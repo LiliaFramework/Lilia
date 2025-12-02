@@ -146,24 +146,6 @@ function GM:PlayerDeath(client, inflictor, attacker)
     net.Send(client)
 end
 
-function GM:CharLoaded(id)
-    lia.char.getCharacter(id, nil, function(character)
-        if not character then return end
-        local client = character:getPlayer()
-        if IsValid(client) then
-            local uniqueID = "liaSaveChar" .. client:SteamID64()
-            local saveInterval = lia.config.get("CharacterDataSaveInterval")
-            timer.Create(uniqueID, saveInterval, 0, function()
-                if IsValid(client) and client:getChar() then
-                    client:getChar():save()
-                else
-                    timer.Remove(uniqueID)
-                end
-            end)
-        end
-    end)
-end
-
 function GM:PrePlayerLoadedChar(client)
     client:SetBodyGroups("000000000")
     client:SetSkin(0)
@@ -507,6 +489,8 @@ function GM:PlayerSpawn(client)
         client:setNetVar("diedInRagdoll", nil)
     end
 
+    client:setNetVar("IsDeadRestricted", false)
+    if not client:getChar() then client:SetNoDraw(true) end
     hook.Run("PlayerLoadout", client)
 end
 
@@ -610,20 +594,7 @@ function GM:PlayerInitialSpawn(client)
 
         timer.Simple(1, function() lia.playerinteract.sync(client) end)
         timer.Simple(1, function() lia.dialog.syncToClients(client) end)
-        timer.Simple(1, function()
-            if IsValid(client) then
-                local syncCount = 0
-                local doorsWithData = 0
-                for _, door in ents.Iterator() do
-                    if IsValid(door) and door:isDoor() then
-                        local syncData = lia.doors.getData(door)
-                        if not table.IsEmpty(syncData) then doorsWithData = doorsWithData + 1 end
-                        syncCount = syncCount + 1
-                    end
-                end
-            end
-        end)
-
+        timer.Simple(1, function() if IsValid(client) then lia.doors.syncAllDoorsToClient(client) end end)
         hook.Run("PlayerLiliaDataLoaded", client)
         net.Start("liaAssureClientSideAssets")
         net.Send(client)
@@ -1047,6 +1018,21 @@ function GM:PlayerCanHearPlayersVoice(listener, speaker)
     local distance = listener:GetPos():Distance(speaker:GetPos())
     local canHear = distance <= baseRange
     return canHear, canHear
+end
+
+function GM:CreateCharacterSaveTimer()
+    local saveInterval = lia.config.get("CharacterDataSaveInterval")
+    local saveTimer = function()
+        for _, client in player.Iterator() do
+            if IsValid(client) and client:getChar() then client:getChar():save() end
+        end
+    end
+
+    if timer.Exists("liaSaveCharGlobal") then
+        timer.Adjust("liaSaveCharGlobal", saveInterval, 0, saveTimer)
+    else
+        timer.Create("liaSaveCharGlobal", saveInterval, 0, saveTimer)
+    end
 end
 
 function GM:CreateSalaryTimers()

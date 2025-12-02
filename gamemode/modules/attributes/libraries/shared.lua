@@ -1,20 +1,34 @@
 ﻿function MODULE:CalcStaminaChange(client)
     local char = client:getChar()
-    if not char then return 1 end
-    local draining = client:GetMoveType() ~= MOVETYPE_NOCLIP and not client:InVehicle() and client:KeyDown(IN_SPEED) and client:OnGround() and (client:GetVelocity():Length2D() > client:GetWalkSpeed())
-    local offset = draining and -lia.config.get("StaminaDrain") or lia.config.get("StaminaRegeneration")
+    if not char or client:GetMoveType() == MOVETYPE_NOCLIP then return 0 end
+    local walkSpeed = lia.config.get("WalkSpeed", 100)
+    local maxAttributes = lia.config.get("maxAttributes", 100)
+    local offset
+    if client:KeyDown(IN_SPEED) and client:GetVelocity():LengthSqr() >= (walkSpeed * walkSpeed) and client:OnGround() then
+        offset = -lia.config.get("StaminaDrain", 1) + math.min(char:getAttrib("end", 0), maxAttributes) / 100
+    else
+        offset = client:Crouching() and lia.config.get("StaminaCrouchRegeneration", 2) or lia.config.get("StaminaRegeneration", 1.75)
+    end
+
     offset = hook.Run("AdjustStaminaOffset", client, offset) or offset
-    if CLIENT then return offset end
-    local max = hook.Run("GetCharMaxStamina", char) or lia.config.get("DefaultStamina", 100)
-    local current = client:getNetVar("stamina", max)
-    local value = math.Clamp(current + offset, 0, max)
-    if current ~= value then
-        client:setNetVar("stamina", value)
-        if value == 0 and not client:getNetVar("brth", false) then
-            hook.Run("PlayerStaminaLost", client)
-        elseif value >= max * 0.25 and client:getNetVar("brth", false) then
-            client:setNetVar("brth", nil)
-            hook.Run("PlayerStaminaGained", client)
+    if CLIENT then
+        return offset
+    else
+        local max = hook.Run("GetCharMaxStamina", char) or lia.config.get("DefaultStamina", 100)
+        local current = client:getLocalVar("stm", max)
+        local value = math.Clamp(current + offset, 0, max)
+        if current ~= value then
+            client:setLocalVar("stm", value)
+            client:setNetVar("stamina", value)
+            if value == 0 and not client:getNetVar("brth", false) then
+                client:setNetVar("brth", true)
+                char:updateAttrib("end", 0.1)
+                char:updateAttrib("stm", 0.01)
+                hook.Run("PlayerStaminaLost", client)
+            elseif value >= 50 and client:getNetVar("brth", false) then
+                client:setNetVar("brth", nil)
+                hook.Run("PlayerStaminaGained", client)
+            end
         end
     end
 end
@@ -39,11 +53,11 @@ function MODULE:CanPlayerThrowPunch(client)
         if not client:playTimeGreaterThan(required) then return false, L("needMorePlaytimeBeforePunch") end
     end
 
-    local staminaUse = lia.config.get("PunchStamina", 0)
+    local staminaUse = lia.config.get("PunchStamina", 10)
     if staminaUse > 0 then
         local char = client:getChar()
         if not char then return false, L("invalidCharacter") end
-        local currentStamina = client:getNetVar("stamina", hook.Run("GetCharMaxStamina", char) or lia.config.get("DefaultStamina", 100))
+        local currentStamina = CLIENT and predictedStamina or client:getLocalVar("stm", hook.Run("GetCharMaxStamina", char) or lia.config.get("DefaultStamina", 100))
         if currentStamina < staminaUse then return false, L("notEnoughStaminaToPunch") end
     end
 end

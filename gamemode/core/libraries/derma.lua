@@ -310,7 +310,9 @@ function lia.derma.optionsMenu(rawOptions, config)
     local frameH = config.frameH
     if not frameH then
         if mode == "interaction" then
-            frameH = totalHeight
+            local minHeight = ScrH() * 0.25
+            local maxHeight = ScrH() * 0.75
+            frameH = math.max(minHeight, math.min(totalHeight, maxHeight))
         else
             local maxHeight = config.maxHeight or ScrH() * 0.6
             frameH = math.min(totalHeight, maxHeight)

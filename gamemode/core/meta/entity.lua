@@ -1034,6 +1034,7 @@ if SERVER then
     function entityMeta:clearNetVars(receiver)
         if not IsValid(self) then return end
         lia.net[self] = nil
+        if lia.localvars and lia.localvars[self] then lia.localvars[self] = nil end
         if lia.shuttingDown then return end
         net.Start("liaNetDel")
         net.WriteUInt(self:EntIndex(), 16)
@@ -1345,6 +1346,91 @@ if SERVER then
     function entityMeta:getNetVar(key, default)
         if not IsValid(self) then return default end
         if lia.net[self] and lia.net[self][key] ~= nil then return lia.net[self][key] end
+        return default
+    end
+
+    --[[
+    Purpose:
+        Sets a local variable on the entity (server-side only, not networked)
+
+    When Called:
+        When you need to store server-side data that doesn't need to sync to clients
+
+    Parameters:
+        key (string)
+            The local variable key to set
+        value (any)
+            The value to store
+
+    Returns:
+        nil
+
+    Realm:
+        Server
+
+    Example Usage:
+
+    Low Complexity:
+        ```lua
+        -- Simple: Set a local variable
+        entity:setLocalVar("stamina", 100)
+        ```
+
+    Medium Complexity:
+        ```lua
+        -- Medium: Use in server-side calculations
+        entity:setLocalVar("lastDamage", CurTime())
+        entity:setLocalVar("damageCount", (entity:getLocalVar("damageCount", 0) + 1))
+        ```
+    ]]
+    function entityMeta:setLocalVar(key, value)
+        if not IsValid(self) then return end
+        lia.localvars = lia.localvars or {}
+        lia.localvars[self] = lia.localvars[self] or {}
+        lia.localvars[self][key] = value
+    end
+
+    --[[
+    Purpose:
+        Gets a local variable from the entity (server-side only)
+
+    When Called:
+        When you need to retrieve server-side data that isn't networked
+
+    Parameters:
+        key (string)
+            The local variable key to retrieve
+        default (any, optional)
+            Default value if the key doesn't exist
+
+    Returns:
+        any - The local variable value or default
+
+    Realm:
+        Server
+
+    Example Usage:
+
+    Low Complexity:
+        ```lua
+        -- Simple: Get a local variable
+        local stamina = entity:getLocalVar("stamina", 100)
+        ```
+
+    Medium Complexity:
+        ```lua
+        -- Medium: Use in server-side logic
+        local lastAction = entity:getLocalVar("lastAction", 0)
+        if CurTime() - lastAction > 5 then
+            entity:setLocalVar("lastAction", CurTime())
+            -- Perform action
+        end
+        ```
+    ]]
+    function entityMeta:getLocalVar(key, default)
+        if not IsValid(self) then return default end
+        lia.localvars = lia.localvars or {}
+        if lia.localvars[self] and lia.localvars[self][key] ~= nil then return lia.localvars[self][key] end
         return default
     end
 else

@@ -533,7 +533,14 @@ local function versionCompare(localVersion, remoteVersion)
     local function toParts(v)
         local parts = {}
         if not v then return parts end
-        for num in tostring(v):gmatch("%d+") do
+        local str
+        if type(v) == "number" then
+            str = string.format("%.3f", v)
+        else
+            str = tostring(v)
+        end
+
+        for num in str:gmatch("%d+") do
             table.insert(parts, tonumber(num))
         end
         return parts

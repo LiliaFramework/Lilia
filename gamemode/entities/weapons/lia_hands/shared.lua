@@ -249,8 +249,6 @@ function SWEP:PrimaryAttack()
         return
     end
 
-    local staminaUse = lia.config.get("PunchStamina", 0)
-    if staminaUse > 0 and SERVER then self:GetOwner():consumeStamina(staminaUse) end
     local defaultDelay = self.Primary.Delay
     local scaledDelay = hook.Run("GetHandsAttackSpeed", self:GetOwner(), defaultDelay)
     self:SetNextPrimaryFire(CurTime() + (isnumber(scaledDelay) and scaledDelay or defaultDelay))

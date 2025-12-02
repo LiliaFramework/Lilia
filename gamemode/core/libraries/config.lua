@@ -1434,8 +1434,17 @@ lia.config.add("StaminaDrain", "staminaDrain", 1, nil, {
     decimals = 2
 })
 
-lia.config.add("StaminaRegeneration", "staminaRegeneration", 5, nil, {
+lia.config.add("StaminaRegeneration", "staminaRegeneration", 1.75, nil, {
     desc = "staminaRegenerationDesc",
+    category = "categoryCharacter",
+    type = "Number",
+    min = 0.1,
+    max = 50,
+    decimals = 2
+})
+
+lia.config.add("StaminaCrouchRegeneration", "staminaCrouchRegeneration", 2, nil, {
+    desc = "staminaCrouchRegenerationDesc",
     category = "categoryCharacter",
     type = "Number",
     min = 0.1,

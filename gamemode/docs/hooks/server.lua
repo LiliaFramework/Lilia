@@ -3558,7 +3558,8 @@ end
             end
 
             -- Check if door is already locked
-            if door:getNetVar("locked", false) then
+            local doorData = lia.doors.getData(door)
+            if doorData.locked then
                 return false -- Already locked
             end
 
@@ -5398,7 +5399,8 @@ end
             end
 
             -- Check if door is already unlocked
-            if not door:getNetVar("locked", false) then
+            local doorData = lia.doors.getData(door)
+            if not doorData.locked then
                 return false -- Already unlocked
             end
 
@@ -5445,7 +5447,8 @@ end
             end
 
             -- Check if door is already unlocked
-            if not door:getNetVar("locked", false) then
+            local doorData = lia.doors.getData(door)
+            if not doorData.locked then
                 return false -- Already unlocked
             end
 
@@ -6126,7 +6129,8 @@ end
             end
 
             -- Check if door is locked
-            if door:getNetVar("locked", false) then
+            local doorData = lia.doors.getData(door)
+            if doorData.locked then
                 return false -- Can't use locked doors
             end
 
@@ -6179,12 +6183,13 @@ end
             end
 
             -- Check if door is disabled
-            if door:getNetVar("disabled", false) then
+            local doorData = lia.doors.getData(door)
+            if doorData.disabled then
                 return false -- Door is disabled
             end
 
             -- Check if door is locked
-            if door:getNetVar("locked", false) then
+            if doorData.locked then
                 return false -- Can't use locked doors
             end
 
@@ -6306,8 +6311,10 @@ end
             end
 
             -- Update door usage data
-            door:setNetVar("lastUsed", CurTime())
-            door:setNetVar("useCount", door:getNetVar("useCount", 0) + 1)
+            local doorData = lia.doors.getCachedData(door)
+            doorData.lastUsed = CurTime()
+            doorData.useCount = (doorData.useCount or 0) + 1
+            lia.doors.setCachedData(door, doorData)
 
             -- Log door usage
             lia.log.add(client:Name() .. " used door: " .. (door:EntIndex() or "unknown"), FLAG_NORMAL)
@@ -11469,7 +11476,9 @@ end
             end
 
             -- Update door data
-            door:setNetVar("locked", state)
+            local doorData = lia.doors.getData(door)
+            doorData.locked = state
+            lia.doors.setCachedData(door, doorData)
 
             -- Handle lock state effects
             if state then
@@ -11799,7 +11808,9 @@ end
             end
 
             -- Update door price
-            door:setNetVar("price", price)
+            local doorData = lia.doors.getData(door)
+            doorData.price = price
+            lia.doors.setCachedData(door, doorData)
 
             -- Log the change
             lia.log.add(client:Name() .. " set door " .. tostring(door) .. " price to $" .. price, FLAG_NORMAL)
@@ -11839,7 +11850,8 @@ end
             end
 
             -- Get previous price for comparison
-            local oldPrice = door:getNetVar("price", 0)
+            local doorData = lia.doors.getData(door)
+            local oldPrice = doorData.price or 0
 
             -- Apply economic modifiers
             price = self:ApplyEconomicModifiers(price, door, client)
@@ -11866,7 +11878,9 @@ end
             end
 
             -- Update door data
-            door:setNetVar("price", price)
+            local doorData = lia.doors.getData(door)
+            doorData.price = price
+            lia.doors.setCachedData(door, doorData)
             door:setNetVar("lastPriceChange", os.time())
             door:setNetVar("priceSetBy", client:SteamID())
 
@@ -12010,7 +12024,9 @@ end
             lia.log.add(client:Name() .. " set door title to: " .. sanitized)
 
             -- Update door data
-            door:setNetVar("title", sanitized)
+            local doorData = lia.doors.getData(door)
+            doorData.title = sanitized
+            lia.doors.setCachedData(door, doorData)
         end
         ```
 
@@ -12047,7 +12063,9 @@ end
             end
 
             -- Update door data
-            door:setNetVar("title", sanitized)
+            local doorData = lia.doors.getData(door)
+            doorData.title = sanitized
+            lia.doors.setCachedData(door, doorData)
 
             -- Log the change
             lia.log.add(client:Name() .. " (" .. client:SteamID() .. ") set door title to: " .. sanitized)
@@ -17268,7 +17286,8 @@ end
             if not char then return end
 
             local action = isPurchase and "purchased" or "sold"
-            local price = door:getNetVar("price", 0)
+            local doorData = lia.doors.getData(door)
+            local price = doorData.price or 0
 
             -- Log transaction
             lia.log.add(string.format("%s (%s) %s door at %s for $%d",

@@ -516,7 +516,7 @@ end
     -- Medium: Add custom door info
     hook.Add("GetDoorInfo", "CustomDoorInfo", function(entity, doorData, doorInfo)
         doorInfo.customField = "Custom Value"
-        doorInfo.price = entity:getNetVar("price", 0)
+        doorInfo.price = doorData.price or 0
 
         return doorInfo
     end)
@@ -528,10 +528,10 @@ end
     -- High: Complex door info system
     hook.Add("GetDoorInfo", "AdvancedDoorInfo", function(entity, doorData, doorInfo)
         -- Add basic info
-        doorInfo.price = entity:getNetVar("price", 0)
-        doorInfo.title = entity:getNetVar("title", "Door")
+        doorInfo.price = doorData.price or 0
+        doorInfo.title = doorData.title or doorData.name or "Door"
         doorInfo.owner = entity:getNetVar("owner")
-        doorInfo.locked = entity:getNetVar("locked", false)
+        doorInfo.locked = doorData.locked or false
 
         -- Add owner name
         if doorInfo.owner then

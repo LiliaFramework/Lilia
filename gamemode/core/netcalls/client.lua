@@ -1084,6 +1084,22 @@ net.Receive("liaDoorMenu", function()
     end
 end)
 
+net.Receive("liaDoorDataUpdate", function()
+    local doorID = net.ReadUInt(16)
+    local hasData = net.ReadBool()
+    local data = hasData and net.ReadTable() or nil
+    lia.doors.updateCachedData(doorID, data)
+end)
+
+net.Receive("liaDoorDataBulk", function()
+    local count = net.ReadUInt(16)
+    for _ = 1, count do
+        local doorID = net.ReadUInt(16)
+        local data = net.ReadTable()
+        lia.doors.updateCachedData(doorID, data)
+    end
+end)
+
 net.Receive("liaDoorPerm", function()
     local door = net.ReadEntity()
     local client = net.ReadEntity()
@@ -1111,15 +1127,6 @@ net.Receive("liaDoorData", function()
         local verifyData = lia.doors.getData(door)
         print("[TEST CLIENT] Door #" .. mapID .. " getData after receive - name: " .. tostring(verifyData.name) .. ", price: " .. tostring(verifyData.price))
         hook.Run("DoorDataReceived", door, syncData)
-    end
-end)
-
-net.Receive("liaDoorDataUpdate", function()
-    local door = net.ReadEntity()
-    local syncData = net.ReadTable()
-    if IsValid(door) and istable(syncData) then
-        lia.doors.stored[door] = syncData
-        hook.Run("DoorDataUpdated", door, syncData)
     end
 end)
 

@@ -4431,9 +4431,14 @@ if SERVER then
 ]]
     function playerMeta:consumeStamina(amount)
         local char = self:getChar()
-        local current = self:getNetVar("stamina", char and (hook.Run("GetCharMaxStamina", char) or lia.config.get("DefaultStamina", 100)) or lia.config.get("DefaultStamina", 100))
-        local value = math.Clamp(current - amount, 0, char and (hook.Run("GetCharMaxStamina", char) or lia.config.get("DefaultStamina", 100)) or lia.config.get("DefaultStamina", 100))
+        local max = char and (hook.Run("GetCharMaxStamina", char) or lia.config.get("DefaultStamina", 100)) or lia.config.get("DefaultStamina", 100)
+        local current = self:getLocalVar("stm", max)
+        local value = math.Clamp(current - amount, 0, max)
+        self:setLocalVar("stm", value)
         self:setNetVar("stamina", value)
+        net.Start("liaStaminaSync")
+        net.WriteFloat(value)
+        net.Send(self)
         if value == 0 and not self:getNetVar("brth", false) then
             self:setNetVar("brth", true)
             hook.Run("PlayerStaminaLost", self)
@@ -5156,7 +5161,7 @@ if SERVER then
             self:SetMoveType(MOVETYPE_NONE)
             if time then
                 local uniqueID = "liaUnRagdoll" .. self:SteamID64()
-                timer.Create(uniqueID, 0.33, 0, function()
+                timer.Create(uniqueID, 1.0, 0, function()
                     if not IsValid(entity) or not IsValid(self) then
                         timer.Remove(uniqueID)
                         return
@@ -5165,7 +5170,7 @@ if SERVER then
                     local velocity = entity:GetVelocity()
                     entity.liaLastVelocity = velocity
                     self:SetPos(entity:GetPos())
-                    time = time - 0.33
+                    time = time - 1.0
                     if time <= 0 then SafeRemoveEntity(entity) end
                 end)
             end

@@ -77,6 +77,7 @@ lia.char.pendingRequests = lia.char.pendingRequests or {}
 ]]
 function lia.char.getCharacter(charID, client, callback)
     if SERVER then
+        if not charID then return end
         local character = lia.char.loaded[charID]
         if character then
             if callback then callback(character) end
@@ -2624,7 +2625,62 @@ if SERVER then
         end
 
         if client and not table.HasValue(client.liaCharList or {}, charID) then
-            if callback then callback(nil) end
+            lia.db.selectOne("faction", "characters", "id = " .. charID):next(function(result)
+                if not (result and result.faction == FACTION_STAFF and client:hasPrivilege("createStaffCharacter")) then
+                    if callback then callback(nil) end
+                    return
+                end
+
+                lia.db.selectOne("*", "characters", "id = " .. charID):next(function(charResult)
+                    if not charResult then
+                        if callback then callback(nil) end
+                        return
+                    end
+
+                    local charData = {}
+                    for k, v in pairs(lia.char.vars) do
+                        if v.field and charResult[v.field] then
+                            local value = tostring(charResult[v.field])
+                            if isnumber(v.default) then
+                                value = tonumber(value) or v.default
+                            elseif isbool(v.default) then
+                                value = tobool(value)
+                            elseif istable(v.default) then
+                                value = util.JSONToTable(value)
+                            end
+
+                            charData[k] = value
+                        end
+                    end
+
+                    local character = lia.char.new(charData, charID, client)
+                    hook.Run("CharRestored", character)
+                    character.vars.inv = {}
+                    lia.inventory.loadAllFromCharID(charID):next(function(inventories)
+                        if #inventories == 0 then
+                            local promise = hook.Run("CreateDefaultInventory", character)
+                            if promise then
+                                promise:next(function(inventory)
+                                    character.vars.inv = {inventory}
+                                    lia.char.loaded[charID] = character
+                                    if callback then callback(character) end
+                                end)
+                            else
+                                character.vars.inv = {}
+                                lia.char.loaded[charID] = character
+                                if callback then callback(character) end
+                            end
+                        else
+                            character.vars.inv = inventories
+                            lia.char.loaded[charID] = character
+                            if callback then callback(character) end
+                        end
+                    end, function(err)
+                        lia.information(L("failedToLoadInventoriesForCharacter") .. " " .. charID .. ": " .. tostring(err))
+                        if callback then callback(nil) end
+                    end)
+                end)
+            end)
             return
         end
 

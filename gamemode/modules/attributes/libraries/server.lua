@@ -15,7 +15,18 @@ function MODULE:PostPlayerLoadout(client)
         end
     end
 
-    client:setNetVar("stamina", hook.Run("GetCharMaxStamina", char) or lia.config.get("DefaultStamina", 100))
+    local maxStamina = hook.Run("GetCharMaxStamina", char) or lia.config.get("DefaultStamina", 100)
+    client:setLocalVar("stm", maxStamina)
+    client:setNetVar("stamina", maxStamina)
+    local uniqueID = "liaStam" .. client:SteamID64()
+    timer.Create(uniqueID, 0.25, 0, function()
+        if not IsValid(client) then
+            timer.Remove(uniqueID)
+            return
+        end
+
+        self:CalcStaminaChange(client)
+    end)
 end
 
 function MODULE:PlayerStaminaLost(client)
@@ -45,14 +56,30 @@ function MODULE:PlayerStaminaLost(client)
 end
 
 function MODULE:PlayerLoadedChar(client, character)
-    timer.Simple(0.25, function() if IsValid(client) then client:setNetVar("stamina", hook.Run("GetCharMaxStamina", character) or lia.config.get("DefaultStamina", 100)) end end)
+    timer.Simple(0.25, function()
+        if IsValid(client) then
+            local maxStamina = hook.Run("GetCharMaxStamina", character) or lia.config.get("DefaultStamina", 100)
+            client:setLocalVar("stm", character:getData("stamina", maxStamina))
+            client:setNetVar("stamina", client:getLocalVar("stm", maxStamina))
+        end
+    end)
 end
 
-timer.Remove("liaGlobalStamina")
-timer.Create("liaGlobalStamina", 0.25, 0, function()
-    for _, client in player.Iterator() do
-        if IsValid(client) then MODULE:CalcStaminaChange(client) end
-    end
-end)
+function MODULE:CharacterPreSave(character)
+    local client = character:GetPlayer()
+    if IsValid(client) then character:SetData("stamina", client:getLocalVar("stm", hook.Run("GetCharMaxStamina", character) or lia.config.get("DefaultStamina", 100))) end
+end
 
-hook.Add("PlayerBindPress", "liaAttributesPlayerBindPress", function(client, bind, pressed) return MODULE:PlayerBindPress(client, bind, pressed) end)
+function MODULE:PlayerThrowPunch(client)
+    local staminaUse = lia.config.get("PunchStamina", 10)
+    if staminaUse > 0 then
+        local current = client:getLocalVar("stm", 100)
+        local max = hook.Run("GetCharMaxStamina", client:getChar()) or lia.config.get("DefaultStamina", 100)
+        local value = math.Clamp(current - staminaUse, 0, max)
+        client:setLocalVar("stm", value)
+        client:setNetVar("stamina", value)
+        net.Start("liaStaminaSync")
+        net.WriteFloat(value)
+        net.Send(client)
+    end
+end

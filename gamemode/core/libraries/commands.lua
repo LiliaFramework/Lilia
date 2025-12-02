@@ -2013,7 +2013,7 @@ lia.command.add("charid", {
     onRun = function(client)
         local char = client:getChar()
         if not char then
-            client:notifyErrorLocalized("noCharacterLoaded")
+            client:notifyErrorLocalized("noCharacterSelected")
             return
         end
 
@@ -2092,6 +2092,20 @@ lia.command.add("plycheckid", {
 
         local charID = char:getID()
         client:ChatPrint(L("charidFor", target:Nick(), charID))
+    end
+})
+
+lia.command.add("checkid", {
+    desc = "charidDesc",
+    onRun = function(client)
+        local char = client:getChar()
+        if not char then
+            client:notifyErrorLocalized("noCharacterSelected")
+            return
+        end
+
+        local charID = char:getID()
+        client:ChatPrint(L("charidYour", charID))
     end
 })
 
@@ -5595,25 +5609,30 @@ lia.command.add("doortogglelock", {
                 if toggleState then
                     door:Fire("lock")
                     door:EmitSound("doors/door_latch3.wav")
-                    door:setNetVar("locked", true)
+                    doorData.locked = true
+                    lia.doors.setCachedData(door, doorData)
                     client:notifyInfoLocalized("doorToggleLocked", L("locked"):lower())
                     lia.log.add(client, "toggleLock", door, L("locked"))
                 else
                     door:Fire("unlock")
                     door:EmitSound("doors/door_latch1.wav")
-                    door:setNetVar("locked", false)
+                    doorData.locked = false
+                    lia.doors.setCachedData(door, doorData)
                     client:notifyInfoLocalized("doorToggleLocked", L("unlocked"))
                     lia.log.add(client, "toggleLock", door, L("unlocked"))
                 end
 
                 local partner = door:getDoorPartner()
                 if IsValid(partner) then
+                    local partnerData = lia.doors.getData(partner)
                     if toggleState then
                         partner:Fire("lock")
-                        partner:setNetVar("locked", true)
+                        partnerData.locked = true
+                        lia.doors.setCachedData(partner, partnerData)
                     else
                         partner:Fire("unlock")
-                        partner:setNetVar("locked", false)
+                        partnerData.locked = false
+                        lia.doors.setCachedData(partner, partnerData)
                     end
                 end
             else
@@ -7744,6 +7763,7 @@ lia.command.add("forcerespawn", {
         end
 
         client:Spawn()
+        client:setNetVar("lastDeathTime", 0)
         client:notifySuccessLocalized("playerForceRespawned", client:Name())
         client:notifyLocalized("youWereForceRespawned")
         lia.log.add(client, "forcerespawn", client:Name())
@@ -7783,5 +7803,61 @@ lia.command.add("resetvendorcooldowns", {
         character:setData("vendorCooldowns", {})
         client:notifyLocalized("vendorCooldownsReset", target:Name())
         target:notifyLocalized("vendorCooldownsResetByAdmin")
+    end
+})
+
+lia.command.add("storagepasswordremove", {
+    adminOnly = true,
+    desc = "storagePasswordRemoveDesc",
+    arguments = {},
+    onRun = function(client)
+        local trace = client:GetEyeTrace()
+        local entity = trace.Entity
+        if not IsValid(entity) or trace.HitPos:Distance(client:GetPos()) > 128 then
+            client:notifyErrorLocalized("invalidTarget")
+            return
+        end
+
+        if not entity.password then
+            client:notifyErrorLocalized("storageNotLocked")
+            return
+        end
+
+        entity.password = nil
+        entity:setNetVar("locked", false)
+        client:notifySuccessLocalized("storageUnlocked")
+        lia.log.add(client, "storagePasswordRemoved", entity:GetClass())
+        hook.Run("UpdateEntityPersistence", entity)
+    end
+})
+
+lia.command.add("storagepasswordchange", {
+    adminOnly = true,
+    desc = "storagePasswordChangeDesc",
+    arguments = {
+        {
+            name = "password",
+            type = "string"
+        },
+    },
+    onRun = function(client, arguments)
+        local trace = client:GetEyeTrace()
+        local entity = trace.Entity
+        local newPassword = arguments[1]
+        if not IsValid(entity) or trace.HitPos:Distance(client:GetPos()) > 128 then
+            client:notifyErrorLocalized("invalidTarget")
+            return
+        end
+
+        if not newPassword or newPassword == "" then
+            client:notifyErrorLocalized("invalidPassword")
+            return
+        end
+
+        entity.password = newPassword
+        entity:setNetVar("locked", true)
+        client:notifySuccessLocalized("storagePasswordChanged")
+        lia.log.add(client, "storagePasswordChanged", entity:GetClass())
+        hook.Run("UpdateEntityPersistence", entity)
     end
 })

@@ -19,16 +19,16 @@ function MODULE:PostLoadData()
         local count = 0
         for _, door in ents.Iterator() do
             if IsValid(door) and door:isDoor() then
-                local doorData = door:getNetVar("doorData", {})
+                local doorData = lia.doors.getCachedData(door)
                 if not doorData or table.IsEmpty(doorData) then
-                    door:setNetVar("doorData", {
+                    lia.doors.setCachedData(door, {
                         disabled = true
                     })
 
                     count = count + 1
                 else
                     doorData.disabled = true
-                    door:setNetVar("doorData", doorData)
+                    lia.doors.setCachedData(door, doorData)
                     count = count + 1
                 end
             end
@@ -94,11 +94,9 @@ function MODULE:LoadData()
                         if not isEmpty then
                             factions = result
                             ent.liaFactions = factions
-                            ent:setNetVar("factions", util.TableToJSON(factions))
                         else
                             factions = result
                             ent.liaFactions = factions
-                            ent:setNetVar("factions", util.TableToJSON(factions))
                         end
                     else
                         lia.warning(L("failedToDeserializeFactionsForDoor", id) .. ": " .. tostring(result))
@@ -126,11 +124,9 @@ function MODULE:LoadData()
                         if not isEmpty then
                             classes = result
                             ent.liaClasses = classes
-                            ent:setNetVar("classes", util.TableToJSON(classes))
                         else
                             classes = result
                             ent.liaClasses = classes
-                            ent:setNetVar("classes", util.TableToJSON(classes))
                         end
                     else
                         lia.warning(L("failedToDeserializeClassesForDoor", id) .. ": " .. tostring(result))
@@ -184,7 +180,7 @@ function MODULE:LoadData()
 
             if hasData then
                 doorData = hook.Run("PostDoorDataLoad", ent, doorData) or doorData
-                ent:setNetVar("doorData", doorData)
+                lia.doors.setCachedData(ent, doorData)
                 loadedCount = loadedCount + 1
                 if ent:isDoor() then
                     if doorData.locked then
@@ -247,7 +243,7 @@ function MODULE:LoadData()
 
                         if hasPresetData then
                             doorData = hook.Run("PostDoorDataLoad", ent, doorData) or doorData
-                            ent:setNetVar("doorData", doorData)
+                            lia.doors.setCachedData(ent, doorData)
                             lia.information(L("appliedPresetToDoor", doorID))
                             loadedCount = loadedCount + 1
                             if ent:isDoor() then
@@ -279,39 +275,13 @@ function MODULE:SaveData()
         if door:isDoor() then
             local mapID = door:MapCreationID()
             if not mapID or mapID <= 0 then continue end
-            local doorData = door:getNetVar("doorData", {})
+            local doorData = lia.doors.getCachedData(door)
             if not doorData or table.IsEmpty(doorData) then continue end
             doorData = hook.Run("PreDoorDataSave", door, doorData) or doorData
             local factionsTable = doorData.factions or {}
             local classesTable = doorData.classes or {}
-            if not doorData.factions then
-                local factions = door:getNetVar("factions")
-                if factions and factions ~= "[]" then
-                    local success, result = pcall(util.JSONToTable, factions)
-                    if success and istable(result) then
-                        factionsTable = result
-                    else
-                        lia.warning(L("failedToParseFactionsJSON", mapID))
-                    end
-                elseif door.liaFactions then
-                    factionsTable = door.liaFactions
-                end
-            end
-
-            if not doorData.classes then
-                local classes = door:getNetVar("classes")
-                if classes and classes ~= "[]" then
-                    local success, result = pcall(util.JSONToTable, classes)
-                    if success and istable(result) then
-                        classesTable = result
-                    else
-                        lia.warning(L("failedToParseClassesJSON", mapID))
-                    end
-                elseif door.liaClasses then
-                    classesTable = door.liaClasses
-                end
-            end
-
+            if not doorData.factions and door.liaFactions then factionsTable = door.liaFactions end
+            if not doorData.classes and door.liaClasses then classesTable = door.liaClasses end
             if not istable(factionsTable) then
                 lia.warning(L("doorInvalidFactionsType", mapID, type(factionsTable)))
                 factionsTable = {}
@@ -408,12 +378,12 @@ function MODULE:PlayerUse(client, door)
 end
 
 function MODULE:CanPlayerUseDoor(_, door)
-    local doorData = door:getNetVar("doorData", {})
+    local doorData = lia.doors.getData(door)
     if doorData.disabled then return false end
 end
 
 function MODULE:CanPlayerAccessDoor(client, door)
-    local doorData = door:getNetVar("doorData", {})
+    local doorData = lia.doors.getData(door)
     local factions = doorData.factions
     if factions and #factions > 0 then
         local playerFaction = client:getChar():getFaction()
@@ -449,7 +419,7 @@ end
 function MODULE:ShowTeam(client)
     local entity = client:getTracedEntity()
     if IsValid(entity) and entity:isDoor() then
-        local doorData = entity:getNetVar("doorData", {})
+        local doorData = lia.doors.getData(entity)
         local factions = doorData.factions
         local classes = doorData.classes
         if (not factions or #factions == 0) and (not classes or #classes == 0) then
