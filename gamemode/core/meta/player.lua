@@ -1,4 +1,4 @@
-﻿--[[
+--[[
     Player Meta
 
     Player management system for the Lilia framework.
@@ -4365,10 +4365,12 @@ if SERVER then
 ]]
     function playerMeta:restoreStamina(amount)
         local char = self:getChar()
-        local current = self:getNetVar("stamina", char and (hook.Run("GetCharMaxStamina", char) or lia.config.get("DefaultStamina", 100)) or lia.config.get("DefaultStamina", 100))
         local maxStamina = char and (hook.Run("GetCharMaxStamina", char) or lia.config.get("DefaultStamina", 100)) or lia.config.get("DefaultStamina", 100)
+        local current = self:getLocalVar("stamina", maxStamina)
         local value = math.Clamp(current + amount, 0, maxStamina)
-        self:setNetVar("stamina", value)
+        if current ~= value then
+            self:setLocalVar("stamina", value)
+        end
         if value >= maxStamina * 0.25 and self:getNetVar("brth", false) then
             self:setNetVar("brth", nil)
             hook.Run("PlayerStaminaGained", self)
@@ -4432,16 +4434,14 @@ if SERVER then
     function playerMeta:consumeStamina(amount)
         local char = self:getChar()
         local max = char and (hook.Run("GetCharMaxStamina", char) or lia.config.get("DefaultStamina", 100)) or lia.config.get("DefaultStamina", 100)
-        local current = self:getLocalVar("stm", max)
+        local current = self:getLocalVar("stamina", max)
         local value = math.Clamp(current - amount, 0, max)
-        self:setLocalVar("stm", value)
-        self:setNetVar("stamina", value)
-        net.Start("liaStaminaSync")
-        net.WriteFloat(value)
-        net.Send(self)
-        if value == 0 and not self:getNetVar("brth", false) then
-            self:setNetVar("brth", true)
-            hook.Run("PlayerStaminaLost", self)
+        if current ~= value then
+            self:setLocalVar("stamina", value)
+            if value == 0 and not self:getNetVar("brth", false) then
+                self:setNetVar("brth", true)
+                hook.Run("PlayerStaminaLost", self)
+            end
         end
     end
 
@@ -5319,6 +5319,81 @@ if SERVER then
 
         hook.Run("NetVarChanged", self, key, oldValue, value)
     end
+
+    --[[
+    Purpose:
+        Sets a local variable on the player and automatically networks it if it's "stamina"
+        This provides efficient networking similar to Helix's system
+
+    When Called:
+        When setting player-local data that needs to sync to the client (like stamina)
+
+    Parameters:
+        key (string)
+            The local variable key
+        value (any)
+            The value to store
+
+    Returns:
+        None
+
+    Realm:
+        Server
+
+    Notes:
+        For "stamina" key, automatically networks via liaNetLocal when value changes
+    ]]
+    function playerMeta:setLocalVar(key, value)
+        if not IsValid(self) then return end
+        lia.localvars = lia.localvars or {}
+        lia.localvars[self] = lia.localvars[self] or {}
+        lia.localvars[self][key] = value
+
+        -- Automatically network stamina changes (similar to Helix's approach)
+        if key == "stamina" then
+            lia.net[self] = lia.net[self] or {}
+            local netOldValue = lia.net[self][key]
+            -- Only network if value actually changed
+            if netOldValue ~= value then
+                lia.net[self][key] = value
+                if not self:IsBot() then
+                    net.Start("liaNetLocal")
+                    net.WriteString(key)
+                    net.WriteType(value)
+                    net.Send(self)
+                    hook.Run("NetVarChanged", self, key, netOldValue, value)
+                end
+            end
+        end
+    end
+
+    --[[
+    Purpose:
+        Gets a local variable from the player
+
+    When Called:
+        When retrieving player-local data
+
+    Parameters:
+        key (string)
+            The local variable key to retrieve
+        default (any, optional)
+            Default value if the key doesn't exist
+
+    Returns:
+        any - The local variable value or default
+
+    Realm:
+        Server
+    ]]
+    function playerMeta:getLocalVar(key, default)
+        if not IsValid(self) then return default end
+        lia.localvars = lia.localvars or {}
+        if lia.localvars[self] and lia.localvars[self][key] ~= nil then
+            return lia.localvars[self][key]
+        end
+        return default
+    end
 else
     --[[
     Purpose:
@@ -5431,6 +5506,41 @@ else
         local thirdPersonEnabled = lia.config.get("ThirdPersonEnabled", true)
         local tpEnabled = lia.option.get("thirdPersonEnabled", false)
         return tpEnabled and thirdPersonEnabled
+    end
+
+    --[[
+    Purpose:
+        Gets a local variable from the player, reading from networked data for "stamina"
+        This provides client-side access to server-synced local variables
+
+    When Called:
+        When retrieving player-local data on the client
+
+    Parameters:
+        key (string)
+            The local variable key to retrieve
+        default (any, optional)
+            Default value if the key doesn't exist
+
+    Returns:
+        any - The local variable value or default
+
+    Realm:
+        Client
+
+    Notes:
+        For "stamina" key on LocalPlayer, reads from lia.net table (networked data)
+    ]]
+    function playerMeta:getLocalVar(key, default)
+        if not IsValid(self) then return default end
+        -- For stamina on LocalPlayer, read from networked data
+        if key == "stamina" and self == LocalPlayer() then
+            local idx = self:EntIndex()
+            if lia.net[idx] and lia.net[idx][key] ~= nil then
+                return lia.net[idx][key]
+            end
+        end
+        return default
     end
 
     --[[

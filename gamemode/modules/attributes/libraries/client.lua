@@ -1,4 +1,4 @@
-﻿local predictedStamina = 100
+local predictedStamina = 100
 function MODULE:LoadCharInformation()
     local client = LocalPlayer()
     if not IsValid(client) then return end
@@ -23,7 +23,7 @@ function MODULE:LoadCharInformation()
     end
 
     local max = hook.Run("GetCharMaxStamina", char) or lia.config.get("DefaultStamina", 100)
-    predictedStamina = client:getNetVar("stamina", max)
+    predictedStamina = client:getLocalVar("stamina", max)
 end
 
 function MODULE:Think()
@@ -35,10 +35,9 @@ function MODULE:Think()
     end
 end
 
-net.Receive("liaStaminaSync", function()
-    local serverStamina = net.ReadFloat()
-    if math.abs(predictedStamina - serverStamina) > 5 then predictedStamina = serverStamina end
-end)
+function MODULE:NetVarChanged(ply, key, _, newValue)
+    if key == "stamina" and ply == LocalPlayer() and math.abs(predictedStamina - newValue) > 5 then predictedStamina = newValue end
+end
 
 lia.bar.add(function()
     local client = LocalPlayer()

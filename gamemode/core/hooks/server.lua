@@ -1,4 +1,4 @@
-﻿local GM = GM or GAMEMODE
+local GM = GM or GAMEMODE
 local VOICE_WHISPERING = "whispering"
 local VOICE_TALKING = "talking"
 local VOICE_YELLING = "yelling"
@@ -402,12 +402,13 @@ function GM:KeyPress(client, key)
 
         local char = client:getChar()
         if char then
-            local stamina = client:getNetVar("stamina", hook.Run("GetCharMaxStamina", char) or lia.config.get("DefaultStamina", 100))
+            local maxStamina = hook.Run("GetCharMaxStamina", char) or lia.config.get("DefaultStamina", 100)
+            local stamina = client:getLocalVar("stamina", maxStamina)
             local jumpReq = lia.config.get("JumpStaminaCost", 25)
             if stamina >= jumpReq and client:GetMoveType() ~= MOVETYPE_NOCLIP and not client:InVehicle() and client:Alive() and (client.liaNextJump or 0) <= CurTime() then
                 client.liaNextJump = CurTime() + 0.1
                 client:consumeStamina(jumpReq)
-                local newStamina = client:getNetVar("stamina", hook.Run("GetCharMaxStamina", char) or lia.config.get("DefaultStamina", 100))
+                local newStamina = client:getLocalVar("stamina", maxStamina)
                 if newStamina <= 0 then
                     client:setNetVar("brth", true)
                     client:ConCommand("-speed")

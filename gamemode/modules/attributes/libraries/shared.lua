@@ -1,4 +1,4 @@
-﻿function MODULE:CalcStaminaChange(client)
+function MODULE:CalcStaminaChange(client)
     local char = client:getChar()
     if not char or client:GetMoveType() == MOVETYPE_NOCLIP then return 0 end
     local walkSpeed = lia.config.get("WalkSpeed", 100)
@@ -15,11 +15,10 @@
         return offset
     else
         local max = hook.Run("GetCharMaxStamina", char) or lia.config.get("DefaultStamina", 100)
-        local current = client:getLocalVar("stm", max)
+        local current = client:getLocalVar("stamina", max)
         local value = math.Clamp(current + offset, 0, max)
         if current ~= value then
-            client:setLocalVar("stm", value)
-            client:setNetVar("stamina", value)
+            client:setLocalVar("stamina", value)
             if value == 0 and not client:getNetVar("brth", false) then
                 client:setNetVar("brth", true)
                 char:updateAttrib("end", 0.1)
@@ -37,8 +36,8 @@ function MODULE:PlayerBindPress(client, bind, pressed)
     if not pressed then return end
     local char = client:getChar()
     if not char then return end
-    local stamina = client:getNetVar("stamina", hook.Run("GetCharMaxStamina", char) or lia.config.get("DefaultStamina", 100))
     local maxStamina = hook.Run("GetCharMaxStamina", char) or lia.config.get("DefaultStamina", 100)
+    local stamina = client:getLocalVar("stamina", maxStamina)
     local runThreshold = maxStamina * 0.25
     if bind == "+speed" and stamina <= runThreshold then
         client:ConCommand("-speed")
@@ -57,7 +56,7 @@ function MODULE:CanPlayerThrowPunch(client)
     if staminaUse > 0 then
         local char = client:getChar()
         if not char then return false, L("invalidCharacter") end
-        local currentStamina = CLIENT and predictedStamina or client:getLocalVar("stm", hook.Run("GetCharMaxStamina", char) or lia.config.get("DefaultStamina", 100))
+        local currentStamina = CLIENT and predictedStamina or client:getLocalVar("stamina", hook.Run("GetCharMaxStamina", char) or lia.config.get("DefaultStamina", 100))
         if currentStamina < staminaUse then return false, L("notEnoughStaminaToPunch") end
     end
 end
