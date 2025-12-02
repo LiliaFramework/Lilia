@@ -190,6 +190,64 @@ Shared
 
 ---
 
+### lia.lang.generateCacheKey
+
+#### 📋 Purpose
+Generates a unique cache key for localized string requests
+
+#### ⏰ When Called
+Internally by getLocalizedString for caching
+
+#### ⚙️ Parameters
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `lang` | **string** | The language identifier |
+| `key` | **string** | The language key |
+
+#### ↩️ Returns
+* string - Unique cache key
+
+#### 🌐 Realm
+Shared
+]]
+
+---
+
+### lia.lang.cleanupCache
+
+#### 📋 Purpose
+Cleans up the localization cache when it exceeds the maximum size
+
+#### ⏰ When Called
+Automatically by getLocalizedString when cache size limit is reached
+
+#### ↩️ Returns
+* None
+
+#### 🌐 Realm
+Shared
+]]
+
+---
+
+### lia.lang.clearCache
+
+#### 📋 Purpose
+Clears the entire localization cache
+
+#### ⏰ When Called
+When language tables are updated or language changes
+
+#### ↩️ Returns
+* None
+
+#### 🌐 Realm
+Shared
+]]
+
+---
+
 ### lia.lang.getLocalizedString
 
 #### 📋 Purpose

@@ -1233,6 +1233,89 @@ Server
 
 ---
 
+### setLocalVar
+
+#### 📋 Purpose
+Sets a local variable on the entity (server-side only, not networked)
+
+#### ⏰ When Called
+When you need to store server-side data that doesn't need to sync to clients
+
+#### ⚙️ Parameters
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `key` | **string** | The local variable key to set |
+| `value` | **any** | The value to store |
+
+#### ↩️ Returns
+* nil
+
+#### 🌐 Realm
+Server
+
+#### 💡 Example Usage
+
+#### 🔰 Low Complexity
+```lua
+    -- Simple: Set a local variable
+    entity:setLocalVar("stamina", 100)
+
+```
+
+#### 📊 Medium Complexity
+```lua
+    -- Medium: Use in server-side calculations
+    entity:setLocalVar("lastDamage", CurTime())
+    entity:setLocalVar("damageCount", (entity:getLocalVar("damageCount", 0) + 1))
+
+```
+
+---
+
+### getLocalVar
+
+#### 📋 Purpose
+Gets a local variable from the entity (server-side only)
+
+#### ⏰ When Called
+When you need to retrieve server-side data that isn't networked
+
+#### ⚙️ Parameters
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `key` | **string** | The local variable key to retrieve |
+| `default` | **any, optional** | Default value if the key doesn't exist |
+
+#### ↩️ Returns
+* any - The local variable value or default
+
+#### 🌐 Realm
+Server
+
+#### 💡 Example Usage
+
+#### 🔰 Low Complexity
+```lua
+    -- Simple: Get a local variable
+    local stamina = entity:getLocalVar("stamina", 100)
+
+```
+
+#### 📊 Medium Complexity
+```lua
+    -- Medium: Use in server-side logic
+    local lastAction = entity:getLocalVar("lastAction", 0)
+    if CurTime() - lastAction > 5 then
+        entity:setLocalVar("lastAction", CurTime())
+        -- Perform action
+    end
+
+```
+
+---
+
 ### isDoor
 
 #### 📋 Purpose
