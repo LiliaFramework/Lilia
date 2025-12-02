@@ -173,7 +173,7 @@ Server
             if IsValid(ent) and ent:isDoor() then
                 validDoors = validDoors + 1
                 -- Apply preset data to door
-                ent:setNetVar("doorData", doorData)
+                lia.doors.setCachedData(ent, doorData)
             end
         end
         lia.information("Loaded " .. validDoors .. " doors from preset for " .. mapName)
@@ -291,6 +291,114 @@ Server
 ---
 
 ### lia.doors.getData
+
+#### 📋 Purpose
+Cleans up corrupted door data in the database by removing invalid faction/class data
+
+#### ⏰ When Called
+During server initialization or when data corruption is detected
+
+#### ↩️ Returns
+* nil
+
+#### 🌐 Realm
+Server
+
+#### 💡 Example Usage
+
+#### 🔰 Low Complexity
+```lua
+    -- Simple: Run cleanup on server start
+    lia.doors.cleanupCorruptedData()
+
+```
+
+#### 📊 Medium Complexity
+```lua
+    -- Medium: Schedule cleanup with delay
+    hook.Add("InitPostEntity", "CleanupDoorData", function()
+        timer.Simple(2, function()
+            lia.doors.cleanupCorruptedData()
+        end)
+    end)
+
+```
+
+#### ⚙️ High Complexity
+```lua
+    -- High: Custom cleanup with logging and validation
+    function advancedDoorCleanup()
+        lia.information("Starting door data cleanup...")
+        lia.doors.cleanupCorruptedData()
+        -- Additional validation
+        local gamemode = SCHEMA and SCHEMA.folder or engine.ActiveGamemode()
+        local map = lia.data.getEquivalencyMap(game.GetMap())
+        local condition = "gamemode = " .. lia.db.convertDataType(gamemode) .. " AND map = " .. lia.db.convertDataType(map)
+        lia.db.query("SELECT COUNT(*) as count FROM lia_doors WHERE " .. condition):next(function(res)
+            local count = res.results[1].count
+            lia.information("Door cleanup completed. Total doors in database: " .. count)
+        end)
+    end
+
+```
+
+---
+
+### lia.doors.getCachedData
+
+#### 📋 Purpose
+Cleans up corrupted door data in the database by removing invalid faction/class data
+
+#### ⏰ When Called
+During server initialization or when data corruption is detected
+
+#### ↩️ Returns
+* nil
+
+#### 🌐 Realm
+Server
+
+#### 💡 Example Usage
+
+#### 🔰 Low Complexity
+```lua
+    -- Simple: Run cleanup on server start
+    lia.doors.cleanupCorruptedData()
+
+```
+
+#### 📊 Medium Complexity
+```lua
+    -- Medium: Schedule cleanup with delay
+    hook.Add("InitPostEntity", "CleanupDoorData", function()
+        timer.Simple(2, function()
+            lia.doors.cleanupCorruptedData()
+        end)
+    end)
+
+```
+
+#### ⚙️ High Complexity
+```lua
+    -- High: Custom cleanup with logging and validation
+    function advancedDoorCleanup()
+        lia.information("Starting door data cleanup...")
+        lia.doors.cleanupCorruptedData()
+        -- Additional validation
+        local gamemode = SCHEMA and SCHEMA.folder or engine.ActiveGamemode()
+        local map = lia.data.getEquivalencyMap(game.GetMap())
+        local condition = "gamemode = " .. lia.db.convertDataType(gamemode) .. " AND map = " .. lia.db.convertDataType(map)
+        lia.db.query("SELECT COUNT(*) as count FROM lia_doors WHERE " .. condition):next(function(res)
+            local count = res.results[1].count
+            lia.information("Door cleanup completed. Total doors in database: " .. count)
+        end)
+    end
+
+```
+
+---
+
+### lia.doors.updateCachedData
 
 #### 📋 Purpose
 Cleans up corrupted door data in the database by removing invalid faction/class data
