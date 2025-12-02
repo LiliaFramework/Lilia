@@ -25375,7 +25375,7 @@ Client
         hook.Run("SkinChanged", newSkin, oldSkin)
         -- Update player settings
         if LocalPlayer() then
-            LocalPlayer():SetNWString("skin_preference", newSkin)
+            LocalPlayer():setClientNetVar("skin_preference", newSkin)
         end
         -- Log comprehensive skin change
         lia.log.add(string.format("Derma skin changed from '%s' to '%s'",
@@ -25492,7 +25492,7 @@ Client
         hook.Run("SkinChanged", newSkin, oldSkin)
         -- Update player settings
         if LocalPlayer() then
-            LocalPlayer():SetNWString("skin_preference", newSkin)
+            LocalPlayer():setClientNetVar("skin_preference", newSkin)
         end
         -- Log comprehensive skin change
         lia.log.add(string.format("Derma skin changed from '%s' to '%s'",
@@ -25609,7 +25609,7 @@ Client
         hook.Run("SkinChanged", newSkin, oldSkin)
         -- Update player settings
         if LocalPlayer() then
-            LocalPlayer():SetNWString("skin_preference", newSkin)
+            LocalPlayer():setClientNetVar("skin_preference", newSkin)
         end
         -- Log comprehensive skin change
         lia.log.add(string.format("Derma skin changed from '%s' to '%s'",
@@ -25726,7 +25726,7 @@ Client
         hook.Run("SkinChanged", newSkin, oldSkin)
         -- Update player settings
         if LocalPlayer() then
-            LocalPlayer():SetNWString("skin_preference", newSkin)
+            LocalPlayer():setClientNetVar("skin_preference", newSkin)
         end
         -- Log comprehensive skin change
         lia.log.add(string.format("Derma skin changed from '%s' to '%s'",
@@ -25843,7 +25843,7 @@ Client
         hook.Run("SkinChanged", newSkin, oldSkin)
         -- Update player settings
         if LocalPlayer() then
-            LocalPlayer():SetNWString("skin_preference", newSkin)
+            LocalPlayer():setClientNetVar("skin_preference", newSkin)
         end
         -- Log comprehensive skin change
         lia.log.add(string.format("Derma skin changed from '%s' to '%s'",
@@ -25960,7 +25960,7 @@ Client
         hook.Run("SkinChanged", newSkin, oldSkin)
         -- Update player settings
         if LocalPlayer() then
-            LocalPlayer():SetNWString("skin_preference", newSkin)
+            LocalPlayer():setClientNetVar("skin_preference", newSkin)
         end
         -- Log comprehensive skin change
         lia.log.add(string.format("Derma skin changed from '%s' to '%s'",
@@ -49738,7 +49738,7 @@ Client
             return false
         end
         -- Check time-based restrictions
-        local deathTime = client:GetNWFloat("DeathTime", 0)
+        local deathTime = client:getNetVar("DeathTime", 0)
         local respawnDelay = lia.config.get("RespawnDelay", 5)
         if (CurTime() - deathTime) < respawnDelay then
             return false -- Too soon after death
@@ -49826,7 +49826,7 @@ Client
             return false
         end
         -- Check time-based restrictions
-        local deathTime = client:GetNWFloat("DeathTime", 0)
+        local deathTime = client:getNetVar("DeathTime", 0)
         local respawnDelay = lia.config.get("RespawnDelay", 5)
         if (CurTime() - deathTime) < respawnDelay then
             return false -- Too soon after death
@@ -49914,7 +49914,7 @@ Client
             return false
         end
         -- Check time-based restrictions
-        local deathTime = client:GetNWFloat("DeathTime", 0)
+        local deathTime = client:getNetVar("DeathTime", 0)
         local respawnDelay = lia.config.get("RespawnDelay", 5)
         if (CurTime() - deathTime) < respawnDelay then
             return false -- Too soon after death
@@ -50002,7 +50002,7 @@ Client
             return false
         end
         -- Check time-based restrictions
-        local deathTime = client:GetNWFloat("DeathTime", 0)
+        local deathTime = client:getNetVar("DeathTime", 0)
         local respawnDelay = lia.config.get("RespawnDelay", 5)
         if (CurTime() - deathTime) < respawnDelay then
             return false -- Too soon after death
@@ -53160,13 +53160,13 @@ Client
                 lia.gui.crosshair:SetVisible(false)
             end
             -- Adjust weapon view model
-            LocalPlayer():SetNWBool("ThirdPerson", true)
+            LocalPlayer():setClientNetVar("ThirdPerson", true)
         else
             -- Show HUD elements in first person
             if lia.gui.crosshair then
                 lia.gui.crosshair:SetVisible(true)
             end
-            LocalPlayer():SetNWBool("ThirdPerson", false)
+            LocalPlayer():setClientNetVar("ThirdPerson", false)
         end
     end
 
@@ -53189,10 +53189,10 @@ Client
         -- Adjust camera settings
         if newValue then
             -- Third person mode
-            client:SetNWBool("ThirdPerson", true)
+            client:setClientNetVar("ThirdPerson", true)
             -- Adjust camera distance based on character
             local cameraDistance = MODULE.GetThirdPersonDistance(char)
-            client:SetNWFloat("ThirdPersonDistance", cameraDistance)
+            client:setClientNetVar("ThirdPersonDistance", cameraDistance)
             -- Hide first person elements
             MODULE.HideFirstPersonElements()
             -- Adjust weapon positioning
@@ -53206,8 +53206,8 @@ Client
             surface.PlaySound("buttons/button9.wav")
         else
             -- First person mode
-            client:SetNWBool("ThirdPerson", false)
-            client:SetNWFloat("ThirdPersonDistance", 0)
+            client:setClientNetVar("ThirdPerson", false)
+            client:setClientNetVar("ThirdPersonDistance", 0)
             -- Show first person elements
             MODULE.ShowFirstPersonElements()
             -- Reset weapon positioning
@@ -53314,13 +53314,13 @@ Client
                 lia.gui.crosshair:SetVisible(false)
             end
             -- Adjust weapon view model
-            LocalPlayer():SetNWBool("ThirdPerson", true)
+            LocalPlayer():setClientNetVar("ThirdPerson", true)
         else
             -- Show HUD elements in first person
             if lia.gui.crosshair then
                 lia.gui.crosshair:SetVisible(true)
             end
-            LocalPlayer():SetNWBool("ThirdPerson", false)
+            LocalPlayer():setClientNetVar("ThirdPerson", false)
         end
     end
 
@@ -53343,10 +53343,10 @@ Client
         -- Adjust camera settings
         if newValue then
             -- Third person mode
-            client:SetNWBool("ThirdPerson", true)
+            client:setClientNetVar("ThirdPerson", true)
             -- Adjust camera distance based on character
             local cameraDistance = MODULE.GetThirdPersonDistance(char)
-            client:SetNWFloat("ThirdPersonDistance", cameraDistance)
+            client:setClientNetVar("ThirdPersonDistance", cameraDistance)
             -- Hide first person elements
             MODULE.HideFirstPersonElements()
             -- Adjust weapon positioning
@@ -53360,8 +53360,8 @@ Client
             surface.PlaySound("buttons/button9.wav")
         else
             -- First person mode
-            client:SetNWBool("ThirdPerson", false)
-            client:SetNWFloat("ThirdPersonDistance", 0)
+            client:setClientNetVar("ThirdPerson", false)
+            client:setClientNetVar("ThirdPersonDistance", 0)
             -- Show first person elements
             MODULE.ShowFirstPersonElements()
             -- Reset weapon positioning
@@ -53468,13 +53468,13 @@ Client
                 lia.gui.crosshair:SetVisible(false)
             end
             -- Adjust weapon view model
-            LocalPlayer():SetNWBool("ThirdPerson", true)
+            LocalPlayer():setClientNetVar("ThirdPerson", true)
         else
             -- Show HUD elements in first person
             if lia.gui.crosshair then
                 lia.gui.crosshair:SetVisible(true)
             end
-            LocalPlayer():SetNWBool("ThirdPerson", false)
+            LocalPlayer():setClientNetVar("ThirdPerson", false)
         end
     end
 
@@ -53497,10 +53497,10 @@ Client
         -- Adjust camera settings
         if newValue then
             -- Third person mode
-            client:SetNWBool("ThirdPerson", true)
+            client:setClientNetVar("ThirdPerson", true)
             -- Adjust camera distance based on character
             local cameraDistance = MODULE.GetThirdPersonDistance(char)
-            client:SetNWFloat("ThirdPersonDistance", cameraDistance)
+            client:setClientNetVar("ThirdPersonDistance", cameraDistance)
             -- Hide first person elements
             MODULE.HideFirstPersonElements()
             -- Adjust weapon positioning
@@ -53514,8 +53514,8 @@ Client
             surface.PlaySound("buttons/button9.wav")
         else
             -- First person mode
-            client:SetNWBool("ThirdPerson", false)
-            client:SetNWFloat("ThirdPersonDistance", 0)
+            client:setClientNetVar("ThirdPerson", false)
+            client:setClientNetVar("ThirdPersonDistance", 0)
             -- Show first person elements
             MODULE.ShowFirstPersonElements()
             -- Reset weapon positioning
@@ -53622,13 +53622,13 @@ Client
                 lia.gui.crosshair:SetVisible(false)
             end
             -- Adjust weapon view model
-            LocalPlayer():SetNWBool("ThirdPerson", true)
+            LocalPlayer():setClientNetVar("ThirdPerson", true)
         else
             -- Show HUD elements in first person
             if lia.gui.crosshair then
                 lia.gui.crosshair:SetVisible(true)
             end
-            LocalPlayer():SetNWBool("ThirdPerson", false)
+            LocalPlayer():setClientNetVar("ThirdPerson", false)
         end
     end
 
@@ -53651,10 +53651,10 @@ Client
         -- Adjust camera settings
         if newValue then
             -- Third person mode
-            client:SetNWBool("ThirdPerson", true)
+            client:setClientNetVar("ThirdPerson", true)
             -- Adjust camera distance based on character
             local cameraDistance = MODULE.GetThirdPersonDistance(char)
-            client:SetNWFloat("ThirdPersonDistance", cameraDistance)
+            client:setClientNetVar("ThirdPersonDistance", cameraDistance)
             -- Hide first person elements
             MODULE.HideFirstPersonElements()
             -- Adjust weapon positioning
@@ -53668,8 +53668,8 @@ Client
             surface.PlaySound("buttons/button9.wav")
         else
             -- First person mode
-            client:SetNWBool("ThirdPerson", false)
-            client:SetNWFloat("ThirdPersonDistance", 0)
+            client:setClientNetVar("ThirdPerson", false)
+            client:setClientNetVar("ThirdPersonDistance", 0)
             -- Show first person elements
             MODULE.ShowFirstPersonElements()
             -- Reset weapon positioning
@@ -56040,8 +56040,8 @@ Client
     function MODULE:VendorExited()
         local client = LocalPlayer()
         -- Clear vendor interaction state
-        client:setNetVar("currentVendor", nil)
-        client:setNetVar("vendorMode", nil)
+        client:setClientNetVar("currentVendor", nil)
+        client:setClientNetVar("vendorMode", nil)
         -- Close vendor UI
         if lia.gui.vendor then
             lia.gui.vendor:Remove()
@@ -56062,7 +56062,7 @@ Client
         local exitTime = CurTime()
         local char = client:getChar()
         -- Log vendor session end
-        local sessionStart = client:getNetVar("vendorSessionStart", 0)
+        local sessionStart = client:getClientNetVar("vendorSessionStart", 0)
         local sessionDuration = exitTime - sessionStart
         if sessionDuration > 0 then
             lia.log.add(string.format("Vendor session ended - Duration: %.2f seconds", sessionDuration), FLAG_NORMAL)
@@ -56070,10 +56070,10 @@ Client
             MODULE.TrackVendorSession(client, sessionDuration)
         end
         -- Clear all vendor-related network variables
-        client:setNetVar("currentVendor", nil)
-        client:setNetVar("vendorMode", nil)
-        client:setNetVar("vendorSessionStart", nil)
-        client:setNetVar("vendorTransactionCount", nil)
+        client:setClientNetVar("currentVendor", nil)
+        client:setClientNetVar("vendorMode", nil)
+        client:setClientNetVar("vendorSessionStart", nil)
+        client:setClientNetVar("vendorTransactionCount", nil)
         -- Close all vendor-related UI panels
         MODULE.CloseAllVendorPanels()
         -- Reset player state
@@ -56154,8 +56154,8 @@ Client
     function MODULE:VendorExited()
         local client = LocalPlayer()
         -- Clear vendor interaction state
-        client:setNetVar("currentVendor", nil)
-        client:setNetVar("vendorMode", nil)
+        client:setClientNetVar("currentVendor", nil)
+        client:setClientNetVar("vendorMode", nil)
         -- Close vendor UI
         if lia.gui.vendor then
             lia.gui.vendor:Remove()
@@ -56176,7 +56176,7 @@ Client
         local exitTime = CurTime()
         local char = client:getChar()
         -- Log vendor session end
-        local sessionStart = client:getNetVar("vendorSessionStart", 0)
+        local sessionStart = client:getClientNetVar("vendorSessionStart", 0)
         local sessionDuration = exitTime - sessionStart
         if sessionDuration > 0 then
             lia.log.add(string.format("Vendor session ended - Duration: %.2f seconds", sessionDuration), FLAG_NORMAL)
@@ -56184,10 +56184,10 @@ Client
             MODULE.TrackVendorSession(client, sessionDuration)
         end
         -- Clear all vendor-related network variables
-        client:setNetVar("currentVendor", nil)
-        client:setNetVar("vendorMode", nil)
-        client:setNetVar("vendorSessionStart", nil)
-        client:setNetVar("vendorTransactionCount", nil)
+        client:setClientNetVar("currentVendor", nil)
+        client:setClientNetVar("vendorMode", nil)
+        client:setClientNetVar("vendorSessionStart", nil)
+        client:setClientNetVar("vendorTransactionCount", nil)
         -- Close all vendor-related UI panels
         MODULE.CloseAllVendorPanels()
         -- Reset player state
@@ -56268,8 +56268,8 @@ Client
     function MODULE:VendorExited()
         local client = LocalPlayer()
         -- Clear vendor interaction state
-        client:setNetVar("currentVendor", nil)
-        client:setNetVar("vendorMode", nil)
+        client:setClientNetVar("currentVendor", nil)
+        client:setClientNetVar("vendorMode", nil)
         -- Close vendor UI
         if lia.gui.vendor then
             lia.gui.vendor:Remove()
@@ -56290,7 +56290,7 @@ Client
         local exitTime = CurTime()
         local char = client:getChar()
         -- Log vendor session end
-        local sessionStart = client:getNetVar("vendorSessionStart", 0)
+        local sessionStart = client:getClientNetVar("vendorSessionStart", 0)
         local sessionDuration = exitTime - sessionStart
         if sessionDuration > 0 then
             lia.log.add(string.format("Vendor session ended - Duration: %.2f seconds", sessionDuration), FLAG_NORMAL)
@@ -56298,10 +56298,10 @@ Client
             MODULE.TrackVendorSession(client, sessionDuration)
         end
         -- Clear all vendor-related network variables
-        client:setNetVar("currentVendor", nil)
-        client:setNetVar("vendorMode", nil)
-        client:setNetVar("vendorSessionStart", nil)
-        client:setNetVar("vendorTransactionCount", nil)
+        client:setClientNetVar("currentVendor", nil)
+        client:setClientNetVar("vendorMode", nil)
+        client:setClientNetVar("vendorSessionStart", nil)
+        client:setClientNetVar("vendorTransactionCount", nil)
         -- Close all vendor-related UI panels
         MODULE.CloseAllVendorPanels()
         -- Reset player state
@@ -56382,8 +56382,8 @@ Client
     function MODULE:VendorExited()
         local client = LocalPlayer()
         -- Clear vendor interaction state
-        client:setNetVar("currentVendor", nil)
-        client:setNetVar("vendorMode", nil)
+        client:setClientNetVar("currentVendor", nil)
+        client:setClientNetVar("vendorMode", nil)
         -- Close vendor UI
         if lia.gui.vendor then
             lia.gui.vendor:Remove()
@@ -56404,7 +56404,7 @@ Client
         local exitTime = CurTime()
         local char = client:getChar()
         -- Log vendor session end
-        local sessionStart = client:getNetVar("vendorSessionStart", 0)
+        local sessionStart = client:getClientNetVar("vendorSessionStart", 0)
         local sessionDuration = exitTime - sessionStart
         if sessionDuration > 0 then
             lia.log.add(string.format("Vendor session ended - Duration: %.2f seconds", sessionDuration), FLAG_NORMAL)
@@ -56412,10 +56412,10 @@ Client
             MODULE.TrackVendorSession(client, sessionDuration)
         end
         -- Clear all vendor-related network variables
-        client:setNetVar("currentVendor", nil)
-        client:setNetVar("vendorMode", nil)
-        client:setNetVar("vendorSessionStart", nil)
-        client:setNetVar("vendorTransactionCount", nil)
+        client:setClientNetVar("currentVendor", nil)
+        client:setClientNetVar("vendorMode", nil)
+        client:setClientNetVar("vendorSessionStart", nil)
+        client:setClientNetVar("vendorTransactionCount", nil)
         -- Close all vendor-related UI panels
         MODULE.CloseAllVendorPanels()
         -- Reset player state
@@ -56498,7 +56498,7 @@ Client
     -- Medium: Update voice state
     function MODULE:VoiceToggled(enabled)
         local client = LocalPlayer()
-        client:setNetVar("voiceEnabled", enabled)
+        client:setClientNetVar("voiceEnabled", enabled)
         if enabled then
             -- Show voice icon
             MODULE.ShowVoiceIcon()
@@ -56518,7 +56518,7 @@ Client
         if not IsValid(client) then return end
         local char = client:getChar()
         -- Update voice state
-        client:setNetVar("voiceEnabled", enabled)
+        client:setClientNetVar("voiceEnabled", enabled)
         -- Log voice toggle
         lia.log.add(string.format("Voice %s for %s", enabled and "enabled" or "disabled", client:Name()), FLAG_NORMAL)
         if enabled then
@@ -56577,7 +56577,7 @@ Client
     -- Medium: Update voice state
     function MODULE:VoiceToggled(enabled)
         local client = LocalPlayer()
-        client:setNetVar("voiceEnabled", enabled)
+        client:setClientNetVar("voiceEnabled", enabled)
         if enabled then
             -- Show voice icon
             MODULE.ShowVoiceIcon()
@@ -56597,7 +56597,7 @@ Client
         if not IsValid(client) then return end
         local char = client:getChar()
         -- Update voice state
-        client:setNetVar("voiceEnabled", enabled)
+        client:setClientNetVar("voiceEnabled", enabled)
         -- Log voice toggle
         lia.log.add(string.format("Voice %s for %s", enabled and "enabled" or "disabled", client:Name()), FLAG_NORMAL)
         if enabled then
@@ -56656,7 +56656,7 @@ Client
     -- Medium: Update voice state
     function MODULE:VoiceToggled(enabled)
         local client = LocalPlayer()
-        client:setNetVar("voiceEnabled", enabled)
+        client:setClientNetVar("voiceEnabled", enabled)
         if enabled then
             -- Show voice icon
             MODULE.ShowVoiceIcon()
@@ -56676,7 +56676,7 @@ Client
         if not IsValid(client) then return end
         local char = client:getChar()
         -- Update voice state
-        client:setNetVar("voiceEnabled", enabled)
+        client:setClientNetVar("voiceEnabled", enabled)
         -- Log voice toggle
         lia.log.add(string.format("Voice %s for %s", enabled and "enabled" or "disabled", client:Name()), FLAG_NORMAL)
         if enabled then
@@ -56735,7 +56735,7 @@ Client
     -- Medium: Update voice state
     function MODULE:VoiceToggled(enabled)
         local client = LocalPlayer()
-        client:setNetVar("voiceEnabled", enabled)
+        client:setClientNetVar("voiceEnabled", enabled)
         if enabled then
             -- Show voice icon
             MODULE.ShowVoiceIcon()
@@ -56755,7 +56755,7 @@ Client
         if not IsValid(client) then return end
         local char = client:getChar()
         -- Update voice state
-        client:setNetVar("voiceEnabled", enabled)
+        client:setClientNetVar("voiceEnabled", enabled)
         -- Log voice toggle
         lia.log.add(string.format("Voice %s for %s", enabled and "enabled" or "disabled", client:Name()), FLAG_NORMAL)
         if enabled then
@@ -57839,7 +57839,7 @@ Client
             return {"moderatelyInjured", Color(255, 200, 0)}
         end
         -- Check for stamina-based injury
-        local stamina = client:getNetVar("stamina", 100)
+        local stamina = client:getLocalVar("stamina", 100)
         if stamina < 10 then
             return {"exhausted", Color(100, 100, 255)}
         end

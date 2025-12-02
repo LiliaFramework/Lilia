@@ -1,4 +1,4 @@
---[[
+﻿--[[
     Data Library
 
     Data persistence, serialization, and management system for the Lilia framework.

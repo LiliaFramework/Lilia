@@ -1,4 +1,4 @@
---[[
+﻿--[[
     Network Library
 
     Network communication and data streaming system for the Lilia framework.

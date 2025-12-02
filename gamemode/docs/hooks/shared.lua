@@ -1,4 +1,4 @@
---[[
+﻿--[[
     Shared Hooks
 
     Shared hook system for the Lilia framework.

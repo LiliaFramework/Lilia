@@ -3898,7 +3898,7 @@ Server
     -- High: Complex stamina system with effects
     local char = player:getChar()
     if char then
-        local currentStamina = player:getNetVar("stamina", 100)
+        local currentStamina = player:getLocalVar("stamina", 100)
         local maxStamina = hook.Run("GetCharMaxStamina", char) or 100
         local restoreAmount = math.min(amount, maxStamina - currentStamina)
         player:restoreStamina(restoreAmount)
@@ -3944,7 +3944,7 @@ Server
 ```lua
     -- Medium: Consume stamina with validation
     local cost = 15
-    local currentStamina = player:getNetVar("stamina", 100)
+    local currentStamina = player:getLocalVar("stamina", 100)
     if currentStamina >= cost then
         player:consumeStamina(cost)
         player:notify("Stamina used: " .. cost)
@@ -3959,7 +3959,7 @@ Server
     -- High: Complex stamina system with effects
     local char = player:getChar()
     if char then
-        local currentStamina = player:getNetVar("stamina", 100)
+        local currentStamina = player:getLocalVar("stamina", 100)
         local maxStamina = hook.Run("GetCharMaxStamina", char) or 100
         local staminaRatio = currentStamina / maxStamina
         if staminaRatio < 0.25 then
@@ -4608,6 +4608,37 @@ Notes: Broadcasts to all clients so other players can see the player's state cha
     player:setNetVar("level", newValue)
     hook.Run("OnPlayerLevelUp", player, oldValue, newValue)
     player:notifySuccess("Level up! " .. oldValue .. " → " .. newValue)
+
+```
+
+---
+
+### setClientNetVar
+
+#### 📋 Purpose
+Sets a client-specific net variable that only syncs to this client
+
+#### ⏰ When Called
+When you need to set a net variable that should only be visible to this specific client
+
+#### ⚙️ Parameters
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `key` | **string** | The variable key |
+| `value` | **any** | The value to store |
+
+#### ↩️ Returns
+* nil
+
+#### 🌐 Realm
+Server
+
+#### 💡 Example Usage
+
+```lua
+    -- Send a private message only to this player
+    player:setClientNetVar("privateMessage", "This is only for you!")
 
 ```
 

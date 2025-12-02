@@ -1,5 +1,30 @@
 # Changelog
 
+## Version 7.15 (December 02, 2025)
+
+### Changes
+
+- More Optimizations!
+- Cached getItemTable
+- Successfully updated workshop Lilia to 7.12
+- Caching for lessl ag
+- Successfully updated workshop Lilia to 7.10
+- Huge Optimization in Stamina
+- Successfully updated workshop Lilia to 7.098
+- Door Optimization
+- Overlap Bug Fix
+- Update admin.lua
+- requestString instead of Derma_Query
+- Language Cache
+- Delete sh_extensions.lua
+- Better lia_storage UI
+- Successfully updated workshop Lilia to 7.090
+- Vendors Overhaul, Optimizations and Bug Fixes
+- Minor Optimizations
+- Missing Localizations
+- Successfully updated workshop Lilia to 7.086
+- Minor Bug Fixes
+
 ## Version 7.12 (December 02, 2025)
 
 ### Changes

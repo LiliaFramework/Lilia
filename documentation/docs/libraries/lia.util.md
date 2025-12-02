@@ -1869,7 +1869,7 @@ Client
         ["type"] = {"table", {"option1", "option2", "option3"}}
     }, function(information)
         -- Process the information
-        entity:SetNWString("Name", information.name)
+        entity:setNetVar("Name", information.name)
     end)
 
 ```

@@ -1,4 +1,4 @@
-SWEP.PrintName = L("handsWeaponName")
+﻿SWEP.PrintName = L("handsWeaponName")
 SWEP.Slot = 0
 SWEP.SlotPos = 1
 SWEP.DrawAmmo = false
@@ -78,7 +78,6 @@ end
 
 function SWEP:Think()
     if not IsValid(self:GetOwner()) then return end
-    -- Cache IsHoldingObject result to avoid calling it every frame in CreateMove
     self.cachedIsHoldingObject = self:IsHoldingObject()
     if CLIENT then
         local viewModel = self:GetOwner():GetViewModel()

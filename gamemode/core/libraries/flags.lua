@@ -1,4 +1,4 @@
---[[
+﻿--[[
     Flags Library
 
     Character permission and access control system for the Lilia framework.

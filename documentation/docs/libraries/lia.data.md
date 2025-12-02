@@ -763,7 +763,7 @@ Server
                 -- Restore custom properties
                 for k, v in pairs(entData) do
                     if not defaultCols[k] then
-                        ent:SetNWVar(k, v)
+                        ent:setNetVar(k, v)
                     end
                 end
             end

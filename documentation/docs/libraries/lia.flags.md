@@ -59,11 +59,11 @@ Shared
     -- High: Add flag with complex callback and validation
     lia.flag.add("M", "flagModerator", function(client, isGiven)
     if isGiven then
-        client:SetNWBool("isModerator", true)
+        client:setNetVar("isModerator", true)
         client:ChatPrint("Moderator privileges granted!")
         -- Additional setup logic here
         else
-            client:SetNWBool("isModerator", false)
+            client:setNetVar("isModerator", false)
             client:ChatPrint("Moderator privileges revoked!")
             -- Cleanup logic here
         end

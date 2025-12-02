@@ -361,3 +361,196 @@ Server
 
 ---
 
+### lia.net.checkBadType
+
+#### 📋 Purpose
+Checks if an object contains invalid types (functions) that cannot be sent over the network
+
+#### ⏰ When Called
+Before setting net variables to ensure they don't contain functions
+
+#### ⚙️ Parameters
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `name` | **string** | The name/key of the net variable being checked |
+| `object` | **any** | The object to check for invalid types |
+
+#### ↩️ Returns
+* boolean - true if bad types are found, nil otherwise
+
+#### 🌐 Realm
+Server
+
+#### 💡 Example Usage
+
+```lua
+    -- Check if a table contains functions before setting as net var
+    local data = {name = "test", callback = function() end}
+    if not lia.net.checkBadType("playerData", data) then
+        lia.net.setNetVar("playerData", data)
+    end
+
+```
+
+---
+
+### lia.net.setNetVar
+
+#### 📋 Purpose
+Sets a global net variable that syncs to all clients or a specific receiver
+
+#### ⏰ When Called
+When you need to set server-side variables that should be synchronized with clients
+
+#### ⚙️ Parameters
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `key` | **string** | The variable key name |
+| `value` | **any** | The value to store (cannot contain functions) |
+| `receiver` | **Player, optional** | Specific player to send to, nil broadcasts to all |
+
+#### ↩️ Returns
+* nil
+
+#### 🌐 Realm
+Server
+
+#### 💡 Example Usage
+
+#### 🔰 Low Complexity
+```lua
+    -- Simple: Set a global variable for all players
+    lia.net.setNetVar("serverTime", os.time())
+
+```
+
+#### 📊 Medium Complexity
+```lua
+    -- Medium: Set variable for specific player
+    local player = player.GetByID(1)
+    if player then
+        lia.net.setNetVar("playerScore", 100, player)
+    end
+
+```
+
+#### ⚙️ High Complexity
+```lua
+    -- High: Set complex data structure with validation
+    local gameSettings = {
+        maxPlayers = 32,
+        gameMode = "survival",
+        difficulty = "hard",
+        features = {
+            pvp = true,
+            crafting = true,
+            trading = false
+        }
+    }
+    -- Validate the data before setting
+    if not lia.net.checkBadType("gameSettings", gameSettings) then
+        lia.net.setNetVar("gameSettings", gameSettings)
+    else
+        lia.log.add("Failed to set game settings: contains invalid data types")
+    end
+
+```
+
+---
+
+### lia.net.setClientNetVar
+
+#### 📋 Purpose
+Sets a client-specific net variable that only syncs to one client
+
+#### ⏰ When Called
+When you need to set a net variable that should only be visible to a specific client
+
+#### ⚙️ Parameters
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `client` | **Player** | The client to send the net variable to |
+| `key` | **string** | The variable key |
+| `value` | **any** | The value to store |
+
+#### ↩️ Returns
+* nil
+
+#### 🌐 Realm
+Server
+
+#### 💡 Example Usage
+
+```lua
+    -- Send a private message only to a specific player
+    lia.net.setClientNetVar(player, "privateMessage", "This is only for you!")
+
+```
+
+---
+
+### lia.net.getNetVar
+
+#### 📋 Purpose
+Retrieves a global net variable value
+
+#### ⏰ When Called
+When you need to get the value of a net variable that was set with lia.net.setNetVar
+
+#### ⚙️ Parameters
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `key` | **string** | The variable key name |
+| `default` | **any, optional** | Default value to return if the key doesn't exist |
+
+#### ↩️ Returns
+* any - The stored value or the default value if not found
+
+#### 🌐 Realm
+Shared
+
+#### 💡 Example Usage
+
+#### 🔰 Low Complexity
+```lua
+    -- Simple: Get a stored value
+    local serverTime = lia.net.getNetVar("serverTime")
+    if serverTime then
+        print("Server time:", serverTime)
+    end
+
+```
+
+#### 📊 Medium Complexity
+```lua
+    -- Medium: Get with default value
+    local maxPlayers = lia.net.getNetVar("maxPlayers", 32)
+    print("Max players:", maxPlayers)
+
+```
+
+#### ⚙️ High Complexity
+```lua
+    -- High: Get complex data structure
+    local gameSettings = lia.net.getNetVar("gameSettings")
+    if gameSettings then
+        print("Game mode:", gameSettings.gameMode)
+        print("Difficulty:", gameSettings.difficulty)
+        print("PVP enabled:", gameSettings.features.pvp)
+    else
+        -- Use defaults if not set
+        gameSettings = {
+            gameMode = "default",
+            difficulty = "normal",
+            features = {pvp = false}
+        }
+    end
+
+```
+
+---
+

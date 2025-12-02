@@ -1,4 +1,4 @@
---[[
+﻿--[[
     Time Library
 
     Time manipulation, formatting, and calculation system for the Lilia framework.
