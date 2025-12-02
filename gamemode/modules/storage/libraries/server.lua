@@ -63,6 +63,8 @@ end
 local PROHIBITED_ACTIONS = {
     [L("equip")] = true,
     [L("unequip")] = true,
+    [L("use")] = true,
+    [L("drop")] = true,
 }
 
 function MODULE:CanPlayerInteractItem(_, action, itemObject)

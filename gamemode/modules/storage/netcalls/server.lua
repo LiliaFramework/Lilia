@@ -79,3 +79,61 @@ net.Receive("liaStorageTransfer", function(_, client)
         if IsValid(client) then client:notifyInfoLocalized("itemOnGround") end
     end)
 end)
+
+net.Receive("liaStorageSetPassword", function(_, client)
+    local action = net.ReadString()
+    local storageFunc = function()
+        if not IsValid(client.liaStorageEntity) then return end
+        if client:GetPos():Distance(client.liaStorageEntity:GetPos()) > 128 then return end
+        return client.liaStorageEntity
+    end
+
+    local storage = storageFunc()
+    if not storage or not storage.receivers[client] then return end
+    if action == "remove" then
+        if not storage.password then
+            client:notifyErrorLocalized("storageNotLocked")
+            return
+        end
+
+        storage.password = nil
+        storage:setNetVar("locked", false)
+        client:notifySuccessLocalized("storageUnlocked")
+        lia.log.add(client, "storagePasswordRemoved", storage:GetClass())
+    elseif action == "set" then
+        local newPassword = net.ReadString()
+        if not newPassword or newPassword == "" then
+            client:notifyErrorLocalized("invalidPassword")
+            return
+        end
+
+        storage.password = newPassword
+        storage:setNetVar("locked", true)
+        client:notifySuccessLocalized("storageLocked")
+        lia.log.add(client, "storagePasswordSet", storage:GetClass())
+    elseif action == "change" then
+        if not storage.password then
+            client:notifyErrorLocalized("storageNotLocked")
+            return
+        end
+
+        local oldPassword = net.ReadString()
+        local newPassword = net.ReadString()
+        if storage.password ~= oldPassword then
+            client:notifyErrorLocalized("wrongPassword")
+            return
+        end
+
+        if not newPassword or newPassword == "" then
+            client:notifyErrorLocalized("invalidPassword")
+            return
+        end
+
+        storage.password = newPassword
+        storage:setNetVar("locked", true)
+        client:notifySuccessLocalized("storagePasswordChanged")
+        lia.log.add(client, "storagePasswordChanged", storage:GetClass())
+    end
+
+    hook.Run("UpdateEntityPersistence", storage)
+end)
