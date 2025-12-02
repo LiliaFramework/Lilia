@@ -28,6 +28,12 @@ function PANEL:Init()
         self:onCharListUpdated(oldCharList, newCharList)
     end)
 
+    self.adminPrivilegesUpdateHook = "liaCharacterAdminPrivilegesUpdate" .. tostring(self)
+    hook.Add("AdminPrivilegesUpdated", self.adminPrivilegesUpdateHook, function()
+        if not IsValid(self) then return end
+        self:createStartButton()
+    end)
+
     self.tabs = self:Add("DPanel")
     self.tabs:Dock(TOP)
     self.tabs:DockMargin(64, 32, 64, 0)
@@ -585,7 +591,7 @@ function PANEL:createSelectedCharacterInfoPanel(character)
     self.selectBtn.DoClick = function()
         if character:isBanned() then
             local characterName = character:getName()
-            Derma_Query(L("pkDialogMessage", characterName), L("permaKillTitle"), L("iAcknowledge"), function() end)
+            LocalPlayer():requestString(L("permaKillTitle"), L("pkDialogMessage", characterName), function() end)
             return
         end
 
@@ -829,6 +835,7 @@ function PANEL:OnRemove()
     hook.Remove("PostDrawOpaqueRenderables", "liaMainMenuPostDrawOpaqueRenderables")
     hook.Remove("PreDrawPhysgunBeam", "liaMainMenuPreDrawPhysgunBeam")
     if self.charListUpdateHook then hook.Remove("CharListUpdated", self.charListUpdateHook) end
+    if self.adminPrivilegesUpdateHook then hook.Remove("AdminPrivilegesUpdated", self.adminPrivilegesUpdateHook) end
     if render.oldDrawBeam then
         render.DrawBeam = render.oldDrawBeam
         render.oldDrawBeam = nil
