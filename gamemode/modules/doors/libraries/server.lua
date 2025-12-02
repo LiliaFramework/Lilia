@@ -1,4 +1,4 @@
-﻿--[[
+--[[
     Doors Library Server
 
     Server-side door management and configuration system for the Lilia framework.

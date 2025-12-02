@@ -1,4 +1,4 @@
-﻿ITEM.name = "bagName"
+ITEM.name = "bagName"
 ITEM.desc = "bagDesc"
 ITEM.model = "models/props_c17/suitcase001a.mdl"
 ITEM.category = "storage"

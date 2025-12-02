@@ -1,4 +1,4 @@
-﻿NAME = "German"
+NAME = "German"
 LANGUAGE = {
     mustProvideString = "Es muss ein String angegeben werden",
     use = "Benutzen",

@@ -1,4 +1,4 @@
-﻿net.Receive("liaPlayerRespawn", function(_, client)
+net.Receive("liaPlayerRespawn", function(_, client)
     if not IsValid(client) or client:Alive() then return end
     local char = client:getChar()
     if not char then return end
@@ -118,10 +118,12 @@ net.Receive("liaCheckHack", function(_, client)
     if IsValid(client) then
         lia.log.add(client, "cheaterDetected", client:Name(), client:SteamID())
         client:notifyErrorLocalized("caughtCheating")
+        -- Warn staff
         for _, p in player.Iterator() do
             if p:isStaffOnDuty() or p:hasPrivilege("receiveCheaterNotifications") then p:notifyWarningLocalized("cheaterDetectedStaff", client:Name(), client:SteamID()) end
         end
 
+        -- Add warning to player
         if client:getChar() then
             local warnsModule = lia.module.get("administration")
             if warnsModule and warnsModule.AddWarning then
@@ -132,6 +134,7 @@ net.Receive("liaCheckHack", function(_, client)
     end
 
     hook.Run("OnCheaterCaught", client)
+    -- Removed automatic punishment - only warn staff
 end)
 
 net.Receive("liaVerifyCheatsResponse", function(_, client)
@@ -730,6 +733,7 @@ net.Receive("liaInvAct", function(_, client)
 end)
 
 net.Receive("liaRunInteraction", function(_, ply)
+
     local name = net.ReadString()
     local hasEntity = net.ReadBool()
     local tracedEntity = hasEntity and net.ReadEntity() or nil

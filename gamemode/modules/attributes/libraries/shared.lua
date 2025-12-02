@@ -1,4 +1,4 @@
-﻿function MODULE:CalcStaminaChange(client)
+function MODULE:CalcStaminaChange(client)
     local char = client:getChar()
     if not char or client:GetMoveType() == MOVETYPE_NOCLIP then return 0 end
     local walkSpeed = lia.config.get("WalkSpeed", 100)

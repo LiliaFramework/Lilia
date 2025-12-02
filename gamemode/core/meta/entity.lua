@@ -1290,7 +1290,7 @@ if SERVER then
 ]]
     function entityMeta:setNetVar(key, value, receiver)
         if not IsValid(self) then return end
-        if checkBadType(key, value) then return end
+        if lia.net.checkBadType(key, value) then return end
         lia.net[self] = lia.net[self] or {}
         local oldValue = lia.net[self][key]
         if oldValue ~= value then lia.net[self][key] = value end

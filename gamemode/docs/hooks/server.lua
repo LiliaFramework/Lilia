@@ -1,4 +1,4 @@
-﻿--[[
+--[[
     Server-Side Hooks
 
     Server-side hook system for the Lilia framework.
@@ -9064,9 +9064,9 @@ end
             end
 
             -- Set character-specific data on player
-            client:SetNWString("characterName", character:getName())
-            client:SetNWInt("characterID", character:getID())
-            client:SetNWString("characterFaction", character:getFaction() or "")
+            client:setNetVar("characterName", character:getName())
+            client:setNetVar("characterID", character:getID())
+            client:setNetVar("characterFaction", character:getFaction() or "")
         end
 
         -- Helper function to send selection confirmation
@@ -25925,11 +25925,11 @@ end
         end
 
         -- Check cooldown
-        local lastPickup = activator:GetNWFloat("lastMoneyPickup", 0)
+        local lastPickup = activator:getLocalVar("lastMoneyPickup", 0)
         if CurTime() - lastPickup < 1 then
             return false -- Too soon
         end
-        activator:SetNWFloat("lastMoneyPickup", CurTime())
+        activator:setLocalVar("lastMoneyPickup", CurTime())
 
         return true
     end)
@@ -27572,7 +27572,7 @@ end
         end
 
         -- Check for recent spam
-        local lastOOC = speaker:GetNWFloat("lastOOC", 0)
+        local lastOOC = speaker:getLocalVar("lastOOC", 0)
         local timeSince = CurTime() - lastOOC
         if timeSince < 1 then
             baseDelay = baseDelay * 2 -- Double delay for spam
@@ -28373,7 +28373,7 @@ end
         end
 
         -- Check for vehicle flag
-        if entity:GetNWBool("isVehicle", false) then
+        if entity:getNetVar("isVehicle", false) then
             return true
         end
 

@@ -1,4 +1,4 @@
-﻿--[[
+--[[
     Player Meta
 
     Player management system for the Lilia framework.
@@ -2970,16 +2970,18 @@ function playerMeta:networkAnimation(active, boneData)
         net.WriteTable(boneData)
         net.Broadcast()
     else
+        -- Initialize bone cache if it doesn't exist
         if not self.liaBoneCache then self.liaBoneCache = {} end
         for name, ang in pairs(boneData) do
             local i = self:LookupBone(name)
             if i then
                 local targetAng = active and ang or angle_zero
                 local cachedAng = self.liaBoneCache[i]
+                -- Only update if the angle has actually changed (compare components)
                 local shouldUpdate = true
                 if cachedAng then
                     local diff = math.abs(cachedAng.p - targetAng.p) + math.abs(cachedAng.y - targetAng.y) + math.abs(cachedAng.r - targetAng.r)
-                    shouldUpdate = diff > 0.001
+                    shouldUpdate = diff > 0.001 -- Small threshold to account for floating point precision
                 end
 
                 if shouldUpdate then
@@ -4367,7 +4369,7 @@ if SERVER then
         -- High: Complex stamina system with effects
         local char = player:getChar()
         if char then
-            local currentStamina = player:getNetVar("stamina", 100)
+            local currentStamina = player:getLocalVar("stamina", 100)
             local maxStamina = hook.Run("GetCharMaxStamina", char) or 100
             local restoreAmount = math.min(amount, maxStamina - currentStamina)
             player:restoreStamina(restoreAmount)
@@ -4418,7 +4420,7 @@ if SERVER then
         ```lua
         -- Medium: Consume stamina with validation
         local cost = 15
-        local currentStamina = player:getNetVar("stamina", 100)
+        local currentStamina = player:getLocalVar("stamina", 100)
         if currentStamina >= cost then
             player:consumeStamina(cost)
             player:notify("Stamina used: " .. cost)
@@ -4432,7 +4434,7 @@ if SERVER then
         -- High: Complex stamina system with effects
         local char = player:getChar()
         if char then
-            local currentStamina = player:getNetVar("stamina", 100)
+            local currentStamina = player:getLocalVar("stamina", 100)
             local maxStamina = hook.Run("GetCharMaxStamina", char) or 100
             local staminaRatio = currentStamina / maxStamina
             if staminaRatio < 0.25 then
@@ -5310,9 +5312,10 @@ if SERVER then
         ```
 ]]
     function playerMeta:setNetVar(key, value)
-        if checkBadType(key, value) then return end
+        if lia.net.checkBadType(key, value) then return end
         lia.net[self] = lia.net[self] or {}
         local oldValue = lia.net[self][key]
+        if oldValue == value then return end
         lia.net[self][key] = value
         net.Start("liaNetVar")
         net.WriteUInt(self:EntIndex(), 16)
@@ -5321,6 +5324,48 @@ if SERVER then
         net.Broadcast()
         if not self:IsBot() then
             net.Start("liaNetLocal")
+            net.WriteString(key)
+            net.WriteType(value)
+            net.Send(self)
+        end
+
+        hook.Run("NetVarChanged", self, key, oldValue, value)
+    end
+
+    --[[
+        Purpose:
+            Sets a client-specific net variable that only syncs to this client
+
+        When Called:
+            When you need to set a net variable that should only be visible to this specific client
+
+        Parameters:
+            key (string)
+                The variable key
+            value (any)
+                The value to store
+
+        Returns:
+            nil
+
+        Realm:
+            Server
+
+        Example Usage:
+            ```lua
+            -- Send a private message only to this player
+            player:setClientNetVar("privateMessage", "This is only for you!")
+            ```
+    ]]
+    function playerMeta:setClientNetVar(key, value)
+        if lia.net.checkBadType(key, value) then return end
+        lia.net[self] = lia.net[self] or {}
+        local oldValue = lia.net[self][key]
+        if oldValue == value then return end
+        lia.net[self][key] = value
+        if not lia.shuttingDown then
+            net.Start("liaClientNetVar")
+            net.WriteUInt(self:EntIndex(), 16)
             net.WriteString(key)
             net.WriteType(value)
             net.Send(self)
@@ -5357,9 +5402,11 @@ if SERVER then
         lia.localvars = lia.localvars or {}
         lia.localvars[self] = lia.localvars[self] or {}
         lia.localvars[self][key] = value
+        -- Automatically network stamina changes (similar to Helix's approach)
         if key == "stamina" then
             lia.net[self] = lia.net[self] or {}
             local netOldValue = lia.net[self][key]
+            -- Only network if value actually changed
             if netOldValue ~= value then
                 lia.net[self][key] = value
                 if not self:IsBot() then
@@ -5537,6 +5584,7 @@ else
     ]]
     function playerMeta:getLocalVar(key, default)
         if not IsValid(self) then return default end
+        -- For stamina on LocalPlayer, read from networked data
         if key == "stamina" and self == LocalPlayer() then
             local idx = self:EntIndex()
             if lia.net[idx] and lia.net[idx][key] ~= nil then return lia.net[idx][key] end

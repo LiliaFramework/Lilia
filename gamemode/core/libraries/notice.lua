@@ -1,4 +1,4 @@
-﻿--[[
+--[[
     Notice Library
 
     Player notification and messaging system for the Lilia framework.
@@ -330,9 +330,9 @@ else
         ```lua
         -- High: Display notifications based on conditions
         local player = LocalPlayer()
-        if player:GetNWInt("health") < 25 then
+        if player:getNetVar("health", 100) < 25 then
             lia.notices.notify(nil, "Health critical! Find medical attention!", "error")
-            elseif player:GetNWInt("health") < 50 then
+            elseif player:getNetVar("health", 100) < 50 then
                 lia.notices.notify(nil, "Health low - be careful!", "warning")
                 else
                     lia.notices.notify(nil, "Health status: Good", "success")
@@ -394,7 +394,7 @@ else
         ```lua
         -- High: Display localized notifications with multiple parameters
         local player = LocalPlayer()
-        local health = player:GetNWInt("health")
+        local health = player:getNetVar("health", 100)
         local maxHealth = player:GetMaxHealth()
         local healthPercent = math.floor((health / maxHealth) * 100)
 

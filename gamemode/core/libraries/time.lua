@@ -1,4 +1,4 @@
-﻿--[[
+--[[
     Time Library
 
     Time manipulation, formatting, and calculation system for the Lilia framework.
@@ -246,7 +246,7 @@ end
     Medium Complexity:
         ```lua
         -- Medium: Format cooldown with validation
-        local cooldownTime = player:GetNWInt("cooldown", 0)
+        local cooldownTime = player:getNetVar("cooldown", 0)
         if cooldownTime > 0 then
             local formatted = lia.time.formatDHM(cooldownTime)
             player:ChatPrint("Cooldown remaining: " .. formatted)

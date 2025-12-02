@@ -1,4 +1,4 @@
-﻿--[[
+--[[
     Shared Hooks
 
     Shared hook system for the Lilia framework.
@@ -2773,7 +2773,7 @@ end
             char:setData("staminaLoss", staminaLoss + 1)
 
             -- Check if stamina is critically low
-            local stamina = self:getNetVar("stamina", 100)
+            local stamina = self:getLocalVar("stamina", 100)
             if stamina <= 10 then
                 self:ChatPrint("Warning: Stamina is critically low!")
             end

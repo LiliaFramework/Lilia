@@ -1,4 +1,4 @@
-﻿--[[
+--[[
     Utility Library
 
     Common operations and helper functions for the Lilia framework.
@@ -2300,7 +2300,7 @@ else
             ["type"] = {"table", {"option1", "option2", "option3"}}
         }, function(information)
             -- Process the information
-            entity:SetNWString("Name", information.name)
+            entity:setNetVar("Name", information.name)
         end)
         ```
     ]]

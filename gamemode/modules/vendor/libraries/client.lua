@@ -1,4 +1,4 @@
-﻿function MODULE:VendorOpened(vendor)
+function MODULE:VendorOpened(vendor)
     local vendorUI = vgui.Create("liaVendor")
     vendorUI.vendor = vendor
     hook.Run("OnOpenVendorMenu", self, vendor)

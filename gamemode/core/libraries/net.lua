@@ -1,4 +1,4 @@
-﻿--[[
+--[[
     Network Library
 
     Network communication and data streaming system for the Lilia framework.
@@ -576,18 +576,106 @@ if SERVER then
         end
     end
 
-    function checkBadType(name, object)
+    --[[
+        Purpose:
+            Checks if an object contains invalid types (functions) that cannot be sent over the network
+
+        When Called:
+            Before setting net variables to ensure they don't contain functions
+
+        Parameters:
+            name (string)
+                The name/key of the net variable being checked
+            object (any)
+                The object to check for invalid types
+
+        Returns:
+            boolean - true if bad types are found, nil otherwise
+
+        Realm:
+            Server
+
+        Example Usage:
+            ```lua
+            -- Check if a table contains functions before setting as net var
+            local data = {name = "test", callback = function() end}
+            if not lia.net.checkBadType("playerData", data) then
+                lia.net.setNetVar("playerData", data)
+            end
+            ```
+    ]]
+    function lia.net.checkBadType(name, object)
         if isfunction(object) then
             lia.error(L("netVarBadType", name))
             return true
         elseif istable(object) then
             for k, v in pairs(object) do
-                if checkBadType(name, k) or checkBadType(name, v) then return true end
+                if lia.net.checkBadType(name, k) or lia.net.checkBadType(name, v) then return true end
             end
         end
     end
 
-    function setNetVar(key, value, receiver)
+    --[[
+        Purpose:
+            Sets a global net variable that syncs to all clients or a specific receiver
+
+        When Called:
+            When you need to set server-side variables that should be synchronized with clients
+
+        Parameters:
+            key (string)
+                The variable key name
+            value (any)
+                The value to store (cannot contain functions)
+            receiver (Player, optional)
+                Specific player to send to, nil broadcasts to all
+
+        Returns:
+            nil
+
+        Realm:
+            Server
+
+        Example Usage:
+
+        Low Complexity:
+            ```lua
+            -- Simple: Set a global variable for all players
+            lia.net.setNetVar("serverTime", os.time())
+            ```
+
+        Medium Complexity:
+            ```lua
+            -- Medium: Set variable for specific player
+            local player = player.GetByID(1)
+            if player then
+                lia.net.setNetVar("playerScore", 100, player)
+            end
+            ```
+
+        High Complexity:
+            ```lua
+            -- High: Set complex data structure with validation
+            local gameSettings = {
+                maxPlayers = 32,
+                gameMode = "survival",
+                difficulty = "hard",
+                features = {
+                    pvp = true,
+                    crafting = true,
+                    trading = false
+                }
+            }
+
+            -- Validate the data before setting
+            if not lia.net.checkBadType("gameSettings", gameSettings) then
+                lia.net.setNetVar("gameSettings", gameSettings)
+            else
+                lia.log.add("Failed to set game settings: contains invalid data types")
+            end
+            ```
+    ]]
+    function lia.net.setNetVar(key, value, receiver)
         if checkBadType(key, value) then return end
         local oldValue = getNetVar(key)
         if oldValue == value then return end
@@ -606,16 +694,111 @@ if SERVER then
         hook.Run("NetVarChanged", nil, key, oldValue, value)
     end
 
-    function getNetVar(key, default)
-        local value = lia.net.globals[key]
-        return value ~= nil and value or default
+    --[[
+        Purpose:
+            Sets a client-specific net variable that only syncs to one client
+
+        When Called:
+            When you need to set a net variable that should only be visible to a specific client
+
+        Parameters:
+            client (Player)
+                The client to send the net variable to
+            key (string)
+                The variable key
+            value (any)
+                The value to store
+
+        Returns:
+            nil
+
+        Realm:
+            Server
+
+        Example Usage:
+            ```lua
+            -- Send a private message only to a specific player
+            lia.net.setClientNetVar(player, "privateMessage", "This is only for you!")
+            ```
+    ]]
+    function lia.net.setClientNetVar(client, key, value)
+        if not IsValid(client) or not isstring(key) then return end
+        if checkBadType(key, value) then return end
+        lia.net[client] = lia.net[client] or {}
+        local oldValue = lia.net[client][key]
+        if oldValue == value then return end
+        lia.net[client][key] = value
+        if not lia.shuttingDown then
+            net.Start("liaClientNetVar")
+            net.WriteUInt(client:EntIndex(), 16)
+            net.WriteString(key)
+            net.WriteType(value)
+            net.Send(client)
+        end
+
+        hook.Run("NetVarChanged", client, key, oldValue, value)
     end
 
     hook.Add("EntityRemoved", "liaNetworkingCleanup", function(entity) entity:clearNetVars() end)
     hook.Add("PlayerInitialSpawn", "liaNetworkingSync", function(client) client:syncVars() end)
-else
-    function getNetVar(key, default)
-        local value = lia.net.globals[key]
-        return value ~= nil and value or default
-    end
+end
+
+--[[
+    Purpose:
+        Retrieves a global net variable value
+
+    When Called:
+        When you need to get the value of a net variable that was set with lia.net.setNetVar
+
+    Parameters:
+        key (string)
+            The variable key name
+        default (any, optional)
+            Default value to return if the key doesn't exist
+
+    Returns:
+        any - The stored value or the default value if not found
+
+    Realm:
+        Shared
+
+    Example Usage:
+
+    Low Complexity:
+        ```lua
+        -- Simple: Get a stored value
+        local serverTime = lia.net.getNetVar("serverTime")
+        if serverTime then
+            print("Server time:", serverTime)
+        end
+        ```
+
+    Medium Complexity:
+        ```lua
+        -- Medium: Get with default value
+        local maxPlayers = lia.net.getNetVar("maxPlayers", 32)
+        print("Max players:", maxPlayers)
+        ```
+
+    High Complexity:
+        ```lua
+        -- High: Get complex data structure
+        local gameSettings = lia.net.getNetVar("gameSettings")
+        if gameSettings then
+            print("Game mode:", gameSettings.gameMode)
+            print("Difficulty:", gameSettings.difficulty)
+            print("PVP enabled:", gameSettings.features.pvp)
+        else
+            -- Use defaults if not set
+            gameSettings = {
+                gameMode = "default",
+                difficulty = "normal",
+                features = {pvp = false}
+            }
+        end
+        ```
+]]
+function lia.net.getNetVar(key, default)
+    local value = lia.net.globals[key]
+    return value ~= nil and value or default
 end
