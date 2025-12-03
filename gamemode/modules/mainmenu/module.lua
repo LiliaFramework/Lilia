@@ -1,4 +1,4 @@
-MODULE.name = "mainMenuModuleName"
+﻿MODULE.name = "mainMenuModuleName"
 MODULE.author = "Samael"
 MODULE.discord = "@liliaplayer"
 MODULE.desc = "mainMenuDescription"

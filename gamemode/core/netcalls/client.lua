@@ -1,4 +1,4 @@
-net.Receive("liaSetWaypoint", function()
+﻿net.Receive("liaSetWaypoint", function()
     local name = net.ReadString()
     local pos = net.ReadVector()
     local logo = net.ReadString()
@@ -326,7 +326,6 @@ net.Receive("liaNetVar", function()
     local entity = Entity(index)
     if IsValid(entity) then hook.Run("NetVarChanged", entity, key, oldValue, value) end
 end)
-
 
 net.Receive("liaNetLocal", function()
     local key = net.ReadString()

@@ -1,4 +1,4 @@
-local VOICE_WHISPERING = "whispering"
+﻿local VOICE_WHISPERING = "whispering"
 local VOICE_TALKING = "talking"
 local VOICE_YELLING = "yelling"
 VoicePanels = {}

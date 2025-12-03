@@ -1,4 +1,4 @@
---[[
+﻿--[[
     Commands Library
 
     Comprehensive command registration, parsing, and execution system for the Lilia framework.
@@ -5206,6 +5206,7 @@ lia.command.add("doortoggleownable", {
                     client:notifyErrorLocalized("doorIsNotOwnable")
                     return false
                 end
+
                 doorData.noSell = newState and true or nil
                 lia.doors.setData(door, doorData)
                 lia.log.add(client, "doorToggleOwnable", door, newState)

@@ -1,4 +1,4 @@
---[[
+﻿--[[
     Network Library
 
     Network communication and data streaming system for the Lilia framework.
@@ -279,7 +279,6 @@ if SERVER then
 
         hook.Run("NetVarChanged", nil, key, oldValue, value)
     end
-
 
     hook.Add("EntityRemoved", "liaNetworkingCleanup", function(entity) entity:clearNetVars() end)
     hook.Add("PlayerInitialSpawn", "liaNetworkingSync", function(client) client:syncVars() end)

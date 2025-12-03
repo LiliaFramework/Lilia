@@ -1,4 +1,4 @@
---[[
+﻿--[[
     Player Meta
 
     Player management system for the Lilia framework.

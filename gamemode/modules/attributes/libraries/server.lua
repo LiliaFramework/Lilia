@@ -1,4 +1,4 @@
-local MODULE = MODULE
+﻿local MODULE = MODULE
 local function InitializeStaminaTimer()
     local staminaTimer = function()
         for _, client in player.Iterator() do

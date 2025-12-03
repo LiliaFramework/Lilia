@@ -1,4 +1,4 @@
---[[
+﻿--[[
     Player Interaction Library
 
     Player-to-player and entity interaction management system for the Lilia framework.

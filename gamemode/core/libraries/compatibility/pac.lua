@@ -1,5 +1,4 @@
-local playerMeta = FindMetaTable("Player")
-
+﻿local playerMeta = FindMetaTable("Player")
 function playerMeta:getParts()
     return self:getNetVar("parts", {})
 end

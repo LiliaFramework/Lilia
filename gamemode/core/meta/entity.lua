@@ -1,4 +1,4 @@
---[[
+﻿--[[
     Entity Meta
 
     Entity management system for the Lilia framework.

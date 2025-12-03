@@ -1,4 +1,4 @@
-local predictedStamina = 100
+﻿local predictedStamina = 100
 function MODULE:LoadCharInformation()
     local client = LocalPlayer()
     if not IsValid(client) then return end
@@ -37,9 +37,7 @@ end
 
 function MODULE:OnLocalVarSet(key, value)
     if key ~= "stamina" then return end
-    if math.abs(predictedStamina - value) > 5 then
-        predictedStamina = value
-    end
+    if math.abs(predictedStamina - value) > 5 then predictedStamina = value end
 end
 
 lia.bar.add(function()
