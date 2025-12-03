@@ -1,4 +1,4 @@
-﻿MODULE.name = "mainMenuModuleName"
+MODULE.name = "mainMenuModuleName"
 MODULE.author = "Samael"
 MODULE.discord = "@liliaplayer"
 MODULE.desc = "mainMenuDescription"
@@ -117,10 +117,15 @@ else
         end
     end
 
+    local function isInThirdPerson()
+        local thirdPersonEnabled = lia.config.get("ThirdPersonEnabled", true)
+        local tpEnabled = lia.option.get("thirdPersonEnabled", false)
+        return tpEnabled and thirdPersonEnabled
+    end
+
     function MODULE:CreateMenuButtons(tabs)
         tabs["characters"] = function()
-            local client = LocalPlayer()
-            if client:isInThirdPerson() then
+            if isInThirdPerson() then
                 lia.option.set("thirdPersonEnabled", false)
                 hook.Run("ThirdPersonToggled", false)
             end

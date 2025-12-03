@@ -170,11 +170,13 @@ function MODULE:LoadData()
 
             if factions and #factions > 0 then
                 doorData.factions = factions
+                doorData.noSell = true
                 hasData = true
             end
 
             if classes and #classes > 0 then
                 doorData.classes = classes
+                doorData.noSell = true
                 hasData = true
             end
 
@@ -232,12 +234,14 @@ function MODULE:LoadData()
                         if doorVars.factions and istable(doorVars.factions) and not table.IsEmpty(doorVars.factions) then
                             doorData.factions = doorVars.factions
                             ent.liaFactions = doorVars.factions
+                            doorData.noSell = true
                             hasPresetData = true
                         end
 
                         if doorVars.classes and istable(doorVars.classes) and not table.IsEmpty(doorVars.classes) then
                             doorData.classes = doorVars.classes
                             ent.liaClasses = doorVars.classes
+                            doorData.noSell = true
                             hasPresetData = true
                         end
 
@@ -316,6 +320,9 @@ function MODULE:SaveData()
             local price = tonumber(doorData.price) or 0
             if price < 0 then price = 0 end
             if price > 999999999 then price = 999999999 end
+            local hasFactions = istable(factionsTable) and #factionsTable > 0
+            local hasClasses = istable(classesTable) and #classesTable > 0
+            local isUnownable = doorData.noSell or hasFactions or hasClasses
             rows[#rows + 1] = {
                 gamemode = gamemode,
                 map = map,
@@ -324,7 +331,7 @@ function MODULE:SaveData()
                 classes = classesSerialized,
                 disabled = doorData.disabled and 1 or 0,
                 hidden = doorData.hidden and 1 or 0,
-                ownable = doorData.noSell and 0 or 1,
+                ownable = isUnownable and 0 or 1,
                 name = name,
                 price = price,
                 locked = doorData.locked and 1 or 0

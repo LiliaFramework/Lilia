@@ -1,16 +1,29 @@
-﻿local function getGroupLevel(group)
+﻿local groupLevelCache = {}
+local function getGroupLevel(group)
+    if groupLevelCache[group] ~= nil then return groupLevelCache[group] end
     local levels = lia.administrator.DefaultGroups or {}
-    if levels[group] then return levels[group] end
+    if levels[group] then
+        groupLevelCache[group] = levels[group]
+        return levels[group]
+    end
+
     local visited, current = {}, group
     for _ = 1, 16 do
         if visited[current] then break end
         visited[current] = true
         local g = lia.administrator.groups and lia.administrator.groups[current]
         local inh = g and g._info and g._info.inheritance or "user"
-        if levels[inh] then return levels[inh] end
+        if levels[inh] then
+            groupLevelCache[group] = levels[inh]
+            return levels[inh]
+        end
+
         current = inh
     end
-    return levels.user or 1
+
+    local defaultLevel = levels.user or 1
+    groupLevelCache[group] = defaultLevel
+    return defaultLevel
 end
 
 local function shouldGrant(group, min)
@@ -42,7 +55,7 @@ local function defaultAccessHandler(actor, privilege, callback, _, extra)
         end
     end
 
-    if istable(extra) and (extra.isUse or extra.IsUse or extra.use) then if IsValid(actor) and actor:IsFrozen() then allow = false end end
+    if istable(extra) and (extra.isUse or extra.IsUse or extra.use) and IsValid(actor) and actor:IsFrozen() then allow = false end
     if isfunction(callback) then callback(allow, "lia") end
     return true
 end
@@ -88,8 +101,10 @@ hook.Add("CAMI.OnPrivilegeRegistered", "liaAdminPrivAdded", function(priv)
     local min = tostring(priv.MinAccess or "user"):lower()
     lia.administrator.privileges[name] = min
     if lia.administrator and lia.administrator.clearPrivilegeCategoryCache then lia.administrator.clearPrivilegeCategoryCache() end
+    local defaultGroups = lia.administrator.DefaultGroups or {}
+    local minLevel = defaultGroups[min] or 1
     for groupName in pairs(lia.administrator.groups or {}) do
-        if shouldGrant(groupName, min) then lia.administrator.groups[groupName][name] = true end
+        if getGroupLevel(groupName) >= minLevel then lia.administrator.groups[groupName][name] = true end
     end
 
     if SERVER then

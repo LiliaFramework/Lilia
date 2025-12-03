@@ -2,13 +2,23 @@
 local fade, shadowFade = 0, 0
 local hideKey = false
 local fastFade = false
+local deathTimeReceived = 0
+local lastDeathTimeValue = 0
 function MODULE:HUDPaint()
     local ply, ft = LocalPlayer(), FrameTime()
     if not ply:getChar() then return end
     local baseTime = lia.config.get("SpawnTime", 5)
     baseTime = hook.Run("OverrideSpawnTime", ply, baseTime) or baseTime
     local lastDeath = ply:getNetVar("lastDeathTime", os.time())
-    local left = clamp(baseTime - (os.time() - lastDeath), 0, baseTime)
+    if lastDeath ~= lastDeathTimeValue then
+        lastDeathTimeValue = lastDeath
+        deathTimeReceived = CurTime()
+    end
+
+    local timeSinceDeath = os.time() - lastDeath
+    local preciseTimeSinceDeath = CurTime() - deathTimeReceived
+    local left = clamp(baseTime - preciseTimeSinceDeath, 0, baseTime)
+    if deathTimeReceived == 0 or preciseTimeSinceDeath < 0 then left = clamp(baseTime - timeSinceDeath, 0, baseTime) end
     if left >= baseTime and not ply:Alive() then left = baseTime end
     if not ply:Alive() and lastDeath > 0 and (os.time() - lastDeath) > (baseTime + 10) then
         net.Start("liaPlayerRespawn")
@@ -18,6 +28,11 @@ function MODULE:HUDPaint()
 
     if hook.Run("ShouldRespawnScreenAppear") == false then return end
     if ply:getChar() and ply:Alive() then
+        if deathTimeReceived > 0 then
+            deathTimeReceived = 0
+            lastDeathTimeValue = 0
+        end
+
         if fade > 0 then
             shadowFade = clamp(shadowFade - ft * 2 / baseTime, 0, 1)
             local fadeSpeed = fastFade and (ft * 4) or (ft / baseTime)
@@ -46,10 +61,11 @@ function MODULE:HUDPaint()
     if not hideKey then
         surface.SetFont("LiliaFont.25")
         local text
-        if left <= 0 then
+        local displayLeft = ceil(left)
+        if displayLeft <= 0 then
             text = L("pressAnyKeyToRespawn")
         else
-            text = L("respawnIn", left)
+            text = L("respawnIn", displayLeft)
         end
 
         local dw = select(1, surface.GetTextSize(text))
@@ -75,7 +91,10 @@ function MODULE:PlayerButtonDown(client, key)
     local baseTime = lia.config.get("SpawnTime", 5)
     baseTime = hook.Run("OverrideSpawnTime", ply, baseTime) or baseTime
     local lastDeath = ply:getNetVar("lastDeathTime", os.time())
-    local left = math.Clamp(baseTime - (os.time() - lastDeath), 0, baseTime)
+    local timeSinceDeath = os.time() - lastDeath
+    local preciseTimeSinceDeath = CurTime() - deathTimeReceived
+    local left = math.Clamp(baseTime - preciseTimeSinceDeath, 0, baseTime)
+    if deathTimeReceived == 0 or preciseTimeSinceDeath < 0 then left = math.Clamp(baseTime - timeSinceDeath, 0, baseTime) end
     if left > 0 then return end
     fastFade = true
     net.Start("liaPlayerRespawn")

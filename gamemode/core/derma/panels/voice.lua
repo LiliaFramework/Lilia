@@ -1,4 +1,4 @@
-﻿local VOICE_WHISPERING = "whispering"
+local VOICE_WHISPERING = "whispering"
 local VOICE_TALKING = "talking"
 local VOICE_YELLING = "yelling"
 VoicePanels = {}
@@ -33,7 +33,7 @@ function PANEL:Setup(client)
 end
 
 function PANEL:UpdateIcon()
-    local vt = self.client:getNetVar("VoiceType", VOICE_TALKING)
+    local vt = self.client:getLocalVar("VoiceType", VOICE_TALKING)
     local img = ICON_MAP[vt] or "normaltalk.png"
     self.Icon:SetImage(img)
 end

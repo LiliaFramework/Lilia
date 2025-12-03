@@ -217,9 +217,11 @@ net.Receive("liaVendorInitialSync", function()
         lia.vendor.stored[vendor] = lia.vendor.stored[vendor] or {}
         for _ = 1, propertyCount do
             local propertyName = net.ReadString()
-            local valueTable = net.ReadTable()
-            local propertyValue = valueTable[1]
-            lia.vendor.stored[vendor][propertyName] = propertyValue
+            local success, valueTable = pcall(net.ReadTable)
+            if success and valueTable and valueTable[1] ~= nil then
+                local propertyValue = valueTable[1]
+                lia.vendor.stored[vendor][propertyName] = propertyValue
+            end
         end
     end
 end)
@@ -234,8 +236,10 @@ net.Receive("liaVendorPropertySync", function()
         lia.vendor.stored[vendor][propertyName] = nil
         if table.IsEmpty(lia.vendor.stored[vendor]) then lia.vendor.stored[vendor] = nil end
     else
-        local valueTable = net.ReadTable()
-        local propertyValue = valueTable[1]
-        lia.vendor.stored[vendor][propertyName] = propertyValue
+        local success, valueTable = pcall(net.ReadTable)
+        if success and valueTable and valueTable[1] ~= nil then
+            local propertyValue = valueTable[1]
+            lia.vendor.stored[vendor][propertyName] = propertyValue
+        end
     end
 end)

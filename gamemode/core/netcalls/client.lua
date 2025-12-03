@@ -1,4 +1,4 @@
-﻿net.Receive("liaSetWaypoint", function()
+net.Receive("liaSetWaypoint", function()
     local name = net.ReadString()
     local pos = net.ReadVector()
     local logo = net.ReadString()
@@ -327,25 +327,14 @@ net.Receive("liaNetVar", function()
     if IsValid(entity) then hook.Run("NetVarChanged", entity, key, oldValue, value) end
 end)
 
-net.Receive("liaClientNetVar", function()
-    local index = net.ReadUInt(16)
-    local key = net.ReadString()
-    local value = net.ReadType()
-    lia.net[index] = lia.net[index] or {}
-    local oldValue = lia.net[index][key]
-    lia.net[index][key] = value
-    local entity = Entity(index)
-    if IsValid(entity) then hook.Run("NetVarChanged", entity, key, oldValue, value) end
-end)
 
 net.Receive("liaNetLocal", function()
     local key = net.ReadString()
     local value = net.ReadType()
     local idx = LocalPlayer():EntIndex()
     lia.net[idx] = lia.net[idx] or {}
-    local oldValue = lia.net[idx][key]
     lia.net[idx][key] = value
-    hook.Run("NetVarChanged", LocalPlayer(), key, oldValue, value)
+    hook.Run("OnLocalVarSet", key, value)
 end)
 
 net.Receive("liaActBar", function()

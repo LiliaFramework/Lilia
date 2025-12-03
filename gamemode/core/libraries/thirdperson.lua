@@ -1,4 +1,4 @@
-﻿local view, traceData, traceData2, aimOrigin, crouchFactor, ft, curAng
+local view, traceData, traceData2, aimOrigin, crouchFactor, ft, curAng
 local clmp = math.Clamp
 crouchFactor = 0
 local diff, fm, sm
@@ -8,10 +8,19 @@ local maxValues = {
     distance = 100
 }
 
+local function canOverrideView(client)
+    local ragdoll = client:getNetVar("ragdoll")
+    local isInVehicle = IsValid(client:GetVehicle())
+    if IsValid(lia.gui.char) then return false end
+    if isInVehicle then return false end
+    if hook.Run("ShouldDisableThirdperson", client) == true then return false end
+    return lia.option.get("thirdPersonEnabled", false) and lia.config.get("ThirdPersonEnabled", true) and IsValid(client) and client:getChar() and not IsValid(ragdoll)
+end
+
 hook.Add("CalcView", "liaThirdPersonCalcView", function(client)
     ft = FrameTime()
     owner = owner or LocalPlayer()
-    if client:canOverrideView() and LocalPlayer():GetViewEntity() == LocalPlayer() then
+    if canOverrideView(client) and LocalPlayer():GetViewEntity() == LocalPlayer() then
         if client:OnGround() and client:KeyDown(IN_DUCK) or client:Crouching() then
             crouchFactor = Lerp(ft * 5, crouchFactor, 1)
         else
@@ -48,7 +57,7 @@ end)
 
 hook.Add("CreateMove", "liaThirdPersonCreateMove", function(cmd)
     owner = LocalPlayer()
-    if owner:canOverrideView() and owner:GetMoveType() ~= MOVETYPE_NOCLIP and LocalPlayer():GetViewEntity() == LocalPlayer() then
+    if canOverrideView(owner) and owner:GetMoveType() ~= MOVETYPE_NOCLIP and LocalPlayer():GetViewEntity() == LocalPlayer() then
         fm = cmd:GetForwardMove()
         sm = cmd:GetSideMove()
         diff = (owner:EyeAngles() - (owner.camAng or Angle(0, 0, 0)))[2] or 0
@@ -62,14 +71,14 @@ end)
 hook.Add("InputMouseApply", "liaThirdPersonInputMouseApply", function(_, x, y)
     owner = LocalPlayer()
     if not owner.camAng then owner.camAng = Angle(0, 0, 0) end
-    if owner:canOverrideView() and LocalPlayer():GetViewEntity() == LocalPlayer() then
+    if canOverrideView(owner) and LocalPlayer():GetViewEntity() == LocalPlayer() then
         owner.camAng.p = clmp(math.NormalizeAngle(owner.camAng.p + y / 50), -85, 85)
         owner.camAng.y = math.NormalizeAngle(owner.camAng.y - x / 50)
         return true
     end
 end)
 
-hook.Add("ShouldDrawLocalPlayer", "liaThirdPersonShouldDrawLocalPlayer", function() if LocalPlayer():GetViewEntity() == LocalPlayer() and not IsValid(LocalPlayer():GetVehicle()) and LocalPlayer():canOverrideView() then return true end end)
+hook.Add("ShouldDrawLocalPlayer", "liaThirdPersonShouldDrawLocalPlayer", function() if LocalPlayer():GetViewEntity() == LocalPlayer() and not IsValid(LocalPlayer():GetVehicle()) and canOverrideView(LocalPlayer()) then return true end end)
 hook.Add("EntityEmitSound", "liaThirdPersonEntityEmitSound", function(data)
     local steps = {".stepleft", ".stepright"}
     local thirdPersonIsEnabled = lia.option.get("thirdPersonEnabled", false)

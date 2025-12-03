@@ -162,7 +162,6 @@ function MODULE:PlayerDeath(client, _, attacker)
     if not char then return end
     if not client:IsBot() then
         local deathTime = os.time()
-        client:setNetVar("IsDeadRestricted", true)
         client:setNetVar("lastDeathTime", deathTime)
         timer.Simple(0.1, function() if IsValid(client) and client:getChar() and not client:Alive() then client:setNetVar("lastDeathTime", deathTime) end end)
     else

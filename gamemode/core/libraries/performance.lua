@@ -50,6 +50,14 @@ end)
 
 if CLIENT then
     hook.Add("InitializedModules", "liaPerformanceInitializedModules", function() scripted_ents.GetStored("base_gmodentity").t.Think = nil end)
+    local function DisableWidgetRendering()
+        hook.Remove("PostDrawEffects", "RenderWidgets")
+        if RenderWidgets then RenderWidgets = function() end end
+    end
+
+    DisableWidgetRendering()
+    hook.Add("Initialize", "liaDisableWidgets", DisableWidgetRendering)
+    timer.Create("liaRemoveWidgetHook", 0.1, 0, function() hook.Remove("PostDrawEffects", "RenderWidgets") end)
 else
     hook.Add("PropBreak", "liaPerformancePropBreak", function(_, entity) if IsValid(entity) and IsValid(entity:GetPhysicsObject()) then constraint.RemoveAll(entity) end end)
 end

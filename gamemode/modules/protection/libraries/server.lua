@@ -22,9 +22,19 @@ function MODULE:CanPlayerSwitchChar(client, character, newCharacter)
 end
 
 function MODULE:EntityTakeDamage(entity, dmgInfo)
+    if IsValid(entity) and entity:IsPlayer() and entity:isStaffOnDuty() then
+        dmgInfo:SetDamage(0)
+        return
+    end
+
     if IsValid(entity) and entity:IsVehicle() and entity:GetClass():find("prop_vehicle") then
         local driver = entity:GetDriver()
         if IsValid(driver) then
+            if driver:isStaffOnDuty() then
+                dmgInfo:SetDamage(0)
+                return
+            end
+
             local hitPos = dmgInfo:GetDamagePosition()
             if hitPos:Distance(driver:GetPos()) <= 53 then
                 local newHealth = driver:Health() - dmgInfo:GetDamage() * 0.3

@@ -128,7 +128,7 @@ function MODULE:ShowPlayerOptions(target, options)
         })
     end
 
-    if not (target:getChar() and target:getLiliaData("VoiceBan", false)) then
+    if not (target:getChar() and target:getLiliaData("liaMuted", false)) then
         table.insert(orderedOptions, {
             name = L("mute"),
             image = "icon16/sound_delete.png",
@@ -190,7 +190,7 @@ function MODULE:ShowPlayerOptions(target, options)
         })
     end
 
-    if target:getChar() and target:getLiliaData("VoiceBan", false) then
+    if target:getChar() and target:getLiliaData("liaMuted", false) then
         table.insert(orderedOptions, {
             name = L("unmute"),
             image = "icon16/sound_add.png",
@@ -1612,7 +1612,7 @@ local function IncludeAdminMenu(tgt, menu, stores)
         }
     end
 
-    if tgt:getChar() and tgt:getLiliaData("VoiceBan", false) then
+    if tgt:getChar() and tgt:getLiliaData("liaMuted", false) then
         mods[#mods + 1] = {
             name = L("unmute"),
             cmd = "unmute",

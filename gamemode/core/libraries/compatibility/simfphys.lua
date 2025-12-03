@@ -4,7 +4,11 @@
         if not damageInCars then return end
         if seat:IsVehicle() and seat:GetClass() == "gmod_sent_vehicle_fphysics_base" then
             local player = seat:GetDriver()
-            if isfunction(player.isStaffOnDuty) and player:isStaffOnDuty() and lia.config.get("StaffHasGodMode", true) then return true end
+            if IsValid(player) and isfunction(player.isStaffOnDuty) and player:isStaffOnDuty() then
+                dmgInfo:SetDamage(0)
+                return
+            end
+
             if IsValid(player) then
                 local hitPos = dmgInfo:GetDamagePosition()
                 local playerPos = player:GetPos()

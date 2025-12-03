@@ -12,51 +12,6 @@ if SERVER then
     lia.workshop.ids = lia.workshop.ids or {}
     lia.workshop.known = lia.workshop.known or {}
     lia.workshop.cache = lia.workshop.cache or {}
-    --[[
-    Purpose:
-        Adds a workshop addon ID to the server's required workshop content list
-
-    When Called:
-        Called when modules or addons need specific workshop content
-
-    Parameters:
-        id (string/number)
-            The Steam Workshop ID of the addon to add
-
-    Returns:
-        None
-
-    Realm:
-        Server
-
-    Example Usage:
-
-    Low Complexity:
-        ```lua
-        -- Simple: Add a single workshop addon
-        lia.workshop.addWorkshop("1234567890")
-        ```
-
-    Medium Complexity:
-        ```lua
-        -- Medium: Add workshop addon from module configuration
-        local workshopId = module.WorkshopContent
-        if workshopId then
-            lia.workshop.addWorkshop(workshopId)
-        end
-        ```
-
-    High Complexity:
-        ```lua
-        -- High: Add multiple workshop addons with validation
-        local workshopIds = {"1234567890", "0987654321", "1122334455"}
-        for _, id in ipairs(workshopIds) do
-            if id and id ~= "" then
-                lia.workshop.addWorkshop(id)
-            end
-        end
-        ```
-    ]]
     function lia.workshop.addWorkshop(id)
         id = tostring(id)
         if not lia.workshop.ids[id] then lia.bootstrap(L("workshopDownloader"), L("workshopAdded", id)) end
@@ -72,51 +27,6 @@ if SERVER then
         end
     end
 
-    --[[
-        Purpose:
-            Gathers all workshop IDs from mounted addons and module configurations
-
-        When Called:
-            Called during module initialization to collect all required workshop content
-
-        Parameters:
-            None
-
-        Returns:
-            table - Table containing all workshop IDs that need to be downloaded
-
-        Realm:
-            Server
-
-        Example Usage:
-
-        Low Complexity:
-            ```lua
-            -- Simple: Gather workshop IDs
-            local workshopIds = lia.workshop.gather()
-            ```
-
-        Medium Complexity:
-            ```lua
-            -- Medium: Gather and validate workshop IDs
-            local workshopIds = lia.workshop.gather()
-            local count = table.Count(workshopIds)
-            print("Found " .. count .. " workshop addons")
-            ```
-
-        High Complexity:
-            ```lua
-            -- High: Gather workshop IDs and send to specific players
-            local workshopIds = lia.workshop.gather()
-            for _, ply in player.Iterator() do
-                if ply:IsAdmin() then
-                    net.Start("liaWorkshopDownloaderStart")
-                    net.WriteTable(workshopIds)
-                    net.Send(ply)
-                end
-            end
-            ```
-    ]]
     function lia.workshop.gather()
         local ids = table.Copy(lia.workshop.ids)
         for _, addon in pairs(engine.GetAddons() or {}) do
@@ -143,58 +53,6 @@ if SERVER then
     end
 
     hook.Add("InitializedModules", "liaWorkshopInitializedModules", function() lia.workshop.cache = lia.workshop.gather() end)
-    --[[
-        Purpose:
-            Sends the cached workshop IDs to a specific player to initiate download
-
-        When Called:
-            Called when a player requests workshop content or during initial spawn
-
-        Parameters:
-            ply (Player)
-                The player to send workshop IDs to
-
-        Returns:
-            None
-
-        Realm:
-            Server
-
-        Example Usage:
-
-        Low Complexity:
-            ```lua
-            -- Simple: Send workshop IDs to a player
-            lia.workshop.send(player.GetByID(1))
-            ```
-
-        Medium Complexity:
-            ```lua
-            -- Medium: Send workshop IDs to admin players only
-            for _, ply in player.Iterator() do
-                if ply:IsAdmin() then
-                    lia.workshop.send(ply)
-                end
-            end
-            ```
-
-        High Complexity:
-            ```lua
-            -- High: Send workshop IDs with validation and logging
-            local function sendToPlayer(ply)
-                if IsValid(ply) and ply:IsConnected() then
-                    lia.workshop.send(ply)
-                    print("Sent workshop IDs to " .. ply:Name())
-                end
-            end
-
-            hook.Add("PlayerInitialSpawn", "CustomWorkshopSend", function(ply)
-                timer.Simple(5, function()
-                    sendToPlayer(ply)
-                end)
-            end)
-            ```
-    ]]
     function lia.workshop.send(ply)
         net.Start("liaWorkshopDownloaderStart")
         net.WriteTable(lia.workshop.cache)
@@ -253,68 +111,6 @@ else
         return false
     end
 
-    --[[
-        Purpose:
-            Checks if there are any workshop addons that need to be downloaded
-
-        When Called:
-            Called to determine if the client needs to download workshop content
-
-        Parameters:
-            None
-
-        Returns:
-            boolean - True if content needs to be downloaded, false otherwise
-
-        Realm:
-            Client
-
-        Example Usage:
-
-        Low Complexity:
-            ```lua
-            -- Simple: Check if downloads are needed
-            if lia.workshop.hasContentToDownload() then
-                print("Workshop content needs to be downloaded")
-            end
-            ```
-
-        Medium Complexity:
-            ```lua
-            -- Medium: Check and show notification
-            if lia.workshop.hasContentToDownload() then
-                notification.AddLegacy("Workshop content available for download", NOTIFY_GENERIC, 5)
-            end
-            ```
-
-        High Complexity:
-            ```lua
-            -- High: Check downloads and create custom UI
-            local function checkDownloads()
-                if lia.workshop.hasContentToDownload() then
-                    local frame = vgui.Create("liaFrame")
-                    frame:SetTitle("Workshop Downloads Available")
-                    frame:SetSize(400, 200)
-                    frame:Center()
-                    frame:MakePopup()
-
-                    local btn = vgui.Create("liaButton", frame)
-                    btn:SetText("Download Now")
-                    btn:Dock(BOTTOM)
-                    btn.DoClick = function()
-                        lia.workshop.mountContent()
-                        frame:Close()
-                    end
-                end
-            end
-
-            hook.Add("OnEntityCreated", "CheckWorkshopDownloads", function(ent)
-                if ent == LocalPlayer() then
-                    timer.Simple(1, checkDownloads)
-                end
-            end)
-            ```
-    ]]
     function lia.workshop.hasContentToDownload()
         for id in pairs(lia.workshop.serverIds or {}) do
             if id ~= FORCE_ID and not mounted(id) and not mountLocal(id) then return true end
@@ -322,92 +118,6 @@ else
         return false
     end
 
-    --[[
-        Purpose:
-            Initiates the mounting process for required workshop content with user confirmation
-
-        When Called:
-            Called when the client needs to download and mount workshop addons
-
-        Parameters:
-            None
-
-        Returns:
-            None
-
-        Realm:
-            Client
-
-        Example Usage:
-
-        Low Complexity:
-            ```lua
-            -- Simple: Mount workshop content
-            lia.workshop.mountContent()
-            ```
-
-        Medium Complexity:
-            ```lua
-            -- Medium: Mount content with custom callback
-            lia.workshop.mountContent()
-            hook.Add("Think", "CheckMountComplete", function()
-                if not lia.workshop.hasContentToDownload() then
-                    print("All workshop content mounted successfully")
-                    hook.Remove("Think", "CheckMountComplete")
-                end
-            end)
-            ```
-
-        High Complexity:
-            ```lua
-            -- High: Mount content with progress tracking and custom UI
-            local function mountWithProgress()
-                local needed = {}
-                local ids = lia.workshop.serverIds or {}
-
-                for id in pairs(ids) do
-                    if id ~= "3527535922" and not mounted(id) and not mountLocal(id) then
-                        needed[#needed + 1] = id
-                    end
-                end
-
-                if #needed > 0 then
-                    local frame = vgui.Create("liaFrame")
-                    frame:SetTitle("Workshop Content Download")
-                    frame:SetSize(500, 300)
-                    frame:Center()
-                    frame:MakePopup()
-
-                    local progressPanel = vgui.Create("Panel", frame)
-                    progressPanel:Dock(TOP)
-                    progressPanel:SetHeight(30)
-                    progressPanel:DockMargin(10, 10, 10, 10)
-
-                    local progressFraction = 0
-                    local progressText = "0/" .. #needed
-
-                    progressPanel.Paint = function(s, w, h)
-                        draw.RoundedBox(4, 0, 0, w, h, Color(60, 60, 60))
-                        draw.RoundedBox(4, 2, 2, (w - 4) * progressFraction, h - 4, lia.color.theme.primary or Color(100, 150, 255))
-                        draw.SimpleText(progressText, "LiliaFont.17", w / 2, h / 2, color_white, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
-                    end
-
-                    local function updateProgress(current, total)
-                        progressFraction = current / total
-                        progressText = current .. "/" .. total
-                    end
-
-                    lia.workshop.mountContent()
-                end
-            end
-
-            hook.Add("PlayerInitialSpawn", "MountWorkshopContent", function(ply)
-                if ply == LocalPlayer() then
-                    timer.Simple(3, mountWithProgress)
-                end
-            end)
-            ```
-    ]]
     function lia.workshop.mountContent()
         local ids = lia.workshop.serverIds or {}
         local needed = {}

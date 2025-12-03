@@ -34,7 +34,7 @@ function MODULE:PlayerSay(client, text)
         return ""
     end
 
-    if client:getLiliaData("liaGagged", false) then return "" end
+    if client:getLiliaData("liaMuted", false) then return "" end
 end
 
 function MODULE:PlayerSpawn(client)

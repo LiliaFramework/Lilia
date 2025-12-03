@@ -10,159 +10,15 @@
 lia.data = lia.data or {}
 lia.data.stored = lia.data.stored or {}
 lia.data.equivalencyMaps = lia.data.equivalencyMaps or {}
---[[
-    Purpose:
-        Creates a bidirectional equivalency mapping between two maps for database operations
-
-    When Called:
-        Called during gamemode initialization to set up map equivalencies for data sharing
-
-    Parameters:
-        map1 (string)
-            First map name in the equivalency pair
-        map2 (string)
-            Second map name in the equivalency pair
-
-    Returns:
-        nil
-
-    Realm:
-        Shared
-
-    Example Usage:
-
-    Low Complexity:
-        ```lua
-        -- Simple: Create equivalency between day and night versions of same map
-        lia.data.addEquivalencyMap("rp_nycity_day", "rp_nycity_city")
-        -- Data saved on either map will be accessible from both
-        ```
-
-    Medium Complexity:
-        ```lua
-        -- Medium: Set up multiple equivalency pairs
-        lia.data.addEquivalencyMap("rp_nycity_day", "rp_nycity_city")
-        lia.data.addEquivalencyMap("rp_downtown_v1", "rp_downtown_v2")
-        -- Each pair shares data independently
-        ```
-
-    High Complexity:
-        ```lua
-        -- High: Set up equivalencies with validation
-        local dayMap = "rp_nycity_day"
-        local nightMap = "rp_nycity_city"
-        if dayMap and nightMap then
-            lia.data.addEquivalencyMap(dayMap, nightMap)
-            print("Equivalency set up between " .. dayMap .. " and " .. nightMap)
-        end
-        ```
-]]
 function lia.data.addEquivalencyMap(map1, map2)
     lia.data.equivalencyMaps[map1] = map2
     lia.data.equivalencyMaps[map2] = map1
 end
 
---[[
-    Purpose:
-        Retrieves the equivalency map name for a given map, or returns the original map if no equivalency exists
-
-    When Called:
-        Automatically called by database operations to resolve map equivalencies
-
-    Parameters:
-        map (string)
-            The map name to resolve equivalency for
-
-    Returns:
-        string - The equivalency map name, or the original map name if no equivalency exists
-
-    Realm:
-        Shared
-
-    Example Usage:
-
-    Low Complexity:
-        ```lua
-        -- Simple: Get equivalency for current map
-        local equivMap = lia.data.getEquivalencyMap(game.GetMap())
-        -- Returns equivalency map name or original map name
-        ```
-
-    Medium Complexity:
-        ```lua
-        -- Medium: Check if map has equivalency
-        local currentMap = game.GetMap()
-        local equivMap = lia.data.getEquivalencyMap(currentMap)
-        if equivMap ~= currentMap then
-            print("Map " .. currentMap .. " has equivalency: " .. equivMap)
-        else
-            print("Map " .. currentMap .. " has no equivalency")
-        end
-        ```
-
-    High Complexity:
-        ```lua
-        -- High: Use in database query building
-        local map = lia.data.getEquivalencyMap(game.GetMap())
-        local condition = "gamemode = " .. lia.db.convertDataType(SCHEMA.folder) ..
-                         " AND map = " .. lia.db.convertDataType(map)
-        -- Ensures queries use correct equivalency map
-        ```
-]]
 function lia.data.getEquivalencyMap(map)
     return lia.data.equivalencyMaps[map] or map
 end
 
---[[
-    Purpose:
-        Converts complex data types (vectors, angles, colors, tables) into database-storable formats
-
-    When Called:
-        Automatically called during data serialization before database storage
-
-    Parameters:
-        value (any)
-            The value to encode (vector, angle, color table, or regular table)
-
-    Returns:
-        table or any - Encoded representation suitable for JSON serialization
-
-    Realm:
-        Shared
-
-    Example Usage:
-
-    Low Complexity:
-        ```lua
-        -- Simple: Encode a vector
-        local encoded = lia.data.encodetable(Vector(100, 200, 300))
-
-        -- Returns: {100, 200, 300}
-        ```
-
-    Medium Complexity:
-        ```lua
-        -- Medium: Encode a color with alpha
-        local color = Color(255, 128, 64, 200)
-        local encoded = lia.data.encodetable(color)
-
-        -- Returns: {255, 128, 64, 200}
-        ```
-
-    High Complexity:
-        ```lua
-        -- High: Encode nested table with mixed data types
-        local complexData = {
-            position = Vector(0, 0, 0),
-            rotation = Angle(0, 90, 0),
-            color   = Color(255, 0, 0),
-            settings = {enabled = true, count = 5}
-        }
-        local encoded = lia.data.encodetable(complexData)
-
-        -- Returns: {position = {0, 0, 0}, rotation = {0, 90, 0}, color = {255, 0, 0, 255}, settings = {enabled = true, count = 5}}
-        ```
-]]
 function lia.data.encodetable(value)
     if isvector(value) then
         return {value.x, value.y, value.z}
@@ -317,109 +173,10 @@ local function deepDecode(value)
     return value
 end
 
---[[
-    Purpose:
-        Converts encoded data back to original complex data types (vectors, angles, colors)
-
-    When Called:
-        Automatically called during data deserialization after database retrieval
-
-    Parameters:
-        value (any)
-            The encoded value to decode (table, string, or raw data)
-
-    Returns:
-        any - Decoded value with proper data types restored
-
-    Realm:
-        Shared
-
-    Example Usage:
-
-    Low Complexity:
-        ```lua
-        -- Simple: Decode a vector from encoded format
-        local decoded = lia.data.decode({100, 200, 300})
-
-        -- Returns: Vector(100, 200, 300)
-        ```
-
-    Medium Complexity:
-        ```lua
-        -- Medium: Decode an angle from encoded format
-        local encodedAngle = {0, 90, 0}
-        local decoded = lia.data.decode(encodedAngle)
-
-        -- Returns: Angle(0, 90, 0)
-        ```
-
-    High Complexity:
-        ```lua
-        -- High: Decode complex nested data structure
-        local encodedData = {
-            position = {100, 200, 300},
-            rotation = {0, 90, 0},
-            color    = {255, 0, 0, 255},
-            settings = {enabled = true, count = 5}
-        }
-        local decoded = lia.data.decode(encodedData)
-
-        -- Returns: {position = Vector(100, 200, 300), rotation = Angle(0, 90, 0), color = Color(255, 0, 0, 255), settings = {enabled = true, count = 5}}
-        ```
-]]
 function lia.data.decode(value)
     return deepDecode(value)
 end
 
---[[
-    Purpose:
-        Converts any data structure into a JSON string suitable for database storage
-
-    When Called:
-        Called before storing data in the database to ensure proper serialization
-
-    Parameters:
-        value (any)
-            The data to serialize (tables, vectors, angles, colors, etc.)
-
-    Returns:
-        string - JSON string representation of the encoded data
-
-    Realm:
-        Shared
-
-    Example Usage:
-
-    Low Complexity:
-        ```lua
-        -- Simple: Serialize a basic table
-        local serialized = lia.data.serialize({name = "test", value = 42})
-
-        -- Returns: '{"name":"test","value":42}'
-        ```
-
-    Medium Complexity:
-        ```lua
-        -- Medium: Serialize a vector
-        local serialized = lia.data.serialize(Vector(100, 200, 300))
-
-        -- Returns: '{"value":[100,200,300]}'
-        ```
-
-    High Complexity:
-        ```lua
-        -- High: Serialize complex nested data with mixed types
-        local complexData = {
-            position = Vector(0, 0, 0),
-            rotation = Angle(0, 90, 0),
-            color    = Color(255, 0, 0),
-            settings = {enabled = true, count = 5}
-        }
-        local serialized = lia.data.serialize(complexData)
-
-        -- Returns: JSON string with all data properly encoded
-        ```
-]]
 function lia.data.serialize(value)
     local encoded = lia.data.encodetable(value) or {}
     if not istable(encoded) then
@@ -430,51 +187,6 @@ function lia.data.serialize(value)
     return util.TableToJSON(encoded)
 end
 
---[[
-    Purpose:
-        Converts serialized data (JSON strings or tables) back to original data structures
-
-    When Called:
-        Called after retrieving data from database to restore original data types
-
-    Parameters:
-        raw (string|table)
-            Serialized data from database (JSON string or table)
-
-    Returns:
-        any - Deserialized data with proper types restored, or nil if invalid
-
-    Realm:
-        Shared
-
-    Example Usage:
-
-    Low Complexity:
-        ```lua
-        -- Simple: Deserialize a JSON string
-        local deserialized = lia.data.deserialize('{"name":"test","value":42}')
-
-        -- Returns: {name = "test", value = 42}
-        ```
-
-    Medium Complexity:
-        ```lua
-        -- Medium: Deserialize encoded vector data
-        local jsonData = '{"value":[100,200,300]}'
-        local deserialized = lia.data.deserialize(jsonData)
-
-        -- Returns: Vector(100, 200, 300)
-        ```
-
-    High Complexity:
-        ```lua
-        -- High: Deserialize complex data with fallback handling
-        local complexJson = '{"position":[0,0,0],"rotation":[0,90,0],"color":[255,0,0,255],"settings":{"enabled":true,"count":5}}'
-        local deserialized = lia.data.deserialize(complexJson)
-
-        -- Returns: {position = Vector(0, 0, 0), rotation = Angle(0, 90, 0), color = Color(255, 0, 0, 255), settings = {enabled = true, count = 5}}
-        ```
-]]
 function lia.data.deserialize(raw)
     if not raw then return nil end
     local decoded
@@ -495,51 +207,6 @@ function lia.data.deserialize(raw)
     return lia.data.decode(decoded)
 end
 
---[[
-    Purpose:
-        Specifically decodes vector data from various formats (JSON, strings, tables)
-
-    When Called:
-        Called when specifically needing to decode vector data from database or serialized format
-
-    Parameters:
-        raw (any)
-            Raw data that should contain vector information
-
-    Returns:
-        Vector or any - Decoded Vector object, or original data if not vector format
-
-    Realm:
-        Shared
-
-    Example Usage:
-
-    Low Complexity:
-        ```lua
-        -- Simple: Decode vector from array format
-        local vector = lia.data.decodeVector({100, 200, 300})
-
-        -- Returns: Vector(100, 200, 300)
-        ```
-
-    Medium Complexity:
-        ```lua
-        -- Medium: Decode vector from JSON string
-        local jsonString = '[100,200,300]'
-        local vector = lia.data.decodeVector(jsonString)
-
-        -- Returns: Vector(100, 200, 300)
-        ```
-
-    High Complexity:
-        ```lua
-        -- High: Decode vector with multiple format fallbacks
-        local vectorData = "Vector(100, 200, 300)"
-        local vector = lia.data.decodeVector(vectorData)
-
-        -- Returns: Vector(100, 200, 300) - handles string parsing
-        ```
-]]
 function lia.data.decodeVector(raw)
     if not raw then return nil end
     local direct = _decodeVector(raw)
@@ -559,51 +226,6 @@ function lia.data.decodeVector(raw)
     return _decodeVector(decoded)
 end
 
---[[
-    Purpose:
-        Specifically decodes angle data from various formats (JSON, strings, tables)
-
-    When Called:
-        Called when specifically needing to decode angle data from database or serialized format
-
-    Parameters:
-        raw (any)
-            Raw data that should contain angle information
-
-    Returns:
-        Angle or any - Decoded Angle object, or original data if not angle format
-
-    Realm:
-        Shared
-
-    Example Usage:
-
-    Low Complexity:
-        ```lua
-        -- Simple: Decode angle from array format
-        local angle = lia.data.decodeAngle({0, 90, 0})
-
-        -- Returns: Angle(0, 90, 0)
-        ```
-
-    Medium Complexity:
-        ```lua
-        -- Medium: Decode angle from JSON string
-        local jsonString = '[0,90,0]'
-        local angle = lia.data.decodeAngle(jsonString)
-
-        -- Returns: Angle(0, 90, 0)
-        ```
-
-    High Complexity:
-        ```lua
-        -- High: Decode angle with multiple format fallbacks
-        local angleData = "Angle(0, 90, 0)"
-        local angle = lia.data.decodeAngle(angleData)
-
-        -- Returns: Angle(0, 90, 0) - handles string parsing
-        ```
-]]
 function lia.data.decodeAngle(raw)
     if not raw then return nil end
     local direct = _decodeAngle(raw)
@@ -629,57 +251,6 @@ local function buildCondition(gamemode, map)
     return cond
 end
 
---[[
-    Purpose:
-        Stores data in the database with gamemode and map-specific scoping
-
-    When Called:
-        Called when storing persistent data that should survive server restarts
-
-    Parameters:
-        key (string)
-            Unique identifier for the data
-        value (any)
-            Data to store
-        global (boolean, optional)
-            Store globally across all gamemodes/maps
-        ignoreMap (boolean, optional)
-            Store for all maps in current gamemode
-
-    Returns:
-        string - Database path where data was stored
-
-    Realm:
-        Server
-
-    Example Usage:
-
-    Low Complexity:
-        ```lua
-        -- Simple: Store basic data for current gamemode and map
-        lia.data.set("playerCount", 25)
-        -- Stores data scoped to current gamemode and map
-        ```
-
-    Medium Complexity:
-        ```lua
-        -- Medium: Store data globally across all gamemodes and maps
-        lia.data.set("serverVersion", "1.0.0", true)
-        -- Stores data globally, accessible from any gamemode/map
-        ```
-
-    High Complexity:
-        ```lua
-        -- High: Store complex data with custom scoping
-        local playerData = {
-            position  = Vector(100, 200, 300),
-            inventory = {weapon = "pistol", ammo = 50},
-            settings  = {volume = 0.8, graphics = "high"}
-        }
-        lia.data.set("player_" .. player:SteamID64(), playerData, false, true)
-        -- Stores player data for current gamemode but all maps
-        ```
-]]
 function lia.data.set(key, value, global, ignoreMap)
     local gamemode = SCHEMA and SCHEMA.folder or engine.ActiveGamemode()
     local map = ignoreMap and NULL or game.GetMap()
@@ -708,51 +279,6 @@ function lia.data.set(key, value, global, ignoreMap)
     return path
 end
 
---[[
-    Purpose:
-        Removes data from the database with gamemode and map-specific scoping
-
-    When Called:
-        Called when removing persistent data that should no longer be stored
-
-    Parameters:
-        key (string)
-            Unique identifier for the data to delete
-        global (boolean, optional)
-            Delete from global scope
-        ignoreMap (boolean, optional)
-            Delete from all maps in current gamemode
-
-    Returns:
-        boolean - Always returns true
-
-    Realm:
-        Server
-
-    Example Usage:
-
-    Low Complexity:
-        ```lua
-        -- Simple: Delete data for current gamemode and map
-        lia.data.delete("playerCount")
-        -- Removes data scoped to current gamemode and map
-        ```
-
-    Medium Complexity:
-        ```lua
-        -- Medium: Delete data globally across all gamemodes and maps
-        lia.data.delete("serverVersion", true)
-        -- Removes data from global scope
-        ```
-
-    High Complexity:
-        ```lua
-        -- High: Delete player data with custom scoping
-        local playerID = "player_" .. player:SteamID64()
-        lia.data.delete(playerID, false, true)
-        -- Removes player data for current gamemode but all maps
-        ```
-]]
 function lia.data.delete(key, global, ignoreMap)
     local gamemode = SCHEMA and SCHEMA.folder or engine.ActiveGamemode()
     local map = ignoreMap and nil or game.GetMap()
@@ -780,47 +306,6 @@ function lia.data.delete(key, global, ignoreMap)
     return true
 end
 
---[[
-    Purpose:
-        Loads all stored data from database into memory with hierarchical scoping
-
-    When Called:
-        Called during server startup to restore all persistent data
-
-    Parameters:
-        None
-
-    Returns:
-        None
-
-    Realm:
-        Server
-
-    Example Usage:
-
-    Low Complexity:
-        ```lua
-        -- Simple: Load all data tables
-        lia.data.loadTables()
-        -- Loads global, gamemode, and map-specific data
-        ```
-
-    Medium Complexity:
-        ```lua
-        -- Medium: Load data with custom initialization
-        lia.data.loadTables()
-        -- After loading, access specific data
-        local playerCount = lia.data.get("playerCount", 0)
-        ```
-
-    High Complexity:
-        ```lua
-        -- High: Load data with validation and error handling
-        lia.data.loadTables()
-        -- Data is loaded hierarchically: global -> gamemode -> map-specific
-        -- Later data overrides earlier data (map overrides gamemode overrides global)
-        ```
-]]
 function lia.data.loadTables()
     local gamemode = SCHEMA and SCHEMA.folder or engine.ActiveGamemode()
     local map = game.GetMap()
@@ -867,122 +352,10 @@ local function ensurePersistenceColumns(cols)
     return d
 end
 
---[[
-    Purpose:
-        Ensures persistence table has required columns for entity storage
-
-    When Called:
-        Called during server startup to prepare database schema for entity persistence
-
-    Parameters:
-        None
-
-    Returns:
-        Promise - Database operation promise
-
-    Realm:
-        Server
-
-    Example Usage:
-
-    Low Complexity:
-        ```lua
-        -- Simple: Load persistence schema
-        lia.data.loadPersistence()
-        -- Ensures all required columns exist in persistence table
-        ```
-
-    Medium Complexity:
-        ```lua
-        -- Medium: Load persistence with error handling
-        lia.data.loadPersistence():next(function()
-            print("Persistence schema loaded successfully")
-        end):catch(function(err)
-            print("Failed to load persistence schema: " .. err)
-        end)
-        ```
-
-    High Complexity:
-        ```lua
-        -- High: Load persistence as part of initialization sequence
-        lia.data.loadPersistence():next(function()
-            return lia.data.loadPersistenceData(function(entities)
-                -- Process loaded entities
-                for _, ent in ipairs(entities) do
-                    -- Spawn entities or process data
-                end
-            end)
-        end)
-        ```
-]]
 function lia.data.loadPersistence()
     return ensurePersistenceColumns(baseCols)
 end
 
---[[
-    Purpose:
-        Saves entity data to database for persistence across server restarts
-
-    When Called:
-        Called during server shutdown or periodic saves to persist entity states
-
-    Parameters:
-        entities (table)
-            Array of entity data tables to save
-
-    Returns:
-        None
-
-    Realm:
-        Server
-
-    Example Usage:
-
-    Low Complexity:
-        ```lua
-        -- Simple: Save basic entity data
-        local entities = {
-            {class = "prop_physics", pos = Vector(0, 0, 0), angles = Angle(0, 0, 0), model = "models/props_c17/FurnitureTable001a.mdl"}
-        }
-        lia.data.savePersistence(entities)
-        ```
-
-    Medium Complexity:
-        ```lua
-        -- Medium: Save entities with custom properties
-        local entities = {
-            {
-                class   = "lia_vendor",
-                pos     = Vector(100, 200, 0),
-                angles  = Angle(0, 90, 0),
-                model   = "models/player.mdl",
-                name    = "Weapon Vendor",
-                items   = {"weapon_pistol", "weapon_shotgun"}
-            }
-        }
-        lia.data.savePersistence(entities)
-        ```
-
-    High Complexity:
-        ```lua
-        -- High: Save complex entities with dynamic properties
-        local entities = {}
-        for _, ent in ents.Iterator() do
-            if ent:GetClass() == "lia_item" then
-                table.insert(entities, {
-                    class   = ent:GetClass(),
-                    pos     = ent:GetPos(),
-                    angles  = ent:GetAngles(),
-                    model   = ent:GetModel(),
-                    itemID  = ent:GetItemID(),
-                    amount  = ent:GetAmount(),
-                    data    = ent:GetData()
-                })
-            end
-        end
-        lia.data.savePersistence(entities)
-        ```
-]]
 function lia.data.savePersistence(entities)
     local gamemode = SCHEMA and SCHEMA.folder or engine.ActiveGamemode()
     local map = game.GetMap()
@@ -1035,66 +408,6 @@ function lia.data.savePersistence(entities)
     end)
 end
 
---[[
-    Purpose:
-        Loads persisted entity data from database and optionally executes callback
-
-    When Called:
-        Called during server startup to restore persisted entities
-
-    Parameters:
-        callback (function, optional)
-            Function to call with loaded entity data
-
-    Returns:
-        Promise - Database operation promise
-
-    Realm:
-        Server
-
-    Example Usage:
-
-    Low Complexity:
-        ```lua
-        -- Simple: Load persistence data
-        lia.data.loadPersistenceData()
-        -- Loads entity data into cache
-        ```
-
-    Medium Complexity:
-        ```lua
-        -- Medium: Load persistence data with callback
-        lia.data.loadPersistenceData(function(entities)
-            print("Loaded " .. #entities .. " entities")
-            for _, ent in ipairs(entities) do
-                print("Entity: " .. ent.class .. " at " .. tostring(ent.pos))
-            end
-        end)
-        ```
-
-    High Complexity:
-        ```lua
-        -- High: Load persistence data with entity spawning
-        lia.data.loadPersistenceData(function(entities)
-            for _, entData in ipairs(entities) do
-                local ent = ents.Create(entData.class)
-                if IsValid(ent) then
-                    ent:SetPos(entData.pos)
-                    ent:SetAngles(entData.angles)
-                    ent:SetModel(entData.model)
-                    ent:Spawn()
-
-                    -- Restore custom properties
-                    for k, v in pairs(entData) do
-                        if not defaultCols[k] then
-                            ent:setNetVar(k, v)
-                        end
-                    end
-                end
-            end
-        end)
-        ```
-]]
 function lia.data.loadPersistenceData(callback)
     local gamemode = SCHEMA and SCHEMA.folder or engine.ActiveGamemode()
     local map = game.GetMap()
@@ -1121,57 +434,6 @@ function lia.data.loadPersistenceData(callback)
     end)
 end
 
---[[
-    Purpose:
-        Retrieves stored data from memory cache with automatic deserialization
-
-    When Called:
-        Called when accessing stored persistent data
-
-    Parameters:
-        key (string)
-            Unique identifier for the data
-        default (any, optional)
-            Default value if key not found
-
-    Returns:
-        any - Stored data or default value if not found
-
-    Realm:
-        Shared
-
-    Example Usage:
-
-    Low Complexity:
-        ```lua
-        -- Simple: Get basic data
-        local playerCount = lia.data.get("playerCount", 0)
-        -- Returns stored player count or 0 if not found
-        ```
-
-    Medium Complexity:
-        ```lua
-        -- Medium: Get data with default fallback
-        local serverSettings = lia.data.get("serverSettings", {
-            maxPlayers  = 32,
-            mapRotation = {"gm_flatgrass", "gm_construct"}
-        })
-        -- Returns stored settings or default configuration
-        ```
-
-    High Complexity:
-        ```lua
-        -- High: Get complex data with validation
-        local playerData = lia.data.get("player_" .. player:SteamID64(), {})
-        if playerData.position then
-            player:SetPos(playerData.position)
-        end
-        if playerData.inventory then
-            player:GetInventory():LoadFromData(playerData.inventory)
-        end
-        -- Retrieves and processes complex player data
-        ```
-]]
 function lia.data.get(key, default)
     local stored = lia.data.stored[key]
     if stored ~= nil then
@@ -1184,61 +446,6 @@ function lia.data.get(key, default)
     return default
 end
 
---[[
-    Purpose:
-        Retrieves cached entity persistence data from memory
-
-    When Called:
-        Called when accessing loaded entity persistence data
-
-    Parameters:
-        None
-
-    Returns:
-        table - Array of entity data tables or empty table if none loaded
-
-    Realm:
-        Shared
-
-    Example Usage:
-
-    Low Complexity:
-        ```lua
-        -- Simple: Get persistence data
-        local entities = lia.data.getPersistence()
-        print("Loaded " .. #entities .. " entities")
-        ```
-
-    Medium Complexity:
-        ```lua
-        -- Medium: Get persistence data with filtering
-        local entities = lia.data.getPersistence()
-        local vendors = {}
-        for _, ent in ipairs(entities) do
-            if ent.class == "lia_vendor" then
-                table.insert(vendors, ent)
-            end
-        end
-        print("Found " .. #vendors .. " vendors")
-        ```
-
-    High Complexity:
-        ```lua
-        -- High: Get persistence data with processing
-        local entities = lia.data.getPersistence()
-        local entityStats = {}
-        for _, ent in ipairs(entities) do
-            if not entityStats[ent.class] then
-                entityStats[ent.class] = 0
-            end
-            entityStats[ent.class] = entityStats[ent.class] + 1
-        end
-
-        for class, count in pairs(entityStats) do
-            print(class .. ": " .. count .. " entities")
-        end
-        ```
-]]
 function lia.data.getPersistence()
     return lia.data.persistCache or {}
 end
