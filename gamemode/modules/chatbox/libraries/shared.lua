@@ -1,4 +1,4 @@
-lia.chat.register("ic", {
+﻿lia.chat.register("ic", {
     arguments = {
         {
             name = "text",
