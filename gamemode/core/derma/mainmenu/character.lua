@@ -1,4 +1,4 @@
-﻿local PANEL = {}
+local PANEL = {}
 function PANEL:Init()
     local client = LocalPlayer()
     local clientChar = client.getChar and client:getChar()
@@ -288,7 +288,7 @@ function PANEL:createStartButton()
         end
     })
 
-    if clientChar then
+    if clientChar and not self.isKickedFromChar then
         table.insert(buttonsData, {
             id = "return",
             text = L("returnButton"),

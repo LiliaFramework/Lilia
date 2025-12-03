@@ -1,4 +1,4 @@
-﻿NAME = "English"
+NAME = "English"
 LANGUAGE = {
     mustProvideString = "Must Provide a String",
     use = "Use",
@@ -986,6 +986,7 @@ LANGUAGE = {
     noPreviousPosition = "No previous position",
     noPreviousSitroomPos = "No previous sitroom position",
     noPrivilege = "No privilege",
+    bypassOOCBlockPrivilege = "Bypass OOC Block",
     noStaffChar = "No staff character found. Create one in the staff faction.",
     staffCharCreated = "A staff character has been automatically created for you.",
     staffFactionRestricted = "Staff faction restricted",

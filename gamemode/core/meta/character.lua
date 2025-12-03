@@ -1,4 +1,4 @@
-﻿--[[
+--[[
     Character Meta
 
     Character management system for the Lilia framework.

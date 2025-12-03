@@ -1,4 +1,4 @@
-﻿lia.chat.register("ic", {
+lia.chat.register("ic", {
     arguments = {
         {
             name = "text",
@@ -317,7 +317,7 @@ lia.chat.register("ooc", {
     },
     desc = "oocDesc",
     onCanSay = function(speaker, text)
-        if GetGlobalBool("oocblocked", false) then
+        if GetGlobalBool("oocblocked", false) and not speaker:hasPrivilege("bypassOOCBlock") then
             speaker:notifyErrorLocalized("oocBlocked")
             return false
         end
