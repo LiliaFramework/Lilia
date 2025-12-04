@@ -1,4 +1,4 @@
-local view, traceData, traceData2, aimOrigin, crouchFactor, ft, curAng
+﻿local view, traceData, traceData2, aimOrigin, crouchFactor, ft, curAng
 local clmp = math.Clamp
 crouchFactor = 0
 local diff, fm, sm

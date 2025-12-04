@@ -1,4 +1,4 @@
---[[
+﻿--[[
     Commands Library
 
     Comprehensive command registration, parsing, and execution system for the Lilia framework.
@@ -7329,12 +7329,9 @@ lia.command.add("listnearbyentities", {
     onRun = function(client, arguments)
         local radius = tonumber(arguments[1]) or 500
         if radius <= 0 then radius = 500 end
-        if radius > 10000 then radius = 10000 end -- Cap at 10k units to prevent abuse
-
+        if radius > 10000 then radius = 10000 end
         local pos = client:GetPos()
         local entities = ents.FindInSphere(pos, radius)
-
-        -- Categorize entities
         local entityCategories = {
             players = {},
             npcs = {},
@@ -7346,10 +7343,8 @@ lia.command.add("listnearbyentities", {
 
         for _, ent in ipairs(entities) do
             if not IsValid(ent) then continue end
-
             local class = ent:GetClass()
             local category = "other"
-
             if ent:IsPlayer() then
                 category = "players"
             elseif ent:IsNPC() then
@@ -7372,25 +7367,18 @@ lia.command.add("listnearbyentities", {
             })
         end
 
-        -- Print results
         client:ChatPrint("=== Entities within " .. radius .. " units ===")
-
         for categoryName, entitiesInCategory in pairs(entityCategories) do
             if #entitiesInCategory > 0 then
                 client:ChatPrint("--- " .. categoryName:upper() .. " (" .. #entitiesInCategory .. ") ---")
-
                 table.sort(entitiesInCategory, function(a, b) return a.distance < b.distance end)
-
                 for _, entData in ipairs(entitiesInCategory) do
                     local info = string.format("%.1f units: %s", entData.distance, entData.class)
-                    if entData.name ~= "N/A" and entData.name ~= "" then
-                        info = info .. " (" .. entData.name .. ")"
-                    end
-                    if entData.health ~= "N/A" then
-                        info = info .. " [HP: " .. entData.health .. "]"
-                    end
+                    if entData.name ~= "N/A" and entData.name ~= "" then info = info .. " (" .. entData.name .. ")" end
+                    if entData.health ~= "N/A" then info = info .. " [HP: " .. entData.health .. "]" end
                     client:ChatPrint(info)
                 end
+
                 client:ChatPrint("")
             end
         end

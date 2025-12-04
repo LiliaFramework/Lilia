@@ -1,4 +1,4 @@
-NAME = "Portuguese"
+﻿NAME = "Portuguese"
 LANGUAGE = {
     mustProvideString = "Deves fornecer uma cadeia de texto",
     use = "Usar",
