@@ -1,4 +1,4 @@
-﻿local function OnPrivilegeRegistered(privilege)
+local function OnPrivilegeRegistered(privilege)
     local permission = privilege.Name
     serverguard.permission:Add(permission)
     if SERVER then
@@ -33,7 +33,7 @@ function serverguard.permission:Add(identifier, priv)
                         Name = identifier,
                         ID = identifier,
                         MinAccess = "admin",
-                        Category = "categoryServerGuard"
+                        Category = "compatibility"
                     })
                 end
             end

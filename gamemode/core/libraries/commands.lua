@@ -1,4 +1,4 @@
-﻿--[[
+--[[
     Commands Library
 
     Comprehensive command registration, parsing, and execution system for the Lilia framework.
@@ -50,7 +50,7 @@ function lia.command.add(command, data)
             Name = privilegeName,
             ID = privilegeID,
             MinAccess = superAdminOnly and "superadmin" or "admin",
-            Category = "commands"
+            Category = "staffPermissions"
         })
     end
 
@@ -7313,5 +7313,94 @@ lia.command.add("storagepasswordchange", {
         client:notifySuccessLocalized("storagePasswordChanged")
         lia.log.add(client, "storagePasswordChanged", entity:GetClass())
         hook.Run("UpdateEntityPersistence", entity)
+    end
+})
+
+lia.command.add("listnearbyentities", {
+    adminOnly = true,
+    desc = "listNearbyEntitiesDesc",
+    arguments = {
+        {
+            name = "radius",
+            type = "string",
+            optional = true
+        },
+    },
+    onRun = function(client, arguments)
+        local radius = tonumber(arguments[1]) or 500
+        if radius <= 0 then radius = 500 end
+        if radius > 10000 then radius = 10000 end -- Cap at 10k units to prevent abuse
+
+        local pos = client:GetPos()
+        local entities = ents.FindInSphere(pos, radius)
+
+        -- Categorize entities
+        local entityCategories = {
+            players = {},
+            npcs = {},
+            props = {},
+            vehicles = {},
+            weapons = {},
+            other = {}
+        }
+
+        for _, ent in ipairs(entities) do
+            if not IsValid(ent) then continue end
+
+            local class = ent:GetClass()
+            local category = "other"
+
+            if ent:IsPlayer() then
+                category = "players"
+            elseif ent:IsNPC() then
+                category = "npcs"
+            elseif ent:IsVehicle() then
+                category = "vehicles"
+            elseif ent:IsWeapon() then
+                category = "weapons"
+            elseif class:find("prop_") or class == "lia_item" then
+                category = "props"
+            end
+
+            table.insert(entityCategories[category], {
+                class = class,
+                model = ent:GetModel() or "N/A",
+                pos = ent:GetPos(),
+                distance = pos:Distance(ent:GetPos()),
+                health = ent.Health and ent:Health() or "N/A",
+                name = ent.GetName and ent:GetName() or "N/A"
+            })
+        end
+
+        -- Print results
+        client:ChatPrint("=== Entities within " .. radius .. " units ===")
+
+        for categoryName, entitiesInCategory in pairs(entityCategories) do
+            if #entitiesInCategory > 0 then
+                client:ChatPrint("--- " .. categoryName:upper() .. " (" .. #entitiesInCategory .. ") ---")
+
+                table.sort(entitiesInCategory, function(a, b) return a.distance < b.distance end)
+
+                for _, entData in ipairs(entitiesInCategory) do
+                    local info = string.format("%.1f units: %s", entData.distance, entData.class)
+                    if entData.name ~= "N/A" and entData.name ~= "" then
+                        info = info .. " (" .. entData.name .. ")"
+                    end
+                    if entData.health ~= "N/A" then
+                        info = info .. " [HP: " .. entData.health .. "]"
+                    end
+                    client:ChatPrint(info)
+                end
+                client:ChatPrint("")
+            end
+        end
+
+        local totalEntities = 0
+        for _, entitiesInCategory in pairs(entityCategories) do
+            totalEntities = totalEntities + #entitiesInCategory
+        end
+
+        client:ChatPrint("Total entities found: " .. totalEntities)
+        client:notify("Listed " .. totalEntities .. " entities within " .. radius .. " units")
     end
 })

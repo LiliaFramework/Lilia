@@ -1,4 +1,4 @@
-﻿--[[
+--[[
     Player Meta
 
     Player management system for the Lilia framework.
@@ -932,6 +932,14 @@ if SERVER then
         return entity
     end
 
+    local function isStuck(client)
+        return util.TraceEntity({
+            start = client:GetPos(),
+            endpos = client:GetPos(),
+            filter = client
+        }, client).StartSolid
+    end
+
     function playerMeta:setRagdolled(state, baseTime, getUpGrace, getUpMessage)
         getUpMessage = getUpMessage or L("wakingUp")
         local ragdoll = self:getNetVar("ragdoll")
@@ -970,13 +978,13 @@ if SERVER then
                         end
                     end
 
-                    if self:isStuck() then
+                    if isStuck(self) then
                         entity:DropToFloor()
                         self:SetPos(entity:GetPos() + Vector(0, 0, 16))
                         local positions = lia.util.findEmptySpace(self, {entity, self})
                         for _, pos in ipairs(positions) do
                             self:SetPos(pos)
-                            if not self:isStuck() then return end
+                            if not isStuck(self) then return end
                         end
                     end
                 end

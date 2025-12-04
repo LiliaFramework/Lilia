@@ -1,4 +1,4 @@
-﻿--[[
+--[[
     Administrator Library
 
     Comprehensive user group and privilege management system for the Lilia framework.
@@ -83,39 +83,39 @@ function getPrivilegeCategory(privilegeName)
     local categoryChecks = {
         {
             match = function(name) return string.match(name, "^tool_") end,
-            category = "categoryStaffTools"
+            category = "staffPermissions"
         },
         {
             match = function(name) return string.match(name, "^property_") end,
-            category = "categoryStaffManagement"
+            category = "staffPermissions"
         },
         {
             match = function(name) return name == "stopSoundForEveryone" end,
-            category = "categoryServer"
+            category = "staffPermissions"
         },
         {
             match = function(name) return string.match(name, "simfphys") end,
-            category = "simfphysVehicles"
+            category = "compatibility"
         },
         {
             match = function(name) return string.match(name, "SAM") end,
-            category = "categorySAM"
+            category = "compatibility"
         },
         {
             match = function(name) return string.match(name, "PAC") end,
-            category = "categoryPAC3"
+            category = "compatibility"
         },
         {
             match = function(name) return string.match(name, "ServerGuard") end,
-            category = "categoryServerGuard"
+            category = "compatibility"
         },
         {
             match = function(name) return name == "receiveCheaterNotifications" end,
-            category = "protection"
+            category = "exploiting"
         },
         {
             match = function(name) return name == "useDisallowedTools" end,
-            category = "categoryStaffTools"
+            category = "staffPermissions"
         }
     }
 
@@ -123,7 +123,7 @@ function getPrivilegeCategory(privilegeName)
     if lia.administrator and lia.administrator.privilegeCategories and lia.administrator.privilegeCategories[privilegeName] then
         category = L(lia.administrator.privilegeCategories[privilegeName])
     elseif lia.command and lia.command.list and lia.command.list[privilegeName] then
-        category = L("commands")
+        category = L("staffPermissions")
     else
         for _, module in pairs(lia.module.list) do
             if module.Privileges and istable(module.Privileges) then
@@ -318,7 +318,7 @@ function lia.administrator.hasAccess(ply, privilege)
                     Name = L("accessPropertyPrivilege", prop.MenuLabel or propName),
                     ID = privilege,
                     MinAccess = "admin",
-                    Category = "properties",
+                    Category = "staffPermissions",
                 })
             end
         elseif privilege:find("^tool_") then
@@ -329,7 +329,7 @@ function lia.administrator.hasAccess(ply, privilege)
                         Name = L("accessToolPrivilege", toolName:gsub("^%l", string.upper)),
                         ID = privilege,
                         MinAccess = defaultUserTools[string.lower(toolName)] and "user" or "admin",
-                        Category = "categoryStaffTools",
+                        Category = "staffPermissions",
                     })
 
                     break
@@ -1028,7 +1028,7 @@ if properties and properties.List then
                 Name = L("accessPropertyPrivilege", prop.MenuLabel or name),
                 ID = id,
                 MinAccess = "admin",
-                Category = "properties"
+                Category = "staffPermissions"
             })
         end
     end
@@ -1042,7 +1042,7 @@ for _, wep in ipairs(weapons.GetList()) do
                 Name = L("accessToolPrivilege", tool:gsub("^%l", string.upper)),
                 ID = id,
                 MinAccess = defaultUserTools[string.lower(tool)] and "user" or "admin",
-                Category = "categoryStaffTools"
+                Category = "staffPermissions"
             })
         end
     end

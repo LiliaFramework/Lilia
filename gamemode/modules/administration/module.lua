@@ -1,4 +1,4 @@
-﻿MODULE.name = "administrationModuleName"
+MODULE.name = "administrationModuleName"
 MODULE.author = "Samael"
 MODULE.discord = "@liliaplayer"
 MODULE.desc = "administrationToolsDescription"
@@ -25,7 +25,7 @@ MODULE.Privileges = {
         Name = "accessEditConfigurationMenu",
         ID = "accessEditConfigurationMenu",
         MinAccess = "superadmin",
-        Category = "categoryConfiguration",
+        Category = "userInterface",
     },
     {
         Name = "manageUsergroups",
@@ -139,7 +139,7 @@ MODULE.Privileges = {
         ID = "receiveCheaterNotifications",
         Name = "receiveCheaterNotifications",
         MinAccess = "admin",
-        Category = "protection",
+        Category = "exploiting",
     },
     {
         ID = "stopSoundForEveryone",
@@ -235,7 +235,7 @@ MODULE.Privileges = {
         Name = "noClipESPOffsetStaff",
         ID = "noClipESPOffsetStaff",
         MinAccess = "superadmin",
-        Category = "categoryStaffSettings",
+        Category = "userInterface",
     },
     {
         Name = "canPropertyWorldEntities",
@@ -247,67 +247,67 @@ MODULE.Privileges = {
         Name = "canSpawnRagdolls",
         ID = "canSpawnRagdolls",
         MinAccess = "admin",
-        Category = "categorySpawnRagdolls",
+        Category = "spawnPermissions",
     },
     {
         Name = "canSpawnSWEPs",
         ID = "canSpawnSWEPs",
         MinAccess = "superadmin",
-        Category = "categorySpawnSWEPs",
+        Category = "spawnPermissions",
     },
     {
         Name = "canEditWeapons",
         ID = "canEditWeapons",
         MinAccess = "superadmin",
-        Category = "categorySpawnSWEPs",
+        Category = "spawnPermissions",
     },
     {
         Name = "canSpawnEffects",
         ID = "canSpawnEffects",
         MinAccess = "admin",
-        Category = "categorySpawnEffects",
+        Category = "spawnPermissions",
     },
     {
         Name = "canSpawnProps",
         ID = "canSpawnProps",
         MinAccess = "admin",
-        Category = "categorySpawnProps",
+        Category = "spawnPermissions",
     },
     {
         Name = "canSpawnBlacklistedProps",
         ID = "canSpawnBlacklistedProps",
         MinAccess = "superadmin",
-        Category = "categorySpawnBlacklisting",
+        Category = "spawnPermissions",
     },
     {
         Name = "canSpawnNPCs",
         ID = "canSpawnNPCs",
         MinAccess = "superadmin",
-        Category = "categorySpawnNPCs",
+        Category = "spawnPermissions",
     },
     {
         Name = "noCarSpawnDelay",
         ID = "noCarSpawnDelay",
         MinAccess = "superadmin",
-        Category = "categorySpawnVehicles",
+        Category = "spawnPermissions",
     },
     {
         Name = "canSpawnCars",
         ID = "canSpawnCars",
         MinAccess = "admin",
-        Category = "categorySpawnVehicles",
+        Category = "spawnPermissions",
     },
     {
         Name = "canSpawnBlacklistedCars",
         ID = "canSpawnBlacklistedCars",
         MinAccess = "superadmin",
-        Category = "categorySpawnBlacklisting",
+        Category = "spawnPermissions",
     },
     {
         Name = "canSpawnSENTs",
         ID = "canSpawnSENTs",
         MinAccess = "admin",
-        Category = "categorySpawnSENTs",
+        Category = "spawnPermissions",
     },
     {
         Name = "canRemoveBlockedEntities",

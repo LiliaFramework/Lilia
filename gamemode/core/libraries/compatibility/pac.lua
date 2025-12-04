@@ -1,4 +1,4 @@
-﻿local playerMeta = FindMetaTable("Player")
+local playerMeta = FindMetaTable("Player")
 function playerMeta:getParts()
     return self:getNetVar("parts", {})
 end
@@ -208,7 +208,7 @@ lia.administrator.registerPrivilege({
     Name = "canUsePAC3",
     ID = "canUsePAC3",
     MinAccess = "admin",
-    Category = "categoryPAC3"
+    Category = "compatibility"
 })
 
 lia.flag.add("P", "flagPac3")
