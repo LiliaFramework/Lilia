@@ -317,7 +317,7 @@ lia.chat.register("ooc", {
     },
     desc = "oocDesc",
     onCanSay = function(speaker, text)
-        if GetGlobalBool("oocblocked", false) and not speaker:hasPrivilege("bypassOOCBlock") then
+        if lia.config.get("OOCBlocked", false) and not speaker:hasPrivilege("bypassOOCBlock") then
             speaker:notifyErrorLocalized("oocBlocked")
             return false
         end

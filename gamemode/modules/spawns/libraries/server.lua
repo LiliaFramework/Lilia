@@ -162,8 +162,8 @@ function MODULE:PlayerDeath(client, _, attacker)
     if not char then return end
     if not client:IsBot() then
         local deathTime = os.time()
-        client:setNetVar("lastDeathTime", deathTime)
-        timer.Simple(0.1, function() if IsValid(client) and client:getChar() and not client:Alive() then client:setNetVar("lastDeathTime", deathTime) end end)
+        client:setLocalVar("lastDeathTime", deathTime)
+        timer.Simple(0.1, function() if IsValid(client) and client:getChar() and not client:Alive() then client:setLocalVar("lastDeathTime", deathTime) end end)
     else
         local spawnTime = lia.config.get("SpawnTime", 5)
         timer.Simple(spawnTime, function() if IsValid(client) and client:getChar() and not client:Alive() then client:Spawn() end end)

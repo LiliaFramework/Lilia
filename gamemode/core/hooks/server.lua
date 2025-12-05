@@ -90,6 +90,7 @@ function GM:PlayerLoadedChar(client, character)
     character:setLoginTime(os.time())
     hook.Run("PlayerLoadout", client)
     if not timer.Exists("liaSalaryGlobal") then self:CreateSalaryTimers() end
+    if not timer.Exists("liaVoiceUpdate") then self:CreateVoiceUpdateTimer() end
     local ammoTable = character:getAmmo()
     if character:getFaction() == FACTION_STAFF then
         local storedDiscord = client:getLiliaData("staffDiscord")
@@ -410,7 +411,7 @@ function GM:KeyPress(client, key)
                 client:consumeStamina(jumpReq)
                 local newStamina = client:getLocalVar("stamina", maxStamina)
                 if newStamina <= 0 then
-                    client:setNetVar("brth", true)
+                    client:setLocalVar("brth", true)
                     client:ConCommand("-speed")
                 end
             elseif stamina < jumpReq then
@@ -465,7 +466,7 @@ function GM:DoPlayerDeath(client, attacker)
         existingRagdoll.liaIsDeadRagdoll = true
         existingRagdoll.liaNoReset = true
         existingRagdoll:CallOnRemove("deadRagdoll", function() existingRagdoll.liaIgnoreDelete = true end)
-        client:setNetVar("diedInRagdoll", true)
+        client.diedInRagdoll = true
     elseif hook.Run("ShouldSpawnClientRagdoll", client) ~= false then
         client:createRagdoll(false, true)
     end
@@ -484,10 +485,10 @@ end
 function GM:PlayerSpawn(client)
     client:stopAction()
     client:SetDSP(1, false)
-    if not client:getNetVar("diedInRagdoll", false) then
+    if not client.diedInRagdoll then
         client:removeRagdoll()
     else
-        client:setNetVar("diedInRagdoll", nil)
+        client.diedInRagdoll = nil
     end
 
     if not client:getChar() then client:SetNoDraw(true) end
@@ -548,6 +549,7 @@ function GM:PlayerDisconnected(client)
 
     client:removeRagdoll()
     lia.char.cleanUpForPlayer(client)
+    client.liaVoiceHear = nil
     if lia.config.get("DeleteDroppedItemsOnLeave", false) then
         local droppedItems = lia.util.findPlayerItems(client)
         for _, item in ipairs(droppedItems) do
@@ -614,9 +616,7 @@ function GM:PlayerLoadout(client)
     client:SetNoDraw(false)
     client:SetWeaponColor(Vector(0.30, 0.80, 0.10))
     client:StripWeapons()
-    client:setNetVar("blur", nil)
     client:SetModel(character:getModel())
-    client:SetJumpPower(160)
     lia.flag.onSpawn(client)
     hook.Run("PostPlayerLoadout", client)
     client:SelectWeapon("lia_hands")
@@ -624,6 +624,7 @@ function GM:PlayerLoadout(client)
         if IsValid(client) and client:getChar() == character then
             client:SetWalkSpeed(lia.config.get("WalkSpeed"))
             client:SetRunSpeed(lia.config.get("RunSpeed"))
+            client:SetJumpPower(160)
         end
     end)
 end
@@ -757,7 +758,7 @@ function GM:SaveData()
 
     if #data > 0 then
         lia.data.savePersistence(data)
-        lia.information(L("dataSaved"))
+        lia.information("dataSaved")
     end
 end
 
@@ -1009,15 +1010,39 @@ function ClientAddText(client, ...)
     net.Send(client)
 end
 
+local function UpdateVoiceHearing()
+    if not lia.config.get("IsVoiceEnabled", true) then return end
+    for _, listener in player.Iterator() do
+        if not IsValid(listener) or not listener:getChar() or not listener:Alive() then
+            listener.liaVoiceHear = nil
+            continue
+        end
+
+        listener.liaVoiceHear = listener.liaVoiceHear or {}
+        for _, speaker in player.Iterator() do
+            if not IsValid(speaker) or speaker == listener or not speaker:getChar() or not speaker:Alive() or speaker:getLiliaData("liaGagged", false) then
+                listener.liaVoiceHear[speaker] = nil
+                continue
+            end
+
+            local voiceType = speaker:getLocalVar("VoiceType", VOICE_TALKING)
+            local baseRange = voiceType == VOICE_WHISPERING and lia.config.get("WhisperRange", 70) or voiceType == VOICE_TALKING and lia.config.get("TalkRange", 280) or voiceType == VOICE_YELLING and lia.config.get("YellRange", 840) or lia.config.get("TalkRange", 280)
+            local distance = listener:GetPos():Distance(speaker:GetPos())
+            listener.liaVoiceHear[speaker] = distance <= baseRange
+        end
+    end
+end
+
 function GM:PlayerCanHearPlayersVoice(listener, speaker)
     if not IsValid(listener) or not IsValid(speaker) or listener == speaker then return false, false end
-    if speaker:getLiliaData("liaGagged", false) or not speaker:getChar() then return false, false end
     if not lia.config.get("IsVoiceEnabled", true) then return false, false end
-    local voiceType = speaker:getLocalVar("VoiceType", VOICE_TALKING)
-    local baseRange = voiceType == VOICE_WHISPERING and lia.config.get("WhisperRange", 70) or voiceType == VOICE_TALKING and lia.config.get("TalkRange", 280) or voiceType == VOICE_YELLING and lia.config.get("YellRange", 840) or lia.config.get("TalkRange", 280)
-    local distance = listener:GetPos():Distance(speaker:GetPos())
-    local canHear = distance <= baseRange
-    return canHear, canHear
+    local bCanHear = listener.liaVoiceHear and listener.liaVoiceHear[speaker]
+    return bCanHear, bCanHear
+end
+
+function GM:OnVoiceTypeChanged(client)
+    if not IsValid(client) or not client:getChar() then return end
+    UpdateVoiceHearing()
 end
 
 function GM:CreateCharacterSaveTimer()
@@ -1065,6 +1090,11 @@ function GM:CreateSalaryTimers()
     else
         timer.Create("liaSalaryGlobal", salaryInterval, 0, salaryTimer)
     end
+end
+
+function GM:CreateVoiceUpdateTimer()
+    if timer.Exists("liaVoiceUpdate") then return end
+    timer.Create("liaVoiceUpdate", 0.5, 0, function() UpdateVoiceHearing() end)
 end
 
 function GM:ShowHelp()
@@ -1192,3 +1222,10 @@ hook.Add("server_removeban", "LiliaLogServerUnban", function(data)
     MsgC(Color(255, 153, 0), L("unbanLogFormat", data.networkid), "\n")
     lia.db.query("DELETE FROM lia_bans WHERE playerSteamID = " .. lia.db.convertDataType(data.networkid))
 end)
+
+function GM:CanEditVariable()
+    return false
+end
+
+if timer.Exists("CheckHookTimes") then timer.Remove("CheckHookTimes") end
+timer.Remove("HostnameThink")

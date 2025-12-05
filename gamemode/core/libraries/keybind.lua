@@ -181,30 +181,30 @@ lia.keybind.add("adminMode", {
         local steamID = client:SteamID()
         client:ChatPrint(L("adminModeToggle"))
         if client:isStaffOnDuty() then
-            local oldCharID = client:getNetVar("OldCharID", 0)
+            local oldCharID = client.oldCharID or 0
             if oldCharID > 0 then
-                local originalPos = client:getNetVar("OriginalPosition")
+                local originalPos = client.OriginalPosition
                 if originalPos then
                     client:SetPos(originalPos)
-                    client:setNetVar("OriginalPosition", nil)
+                    client.OriginalPosition = nil
                 end
 
                 net.Start("liaAdminModeSwapCharacter")
                 net.WriteInt(oldCharID, 32)
                 net.Send(client)
-                client:setNetVar("OldCharID", nil)
+                client.oldCharID = nil
                 lia.log.add(client, "adminMode", oldCharID, L("adminModeLogBack"))
             else
                 client:notifyErrorLocalized("noPrevChar")
             end
         else
             local currentChar = client:getChar()
-            if currentChar and currentChar:getFaction() ~= "staff" then client:setNetVar("OriginalPosition", client:GetPos()) end
+            if currentChar and currentChar:getFaction() ~= "staff" then client.OriginalPosition = client:GetPos() end
             lia.db.query(string.format("SELECT * FROM lia_characters WHERE steamID = \"%s\"", lia.db.escape(steamID)), function(data)
                 for _, row in ipairs(data) do
                     local id = tonumber(row.id)
                     if row.faction == "staff" then
-                        client:setNetVar("OldCharID", client:getChar():getID())
+                        client.oldCharID = client:getChar():getID()
                         net.Start("liaAdminModeSwapCharacter")
                         net.WriteInt(id, 32)
                         net.Send(client)
@@ -224,7 +224,7 @@ lia.keybind.add("adminMode", {
 
                     lia.char.create(staffCharData, function(charID)
                         if IsValid(client) and charID then
-                            client:setNetVar("OldCharID", client:getChar():getID())
+                            client.oldCharID = client:getChar():getID()
                             net.Start("liaAdminModeSwapCharacter")
                             net.WriteInt(charID, 32)
                             net.Send(client)

@@ -237,6 +237,7 @@ if SERVER then
         onRun = function(client)
             client:setLocalVar("VoiceType", VOICE_WHISPERING)
             client:notifyInfoLocalized("voiceModeSet", L("whispering"))
+            hook.Run("OnVoiceTypeChanged", client)
         end,
         serverOnly = true
     })
@@ -247,6 +248,7 @@ if SERVER then
         onRun = function(client)
             client:setLocalVar("VoiceType", VOICE_TALKING)
             client:notifyInfoLocalized("voiceModeSet", L("talking"))
+            hook.Run("OnVoiceTypeChanged", client)
         end,
         serverOnly = true
     })
@@ -257,6 +259,7 @@ if SERVER then
         onRun = function(client)
             client:setLocalVar("VoiceType", VOICE_YELLING)
             client:notifyInfoLocalized("voiceModeSet", L("yelling"))
+            hook.Run("OnVoiceTypeChanged", client)
         end,
         serverOnly = true
     })

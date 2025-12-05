@@ -836,6 +836,12 @@ lia.config.add("LOOCDelayAdmin", "loocDelayAdmin", false, nil, {
     type = "Boolean",
 })
 
+lia.config.add("OOCBlocked", "oocBlocked", false, nil, {
+    desc = "oocBlockedDesc",
+    category = "categoryInterface",
+    type = "Boolean",
+})
+
 lia.config.add("ChatSizeDiff", "enableDifferentChatSize", false, nil, {
     desc = "enableDifferentChatSizeDesc",
     category = "categoryInterface",

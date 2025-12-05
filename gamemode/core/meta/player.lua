@@ -123,7 +123,6 @@ function playerMeta:removeRagdoll()
     if not IsValid(ragdoll) then return end
     ragdoll.liaIgnoreDelete = true
     SafeRemoveEntity(ragdoll)
-    self:setNetVar("blur", nil)
 end
 
 function playerMeta:getItemWeapon()
@@ -760,8 +759,8 @@ if SERVER then
         local current = self:getLocalVar("stamina", maxStamina)
         local value = math.Clamp(current + amount, 0, maxStamina)
         if current ~= value then self:setLocalVar("stamina", value) end
-        if value >= maxStamina * 0.25 and self:getNetVar("brth", false) then
-            self:setNetVar("brth", nil)
+        if value >= maxStamina * 0.25 and self:getLocalVar("brth", false) then
+            self:setLocalVar("brth", nil)
             hook.Run("PlayerStaminaGained", self)
         end
     end
@@ -773,8 +772,8 @@ if SERVER then
         local value = math.Clamp(current - amount, 0, max)
         if current ~= value then
             self:setLocalVar("stamina", value)
-            if value == 0 and not self:getNetVar("brth", false) then
-                self:setNetVar("brth", true)
+            if value == 0 and not self:getLocalVar("brth", false) then
+                self:setLocalVar("brth", true)
                 hook.Run("PlayerStaminaLost", self)
             end
         end
@@ -954,7 +953,6 @@ if SERVER then
             entity:setNetVar("player", self)
             entity:CallOnRemove("fixer", function()
                 if IsValid(self) then
-                    self:setNetVar("blur", nil)
                     if self.liaStoredHealth then self:SetHealth(math.max(self.liaStoredHealth, 1)) end
                     if not entity.liaNoReset then self:SetPos(entity:GetPos()) end
                     self:SetNoDraw(false)
@@ -990,7 +988,6 @@ if SERVER then
                 end
             end)
 
-            self:setNetVar("blur", 25)
             self:setNetVar("ragdoll", entity)
             entity.liaWeapons = {}
             entity.liaAmmo = {}

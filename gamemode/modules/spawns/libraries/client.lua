@@ -9,7 +9,7 @@ function MODULE:HUDPaint()
     if not ply:getChar() then return end
     local baseTime = lia.config.get("SpawnTime", 5)
     baseTime = hook.Run("OverrideSpawnTime", ply, baseTime) or baseTime
-    local lastDeath = ply:getNetVar("lastDeathTime", os.time())
+    local lastDeath = ply:getLocalVar("lastDeathTime", os.time())
     if lastDeath ~= lastDeathTimeValue then
         lastDeathTimeValue = lastDeath
         deathTimeReceived = CurTime()
@@ -90,7 +90,7 @@ function MODULE:PlayerButtonDown(client, key)
     if key ~= KEY_SPACE or not IsFirstTimePredicted() or not IsValid(ply) or ply ~= client or ply:Alive() or not char then return end
     local baseTime = lia.config.get("SpawnTime", 5)
     baseTime = hook.Run("OverrideSpawnTime", ply, baseTime) or baseTime
-    local lastDeath = ply:getNetVar("lastDeathTime", os.time())
+    local lastDeath = ply:getLocalVar("lastDeathTime", os.time())
     local timeSinceDeath = os.time() - lastDeath
     local preciseTimeSinceDeath = CurTime() - deathTimeReceived
     local left = math.Clamp(baseTime - preciseTimeSinceDeath, 0, baseTime)

@@ -1580,7 +1580,7 @@ local function getEntityDisplayName(ent)
     end
 
     if ent:GetClass() == "lia_vendor" then
-        local vendorName = ent:getNetVar("name")
+        local vendorName = ent:getName()
         if vendorName and vendorName ~= "" then return vendorName end
     end
 

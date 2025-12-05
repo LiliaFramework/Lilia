@@ -189,7 +189,13 @@ if SERVER then
 
     function entityMeta:setKeysNonOwnable(state)
         if not IsValid(self) then return end
-        self:setNetVar("noSell", state)
+        if self:isDoor() then
+            lia.doors.setData(self, {
+                noSell = state
+            })
+        else
+            self:setNetVar("noSell", state)
+        end
     end
 
     function entityMeta:setNetVar(key, value, receiver)

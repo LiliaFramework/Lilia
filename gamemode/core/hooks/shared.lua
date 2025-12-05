@@ -7,6 +7,24 @@ function GM:OnCharVarChanged(character, varName, oldVar, newVar)
     end
 end
 
+function GM:FindUseEntity(_, ent)
+    return ent
+end
+
+function GM:MouthMoveAnimation()
+    return nil
+end
+
+function GM:GrabEarAnimation()
+    return nil
+end
+
+function GM:PreGamemodeLoaded()
+    widgets.PlayerTick = function() end
+    hook.Remove("PlayerTick", "TickWidgets")
+    hook.Remove("PostDrawEffects", "RenderWidgets")
+end
+
 function GM:GetModelGender(model)
     local isFemale = model:find("alyx") or model:find("mossman") or model:find("female")
     return isFemale and "female" or "male"

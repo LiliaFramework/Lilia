@@ -19,13 +19,13 @@
         local value = math.Clamp(current + offset, 0, max)
         if current ~= value then
             client:setLocalVar("stamina", value)
-            if value == 0 and not client:getNetVar("brth", false) then
-                client:setNetVar("brth", true)
+            if value == 0 and not client:getLocalVar("brth", false) then
+                client:setLocalVar("brth", true)
                 char:updateAttrib("end", 0.1)
                 char:updateAttrib("stm", 0.01)
                 hook.Run("PlayerStaminaLost", client)
-            elseif value >= 50 and client:getNetVar("brth", false) then
-                client:setNetVar("brth", nil)
+            elseif value >= 50 and client:getLocalVar("brth", false) then
+                client:setLocalVar("brth", nil)
                 hook.Run("PlayerStaminaGained", client)
             end
         end
@@ -63,5 +63,5 @@ end
 
 function MODULE:SetupMove(client, cMoveData)
     if not lia.config.get("StaminaSlowdown", true) then return end
-    if client:getNetVar("brth", false) then cMoveData:SetMaxClientSpeed(client:GetWalkSpeed()) end
+    if client:getLocalVar("brth", false) then cMoveData:SetMaxClientSpeed(client:GetWalkSpeed()) end
 end

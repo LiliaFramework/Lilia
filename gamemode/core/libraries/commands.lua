@@ -1701,7 +1701,7 @@ lia.command.add("returnsitroom", {
             return
         end
 
-        local prev = target:getNetVar("previousSitroomPos")
+        local prev = target.previousSitroomPos
         if not prev then
             client:notifyErrorLocalized("noPreviousSitroomPos")
             return
@@ -2501,8 +2501,8 @@ lia.command.add("plyspectate", {
             return
         end
 
-        client:setNetVar("liaSpectateReturnPos", client:GetPos())
-        client:setNetVar("liaSpectateReturnAng", client:EyeAngles())
+        client.returnPos = client:GetPos()
+        client.returnAng = client:EyeAngles()
         client:Spectate(OBS_MODE_CHASE)
         client:SpectateEntity(target)
         client:GodEnable()
@@ -2525,16 +2525,16 @@ lia.command.add("stopspectate", {
         client:UnSpectate()
         client:GodDisable()
         client.liaSpectating = false
-        local returnPos = client:getNetVar("liaSpectateReturnPos")
-        local returnAng = client:getNetVar("liaSpectateReturnAng")
+        local returnPos = client.returnPos
+        local returnAng = client.returnAng
         if returnPos then
             client:SetPos(returnPos)
-            client:setNetVar("liaSpectateReturnPos", nil)
+            client.returnPos = nil
         end
 
         if returnAng then
             client:SetEyeAngles(returnAng)
-            client:setNetVar("liaSpectateReturnAng", nil)
+            client.returnAng = nil
         end
 
         client:Give("weapon_physgun")
@@ -2624,7 +2624,7 @@ lia.command.add("forcefallover", {
             return
         end
 
-        if target:getNetVar("FallOverCooldown", false) then
+        if target.FallOverCooldown then
             target:notifyWarningLocalized("cmdCooldown")
             return
         elseif target:IsFrozen() then
@@ -2648,10 +2648,10 @@ lia.command.add("forcefallover", {
             time = math.Clamp(time, 1, 60)
         end
 
-        target:setNetVar("FallOverCooldown", true)
+        target.FallOverCooldown = true
         if not IsValid(target:getNetVar("ragdoll")) then
             target:setRagdolled(true, time)
-            timer.Simple(10, function() if IsValid(target) then target:setNetVar("FallOverCooldown", false) end end)
+            timer.Simple(10, function() if IsValid(target) then target.FallOverCooldown = false end end)
         end
     end
 })
@@ -4989,17 +4989,6 @@ lia.command.add("unbanooc", {
     end
 })
 
-lia.command.add("blockooc", {
-    superAdminOnly = true,
-    desc = "blockOOCCommandDesc",
-    onRun = function(client)
-        local blocked = GetGlobalBool("oocblocked", false)
-        SetGlobalBool("oocblocked", not blocked)
-        client:notifyInfoLocalized(blocked and "unlockedOOC" or "blockedOOC")
-        lia.log.add(client, "blockOOC", not blocked)
-    end
-})
-
 lia.command.add("clearchat", {
     adminOnly = true,
     desc = "clearChatCommandDesc",
@@ -7209,7 +7198,7 @@ lia.command.add("forcerespawn", {
 
         local baseTime = lia.config.get("SpawnTime", 5)
         baseTime = hook.Run("OverrideSpawnTime", client, baseTime) or baseTime
-        local lastDeath = client:getNetVar("lastDeathTime", os.time())
+        local lastDeath = client:getLocalVar("lastDeathTime", os.time())
         local timePassed = os.time() - lastDeath
         if timePassed < baseTime then
             client:notifyErrorLocalized("cannotRespawnYet", baseTime - timePassed)
@@ -7217,7 +7206,7 @@ lia.command.add("forcerespawn", {
         end
 
         client:Spawn()
-        client:setNetVar("lastDeathTime", 0)
+        client:setLocalVar("lastDeathTime", 0)
         client:notifySuccessLocalized("playerForceRespawned", client:Name())
         client:notifyLocalized("youWereForceRespawned")
         lia.log.add(client, "forcerespawn", client:Name())

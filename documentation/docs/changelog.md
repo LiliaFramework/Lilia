@@ -1,55 +1,5 @@
 # Changelog
 
-## Version 7.111 (December 04, 2025)
-
-### Changes
-
-- Compressed Categories of Privileges
-- Successfully updated workshop Lilia to 7.19
-- Chatbox perms
-- Successfully updated workshop Lilia to 7.17
-- Bug Fixing
-- Successfully updated workshop Lilia to 7.15
-- More Optimizations!
-- Cached getItemTable
-- Successfully updated workshop Lilia to 7.12
-- Caching for lessl ag
-- Successfully updated workshop Lilia to 7.10
-- Huge Optimization in Stamina
-- Successfully updated workshop Lilia to 7.098
-- Door Optimization
-- Overlap Bug Fix
-- Update admin.lua
-- requestString instead of Derma_Query
-- Language Cache
-- Delete sh_extensions.lua
-- Better lia_storage UI
-
-## Version 7.19 (December 03, 2025)
-
-### Changes
-
-- Chatbox perms
-- Successfully updated workshop Lilia to 7.17
-- Bug Fixing
-- Successfully updated workshop Lilia to 7.15
-- More Optimizations!
-- Cached getItemTable
-- Successfully updated workshop Lilia to 7.12
-- Caching for lessl ag
-- Successfully updated workshop Lilia to 7.10
-- Huge Optimization in Stamina
-- Successfully updated workshop Lilia to 7.098
-- Door Optimization
-- Overlap Bug Fix
-- Update admin.lua
-- requestString instead of Derma_Query
-- Language Cache
-- Delete sh_extensions.lua
-- Better lia_storage UI
-- Successfully updated workshop Lilia to 7.090
-- Vendors Overhaul, Optimizations and Bug Fixes
-
 ## Version 7.17 (December 03, 2025)
 
 ### Changes

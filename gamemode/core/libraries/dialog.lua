@@ -916,6 +916,19 @@ lia.dialog.registerConfiguration("appearance", {
 })
 
 if SERVER then
+    lia.dialog.registerConfiguration("dialog_type", {
+        onApply = function(ply, npc, customData)
+            if not IsValid(npc) then return end
+            customData = istable(customData) and customData or {}
+            if customData.dialogType then
+                npc.uniqueID = customData.dialogType
+                hook.Run("UpdateEntityPersistence", npc)
+                hook.Run("SaveData")
+                ply:notifySuccess("NPC dialog type updated successfully!")
+            end
+        end
+    })
+
     lia.dialog.registerConfiguration("appearance", {
         onApply = function(ply, npc, customData)
             if not IsValid(npc) then return end
