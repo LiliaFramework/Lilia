@@ -46,8 +46,6 @@
 
 - [Door Kick](https://liliaframework.github.io/modules/doorkick/about/)
 
-- [Enhanced Death](https://liliaframework.github.io/modules/enhanceddeath/about/)
-
 - [Extended Descriptions](https://liliaframework.github.io/modules/extendeddescriptions/about/)
 
 - [Extended Descriptions](https://liliaframework.github.io/modules/firstpersoneffects/about/)
@@ -59,6 +57,8 @@
 - [Gamemaster Points](https://liliaframework.github.io/modules/gamemasterpoints/about/)
 
 - [HUD Extras](https://liliaframework.github.io/modules/hud_extras/about/)
+
+- [Hospitals](https://liliaframework.github.io/modules/hospitals/about/)
 
 - [Instakill](https://liliaframework.github.io/modules/instakill/about/)
 

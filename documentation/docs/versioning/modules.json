@@ -228,18 +228,6 @@
     "workshop": []
   },
   {
-    "name": "Enhanced Death",
-    "versionID": "public_enhanceddeath",
-    "author": "Samael",
-    "discord": "@liliaplayer",
-    "description": "Adds respawning of players at hospitals, a medical recovery system, support for multiple hospital spawns, configurable respawn delays, and integration with death logs.",
-    "version": "1",
-    "download": "https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/enhanceddeath.zip",
-    "source": "https://liliaframework.github.io/modules/enhanceddeath/about/",
-    "features": [],
-    "workshop": []
-  },
-  {
     "name": "Extended Descriptions",
     "versionID": "public_extendeddescriptions",
     "author": "Samael",
@@ -296,6 +284,18 @@
     "version": "1",
     "download": "https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/gamemasterpoints.zip",
     "source": "https://liliaframework.github.io/modules/gamemasterpoints/about/",
+    "features": [],
+    "workshop": []
+  },
+  {
+    "name": "Hospitals",
+    "versionID": "public_hospitals",
+    "author": "Samael",
+    "discord": "@liliaplayer",
+    "description": "Adds respawning of players at hospitals with support for multiple hospital spawn locations on different maps.",
+    "version": "1",
+    "download": "https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/hospitals.zip",
+    "source": "https://liliaframework.github.io/modules/hospitals/about/",
     "features": [],
     "workshop": []
   },

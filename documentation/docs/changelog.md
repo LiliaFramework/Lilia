@@ -1,5 +1,30 @@
 # Changelog
 
+## Version 7.117 (December 06, 2025)
+
+### Changes
+
+- Log Pagination
+- Character Loader Camera Pos Fixes
+- Fixed Convert Entity
+- Successfully updated workshop Lilia to 7.113
+- Removed Redudant Nets and Moved Several to setLocalVar for Performance
+- Successfully updated workshop Lilia to 7.111
+- Compressed Categories of Privileges
+- Successfully updated workshop Lilia to 7.19
+- Chatbox perms
+- Successfully updated workshop Lilia to 7.17
+- Bug Fixing
+- Successfully updated workshop Lilia to 7.15
+- More Optimizations!
+- Cached getItemTable
+- Successfully updated workshop Lilia to 7.12
+- Caching for lessl ag
+- Successfully updated workshop Lilia to 7.10
+- Huge Optimization in Stamina
+- Successfully updated workshop Lilia to 7.098
+- Door Optimization
+
 ## Version 7.113 (December 05, 2025)
 
 ### Changes
