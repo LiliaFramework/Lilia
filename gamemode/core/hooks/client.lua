@@ -668,33 +668,47 @@ function GM:DrawDeathNotice()
 end
 
 function GM:GetMainMenuPosition(character)
-    if character and lia.config.get("MainMenuUseLastPos", true) then
+    if not character then return nil, nil end
+    if lia.config.get("MainMenuUseLastPos", true) then
         local lastPos = character:getLastPos()
-        if lastPos and lastPos.pos and isvector(lastPos.pos) then
-            local angles = lastPos.ang and isangle(lastPos.ang) and lastPos.ang or Angle(0, 0, 0)
-            return lastPos.pos, angles
+        if lastPos then
+            local pos = lastPos.pos or lastPos.position or lastPos.Pos or lastPos.Position
+            local ang = lastPos.ang or lastPos.angles or lastPos.Ang or lastPos.Angles
+            if pos and isvector(pos) then
+                local angles = ang and isangle(ang) and ang or Angle(0, 0, 0)
+                return pos, angles
+            end
         end
 
-        if character:getFaction() then
-            local faction = lia.faction.get(character:getFaction())
-            if faction and faction.mainMenuPosition then
-                local menuPos = faction.mainMenuPosition
-                local currentMap = game.GetMap()
-                if istable(menuPos) and menuPos[currentMap] then
-                    local mapPos = menuPos[currentMap]
-                    if istable(mapPos) then
-                        return mapPos.position, mapPos.angles
-                    elseif isvector(mapPos) then
-                        return mapPos, Angle(0, 0, 0)
-                    end
-                end
+        local client = LocalPlayer()
+        if IsValid(client) and client:getChar() then
+            local currentChar = client:getChar()
+            local currentCharID = currentChar.getID and currentChar:getID() or nil
+            local viewingCharID = character.getID and character:getID() or nil
+            if currentCharID == viewingCharID then return client:GetPos(), Angle(0, 0, 0) end
+        end
+    end
 
-                if istable(menuPos) then
-                    return menuPos.position, menuPos.angles
-                elseif isvector(menuPos) then
-                    return menuPos, Angle(0, 0, 0)
+    if character:getFaction() then
+        local faction = lia.faction.get(character:getFaction())
+        if faction and faction.mainMenuPosition then
+            local menuPos = faction.mainMenuPosition
+            local currentMap = lia.data.getEquivalencyMap(game.GetMap())
+            if istable(menuPos) and menuPos[currentMap] then
+                local mapPos = menuPos[currentMap]
+                if istable(mapPos) then
+                    return mapPos.position, mapPos.angles
+                elseif isvector(mapPos) then
+                    return mapPos, Angle(0, 0, 0)
                 end
+            end
+
+            if istable(menuPos) then
+                return menuPos.position, menuPos.angles
+            elseif isvector(menuPos) then
+                return menuPos, Angle(0, 0, 0)
             end
         end
     end
+    return nil, nil
 end

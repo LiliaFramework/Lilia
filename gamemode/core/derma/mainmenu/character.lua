@@ -81,6 +81,13 @@ function PANEL:restoreExternalEntities()
         if IsValid(ent) then ent:SetNoDraw(wasHidden) end
     end
 
+    local client = LocalPlayer()
+    if IsValid(client) and self.hiddenEntities[client] ~= nil then
+        client:SetNoDraw(self.hiddenEntities[client])
+    elseif IsValid(client) then
+        client:SetNoDraw(false)
+    end
+
     self.hiddenEntities = nil
 end
 
@@ -97,7 +104,11 @@ function PANEL:loadBackground()
             local modelAngles = ent:GetAngles()
             local forward = modelAngles:Forward()
             local desired = center + forward * 70
-            self.currentCamPos = self.currentCamPos and LerpVector(FrameTime() * 5, self.currentCamPos, desired) or desired
+            if not self.currentCamPos then
+                self.currentCamPos = desired
+            else
+                self.currentCamPos = LerpVector(FrameTime() * 5, self.currentCamPos, desired)
+            end
             return {
                 origin = self.currentCamPos,
                 angles = (center - self.currentCamPos):Angle(),
@@ -628,7 +639,46 @@ function PANEL:updateModelEntity(character)
     end
 
     hook.Run("SetupPlayerModel", self.modelEntity, character)
-    local pos, ang = hook.Run("GetMainMenuPosition", character)
+    local pos, ang = nil, nil
+    if lia.config.get("MainMenuUseLastPos", true) then
+        local lastPos = character.getLastPos and character:getLastPos()
+        if lastPos then
+            local posValue = lastPos.pos or lastPos.position or lastPos.Pos or lastPos.Position
+            local angValue = lastPos.ang or lastPos.angles or lastPos.Ang or lastPos.Angles
+            if posValue and isvector(posValue) then
+                pos = posValue
+                ang = angValue and isangle(angValue) and angValue or Angle(0, 0, 0)
+            else
+                local client = LocalPlayer()
+                if IsValid(client) and client:getChar() then
+                    local currentChar = client:getChar()
+                    local currentCharID = currentChar.getID and currentChar:getID() or nil
+                    local viewingCharID = character.getID and character:getID() or nil
+                    if currentCharID == viewingCharID then
+                        pos = client:GetPos()
+                        ang = Angle(0, 0, 0)
+                    end
+                end
+            end
+        else
+            local client = LocalPlayer()
+            if IsValid(client) and client:getChar() then
+                local currentChar = client:getChar()
+                local currentCharID = currentChar.getID and currentChar:getID() or nil
+                local viewingCharID = character.getID and character:getID() or nil
+                if currentCharID == viewingCharID then
+                    pos = client:GetPos()
+                    ang = Angle(0, 0, 0)
+                end
+            end
+        end
+    end
+
+    if not pos then
+        local hookResult = {hook.Run("GetMainMenuPosition", character)}
+        pos, ang = hookResult[1], hookResult[2]
+    end
+
     if not pos or not ang then
         local spawns = ents.FindByClass("info_player_start")
         pos = #spawns > 0 and spawns[1]:GetPos() or Vector()
@@ -637,6 +687,7 @@ function PANEL:updateModelEntity(character)
 
     self.modelEntity:SetPos(pos)
     self.modelEntity:SetAngles(ang)
+    self.currentCamPos = nil
     for _, seq in ipairs(self.modelEntity:GetSequenceList()) do
         if seq:lower():find("idle") and seq ~= "idlenoise" then
             self.modelEntity:ResetSequence(seq)
@@ -830,6 +881,8 @@ function PANEL:OnRemove()
     if lia.gui.character == self then lia.gui.character = nil end
     hook.Run("CharMenuClosed")
     self:restoreExternalEntities()
+    local client = LocalPlayer()
+    if IsValid(client) then client:SetNoDraw(false) end
     hook.Remove("PrePlayerDraw", "liaMainMenuPrePlayerDraw")
     hook.Remove("CalcView", "liaMainMenuCalcView")
     hook.Remove("PostDrawOpaqueRenderables", "liaMainMenuPostDrawOpaqueRenderables")
