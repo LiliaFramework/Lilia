@@ -289,34 +289,16 @@ lia.keybind.add("convertEntity", {
             return
         end
 
-        local entityData = extractEntityData(targetEntity)
-        lia.item.instance(0, itemUniqueID, {}, 1, 1, function(item)
-            if not item then return end
-            if SERVER then
-                item:getEntity():setNetVar("entityData", entityData)
-                item:setData("entityClass", targetEntity:GetClass())
-                item:setData("entityModel", targetEntity:GetModel())
-            end
+        local character = client:getChar()
+        local inventory = character:getInv()
+        if not inventory:canAdd(itemUniqueID) then
+            client:notifyErrorLocalized("noSpaceForItem")
+            return
+        end
 
-            local inventory = client:getChar():getInv()
-            if inventory then
-                inventory:add(item):next(function()
-                    if IsValid(targetEntity) then SafeRemoveEntity(targetEntity) end
-                    client:notifySuccessLocalized("entityConverted", item:getName())
-                end):catch(function(err)
-                    if err == "noFit" then
-                        item:spawn(client:getItemDropPos())
-                        if IsValid(targetEntity) then SafeRemoveEntity(targetEntity) end
-                        client:notifySuccessLocalized("entityConvertedGround", item:getName())
-                    else
-                        client:notifyErrorLocalized("inventoryError")
-                    end
-                end)
-            else
-                item:spawn(client:getItemDropPos())
-                if IsValid(targetEntity) then SafeRemoveEntity(targetEntity) end
-                client:notifySuccessLocalized("entityConvertedGround", item:getName())
-            end
+        inventory:add(itemUniqueID):next(function(item)
+            client:notifyLocalized("entityConverted", item:getName())
+            SafeRemoveEntity(targetEntity)
         end)
     end,
     shouldRun = function(client) return client:getChar() ~= nil end,
