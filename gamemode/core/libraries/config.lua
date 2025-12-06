@@ -734,7 +734,7 @@ lia.config.add("StaminaCrouchRegeneration", "staminaCrouchRegeneration", 2, nil,
     decimals = 2
 })
 
-lia.config.add("logsPerPage", "logsPerPage", 500, nil, {
+lia.config.add("logsPerPage", "logsPerPage", 50, nil, {
     desc = "logsPerPageDesc",
     category = "categoryServer",
     type = "Number",

@@ -350,13 +350,13 @@ if SERVER then
 
     function characterMeta:save(callback)
         if self.isBot then return end
-        local data = {}
-        for k, v in pairs(lia.char.vars) do
-            if v.field and self.vars[k] ~= nil then data[v.field] = self.vars[k] end
-        end
-
         local shouldSave = hook.Run("CharPreSave", self)
         if shouldSave ~= false then
+            local data = {}
+            for k, v in pairs(lia.char.vars) do
+                if v.field and self.vars[k] ~= nil then data[v.field] = self.vars[k] end
+            end
+
             lia.db.updateTable(data, function()
                 if callback then callback() end
                 hook.Run("CharPostSave", self)

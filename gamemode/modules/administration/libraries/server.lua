@@ -90,38 +90,53 @@ net.Receive("liaSpawnMenuGiveItem", function(_, client)
     lia.log.add(client, "chargiveItem", id, target, "SpawnMenuGiveItem")
 end)
 
-local function SendLogs(client, categorizedLogs)
-    lia.net.writeBigTable(client, "liaSendLogs", categorizedLogs)
-end
-
 local function CanPlayerSeeLog(client)
     return lia.config.get("AdminConsoleNetworkLogs", true) and client:hasPrivilege("canSeeLogs")
 end
 
-local function ReadLogEntries(category)
+local function ReadLogEntries(category, page)
     local d = deferred.new()
     local maxDays = lia.config.get("LogRetentionDays", 7)
-    local maxLines = math.max(lia.config.get("logsPerPage", 500), 1) * 5
+    local logsPerPage = lia.config.get("logsPerPage", 50)
     local cutoff = os.time() - maxDays * 86400
     local cutoffStr = os.date("%Y-%m-%d %H:%M:%S", cutoff)
-    local condition = table.concat({"gamemode = " .. lia.db.convertDataType(engine.ActiveGamemode()), "category = " .. lia.db.convertDataType(category), "timestamp >= " .. lia.db.convertDataType(cutoffStr)}, " AND ") .. " ORDER BY id DESC LIMIT " .. maxLines
-    lia.db.select({"timestamp", "message", "steamID"}, "logs", condition):next(function(res)
-        local rows = res.results or {}
-        local logs = {}
-        for _, row in ipairs(rows) do
-            logs[#logs + 1] = {
-                timestamp = row.timestamp,
-                message = row.message,
-                steamID = row.steamID
-            }
-        end
+    local countCondition = table.concat({"gamemode = " .. lia.db.convertDataType(engine.ActiveGamemode()), "category = " .. lia.db.convertDataType(category), "timestamp >= " .. lia.db.convertDataType(cutoffStr)}, " AND ")
+    lia.db.count("logs", countCondition):next(function(totalCount)
+        local offset = (page - 1) * logsPerPage
+        local limit = logsPerPage
+        local condition = countCondition .. " ORDER BY id DESC LIMIT " .. limit .. " OFFSET " .. offset
+        lia.db.select({"timestamp", "message", "steamID"}, "logs", condition):next(function(res)
+            local rows = res.results or {}
+            local logs = {}
+            for _, row in ipairs(rows) do
+                logs[#logs + 1] = {
+                    timestamp = row.timestamp,
+                    message = row.message,
+                    steamID = row.steamID
+                }
+            end
 
-        d:resolve(logs)
+            d:resolve({
+                logs = logs,
+                totalCount = totalCount,
+                totalPages = math.max(1, math.ceil(totalCount / logsPerPage)),
+                currentPage = page,
+                category = category
+            })
+        end)
     end)
     return d
 end
 
 net.Receive("liaSendLogsRequest", function(_, client)
+    if not CanPlayerSeeLog(client) then return end
+    local category = net.ReadString()
+    local page = net.ReadUInt(16)
+    if hook.Run("CanPlayerSeeLogCategory", client, category) == false then return end
+    ReadLogEntries(category, page):next(function(result) lia.net.writeBigTable(client, "liaSendLogs", result) end)
+end)
+
+net.Receive("liaSendLogsCategoriesRequest", function(_, client)
     if not CanPlayerSeeLog(client) then return end
     local categories = {}
     for _, v in pairs(lia.log.types) do
@@ -133,17 +148,9 @@ net.Receive("liaSendLogsRequest", function(_, client)
         if hook.Run("CanPlayerSeeLogCategory", client, k) ~= false then catList[#catList + 1] = k end
     end
 
-    local logsByCategory = {}
-    local function fetch(i)
-        if i > #catList then return SendLogs(client, logsByCategory) end
-        local cat = catList[i]
-        ReadLogEntries(cat):next(function(entries)
-            if #entries > 0 then logsByCategory[cat] = entries end
-            fetch(i + 1)
-        end)
-    end
-
-    fetch(1)
+    net.Start("liaSendLogsCategories")
+    net.WriteTable(catList)
+    net.Send(client)
 end)
 
 function MODULE:OnCharDelete(client, id)

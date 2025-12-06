@@ -403,6 +403,7 @@ end)
 
 net.Receive("liaMessageData", function(_, client)
     local text = net.ReadString()
+    if not text then return end
     local charlimit = lia.config.get("MaxChatLength")
     if charlimit > 0 then
         if (client.liaNextChat or 0) < CurTime() and text:find("%S") then

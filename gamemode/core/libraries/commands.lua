@@ -1390,7 +1390,7 @@ else
         elseif istable(faction.mainMenuPosition) then
             MsgC(Color(0, 255, 0), L("mapSpecificPositions") .. "\n")
             for mapName, posData in pairs(faction.mainMenuPosition) do
-                local isCurrentMap = mapName == game.GetMap()
+                local isCurrentMap = mapName == lia.data.getEquivalencyMap(game.GetMap())
                 local mapColor = isCurrentMap and Color(0, 255, 0) or Color(255, 255, 255)
                 MsgC(mapColor, "  " .. (isCurrentMap and ">>> " or "    ") .. mapName .. ":\n")
                 if istable(posData) then
@@ -6298,7 +6298,7 @@ lia.command.add("spawnadd", {
                 local newSpawn = {
                     pos = client:GetPos(),
                     ang = client:EyeAngles(),
-                    map = game.GetMap()
+                    map = lia.data.getEquivalencyMap(game.GetMap())
                 }
 
                 table.insert(spawns[factionInfo.uniqueID], newSpawn)
@@ -6328,7 +6328,7 @@ lia.command.add("spawnremoveinradius", {
         local radius = tonumber(arguments[1]) or 120
         lia.module.get("spawns"):FetchSpawns():next(function(spawns)
             local removedCount = 0
-            local curMap = game.GetMap():lower()
+            local curMap = lia.data.getEquivalencyMap(game.GetMap()):lower()
             for faction, list in pairs(spawns) do
                 for i = #list, 1, -1 do
                     local data = list[i]
@@ -6381,7 +6381,7 @@ lia.command.add("spawnremovebyname", {
             lia.module.get("spawns"):FetchSpawns():next(function(spawns)
                 local list = spawns[factionInfo.uniqueID]
                 if list then
-                    local curMap = game.GetMap():lower()
+                    local curMap = lia.data.getEquivalencyMap(game.GetMap()):lower()
                     local removedCount = 0
                     for i = #list, 1, -1 do
                         local data = list[i]
