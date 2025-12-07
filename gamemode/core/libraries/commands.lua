@@ -3760,9 +3760,14 @@ lia.command.add("charsetskin", {
             return
         end
 
+        if not skin then
+            client:notifyErrorLocalized("invalidArg", 2)
+            return
+        end
+
         target:getChar():setSkin(skin)
-        target:SetSkin(skin or 0)
-        client:notifySuccessLocalized("changeSkin", client:Name(), target:Name(), skin or 0)
+        target:SetSkin(skin)
+        client:notifySuccessLocalized("changeSkin", client:Name(), target:Name(), skin)
     end
 })
 

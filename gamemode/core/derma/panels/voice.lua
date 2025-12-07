@@ -33,9 +33,12 @@ function PANEL:Setup(client)
 end
 
 function PANEL:UpdateIcon()
-    local vt = self.client:getLocalVar("VoiceType", VOICE_TALKING)
+    local vt = self.cachedVoiceType or VOICE_TALKING
     local img = ICON_MAP[vt] or "normaltalk.png"
-    self.Icon:SetImage(img)
+    if self.currentIcon ~= img then
+        self.currentIcon = img
+        self.Icon:SetImage(img)
+    end
 end
 
 function PANEL:Paint(w, h)
@@ -52,7 +55,15 @@ end
 function PANEL:Think()
     if not IsValid(self.client) then return end
     if self.LabelName:GetText() ~= self.name then self.LabelName:SetText(self.name) end
-    self:UpdateIcon()
+    if not self.nextIconCheck or CurTime() >= self.nextIconCheck then
+        self.nextIconCheck = CurTime() + 0.1
+        local newVoiceType = self.client:getLocalVar("VoiceType", VOICE_TALKING)
+        if newVoiceType ~= self.cachedVoiceType then
+            self.cachedVoiceType = newVoiceType
+            self:UpdateIcon()
+        end
+    end
+
     if self.fadeAnim then self.fadeAnim:Run() end
 end
 

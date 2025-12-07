@@ -1013,6 +1013,11 @@ end
 
 local function UpdateVoiceHearing()
     if not lia.config.get("IsVoiceEnabled", true) then return end
+    local speakerGaggedCache = {}
+    for _, speaker in player.Iterator() do
+        if IsValid(speaker) and speaker:getChar() and speaker:Alive() then speakerGaggedCache[speaker] = speaker:getLiliaData("liaGagged", false) end
+    end
+
     for _, listener in player.Iterator() do
         if not IsValid(listener) or not listener:getChar() or not listener:Alive() then
             listener.liaVoiceHear = nil
@@ -1021,7 +1026,7 @@ local function UpdateVoiceHearing()
 
         listener.liaVoiceHear = listener.liaVoiceHear or {}
         for _, speaker in player.Iterator() do
-            if not IsValid(speaker) or speaker == listener or not speaker:getChar() or not speaker:Alive() or speaker:getLiliaData("liaGagged", false) then
+            if not IsValid(speaker) or speaker == listener or not speaker:getChar() or not speaker:Alive() or speakerGaggedCache[speaker] then
                 listener.liaVoiceHear[speaker] = nil
                 continue
             end

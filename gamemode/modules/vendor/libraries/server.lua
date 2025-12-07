@@ -322,16 +322,28 @@ function MODULE:OnEntityLoaded(ent, data)
     lia.vendor.setVendorProperty(ent, "name", data.name)
     lia.vendor.setVendorProperty(ent, "animation", data.animation or "")
     ent.items = data.items or {}
-    ent.factions = data.factions or {}
-    ent.classes = data.classes or {}
-    ent.messages = data.messages or {}
-    ent.factionBuyScales = data.factionBuyScales
-    ent.factionSellScales = data.factionSellScales
+    ent.factions = istable(data.factions) and data.factions or {}
+    ent.classes = istable(data.classes) and data.classes or {}
+    ent.messages = istable(data.messages) and data.messages or {}
+    ent.factionBuyScales = istable(data.factionBuyScales) and data.factionBuyScales or {}
+    ent.factionSellScales = istable(data.factionSellScales) and data.factionSellScales or {}
     timer.Simple(0.1, function()
-        if IsValid(ent) then
-            for _, client in player.Iterator() do
-                if IsValid(client) then self:syncVendorDataToClient(client) end
-            end
+        if not IsValid(ent) then return end
+        local savedPos = ent:GetPos()
+        local savedAng = ent:GetAngles()
+        ent:SetMoveType(MOVETYPE_NONE)
+        ent:SetPos(savedPos)
+        ent:SetAngles(savedAng)
+        local physObj = ent:GetPhysicsObject()
+        if IsValid(physObj) then
+            physObj:EnableMotion(false)
+            physObj:Sleep()
+            physObj:SetPos(savedPos)
+            physObj:SetAngles(savedAng)
+        end
+
+        for _, client in player.Iterator() do
+            if IsValid(client) then self:syncVendorDataToClient(client) end
         end
     end)
 

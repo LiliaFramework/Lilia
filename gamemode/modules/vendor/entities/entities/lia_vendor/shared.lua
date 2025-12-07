@@ -13,18 +13,20 @@ ENT.DrawEntityInfo = true
 ENT.IsPersistent = true
 function ENT:setupVars()
     if SERVER then
-        lia.vendor.setVendorProperty(self, "name", L("vendorDefaultName"))
-        lia.vendor.setVendorProperty(self, "preset", "none")
-        lia.vendor.setVendorProperty(self, "animation", "")
+        if not self.hasSetupVars then
+            lia.vendor.setVendorProperty(self, "name", L("vendorDefaultName"))
+            lia.vendor.setVendorProperty(self, "preset", "none")
+            lia.vendor.setVendorProperty(self, "animation", "")
+        end
     end
 
     self.receivers = self.receivers or {}
     self.items = self.items or {}
-    self.factions = self.factions or {}
+    if not istable(self.factions) then self.factions = {} end
     self.messages = self.messages or {}
     self.classes = self.classes or {}
-    self.factionBuyScales = self.factionBuyScales or {}
-    self.factionSellScales = self.factionSellScales or {}
+    if not istable(self.factionBuyScales) then self.factionBuyScales = {} end
+    if not istable(self.factionSellScales) then self.factionSellScales = {} end
     self.hasSetupVars = true
 end
 
@@ -43,6 +45,8 @@ function ENT:Initialize()
     end
 
     self.receivers = self.receivers or {}
+    local savedPos = self:GetPos()
+    local savedAng = self:GetAngles()
     self:SetModel("models/mossman.mdl")
     self:SetUseType(SIMPLE_USE)
     self:SetMoveType(MOVETYPE_NONE)
@@ -51,11 +55,30 @@ function ENT:Initialize()
     self:PhysicsInit(SOLID_BBOX)
     self:SetCollisionGroup(COLLISION_GROUP_PASSABLE_DOOR)
     self:setupVars()
+    self:SetPos(savedPos)
+    self:SetAngles(savedAng)
     local physObj = self:GetPhysicsObject()
     if IsValid(physObj) then
         physObj:EnableMotion(false)
         physObj:Sleep()
+        physObj:SetPos(savedPos)
+        physObj:SetAngles(savedAng)
     end
+
+    timer.Simple(0.1, function()
+        if IsValid(self) then
+            self:SetMoveType(MOVETYPE_NONE)
+            self:SetPos(savedPos)
+            self:SetAngles(savedAng)
+            local phys = self:GetPhysicsObject()
+            if IsValid(phys) then
+                phys:EnableMotion(false)
+                phys:Sleep()
+                phys:SetPos(savedPos)
+                phys:SetAngles(savedAng)
+            end
+        end
+    end)
 
     LiliaVendors[self:EntIndex()] = self
     timer.Simple(0.5, function() if IsValid(self) and self:isReadyForAnim() then self:setAnim() end end)
