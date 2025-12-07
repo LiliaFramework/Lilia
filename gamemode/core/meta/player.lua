@@ -927,7 +927,6 @@ if SERVER then
                 local ammoType = w:GetPrimaryAmmoType()
                 local clip = w:Clip1()
                 entity.liaWeaponClips[weaponClass] = clip
-                -- Save reserve ammo only once per ammo type (since it's shared)
                 if ammoType and ammoType > 0 and not processedAmmoTypes[ammoType] then
                     local reserve = self:GetAmmoCount(ammoType)
                     entity.liaAmmo[ammoType] = reserve
@@ -950,12 +949,10 @@ if SERVER then
 
                 if IsValid(self) and not entity.liaIgnoreDelete then
                     if entity.liaWeapons then
-                        -- First, restore all weapons
                         for _, weaponClass in ipairs(entity.liaWeapons) do
                             self:Give(weaponClass, true)
                         end
 
-                        -- Then restore clips for each weapon
                         if entity.liaWeaponClips then
                             for _, weapon in ipairs(self:GetWeapons()) do
                                 local weaponClass = weapon:GetClass()
@@ -964,7 +961,6 @@ if SERVER then
                             end
                         end
 
-                        -- Finally, restore reserve ammo for each ammo type
                         if entity.liaAmmo then
                             for ammoType, reserve in pairs(entity.liaAmmo) do
                                 if reserve and reserve > 0 then self:SetAmmo(reserve, ammoType) end
@@ -1023,14 +1019,11 @@ if SERVER then
         else
             ragdoll = self:GetRagdollEntity()
             if IsValid(ragdoll) then
-                -- Restore weapons and ammo before removing ragdoll
                 if ragdoll.liaWeapons then
-                    -- First, restore all weapons
                     for _, weaponClass in ipairs(ragdoll.liaWeapons) do
                         self:Give(weaponClass, true)
                     end
 
-                    -- Then restore clips for each weapon
                     if ragdoll.liaWeaponClips then
                         for _, weapon in ipairs(self:GetWeapons()) do
                             local weaponClass = weapon:GetClass()
@@ -1039,7 +1032,6 @@ if SERVER then
                         end
                     end
 
-                    -- Finally, restore reserve ammo for each ammo type
                     if ragdoll.liaAmmo then
                         for ammoType, reserve in pairs(ragdoll.liaAmmo) do
                             if reserve and reserve > 0 then self:SetAmmo(reserve, ammoType) end

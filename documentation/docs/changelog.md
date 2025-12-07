@@ -1,5 +1,30 @@
 # Changelog
 
+## Version 7.121 (December 07, 2025)
+
+### Changes
+
+- Ragdoll Optimization
+- Successfully updated workshop Lilia to 7.119
+- Cached Breathing and Gags
+- Successfully updated workshop Lilia to 7.117
+- Log Pagination
+- Character Loader Camera Pos Fixes
+- Fixed Convert Entity
+- Successfully updated workshop Lilia to 7.113
+- Removed Redudant Nets and Moved Several to setLocalVar for Performance
+- Successfully updated workshop Lilia to 7.111
+- Compressed Categories of Privileges
+- Successfully updated workshop Lilia to 7.19
+- Chatbox perms
+- Successfully updated workshop Lilia to 7.17
+- Bug Fixing
+- Successfully updated workshop Lilia to 7.15
+- More Optimizations!
+- Cached getItemTable
+- Successfully updated workshop Lilia to 7.12
+- Caching for lessl ag
+
 ## Version 7.119 (December 07, 2025)
 
 ### Changes

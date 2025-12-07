@@ -234,7 +234,7 @@ When weapon is dropped
     ITEM:hook("drop", function(item)
         local client = item.player
         if not client or not IsValid(client) then return false end
-        if IsValid(client:getNetVar("ragdoll")) then
+        if IsValid(client:GetRagdollEntity()) then
             client:notifyErrorLocalized("noRagdollAction")
             return false
         end
@@ -380,7 +380,7 @@ Below is a comprehensive example showing how to define a complete item with all 
         ITEM:hook("drop", function(item)
             local client = item.player
             if not client or not IsValid(client) then return false end
-            if IsValid(client:getNetVar("ragdoll")) then
+            if IsValid(client:GetRagdollEntity()) then
                 client:notifyErrorLocalized("noRagdollAction")
                 return false
             end
