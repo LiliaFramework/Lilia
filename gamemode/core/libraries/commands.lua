@@ -658,7 +658,7 @@ if SERVER then
 
     concommand.Add("bots", function()
         timer.Create("Bots_Add_Timer", 2, 0, function()
-            if #player.GetAll() < game.MaxPlayers() then
+            if player.GetCount() < game.MaxPlayers() then
                 game.ConsoleCommand("bot\n")
             else
                 timer.Remove("Bots_Add_Timer")
@@ -2624,23 +2624,6 @@ lia.command.add("forcefallover", {
             return
         end
 
-        if target.FallOverCooldown then
-            target:notifyWarningLocalized("cmdCooldown")
-            return
-        elseif target:IsFrozen() then
-            target:notifyWarningLocalized("cmdFrozen")
-            return
-        elseif not target:Alive() then
-            target:notifyErrorLocalized("cmdDead")
-            return
-        elseif IsValid(target:GetVehicle()) then
-            target:notifyWarningLocalized("cmdVehicle")
-            return
-        elseif target:GetMoveType() == MOVETYPE_NOCLIP then
-            target:notifyWarningLocalized("cmdNoclip")
-            return
-        end
-
         local time = tonumber(arguments[2])
         if not time or time < 1 then
             time = 5
@@ -2649,10 +2632,7 @@ lia.command.add("forcefallover", {
         end
 
         target.FallOverCooldown = true
-        if not IsValid(target:getNetVar("ragdoll")) then
-            target:setRagdolled(true, time)
-            timer.Simple(10, function() if IsValid(target) then target.FallOverCooldown = false end end)
-        end
+        target:setRagdolled(true, time)
     end
 })
 
@@ -2672,12 +2652,12 @@ lia.command.add("forcegetup", {
             return
         end
 
-        if not IsValid(target:getNetVar("ragdoll")) then
+        if not IsValid(target:GetRagdollEntity()) then
             target:notifyErrorLocalized("noRagdoll")
             return
         end
 
-        local entity = target:getNetVar("ragdoll")
+        local entity = target:GetRagdollEntity()
         if IsValid(entity) and entity.liaGrace and entity.liaGrace < CurTime() and entity:GetVelocity():Length2D() < 8 and not entity.liaWakingUp then
             entity.liaWakingUp = true
             target:setAction("gettingUp", 5, function()
@@ -2713,12 +2693,12 @@ lia.command.add("chargetup", {
     adminOnly = false,
     desc = "forceSelfGetUpDesc",
     onRun = function(client)
-        if not IsValid(client:getNetVar("ragdoll")) then
+        if not IsValid(client:GetRagdollEntity()) then
             client:notifyErrorLocalized("noRagdoll")
             return
         end
 
-        local entity = client:getNetVar("ragdoll")
+        local entity = client:GetRagdollEntity()
         if IsValid(entity) and entity.liaGrace and entity.liaGrace < CurTime() and entity:GetVelocity():Length2D() < 8 and not entity.liaWakingUp then
             entity.liaWakingUp = true
             client:setAction("gettingUp", 5, function()
@@ -2758,7 +2738,7 @@ lia.command.add("fallover", {
         elseif client:GetMoveType() == MOVETYPE_NOCLIP then
             client:notifyWarningLocalized("cmdNoclip")
             return
-        elseif IsValid(client:getNetVar("ragdoll")) then
+        elseif IsValid(client:GetRagdollEntity()) then
             return
         end
 
@@ -4403,7 +4383,7 @@ lia.command.add("fillwithbots", {
         if not SERVER then return end
         if not timer.Exists("Bots_Add_Timer") then
             timer.Create("Bots_Add_Timer", 2, 0, function()
-                if #player.GetAll() < game.MaxPlayers() then
+                if player.GetCount() < game.MaxPlayers() then
                     game.ConsoleCommand("bot\n")
                 else
                     timer.Remove("Bots_Add_Timer")
@@ -4429,9 +4409,8 @@ lia.command.add("spawnbots", {
     onRun = function(client, arguments)
         if not SERVER then return end
         local requestedAmount = math.max(1, math.floor(arguments.amount or 1))
-        local currentPlayers = #player.GetAll()
         local maxPlayers = game.MaxPlayers()
-        local availableSlots = maxPlayers - currentPlayers
+        local availableSlots = maxPlayers - player.GetCount()
         if requestedAmount > availableSlots then
             client:notifyErrorLocalized("spawnBotsLimit", requestedAmount, availableSlots, maxPlayers)
             return
@@ -4461,9 +4440,8 @@ lia.command.add("bot", {
     desc = "spawnBotDesc",
     onRun = function(client)
         if not SERVER then return end
-        local currentPlayers = #player.GetAll()
         local maxPlayers = game.MaxPlayers()
-        if currentPlayers >= maxPlayers then
+        if player.GetCount() >= maxPlayers then
             client:notifyErrorLocalized("spawnBotsLimit", 1, 0, maxPlayers)
             return
         end
@@ -7180,8 +7158,8 @@ lia.command.add("plyrespawn", {
     },
     desc = "plyRespawnDesc",
     onRun = function(client, arguments)
-        local target = arguments[1]
-        if not IsValid(target) then
+        local target = lia.util.findPlayer(client, arguments[1])
+        if not target or not IsValid(target) then
             client:notifyErrorLocalized("invalidTarget")
             return
         end

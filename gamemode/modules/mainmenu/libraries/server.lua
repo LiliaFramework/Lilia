@@ -25,7 +25,7 @@ function MODULE:CanPlayerSwitchChar(client, character, newCharacter)
     if character:getID() == newCharacter:getID() then return false, L("alreadyUsingCharacter") end
     if character:isBanned() then return false, L("permaKilledCharacter") end
     if not client:Alive() then return false, L("youAreDead") end
-    if IsValid(client:getNetVar("ragdoll")) then return false, L("youAreRagdolled") end
+    if IsValid(client:GetRagdollEntity()) then return false, L("youAreRagdolled") end
     if IsValid(client:GetVehicle()) then return false, L("cannotSwitchInVehicle") end
     return true
 end

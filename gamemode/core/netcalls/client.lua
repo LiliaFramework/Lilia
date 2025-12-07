@@ -1149,7 +1149,7 @@ local function uiCreate()
 end
 
 local queue = {}
-local MOUNT_DELAY = 0.1
+local MOUNT_DELAY = 3
 local function gmaPath(id)
     return "lilia/workshop/" .. id .. ".gma"
 end
@@ -1238,9 +1238,22 @@ end
 
 local function refresh(tbl)
     if tbl then lia.workshop.serverIds = tbl end
+    local ids = {}
     for id in pairs(lia.workshop.serverIds or {}) do
-        if id ~= FORCE_ID then mountLocal(id) end
+        if id ~= FORCE_ID then ids[#ids + 1] = id end
     end
+
+    if #ids == 0 then return end
+    local idx = 1
+    local function mountNext()
+        if idx > #ids then return end
+        local id = ids[idx]
+        mountLocal(id)
+        idx = idx + 1
+        if idx <= #ids then timer.Simple(MOUNT_DELAY, mountNext) end
+    end
+
+    mountNext()
 end
 
 net.Receive("liaWorkshopDownloaderStart", function()

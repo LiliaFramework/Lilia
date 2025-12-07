@@ -9,7 +9,7 @@ local maxValues = {
 }
 
 local function canOverrideView(client)
-    local ragdoll = client:getNetVar("ragdoll")
+    local ragdoll = client:GetRagdollEntity()
     local isInVehicle = IsValid(client:GetVehicle())
     if IsValid(lia.gui.char) then return false end
     if isInVehicle then return false end

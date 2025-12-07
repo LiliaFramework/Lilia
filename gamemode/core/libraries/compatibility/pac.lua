@@ -96,11 +96,21 @@ else
     hook.Add("OnEntityCreated", "liaPAC", function(entity)
         local class = entity:GetClass()
         timer.Simple(0, function()
-            if class == "prop_ragdoll" and entity:getNetVar("player") then
-                entity.RenderOverride = function()
-                    entity.objCache = entity:getNetVar("player")
-                    entity:DrawModel()
-                    hook.Run("DrawPlayerRagdoll", entity)
+            if class == "prop_ragdoll" then
+                local foundPlayer
+                for _, ply in player.Iterator() do
+                    if ply:GetRagdollEntity() == entity then
+                        foundPlayer = ply
+                        break
+                    end
+                end
+
+                if IsValid(foundPlayer) then
+                    entity.objCache = foundPlayer
+                    entity.RenderOverride = function()
+                        entity:DrawModel()
+                        hook.Run("DrawPlayerRagdoll", entity)
+                    end
                 end
             end
 

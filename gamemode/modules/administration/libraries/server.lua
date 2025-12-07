@@ -781,48 +781,6 @@ function GM:DrawPhysgunBeam(client)
     if client:GetMoveType() == MOVETYPE_NOCLIP then return false end
 end
 
-function GM:PhysgunPickup(client, entity)
-    if (client:hasPrivilege("physgunPickup") or client:isStaffOnDuty()) and entity.NoPhysgun then
-        if not client:hasPrivilege("physgunPickupRestrictedEntities") then
-            lia.log.add(client, "permissionDenied", L("physgunRestrictedEntity"))
-            client:notifyErrorLocalized("noPickupRestricted")
-            return false
-        end
-        return true
-    end
-
-    if entity:GetCreator() == client and (entity:isProp() or entity:isItem()) then return true end
-    if client:hasPrivilege("physgunPickup") then
-        if entity:IsVehicle() then
-            if not client:hasPrivilege("physgunPickupVehicles") then
-                lia.log.add(client, "permissionDenied", L("physgunVehicle"))
-                client:notifyErrorLocalized("noPickupVehicles")
-                return false
-            end
-            return true
-        elseif entity:IsPlayer() then
-            if entity:hasPrivilege("cantBeGrabbedPhysgun") or not client:hasPrivilege("canGrabPlayers") then
-                lia.log.add(client, "permissionDenied", L("physgunPlayer"))
-                client:notifyErrorLocalized("noPickupPlayer")
-                return false
-            end
-            return true
-        elseif entity:IsWorld() or entity:CreatedByMap() then
-            if not client:hasPrivilege("canGrabWorldProps") then
-                lia.log.add(client, "permissionDenied", L("physgunWorldProp"))
-                client:notifyErrorLocalized("noPickupWorld")
-                return false
-            end
-            return true
-        end
-        return true
-    end
-
-    lia.log.add(client, "permissionDenied", L("physgunEntity"))
-    client:notifyErrorLocalized("noPickupEntity")
-    return false
-end
-
 function GM:PlayerSpawnVehicle(client, model)
     if not client:hasPrivilege("noCarSpawnDelay") then client.NextVehicleSpawn = SysTime() + lia.config.get("PlayerSpawnVehicleDelay", 30) end
     local list = lia.data.get("carBlacklist", {})
@@ -838,36 +796,6 @@ function GM:PlayerSpawnVehicle(client, model)
         client:notifyErrorLocalized("noSpawnVehicles", model)
     end
     return canSpawn
-end
-
-function GM:PlayerNoClip(ply, enabled)
-    if not (ply:isStaffOnDuty() or ply:hasPrivilege("noClipOutsideStaff")) then
-        lia.log.add(ply, "permissionDenied", L("noclip"))
-        ply:notifyErrorLocalized("noNoclip")
-        return false
-    end
-
-    if not ply:Alive() then
-        lia.log.add(ply, "permissionDenied", L("noclipWhileDead"))
-        ply:notifyErrorLocalized("noNoclipWhileDead")
-        return false
-    end
-
-    ply:SetNoDraw(enabled)
-    ply:SetNotSolid(enabled)
-    ply:DrawWorldModel(not enabled)
-    ply:DrawShadow(enabled)
-    ply:SetNoTarget(enabled)
-    if enabled then
-        ply:GodEnable()
-        ply:AddFlags(FL_NOTARGET)
-    else
-        ply:GodDisable()
-        ply:RemoveFlags(FL_NOTARGET)
-    end
-
-    hook.Run("OnPlayerObserve", ply, enabled)
-    return true
 end
 
 function GM:PlayerSpawnEffect(client)
@@ -931,94 +859,6 @@ function GM:OnPhysgunReload(_, client)
         client:notifyErrorLocalized("noPhysgunReload")
     end
     return canReload
-end
-
-local DisallowedTools = {
-    rope = true,
-    light = true,
-    lamp = true,
-    dynamite = true,
-    physprop = true,
-    faceposer = true,
-    stacker = true
-}
-
-function GM:CanTool(client, trace, tool)
-    local function CheckDuplicationScale(ply, entities)
-        entities = entities or {}
-        for _, v in pairs(entities) do
-            if v.ModelScale and v.ModelScale > 10 then
-                ply:notifyErrorLocalized("duplicationSizeLimit")
-                lia.log.add(ply, "dupeCrashAttempt")
-                return false
-            end
-
-            v.ModelScale = 1
-        end
-        return true
-    end
-
-    if DisallowedTools[tool] and not client:hasPrivilege("useDisallowedTools") then
-        lia.log.add(client, "toolDenied", tool)
-        client:notifyErrorLocalized("toolNotAllowed", tool)
-        return false
-    end
-
-    local formattedTool = tool:gsub("^%l", string.upper)
-    local isStaffOrFlagged = client:isStaffOnDuty() or client:hasFlags("t")
-    local hasPriv = client:hasPrivilege("tool_" .. tool)
-    if not (isStaffOrFlagged and hasPriv) then
-        local reasons = {}
-        if not isStaffOrFlagged then table.insert(reasons, L("onDutyStaffOrFlagT")) end
-        if not hasPriv then table.insert(reasons, L("privilege") .. " '" .. L("accessToolPrivilege", formattedTool) .. "'") end
-        lia.log.add(client, "toolDenied", tool)
-        client:notifyErrorLocalized("toolNoPermission", tool, table.concat(reasons, ", "))
-        return false
-    end
-
-    local entity = trace.Entity
-    if IsValid(entity) then
-        local entClass = entity:GetClass()
-        if tool == "remover" then
-            if entity.NoRemover then
-                if not client:hasPrivilege("canRemoveBlockedEntities") then
-                    lia.log.add(client, "permissionDenied", L("removeBlockedEntity"))
-                    client:notifyErrorLocalized("noRemoveBlockedEntities")
-                    return false
-                end
-                return true
-            elseif entity:IsWorld() then
-                if not client:hasPrivilege("canRemoveWorldEntities") then
-                    lia.log.add(client, "permissionDenied", L("removeWorldEntity"))
-                    client:notifyErrorLocalized("noRemoveWorldEntities")
-                    return false
-                end
-                return true
-            end
-            return true
-        end
-
-        if (tool == "permaall" or tool == "blacklistandremove") and hook.Run("CanPersistEntity", entity) ~= false and (string.StartWith(entClass, "lia_") or entity.IsPersistent or entity:CreatedByMap()) then
-            lia.log.add(client, "toolDenied", tool)
-            client:notifyErrorLocalized("toolCantUseEntity", tool)
-            return false
-        end
-
-        if (tool == "duplicator" or tool == "blacklistandremove") and entity.NoDuplicate then
-            lia.log.add(client, "toolDenied", tool)
-            client:notifyErrorLocalized("cannotDuplicateEntity", tool)
-            return false
-        end
-
-        if tool == "weld" and entClass == "sent_ball" then
-            lia.log.add(client, "toolDenied", tool)
-            client:notifyErrorLocalized("cannotWeldBall")
-            return false
-        end
-    end
-
-    if tool == "duplicator" and client.CurrentDupe and not CheckDuplicationScale(client, client.CurrentDupe.Entities) then return false end
-    return true
 end
 
 function GM:PlayerSpawnedNPC(client, entity)
@@ -1336,4 +1176,158 @@ net.Receive("liaRequestWarningsCount", function(_, client)
         net.WriteInt(count or 0, 32)
         net.Send(client)
     end)
+end)
+
+hook.Add("PhysgunPickup", "Lilia.PhysgunPickup", function(client, entity)
+    if (client:hasPrivilege("physgunPickup") or client:isStaffOnDuty()) and entity.NoPhysgun then
+        if not client:hasPrivilege("physgunPickupRestrictedEntities") then
+            lia.log.add(client, "permissionDenied", L("physgunRestrictedEntity"))
+            client:notifyErrorLocalized("noPickupRestricted")
+            return false
+        end
+        return true
+    end
+
+    if entity:GetCreator() == client and (entity:isProp() or entity:isItem()) then return true end
+    if client:hasPrivilege("physgunPickup") then
+        if entity:IsVehicle() then
+            if not client:hasPrivilege("physgunPickupVehicles") then
+                lia.log.add(client, "permissionDenied", L("physgunVehicle"))
+                client:notifyErrorLocalized("noPickupVehicles")
+                return false
+            end
+            return true
+        elseif entity:IsPlayer() then
+            if entity:hasPrivilege("cantBeGrabbedPhysgun") or not client:hasPrivilege("canGrabPlayers") then
+                lia.log.add(client, "permissionDenied", L("physgunPlayer"))
+                client:notifyErrorLocalized("noPickupPlayer")
+                return false
+            end
+            return true
+        elseif entity:IsWorld() or entity:CreatedByMap() then
+            if not client:hasPrivilege("canGrabWorldProps") then
+                lia.log.add(client, "permissionDenied", L("physgunWorldProp"))
+                client:notifyErrorLocalized("noPickupWorld")
+                return false
+            end
+            return true
+        end
+        return true
+    end
+
+    lia.log.add(client, "permissionDenied", L("physgunEntity"))
+    client:notifyErrorLocalized("noPickupEntity")
+    return false
+end)
+
+local DisallowedTools = {
+    rope = true,
+    light = true,
+    lamp = true,
+    dynamite = true,
+    physprop = true,
+    faceposer = true,
+    stacker = true
+}
+
+hook.Add("CanTool", "Lilia.CanTool", function(client, trace, tool)
+    local function CheckDuplicationScale(ply, entities)
+        entities = entities or {}
+        for _, v in pairs(entities) do
+            if v.ModelScale and v.ModelScale > 10 then
+                ply:notifyErrorLocalized("duplicationSizeLimit")
+                lia.log.add(ply, "dupeCrashAttempt")
+                return false
+            end
+
+            v.ModelScale = 1
+        end
+        return true
+    end
+
+    if DisallowedTools[tool] and not client:hasPrivilege("useDisallowedTools") then
+        lia.log.add(client, "toolDenied", tool)
+        client:notifyErrorLocalized("toolNotAllowed", tool)
+        return false
+    end
+
+    local formattedTool = tool:gsub("^%l", string.upper)
+    local isStaffOrFlagged = client:isStaffOnDuty() or client:hasFlags("t")
+    local hasPriv = client:hasPrivilege("tool_" .. tool)
+    if not (isStaffOrFlagged and hasPriv) then
+        local reasons = {}
+        if not isStaffOrFlagged then table.insert(reasons, L("onDutyStaffOrFlagT")) end
+        if not hasPriv then table.insert(reasons, L("privilege") .. " '" .. L("accessToolPrivilege", formattedTool) .. "'") end
+        lia.log.add(client, "toolDenied", tool)
+        client:notifyErrorLocalized("toolNoPermission", tool, table.concat(reasons, ", "))
+        return false
+    end
+
+    local entity = trace.Entity
+    if IsValid(entity) then
+        local entClass = entity:GetClass()
+        if tool == "remover" then
+            if entity.NoRemover then
+                if not client:hasPrivilege("canRemoveBlockedEntities") then
+                    lia.log.add(client, "permissionDenied", L("removeBlockedEntity"))
+                    client:notifyErrorLocalized("noRemoveBlockedEntities")
+                    return false
+                end
+                return true
+            elseif entity:IsWorld() then
+                if not client:hasPrivilege("canRemoveWorldEntities") then
+                    lia.log.add(client, "permissionDenied", L("removeWorldEntity"))
+                    client:notifyErrorLocalized("noRemoveWorldEntities")
+                    return false
+                end
+                return true
+            end
+            return true
+        end
+
+        if (tool == "permaall" or tool == "blacklistandremove") and hook.Run("CanPersistEntity", entity) ~= false and (string.StartWith(entClass, "lia_") or entity.IsPersistent or entity:CreatedByMap()) then
+            lia.log.add(client, "toolDenied", tool)
+            client:notifyErrorLocalized("toolCantUseEntity", tool)
+            return false
+        end
+
+        if (tool == "duplicator" or tool == "blacklistandremove") and entity.NoDuplicate then
+            lia.log.add(client, "toolDenied", tool)
+            client:notifyErrorLocalized("cannotDuplicateEntity", tool)
+            return false
+        end
+
+        if tool == "weld" and entClass == "sent_ball" then
+            lia.log.add(client, "toolDenied", tool)
+            client:notifyErrorLocalized("cannotWeldBall")
+            return false
+        end
+    end
+
+    if tool == "duplicator" and client.CurrentDupe and not CheckDuplicationScale(client, client.CurrentDupe.Entities) then return false end
+    return true
+end)
+
+hook.Add("PlayerNoClip", "Lilia.PlayerNoClip", function(ply, enabled)
+    if not (ply:isStaffOnDuty() or ply:hasPrivilege("noClipOutsideStaff")) then
+        lia.log.add(ply, "permissionDenied", L("noclip"))
+        ply:notifyErrorLocalized("noNoclip")
+        return false
+    end
+
+    ply:SetNoDraw(enabled)
+    ply:SetNotSolid(enabled)
+    ply:DrawWorldModel(not enabled)
+    ply:DrawShadow(enabled)
+    ply:SetNoTarget(enabled)
+    if enabled then
+        ply:GodEnable()
+        ply:AddFlags(FL_NOTARGET)
+    else
+        ply:GodDisable()
+        ply:RemoveFlags(FL_NOTARGET)
+    end
+
+    hook.Run("OnPlayerObserve", ply, enabled)
+    return true
 end)

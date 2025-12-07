@@ -197,7 +197,7 @@ ITEM.DropOnDeath = true
         ITEM:hook("drop", function(item)
             local client = item.player
             if not client or not IsValid(client) then return false end
-            if IsValid(client:getNetVar("ragdoll")) then
+            if IsValid(client:GetRagdollEntity()) then
                 client:notifyErrorLocalized("noRagdollAction")
                 return false
             end

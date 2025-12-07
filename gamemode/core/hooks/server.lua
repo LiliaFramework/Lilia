@@ -178,7 +178,7 @@ function GM:CanPlayerInteractItem(client, action, item)
     action = string.lower(action)
     if client:hasPrivilege("noItemCooldown") then return true end
     if not client:Alive() then return false, L("forbiddenActionStorage") end
-    if IsValid(client:getNetVar("ragdoll")) then return false, L("forbiddenActionStorage") end
+    if IsValid(client:GetRagdollEntity()) then return false, L("forbiddenActionStorage") end
     if action == "drop" then
         if hook.Run("CanPlayerDropItem", client, item) ~= false then
             if not client.dropDelay then
@@ -355,28 +355,52 @@ function GM:EntityTakeDamage(entity, dmgInfo)
         end
     end
 
-    if not entity:IsPlayer() then return end
-    if entity:isStaffOnDuty() and lia.config.get("StaffHasGodMode", true) then return true end
-    if entity:GetMoveType() == MOVETYPE_NOCLIP then return true end
-    if IsValid(entity:getNetVar("player")) then
-        if dmgInfo:IsDamageType(DMG_CRUSH) then
-            if (entity.liaFallGrace or 0) < CurTime() then
-                if dmgInfo:GetDamage() <= 10 then dmgInfo:SetDamage(0) end
-                entity.liaFallGrace = CurTime() + 0.5
-            else
-                return
+    local foundPlayer
+    if entity:GetClass() == "prop_ragdoll" then
+        for _, ply in player.Iterator() do
+            if ply:GetRagdollEntity() == entity then
+                foundPlayer = ply
+                break
             end
         end
 
-        local player = entity:getNetVar("player")
-        local damage = dmgInfo:GetDamage()
-        if IsValid(player) then
-            local currentHealth = player:Health()
-            local newHealth = math.max(currentHealth - damage, 0)
-            player:SetHealth(newHealth)
-            if newHealth <= 0 and currentHealth > 0 then player:Kill() end
-            dmgInfo:SetDamage(0)
+        if IsValid(foundPlayer) then
+            if dmgInfo:IsDamageType(DMG_CRUSH) then
+                if (entity.liaFallGrace or 0) < CurTime() then
+                    if dmgInfo:GetDamage() <= 10 then dmgInfo:SetDamage(0) end
+                    entity.liaFallGrace = CurTime() + 0.5
+                else
+                    return
+                end
+            end
+
+            if IsValid(foundPlayer) then
+                foundPlayer:TakeDamageInfo(dmgInfo)
+                dmgInfo:SetDamage(0)
+            end
         end
+        return
+    end
+
+    if not entity:IsPlayer() then return end
+    if entity:isStaffOnDuty() and lia.config.get("StaffHasGodMode", true) then return true end
+    if entity:GetMoveType() == MOVETYPE_NOCLIP then return true end
+    if dmgInfo:IsDamageType(DMG_CRUSH) then
+        if (entity.liaFallGrace or 0) < CurTime() then
+            if dmgInfo:GetDamage() <= 10 then dmgInfo:SetDamage(0) end
+            entity.liaFallGrace = CurTime() + 0.5
+        else
+            return
+        end
+    end
+
+    local damage = dmgInfo:GetDamage()
+    if IsValid(entity) then
+        local currentHealth = entity:Health()
+        local newHealth = math.max(currentHealth - damage, 0)
+        entity:SetHealth(newHealth)
+        if newHealth <= 0 and currentHealth > 0 then entity:Kill() end
+        dmgInfo:SetDamage(0)
     end
 end
 
@@ -462,14 +486,14 @@ end
 
 function GM:DoPlayerDeath(client, attacker)
     client:AddDeaths(1)
-    local existingRagdoll = client:getNetVar("ragdoll")
+    local existingRagdoll = client:GetRagdollEntity()
     if IsValid(existingRagdoll) then
         existingRagdoll.liaIsDeadRagdoll = true
         existingRagdoll.liaNoReset = true
         existingRagdoll:CallOnRemove("deadRagdoll", function() existingRagdoll.liaIgnoreDelete = true end)
         client.diedInRagdoll = true
     elseif hook.Run("ShouldSpawnClientRagdoll", client) ~= false then
-        client:createRagdoll(false, true)
+        client:CreateRagdoll()
     end
 
     if IsValid(attacker) and attacker:IsPlayer() then

@@ -59,12 +59,21 @@ function MODULE:EntityTakeDamage(entity, dmgInfo)
     end
 
     if dmgInfo:IsExplosionDamage() and lia.config.get("ExplosionRagdoll", false) then
+        local originalDmg = dmgInfo:GetDamage()
         dmgInfo:ScaleDamage(0.5)
         local dmgPos = dmgInfo:GetDamagePosition()
         local dir = (entity:GetPos() - dmgPos):GetNormalized()
         entity:SetVelocity(dir * 60 * dmgInfo:GetDamage())
         local dmgAmt = dmgInfo:GetDamage()
-        timer.Simple(0.05, function() if IsValid(entity) and entity:IsPlayer() and not IsValid(entity:getNetVar("ragdoll")) and entity:Health() - dmgAmt > 0 and not entity:InVehicle() then entity:setRagdolled(true, 3) end end)
+        timer.Simple(0.05, function()
+            if IsValid(entity) and entity:IsPlayer() and not IsValid(entity:GetRagdollEntity()) and entity:Health() - dmgAmt > 0 and not entity:InVehicle() then
+                local maxHP = entity:GetMaxHealth()
+                if dmgAmt >= maxHP * 0.25 then
+                    local ragdollTime = math.Clamp(originalDmg / 10, 1, 10)
+                    entity:setRagdolled(true, ragdollTime)
+                end
+            end
+        end)
     end
 
     if attacker ~= entity then
@@ -77,8 +86,12 @@ function MODULE:EntityTakeDamage(entity, dmgInfo)
         if lia.config.get("CarRagdoll", false) and IsValid(inflictor) and inflictor:isSimfphysCar() then
             local veh = entity.GetVehicle and entity:GetVehicle() or nil
             if not (IsValid(veh) and veh:isSimfphysCar()) then
-                dmgInfo:ScaleDamage(0)
-                if entity:IsPlayer() and not IsValid(entity:getNetVar("ragdoll")) and entity:Health() > 0 then entity:setRagdolled(true, 5) end
+                local originalDmg = dmgInfo:GetDamage()
+                dmgInfo:ScaleDamage(0.5)
+                if entity:IsPlayer() and not IsValid(entity:GetRagdollEntity()) and entity:Health() > 0 then
+                    local ragdollTime = math.Clamp(originalDmg / 10, 1, 10)
+                    entity:setRagdolled(true, ragdollTime)
+                end
             end
         end
     end

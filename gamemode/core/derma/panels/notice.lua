@@ -38,6 +38,9 @@ function PANEL:Init()
     self.alpha = 255
     self.startTime = CurTime()
     self.scale = ScrH() / 1080
+    self.lines = {""}
+    self.lineHeight = 0
+    self.lineSpacing = 0
     self:RecalcSize()
     self:DockPadding(0, 0, 0, 0)
     self:SetDrawOnTop(true)
@@ -51,19 +54,56 @@ function PANEL:RecalcSize()
     self.scale = ScrH() / 1080
     surface.SetFont("LiliaFont.17")
     local msg = self.msg or ""
-    local tw, th = surface.GetTextSize(msg)
-    if tw == 0 or th == 0 then tw, th = surface.GetTextSize(" ") end
+    -- Split message by newlines to handle multi-line text
+    -- Manually split to ensure we preserve empty lines
+    local lines = {}
+    if msg == "" then
+        lines = {""}
+    else
+        local startPos = 1
+        while true do
+            local pos = string.find(msg, "\n", startPos, true)
+            if not pos then
+                table.insert(lines, string.sub(msg, startPos))
+                break
+            end
+
+            table.insert(lines, string.sub(msg, startPos, pos - 1))
+            startPos = pos + 1
+        end
+    end
+
+    if #lines == 0 then lines = {""} end
+    -- Calculate width based on the longest line
+    local maxWidth = 0
+    local lineHeight = 0
+    for _, line in ipairs(lines) do
+        local tw, th = surface.GetTextSize(line)
+        -- Handle empty lines by using space character for measurement
+        if tw == 0 and th == 0 then tw, th = surface.GetTextSize(" ") end
+        if tw > maxWidth then maxWidth = tw end
+        if th > lineHeight then lineHeight = th end
+    end
+
+    if maxWidth == 0 or lineHeight == 0 then maxWidth, lineHeight = surface.GetTextSize(" ") end
     local minWidth = 300 * self.scale
     local extraSpacing = 40 * self.scale
     local iconWidth = 24 * self.scale
-    local textPadding = math.min(60 * self.scale, tw * 0.1)
-    local requiredWidth = tw + (NotificationPadding * 2) + iconWidth + extraSpacing + textPadding
+    local textPadding = math.min(60 * self.scale, maxWidth * 0.1)
+    local requiredWidth = maxWidth + (NotificationPadding * 2) + iconWidth + extraSpacing + textPadding
     local w = math.max(requiredWidth, minWidth)
-    local h = math.max(NotificationHeight * self.scale, th + NotificationPadding * self.scale)
+    -- Calculate height based on number of lines
+    -- Add extra padding between lines
+    local lineSpacing = 2 * self.scale
+    local totalHeight = (lineHeight * #lines) + (lineSpacing * math.max(0, #lines - 1)) + (NotificationPadding * self.scale)
+    local h = math.max(NotificationHeight * self.scale, totalHeight)
     self:SetSize(w, h)
     self.iconSize = iconWidth
     self.padding = NotificationPadding * self.scale
     self.baseX = 32 * self.scale
+    self.lineHeight = lineHeight
+    self.lines = lines
+    self.lineSpacing = lineSpacing
 end
 
 function PANEL:SetText(t)
@@ -121,7 +161,21 @@ function PANEL:Paint(w, h)
         surface.DrawTexturedRect(self.padding, (h - self.iconSize) / 2, self.iconSize, self.iconSize)
     end
 
-    draw.SimpleText(self.msg or "", "LiliaFont.17", self.padding + self.iconSize + self.padding / 2, h / 2, Color(255, 255, 255, self.alpha), TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)
+    -- Render multi-line text
+    local textX = self.padding + self.iconSize + self.padding / 2
+    local textColor = Color(255, 255, 255, self.alpha)
+    if self.lines and #self.lines > 1 then
+        -- Multi-line rendering
+        local totalTextHeight = (self.lineHeight * #self.lines) + (self.lineSpacing * math.max(0, #self.lines - 1))
+        local startY = (h - totalTextHeight) / 2
+        for i, line in ipairs(self.lines) do
+            local yPos = startY + (self.lineHeight * (i - 1)) + (self.lineSpacing * (i - 1)) + (self.lineHeight / 2)
+            draw.SimpleText(line or "", "LiliaFont.17", textX, yPos, textColor, TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)
+        end
+    else
+        -- Single-line rendering (backward compatibility)
+        draw.SimpleText(self.msg or "", "LiliaFont.17", textX, h / 2, textColor, TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)
+    end
 end
 
 vgui.Register("liaNotice", PANEL, "DPanel")

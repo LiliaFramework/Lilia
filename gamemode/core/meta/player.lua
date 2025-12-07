@@ -89,7 +89,15 @@ function playerMeta:doStaredAction(entity, callback, time, onCancel, distance)
             data.start = self:GetShootPos()
             data.endpos = data.start + self:GetAimVector() * (distance or 96)
             local targetEntity = self:getTracedEntity()
-            if IsValid(targetEntity) and targetEntity:GetClass() == "prop_ragdoll" and IsValid(targetEntity:getNetVar("player")) then targetEntity = targetEntity:getNetVar("player") end
+            if IsValid(targetEntity) and targetEntity:GetClass() == "prop_ragdoll" then
+                for _, ply in player.Iterator() do
+                    if ply:GetRagdollEntity() == targetEntity then
+                        targetEntity = ply
+                        break
+                    end
+                end
+            end
+
             if targetEntity ~= entity then
                 timer.Remove(uniqueID)
                 if onCancel then onCancel() end
@@ -119,7 +127,7 @@ function playerMeta:hasPrivilege(privilegeName)
 end
 
 function playerMeta:removeRagdoll()
-    local ragdoll = self:getNetVar("ragdoll")
+    local ragdoll = self:GetRagdollEntity()
     if not IsValid(ragdoll) then return end
     ragdoll.liaIgnoreDelete = true
     SafeRemoveEntity(ragdoll)
@@ -891,46 +899,6 @@ if SERVER then
         return diff + RealTime() - (self.liaJoinTime or RealTime())
     end
 
-    function playerMeta:createRagdoll(freeze, isDead)
-        local entity = ents.Create("prop_ragdoll")
-        entity:SetPos(self:GetPos())
-        entity:SetAngles(self:EyeAngles())
-        entity:SetModel(self:GetModel())
-        entity:SetSkin(self:GetSkin())
-        entity:Spawn()
-        local numBodyGroups = entity:GetNumBodyGroups() or 0
-        for i = 0, numBodyGroups - 1 do
-            entity:SetBodygroup(i, self:GetBodygroup(i))
-        end
-
-        entity:SetCollisionGroup(COLLISION_GROUP_WEAPON)
-        entity:Activate()
-        if self:IsOnFire() then entity:Ignite(8) end
-        if isDead then self:setNetVar("ragdoll", entity) end
-        local handsWeapon = self:GetActiveWeapon()
-        if IsValid(handsWeapon) and handsWeapon:GetClass() == "lia_hands" and handsWeapon:IsHoldingObject() then handsWeapon:DropObject() end
-        hook.Run("OnCreatePlayerRagdoll", self, entity, isDead)
-        local velocity = self:GetVelocity()
-        for i = 0, entity:GetPhysicsObjectCount() - 1 do
-            local physObj = entity:GetPhysicsObjectNum(i)
-            if IsValid(physObj) then
-                local index = entity:TranslatePhysBoneToBone(i)
-                if index then
-                    local position, angles = self:GetBonePosition(index)
-                    physObj:SetPos(position)
-                    physObj:SetAngles(angles)
-                end
-
-                if freeze then
-                    physObj:EnableMotion(false)
-                else
-                    physObj:SetVelocity(velocity)
-                end
-            end
-        end
-        return entity
-    end
-
     local function isStuck(client)
         return util.TraceEntity({
             start = client:GetPos(),
@@ -941,16 +909,32 @@ if SERVER then
 
     function playerMeta:setRagdolled(state, baseTime, getUpGrace, getUpMessage)
         getUpMessage = getUpMessage or L("wakingUp")
-        local ragdoll = self:getNetVar("ragdoll")
+        local ragdoll = self:GetRagdollEntity()
         local time = hook.Run("GetRagdollTime", self, time) or baseTime or 10
         if state then
-            self.liaStoredHealth = self:Health()
-            self.liaStoredMaxHealth = self:GetMaxHealth()
             local handsWeapon = self:GetActiveWeapon()
             if IsValid(handsWeapon) and handsWeapon:GetClass() == "lia_hands" and handsWeapon:IsHoldingObject() then handsWeapon:DropObject() end
             if IsValid(ragdoll) then SafeRemoveEntity(ragdoll) end
-            local entity = self:createRagdoll()
-            entity:setNetVar("player", self)
+            self:CreateRagdoll()
+            local entity = self:GetRagdollEntity()
+            entity.liaWeapons = {}
+            entity.liaAmmo = {}
+            entity.liaWeaponClips = {}
+            local processedAmmoTypes = {}
+            for _, w in ipairs(self:GetWeapons()) do
+                local weaponClass = w:GetClass()
+                entity.liaWeapons[#entity.liaWeapons + 1] = weaponClass
+                local ammoType = w:GetPrimaryAmmoType()
+                local clip = w:Clip1()
+                entity.liaWeaponClips[weaponClass] = clip
+                -- Save reserve ammo only once per ammo type (since it's shared)
+                if ammoType and ammoType > 0 and not processedAmmoTypes[ammoType] then
+                    local reserve = self:GetAmmoCount(ammoType)
+                    entity.liaAmmo[ammoType] = reserve
+                    processedAmmoTypes[ammoType] = true
+                end
+            end
+
             entity:CallOnRemove("fixer", function()
                 if IsValid(self) then
                     if self.liaStoredHealth then self:SetHealth(math.max(self.liaStoredHealth, 1)) end
@@ -966,12 +950,24 @@ if SERVER then
 
                 if IsValid(self) and not entity.liaIgnoreDelete then
                     if entity.liaWeapons then
-                        for _, v in ipairs(entity.liaWeapons) do
-                            self:Give(v, true)
-                            if entity.liaAmmo then
-                                for _, data in ipairs(entity.liaAmmo) do
-                                    if v == data[1] then self:SetAmmo(data[2], tostring(data[1])) end
-                                end
+                        -- First, restore all weapons
+                        for _, weaponClass in ipairs(entity.liaWeapons) do
+                            self:Give(weaponClass, true)
+                        end
+
+                        -- Then restore clips for each weapon
+                        if entity.liaWeaponClips then
+                            for _, weapon in ipairs(self:GetWeapons()) do
+                                local weaponClass = weapon:GetClass()
+                                local clip = entity.liaWeaponClips[weaponClass]
+                                if clip and clip > 0 then weapon:SetClip1(clip) end
+                            end
+                        end
+
+                        -- Finally, restore reserve ammo for each ammo type
+                        if entity.liaAmmo then
+                            for ammoType, reserve in pairs(entity.liaAmmo) do
+                                if reserve and reserve > 0 then self:SetAmmo(reserve, ammoType) end
                             end
                         end
                     end
@@ -988,9 +984,6 @@ if SERVER then
                 end
             end)
 
-            self:setNetVar("ragdoll", entity)
-            entity.liaWeapons = {}
-            entity.liaAmmo = {}
             if getUpGrace then entity.liaGrace = CurTime() + getUpGrace end
             if time and time > 0 then
                 entity.liaStart = CurTime()
@@ -998,15 +991,7 @@ if SERVER then
                 self:setAction(getUpMessage, time)
             end
 
-            for _, w in ipairs(self:GetWeapons()) do
-                entity.liaWeapons[#entity.liaWeapons + 1] = w:GetClass()
-                local clip = w:Clip1()
-                local reserve = self:GetAmmoCount(w:GetPrimaryAmmoType())
-                local ammo = clip + reserve
-                entity.liaAmmo[w:GetPrimaryAmmoType()] = {w:GetClass(), ammo}
-            end
-
-            self:GodDisable()
+            self:GodEnable()
             self:StripWeapons()
             self:Freeze(true)
             self:SetNoDraw(true)
@@ -1024,7 +1009,10 @@ if SERVER then
                     entity.liaLastVelocity = velocity
                     self:SetPos(entity:GetPos())
                     time = time - 1.0
-                    if time <= 0 then SafeRemoveEntity(entity) end
+                    if time <= 0 then
+                        timer.Remove(uniqueID)
+                        self:setRagdolled(false)
+                    end
                 end)
             end
 
@@ -1032,9 +1020,41 @@ if SERVER then
                 entity:SetCollisionGroup(COLLISION_GROUP_NONE)
                 entity:SetCustomCollisionCheck(false)
             end
-        elseif IsValid(self:getNetVar("ragdoll")) then
-            SafeRemoveEntity(self:getNetVar("ragdoll"))
-            hook.Run("OnCharFallover", self, nil, false)
+        else
+            ragdoll = self:GetRagdollEntity()
+            if IsValid(ragdoll) then
+                -- Restore weapons and ammo before removing ragdoll
+                if ragdoll.liaWeapons then
+                    -- First, restore all weapons
+                    for _, weaponClass in ipairs(ragdoll.liaWeapons) do
+                        self:Give(weaponClass, true)
+                    end
+
+                    -- Then restore clips for each weapon
+                    if ragdoll.liaWeaponClips then
+                        for _, weapon in ipairs(self:GetWeapons()) do
+                            local weaponClass = weapon:GetClass()
+                            local clip = ragdoll.liaWeaponClips[weaponClass]
+                            if clip and clip > 0 then weapon:SetClip1(clip) end
+                        end
+                    end
+
+                    -- Finally, restore reserve ammo for each ammo type
+                    if ragdoll.liaAmmo then
+                        for ammoType, reserve in pairs(ragdoll.liaAmmo) do
+                            if reserve and reserve > 0 then self:SetAmmo(reserve, ammoType) end
+                        end
+                    end
+                end
+
+                self:removeRagdoll()
+                self:GodDisable()
+                self:Freeze(false)
+                self:SetNoDraw(false)
+                self:SetNotSolid(false)
+                self:SetMoveType(MOVETYPE_WALK)
+                hook.Run("OnCharFallover", self, nil, false)
+            end
         end
     end
 

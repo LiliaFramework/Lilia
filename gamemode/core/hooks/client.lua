@@ -84,28 +84,27 @@ local function drawAmmo(wpn)
     local sec = client:GetAmmoCount(wpn:GetSecondaryAmmoType())
     local x, y = ScrW() - 80, ScrH() - 80
     if sec > 0 then
-        lia.util.drawBlurAt(x, y, 64, 64)
-        surface.SetDrawColor(255, 255, 255, 5)
-        surface.DrawRect(x, y, 64, 64)
-        surface.SetDrawColor(255, 255, 255, 3)
-        surface.DrawOutlinedRect(x, y, 64, 64)
-        lia.util.drawText(sec, x + 32, y + 32, nil, 1, 1, "LiliaFont.36")
+        local shadowIntensity = 8
+        local shadowBlur = 12
+        lia.derma.rect(x, y, 64, 64):Rad(6):Color(lia.color.theme.window_shadow):Shadow(shadowIntensity, shadowBlur):Shape(lia.derma.SHAPE_IOS):Draw()
+        lia.derma.rect(x, y, 64, 64):Radii(6, 6, 6, 6):Color(lia.color.theme.background_alpha):Draw()
+        lia.util.drawText(sec, x + 32, y + 32, lia.color.theme.text, 1, 1, "LiliaFont.36")
     end
 
     if wpn:GetClass() ~= "weapon_slam" and (clip > 0 or count > 0) then
         x = x - (sec > 0 and 144 or 64)
-        lia.util.drawBlurAt(x, y, 128, 64)
-        surface.SetDrawColor(255, 255, 255, 5)
-        surface.DrawRect(x, y, 128, 64)
-        surface.SetDrawColor(255, 255, 255, 3)
-        surface.DrawOutlinedRect(x, y, 128, 64)
-        lia.util.drawText(clip == -1 and count or clip .. "/" .. count, x + 64, y + 32, nil, 1, 1, "LiliaFont.36")
+        local ammoText = clip == -1 and count or clip .. "/" .. count
+        local shadowIntensity = 8
+        local shadowBlur = 12
+        lia.derma.rect(x, y, 128, 64):Rad(6):Color(lia.color.theme.window_shadow):Shadow(shadowIntensity, shadowBlur):Shape(lia.derma.SHAPE_IOS):Draw()
+        lia.derma.rect(x, y, 128, 64):Radii(6, 6, 6, 6):Color(lia.color.theme.background_alpha):Draw()
+        lia.util.drawText(ammoText, x + 64, y + 32, lia.color.theme.text, 1, 1, "LiliaFont.36")
     end
 end
 
 local function canDrawCrosshair()
     local client = LocalPlayer()
-    local rag = client:getNetVar("ragdoll")
+    local rag = client:GetRagdollEntity()
     local wpn = client:GetActiveWeapon()
     if not client:getChar() then return false end
     if IsValid(wpn) then
@@ -155,7 +154,16 @@ local function RenderEntities()
                 local a = mathApproach(ent.liaAlpha or 0, goal, ft * 1000)
                 if lastEntity ~= ent then paintedEntitiesCache[ent] = false end
                 if a > 0 then
-                    local netPlayer = ent.getNetVar and ent:getNetVar("player")
+                    local netPlayer
+                    if ent:GetClass() == "prop_ragdoll" then
+                        for _, ply in player.Iterator() do
+                            if ply:GetRagdollEntity() == ent then
+                                netPlayer = ply
+                                break
+                            end
+                        end
+                    end
+
                     if IsValid(netPlayer) then
                         local p = toScreen(ent:LocalToWorld(ent:OBBCenter()))
                         hook.Run("DrawEntityInfo", netPlayer, a, p)
@@ -201,11 +209,17 @@ function GM:ShouldDrawEntityInfo(e)
             return true
         end
 
-        if e.getNetVar then
-            local ply = e:getNetVar("player")
-            if IsValid(ply) then return e == LocalPlayer() and not LocalPlayer():ShouldDrawLocalPlayer() end
+        local ply
+        if e:GetClass() == "prop_ragdoll" then
+            for _, p in player.Iterator() do
+                if p:GetRagdollEntity() == e then
+                    ply = p
+                    break
+                end
+            end
         end
 
+        if IsValid(ply) then return e == LocalPlayer() and not LocalPlayer():ShouldDrawLocalPlayer() end
         if e.DrawEntityInfo then return true end
         if e.onShouldDrawEntityInfo and e:onShouldDrawEntityInfo() then return true end
         return true
@@ -395,22 +409,12 @@ end
 
 function GM:CalcView(client, origin, angles, fov)
     local view = self.BaseClass:CalcView(client, origin, angles, fov)
-    local ragEntity = client:getNetVar("ragdoll")
     local ragdoll = client:GetRagdollEntity()
-    local ent
     if IsValid(client:GetVehicle()) then return view end
-    if not IsValid(client:GetVehicle()) and client:GetViewEntity() == client and not client:ShouldDrawLocalPlayer() then
-        if IsValid(ragEntity) and ragEntity:IsRagdoll() then
-            ent = ragEntity
-        elseif not client:Alive() and IsValid(ragdoll) then
-            ent = ragdoll
-        end
-    end
-
-    if ent and ent:IsValid() then
-        local idx = ent:LookupAttachment("eyes")
+    if not IsValid(client:GetVehicle()) and client:GetViewEntity() == client and not client:ShouldDrawLocalPlayer() and IsValid(ragdoll) then
+        local idx = ragdoll:LookupAttachment("eyes")
         if idx then
-            local data = ent:GetAttachment(idx)
+            local data = ragdoll:GetAttachment(idx)
             if data then
                 view.origin = data.Pos
                 view.angles = data.Ang
@@ -424,7 +428,7 @@ end
 
 function GM:PlayerBindPress(client, bind, pressed)
     bind = bind:lower()
-    if bind:find("jump") and IsValid(client:getNetVar("ragdoll")) then lia.command.send("chargetup") end
+    if bind:find("jump") and IsValid(client:GetRagdollEntity()) then lia.command.send("chargetup") end
     if bind:find("use") then
         local entity = client:getTracedEntity()
         local hasValidEntity = IsValid(entity) and (entity:isItem() or entity.hasMenu)
