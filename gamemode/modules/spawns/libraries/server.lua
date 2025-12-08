@@ -142,6 +142,7 @@ end
 
 function MODULE:PlayerSpawn(client)
     client.liaSpawnHandled = nil
+    -- Don't clear liaIsRespawning here, we need it in PostPlayerLoadout
 end
 
 function MODULE:OnCharDisconnect(client, character)
@@ -188,6 +189,25 @@ function MODULE:PostPlayerLoadout(client)
     local character = client:getChar()
     if not character then return end
     if client.liaSpawnHandled then return end
+    -- Check if this is a respawn and if a hook provides a respawn location
+    if client.liaIsRespawning then
+        local respawnLocation = hook.Run("GetPlayerRespawnLocation", client)
+        if respawnLocation then
+            local pos = respawnLocation.pos or respawnLocation.position
+            local ang = respawnLocation.ang or respawnLocation.angle
+            if isvector(pos) then
+                pos = pos + Vector(0, 0, 16)
+                client:SetPos(pos)
+            end
+
+            if isangle(ang) then client:SetEyeAngles(ang) end
+            client.liaIsRespawning = nil
+            client.liaSpawnHandled = true
+            hook.Run("PlayerSpawnPointSelected", client, pos or Vector(0, 0, 16), ang or angle_zero)
+            return
+        end
+    end
+
     local lastPos = character:getLastPos()
     if lastPos and lastPos.map then
         local currentMap = lia.data.getEquivalencyMap(game.GetMap()):lower()
@@ -197,10 +217,12 @@ function MODULE:PostPlayerLoadout(client)
             if lastPos.ang and isangle(lastPos.ang) then client:SetEyeAngles(lastPos.ang) end
             character:setLastPos(nil)
             client.liaSpawnHandled = true
+            client.liaIsRespawning = nil
             return
         end
     end
 
     client.liaSpawnHandled = true
+    client.liaIsRespawning = nil
     DoSpawnLogic(client)
 end

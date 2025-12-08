@@ -6,6 +6,7 @@
     baseTime = hook.Run("OverrideSpawnTime", client, baseTime) or baseTime
     local lastDeath = client:getLocalVar("lastDeathTime")
     if not lastDeath or lastDeath == 0 then
+        client.liaIsRespawning = true
         client:Spawn()
         lia.log.add(client, "respawn", "Forced respawn due to missing lastDeathTime")
         return
@@ -13,6 +14,7 @@
 
     local timePassed = os.time() - lastDeath
     if timePassed >= baseTime then
+        client.liaIsRespawning = true
         client:Spawn()
     else
         lia.log.add(client, "respawn", "Respawn denied - timePassed: " .. timePassed .. " < baseTime: " .. baseTime)
