@@ -12,12 +12,10 @@ ENT.NoRemover = true
 ENT.DrawEntityInfo = true
 ENT.IsPersistent = true
 function ENT:setupVars()
-    if SERVER then
-        if not self.hasSetupVars then
-            lia.vendor.setVendorProperty(self, "name", L("vendorDefaultName"))
-            lia.vendor.setVendorProperty(self, "preset", "none")
-            lia.vendor.setVendorProperty(self, "animation", "")
-        end
+    if SERVER and not self.hasSetupVars then
+        lia.vendor.setVendorProperty(self, "name", L("vendorDefaultName"))
+        lia.vendor.setVendorProperty(self, "preset", "none")
+        lia.vendor.setVendorProperty(self, "animation", "")
     end
 
     self.receivers = self.receivers or {}
