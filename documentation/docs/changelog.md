@@ -1,5 +1,30 @@
 # Changelog
 
+## Version 7.128 (December 09, 2025)
+
+### Changes
+
+- New Skins
+- Rarities are now tied to lia.item, instead of .vendor
+- Minor Bug Fixing
+- DoubleIf Statement
+- Successfully updated workshop Lilia to 7.123
+- GetPlayerRespawnLocation  hook
+- Successfully updated workshop Lilia to 7.121
+- Ragdoll Optimization
+- Successfully updated workshop Lilia to 7.119
+- Cached Breathing and Gags
+- Successfully updated workshop Lilia to 7.117
+- Log Pagination
+- Character Loader Camera Pos Fixes
+- Fixed Convert Entity
+- Successfully updated workshop Lilia to 7.113
+- Removed Redudant Nets and Moved Several to setLocalVar for Performance
+- Successfully updated workshop Lilia to 7.111
+- Compressed Categories of Privileges
+- Successfully updated workshop Lilia to 7.19
+- Chatbox perms
+
 ## Version 7.123 (December 08, 2025)
 
 ### Changes

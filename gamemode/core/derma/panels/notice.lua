@@ -54,8 +54,6 @@ function PANEL:RecalcSize()
     self.scale = ScrH() / 1080
     surface.SetFont("LiliaFont.17")
     local msg = self.msg or ""
-    -- Split message by newlines to handle multi-line text
-    -- Manually split to ensure we preserve empty lines
     local lines = {}
     if msg == "" then
         lines = {""}
@@ -74,12 +72,10 @@ function PANEL:RecalcSize()
     end
 
     if #lines == 0 then lines = {""} end
-    -- Calculate width based on the longest line
     local maxWidth = 0
     local lineHeight = 0
     for _, line in ipairs(lines) do
         local tw, th = surface.GetTextSize(line)
-        -- Handle empty lines by using space character for measurement
         if tw == 0 and th == 0 then tw, th = surface.GetTextSize(" ") end
         if tw > maxWidth then maxWidth = tw end
         if th > lineHeight then lineHeight = th end
@@ -92,8 +88,6 @@ function PANEL:RecalcSize()
     local textPadding = math.min(60 * self.scale, maxWidth * 0.1)
     local requiredWidth = maxWidth + (NotificationPadding * 2) + iconWidth + extraSpacing + textPadding
     local w = math.max(requiredWidth, minWidth)
-    -- Calculate height based on number of lines
-    -- Add extra padding between lines
     local lineSpacing = 2 * self.scale
     local totalHeight = (lineHeight * #lines) + (lineSpacing * math.max(0, #lines - 1)) + (NotificationPadding * self.scale)
     local h = math.max(NotificationHeight * self.scale, totalHeight)
@@ -161,11 +155,9 @@ function PANEL:Paint(w, h)
         surface.DrawTexturedRect(self.padding, (h - self.iconSize) / 2, self.iconSize, self.iconSize)
     end
 
-    -- Render multi-line text
     local textX = self.padding + self.iconSize + self.padding / 2
     local textColor = Color(255, 255, 255, self.alpha)
     if self.lines and #self.lines > 1 then
-        -- Multi-line rendering
         local totalTextHeight = (self.lineHeight * #self.lines) + (self.lineSpacing * math.max(0, #self.lines - 1))
         local startY = (h - totalTextHeight) / 2
         for i, line in ipairs(self.lines) do
@@ -173,7 +165,6 @@ function PANEL:Paint(w, h)
             draw.SimpleText(line or "", "LiliaFont.17", textX, yPos, textColor, TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)
         end
     else
-        -- Single-line rendering (backward compatibility)
         draw.SimpleText(self.msg or "", "LiliaFont.17", textX, h / 2, textColor, TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)
     end
 end
