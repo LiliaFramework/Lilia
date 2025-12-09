@@ -88,7 +88,7 @@ end
 function GridInv:doesItemFitAtPos(testItem, x, y)
     if not self:canItemFitInInventory(testItem, x, y) then return false end
     for _, v in pairs(self.items) do
-        if self:doesItemOverlapWithOther(testItem, x, y, v) then return false, v end
+        if v ~= testItem and self:doesItemOverlapWithOther(testItem, x, y, v) then return false, v end
     end
 
     if self.occupied then

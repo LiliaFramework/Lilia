@@ -1179,6 +1179,11 @@ net.Receive("liaRequestWarningsCount", function(_, client)
 end)
 
 hook.Add("PhysgunPickup", "Lilia.PhysgunPickup", function(client, entity)
+    if client:InVehicle() then
+        client:notifyErrorLocalized("cmdVehicle")
+        return false
+    end
+
     if (client:hasPrivilege("physgunPickup") or client:isStaffOnDuty()) and entity.NoPhysgun then
         if not client:hasPrivilege("physgunPickupRestrictedEntities") then
             lia.log.add(client, "permissionDenied", L("physgunRestrictedEntity"))
@@ -1231,6 +1236,11 @@ local DisallowedTools = {
 }
 
 hook.Add("CanTool", "Lilia.CanTool", function(client, trace, tool)
+    if client:InVehicle() then
+        client:notifyErrorLocalized("cmdVehicle")
+        return false
+    end
+
     local function CheckDuplicationScale(ply, entities)
         entities = entities or {}
         for _, v in pairs(entities) do
@@ -1306,6 +1316,13 @@ hook.Add("CanTool", "Lilia.CanTool", function(client, trace, tool)
 
     if tool == "duplicator" and client.CurrentDupe and not CheckDuplicationScale(client, client.CurrentDupe.Entities) then return false end
     return true
+end)
+
+hook.Add("GravGunPickupAllowed", "Lilia.GravGunPickupAllowed", function(client)
+    if client:InVehicle() then
+        client:notifyErrorLocalized("cmdVehicle")
+        return false
+    end
 end)
 
 hook.Add("PlayerNoClip", "Lilia.PlayerNoClip", function(ply, enabled)

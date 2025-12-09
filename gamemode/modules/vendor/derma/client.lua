@@ -1,5 +1,5 @@
 ﻿local sw, sh = ScrW(), ScrH()
-local RarityColors = lia.vendor.rarities
+local RarityColors = lia.item.rarities
 local VendorClick = {"buttons/button15.wav", 30, 250}
 local PANEL = {}
 function PANEL:Init()

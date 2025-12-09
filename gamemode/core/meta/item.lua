@@ -384,20 +384,24 @@ if SERVER then
         local result
         if isfunction(self.hooks[action]) then result = self.hooks[action](self, data) end
         if result == nil then
-            local isMulti = callback.isMulti or callback.multiOptions and istable(callback.multiOptions)
-            if isMulti and isstring(data) and callback.multiOptions then
-                local optionFunc = callback.multiOptions[data]
-                if optionFunc then
-                    if isfunction(optionFunc) then
-                        result = optionFunc(self)
-                    elseif istable(optionFunc) then
-                        local runFunc = optionFunc[1] or optionFunc.onRun
-                        if isfunction(runFunc) then result = runFunc(self) end
+            local multiOptions = callback.multiOptions
+            local isMulti = callback.isMulti or istable(multiOptions) or isfunction(multiOptions)
+            if isMulti and multiOptions then
+                local options = istable(multiOptions) and multiOptions or multiOptions(self, client)
+                if istable(options) then
+                    local optionFunc = options[data] or options[tostring(data)] or options[tonumber(data)]
+                    if optionFunc then
+                        if isfunction(optionFunc) then
+                            result = optionFunc(self, data)
+                        elseif istable(optionFunc) then
+                            local runFunc = optionFunc[1] or optionFunc.onRun
+                            if isfunction(runFunc) then result = runFunc(self, data) end
+                        end
                     end
                 end
-            elseif isfunction(callback.onRun) then
-                result = callback.onRun(self, data)
             end
+
+            if result == nil and isfunction(callback.onRun) then result = callback.onRun(self, data) end
         end
 
         if self.postHooks[action] then self.postHooks[action](self, result, data) end

@@ -10,11 +10,13 @@
 lia.item = lia.item or {}
 lia.item.base = lia.item.base or {}
 lia.item.list = lia.item.list or {}
+lia.item.rarities = lia.item.rarities or {}
 lia.item.instances = lia.item.instances or {}
 lia.item.itemEntities = lia.item.itemEntities or {}
 lia.item.inventories = lia.inventory.instances or {}
 lia.item.inventoryTypes = lia.item.inventoryTypes or {}
 lia.item.WeaponOverrides = lia.item.WeaponOverrides or {}
+lia.item.pendingOverrides = lia.item.pendingOverrides or {}
 lia.item.WeaponsBlackList = lia.item.WeaponsBlackList or {
     weapon_fists = true,
     weapon_medkit = true,
@@ -25,7 +27,6 @@ lia.item.WeaponsBlackList = lia.item.WeaponsBlackList or {
     lia_keys = true
 }
 
-lia.item.pendingOverrides = lia.item.pendingOverrides or {}
 local DefaultFunctions = {
     drop = {
         tip = "dropTip",
@@ -218,6 +219,12 @@ function lia.item.getInv(invID)
     return lia.inventory.instances[invID]
 end
 
+function lia.item.addRarities(name, color)
+    assert(isstring(name), L("vendorRarityNameString"))
+    assert(IsColor(color), L("vendorColorMustBeColor"))
+    lia.item.rarities[name] = color
+end
+
 function lia.item.register(uniqueID, baseID, isBaseItem, path, luaGenerated)
     assert(isstring(uniqueID), L("itemUniqueIDString"))
     local baseTable = lia.item.base[baseID] or lia.meta.item
@@ -333,6 +340,7 @@ function lia.item.new(uniqueID, id)
         })
 
         lia.item.instances[id] = item
+        hook.Run("OnItemCreated", item)
         return item
     else
         error("[Lilia] " .. L("unknownItem", tostring(uniqueID)) .. "\n")

@@ -11,7 +11,6 @@ lia.vendor = lia.vendor or {}
 lia.vendor.stored = lia.vendor.stored or {}
 lia.vendor.editor = lia.vendor.editor or {}
 lia.vendor.presets = lia.vendor.presets or {}
-lia.vendor.rarities = lia.vendor.rarities or {}
 lia.vendor.defaults = {
     name = L("vendorDefaultName"),
     preset = "none",
@@ -151,12 +150,6 @@ else
     addEditor("scale", function(scale) net.WriteFloat(scale) end)
     addEditor("preset", function(preset) net.WriteString(preset) end)
     addEditor("animation", function(animation) net.WriteString(animation or "") end)
-end
-
-function lia.vendor.addRarities(name, color)
-    assert(isstring(name), L("vendorRarityNameString"))
-    assert(IsColor(color), L("vendorColorMustBeColor"))
-    lia.vendor.rarities[name] = color
 end
 
 function lia.vendor.addPreset(name, items)

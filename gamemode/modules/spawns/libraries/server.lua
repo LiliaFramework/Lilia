@@ -142,6 +142,7 @@ end
 
 function MODULE:PlayerSpawn(client)
     client.liaSpawnHandled = nil
+    -- Don't clear liaIsRespawning here, we need it in PostPlayerLoadout
 end
 
 function MODULE:OnCharDisconnect(client, character)
@@ -188,6 +189,7 @@ function MODULE:PostPlayerLoadout(client)
     local character = client:getChar()
     if not character then return end
     if client.liaSpawnHandled then return end
+    -- Check if this is a respawn and if a hook provides a respawn location
     if client.liaIsRespawning then
         local respawnLocation = hook.Run("GetPlayerRespawnLocation", client)
         if respawnLocation then
