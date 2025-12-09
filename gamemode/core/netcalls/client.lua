@@ -67,14 +67,6 @@ net.Receive("liaServerChatAddText", function()
     chat.AddText(unpack(args))
 end)
 
-net.Receive("liaSyncGesture", function()
-    local entity = net.ReadEntity()
-    local a = net.ReadUInt(8)
-    local b = net.ReadUInt(8)
-    local c = net.ReadBool()
-    if IsValid(entity) then entity:AnimRestartGesture(a, b, c) end
-end)
-
 net.Receive("liaProvideServerPassword", function()
     local pw = net.ReadString()
     if not isstring(pw) or pw == "" then return end
@@ -1288,3 +1280,4 @@ net.Receive("liaGroupPermChanged", function()
 end)
 
 net.Receive("liaJobNpcCloseDialog", function() if IsValid(lia.dialog.vgui) then lia.dialog.vgui:Remove() end end)
+netstream.Hook("liaSyncGesture", function(entity, a, b, c) if IsValid(entity) then entity:AnimRestartGesture(a, b, c) end end)

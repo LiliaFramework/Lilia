@@ -14,11 +14,24 @@ function lia.attribs.loadFromDir(directory)
         local niceName = v:sub(1, 3) == "sh_" and v:sub(4, -5):lower() or v:sub(1, -5)
         ATTRIBUTE = lia.attribs.list[niceName] or {}
         lia.loader.include(directory .. "/" .. v, "shared")
-        ATTRIBUTE.name = ATTRIBUTE.name and L(ATTRIBUTE.name) or L("unknown")
-        ATTRIBUTE.desc = ATTRIBUTE.desc and L(ATTRIBUTE.desc) or L("noDesc")
-        lia.attribs.list[niceName] = ATTRIBUTE
+        lia.attribs.register(niceName, ATTRIBUTE)
         ATTRIBUTE = nil
     end
+end
+
+function lia.attribs.register(uniqueID, data)
+    assert(isstring(uniqueID), "uniqueID must be a string")
+    assert(istable(data), "data must be a table")
+    local attribute = lia.attribs.list[uniqueID] or {}
+    for k, v in pairs(data) do
+        attribute[k] = v
+    end
+
+    attribute.uniqueID = uniqueID
+    attribute.name = attribute.name and L(attribute.name) or L("unknown")
+    attribute.desc = attribute.desc and L(attribute.desc) or L("noDesc")
+    lia.attribs.list[uniqueID] = attribute
+    return attribute
 end
 
 if SERVER then

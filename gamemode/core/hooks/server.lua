@@ -145,6 +145,7 @@ function GM:PlayerDeath(client, inflictor, attacker)
     if IsValid(attacker) and attacker:IsPlayer() and attacker ~= client and hook.Run("PlayerShouldPermaKill", client, inflictor, attacker) then character:ban() end
     net.Start("liaRemoveFOne")
     net.Send(client)
+    if hook.Run("ShouldSpawnClientRagdoll", client) ~= false then client:CreateRagdoll() end
 end
 
 function GM:PrePlayerLoadedChar(client)
@@ -492,8 +493,6 @@ function GM:DoPlayerDeath(client, attacker)
         existingRagdoll.liaNoReset = true
         existingRagdoll:CallOnRemove("deadRagdoll", function() existingRagdoll.liaIgnoreDelete = true end)
         client.diedInRagdoll = true
-    elseif hook.Run("ShouldSpawnClientRagdoll", client) ~= false then
-        client:CreateRagdoll()
     end
 
     if IsValid(attacker) and attacker:IsPlayer() then
@@ -1102,6 +1101,8 @@ function GM:CreateSalaryTimers()
                 pay = isnumber(pay) and pay or class and class.pay or faction and faction.pay or 0
                 local adjustedPay = hook.Run("OnSalaryAdjust", client)
                 if isnumber(adjustedPay) then pay = adjustedPay end
+                local prestigeBonus = hook.Run("GetPrestigePayBonus", client, char, pay, faction, class)
+                if isnumber(prestigeBonus) then pay = pay + prestigeBonus end
                 if pay > 0 then
                     local handled = hook.Run("PreSalaryGive", client, char, pay, faction, class)
                     if handled ~= true then

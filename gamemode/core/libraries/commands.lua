@@ -318,16 +318,18 @@ else
 
         prefix = prefix or {}
         local numFields = table.Count(fields)
-        local frameW, frameH = 600, 200 + numFields * 75
+        local frameW, frameH = 600, math.min(450 + numFields * 135, ScrH() * 0.5)
         local frame = vgui.Create("liaFrame")
-        frame:SetTitle(L(cmdKey))
+        frame:SetTitle("")
+        frame:SetCenterTitle(L(cmdKey))
         frame:SetSize(frameW, frameH)
         frame:Center()
         frame:MakePopup()
-        frame:ShowCloseButton(true)
+        frame:ShowCloseButton(false)
+        frame:SetZPos(1000)
         local scroll = vgui.Create("liaScrollPanel", frame)
         scroll:Dock(FILL)
-        scroll:DockMargin(10, 10, 10, 10)
+        scroll:DockMargin(10, 40, 10, 10)
         surface.SetFont("LiliaFont.17")
         local controls = {}
         local watchers = {}
@@ -342,9 +344,10 @@ else
                 local filter = data.filter
                 local panel = vgui.Create("DPanel", scroll)
                 panel:Dock(TOP)
-                panel:DockMargin(0, 0, 0, 5)
-                panel:SetTall(70)
-                panel.Paint = function() end
+                panel:DockMargin(0, 0, 0, 15)
+                panel:SetTall(120)
+                panel.Paint = nil
+                surface.SetFont("LiliaFont.20")
                 local textW = select(1, surface.GetTextSize(L(data.description or name)))
                 local ctrl
                 if fieldType == "player" then
@@ -395,18 +398,22 @@ else
                 end
 
                 local label = vgui.Create("DLabel", panel)
-                label:SetFont("LiliaFont.17")
+                label:SetFont("LiliaFont.20")
                 label:SetText(L(data.description or name))
                 label:SizeToContents()
+                local isBool = fieldType == "bool"
                 panel.PerformLayout = function(_, w, h)
-                    local ctrlH = 30
-                    ctrl:SetTall(ctrlH)
-                    local ctrlW = w * 0.7
-                    local totalW = textW + 10 + ctrlW
-                    local xOff = (w - totalW) / 2
-                    label:SetPos(xOff, (h - label:GetTall()) / 2)
-                    ctrl:SetPos(xOff + textW + 10, (h - ctrlH) / 2)
-                    ctrl:SetWide(ctrlW)
+                    local ctrlH, ctrlW
+                    if isBool then
+                        ctrlH, ctrlW = 22, 60
+                    else
+                        ctrlH, ctrlW = 60, w * 0.85
+                    end
+
+                    local ctrlX = (w - ctrlW) / 2
+                    ctrl:SetPos(ctrlX, (h - ctrlH) / 2 + 6)
+                    ctrl:SetSize(ctrlW, ctrlH)
+                    label:SetPos((w - textW) / 2, (h - ctrlH) / 2 - 25)
                 end
 
                 controls[name] = {
@@ -4198,7 +4205,6 @@ lia.command.add("getallinfos", {
 })
 
 lia.command.add("dropmoney", {
-    adminOnly = true,
     desc = "dropMoneyDesc",
     arguments = {
         {

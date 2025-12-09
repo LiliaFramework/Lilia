@@ -95,7 +95,19 @@ function PANEL:setItemType(itemTypeOrID)
 end
 
 function PANEL:updateTooltip()
-    self:SetTooltip("<font=LiliaFont.16b>" .. self.itemTable:getName() .. "</font>\n<font=LiliaFont.16>" .. self.itemTable:getDesc())
+    local lines = {}
+    lines[#lines + 1] = "<font=LiliaFont.16b>" .. self.itemTable:getName() .. "</font>"
+    local rarity = self.itemTable:getData("rarity") or self.itemTable.rarity
+    if rarity and rarity ~= "" then
+        local rarityText = rarity
+        local rarityColors = lia.item and lia.item.rarities
+        local rarityColor = rarityColors and rarityColors[rarity]
+        if rarityColor then rarityText = Format("<color=%s, %s, %s>%s</color>", rarityColor.r, rarityColor.g, rarityColor.b, rarity) end
+        lines[#lines + 1] = "<font=LiliaFont.16>" .. rarityText .. "</font>"
+    end
+
+    lines[#lines + 1] = "<font=LiliaFont.16>" .. self.itemTable:getDesc() .. "</font>"
+    self:SetTooltip(table.concat(lines, "\n"))
 end
 
 function PANEL:ItemDataChanged()

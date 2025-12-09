@@ -1,20 +1,4 @@
-﻿--[[
-    Doors Library Server
-
-    Server-side door management and configuration system for the Lilia framework.
-]]
---[[
-    Overview:
-        The doors library server component provides comprehensive door management functionality including
-        preset configuration, database schema verification, and data cleanup operations. It handles
-        door data persistence, loading door configurations from presets, and maintaining database
-        integrity. The library manages door ownership, access permissions, faction and class restrictions,
-        and provides utilities for door data validation and corruption cleanup. It operates primarily
-        on the server side and integrates with the database system to persist door configurations
-        across server restarts. The library also handles door locking/unlocking mechanics and
-        provides hooks for custom door behavior integration.
-]]
-function MODULE:PostLoadData()
+﻿function MODULE:PostLoadData()
     if lia.config.get("DoorsAlwaysDisabled", false) then
         local count = 0
         for _, door in ents.Iterator() do

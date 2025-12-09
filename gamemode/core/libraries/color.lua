@@ -10,7 +10,15 @@
 lia.color = lia.color or {}
 lia.color.stored = lia.color.stored or {}
 lia.color.themes = lia.color.themes or {}
-if CLIENT then
+if SERVER then
+    hook.Add("OnConfigUpdated", "liaThemeSkinSpawnmenuReload", function(key, oldValue, newValue)
+        if oldValue == newValue then return end
+        if key ~= "Theme" and key ~= "DermaSkin" then return end
+        for _, ply in player.Iterator() do
+            if IsValid(ply) and ply:IsPlayer() then ply:ConCommand("spawnmenu_reload") end
+        end
+    end)
+else
     function lia.color.register(name, color)
         lia.color.stored[name:lower()] = color
     end

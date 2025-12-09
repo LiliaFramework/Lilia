@@ -362,10 +362,13 @@ end
 
 function GM:TooltipInitialize(var, panel)
     if panel.liaToolTip or panel.itemID then
-        var.markupObject = lia.markup.parse(var:GetText(), ScrW() * 0.15)
+        local tooltipWidth = math.max(ScrW() * 0.15, 200)
+        var.markupObject = lia.markup.parse(var:GetText(), tooltipWidth)
+        var.tooltipPaddingX = 12
+        var.tooltipPaddingY = 12
         var:SetText("")
-        var:SetWide(math.max(ScrW() * 0.15, 200) + 12)
-        var:SetHeight(var.markupObject:getHeight() + 12)
+        var:SetWide(tooltipWidth + var.tooltipPaddingX * 2)
+        var:SetHeight(var.markupObject:getHeight() + var.tooltipPaddingY * 2)
         var:SetAlpha(0)
         var:AlphaTo(255, 0.2, 0)
         var.isItemTooltip = true
@@ -374,10 +377,19 @@ end
 
 function GM:TooltipPaint(var, w, h)
     if var.isItemTooltip then
-        lia.util.drawBlur(var, 2, 2)
-        surface.SetDrawColor(0, 0, 0, 230)
-        surface.DrawRect(0, 0, w, h)
-        var.markupObject:draw(6, 8)
+        local paddingX = var.tooltipPaddingX or 6
+        local paddingY = var.tooltipPaddingY or 8
+        local radius = 6
+        local shadowIntensity = 8
+        local shadowBlur = 12
+        local accent = lia.color.theme.accent or lia.color.theme.header or lia.color.theme.theme
+        local background = lia.color.theme.background_alpha or lia.color.theme.background
+        lia.derma.rect(0, 0, w, h):Rad(radius):Color(lia.color.theme.window_shadow):Shadow(shadowIntensity, shadowBlur):Shape(lia.derma.SHAPE_IOS):Draw()
+        lia.util.drawBlur(var, 4, 2)
+        lia.derma.rect(0, 0, w, h):Rad(radius):Color(background):Draw()
+        surface.SetDrawColor(accent)
+        surface.DrawRect(0, 0, w, 2)
+        if var.markupObject then var.markupObject:draw(paddingX, paddingY) end
         return true
     end
 end
