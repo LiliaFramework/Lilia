@@ -52,45 +52,13 @@ end
 function PANEL:Init()
     if IsValid(lia.gui.score) then lia.gui.score:Remove() end
     lia.gui.score = self
+    self.isLiaScoreboard = true
     hook.Run("ScoreboardOpened", self)
     self:ApplyConfig()
     self:ShowCloseButton(false)
+    self:SetTitle("")
+    self:SetCenterTitle(GetHostName())
     self.playerOptionFrames = {}
-    local header = self:Add("DPanel")
-    header:Dock(TOP)
-    header:SetTall(40)
-    header:DockMargin(0, 0, 0, 5)
-    header.Paint = function() end
-    local serverName = header:Add("DLabel")
-    serverName:Dock(TOP)
-    serverName:DockMargin(0, -5, 0, 0)
-    serverName:SetText(GetHostName())
-    serverName:SetFont("LiliaFont.25")
-    serverName:SetContentAlignment(5)
-    serverName:SetTextColor(color_white)
-    serverName:SetExpensiveShadow(1, color_black)
-    serverName:SizeToContentsY()
-    local serverIcon = header:Add("DImage")
-    serverIcon:Dock(RIGHT)
-    serverIcon:DockMargin(15, -20, 20, 7)
-    serverIcon:SetWide(60)
-    serverIcon:SetTall(32)
-    serverIcon.PerformLayout = function(icon)
-        icon:SetWide(60)
-        icon:SetTall(32)
-    end
-
-    serverIcon:SetVisible(false)
-    local serverIconPath = lia.config.get("ServerLogo", "")
-    local scoreboardLogoEnabled = lia.config.get("ScoreboardLogoEnabled", true)
-    if scoreboardLogoEnabled and serverIconPath and serverIconPath ~= "" then
-        local material = Material(serverIconPath)
-        if material then
-            serverIcon:SetMaterial(material)
-            serverIcon:SetVisible(true)
-        end
-    end
-
     local scroll = self:Add("liaScrollPanel")
     scroll:Dock(FILL)
     scroll:DockMargin(1, 0, 1, 0)
@@ -515,7 +483,7 @@ function PANEL:OnRemove()
     self:ClosePlayerOptionFrames()
 end
 
-vgui.Register("liaScoreboard", PANEL, "liaSemiTransparentDFrame")
+vgui.Register("liaScoreboard", PANEL, "liaFrame")
 local function liaScoreboardHide()
     if IsValid(lia.gui.score) and lia.gui.score:IsVisible() then
         lia.gui.score:SetVisible(false)

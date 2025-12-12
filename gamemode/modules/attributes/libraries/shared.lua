@@ -1,10 +1,13 @@
 ﻿function MODULE:CalcStaminaChange(client)
     local char = client:getChar()
-    if not char or client:GetMoveType() == MOVETYPE_NOCLIP then return 0 end
+    if not char then return 0 end
     local walkSpeed = lia.config.get("WalkSpeed", 100)
     local maxAttributes = lia.config.get("maxAttributes", 100)
+    local inNoClip = client:GetMoveType() == MOVETYPE_NOCLIP
+    local inVehicle = client:InVehicle()
     local offset
-    if client:KeyDown(IN_SPEED) and client:GetVelocity():LengthSqr() >= (walkSpeed * walkSpeed) and client:OnGround() then
+    local isRunning = client:KeyDown(IN_SPEED) and client:GetVelocity():LengthSqr() >= (walkSpeed * walkSpeed) and client:OnGround() and not inNoClip and not inVehicle
+    if isRunning then
         offset = -lia.config.get("StaminaDrain", 1) + math.min(char:getAttrib("end", 0), maxAttributes) / 100
     else
         offset = client:Crouching() and lia.config.get("StaminaCrouchRegeneration", 2) or lia.config.get("StaminaRegeneration", 1.75)

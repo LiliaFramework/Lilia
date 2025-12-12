@@ -66,6 +66,7 @@ function PANEL:PerformLayout(w, h)
         self.resizer:SetSize(14, 14)
         self.resizer:SetPos(w - 14, h - 14)
         self.resizer:SetVisible(self.sizable or false)
+    end
 
     local pad, btnH = self.pad, self.btnH
     local headerH = 24

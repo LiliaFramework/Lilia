@@ -2354,7 +2354,7 @@ end
 function lia.derma.requestButtons(title, buttons, callback, description)
     if IsValid(lia.gui.menuRequestButtons) then lia.gui.menuRequestButtons:Remove() end
     local buttonCount = #buttons
-    local frameHeight = 200 + (buttonCount * 45)
+    local frameHeight = 260 + (buttonCount * 45)
     local frame = vgui.Create("liaFrame")
     frame:SetSize(350, frameHeight)
     frame:Center()
@@ -2476,22 +2476,3 @@ function lia.derma.requestPopupQuestion(question, buttons)
     lia.gui.menuRequestPopup = frame
     return frame
 end
-
-timer.Simple(0, function()
-    if IsValid(lia.gui.menuDermaMenu) then lia.gui.menuDermaMenu:Remove() end
-    if IsValid(lia.gui.menuTextBox) then lia.gui.menuTextBox:Remove() end
-    if IsValid(lia.gui.menuColorPicker) then lia.gui.menuColorPicker:Remove() end
-    if IsValid(lia.gui.menu_radial) then lia.gui.menu_radial:Remove() end
-    if IsValid(lia.gui.menuPlayerSelector) then lia.gui.menuPlayerSelector:Remove() end
-    if IsValid(lia.gui.menuRequestDropdown) then lia.gui.menuRequestDropdown:Remove() end
-    if IsValid(lia.gui.menuRequestString) then lia.gui.menuRequestString:Remove() end
-    if IsValid(lia.gui.menuRequestOptions) then lia.gui.menuRequestOptions:Remove() end
-    if IsValid(lia.gui.menuRequestBinary) then lia.gui.menuRequestBinary:Remove() end
-    if IsValid(lia.gui.menuRequestButtons) then lia.gui.menuRequestButtons:Remove() end
-    if IsValid(lia.gui.menuRequestPopup) then lia.gui.menuRequestPopup:Remove() end
-    if IsValid(lia.gui.menuOpenOptions) then lia.gui.menuOpenOptions:Remove() end
-    if IsValid(lia.gui.menuTableUI) then lia.gui.menuTableUI:Remove() end
-    if IsValid(lia.gui.quick) then lia.gui.quick:Remove() end
-    if IsValid(lia.gui.InteractionMenu) then lia.gui.InteractionMenu:Remove() end
-    if IsValid(lia.gui.OptionsMenu) then lia.gui.OptionsMenu:Remove() end
-end)

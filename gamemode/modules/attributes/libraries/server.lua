@@ -4,7 +4,7 @@ local function InitializeStaminaTimer()
         for _, client in player.Iterator() do
             if IsValid(client) then
                 local char = client:getChar()
-                if char and client:GetMoveType() ~= MOVETYPE_NOCLIP then MODULE:CalcStaminaChange(client) end
+                if char then MODULE:CalcStaminaChange(client) end
             end
         end
     end
