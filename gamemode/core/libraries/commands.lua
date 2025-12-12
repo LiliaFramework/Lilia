@@ -3023,6 +3023,20 @@ lia.command.add("cleanprops", {
     end
 })
 
+lia.command.add("resetmapprops", {
+    superAdminOnly = true,
+    desc = "resetMapPropsDesc",
+    onRun = function(client)
+        local started = SysTime()
+        client:notifyInfoLocalized("resetMapPropsRunning")
+        game.CleanUpMap(false, nil, function()
+            if not IsValid(client) then return end
+            local elapsed = math.Round((SysTime() - started) * 1000)
+            client:notifySuccessLocalized("resetMapPropsSuccess", elapsed)
+        end)
+    end
+})
+
 lia.command.add("cleannpcs", {
     superAdminOnly = true,
     desc = "cleanNPCsDesc",
@@ -3748,7 +3762,7 @@ lia.command.add("charsetskin", {
         end
 
         if not skin then
-            client:notifyErrorLocalized("invalidArg", 2)
+            client:notifyErrorLocalized("invalidArg")
             return
         end
 
