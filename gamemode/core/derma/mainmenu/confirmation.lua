@@ -6,12 +6,9 @@ function PANEL:Init()
     self:SetSize(400, 200)
     self:MakePopup()
     self:SetTitle("")
+    self:SetCenterTitle(L("areYouSure"):upper())
     self:ShowCloseButton(false)
-    self.titleLabel = self:Add("DLabel")
-    self.titleLabel:SetFont("LiliaFont.17")
-    self.titleLabel:SetTextColor(color_white)
-    self.titleLabel:SetText(L("areYouSure"):upper())
-    self.titleLabel:SetContentAlignment(5)
+    self:SetDraggable(false)
     self.messageLabel = self:Add("DLabel")
     self.messageLabel:SetFont("LiliaFont.14")
     self.messageLabel:SetTextColor(color_white)
@@ -50,20 +47,33 @@ function PANEL:Init()
     end
 
     timer.Simple(0.25, function() if lia.gui.character and isfunction(lia.gui.character.warningSound) then lia.gui.character:warningSound() end end)
-    self:Center()
+    timer.Simple(0, function()
+        if IsValid(self) then
+            local w, h = self:GetWide(), self:GetTall()
+            self:SetPos((ScrW() - w) * 0.5, (ScrH() - h) * 0.5)
+        end
+    end)
 end
 
 function PANEL:PerformLayout(w, h)
-    DFrame.PerformLayout(self, w, h)
+    if IsValid(self.top_panel) then self.top_panel:SetSize(w, 24) end
+    if IsValid(self.cls) then
+        self.cls:SetSize(20, 20)
+        self.cls:SetPos(w - 22, 2)
+    end
+
+    if IsValid(self.resizer) then
+        self.resizer:SetSize(14, 14)
+        self.resizer:SetPos(w - 14, h - 14)
+        self.resizer:SetVisible(self.sizable or false)
+
     local pad, btnH = self.pad, self.btnH
-    self.titleLabel:SizeToContents()
-    self.titleLabel:SetPos((w - self.titleLabel:GetWide()) * 0.5, pad * 2)
-    local titleBottom = pad * 2 + self.titleLabel:GetTall()
-    local availH = h - titleBottom - pad * 2 - btnH
+    local headerH = 24
+    local availH = h - headerH - pad * 2 - btnH
     self.messageLabel:SetSize(w - pad * 2, availH)
     self.messageLabel:InvalidateLayout(true)
     self.messageLabel:SizeToContentsY()
-    self.messageLabel:SetPos((w - self.messageLabel:GetWide()) * 0.5, titleBottom + (availH - self.messageLabel:GetTall()) * 0.5)
+    self.messageLabel:SetPos((w - self.messageLabel:GetWide()) * 0.5, headerH + pad + (availH - self.messageLabel:GetTall()) * 0.5)
     local btnW = (w - pad * 3) * 0.5
     self.confirmButton:SetSize(btnW, btnH)
     self.confirmButton:SetPos(pad, h - pad - btnH)
@@ -87,4 +97,4 @@ function PANEL:onCancel(cb)
     return self
 end
 
-vgui.Register("liaCharacterConfirm", PANEL, "liaSemiTransparentDFrame")
+vgui.Register("liaCharacterConfirm", PANEL, "liaFrame")
