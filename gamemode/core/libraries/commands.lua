@@ -603,11 +603,7 @@ end)
 lia.command.findPlayer = lia.util.findPlayer
 if SERVER then
     concommand.Add("kickbots", function()
-        -- Stop any ongoing bot spawning timer
-        if timer.Exists("Bots_Add_Timer") then
-            timer.Remove("Bots_Add_Timer")
-        end
-
+        if timer.Exists("Bots_Add_Timer") then timer.Remove("Bots_Add_Timer") end
         for _, bot in player.Iterator() do
             if bot:IsBot() then lia.administrator.execCommand("kick", bot, nil, L("allBotsKicked")) end
         end
@@ -4420,11 +4416,9 @@ lia.command.add("fillwithbots", {
 
         local requestedAmount = arguments.amount
         if requestedAmount then
-            -- Spawn specific number of bots
             requestedAmount = math.max(1, math.floor(requestedAmount))
             local maxPlayers = game.MaxPlayers()
             local availableSlots = maxPlayers - player.GetCount()
-
             if requestedAmount > availableSlots then
                 client:notifyErrorLocalized("spawnBotsLimit", requestedAmount, availableSlots, maxPlayers)
                 return
@@ -4447,7 +4441,6 @@ lia.command.add("fillwithbots", {
 
             client:notifyInfoLocalized("spawningBots", requestedAmount)
         else
-            -- Fill server with bots (original behavior)
             timer.Create("Bots_Add_Timer", 2, 0, function()
                 if player.GetCount() < game.MaxPlayers() then
                     game.ConsoleCommand("bot\n")
@@ -7082,11 +7075,7 @@ lia.command.add("kickbots", {
     privilege = "manageBots",
     desc = "kickAllBotsDesc",
     onRun = function(client)
-        -- Stop any ongoing bot spawning timer
-        if timer.Exists("Bots_Add_Timer") then
-            timer.Remove("Bots_Add_Timer")
-        end
-
+        if timer.Exists("Bots_Add_Timer") then timer.Remove("Bots_Add_Timer") end
         local kickedCount = 0
         for _, bot in player.Iterator() do
             if bot:IsBot() then

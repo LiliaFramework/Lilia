@@ -1,5 +1,30 @@
 # Changelog
 
+## Version 7.137 (December 12, 2025)
+
+### Changes
+
+- Skin Changes
+- Successfully updated workshop Lilia to 7.135
+- Stamina fIX
+- Better Confirmation UI
+- Chatbox Bug Fix
+- Better Inventory Items
+- Added Extra Respawn Logic
+- resetmapprops command
+- Successfully updated workshop Lilia to 7.128
+- New Skins
+- Rarities are now tied to lia.item, instead of .vendor
+- Minor Bug Fixing
+- DoubleIf Statement
+- Successfully updated workshop Lilia to 7.123
+- GetPlayerRespawnLocation  hook
+- Successfully updated workshop Lilia to 7.121
+- Ragdoll Optimization
+- Successfully updated workshop Lilia to 7.119
+- Cached Breathing and Gags
+- Successfully updated workshop Lilia to 7.117
+
 ## Version 7.135 (December 12, 2025)
 
 ### Changes
