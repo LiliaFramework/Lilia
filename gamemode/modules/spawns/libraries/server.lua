@@ -34,10 +34,40 @@ function MODULE:StoreSpawns(spawns)
     return deferred.resolve(true)
 end
 
-local function DoSpawnLogic(client)
+local function DoSpawnLogic(client, isRespawning)
     if not IsValid(client) then return end
     local character = client:getChar()
     if not character then return end
+    if isRespawning then
+        local respawnLocation = hook.Run("GetPlayerRespawnLocation", client, character)
+        if respawnLocation then
+            local pos = respawnLocation.pos or respawnLocation.position
+            local ang = respawnLocation.ang or respawnLocation.angle
+            if isvector(pos) then
+                pos = pos + Vector(0, 0, 16)
+                client:SetPos(pos)
+            end
+
+            if isangle(ang) then client:SetEyeAngles(ang) end
+            hook.Run("PlayerSpawnPointSelected", client, pos or Vector(0, 0, 16), ang or angle_zero)
+            return
+        end
+    end
+
+    local overrideLocation = hook.Run("GetPlayerSpawnLocation", client, character)
+    if overrideLocation then
+        local pos = overrideLocation.pos or overrideLocation.position
+        local ang = overrideLocation.ang or overrideLocation.angle
+        if isvector(pos) then
+            pos = pos + Vector(0, 0, 16)
+            client:SetPos(pos)
+        end
+
+        if isangle(ang) then client:SetEyeAngles(ang) end
+        hook.Run("PlayerSpawnPointSelected", client, pos or Vector(0, 0, 16), ang or angle_zero)
+        return
+    end
+
     local factionID
     for _, info in ipairs(lia.faction.indices) do
         if info.index == client:Team() then
@@ -221,6 +251,7 @@ function MODULE:PostPlayerLoadout(client)
     end
 
     client.liaSpawnHandled = true
+    local wasRespawning = client.liaIsRespawning
     client.liaIsRespawning = nil
-    DoSpawnLogic(client)
+    DoSpawnLogic(client, wasRespawning)
 end

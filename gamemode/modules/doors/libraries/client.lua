@@ -73,7 +73,7 @@ end
 function MODULE:DrawEntityInfo(entity, alpha)
     local client = LocalPlayer()
     local activeWeapon = client:GetActiveWeapon()
-    if IsValid(client) and IsValid(activeWeapon) and activeWeapon:GetClass() == "adminstick" then return end
+    if IsValid(client) and IsValid(activeWeapon) and activeWeapon:GetClass() == "lia_adminstick" then return end
     if entity:isDoor() then
         local doorData = lia.doors.getData(entity)
         if not (doorData.hidden or false) then
