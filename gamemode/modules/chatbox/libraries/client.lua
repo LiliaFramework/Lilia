@@ -35,6 +35,7 @@ function MODULE:PlayerBindPress(_, bind, pressed)
 end
 
 function chat.AddText(...)
+    if not IsValid(MODULE.panel) then MODULE:CreateChat() end
     local show = true
     if IsValid(MODULE.panel) then show = MODULE.panel:addText(...) end
     if show then
