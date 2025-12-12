@@ -252,10 +252,6 @@ function SKIN:PaintPopupMenu(panel, w, h)
     drawAltBg(panel, w, h)
 end
 
-function SKIN:PaintCollapsibleCategory(panel, w, h)
-    drawAltBg(panel, w, h)
-end
-
 function SKIN:PaintCategoryList(panel, w, h)
     drawAltBg(panel, w, h)
 end
