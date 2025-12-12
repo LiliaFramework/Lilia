@@ -671,8 +671,8 @@ spawnmenu.AddContentType("inventoryitem", function(container, data)
     local client = LocalPlayer()
     if not client:hasPrivilege("canUseItemSpawner") then return end
     local icon = vgui.Create("liaItemIcon", container)
-    icon:SetSize(112, 112)
-    icon:DockMargin(15, 15, 15, 15)
+    icon:SetSize(168, 168)
+    icon:DockMargin(10, 10, 10, 10)
     icon.GetSpawnName = function() return data.id end
     icon.SetSpawnName = function(_, name) data.id = name end
     icon.SetContentType = function() end
@@ -680,15 +680,42 @@ spawnmenu.AddContentType("inventoryitem", function(container, data)
     local itemData = lia.item.list[data.id]
     icon:setItemType(data.id)
     if icon.Icon then
-        icon.Icon:SetSize(104, 104)
+        icon.Icon:SetSize(152, 152)
         local w, h = icon:GetSize()
         local iconW, iconH = icon.Icon:GetSize()
         icon.Icon:SetPos((w - iconW) * 0.5, (h - iconH) * 0.5)
     end
 
     icon:SetColor(Color(205, 92, 92, 255))
-    icon:SetTooltip("<font=LiliaFont.16b>" .. itemData:getName() .. "</font>\n" .. "<font=LiliaFont.16>" .. lia.darkrp.textWrap(itemData:getDesc() or "", "DermaDefault", 560))
-    icon.DoClick = function()
+    icon.PaintOver = function(_, w, h)
+        local name = itemData:getName()
+        surface.SetFont("LiliaFont.18")
+        local textW, textH = surface.GetTextSize(name)
+        surface.SetDrawColor(0, 0, 0, 200)
+        surface.DrawRect(0, h - textH - 6, w, textH + 6)
+        surface.SetTextColor(255, 255, 255, 255)
+        surface.SetTextPos((w - textW) * 0.5, h - textH - 3)
+        surface.DrawText(name)
+    end
+
+    local lines = {}
+    lines[#lines + 1] = "<font=LiliaFont.16b>" .. itemData:getName() .. "</font>"
+    local rarity = itemData:getData("rarity") or itemData.rarity
+    if rarity and rarity ~= "" then
+        local rarityText = rarity
+        local rarityColors = lia.item and lia.item.rarities
+        local rarityColor = rarityColors and rarityColors[rarity]
+        if rarityColor then rarityText = Format("<color=%s, %s, %s>%s</color>", rarityColor.r, rarityColor.g, rarityColor.b, rarity) end
+        lines[#lines + 1] = "<font=LiliaFont.16>" .. rarityText .. "</font>"
+    end
+
+    lines[#lines + 1] = "<font=LiliaFont.16>" .. itemData:getDesc() .. "</font>"
+    icon:SetTooltip(table.concat(lines, "\n"))
+    icon.lastSpawnTime = 0
+    icon.DoClick = function(self)
+        local currentTime = CurTime()
+        if self.lastSpawnTime and currentTime - self.lastSpawnTime < 0.5 then return end
+        self.lastSpawnTime = currentTime
         net.Start("liaSpawnMenuSpawnItem")
         net.WriteString(data.id)
         net.SendToServer()
@@ -720,7 +747,7 @@ function MODULE:PopulateInventoryItems(pnlContent, tree)
         categorized[category] = categorized[category] or {}
         table.insert(categorized[category], {
             id = uniqueID,
-            name = itemData.name
+            name = itemData:getName()
         })
     end
 
@@ -732,6 +759,19 @@ function MODULE:PopulateInventoryItems(pnlContent, tree)
                 btn.PropPanel = vgui.Create("ContentContainer", pnlContent)
                 btn.PropPanel:SetVisible(false)
                 btn.PropPanel:SetTriggerSpawnlistChange(false)
+                local originalLayout = btn.PropPanel.PerformLayout
+                local shiftAmount = 45
+                local shiftDownAmount = 20
+                btn.PropPanel.PerformLayout = function(panel, w, h)
+                    if originalLayout then originalLayout(panel, w, h) end
+                    for _, child in pairs(panel:GetChildren()) do
+                        if IsValid(child) then
+                            local x, y = child:GetPos()
+                            if x < shiftAmount then child:SetPos(x + shiftAmount, y + shiftDownAmount) end
+                        end
+                    end
+                end
+
                 for _, itemListData in SortedPairsByMemberValue(itemList, "name") do
                     spawnmenu.CreateContentIcon("inventoryitem", btn.PropPanel, {
                         name = itemListData.name,
@@ -753,8 +793,8 @@ search.AddProvider(function(str)
     if not str or str == "" then return results end
     local query = string.lower(str)
     for uniqueID, itemData in pairs(lia.item.list or {}) do
-        local name = tostring(itemData.name or "")
-        local desc = tostring(itemData.desc or "")
+        local name = tostring(itemData:getName() or "")
+        local desc = tostring(itemData:getDesc() or "")
         local category = tostring((itemData.getCategory and itemData:getCategory()) or "")
         if string.find(string.lower(name), query, 1, true) or string.find(string.lower(desc), query, 1, true) or string.find(string.lower(category), query, 1, true) or string.find(string.lower(uniqueID), query, 1, true) then
             local icon = spawnmenu.CreateContentIcon("inventoryitem", g_SpawnMenu and g_SpawnMenu.SearchPropPanel or nil, {
@@ -3281,7 +3321,7 @@ end)
 function MODULE:HUDPaint()
     local client = LocalPlayer()
     if not client:IsValid() or not client:IsPlayer() or not client:getChar() then return end
-    if not (client:GetMoveType() == MOVETYPE_NOCLIP) then return end
+    if client:GetMoveType() ~= MOVETYPE_NOCLIP then return end
     if not (client:hasPrivilege("noClipESPOffsetStaff") or client:isStaffOnDuty()) then return end
     if not lia.option.get("espEnabled", false) then return end
     for _, ent in ents.Iterator() do

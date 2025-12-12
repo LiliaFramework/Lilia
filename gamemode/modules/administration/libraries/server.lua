@@ -46,9 +46,14 @@ function MODULE:PostPlayerLoadout(client)
     if client:hasPrivilege("alwaysSpawnAdminStick") or client:isStaffOnDuty() then client:Give("lia_adminstick") end
 end
 
+local spawnCooldowns = {}
 net.Receive("liaSpawnMenuSpawnItem", function(_, client)
     local id = net.ReadString()
     if not IsValid(client) or not id or not client:hasPrivilege("canUseItemSpawner") then return end
+    local currentTime = CurTime()
+    local lastSpawnTime = spawnCooldowns[client] or 0
+    if currentTime - lastSpawnTime < 0.5 then return end
+    spawnCooldowns[client] = currentTime
     local startPos, dir = client:EyePos(), client:GetAimVector()
     local tr = util.TraceLine({
         start = startPos,
