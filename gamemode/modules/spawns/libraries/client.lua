@@ -20,12 +20,6 @@ function MODULE:HUDPaint()
     local left = clamp(baseTime - preciseTimeSinceDeath, 0, baseTime)
     if deathTimeReceived == 0 or preciseTimeSinceDeath < 0 then left = clamp(baseTime - timeSinceDeath, 0, baseTime) end
     if left >= baseTime and not ply:Alive() then left = baseTime end
-    if not ply:Alive() and lastDeath > 0 and (os.time() - lastDeath) > (baseTime + 10) then
-        net.Start("liaPlayerRespawn")
-        net.SendToServer()
-        return
-    end
-
     if hook.Run("ShouldRespawnScreenAppear") == false then return end
     if ply:getChar() and ply:Alive() then
         if deathTimeReceived > 0 then
