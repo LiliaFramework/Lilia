@@ -494,13 +494,6 @@ lia.char.registerVar("lastPos", {
     noDisplay = true
 })
 
-lia.char.registerVar("ammo", {
-    field = "ammo",
-    fieldType = "text",
-    default = {},
-    noDisplay = true
-})
-
 lia.char.registerVar("classwhitelists", {
     field = "classwhitelists",
     fieldType = "text",

@@ -66,7 +66,7 @@ function GM:CharPreSave(character)
         if v.OnSave then v:call("OnSave", client) end
     end
 
-    if IsValid(client) then
+    if IsValid(client) and client:getChar() == character then
         local ammoTable = {}
         for _, ammoType in pairs(game.GetAmmoTypes()) do
             if ammoType then
@@ -75,7 +75,7 @@ function GM:CharPreSave(character)
             end
         end
 
-        character:setAmmo(ammoTable)
+        character:setData("ammo", ammoTable)
     end
 end
 
@@ -91,7 +91,7 @@ function GM:PlayerLoadedChar(client, character)
     hook.Run("PlayerLoadout", client)
     if not timer.Exists("liaSalaryGlobal") then self:CreateSalaryTimers() end
     if not timer.Exists("liaVoiceUpdate") then self:CreateVoiceUpdateTimer() end
-    local ammoTable = character:getAmmo()
+    local ammoTable = character:getData("ammo")
     if character:getFaction() == FACTION_STAFF then
         local storedDiscord = client:getLiliaData("staffDiscord")
         if storedDiscord and storedDiscord ~= "" then
@@ -111,12 +111,12 @@ function GM:PlayerLoadedChar(client, character)
 
     if not table.IsEmpty(ammoTable) then
         timer.Simple(0.25, function()
-            if not IsValid(ammoTable) then return end
+            if not IsValid(client) then return end
             for ammoType, ammoCount in pairs(ammoTable) do
-                if IsValid(ammoCount) or IsValid(ammoCount) then client:GiveAmmo(ammoCount, ammoType, true) end
+                client:GiveAmmo(ammoCount, ammoType, true)
             end
 
-            character:setAmmo(nil)
+            character:setData("ammo", nil)
         end)
     end
 end
