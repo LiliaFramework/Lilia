@@ -1331,7 +1331,7 @@ local function OpenPlayerModelUI(tgt)
     AdminStickIsOpen = true
     local fr = vgui.Create("liaFrame")
     fr:SetTitle(L("changePlayerModel"))
-    fr:SetSize(800, 600)
+    fr:SetSize(1200, 800)
     fr:Center()
     function fr:OnClose()
         fr:Remove()
@@ -1339,10 +1339,6 @@ local function OpenPlayerModelUI(tgt)
         AdminStickIsOpen = false
     end
 
-    local sc = vgui.Create("liaScrollPanel", fr)
-    sc:Dock(FILL)
-    local wr = vgui.Create("DIconLayout", sc)
-    wr:Dock(FILL)
     local ed = vgui.Create("liaEntry", fr)
     ed:Dock(BOTTOM)
     ed:SetText(tgt:GetModel())
@@ -1358,159 +1354,184 @@ local function OpenPlayerModelUI(tgt)
         AdminStickIsOpen = false
     end
 
-    local modList = {}
+    local sheet = fr:Add("liaTabs")
+    sheet:Dock(FILL)
+    local function populateModelGrid(wr, modList)
+        wr:Clear()
+        for _, md in ipairs(modList) do
+            local ic = wr:Add("SpawnIcon")
+            ic:SetModel(md.mdl)
+            ic:SetSize(128, 128)
+            ic:SetTooltip(md.name)
+            ic.model_path = md.mdl
+            ic.DoClick = function() ed:SetValue(ic.model_path) end
+        end
+    end
+
+    local allPanel = sheet:Add("Panel")
+    local allSc = allPanel:Add("liaScrollPanel")
+    allSc:Dock(FILL)
+    local allWr = allSc:Add("DIconLayout")
+    allWr:Dock(FILL)
+    local allModList = {}
     for n, m in SortedPairs(player_manager.AllValidModels()) do
-        table.insert(modList, {
+        table.insert(allModList, {
             name = n,
             mdl = m
         })
     end
 
-    hook.Run("AdminStickAddModels", modList, tgt)
-    table.sort(modList, function(a, b) return a.name < b.name end)
-    for _, md in ipairs(modList) do
-        local ic = wr:Add("SpawnIcon")
-        ic:SetModel(md.mdl)
-        ic:SetSize(128, 128)
-        ic:SetTooltip(md.name)
-        ic.model_path = md.mdl
-        ic.DoClick = function() ed:SetValue(ic.model_path) end
+    hook.Run("AdminStickAddModels", allModList, tgt)
+    table.sort(allModList, function(a, b) return a.name < b.name end)
+    populateModelGrid(allWr, allModList)
+    sheet:AddSheet(L("all"), allPanel)
+    local factionPanel = sheet:Add("Panel")
+    local factionSheet = factionPanel:Add("liaTabs")
+    factionSheet:Dock(FILL)
+    local function processFactionModel(modelData, defaultName, modList)
+        if isstring(modelData) then
+            table.insert(modList, {
+                name = defaultName,
+                mdl = modelData
+            })
+        elseif istable(modelData) then
+            if modelData[1] and isstring(modelData[1]) then
+                table.insert(modList, {
+                    name = modelData[2] or defaultName,
+                    mdl = modelData[1]
+                })
+            end
+        end
     end
 
-    fr:MakePopup()
-end
-
-local function OpenFactionPlayerModelUI(tgt)
-    AdminStickIsOpen = true
-    local fr = vgui.Create("liaFrame")
-    fr:SetTitle(L("changePlayerModel") .. " - " .. L("faction"))
-    fr:SetSize(800, 600)
-    fr:Center()
-    function fr:OnClose()
-        fr:Remove()
-        LocalPlayer().AdminStickTarget = nil
-        AdminStickIsOpen = false
-    end
-
-    local sc = vgui.Create("liaScrollPanel", fr)
-    sc:Dock(FILL)
-    local wr = vgui.Create("DIconLayout", sc)
-    wr:Dock(FILL)
-    local ed = vgui.Create("liaEntry", fr)
-    ed:Dock(BOTTOM)
-    ed:SetText(tgt:GetModel())
-    local bt = vgui.Create("liaButton", fr)
-    bt:SetText(L("change"))
-    bt:Dock(TOP)
-    function bt:DoClick()
-        local txt = ed:GetValue()
-        local id = GetIdentifier(tgt)
-        if id ~= "" then RunConsoleCommand("say", "/charsetmodel " .. QuoteArgs(id, txt)) end
-        fr:Remove()
-        LocalPlayer().AdminStickTarget = nil
-        AdminStickIsOpen = false
-    end
-
-    local factionList = {}
-    for k, v in pairs(lia.faction.teams) do
-        table.insert(factionList, {
-            name = v.name,
-            uniqueID = k,
-            faction = v
-        })
-    end
-
-    table.sort(factionList, function(a, b) return a.name < b.name end)
-    for _, factionData in ipairs(factionList) do
-        local fac = factionData.faction
-        local ic = wr:Add("SpawnIcon")
-        ic:SetModel(fac.models and (istable(fac.models) and #fac.models > 0 and fac.models[1] or fac.models) or "models/player/group01/male_01.mdl")
-        ic:SetSize(128, 128)
-        ic:SetTooltip(factionData.name)
-        ic.factionData = fac
-        ic.DoClick = function()
-            wr:Clear()
-            local backBtn = vgui.Create("liaButton", fr)
-            backBtn:SetText(L("back"))
-            backBtn:Dock(TOP)
-            function backBtn:DoClick()
-                backBtn:Remove()
-                OpenFactionPlayerModelUI(tgt)
+    local function processFactionModels(faction, modList)
+        if not faction.models then return end
+        local models = faction.models
+        if istable(models) then
+            local hasStringKeys = false
+            for k, _ in pairs(models) do
+                if isstring(k) then
+                    hasStringKeys = true
+                    break
+                end
             end
 
-            local models = fac.models or {}
-            local modList = {}
-            if istable(models) then
+            if hasStringKeys then
+                for _, categoryModels in pairs(models) do
+                    if istable(categoryModels) then
+                        for _, modelData in ipairs(categoryModels) do
+                            processFactionModel(modelData, faction.name or "Unknown Faction", modList)
+                        end
+                    else
+                        processFactionModel(categoryModels, faction.name or "Unknown Faction", modList)
+                    end
+                end
+            else
                 if models.male or models.female then
                     if models.male then
                         for _, modelData in ipairs(models.male) do
-                            if istable(modelData) then
-                                table.insert(modList, {
-                                    name = modelData[2] or factionData.name,
-                                    mdl = modelData[1],
-                                    faction = factionData.name
-                                })
-                            else
-                                table.insert(modList, {
-                                    name = factionData.name,
-                                    mdl = modelData,
-                                    faction = factionData.name
-                                })
-                            end
+                            processFactionModel(modelData, faction.name or "Unknown Faction", modList)
                         end
                     end
 
                     if models.female then
                         for _, modelData in ipairs(models.female) do
-                            if istable(modelData) then
-                                table.insert(modList, {
-                                    name = modelData[2] or factionData.name,
-                                    mdl = modelData[1],
-                                    faction = factionData.name
-                                })
-                            else
-                                table.insert(modList, {
-                                    name = factionData.name,
-                                    mdl = modelData,
-                                    faction = factionData.name
-                                })
-                            end
+                            processFactionModel(modelData, faction.name or "Unknown Faction", modList)
                         end
                     end
                 else
                     for _, modelData in ipairs(models) do
-                        if istable(modelData) then
-                            table.insert(modList, {
-                                name = modelData[2] or factionData.name,
-                                mdl = modelData[1],
-                                faction = factionData.name
-                            })
-                        else
-                            table.insert(modList, {
-                                name = factionData.name,
-                                mdl = modelData,
-                                faction = factionData.name
-                            })
-                        end
+                        processFactionModel(modelData, faction.name or "Unknown Faction", modList)
                     end
                 end
-            else
-                table.insert(modList, {
-                    name = factionData.name,
-                    mdl = models,
-                    faction = factionData.name
-                })
+            end
+        else
+            processFactionModel(models, faction.name or "Unknown Faction", modList)
+        end
+    end
+
+    for _, faction in pairs(lia.faction.teams or {}) do
+        if faction.models then
+            local factionSubPanel = factionSheet:Add("Panel")
+            local factionSc = factionSubPanel:Add("liaScrollPanel")
+            factionSc:Dock(FILL)
+            local factionWr = factionSc:Add("DIconLayout")
+            factionWr:Dock(FILL)
+            local factionModList = {}
+            processFactionModels(faction, factionModList)
+            table.sort(factionModList, function(a, b) return a.name < b.name end)
+            populateModelGrid(factionWr, factionModList)
+            factionSheet:AddSheet(faction.name or "Unknown Faction", factionSubPanel)
+        end
+    end
+
+    sheet:AddSheet(L("faction"), factionPanel)
+    local charObj = tgt:getChar()
+    if charObj then
+        local classIndex = charObj:getClass()
+        if classIndex and classIndex ~= -1 and lia.class.list[classIndex] then
+            local classPanel = sheet:Add("Panel")
+            local classSheet = classPanel:Add("liaTabs")
+            classSheet:Dock(FILL)
+            local function processClassModel(modelData, className, modList)
+                if istable(modelData) then
+                    table.insert(modList, {
+                        name = modelData[2] or className,
+                        mdl = modelData[1]
+                    })
+                else
+                    table.insert(modList, {
+                        name = className,
+                        mdl = modelData
+                    })
+                end
             end
 
-            table.sort(modList, function(a, b) return a.name < b.name end)
-            for _, md in ipairs(modList) do
-                local modelIc = wr:Add("SpawnIcon")
-                modelIc:SetModel(md.mdl)
-                modelIc:SetSize(128, 128)
-                modelIc:SetTooltip(md.name .. " (" .. md.faction .. ")")
-                modelIc.model_path = md.mdl
-                modelIc.DoClick = function() ed:SetValue(modelIc.model_path) end
+            local function processClassModels(class, modList)
+                if not class.model then return end
+                local modelPath = class.model
+                if istable(modelPath) then
+                    if modelPath.male or modelPath.female then
+                        if modelPath.male then
+                            for _, modelData in ipairs(modelPath.male) do
+                                processClassModel(modelData, class.name, modList)
+                            end
+                        end
+
+                        if modelPath.female then
+                            for _, modelData in ipairs(modelPath.female) do
+                                processClassModel(modelData, class.name, modList)
+                            end
+                        end
+                    else
+                        for _, modelData in ipairs(modelPath) do
+                            processClassModel(modelData, class.name, modList)
+                        end
+                    end
+                elseif isstring(modelPath) then
+                    table.insert(modList, {
+                        name = class.name,
+                        mdl = modelPath
+                    })
+                end
             end
+
+            for _, class in pairs(lia.class.list or {}) do
+                if class.model then
+                    local classSubPanel = classSheet:Add("Panel")
+                    local classSc = classSubPanel:Add("liaScrollPanel")
+                    classSc:Dock(FILL)
+                    local classWr = classSc:Add("DIconLayout")
+                    classWr:Dock(FILL)
+                    local classModList = {}
+                    processClassModels(class, classModList)
+                    table.sort(classModList, function(a, b) return a.name < b.name end)
+                    populateModelGrid(classWr, classModList)
+                    classSheet:AddSheet(class.name or "Unknown Class", classSubPanel)
+                end
+            end
+
+            sheet:AddSheet(L("class"), classPanel)
         end
     end
 
@@ -1772,20 +1793,10 @@ local function IncludeCharacterManagement(tgt, menu, stores)
     local charCategory = GetOrCreateCategoryMenu(menu, "characterManagement", stores)
     if not charCategory then return end
     if cl:hasPrivilege("manageCharacterInformation") then
-        local attributesSubCategory = GetOrCreateSubCategoryMenu(charCategory, "characterManagement", "attributes", stores)
-        if attributesSubCategory then
-            attributesSubCategory:AddOption(L("changePlayerModel"), function()
-                OpenPlayerModelUI(tgt)
-                timer.Simple(0.1, function() AdminStickIsOpen = false end)
-            end):SetIcon("icon16/user_suit.png")
-
-            attributesSubCategory:AddOption(L("changePlayerModel") .. " - " .. L("faction"), function()
-                OpenFactionPlayerModelUI(tgt)
-                timer.Simple(0.1, function() AdminStickIsOpen = false end)
-            end):SetIcon("icon16/group.png")
-
-            if attributesSubCategory.UpdateSize then attributesSubCategory:UpdateSize() end
-        end
+        charCategory:AddOption(L("changePlayerModel"), function()
+            OpenPlayerModelUI(tgt)
+            timer.Simple(0.1, function() AdminStickIsOpen = false end)
+        end):SetIcon("icon16/user_suit.png")
     end
 end
 
@@ -2230,6 +2241,11 @@ function MODULE:OpenAdminStickUI(tgt)
             categories.characterManagement.subcategories.flags = {
                 name = L("adminStickSubCategoryFlags") or "Flags",
                 icon = "icon16/flag_red.png"
+            }
+
+            categories.characterManagement.subcategories.attributes = {
+                name = L("adminStickSubCategoryAttributes") or "Attributes",
+                icon = "icon16/chart_line.png"
             }
         end
 
@@ -3927,7 +3943,7 @@ function MODULE:OnAdminStickMenuClosed()
     if IsValid(client) and client.AdminStickTarget == client then client.AdminStickTarget = nil end
 end
 
-function MODULE:AdminStickAddModels(modList, tgt)
+function MODULE:AdminStickAddModels(modList)
     local addedModels = {}
     for _, modelData in ipairs(modList) do
         addedModels[modelData.mdl] = true
@@ -3940,6 +3956,7 @@ function MODULE:AdminStickAddModels(modList, tgt)
                 name = modelName or modelPath,
                 mdl = modelPath
             })
+
             addedModels[modelPath] = true
         end
     end
@@ -3948,9 +3965,7 @@ function MODULE:AdminStickAddModels(modList, tgt)
         if isstring(modelData) then
             addModel(modelData, defaultName)
         elseif istable(modelData) then
-            if modelData[1] and isstring(modelData[1]) then
-                addModel(modelData[1], modelData[2] or defaultName)
-            end
+            if modelData[1] and isstring(modelData[1]) then addModel(modelData[1], modelData[2] or defaultName) end
         end
     end
 
@@ -3958,7 +3973,7 @@ function MODULE:AdminStickAddModels(modList, tgt)
         if faction.models then
             if istable(faction.models) then
                 local hasStringKeys = false
-                for k, v in pairs(faction.models) do
+                for k, _ in pairs(faction.models) do
                     if isstring(k) then
                         hasStringKeys = true
                         break
@@ -3966,7 +3981,7 @@ function MODULE:AdminStickAddModels(modList, tgt)
                 end
 
                 if hasStringKeys then
-                    for category, categoryModels in pairs(faction.models) do
+                    for _, categoryModels in pairs(faction.models) do
                         if istable(categoryModels) then
                             for _, modelData in ipairs(categoryModels) do
                                 processModelData(modelData, faction.name or "Unknown Faction")
@@ -3987,8 +4002,6 @@ function MODULE:AdminStickAddModels(modList, tgt)
     end
 
     for _, class in pairs(lia.class.list or {}) do
-        if class.model and isstring(class.model) then
-            addModel(class.model, class.name or "Unknown Class")
-        end
+        if class.model and isstring(class.model) then addModel(class.model, class.name or "Unknown Class") end
     end
 end
