@@ -3265,6 +3265,7 @@ lia.command.add("charban", {
 
         local character = target:getChar()
         if character then
+            local isBot = target:IsBot()
             character:setBanned(-1)
             character:setData("charBanInfo", {
                 name = client.steamName and client:steamName() or client:Name(),
@@ -3276,6 +3277,7 @@ lia.command.add("charban", {
             character:kick()
             client:notifySuccessLocalized("charBan", client:Name(), target:Name())
             lia.log.add(client, "charBan", target:Name(), character:getID())
+            if isBot then timer.Simple(0.1, function() if IsValid(target) then hook.Run("SetupBotPlayer", target) end end) end
         else
             client:notifyErrorLocalized("noChar")
         end
