@@ -227,6 +227,18 @@ function PANEL:createStartButton()
         })
     end
 
+    local mainCharID = IsValid(client) and client:getMainCharacter() or nil
+    if mainCharID and lia.characters and #lia.characters > 0 and table.HasValue(lia.characters, mainCharID) and (not clientChar or clientChar:getID() ~= mainCharID) then
+        table.insert(buttonsData, {
+            id = "loadmain",
+            text = L("loadMainCharacter"),
+            doClick = function()
+                self:clickSound()
+                lia.module.get("mainmenu"):LoadMainCharacter():next(function() end):catch(function(err) if err and err ~= "" then LocalPlayer():notifyErrorLocalized(err) end end)
+            end
+        })
+    end
+
     if client:hasPrivilege("createStaffCharacter") and not client:isStaffOnDuty() then
         table.insert(buttonsData, {
             id = "staff",
@@ -376,6 +388,7 @@ function PANEL:backToMainMenu()
 
     if IsValid(self.selectBtn) then self.selectBtn:Remove() end
     if IsValid(self.deleteBtn) then self.deleteBtn:Remove() end
+    if IsValid(self.setMainBtn) then self.setMainBtn:Remove() end
     for _, btn in pairs(self.buttons) do
         if IsValid(btn) then btn:Remove() end
     end
@@ -463,6 +476,7 @@ function PANEL:updateSelectedCharacter()
     if IsValid(self.infoFrame) then self.infoFrame:Remove() end
     if IsValid(self.selectBtn) then self.selectBtn:Remove() end
     if IsValid(self.deleteBtn) then self.deleteBtn:Remove() end
+    if IsValid(self.setMainBtn) then self.setMainBtn:Remove() end
     self:createSelectedCharacterInfoPanel(character)
     self:updateModelEntity(character)
 end
@@ -621,6 +635,19 @@ function PANEL:createSelectedCharacterInfoPanel(character)
         end
 
         vgui.Create("liaCharacterConfirm", self):setMessage(L("charDeletionAreYouSure") .. "\n" .. L("charDeletionCannotUndone")):onConfirm(function() lia.module.get("mainmenu"):DeleteCharacter(charID) end)
+    end
+
+    local localClient = LocalPlayer()
+    local mainCharID = IsValid(localClient) and localClient:getMainCharacter() or nil
+    if character:getID() ~= mainCharID then
+        self.setMainBtn = self:Add("liaSmallButton")
+        self.setMainBtn:SetSize(bw, bh)
+        self.setMainBtn:SetPos(cx, fy + fh + pad + bh + pad + bh + pad)
+        self.setMainBtn:SetText(L("setAsMainCharacter"))
+        self.setMainBtn.DoClick = function()
+            if IsValid(localClient) then localClient:setMainCharacter(character:getID()) end
+            self:clickSound()
+        end
     end
 end
 

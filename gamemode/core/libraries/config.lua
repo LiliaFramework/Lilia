@@ -332,6 +332,14 @@ if SERVER then
     end
 end
 
+lia.config.add("MainCharacterCooldownDays", "mainCharacterCooldownDays", 0, nil, {
+    category = "character",
+    type = "Int",
+    min = 0,
+    max = 365,
+    desc = "mainCharacterCooldownDaysDesc"
+})
+
 lia.config.add("MoneyModel", "moneyModel", "models/props/cs_assault/Dollar.mdl", nil, {
     desc = "moneyModelDesc",
     category = "categoryCharacter",

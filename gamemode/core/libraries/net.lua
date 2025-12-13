@@ -69,50 +69,6 @@ function lia.net.addToCache(name, args)
     cleanupCache()
 end
 
-function lia.net.register(name, callback)
-    if not isstring(name) or not isfunction(callback) then
-        lia.error(L("invalidArgumentsForNetRegister"))
-        return false
-    end
-
-    lia.net.registry[name] = callback
-    return true
-end
-
-function lia.net.send(name, target, ...)
-    if not isstring(name) then
-        lia.error(L("invalidNetMessageName"))
-        return false
-    end
-
-    local args = {...}
-    if SERVER and target == nil and lia.net.isCacheHit(name, args) then return true end
-    if SERVER then
-        net.Start("liaNetMessage")
-        net.WriteString(name)
-        net.WriteTable(args)
-        if target == nil then
-            net.Broadcast()
-            lia.net.addToCache(name, args)
-        elseif istable(target) then
-            for _, ply in ipairs(target) do
-                if IsValid(ply) then net.Send(ply) end
-            end
-        elseif IsValid(target) then
-            net.Send(target)
-        else
-            lia.error(L("invalidNetTarget"))
-            return false
-        end
-    else
-        net.Start("liaNetMessage")
-        net.WriteString(name)
-        net.WriteTable(args)
-        net.SendToServer()
-    end
-    return true
-end
-
 function lia.net.readBigTable(netStr, callback)
     lia.net.buffers[netStr] = lia.net.buffers[netStr] or {}
     net.Receive(netStr, function(_, ply)

@@ -508,6 +508,13 @@ if SERVER then
         lia.log.add(self:getPlayer(), "money", -amount)
         return true
     end
+
+    function characterMeta:isMainCharacter()
+        local client = self:getPlayer()
+        if not IsValid(client) then return false end
+        local mainCharID = client:getMainCharacter()
+        return mainCharID == self:getID()
+    end
 end
 
 lia.meta.character = characterMeta
