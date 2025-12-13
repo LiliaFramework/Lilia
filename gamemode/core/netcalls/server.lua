@@ -327,7 +327,7 @@ net.Receive("liaCharCreate", function(_, client)
         data[net.ReadString()] = net.ReadType()
     end
 
-    if hook.Run("CanPlayerCreateChar", client, data) == false then return response(nil, "maxCharactersReached") end
+    if not (istable(data) and data.faction == FACTION_STAFF) and hook.Run("CanPlayerCreateChar", client, data) == false then return response(nil, "maxCharactersReached") end
     local originalData = table.Copy(data)
     local newData = {}
     for key in pairs(data) do

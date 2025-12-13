@@ -103,8 +103,36 @@ else
         net.SendToServer()
     end
 
+    function MODULE:GetMainCharacterID()
+        local client = LocalPlayer()
+        if IsValid(client) then
+            local mainCharID = client:getMainCharacter()
+            return mainCharID and tonumber(mainCharID) or nil
+        end
+        return nil
+    end
+
+    function MODULE:SetMainCharacter(charID)
+        net.Start("liaSetMainCharacter")
+        net.WriteUInt(charID or 0, 32)
+        net.SendToServer()
+    end
+
+    function MODULE:LoadMainCharacter()
+        local mainCharID = self:GetMainCharacterID()
+        if not mainCharID then
+            LocalPlayer():notifyErrorLocalized("noMainCharacter")
+            return
+        end
+        return self:ChooseCharacter(mainCharID):next(function() if IsValid(lia.gui.character) then lia.gui.character:Remove() end end):catch(function(err) if err and err ~= "" then LocalPlayer():notifyErrorLocalized(err) end end)
+    end
+
     function MODULE:LiliaLoaded()
         vgui.Create("liaCharacter")
+    end
+
+    function MODULE:CharListLoaded()
+        if IsValid(lia.gui.character) and not lia.gui.character.isLoadMode then lia.gui.character:createStartButton() end
     end
 
     function MODULE:OnReloaded()
@@ -139,6 +167,18 @@ else
         end
     end
 
+    net.Receive("liaMainCharacterSet", function()
+        local charID = net.ReadUInt(32)
+        charID = tonumber(charID)
+        local client = LocalPlayer()
+        if IsValid(client) then
+            lia.localData = lia.localData or {}
+            lia.localData["mainCharacter"] = charID
+            client:notifyLocalized("mainCharacterSet")
+            if IsValid(lia.gui.character) and lia.gui.character.isLoadMode then lia.gui.character:updateSelectedCharacter() end
+        end
+    end)
+
     net.Receive("liaStaffDiscordPrompt", function()
         lia.derma.requestString(L("staffCharacterSetup"), L("discordUsernamePrompt"), function(discord)
             if discord and discord:Trim() ~= "" then
@@ -157,8 +197,7 @@ else
 end
 
 function MODULE:CanPlayerCreateChar(client, data)
-    local isStaffCharacter = istable(data) and data.faction == FACTION_STAFF
-    if isStaffCharacter then return true end
+    if istable(data) and data.faction == FACTION_STAFF then return true end
     if SERVER then
         local count = #client.liaCharList or 0
         local maxChars = hook.Run("GetMaxPlayerChar", client) or lia.config.get("MaxCharacters")
