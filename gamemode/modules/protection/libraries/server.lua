@@ -37,7 +37,7 @@ function MODULE:EntityTakeDamage(entity, dmgInfo)
 
             local hitPos = dmgInfo:GetDamagePosition()
             if hitPos:Distance(driver:GetPos()) <= 53 then
-                local newHealth = driver:Health() - dmgInfo:GetDamage() * 0.3
+                local newHealth = driver:Health() - dmgInfo:GetDamage() * 0.05
                 if newHealth > 0 then
                     driver:SetHealth(newHealth)
                 else
@@ -60,7 +60,7 @@ function MODULE:EntityTakeDamage(entity, dmgInfo)
 
     if dmgInfo:IsExplosionDamage() and lia.config.get("ExplosionRagdoll", false) then
         local originalDmg = dmgInfo:GetDamage()
-        dmgInfo:ScaleDamage(0.5)
+        dmgInfo:ScaleDamage(0.9)
         local dmgPos = dmgInfo:GetDamagePosition()
         local dir = (entity:GetPos() - dmgPos):GetNormalized()
         entity:SetVelocity(dir * 60 * dmgInfo:GetDamage())
@@ -69,7 +69,7 @@ function MODULE:EntityTakeDamage(entity, dmgInfo)
             if IsValid(entity) and entity:IsPlayer() and not IsValid(entity:GetRagdollEntity()) and entity:Health() - dmgAmt > 0 and not entity:InVehicle() then
                 local maxHP = entity:GetMaxHealth()
                 if dmgAmt >= maxHP * 0.25 then
-                    local ragdollTime = math.Clamp(originalDmg / 10, 1, 10)
+                    local ragdollTime = math.Clamp(originalDmg / 15, 1, 5)
                     entity:setRagdolled(true, ragdollTime)
                 end
             end
@@ -89,7 +89,7 @@ function MODULE:EntityTakeDamage(entity, dmgInfo)
                 local originalDmg = dmgInfo:GetDamage()
                 dmgInfo:ScaleDamage(0.5)
                 if entity:IsPlayer() and not IsValid(entity:GetRagdollEntity()) and entity:Health() > 0 then
-                    local ragdollTime = math.Clamp(originalDmg / 10, 1, 10)
+                    local ragdollTime = math.Clamp(originalDmg / 5, 2, 20)
                     entity:setRagdolled(true, ragdollTime)
                 end
             end
