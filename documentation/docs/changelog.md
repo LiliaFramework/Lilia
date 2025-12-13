@@ -1,5 +1,30 @@
 # Changelog
 
+## Version 7.146 (December 13, 2025)
+
+### Changes
+
+- Faction And Class appear on Admin Stick  models now
+- Bots Regenerate on Char Ban
+- Main Character Mechanic
+- Made PK Work Properly
+- Fixed Ammo Saving
+- FACTION|CLASS.models now appear in the adminstick models
+- Increased Ragdoll Time + Reduced Damage on VDM
+- Prevented Respawn without SPACE
+- Successfully updated workshop Lilia to 7.137
+- Skin Changes
+- Successfully updated workshop Lilia to 7.135
+- Stamina fIX
+- Better Confirmation UI
+- Chatbox Bug Fix
+- Better Inventory Items
+- Added Extra Respawn Logic
+- resetmapprops command
+- Successfully updated workshop Lilia to 7.128
+- New Skins
+- Rarities are now tied to lia.item, instead of .vendor
+
 ## Version 7.137 (December 12, 2025)
 
 ### Changes

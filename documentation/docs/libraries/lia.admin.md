@@ -293,7 +293,7 @@ Shared
 Copies permissions from a parent group and grants required minimum privileges
 
 #### ⏰ When Called
-After setting or changing a group’s parent so permissions stay in sync
+After setting or changing a group's parent so permissions stay in sync
 
 #### ⚙️ Parameters
 
@@ -773,7 +773,7 @@ Server
 ### lia.administrator.setPlayerUsergroup
 
 #### 📋 Purpose
-Sets a player’s usergroup and notifies CAMI about the change
+Sets a player's usergroup and notifies CAMI about the change
 
 #### ⏰ When Called
 When staff move a live player to a new group
