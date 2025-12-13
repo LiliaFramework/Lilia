@@ -411,6 +411,12 @@ net.Receive("liaRequestPksCount", function(_, client)
     end)
 end)
 
+function MODULE:PlayerShouldPermaKill(client)
+    local character = client:getChar()
+    if not character then return false end
+    return character:getData("permakilled", false)
+end
+
 net.Receive("liaRequestFullCharList", function(_, client)
     if not IsValid(client) or not client:hasPrivilege("listCharacters") then return end
     lia.db.query([[SELECT c.id, c.name, c.`desc`, c.faction, c.steamID, c.lastJoinTime, c.banned, c.playtime, c.money, d.value AS charBanInfo

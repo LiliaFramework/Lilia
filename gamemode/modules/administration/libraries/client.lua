@@ -2076,7 +2076,7 @@ function MODULE:OpenAdminStickUI(tgt)
     local tgtClass = tgt:GetClass()
     local cmds = {}
     for k, v in pairs(lia.command.list) do
-        if v.AdminStick and istable(v.AdminStick) then
+        if v.AdminStick and istable(v.AdminStick) and not v.realCommand then
             local tc = v.AdminStick.TargetClass
             if tc then
                 if tc == "door" and tgt:isDoor() or tc == tgtClass then
@@ -3925,4 +3925,70 @@ end)
 function MODULE:OnAdminStickMenuClosed()
     local client = LocalPlayer()
     if IsValid(client) and client.AdminStickTarget == client then client.AdminStickTarget = nil end
+end
+
+function MODULE:AdminStickAddModels(modList, tgt)
+    local addedModels = {}
+    for _, modelData in ipairs(modList) do
+        addedModels[modelData.mdl] = true
+    end
+
+    local function addModel(modelPath, modelName)
+        if not modelPath or modelPath == "" then return end
+        if isstring(modelPath) and not addedModels[modelPath] then
+            table.insert(modList, {
+                name = modelName or modelPath,
+                mdl = modelPath
+            })
+            addedModels[modelPath] = true
+        end
+    end
+
+    local function processModelData(modelData, defaultName)
+        if isstring(modelData) then
+            addModel(modelData, defaultName)
+        elseif istable(modelData) then
+            if modelData[1] and isstring(modelData[1]) then
+                addModel(modelData[1], modelData[2] or defaultName)
+            end
+        end
+    end
+
+    for _, faction in pairs(lia.faction.teams or {}) do
+        if faction.models then
+            if istable(faction.models) then
+                local hasStringKeys = false
+                for k, v in pairs(faction.models) do
+                    if isstring(k) then
+                        hasStringKeys = true
+                        break
+                    end
+                end
+
+                if hasStringKeys then
+                    for category, categoryModels in pairs(faction.models) do
+                        if istable(categoryModels) then
+                            for _, modelData in ipairs(categoryModels) do
+                                processModelData(modelData, faction.name or "Unknown Faction")
+                            end
+                        else
+                            processModelData(categoryModels, faction.name or "Unknown Faction")
+                        end
+                    end
+                else
+                    for _, modelData in ipairs(faction.models) do
+                        processModelData(modelData, faction.name or "Unknown Faction")
+                    end
+                end
+            else
+                processModelData(faction.models, faction.name or "Unknown Faction")
+            end
+        end
+    end
+
+    for _, class in pairs(lia.class.list or {}) do
+        if class.model and isstring(class.model) then
+            addModel(class.model, class.name or "Unknown Class")
+        end
+    end
 end
