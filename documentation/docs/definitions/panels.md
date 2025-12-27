@@ -130,18 +130,6 @@ In character creation, attribute allocation, or character info screens
 
 ---
 
-### liaCharacterAttribsRow
-
-#### 📋 Purpose
-Individual attribute row in attributes panel
-A single row representing one attribute with controls
-
-#### ⏰ When Called
-As part of the character attributes panel
-]]
-
----
-
 ### liaButton
 
 #### 📋 Purpose

@@ -3423,8 +3423,6 @@ Reload: Drop]],
     secondarySound = "Secondary Sound",
     addonLoaded = "Addon loaded: %s",
     addonInitialized = "Addon initialized: %s",
-
-    -- Notes
     notes = "Notes",
     savedNotes = "saved notes",
     content = "Content",
