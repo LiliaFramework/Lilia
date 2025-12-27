@@ -125,6 +125,7 @@ function playerMeta:removeRagdoll()
     if not IsValid(ragdoll) then return end
     ragdoll.liaIgnoreDelete = true
     SafeRemoveEntity(ragdoll)
+    self:setNetVar("ragdoll", nil)
 end
 
 function playerMeta:getItemWeapon()
@@ -969,9 +970,15 @@ if SERVER then
         if state then
             local handsWeapon = self:GetActiveWeapon()
             if IsValid(handsWeapon) and handsWeapon:GetClass() == "lia_hands" and handsWeapon:IsHoldingObject() then handsWeapon:DropObject() end
-            if IsValid(ragdoll) then SafeRemoveEntity(ragdoll) end
-            self:CreateRagdoll()
-            local entity = self:GetRagdollEntity()
+            if not IsValid(ragdoll) then
+                self:CreateRagdoll()
+                ragdoll = self:GetRagdollEntity()
+                self:SetCreator(self)
+            end
+
+            local entity = ragdoll
+            if IsValid(entity) then self:setNetVar("ragdoll", entity) end
+            hook.Run("OnPlayerRagdolled", self, entity)
             entity.liaWeapons = {}
             entity.liaAmmo = {}
             entity.liaWeaponClips = {}
@@ -991,6 +998,7 @@ if SERVER then
 
             entity:CallOnRemove("fixer", function()
                 if IsValid(self) then
+                    self:setNetVar("ragdoll", nil)
                     if self.liaStoredHealth then self:SetHealth(math.max(self.liaStoredHealth, 1)) end
                     if not entity.liaNoReset then self:SetPos(entity:GetPos()) end
                     self:SetNoDraw(false)
@@ -1100,7 +1108,6 @@ if SERVER then
                 self:SetNoDraw(false)
                 self:SetNotSolid(false)
                 self:SetMoveType(MOVETYPE_WALK)
-                hook.Run("OnCharFallover", self, nil, false)
             end
         end
     end

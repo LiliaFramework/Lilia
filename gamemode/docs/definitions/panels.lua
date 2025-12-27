@@ -111,14 +111,6 @@ liaAttribBar
 liaCharacterAttribs
 --[[
     Purpose:
-        Individual attribute row in attributes panel
-        A single row representing one attribute with controls
-    When Used:
-        As part of the character attributes panel
-]]
-liaCharacterAttribsRow
---[[
-    Purpose:
         Styled button with Lilia theming
         A custom button panel with Lilia's visual styling and effects
     When Used:

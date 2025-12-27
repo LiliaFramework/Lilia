@@ -280,10 +280,19 @@ if SERVER then
     local ITEM_FIELDS = {"itemID", "uniqueID", "data", "x", "y", "quantity"}
     function Inventory:loadItems()
         return lia.db.select(ITEM_FIELDS, ITEM_TABLE, "invID = " .. self.id):next(function(res)
+            if not res or not istable(res) then
+                local items = {}
+                self.items = items
+                self:onItemsLoaded(items)
+                return items
+            end
+
             local items = {}
             for _, result in ipairs(res.results or {}) do
+                if not result or not istable(result) then continue end
                 local itemID = tonumber(result.itemID)
                 local uniqueID = result.uniqueID
+                if not uniqueID or not isstring(uniqueID) then continue end
                 local itemTable = lia.item.list[uniqueID]
                 if not itemTable then
                     lia.error(L("inventoryInvalidItem", self.id, uniqueID, itemID))
@@ -291,6 +300,7 @@ if SERVER then
                 end
 
                 local item = lia.item.new(uniqueID, itemID)
+                if not item then continue end
                 item.invID = self.id
                 if result.data then item.data = table.Merge(item.data, util.JSONToTable(result.data) or {}) end
                 item.data.x = tonumber(result.x)

@@ -109,7 +109,7 @@ function GM:PlayerLoadedChar(client, character)
         end
     end
 
-    if not table.IsEmpty(ammoTable) then
+    if istable(ammoTable) and not table.IsEmpty(ammoTable) then
         timer.Simple(0.25, function()
             if not IsValid(client) then return end
             for ammoType, ammoCount in pairs(ammoTable) do
@@ -495,6 +495,12 @@ function GM:DoPlayerDeath(client, attacker)
         client.diedInRagdoll = true
     end
 
+    timer.Simple(0, function()
+        if not IsValid(client) then return end
+        local deathRagdoll = client:GetRagdollEntity()
+        if IsValid(deathRagdoll) then client:setNetVar("ragdoll", deathRagdoll) end
+    end)
+
     if IsValid(attacker) and attacker:IsPlayer() then
         if client == attacker then
             attacker:AddFrags(-1)
@@ -674,11 +680,12 @@ function GM:SetupBotPlayer(client)
     local invType = hook.Run("GetDefaultInventoryType") or "GridInv"
     if not invType then return end
     local inventory = lia.inventory.new(invType)
+    local model = hook.Run("GetBotModel", client, faction) or "models/player/phoenix.mdl"
     local character = lia.char.new({
         name = lia.util.generateRandomName(),
         faction = faction and faction.uniqueID or "unknown",
         desc = L("botDesc", botID),
-        model = "models/player/phoenix.mdl",
+        model = model,
     }, botID, client, client:SteamID())
 
     local defaultClass = lia.faction.getDefaultClass(faction.index)

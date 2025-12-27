@@ -1644,7 +1644,7 @@ local function detect_cheadleware()
             do
                 local f = rawget(api, "username") or rawget(api, "get_username")
                 local ok, v = safe_call(f)
-                if ok and isstring(v) == "string" and #v > 0 and #v <= 64 then score = score + 1 end
+                if ok and isstring(v) and #v > 0 and #v <= 64 then score = score + 1 end
             end
 
             do
