@@ -528,7 +528,7 @@ function lia.item.generateAmmo()
 
         ITEM.desc = override.desc or "A Box of " .. ammoType .. " Ammunition"
         ITEM.category = override.category or L("itemCatAmmunition")
-        ITEM.model = override.model or "models/props_c17/suitcase001a.mdl"
+        ITEM.model = override.model or "models/items/boxsrounds.mdl"
         ITEM.entityid = override.entityid or entityID
         ITEM.width = override.width or 1
         ITEM.height = override.height or 1
