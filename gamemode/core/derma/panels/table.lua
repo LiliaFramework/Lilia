@@ -30,15 +30,34 @@ function PANEL:Init()
 end
 
 function PANEL:AddColumn(name, width, align, sortable)
-    table.insert(self.columns, {
+    local column = {
         name = name,
         width = width or 100,
         align = align or TEXT_ALIGN_LEFT,
         sortable = sortable ~= false,
-        autoSize = true
-    })
+        autoSize = true,
+        minWidth = 0
+    }
 
+    column.Header = {
+        GetFont = function() return self.font end,
+        GetText = function() return name end
+    }
+
+    column.SetMinWidth = function(_, minWidth)
+        column.minWidth = minWidth
+        if column.width < minWidth then column.width = minWidth end
+    end
+
+    column.SetMaxWidth = function(_, maxWidth) column.maxWidth = maxWidth end
+    column.SetWidth = function(_, newWidth)
+        column.width = newWidth
+        column.autoSize = false
+    end
+
+    table.insert(self.columns, column)
     self:RebuildRows()
+    return column
 end
 
 function PANEL:AddItem(...)
@@ -123,7 +142,13 @@ function PANEL:CreateRow(rowIndex, rowData)
 
     row.DoRightClick = function()
         self.selectedRow = rowIndex
-        self.OnRightClick(rowData)
+        print("[liaTable] DoRightClick row", rowIndex, "invoking OnRightClick")
+        local handled = self.OnRightClick(rowData)
+        if handled then
+            print("[liaTable] OnRightClick handled custom menu")
+            return
+        end
+
         local menu = lia.derma.dermaMenu()
         for _, option in ipairs(self.customMenuOptions) do
             menu:AddOption(option.text, function() option.callback(rowData, rowIndex) end, option.icon)
@@ -170,7 +195,9 @@ function PANEL:CalculateColumnWidths()
                 end
             end
 
-            column.width = math.max(maxWidth, 60)
+            local calculatedWidth = math.max(maxWidth, column.minWidth or 60)
+            if column.maxWidth then calculatedWidth = math.min(calculatedWidth, column.maxWidth) end
+            column.width = calculatedWidth
             table.insert(autoSizeColumns, colIndex)
         end
     end

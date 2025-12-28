@@ -58,6 +58,7 @@ local logTypeData = {
         charAddMoney = function(client, targetName, amount, total) return L("logCharAddMoney", client:Name(), targetName, lia.currency.get(amount), lia.currency.get(total)) end,
         moneyDropped = function(client, amount) return L("logMoneyDropped", client:Name(), lia.currency.get(amount)) end,
         moneyDupeAttempt = function(client, message) return L("logMoneyDupeAttempt", client:Name(), message) end,
+        giveMoneySteamID = function(_, steamID, amount, count) return L("logGiveMoneySteamID", steamID, lia.currency.get(amount), count) end,
     },
     items = {
         itemTake = function(client, item) return L("logItemTake", client:Name(), item) end,

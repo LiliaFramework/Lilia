@@ -133,6 +133,14 @@ function lia.font.registerFonts(fontName)
         weight = 400
     })
 
+    lia.font.register("LiliaFont", {
+        font = mainFont,
+        size = 16,
+        extended = true,
+        antialias = true,
+        weight = 500
+    })
+
     local fontSizes = {12, 14, 15, 16, 17, 18, 20, 22, 23, 24, 25, 26, 28, 30, 32, 34, 36, 40, 48, 72}
     for _, size in ipairs(fontSizes) do
         lia.font.register("LiliaFont." .. size, {
@@ -168,6 +176,7 @@ if CLIENT then
     local oldSurfaceSetFont = surface.SetFont
     function surface.SetFont(font)
         if isstring(font) and not lia.font.stored[font] then
+            local mainFont = lia.config and lia.config.get("Font", "Montserrat Medium") or "Montserrat Medium"
             local fontData = {
                 font = font,
                 size = 16,
@@ -176,15 +185,30 @@ if CLIENT then
                 weight = 500
             }
 
-            local baseFont, sizeStr = font:match("^([^%.]+)%.(%d+)$")
-            if baseFont and sizeStr then
-                fontData.font = baseFont
-                fontData.size = tonumber(sizeStr) or 16
+            if font == "LiliaFont" then
+                fontData.font = mainFont
+                fontData.size = 16
+            else
+                local baseFont, sizeStr = font:match("^([^%.]+)%.(%d+)$")
+                if baseFont and sizeStr then
+                    if baseFont == "LiliaFont" then
+                        fontData.font = mainFont
+                    else
+                        fontData.font = baseFont
+                    end
+
+                    fontData.size = tonumber(sizeStr) or 16
+                end
             end
 
             local boldMatch = font:match("^(.-)(%d+)b$")
             if boldMatch then
-                fontData.font = boldMatch
+                if string.match(boldMatch, "^LiliaFont") then
+                    fontData.font = lia.font.getBoldFontName(mainFont)
+                else
+                    fontData.font = boldMatch
+                end
+
                 fontData.weight = 700
             end
 
@@ -194,14 +218,24 @@ if CLIENT then
             if shadowMatch then fontData.shadow = true end
             local boldItalicMatch = font:match("^(.-)(%d+)bi$")
             if boldItalicMatch then
-                fontData.font = boldItalicMatch
+                if string.match(boldItalicMatch, "^LiliaFont") then
+                    fontData.font = lia.font.getBoldFontName(mainFont)
+                else
+                    fontData.font = boldItalicMatch
+                end
+
                 fontData.weight = 700
                 fontData.italic = true
             end
 
             local boldShadowMatch = font:match("^(.-)(%d+)bs$")
             if boldShadowMatch then
-                fontData.font = boldShadowMatch
+                if string.match(boldShadowMatch, "^LiliaFont") then
+                    fontData.font = lia.font.getBoldFontName(mainFont)
+                else
+                    fontData.font = boldShadowMatch
+                end
+
                 fontData.weight = 700
                 fontData.shadow = true
             end

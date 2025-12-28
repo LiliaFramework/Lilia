@@ -212,19 +212,20 @@ end
 
 function MODULE:GetMaxPlayerChar(client)
     local maxChars = lia.config.get("MaxCharacters")
+    local extraChars = client:getLiliaData("extraCharacters", 0)
     if SERVER then
         local staffCount = 0
         for _, charID in pairs(client.liaCharList or {}) do
             local character = lia.char.getCharacter(charID)
             if character and character:getFaction() == FACTION_STAFF then staffCount = staffCount + 1 end
         end
-        return maxChars + staffCount
+        return maxChars + staffCount + extraChars
     else
         local staffCount = 0
         for _, charID in pairs(lia.characters or {}) do
             local character = lia.char.getCharacter(charID)
             if character and character:getFaction() == FACTION_STAFF then staffCount = staffCount + 1 end
         end
-        return maxChars + staffCount
+        return maxChars + staffCount + extraChars
     end
 end

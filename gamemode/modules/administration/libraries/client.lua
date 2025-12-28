@@ -2968,6 +2968,8 @@ net.Receive("liaAllPks", function()
     local cases = net.ReadTable() or {}
     if not IsValid(panelRef) then return end
     panelRef:Clear()
+    panelRef:DockPadding(6, 6, 6, 6)
+    panelRef.Paint = function() end
     local search = panelRef:Add("liaEntry")
     search:Dock(TOP)
     search:DockMargin(0, 20, 0, 15)
@@ -2977,19 +2979,33 @@ net.Receive("liaAllPks", function()
     search:SetTextColor(Color(200, 200, 200))
     local list = panelRef:Add("liaTable")
     list:Dock(FILL)
-    local function addSizedColumn(text)
-        local col = list:AddColumn(text)
-        surface.SetFont(col.Header:GetFont())
-        local w = surface.GetTextSize(col.Header:GetText())
-        col:SetMinWidth(w + 16)
-        col:SetWidth(w + 16)
-        return col
+    panelRef.searchEntry = search
+    panelRef.list = list
+    panelRef:InvalidateLayout(true)
+    panelRef:SizeToChildren(false, true)
+    local columns = {
+        {
+            name = L("timestamp"),
+            field = "timestamp"
+        },
+        {
+            name = L("character"),
+            field = "character"
+        },
+        {
+            name = L("submitter"),
+            field = "submitter"
+        },
+        {
+            name = L("evidence"),
+            field = "evidence"
+        }
+    }
+
+    for _, col in ipairs(columns) do
+        list:AddColumn(col.name)
     end
 
-    addSizedColumn(L("timestamp"))
-    addSizedColumn(L("character"))
-    addSizedColumn(L("submitter"))
-    addSizedColumn(L("evidence"))
     local function populate(filter)
         list:Clear()
         filter = string.lower(filter or "")

@@ -1125,20 +1125,20 @@ function PANEL:Init()
     self.backgroundPanel:Dock(FILL)
     self.backgroundPanel:SetPaintBackground(false)
     self.factionsFrame = self.backgroundPanel:Add("liaFrame")
-    self.factionsFrame:SetSize(width * 0.375, height)
+    self.factionsFrame:SetSize(width * 0.25, height)
     self.factionsFrame:SetPos(0, 0)
     self.factionsFrame:SetTitle(L("vendorFaction"))
     self.factionsFrame:SetDraggable(false)
     self.factionsFrame:ShowCloseButton(false)
     self.generalFrame = self.backgroundPanel:Add("liaFrame")
-    self.generalFrame:SetSize(width * 0.35, height)
-    self.generalFrame:SetPos(width * 0.375, 0)
+    self.generalFrame:SetSize(width * 0.20, height)
+    self.generalFrame:SetPos(width * 0.25, 0)
     self.generalFrame:SetTitle(L("vendorGeneralInfo"))
     self.generalFrame:SetDraggable(false)
     self.generalFrame:ShowCloseButton(false)
     self.itemsFrame = self.backgroundPanel:Add("liaFrame")
-    self.itemsFrame:SetSize(width * 0.275, height)
-    self.itemsFrame:SetPos(width * 0.725, 0)
+    self.itemsFrame:SetSize(width * 0.55, height)
+    self.itemsFrame:SetPos(width * 0.45, 0)
     self.itemsFrame:SetTitle(L("vendorItemsTitle"))
     self.itemsFrame:SetDraggable(false)
     self.itemsFrame:ShowCloseButton(false)
@@ -1155,6 +1155,7 @@ function PANEL:Init()
     self.generalScroll = self.generalFrame:Add("liaScrollPanel")
     self.generalScroll:Dock(FILL)
     self.generalScroll:DockPadding(12, 12, 12, 12)
+    self:initializeGeneralInfoPanel(entity)
     self.itemSearchBar = self.itemsFrame:Add("liaEntry")
     self.itemSearchBar:Dock(TOP)
     self.itemSearchBar:DockMargin(8, 8, 8, 4)
@@ -1175,39 +1176,141 @@ function PANEL:Init()
     end)
 
     self.items = self.itemsFrame:Add("liaTable")
+    if not self.items then
+        print("ERROR: Failed to create liaTable")
+        return
+    end
+
     self.items:Dock(FILL)
     self.items:DockMargin(8, 0, 8, 8)
-    local nameLabel = self.generalScroll:Add("DLabel")
-    nameLabel:Dock(TOP)
-    nameLabel:DockMargin(0, 0, 0, 6)
-    nameLabel:SetText(L("vendorName"))
-    nameLabel:SetFont("LiliaFont.20b")
-    nameLabel:SetTextColor(lia.color.theme.text or color_white)
-    nameLabel:SetContentAlignment(5)
-    nameLabel:SetTall(24)
-    self.name:SetParent(self.generalScroll)
-    self.name:Dock(TOP)
-    self.name:DockMargin(0, 0, 0, 12)
-    local modelLabel = self.generalScroll:Add("DLabel")
-    modelLabel:Dock(TOP)
-    modelLabel:DockMargin(0, 0, 0, 6)
-    modelLabel:SetText(L("model"))
-    modelLabel:SetFont("LiliaFont.20b")
-    modelLabel:SetTextColor(lia.color.theme.text or color_white)
-    modelLabel:SetContentAlignment(5)
-    modelLabel:SetTall(24)
-    self.model:SetParent(self.generalScroll)
-    self.model:Dock(TOP)
-    self.model:DockMargin(0, 0, 0, 12)
-    if entity:SkinCount() > 1 then
-        local skinLabel = self.generalScroll:Add("DLabel")
-        skinLabel:Dock(TOP)
-        skinLabel:DockMargin(0, 0, 0, 6)
-        skinLabel:SetText(L("skin"))
-        skinLabel:SetFont("LiliaFont.20b")
-        skinLabel:SetTextColor(lia.color.theme.text or color_white)
-        skinLabel:SetContentAlignment(5)
-        skinLabel:SetTall(24)
+    local nameCol = self.items:AddColumn("Name")
+    nameCol:SetMinWidth(150)
+    nameCol:SetMaxWidth(200)
+    local modeCol = self.items:AddColumn("Mode")
+    modeCol:SetMinWidth(110)
+    local priceCol = self.items:AddColumn("Price")
+    priceCol:SetMinWidth(90)
+    local stockCol = self.items:AddColumn("Stock")
+    stockCol:SetMinWidth(80)
+    local categoryCol = self.items:AddColumn("Category")
+    categoryCol:SetMinWidth(90)
+    self.lines = {}
+    self.items:ClearMenuOptions()
+    self.items:AddMenuOption(L("mode") .. " - " .. L("none"), function(rowData)
+        if not rowData or not rowData.item then return end
+        lia.vendor.editor.mode(rowData.item, nil)
+    end, "icon16/cog_error.png")
+
+    self.items:AddMenuOption(L("mode") .. " - " .. L("buyOnlynSell"), function(rowData)
+        if not rowData or not rowData.item then return end
+        lia.vendor.editor.mode(rowData.item, VENDOR_SELLANDBUY)
+    end, "icon16/cog.png")
+
+    self.items:AddMenuOption(L("mode") .. " - " .. L("buyOnly"), function(rowData)
+        if not rowData or not rowData.item then return end
+        lia.vendor.editor.mode(rowData.item, VENDOR_BUYONLY)
+    end, "icon16/cog_delete.png")
+
+    self.items:AddMenuOption(L("mode") .. " - " .. L("sellOnly"), function(rowData)
+        if not rowData or not rowData.item then return end
+        lia.vendor.editor.mode(rowData.item, VENDOR_SELLONLY)
+    end, "icon16/cog_add.png")
+
+    self.items:AddMenuOption(L("price"), function(rowData)
+        if not rowData or not rowData.item then return end
+        local vEnt = liaVendorEnt
+        if not IsValid(vEnt) then return end
+        local itemTable = lia.item.list[rowData.item]
+        if not itemTable then return end
+        LocalPlayer():requestString(itemTable:getName(), L("vendorPriceReq"), function(text)
+            text = tonumber(text)
+            lia.vendor.editor.price(rowData.item, text)
+        end, vEnt:getPrice(rowData.item))
+    end, "icon16/coins.png")
+
+    self.items:AddMenuOption(L("stock") .. " - " .. L("disable"), function(rowData)
+        if not rowData or not rowData.item then return end
+        lia.vendor.editor.stockDisable(rowData.item)
+    end, "icon16/table_delete.png")
+
+    self.items:AddMenuOption(L("stock") .. " - " .. L("edit"), function(rowData)
+        if not rowData or not rowData.item then return end
+        local vEnt = liaVendorEnt
+        if not IsValid(vEnt) then return end
+        local _, max = vEnt:getStock(rowData.item)
+        local itemTable = lia.item.list[rowData.item]
+        if not itemTable then return end
+        LocalPlayer():requestString(itemTable:getName(), L("vendorStockReq"), function(text)
+            text = math.max(math.Round(tonumber(text) or 1), 1)
+            lia.vendor.editor.stockMax(rowData.item, text)
+        end, max or 1)
+    end, "icon16/table_edit.png")
+
+    self.items:AddMenuOption(L("stock") .. " - " .. L("vendorEditCurStock"), function(rowData)
+        if not rowData or not rowData.item then return end
+        local vEnt = liaVendorEnt
+        if not IsValid(vEnt) then return end
+        local itemTable = lia.item.list[rowData.item]
+        if not itemTable then return end
+        LocalPlayer():requestString(itemTable:getName(), L("vendorStockCurReq"), function(text)
+            text = math.Round(tonumber(text) or 0)
+            lia.vendor.editor.stock(rowData.item, text)
+        end, vEnt:getStock(rowData.item) or 0)
+    end, "icon16/table_edit.png")
+
+    self:ReloadItemList()
+    self.items:InvalidateLayout(true)
+    self:listenForUpdates()
+end
+
+function PANEL:initializeGeneralInfoPanel(entity)
+    if not IsValid(entity) or not IsValid(self.generalScroll) then return end
+    if not IsValid(self.nameLabel) then
+        self.nameLabel = self.generalScroll:Add("DLabel")
+        self.nameLabel:Dock(TOP)
+        self.nameLabel:DockMargin(0, 0, 0, 6)
+        self.nameLabel:SetText(L("vendorName"))
+        self.nameLabel:SetFont("LiliaFont.20b")
+        self.nameLabel:SetTextColor(lia.color.theme.text or color_white)
+        self.nameLabel:SetContentAlignment(5)
+        self.nameLabel:SetTall(24)
+    end
+
+    if not IsValid(self.name) then
+        self.name:SetParent(self.generalScroll)
+        self.name:Dock(TOP)
+        self.name:DockMargin(0, 0, 0, 12)
+    end
+
+    if not IsValid(self.modelLabel) then
+        self.modelLabel = self.generalScroll:Add("DLabel")
+        self.modelLabel:Dock(TOP)
+        self.modelLabel:DockMargin(0, 0, 0, 6)
+        self.modelLabel:SetText(L("model"))
+        self.modelLabel:SetFont("LiliaFont.20b")
+        self.modelLabel:SetTextColor(lia.color.theme.text or color_white)
+        self.modelLabel:SetContentAlignment(5)
+        self.modelLabel:SetTall(24)
+    end
+
+    if not IsValid(self.model) then
+        self.model:SetParent(self.generalScroll)
+        self.model:Dock(TOP)
+        self.model:DockMargin(0, 0, 0, 12)
+    end
+
+    if entity:SkinCount() > 1 and not IsValid(self.skinLabel) then
+        self.skinLabel = self.generalScroll:Add("DLabel")
+        self.skinLabel:Dock(TOP)
+        self.skinLabel:DockMargin(0, 0, 0, 6)
+        self.skinLabel:SetText(L("skin"))
+        self.skinLabel:SetFont("LiliaFont.20b")
+        self.skinLabel:SetTextColor(lia.color.theme.text or color_white)
+        self.skinLabel:SetContentAlignment(5)
+        self.skinLabel:SetTall(24)
+    end
+
+    if entity:SkinCount() > 1 and not IsValid(self.skin) then
         self.skin = self.generalScroll:Add("liaSlider")
         self.skin:Dock(TOP)
         self.skin:DockMargin(0, 0, 0, 8)
@@ -1220,75 +1323,91 @@ function PANEL:Init()
         end
     end
 
-    local animationLabel = self.generalScroll:Add("DLabel")
-    animationLabel:Dock(TOP)
-    animationLabel:DockMargin(0, 0, 0, 6)
-    animationLabel:SetText(L("animation"))
-    animationLabel:SetFont("LiliaFont.20b")
-    animationLabel:SetTextColor(lia.color.theme.text or color_white)
-    animationLabel:SetContentAlignment(5)
-    animationLabel:SetTall(24)
-    self.animation = self.generalScroll:Add("liaComboBox")
-    self.animation:Dock(TOP)
-    self.animation:DockMargin(0, 0, 0, 8)
-    self.animation:PostInit()
-    self.animation:SetText(L("vendorPickAnimation"))
-    self.animation:SetTooltip(L("vendorAnimationTooltip"))
-    self:refreshAnimationDropdown()
-    local currentAnimation = lia.vendor.getVendorProperty(entity, "animation")
-    self.animation:SetValue(currentAnimation == "" and L("none") or currentAnimation)
-    self.animation:ChooseOption(currentAnimation == "" and L("none") or currentAnimation)
-    self.animation.OnSelect = function(_, _, value)
-        local currentValue = self.animation:GetValue()
-        if not IsValid(self.animation) then return end
-        local selectedValue = value or currentValue
-        if not isstring(selectedValue) then return end
-        if selectedValue == L("none") then selectedValue = "" end
-        if lia.vendor.editor.animation then lia.vendor.editor.animation(selectedValue) end
-        timer.Simple(0.1, function()
-            if IsValid(self.animation) then
-                local displayValue = selectedValue == "" and L("none") or selectedValue
-                self.animation:SetValue(displayValue)
-            end
-        end)
+    if not IsValid(self.animationLabel) then
+        self.animationLabel = self.generalScroll:Add("DLabel")
+        self.animationLabel:Dock(TOP)
+        self.animationLabel:DockMargin(0, 0, 0, 6)
+        self.animationLabel:SetText(L("animation"))
+        self.animationLabel:SetFont("LiliaFont.20b")
+        self.animationLabel:SetTextColor(lia.color.theme.text or color_white)
+        self.animationLabel:SetContentAlignment(5)
+        self.animationLabel:SetTall(24)
     end
 
-    local presetLabel = self.generalScroll:Add("DLabel")
-    presetLabel:Dock(TOP)
-    presetLabel:DockMargin(0, 0, 0, 6)
-    presetLabel:SetText(L("preset"))
-    presetLabel:SetFont("LiliaFont.20b")
-    presetLabel:SetTextColor(lia.color.theme.text or color_white)
-    presetLabel:SetContentAlignment(5)
-    presetLabel:SetTall(24)
-    self.deletePresetButton = self.generalScroll:Add("liaButton")
-    self.deletePresetButton:Dock(TOP)
-    self.deletePresetButton:DockMargin(0, 0, 0, 8)
-    self.deletePresetButton:SetText(L("vendorDeletePreset"))
-    self.deletePresetButton:SetTooltip(L("vendorDeletePresetTooltip"))
-    self.deletePresetButton.DoClick = function() self:openDeletePresetSelector() end
-    self.presetButton = self.generalScroll:Add("liaButton")
-    self.presetButton:Dock(TOP)
-    self.presetButton:DockMargin(0, 0, 0, 8)
-    self.presetButton:SetText(L("vendorLoadPreset"))
-    self.presetButton:SetTooltip(L("vendorLoadPresetTooltip"))
-    self.presetButton.DoClick = function() self:openPresetSelector() end
-    local savePresetButton = self.generalScroll:Add("liaButton")
-    savePresetButton:Dock(TOP)
-    savePresetButton:DockMargin(0, 0, 0, 8)
-    savePresetButton:SetText(L("vendorSavePreset"))
-    savePresetButton:SetFont("LiliaFont.16")
-    savePresetButton.DoClick = function()
-        LocalPlayer():requestString(L("vendorSavePresetTitle"), L("vendorSavePresetPrompt"), function(text)
-            if text and text ~= "" then
-                local items = liaVendorEnt.items or {}
-                net.Start("liaVendorSavePreset")
-                net.WriteString(text)
-                net.WriteTable(items)
-                net.SendToServer()
-                self:refreshPresetButton()
-            end
-        end)
+    if not IsValid(self.animation) then
+        self.animation = self.generalScroll:Add("liaComboBox")
+        self.animation:Dock(TOP)
+        self.animation:DockMargin(0, 0, 0, 8)
+        self.animation:PostInit()
+        self.animation:SetText(L("vendorPickAnimation"))
+        self.animation:SetTooltip(L("vendorAnimationTooltip"))
+        self:refreshAnimationDropdown()
+        local currentAnimation = lia.vendor.getVendorProperty(entity, "animation")
+        self.animation:SetValue(currentAnimation == "" and L("none") or currentAnimation)
+        self.animation:ChooseOption(currentAnimation == "" and L("none") or currentAnimation)
+        self.animation.OnSelect = function(_, _, value)
+            local currentValue = self.animation:GetValue()
+            if not IsValid(self.animation) then return end
+            local selectedValue = value or currentValue
+            if not isstring(selectedValue) then return end
+            if selectedValue == L("none") then selectedValue = "" end
+            if lia.vendor.editor.animation then lia.vendor.editor.animation(selectedValue) end
+            timer.Simple(0.1, function()
+                if IsValid(self.animation) then
+                    local displayValue = selectedValue == "" and L("none") or selectedValue
+                    self.animation:SetValue(displayValue)
+                end
+            end)
+        end
+    end
+
+    if not IsValid(self.presetLabel) then
+        self.presetLabel = self.generalScroll:Add("DLabel")
+        self.presetLabel:Dock(TOP)
+        self.presetLabel:DockMargin(0, 0, 0, 6)
+        self.presetLabel:SetText(L("preset"))
+        self.presetLabel:SetFont("LiliaFont.20b")
+        self.presetLabel:SetTextColor(lia.color.theme.text or color_white)
+        self.presetLabel:SetContentAlignment(5)
+        self.presetLabel:SetTall(24)
+    end
+
+    if not IsValid(self.deletePresetButton) then
+        self.deletePresetButton = self.generalScroll:Add("liaButton")
+        self.deletePresetButton:Dock(TOP)
+        self.deletePresetButton:DockMargin(0, 0, 0, 8)
+        self.deletePresetButton:SetText(L("vendorDeletePreset"))
+        self.deletePresetButton:SetTooltip(L("vendorDeletePresetTooltip"))
+        self.deletePresetButton.DoClick = function() self:openDeletePresetSelector() end
+    end
+
+    if not IsValid(self.presetButton) then
+        self.presetButton = self.generalScroll:Add("liaButton")
+        self.presetButton:Dock(TOP)
+        self.presetButton:DockMargin(0, 0, 0, 8)
+        self.presetButton:SetText(L("vendorLoadPreset"))
+        self.presetButton:SetTooltip(L("vendorLoadPresetTooltip"))
+        self.presetButton.DoClick = function() self:openPresetSelector() end
+    end
+
+    if not IsValid(self.savePresetButton) then
+        self.savePresetButton = self.generalScroll:Add("liaButton")
+        self.savePresetButton:Dock(TOP)
+        self.savePresetButton:DockMargin(0, 0, 0, 8)
+        self.savePresetButton:SetText(L("vendorSavePreset"))
+        self.savePresetButton:SetFont("LiliaFont.16")
+        self.savePresetButton.DoClick = function()
+            LocalPlayer():requestString(L("vendorSavePresetTitle"), L("vendorSavePresetPrompt"), function(text)
+                if text and text ~= "" then
+                    local items = liaVendorEnt.items or {}
+                    net.Start("liaVendorSavePreset")
+                    net.WriteString(text)
+                    net.WriteTable(items)
+                    net.SendToServer()
+                    self:refreshPresetButton()
+                end
+            end)
+        end
     end
 
     local hasBodygroupsBottom = false
@@ -1299,13 +1418,13 @@ function PANEL:Init()
         end
     end
 
-    if hasBodygroupsBottom then
-        local bodygroupsPanel = self.generalScroll:Add("DPanel")
-        bodygroupsPanel:Dock(TOP)
-        bodygroupsPanel:DockMargin(0, 8, 0, 8)
-        bodygroupsPanel:SetTall(250)
-        bodygroupsPanel:SetPaintBackground(false)
-        local titleLabel = bodygroupsPanel:Add("DLabel")
+    if hasBodygroupsBottom and not IsValid(self.bodygroupsPanel) then
+        self.bodygroupsPanel = self.generalScroll:Add("DPanel")
+        self.bodygroupsPanel:Dock(TOP)
+        self.bodygroupsPanel:DockMargin(0, 8, 0, 8)
+        self.bodygroupsPanel:SetTall(250)
+        self.bodygroupsPanel:SetPaintBackground(false)
+        local titleLabel = self.bodygroupsPanel:Add("DLabel")
         titleLabel:Dock(TOP)
         titleLabel:DockMargin(8, 8, 8, 6)
         titleLabel:SetTall(24)
@@ -1313,7 +1432,7 @@ function PANEL:Init()
         titleLabel:SetFont("LiliaFont.20b")
         titleLabel:SetTextColor(lia.color.theme.text or color_white)
         titleLabel:SetContentAlignment(5)
-        local bodygroupsScroll = bodygroupsPanel:Add("liaScrollPanel")
+        local bodygroupsScroll = self.bodygroupsPanel:Add("liaScrollPanel")
         bodygroupsScroll:Dock(FILL)
         bodygroupsScroll:DockPadding(8, 4, 8, 8)
         for i = 0, entity:GetNumBodyGroups() - 1 do
@@ -1340,57 +1459,8 @@ function PANEL:Init()
         end
     end
 
-    self.items:AddColumn(L("name"))
-    self.items:AddColumn(L("mode"))
-    self.items:AddColumn(L("price"))
-    self.items:AddColumn(L("stock"))
-    self.items:AddColumn(L("category"))
-    self.lines = {}
-    self.items.CreateRow = function(tbl, rowIndex, rowData)
-        local row = vgui.Create("DButton", tbl.content)
-        row:Dock(TOP)
-        row:DockMargin(0, 0, 0, 1)
-        row:SetTall(tbl.rowHeight)
-        row:SetText("")
-        row.Paint = function(s, w, h)
-            local bgColor = tbl.selectedRow == rowIndex and lia.color.theme.theme or (s:IsHovered() and lia.color.theme.hover or lia.color.theme.panel[1])
-            lia.derma.rect(0, 0, w, h):Color(bgColor):Shape(lia.derma.SHAPE_IOS):Draw()
-        end
-
-        row.DoClick = function()
-            tbl.selectedRow = rowIndex
-            tbl.OnAction(rowData)
-            lia.websound.playButtonSound()
-        end
-
-        row.DoRightClick = function()
-            tbl.selectedRow = rowIndex
-            self:OnRowRightClick(rowIndex, rowData)
-            if tbl.OnRightClick then tbl.OnRightClick(rowData) end
-        end
-
-        local xPos = 0
-        for i, column in ipairs(tbl.columns) do
-            local label = vgui.Create("DLabel", row)
-            label:SetText(tostring(rowData[i]))
-            label:SetFont(tbl.rowFont)
-            label:SetTextColor(lia.color.theme.text)
-            label:SetContentAlignment(column.align)
-            label:SetSize(column.width, tbl.rowHeight)
-            label:SetPos(xPos, 0)
-            if column.align == TEXT_ALIGN_LEFT then
-                label:SetTextInset(tbl.padding, 0)
-            elseif column.align == TEXT_ALIGN_RIGHT then
-                label:SetTextInset(0, 0, tbl.padding, 0)
-            end
-
-            label:SetContentAlignment(column.align + 4)
-            xPos = xPos + column.width
-        end
-    end
-
-    self:ReloadItemList()
-    self:listenForUpdates()
+    self.generalScroll:InvalidateLayout(true)
+    self.generalScroll:SizeToChildren(false, true)
 end
 
 function PANEL:populateFactionPanel()
@@ -1571,18 +1641,19 @@ function PANEL:PerformLayout(width, height)
     end
 
     if IsValid(self.factionsFrame) then
-        self.factionsFrame:SetSize(width * 0.375, height)
+        self.factionsFrame:SetSize(width * 0.25, height)
         self.factionsFrame:SetPos(0, 0)
     end
 
     if IsValid(self.generalFrame) then
-        self.generalFrame:SetSize(width * 0.25, height)
-        self.generalFrame:SetPos(width * 0.375, 0)
+        self.generalFrame:SetSize(width * 0.20, height)
+        self.generalFrame:SetPos(width * 0.25, 0)
     end
 
     if IsValid(self.itemsFrame) then
-        self.itemsFrame:SetSize(width * 0.375, height)
-        self.itemsFrame:SetPos(width * 0.625, 0)
+        self.itemsFrame:SetSize(width * 0.55, height)
+        self.itemsFrame:SetPos(width * 0.45, 0)
+        if IsValid(self.items) then self.items:InvalidateLayout(true) end
     end
 end
 
@@ -2068,6 +2139,7 @@ function PANEL:OnRowRightClick(_, rowData)
         return
     end
 
+    print("[liaVendorEditor] OnRowRightClick triggered for row", rowData and rowData.item)
     if IsValid(menu) then menu:Remove() end
     local uniqueID = rowData.item
     local itemTable = lia.item.list[uniqueID]
@@ -2105,6 +2177,7 @@ function PANEL:OnRowRightClick(_, rowData)
     end):SetImage("icon16/table_edit.png")
 
     menu:Open()
+    return true
 end
 
 function PANEL:ReloadItemList(filter)

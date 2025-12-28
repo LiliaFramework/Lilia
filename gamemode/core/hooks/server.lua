@@ -119,6 +119,18 @@ function GM:PlayerLoadedChar(client, character)
             character:setData("ammo", nil)
         end)
     end
+
+    local permaFlags = client:getLiliaData("permanentflags", "")
+    if permaFlags and permaFlags ~= "" then
+        local cleaned = permaFlags:gsub("%s", "")
+        local toGive = ""
+        for i = 1, #cleaned do
+            local flag = cleaned:sub(i, i)
+            if not character:hasFlags(flag) then toGive = toGive .. flag end
+        end
+
+        if toGive ~= "" then character:giveFlags(toGive) end
+    end
 end
 
 function GM:PlayerDeath(client, inflictor, attacker)
