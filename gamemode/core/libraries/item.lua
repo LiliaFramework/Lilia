@@ -509,8 +509,6 @@ function lia.item.generateAmmo()
         local baseType = "base_entities"
         local entityID = className
         local ITEM = lia.item.register(className, baseType, nil, nil, true)
-
-        -- Generate ammo type name with proper capitalization
         local ammoType
         if isArc9Ammo then
             ammoType = className:gsub("^arc9_ammo_", ""):gsub("_", " "):lower():gsub("(%a)([%w_']*)", function(first, rest) return first:upper() .. rest end)
