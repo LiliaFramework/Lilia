@@ -502,14 +502,31 @@ function lia.item.generateAmmo()
         if not className or not isstring(className) then continue end
         local isArc9Ammo = className:find("^arc9_ammo_")
         local isArccwAmmo = className:find("^arccw_ammo_")
-        if not (isArc9Ammo or isArccwAmmo) then continue end
+        local isTfaAmmo = className:find("^tfa_ammo_")
+        if not (isArc9Ammo or isArccwAmmo or isTfaAmmo) then continue end
         if className:find("_base") or lia.item.WeaponsBlackList[className] then continue end
         local override = lia.item.WeaponOverrides[className] or {}
         local baseType = "base_entities"
         local entityID = className
         local ITEM = lia.item.register(className, baseType, nil, nil, true)
-        ITEM.name = override.name or isArc9Ammo and "ARC9 " .. className:gsub("^arc9_ammo_", ""):gsub("_", " "):upper() or isArccwAmmo and "ARCCW " .. className:gsub("^arccw_ammo_", ""):gsub("_", " "):upper() or className
-        ITEM.desc = override.desc or L("ammoBoxDesc")
+
+        -- Generate ammo type name with proper capitalization
+        local ammoType = ""
+        if isArc9Ammo then
+            ammoType = className:gsub("^arc9_ammo_", ""):gsub("_", " "):lower():gsub("(%a)([%w_']*)", function(first, rest) return first:upper() .. rest end)
+            ITEM.name = override.name or "[ARC9] " .. ammoType .. " Ammunition"
+        elseif isArccwAmmo then
+            ammoType = className:gsub("^arccw_ammo_", ""):gsub("_", " "):lower():gsub("(%a)([%w_']*)", function(first, rest) return first:upper() .. rest end)
+            ITEM.name = override.name or "[ARCCW] " .. ammoType .. " Ammunition"
+        elseif isTfaAmmo then
+            ammoType = className:gsub("^tfa_ammo_", ""):gsub("_", " "):lower():gsub("(%a)([%w_']*)", function(first, rest) return first:upper() .. rest end)
+            ITEM.name = override.name or "[TFA] " .. ammoType .. " Ammunition"
+        else
+            ITEM.name = override.name or className
+            ammoType = className
+        end
+
+        ITEM.desc = override.desc or "A Box of " .. ammoType .. " Ammunition"
         ITEM.category = override.category or L("itemCatAmmunition")
         ITEM.model = override.model or "models/props_c17/suitcase001a.mdl"
         ITEM.entityid = override.entityid or entityID
