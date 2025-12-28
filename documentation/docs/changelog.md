@@ -1,5 +1,30 @@
 # Changelog
 
+## Version 7.153 (December 28, 2025)
+
+### Changes
+
+- Update server.lua
+- Fixed Bad Arg
+- Successfully updated workshop Lilia to 7.150
+- Bug Fixing and New Feature
+- Successfully updated workshop Lilia to 7.148
+- Minor Bug Fixing
+- Successfully updated workshop Lilia to 7.146
+- Faction And Class appear on Admin Stick  models now
+- Bots Regenerate on Char Ban
+- Main Character Mechanic
+- Made PK Work Properly
+- Fixed Ammo Saving
+- FACTION|CLASS.models now appear in the adminstick models
+- Increased Ragdoll Time + Reduced Damage on VDM
+- Prevented Respawn without SPACE
+- Successfully updated workshop Lilia to 7.137
+- Skin Changes
+- Successfully updated workshop Lilia to 7.135
+- Stamina fIX
+- Better Confirmation UI
+
 ## Version 7.150 (December 28, 2025)
 
 ### Changes
