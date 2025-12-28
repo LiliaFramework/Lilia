@@ -1,5 +1,30 @@
 # Changelog
 
+## Version 7.159 (December 28, 2025)
+
+### Changes
+
+- Better Model in Ammo
+- Placing entity items without being in inv
+- Successfully updated workshop Lilia to 7.156
+- Update item.lua
+- Auto Gen TFA & ARCCW Ammo
+- Successfully updated workshop Lilia to 7.153
+- Update server.lua
+- Fixed Bad Arg
+- Successfully updated workshop Lilia to 7.150
+- Bug Fixing and New Feature
+- Successfully updated workshop Lilia to 7.148
+- Minor Bug Fixing
+- Successfully updated workshop Lilia to 7.146
+- Faction And Class appear on Admin Stick  models now
+- Bots Regenerate on Char Ban
+- Main Character Mechanic
+- Made PK Work Properly
+- Fixed Ammo Saving
+- FACTION|CLASS.models now appear in the adminstick models
+- Increased Ragdoll Time + Reduced Damage on VDM
+
 ## Version 7.156 (December 28, 2025)
 
 ### Changes
