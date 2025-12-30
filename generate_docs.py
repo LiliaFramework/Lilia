@@ -613,17 +613,6 @@ def generate_markdown_for_function(function_name, parsed_comment, is_library=Fal
     if parsed_comment['examples']:
         md += '#### 💡 Example Usage\n\n'
         for example in parsed_comment['examples']:
-            complexity = example.get('complexity', 'example').lower()
-            # Map complexity to emoji headers
-            if complexity == 'low':
-                md += '#### 🔰 Low Complexity\n'
-            elif complexity == 'medium':
-                md += '#### 📊 Medium Complexity\n'
-            elif complexity == 'high':
-                md += '#### ⚙️ High Complexity\n'
-            else:
-                # For generic examples without complexity, skip the header
-                pass
             md += '```lua\n'
             formatted_code = format_lua_code(example['code'])
             md += '\n'.join(formatted_code)
@@ -896,17 +885,6 @@ def generate_markdown_for_definition_entries(title: str, subtitle: str, overview
         if parsed.get('examples'):
             md_parts.append('#### 💡 Example Usage\n\n')
             for example in parsed['examples']:
-                complexity = example.get('complexity', 'example').lower()
-                # Map complexity to emoji headers
-                if complexity == 'low':
-                    md_parts.append('#### 🔰 Low Complexity\n')
-                elif complexity == 'medium':
-                    md_parts.append('#### 📊 Medium Complexity\n')
-                elif complexity == 'high':
-                    md_parts.append('#### ⚙️ High Complexity\n')
-                else:
-                    # For generic examples without complexity, skip the header
-                    pass
                 md_parts.append('```lua\n')
                 formatted_code = format_lua_code(example.get('code', []))
                 md_parts.append('\n'.join(formatted_code))
