@@ -55,7 +55,7 @@ function MODULE:LoadData()
             end
 
             if not ent:isDoor() then
-                lia.warning(L("entityIsNotADoorSkipping") .. " " .. id)
+                lia.warning(L("entityIsNotADoorSkipping") .. " " .. id .. " (Class: " .. ent:GetClass() .. ")")
                 continue
             end
 
