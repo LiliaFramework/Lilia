@@ -76,6 +76,8 @@
 
 - [Model Tweaker](https://liliaframework.github.io/modules/npcdrop/about/)
 
+- [Model Tweaker](https://liliaframework.github.io/modules/npcmoney/about/)
+
 - [NPC Spawner](https://liliaframework.github.io/modules/npcspawner/about/)
 
 - [Perma Remove](https://liliaframework.github.io/modules/permaremove/about/)

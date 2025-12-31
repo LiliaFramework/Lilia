@@ -408,6 +408,18 @@
     "workshop": []
   },
   {
+    "name": "Model Tweaker",
+    "versionID": "public_npcmoney",
+    "author": "Samael",
+    "discord": "@liliaplayer",
+    "description": "Adds an entity to tweak prop models, adjustments for scale and rotation, easy UI controls, saving of tweaked props between restarts, and undo support for recent tweaks.",
+    "version": "1",
+    "download": "https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/npcmoney.zip",
+    "source": "https://liliaframework.github.io/modules/npcmoney/about/",
+    "features": [],
+    "workshop": []
+  },
+  {
     "name": "NPC Spawner",
     "versionID": "public_npcspawner",
     "author": "Samael",
