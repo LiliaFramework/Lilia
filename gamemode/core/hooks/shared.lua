@@ -7,7 +7,7 @@ function GM:OnCharVarChanged(character, varName, oldVar, newVar)
     end
 end
 
-function GM:FindUseEntity(_, ent)
+function GM:FindUseEntity(client, ent)
     return ent
 end
 
@@ -30,14 +30,14 @@ function GM:GetModelGender(model)
     return isFemale and "female" or "male"
 end
 
-function GM:GetAttributeMax(_, attribute)
+function GM:GetAttributeMax(client, attribute)
     local attribTable = lia.attribs.list[attribute]
     if not attribTable then return lia.config.get("MaxAttributePoints") end
     if istable(attribTable) and isnumber(attribTable.maxValue) then return attribTable.maxValue end
     return lia.config.get("MaxAttributePoints")
 end
 
-function GM:GetAttributeStartingMax(_, attribute)
+function GM:GetAttributeStartingMax(client, attribute)
     local attribTable = lia.attribs.list[attribute]
     if not attribTable then return lia.config.get("MaxStartingAttributes") end
     if istable(attribTable) and isnumber(attribTable.startingMax) then return attribTable.startingMax end

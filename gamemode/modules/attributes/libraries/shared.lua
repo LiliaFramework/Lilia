@@ -72,6 +72,6 @@ function MODULE:SetupMove(client, cMoveData)
     if client.liaBrthCache then cMoveData:SetMaxClientSpeed(client:GetWalkSpeed()) end
 end
 
-function MODULE:NetVarChanged(client, key, _, value)
+function MODULE:NetVarChanged(client, key, oldValue, value)
     if key == "brth" then client.liaBrthCache = value or false end
 end

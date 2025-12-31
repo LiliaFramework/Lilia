@@ -14,7 +14,7 @@
     if classID and classData and classData.name then hook.Run("AddTextField", L("generalInfo"), "class", L("class"), function() return L("classMember", classData.name) end) end
 end
 
-function MODULE:DrawCharInfo(client, _, info)
+function MODULE:DrawCharInfo(client, character, info)
     if not lia.config.get("ClassDisplay", true) then return end
     local charClass = client:getClassData()
     if charClass then

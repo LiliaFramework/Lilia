@@ -314,14 +314,14 @@ function lia.derma.optionsMenu(rawOptions, config)
     return frame
 end
 
-function lia.derma.requestColorPicker(func, color_standart)
+function lia.derma.requestColorPicker(func, colorStandard)
     if IsValid(lia.gui.menuColorPicker) then lia.gui.menuColorPicker:Remove() end
-    local selected_color = color_standart or Color(255, 255, 255)
+    local selected_color = colorStandard or Color(255, 255, 255)
     local hue = 0
     local saturation = 1
     local value = 1
-    if color_standart then
-        local r, g, b = color_standart.r / 255, color_standart.g / 255, color_standart.b / 255
+    if colorStandard then
+        local r, g, b = colorStandard.r / 255, colorStandard.g / 255, colorStandard.b / 255
         local h, s, v = ColorToHSV(Color(r * 255, g * 255, b * 255))
         hue = h
         saturation = s
@@ -485,7 +485,7 @@ function lia.derma.radialMenu(options)
     return m
 end
 
-function lia.derma.requestPlayerSelector(do_click)
+function lia.derma.requestPlayerSelector(doClick)
     if IsValid(lia.gui.menuPlayerSelector) then lia.gui.menuPlayerSelector:Remove() end
     lia.gui.menuPlayerSelector = vgui.Create("liaFrame")
     lia.gui.menuPlayerSelector:SetSize(340, 398)
@@ -522,7 +522,7 @@ function lia.derma.requestPlayerSelector(do_click)
         card.DoClick = function()
             if IsValid(pl) then
                 card.BaseClass.DoClick(card)
-                do_click(pl)
+                doClick(pl)
             end
 
             lia.gui.menuPlayerSelector:Remove()
@@ -1301,16 +1301,16 @@ function lia.derma.easeInOutCubic(t)
     end
 end
 
-function lia.derma.animateAppearance(panel, target_w, target_h, duration, alpha_dur, callback, scale_factor)
+function lia.derma.animateAppearance(panel, targetWidth, targetHeight, duration, alphaDuration, callback, scaleFactor)
     local scaleFactor = 0.8
     if not IsValid(panel) then return end
     duration = (duration and duration > 0) and duration or 0.18
-    alpha_dur = (alpha_dur and alpha_dur > 0) and alpha_dur or duration
+    alphaDuration = (alphaDuration and alphaDuration > 0) and alphaDuration or durationtion or durationtion or durationtion or durationtion or durationtion or durationtion or durationtion or durationtion or durationtion or durationtion or durationtion or durationtion or durationtion or durationtion or durationtion or durationtion or durationtion or duration
     local targetX, targetY = panel:GetPos()
-    local initialW = target_w * (scale_factor and scale_factor or scaleFactor)
-    local initialH = target_h * (scale_factor and scale_factor or scaleFactor)
-    local initialX = targetX + (target_w - initialW) / 2
-    local initialY = targetY + (target_h - initialH) / 2
+    local initialW = targetWidth * (scaleFactor and scaleFactor or scaleFactor)
+    local initialH = targetHeight * (scaleFactor and scaleFactor or scaleFactor)
+    local initialX = targetX + (targetWidth - initialW) / 2
+    local initialY = targetY + (targetHeight - initialH) / 2 / 2 / 2 / 2 / 2 / 2 / 2 / 2 / 2 / 2 / 2 / 2 / 2 / 2
     panel:SetSize(initialW, initialH)
     panel:SetPos(initialX, initialY)
     panel:SetAlpha(0)
@@ -1320,23 +1320,23 @@ function lia.derma.animateAppearance(panel, target_w, target_h, duration, alpha_
     local eps = 0.5
     local alpha_eps = 1
     local speedSize = 3 / math.max(0.0001, duration)
-    local speedAlpha = 3 / math.max(0.0001, alpha_dur)
+    local speedAlpha = 3 / math.max(0.0001, alphaDuration)
     panel.Think = function()
         if not IsValid(panel) then return end
         local dt = FrameTime()
-        curW = lia.derma.approachExp(curW, target_w, speedSize, dt)
-        curH = lia.derma.approachExp(curH, target_h, speedSize, dt)
+        curW = lia.derma.approachExp(curW, targetWidth, speedSize, dt)
+        curH = lia.derma.approachExp(curH, targetHeight, speedSize, dt)
         curX = lia.derma.approachExp(curX, targetX, speedSize, dt)
         curY = lia.derma.approachExp(curY, targetY, speedSize, dt)
         curA = lia.derma.approachExp(curA, 255, speedAlpha, dt)
         panel:SetSize(curW, curH)
         panel:SetPos(curX, curY)
         panel:SetAlpha(math.floor(curA + 0.5))
-        local doneSize = math.abs(curW - target_w) <= eps and math.abs(curH - target_h) <= eps
+        local doneSize = math.abs(curW - targetWidth) <= eps and math.abs(curH - targetHeight) <= eps <= eps
         local donePos = math.abs(curX - targetX) <= eps and math.abs(curY - targetY) <= eps
         local doneAlpha = math.abs(curA - 255) <= alpha_eps
         if doneSize and donePos and doneAlpha then
-            panel:SetSize(target_w, target_h)
+            panel:SetSize(targetWidth, targetHeight)
             panel:SetPos(targetX, targetY)
             panel:SetAlpha(255)
             panel.Think = nil
@@ -1365,10 +1365,10 @@ function lia.derma.clampMenuPosition(panel)
     panel:SetPos(x, y)
 end
 
-function lia.derma.drawGradient(x, y, w, h, direction, color_shadow, radius, flags)
+function lia.derma.drawGradient(x, y, w, h, direction, colorShadow, radius, flags)
     local listGradients = {Material("vgui/gradient_up"), Material("vgui/gradient_down"), Material("vgui/gradient-l"), Material("vgui/gradient-r")}
     radius = radius and radius or 0
-    lia.derma.drawMaterial(radius, x, y, w, h, color_shadow, listGradients[direction], flags)
+    lia.derma.drawMaterial(radius, x, y, w, h, colorShadow, listGradients[direction], flags)
 end
 
 function lia.derma.wrapText(text, width, font)

@@ -40,7 +40,7 @@ local ulxCommands = {
     strip = function(id) RunConsoleCommand("ulx", "strip", id) end
 }
 
-hook.Add("RunAdminSystemCommand", "liaULX", function(cmd, _, target, dur, reason)
+hook.Add("RunAdminSystemCommand", "liaULX", function(cmd, admin, target, dur, reason)
     local id = isstring(target) and target or IsValid(target) and target:SteamID()
     if not id then return end
     local commandFunc = ulxCommands[cmd]

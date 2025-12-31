@@ -52,7 +52,7 @@ function MODULE:InventoryItemAdded(inventory, item)
     lia.gui["inv" .. bagInv:getID()] = bagPanel
 end
 
-function MODULE:InventoryItemDataChanged(item, key, _, _, inventory)
+function MODULE:InventoryItemDataChanged(item, key, oldValue, newValue, inventory)
     if not item.isBag then return end
     if key ~= "x" and key ~= "y" then return end
     local bagInv = item:getInv()

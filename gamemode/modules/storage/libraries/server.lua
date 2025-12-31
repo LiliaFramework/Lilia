@@ -46,7 +46,7 @@ function MODULE:PlayerSpawnedProp(client, model, entity)
     SafeRemoveEntity(entity)
 end
 
-function MODULE:CanPlayerSpawnStorage(client, _, info)
+function MODULE:CanPlayerSpawnStorage(client, entity, info)
     if not client then return true end
     if not client:hasPrivilege("canSpawnStorage") then return false end
     if not info.invType or not lia.inventory.types[info.invType] then return false end
@@ -85,7 +85,7 @@ function MODULE:OnEntityCreated(entity)
     self:InitializeStorage(entity)
 end
 
-function MODULE:StorageInventorySet(_, inventory, isCar)
+function MODULE:StorageInventorySet(entity, inventory, isCar)
     inventory:addAccessRule(isCar and RULES.AccessIfCarStorageReceiver or RULES.AccessIfStorageReceiver)
 end
 

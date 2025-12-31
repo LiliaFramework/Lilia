@@ -239,7 +239,7 @@ function GM:GetInjuredText(c)
     return {last.text, last.color}
 end
 
-function GM:DrawCharInfo(c, _, info)
+function GM:DrawCharInfo(c, character, info)
     local injured = hook.Run("GetInjuredText", c)
     if injured then info[#info + 1] = {L(injured[1]), injured[2]} end
 end
@@ -428,8 +428,9 @@ function GM:TooltipLayout(var)
     return var.isItemTooltip
 end
 
-function GM:DrawLiliaModelView(_, entity)
+function GM:DrawLiliaModelView(client, entity)
     if IsValid(entity.weapon) then entity.weapon:DrawModel() end
+end
 end
 
 function GM:OnChatReceived()

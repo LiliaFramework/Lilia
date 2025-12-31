@@ -158,7 +158,7 @@ net.Receive("liaVendorSyncMessages", function()
     hook.Run("VendorMessagesUpdated", vendor)
 end)
 
-function MODULE:AddToAdminStickHUD(_, target, information)
+function MODULE:AddToAdminStickHUD(client, target, information)
     if not IsValid(target) or not target.IsVendor then return end
     local name = target:getName()
     if name and name ~= "" then table.insert(information, L("vendorNameLabel") .. name) end

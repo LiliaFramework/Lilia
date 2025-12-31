@@ -230,7 +230,7 @@ function MODULE:OnEntityCreated(entity)
     end
 end
 
-function MODULE:OnPlayerDropWeapon(_, _, entity)
+function MODULE:OnPlayerDropWeapon(client, weapon, entity)
     local physObject = entity:GetPhysicsObject()
     if physObject then physObject:EnableMotion() end
     SafeRemoveEntityDelayed(entity, lia.config.get("TimeUntilDroppedSWEPRemoved", 15))

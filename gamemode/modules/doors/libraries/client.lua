@@ -275,7 +275,7 @@ function MODULE:GetAdminStickLists(tgt, lists)
     end
 end
 
-function MODULE:AddToAdminStickHUD(_, target, information)
+function MODULE:AddToAdminStickHUD(client, target, information)
     if IsValid(target) and target:isDoor() then
         local extraInfo = {}
         hook.Run("GetDoorInfoForAdminStick", target, extraInfo)

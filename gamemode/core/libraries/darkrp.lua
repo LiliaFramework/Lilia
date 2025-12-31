@@ -43,7 +43,7 @@ if SERVER then
         return startPos
     end
 
-    function lia.darkrp.notify(client, _, _, message)
+    function lia.darkrp.notify(client, notifyType, duration, message)
         client:notifyInfoLocalized(message)
     end
 else

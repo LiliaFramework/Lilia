@@ -220,7 +220,7 @@ if SERVER then
         return default
     end
 else
-    function entityMeta:playFollowingSound(soundPath, volume, shouldFollow, maxDistance, startDelay, minDistance, pitch, _, dsp)
+    function entityMeta:playFollowingSound(soundPath, volume, shouldFollow, maxDistance, startDelay, minDistance, pitch, soundLevel, dsp)
         local v = math.Clamp(tonumber(volume) or 1, 0, 1)
         local follow = shouldFollow ~= false
         local fmin, fmax = tonumber(minDistance) or 0, tonumber(maxDistance) or 1200

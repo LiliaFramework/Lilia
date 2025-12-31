@@ -1601,7 +1601,7 @@ local function getEntityDisplayName(ent)
     return className
 end
 
-function MODULE:CanDeleteChar(_, character)
+function MODULE:CanDeleteChar(client, character)
     if IsValid(character) and character:getMoney() < lia.config.get("DefaultMoney") then return false end
 end
 

@@ -161,7 +161,7 @@ function QuickPanel:Init()
     self:SetZPos(999)
     self:SetMouseInputEnabled(true)
     hook.Add("OnThemeChanged", self, function() if IsValid(self) then self:RefreshTheme() end end)
-    hook.Add("OptionAdded", self, function(_, _, option) if (option.isQuick or (option.data and option.data.isQuick)) and IsValid(self) then self:InvalidateCache() end end)
+    hook.Add("OptionAdded", self, function(key, name, option) if (option.isQuick or (option.data and option.data.isQuick)) and IsValid(self) then self:InvalidateCache() end end)
 end
 
 function QuickPanel:Paint(w, h)

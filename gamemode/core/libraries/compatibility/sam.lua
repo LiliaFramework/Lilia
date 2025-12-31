@@ -25,7 +25,7 @@ local samCommands = {
     strip = function(id) RunConsoleCommand("sam", "strip", id) end
 }
 
-hook.Add("RunAdminSystemCommand", "liaSam", function(cmd, _, victim, dur, reason)
+hook.Add("RunAdminSystemCommand", "liaSam", function(cmd, admin, victim, dur, reason)
     local id = isstring(victim) and victim or IsValid(victim) and victim:SteamID()
     if not id then return end
     local commandFunc = samCommands[cmd]

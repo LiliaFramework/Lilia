@@ -82,7 +82,7 @@ else
         strip = function(id) RunConsoleCommand("serverguard", "strip", id) end
     }
 
-    hook.Add("RunAdminSystemCommand", "liaServerGuard", function(cmd, _, target, dur, reason)
+    hook.Add("RunAdminSystemCommand", "liaServerGuard", function(cmd, admin, target, dur, reason)
         local id = isstring(target) and target or IsValid(target) and target:SteamID()
         if not id then return end
         local commandFunc = sgCommands[cmd]

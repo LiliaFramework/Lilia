@@ -368,7 +368,7 @@ function MODULE:PlayerUse(client, door)
     end
 end
 
-function MODULE:CanPlayerUseDoor(_, door)
+function MODULE:CanPlayerUseDoor(client, door)
     local doorData = lia.doors.getData(door)
     if doorData.disabled then return false end
 end

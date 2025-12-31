@@ -142,7 +142,7 @@ else
         end)
     end
 
-    function MODULE:KickedFromChar(_, isCurrentChar)
+    function MODULE:KickedFromChar(characterID, isCurrentChar)
         if isCurrentChar then
             local charPanel = vgui.Create("liaCharacter")
             charPanel.isKickedFromChar = true

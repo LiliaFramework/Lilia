@@ -7,58 +7,6 @@
     Overview:
         The utility library provides comprehensive functionality for common operations and helper functions used throughout the Lilia framework. It contains a wide range of utilities for player management, string processing, entity handling, UI operations, and general purpose calculations. The library is divided into server-side functions for game logic and data management, and client-side functions for user interface, visual effects, and player interaction. These utilities simplify complex operations, provide consistent behavior across the framework, and offer reusable components for modules and plugins. The library handles everything from player identification and spatial queries to advanced UI animations and text processing, ensuring robust and efficient operations across both server and client environments.
 ]]
---[[
-    Purpose:
-        Find all players within a specified 3D box area
-
-    When Called:
-        When you need to find players in a specific rectangular area for operations like area-of-effect abilities or zone management
-
-    Parameters:
-        mins (Vector)
-            The minimum corner coordinates of the box
-        maxs (Vector)
-            The maximum corner coordinates of the box
-
-    Returns:
-        Table of player entities found within the box area
-
-    Realm:
-        Shared
-
-    Example Usage:
-
-    Low Complexity:
-        ```lua
-        -- Simple: Find players in a small area around a position
-        local players = lia.util.findPlayersInBox(Vector(-100, -100, -50), Vector(100, 100, 50))
-        ```
-
-    Medium Complexity:
-        ```lua
-        -- Medium: Find players in a zone and notify them
-        local zonePlayers = lia.util.findPlayersInBox(zoneMin, zoneMax)
-        for _, player in ipairs(zonePlayers) do
-            player:notify("You are in the danger zone!")
-        end
-        ```
-
-    High Complexity:
-        ```lua
-        -- High: Create a dynamic zone system with multiple areas
-        local zones = {
-            {mins = Vector(0, 0, 0),     maxs = Vector(100, 100, 100), name = "Safe Zone"  },
-            {mins = Vector(200, 200, 0), maxs = Vector(300, 300, 100), name = "Combat Zone"}
-        }
-
-        for _, zone in ipairs(zones) do
-            local players = lia.util.findPlayersInBox(zone.mins, zone.maxs)
-            for _, player in ipairs(players) do
-                player:notify("Entered: " .. zone.name)
-            end
-        end
-        ```
-]]
 function lia.util.findPlayersInBox(mins, maxs)
     local entsList = ents.FindInBox(mins, maxs)
     local plyList = {}
@@ -384,16 +332,16 @@ else
     lia.util.approachExp = lia.derma.approachExp
     lia.util.easeOutCubic = lia.derma.easeOutCubic
     lia.util.easeInOutCubic = lia.derma.easeInOutCubic
-    function lia.util.animateAppearance(panel, target_w, target_h, duration, alpha_dur, callback, scale_factor)
+    function lia.util.animateAppearance(panel, targetWidth, targetHeight, duration, alphaDuration, callback, scaleFactor)
         local scaleFactor = 0.8
         if not IsValid(panel) then return end
         duration = (duration and duration > 0) and duration or 0.18
-        alpha_dur = (alpha_dur and alpha_dur > 0) and alpha_dur or duration
+        alphaDuration = (alphaDuration and alphaDuration > 0) and alphaDuration or duration
         local targetX, targetY = panel:GetPos()
-        local initialW = target_w * (scale_factor and scale_factor or scaleFactor)
-        local initialH = target_h * (scale_factor and scale_factor or scaleFactor)
-        local initialX = targetX + (target_w - initialW) / 2
-        local initialY = targetY + (target_h - initialH) / 2
+        local initialW = targetWidth * (scaleFactor and scaleFactor or scaleFactor)
+        local initialH = targetHeight * (scaleFactor and scaleFactor or scaleFactor)
+        local initialX = targetX + (targetWidth - initialW) / 2
+        local initialY = targetY + (targetHeight - initialH) / 2
         panel:SetSize(initialW, initialH)
         panel:SetPos(initialX, initialY)
         panel:SetAlpha(0)
@@ -403,23 +351,23 @@ else
         local eps = 0.5
         local alpha_eps = 1
         local speedSize = 3 / math.max(0.0001, duration)
-        local speedAlpha = 3 / math.max(0.0001, alpha_dur)
+        local speedAlpha = 3 / math.max(0.0001, alphaDuration)
         panel.Think = function()
             if not IsValid(panel) then return end
             local dt = FrameTime()
-            curW = lia.util.approachExp(curW, target_w, speedSize, dt)
-            curH = lia.util.approachExp(curH, target_h, speedSize, dt)
+            curW = lia.util.approachExp(curW, targetWidth, speedSize, dt)
+            curH = lia.util.approachExp(curH, targetHeight, speedSize, dt)
             curX = lia.util.approachExp(curX, targetX, speedSize, dt)
             curY = lia.util.approachExp(curY, targetY, speedSize, dt)
             curA = lia.util.approachExp(curA, 255, speedAlpha, dt)
             panel:SetSize(curW, curH)
             panel:SetPos(curX, curY)
             panel:SetAlpha(math.floor(curA + 0.5))
-            local doneSize = math.abs(curW - target_w) <= eps and math.abs(curH - target_h) <= eps
+            local doneSize = math.abs(curW - targetWidth) <= eps and math.abs(curH - targetHeight) <= eps
             local donePos = math.abs(curX - targetX) <= eps and math.abs(curY - targetY) <= eps
             local doneAlpha = math.abs(curA - 255) <= alpha_eps
             if doneSize and donePos and doneAlpha then
-                panel:SetSize(target_w, target_h)
+                panel:SetSize(targetWidth, targetHeight)
                 panel:SetPos(targetX, targetY)
                 panel:SetAlpha(255)
                 panel.Think = nil
@@ -458,10 +406,10 @@ else
         panel:SetPos(x, y)
     end
 
-    function lia.util.drawGradient(_x, _y, _w, _h, direction, color_shadow, radius, flags)
+    function lia.util.drawGradient(x, y, w, h, direction, colorShadow, radius, flags)
         local listGradients = {Material("vgui/gradient_up"), Material("vgui/gradient_down"), Material("vgui/gradient-l"), Material("vgui/gradient-r")}
         radius = radius and radius or 0
-        lia.derma.drawMaterial(radius, _x, _y, _w, _h, color_shadow, listGradients[direction], flags)
+        lia.derma.drawMaterial(radius, x, y, w, h, colorShadow, listGradients[direction], flags)
     end
 
     function lia.util.wrapText(text, width, font)
@@ -492,7 +440,7 @@ else
         return lines, maxW
     end
 
-    function lia.util.drawBlur(panel, amount, _, alpha)
+    function lia.util.drawBlur(panel, amount, passes, alpha)
         amount = amount or 5
         alpha = alpha or 255
         local maxPasses = 3
