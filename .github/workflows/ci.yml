@@ -56,7 +56,8 @@ jobs:
             --no-max-code-line-length \
             --no-max-string-line-length \
             --no-max-comment-line-length \
-            --no-max-cyclomatic-complexity
+            --no-max-cyclomatic-complexity \
+            --no-unused-args
 
   linter-non-main:
     if: github.repository != 'LiliaFramework/Lilia'
@@ -91,7 +92,8 @@ jobs:
             --no-max-code-line-length \
             --no-max-string-line-length \
             --no-max-comment-line-length \
-            --no-max-cyclomatic-complexity
+            --no-max-cyclomatic-complexity \
+            --no-unused-args
 
   compute-version:
     if: github.repository == 'LiliaFramework/Lilia' && github.ref == 'refs/heads/main'
