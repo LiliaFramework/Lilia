@@ -333,6 +333,7 @@ else
     lia.util.easeOutCubic = lia.derma.easeOutCubic
     lia.util.easeInOutCubic = lia.derma.easeInOutCubic
     function lia.util.animateAppearance(panel, targetWidth, targetHeight, duration, alphaDuration, callback, scaleFactor)
+        scaleFactor = scaleFactor or 0.8
         if not IsValid(panel) then return end
         duration = (duration and duration > 0) and duration or 0.18
         alphaDuration = (alphaDuration and alphaDuration > 0) and alphaDuration or duration
