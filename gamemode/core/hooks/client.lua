@@ -431,7 +431,6 @@ end
 function GM:DrawLiliaModelView(client, entity)
     if IsValid(entity.weapon) then entity.weapon:DrawModel() end
 end
-end
 
 function GM:OnChatReceived()
     if system.IsWindows() and not system.HasFocus() then system.FlashWindow() end

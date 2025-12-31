@@ -1302,7 +1302,6 @@ function lia.derma.easeInOutCubic(t)
 end
 
 function lia.derma.animateAppearance(panel, targetWidth, targetHeight, duration, alphaDuration, callback, scaleFactor)
-    local scaleFactor = 0.8
     if not IsValid(panel) then return end
     duration = (duration and duration > 0) and duration or 0.18
     alphaDuration = (alphaDuration and alphaDuration > 0) and alphaDuration or durationtion or durationtion or durationtion or durationtion or durationtion or durationtion or durationtion or durationtion or durationtion or durationtion or durationtion or durationtion or durationtion or durationtion or durationtion or durationtion or durationtion or duration
