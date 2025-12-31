@@ -204,6 +204,18 @@
     "workshop": []
   },
   {
+    "name": "Donator",
+    "versionID": "public_donator",
+    "author": "Samael",
+    "discord": "@liliaplayer",
+    "description": "Adds libraries to manage donor perks, tracking for donor ranks and perks, configurable perks by tier, and commands to adjust character slots.",
+    "version": "1",
+    "download": "https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/donator.zip",
+    "source": "https://liliaframework.github.io/modules/donator/about/",
+    "features": [],
+    "workshop": []
+  },
+  {
     "name": "Door Kick",
     "versionID": "public_doorkick",
     "author": "Samael",
@@ -392,6 +404,18 @@
     "version": "1",
     "download": "https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/npcdrop.zip",
     "source": "https://liliaframework.github.io/modules/npcdrop/about/",
+    "features": [],
+    "workshop": []
+  },
+  {
+    "name": "Model Tweaker",
+    "versionID": "public_npcmoney",
+    "author": "Samael",
+    "discord": "@liliaplayer",
+    "description": "Adds an entity to tweak prop models, adjustments for scale and rotation, easy UI controls, saving of tweaked props between restarts, and undo support for recent tweaks.",
+    "version": "1",
+    "download": "https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/npcmoney.zip",
+    "source": "https://liliaframework.github.io/modules/npcmoney/about/",
     "features": [],
     "workshop": []
   },

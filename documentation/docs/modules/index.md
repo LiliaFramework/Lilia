@@ -42,6 +42,8 @@
 
 - [Development Server](https://liliaframework.github.io/modules/developmentserver/about/)
 
+- [Donator](https://liliaframework.github.io/modules/donator/about/)
+
 - [Door Kick](https://liliaframework.github.io/modules/doorkick/about/)
 
 - [Extended Descriptions](https://liliaframework.github.io/modules/extendeddescriptions/about/)
@@ -73,6 +75,8 @@
 - [Model Tweaker](https://liliaframework.github.io/modules/modeltweaker/about/)
 
 - [Model Tweaker](https://liliaframework.github.io/modules/npcdrop/about/)
+
+- [Model Tweaker](https://liliaframework.github.io/modules/npcmoney/about/)
 
 - [NPC Spawner](https://liliaframework.github.io/modules/npcspawner/about/)
 

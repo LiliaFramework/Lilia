@@ -1,5 +1,30 @@
 # Changelog
 
+## Version 7.168 (December 31, 2025)
+
+### Changes
+
+- Micro Fixes
+- Successfully updated workshop Lilia to 7.166
+- Linting
+- Added Args For Clarity + FACTION.Scale Bug Fix
+- Update ci.yml
+- Update generate_docs.py
+- Successfully updated workshop Lilia to 7.161
+- Update server.lua
+- Successfully updated workshop Lilia to 7.159
+- Better Model in Ammo
+- Placing entity items without being in inv
+- Successfully updated workshop Lilia to 7.156
+- Update item.lua
+- Auto Gen TFA & ARCCW Ammo
+- Successfully updated workshop Lilia to 7.153
+- Update server.lua
+- Fixed Bad Arg
+- Successfully updated workshop Lilia to 7.150
+- Bug Fixing and New Feature
+- Successfully updated workshop Lilia to 7.148
+
 ## Version 7.166 (December 31, 2025)
 
 ### Changes
