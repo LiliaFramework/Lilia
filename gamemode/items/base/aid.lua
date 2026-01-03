@@ -4,6 +4,7 @@ ITEM.model = "models/weapons/w_package.mdl"
 ITEM.width = 1
 ITEM.height = 1
 ITEM.health = 0
+ITEM.armor = 0
 ITEM.functions.use = {
     name = "use",
     sound = "items/medshot4.wav",
@@ -12,6 +13,10 @@ ITEM.functions.use = {
         if IsValid(client) then
             local newHealth = math.min(client:Health() + item.health, client:GetMaxHealth())
             client:SetHealth(newHealth)
+            if item.armor > 0 then
+                local newArmor = math.min(client:Armor() + item.armor, client:GetMaxArmor())
+                client:SetArmor(newArmor)
+            end
         end
     end
 }
@@ -26,6 +31,10 @@ ITEM.functions.target = {
             if IsValid(target) and target:IsPlayer() and target:Alive() then
                 local newHealth = math.min(target:Health() + item.health, target:GetMaxHealth())
                 target:SetHealth(newHealth)
+                if item.armor > 0 then
+                    local newArmor = math.min(target:Armor() + item.armor, target:GetMaxArmor())
+                    target:SetArmor(newArmor)
+                end
             else
                 client:notifyErrorLocalized("invalidTargetNeedLiving")
             end
