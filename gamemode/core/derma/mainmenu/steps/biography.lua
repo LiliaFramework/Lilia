@@ -139,6 +139,15 @@ function PANEL:validate()
         end
     end
 
+    if hook.Run("ShouldShowCharVarInCreation", "desc") ~= false and IsValid(self.descEntry) then
+        local desc = string.Trim(self.descEntry:GetValue() or "")
+        local descWithoutSpaces = string.gsub(desc, "%s", "")
+        local minLength = lia.config.get("MinDescLen", 16)
+        if #descWithoutSpaces < minLength then
+            return false, L("descMinLen", minLength)
+        end
+    end
+
     local factionID = self.factionCombo:GetSelectedData()
     if not factionID then return false, L("requiredFieldError", "faction") end
     return true
