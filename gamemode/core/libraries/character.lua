@@ -189,9 +189,11 @@ lia.char.registerVar("desc", {
         local desc, override = hook.Run("GetDefaultCharDesc", client, data.faction, data)
         local minLength = lia.config.get("MinDescLen", 16)
         if isstring(desc) and override then return true end
-        if not value or #string.Trim(value) < minLength then return false, "descMinLen", minLength end
+        local trimmedValue = string.Trim(value or "")
+        local valueWithoutSpaces = string.gsub(trimmedValue, "%s", "")
+        if #valueWithoutSpaces < minLength then return false, "descMinLen", minLength end
         return true
-    end,
+end,
     onAdjust = function(client, data, value, newData)
         local desc, override = hook.Run("GetDefaultCharDesc", client, data.faction, data)
         if isstring(desc) and override then
