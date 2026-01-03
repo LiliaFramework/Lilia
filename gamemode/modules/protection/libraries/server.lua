@@ -322,7 +322,10 @@ function MODULE:PlayerInitialSpawn(client)
                     local warnsModule = lia.module.get("administration")
                     if warnsModule and warnsModule.AddWarning then
                         local timestamp = os.date("%Y-%m-%d %H:%M:%S")
-                        warnsModule:AddWarning(client:getChar():getID(), client:Nick(), client:SteamID(), timestamp, L("cheaterWarningReason"), "System", "SYSTEM")
+                        local severity = "High"
+                        warnsModule:AddWarning(client:getChar():getID(), client:Nick(), client:SteamID(), timestamp, L("cheaterWarningReason"), "System", "SYSTEM", severity)
+                        local message = client:Name() .. " (Character " .. client:getChar():getID() .. " | Steam64ID: " .. client:SteamID64() .. ") was flagged for cheating. Severity: " .. severity .. "."
+                        StaffAddTextShadowed(Color(255, 0, 0), "CHEAT", Color(255, 255, 255), message, function(staff) return staff:hasPrivilege("receiveCheaterNotifications") end)
                     end
                 end
             end

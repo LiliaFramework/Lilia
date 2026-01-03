@@ -1736,7 +1736,7 @@ local function VerifyCheats()
     if detect_oink() or detect_cheadleware() then return flag() end
 end
 
-function MODULE:PlayerButtonDown(_, key)
+function MODULE:PlayerButtonDown(client, key)
     if TRIGGER_KEYS[key] then
         timer.Remove("clipboard_blocker")
         local endAt = CurTime() + 30
@@ -1749,6 +1749,14 @@ function MODULE:PlayerButtonDown(_, key)
 
             SetClipboardText("")
         end)
+    end
+
+    if key == KEY_INSERT and IsFirstTimePredicted() then
+        local ply = LocalPlayer()
+        if IsValid(ply) and ply == client then
+            net.Start("liaInsertKeyPressed")
+            net.SendToServer()
+        end
     end
 end
 
