@@ -90,9 +90,14 @@ function PANEL:Init()
         if IsValid(facCat.Header) then
             facCat.Header:SetTall(50)
             facCat.Header.Paint = function(_, ww, hh)
+                local blurAmount = 4
+                local blurPasses = 2
+                local blurAlpha = 255
+                lia.util.drawBlur(_, blurAmount, blurPasses, blurAlpha)
                 local radius = 8
-                lia.derma.rect(0, 0, ww, hh):Rad(radius):Color(Color(facColor.r, facColor.g, facColor.b, 80)):Shape(lia.derma.SHAPE_IOS):Draw()
-                lia.derma.rect(0, 0, ww, hh):Rad(radius):Color(Color(facColor.r, facColor.g, facColor.b, 200)):Shape(lia.derma.SHAPE_IOS):Draw()
+                local baseColor = lia.color.theme.background_alpha
+                local tintedColor = Color(math.Clamp((baseColor.r + facColor.r) * 0.5, 0, 255), math.Clamp((baseColor.g + facColor.g) * 0.5, 0, 255), math.Clamp((baseColor.b + facColor.b) * 0.5, 0, 255), baseColor.a)
+                lia.derma.rect(0, 0, ww, hh):Rad(radius):Color(tintedColor):Shape(lia.derma.SHAPE_IOS):Draw()
             end
         end
 
@@ -145,9 +150,15 @@ function PANEL:Init()
                 if IsValid(cat.Header) then
                     cat.Header:SetTall(30)
                     cat.Header.Paint = function(_, ww, hh)
-                        local c = clsData.color or facColor
+                        local blurAmount = 4
+                        local blurPasses = 2
+                        local blurAlpha = 255
+                        lia.util.drawBlur(_, blurAmount, blurPasses, blurAlpha)
                         local radius = 6
-                        lia.derma.rect(0, 0, ww, hh):Rad(radius):Color(Color(c.r, c.g, c.b, 80)):Shape(lia.derma.SHAPE_IOS):Draw()
+                        local c = clsData.color or facColor
+                        local baseColor = lia.color.theme.background_alpha
+                        local tintedColor = Color(math.Clamp((baseColor.r + c.r) * 0.5, 0, 255), math.Clamp((baseColor.g + c.g) * 0.5, 0, 255), math.Clamp((baseColor.b + c.b) * 0.5, 0, 255), baseColor.a)
+                        lia.derma.rect(0, 0, ww, hh):Rad(radius):Color(tintedColor):Shape(lia.derma.SHAPE_IOS):Draw()
                     end
                 end
 
@@ -499,7 +510,7 @@ end
 local function liaScoreboardShow()
     local client = LocalPlayer()
     if hook.Run("CanPlayerOpenScoreboard", LocalPlayer()) == false then return false end
-    local tracedEntity = client:getTracedEntity(250)
+    local tracedEntity = client:getTracedEntity(100)
     if not IsValid(tracedEntity) or not tracedEntity:IsPlayer() then
         if IsValid(lia.gui.score) then
             if not lia.gui.score:IsVisible() then
