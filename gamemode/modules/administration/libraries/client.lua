@@ -1,5 +1,6 @@
 ﻿local MODULE = MODULE
 AdminStickIsOpen = false
+AdminStickMenu = nil
 local pksCount, ticketsCount, warningsCount = 0, 0, 0
 local playerInfoLabel = L("player") .. " " .. L("information")
 local subMenuIcons = {
@@ -2000,10 +2001,54 @@ local function AddCommandToMenu(menu, data, key, tgt, name, stores)
 
     if IsValid(m) then
         local ic = data.AdminStick.Icon or "icon16/page.png"
+        local id = GetIdentifier(tgt)
+        local baseCmd = "say /" .. key
+        if id ~= "" then baseCmd = baseCmd .. " " .. QuoteArgs(id) end
+        if key == "warn" then
+            local warnMenu, warnOption = m:AddSubMenu(L(name))
+            if warnOption then warnOption:SetIcon(ic) end
+            local severityOptions = {
+                {
+                    label = "Low",
+                    value = "Low"
+                },
+                {
+                    label = "Medium",
+                    value = "Medium"
+                },
+                {
+                    label = "High",
+                    value = "High"
+                }
+            }
+
+            local reasonKey = L("reason") or "reason"
+            local function openReason(selectedSeverity)
+                lia.derma.requestArguments(L(name) .. " - " .. selectedSeverity, {{reasonKey, "string"}}, function(success, argData)
+                    if not success or not argData then
+                        timer.Simple(0.1, function() AdminStickIsOpen = false end)
+                        LocalPlayer().AdminStickTarget = nil
+                        return
+                    end
+
+                    local reasonValue = argData[reasonKey] or ""
+                    local warnCmd = baseCmd .. " " .. QuoteArgs(selectedSeverity)
+                    if reasonValue ~= "" then warnCmd = warnCmd .. " " .. QuoteArgs(reasonValue) end
+                    cl:ConCommand(warnCmd)
+                    timer.Simple(0.1, function() AdminStickIsOpen = false end)
+                end, {
+                    [reasonKey] = ""
+                })
+            end
+
+            for _, option in ipairs(severityOptions) do
+                warnMenu:AddOption(option.label, function() openReason(option.value) end):SetIcon("icon16/error.png")
+            end
+            return
+        end
+
         m:AddOption(L(name), function()
-            local id = GetIdentifier(tgt)
-            local cmd = "say /" .. key
-            if id ~= "" then cmd = cmd .. " " .. QuoteArgs(id) end
+            local cmd = baseCmd
             if data.arguments and #data.arguments > 0 then
                 local argTypes = {}
                 local defaults = {}
@@ -2122,24 +2167,73 @@ function MODULE:OpenAdminStickUI(tgt)
     AdminStickIsOpen = true
     local menu = lia.derma.dermaMenu()
     if not IsValid(menu) then return end
+    AdminStickMenu = menu
     if tgt:IsPlayer() then
         local charID = tgt:getChar() and tgt:getChar():getID() or L("na")
+        local charName = tgt:getChar() and tgt:getChar():getName() or tgt:Name()
+        local steamName = tgt:IsBot() and "BOT" or tgt:SteamName() or ""
+        local steamID = tgt:IsBot() and "BOT" or tgt:SteamID() or ""
+        local steamID64 = tgt:IsBot() and "BOT" or tgt:SteamID64() or ""
+        local model = tgt:GetModel() or ""
+        local steamProfileLink = steamID64 ~= "BOT" and steamID64 ~= "" and ("https://steamcommunity.com/profiles/" .. steamID64) or ""
         local info = {
             {
-                name = L("steamIDCopyFormat", tgt:SteamID()),
+                name = "Steam Name: " .. steamName .. " (copy)",
                 cmd = function()
-                    cl:notifySuccessLocalized("adminStickCopiedToClipboard")
-                    SetClipboardText(tgt:SteamID())
+                    if steamName ~= "BOT" and steamName ~= "" then
+                        cl:notifySuccessLocalized("adminStickCopiedToClipboard")
+                        SetClipboardText(steamName)
+                    end
+
                     menu:Remove()
                     timer.Simple(0.1, function() AdminStickIsOpen = false end)
                 end,
                 icon = "icon16/page_copy.png"
             },
             {
-                name = L("nameCopyFormat", tgt:Name()),
+                name = "Steam Profile: " .. (steamProfileLink ~= "" and steamProfileLink or "N/A") .. " (copy)",
+                cmd = function()
+                    if steamProfileLink ~= "" then
+                        cl:notifySuccessLocalized("adminStickCopiedToClipboard")
+                        SetClipboardText(steamProfileLink)
+                    end
+
+                    menu:Remove()
+                    timer.Simple(0.1, function() AdminStickIsOpen = false end)
+                end,
+                icon = "icon16/page_copy.png"
+            },
+            {
+                name = L("steamIDCopyFormat", steamID),
+                cmd = function()
+                    if steamID ~= "BOT" and steamID ~= "" then
+                        cl:notifySuccessLocalized("adminStickCopiedToClipboard")
+                        SetClipboardText(steamID)
+                    end
+
+                    menu:Remove()
+                    timer.Simple(0.1, function() AdminStickIsOpen = false end)
+                end,
+                icon = "icon16/page_copy.png"
+            },
+            {
+                name = "SteamID64: " .. steamID64 .. " (copy)",
+                cmd = function()
+                    if steamID64 ~= "BOT" and steamID64 ~= "" then
+                        cl:notifySuccessLocalized("adminStickCopiedToClipboard")
+                        SetClipboardText(steamID64)
+                    end
+
+                    menu:Remove()
+                    timer.Simple(0.1, function() AdminStickIsOpen = false end)
+                end,
+                icon = "icon16/page_copy.png"
+            },
+            {
+                name = L("nameCopyFormat", charName),
                 cmd = function()
                     cl:notifySuccessLocalized("adminStickCopiedToClipboard")
-                    SetClipboardText(tgt:Name())
+                    SetClipboardText(charName)
                     menu:Remove()
                     timer.Simple(0.1, function() AdminStickIsOpen = false end)
                 end,
@@ -2158,11 +2252,46 @@ function MODULE:OpenAdminStickUI(tgt)
                 end,
                 icon = "icon16/page_copy.png"
             },
+            {
+                name = "Model: " .. model .. " (copy)",
+                cmd = function()
+                    cl:notifySuccessLocalized("adminStickCopiedToClipboard")
+                    SetClipboardText(model)
+                    menu:Remove()
+                    timer.Simple(0.1, function() AdminStickIsOpen = false end)
+                end,
+                icon = "icon16/page_copy.png"
+            },
+            {
+                name = function()
+                    local currentPos = tgt:GetPos()
+                    local currentAng = tgt:GetAngles()
+                    local posStr = string.format("Vector = (%.2f, %.2f, %.2f), Angle = (%.2f, %.2f, %.2f)", currentPos.x, currentPos.y, currentPos.z, currentAng.x, currentAng.y, currentAng.z)
+                    return "Position: " .. posStr .. " (copy)"
+                end,
+                cmd = function()
+                    local client = cl
+                    if not IsValid(client) then
+                        chat.AddText(Color(255, 0, 0), "[Lilia] " .. L("errorPrefix") .. L("commandCanOnlyBeUsedByPlayers"))
+                        return
+                    end
+
+                    local currentPos = tgt:GetPos()
+                    local currentAng = tgt:GetAngles()
+                    local posStr = string.format("Vector = (%.2f, %.2f, %.2f), Angle = (%.2f, %.2f, %.2f)", currentPos.x, currentPos.y, currentPos.z, currentAng.x, currentAng.y, currentAng.z)
+                    chat.AddText(Color(255, 255, 255), posStr)
+                    SetClipboardText(posStr)
+                    cl:notifySuccessLocalized("adminStickCopiedToClipboard")
+                    menu:Remove()
+                    timer.Simple(0.1, function() AdminStickIsOpen = false end)
+                end,
+                icon = "icon16/page_copy.png"
+            },
         }
 
-        table.sort(info, function(a, b) return a.name < b.name end)
         for _, o in ipairs(info) do
-            local option = menu:AddOption(L(o.name), o.cmd)
+            local nameText = isfunction(o.name) and o.name() or o.name
+            local option = menu:AddOption(L(nameText), o.cmd)
             option:SetIcon(o.icon)
             option:SetZPos(-100)
         end
@@ -2263,7 +2392,53 @@ function MODULE:OpenAdminStickUI(tgt)
         local canFaction = client:hasPrivilege("manageTransfers")
         local canClass = client:hasPrivilege("manageClasses")
         local canWhitelist = client:hasPrivilege("manageWhitelists")
-        if IsValid(target) and target.isStorageEntity then
+        if not target or not IsValid(target) then return end
+        local pos = target:GetPos()
+        local ang = target:GetAngles()
+        local posStr = string.format("%.2f %.2f %.2f", pos.x, pos.y, pos.z)
+        local angStr = string.format("%.2f %.2f %.2f", ang.p, ang.y, ang.r)
+        local setPosAngStr = string.format("setpos %.2f %.2f %.2f; setang %.2f %.2f %.2f", pos.x, pos.y, pos.z, ang.p, ang.y, ang.r)
+        local displayName
+        if target:IsPlayer() then
+            local char = target:getChar()
+            displayName = (char and char:getName()) or target:Nick() or target:Name() or "Unknown"
+        elseif target.GetName and target:GetName() ~= "" then
+            displayName = target:GetName()
+        else
+            displayName = target:GetClass() or "Unknown"
+        end
+
+        local copyItems = {
+            {
+                name = "Copy Name",
+                icon = "icon16/page_copy.png",
+                callback = function() SetClipboardText(displayName) end
+            },
+            {
+                name = "Copy Position",
+                icon = "icon16/page_copy.png",
+                callback = function() SetClipboardText(posStr) end
+            },
+            {
+                name = "Copy Angles",
+                icon = "icon16/page_copy.png",
+                callback = function() SetClipboardText(angStr) end
+            },
+            {
+                name = "Copy Pos + Ang (printpos)",
+                icon = "icon16/page_copy.png",
+                callback = function() SetClipboardText(setPosAngStr) end
+            }
+        }
+
+        table.insert(lists, {
+            name = "Copy",
+            category = "utility",
+            subcategory = "commands",
+            items = copyItems
+        })
+
+        if target.isStorageEntity then
             local storageOptions = {
                 {
                     name = L("removePassword"),
@@ -2285,7 +2460,7 @@ function MODULE:OpenAdminStickUI(tgt)
             })
         end
 
-        if not target or not IsValid(target) or (not target:IsPlayer() and not target.isStorageEntity) then return end
+        if not target:IsPlayer() and not target.isStorageEntity then return end
         if target:IsPlayer() then
             local char = target:getChar()
             if not char then return end
@@ -2321,8 +2496,8 @@ function MODULE:OpenAdminStickUI(tgt)
                         end
                     end
 
-                    local classes = lia.faction.getClasses and lia.faction.getClasses(facID) or {}
-                    if classes and #classes > 1 and canClass then
+                    local classes = lia.faction.getClasses(facID) or {}
+                    if classes and #classes >= 1 and canClass then
                         local cls = {}
                         for _, c in ipairs(classes) do
                             table.insert(cls, {
@@ -2485,12 +2660,14 @@ function MODULE:OpenAdminStickUI(tgt)
     function menu:OnRemove()
         cl.AdminStickTarget = nil
         AdminStickIsOpen = false
+        AdminStickMenu = nil
         hook.Run("OnAdminStickMenuClosed")
     end
 
     function menu:OnClose()
         cl.AdminStickTarget = nil
         AdminStickIsOpen = false
+        AdminStickMenu = nil
         hook.Run("OnAdminStickMenuClosed")
     end
 
@@ -3900,6 +4077,10 @@ net.Receive("liaAllWarnings", function()
         {
             name = L("warningMessage"),
             field = "message"
+        },
+        {
+            name = L("warningSeverity"),
+            field = "severity"
         }
     }
 
@@ -3924,7 +4105,7 @@ net.Receive("liaAllWarnings", function()
         for _, warn in ipairs(warnings) do
             local warnedDisplay = string.format("%s (%s)", warn.warned or "", warn.warnedSteamID or "")
             local adminDisplay = string.format("%s (%s)", warn.warner or "", warn.warnerSteamID or "")
-            local values = {warn.timestamp or "", warnedDisplay, adminDisplay, warn.message or ""}
+            local values = {warn.timestamp or "", warnedDisplay, adminDisplay, warn.message or "", warn.severity or "Medium"}
             local match = false
             if filter == "" then
                 match = true
@@ -4020,4 +4201,124 @@ function MODULE:AdminStickAddModels(modList)
     for _, class in pairs(lia.class.list or {}) do
         if class.model and isstring(class.model) then addModel(class.model, class.name or "Unknown Class") end
     end
+end
+
+function MODULE:DisplayPlayerHUDInformation(client, hudInfos)
+    if not client:getChar() then return end
+    local weapon = client:GetActiveWeapon()
+    if not IsValid(weapon) then return end
+    if weapon:GetClass() == "lia_adminstick" then
+        self:DisplayAdminStickHUD(client, hudInfos, weapon)
+    elseif weapon:GetClass() == "lia_distance" then
+        self:DisplayDistanceToolHUD(client, hudInfos, weapon)
+    end
+end
+
+function MODULE:DisplayAdminStickHUD(client, hudInfos, weapon)
+    local target = weapon:GetTarget()
+    if IsValid(target) then
+        local infoLines = {}
+        if not target:IsPlayer() and IsValid(target:GetOwner()) and target:GetOwner():IsPlayer() then target = target:GetOwner() end
+        if target:IsPlayer() then
+            local char = target:getChar()
+            local charName = char and char:getName() or target:Nick()
+            local steamName = target:IsBot() and "BOT" or target:SteamName() or ""
+            table.insert(infoLines, "Name: " .. charName)
+            table.insert(infoLines, "Steam Name: " .. steamName)
+            table.insert(infoLines, "Health: " .. target:Health() .. "/" .. target:GetMaxHealth())
+            local activeWeapon = target:GetActiveWeapon()
+            local weaponName = "None"
+            if IsValid(activeWeapon) then weaponName = activeWeapon:GetPrintName() or activeWeapon:GetClass() end
+            table.insert(infoLines, "Weapon: " .. weaponName)
+            table.insert(infoLines, "User Group: " .. target:GetUserGroup())
+            local velocity = target:GetVelocity()
+            local speed = math.Round(velocity:Length())
+            table.insert(infoLines, "Speed: " .. speed)
+        else
+            table.insert(infoLines, "Class: " .. target:GetClass())
+            local owner = target:GetOwner()
+            if IsValid(owner) and owner:IsPlayer() then
+                table.insert(infoLines, "Owner: " .. owner:Nick())
+            else
+                table.insert(infoLines, "Owner: World")
+            end
+
+            table.insert(infoLines, "Entity ID: " .. target:EntIndex())
+        end
+
+        table.insert(hudInfos, {
+            text = infoLines,
+            font = "LiliaFont.20",
+            position = {
+                x = ScrW() * 0.5,
+                y = ScrH() - 30
+            },
+            textAlignX = TEXT_ALIGN_CENTER,
+            textAlignY = TEXT_ALIGN_BOTTOM
+        })
+    end
+
+    local instructions = {"Left Click: Selects target", "Right Click: Freezes player", "Shift + R: Selects yourself", "R: Clears the selection"}
+    table.insert(hudInfos, {
+        text = instructions,
+        font = "LiliaFont.18",
+        position = {
+            x = ScrW() - 20,
+            y = 20
+        },
+        textAlignX = TEXT_ALIGN_RIGHT,
+        textAlignY = TEXT_ALIGN_TOP
+    })
+end
+
+function MODULE:DisplayDistanceToolHUD(client, hudInfos, weapon)
+    local instructions = {"Left Click: Set point", "Right Click: Clear points", "Reload: Measure current"}
+    table.insert(hudInfos, {
+        text = instructions,
+        font = "LiliaFont.18",
+        position = {
+            x = ScrW() - 20,
+            y = 20
+        },
+        textAlignX = TEXT_ALIGN_RIGHT,
+        textAlignY = TEXT_ALIGN_TOP
+    })
+
+    if weapon.StartPos then
+        local tr = client:GetEyeTrace()
+        local distance = weapon.StartPos:Distance(tr.HitPos)
+        local distanceText = string.format("Distance: %.1f units", distance)
+        table.insert(hudInfos, {
+            text = distanceText,
+            font = "LiliaFont.24",
+            position = {
+                x = ScrW() * 0.5,
+                y = 30
+            },
+            textAlignX = TEXT_ALIGN_CENTER,
+            textAlignY = TEXT_ALIGN_TOP
+        })
+    else
+        table.insert(hudInfos, {
+            text = "Click to set start point",
+            font = "LiliaFont.20",
+            position = {
+                x = ScrW() * 0.5,
+                y = 30
+            },
+            textAlignX = TEXT_ALIGN_CENTER,
+            textAlignY = TEXT_ALIGN_TOP
+        })
+    end
+
+    table.insert(hudInfos, {
+        text = distanceLines,
+        font = "LiliaFont.20",
+        position = {
+            x = 20,
+            y = ScrH() - 30
+        },
+        textAlignX = TEXT_ALIGN_LEFT,
+        textAlignY = TEXT_ALIGN_BOTTOM
+    })
 end

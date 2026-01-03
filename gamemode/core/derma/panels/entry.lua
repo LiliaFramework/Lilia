@@ -4,7 +4,7 @@ function PANEL:Init()
     self.placeholder = L("enterText")
     self:SetTall(26)
     self.action = function() end
-    local font = "LiliaFont.18"
+    self.font = "LiliaFont.18"
     self.textEntry = vgui.Create("DTextEntry", self)
     self.textEntry:Dock(FILL)
     self.textEntry:SetText("")
@@ -17,8 +17,10 @@ function PANEL:Init()
     end
 
     self._text_offset = 0
+    self._centerText = false
     self.panelColor = lia.color.theme.panel[1]
-    self.textEntry.Paint = nil
+    self.textEntry.Paint = function(s, w, h) if self._centerText then return end end
+    self.textEntry._originalPaintOver = nil
     self.textEntry.PaintOver = function(s, w, h)
         if not s._shadowLerp then s._shadowLerp = 5 end
         local target = s:IsEditing() and 10 or 5
@@ -39,17 +41,29 @@ function PANEL:Init()
 
         local value = self:GetValue()
         local padding = 6
-        if value == "" then
-            surface.SetFont(font)
-            local phColor = lia.color.theme.gray
-            draw.SimpleText(self.placeholder or "", font, padding, h * 0.5, phColor, TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)
-        end
-
+        local font = self.font or "LiliaFont.18"
         local textCol = lia.color.theme.text_entry or lia.color.theme.text or color_white
         local selBase = lia.color.theme.theme or lia.color.theme.accent or Color(100, 100, 255)
         local selCol = Color(selBase.r, selBase.g, selBase.b, 60)
         local caretCol = lia.color.theme.theme or lia.color.theme.accent or textCol
-        s:DrawTextEntryText(textCol, selCol, caretCol)
+        if self._centerText then
+            if value == "" then
+                surface.SetFont(font)
+                local phColor = lia.color.theme.gray
+                draw.SimpleText(self.placeholder or "", font, w * 0.5, h * 0.5, phColor, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
+            else
+                surface.SetFont(font)
+                draw.SimpleText(value, font, w * 0.5, h * 0.5, textCol, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
+            end
+        else
+            if value == "" then
+                surface.SetFont(font)
+                local phColor = lia.color.theme.gray
+                draw.SimpleText(self.placeholder or "", font, padding, h * 0.5, phColor, TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)
+            end
+
+            s:DrawTextEntryText(textCol, selCol, caretCol)
+        end
     end
 end
 
@@ -88,6 +102,7 @@ function PANEL:SelectAll()
 end
 
 function PANEL:SetFont(font)
+    self.font = font
     self.textEntry:SetFont(font)
 end
 
@@ -241,6 +256,20 @@ end
 
 function PANEL:SetMultiline(multiline)
     if self.textEntry.SetMultiline then self.textEntry:SetMultiline(multiline) end
+end
+
+function PANEL:SetContentAlignment(align)
+    if align == TEXT_ALIGN_CENTER or align == 5 then
+        self._centerText = true
+        if IsValid(self.textEntry) then
+            self.textEntry.Paint = function(s, w, h) return end
+            self.textEntry:SetPaintBackground(false)
+            self.textEntry:SetPaintBorder(false)
+        end
+    else
+        self._centerText = false
+        if IsValid(self.textEntry) then self.textEntry.Paint = function(s, w, h) if self._centerText then return end end end
+    end
 end
 
 function PANEL:OnChange()

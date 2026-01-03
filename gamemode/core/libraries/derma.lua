@@ -81,14 +81,17 @@ function lia.derma.optionsMenu(rawOptions, config)
     elseif mode == "interaction" then
         if not IsValid(ent) then return end
         for id, option in pairs(rawOptions or {}) do
-            if option.type == "interaction" and lia.playerinteract and lia.playerinteract.isWithinRange(client, ent, option.range) then
-                local targetType = option.target or "player"
-                local isPlayerTarget = ent:IsPlayer()
-                local targetMatches = targetType == "any" or targetType == "player" and isPlayerTarget or targetType == "entity" and not isPlayerTarget
-                if targetMatches then
-                    local shouldShow = true
-                    if option.shouldShow then shouldShow = option.shouldShow(client, ent) end
-                    if shouldShow then addOption(id, option) end
+            if option.type == "interaction" and lia.playerinteract then
+                local maxRange = option.range and math.min(option.range, 100) or 100
+                if lia.playerinteract.isWithinRange(client, ent, maxRange) then
+                    local targetType = option.target or "player"
+                    local isPlayerTarget = ent:IsPlayer()
+                    local targetMatches = targetType == "any" or targetType == "player" and isPlayerTarget or targetType == "entity" and not isPlayerTarget
+                    if targetMatches then
+                        local shouldShow = true
+                        if option.shouldShow then shouldShow = option.shouldShow(client, ent) end
+                        if shouldShow then addOption(id, option) end
+                    end
                 end
             end
         end

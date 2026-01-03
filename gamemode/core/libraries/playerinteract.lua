@@ -17,13 +17,13 @@ lia.playerinteract._lastSyncInteractionCount = lia.playerinteract._lastSyncInter
 lia.playerinteract._lastSyncCategoryCount = lia.playerinteract._lastSyncCategoryCount or 0
 function lia.playerinteract.isWithinRange(client, entity, customRange)
     if not IsValid(client) or not IsValid(entity) then return false end
-    local range = customRange or 250
+    local range = customRange or 100
     return entity:GetPos():DistToSqr(client:GetPos()) < range * range
 end
 
 function lia.playerinteract.getInteractions(client)
     client = client or LocalPlayer()
-    local ent = client:getTracedEntity(250)
+    local ent = client:getTracedEntity(100)
     if not IsValid(ent) then return {} end
     local interactions = {}
     local isPlayerTarget = ent:IsPlayer()
@@ -87,7 +87,7 @@ end
 if SERVER then
     function lia.playerinteract.addInteraction(name, data)
         data.type = "interaction"
-        data.range = data.range or 250
+        data.range = data.range or 100
         data.category = data.category or L("categoryUnsorted")
         data.target = data.target or "player"
         data.timeToComplete = data.timeToComplete or nil
@@ -114,7 +114,7 @@ if SERVER then
 
     function lia.playerinteract.addAction(name, data)
         data.type = "action"
-        data.range = data.range or 250
+        data.range = data.range or 100
         data.category = data.category or L("categoryUnsorted")
         data.timeToComplete = data.timeToComplete or nil
         data.actionText = data.actionText or nil
@@ -267,7 +267,7 @@ else
     function lia.playerinteract.openMenu(options, isInteraction, titleText, closeKey, netMsg, preFiltered)
         local client = LocalPlayer()
         if not IsValid(client) then return end
-        local ent = isfunction(client.getTracedEntity) and client:getTracedEntity(250) or NULL
+        local ent = isfunction(client.getTracedEntity) and client:getTracedEntity(100) or NULL
         return lia.derma.optionsMenu(options, {
             mode = isInteraction and "interaction" or "action",
             title = titleText,

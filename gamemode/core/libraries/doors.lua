@@ -80,7 +80,11 @@ if SERVER then
             if cachedData[key] ~= nil then
                 fullData[key] = cachedData[key]
             else
-                fullData[key] = defaultValue
+                if istable(defaultValue) then
+                    fullData[key] = table.Copy(defaultValue)
+                else
+                    fullData[key] = defaultValue
+                end
             end
         end
         return fullData
@@ -226,7 +230,11 @@ if CLIENT then
             if cachedData[key] ~= nil then
                 fullData[key] = cachedData[key]
             else
-                fullData[key] = defaultValue
+                if istable(defaultValue) then
+                    fullData[key] = table.Copy(defaultValue)
+                else
+                    fullData[key] = defaultValue
+                end
             end
         end
         return fullData

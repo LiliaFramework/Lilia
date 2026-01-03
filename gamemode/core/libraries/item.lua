@@ -22,7 +22,7 @@ lia.item.WeaponsBlackList = lia.item.WeaponsBlackList or {
     weapon_medkit = true,
     gmod_camera = true,
     gmod_tool = true,
-    adminstick = true,
+    lia_adminstick = true,
     lia_hands = true,
     lia_keys = true
 }

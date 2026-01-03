@@ -320,13 +320,6 @@ function playerMeta:isStaff()
     return groupHasType(self:GetUserGroup(), "Staff")
 end
 
-function playerMeta:isVIP()
-    local userGroup = self:GetUserGroup()
-    if userGroup == "superadmin" or userGroup == "admin" then return true end
-    local hasVIP = groupHasType(userGroup, "VIP")
-    return hasVIP
-end
-
 function playerMeta:isStaffOnDuty()
     return self:Team() == FACTION_STAFF
 end

@@ -1053,6 +1053,26 @@ function ClientAddText(client, ...)
     net.Send(client)
 end
 
+function ClientAddTextShadowed(client, ...)
+    if not client or not IsValid(client) then
+        lia.error(L("invalidClientChatAddText"))
+        return
+    end
+
+    local args = {...}
+    net.Start("liaServerChatAddTextShadowed")
+    net.WriteTable(args)
+    net.Send(client)
+end
+
+function StaffAddTextShadowed(tagColor, tagText, messageColor, message, predicate)
+    local timestamp = os.date("%Y-%m-%d %H:%M:%S", os.time())
+    for _, staff in player.Iterator() do
+        local isStaff = staff:isStaffOnDuty() or staff:hasPrivilege("canSeeLogs")
+        if (predicate and predicate(staff)) or isStaff then ClientAddTextShadowed(staff, tagColor or Color(255, 255, 255), tagText or "", messageColor or Color(255, 255, 255), " | " .. timestamp .. " | " .. message) end
+    end
+end
+
 local function UpdateVoiceHearing()
     if not lia.config.get("IsVoiceEnabled", true) then return end
     local speakerGaggedCache = {}

@@ -39,14 +39,6 @@
 liaCharacterBiography
 --[[
     Purpose:
-        Displays and manages character faction selection
-        A panel for selecting and displaying character factions
-    When Used:
-        During character creation or faction management interfaces
-]]
-liaCharacterFaction
---[[
-    Purpose:
         Displays character model with customization options
         A model panel specifically designed for character model display and customization
     When Used:

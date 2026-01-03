@@ -298,14 +298,18 @@ function MODULE:TicketSystemClaim(admin, requester)
         adminSteamID = admin:SteamID(),
         message = ticket and ticket.message or ""
     }, nil, "ticketclaims")
+
+    local requesterInfo = requester:Name() .. " (Steam64ID: " .. requester:SteamID64() .. ")"
+    local adminInfo = admin:Name() .. " (Steam64ID: " .. admin:SteamID64() .. ")"
+    StaffAddTextShadowed(Color(0, 191, 255), "TICKET", Color(255, 255, 255), adminInfo .. " claimed a ticket from " .. requesterInfo)
 end
 
 function MODULE:TicketSystemClose(admin, requester)
     lia.db.count("ticketclaims", "adminSteamID = " .. lia.db.convertDataType(admin:SteamID())):next(function(count) lia.log.add(admin, "ticketClosed", requester:Name(), count) end)
 end
 
-function MODULE:WarningIssued(admin, target, reason, index)
-    lia.db.count("warnings", "charID = " .. lia.db.convertDataType(target:getChar():getID())):next(function(count) lia.log.add(admin, "warningIssued", target, reason, count, index) end)
+function MODULE:WarningIssued(admin, target, reason, severity, index)
+    lia.db.count("warnings", "charID = " .. lia.db.convertDataType(target:getChar():getID())):next(function(count) lia.log.add(admin, "warningIssued", target, reason, severity or "Medium", count, index) end)
 end
 
 function MODULE:WarningRemoved(admin, target, warning, index)
@@ -373,6 +377,8 @@ net.Receive("liaManagesitroomsAction", function(_, client)
             client:SetPos(targetPos)
             client:notifySuccessLocalized("sitroomTeleport", name)
             lia.log.add(client, "sendToSitRoom", client:Name(), name)
+            local message = client:Name() .. " (Steam64ID: " .. client:SteamID64() .. ") teleported to sit room \"" .. name .. "\"."
+            StaffAddTextShadowed(Color(123, 104, 238), "SIT", Color(255, 255, 255), message)
         end
     elseif action == 2 then
         local newName = net.ReadString()
@@ -478,32 +484,69 @@ end)
 
 net.Receive("liaRequestAllFlags", function(_, client)
     if not client:hasPrivilege("manageFlags") then return end
-    local data = {}
-    for _, ply in player.Iterator() do
-        local char = ply:getChar()
-        if char then
-            data[#data + 1] = {
-                name = ply:Name(),
-                steamID = ply:SteamID(),
-                flags = char:getFlags() or "",
-            }
-        end
-    end
+    lia.db.fieldExists("lia_characters", "charflags"):next(function(exists)
+        if not exists then lia.db.query("ALTER TABLE lia_characters ADD COLUMN charflags VARCHAR(255) DEFAULT ''") end
+        lia.db.query([[SELECT c.id, c.name, c.steamID, COALESCE(c.charflags, '') AS flags
+FROM lia_characters AS c]], function(charData)
+            lia.db.query([[SELECT d.charID, d.value AS flags
+FROM lia_chardata AS d
+WHERE d.key = 'flags']], function(chardata)
+                local chardataFlags = {}
+                for _, row in ipairs(chardata or {}) do
+                    if row.value and row.value ~= "" then
+                        local ok, decoded = pcall(pon.decode, row.value)
+                        if ok and decoded then chardataFlags[row.charID] = decoded[1] or "" end
+                    end
+                end
 
-    lia.net.writeBigTable(client, "liaAllFlags", data)
+                local processedData = {}
+                for _, row in ipairs(charData or {}) do
+                    local char = lia.char.loaded[row.id]
+                    local flags = row.flags or ""
+                    if flags == "" and chardataFlags[row.id] then flags = chardataFlags[row.id] end
+                    if char then
+                        local memoryFlags = char:getFlags() or ""
+                        if memoryFlags ~= "" then flags = memoryFlags end
+                    end
+
+                    processedData[#processedData + 1] = {
+                        name = row.name or "",
+                        steamID = row.steamID or "",
+                        flags = flags,
+                    }
+                end
+
+                lia.net.writeBigTable(client, "liaAllFlags", processedData)
+            end)
+        end)
+    end)
 end)
 
 net.Receive("liaModifyFlags", function(_, client)
     if not client:hasPrivilege("manageFlags") then return end
     local steamID = net.ReadString()
     local flags = net.ReadString()
-    local target = lia.util.findPlayerBySteamID(steamID)
-    if not IsValid(target) then return end
     flags = string.gsub(flags or "", "%s", "")
-    local char = target:getChar()
-    if not char then return end
-    char:setFlags(flags)
-    client:notifySuccessLocalized("flagSet", client:Name(), target:Name(), flags)
+    local target = lia.util.findPlayerBySteamID(steamID)
+    if IsValid(target) then
+        local char = target:getChar()
+        if not char then return end
+        char:setFlags(flags)
+        client:notifySuccessLocalized("flagSet", client:Name(), target:Name(), flags)
+        return
+    end
+
+    lia.db.query("SELECT id, name FROM lia_characters WHERE steamID = " .. lia.db.convertDataType(steamID) .. " LIMIT 1", function(data)
+        if not data or not data[1] then
+            client:notifyLocalized("playerNotFound")
+            return
+        end
+
+        local charID = data[1].id
+        local charName = data[1].name
+        lia.char.setCharDatabase(charID, "flags", flags)
+        client:notifySuccessLocalized("flagSet", client:Name(), charName, flags)
+    end)
 end)
 
 local function buildSummary()
@@ -1101,15 +1144,16 @@ end)
 
 function MODULE:GetWarnings(charID)
     local condition = "charID = " .. lia.db.convertDataType(charID)
-    return lia.db.select({"id", "timestamp", "message", "warner", "warnerSteamID"}, "warnings", condition):next(function(res) return res.results or {} end)
+    return lia.db.select({"id", "timestamp", "message", "warner", "warnerSteamID", "severity"}, "warnings", condition):next(function(res) return res.results or {} end)
 end
 
 function MODULE:GetWarningsByIssuer(steamID)
     local condition = "warnerSteamID = " .. lia.db.convertDataType(steamID)
-    return lia.db.select({"id", "timestamp", "message", "warned", "warnedSteamID", "warner", "warnerSteamID"}, "warnings", condition):next(function(res) return res.results or {} end)
+    return lia.db.select({"id", "timestamp", "message", "warned", "warnedSteamID", "warner", "warnerSteamID", "severity"}, "warnings", condition):next(function(res) return res.results or {} end)
 end
 
-function MODULE:AddWarning(charID, warned, warnedSteamID, timestamp, message, warner, warnerSteamID)
+function MODULE:AddWarning(charID, warned, warnedSteamID, timestamp, message, warner, warnerSteamID, severity)
+    local finalSeverity = severity or "Medium"
     lia.db.insertTable({
         charID = charID,
         warned = warned,
@@ -1117,8 +1161,10 @@ function MODULE:AddWarning(charID, warned, warnedSteamID, timestamp, message, wa
         timestamp = timestamp,
         message = message,
         warner = warner,
-        warnerSteamID = warnerSteamID
+        warnerSteamID = warnerSteamID,
+        severity = finalSeverity
     }, nil, "warnings")
+    return finalSeverity
 end
 
 function MODULE:RemoveWarning(charID, index)
@@ -1173,7 +1219,7 @@ end)
 
 net.Receive("liaRequestAllWarnings", function(_, client)
     if not client:hasPrivilege("viewPlayerWarnings") then return end
-    lia.db.select({"timestamp", "warned", "warnedSteamID", "warner", "warnerSteamID", "message"}, "warnings"):next(function(res)
+    lia.db.select({"timestamp", "warned", "warnedSteamID", "warner", "warnerSteamID", "message", "severity"}, "warnings"):next(function(res)
         net.Start("liaAllWarnings")
         net.WriteTable(res.results or {})
         net.Send(client)

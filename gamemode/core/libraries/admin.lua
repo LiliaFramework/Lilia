@@ -711,6 +711,10 @@ if SERVER then
             return false
         end
 
+        local function staffAction(tag, text)
+            StaffAddTextShadowed(Color(255, 215, 0), tag, Color(255, 255, 255), text)
+        end
+
         local target
         if IsValid(victim) then
             target = victim
@@ -723,10 +727,12 @@ if SERVER then
             return false
         end
 
+        local targetInfo = target:Name() .. " (Steam64ID: " .. target:SteamID64() .. ")"
         if cmd == "kick" then
             target:Kick(reason or L("genericReason"))
             admin:notifySuccessLocalized("plyKicked")
             lia.log.add(admin, "plyKick", target:Name())
+            staffAction("KICK", admin:Name() .. " kicked " .. target:Name() .. " (Steam64ID: " .. target:SteamID64() .. ")")
             lia.db.insertTable({
                 player = target:Name(),
                 playerSteamID = target:SteamID(),
@@ -741,6 +747,7 @@ if SERVER then
             target:banPlayer(reason, tonumber(dur) or 0, admin)
             admin:notifySuccessLocalized("plyBanned")
             lia.log.add(admin, "plyBan", target:Name())
+            staffAction("BAN", admin:Name() .. " banned " .. target:Name() .. " (Steam64ID: " .. target:SteamID64() .. ")")
             return true
         elseif cmd == "unban" then
             local steamid = IsValid(target) and target:SteamID() or tostring(victim)
@@ -748,6 +755,7 @@ if SERVER then
                 lia.db.query("DELETE FROM lia_bans WHERE playerSteamID = " .. lia.db.convertDataType(steamid))
                 admin:notifySuccessLocalized("playerUnbanned")
                 lia.log.add(admin, "plyUnban", steamid)
+                staffAction("UNBAN", admin:Name() .. " unbanned SteamID " .. steamid)
                 return true
             end
         elseif cmd == "mute" then
@@ -765,6 +773,7 @@ if SERVER then
                     timestamp = os.time()
                 }, nil, "staffactions")
 
+                staffAction("MUTE", admin:Name() .. " muted " .. target:Name() .. " (Steam64ID: " .. target:SteamID64() .. ")")
                 hook.Run("PlayerMuted", target, admin)
                 return true
             end
@@ -773,6 +782,7 @@ if SERVER then
                 target:setLiliaData("liaMuted", false)
                 admin:notifySuccessLocalized("plyUnmuted")
                 lia.log.add(admin, "plyUnmute", target:Name())
+                staffAction("UNMUTE", admin:Name() .. " unmuted " .. target:Name() .. " (Steam64ID: " .. target:SteamID64() .. ")")
                 hook.Run("PlayerUnmuted", target, admin)
                 return true
             end
@@ -780,12 +790,14 @@ if SERVER then
             target:setLiliaData("liaGagged", true)
             admin:notifySuccessLocalized("plyGagged")
             lia.log.add(admin, "plyGag", target:Name())
+            staffAction("GAG", admin:Name() .. " gagged " .. targetInfo)
             hook.Run("PlayerGagged", target, admin)
             return true
         elseif cmd == "ungag" then
             target:setLiliaData("liaGagged", false)
             admin:notifySuccessLocalized("plyUngagged")
             lia.log.add(admin, "plyUngag", target:Name())
+            staffAction("UNGAG", admin:Name() .. " ungagged " .. targetInfo)
             hook.Run("PlayerUngagged", target, admin)
             return true
         elseif cmd == "freeze" then
@@ -794,17 +806,20 @@ if SERVER then
             if duration > 0 then timer.Simple(duration, function() if IsValid(target) then target:Freeze(false) end end) end
             admin:notifySuccessLocalized("plyFrozen", target:Name())
             lia.log.add(admin, "plyFreeze", target:Name(), duration)
+            staffAction("FREEZE", admin:Name() .. " froze " .. targetInfo)
             return true
         elseif cmd == "unfreeze" then
             target:Freeze(false)
             admin:notifySuccessLocalized("plyUnfrozen", target:Name())
             lia.log.add(admin, "plyUnfreeze", target:Name())
+            staffAction("UNFREEZE", admin:Name() .. " unfroze " .. targetInfo)
             return true
         elseif cmd == "slay" then
             target:Kill()
             timer.Simple(0.05, function() if IsValid(target) and not target:Alive() then hook.Run("PlayerDeath", target, nil, admin) end end)
             admin:notifySuccessLocalized("plyKilled")
             lia.log.add(admin, "plySlay", target:Name())
+            staffAction("SLAY", admin:Name() .. " slayed " .. targetInfo)
             return true
         elseif cmd == "kill" then
             target:Kill()
@@ -819,6 +834,8 @@ if SERVER then
                 staffSteamID = admin:SteamID(),
                 timestamp = os.time()
             }, nil, "staffactions")
+
+            staffAction("KILL", admin:Name() .. " killed " .. targetInfo)
             return true
         elseif cmd == "bring" then
             returnPositions = returnPositions or {}
@@ -826,6 +843,7 @@ if SERVER then
             target:SetPos(admin:GetPos() + admin:GetForward() * 50)
             admin:notifySuccessLocalized("plyBrought", target:Name())
             lia.log.add(admin, "plyBring", target:Name())
+            staffAction("BRING", admin:Name() .. " brought " .. targetInfo)
             return true
         elseif cmd == "goto" then
             returnPositions = returnPositions or {}
@@ -833,6 +851,7 @@ if SERVER then
             admin:SetPos(target:GetPos() + target:GetForward() * 50)
             admin:notifySuccessLocalized("plyGoto", target:Name())
             lia.log.add(admin, "plyGoto", target:Name())
+            staffAction("GOTO", admin:Name() .. " went to " .. targetInfo)
             return true
         elseif cmd == "return" then
             returnPositions = returnPositions or {}
@@ -843,6 +862,7 @@ if SERVER then
                 returnPositions[admin] = nil
                 admin:notifySuccessLocalized("plyReturned", IsValid(target) and target:Name() or admin:Name())
                 lia.log.add(admin, "plyReturn", IsValid(target) and target:Name() or admin:Name())
+                staffAction("RETURN", admin:Name() .. " returned " .. targetInfo)
                 return true
             end
         elseif cmd == "jail" then
@@ -859,43 +879,52 @@ if SERVER then
                 staffSteamID = admin:SteamID(),
                 timestamp = os.time()
             }, nil, "staffactions")
+
+            staffAction("JAIL", admin:Name() .. " jailed " .. targetInfo)
             return true
         elseif cmd == "unjail" then
             target:UnLock()
             target:Freeze(false)
             admin:notifySuccessLocalized("plyUnjailed", target:Name())
             lia.log.add(admin, "plyUnjail", target:Name())
+            staffAction("UNJAIL", admin:Name() .. " unjailed " .. targetInfo)
             return true
         elseif cmd == "cloak" then
             target:SetNoDraw(true)
             admin:notifySuccessLocalized("plyCloaked", target:Name())
             lia.log.add(admin, "plyCloak", target:Name())
+            staffAction("CLOAK", admin:Name() .. " cloaked " .. targetInfo)
             return true
         elseif cmd == "uncloak" then
             target:SetNoDraw(false)
             admin:notifySuccessLocalized("plyUncloaked", target:Name())
             lia.log.add(admin, "plyUncloak", target:Name())
+            staffAction("UNCLOAK", admin:Name() .. " uncloaked " .. targetInfo)
             return true
         elseif cmd == "god" then
             target:GodEnable()
             admin:notifySuccessLocalized("plyGodded", target:Name())
             lia.log.add(admin, "plyGod", target:Name())
+            staffAction("GOD", admin:Name() .. " enabled god mode for " .. targetInfo)
             return true
         elseif cmd == "ungod" then
             target:GodDisable()
             admin:notifySuccessLocalized("plyUngodded", target:Name())
             lia.log.add(admin, "plyUngod", target:Name())
+            staffAction("UNGOD", admin:Name() .. " disabled god mode for " .. targetInfo)
             return true
         elseif cmd == "ignite" then
             local duration = tonumber(dur) or 5
             target:Ignite(duration)
             admin:notifySuccessLocalized("plyIgnited", target:Name())
             lia.log.add(admin, "plyIgnite", target:Name(), duration)
+            staffAction("IGNITE", admin:Name() .. " ignited " .. targetInfo)
             return true
         elseif cmd == "extinguish" or cmd == "unignite" then
             target:Extinguish()
             admin:notifySuccessLocalized("plyExtinguished", target:Name())
             lia.log.add(admin, "plyExtinguish", target:Name())
+            staffAction("EXTINGUISH", admin:Name() .. " extinguished " .. targetInfo)
             return true
         elseif cmd == "strip" then
             target:StripWeapons()
@@ -910,6 +939,8 @@ if SERVER then
                 staffSteamID = admin:SteamID(),
                 timestamp = os.time()
             }, nil, "staffactions")
+
+            staffAction("STRIP", admin:Name() .. " stripped weapons from " .. targetInfo)
             return true
         elseif cmd == "respawn" then
             target:Spawn()
@@ -925,6 +956,8 @@ if SERVER then
                 staffSteamID = admin:SteamID(),
                 timestamp = os.time()
             }, nil, "staffactions")
+
+            staffAction("RESPAWN", admin:Name() .. " respawned " .. targetInfo)
             return true
         elseif cmd == "blind" then
             net.Start("liaBlindTarget")
@@ -952,6 +985,8 @@ if SERVER then
                 staffSteamID = admin:SteamID(),
                 timestamp = os.time()
             }, nil, "staffactions")
+
+            staffAction("BLIND", admin:Name() .. " blinded " .. targetInfo)
             return true
         elseif cmd == "unblind" then
             net.Start("liaBlindTarget")
@@ -959,6 +994,7 @@ if SERVER then
             net.Send(target)
             admin:notifySuccessLocalized("plyUnblinded", target:Name())
             lia.log.add(admin, "plyUnblind", target:Name())
+            staffAction("UNBLIND", admin:Name() .. " unblinded " .. targetInfo)
             return true
         end
         return false

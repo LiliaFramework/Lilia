@@ -73,6 +73,7 @@ end
 
 function PANEL:setActive(state)
     self.active = state
+    lia.chat.wasActive = state
     if IsValid(self.cls) then self.cls:SetVisible(state) end
     if IsValid(self.top_panel) then self.top_panel:SetVisible(state) end
     self:setScrollbarVisible(state)
@@ -324,9 +325,13 @@ function PANEL:setActive(state)
 end
 
 function PANEL:addText(...)
+    lia.chat = lia.chat or {}
+    lia.chat.persistedMessages = lia.chat.persistedMessages or {}
+    local shouldPersist = not self.skipPersist
+    local argList = {...}
     local markup = "<font=LiliaFont.20>"
-    markup = hook.Run("ChatAddText", markup, ...) or markup
-    for _, item in ipairs({...}) do
+    markup = hook.Run("ChatAddText", markup, unpack(argList)) or markup
+    for _, item in ipairs(argList) do
         if item and istable(item) and item.GetName and item.Width and item.Height then
             local matName = item:GetName()
             markup = markup .. "<img=" .. matName .. "," .. item:Width() .. "x" .. item:Height() .. ">"
@@ -348,10 +353,10 @@ function PANEL:addText(...)
     local panel = self.scroll:Add("liaMarkupPanel")
     panel:SetWide(self:GetWide() - 16)
     panel:setMarkup(markup)
-    panel.originalArgs = {...}
+    panel.originalArgs = argList
     panel.markupArgs = {
         markup = markup,
-        arguments = {...},
+        arguments = argList,
         themeState = {
             chatColor = lia.color.theme.chat,
             chatListenColor = lia.color.theme.chatListen
@@ -374,6 +379,21 @@ function PANEL:addText(...)
     panel:SetPos(0, self.lastY)
     self.lastY = self.lastY + panel:GetTall() + 2
     timer.Simple(0.01, function() if IsValid(self.scroll) and IsValid(panel) then self.scroll:ScrollToChild(panel) end end)
+    if shouldPersist then
+        local history = lia.chat.persistedMessages
+        history[#history + 1] = {
+            arguments = argList
+        }
+
+        local maxEntries = 200
+        if #history > maxEntries then
+            local overflow = #history - maxEntries
+            for i = 1, overflow do
+                table.remove(history, 1)
+            end
+        end
+    end
+
     if not self.active then
         self:SetVisible(true)
         if IsValid(self.scroll) then self.scroll:SetVisible(true) end

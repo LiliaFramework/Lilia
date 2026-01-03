@@ -21,6 +21,16 @@
     end
 end)
 
+net.Receive("liaInsertKeyPressed", function(_, client)
+    if not IsValid(client) then return end
+    local char = client:getChar()
+    if not char then return end
+    local charID = char:getID()
+    local steamId = client:SteamID64()
+    local message = client:Name() .. " (Character " .. charID .. " | Steam64ID: " .. steamId .. ") pressed the Insert key."
+    StaffAddTextShadowed(Color(255, 165, 0), "INSERT", Color(255, 255, 255), message, function(staff) return staff:hasPrivilege("seeInsertNotifications") end)
+end)
+
 net.Receive("liaStringRequest", function(_, client)
     local id = net.ReadUInt(32)
     local value = net.ReadString()
@@ -128,7 +138,11 @@ net.Receive("liaCheckHack", function(_, client)
             local warnsModule = lia.module.get("administration")
             if warnsModule and warnsModule.AddWarning then
                 local timestamp = os.date("%Y-%m-%d %H:%M:%S")
-                warnsModule:AddWarning(client:getChar():getID(), client:Nick(), client:SteamID(), timestamp, L("cheaterWarningReason"), "System", "SYSTEM")
+                local severity = "High"
+                warnsModule:AddWarning(client:getChar():getID(), client:Nick(), client:SteamID(), timestamp, L("cheaterWarningReason"), "System", "SYSTEM", severity)
+                local charID = client:getChar():getID()
+                local message = client:Name() .. " (Character " .. charID .. " | Steam64ID: " .. client:SteamID64() .. ") was flagged for cheating. Severity: " .. severity .. "."
+                StaffAddTextShadowed(Color(255, 0, 0), "CHEAT", Color(255, 255, 255), message, function(staff) return staff:hasPrivilege("receiveCheaterNotifications") end)
             end
         end
     end
@@ -765,7 +779,7 @@ net.Receive("liaRequestInteractOptions", function(_, ply)
     local requestType = net.ReadString()
     local options = {}
     if requestType == "interaction" then
-        local ent = ply:getTracedEntity(250)
+        local ent = ply:getTracedEntity(100)
         if not IsValid(ent) then
             net.Start("liaProvideInteractOptions")
             net.WriteString(requestType)
@@ -775,31 +789,34 @@ net.Receive("liaRequestInteractOptions", function(_, ply)
         end
 
         for name, opt in pairs(lia.playerinteract.stored or {}) do
-            if opt.type == "interaction" and lia.playerinteract.isWithinRange(ply, ent, opt.range) then
-                local targetType = opt.target or "player"
-                local isPlayerTarget = ent:IsPlayer()
-                local targetMatches = targetType == "any" or targetType == "player" and isPlayerTarget or targetType == "entity" and not isPlayerTarget
-                if targetMatches then
-                    local canShow = true
-                    if opt.shouldShow then
-                        local ok, res = pcall(opt.shouldShow, ply, ent)
-                        canShow = ok and res ~= false
-                    end
+            if opt.type == "interaction" then
+                local maxRange = opt.range and math.min(opt.range, 100) or 100
+                if lia.playerinteract.isWithinRange(ply, ent, maxRange) then
+                    local targetType = opt.target or "player"
+                    local isPlayerTarget = ent:IsPlayer()
+                    local targetMatches = targetType == "any" or targetType == "player" and isPlayerTarget or targetType == "entity" and not isPlayerTarget
+                    if targetMatches then
+                        local canShow = true
+                        if opt.shouldShow then
+                            local ok, res = pcall(opt.shouldShow, ply, ent)
+                            canShow = ok and res ~= false
+                        end
 
-                    if canShow then
-                        options[#options + 1] = {
-                            name = name,
-                            opt = {
-                                type = opt.type,
-                                serverOnly = opt.serverOnly and true or false,
-                                range = opt.range,
-                                category = opt.category or "",
-                                target = opt.target,
-                                timeToComplete = opt.timeToComplete,
-                                actionText = opt.actionText,
-                                targetActionText = opt.targetActionText
+                        if canShow then
+                            options[#options + 1] = {
+                                name = name,
+                                opt = {
+                                    type = opt.type,
+                                    serverOnly = opt.serverOnly and true or false,
+                                    range = opt.range,
+                                    category = opt.category or "",
+                                    target = opt.target,
+                                    timeToComplete = opt.timeToComplete,
+                                    actionText = opt.actionText,
+                                    targetActionText = opt.targetActionText
+                                }
                             }
-                        }
+                        end
                     end
                 end
             end

@@ -59,10 +59,11 @@ function PANEL:Init()
     end
 end
 
-function PANEL:AddChoice(text, data)
+function PANEL:AddChoice(text, data, tooltip)
     table.insert(self.choices, {
         text = text,
-        data = data
+        data = data,
+        tooltip = tooltip
     })
 
     if not self.opened then
@@ -191,6 +192,7 @@ function PANEL:OpenMenu()
                 option:DockMargin(2, 2, 2, 0)
                 option:SetTall(itemHeight)
                 option:SetCursor("hand")
+                if choice.tooltip and choice.tooltip ~= "" then option:SetTooltip(choice.tooltip) end
                 option.Paint = function(s, w, h)
                     if not IsValid(self) then return end
                     local isSelected = self.selected == choice.text
@@ -248,6 +250,7 @@ function PANEL:OpenMenu()
                 option:DockMargin(2, 2, 2, 0)
                 option:SetTall(itemHeight)
                 option:SetCursor("hand")
+                if choice.tooltip and choice.tooltip ~= "" then option:SetTooltip(choice.tooltip) end
                 option.Paint = function(s, w, h)
                     if not IsValid(self) then return end
                     local isSelected = self.selected == choice.text

@@ -69,11 +69,28 @@ local function applyInventorySize(client, character)
     if sizeChanged or removed then inv:sync(client) end
 end
 
+function MODULE:CharRestored(character)
+    if character and character:getID() then
+        local charID = character:getID()
+        local chardata = lia.char.getCharData(charID)
+        if chardata then
+            character.dataVars = character.dataVars or {}
+            for key, value in pairs(chardata) do
+                if character.dataVars[key] == nil then character.dataVars[key] = value end
+            end
+        end
+    end
+end
+
 function MODULE:PlayerLoadedChar(client, character)
     applyInventorySize(client, character)
 end
 
 function MODULE:OnCharCreated(client, character)
+    applyInventorySize(client, character)
+end
+
+function MODULE:ApplyInventorySizeOverride(client, character)
     applyInventorySize(client, character)
 end
 

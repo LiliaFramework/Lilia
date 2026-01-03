@@ -8,7 +8,13 @@ function PANEL:SetModel(model)
     DModelPanel.SetModel(self, model)
     local ent = self.Entity
     if not IsValid(ent) then return end
-    local seq = ent:SelectWeightedSequence(ACT_IDLE)
+    local seq = ent:LookupSequence("idle_all_01")
+    if seq > 0 then
+        ent:ResetSequence(seq)
+        return
+    end
+
+    seq = ent:SelectWeightedSequence(ACT_IDLE)
     if seq <= 0 then seq = ent:LookupSequence("idle_unarmed") end
     if seq > 0 then
         ent:ResetSequence(seq)

@@ -136,2050 +136,2048 @@ Count: 22 functions
 Count: 4 functions
 
 - `lia.chat.parse(client, message, noSend)`
-  - Undefined Realm
+  - Shared
 - `lia.chat.register(chatType, data)`
-  - Undefined Realm
+  - Shared
 - `lia.chat.send(speaker, chatType, text, anonymous, receivers)`
-  - Undefined Realm
+  - Shared
 - `lia.chat.timestamp(ooc)`
-  - Undefined Realm
+  - Shared
 
 #### lia.class
 Count: 9 functions
 
 - `lia.class.canBe(client, class)`
-  - Undefined Realm
+  - Shared
 - `lia.class.get(identifier)`
-  - Undefined Realm
+  - Shared
 - `lia.class.getPlayerCount(class)`
-  - Undefined Realm
+  - Shared
 - `lia.class.getPlayers(class)`
-  - Undefined Realm
+  - Shared
 - `lia.class.hasWhitelist(class)`
-  - Undefined Realm
+  - Shared
 - `lia.class.loadFromDir(directory)`
-  - Undefined Realm
+  - Shared
 - `lia.class.register(uniqueID, data)`
-  - Undefined Realm
+  - Shared
 - `lia.class.retrieveClass(class)`
-  - Undefined Realm
+  - Shared
 - `lia.class.retrieveJoinable(client)`
-  - Undefined Realm
+  - Shared
 
 #### lia.color
 Count: 16 functions
 
 - `lia.color.adjust(color, rOffset, gOffset, bOffset, aOffset)`
-  - Undefined Realm
+  - Shared
 - `lia.color.applyTheme(themeName, useTransition)`
-  - Undefined Realm
+  - Shared
 - `lia.color.calculateNegativeColor(mainColor)`
-  - Undefined Realm
+  - Shared
 - `lia.color.darken(color, factor)`
-  - Undefined Realm
+  - Shared
 - `lia.color.getAllThemes()`
-  - Undefined Realm
+  - Shared
 - `lia.color.getCurrentTheme()`
-  - Undefined Realm
+  - Shared
 - `lia.color.getCurrentThemeName()`
-  - Undefined Realm
+  - Shared
 - `lia.color.getMainColor()`
-  - Undefined Realm
+  - Shared
 - `lia.color.isColor(v)`
-  - Undefined Realm
+  - Shared
 - `lia.color.isTransitionActive()`
-  - Undefined Realm
+  - Shared
 - `lia.color.lerp(frac, col1, col2)`
-  - Undefined Realm
+  - Shared
 - `lia.color.register(name, color)`
-  - Undefined Realm
+  - Shared
 - `lia.color.registerTheme(name, themeData)`
-  - Undefined Realm
+  - Shared
 - `lia.color.returnMainAdjustedColors()`
-  - Undefined Realm
+  - Shared
 - `lia.color.startThemeTransition(name)`
-  - Undefined Realm
+  - Shared
 - `lia.color.testThemeTransition(themeName)`
-  - Undefined Realm
+  - Shared
 
 #### lia.command
 Count: 8 functions
 
 - `lia.command.add(command, data)`
-  - Undefined Realm
+  - Shared
 - `lia.command.buildSyntaxFromArguments(args)`
-  - Undefined Realm
+  - Shared
 - `lia.command.extractArgs(text)`
-  - Undefined Realm
+  - Shared
 - `lia.command.hasAccess(client, command, data)`
-  - Undefined Realm
+  - Shared
 - `lia.command.openArgumentPrompt(cmdKey, missing, prefix)`
-  - Undefined Realm
+  - Shared
 - `lia.command.parse(client, text, realCommand, arguments)`
-  - Undefined Realm
+  - Shared
 - `lia.command.run(client, command, arguments)`
-  - Undefined Realm
+  - Shared
 - `lia.command.send(command, ...)`
-  - Undefined Realm
+  - Shared
 
 #### lia.config
 Count: 12 functions
 
 - `lia.config.add(key, name, value, callback, data)`
-  - Undefined Realm
+  - Shared
 - `lia.config.forceSet(key, value, noSave)`
-  - Undefined Realm
+  - Shared
 - `lia.config.get(key, default)`
-  - Undefined Realm
+  - Shared
 - `lia.config.getChangedValues(includeDefaults)`
-  - Undefined Realm
+  - Shared
 - `lia.config.getOptions(key)`
-  - Undefined Realm
+  - Shared
 - `lia.config.hasChanges()`
-  - Undefined Realm
+  - Shared
 - `lia.config.load()`
-  - Undefined Realm
+  - Shared
 - `lia.config.reset()`
-  - Undefined Realm
+  - Shared
 - `lia.config.save()`
-  - Undefined Realm
+  - Shared
 - `lia.config.send(client)`
-  - Undefined Realm
+  - Shared
 - `lia.config.set(key, value)`
-  - Undefined Realm
+  - Shared
 - `lia.config.setDefault(key, value)`
-  - Undefined Realm
+  - Shared
 
 #### lia.currency
 Count: 2 functions
 
 - `lia.currency.get(amount)`
-  - Undefined Realm
+  - Shared
 - `lia.currency.spawn(pos, amount, angle)`
-  - Undefined Realm
+  - Shared
 
 #### lia.darkrp
 Count: 7 functions
 
 - `lia.darkrp.createCategory()`
-  - Undefined Realm
+  - Shared
 - `lia.darkrp.createEntity(name, data)`
-  - Undefined Realm
+  - Shared
 - `lia.darkrp.findEmptyPos(startPos, entitiesToIgnore, maxDistance, searchStep, checkArea)`
-  - Undefined Realm
+  - Shared
 - `lia.darkrp.formatMoney(amount)`
-  - Undefined Realm
+  - Shared
 - `lia.darkrp.isEmpty(position, entitiesToIgnore)`
-  - Undefined Realm
+  - Shared
 - `lia.darkrp.notify(client, notifyType, duration, message)`
-  - Undefined Realm
+  - Shared
 - `lia.darkrp.textWrap(text, fontName, maxLineWidth)`
-  - Undefined Realm
+  - Shared
 
 #### lia.data
 Count: 16 functions
 
 - `lia.data.addEquivalencyMap(map1, map2)`
-  - Undefined Realm
+  - Shared
 - `lia.data.decode(value)`
-  - Undefined Realm
+  - Shared
 - `lia.data.decodeAngle(raw)`
-  - Undefined Realm
+  - Shared
 - `lia.data.decodeVector(raw)`
-  - Undefined Realm
+  - Shared
 - `lia.data.delete(key, global, ignoreMap)`
-  - Undefined Realm
+  - Shared
 - `lia.data.deserialize(raw)`
-  - Undefined Realm
+  - Shared
 - `lia.data.encodetable(value)`
-  - Undefined Realm
+  - Shared
 - `lia.data.get(key, default)`
-  - Undefined Realm
+  - Shared
 - `lia.data.getEquivalencyMap(map)`
-  - Undefined Realm
+  - Shared
 - `lia.data.getPersistence()`
-  - Undefined Realm
+  - Shared
 - `lia.data.loadPersistence()`
-  - Undefined Realm
+  - Shared
 - `lia.data.loadPersistenceData(callback)`
-  - Undefined Realm
+  - Shared
 - `lia.data.loadTables()`
-  - Undefined Realm
+  - Shared
 - `lia.data.savePersistence(entities)`
-  - Undefined Realm
+  - Shared
 - `lia.data.serialize(value)`
-  - Undefined Realm
+  - Shared
 - `lia.data.set(key, value, global, ignoreMap)`
-  - Undefined Realm
+  - Shared
 
 #### lia.db
 Count: 30 functions
 
 - `lia.db.addDatabaseFields()`
-  - Undefined Realm
+  - Server
 - `lia.db.bulkInsert(dbTable, rows)`
-  - Undefined Realm
+  - Server
 - `lia.db.bulkUpsert(dbTable, rows)`
-  - Undefined Realm
+  - Server
 - `lia.db.connect(callback, reconnect)`
-  - Undefined Realm
+  - Server
 - `lia.db.convertDataType(value, noEscape)`
-  - Undefined Realm
+  - Server
 - `lia.db.count(dbTable, condition)`
-  - Undefined Realm
+  - Server
 - `lia.db.createColumn(tableName, columnName, columnType, defaultValue)`
-  - Undefined Realm
+  - Server
 - `lia.db.createSnapshot(tableName)`
-  - Undefined Realm
+  - Server
 - `lia.db.createTable(dbName, primaryKey, schema)`
-  - Undefined Realm
+  - Server
 - `lia.db.delete(dbTable, condition)`
-  - Undefined Realm
+  - Server
 - `lia.db.escapeIdentifier(id)`
-  - Undefined Realm
+  - Server
 - `lia.db.exists(dbTable, condition)`
-  - Undefined Realm
+  - Server
 - `lia.db.fieldExists(tbl, field)`
-  - Undefined Realm
+  - Server
 - `lia.db.getCharacterTable(callback)`
-  - Undefined Realm
+  - Server
 - `lia.db.getTables()`
-  - Undefined Realm
+  - Server
 - `lia.db.insertOrIgnore(value, dbTable)`
-  - Undefined Realm
+  - Server
 - `lia.db.insertTable(value, callback, dbTable)`
-  - Undefined Realm
+  - Server
 - `lia.db.loadSnapshot(fileName)`
-  - Undefined Realm
+  - Server
 - `lia.db.loadTables()`
-  - Undefined Realm
+  - Server
 - `lia.db.removeColumn(tableName, columnName)`
-  - Undefined Realm
+  - Server
 - `lia.db.removeTable(tableName)`
-  - Undefined Realm
+  - Server
 - `lia.db.select(fields, dbTable, condition, limit)`
-  - Undefined Realm
+  - Server
 - `lia.db.selectOne(fields, dbTable, condition)`
-  - Undefined Realm
+  - Server
 - `lia.db.selectWithCondition(fields, dbTable, conditions, limit, orderBy)`
-  - Undefined Realm
+  - Server
 - `lia.db.tableExists(tbl)`
-  - Undefined Realm
+  - Server
 - `lia.db.transaction(queries)`
-  - Undefined Realm
+  - Server
 - `lia.db.updateTable(value, callback, dbTable, condition)`
-  - Undefined Realm
+  - Server
 - `lia.db.upsert(value, dbTable)`
-  - Undefined Realm
+  - Server
 - `lia.db.waitForTablesToLoad()`
-  - Undefined Realm
+  - Server
 - `lia.db.wipeTables(callback)`
-  - Undefined Realm
+  - Server
 
 #### lia.derma
 Count: 47 functions
 
 - `lia.derma.animateAppearance(panel, target_w, target_h, duration, alpha_dur, callback, scale_factor)`
-  - Undefined Realm
+  - Client
 - `lia.derma.approachExp(current, target, speed, dt)`
-  - Undefined Realm
+  - Client
 - `lia.derma.circle(x, y, r)`
-  - Undefined Realm
+  - Client
 - `lia.derma.clampMenuPosition(panel)`
-  - Undefined Realm
+  - Client
 - `lia.derma.createTableUI(title, columns, data, options, charID)`
-  - Undefined Realm
+  - Client
 - `lia.derma.dermaMenu()`
-  - Undefined Realm
+  - Client
 - `lia.derma.draw(radius, x, y, w, h, col, flags)`
-  - Undefined Realm
+  - Client
 - `lia.derma.drawBlackBlur(panel, amount, passes, alpha, darkAlpha)`
-  - Undefined Realm
+  - Client
 - `lia.derma.drawBlur(panel, amount, passes, alpha)`
-  - Undefined Realm
+  - Client
 - `lia.derma.drawBlurAt(x, y, w, h, amount, passes, alpha)`
-  - Undefined Realm
+  - Client
 - `lia.derma.drawBoxWithText(text, x, y, options)`
-  - Undefined Realm
+  - Client
 - `lia.derma.drawCircle(x, y, radius, col, flags)`
-  - Undefined Realm
+  - Client
 - `lia.derma.drawCircleMaterial(x, y, radius, col, mat, flags)`
-  - Undefined Realm
+  - Client
 - `lia.derma.drawCircleOutlined(x, y, radius, col, thickness, flags)`
-  - Undefined Realm
+  - Client
 - `lia.derma.drawCircleTexture(x, y, radius, col, texture, flags)`
-  - Undefined Realm
+  - Client
 - `lia.derma.drawEntText(ent, text, posY, alphaOverride)`
-  - Undefined Realm
+  - Client
 - `lia.derma.drawGradient(x, y, w, h, direction, color_shadow, radius, flags)`
-  - Undefined Realm
+  - Client
 - `lia.derma.drawMaterial(radius, x, y, w, h, col, mat, flags)`
-  - Undefined Realm
+  - Client
 - `lia.derma.drawOutlined(radius, x, y, w, h, col, thickness, flags)`
-  - Undefined Realm
+  - Client
 - `lia.derma.drawShadows(radius, x, y, w, h, col, spread, intensity, flags)`
-  - Undefined Realm
+  - Client
 - `lia.derma.drawShadowsEx(x, y, w, h, col, flags, tl, tr, bl, br, spread, intensity, thickness)`
-  - Undefined Realm
+  - Client
 - `lia.derma.drawShadowsOutlined(radius, x, y, w, h, col, thickness, spread, intensity, flags)`
-  - Undefined Realm
+  - Client
 - `lia.derma.drawSurfaceTexture(material, color, x, y, w, h)`
-  - Undefined Realm
+  - Client
 - `lia.derma.drawText(text, x, y, color, alignX, alignY, font, alpha)`
-  - Undefined Realm
+  - Client
 - `lia.derma.drawTextOutlined(text, font, x, y, colour, xalign, outlinewidth, outlinecolour)`
-  - Undefined Realm
+  - Client
 - `lia.derma.drawTexture(radius, x, y, w, h, col, texture, flags)`
-  - Undefined Realm
+  - Client
 - `lia.derma.drawTip(x, y, w, h, text, font, textCol, outlineCol)`
-  - Undefined Realm
+  - Client
 - `lia.derma.easeInOutCubic(t)`
-  - Undefined Realm
+  - Client
 - `lia.derma.easeOutCubic(t)`
-  - Undefined Realm
+  - Client
 - `lia.derma.openOptionsMenu(title, options)`
-  - Undefined Realm
+  - Client
 - `lia.derma.optionsMenu(rawOptions, config)`
-  - Undefined Realm
+  - Client
 - `lia.derma.radialMenu(options)`
-  - Undefined Realm
+  - Client
 - `lia.derma.rect(x, y, w, h)`
-  - Undefined Realm
+  - Client
 - `lia.derma.requestArguments(title, argTypes, onSubmit, defaults)`
-  - Undefined Realm
+  - Client
 - `lia.derma.requestBinaryQuestion(title, question, callback, yesText, noText)`
-  - Undefined Realm
+  - Client
 - `lia.derma.requestButtons(title, buttons, callback, description)`
-  - Undefined Realm
+  - Client
 - `lia.derma.requestColorPicker(func, color_standart)`
-  - Undefined Realm
+  - Client
 - `lia.derma.requestDropdown(title, options, callback, defaultValue)`
-  - Undefined Realm
+  - Client
 - `lia.derma.requestOptions(title, options, callback, defaults)`
-  - Undefined Realm
+  - Client
 - `lia.derma.requestPlayerSelector(do_click)`
-  - Undefined Realm
+  - Client
 - `lia.derma.requestPopupQuestion(question, buttons)`
-  - Undefined Realm
+  - Client
 - `lia.derma.requestString(title, description, callback, defaultValue, maxLength)`
-  - Undefined Realm
+  - Client
 - `lia.derma.setDefaultShape(shape)`
-  - Undefined Realm
+  - Client
 - `lia.derma.setFlag(flags, flag, bool)`
-  - Undefined Realm
+  - Client
 - `lia.derma.shadowText(text, font, x, y, colortext, colorshadow, dist, xalign, yalign)`
-  - Undefined Realm
+  - Client
 - `lia.derma.skinFunc(name, panel, a, b, c, d, e, f, g)`
-  - Undefined Realm
+  - Client
 - `lia.derma.wrapText(text, width, font)`
-  - Undefined Realm
+  - Client
 
 #### lia.dialog
 Count: 13 functions
 
 - `lia.dialog.getAvailableConfigurations(ply, npc, npcID)`
-  - Undefined Realm
+  - Shared
 - `lia.dialog.getConfiguration(uniqueID)`
-  - Undefined Realm
+  - Shared
 - `lia.dialog.getNPCData(npcID)`
-  - Undefined Realm
+  - Shared
 - `lia.dialog.getOriginalNPCData(npcID)`
-  - Undefined Realm
+  - Shared
 - `lia.dialog.isTableEqual(tbl1, tbl2, checked)`
-  - Undefined Realm
+  - Shared
 - `lia.dialog.openConfigurationPicker(npc, npcID)`
-  - Undefined Realm
+  - Shared
 - `lia.dialog.openCustomizationUI(npc, configID)`
-  - Undefined Realm
+  - Shared
 - `lia.dialog.openDialog(client, npc, npcID)`
-  - Undefined Realm
+  - Shared
 - `lia.dialog.registerConfiguration(uniqueID, data)`
-  - Undefined Realm
+  - Shared
 - `lia.dialog.registerNPC(uniqueID, data, shouldSync)`
-  - Undefined Realm
+  - Shared
 - `lia.dialog.submitConfiguration(configID, npc, payload)`
-  - Undefined Realm
+  - Shared
 - `lia.dialog.syncDialogs()`
-  - Undefined Realm
+  - Shared
 - `lia.dialog.syncToClients(client)`
-  - Undefined Realm
+  - Shared
 
 #### lia.doors
 Count: 11 functions
 
 - `lia.doors.addPreset(mapName, presetData)`
-  - Undefined Realm
+  - Shared
 - `lia.doors.cleanupCorruptedData()`
-  - Undefined Realm
+  - Shared
 - `lia.doors.getCachedData(door)`
-  - Undefined Realm
+  - Shared
 - `lia.doors.getData(door)`
-  - Undefined Realm
+  - Shared
 - `lia.doors.getPreset(mapName)`
-  - Undefined Realm
+  - Shared
 - `lia.doors.setCachedData(door, data)`
-  - Undefined Realm
+  - Shared
 - `lia.doors.setData(door, data)`
-  - Undefined Realm
+  - Shared
 - `lia.doors.syncAllDoorsToClient(client)`
-  - Undefined Realm
+  - Shared
 - `lia.doors.syncDoorData(door)`
-  - Undefined Realm
+  - Shared
 - `lia.doors.updateCachedData(doorID, data)`
-  - Undefined Realm
+  - Shared
 - `lia.doors.verifyDatabaseSchema()`
-  - Undefined Realm
+  - Shared
 
 #### lia.faction
 Count: 15 functions
 
 - `lia.faction.cacheModels(models)`
-  - Undefined Realm
+  - Shared
 - `lia.faction.formatModelData()`
-  - Undefined Realm
+  - Shared
 - `lia.faction.get(identifier)`
-  - Undefined Realm
+  - Shared
 - `lia.faction.getCategories(teamName)`
-  - Undefined Realm
+  - Shared
 - `lia.faction.getClasses(faction)`
-  - Undefined Realm
+  - Shared
 - `lia.faction.getDefaultClass(id)`
-  - Undefined Realm
+  - Shared
 - `lia.faction.getIndex(uniqueID)`
-  - Undefined Realm
+  - Shared
 - `lia.faction.getModelsFromCategory(teamName, category)`
-  - Undefined Realm
+  - Shared
 - `lia.faction.getPlayerCount(faction)`
-  - Undefined Realm
+  - Shared
 - `lia.faction.getPlayers(faction)`
-  - Undefined Realm
+  - Shared
 - `lia.faction.hasWhitelist(faction)`
-  - Undefined Realm
+  - Shared
 - `lia.faction.isFactionCategory(faction, categoryFactions)`
-  - Undefined Realm
+  - Shared
 - `lia.faction.jobGenerate(index, name, color, default, models)`
-  - Undefined Realm
+  - Shared
 - `lia.faction.loadFromDir(directory)`
-  - Undefined Realm
+  - Shared
 - `lia.faction.register(uniqueID, data)`
-  - Undefined Realm
+  - Shared
 
 #### lia.flag
 Count: 2 functions
 
 - `lia.flag.add(flag, desc, callback)`
-  - Undefined Realm
+  - Shared
 - `lia.flag.onSpawn(client)`
-  - Undefined Realm
+  - Shared
 
 #### lia.font
 Count: 5 functions
 
 - `lia.font.getAvailableFonts()`
-  - Undefined Realm
+  - Shared
 - `lia.font.getBoldFontName(fontName)`
-  - Undefined Realm
+  - Shared
 - `lia.font.loadFonts()`
-  - Undefined Realm
+  - Shared
 - `lia.font.register(fontName, fontData)`
-  - Undefined Realm
+  - Shared
 - `lia.font.registerFonts(fontName)`
-  - Undefined Realm
+  - Shared
 
 #### lia.inventory
 Count: 17 functions
 
 - `lia.inventory.checkOverflow(inv, character, oldW, oldH)`
-  - Undefined Realm
+  - Shared
 - `lia.inventory.cleanUpForCharacter(character)`
-  - Undefined Realm
+  - Shared
 - `lia.inventory.deleteByID(id)`
-  - Undefined Realm
+  - Shared
 - `lia.inventory.getAllStorage(includeTrunks)`
-  - Undefined Realm
+  - Shared
 - `lia.inventory.getAllTrunks()`
-  - Undefined Realm
+  - Shared
 - `lia.inventory.getStorage(model)`
-  - Undefined Realm
+  - Shared
 - `lia.inventory.getTrunk(vehicleClass)`
-  - Undefined Realm
+  - Shared
 - `lia.inventory.instance(typeID, initialData)`
-  - Undefined Realm
+  - Shared
 - `lia.inventory.loadAllFromCharID(charID)`
-  - Undefined Realm
+  - Shared
 - `lia.inventory.loadByID(id, noCache)`
-  - Undefined Realm
+  - Shared
 - `lia.inventory.loadFromDefaultStorage(id, noCache)`
-  - Undefined Realm
+  - Shared
 - `lia.inventory.new(typeID)`
-  - Undefined Realm
+  - Shared
 - `lia.inventory.newType(typeID, invTypeStruct)`
-  - Undefined Realm
+  - Shared
 - `lia.inventory.registerStorage(model, data)`
-  - Undefined Realm
+  - Shared
 - `lia.inventory.registerTrunk(vehicleClass, data)`
-  - Undefined Realm
+  - Shared
 - `lia.inventory.show(inventory, parent)`
-  - Undefined Realm
+  - Shared
 - `lia.inventory.showDual(inventory1, inventory2, parent)`
-  - Undefined Realm
+  - Shared
 
 #### lia.item
 Count: 25 functions
 
 - `lia.item.addRarities(name, color)`
-  - Undefined Realm
+  - Shared
 - `lia.item.addWeaponOverride(className, data)`
-  - Undefined Realm
+  - Shared
 - `lia.item.addWeaponToBlacklist(className)`
-  - Undefined Realm
+  - Shared
 - `lia.item.createInv(w, h, id)`
-  - Undefined Realm
+  - Shared
 - `lia.item.deleteByID(id)`
-  - Undefined Realm
+  - Shared
 - `lia.item.generateAmmo()`
-  - Undefined Realm
+  - Shared
 - `lia.item.generateWeapons()`
-  - Undefined Realm
+  - Shared
 - `lia.item.get(identifier)`
-  - Undefined Realm
+  - Shared
 - `lia.item.getInstancedItemByID(itemID)`
-  - Undefined Realm
+  - Shared
 - `lia.item.getInv(invID)`
-  - Undefined Realm
+  - Shared
 - `lia.item.getItemByID(itemID)`
-  - Undefined Realm
+  - Shared
 - `lia.item.getItemDataByID(itemID)`
-  - Undefined Realm
+  - Shared
 - `lia.item.instance(index, uniqueID, itemData, x, y, callback)`
-  - Undefined Realm
+  - Shared
 - `lia.item.isItem(object)`
-  - Undefined Realm
+  - Shared
 - `lia.item.load(path, baseID, isBaseItem)`
-  - Undefined Realm
+  - Shared
 - `lia.item.loadFromDir(directory)`
-  - Undefined Realm
+  - Shared
 - `lia.item.loadItemByID(itemIndex)`
-  - Undefined Realm
+  - Shared
 - `lia.item.new(uniqueID, id)`
-  - Undefined Realm
+  - Shared
 - `lia.item.newInv(owner, invType, callback)`
-  - Undefined Realm
+  - Shared
 - `lia.item.overrideItem(uniqueID, overrides)`
-  - Undefined Realm
+  - Shared
 - `lia.item.register(uniqueID, baseID, isBaseItem, path, luaGenerated)`
-  - Undefined Realm
+  - Shared
 - `lia.item.registerInv(invType, w, h)`
-  - Undefined Realm
+  - Shared
 - `lia.item.restoreInv(invID, w, h, callback)`
-  - Undefined Realm
+  - Shared
 - `lia.item.setItemDataByID(itemID, key, value, receivers, noSave, noCheckEntity)`
-  - Undefined Realm
+  - Shared
 - `lia.item.spawn(uniqueID, position, callback, angles, data)`
-  - Undefined Realm
+  - Shared
 
 #### lia.keybind
 Count: 4 functions
 
 - `lia.keybind.add(k, d, desc, cb)`
-  - Undefined Realm
+  - Shared
 - `lia.keybind.get(a, df)`
-  - Undefined Realm
+  - Shared
 - `lia.keybind.load()`
-  - Undefined Realm
+  - Shared
 - `lia.keybind.save()`
-  - Undefined Realm
+  - Shared
 
 #### lia.lang
 Count: 7 functions
 
 - `lia.lang.addTable(name, tbl)`
-  - Undefined Realm
+  - Shared
 - `lia.lang.cleanupCache()`
-  - Undefined Realm
+  - Shared
 - `lia.lang.clearCache()`
-  - Undefined Realm
+  - Shared
 - `lia.lang.generateCacheKey(lang, key, ...)`
-  - Undefined Realm
+  - Shared
 - `lia.lang.getLanguages()`
-  - Undefined Realm
+  - Shared
 - `lia.lang.getLocalizedString(key, ...)`
-  - Undefined Realm
+  - Shared
 - `lia.lang.loadFromDir(directory)`
-  - Undefined Realm
+  - Shared
 
 #### lia.loader
 Count: 6 functions
 
 - `lia.loader.checkForUpdates()`
-  - Undefined Realm
+  - Shared
 - `lia.loader.include(path, realm)`
-  - Undefined Realm
+  - Shared
 - `lia.loader.includeDir(dir, raw, deep, realm)`
-  - Undefined Realm
+  - Shared
 - `lia.loader.includeEntities(path)`
-  - Undefined Realm
+  - Shared
 - `lia.loader.includeGroupedDir(dir, raw, recursive, forceRealm)`
-  - Undefined Realm
+  - Shared
 - `lia.loader.initializeGamemode(isReload)`
-  - Undefined Realm
+  - Shared
 
 #### lia.log
 Count: 3 functions
 
 - `lia.log.add(client, logType, ...)`
-  - Undefined Realm
+  - Server
 - `lia.log.addType(logType, func, category)`
-  - Undefined Realm
+  - Server
 - `lia.log.getString(client, logType, ...)`
-  - Undefined Realm
+  - Server
 
 #### lia.menu
 Count: 4 functions
 
 - `lia.menu.add(opts, pos, onRemove)`
-  - Undefined Realm
+  - Client
 - `lia.menu.drawAll()`
-  - Undefined Realm
+  - Client
 - `lia.menu.getActiveMenu()`
-  - Undefined Realm
+  - Client
 - `lia.menu.onButtonPressed(id, cb)`
-  - Undefined Realm
+  - Client
 
 #### lia.module
 Count: 4 functions
 
 - `lia.module.get(identifier)`
-  - Undefined Realm
+  - Shared
 - `lia.module.initialize()`
-  - Undefined Realm
+  - Shared
 - `lia.module.load(uniqueID, path, variable, skipSubmodules)`
-  - Undefined Realm
+  - Shared
 - `lia.module.loadFromDir(directory, group, skip)`
-  - Undefined Realm
+  - Shared
 
 #### lia.net
 Count: 7 functions
 
 - `lia.net.addToCache(name, args)`
-  - Undefined Realm
+  - Shared
 - `lia.net.checkBadType(name, object)`
-  - Undefined Realm
+  - Shared
 - `lia.net.getNetVar(key, default)`
-  - Undefined Realm
+  - Shared
 - `lia.net.isCacheHit(name, args)`
-  - Undefined Realm
+  - Shared
 - `lia.net.readBigTable(netStr, callback)`
-  - Undefined Realm
+  - Shared
 - `lia.net.setNetVar(key, value, receiver)`
-  - Undefined Realm
+  - Shared
 - `lia.net.writeBigTable(targets, netStr, tbl, chunkSize)`
-  - Undefined Realm
+  - Shared
 
 #### lia.notices
 Count: 10 functions
 
 - `lia.notices.notify(client, message, notifType)`
-  - Undefined Realm
+  - Shared
 - `lia.notices.notifyAdminLocalized(client, key, ...)`
-  - Undefined Realm
+  - Shared
 - `lia.notices.notifyErrorLocalized(client, key, ...)`
-  - Undefined Realm
+  - Shared
 - `lia.notices.notifyInfoLocalized(client, key, ...)`
-  - Undefined Realm
+  - Shared
 - `lia.notices.notifyLocalized(client, key, notifType, ...)`
-  - Undefined Realm
+  - Shared
 - `lia.notices.notifyMoneyLocalized(client, key, ...)`
-  - Undefined Realm
+  - Shared
 - `lia.notices.notifySuccessLocalized(client, key, ...)`
-  - Undefined Realm
+  - Shared
 - `lia.notices.notifyWarningLocalized(client, key, ...)`
-  - Undefined Realm
+  - Shared
 - `lia.notices.receiveNotify()`
-  - Undefined Realm
+  - Shared
 - `lia.notices.receiveNotifyL()`
-  - Undefined Realm
+  - Shared
 
 #### lia.option
 Count: 6 functions
 
 - `lia.option.add(key, name, desc, default, callback, data)`
-  - Undefined Realm
+  - Shared
 - `lia.option.get(key, default)`
-  - Undefined Realm
+  - Shared
 - `lia.option.getOptions(key)`
-  - Undefined Realm
+  - Shared
 - `lia.option.load()`
-  - Undefined Realm
+  - Shared
 - `lia.option.save()`
-  - Undefined Realm
+  - Shared
 - `lia.option.set(key, value)`
-  - Undefined Realm
+  - Shared
 
 #### lia.playerinteract
 Count: 9 functions
 
 - `lia.playerinteract.addAction(name, data)`
-  - Undefined Realm
+  - Shared
 - `lia.playerinteract.addInteraction(name, data)`
-  - Undefined Realm
+  - Shared
 - `lia.playerinteract.getActions(client)`
-  - Undefined Realm
+  - Shared
 - `lia.playerinteract.getCategorizedOptions(options)`
-  - Undefined Realm
+  - Shared
 - `lia.playerinteract.getInteractions(client)`
-  - Undefined Realm
+  - Shared
 - `lia.playerinteract.hasChanges()`
-  - Undefined Realm
+  - Shared
 - `lia.playerinteract.isWithinRange(client, entity, customRange)`
-  - Undefined Realm
+  - Shared
 - `lia.playerinteract.openMenu(options, isInteraction, titleText, closeKey, netMsg, preFiltered)`
-  - Undefined Realm
+  - Shared
 - `lia.playerinteract.sync(client)`
-  - Undefined Realm
+  - Shared
 
 #### lia.time
 Count: 5 functions
 
 - `lia.time.formatDHM(seconds)`
-  - Undefined Realm
+  - Shared
 - `lia.time.getDate()`
-  - Undefined Realm
+  - Shared
 - `lia.time.getHour()`
-  - Undefined Realm
+  - Shared
 - `lia.time.timeSince(strTime)`
-  - Undefined Realm
+  - Shared
 - `lia.time.toNumber(str)`
-  - Undefined Realm
+  - Shared
 
 #### lia.util
 Count: 31 functions
 
 - `lia.util.animateAppearance(panel, targetWidth, targetHeight, duration, alphaDuration, callback, scaleFactor)`
-  - Undefined Realm
+  - Shared
 - `lia.util.canFit(pos, mins, maxs, filter)`
-  - Undefined Realm
+  - Shared
 - `lia.util.clampMenuPosition(panel)`
-  - Undefined Realm
+  - Shared
 - `lia.util.createTableUI(title, columns, data, options, charID)`
-  - Undefined Realm
+  - Shared
 - `lia.util.drawBlackBlur(panel, amount, passes, alpha, darkAlpha)`
-  - Undefined Realm
+  - Shared
 - `lia.util.drawBlur(panel, amount, passes, alpha)`
-  - Undefined Realm
+  - Shared
 - `lia.util.drawBlurAt(x, y, w, h, amount, passes, alpha)`
-  - Undefined Realm
+  - Shared
 - `lia.util.drawEntText(ent, text, posY, alphaOverride)`
-  - Undefined Realm
+  - Shared
 - `lia.util.drawGradient(x, y, w, h, direction, colorShadow, radius, flags)`
-  - Undefined Realm
+  - Shared
 - `lia.util.drawLookText(text, posY, alphaOverride, maxDist)`
-  - Undefined Realm
+  - Shared
 - `lia.util.findEmptySpace(entity, filter, spacing, size, height, tolerance)`
-  - Undefined Realm
+  - Shared
 - `lia.util.findFaction(client, name)`
-  - Undefined Realm
+  - Shared
 - `lia.util.findPlayer(client, identifier)`
-  - Undefined Realm
+  - Shared
 - `lia.util.findPlayerBySteamID(SteamID)`
-  - Undefined Realm
+  - Shared
 - `lia.util.findPlayerBySteamID64(SteamID64)`
-  - Undefined Realm
+  - Shared
 - `lia.util.findPlayerEntities(client, class)`
-  - Undefined Realm
+  - Shared
 - `lia.util.findPlayerItems(client)`
-  - Undefined Realm
+  - Shared
 - `lia.util.findPlayerItemsByClass(client, class)`
-  - Undefined Realm
+  - Shared
 - `lia.util.findPlayersInBox(mins, maxs)`
-  - Undefined Realm
+  - Shared
 - `lia.util.findPlayersInSphere(origin, radius)`
-  - Undefined Realm
+  - Shared
 - `lia.util.formatStringNamed(format, ...)`
-  - Undefined Realm
+  - Shared
 - `lia.util.generateRandomName(firstNames, lastNames)`
-  - Undefined Realm
+  - Shared
 - `lia.util.getAdmins()`
-  - Undefined Realm
+  - Shared
 - `lia.util.getBySteamID(steamID)`
-  - Undefined Realm
+  - Shared
 - `lia.util.getMaterial(materialPath, materialParameters)`
-  - Undefined Realm
+  - Shared
 - `lia.util.openOptionsMenu(title, options)`
-  - Undefined Realm
+  - Shared
 - `lia.util.playerInRadius(pos, dist)`
-  - Undefined Realm
+  - Shared
 - `lia.util.requestEntityInformation(entity, argTypes, callback)`
-  - Undefined Realm
+  - Shared
 - `lia.util.sendTableUI(client, title, columns, data, options, characterID)`
-  - Undefined Realm
+  - Shared
 - `lia.util.stringMatches(a, b)`
-  - Undefined Realm
+  - Shared
 - `lia.util.wrapText(text, width, font)`
-  - Undefined Realm
+  - Shared
 
 #### lia.vendor
 Count: 6 functions
 
 - `lia.vendor.addPreset(name, items)`
-  - Undefined Realm
+  - Shared
 - `lia.vendor.getAllVendorData(entity)`
-  - Undefined Realm
+  - Shared
 - `lia.vendor.getPreset(name)`
-  - Undefined Realm
+  - Shared
 - `lia.vendor.getVendorProperty(entity, property)`
-  - Undefined Realm
+  - Shared
 - `lia.vendor.setVendorProperty(entity, property, value)`
-  - Undefined Realm
+  - Shared
 - `lia.vendor.syncVendorProperty(entity, property, value, isDefault)`
-  - Undefined Realm
+  - Shared
 
 #### lia.webimage
 Count: 5 functions
 
 - `lia.webimage.clearCache(skipReRegister)`
-  - Undefined Realm
+  - Client
 - `lia.webimage.download(n, u, cb, flags)`
-  - Undefined Realm
+  - Client
 - `lia.webimage.get(n, flags)`
-  - Undefined Realm
+  - Client
 - `lia.webimage.getStats()`
-  - Undefined Realm
+  - Client
 - `lia.webimage.register(n, u, cb, flags)`
-  - Undefined Realm
+  - Client
 
 #### lia.websound
 Count: 6 functions
 
 - `lia.websound.clearCache(skipReRegister)`
-  - Undefined Realm
+  - Client
 - `lia.websound.download(name, url, cb)`
-  - Undefined Realm
+  - Client
 - `lia.websound.get(name)`
-  - Undefined Realm
+  - Client
 - `lia.websound.getStats()`
-  - Undefined Realm
+  - Client
 - `lia.websound.playButtonSound(customSound, callback)`
-  - Undefined Realm
+  - Client
 - `lia.websound.register(name, url, cb)`
-  - Undefined Realm
+  - Client
 
 #### lia.workshop
 Count: 5 functions
 
 - `lia.workshop.addWorkshop(id)`
-  - Undefined Realm
+  - Shared
 - `lia.workshop.gather()`
-  - Undefined Realm
+  - Shared
 - `lia.workshop.hasContentToDownload()`
-  - Undefined Realm
+  - Shared
 - `lia.workshop.mountContent()`
-  - Undefined Realm
+  - Shared
 - `lia.workshop.send(ply)`
-  - Undefined Realm
+  - Shared
 
 #### characterMeta
 - `characterMeta:addBoost(boostID, attribID, boostAmount)`
-  - Undefined Realm
+  - Shared
 - `characterMeta:ban(time)`
-  - Undefined Realm
+  - Shared
 - `characterMeta:clearAllBoosts()`
-  - Undefined Realm
+  - Shared
 - `characterMeta:delete()`
-  - Undefined Realm
+  - Shared
 - `characterMeta:destroy()`
-  - Undefined Realm
+  - Shared
 - `characterMeta:doesFakeRecognize(id)`
-  - Undefined Realm
+  - Shared
 - `characterMeta:doesRecognize(id)`
-  - Undefined Realm
+  - Shared
 - `characterMeta:getAttrib(key, default)`
-  - Undefined Realm
+  - Shared
 - `characterMeta:getData(key, default)`
-  - Undefined Realm
+  - Shared
 - `characterMeta:getDisplayedName(client)`
-  - Undefined Realm
+  - Shared
 - `characterMeta:getID()`
-  - Undefined Realm
+  - Shared
 - `characterMeta:getPlayer()`
-  - Undefined Realm
+  - Shared
 - `characterMeta:giveFlags(flags)`
-  - Undefined Realm
+  - Shared
 - `characterMeta:giveMoney(amount)`
-  - Undefined Realm
+  - Shared
 - `characterMeta:hasFlags(flagStr)`
-  - Undefined Realm
+  - Shared
 - `characterMeta:hasMoney(amount)`
-  - Undefined Realm
+  - Shared
 - `characterMeta:isBanned()`
-  - Undefined Realm
+  - Shared
 - `characterMeta:isMainCharacter()`
-  - Undefined Realm
+  - Shared
 - `characterMeta:joinClass(class, isForced)`
-  - Undefined Realm
+  - Shared
 - `characterMeta:kick()`
-  - Undefined Realm
+  - Shared
 - `characterMeta:kickClass()`
-  - Undefined Realm
+  - Shared
 - `characterMeta:recognize(character, name)`
-  - Undefined Realm
+  - Shared
 - `characterMeta:removeBoost(boostID, attribID)`
-  - Undefined Realm
+  - Shared
 - `characterMeta:save(callback)`
-  - Undefined Realm
+  - Shared
 - `characterMeta:setAttrib(key, value)`
-  - Undefined Realm
+  - Shared
 - `characterMeta:setData(k, v, noReplication, receiver)`
-  - Undefined Realm
+  - Shared
 - `characterMeta:setFlags(flags)`
-  - Undefined Realm
+  - Shared
 - `characterMeta:setup(noNetworking)`
-  - Undefined Realm
+  - Shared
 - `characterMeta:sync(receiver)`
-  - Undefined Realm
+  - Shared
 - `characterMeta:takeFlags(flags)`
-  - Undefined Realm
+  - Shared
 - `characterMeta:takeMoney(amount)`
-  - Undefined Realm
+  - Shared
 - `characterMeta:updateAttrib(key, value)`
-  - Undefined Realm
+  - Shared
 
 #### entityMeta
 - `entityMeta:EmitSound(soundName, soundLevel, pitchPercent, volume, channel, flags, dsp)`
-  - Undefined Realm
+  - Shared
 - `entityMeta:checkDoorAccess(client, access)`
-  - Undefined Realm
+  - Shared
 - `entityMeta:clearNetVars(receiver)`
-  - Undefined Realm
+  - Shared
 - `entityMeta:getDoorOwner()`
-  - Undefined Realm
+  - Shared
 - `entityMeta:getDoorPartner()`
-  - Undefined Realm
+  - Shared
 - `entityMeta:getLocalVar(key, default)`
-  - Undefined Realm
+  - Shared
 - `entityMeta:getNetVar(key, default)`
-  - Undefined Realm
+  - Shared
 - `entityMeta:isDoor()`
-  - Undefined Realm
+  - Shared
 - `entityMeta:isDoorLocked()`
-  - Undefined Realm
+  - Shared
 - `entityMeta:isFemale()`
-  - Undefined Realm
+  - Shared
 - `entityMeta:isItem()`
-  - Undefined Realm
+  - Shared
 - `entityMeta:isLocked()`
-  - Undefined Realm
+  - Shared
 - `entityMeta:isMoney()`
-  - Undefined Realm
+  - Shared
 - `entityMeta:isProp()`
-  - Undefined Realm
+  - Shared
 - `entityMeta:isSimfphysCar()`
-  - Undefined Realm
+  - Shared
 - `entityMeta:keysLock()`
-  - Undefined Realm
+  - Shared
 - `entityMeta:keysOwn(client)`
-  - Undefined Realm
+  - Shared
 - `entityMeta:keysUnLock()`
-  - Undefined Realm
+  - Shared
 - `entityMeta:playFollowingSound(soundPath, volume, shouldFollow, maxDistance, startDelay, minDistance, pitch, soundLevel, dsp)`
-  - Undefined Realm
+  - Shared
 - `entityMeta:removeDoorAccessData()`
-  - Undefined Realm
+  - Shared
 - `entityMeta:sendNetVar(key, receiver)`
-  - Undefined Realm
+  - Shared
 - `entityMeta:setKeysNonOwnable(state)`
-  - Undefined Realm
+  - Shared
 - `entityMeta:setLocalVar(key, value)`
-  - Undefined Realm
+  - Shared
 - `entityMeta:setLocked(state)`
-  - Undefined Realm
+  - Shared
 - `entityMeta:setNetVar(key, value, receiver)`
-  - Undefined Realm
+  - Shared
 
 #### panelMeta
 - `panelMeta:AvatarMask(mask)`
-  - Undefined Realm
+  - Client
 - `panelMeta:Background(col, rad, rtl, rtr, rbl, rbr)`
-  - Undefined Realm
+  - Client
 - `panelMeta:BarHover(col, height, speed)`
-  - Undefined Realm
+  - Client
 - `panelMeta:Blur(amount)`
-  - Undefined Realm
+  - Client
 - `panelMeta:Circle(col)`
-  - Undefined Realm
+  - Client
 - `panelMeta:CircleAvatar()`
-  - Undefined Realm
+  - Client
 - `panelMeta:CircleCheckbox(inner, outer, speed)`
-  - Undefined Realm
+  - Client
 - `panelMeta:CircleClick(col, speed, trad)`
-  - Undefined Realm
+  - Client
 - `panelMeta:CircleExpandHover(col, speed)`
-  - Undefined Realm
+  - Client
 - `panelMeta:CircleFadeHover(col, speed)`
-  - Undefined Realm
+  - Client
 - `panelMeta:CircleHover(col, speed, trad)`
-  - Undefined Realm
+  - Client
 - `panelMeta:ClearAppendOverwrite()`
-  - Undefined Realm
+  - Client
 - `panelMeta:ClearPaint()`
-  - Undefined Realm
+  - Client
 - `panelMeta:ClearTransitionFunc()`
-  - Undefined Realm
+  - Client
 - `panelMeta:DivTall(frac, target)`
-  - Undefined Realm
+  - Client
 - `panelMeta:DivWide(frac, target)`
-  - Undefined Realm
+  - Client
 - `panelMeta:DualText(toptext, topfont, topcol, bottomtext, bottomfont, bottomcol, alignment, centerSpacing)`
-  - Undefined Realm
+  - Client
 - `panelMeta:FadeHover(col, speed, rad)`
-  - Undefined Realm
+  - Client
 - `panelMeta:FadeIn(time, alpha)`
-  - Undefined Realm
+  - Client
 - `panelMeta:FillHover(col, dir, speed, mat)`
-  - Undefined Realm
+  - Client
 - `panelMeta:Gradient(col, dir, frac, op)`
-  - Undefined Realm
+  - Client
 - `panelMeta:HideVBar()`
-  - Undefined Realm
+  - Client
 - `panelMeta:LinedCorners(col, cornerLen)`
-  - Undefined Realm
+  - Client
 - `panelMeta:Material(mat, col)`
-  - Undefined Realm
+  - Client
 - `panelMeta:NetMessage(name, data)`
-  - Undefined Realm
+  - Client
 - `panelMeta:On(name, fn)`
-  - Undefined Realm
+  - Client
 - `panelMeta:Outline(col, width)`
-  - Undefined Realm
+  - Client
 - `panelMeta:ReadyTextbox()`
-  - Undefined Realm
+  - Client
 - `panelMeta:SetAppendOverwrite(fn)`
-  - Undefined Realm
+  - Client
 - `panelMeta:SetOpenURL(url)`
-  - Undefined Realm
+  - Client
 - `panelMeta:SetRemove(target)`
-  - Undefined Realm
+  - Client
 - `panelMeta:SetTransitionFunc(fn)`
-  - Undefined Realm
+  - Client
 - `panelMeta:SetupTransition(name, speed, fn)`
-  - Undefined Realm
+  - Client
 - `panelMeta:SideBlock(col, size, side)`
-  - Undefined Realm
+  - Client
 - `panelMeta:SquareCheckbox(inner, outer, speed)`
-  - Undefined Realm
+  - Client
 - `panelMeta:SquareFromHeight()`
-  - Undefined Realm
+  - Client
 - `panelMeta:SquareFromWidth()`
-  - Undefined Realm
+  - Client
 - `panelMeta:Stick(dock, margin, dontInvalidate)`
-  - Undefined Realm
+  - Client
 - `panelMeta:Text(text, font, col, alignment, ox, oy, paint)`
-  - Undefined Realm
+  - Client
 - `panelMeta:TiledMaterial(mat, tw, th, col)`
-  - Undefined Realm
+  - Client
 - `panelMeta:liaDeleteInventoryHooks(id)`
-  - Undefined Realm
+  - Client
 - `panelMeta:liaListenForInventoryChanges(inventory)`
-  - Undefined Realm
+  - Client
 - `panelMeta:setScaledPos(x, y)`
-  - Undefined Realm
+  - Client
 - `panelMeta:setScaledSize(w, h)`
-  - Undefined Realm
+  - Client
 
 #### playerMeta
 - `playerMeta:Name()`
-  - Undefined Realm
+  - Shared
 - `playerMeta:addMoney(amount)`
-  - Undefined Realm
+  - Shared
 - `playerMeta:addPart(partID)`
-  - Undefined Realm
+  - Shared
 - `playerMeta:banPlayer(reason, duration, banner)`
-  - Undefined Realm
+  - Shared
 - `playerMeta:canAfford(amount)`
-  - Undefined Realm
+  - Shared
 - `playerMeta:canEditVendor(vendor)`
-  - Undefined Realm
+  - Shared
 - `playerMeta:consumeStamina(amount)`
-  - Undefined Realm
+  - Shared
 - `playerMeta:doGesture(a, b, c)`
-  - Undefined Realm
+  - Shared
 - `playerMeta:doStaredAction(entity, callback, time, onCancel, distance)`
-  - Undefined Realm
+  - Shared
 - `playerMeta:forceSequence(sequenceName, callback, time, noFreeze)`
-  - Undefined Realm
+  - Shared
 - `playerMeta:getAllLiliaData()`
-  - Undefined Realm
+  - Shared
 - `playerMeta:getChar()`
-  - Undefined Realm
+  - Shared
 - `playerMeta:getClassData()`
-  - Undefined Realm
+  - Shared
 - `playerMeta:getDarkRPVar(var)`
-  - Undefined Realm
+  - Shared
 - `playerMeta:getFlags()`
-  - Undefined Realm
+  - Shared
 - `playerMeta:getItemDropPos()`
-  - Undefined Realm
+  - Shared
 - `playerMeta:getItemWeapon()`
-  - Undefined Realm
+  - Shared
 - `playerMeta:getItems()`
-  - Undefined Realm
+  - Shared
 - `playerMeta:getLiliaData(key, default)`
-  - Undefined Realm
+  - Shared
 - `playerMeta:getLocalVar(key, default)`
-  - Undefined Realm
+  - Shared
 - `playerMeta:getMainCharacter()`
-  - Undefined Realm
+  - Shared
 - `playerMeta:getMoney()`
-  - Undefined Realm
+  - Shared
 - `playerMeta:getParts()`
-  - Undefined Realm
+  - Shared
 - `playerMeta:getPlayTime()`
-  - Undefined Realm
+  - Shared
 - `playerMeta:getTracedEntity(distance)`
-  - Undefined Realm
+  - Shared
 - `playerMeta:giveFlags(flags)`
-  - Undefined Realm
+  - Shared
 - `playerMeta:hasFlags(flags)`
-  - Undefined Realm
+  - Shared
 - `playerMeta:hasPrivilege(privilegeName)`
-  - Undefined Realm
+  - Shared
 - `playerMeta:hasSkillLevel(skill, level)`
-  - Undefined Realm
+  - Shared
 - `playerMeta:hasWhitelist(faction)`
-  - Undefined Realm
+  - Shared
 - `playerMeta:isFamilySharedAccount()`
-  - Undefined Realm
+  - Shared
 - `playerMeta:isStaff()`
-  - Undefined Realm
+  - Shared
 - `playerMeta:isStaffOnDuty()`
-  - Undefined Realm
-- `playerMeta:isVIP()`
-  - Undefined Realm
+  - Shared
 - `playerMeta:leaveSequence()`
-  - Undefined Realm
+  - Shared
 - `playerMeta:loadLiliaData(callback)`
-  - Undefined Realm
+  - Shared
 - `playerMeta:meetsRequiredSkills(requiredSkillLevels)`
-  - Undefined Realm
+  - Shared
 - `playerMeta:networkAnimation(active, boneData)`
-  - Undefined Realm
+  - Shared
 - `playerMeta:notify(message, notifType)`
-  - Undefined Realm
+  - Shared
 - `playerMeta:notifyAdmin(message)`
-  - Undefined Realm
+  - Shared
 - `playerMeta:notifyAdminLocalized(key, ...)`
-  - Undefined Realm
+  - Shared
 - `playerMeta:notifyError(message)`
-  - Undefined Realm
+  - Shared
 - `playerMeta:notifyErrorLocalized(key, ...)`
-  - Undefined Realm
+  - Shared
 - `playerMeta:notifyInfo(message)`
-  - Undefined Realm
+  - Shared
 - `playerMeta:notifyInfoLocalized(key, ...)`
-  - Undefined Realm
+  - Shared
 - `playerMeta:notifyLocalized(message, notifType, ...)`
-  - Undefined Realm
+  - Shared
 - `playerMeta:notifyMoney(message)`
-  - Undefined Realm
+  - Shared
 - `playerMeta:notifyMoneyLocalized(key, ...)`
-  - Undefined Realm
+  - Shared
 - `playerMeta:notifySuccess(message)`
-  - Undefined Realm
+  - Shared
 - `playerMeta:notifySuccessLocalized(key, ...)`
-  - Undefined Realm
+  - Shared
 - `playerMeta:notifyWarning(message)`
-  - Undefined Realm
+  - Shared
 - `playerMeta:notifyWarningLocalized(key, ...)`
-  - Undefined Realm
+  - Shared
 - `playerMeta:playTimeGreaterThan(time)`
-  - Undefined Realm
+  - Shared
 - `playerMeta:removePart(partID)`
-  - Undefined Realm
+  - Shared
 - `playerMeta:removeRagdoll()`
-  - Undefined Realm
+  - Shared
 - `playerMeta:requestArguments(title, argTypes, callback)`
-  - Undefined Realm
+  - Shared
 - `playerMeta:requestBinaryQuestion(question, option1, option2, manualDismiss, callback)`
-  - Undefined Realm
+  - Shared
 - `playerMeta:requestButtons(title, buttons)`
-  - Undefined Realm
+  - Shared
 - `playerMeta:requestDropdown(title, subTitle, options, callback)`
-  - Undefined Realm
+  - Shared
 - `playerMeta:requestOptions(title, subTitle, options, limit, callback)`
-  - Undefined Realm
+  - Shared
 - `playerMeta:requestPopupQuestion(question, buttons)`
-  - Undefined Realm
+  - Shared
 - `playerMeta:requestString(title, subTitle, callback, default)`
-  - Undefined Realm
+  - Shared
 - `playerMeta:resetParts()`
-  - Undefined Realm
+  - Shared
 - `playerMeta:restoreStamina(amount)`
-  - Undefined Realm
+  - Shared
 - `playerMeta:saveLiliaData()`
-  - Undefined Realm
+  - Shared
 - `playerMeta:setAction(text, time, callback)`
-  - Undefined Realm
+  - Shared
 - `playerMeta:setLiliaData(key, value, noNetworking, noSave)`
-  - Undefined Realm
+  - Shared
 - `playerMeta:setLocalVar(key, value)`
-  - Undefined Realm
+  - Shared
 - `playerMeta:setMainCharacter(charID)`
-  - Undefined Realm
+  - Shared
 - `playerMeta:setNetVar(key, value)`
-  - Undefined Realm
+  - Shared
 - `playerMeta:setRagdolled(state, baseTime, getUpGrace, getUpMessage)`
-  - Undefined Realm
+  - Shared
 - `playerMeta:setWaypoint(name, vector, logo, onReach)`
-  - Undefined Realm
+  - Shared
 - `playerMeta:stopAction()`
-  - Undefined Realm
+  - Shared
 - `playerMeta:syncParts()`
-  - Undefined Realm
+  - Shared
 - `playerMeta:syncVars()`
-  - Undefined Realm
+  - Shared
 - `playerMeta:takeFlags(flags)`
-  - Undefined Realm
+  - Shared
 - `playerMeta:takeMoney(amount)`
-  - Undefined Realm
+  - Shared
 - `playerMeta:tostring()`
-  - Undefined Realm
+  - Shared
 
 
 - `AddBarField(sectionName, fieldName, labelText, minFunc, maxFunc, valueFunc)`
-  - Undefined Realm
+  - Client
 - `AddSection(sectionName, color, priority, location)`
-  - Undefined Realm
+  - Client
 - `AddTextField(sectionName, fieldName, labelText, valueFunc)`
-  - Undefined Realm
+  - Client
 - `AddToAdminStickHUD(client, target, information)`
-  - Undefined Realm
-- `AddWarning(charID, warned, warnedSteamID, timestamp, message, warner, warnerSteamID)`
-  - Undefined Realm
+  - Client
+- `AddWarning(charID, warned, warnedSteamID, timestamp, message, warner, warnerSteamID, severity)`
+  - Server
 - `AdjustCreationData(client, data, newData, originalData)`
-  - Undefined Realm
+  - Shared
 - `AdjustPACPartData(wearer, id, data)`
-  - Undefined Realm
+  - Shared
 - `AdjustStaminaOffset(client, offset)`
-  - Undefined Realm
+  - Shared
 - `AdminPrivilegesUpdated()`
-  - Undefined Realm
+  - Shared
 - `AdminStickAddModels(allModList, tgt)`
-  - Undefined Realm
+  - Client
 - `AdvDupe_FinishPasting(tbl)`
-  - Undefined Realm
+  - Shared
 - `AttachPart(client, id)`
-  - Undefined Realm
+  - Shared
 - `BagInventoryReady(self, inventory)`
-  - Undefined Realm
+  - Shared
 - `BagInventoryRemoved(self, inv)`
-  - Undefined Realm
+  - Shared
 - `CalcStaminaChange(client)`
-  - Undefined Realm
+  - Shared
 - `CanCharBeTransfered(tChar, faction, arg3)`
-  - Undefined Realm
+  - Server
 - `CanDeleteChar(client, character)`
-  - Undefined Realm
+  - Client
 - `CanDisplayCharInfo(name)`
-  - Undefined Realm
+  - Client
 - `CanInviteToClass(client, target)`
-  - Undefined Realm
+  - Shared
 - `CanInviteToFaction(client, target)`
-  - Undefined Realm
+  - Shared
 - `CanItemBeTransfered(item, inventory, VENDOR_INVENTORY_MEASURE, client)`
-  - Undefined Realm
+  - Server
 - `CanOpenBagPanel(item)`
-  - Undefined Realm
+  - Client
 - `CanOutfitChangeModel(self)`
-  - Undefined Realm
+  - Shared
 - `CanPerformVendorEdit(self, vendor)`
-  - Undefined Realm
+  - Shared
 - `CanPersistEntity(entity)`
-  - Undefined Realm
+  - Server
 - `CanPickupMoney(activator, self)`
-  - Undefined Realm
+  - Shared
 - `CanPlayerAccessDoor(client, self, access)`
-  - Undefined Realm
+  - Server
 - `CanPlayerAccessVendor(client, vendor)`
-  - Undefined Realm
+  - Server
 - `CanPlayerChooseWeapon(weapon)`
-  - Undefined Realm
+  - Shared
 - `CanPlayerCreateChar(client, data)`
-  - Undefined Realm
+  - Shared
 - `CanPlayerDropItem(client, item)`
-  - Undefined Realm
+  - Server
 - `CanPlayerEarnSalary(client)`
-  - Undefined Realm
+  - Server
 - `CanPlayerEquipItem(client, item)`
-  - Undefined Realm
+  - Server
 - `CanPlayerHoldObject(client, entity)`
-  - Undefined Realm
+  - Server
 - `CanPlayerInteractItem(client, action, self, data)`
-  - Undefined Realm
+  - Server
 - `CanPlayerJoinClass(client, class, info)`
-  - Undefined Realm
+  - Server
 - `CanPlayerKnock(arg1)`
-  - Undefined Realm
+  - Shared
 - `CanPlayerLock(client, door)`
-  - Undefined Realm
+  - Server
 - `CanPlayerModifyConfig(client, key)`
-  - Undefined Realm
+  - Shared
 - `CanPlayerOpenScoreboard(arg1)`
-  - Undefined Realm
+  - Client
 - `CanPlayerRotateItem(client, item)`
-  - Undefined Realm
+  - Shared
 - `CanPlayerSeeLogCategory(client, category)`
-  - Undefined Realm
+  - Server
 - `CanPlayerSpawnStorage(client, entity, info)`
-  - Undefined Realm
+  - Server
 - `CanPlayerSwitchChar(client, currentCharacter, newCharacter)`
-  - Undefined Realm
+  - Server
 - `CanPlayerTakeItem(client, item)`
-  - Undefined Realm
+  - Server
 - `CanPlayerThrowPunch(client)`
-  - Undefined Realm
+  - Shared
 - `CanPlayerTradeWithVendor(client, vendor, itemType, isSellingToVendor)`
-  - Undefined Realm
+  - Server
 - `CanPlayerUnequipItem(client, item)`
-  - Undefined Realm
+  - Server
 - `CanPlayerUnlock(client, door)`
-  - Undefined Realm
+  - Server
 - `CanPlayerUseChar(client, character)`
-  - Undefined Realm
+  - Server
 - `CanPlayerUseCommand(client, command)`
-  - Undefined Realm
+  - Shared
 - `CanPlayerUseDoor(client, door)`
-  - Undefined Realm
+  - Server
 - `CanPlayerViewInventory()`
-  - Undefined Realm
+  - Client
 - `CanRunItemAction(tempItem, key)`
-  - Undefined Realm
+  - Shared
 - `CanSaveData(ent, inventory)`
-  - Undefined Realm
+  - Server
 - `CharCleanUp(character)`
-  - Undefined Realm
+  - Server
 - `CharDeleted(client, character)`
-  - Undefined Realm
+  - Server
 - `CharForceRecognized(ply, range)`
-  - Undefined Realm
+  - Shared
 - `CharHasFlags(self, flags)`
-  - Undefined Realm
+  - Shared
 - `CharListColumns(columns)`
-  - Undefined Realm
+  - Client
 - `CharListEntry(entry, row)`
-  - Undefined Realm
+  - Client
 - `CharListExtraDetails(client, entry, stored)`
-  - Undefined Realm
+  - Client
 - `CharListLoaded(newCharList)`
-  - Undefined Realm
+  - Client
 - `CharListUpdated(oldCharList, newCharList)`
-  - Undefined Realm
+  - Client
 - `CharLoaded(character)`
-  - Undefined Realm
+  - Server
 - `CharMenuClosed()`
-  - Undefined Realm
+  - Client
 - `CharMenuOpened(self)`
-  - Undefined Realm
+  - Client
 - `CharPostSave(self)`
-  - Undefined Realm
+  - Server
 - `CharPreSave(character)`
-  - Undefined Realm
+  - Server
 - `CharRestored(character)`
-  - Undefined Realm
+  - Server
 - `ChatAddText(text, ...)`
-  - Undefined Realm
+  - Client
 - `ChatParsed(client, chatType, message, anonymous)`
-  - Undefined Realm
+  - Server
 - `ChatboxPanelCreated(arg1)`
-  - Undefined Realm
+  - Client
 - `ChatboxTextAdded(arg1)`
-  - Undefined Realm
+  - Client
 - `CheckFactionLimitReached(faction, character, client)`
-  - Undefined Realm
+  - Server
 - `ChooseCharacter(id)`
-  - Undefined Realm
+  - Client
 - `CommandAdded(command, data)`
-  - Undefined Realm
+  - Shared
 - `CommandRan(client, command, arg3, results)`
-  - Undefined Realm
+  - Server
 - `ConfigChanged(key, value, oldValue, client)`
-  - Undefined Realm
+  - Shared
 - `ConfigureCharacterCreationSteps(self)`
-  - Undefined Realm
+  - Client
 - `CreateCharacter(data)`
-  - Undefined Realm
+  - Server
 - `CreateCharacterSaveTimer()`
-  - Undefined Realm
+  - Server
 - `CreateChat()`
-  - Undefined Realm
+  - Client
 - `CreateDefaultInventory(character)`
-  - Undefined Realm
+  - Server
 - `CreateInformationButtons(pages)`
-  - Undefined Realm
+  - Client
 - `CreateInventoryPanel(inventory, parent)`
-  - Undefined Realm
+  - Client
 - `CreateMenuButtons(tabs)`
-  - Undefined Realm
+  - Client
 - `CreateSalaryTimers()`
-  - Undefined Realm
+  - Server
 - `CreateVoiceUpdateTimer()`
-  - Undefined Realm
+  - Server
 - `DatabaseConnected()`
-  - Undefined Realm
+  - Server
 - `DeleteCharacter(id)`
-  - Undefined Realm
+  - Server
 - `DermaSkinChanged(newSkin)`
-  - Undefined Realm
+  - Client
 - `DiscordRelaySend(embed)`
-  - Undefined Realm
+  - Server
 - `DiscordRelayUnavailable()`
-  - Undefined Realm
+  - Server
 - `DiscordRelayed(embed)`
-  - Undefined Realm
+  - Server
 - `DisplayPlayerHUDInformation(client, hudInfos)`
-  - Undefined Realm
+  - Client
 - `DoModuleIncludes(path, MODULE)`
-  - Undefined Realm
+  - Shared
 - `DoorDataReceived(door, syncData)`
-  - Undefined Realm
+  - Client
 - `DoorEnabledToggled(client, door, newState)`
-  - Undefined Realm
+  - Server
 - `DoorHiddenToggled(client, entity, newState)`
-  - Undefined Realm
+  - Server
 - `DoorLockToggled(client, door, state)`
-  - Undefined Realm
+  - Server
 - `DoorOwnableToggled(client, door, newState)`
-  - Undefined Realm
+  - Server
 - `DoorPriceSet(client, door, price)`
-  - Undefined Realm
+  - Server
 - `DoorTitleSet(client, door, name)`
-  - Undefined Realm
+  - Server
 - `DrawCharInfo(client, character, info)`
-  - Undefined Realm
+  - Client
 - `DrawDoorInfoBox(entity, infoTexts, alphaOverride)`
-  - Undefined Realm
+  - Client
 - `DrawEntityInfo(e, a, pos)`
-  - Undefined Realm
+  - Client
 - `DrawItemEntityInfo(self, item, infoTable, alpha)`
-  - Undefined Realm
+  - Client
 - `DrawLiliaModelView(client, entity)`
-  - Undefined Realm
+  - Client
 - `DrawPlayerRagdoll(entity)`
-  - Undefined Realm
+  - Client
 - `ExitStorage()`
-  - Undefined Realm
+  - Client
 - `F1MenuClosed()`
-  - Undefined Realm
+  - Client
 - `F1MenuOpened(self)`
-  - Undefined Realm
+  - Client
 - `FetchSpawns()`
-  - Undefined Realm
+  - Server
 - `FilterCharModels(arg1)`
-  - Undefined Realm
+  - Client
 - `FilterDoorInfo(entity, doorData, doorInfo)`
-  - Undefined Realm
+  - Client
 - `ForceRecognizeRange(ply, range, fakeName)`
-  - Undefined Realm
+  - Shared
 - `GetAdjustedPartData(wearer, id)`
-  - Undefined Realm
+  - Shared
 - `GetAdminESPTarget(ent, client)`
-  - Undefined Realm
+  - Client
 - `GetAdminStickLists(tgt, lists)`
-  - Undefined Realm
+  - Client
 - `GetAllCaseClaims()`
-  - Undefined Realm
+  - Server
 - `GetAttributeMax(client, id)`
-  - Undefined Realm
+  - Shared
 - `GetAttributeStartingMax(client, attribute)`
-  - Undefined Realm
+  - Shared
 - `GetBotModel(client, faction)`
-  - Undefined Realm
+  - Server
 - `GetCharMaxStamina(char)`
-  - Undefined Realm
+  - Shared
 - `GetDamageScale(hitgroup, dmgInfo, damageScale)`
-  - Undefined Realm
+  - Server
 - `GetDefaultCharDesc(client, arg2, data)`
-  - Undefined Realm
+  - Shared
 - `GetDefaultCharName(client, faction, data)`
-  - Undefined Realm
+  - Shared
 - `GetDefaultInventorySize(client, char)`
-  - Undefined Realm
+  - Server
 - `GetDefaultInventoryType(character)`
-  - Undefined Realm
+  - Server
 - `GetDisplayedDescription(client, isHUD)`
-  - Undefined Realm
+  - Client
 - `GetDisplayedName(client, chatType)`
-  - Undefined Realm
+  - Shared
 - `GetDoorInfo(entity, doorData, doorInfo)`
-  - Undefined Realm
+  - Client
 - `GetDoorInfoForAdminStick(target, extraInfo)`
-  - Undefined Realm
+  - Client
 - `GetEntitySaveData(ent)`
-  - Undefined Realm
+  - Server
 - `GetHandsAttackSpeed(arg1)`
-  - Undefined Realm
+  - Shared
 - `GetInjuredText(c)`
-  - Undefined Realm
+  - Client
 - `GetItemDropModel(itemTable, self)`
-  - Undefined Realm
+  - Shared
 - `GetItemStackKey(item)`
-  - Undefined Realm
+  - Client
 - `GetItemStacks(inventory)`
-  - Undefined Realm
+  - Client
 - `GetMainCharacterID()`
-  - Undefined Realm
+  - Client
 - `GetMainMenuPosition(character)`
-  - Undefined Realm
+  - Client
 - `GetMaxPlayerChar(client)`
-  - Undefined Realm
+  - Shared
 - `GetMaxStartingAttributePoints(client, count)`
-  - Undefined Realm
+  - Shared
 - `GetModelGender(model)`
-  - Undefined Realm
+  - Shared
 - `GetMoneyModel(arg1)`
-  - Undefined Realm
+  - Shared
 - `GetNPCDialogOptions(arg1)`
-  - Undefined Realm
+  - Shared
 - `GetOOCDelay(speaker)`
-  - Undefined Realm
+  - Server
 - `GetPlayTime(self)`
-  - Undefined Realm
+  - Server
 - `GetPlayerDeathSound(client, isFemale)`
-  - Undefined Realm
+  - Server
 - `GetPlayerPainSound(client, paintype, isFemale)`
-  - Undefined Realm
+  - Server
 - `GetPlayerPunchDamage(arg1)`
-  - Undefined Realm
+  - Shared
 - `GetPlayerPunchRagdollTime(arg1)`
-  - Undefined Realm
+  - Shared
 - `GetPlayerRespawnLocation(client, character)`
-  - Undefined Realm
+  - Server
 - `GetPlayerSpawnLocation(client, character)`
-  - Undefined Realm
+  - Server
 - `GetPrestigePayBonus(client, char, pay, faction, class)`
-  - Undefined Realm
+  - Server
 - `GetPriceOverride(self, uniqueID, price, isSellingToVendor)`
-  - Undefined Realm
+  - Shared
 - `GetRagdollTime(self, time)`
-  - Undefined Realm
+  - Shared
 - `GetSalaryAmount(client, faction, class)`
-  - Undefined Realm
+  - Server
 - `GetTicketsByRequester(steamID)`
-  - Undefined Realm
+  - Server
 - `GetVendorSaleScale(self)`
-  - Undefined Realm
+  - Shared
 - `GetWarnings(charID)`
-  - Undefined Realm
+  - Server
 - `GetWarningsByIssuer(steamID)`
-  - Undefined Realm
+  - Server
 - `GetWeaponName(weapon)`
-  - Undefined Realm
+  - Shared
 - `HandleItemTransferRequest(client, itemID, x, y, invID)`
-  - Undefined Realm
+  - Server
 - `InitializeStorage(entity)`
-  - Undefined Realm
+  - Server
 - `InitializedConfig()`
-  - Undefined Realm
+  - Shared
 - `InitializedItems()`
-  - Undefined Realm
+  - Shared
 - `InitializedKeybinds()`
-  - Undefined Realm
+  - Shared
 - `InitializedModules()`
-  - Undefined Realm
+  - Shared
 - `InitializedOptions()`
-  - Undefined Realm
+  - Shared
 - `InitializedSchema()`
-  - Undefined Realm
+  - Server
 - `InteractionMenuClosed()`
-  - Undefined Realm
+  - Client
 - `InteractionMenuOpened(frame)`
-  - Undefined Realm
+  - Client
 - `InterceptClickItemIcon(self, itemIcon, keyCode)`
-  - Undefined Realm
+  - Client
 - `InventoryClosed(self, inventory)`
-  - Undefined Realm
+  - Client
 - `InventoryDataChanged(instance, key, oldValue, value)`
-  - Undefined Realm
+  - Shared
 - `InventoryDeleted(instance)`
-  - Undefined Realm
+  - Server
 - `InventoryInitialized(instance)`
-  - Undefined Realm
+  - Shared
 - `InventoryItemAdded(inventory, item)`
-  - Undefined Realm
+  - Shared
 - `InventoryItemDataChanged(item, key, oldValue, newValue, inventory)`
-  - Undefined Realm
+  - Shared
 - `InventoryItemIconCreated(icon, item, self)`
-  - Undefined Realm
+  - Client
 - `InventoryItemRemoved(self, instance, preserveItem)`
-  - Undefined Realm
+  - Shared
 - `InventoryOpened(panel, inventory)`
-  - Undefined Realm
+  - Client
 - `InventoryPanelCreated(panel, inventory, parent)`
-  - Undefined Realm
+  - Client
 - `IsCharFakeRecognized(character, id)`
-  - Undefined Realm
+  - Shared
 - `IsCharRecognized(a, arg2)`
-  - Undefined Realm
+  - Shared
 - `IsRecognizedChatType(chatType)`
-  - Undefined Realm
+  - Shared
 - `IsSuitableForTrunk(ent)`
-  - Undefined Realm
+  - Server
 - `IsValid()`
-  - Undefined Realm
+  - Shared
 - `ItemCombine(client, item, target)`
-  - Undefined Realm
+  - Server
 - `ItemDataChanged(item, key, oldValue, newValue)`
-  - Undefined Realm
+  - Shared
 - `ItemDefaultFunctions(arg1)`
-  - Undefined Realm
+  - Shared
 - `ItemDeleted(instance)`
-  - Undefined Realm
+  - Server
 - `ItemDraggedOutOfInventory(client, item)`
-  - Undefined Realm
+  - Client
 - `ItemFunctionCalled(self, method, client, entity, results)`
-  - Undefined Realm
+  - Server
 - `ItemInitialized(item)`
-  - Undefined Realm
+  - Shared
 - `ItemPaintOver(self, itemTable, w, h)`
-  - Undefined Realm
+  - Client
 - `ItemQuantityChanged(item, oldValue, quantity)`
-  - Undefined Realm
+  - Shared
 - `ItemShowEntityMenu(entity)`
-  - Undefined Realm
+  - Client
 - `ItemTransfered(context)`
-  - Undefined Realm
+  - Server
 - `KeyLock(client, door, time)`
-  - Undefined Realm
+  - Server
 - `KeyUnlock(client, door, time)`
-  - Undefined Realm
+  - Server
 - `KickedFromChar(characterID, isCurrentChar)`
-  - Undefined Realm
+  - Server
 - `LiliaLoaded()`
-  - Undefined Realm
+  - Shared
 - `LiliaTablesLoaded()`
-  - Undefined Realm
+  - Server
 - `LoadCharInformation()`
-  - Undefined Realm
+  - Client
 - `LoadData()`
-  - Undefined Realm
+  - Server
 - `LoadMainCharacter()`
-  - Undefined Realm
+  - Client
 - `LoadMainMenuInformation(info, character)`
-  - Undefined Realm
+  - Client
 - `ModifyCharacterModel(arg1, character)`
-  - Undefined Realm
+  - Server
 - `ModifyScoreboardModel(arg1, ply)`
-  - Undefined Realm
+  - Client
 - `ModifyVoiceIndicatorText(client, voiceText, voiceType)`
-  - Undefined Realm
+  - Client
 - `NetVarChanged(client, key, oldValue, value)`
-  - Undefined Realm
+  - Shared
 - `OnAdminStickMenuClosed()`
-  - Undefined Realm
+  - Client
 - `OnAdminSystemLoaded(arg1, arg2)`
-  - Undefined Realm
+  - Server
 - `OnCharAttribBoosted(client, self, attribID, boostID, arg5)`
-  - Undefined Realm
+  - Server
 - `OnCharAttribUpdated(client, self, key, arg4)`
-  - Undefined Realm
+  - Server
 - `OnCharCreated(client, character, originalData)`
-  - Undefined Realm
+  - Server
 - `OnCharDelete(client, id)`
-  - Undefined Realm
+  - Server
 - `OnCharDisconnect(client, character)`
-  - Undefined Realm
+  - Server
 - `OnCharFlagsGiven(ply, self, addedFlags)`
-  - Undefined Realm
+  - Server
 - `OnCharFlagsTaken(ply, self, removedFlags)`
-  - Undefined Realm
+  - Server
 - `OnCharGetup(target, entity)`
-  - Undefined Realm
+  - Server
 - `OnCharKick(self, client)`
-  - Undefined Realm
+  - Server
 - `OnCharNetVarChanged(character, key, oldVar, value)`
-  - Undefined Realm
+  - Server
 - `OnCharPermakilled(self, arg2)`
-  - Undefined Realm
+  - Server
 - `OnCharRecognized(client, arg2)`
-  - Undefined Realm
+  - Server
 - `OnCharTradeVendor(client, vendor, item, isSellingToVendor, character, itemType, isFailed)`
-  - Undefined Realm
+  - Server
 - `OnCharVarChanged(character, varName, oldVar, newVar)`
-  - Undefined Realm
+  - Shared
 - `OnChatReceived(client, chatType, text, anonymous)`
-  - Undefined Realm
+  - Client
 - `OnCheaterCaught(client)`
-  - Undefined Realm
+  - Server
 - `OnConfigChanged(key, oldValue, newValue)`
-  - Undefined Realm
+  - Shared
 - `OnConfigUpdated(key, oldValue, value)`
-  - Undefined Realm
+  - Shared
 - `OnCreateDualInventoryPanels(panel1, panel2, inventory1, inventory2)`
-  - Undefined Realm
+  - Client
 - `OnCreateItemInteractionMenu(self, menu, itemTable)`
-  - Undefined Realm
+  - Client
 - `OnCreateStoragePanel(localInvPanel, storageInvPanel, storage)`
-  - Undefined Realm
+  - Client
 - `OnDataSet(key, value, gamemode, map)`
-  - Undefined Realm
+  - Server
 - `OnDatabaseLoaded()`
-  - Undefined Realm
+  - Server
 - `OnDeathSoundPlayed(client, deathSound)`
-  - Undefined Realm
+  - Server
 - `OnEntityLoaded(ent, data)`
-  - Undefined Realm
+  - Server
 - `OnEntityPersistUpdated(ent, data)`
-  - Undefined Realm
+  - Server
 - `OnEntityPersisted(ent, entData)`
-  - Undefined Realm
+  - Server
 - `OnItemAdded(owner, item)`
-  - Undefined Realm
+  - Shared
 - `OnItemCreated(itemTable, self)`
-  - Undefined Realm
+  - Shared
 - `OnItemOverridden(item, overrides)`
-  - Undefined Realm
+  - Shared
 - `OnItemRegistered(ITEM)`
-  - Undefined Realm
+  - Shared
 - `OnItemSpawned(self)`
-  - Undefined Realm
+  - Server
 - `OnLoadTables()`
-  - Undefined Realm
+  - Server
 - `OnLocalVarSet(key, value)`
-  - Undefined Realm
+  - Client
 - `OnLocalizationLoaded()`
-  - Undefined Realm
+  - Shared
 - `OnNPCTypeSet(client, npc, npcID, filteredData)`
-  - Undefined Realm
+  - Server
 - `OnOOCMessageSent(client, message)`
-  - Undefined Realm
+  - Server
 - `OnOpenVendorMenu(self, vendor)`
-  - Undefined Realm
+  - Client
 - `OnPAC3PartTransfered(part)`
-  - Undefined Realm
+  - Shared
 - `OnPainSoundPlayed(entity, painSound)`
-  - Undefined Realm
+  - Server
 - `OnPickupMoney(activator, self)`
-  - Undefined Realm
+  - Server
 - `OnPlayerDropWeapon(client, weapon, entity)`
-  - Undefined Realm
+  - Server
 - `OnPlayerEnterSequence(self, sequenceName, callback, time, noFreeze)`
-  - Undefined Realm
+  - Server
 - `OnPlayerInteractItem(client, action, self, result, data)`
-  - Undefined Realm
+  - Server
 - `OnPlayerJoinClass(target, arg2, oldClass)`
-  - Undefined Realm
+  - Server
 - `OnPlayerLeaveSequence(self)`
-  - Undefined Realm
+  - Server
 - `OnPlayerLostStackItem(itemTypeOrItem)`
-  - Undefined Realm
+  - Server
 - `OnPlayerObserve(client, state)`
-  - Undefined Realm
+  - Server
 - `OnPlayerPurchaseDoor(client, door, arg3)`
-  - Undefined Realm
+  - Server
 - `OnPlayerRagdolled(self, entity)`
-  - Undefined Realm
+  - Server
 - `OnPlayerSwitchClass(client, class, oldClass)`
-  - Undefined Realm
+  - Server
 - `OnPrivilegeRegistered(arg1, arg2, arg3, arg4)`
-  - Undefined Realm
+  - Shared
 - `OnPrivilegeUnregistered(arg1, arg2)`
-  - Undefined Realm
+  - Shared
 - `OnRequestItemTransfer(self, arg2)`
-  - Undefined Realm
+  - Server
 - `OnSalaryAdjust(client)`
-  - Undefined Realm
+  - Server
 - `OnSalaryGiven(client, char, pay, faction, class)`
-  - Undefined Realm
+  - Server
 - `OnSavedItemLoaded(loadedItems)`
-  - Undefined Realm
+  - Server
 - `OnServerLog(client, logType, logString, category)`
-  - Undefined Realm
+  - Server
 - `OnThemeChanged(themeName, useTransition)`
-  - Undefined Realm
+  - Client
 - `OnTicketClaimed(client, requester, ticketMessage)`
-  - Undefined Realm
+  - Server
 - `OnTicketClosed(client, requester, ticketMessage)`
-  - Undefined Realm
+  - Server
 - `OnTicketCreated(noob, message)`
-  - Undefined Realm
+  - Server
 - `OnTransferred(target)`
-  - Undefined Realm
+  - Server
 - `OnUsergroupCreated(groupName, arg2)`
-  - Undefined Realm
+  - Shared
 - `OnUsergroupPermissionsChanged(groupName, arg2)`
-  - Undefined Realm
+  - Shared
 - `OnUsergroupRemoved(groupName)`
-  - Undefined Realm
+  - Shared
 - `OnUsergroupRenamed(oldName, newName)`
-  - Undefined Realm
+  - Shared
 - `OnVendorEdited(client, vendor, key)`
-  - Undefined Realm
+  - Server
 - `OnVoiceTypeChanged(client)`
-  - Undefined Realm
+  - Server
 - `OnlineStaffDataReceived(staffData)`
-  - Undefined Realm
+  - Client
 - `OpenAdminStickUI(tgt)`
-  - Undefined Realm
+  - Client
 - `OptionAdded(key, name, option)`
-  - Undefined Realm
+  - Shared
 - `OptionChanged(key, old, value)`
-  - Undefined Realm
+  - Shared
 - `OptionReceived(arg1, key, value)`
-  - Undefined Realm
+  - Client
 - `OverrideFactionDesc(uniqueID, arg2)`
-  - Undefined Realm
+  - Shared
 - `OverrideFactionModels(uniqueID, arg2)`
-  - Undefined Realm
+  - Shared
 - `OverrideFactionName(uniqueID, arg2)`
-  - Undefined Realm
+  - Shared
 - `OverrideSpawnTime(ply, baseTime)`
-  - Undefined Realm
+  - Server
 - `PaintItem(item)`
-  - Undefined Realm
+  - Client
 - `PlayerAccessVendor(client, vendor)`
-  - Undefined Realm
+  - Server
 - `PlayerCheatDetected(client)`
-  - Undefined Realm
+  - Server
 - `PlayerGagged(target, admin)`
-  - Undefined Realm
+  - Server
 - `PlayerLiliaDataLoaded(client)`
-  - Undefined Realm
+  - Server
 - `PlayerLoadedChar(client, character, currentChar)`
-  - Undefined Realm
+  - Server
 - `PlayerMessageSend(speaker, chatType, text, anonymous, receivers)`
-  - Undefined Realm
+  - Server
 - `PlayerModelChanged(client, value)`
-  - Undefined Realm
+  - Server
 - `PlayerMuted(target, admin)`
-  - Undefined Realm
+  - Server
 - `PlayerShouldAct()`
-  - Undefined Realm
+  - Shared
 - `PlayerShouldPermaKill(client, inflictor, attacker)`
-  - Undefined Realm
+  - Server
 - `PlayerSpawnPointSelected(client, pos, ang)`
-  - Undefined Realm
+  - Server
 - `PlayerStaminaGained(client)`
-  - Undefined Realm
+  - Server
 - `PlayerStaminaLost(client)`
-  - Undefined Realm
+  - Server
 - `PlayerThrowPunch(client)`
-  - Undefined Realm
+  - Shared
 - `PlayerUngagged(target, admin)`
-  - Undefined Realm
+  - Server
 - `PlayerUnmuted(target, admin)`
-  - Undefined Realm
+  - Server
 - `PlayerUseDoor(client, door)`
-  - Undefined Realm
+  - Server
 - `PopulateAdminStick(currentMenu, currentTarget, currentStores)`
-  - Undefined Realm
+  - Client
 - `PopulateAdminTabs(pages)`
-  - Undefined Realm
+  - Client
 - `PopulateConfigurationButtons(pages)`
-  - Undefined Realm
+  - Client
 - `PopulateInventoryItems(pnlContent, tree)`
-  - Undefined Realm
+  - Client
 - `PostDoorDataLoad(ent, doorData)`
-  - Undefined Realm
+  - Server
 - `PostDrawInventory(mainPanel, parentPanel)`
-  - Undefined Realm
+  - Client
 - `PostLoadData()`
-  - Undefined Realm
+  - Server
 - `PostLoadFonts(mainFont, mainFont)`
-  - Undefined Realm
+  - Client
 - `PostPlayerInitialSpawn(client)`
-  - Undefined Realm
+  - Server
 - `PostPlayerLoadedChar(client, character, currentChar)`
-  - Undefined Realm
+  - Server
 - `PostPlayerLoadout(client)`
-  - Undefined Realm
+  - Server
 - `PostPlayerSay(client, message, chatType, anonymous)`
-  - Undefined Realm
+  - Server
 - `PostScaleDamage(hitgroup, dmgInfo, damageScale)`
-  - Undefined Realm
+  - Server
 - `PreCharDelete(id)`
-  - Undefined Realm
+  - Server
 - `PreDoorDataSave(door, doorData)`
-  - Undefined Realm
+  - Server
 - `PreDrawPhysgunBeam()`
-  - Undefined Realm
+  - Client
 - `PreLiliaLoaded()`
-  - Undefined Realm
+  - Shared
 - `PrePlayerInteractItem(client, action, self)`
-  - Undefined Realm
+  - Server
 - `PrePlayerLoadedChar(client, character, currentChar)`
-  - Undefined Realm
+  - Server
 - `PreSalaryGive(client, char, pay, faction, class)`
-  - Undefined Realm
+  - Server
 - `PreScaleDamage(hitgroup, dmgInfo, damageScale)`
-  - Undefined Realm
+  - Server
 - `RefreshFonts()`
-  - Undefined Realm
+  - Client
 - `RegisterAdminStickSubcategories(categories)`
-  - Undefined Realm
+  - Client
 - `RegisterPreparedStatements()`
-  - Undefined Realm
+  - Server
 - `RemovePart(client, id)`
-  - Undefined Realm
+  - Shared
 - `RemoveWarning(charID, index)`
-  - Undefined Realm
+  - Server
 - `ResetCharacterPanel()`
-  - Undefined Realm
+  - Client
 - `RunAdminSystemCommand(cmd, admin, victim, dur, reason)`
-  - Undefined Realm
+  - Server
 - `SaveData()`
-  - Undefined Realm
+  - Server
 - `ScoreboardClosed(self)`
-  - Undefined Realm
+  - Client
 - `ScoreboardOpened(self)`
-  - Undefined Realm
+  - Client
 - `ScoreboardRowCreated(slot, ply)`
-  - Undefined Realm
+  - Client
 - `ScoreboardRowRemoved(self, ply)`
-  - Undefined Realm
+  - Client
 - `SendPopup(noob, message)`
-  - Undefined Realm
+  - Server
 - `SetMainCharacter(charID)`
-  - Undefined Realm
+  - Server
 - `SetupBagInventoryAccessRules(inventory)`
-  - Undefined Realm
+  - Server
 - `SetupBotPlayer(client)`
-  - Undefined Realm
+  - Server
 - `SetupDatabase()`
-  - Undefined Realm
+  - Server
 - `SetupPACDataFromItems()`
-  - Undefined Realm
+  - Shared
 - `SetupPlayerModel(client, self)`
-  - Undefined Realm
+  - Server
 - `SetupQuickMenu(self)`
-  - Undefined Realm
+  - Client
 - `ShouldAllowScoreboardOverride(client, var)`
-  - Undefined Realm
+  - Client
 - `ShouldBarDraw(bar)`
-  - Undefined Realm
+  - Client
 - `ShouldDataBeSaved()`
-  - Undefined Realm
+  - Server
 - `ShouldDeleteSavedItems()`
-  - Undefined Realm
+  - Server
 - `ShouldDisableThirdperson(client)`
-  - Undefined Realm
+  - Client
 - `ShouldDrawAmmo(wpn)`
-  - Undefined Realm
+  - Client
 - `ShouldDrawEntityInfo(e)`
-  - Undefined Realm
+  - Client
 - `ShouldDrawPlayerInfo(e)`
-  - Undefined Realm
+  - Client
 - `ShouldDrawWepSelect(client)`
-  - Undefined Realm
+  - Client
 - `ShouldHideBars()`
-  - Undefined Realm
+  - Client
 - `ShouldMenuButtonShow(arg1)`
-  - Undefined Realm
+  - Client
 - `ShouldPlayDeathSound(client, deathSound)`
-  - Undefined Realm
+  - Server
 - `ShouldPlayPainSound(entity, painSound)`
-  - Undefined Realm
+  - Server
 - `ShouldRespawnScreenAppear()`
-  - Undefined Realm
+  - Client
 - `ShouldShowCharVarInCreation(key)`
-  - Undefined Realm
+  - Client
 - `ShouldShowClassOnScoreboard(clsData)`
-  - Undefined Realm
+  - Client
 - `ShouldShowFactionOnScoreboard(ply)`
-  - Undefined Realm
+  - Client
 - `ShouldShowPlayerOnScoreboard(ply)`
-  - Undefined Realm
+  - Client
 - `ShouldShowQuickMenu()`
-  - Undefined Realm
+  - Client
 - `ShouldSpawnClientRagdoll(client)`
-  - Undefined Realm
+  - Server
 - `ShowPlayerOptions(target, options)`
-  - Undefined Realm
+  - Client
 - `StorageCanTransferItem(client, storage, item)`
-  - Undefined Realm
+  - Server
 - `StorageEntityRemoved(self, inventory)`
-  - Undefined Realm
+  - Server
 - `StorageInventorySet(entity, inventory, isCar)`
-  - Undefined Realm
+  - Server
 - `StorageItemRemoved()`
-  - Undefined Realm
+  - Server
 - `StorageOpen(storage, isCar)`
-  - Undefined Realm
+  - Client
 - `StorageRestored(ent, inventory)`
-  - Undefined Realm
+  - Server
 - `StorageUnlockPrompt(entity)`
-  - Undefined Realm
+  - Client
 - `StoreSpawns(spawns)`
-  - Undefined Realm
+  - Server
 - `SyncCharList(client)`
-  - Undefined Realm
+  - Shared
 - `ThirdPersonToggled(arg1)`
-  - Undefined Realm
+  - Shared
 - `TicketFrame(requester, message, claimed)`
-  - Undefined Realm
+  - Client
 - `TicketSystemClaim(client, requester, ticketMessage)`
-  - Undefined Realm
+  - Server
 - `TicketSystemClose(client, requester, ticketMessage)`
-  - Undefined Realm
+  - Server
 - `TicketSystemCreated(noob, message)`
-  - Undefined Realm
+  - Server
 - `ToggleLock(client, door, state)`
-  - Undefined Realm
+  - Server
 - `TooltipInitialize(var, panel)`
-  - Undefined Realm
+  - Client
 - `TooltipLayout(var)`
-  - Undefined Realm
+  - Client
 - `TooltipPaint(var, w, h)`
-  - Undefined Realm
+  - Client
 - `TransferItem(itemID)`
-  - Undefined Realm
+  - Client
 - `TryViewModel(entity)`
-  - Undefined Realm
+  - Shared
 - `UpdateEntityPersistence(vendor)`
-  - Undefined Realm
+  - Server
 - `VendorClassUpdated(vendor, id, allowed)`
-  - Undefined Realm
+  - Server
 - `VendorEdited(liaVendorEnt, key)`
-  - Undefined Realm
+  - Server
 - `VendorExited()`
-  - Undefined Realm
+  - Client
 - `VendorFactionBuyScaleUpdated(vendor, factionID, scale)`
-  - Undefined Realm
+  - Server
 - `VendorFactionSellScaleUpdated(vendor, factionID, scale)`
-  - Undefined Realm
+  - Server
 - `VendorFactionUpdated(vendor, id, allowed)`
-  - Undefined Realm
+  - Server
 - `VendorItemMaxStockUpdated(vendor, itemType, value)`
-  - Undefined Realm
+  - Server
 - `VendorItemModeUpdated(vendor, itemType, value)`
-  - Undefined Realm
+  - Server
 - `VendorItemPriceUpdated(vendor, itemType, value)`
-  - Undefined Realm
+  - Server
 - `VendorItemStockUpdated(vendor, itemType, value)`
-  - Undefined Realm
+  - Server
 - `VendorMessagesUpdated(vendor)`
-  - Undefined Realm
+  - Server
 - `VendorOpened(vendor)`
-  - Undefined Realm
+  - Client
 - `VendorSynchronized(vendor)`
-  - Undefined Realm
+  - Server
 - `VendorTradeEvent(client, vendor, itemType, isSellingToVendor)`
-  - Undefined Realm
+  - Server
 - `VoiceToggled(enabled)`
-  - Undefined Realm
-- `WarningIssued(client, target, reason, count, warnerSteamID, arg6)`
-  - Undefined Realm
+  - Client
+- `WarningIssued(client, target, reason, severity, count, warnerSteamID, targetSteamID)`
+  - Server
 - `WarningRemoved(client, targetClient, arg3, arg4, arg5, arg6)`
-  - Undefined Realm
+  - Server
 - `WeaponCycleSound()`
-  - Undefined Realm
+  - Client
 - `WeaponSelectSound()`
-  - Undefined Realm
+  - Client
 - `WebImageDownloaded(n, arg2)`
-  - Undefined Realm
+  - Client
 - `WebSoundDownloaded(name, path)`
-  - Undefined Realm
+  - Client
 - `getData(default)`
-  - Undefined Realm
+  - Shared
 - `setData(value, global, ignoreMap)`
-  - Undefined Realm
+  - Shared
 - `syncVendorDataToClient(client)`
-  - Undefined Realm
+  - Server

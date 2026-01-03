@@ -495,4 +495,10 @@ MODULE.Privileges = {
         MinAccess = "superadmin",
         Category = "categoryStaffManagement",
     },
+    {
+        Name = "seeInsertNotifications",
+        ID = "seeInsertNotifications",
+        MinAccess = "superadmin",
+        Category = "categoryStaffManagement",
+    },
 }
