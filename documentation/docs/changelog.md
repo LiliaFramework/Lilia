@@ -1,5 +1,30 @@
 # Changelog
 
+## Version 7.176 (January 03, 2026)
+
+### Changes
+
+- Donator Stuff, Interaction Changes & New Chat Notifications
+- ChatBox Fixes
+- Warning Severities
+- Aid now allows armor
+- More Fonts
+- Clearer Scoreboard
+- Main Menu Improvements
+- Successfully updated workshop Lilia to 7.168
+- Micro Fixes
+- Successfully updated workshop Lilia to 7.166
+- Linting
+- Added Args For Clarity + FACTION.Scale Bug Fix
+- Update ci.yml
+- Update generate_docs.py
+- Successfully updated workshop Lilia to 7.161
+- Update server.lua
+- Successfully updated workshop Lilia to 7.159
+- Better Model in Ammo
+- Placing entity items without being in inv
+- Successfully updated workshop Lilia to 7.156
+
 ## Version 7.168 (December 31, 2025)
 
 ### Changes

@@ -22,18 +22,6 @@ In character creation, character info display, or biography editing interfaces
 
 ---
 
-### liaCharacterFaction
-
-#### 📋 Purpose
-Displays and manages character faction selection
-A panel for selecting and displaying character factions
-
-#### ⏰ When Called
-During character creation or faction management interfaces
-]]
-
----
-
 ### liaCharacterModel
 
 #### 📋 Purpose
