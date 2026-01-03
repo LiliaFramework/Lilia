@@ -71,7 +71,8 @@ function PANEL:makeFactionComboBox()
     for id, fac in SortedPairsByMemberValue(lia.faction.teams, "name") do
         if lia.faction.hasWhitelist(fac.index) then
             if fac.uniqueID == "staff" then continue end
-            combo:AddChoice(L(fac.name), id)
+            local desc = L(fac.desc or "noDesc")
+            combo:AddChoice(L(fac.name), id, desc ~= "" and desc or nil)
         end
     end
 
