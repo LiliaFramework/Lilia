@@ -757,7 +757,7 @@ def generate_documentation_for_file(file_path, output_dir, is_library=False, bas
 
     # Check if file already exists and has content
     if output_path.exists() and output_path.stat().st_size > 0:
-        print(f"  {output_filename} already exists, skipping")
+        print(f"  {output_path.name} already exists, skipping")
         return
 
     # Generate markdown content
@@ -784,6 +784,8 @@ def generate_documentation_for_file(file_path, output_dir, is_library=False, bas
         return
 
     # Write the documentation file
+    output_path.parent.mkdir(parents=True, exist_ok=True)
+    output_filename = output_path.name  # For consistent logging
     with open(output_path, 'w', encoding='utf-8') as f:
         # Generate title and subtitle from file header
         if custom_filename:
