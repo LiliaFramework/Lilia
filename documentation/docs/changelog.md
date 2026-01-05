@@ -1,5 +1,30 @@
 # Changelog
 
+## Version 7.198 (January 05, 2026)
+
+### Changes
+
+- Update functions.md
+- Bug Fix
+- Successfully updated workshop Lilia to 7.195
+- Update item.lua
+- Badly Named Hook lel
+- Successfully updated workshop Lilia to 7.192
+- Update generate_docs.py
+- UI Name Changes
+- Allowed Schema to have Data Saved
+- Docs Update
+- Update generate_docs.py
+- Successfully updated workshop Lilia to 7.186
+- Successfully updated workshop Lilia to 7.178
+- Update generate_docs.py
+- Update installation tutorial link in ReadMe.md
+- Update ReadMe.md
+- Update installation links in ReadMe.md
+- Add validation to chardesc command
+- Add validation and debouncing to F1 menu description
+- Add whitespace validation to character description
+
 ## Version 7.195 (January 05, 2026)
 
 ### Changes
