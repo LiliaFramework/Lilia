@@ -1,4 +1,9 @@
 ﻿--[[
+    Folder: Libraries
+    File: class.md
+]]
+
+--[[
     Classes Library
 
     Character class management and validation system for the Lilia framework.

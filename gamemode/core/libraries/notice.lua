@@ -1,4 +1,9 @@
-﻿--[[
+--[[
+    Folder: Libraries
+    File: notices.md
+]]
+
+--[[
     Notice Library
 
     Player notification and messaging system for the Lilia framework.

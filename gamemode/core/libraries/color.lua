@@ -1,4 +1,9 @@
 ﻿--[[
+    Folder: Libraries
+    File: color.md
+]]
+
+--[[
     Color Library
 
     Comprehensive color and theme management system for the Lilia framework.

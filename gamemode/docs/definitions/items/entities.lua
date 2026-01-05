@@ -1,4 +1,9 @@
 ﻿--[[
+    Folder: Definitions
+    File:  entities.md
+]]
+
+--[[
     Entities Item Definition
 
     Entity placement item system for the Lilia framework.

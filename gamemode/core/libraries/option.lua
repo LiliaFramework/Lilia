@@ -1,4 +1,9 @@
-﻿--[[
+--[[
+    Folder: Libraries
+    File: option.md
+]]
+
+--[[
     Option Library
 
     User-configurable settings management system for the Lilia framework.

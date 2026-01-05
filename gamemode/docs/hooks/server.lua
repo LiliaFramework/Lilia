@@ -1,4 +1,9 @@
 ﻿--[[
+    Folder: Hooks
+    File:  server.md
+]]
+
+--[[
     Server-Side Hooks
 
     Server-side hook system for the Lilia framework.

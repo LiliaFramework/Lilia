@@ -1,4 +1,9 @@
 ﻿--[[
+    Folder: Definitions
+    File:  weapons.md
+]]
+
+--[[
     Weapons Item Definition
 
     Weapon item system for the Lilia framework.

@@ -1,4 +1,9 @@
 ﻿--[[
+    Folder: Hooks
+    File:  client.md
+]]
+
+--[[
     Client-Side Hooks
 
     Client-side hook system for the Lilia framework.

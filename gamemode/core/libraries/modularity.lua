@@ -1,4 +1,9 @@
-﻿--[[
+--[[
+    Folder: Libraries
+    File: module.md
+]]
+
+--[[
     Modularity Library
 
     Module loading, initialization, and lifecycle management system for the Lilia framework.

@@ -1,4 +1,9 @@
-﻿--[[
+--[[
+    Folder: Libraries
+    File: lang.md
+]]
+
+--[[
     Languages Library
 
     Internationalization (i18n) and localization system for the Lilia framework.

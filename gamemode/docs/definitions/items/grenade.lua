@@ -1,4 +1,9 @@
 ﻿--[[
+    Folder: Definitions
+    File:  grenade.md
+]]
+
+--[[
     Grenade Item Definition
 
     Grenade item system for the Lilia framework.

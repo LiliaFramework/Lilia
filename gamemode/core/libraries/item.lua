@@ -1,4 +1,9 @@
 ﻿--[[
+    Folder: Libraries
+    File: item.md
+]]
+
+--[[
     Item Library
 
     Comprehensive item registration, instantiation, and management system for the Lilia framework.

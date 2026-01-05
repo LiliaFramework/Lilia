@@ -1,4 +1,9 @@
 ﻿--[[
+    Folder: Definitions
+    File:  attributes.md
+]]
+
+--[[
     Attribute Definitions
 
     Character attribute definition system for the Lilia framework.

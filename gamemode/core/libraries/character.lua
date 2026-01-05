@@ -1,4 +1,9 @@
 ﻿--[[
+    Folder: Libraries
+    File: char.md
+]]
+
+--[[
     Character Library
 
     Comprehensive character creation, management, and persistence system for the Lilia framework.

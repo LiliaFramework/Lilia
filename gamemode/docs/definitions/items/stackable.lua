@@ -1,4 +1,9 @@
 ﻿--[[
+    Folder: Definitions
+    File:  stackable.md
+]]
+
+--[[
     Stackable Item Definition
 
     Stackable item system for the Lilia framework.

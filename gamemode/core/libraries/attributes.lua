@@ -1,4 +1,9 @@
 ﻿--[[
+    Folder: Libraries
+    File: attribs.md
+]]
+
+--[[
     Attributes Library
 
     Character attribute management system for the Lilia framework.

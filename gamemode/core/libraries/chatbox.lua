@@ -1,4 +1,9 @@
 ﻿--[[
+    Folder: Libraries
+    File: chat.md
+]]
+
+--[[
     Chatbox Library
 
     Comprehensive chat system management with message routing and formatting for the Lilia framework.

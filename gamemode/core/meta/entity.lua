@@ -1,4 +1,9 @@
 ﻿--[[
+    Folder: Meta
+    File:  entity.md
+]]
+
+--[[
     Entity Meta
 
     Entity management system for the Lilia framework.

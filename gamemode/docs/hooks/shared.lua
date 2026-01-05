@@ -1,4 +1,9 @@
 ﻿--[[
+    Folder: Hooks
+    File:  shared.md
+]]
+
+--[[
     Shared Hooks
 
     Shared hook system for the Lilia framework.

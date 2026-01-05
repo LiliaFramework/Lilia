@@ -1,4 +1,9 @@
-﻿--[[
+--[[
+    Folder: Libraries
+    File: loader.md
+]]
+
+--[[
     Loader Library
     Core initialization and module loading system for the Lilia framework.
 ]]

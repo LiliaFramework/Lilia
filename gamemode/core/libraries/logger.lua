@@ -1,4 +1,9 @@
-﻿--[[
+--[[
+    Folder: Libraries
+    File: log.md
+]]
+
+--[[
     Logger Library
 
     Comprehensive logging and audit trail system for the Lilia framework.

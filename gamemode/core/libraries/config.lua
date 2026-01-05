@@ -1,4 +1,9 @@
 ﻿--[[
+    Folder: Libraries
+    File: config.md
+]]
+
+--[[
     Configuration Library
 
     Comprehensive user-configurable settings management system for the Lilia framework.

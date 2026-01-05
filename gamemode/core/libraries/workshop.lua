@@ -1,4 +1,9 @@
-﻿--[[
+--[[
+    Folder: Libraries
+    File: workshop.md
+]]
+
+--[[
     Workshop Library
 
     Steam Workshop addon downloading, mounting, and management system for the Lilia framework.

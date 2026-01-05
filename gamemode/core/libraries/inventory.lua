@@ -1,4 +1,9 @@
 ﻿--[[
+    Folder: Libraries
+    File: inventory.md
+]]
+
+--[[
     Inventory Library
 
     Comprehensive inventory system management with multiple storage types for the Lilia framework.

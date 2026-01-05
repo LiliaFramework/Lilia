@@ -1,4 +1,9 @@
 ﻿--[[
+    Folder: Definitions
+    File:  aid.md
+]]
+
+--[[
     Aid Item Definition
 
     Medical aid item system for the Lilia framework.

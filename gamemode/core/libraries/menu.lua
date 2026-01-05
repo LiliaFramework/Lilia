@@ -1,4 +1,9 @@
-﻿--[[
+--[[
+    Folder: Libraries
+    File: menu.md
+]]
+
+--[[
     Menu Library
 
     Interactive 3D context menu system for world and entity interactions in the Lilia framework.

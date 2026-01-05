@@ -1,4 +1,9 @@
 --[[
+    Folder: Definitions
+    File:  panels.md
+]]
+
+--[[
     Panel Definitions
 
     Comprehensive documentation for all Lilia VGUI panels.

@@ -1,4 +1,9 @@
 ﻿--[[
+    Folder: Meta
+    File:  panel.md
+]]
+
+--[[
     Panel Meta
 
     Panel management system for the Lilia framework.

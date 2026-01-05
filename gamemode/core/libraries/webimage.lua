@@ -1,4 +1,9 @@
-﻿--[[
+--[[
+    Folder: Libraries
+    File: webimage.md
+]]
+
+--[[
     Web Image Library
 
     Web-based image downloading, caching, and management system for the Lilia framework.

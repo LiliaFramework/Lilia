@@ -1,4 +1,9 @@
 ﻿--[[
+    Folder: Meta
+    File:  item.md
+]]
+
+--[[
     Item Meta
 
     Item management system for the Lilia framework.

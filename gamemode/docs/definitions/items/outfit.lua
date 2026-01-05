@@ -1,4 +1,9 @@
 ﻿--[[
+    Folder: Definitions
+    File:  outfit.md
+]]
+
+--[[
     Outfit Item Definition
 
     Outfit item system for the Lilia framework.

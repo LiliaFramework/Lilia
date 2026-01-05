@@ -1,4 +1,9 @@
 ﻿--[[
+    Folder: Definitions
+    File:  pacoutfit.md
+]]
+
+--[[
     PAC Outfit Item Definition
 
     PAC outfit item system for the Lilia framework.

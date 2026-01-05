@@ -1,4 +1,9 @@
 ﻿--[[
+    Folder: Definitions
+    File:  class.md
+]]
+
+--[[
     Class Definitions
 
     Character class definition system for the Lilia framework.

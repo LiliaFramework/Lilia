@@ -1,4 +1,9 @@
-﻿--[[
+--[[
+    Folder: Libraries
+    File: db.md
+]]
+
+--[[
     Database Library
 
     Comprehensive database management system with SQLite support for the Lilia framework.

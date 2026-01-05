@@ -1,4 +1,9 @@
 ﻿--[[
+    Folder: Definitions
+    File:  books.md
+]]
+
+--[[
     Books Item Definition
 
     Literature item system for the Lilia framework.

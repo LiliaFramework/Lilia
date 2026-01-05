@@ -1,4 +1,9 @@
 ﻿--[[
+    Folder: Libraries
+    File: command.md
+]]
+
+--[[
     Commands Library
 
     Comprehensive command registration, parsing, and execution system for the Lilia framework.

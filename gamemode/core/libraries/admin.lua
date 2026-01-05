@@ -1,4 +1,9 @@
 ﻿--[[
+    Folder: Libraries
+    File: administrator.md
+]]
+
+--[[
     Administrator Library
 
     Comprehensive user group and privilege management system for the Lilia framework.

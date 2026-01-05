@@ -1,4 +1,9 @@
 ﻿--[[
+    Folder: Definitions
+    File:  ammo.md
+]]
+
+--[[
     Ammo Item Definition
 
     Ammunition item system for the Lilia framework.

@@ -1,4 +1,9 @@
 ﻿--[[
+    Folder: Meta
+    File:  player.md
+]]
+
+--[[
     Player Meta
 
     Player management system for the Lilia framework.
