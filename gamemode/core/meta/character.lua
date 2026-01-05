@@ -2,7 +2,6 @@
     Folder: Meta
     File:  character.md
 ]]
-
 --[[
     Character Meta
 

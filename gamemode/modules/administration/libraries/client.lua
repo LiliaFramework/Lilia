@@ -4247,7 +4247,6 @@ function MODULE:DisplayAdminStickHUD(client, hudInfos, weapon)
         end
 
         hook.Run("AddToAdminStickHUD", client, target, infoLines)
-
         table.insert(hudInfos, {
             text = infoLines,
             font = "LiliaFont.20",

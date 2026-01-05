@@ -1,8 +1,7 @@
---[[
+﻿--[[
     Folder: Libraries
     File: playerinteract.md
 ]]
-
 --[[
     Player Interaction Library
 

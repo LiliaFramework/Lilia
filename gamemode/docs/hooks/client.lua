@@ -2,7 +2,6 @@
     Folder: Hooks
     File:  client.md
 ]]
-
 --[[
     Client-Side Hooks
 

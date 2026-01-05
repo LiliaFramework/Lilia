@@ -8,8 +8,6 @@
 
 - [Anonymous Rumors](https://liliaframework.github.io/modules/rumour/about/)
 
-- [Anonymous Rumors](https://liliaframework.github.io/modules/shootlock/about/)
-
 - [Auto Restarter](https://liliaframework.github.io/modules/autorestarter/about/)
 
 - [Body Group Editor](https://liliaframework.github.io/modules/bodygrouper/about/)
@@ -24,15 +22,13 @@
 
 - [Cinematic Text](https://liliaframework.github.io/modules/cinematictext/about/)
 
-- [Cinematic Text](https://liliaframework.github.io/modules/climb/about/)
+- [Climbing](https://liliaframework.github.io/modules/climb/about/)
 
 - [Code Utilities](https://liliaframework.github.io/modules/utilities/about/)
 
-- [Code Utilities](https://liliaframework.github.io/modules/vmanip/about/)
-
 - [Community Commands](https://liliaframework.github.io/modules/communitycommands/about/)
 
-- [Community Commands](https://liliaframework.github.io/modules/cursor/about/)
+- [Cursor](https://liliaframework.github.io/modules/cursor/about/)
 
 - [Cutscenes](https://liliaframework.github.io/modules/cutscenes/about/)
 
@@ -48,7 +44,7 @@
 
 - [Extended Descriptions](https://liliaframework.github.io/modules/extendeddescriptions/about/)
 
-- [Extended Descriptions](https://liliaframework.github.io/modules/firstpersoneffects/about/)
+- [First Person Effects](https://liliaframework.github.io/modules/firstpersoneffects/about/)
 
 - [Flashlight](https://liliaframework.github.io/modules/flashlight/about/)
 
@@ -64,19 +60,19 @@
 
 - [Join Leave Messages](https://liliaframework.github.io/modules/joinleavemessages/about/)
 
-- [Join Leave Messages](https://liliaframework.github.io/modules/loadmessages/about/)
+- [Load Messages](https://liliaframework.github.io/modules/loadmessages/about/)
 
 - [Loyalism](https://liliaframework.github.io/modules/loyalism/about/)
 
 - [Map Cleaner](https://liliaframework.github.io/modules/mapcleaner/about/)
 
-- [Map Cleaner](https://liliaframework.github.io/modules/modelpay/about/)
+- [Model Pay](https://liliaframework.github.io/modules/modelpay/about/)
 
 - [Model Tweaker](https://liliaframework.github.io/modules/modeltweaker/about/)
 
-- [Model Tweaker](https://liliaframework.github.io/modules/npcdrop/about/)
+- [NPC Drop](https://liliaframework.github.io/modules/npcdrop/about/)
 
-- [Model Tweaker](https://liliaframework.github.io/modules/npcmoney/about/)
+- [NPC Money](https://liliaframework.github.io/modules/npcmoney/about/)
 
 - [NPC Spawner](https://liliaframework.github.io/modules/npcspawner/about/)
 
@@ -86,15 +82,19 @@
 
 - [Raised Weapons](https://liliaframework.github.io/modules/raisedweapons/about/)
 
-- [Raised Weapons](https://liliaframework.github.io/modules/realisticview/about/)
+- [Realistic View](https://liliaframework.github.io/modules/realisticview/about/)
+
+- [Shoot Lock](https://liliaframework.github.io/modules/shootlock/about/)
 
 - [Simple Lockpicking](https://liliaframework.github.io/modules/simple_lockpicking/about/)
 
 - [Slot Machine](https://liliaframework.github.io/modules/slots/about/)
 
-- [Slot Machine](https://liliaframework.github.io/modules/slowweapons/about/)
+- [Slow Weapons](https://liliaframework.github.io/modules/slowweapons/about/)
 
-- [Slot Machine](https://liliaframework.github.io/modules/steamgrouprewards/about/)
+- [Steam Group Rewards](https://liliaframework.github.io/modules/steamgrouprewards/about/)
+
+- [View Manipulation](https://liliaframework.github.io/modules/vmanip/about/)
 
 - [War Table](https://liliaframework.github.io/modules/wartable/about/)
 

@@ -2,7 +2,6 @@
     Folder: Definitions
     File:  pacoutfit.md
 ]]
-
 --[[
     PAC Outfit Item Definition
 

@@ -2,7 +2,6 @@
     Folder: Meta
     File:  panel.md
 ]]
-
 --[[
     Panel Meta
 

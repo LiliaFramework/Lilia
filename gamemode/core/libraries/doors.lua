@@ -1,8 +1,7 @@
---[[
+﻿--[[
     Folder: Libraries
     File: doors.md
 ]]
-
 --[[
     Doors Library
 

@@ -2,7 +2,6 @@
     Folder: Definitions
     File:  outfit.md
 ]]
-
 --[[
     Outfit Item Definition
 

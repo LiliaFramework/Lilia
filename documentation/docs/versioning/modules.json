@@ -120,11 +120,11 @@
     "workshop": []
   },
   {
-    "name": "Cinematic Text",
+    "name": "Climbing",
     "versionID": "public_climb",
     "author": "Samael",
     "discord": "@liliaplayer",
-    "description": "Adds displays of cinematic splash text overlays, screen darkening with letterbox bars, support for scripted scenes, timed fades for dramatic effect, and customizable text fonts.",
+    "description": "Adds the ability to climb ledges using movement keys, custom climbing animations, and hooks for climb attempts.",
     "version": "1",
     "download": "https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/climb.zip",
     "source": "https://liliaframework.github.io/modules/climb/about/",
@@ -144,11 +144,11 @@
     "workshop": []
   },
   {
-    "name": "Community Commands",
+    "name": "Cursor",
     "versionID": "public_cursor",
     "author": "Samael",
     "discord": "@liliaplayer",
-    "description": "Adds chat commands to open community links, easy sharing of workshop and docs, configurable commands via settings, localization for command names, and the ability to add custom URLs.",
+    "description": "Adds a toggleable custom cursor for the UI, a purely client-side implementation, improved menu navigation, a hotkey to quickly show or hide the cursor, and compatibility with other menu modules.",
     "version": "1",
     "download": "https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/cursor.zip",
     "source": "https://liliaframework.github.io/modules/cursor/about/",
@@ -240,11 +240,11 @@
     "workshop": []
   },
   {
-    "name": "Extended Descriptions",
+    "name": "First Person Effects",
     "versionID": "public_firstpersoneffects",
     "author": "Samael",
     "discord": "@liliaplayer",
-    "description": "Adds support for long item descriptions, localization for multiple languages, better RP text display, automatic line wrapping, and fallback to short descriptions.",
+    "description": "Adds head bob and view sway, camera motion synced to actions, a realistic first-person feel, and adjustable intensity via config.",
     "version": "1",
     "download": "https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/firstpersoneffects.zip",
     "source": "https://liliaframework.github.io/modules/firstpersoneffects/about/",
@@ -336,11 +336,11 @@
     "workshop": []
   },
   {
-    "name": "Join Leave Messages",
+    "name": "Load Messages",
     "versionID": "public_loadmessages",
     "author": "Samael",
     "discord": "@liliaplayer",
-    "description": "Adds announcements when players join, notifications on disconnect, improved community awareness, relay of messages to Discord, and per-player toggle to hide messages.",
+    "description": "Adds faction-based load messages, execution when players first load a character, customizable message text, color-coded formatting options, and per-faction enable toggles.",
     "version": "1",
     "download": "https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/loadmessages.zip",
     "source": "https://liliaframework.github.io/modules/loadmessages/about/",
@@ -372,11 +372,11 @@
     "workshop": []
   },
   {
-    "name": "Map Cleaner",
+    "name": "Model Pay",
     "versionID": "public_modelpay",
     "author": "Samael",
     "discord": "@liliaplayer",
-    "description": "Adds periodic cleaning of map debris, a configurable interval, reduced server lag, a whitelist for protected entities, and manual cleanup commands.",
+    "description": "Adds payment to characters based on model, custom wage definitions, integration into the economy, config to exclude certain models, and logs of wages issued.",
     "version": "1",
     "download": "https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/modelpay.zip",
     "source": "https://liliaframework.github.io/modules/modelpay/about/",
@@ -396,11 +396,11 @@
     "workshop": []
   },
   {
-    "name": "Model Tweaker",
+    "name": "NPC Drop",
     "versionID": "public_npcdrop",
     "author": "Samael",
     "discord": "@liliaplayer",
-    "description": "Adds an entity to tweak prop models, adjustments for scale and rotation, easy UI controls, saving of tweaked props between restarts, and undo support for recent tweaks.",
+    "description": "Adds NPCs that drop items on death, DropTable to define probabilities, encouragement for looting, editable drop tables per NPC type, and weighted chances for rare items.",
     "version": "1",
     "download": "https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/npcdrop.zip",
     "source": "https://liliaframework.github.io/modules/npcdrop/about/",
@@ -408,11 +408,11 @@
     "workshop": []
   },
   {
-    "name": "Model Tweaker",
+    "name": "NPC Money",
     "versionID": "public_npcmoney",
     "author": "Samael",
     "discord": "@liliaplayer",
-    "description": "Adds an entity to tweak prop models, adjustments for scale and rotation, easy UI controls, saving of tweaked props between restarts, and undo support for recent tweaks.",
+    "description": "Adds NPCs that give money to players on death, MoneyTable to define rewards, editable money amounts per NPC type, and configurable default values.",
     "version": "1",
     "download": "https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/npcmoney.zip",
     "source": "https://liliaframework.github.io/modules/npcmoney/about/",
@@ -470,11 +470,11 @@
     "workshop": []
   },
   {
-    "name": "Raised Weapons",
+    "name": "Realistic View",
     "versionID": "public_realisticview",
     "author": "Samael",
     "discord": "@liliaplayer",
-    "description": "Adds auto-lowering of weapons when running, a raise delay set by WeaponRaiseSpeed, prevention of accidental fire, a toggle to keep weapons lowered, and compatibility with melee weapons.",
+    "description": "Adds a first-person view that shows the full body, immersive camera transitions, compatibility with animations, smooth leaning animations, and optional third-person override.",
     "version": "1",
     "download": "https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/realisticview.zip",
     "source": "https://liliaframework.github.io/modules/realisticview/about/",
@@ -494,11 +494,11 @@
     "workshop": []
   },
   {
-    "name": "Anonymous Rumors",
+    "name": "Shoot Lock",
     "versionID": "public_shootlock",
     "author": "Samael",
     "discord": "@liliaplayer",
-    "description": "Adds an anonymous rumour chat command, hiding of the sender's identity, encouragement for roleplay intrigue, a cooldown to prevent spam, and admin logging of rumour messages.",
+    "description": "Adds the ability to shoot door locks to open them, a quick breach alternative, a loud action that may alert others, and chance-based lock destruction.",
     "version": "1",
     "download": "https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/shootlock.zip",
     "source": "https://liliaframework.github.io/modules/shootlock/about/",
@@ -532,11 +532,11 @@
     ]
   },
   {
-    "name": "Slot Machine",
+    "name": "Slow Weapons",
     "versionID": "public_slowweapons",
     "author": "Samael",
     "discord": "@liliaplayer",
-    "description": "Adds a slot machine minigame, a workshop model for the machine, handling of payouts to winners, customizable payout odds, and sound and animation effects.",
+    "description": "Adds slower movement while holding heavy weapons, speed penalties defined per weapon, encouragement for strategic choices, customizable weapon speed table, and automatic speed restore when switching.",
     "version": "1",
     "download": "https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/slowweapons.zip",
     "source": "https://liliaframework.github.io/modules/slowweapons/about/",
@@ -544,11 +544,11 @@
     "workshop": []
   },
   {
-    "name": "Slot Machine",
+    "name": "Steam Group Rewards",
     "versionID": "public_steamgrouprewards",
     "author": "Samael",
     "discord": "@liliaplayer",
-    "description": "Adds a slot machine minigame, a workshop model for the machine, handling of payouts to winners, customizable payout odds, and sound and animation effects.",
+    "description": "Provides Steam group membership rewards system that automatically checks group membership and gives money rewards to players who join your Steam group.",
     "version": "1",
     "download": "https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/steamgrouprewards.zip",
     "source": "https://liliaframework.github.io/modules/steamgrouprewards/about/",
@@ -568,11 +568,11 @@
     "workshop": []
   },
   {
-    "name": "Code Utilities",
+    "name": "View Manipulation",
     "versionID": "public_vmanip",
     "author": "Samael",
     "discord": "@liliaplayer",
-    "description": "Adds extra helper functions in lia.util, simplified utilities for common scripting tasks, a central library used by other modules, utilities for networking data, and shared constants for modules.",
+    "description": "Adds VManip animation support, hand gestures for items, functionality within Lilia, API for custom gesture triggers, and fallback animations when VManip is missing.",
     "version": "1",
     "download": "https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/vmanip.zip",
     "source": "https://liliaframework.github.io/modules/vmanip/about/",

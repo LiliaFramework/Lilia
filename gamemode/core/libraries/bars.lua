@@ -2,7 +2,6 @@
     Folder: Libraries
     File: bar.md
 ]]
-
 --[[
     Bars Library
 

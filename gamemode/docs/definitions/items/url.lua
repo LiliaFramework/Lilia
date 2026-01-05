@@ -2,7 +2,6 @@
     Folder: Definitions
     File:  url.md
 ]]
-
 --[[
     URL Item Definition
 

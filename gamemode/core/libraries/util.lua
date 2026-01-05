@@ -1,8 +1,7 @@
---[[
+﻿--[[
     Folder: Libraries
     File: util.md
 ]]
-
 --[[
     Utility Library
 

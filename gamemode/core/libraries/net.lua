@@ -1,8 +1,7 @@
---[[
+﻿--[[
     Folder: Libraries
     File: net.md
 ]]
-
 --[[
     Network Library
 

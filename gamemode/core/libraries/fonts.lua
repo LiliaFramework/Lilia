@@ -1,8 +1,7 @@
---[[
+﻿--[[
     Folder: Libraries
     File: font.md
 ]]
-
 --[[
     Font Library
 

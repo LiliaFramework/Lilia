@@ -1,8 +1,7 @@
---[[
+﻿--[[
     Folder: Libraries
     File: log.md
 ]]
-
 --[[
     Logger Library
 

@@ -2,7 +2,6 @@
     Folder: Meta
     File:  item.md
 ]]
-
 --[[
     Item Meta
 
