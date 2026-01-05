@@ -1,5 +1,30 @@
 # Changelog
 
+## Version 7.186 (January 05, 2026)
+
+### Changes
+
+- Successfully updated workshop Lilia to 7.178
+- Update generate_docs.py
+- Update installation tutorial link in ReadMe.md
+- Update ReadMe.md
+- Update installation links in ReadMe.md
+- Add validation to chardesc command
+- Add validation and debouncing to F1 menu description
+- Add whitespace validation to character description
+- Implement character description length validation
+- Successfully updated workshop Lilia to 7.176
+- Donator Stuff, Interaction Changes & New Chat Notifications
+- ChatBox Fixes
+- Warning Severities
+- Aid now allows armor
+- More Fonts
+- Clearer Scoreboard
+- Main Menu Improvements
+- Successfully updated workshop Lilia to 7.168
+- Micro Fixes
+- Successfully updated workshop Lilia to 7.166
+
 ## Version 7.178 (January 05, 2026)
 
 ### Changes
