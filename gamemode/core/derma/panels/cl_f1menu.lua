@@ -67,26 +67,28 @@ function PANEL:CreateTextEntryWithBackgroundAndLabel(parent, name, labelText, ma
         if isstring(v) then txt:SetValue(v) end
     end
 
-   txt.lastValue = nil
+    txt.lastValue = nil
     txt.action = function(value)
-    if isDesc and isstring(value) then
-        if txt.lastValue == value then return end
-        local trimmedValue = string.Trim(value)
-        local valueWithoutSpaces = string.gsub(trimmedValue, "%s", "")
-        local minLength = lia.config.get("MinDescLen", 16)
-        if #valueWithoutSpaces < minLength then
-            local now = CurTime()
-            txt.lastErrorTime = txt.lastErrorTime or 0
-            if now - txt.lastErrorTime > 1 then
-                LocalPlayer():notifyErrorLocalized("descMinLen", minLength)
-                txt.lastErrorTime = now
+        if isDesc and isstring(value) then
+            if txt.lastValue == value then return end
+            local trimmedValue = string.Trim(value)
+            local valueWithoutSpaces = string.gsub(trimmedValue, "%s", "")
+            local minLength = lia.config.get("MinDescLen", 16)
+            if #valueWithoutSpaces < minLength then
+                local now = CurTime()
+                txt.lastErrorTime = txt.lastErrorTime or 0
+                if now - txt.lastErrorTime > 1 then
+                    LocalPlayer():notifyErrorLocalized("descMinLen", minLength)
+                    txt.lastErrorTime = now
+                end
+                return
             end
-            return
+
+            txt.lastValue = value
+            lia.command.send("chardesc", value)
         end
-        txt.lastValue = value
-        lia.command.send("chardesc", value)
     end
-end
+
     self[name] = txt
 end
 

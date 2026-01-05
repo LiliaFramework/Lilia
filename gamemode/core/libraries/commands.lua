@@ -2872,9 +2872,10 @@ lia.command.add("chardesc", {
         local descWithoutSpaces = string.gsub(trimmedDesc, "%s", "")
         local minLength = lia.config.get("MinDescLen", 16)
         if #descWithoutSpaces < minLength then
-        client:notifyErrorLocalized("descMinLen", minLength)
-        return
-    end
+            client:notifyErrorLocalized("descMinLen", minLength)
+            return
+        end
+
         local character = client:getChar()
         if character then character:setDesc(desc) end
         return "@descChanged"
