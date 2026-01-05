@@ -3781,7 +3781,7 @@ end)
 local TicketFrames = {}
 local xpos = xpos or 20
 local ypos = ypos or 20
-function MODULE:TicketFrame(requester, message, claimed)
+function MODULE:CreateTicketFrame(requester, message, claimed)
     if not IsValid(requester) or not requester:IsPlayer() then return end
     for _, v in pairs(TicketFrames) do
         if v.idiot == requester then
@@ -4001,7 +4001,7 @@ net.Receive("liaTicketSystem", function()
     local pl = net.ReadEntity()
     local msg = net.ReadString()
     local claimed = net.ReadEntity()
-    if IsValid(LocalPlayer()) and (LocalPlayer():isStaffOnDuty() or LocalPlayer():hasPrivilege("alwaysSeeTickets")) then MODULE:TicketFrame(pl, msg, claimed) end
+    if IsValid(LocalPlayer()) and (LocalPlayer():isStaffOnDuty() or LocalPlayer():hasPrivilege("alwaysSeeTickets")) then MODULE:CreateTicketFrame(pl, msg, claimed) end
 end)
 
 net.Receive("liaTicketSystemClaim", function()
@@ -4245,6 +4245,8 @@ function MODULE:DisplayAdminStickHUD(client, hudInfos, weapon)
 
             table.insert(infoLines, "Entity ID: " .. target:EntIndex())
         end
+
+        hook.Run("AddToAdminStickHUD", client, target, infoLines)
 
         table.insert(hudInfos, {
             text = infoLines,
