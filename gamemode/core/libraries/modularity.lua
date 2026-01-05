@@ -2,7 +2,6 @@
     Folder: Libraries
     File: module.md
 ]]
-
 --[[
     Modularity Library
 
@@ -123,7 +122,6 @@ function lia.module.load(uniqueID, path, variable, skipSubmodules)
         desc = L("noDesc"),
         author = L("anonymous"),
         enabled = true,
-        IsValid = function() return true end
     }
 
     if uniqueID == "schema" then
@@ -171,19 +169,15 @@ function lia.module.load(uniqueID, path, variable, skipSubmodules)
         if isfunction(f) then hook.Add(k, MODULE, f) end
     end
 
-    if uniqueID == "schema" then
-        function MODULE:IsValid()
-            return true
-        end
-    else
-        function MODULE:setData(value, global, ignoreMap)
-            lia.data.set(uniqueID, value, global, ignoreMap)
-        end
+    function MODULE:setData(value, global, ignoreMap)
+        lia.data.set(uniqueID, value, global, ignoreMap)
+    end
 
-        function MODULE:getData(default)
-            return lia.data.get(uniqueID, default) or {}
-        end
+    function MODULE:getData(default)
+        return lia.data.get(uniqueID, default) or {}
+    end
 
+    if uniqueID ~= "schema" then
         lia.module.list[uniqueID] = MODULE
         if not skipSubmodules then loadSubmodules(path) end
         if MODULE.ModuleLoaded then MODULE:ModuleLoaded() end
