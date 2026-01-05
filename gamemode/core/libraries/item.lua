@@ -64,7 +64,6 @@ local DefaultFunctions = {
                     entity:Remove()
                 end
 
-                -- Hook: OnPlayerTakeItem
                 hook.Run("OnPlayerTakeItem", client, item)
                 if not IsValid(client) then return end
                 d:resolve()
