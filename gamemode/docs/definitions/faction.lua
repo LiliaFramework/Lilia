@@ -2,7 +2,6 @@
     Folder: Definitions
     File:  faction.md
 ]]
-
 --[[
     Faction Definitions
 

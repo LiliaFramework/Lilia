@@ -1,8 +1,7 @@
---[[
+﻿--[[
     Folder: Libraries
     File: option.md
 ]]
-
 --[[
     Option Library
 

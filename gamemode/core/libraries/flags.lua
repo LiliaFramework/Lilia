@@ -1,8 +1,7 @@
---[[
+﻿--[[
     Folder: Libraries
     File: flag.md
 ]]
-
 --[[
     Flags Library
 

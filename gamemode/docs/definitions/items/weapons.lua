@@ -2,7 +2,6 @@
     Folder: Definitions
     File:  weapons.md
 ]]
-
 --[[
     Weapons Item Definition
 

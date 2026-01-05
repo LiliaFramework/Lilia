@@ -1,8 +1,7 @@
---[[
+﻿--[[
     Folder: Libraries
     File: db.md
 ]]
-
 --[[
     Database Library
 

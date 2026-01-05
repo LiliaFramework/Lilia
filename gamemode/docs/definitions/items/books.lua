@@ -2,7 +2,6 @@
     Folder: Definitions
     File:  books.md
 ]]
-
 --[[
     Books Item Definition
 

@@ -2,7 +2,6 @@
     Folder: Libraries
     File: item.md
 ]]
-
 --[[
     Item Library
 

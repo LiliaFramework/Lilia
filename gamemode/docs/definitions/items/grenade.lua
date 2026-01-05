@@ -2,7 +2,6 @@
     Folder: Definitions
     File:  grenade.md
 ]]
-
 --[[
     Grenade Item Definition
 

@@ -1,8 +1,7 @@
---[[
+﻿--[[
     Folder: Libraries
     File: websound.md
 ]]
-
 --[[
     WebSound Library
 

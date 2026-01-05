@@ -2,7 +2,6 @@
     Folder: Definitions
     File:  attributes.md
 ]]
-
 --[[
     Attribute Definitions
 

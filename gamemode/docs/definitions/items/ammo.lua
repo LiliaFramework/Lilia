@@ -2,7 +2,6 @@
     Folder: Definitions
     File:  ammo.md
 ]]
-
 --[[
     Ammo Item Definition
 

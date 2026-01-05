@@ -2,7 +2,6 @@
     Folder: Definitions
     File:  class.md
 ]]
-
 --[[
     Class Definitions
 

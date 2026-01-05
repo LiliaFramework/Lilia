@@ -1,8 +1,7 @@
---[[
+﻿--[[
     Folder: Libraries
     File: notices.md
 ]]
-
 --[[
     Notice Library
 

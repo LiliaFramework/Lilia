@@ -2,7 +2,6 @@
     Folder: Hooks
     File:  shared.md
 ]]
-
 --[[
     Shared Hooks
 

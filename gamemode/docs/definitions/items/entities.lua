@@ -2,7 +2,6 @@
     Folder: Definitions
     File:  entities.md
 ]]
-
 --[[
     Entities Item Definition
 

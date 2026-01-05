@@ -2,7 +2,6 @@
     Folder: Meta
     File:  inventory.md
 ]]
-
 --[[
     Inventory Meta
 

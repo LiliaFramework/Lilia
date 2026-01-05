@@ -1,8 +1,7 @@
---[[
+﻿--[[
     Folder: Libraries
     File: keybind.md
 ]]
-
 --[[
     Keybind Library
 

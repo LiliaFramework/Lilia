@@ -1,8 +1,7 @@
---[[
+﻿--[[
     Folder: Libraries
     File: derma.md
 ]]
-
 --[[
     Derma Library
 

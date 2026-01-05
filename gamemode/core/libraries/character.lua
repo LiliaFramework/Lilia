@@ -2,7 +2,6 @@
     Folder: Libraries
     File: char.md
 ]]
-
 --[[
     Character Library
 

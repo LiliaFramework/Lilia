@@ -2,7 +2,6 @@
     Folder: Hooks
     File:  server.md
 ]]
-
 --[[
     Server-Side Hooks
 

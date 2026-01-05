@@ -1,8 +1,7 @@
---[[
+﻿--[[
     Folder: Libraries
     File: dialog.md
 ]]
-
 --[[
     Dialog Library
 

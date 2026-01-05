@@ -2,7 +2,6 @@
     Folder: Definitions
     File:  stackable.md
 ]]
-
 --[[
     Stackable Item Definition
 

@@ -2,7 +2,6 @@
     Folder: Meta
     File:  entity.md
 ]]
-
 --[[
     Entity Meta
 

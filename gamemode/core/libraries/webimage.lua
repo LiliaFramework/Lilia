@@ -1,8 +1,7 @@
---[[
+﻿--[[
     Folder: Libraries
     File: webimage.md
 ]]
-
 --[[
     Web Image Library
 

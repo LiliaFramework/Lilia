@@ -2,7 +2,6 @@
     Folder: Definitions
     File:  aid.md
 ]]
-
 --[[
     Aid Item Definition
 

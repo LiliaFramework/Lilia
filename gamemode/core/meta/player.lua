@@ -2,7 +2,6 @@
     Folder: Meta
     File:  player.md
 ]]
-
 --[[
     Player Meta
 

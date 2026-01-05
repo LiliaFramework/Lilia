@@ -1,8 +1,7 @@
---[[
+﻿--[[
     Folder: Libraries
     File: vendor.md
 ]]
-
 --[[
     Vendor Library
 

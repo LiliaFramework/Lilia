@@ -2,7 +2,6 @@
     Folder: Libraries
     File: faction.md
 ]]
-
 --[[
     Faction Library
 

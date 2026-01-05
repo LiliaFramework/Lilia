@@ -2,7 +2,6 @@
     Folder: Libraries
     File: chat.md
 ]]
-
 --[[
     Chatbox Library
 
