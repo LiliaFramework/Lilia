@@ -122,6 +122,7 @@ function lia.module.load(uniqueID, path, variable, skipSubmodules)
         desc = L("noDesc"),
         author = L("anonymous"),
         enabled = true,
+        IsValid = function() return true end
     }
 
     if uniqueID == "schema" then
@@ -167,6 +168,10 @@ function lia.module.load(uniqueID, path, variable, skipSubmodules)
     MODULE.loading = false
     for k, f in pairs(MODULE) do
         if isfunction(f) then hook.Add(k, MODULE, f) end
+    end
+
+    function MODULE:IsValid()
+        return true
     end
 
     function MODULE:setData(value, global, ignoreMap)
