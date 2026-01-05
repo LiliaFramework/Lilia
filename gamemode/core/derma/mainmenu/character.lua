@@ -17,7 +17,7 @@ function PANEL:Init()
         end
     end
 
-    hook.Add("PreDrawPhysgunBeam", "liaMainMenuPreDrawPhysgunBeam", function() return IsValid(lia.gui.character) end)
+    hook.Add("DrawPhysgunBeam", "liaMainMenuPreDrawPhysgunBeam", function() return IsValid(lia.gui.character) end)
     self:Dock(FILL)
     self:MakePopup()
     self:SetAlpha(0)
@@ -961,7 +961,7 @@ function PANEL:OnRemove()
     hook.Remove("PrePlayerDraw", "liaMainMenuPrePlayerDraw")
     hook.Remove("CalcView", "liaMainMenuCalcView")
     hook.Remove("PostDrawOpaqueRenderables", "liaMainMenuPostDrawOpaqueRenderables")
-    hook.Remove("PreDrawPhysgunBeam", "liaMainMenuPreDrawPhysgunBeam")
+    hook.Remove("DrawPhysgunBeam", "liaMainMenuPreDrawPhysgunBeam")
     if self.charListUpdateHook then hook.Remove("CharListUpdated", self.charListUpdateHook) end
     if self.adminPrivilegesUpdateHook then hook.Remove("AdminPrivilegesUpdated", self.adminPrivilegesUpdateHook) end
     if render.oldDrawBeam then
