@@ -37,7 +37,10 @@ local DefaultFunctions = {
         icon = "icon16/world.png",
         onRun = function(item)
             local client = item.player
-            item:removeFromInventory(true):next(function() item:spawn(client) end)
+            item:removeFromInventory(true):next(function()
+                item:spawn(client)
+                hook.Run("OnPlayerDroppedItem", client, item)
+            end)
             return false
         end,
         onCanRun = function(item) return not IsValid(item.entity) and not IsValid(item.entity) and not item.noDrop end
@@ -61,6 +64,8 @@ local DefaultFunctions = {
                     entity:Remove()
                 end
 
+                -- Hook: OnPlayerTakeItem
+                hook.Run("OnPlayerTakeItem", client, item)
                 if not IsValid(client) then return end
                 d:resolve()
             end):catch(function(err)
@@ -111,6 +116,7 @@ local DefaultFunctions = {
             end
 
             item:setData("rotated", newRot)
+            if IsValid(item.player) then hook.Run("OnPlayerRotateItem", item.player, item, newRot) end
             return false
         end,
         onCanRun = function(item) return not IsValid(item.entity) and item.width ~= item.height and not item:getData("equip", false) end
