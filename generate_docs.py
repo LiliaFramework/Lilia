@@ -699,19 +699,19 @@ def generate_documentation_for_file(file_path, output_dir, is_library=False):
 
     for func in functions:
         parsed = parse_comment_block(func['comment'])
-        # Generate docs even if only overview and name exist (removed purpose requirement)
-        # Skip documenting core hook implementations in module files
-        # These should only be documented in the central hooks documentation
-        if is_library and 'modules' in str(file_path):
-            func_name = func['name']
-            if ':' in func_name:
-                hook_name = func_name.split(':', 1)[1]
-                if hook_name in CORE_HOOKS:
-                    print(f"  Skipping hook implementation: {func_name} (documented centrally)")
-                    continue
+        if parsed['purpose']:  # Only process blocks that have at least a purpose
+            # Skip documenting core hook implementations in module files
+            # These should only be documented in the central hooks documentation
+            if is_library and 'modules' in str(file_path):
+                func_name = func['name']
+                if ':' in func_name:
+                    hook_name = func_name.split(':', 1)[1]
+                    if hook_name in CORE_HOOKS:
+                        print(f"  Skipping hook implementation: {func_name} (documented centrally)")
+                        continue
 
-        section = generate_markdown_for_function(func['name'], parsed, is_library)
-        sections.append(section)
+            section = generate_markdown_for_function(func['name'], parsed, is_library)
+            sections.append(section)
 
     if not sections:
         print(f"  No valid function documentation found in {file_path}")
@@ -1051,8 +1051,10 @@ def generate_documentation_for_hooks_file(file_path: Path, output_dir: Path) -> 
 
     comment_blocks, file_header, overview_section = find_comment_blocks_in_file(file_path)
     functions = find_functions_in_file(file_path, is_library=False)
-    if not functions:
-        print(f"  No hooks found in {file_path}")
+
+    # Generate documentation even if no functions are found, as long as there's header or overview content
+    if not functions and not file_header and not overview_section:
+        print(f"  No hooks or documentation content found in {file_path}")
         return
 
     sections: List[str] = []
