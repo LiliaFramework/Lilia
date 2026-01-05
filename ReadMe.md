@@ -55,7 +55,7 @@
 ## 🚀 Quick Start
 
 <p align="center">
-  Follow our step-by-step <a href="https://liliaframework.github.io/installation/">installation tutorial</a> to set up Lilia on your server.
+  Follow our step-by-step <a href="https://liliaframework.github.io/gettingstarted/">installation tutorial</a> to set up Lilia on your server.
 </p>
 
 > **Important:** Lilia is a framework that runs beneath a roleplay schema. After installing Lilia, you must also install a schema and start your server using that schema's gamemode (e.g., `+gamemode skeleton`).
@@ -164,5 +164,5 @@ All Lilia content is open source under the **GNU General Public License v3.0**. 
 
 <p align="center">
   <strong>Ready to build your dream roleplay server?</strong><br/>
-  <a href="https://liliaframework.github.io/installation/">Get started with Lilia today!</a>
+  <a href="https://liliaframework.github.io/gettingstarted/">Get started with Lilia today!</a>
 </p>

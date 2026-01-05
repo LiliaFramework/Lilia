@@ -2868,6 +2868,13 @@ lia.command.add("chardesc", {
     onRun = function(client, arguments)
         local desc = table.concat(arguments, " ")
         if not desc:find("%S") then return client:requestString(L("chgName"), L("chgNameDesc"), function(text) lia.command.run(client, "chardesc", {text}) end, client:getChar() and client:getChar():getDesc() or "") end
+        local trimmedDesc = string.Trim(desc)
+        local descWithoutSpaces = string.gsub(trimmedDesc, "%s", "")
+        local minLength = lia.config.get("MinDescLen", 16)
+        if #descWithoutSpaces < minLength then
+        client:notifyErrorLocalized("descMinLen", minLength)
+        return
+    end
         local character = client:getChar()
         if character then character:setDesc(desc) end
         return "@descChanged"
