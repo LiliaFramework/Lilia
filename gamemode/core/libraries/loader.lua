@@ -284,6 +284,12 @@ local ConditionalFiles = {
         global = "ArcCW",
         name = "ArcCW",
         realm = "server"
+    },
+    {
+        path = "lilia/gamemode/core/libraries/compatibility/wiremod.lua",
+        global = "WireLib",
+        name = "Wiremod",
+        realm = "server"
     }
 }
 
