@@ -1360,7 +1360,7 @@ Count: 5 functions
 - [ ]`AdjustStaminaOffset(client, offset)`
   - Shared
 - [ ]`AdminPrivilegesUpdated()`
-  - Shared
+  - Client
 - [ ]`AdminStickAddModels(allModList, tgt)`
   - Client
 - [ ]`AdvDupe_FinishPasting(tbl)`
@@ -1374,7 +1374,7 @@ Count: 5 functions
 - [ ]`CalcStaminaChange(client)`
   - Shared
 - [ ]`CanCharBeTransfered(tChar, faction, arg3)`
-  - Server
+  - Shared
 - [ ]`CanDeleteChar(client, character)`
   - Client
 - [ ]`CanDisplayCharInfo(name)`
@@ -1414,7 +1414,7 @@ Count: 5 functions
 - [ ]`CanPlayerInteractItem(client, action, self, data)`
   - Server
 - [ ]`CanPlayerJoinClass(client, class, info)`
-  - Server
+  - Shared
 - [ ]`CanPlayerKnock(arg1)`
   - Shared
 - [ ]`CanPlayerLock(client, door)`
@@ -1466,13 +1466,13 @@ Count: 5 functions
 - [ ]`CharListEntry(entry, row)`
   - Client
 - [ ]`CharListExtraDetails(client, entry, stored)`
-  - Client
+  - Server
 - [ ]`CharListLoaded(newCharList)`
   - Client
 - [ ]`CharListUpdated(oldCharList, newCharList)`
   - Client
 - [ ]`CharLoaded(character)`
-  - Server
+  - Client
 - [ ]`CharMenuClosed()`
   - Client
 - [ ]`CharMenuOpened(self)`
@@ -1482,11 +1482,11 @@ Count: 5 functions
 - [ ]`CharPreSave(character)`
   - Server
 - [ ]`CharRestored(character)`
-  - Server
+  - Client
 - [ ]`ChatAddText(text, ...)`
   - Client
 - [ ]`ChatParsed(client, chatType, message, anonymous)`
-  - Server
+  - Shared
 - [ ]`ChatboxPanelCreated(arg1)`
   - Client
 - [ ]`ChatboxTextAdded(arg1)`
@@ -1498,19 +1498,19 @@ Count: 5 functions
 - [ ]`CommandAdded(command, data)`
   - Shared
 - [ ]`CommandRan(client, command, arg3, results)`
-  - Server
+  - Client
 - [ ]`ConfigChanged(key, value, oldValue, client)`
   - Shared
 - [ ]`ConfigureCharacterCreationSteps(self)`
   - Client
 - [ ]`CreateCharacter(data)`
-  - Server
+  - Client
 - [ ]`CreateCharacterSaveTimer()`
   - Server
 - [ ]`CreateChat()`
   - Client
 - [ ]`CreateDefaultInventory(character)`
-  - Server
+  - Client
 - [ ]`CreateInformationButtons(pages)`
   - Client
 - [ ]`CreateInventoryPanel(inventory, parent)`
@@ -1524,7 +1524,7 @@ Count: 5 functions
 - [ ]`DatabaseConnected()`
   - Server
 - [ ]`DeleteCharacter(id)`
-  - Server
+  - Client
 - [ ]`DermaSkinChanged(newSkin)`
   - Client
 - [ ]`DiscordRelaySend(embed)`
@@ -1578,7 +1578,7 @@ Count: 5 functions
 - [ ]`ForceRecognizeRange(ply, range, fakeName)`
   - Shared
 - [ ]`GetAdjustedPartData(wearer, id)`
-  - Shared
+  - Client
 - [ ]`GetAdminESPTarget(ent, client)`
   - Client
 - [ ]`GetAdminStickLists(tgt, lists)`
@@ -1600,7 +1600,7 @@ Count: 5 functions
 - [ ]`GetDefaultCharName(client, faction, data)`
   - Shared
 - [ ]`GetDefaultInventorySize(client, char)`
-  - Server
+  - Shared
 - [ ]`GetDefaultInventoryType(character)`
   - Server
 - [ ]`GetDisplayedDescription(client, isHUD)`
@@ -1674,7 +1674,7 @@ Count: 5 functions
 - [ ]`HandleItemTransferRequest(client, itemID, x, y, invID)`
   - Server
 - [ ]`InitializeStorage(entity)`
-  - Server
+  - Shared
 - [ ]`InitializedConfig()`
   - Shared
 - [ ]`InitializedItems()`
@@ -1686,7 +1686,7 @@ Count: 5 functions
 - [ ]`InitializedOptions()`
   - Shared
 - [ ]`InitializedSchema()`
-  - Server
+  - Shared
 - [ ]`InteractionMenuClosed()`
   - Client
 - [ ]`InteractionMenuOpened(frame)`
@@ -1704,7 +1704,7 @@ Count: 5 functions
 - [ ]`InventoryItemAdded(inventory, item)`
   - Shared
 - [ ]`InventoryItemDataChanged(item, key, oldValue, newValue, inventory)`
-  - Shared
+  - Client
 - [ ]`InventoryItemIconCreated(icon, item, self)`
   - Client
 - [ ]`InventoryItemRemoved(self, instance, preserveItem)`
@@ -1720,8 +1720,6 @@ Count: 5 functions
 - [ ]`IsRecognizedChatType(chatType)`
   - Shared
 - [ ]`IsSuitableForTrunk(ent)`
-  - Server
-- [ ]`IsValid()`
   - Shared
 - [ ]`ItemCombine(client, item, target)`
   - Server
@@ -1774,7 +1772,7 @@ Count: 5 functions
 - [ ]`OnAdminStickMenuClosed()`
   - Client
 - [ ]`OnAdminSystemLoaded(arg1, arg2)`
-  - Server
+  - Shared
 - [ ]`OnCharAttribBoosted(client, self, attribID, boostID, arg5)`
   - Server
 - [ ]`OnCharAttribUpdated(client, self, key, arg4)`
@@ -1790,7 +1788,7 @@ Count: 5 functions
 - [ ]`OnCharFlagsTaken(ply, self, removedFlags)`
   - Server
 - [ ]`OnCharGetup(target, entity)`
-  - Server
+  - Shared
 - [ ]`OnCharKick(self, client)`
   - Server
 - [ ]`OnCharNetVarChanged(character, key, oldVar, value)`
@@ -1807,8 +1805,6 @@ Count: 5 functions
   - Client
 - [ ]`OnCheaterCaught(client)`
   - Server
-- [ ]`OnConfigChanged(key, oldValue, newValue)`
-  - Shared
 - [ ]`OnConfigUpdated(key, oldValue, value)`
   - Shared
 - [ ]`OnCreateDualInventoryPanels(panel1, panel2, inventory1, inventory2)`
@@ -1858,7 +1854,7 @@ Count: 5 functions
 - [ ]`OnPickupMoney(activator, self)`
   - Server
 - [ ]`OnPlayerDropWeapon(client, weapon, entity)`
-  - Server
+  - Shared
 - [ ]`OnPlayerEnterSequence(self, sequenceName, callback, time, noFreeze)`
   - Server
 - [ ]`OnPlayerInteractItem(client, action, self, result, data)`
@@ -1872,7 +1868,7 @@ Count: 5 functions
 - [ ]`OnPlayerObserve(client, state)`
   - Server
 - [ ]`OnPlayerPurchaseDoor(client, door, arg3)`
-  - Server
+  - Shared
 - [ ]`OnPlayerRagdolled(self, entity)`
   - Server
 - [ ]`OnPlayerSwitchClass(client, class, oldClass)`
@@ -1892,7 +1888,7 @@ Count: 5 functions
 - [ ]`OnServerLog(client, logType, logString, category)`
   - Server
 - [ ]`OnThemeChanged(themeName, useTransition)`
-  - Client
+  - Shared
 - [ ]`OnTicketClaimed(client, requester, ticketMessage)`
   - Server
 - [ ]`OnTicketClosed(client, requester, ticketMessage)`
@@ -1900,11 +1896,11 @@ Count: 5 functions
 - [ ]`OnTicketCreated(noob, message)`
   - Server
 - [ ]`OnTransferred(target)`
-  - Server
+  - Shared
 - [ ]`OnUsergroupCreated(groupName, arg2)`
   - Shared
 - [ ]`OnUsergroupPermissionsChanged(groupName, arg2)`
-  - Shared
+  - Server
 - [ ]`OnUsergroupRemoved(groupName)`
   - Shared
 - [ ]`OnUsergroupRenamed(oldName, newName)`
@@ -1922,7 +1918,7 @@ Count: 5 functions
 - [ ]`OptionChanged(key, old, value)`
   - Shared
 - [ ]`OptionReceived(arg1, key, value)`
-  - Client
+  - Server
 - [ ]`OverrideFactionDesc(uniqueID, arg2)`
   - Shared
 - [ ]`OverrideFactionModels(uniqueID, arg2)`
@@ -1930,7 +1926,7 @@ Count: 5 functions
 - [ ]`OverrideFactionName(uniqueID, arg2)`
   - Shared
 - [ ]`OverrideSpawnTime(ply, baseTime)`
-  - Server
+  - Shared
 - [ ]`PaintItem(item)`
   - Client
 - [ ]`PlayerAccessVendor(client, vendor)`
@@ -1949,8 +1945,6 @@ Count: 5 functions
   - Server
 - [ ]`PlayerMuted(target, admin)`
   - Server
-- [ ]`PlayerShouldAct()`
-  - Shared
 - [ ]`PlayerShouldPermaKill(client, inflictor, attacker)`
   - Server
 - [ ]`PlayerSpawnPointSelected(client, pos, ang)`
@@ -1997,7 +1991,7 @@ Count: 5 functions
   - Server
 - [ ]`PreDoorDataSave(door, doorData)`
   - Server
-- [ ]`PreDrawPhysgunBeam()`
+- [ ]`DrawPhysgunBeam()`
   - Client
 - [ ]`PreLiliaLoaded()`
   - Shared
@@ -2022,7 +2016,7 @@ Count: 5 functions
 - [ ]`ResetCharacterPanel()`
   - Client
 - [ ]`RunAdminSystemCommand(cmd, admin, victim, dur, reason)`
-  - Server
+  - Client
 - [ ]`SaveData()`
   - Server
 - [ ]`ScoreboardClosed(self)`
@@ -2036,9 +2030,9 @@ Count: 5 functions
 - [ ]`SendPopup(noob, message)`
   - Server
 - [ ]`SetMainCharacter(charID)`
-  - Server
+  - Client
 - [ ]`SetupBagInventoryAccessRules(inventory)`
-  - Server
+  - Shared
 - [ ]`SetupBotPlayer(client)`
   - Server
 - [ ]`SetupDatabase()`
@@ -2108,10 +2102,10 @@ Count: 5 functions
 - [ ]`StoreSpawns(spawns)`
   - Server
 - [ ]`SyncCharList(client)`
-  - Shared
+  - Server
 - [ ]`ThirdPersonToggled(arg1)`
-  - Shared
-- [ ]`TicketFrame(requester, message, claimed)`
+  - Client
+- [ ]`CreateTicketFrame(requester, message, claimed)`
   - Client
 - [ ]`TicketSystemClaim(client, requester, ticketMessage)`
   - Server
@@ -2129,8 +2123,6 @@ Count: 5 functions
   - Client
 - [ ]`TransferItem(itemID)`
   - Client
-- [ ]`TryViewModel(entity)`
-  - Shared
 - [ ]`UpdateEntityPersistence(vendor)`
   - Server
 - [ ]`VendorClassUpdated(vendor, id, allowed)`
@@ -2178,6 +2170,6 @@ Count: 5 functions
 - [ ]`getData(default)`
   - Shared
 - [ ]`setData(value, global, ignoreMap)`
-  - Shared
+  - Server
 - [ ]`syncVendorDataToClient(client)`
   - Server
