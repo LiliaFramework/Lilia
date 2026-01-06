@@ -4,18 +4,34 @@ Grenade item system for the Lilia framework.
 
 ---
 
+Overview
+
+Grenade items are weapons that can be equipped and used by players.
+They drop on death and prevent duplicate grenades.
+
+PLACEMENT:
+- Place in: ModuleFolder/items/grenade/ItemHere.lua (for module-specific items)
+- Place in: SchemaFolder/items/grenade/ItemHere.lua (for schema-specific items)
+
+USAGE:
+- Grenades are used by equipping them
+- They give the weapon specified in ITEM.class
+- Items are consumed when equipped
+- Weapons can be thrown and will explode
+- Grenades drop on death if ITEM.DropOnDeath is true
+
+---
+
 ### name
 
 #### 📋 Purpose
-Sets the display name of the grenade item
-
-#### ⏰ When Called
-During item definition
+Sets the display name shown to players
 
 #### 💡 Example Usage
 
 ```lua
-    ITEM.name = "Fragmentation Grenade"
+    -- Set the grenade name
+    ITEM.name = "Frag Grenade"
 
 ```
 
@@ -24,15 +40,13 @@ During item definition
 ### desc
 
 #### 📋 Purpose
-Sets the description of the grenade item
-
-#### ⏰ When Called
-During item definition
+Sets the description text shown to players
 
 #### 💡 Example Usage
 
 ```lua
-    ITEM.desc = "A deadly fragmentation grenade"
+    -- Set the grenade description
+    ITEM.desc = "A high-explosive fragmentation grenade"
 
 ```
 
@@ -41,14 +55,12 @@ During item definition
 ### category
 
 #### 📋 Purpose
-Sets the category for the grenade item
-
-#### ⏰ When Called
-During item definition
+Sets the category for inventory sorting
 
 #### 💡 Example Usage
 
 ```lua
+    -- Set inventory category
     ITEM.category = "itemCatGrenades"
 
 ```
@@ -58,14 +70,12 @@ During item definition
 ### model
 
 #### 📋 Purpose
-Sets the 3D model for the grenade item
-
-#### ⏰ When Called
-During item definition
+Sets the 3D model used for the item
 
 #### 💡 Example Usage
 
 ```lua
+    -- Set the grenade model
     ITEM.model = "models/weapons/w_eq_fraggrenade.mdl"
 
 ```
@@ -75,14 +85,12 @@ During item definition
 ### class
 
 #### 📋 Purpose
-Sets the weapon class name for the grenade
-
-#### ⏰ When Called
-During item definition (used in Use function)
+Sets the weapon entity class that gets given to players
 
 #### 💡 Example Usage
 
 ```lua
+    -- Set the grenade weapon class
     ITEM.class = "weapon_frag"
 
 ```
@@ -92,15 +100,13 @@ During item definition (used in Use function)
 ### width
 
 #### 📋 Purpose
-Sets the inventory width of the grenade item
-
-#### ⏰ When Called
-During item definition
+Sets the inventory width in slots
 
 #### 💡 Example Usage
 
 ```lua
-    ITEM.width = 1  -- Takes 1 slot width
+    -- Set inventory width
+    ITEM.width = 1
 
 ```
 
@@ -109,37 +115,13 @@ During item definition
 ### height
 
 #### 📋 Purpose
-Sets the inventory height of the grenade item
-
-#### ⏰ When Called
-During item definition
+Sets the inventory height in slots
 
 #### 💡 Example Usage
 
 ```lua
-    ITEM.height = 1  -- Takes 1 slot height
-
-```
-
----
-
-### health
-
-#### 📋 Purpose
-Sets the health value for the item when it's dropped as an entity in the world
-
-#### ⏰ When Called
-During item definition (used when item is spawned as entity)
-Notes:
-- Defaults to 100 if not specified
-- When the item entity takes damage, its health decreases
-- Item is destroyed when health reaches 0
-- Only applies if ITEM.CanBeDestroyed is true (controlled by config)
-
-#### 💡 Example Usage
-
-```lua
-    ITEM.health = 250  -- Item can take 250 damage before being destroyed
+    -- Set inventory height
+    ITEM.height = 1
 
 ```
 
@@ -148,15 +130,13 @@ Notes:
 ### DropOnDeath
 
 #### 📋 Purpose
-Sets whether the grenade drops when player dies
-
-#### ⏰ When Called
-During item definition
+Determines whether grenade drops on player death
 
 #### 💡 Example Usage
 
 ```lua
-    ITEM.DropOnDeath = true  -- Drops on death
+    -- Make grenade drop on death
+    ITEM.DropOnDeath = true
 
 ```
 
@@ -171,34 +151,42 @@ The following examples demonstrate how to use all the properties and methods tog
 Below is a comprehensive example showing how to define a complete item with all available properties and methods.
 
 ```lua
-            ITEM.name = "Fragmentation Grenade"
+    -- Set the grenade name
+    ITEM.name = "Frag Grenade"
 
-            ITEM.desc = "A deadly fragmentation grenade"
+    -- Set the grenade description
+    ITEM.desc = "A high-explosive fragmentation grenade"
 
-            ITEM.category = "itemCatGrenades"
+    -- Set inventory category
+    ITEM.category = "itemCatGrenades"
 
-            ITEM.model = "models/weapons/w_eq_fraggrenade.mdl"
+    -- Set the grenade model
+    ITEM.model = "models/weapons/w_eq_fraggrenade.mdl"
 
-            ITEM.class = "weapon_frag"
+    -- Set the grenade weapon class
+    ITEM.class = "weapon_frag"
 
-            ITEM.width = 1  -- Takes 1 slot width
+    -- Set inventory width
+    ITEM.width = 1
 
-            ITEM.height = 1  -- Takes 1 slot height
+    -- Set inventory height
+    ITEM.height = 1
 
-            ITEM.health = 250  -- Item can take 250 damage before being destroyed
+    -- Make grenade drop on death
+    ITEM.DropOnDeath = true
 
-            ITEM.DropOnDeath = true  -- Drops on death
+```
 
+```lua
     -- Basic item identification
-        ITEM.name = "Fragmentation Grenade"                    -- Display name shown to players
-        ITEM.desc = "A deadly fragmentation grenade"           -- Description text
-        ITEM.category = "itemCatGrenades"                      -- Category for inventory sorting
-        ITEM.model = "models/weapons/w_eq_fraggrenade.mdl"     -- 3D model for the grenade
-        ITEM.class = "weapon_frag"                             -- Weapon class to give when used
-        ITEM.width = 1                                         -- Inventory width (1 slot)
-        ITEM.height = 1                                        -- Inventory height (1 slot)
-        ITEM.health = 100                                      -- Health when dropped (default: 100)
-        ITEM.DropOnDeath = true                                -- Drops on death
+        ITEM.name = "Frag Grenade"                   -- Display name shown to players
+        ITEM.desc = "A high-explosive fragmentation grenade"  -- Description text
+        ITEM.category = "itemCatGrenades"            -- Category for inventory sorting
+        ITEM.model = "models/weapons/w_eq_fraggrenade.mdl"  -- 3D model for the grenade
+        ITEM.class = "weapon_frag"                   -- Weapon class to give to player
+        ITEM.width = 1                               -- Inventory width (1 slot)
+        ITEM.height = 1                              -- Inventory height (1 slot)
+        ITEM.DropOnDeath = true                      -- Grenade drops when player dies
 
 ```
 

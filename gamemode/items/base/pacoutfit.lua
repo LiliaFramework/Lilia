@@ -1,11 +1,127 @@
-﻿if not pac then return end
+﻿--[[
+    Folder: Definitions
+    File:  pacoutfit.md
+]]
+--[[
+    PAC Outfit Item Definition
+
+    PAC outfit item system for the Lilia framework.
+]]
+--[[
+    PAC outfit items are wearable items that use PAC (Player Accessory Creator) for visual effects.
+    They require the PAC addon and provide visual indicators when equipped.
+
+    PLACEMENT:
+    - Place in: ModuleFolder/items/pacoutfit/ItemHere.lua (for module-specific items)
+    - Place in: SchemaFolder/items/pacoutfit/ItemHere.lua (for schema-specific items)
+
+    USAGE:
+    - PAC outfit items are equipped by using them
+    - They add PAC3 parts to the player
+    - Items remain in inventory when equipped
+    - Can be unequipped to remove PAC3 parts
+    - Requires PAC3 addon to function properly
+]]
+if not pac then return end
+--[[
+    Purpose:
+        Sets the display name shown to players
+
+    Example Usage:
+        ```lua
+        -- Set the outfit name
+        ITEM.name = "Cool Sunglasses"
+        ```
+]]
 ITEM.name = "pacoutfitName"
+--[[
+    Purpose:
+        Sets the description text shown to players
+
+    Example Usage:
+        ```lua
+        -- Set the outfit description
+        ITEM.desc = "Stylish sunglasses that look great"
+        ```
+]]
 ITEM.desc = "pacoutfitDesc"
+--[[
+    Purpose:
+        Sets the category for inventory sorting
+
+    Example Usage:
+        ```lua
+        -- Set inventory category
+        ITEM.category = "outfit"
+        ```
+]]
 ITEM.category = "outfit"
+--[[
+    Purpose:
+        Sets the 3D model used for the item
+
+    Example Usage:
+        ```lua
+        -- Set the item model
+        ITEM.model = "models/Gibs/HGIBS.mdl"
+        ```
+]]
 ITEM.model = "models/Gibs/HGIBS.mdl"
+--[[
+    Purpose:
+        Sets the inventory width in slots
+
+    Example Usage:
+        ```lua
+        -- Set inventory width
+        ITEM.width = 1
+        ```
+]]
 ITEM.width = 1
+--[[
+    Purpose:
+        Sets the inventory height in slots
+
+    Example Usage:
+        ```lua
+        -- Set inventory height
+        ITEM.height = 1
+        ```
+]]
 ITEM.height = 1
+--[[
+    Purpose:
+        Sets the category to prevent conflicting PAC outfits
+
+    Example Usage:
+        ```lua
+        -- Set outfit category to prevent conflicts
+        ITEM.outfitCategory = "hat"
+        ```
+]]
 ITEM.outfitCategory = "hat"
+--[[
+    Purpose:
+        Defines PAC3 outfit data for visual effects
+
+    Example Usage:
+        ```lua
+        -- Define PAC3 outfit parts
+        ITEM.pacData = {
+            [1] = {
+                ["children"] = {},
+                ["self"] = {
+                    Skin = 0,
+                    UniqueID = "sunglasses_example",
+                    Size = 1,
+                    Bone = "head",
+                    Model = "models/captainbigbutt/skeyler/accessories/glasses01.mdl",
+                    ClassName = "model"
+                }
+            }
+        }
+        ```
+]]
 ITEM.pacData = {}
 if CLIENT then
     function ITEM:paintOver(item, w, h)
@@ -85,3 +201,38 @@ ITEM:hook("drop", function(item)
     local client = item.player
     if item:getData("equip") then item:removePart(client) end
 end)
+--[[
+Example Item:
+
+```lua
+-- Basic item identification
+    ITEM.name = "Cool Sunglasses"                -- Display name shown to players
+    ITEM.desc = "Stylish sunglasses that look great"  -- Description text
+    ITEM.category = "outfit"                     -- Category for inventory sorting
+    ITEM.model = "models/Gibs/HGIBS.mdl"         -- 3D model for the item
+    ITEM.width = 1                               -- Inventory width (1 slot)
+    ITEM.height = 1                              -- Inventory height (1 slot)
+    ITEM.outfitCategory = "hat"                  -- Category to prevent conflicting PAC outfits
+    ITEM.pacData = {                             -- PAC3 outfit data
+        [1] = {                                   -- PAC part definition
+            ["children"] = {},
+            ["self"] = {
+                Skin = 0,
+                UniqueID = "sunglasses_example",
+                Size = 1,
+                Bone = "head",
+                Model = "models/captainbigbutt/skeyler/accessories/glasses01.mdl",
+                ClassName = "model",
+                Position = Vector(2.5, 0, 0),
+                Angles = Angle(0, 0, 0),
+                Scale = Vector(1, 1, 1),
+                PositionOffset = Vector(0, 0, 0),
+                AngleOffset = Angle(0, 0, 0),
+            },
+        },
+    }
+    ITEM.attribBoosts = {                        -- Attribute bonuses when equipped
+        ["luck"] = 1                             -- +1 luck attribute
+    }
+```
+]]

@@ -4,17 +4,33 @@ Medical aid item system for the Lilia framework.
 
 ---
 
+Overview
+
+Aid items are consumable medical items that can restore health to players.
+They can be used on the player themselves or on other players through targeting.
+
+PLACEMENT:
+- Place in: ModuleFolder/items/aid/ItemHere.lua (for module-specific items)
+- Place in: SchemaFolder/items/aid/ItemHere.lua (for schema-specific items)
+
+USAGE:
+- Aid items are automatically consumed when used
+- They restore health based on the ITEM.health value
+- Can be used on self or other players
+- Health restoration is instant and cannot be interrupted
+- Items are removed from inventory after use
+
+---
+
 ### name
 
 #### 📋 Purpose
-Sets the display name of the aid item
-
-#### ⏰ When Called
-During item definition
+Sets the display name shown to players
 
 #### 💡 Example Usage
 
 ```lua
+    -- Set the aid item name
     ITEM.name = "Medical Kit"
 
 ```
@@ -24,14 +40,12 @@ During item definition
 ### desc
 
 #### 📋 Purpose
-Sets the description of the aid item
-
-#### ⏰ When Called
-During item definition
+Sets the description text shown to players
 
 #### 💡 Example Usage
 
 ```lua
+    -- Set the aid item description
     ITEM.desc = "A medical kit that restores health"
 
 ```
@@ -41,15 +55,13 @@ During item definition
 ### model
 
 #### 📋 Purpose
-Sets the 3D model for the aid item
-
-#### ⏰ When Called
-During item definition
+Sets the 3D model used for the item
 
 #### 💡 Example Usage
 
 ```lua
-    ITEM.model = "models/weapons/w_package.mdl"
+    -- Set the aid item model
+    ITEM.model = "models/items/medkit.mdl"
 
 ```
 
@@ -58,15 +70,13 @@ During item definition
 ### width
 
 #### 📋 Purpose
-Sets the inventory width of the aid item
-
-#### ⏰ When Called
-During item definition
+Sets the inventory width in slots
 
 #### 💡 Example Usage
 
 ```lua
-    ITEM.width = 1  -- Takes 1 slot width
+    -- Set inventory width
+    ITEM.width = 1
 
 ```
 
@@ -75,15 +85,13 @@ During item definition
 ### height
 
 #### 📋 Purpose
-Sets the inventory height of the aid item
-
-#### ⏰ When Called
-During item definition
+Sets the inventory height in slots
 
 #### 💡 Example Usage
 
 ```lua
-    ITEM.height = 1  -- Takes 1 slot height
+    -- Set inventory height
+    ITEM.height = 1
 
 ```
 
@@ -92,15 +100,28 @@ During item definition
 ### health
 
 #### 📋 Purpose
-Sets the amount of health restored by the aid item
-
-#### ⏰ When Called
-During item definition (used in use functions)
+Sets the amount of health restored when used
 
 #### 💡 Example Usage
 
 ```lua
-    ITEM.health = 25  -- Restores 25 health points
+    -- Set health restoration amount
+    ITEM.health = 25
+
+```
+
+---
+
+### armor
+
+#### 📋 Purpose
+Sets the amount of armor restored when used
+
+#### 💡 Example Usage
+
+```lua
+    -- Set armor restoration amount
+    ITEM.armor = 10
 
 ```
 
@@ -115,18 +136,30 @@ The following examples demonstrate how to use all the properties and methods tog
 Below is a comprehensive example showing how to define a complete item with all available properties and methods.
 
 ```lua
-            ITEM.name = "Medical Kit"
+    -- Set the aid item name
+    ITEM.name = "Medical Kit"
 
-            ITEM.desc = "A medical kit that restores health"
+    -- Set the aid item description
+    ITEM.desc = "A medical kit that restores health"
 
-            ITEM.model = "models/weapons/w_package.mdl"
+    -- Set the aid item model
+    ITEM.model = "models/items/medkit.mdl"
 
-            ITEM.width = 1  -- Takes 1 slot width
+    -- Set inventory width
+    ITEM.width = 1
 
-            ITEM.height = 1  -- Takes 1 slot height
+    -- Set inventory height
+    ITEM.height = 1
 
-            ITEM.health = 25  -- Restores 25 health points
+    -- Set health restoration amount
+    ITEM.health = 25
 
+    -- Set armor restoration amount
+    ITEM.armor = 10
+
+```
+
+```lua
     -- Basic item identification
         ITEM.name = "Medical Kit"                    -- Display name shown to players
         ITEM.desc = "A medical kit that restores 25 health points"  -- Description text

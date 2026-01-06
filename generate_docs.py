@@ -303,7 +303,7 @@ def parse_comment_block(comment_text):
         elif line.startswith('Example Usage:'):
             finalize_current_section()
             current_section = 'examples'
-        elif line.startswith('Example Item:'):
+        elif line.startswith('Example Item:') or line.startswith('Example Class:') or line.startswith('Example Faction:'):
             finalize_current_section()
             current_section = 'examples'
         elif current_section in ['purpose', 'when_called', 'when_used', 'returns', 'realm', 'explanation']:
@@ -674,23 +674,23 @@ def find_comment_blocks_in_file(file_path):
 
     # Find all comment blocks that start with --[[
     comment_pattern = r'--\[\[.*?\]\]'
-    comment_blocks = []
+    all_comment_blocks = []
     file_header = None
     overview_section = None
 
     for match in re.finditer(comment_pattern, content, re.DOTALL):
         comment_text = match.group(0)
-        # Check if this comment block has the structured format we expect (function comments)
-        if any(header in comment_text for header in ['Purpose:', 'When Called:', 'When Used:', 'Parameters:', 'Returns:', 'Realm:', 'Explanation of Panel:', 'Example Usage:', 'Example Item:']):
-            comment_blocks.append(comment_text)
+        all_comment_blocks.append(comment_text)
+
         # Check if this is a file header (first comment block that doesn't have function structure or overview, and isn't a folder/file directive)
-        elif file_header is None and not any(header in comment_text for header in ['Purpose:', 'When Called:', 'Parameters:', 'Returns:', 'Realm:', 'Example Usage:', 'Overview:', 'Example Item:', 'Folder:', 'File:']):
+        if file_header is None and not any(header in comment_text for header in ['Purpose:', 'When Called:', 'Parameters:', 'Returns:', 'Realm:', 'Example Usage:', 'Overview:', 'Example Item:', 'Folder:', 'File:']):
             file_header = comment_text
         # Check if this is an overview section (contains "Overview:")
         elif 'Overview:' in comment_text and overview_section is None:
             overview_section = comment_text
 
-    return comment_blocks, file_header, overview_section
+    # Return all comment blocks for processing
+    return all_comment_blocks, file_header, overview_section
 
 
 def generate_documentation_for_file(file_path, output_dir, is_library=False, base_docs_dir=None):
@@ -965,11 +965,25 @@ def generate_markdown_for_definition_entries(title: str, subtitle: str, overview
         md_parts.append('---\n\n')
 
     # Add comprehensive examples at the end
-    if comprehensive_examples:
+    valid_comprehensive_examples = []
+    for example_entry in comprehensive_examples:
+        parsed = example_entry['parsed']
+        if parsed.get('examples'):
+            # Check if any examples have actual content
+            has_content = False
+            for example in parsed['examples']:
+                code_lines = example.get('code', [])
+                if code_lines and any(line.strip() for line in code_lines):
+                    has_content = True
+                    break
+            if has_content:
+                valid_comprehensive_examples.append(example_entry)
+
+    if valid_comprehensive_examples:
         md_parts.append('## Complete Examples\n\n')
         md_parts.append('The following examples demonstrate how to use all the properties and methods together to create complete definitions.\n\n')
 
-        for example_entry in comprehensive_examples:
+        for example_entry in valid_comprehensive_examples:
             parsed = example_entry['parsed']
             entry_name = example_entry['name']
 
@@ -996,10 +1010,13 @@ def generate_markdown_for_definition_entries(title: str, subtitle: str, overview
             # Add the example code
             if parsed.get('examples'):
                 for example in parsed['examples']:
-                    md_parts.append('```lua\n')
-                    formatted_code = format_lua_code(example.get('code', []))
-                    md_parts.append('\n'.join(formatted_code))
-                    md_parts.append('\n```\n\n')
+                    code_lines = example.get('code', [])
+                    # Filter out empty examples
+                    if code_lines and any(line.strip() for line in code_lines):
+                        md_parts.append('```lua\n')
+                        formatted_code = format_lua_code(code_lines)
+                        md_parts.append('\n'.join(formatted_code))
+                        md_parts.append('\n```\n\n')
 
             md_parts.append('---\n\n')
 
@@ -1079,6 +1096,9 @@ def generate_documentation_for_definitions_file(file_path: Path, output_dir: Pat
         print(f"Warning: Could not read {file_path} due to encoding issues")
         return
 
+    # Check if this is an item definition file
+    is_item_file = 'items' in str(file_path)
+
     # Parse folder and file directives
     custom_folder, custom_filename = parse_folder_directives(file_content)
 
@@ -1090,8 +1110,7 @@ def generate_documentation_for_definitions_file(file_path: Path, output_dir: Pat
         name = file_path.stem.lower()
         output_filename = f'{name}.md'
 
-        # Check if this is an item definition file
-        if file_path.parent.name == 'items':
+        if is_item_file:
             # Put item files in an items subdirectory
             output_path = output_dir / 'items' / output_filename
         else:
@@ -1101,8 +1120,8 @@ def generate_documentation_for_definitions_file(file_path: Path, output_dir: Pat
         generate_documentation_for_panels(file_path, output_path)
         return
 
-    # Check if this is an item definition file
-    if file_path.parent.name == 'items':
+    # Set entity prefixes based on file type
+    if is_item_file:
         # This is an item definition file
         entity_prefixes: Tuple[str, ...] = ('ITEM',)
     elif file_path.stem.lower() == 'attributes':
@@ -1111,15 +1130,36 @@ def generate_documentation_for_definitions_file(file_path: Path, output_dir: Pat
     else:
         # Generic CLASS/FACTION/MODULE definitions
         entity_prefixes: Tuple[str, ...] = ('CLASS', 'FACTION', 'MODULE')
+
     comment_blocks, file_header, overview_section = find_comment_blocks_in_file(file_path)
 
-    # Skip the folder/file directive comment block when parsing file header
-    if file_header and ('Folder:' in file_header or 'File:' in file_header):
-        # Find the next comment block that contains actual content
+    # Handle item files specially - they have a specific structure
+    if is_item_file:
+        # For item files, we need to identify the blocks properly:
+        # Block 1: Folder/File directives (skip)
+        # Block 2: Title block
+        # Block 3: Overview block
+        # Remaining: Property blocks and examples
+
+        # Find all non-folder/file blocks
+        content_blocks = []
         for block in comment_blocks:
-            if block != file_header and not ('Folder:' in block or 'File:' in block):
-                file_header = block
-                break
+            if not ('Folder:' in block or 'File:' in block):
+                content_blocks.append(block)
+
+        if len(content_blocks) >= 2:
+            file_header = content_blocks[0]  # Title block
+            overview_section = content_blocks[1]  # Overview block
+        elif len(content_blocks) == 1:
+            file_header = content_blocks[0]  # Title block only
+    else:
+        # Skip the folder/file directive comment block when parsing file header
+        if file_header and ('Folder:' in file_header or 'File:' in file_header):
+            # Find the next comment block that contains actual content
+            for block in comment_blocks:
+                if block != file_header and not ('Folder:' in block or 'File:' in block):
+                    file_header = block
+                    break
 
     entries = parse_definition_property_blocks(file_path, entity_prefixes)
 
@@ -1131,15 +1171,28 @@ def generate_documentation_for_definitions_file(file_path: Path, output_dir: Pat
 
     title = display_name
     subtitle = f'This page documents the {display_name.lower()} definitions.'
-    if file_header:
-        parsed_header = parse_file_header(file_header)
-        if '\n\n' in parsed_header:
-            parts = parsed_header.split('\n\n', 1)
-            title = parts[0].replace('**', '').replace('*', '').strip()
-            if len(parts) > 1 and parts[1].strip():
-                subtitle = parts[1].strip()
 
-    md = generate_markdown_for_definition_entries(title, subtitle, overview_section, entries)
+    if file_header:
+        if is_item_file:
+            # For item files, parse the title block for title/subtitle
+            parsed_header = parse_file_header(file_header)
+            if '\n\n' in parsed_header:
+                parts = parsed_header.split('\n\n', 1)
+                title = parts[0].replace('**', '').replace('*', '').strip()
+                if len(parts) > 1 and parts[1].strip():
+                    subtitle = parts[1].strip()
+        else:
+            # For other definition files, parse into title/subtitle
+            parsed_header = parse_file_header(file_header)
+            if '\n\n' in parsed_header:
+                parts = parsed_header.split('\n\n', 1)
+                title = parts[0].replace('**', '').replace('*', '').strip()
+                if len(parts) > 1 and parts[1].strip():
+                    subtitle = parts[1].strip()
+
+    # Use overview_section if available
+    final_overview = overview_section
+    md = generate_markdown_for_definition_entries(title, subtitle, final_overview, entries)
     output_path.parent.mkdir(parents=True, exist_ok=True)
     with open(output_path, 'w', encoding='utf-8') as f:
         f.write(md)
@@ -1249,7 +1302,7 @@ def main():
 
     # Get list of files to process
     files_to_process = []
-    
+
     if args.files:
         for file_pattern in args.files:
             # Support wildcards

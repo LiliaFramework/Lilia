@@ -4,17 +4,33 @@ Ammunition item system for the Lilia framework.
 
 ---
 
+Overview
+
+Ammo items are stackable consumables that provide ammunition for weapons.
+They can be loaded in different quantities and have visual quantity indicators.
+
+PLACEMENT:
+- Place in: ModuleFolder/items/ammo/ItemHere.lua (for module-specific items)
+- Place in: SchemaFolder/items/ammo/ItemHere.lua (for schema-specific items)
+
+USAGE:
+- Ammo items are consumed when used
+- They give ammunition based on the ITEM.ammo type
+- Ammo type must match weapon's ammo type
+- Can be used to reload equipped weapons
+- Items are removed from inventory after use
+
+---
+
 ### name
 
 #### 📋 Purpose
-Sets the display name of the ammo item
-
-#### ⏰ When Called
-During item definition
+Sets the display name shown to players
 
 #### 💡 Example Usage
 
 ```lua
+    -- Set the ammo name
     ITEM.name = "Pistol Ammo"
 
 ```
@@ -24,15 +40,13 @@ During item definition
 ### model
 
 #### 📋 Purpose
-Sets the 3D model for the ammo item
-
-#### ⏰ When Called
-During item definition
+Sets the 3D model used for the item
 
 #### 💡 Example Usage
 
 ```lua
-    ITEM.model = "models/props_c17/SuitCase001a.mdl"
+    -- Set the ammo model
+    ITEM.model = "models/items/boxsrounds.mdl"
 
 ```
 
@@ -41,15 +55,13 @@ During item definition
 ### width
 
 #### 📋 Purpose
-Sets the inventory width of the ammo item
-
-#### ⏰ When Called
-During item definition
+Sets the inventory width in slots
 
 #### 💡 Example Usage
 
 ```lua
-    ITEM.width = 1  -- Takes 1 slot width
+    -- Set inventory width
+    ITEM.width = 1
 
 ```
 
@@ -58,37 +70,13 @@ During item definition
 ### height
 
 #### 📋 Purpose
-Sets the inventory height of the ammo item
-
-#### ⏰ When Called
-During item definition
+Sets the inventory height in slots
 
 #### 💡 Example Usage
 
 ```lua
-    ITEM.height = 1  -- Takes 1 slot height
-
-```
-
----
-
-### health
-
-#### 📋 Purpose
-Sets the health value for the item when it's dropped as an entity in the world
-
-#### ⏰ When Called
-During item definition (used when item is spawned as entity)
-Notes:
-- Defaults to 100 if not specified
-- When the item entity takes damage, its health decreases
-- Item is destroyed when health reaches 0
-- Only applies if ITEM.CanBeDestroyed is true (controlled by config)
-
-#### 💡 Example Usage
-
-```lua
-    ITEM.health = 250  -- Item can take 250 damage before being destroyed
+    -- Set inventory height
+    ITEM.height = 1
 
 ```
 
@@ -97,16 +85,13 @@ Notes:
 ### ammo
 
 #### 📋 Purpose
-Sets the ammo type for the item
-
-#### ⏰ When Called
-During item definition (used in use functions)
+Sets the ammunition type that matches weapon ammo type
 
 #### 💡 Example Usage
 
 ```lua
-    ITEM.ammo = "pistol"  -- Pistol ammunition type
-    ITEM.ammo = "smg1"    -- SMG ammunition type
+    -- Set ammo type
+    ITEM.ammo = "pistol"
 
 ```
 
@@ -115,14 +100,12 @@ During item definition (used in use functions)
 ### category
 
 #### 📋 Purpose
-Sets the category for the ammo item
-
-#### ⏰ When Called
-During item definition
+Sets the category for inventory sorting
 
 #### 💡 Example Usage
 
 ```lua
+    -- Set inventory category
     ITEM.category = "itemCatAmmunition"
 
 ```
@@ -138,28 +121,33 @@ The following examples demonstrate how to use all the properties and methods tog
 Below is a comprehensive example showing how to define a complete item with all available properties and methods.
 
 ```lua
-            ITEM.name = "Pistol Ammo"
+    -- Set the ammo name
+    ITEM.name = "Pistol Ammo"
 
-            ITEM.model = "models/props_c17/SuitCase001a.mdl"
+    -- Set the ammo model
+    ITEM.model = "models/items/boxsrounds.mdl"
 
-            ITEM.width = 1  -- Takes 1 slot width
+    -- Set inventory width
+    ITEM.width = 1
 
-            ITEM.height = 1  -- Takes 1 slot height
+    -- Set inventory height
+    ITEM.height = 1
 
-            ITEM.health = 250  -- Item can take 250 damage before being destroyed
+    -- Set ammo type
+    ITEM.ammo = "pistol"
 
-            ITEM.ammo = "pistol"  -- Pistol ammunition type
-            ITEM.ammo = "smg1"    -- SMG ammunition type
+    -- Set inventory category
+    ITEM.category = "itemCatAmmunition"
 
-            ITEM.category = "itemCatAmmunition"
+```
 
+```lua
     -- Basic item identification
         ITEM.name = "Pistol Ammo"                    -- Display name shown to players
-        ITEM.desc = "ammoDesc"                       -- Description text
+        ITEM.desc = "ammoDesc"                       -- Description text (localized)
         ITEM.model = "models/items/boxsrounds.mdl"   -- 3D model for the ammo box
         ITEM.width = 1                               -- Inventory width (1 slot)
         ITEM.height = 1                              -- Inventory height (1 slot)
-        ITEM.health = 100                            -- Health when dropped (default: 100)
         ITEM.ammo = "pistol"                         -- Ammo type (matches weapon ammo type)
         ITEM.category = "itemCatAmmunition"          -- Category for inventory sorting
 

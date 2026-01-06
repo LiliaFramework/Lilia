@@ -1,13 +1,153 @@
-﻿ITEM.name = "outfit"
+﻿--[[
+    Folder: Definitions
+    File:  outfit.md
+]]
+--[[
+    Outfit Item Definition
+
+    Outfit item system for the Lilia framework.
+]]
+--[[
+    Outfit items are wearable items that can change player appearance, models, skins, bodygroups,
+    and provide attribute boosts. They support PAC integration and visual indicators.
+
+    PLACEMENT:
+    - Place in: ModuleFolder/items/outfit/ItemHere.lua (for module-specific items)
+    - Place in: SchemaFolder/items/outfit/ItemHere.lua (for schema-specific items)
+
+    USAGE:
+    - Outfit items are equipped by using them
+    - They change the player's model and appearance
+    - Items remain in inventory when equipped
+    - Can be unequipped to restore original appearance
+    - Outfit categories prevent conflicts between items
+]]
+--[[
+    Purpose:
+        Sets the display name shown to players
+
+    Example Usage:
+        ```lua
+        -- Set the outfit name
+        ITEM.name = "Police Uniform"
+        ```
+]]
+ITEM.name = "outfit"
+--[[
+    Purpose:
+        Sets the description text shown to players
+
+    Example Usage:
+        ```lua
+        -- Set the outfit description
+        ITEM.desc = "Standard police officer uniform with vest"
+        ```
+]]
 ITEM.desc = "outfitDesc"
+--[[
+    Purpose:
+        Sets the category for inventory sorting
+
+    Example Usage:
+        ```lua
+        -- Set inventory category
+        ITEM.category = "outfit"
+        ```
+]]
 ITEM.category = "outfit"
+--[[
+    Purpose:
+        Sets the 3D model used for the item
+
+    Example Usage:
+        ```lua
+        -- Set the outfit model
+        ITEM.model = "models/props_c17/BriefCase001a.mdl"
+        ```
+]]
 ITEM.model = "models/props_c17/BriefCase001a.mdl"
+--[[
+    Purpose:
+        Sets the inventory width in slots
+
+    Example Usage:
+        ```lua
+        -- Set inventory width
+        ITEM.width = 1
+        ```
+]]
 ITEM.width = 1
+--[[
+    Purpose:
+        Sets the inventory height in slots
+
+    Example Usage:
+        ```lua
+        -- Set inventory height
+        ITEM.height = 1
+        ```
+]]
 ITEM.height = 1
+--[[
+    Purpose:
+        Sets the category to prevent conflicting outfits
+
+    Example Usage:
+        ```lua
+        -- Set outfit category to prevent conflicts
+        ITEM.outfitCategory = "model"
+        ```
+]]
 ITEM.outfitCategory = "model"
+--[[
+    Purpose:
+        Defines PAC3 outfit data for visual effects
+
+    Example Usage:
+        ```lua
+        -- Define PAC3 outfit parts (optional)
+        ITEM.pacData = {}
+        ```
+]]
 ITEM.pacData = {}
+--[[
+    Purpose:
+        Marks this item as an outfit
+
+    Example Usage:
+        ```lua
+        -- Mark as outfit item
+        ITEM.isOutfit = true
+        ```
+]]
 ITEM.isOutfit = true
 if CLIENT then
+    --[[
+        Purpose:
+            Draws a green indicator square on equipped outfits in the inventory
+
+        When Called:
+            Called in function ITEM:paintOver
+
+        Parameters:
+            item - The item instance being drawn
+            w - Width of the item slot
+            h - Height of the item slot
+
+        Returns:
+            nil
+
+        Realm:
+            Client
+
+        Example Usage:
+
+        Low Complexity:
+            ```lua
+            -- Automatically called when rendering equipped outfit in inventory
+            -- Shows green square in bottom-right corner when equipped
+            ```
+    ]]
     function ITEM:paintOver(item, w, h)
         if item:getData("equip") then
             surface.SetDrawColor(110, 255, 110, 100)
@@ -168,3 +308,24 @@ function ITEM:onRemoved()
 end
 
 ITEM:hook("drop", function(item) if item:getData("equip") then item:removeOutfit(item.player) end end)
+--[[
+Example Item:
+
+```lua
+-- Basic item identification
+    ITEM.name = "Police Uniform"                 -- Display name shown to players
+    ITEM.desc = "Standard police officer uniform with vest"  -- Description text
+    ITEM.category = "outfit"                     -- Category for inventory sorting
+    ITEM.model = "models/props_c17/BriefCase001a.mdl"  -- 3D model for the item
+    ITEM.width = 1                               -- Inventory width (1 slot)
+    ITEM.height = 1                              -- Inventory height (1 slot)
+    ITEM.outfitCategory = "model"                -- Category to prevent conflicting outfits
+    ITEM.pacData = {}                            -- PAC3 outfit data (empty for basic model replacement)
+    ITEM.isOutfit = true                         -- Marks this as an outfit item
+    ITEM.replacement = "models/player/police.mdl" -- Model to replace player's model with
+    ITEM.attribBoosts = {                        -- Attribute bonuses when equipped
+        ["endurance"] = 5,                        -- +5 endurance attribute
+        ["luck"] = -2                             -- -2 luck attribute
+    }
+```
+]]

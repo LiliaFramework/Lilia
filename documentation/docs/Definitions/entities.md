@@ -4,18 +4,34 @@ Entity placement item system for the Lilia framework.
 
 ---
 
+Overview
+
+Entity items allow players to place down entities in the world.
+They support data restoration and various entity properties.
+
+PLACEMENT:
+- Place in: ModuleFolder/items/entities/ItemHere.lua (for module-specific items)
+- Place in: SchemaFolder/items/entities/ItemHere.lua (for schema-specific items)
+
+USAGE:
+- Entity items are placed by using the item
+- They spawn the entity specified in ITEM.entityid
+- Entities are placed at the player's position
+- Items are consumed when placed
+- Entities can be picked up and returned to inventory
+
+---
+
 ### name
 
 #### 📋 Purpose
-Sets the display name of the entity item
-
-#### ⏰ When Called
-During item definition
+Sets the display name shown to players
 
 #### 💡 Example Usage
 
 ```lua
-    ITEM.name = "Chair"
+    -- Set the entity item name
+    ITEM.name = "Vending Machine"
 
 ```
 
@@ -24,15 +40,13 @@ During item definition
 ### model
 
 #### 📋 Purpose
-Sets the 3D model for the entity item
-
-#### ⏰ When Called
-During item definition
+Sets the 3D model used for the item
 
 #### 💡 Example Usage
 
 ```lua
-    ITEM.model = "models/props_c17/FurnitureChair001a.mdl"
+    -- Set the item model (empty for entity placement)
+    ITEM.model = "models/props_interiors/vendingmachinesoda01a.mdl"
 
 ```
 
@@ -41,15 +55,13 @@ During item definition
 ### desc
 
 #### 📋 Purpose
-Sets the description of the entity item
-
-#### ⏰ When Called
-During item definition
+Sets the description text shown to players
 
 #### 💡 Example Usage
 
 ```lua
-    ITEM.desc = "A comfortable chair for sitting"
+    -- Set the entity description
+    ITEM.desc = "A functional vending machine that can be placed in the world"
 
 ```
 
@@ -58,14 +70,12 @@ During item definition
 ### category
 
 #### 📋 Purpose
-Sets the category for the entity item
-
-#### ⏰ When Called
-During item definition
+Sets the category for inventory sorting
 
 #### 💡 Example Usage
 
 ```lua
+    -- Set inventory category
     ITEM.category = "entities"
 
 ```
@@ -75,37 +85,13 @@ During item definition
 ### entityid
 
 #### 📋 Purpose
-Sets the entity class name to spawn
-
-#### ⏰ When Called
-During item definition (used in Place function)
+Sets the entity class to spawn when the item is placed
 
 #### 💡 Example Usage
 
 ```lua
-    ITEM.entityid = "prop_physics"
-
-```
-
----
-
-### health
-
-#### 📋 Purpose
-Sets the health value for the item when it's dropped as an entity in the world
-
-#### ⏰ When Called
-During item definition (used when item is spawned as entity)
-Notes:
-- Defaults to 100 if not specified
-- When the item entity takes damage, its health decreases
-- Item is destroyed when health reaches 0
-- Only applies if ITEM.CanBeDestroyed is true (controlled by config)
-
-#### 💡 Example Usage
-
-```lua
-    ITEM.health = 250  -- Item can take 250 damage before being destroyed
+    -- Set the entity class to spawn
+    ITEM.entityid = "lia_vendingmachine"
 
 ```
 
@@ -120,25 +106,32 @@ The following examples demonstrate how to use all the properties and methods tog
 Below is a comprehensive example showing how to define a complete item with all available properties and methods.
 
 ```lua
-            ITEM.name = "Chair"
+    -- Set the entity item name
+    ITEM.name = "Vending Machine"
 
-            ITEM.model = "models/props_c17/FurnitureChair001a.mdl"
+    -- Set the item model (empty for entity placement)
+    ITEM.model = "models/props_interiors/vendingmachinesoda01a.mdl"
 
-            ITEM.desc = "A comfortable chair for sitting"
+    -- Set the entity description
+    ITEM.desc = "A functional vending machine that can be placed in the world"
 
-            ITEM.category = "entities"
+    -- Set inventory category
+    ITEM.category = "entities"
 
-            ITEM.entityid = "prop_physics"
+    -- Set the entity class to spawn
+    ITEM.entityid = "lia_vendingmachine"
 
-            ITEM.health = 250  -- Item can take 250 damage before being destroyed
+```
 
+```lua
     -- Basic item identification
-        ITEM.name = "Chair"                                          -- Display name shown to players
-        ITEM.model = "models/props_c17/FurnitureChair001a.mdl"       -- 3D model for the item
-        ITEM.desc = "A comfortable chair for sitting"                -- Description text
-        ITEM.category = "entities"                                   -- Category for inventory sorting
-        ITEM.entityid = "prop_physics"                               -- Entity class to spawn when placed
-        ITEM.health = 250                                            -- Health when dropped (default: 100)
+        ITEM.name = "Vending Machine"                 -- Display name shown to players
+        ITEM.desc = "A functional vending machine that can be placed in the world"  -- Description text
+        ITEM.category = "entities"                    -- Category for inventory sorting
+        ITEM.model = "models/props_interiors/vendingmachinesoda01a.mdl"  -- 3D model for the item
+        ITEM.width = 2                                -- Inventory width (2 slots)
+        ITEM.height = 3                               -- Inventory height (3 slots)
+        ITEM.entityid = "lia_vendingmachine"          -- Entity class to spawn when placed
 
 ```
 

@@ -4,35 +4,34 @@ PAC outfit item system for the Lilia framework.
 
 ---
 
-### name
+Overview
 
-#### 📋 Purpose
-Prevents loading if PAC addon is not available
+PAC outfit items are wearable items that use PAC (Player Accessory Creator) for visual effects.
+They require the PAC addon and provide visual indicators when equipped.
 
-#### ⏰ When Called
-During item definition
+PLACEMENT:
+- Place in: ModuleFolder/items/pacoutfit/ItemHere.lua (for module-specific items)
+- Place in: SchemaFolder/items/pacoutfit/ItemHere.lua (for schema-specific items)
 
-#### 💡 Example Usage
-
-```lua
-    if not pac then return end
-
-```
+USAGE:
+- PAC outfit items are equipped by using them
+- They add PAC3 parts to the player
+- Items remain in inventory when equipped
+- Can be unequipped to remove PAC3 parts
+- Requires PAC3 addon to function properly
 
 ---
 
 ### name
 
 #### 📋 Purpose
-Sets the display name of the PAC outfit item
-
-#### ⏰ When Called
-During item definition
+Sets the display name shown to players
 
 #### 💡 Example Usage
 
 ```lua
-    ITEM.name = "Hat"
+    -- Set the outfit name
+    ITEM.name = "Cool Sunglasses"
 
 ```
 
@@ -41,15 +40,13 @@ During item definition
 ### desc
 
 #### 📋 Purpose
-Sets the description of the PAC outfit item
-
-#### ⏰ When Called
-During item definition
+Sets the description text shown to players
 
 #### 💡 Example Usage
 
 ```lua
-    ITEM.desc = "A stylish hat"
+    -- Set the outfit description
+    ITEM.desc = "Stylish sunglasses that look great"
 
 ```
 
@@ -58,14 +55,12 @@ During item definition
 ### category
 
 #### 📋 Purpose
-Sets the category for the PAC outfit item
-
-#### ⏰ When Called
-During item definition
+Sets the category for inventory sorting
 
 #### 💡 Example Usage
 
 ```lua
+    -- Set inventory category
     ITEM.category = "outfit"
 
 ```
@@ -75,14 +70,12 @@ During item definition
 ### model
 
 #### 📋 Purpose
-Sets the 3D model for the PAC outfit item
-
-#### ⏰ When Called
-During item definition
+Sets the 3D model used for the item
 
 #### 💡 Example Usage
 
 ```lua
+    -- Set the item model
     ITEM.model = "models/Gibs/HGIBS.mdl"
 
 ```
@@ -92,15 +85,13 @@ During item definition
 ### width
 
 #### 📋 Purpose
-Sets the inventory width of the PAC outfit item
-
-#### ⏰ When Called
-During item definition
+Sets the inventory width in slots
 
 #### 💡 Example Usage
 
 ```lua
-    ITEM.width = 1  -- Takes 1 slot width
+    -- Set inventory width
+    ITEM.width = 1
 
 ```
 
@@ -109,15 +100,13 @@ During item definition
 ### height
 
 #### 📋 Purpose
-Sets the inventory height of the PAC outfit item
-
-#### ⏰ When Called
-During item definition
+Sets the inventory height in slots
 
 #### 💡 Example Usage
 
 ```lua
-    ITEM.height = 1  -- Takes 1 slot height
+    -- Set inventory height
+    ITEM.height = 1
 
 ```
 
@@ -126,15 +115,13 @@ During item definition
 ### outfitCategory
 
 #### 📋 Purpose
-Sets the outfit category for conflict checking
-
-#### ⏰ When Called
-During item definition
+Sets the category to prevent conflicting PAC outfits
 
 #### 💡 Example Usage
 
 ```lua
-    ITEM.outfitCategory = "hat"  -- Prevents multiple items of same category
+    -- Set outfit category to prevent conflicts
+    ITEM.outfitCategory = "hat"
 
 ```
 
@@ -143,139 +130,25 @@ During item definition
 ### pacData
 
 #### 📋 Purpose
-Sets the PAC data for the outfit
-
-#### ⏰ When Called
-During item definition
+Defines PAC3 outfit data for visual effects
 
 #### 💡 Example Usage
 
 ```lua
-    ITEM.pacData = {}  -- PAC attachment data
-
-```
-
----
-
-### removePart
-
-#### 📋 Purpose
-Custom paint function to show equipped status
-
-#### ⏰ When Called
-When rendering the item in inventory (CLIENT only)
-
-#### 💡 Example Usage
-
-```lua
-    function ITEM:paintOver(item, w, h)
-        if item:getData("equip") then
-            surface.SetDrawColor(110, 255, 110, 100)
-            surface.DrawRect(w - 14, h - 14, 8, 8)
-        end
-    end
-
-```
-
----
-
-### onCanBeTransfered
-
-#### 📋 Purpose
-Removes the PAC part from the player
-
-#### ⏰ When Called
-When unequipping the PAC outfit
-
-#### 💡 Example Usage
-
-```lua
-    function ITEM:removePart(client)
-        local char = client:getChar()
-        self:setData("equip", false)
-        if client.removePart then client:removePart(self.uniqueID) end
-        -- Remove attribute boosts
-    end
-
-```
-
----
-
-### onLoadout
-
-#### 📋 Purpose
-Prevents transfer of equipped PAC outfits
-
-#### ⏰ When Called
-When attempting to transfer the item
-
-#### 💡 Example Usage
-
-```lua
-    function ITEM:onCanBeTransfered(_, newInventory)
-        if newInventory and self:getData("equip") then return false end
-        return true
-    end
-
-```
-
----
-
-### onRemoved
-
-#### 📋 Purpose
-Handles PAC outfit loading on player spawn
-
-#### ⏰ When Called
-When player spawns with equipped PAC outfit
-
-#### 💡 Example Usage
-
-```lua
-    function ITEM:onLoadout()
-        if self:getData("equip") and self.player.addPart then self.player:addPart(self.uniqueID) end
-    end
-
-```
-
----
-
-### name
-
-#### 📋 Purpose
-Handles PAC outfit removal when item is removed
-
-#### ⏰ When Called
-When item is removed from inventory
-
-#### 💡 Example Usage
-
-```lua
-    function ITEM:onRemoved()
-        local inv = lia.item.inventories[self.invID]
-        local receiver = inv.getReceiver and inv:getReceiver()
-        if IsValid(receiver) and receiver:IsPlayer() and self:getData("equip") then self:removePart(receiver) end
-    end
-
-```
-
----
-
-### name
-
-#### 📋 Purpose
-Handles PAC outfit removal when item is dropped
-
-#### ⏰ When Called
-When item is dropped
-
-#### 💡 Example Usage
-
-```lua
-    ITEM:hook("drop", function(item)
-        local client = item.player
-        if item:getData("equip") then item:removePart(client) end
-    end)
+    -- Define PAC3 outfit parts
+    ITEM.pacData = {
+        [1] = {
+            ["children"] = {},
+            ["self"] = {
+                Skin = 0,
+                UniqueID = "sunglasses_example",
+                Size = 1,
+                Bone = "head",
+                Model = "models/captainbigbutt/skeyler/accessories/glasses01.mdl",
+                ClassName = "model"
+            }
+        }
+    }
 
 ```
 
@@ -290,84 +163,74 @@ The following examples demonstrate how to use all the properties and methods tog
 Below is a comprehensive example showing how to define a complete item with all available properties and methods.
 
 ```lua
-    if not pac then return end
+    -- Set the outfit name
+    ITEM.name = "Cool Sunglasses"
 
-    ITEM.name = "Hat"
+    -- Set the outfit description
+    ITEM.desc = "Stylish sunglasses that look great"
 
-    ITEM.desc = "A stylish hat"
-
+    -- Set inventory category
     ITEM.category = "outfit"
 
+    -- Set the item model
     ITEM.model = "models/Gibs/HGIBS.mdl"
 
-    ITEM.width = 1  -- Takes 1 slot width
+    -- Set inventory width
+    ITEM.width = 1
 
-    ITEM.height = 1  -- Takes 1 slot height
+    -- Set inventory height
+    ITEM.height = 1
 
-    ITEM.outfitCategory = "hat"  -- Prevents multiple items of same category
+    -- Set outfit category to prevent conflicts
+    ITEM.outfitCategory = "hat"
 
-    ITEM.pacData = {}  -- PAC attachment data
-
-```
-
-```lua
-    function ITEM:paintOver(item, w, h)
-        if item:getData("equip") then
-            surface.SetDrawColor(110, 255, 110, 100)
-            surface.DrawRect(w - 14, h - 14, 8, 8)
-        end
-    end
-
-```
-
-```lua
-    function ITEM:removePart(client)
-        local char = client:getChar()
-        self:setData("equip", false)
-        if client.removePart then client:removePart(self.uniqueID) end
-        -- Remove attribute boosts
-    end
+    -- Define PAC3 outfit parts
+    ITEM.pacData = {
+        [1] = {
+            ["children"] = {},
+            ["self"] = {
+                Skin = 0,
+                UniqueID = "sunglasses_example",
+                Size = 1,
+                Bone = "head",
+                Model = "models/captainbigbutt/skeyler/accessories/glasses01.mdl",
+                ClassName = "model"
+            }
+        }
+    }
 
 ```
 
 ```lua
-    function ITEM:onCanBeTransfered(_, newInventory)
-        if newInventory and self:getData("equip") then return false end
-        return true
-    end
-
-```
-
-```lua
-    function ITEM:onLoadout()
-        if self:getData("equip") and self.player.addPart then self.player:addPart(self.uniqueID) end
-    end
-
-```
-
-```lua
-    function ITEM:onRemoved()
-        local inv = lia.item.inventories[self.invID]
-        local receiver = inv.getReceiver and inv:getReceiver()
-        if IsValid(receiver) and receiver:IsPlayer() and self:getData("equip") then self:removePart(receiver) end
-    end
-
-```
-
-```lua
-            ITEM:hook("drop", function(item)
-                local client = item.player
-                if item:getData("equip") then item:removePart(client) end
-            end)
-
     -- Basic item identification
-        ITEM.name = "Hat"                               -- Display name shown to players
-        ITEM.desc = "A stylish hat"                     -- Description text
-        ITEM.category = "outfit"                        -- Category for inventory sorting
-        ITEM.model = "models/Gibs/HGIBS.mdl"            -- 3D model for the item
-        ITEM.width = 1                                  -- Inventory width (1 slot)
-        ITEM.height = 1                                 -- Inventory height (1 slot)
-        ITEM.outfitCategory = "hat"                     -- Outfit category for conflict checking
+        ITEM.name = "Cool Sunglasses"                -- Display name shown to players
+        ITEM.desc = "Stylish sunglasses that look great"  -- Description text
+        ITEM.category = "outfit"                     -- Category for inventory sorting
+        ITEM.model = "models/Gibs/HGIBS.mdl"         -- 3D model for the item
+        ITEM.width = 1                               -- Inventory width (1 slot)
+        ITEM.height = 1                              -- Inventory height (1 slot)
+        ITEM.outfitCategory = "hat"                  -- Category to prevent conflicting PAC outfits
+        ITEM.pacData = {                             -- PAC3 outfit data
+            [1] = {                                   -- PAC part definition
+                ["children"] = {},
+                ["self"] = {
+                    Skin = 0,
+                    UniqueID = "sunglasses_example",
+                    Size = 1,
+                    Bone = "head",
+                    Model = "models/captainbigbutt/skeyler/accessories/glasses01.mdl",
+                    ClassName = "model",
+                    Position = Vector(2.5, 0, 0),
+                    Angles = Angle(0, 0, 0),
+                    Scale = Vector(1, 1, 1),
+                    PositionOffset = Vector(0, 0, 0),
+                    AngleOffset = Angle(0, 0, 0),
+                },
+            },
+        }
+        ITEM.attribBoosts = {                        -- Attribute bonuses when equipped
+            ["luck"] = 1                             -- +1 luck attribute
+        }
 
 ```
 
