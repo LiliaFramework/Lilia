@@ -1,4 +1,4 @@
-net.Receive("liaSetWaypoint", function()
+﻿net.Receive("liaSetWaypoint", function()
     local name = net.ReadString()
     local pos = net.ReadVector()
     local logo = net.ReadString()
@@ -231,7 +231,7 @@ local pendingShadowed = {}
 local function deliverShadowed(args)
     local chatModule = lia.module.get("chatbox")
     hook.Run("CreateChatboxPanel")
-    local chatPanel = chatModule and chatModule.panel or ( lia.gui.chat)
+    local chatPanel = chatModule and chatModule.panel or lia.gui.chat
     if IsValid(chatPanel) and IsValid(chatPanel.scroll) and #args >= 3 and IsColor(args[1]) and isstring(args[2]) and IsColor(args[3]) then
         local labelColor = args[1]
         local labelText = args[2]
@@ -576,14 +576,14 @@ end)
 net.Receive("liaActBar", function()
     local hasData = net.ReadBool()
     if not hasData then
-        if IsValid( lia.gui.actionCircle) then lia.gui.actionCircle:Remove() end
+        if IsValid(lia.gui.actionCircle) then lia.gui.actionCircle:Remove() end
         return
     end
 
     local text = net.ReadString()
     local time = net.ReadFloat()
     local displayText = text:sub(1, 1) == "@" and L(text:sub(2)) or text
-    if IsValid( lia.gui.actionCircle) then lia.gui.actionCircle:Remove() end
+    if IsValid(lia.gui.actionCircle) then lia.gui.actionCircle:Remove() end
     lia.gui = lia.gui or {}
     local pnl = vgui.Create("liaLockCircle")
     pnl:Start(displayText, time)

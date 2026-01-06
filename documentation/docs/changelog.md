@@ -1,5 +1,30 @@
 # Changelog
 
+## Version 7.220 (January 06, 2026)
+
+### Changes
+
+- Doors Changes
+- Successfully updated workshop Lilia to 7.216
+- DrawPlayerInfoBackground Hook
+- Added Circle Panel
+- Update loader.lua
+- Successfully updated workshop Lilia to 7.214
+- Function Order
+- Successfully updated workshop Lilia to 7.212
+- Compile already :pray:
+- Documentation Update
+- Auto Save
+- Update config.lua
+- Update client.lua
+- Missing Localization
+- Moved Several Hooks To Local Functions
+- Update generate_docs.py
+- Partially revert documentation updates - keep item changes reverted, restore compatibility library documentation
+- Revert "More Documentation Updates"
+- More Documentation Updates
+- Successfully updated workshop Lilia to 7.20
+
 ## Version 7.216 (January 06, 2026)
 
 ### Changes

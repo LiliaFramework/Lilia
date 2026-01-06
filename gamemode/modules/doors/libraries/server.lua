@@ -495,6 +495,7 @@ function MODULE:KeyLock(client, door, time)
             client:stopAction()
             resetKeyCooldown(client)
         end)
+
         lia.log.add(client, "lockDoor", door)
     end
 end
@@ -511,6 +512,7 @@ function MODULE:KeyUnlock(client, door, time)
             client:stopAction()
             resetKeyCooldown(client)
         end)
+
         lia.log.add(client, "unlockDoor", door)
     end
 end

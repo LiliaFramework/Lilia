@@ -1,4 +1,4 @@
---[[
+﻿--[[
     Folder: Meta
     File:  player.md
 ]]
@@ -57,7 +57,7 @@ function playerMeta:setAction(text, time, callback)
             net.WriteBool(false)
             net.Send(self)
         else
-            if IsValid( lia.gui.actionCircle) then lia.gui.actionCircle:Remove() end
+            if IsValid(lia.gui.actionCircle) then lia.gui.actionCircle:Remove() end
         end
         return
     end
@@ -70,7 +70,7 @@ function playerMeta:setAction(text, time, callback)
         net.Send(self)
         if callback then timer.Create("liaAct" .. self:SteamID64(), time, 1, function() if IsValid(self) then callback(self) end end) end
     else
-        if IsValid( lia.gui.actionCircle) then lia.gui.actionCircle:Remove() end
+        if IsValid(lia.gui.actionCircle) then lia.gui.actionCircle:Remove() end
         lia.gui = lia.gui or {}
         local pnl = vgui.Create("liaLockCircle")
         pnl:Start(text, time)

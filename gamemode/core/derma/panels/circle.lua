@@ -1,4 +1,4 @@
-local function getAccentColor()
+﻿local function getAccentColor()
     if lia.color and lia.color.getMainColor then return lia.color.getMainColor() end
     return Color(160, 120, 255)
 end

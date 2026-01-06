@@ -1,4 +1,4 @@
-local MODULE = MODULE
+﻿local MODULE = MODULE
 AdminStickIsOpen = false
 AdminStickMenu = nil
 local pksCount, ticketsCount, warningsCount = 0, 0, 0
@@ -4241,7 +4241,7 @@ local function DisplayAdminStickHUD(client, hudInfos, weapon)
             font = "LiliaFont.20",
             position = {
                 x = ScrW() * 0.5,
-                y = (IsValid(lia.gui and lia.gui.actionCircle) and (ScrH() - 170) or (ScrH() - 30))
+                y = IsValid(lia.gui and lia.gui.actionCircle) and (ScrH() - 170) or (ScrH() - 30)
             },
             textAlignX = TEXT_ALIGN_CENTER,
             textAlignY = TEXT_ALIGN_BOTTOM
@@ -4306,7 +4306,7 @@ local function DisplayDistanceToolHUD(client, hudInfos, weapon)
         font = "LiliaFont.20",
         position = {
             x = 20,
-            y = (IsValid(lia.gui and lia.gui.actionCircle) and (ScrH() - 140) or (ScrH() - 30))
+            y = IsValid(lia.gui and lia.gui.actionCircle) and (ScrH() - 140) or (ScrH() - 30)
         },
         textAlignX = TEXT_ALIGN_LEFT,
         textAlignY = TEXT_ALIGN_BOTTOM
