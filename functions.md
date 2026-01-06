@@ -1342,6 +1342,7 @@ Count: 5 functions
 - [ ]`playerMeta:tostring()`
   - Shared
 
+# Hooks
 
 - [ ]`AddBarField(sectionName, fieldName, labelText, minFunc, maxFunc, valueFunc)`
   - Client
@@ -1505,10 +1506,6 @@ Count: 5 functions
   - Client
 - [ ]`CreateCharacter(data)`
   - Client
-- [ ]`CreateCharacterSaveTimer()`
-  - Server
-- [ ]`CreateChat()`
-  - Client
 - [ ]`CreateDefaultInventory(character)`
   - Client
 - [ ]`CreateInformationButtons(pages)`
@@ -1517,10 +1514,6 @@ Count: 5 functions
   - Client
 - [ ]`CreateMenuButtons(tabs)`
   - Client
-- [ ]`CreateSalaryTimers()`
-  - Server
-- [ ]`CreateVoiceUpdateTimer()`
-  - Server
 - [ ]`DatabaseConnected()`
   - Server
 - [ ]`DeleteCharacter(id)`
@@ -1552,8 +1545,6 @@ Count: 5 functions
 - [ ]`DoorTitleSet(client, door, name)`
   - Server
 - [ ]`DrawCharInfo(client, character, info)`
-  - Client
-- [ ]`DrawDoorInfoBox(entity, infoTexts, alphaOverride)`
   - Client
 - [ ]`DrawEntityInfo(e, a, pos)`
   - Client
@@ -1619,8 +1610,6 @@ Count: 5 functions
   - Client
 - [ ]`GetItemDropModel(itemTable, self)`
   - Shared
-- [ ]`GetItemStackKey(item)`
-  - Client
 - [ ]`GetItemStacks(inventory)`
   - Client
 - [ ]`GetMainCharacterID()`
@@ -2104,8 +2093,6 @@ Count: 5 functions
 - [ ]`SyncCharList(client)`
   - Server
 - [ ]`ThirdPersonToggled(arg1)`
-  - Client
-- [ ]`CreateTicketFrame(requester, message, claimed)`
   - Client
 - [ ]`TicketSystemClaim(client, requester, ticketMessage)`
   - Server
