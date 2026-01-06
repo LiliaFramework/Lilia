@@ -750,13 +750,30 @@ function lia.loader.initializeGamemode(isReload)
     end
 end
 
+local function CreateCharacterSaveTimer()
+    local saveInterval = lia.config.get("CharacterDataSaveInterval")
+    local saveTimer = function()
+        for _, client in player.Iterator() do
+            if IsValid(client) and client:getChar() then client:getChar():save() end
+        end
+    end
+
+    if timer.Exists("liaSaveCharGlobal") then
+        timer.Adjust("liaSaveCharGlobal", saveInterval, 0, saveTimer)
+    else
+        timer.Create("liaSaveCharGlobal", saveInterval, 0, saveTimer)
+    end
+end
+
 function GM:Initialize()
     if engine.ActiveGamemode() == "lilia" then lia.error(L("noSchemaLoaded")) end
     lia.loader.initializeGamemode(false)
+    CreateCharacterSaveTimer()
 end
 
 function GM:OnReloaded()
     lia.loader.initializeGamemode(true)
+    CreateCharacterSaveTimer()
 end
 
 local loadedCompatibility = {}
