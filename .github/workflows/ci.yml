@@ -228,6 +228,7 @@ jobs:
           python3 generate_docs.py library
           python3 generate_docs.py definitions
           python3 generate_docs.py hooks
+          python3 generate_docs.py compatibility
       - run: |
           python3 remove_comments.py gamemode
       - run: |
@@ -417,6 +418,7 @@ jobs:
           python3 generate_docs.py library
           python3 generate_docs.py definitions
           python3 generate_docs.py hooks
+          python3 generate_docs.py compatibility
       - run: |
           python3 remove_comments.py gamemode
       - run: |
