@@ -1,147 +1,11 @@
-﻿--[[
-    Folder: Items/Base
-    File:  outfit.lua
-]]
---[[
-    Outfit Item Base
-
-    Base outfit item implementation for the Lilia framework.
-
-    Outfit items are wearable items that can change player appearance, models, skins, bodygroups,
-    and provide attribute boosts. They support PAC integration and visual indicators.
-]]
---[[
-    Overview:
-        Outfit items provide the foundation for all wearable clothing and accessories in Lilia. They enable complex character customization
-        with support for model changes, bodygroups, PAC3 integration, and visual equip indicators. The base implementation includes
-        equip/unequip mechanics, conflict prevention through categories, and proper character restoration on removal.
-
-        The base outfit item supports:
-        - Model and appearance changes
-        - PAC3 outfit data integration
-        - Visual equip indicators in inventory
-        - Outfit category conflict prevention
-        - Automatic unequipping on character change
-        - Attribute bonuses and modifications
-]]
-
--- Basic item identification
---[[
-    Purpose:
-        Sets the display name of the outfit item
-
-    When Called:
-        During item definition
-
-    Example Usage:
-        ```lua
-        ITEM.name = "Police Uniform"
-        ```
-]]
-ITEM.name = "outfit"
---[[
-    Purpose:
-        Sets the description of the outfit item
-
-    When Called:
-        During item definition
-
-    Example Usage:
-        ```lua
-        ITEM.desc = "A standard police uniform"
-        ```
-]]
+﻿ITEM.name = "outfit"
 ITEM.desc = "outfitDesc"
---[[
-    Purpose:
-        Sets the category for the outfit item
-
-    When Called:
-        During item definition
-
-    Example Usage:
-        ```lua
-        ITEM.category = "outfit"
-        ```
-]]
 ITEM.category = "outfit"
---[[
-    Purpose:
-        Sets the 3D model for the outfit item
-
-    When Called:
-        During item definition
-
-    Example Usage:
-        ```lua
-        ITEM.model = "models/props_c17/BriefCase001a.mdl"
-        ```
-]]
 ITEM.model = "models/props_c17/BriefCase001a.mdl"
---[[
-    Purpose:
-        Sets the inventory width of the outfit item
-
-    When Called:
-        During item definition
-
-    Example Usage:
-        ```lua
-        ITEM.width = 1  -- Takes 1 slot width
-        ```
-]]
 ITEM.width = 1
---[[
-    Purpose:
-        Sets the inventory height of the outfit item
-
-    When Called:
-        During item definition
-
-    Example Usage:
-        ```lua
-        ITEM.height = 1  -- Takes 1 slot height
-        ```
-]]
 ITEM.height = 1
---[[
-    Purpose:
-        Sets the outfit category for conflict checking
-
-    When Called:
-        During item definition
-
-    Example Usage:
-        ```lua
-        ITEM.outfitCategory = "model"  -- Prevents multiple items of same category
-        ```
-]]
 ITEM.outfitCategory = "model"
---[[
-    Purpose:
-        Sets the PAC data for the outfit
-
-    When Called:
-        During item definition
-
-    Example Usage:
-        ```lua
-        ITEM.pacData = {}  -- PAC attachment data
-        ```
-]]
 ITEM.pacData = {}
---[[
-    Purpose:
-        Marks the item as an outfit
-
-    When Called:
-        During item definition
-
-    Example Usage:
-        ```lua
-        ITEM.isOutfit = true
-        ```
-]]
 ITEM.isOutfit = true
 if CLIENT then
     function ITEM:paintOver(item, w, h)
@@ -290,23 +154,6 @@ ITEM.functions.Equip = {
     onCanRun = function(item) return not IsValid(item.entity) and item:getData("equip") ~= true end
 }
 
---[[
-    Purpose:
-        Prevents transfer of equipped outfits
-
-    When Called:
-        When attempting to transfer the outfit
-
-    Parameters:
-        _ - Unused parameter
-        newInventory - The target inventory
-
-    Returns:
-        boolean - False if equipped (prevents transfer), true otherwise
-
-    Example Usage:
-        This function is automatically called by the framework when transferring items
-]]
 function ITEM:OnCanBeTransfered(_, newInventory)
     if newInventory and self:getData("equip") then return false end
     return true
