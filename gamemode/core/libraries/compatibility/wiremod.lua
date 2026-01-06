@@ -1,10 +1,26 @@
+--[[
+    Folder: Compatibility
+    File:  wiremod.md
+]]
+--[[
+    Wiremod Compatibility
+
+    Provides compatibility and security measures for the Wiremod addon within the Lilia framework.
+]]
+--[[
+    Overview:
+        The Wiremod compatibility module ensures secure and controlled usage of Wiremod's Expression 2 (E2) chips. It implements upload restrictions and validation for E2 code uploads.
+        The module operates on the server side to handle Expression 2 chip uploads, with built-in security measures that restrict uploads to administrators and donators only.
+        It includes validation for upload targets and proper error handling with user notifications for failed uploads.
+        The module integrates with Wiremod's notification system to provide feedback to users about upload status and security restrictions.
+]]
 local uploads = WireLib.RegisterPlayerTable()
 local upload_ents = WireLib.RegisterPlayerTable()
 net.Receive("wire_expression2_upload", function(len, ply)
     local toent = Entity(net.ReadUInt(16))
     local numpackets = net.ReadUInt(16)
     if not IsValid(toent) or toent:GetClass() ~= "gmod_wire_expression2" then
-        if uploads[ply] then
+        if uploads[ply] then -- this is to prevent notification spam due to the net library automatically limiting its own transfer rate so that the messages arrive late
             uploads[ply] = nil
             upload_ents[ply] = nil
             WireLib.AddNotify(ply, "Invalid Expression chip specified. Upload aborted.", NOTIFY_ERROR, 7, NOTIFYSOUND_DRIP3)
@@ -17,7 +33,10 @@ net.Receive("wire_expression2_upload", function(len, ply)
         return
     end
 
-    if upload_ents[ply] ~= toent then uploads[ply] = nil end
+    if upload_ents[ply] ~= toent then -- a new upload was started, abort previous
+        uploads[ply] = nil
+    end
+
     upload_ents[ply] = toent
     if not uploads[ply] then uploads[ply] = {} end
     uploads[ply][#uploads[ply] + 1] = net.ReadData(net.ReadUInt(32))
