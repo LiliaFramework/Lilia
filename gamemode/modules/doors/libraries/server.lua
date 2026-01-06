@@ -474,14 +474,27 @@ local function ToggleLock(client, door, state)
     lia.log.add(client, "toggleLock", door, state and L("locked") or L("unlocked"))
 end
 
+local function resetKeyCooldown(client)
+    if not IsValid(client) then return end
+    local wep = client:GetActiveWeapon()
+    if IsValid(wep) and wep:GetClass() == "lia_keys" then
+        wep:SetNextPrimaryFire(CurTime())
+        wep:SetNextSecondaryFire(CurTime())
+    end
+end
+
 function MODULE:KeyLock(client, door, time)
     if not IsValid(door) or not IsValid(client) then return end
     if hook.Run("CanPlayerLock", client, door) == false then return end
     local distance = client:GetPos():Distance(door:GetPos())
     local isProperEntity = door:isDoor() or door:IsVehicle() or door:isSimfphysCar()
     if isProperEntity and not door:isLocked() and distance <= 256 and (door:checkDoorAccess(client) or door:GetCreator() == client or client:isStaffOnDuty()) then
+        client:stopAction()
         client:setAction(L("locking"), time, function() end)
-        client:doStaredAction(door, function() ToggleLock(client, door, true) end, time, function() client:stopAction() end)
+        client:doStaredAction(door, function() ToggleLock(client, door, true) end, time, function()
+            client:stopAction()
+            resetKeyCooldown(client)
+        end)
         lia.log.add(client, "lockDoor", door)
     end
 end
@@ -492,8 +505,12 @@ function MODULE:KeyUnlock(client, door, time)
     local distance = client:GetPos():Distance(door:GetPos())
     local isProperEntity = door:isDoor() or door:IsVehicle() or door:isSimfphysCar()
     if isProperEntity and door:isLocked() and distance <= 256 and (door:checkDoorAccess(client) or door:GetCreator() == client or client:isStaffOnDuty()) then
+        client:stopAction()
         client:setAction(L("unlocking"), time, function() end)
-        client:doStaredAction(door, function() ToggleLock(client, door, false) end, time, function() client:stopAction() end)
+        client:doStaredAction(door, function() ToggleLock(client, door, false) end, time, function()
+            client:stopAction()
+            resetKeyCooldown(client)
+        end)
         lia.log.add(client, "unlockDoor", door)
     end
 end

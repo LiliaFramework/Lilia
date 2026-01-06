@@ -1,4 +1,4 @@
-﻿function MODULE:GetDoorInfo(entity, doorData, doorInfo)
+function MODULE:GetDoorInfo(entity, doorData, doorInfo)
     local owner = entity:GetDTEntity(0)
     local classes = doorData.classes or {}
     local factions = doorData.factions or {}
@@ -117,7 +117,7 @@ local function DrawDoorInfoBox(entity, infoTexts, alphaOverride)
     if fade <= 0 then return end
     local fadeAlpha = math.Clamp(fade, 0, 1)
     local screenX = ScrW() / 2
-    local screenY = ScrH() - 50
+    local screenY = IsValid(lia.gui and lia.gui.actionCircle) and (ScrH() - 150) or (ScrH() - 50)
     lia.derma.drawBoxWithText(infoTexts, screenX, screenY, {
         font = "LiliaFont.18",
         textColor = Color(255, 255, 255, math.floor(255 * fadeAlpha)),

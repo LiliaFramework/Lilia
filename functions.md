@@ -1610,8 +1610,6 @@ Count: 5 functions
   - Client
 - [ ]`GetItemDropModel(itemTable, self)`
   - Shared
-- [ ]`GetItemStacks(inventory)`
-  - Client
 - [ ]`GetMainCharacterID()`
   - Client
 - [ ]`GetMainMenuPosition(character)`
@@ -1758,6 +1756,8 @@ Count: 5 functions
   - Client
 - [ ]`NetVarChanged(client, key, oldValue, value)`
   - Shared
+  - [ ]`DrawPlayerInfoBackground()`
+  - Client
 - [ ]`OnAdminStickMenuClosed()`
   - Client
 - [ ]`OnAdminSystemLoaded(arg1, arg2)`
@@ -1842,8 +1842,6 @@ Count: 5 functions
   - Server
 - [ ]`OnPickupMoney(activator, self)`
   - Server
-- [ ]`OnPlayerDropWeapon(client, weapon, entity)`
-  - Shared
 - [ ]`OnPlayerEnterSequence(self, sequenceName, callback, time, noFreeze)`
   - Server
 - [ ]`OnPlayerInteractItem(client, action, self, result, data)`
@@ -1996,8 +1994,6 @@ Count: 5 functions
   - Client
 - [ ]`RegisterAdminStickSubcategories(categories)`
   - Client
-- [ ]`RegisterPreparedStatements()`
-  - Server
 - [ ]`RemovePart(client, id)`
   - Shared
 - [ ]`RemoveWarning(charID, index)`
@@ -2098,8 +2094,6 @@ Count: 5 functions
   - Server
 - [ ]`TicketSystemClose(client, requester, ticketMessage)`
   - Server
-- [ ]`TicketSystemCreated(noob, message)`
-  - Server
 - [ ]`ToggleLock(client, door, state)`
   - Server
 - [ ]`TooltipInitialize(var, panel)`
@@ -2107,8 +2101,6 @@ Count: 5 functions
 - [ ]`TooltipLayout(var)`
   - Client
 - [ ]`TooltipPaint(var, w, h)`
-  - Client
-- [ ]`TransferItem(itemID)`
   - Client
 - [ ]`UpdateEntityPersistence(vendor)`
   - Server
