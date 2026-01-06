@@ -6,15 +6,6 @@
     return panel
 end
 
-local function GetItemStackKey(item)
-    local elements = {}
-    for key, value in SortedPairs(item.data) do
-        elements[#elements + 1] = key
-        elements[#elements + 1] = value
-    end
-    return item.uniqueID .. pon.encode(elements)
-end
-
 function MODULE:InventoryItemRemoved(_, item)
     if not item.isBag then return end
     local bagInv = item:getInv()
