@@ -1279,11 +1279,17 @@ def main():
                 p = input_dir / name
                 if p.exists():
                     files_to_process.append(str(p))
-            
+
             # Process items subdirectory
             items_dir = input_dir / 'items'
             if items_dir.exists():
                 for item_file in items_dir.glob('*.lua'):
+                    files_to_process.append(str(item_file))
+
+            # Process item definition files from gamemode/items/base/
+            items_base_dir = script_dir / 'gamemode' / 'items' / 'base'
+            if items_base_dir.exists():
+                for item_file in items_base_dir.glob('*.lua'):
                     files_to_process.append(str(item_file))
         elif args.type == 'hooks':
             for name in ('client.lua', 'server.lua', 'shared.lua'):
