@@ -304,9 +304,12 @@ function GM:DrawEntityInfo(e, a, pos)
         local panelHeight = totalHeight + padding * 2
         local panelX = x - panelWidth / 2
         local panelY = y - panelHeight / 2
-        lia.util.drawBlurAt(panelX, panelY, panelWidth, panelHeight, 4, 2, 0.3 * (a / 255))
-        lia.derma.rect(panelX, panelY, panelWidth, panelHeight):Color(ColorAlpha(lia.color.theme.background_alpha or Color(0, 0, 0, 150), a)):Rad(8):Draw()
-        lia.derma.rect(panelX, panelY, panelWidth, panelHeight):Color(ColorAlpha(lia.color.theme.theme or lia.color.theme.accent, a)):Rad(8):Outline(2):Draw()
+        if hook.Run("DrawPlayerInfoBackground", e, panelX, panelY, panelWidth, panelHeight, a) ~= false then
+            lia.util.drawBlurAt(panelX, panelY, panelWidth, panelHeight, 4, 2, 0.3 * (a / 255))
+            lia.derma.rect(panelX, panelY, panelWidth, panelHeight):Color(ColorAlpha(lia.color.theme.background_alpha or Color(0, 0, 0, 150), a)):Rad(8):Draw()
+            lia.derma.rect(panelX, panelY, panelWidth, panelHeight):Color(ColorAlpha(lia.color.theme.theme or lia.color.theme.accent, a)):Rad(8):Outline(2):Draw()
+        end
+
         local currentY = panelY + padding
         for i = 1, #charInfo do
             local info = charInfo[i]
