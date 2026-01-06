@@ -5,11 +5,12 @@ Documentation Generator for Lilia Framework
 Parses Lua comment blocks and generates Markdown documentation.
 
 Usage:
-    python generate_docs.py [meta|library|definitions|hooks] [files...]
+    python generate_docs.py [meta|library|compatibility|definitions|hooks] [files...]
 
 Path equivalencies (inputs → outputs):
     gamemode/core/meta                     → documentation/docs/meta
     gamemode/core/libraries                → documentation/docs/libraries
+    gamemode/core/libraries/compatibility  → documentation/docs/libraries
     gamemode/docs/definitions/*.lua        → documentation/docs/definitions/*.md
     gamemode/docs/hooks/*.lua              → documentation/docs/hooks/*.md
 
@@ -1269,9 +1270,60 @@ def generate_documentation_for_hooks_file(file_path: Path, output_dir: Path, bas
     print(f"  Generated {output_path.name}")
 
 
+def generate_compatibility_index(output_dir: Path) -> None:
+    """
+    Generate an index file listing all compatibility libraries.
+    """
+    compatibility_dir = output_dir / 'Compatibility'
+
+    if not compatibility_dir.exists():
+        return
+
+    # Get all .md files in the compatibility directory (excluding index.md)
+    compatibility_files = []
+    for md_file in compatibility_dir.glob('*.md'):
+        if md_file.name != 'index.md':
+            compatibility_files.append(md_file.stem)
+
+    # Sort alphabetically
+    compatibility_files.sort()
+
+    # Create friendly names mapping
+    friendly_names = {
+        'advdupe': 'Advanced Duplicator',
+        'advdupe2': 'Advanced Duplicator 2',
+        'arccw': 'ARC9/ARCCW',
+        'cami': 'CAMI',
+        'lvs': 'LVS',
+        'pac': 'PAC3',
+        'permaprops': 'Perma Props',
+        'prone': 'Prone Mod',
+        'sam': 'SAM',
+        'serverguard': 'ServerGuard',
+        'simfphys': 'Simfphys',
+        'sitanywhere': 'Sit Anywhere',
+        'ulx': 'ULX',
+        'vcmod': 'VCMOD',
+        'vjbase': 'VJ Base',
+        'wiremod': 'Wiremod'
+    }
+
+    index_content = '# Compatibility Libraries\n\n'
+    for filename in compatibility_files:
+        friendly_name = friendly_names.get(filename, filename.title())
+        index_content += f'- [{friendly_name}](https://liliaframework.github.io/Compatibility/{filename}/)\n\n'
+
+    # Write the index file
+    index_path = compatibility_dir / 'index.md'
+    with open(index_path, 'w', encoding='utf-8') as f:
+        f.write(index_content)
+
+    print(f"  Generated compatibility index with {len(compatibility_files)} libraries")
+
+
 def main():
     parser = argparse.ArgumentParser(description='Generate documentation from Lua comment blocks')
-    parser.add_argument('type', choices=['meta', 'library', 'definitions', 'hooks'], help='Type of files to process')
+    parser.add_argument('type', choices=['meta', 'library', 'definitions', 'hooks', 'compatibility'], help='Type of files to process')
     parser.add_argument('files', nargs='*', help='Specific files to process (if empty, processes defaults per type)')
 
     args = parser.parse_args()
@@ -1289,6 +1341,9 @@ def main():
         output_dir = script_dir / 'documentation' / 'docs' / 'meta'
     elif args.type == 'library':
         input_dir = base_dir / 'libraries'
+        output_dir = script_dir / 'documentation' / 'docs' / 'libraries'
+    elif args.type == 'compatibility':
+        input_dir = base_dir / 'libraries' / 'compatibility'
         output_dir = script_dir / 'documentation' / 'docs' / 'libraries'
     elif args.type == 'definitions':
         input_dir = docs_definitions_dir
@@ -1315,7 +1370,7 @@ def main():
                 matches = glob.glob(file_pattern)
                 files_to_process.extend(matches)
     else:
-        if args.type in ('meta', 'library'):
+        if args.type in ('meta', 'library', 'compatibility'):
             # Process core files
             files_to_process.extend(list(input_dir.glob('*.lua')))
 
@@ -1358,12 +1413,16 @@ def main():
 
     # Process each file
     for file_path in files_to_process:
-        if args.type in ('meta', 'library') and str(file_path).endswith('.lua'):
-            generate_documentation_for_file(file_path, output_dir, args.type == 'library', base_docs_dir)
+        if args.type in ('meta', 'library', 'compatibility') and str(file_path).endswith('.lua'):
+            generate_documentation_for_file(file_path, output_dir, True, base_docs_dir)  # compatibility files are library files
         elif args.type == 'definitions' and str(file_path).endswith('.lua'):
             generate_documentation_for_definitions_file(Path(file_path), output_dir, base_docs_dir)
         elif args.type == 'hooks' and str(file_path).endswith('.lua'):
             generate_documentation_for_hooks_file(Path(file_path), output_dir, base_docs_dir)
+
+    # Generate index file for compatibility libraries
+    if args.type == 'compatibility':
+        generate_compatibility_index(script_dir / 'documentation' / 'docs')
 
     print("Documentation generation complete!")
 
