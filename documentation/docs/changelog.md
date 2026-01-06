@@ -1,5 +1,30 @@
 # Changelog
 
+## Version 7.216 (January 06, 2026)
+
+### Changes
+
+- Update loader.lua
+- Successfully updated workshop Lilia to 7.214
+- Function Order
+- Successfully updated workshop Lilia to 7.212
+- Compile already :pray:
+- Documentation Update
+- Auto Save
+- Update config.lua
+- Update client.lua
+- Missing Localization
+- Moved Several Hooks To Local Functions
+- Update generate_docs.py
+- Partially revert documentation updates - keep item changes reverted, restore compatibility library documentation
+- Revert "More Documentation Updates"
+- More Documentation Updates
+- Successfully updated workshop Lilia to 7.20
+- Wiremod Extra Compatibility
+- Successfully updated workshop Lilia to 7.198
+- Update functions.md
+- Bug Fix
+
 ## Version 7.214 (January 06, 2026)
 
 ### Changes
