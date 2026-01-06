@@ -768,12 +768,12 @@ end
 function GM:Initialize()
     if engine.ActiveGamemode() == "lilia" then lia.error(L("noSchemaLoaded")) end
     lia.loader.initializeGamemode(false)
-    CreateCharacterSaveTimer()
+    if SERVER then CreateCharacterSaveTimer() end
 end
 
 function GM:OnReloaded()
     lia.loader.initializeGamemode(true)
-    CreateCharacterSaveTimer()
+    if SERVER then CreateCharacterSaveTimer() end
 end
 
 local loadedCompatibility = {}
