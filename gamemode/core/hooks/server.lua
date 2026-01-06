@@ -79,9 +79,71 @@ function GM:CharPreSave(character)
     end
 end
 
+local function UpdateVoiceHearing()
+    if not lia.config.get("IsVoiceEnabled", true) then return end
+    local speakerGaggedCache = {}
+    for _, speaker in player.Iterator() do
+        if IsValid(speaker) and speaker:getChar() and speaker:Alive() then speakerGaggedCache[speaker] = speaker:getLiliaData("liaGagged", false) end
+    end
+
+    for _, listener in player.Iterator() do
+        if not IsValid(listener) or not listener:getChar() or not listener:Alive() then
+            listener.liaVoiceHear = nil
+            continue
+        end
+
+        listener.liaVoiceHear = listener.liaVoiceHear or {}
+        for _, speaker in player.Iterator() do
+            if not IsValid(speaker) or speaker == listener or not speaker:getChar() or not speaker:Alive() or speakerGaggedCache[speaker] then
+                listener.liaVoiceHear[speaker] = nil
+                continue
+            end
+
+            local voiceType = speaker:getLocalVar("VoiceType", VOICE_TALKING)
+            local baseRange = voiceType == VOICE_WHISPERING and lia.config.get("WhisperRange", 70) or voiceType == VOICE_TALKING and lia.config.get("TalkRange", 280) or voiceType == VOICE_YELLING and lia.config.get("YellRange", 840) or lia.config.get("TalkRange", 280)
+            local distance = listener:GetPos():Distance(speaker:GetPos())
+            listener.liaVoiceHear[speaker] = distance <= baseRange
+        end
+    end
+end
+
 local function CreateVoiceUpdateTimer()
     if timer.Exists("liaVoiceUpdate") then return end
     timer.Create("liaVoiceUpdate", 0.5, 0, function() UpdateVoiceHearing() end)
+end
+
+function GM:PlayerDeath(client, inflictor, attacker)
+    if lia.config.get("DeathSoundEnabled") then
+        local deathSound = hook.Run("GetPlayerDeathSound", client, client:isFemale())
+        if deathSound and hook.Run("ShouldPlayDeathSound", client, deathSound) ~= false then
+            client:EmitSound(deathSound)
+            hook.Run("OnDeathSoundPlayed", client, deathSound)
+        end
+    end
+
+    local character = client:getChar()
+    if not character then return end
+    if IsValid(client:GetRagdollEntity()) then client:GetRagdollEntity():Remove() end
+    local handsWeapon = client:GetActiveWeapon()
+    if IsValid(handsWeapon) and handsWeapon:GetClass() == "lia_hands" and handsWeapon:IsHoldingObject() then handsWeapon:DropObject() end
+    local inventory = character:getInv()
+    if inventory then
+        for _, item in pairs(inventory:getItems()) do
+            if item.isWeapon and item:getData("equip") then item:setData("ammo", nil) end
+        end
+    end
+
+    if IsValid(attacker) and attacker:IsPlayer() and attacker ~= client and hook.Run("PlayerShouldPermaKill", client, inflictor, attacker) then character:ban() end
+    net.Start("liaRemoveFOne")
+    net.Send(client)
+    if hook.Run("ShouldSpawnClientRagdoll", client) ~= false then client:CreateRagdoll() end
+end
+
+function GM:PrePlayerLoadedChar(client)
+    client:SetBodyGroups("000000000")
+    client:SetSkin(0)
+    client:ExitVehicle()
+    client:Freeze(false)
 end
 
 function GM:PlayerLoadedChar(client, character)
@@ -136,40 +198,6 @@ function GM:PlayerLoadedChar(client, character)
 
         if toGive ~= "" then character:giveFlags(toGive) end
     end
-end
-
-function GM:PlayerDeath(client, inflictor, attacker)
-    if lia.config.get("DeathSoundEnabled") then
-        local deathSound = hook.Run("GetPlayerDeathSound", client, client:isFemale())
-        if deathSound and hook.Run("ShouldPlayDeathSound", client, deathSound) ~= false then
-            client:EmitSound(deathSound)
-            hook.Run("OnDeathSoundPlayed", client, deathSound)
-        end
-    end
-
-    local character = client:getChar()
-    if not character then return end
-    if IsValid(client:GetRagdollEntity()) then client:GetRagdollEntity():Remove() end
-    local handsWeapon = client:GetActiveWeapon()
-    if IsValid(handsWeapon) and handsWeapon:GetClass() == "lia_hands" and handsWeapon:IsHoldingObject() then handsWeapon:DropObject() end
-    local inventory = character:getInv()
-    if inventory then
-        for _, item in pairs(inventory:getItems()) do
-            if item.isWeapon and item:getData("equip") then item:setData("ammo", nil) end
-        end
-    end
-
-    if IsValid(attacker) and attacker:IsPlayer() and attacker ~= client and hook.Run("PlayerShouldPermaKill", client, inflictor, attacker) then character:ban() end
-    net.Start("liaRemoveFOne")
-    net.Send(client)
-    if hook.Run("ShouldSpawnClientRagdoll", client) ~= false then client:CreateRagdoll() end
-end
-
-function GM:PrePlayerLoadedChar(client)
-    client:SetBodyGroups("000000000")
-    client:SetSkin(0)
-    client:ExitVehicle()
-    client:Freeze(false)
 end
 
 function GM:OnPickupMoney(client, moneyEntity)
@@ -1075,34 +1103,6 @@ function StaffAddTextShadowed(tagColor, tagText, messageColor, message, predicat
     for _, staff in player.Iterator() do
         local isStaff = staff:isStaffOnDuty() or staff:hasPrivilege("canSeeLogs")
         if (predicate and predicate(staff)) or isStaff then ClientAddTextShadowed(staff, tagColor or Color(255, 255, 255), tagText or "", messageColor or Color(255, 255, 255), " | " .. timestamp .. " | " .. message) end
-    end
-end
-
-local function UpdateVoiceHearing()
-    if not lia.config.get("IsVoiceEnabled", true) then return end
-    local speakerGaggedCache = {}
-    for _, speaker in player.Iterator() do
-        if IsValid(speaker) and speaker:getChar() and speaker:Alive() then speakerGaggedCache[speaker] = speaker:getLiliaData("liaGagged", false) end
-    end
-
-    for _, listener in player.Iterator() do
-        if not IsValid(listener) or not listener:getChar() or not listener:Alive() then
-            listener.liaVoiceHear = nil
-            continue
-        end
-
-        listener.liaVoiceHear = listener.liaVoiceHear or {}
-        for _, speaker in player.Iterator() do
-            if not IsValid(speaker) or speaker == listener or not speaker:getChar() or not speaker:Alive() or speakerGaggedCache[speaker] then
-                listener.liaVoiceHear[speaker] = nil
-                continue
-            end
-
-            local voiceType = speaker:getLocalVar("VoiceType", VOICE_TALKING)
-            local baseRange = voiceType == VOICE_WHISPERING and lia.config.get("WhisperRange", 70) or voiceType == VOICE_TALKING and lia.config.get("TalkRange", 280) or voiceType == VOICE_YELLING and lia.config.get("YellRange", 840) or lia.config.get("TalkRange", 280)
-            local distance = listener:GetPos():Distance(speaker:GetPos())
-            listener.liaVoiceHear[speaker] = distance <= baseRange
-        end
     end
 end
 
