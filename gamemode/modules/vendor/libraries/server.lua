@@ -236,7 +236,7 @@ function MODULE:PlayerAccessVendor(client, vendor)
     end
 end
 
-function MODULE:syncVendorDataToClient(client)
+local function syncVendorDataToClient(client)
     local vendors = {}
     for _, vendor in pairs(ents.FindByClass("lia_vendor")) do
         if IsValid(vendor) then table.insert(vendors, vendor) end
@@ -342,7 +342,7 @@ function MODULE:OnEntityLoaded(ent, data)
         end
 
         for _, client in player.Iterator() do
-            if IsValid(client) then self:syncVendorDataToClient(client) end
+            if IsValid(client) then syncVendorDataToClient(client) end
         end
     end)
 
@@ -528,11 +528,11 @@ end
 function MODULE:InitPostEntity()
     timer.Simple(0.1, function()
         for _, client in player.Iterator() do
-            if IsValid(client) then self:syncVendorDataToClient(client) end
+            if IsValid(client) then syncVendorDataToClient(client) end
         end
     end)
 end
 
 function MODULE:PostPlayerInitialSpawn(client)
-    timer.Simple(0.1, function() if IsValid(client) then self:syncVendorDataToClient(client) end end)
+    timer.Simple(0.1, function() if IsValid(client) then syncVendorDataToClient(client) end end)
 end

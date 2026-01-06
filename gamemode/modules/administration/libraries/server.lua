@@ -26,11 +26,40 @@ local function tryFixPropPosition(client, ent)
     fixupProp(client, ent, Vector(0, 0, m.z), Vector(0, 0, M.z))
 end
 
+local function SendPopup(client, message)
+    for _, v in player.Iterator() do
+        if v:hasPrivilege("alwaysSeeTickets") or v:isStaffOnDuty() then
+            net.Start("liaTicketSystem")
+            net.WriteEntity(client)
+            net.WriteString(message)
+            net.WriteEntity(client.CaseClaimed)
+            net.Send(v)
+        end
+    end
+
+    if IsValid(client) and client:IsPlayer() then
+        local requesterSteamID = client:SteamID()
+        ActiveTickets[requesterSteamID] = {
+            timestamp = os.time(),
+            requester = requesterSteamID,
+            admin = client.CaseClaimed and IsValid(client.CaseClaimed) and client.CaseClaimed:SteamID() or nil,
+            message = message
+        }
+
+        hook.Run("OnTicketCreated", client, message)
+        timer.Remove("ticketsystem-" .. requesterSteamID)
+        timer.Create("ticketsystem-" .. requesterSteamID, 60, 1, function()
+            if IsValid(client) and client:IsPlayer() then client.CaseClaimed = nil end
+            ActiveTickets[requesterSteamID] = nil
+        end)
+    end
+end
+
 function MODULE:PlayerSay(client, text)
     if text and string.sub(text, 1, 1) == "@" then
         local message = string.sub(text, 2)
         ClientAddText(client, Color(70, 0, 130), L("you"), Color(151, 211, 255), " " .. L("ticketMessageToAdmins") .. ": ", Color(0, 255, 0), message)
-        self:SendPopup(client, message)
+        SendPopup(client, message)
         return ""
     end
 
@@ -977,24 +1006,6 @@ function MODULE:GetAllCaseClaims()
     return lia.db.select({"timestamp", "requester", "requesterSteamID", "admin", "adminSteamID", "message"}, "ticketclaims"):next(function(res) return buildClaimTable(res.results) end)
 end
 
-function MODULE:GetTicketsByRequester(steamID)
-    local condition = "requesterSteamID = " .. lia.db.convertDataType(steamID)
-    return lia.db.select({"timestamp", "requester", "requesterSteamID", "admin", "adminSteamID", "message"}, "ticketclaims", condition):next(function(res)
-        local tickets = {}
-        for _, row in ipairs(res.results or {}) do
-            tickets[#tickets + 1] = {
-                timestamp = isnumber(row.timestamp) and row.timestamp or os.time(lia.time.toNumber(row.timestamp)),
-                requester = row.requester,
-                requesterSteamID = row.requesterSteamID,
-                admin = row.admin,
-                adminSteamID = row.adminSteamID,
-                message = row.message
-            }
-        end
-        return tickets
-    end)
-end
-
 function MODULE:OnReloaded()
     for steamID, _ in pairs(ActiveTickets) do
         ActiveTickets[steamID] = nil
@@ -1016,36 +1027,6 @@ function MODULE:PlayerDisconnected(client)
     end
 
     ActiveTickets[client:SteamID()] = nil
-end
-
-function MODULE:SendPopup(noob, message)
-    for _, v in player.Iterator() do
-        if v:hasPrivilege("alwaysSeeTickets") or v:isStaffOnDuty() then
-            net.Start("liaTicketSystem")
-            net.WriteEntity(noob)
-            net.WriteString(message)
-            net.WriteEntity(noob.CaseClaimed)
-            net.Send(v)
-        end
-    end
-
-    if IsValid(noob) and noob:IsPlayer() then
-        local requesterSteamID = noob:SteamID()
-        ActiveTickets[requesterSteamID] = {
-            timestamp = os.time(),
-            requester = requesterSteamID,
-            admin = noob.CaseClaimed and IsValid(noob.CaseClaimed) and noob.CaseClaimed:SteamID() or nil,
-            message = message
-        }
-
-        hook.Run("TicketSystemCreated", noob, message)
-        hook.Run("OnTicketCreated", noob, message)
-        timer.Remove("ticketsystem-" .. requesterSteamID)
-        timer.Create("ticketsystem-" .. requesterSteamID, 60, 1, function()
-            if IsValid(noob) and noob:IsPlayer() then noob.CaseClaimed = nil end
-            ActiveTickets[requesterSteamID] = nil
-        end)
-    end
 end
 
 net.Receive("liaViewClaims", function(_, client)
@@ -1145,11 +1126,6 @@ end)
 function MODULE:GetWarnings(charID)
     local condition = "charID = " .. lia.db.convertDataType(charID)
     return lia.db.select({"id", "timestamp", "message", "warner", "warnerSteamID", "severity"}, "warnings", condition):next(function(res) return res.results or {} end)
-end
-
-function MODULE:GetWarningsByIssuer(steamID)
-    local condition = "warnerSteamID = " .. lia.db.convertDataType(steamID)
-    return lia.db.select({"id", "timestamp", "message", "warned", "warnedSteamID", "warner", "warnerSteamID", "severity"}, "warnings", condition):next(function(res) return res.results or {} end)
 end
 
 function MODULE:AddWarning(charID, warned, warnedSteamID, timestamp, message, warner, warnerSteamID, severity)

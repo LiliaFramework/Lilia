@@ -38,8 +38,8 @@ local DefaultFunctions = {
         onRun = function(item)
             local client = item.player
             item:removeFromInventory(true):next(function()
-                item:spawn(client)
-                hook.Run("OnPlayerDroppedItem", client, item)
+                local spawnedItem = item:spawn(client)
+                hook.Run("OnPlayerDroppedItem", client, spawnedItem)
             end)
             return false
         end,

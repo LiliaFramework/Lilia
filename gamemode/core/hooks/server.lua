@@ -79,6 +79,11 @@ function GM:CharPreSave(character)
     end
 end
 
+local function CreateVoiceUpdateTimer()
+    if timer.Exists("liaVoiceUpdate") then return end
+    timer.Create("liaVoiceUpdate", 0.5, 0, function() UpdateVoiceHearing() end)
+end
+
 function GM:PlayerLoadedChar(client, character)
     local timeStamp = os.date("%Y-%m-%d %H:%M:%S", os.time())
     lia.db.updateTable({
@@ -89,8 +94,8 @@ function GM:PlayerLoadedChar(client, character)
     client:stopAction()
     character:setLoginTime(os.time())
     hook.Run("PlayerLoadout", client)
-    if not timer.Exists("liaSalaryGlobal") then self:CreateSalaryTimers() end
-    if not timer.Exists("liaVoiceUpdate") then self:CreateVoiceUpdateTimer() end
+    if not timer.Exists("liaSalaryGlobal") then hook.Run("CreateSalaryTimers") end
+    if not timer.Exists("liaVoiceUpdate") then CreateVoiceUpdateTimer() end
     local ammoTable = character:getData("ammo")
     if character:getFaction() == FACTION_STAFF then
         local storedDiscord = client:getLiliaData("staffDiscord")
@@ -1113,23 +1118,9 @@ function GM:OnVoiceTypeChanged(client)
     UpdateVoiceHearing()
 end
 
-function GM:CreateCharacterSaveTimer()
-    local saveInterval = lia.config.get("CharacterDataSaveInterval")
-    local saveTimer = function()
-        for _, client in player.Iterator() do
-            if IsValid(client) and client:getChar() then client:getChar():save() end
-        end
-    end
-
-    if timer.Exists("liaSaveCharGlobal") then
-        timer.Adjust("liaSaveCharGlobal", saveInterval, 0, saveTimer)
-    else
-        timer.Create("liaSaveCharGlobal", saveInterval, 0, saveTimer)
-    end
-end
-
 function GM:CreateSalaryTimers()
     local salaryInterval = lia.config.get("SalaryInterval", 300)
+    if hook.Run("ShouldOverrideSalaryTimers") == true then return end
     local salaryTimer = function()
         for _, client in player.Iterator() do
             if IsValid(client) and client:getChar() and hook.Run("CanPlayerEarnSalary", client) ~= false then
@@ -1160,11 +1151,6 @@ function GM:CreateSalaryTimers()
     else
         timer.Create("liaSalaryGlobal", salaryInterval, 0, salaryTimer)
     end
-end
-
-function GM:CreateVoiceUpdateTimer()
-    if timer.Exists("liaVoiceUpdate") then return end
-    timer.Create("liaVoiceUpdate", 0.5, 0, function() UpdateVoiceHearing() end)
 end
 
 function GM:ShowHelp()

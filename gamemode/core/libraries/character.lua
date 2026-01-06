@@ -783,7 +783,7 @@ if SERVER then
             if IsValid(ply) then
                 net.Start("liaCharDeleted")
                 net.Send(ply)
-                lia.module.get("mainmenu"):SyncCharList(ply)
+                hook.Run("SyncCharList", ply)
             end
         end
     end

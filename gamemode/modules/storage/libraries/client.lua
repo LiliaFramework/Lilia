@@ -1,4 +1,4 @@
-﻿function MODULE:ExitStorage()
+﻿local function ExitStorage()
     local client = LocalPlayer()
     if client.liaLockPanel and IsValid(client.liaLockPanel) then
         client.liaLockPanel:Remove()
@@ -27,7 +27,7 @@ function MODULE:StorageOpen(storage, isCar)
     end
 
     local localInv = client:getChar() and client:getChar():getInv()
-    if not localInv then return self:ExitStorage() end
+    if not localInv then return ExitStorage() end
     local storageInv
     if isCar then
         storageInv = storage
@@ -36,11 +36,11 @@ function MODULE:StorageOpen(storage, isCar)
         storageInv = storage:getInv()
     end
 
-    if not storageInv then return self:ExitStorage() end
+    if not storageInv then return ExitStorage() end
     local panels = lia.inventory.showDual(localInv, storageInv)
-    if not panels then return self:ExitStorage() end
+    if not panels then return ExitStorage() end
     local localInvPanel, storageInvPanel = panels[1], panels[2]
-    if not IsValid(localInvPanel) or not IsValid(storageInvPanel) then return self:ExitStorage() end
+    if not IsValid(localInvPanel) or not IsValid(storageInvPanel) then return ExitStorage() end
     if isCar then
         storageInvPanel:SetTitle(L("carTrunk"))
     else
@@ -55,7 +55,7 @@ function MODULE:StorageOpen(storage, isCar)
     local originalOnRemove1 = localInvPanel.OnRemove
     local originalOnRemove2 = storageInvPanel.OnRemove
     local function exitStorageOnRemove(panel)
-        self:ExitStorage()
+        ExitStorage()
         if panel == localInvPanel and originalOnRemove1 then
             originalOnRemove1(panel)
         elseif panel == storageInvPanel and originalOnRemove2 then
@@ -66,13 +66,6 @@ function MODULE:StorageOpen(storage, isCar)
     localInvPanel.OnRemove = exitStorageOnRemove
     storageInvPanel.OnRemove = exitStorageOnRemove
     hook.Run("OnCreateStoragePanel", localInvPanel, storageInvPanel, storage)
-end
-
-function MODULE:TransferItem(itemID)
-    if not lia.item.instances[itemID] then return end
-    net.Start("liaStorageTransfer")
-    net.WriteUInt(itemID, 32)
-    net.SendToServer()
 end
 
 local function SetStoragePassword(action, oldPassword, newPassword)

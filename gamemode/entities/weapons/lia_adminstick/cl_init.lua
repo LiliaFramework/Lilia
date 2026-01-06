@@ -3,7 +3,7 @@
     local target = client:GetEyeTrace().Entity
     if IsValid(target) then
         client.AdminStickTarget = target
-        lia.module.get("administration"):OpenAdminStickUI(target)
+        hook.Run("OpenAdminStickUI", target)
     end
 end
 
@@ -38,7 +38,7 @@ function SWEP:Reload()
     if client:KeyDown(IN_SPEED) then
         if AdminStickIsOpen and IsValid(AdminStickMenu) then AdminStickMenu:Remove() end
         client.AdminStickTarget = client
-        lia.module.get("administration"):OpenAdminStickUI(client)
+        hook.Run("OpenAdminStickUI", client)
     else
         if AdminStickIsOpen and IsValid(AdminStickMenu) then AdminStickMenu:Remove() end
         client.AdminStickTarget = nil

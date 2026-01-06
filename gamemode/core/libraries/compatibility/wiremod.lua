@@ -1,4 +1,4 @@
---[[
+﻿--[[
     Folder: Compatibility
     File:  wiremod.md
 ]]
@@ -20,7 +20,7 @@ net.Receive("wire_expression2_upload", function(len, ply)
     local toent = Entity(net.ReadUInt(16))
     local numpackets = net.ReadUInt(16)
     if not IsValid(toent) or toent:GetClass() ~= "gmod_wire_expression2" then
-        if uploads[ply] then -- this is to prevent notification spam due to the net library automatically limiting its own transfer rate so that the messages arrive late
+        if uploads[ply] then
             uploads[ply] = nil
             upload_ents[ply] = nil
             WireLib.AddNotify(ply, "Invalid Expression chip specified. Upload aborted.", NOTIFY_ERROR, 7, NOTIFYSOUND_DRIP3)
@@ -33,10 +33,7 @@ net.Receive("wire_expression2_upload", function(len, ply)
         return
     end
 
-    if upload_ents[ply] ~= toent then -- a new upload was started, abort previous
-        uploads[ply] = nil
-    end
-
+    if upload_ents[ply] ~= toent then uploads[ply] = nil end
     upload_ents[ply] = toent
     if not uploads[ply] then uploads[ply] = {} end
     uploads[ply][#uploads[ply] + 1] = net.ReadData(net.ReadUInt(32))

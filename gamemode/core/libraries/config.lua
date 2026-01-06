@@ -577,7 +577,7 @@ lia.config.add("IsVoiceEnabled", "voiceChatEnabled", true, function(_, newValue)
 
 lia.config.add("SalaryInterval", "salaryInterval", 300, function()
     if not SERVER then return end
-    timer.Simple(0.1, function() GM:CreateSalaryTimers() end)
+    timer.Simple(0.1, function() hook.Run("CreateSalaryTimers") end)
 end, {
     desc = "salaryIntervalDesc",
     category = "categoryCharacter",

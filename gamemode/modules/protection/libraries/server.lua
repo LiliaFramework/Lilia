@@ -230,7 +230,10 @@ function MODULE:OnEntityCreated(entity)
     end
 end
 
-function MODULE:OnPlayerDropWeapon(client, weapon, entity)
+function MODULE:OnPlayerDroppedItem(client, spawnedItem)
+    local item = spawnedItem:getItemTable()
+    local entity = item.entity
+    if not item.isWeapon then return end
     local physObject = entity:GetPhysicsObject()
     if physObject then physObject:EnableMotion() end
     SafeRemoveEntityDelayed(entity, lia.config.get("TimeUntilDroppedSWEPRemoved", 15))
@@ -319,14 +322,11 @@ function MODULE:PlayerInitialSpawn(client)
                 end
 
                 if client:getChar() then
-                    local warnsModule = lia.module.get("administration")
-                    if warnsModule and warnsModule.AddWarning then
-                        local timestamp = os.date("%Y-%m-%d %H:%M:%S")
-                        local severity = "High"
-                        warnsModule:AddWarning(client:getChar():getID(), client:Nick(), client:SteamID(), timestamp, L("cheaterWarningReason"), "System", "SYSTEM", severity)
-                        local message = client:Name() .. " (Character " .. client:getChar():getID() .. " | Steam64ID: " .. client:SteamID64() .. ") was flagged for cheating. Severity: " .. severity .. "."
-                        StaffAddTextShadowed(Color(255, 0, 0), "CHEAT", Color(255, 255, 255), message, function(staff) return staff:hasPrivilege("receiveCheaterNotifications") end)
-                    end
+                    local timestamp = os.date("%Y-%m-%d %H:%M:%S")
+                    local severity = "High"
+                    hook.Run("AddWarning", client:getChar():getID(), client:Nick(), client:SteamID(), timestamp, L("cheaterWarningReason"), "System", "SYSTEM", severity)
+                    local message = client:Name() .. " (Character " .. client:getChar():getID() .. " | Steam64ID: " .. client:SteamID64() .. ") was flagged for cheating. Severity: " .. severity .. "."
+                    StaffAddTextShadowed(Color(255, 0, 0), "CHEAT", Color(255, 255, 255), message, function(staff) return staff:hasPrivilege("receiveCheaterNotifications") end)
                 end
             end
 

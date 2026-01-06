@@ -82,7 +82,7 @@ end
 
 function MODULE:OnEntityCreated(entity)
     if self:IsSuitableForTrunk(entity) == false then return end
-    self:InitializeStorage(entity)
+    hook.Run("InitializeStorage", entity)
 end
 
 function MODULE:StorageInventorySet(entity, inventory, isCar)

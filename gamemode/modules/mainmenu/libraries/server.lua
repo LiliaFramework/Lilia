@@ -11,7 +11,7 @@
         end
 
         client.liaCharList = charList
-        self:SyncCharList(client)
+        hook.Run("SyncCharList", client)
         client.liaLoaded = true
     end)
 end

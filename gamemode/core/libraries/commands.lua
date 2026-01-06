@@ -3505,7 +3505,7 @@ lia.command.add("charwipe", {
                     end
                 end
 
-                lia.module.get("mainmenu"):SyncCharList(target)
+                hook.Run("SyncCharList", target)
             end
 
             client:notifySuccessLocalized("charWipe", client:Name(), charName)
@@ -6731,6 +6731,24 @@ lia.command.add("returnallitems", {
     end
 })
 
+local function GetTicketsByRequester(steamID)
+    local condition = "requesterSteamID = " .. lia.db.convertDataType(steamID)
+    return lia.db.select({"timestamp", "requester", "requesterSteamID", "admin", "adminSteamID", "message"}, "ticketclaims", condition):next(function(res)
+        local tickets = {}
+        for _, row in ipairs(res.results or {}) do
+            tickets[#tickets + 1] = {
+                timestamp = isnumber(row.timestamp) and row.timestamp or os.time(lia.time.toNumber(row.timestamp)),
+                requester = row.requester,
+                requesterSteamID = row.requesterSteamID,
+                admin = row.admin,
+                adminSteamID = row.adminSteamID,
+                message = row.message
+            }
+        end
+        return tickets
+    end)
+end
+
 lia.command.add("viewtickets", {
     adminOnly = true,
     desc = "viewTicketsDesc",
@@ -6757,7 +6775,7 @@ lia.command.add("viewtickets", {
             displayName = targetName
         end
 
-        lia.module.get("administration"):GetTicketsByRequester(steamID):next(function(tickets)
+        GetTicketsByRequester(steamID):next(function(tickets)
             if #tickets == 0 then
                 client:notifyInfoLocalized("noTicketsFound")
                 return
@@ -7060,7 +7078,7 @@ lia.command.add("warn", {
         local timestamp = os.date("%Y-%m-%d %H:%M:%S")
         local warnerName = client:Nick()
         local warnerSteamID = client:SteamID()
-        lia.module.get("administration"):AddWarning(target:getChar():getID(), target:Nick(), target:SteamID(), timestamp, reason, warnerName, warnerSteamID, severity)
+        hook.Run("AddWarning", target:getChar():getID(), target:Nick(), target:SteamID(), timestamp, reason, warnerName, warnerSteamID, severity)
         lia.db.count("warnings", "charID = " .. lia.db.convertDataType(target:getChar():getID())):next(function(count)
             target:notifyWarningLocalized("playerWarned", warnerName .. " (" .. warnerSteamID .. ")", severity, reason)
             client:notifySuccessLocalized("warningIssued", target:Nick())
@@ -7163,6 +7181,11 @@ lia.command.add("viewwarns", {
     end
 })
 
+local function GetWarningsByIssuer(steamID)
+    local condition = "warnerSteamID = " .. lia.db.convertDataType(steamID)
+    return lia.db.select({"id", "timestamp", "message", "warned", "warnedSteamID", "warner", "warnerSteamID", "severity"}, "warnings", condition):next(function(res) return res.results or {} end)
+end
+
 lia.command.add("viewwarnsissued", {
     adminOnly = true,
     desc = "viewWarnsIssuedDesc",
@@ -7186,7 +7209,7 @@ lia.command.add("viewwarnsissued", {
             displayName = target:Nick()
         end
 
-        lia.module.get("administration"):GetWarningsByIssuer(steamID):next(function(warns)
+        GetWarningsByIssuer(steamID):next(function(warns)
             if #warns == 0 then
                 client:notifyInfoLocalized("noWarnings", displayName)
                 return
@@ -7249,7 +7272,7 @@ lia.command.add("recogwhisper", {
     onRun = function(client, arguments)
         local target = lia.util.findPlayer(client, arguments[1]) or client
         if not IsValid(target) or not target:getChar() then return end
-        lia.module.get("recognition"):ForceRecognizeRange(target, "whisper")
+        hook.Run("ForceRecognizeRange", target, "whisper")
     end
 })
 
@@ -7271,7 +7294,7 @@ lia.command.add("recognormal", {
     onRun = function(client, arguments)
         local target = lia.util.findPlayer(client, arguments[1]) or client
         if not IsValid(target) or not target:getChar() then return end
-        lia.module.get("recognition"):ForceRecognizeRange(target, "normal")
+        hook.Run("ForceRecognizeRange", target, "normal")
     end
 })
 
@@ -7293,7 +7316,7 @@ lia.command.add("recogyell", {
     onRun = function(client, arguments)
         local target = lia.util.findPlayer(client, arguments[1]) or client
         if not IsValid(target) or not target:getChar() then return end
-        lia.module.get("recognition"):ForceRecognizeRange(target, "yell")
+        hook.Run("ForceRecognizeRange", target, "yell")
     end
 })
 
@@ -7316,7 +7339,7 @@ lia.command.add("recogbots", {
         local range = arguments[1] or "normal"
         local fakeName = arguments[2]
         for _, ply in player.Iterator() do
-            if ply:IsBot() then lia.module.get("recognition"):ForceRecognizeRange(ply, range, fakeName) end
+            if ply:IsBot() then hook.Run("ForceRecognizeRange", ply, range, fakeName) end
         end
     end
 })

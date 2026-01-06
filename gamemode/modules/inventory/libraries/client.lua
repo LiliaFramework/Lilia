@@ -6,25 +6,13 @@
     return panel
 end
 
-function MODULE:GetItemStackKey(item)
+local function GetItemStackKey(item)
     local elements = {}
     for key, value in SortedPairs(item.data) do
         elements[#elements + 1] = key
         elements[#elements + 1] = value
     end
     return item.uniqueID .. pon.encode(elements)
-end
-
-function MODULE:GetItemStacks(inventory)
-    local stacks = {}
-    local stack, key
-    for _, item in SortedPairs(inventory:getItems()) do
-        key = self:GetItemStackKey(item)
-        stack = stacks[key] or {}
-        stack[#stack + 1] = item
-        stacks[key] = stack
-    end
-    return stacks
 end
 
 function MODULE:InventoryItemRemoved(_, item)
@@ -50,16 +38,6 @@ function MODULE:InventoryItemAdded(inventory, item)
     local bagPanel = bagInv:show(mainPanel)
     bagPanel:MoveRightOf(mainPanel, 4)
     lia.gui["inv" .. bagInv:getID()] = bagPanel
-end
-
-function MODULE:InventoryItemDataChanged(item, key, oldValue, newValue, inventory)
-    if not item.isBag then return end
-    if key ~= "x" and key ~= "y" then return end
-    local bagInv = item:getInv()
-    if not bagInv then return end
-    local bagPanel = lia.gui["inv" .. bagInv:getID()]
-    local mainPanel = lia.gui["inv" .. inventory:getID()]
-    if IsValid(bagPanel) and IsValid(mainPanel) then bagPanel:MoveRightOf(mainPanel, 4) end
 end
 
 hook.Add("CreateMenuButtons", "liaInventory", function(tabs)

@@ -90,10 +90,6 @@ function MODULE:OnCharCreated(client, character)
     applyInventorySize(client, character)
 end
 
-function MODULE:ApplyInventorySizeOverride(client, character)
-    applyInventorySize(client, character)
-end
-
 function MODULE:HandleItemTransferRequest(client, itemID, x, y, invID)
     local newInventory = lia.inventory.instances[invID]
     local item = lia.item.instances[itemID]

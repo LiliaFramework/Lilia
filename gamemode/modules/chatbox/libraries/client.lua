@@ -36,7 +36,7 @@ local function createShadowed(panel, args)
     return true
 end
 
-function MODULE:CreateChat()
+function MODULE:CreateChatboxPanel()
     if IsValid(self.panel) then return end
     if IsValid(lia.gui.chat) then
         self.panel = lia.gui.chat
@@ -61,7 +61,7 @@ function MODULE:CreateChat()
 end
 
 function MODULE:InitPostEntity()
-    self:CreateChat()
+    hook.Run("CreateChatboxPanel")
 end
 
 local function RegenChat()
@@ -72,20 +72,20 @@ local function RegenChat()
     MODULE.panel = nil
     lia.gui.chat = nil
     lia.chat.persistedMessages = {}
-    MODULE:CreateChat()
+    hook.Run("CreateChatboxPanel")
 end
 
 function MODULE:PlayerBindPress(_, bind, pressed)
     bind = bind:lower()
     if bind:find("messagemode") and pressed then
-        if not IsValid(self.panel) then self:CreateChat() end
+        if not IsValid(self.panel) then hook.Run("CreateChatboxPanel") end
         if not self.panel.active then self.panel:setActive(true) end
         return true
     end
 end
 
 function chat.AddText(...)
-    if not IsValid(MODULE.panel) then MODULE:CreateChat() end
+    if not IsValid(MODULE.panel) then hook.Run("CreateChatboxPanel") end
     local show = true
     if IsValid(MODULE.panel) then show = MODULE.panel:addText(...) end
     if show then
@@ -100,7 +100,7 @@ function MODULE:ChatText(_, _, text, messageType)
     if not hadPanel then
         local prevActive = lia.chat.wasActive
         lia.chat.wasActive = false
-        self:CreateChat()
+        hook.Run("CreateChatboxPanel")
         lia.chat.wasActive = prevActive
     end
 

@@ -135,15 +135,12 @@ net.Receive("liaCheckHack", function(_, client)
         end
 
         if client:getChar() then
-            local warnsModule = lia.module.get("administration")
-            if warnsModule and warnsModule.AddWarning then
-                local timestamp = os.date("%Y-%m-%d %H:%M:%S")
-                local severity = "High"
-                warnsModule:AddWarning(client:getChar():getID(), client:Nick(), client:SteamID(), timestamp, L("cheaterWarningReason"), "System", "SYSTEM", severity)
-                local charID = client:getChar():getID()
-                local message = client:Name() .. " (Character " .. charID .. " | Steam64ID: " .. client:SteamID64() .. ") was flagged for cheating. Severity: " .. severity .. "."
-                StaffAddTextShadowed(Color(255, 0, 0), "CHEAT", Color(255, 255, 255), message, function(staff) return staff:hasPrivilege("receiveCheaterNotifications") end)
-            end
+            local timestamp = os.date("%Y-%m-%d %H:%M:%S")
+            local severity = "High"
+            hook.Run("AddWarning", client:getChar():getID(), client:Nick(), client:SteamID(), timestamp, L("cheaterWarningReason"), "System", "SYSTEM", severity)
+            local charID = client:getChar():getID()
+            local message = client:Name() .. " (Character " .. charID .. " | Steam64ID: " .. client:SteamID64() .. ") was flagged for cheating. Severity: " .. severity .. "."
+            StaffAddTextShadowed(Color(255, 0, 0), "CHEAT", Color(255, 255, 255), message, function(staff) return staff:hasPrivilege("receiveCheaterNotifications") end)
         end
     end
 
@@ -375,7 +372,7 @@ net.Receive("liaCharCreate", function(_, client)
                 if not character then return end
                 character:sync(client)
                 table.insert(client.liaCharList, id)
-                lia.module.get("mainmenu"):SyncCharList(client)
+                hook.Run("SyncCharList", client)
                 hook.Run("OnCharCreated", client, character, originalData)
                 local currentChar = client:getChar()
                 if currentChar then currentChar:save() end
@@ -399,7 +396,7 @@ net.Receive("liaCharDelete", function(_, client)
         if character.steamID == steamID then
             hook.Run("CharDeleted", client, character)
             character:delete()
-            timer.Simple(.5, function() lia.module.get("mainmenu"):SyncCharList(client) end)
+            timer.Simple(.5, function() hook.Run("SyncCharList", client) end)
         end
         return
     end
@@ -412,7 +409,7 @@ net.Receive("liaCharDelete", function(_, client)
             if not loadedChar then return end
             hook.Run("CharDeleted", client, loadedChar)
             loadedChar:delete()
-            timer.Simple(.5, function() lia.module.get("mainmenu"):SyncCharList(client) end)
+            timer.Simple(.5, function() hook.Run("SyncCharList", client) end)
         end)
     end)
 end)

@@ -230,7 +230,7 @@ end)
 local pendingShadowed = {}
 local function deliverShadowed(args)
     local chatModule = lia.module.get("chatbox")
-    if chatModule and chatModule.CreateChat then chatModule:CreateChat() end
+    hook.Run("CreateChatboxPanel")
     local chatPanel = chatModule and chatModule.panel or (lia.gui and lia.gui.chat)
     if IsValid(chatPanel) and IsValid(chatPanel.scroll) and #args >= 3 and IsColor(args[1]) and isstring(args[2]) and IsColor(args[3]) then
         local labelColor = args[1]

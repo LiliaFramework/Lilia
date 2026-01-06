@@ -443,31 +443,7 @@ function MODULE:PlayerDisconnected(client)
     end
 end
 
-function MODULE:KeyLock(client, door, time)
-    if not IsValid(door) or not IsValid(client) then return end
-    if hook.Run("CanPlayerLock", client, door) == false then return end
-    local distance = client:GetPos():Distance(door:GetPos())
-    local isProperEntity = door:isDoor() or door:IsVehicle() or door:isSimfphysCar()
-    if isProperEntity and not door:isLocked() and distance <= 256 and (door:checkDoorAccess(client) or door:GetCreator() == client or client:isStaffOnDuty()) then
-        client:setAction(L("locking"), time, function() end)
-        client:doStaredAction(door, function() self:ToggleLock(client, door, true) end, time, function() client:stopAction() end)
-        lia.log.add(client, "lockDoor", door)
-    end
-end
-
-function MODULE:KeyUnlock(client, door, time)
-    if not IsValid(door) or not IsValid(client) then return end
-    if hook.Run("CanPlayerUnlock", client, door) == false then return end
-    local distance = client:GetPos():Distance(door:GetPos())
-    local isProperEntity = door:isDoor() or door:IsVehicle() or door:isSimfphysCar()
-    if isProperEntity and door:isLocked() and distance <= 256 and (door:checkDoorAccess(client) or door:GetCreator() == client or client:isStaffOnDuty()) then
-        client:setAction(L("unlocking"), time, function() end)
-        client:doStaredAction(door, function() self:ToggleLock(client, door, false) end, time, function() client:stopAction() end)
-        lia.log.add(client, "unlockDoor", door)
-    end
-end
-
-function MODULE:ToggleLock(client, door, state)
+local function ToggleLock(client, door, state)
     if not IsValid(door) then return end
     if door:isDoor() then
         local partner = door:getDoorPartner()
@@ -496,4 +472,28 @@ function MODULE:ToggleLock(client, door, state)
 
     hook.Run("DoorLockToggled", client, door, state)
     lia.log.add(client, "toggleLock", door, state and L("locked") or L("unlocked"))
+end
+
+function MODULE:KeyLock(client, door, time)
+    if not IsValid(door) or not IsValid(client) then return end
+    if hook.Run("CanPlayerLock", client, door) == false then return end
+    local distance = client:GetPos():Distance(door:GetPos())
+    local isProperEntity = door:isDoor() or door:IsVehicle() or door:isSimfphysCar()
+    if isProperEntity and not door:isLocked() and distance <= 256 and (door:checkDoorAccess(client) or door:GetCreator() == client or client:isStaffOnDuty()) then
+        client:setAction(L("locking"), time, function() end)
+        client:doStaredAction(door, function() ToggleLock(client, door, true) end, time, function() client:stopAction() end)
+        lia.log.add(client, "lockDoor", door)
+    end
+end
+
+function MODULE:KeyUnlock(client, door, time)
+    if not IsValid(door) or not IsValid(client) then return end
+    if hook.Run("CanPlayerUnlock", client, door) == false then return end
+    local distance = client:GetPos():Distance(door:GetPos())
+    local isProperEntity = door:isDoor() or door:IsVehicle() or door:isSimfphysCar()
+    if isProperEntity and door:isLocked() and distance <= 256 and (door:checkDoorAccess(client) or door:GetCreator() == client or client:isStaffOnDuty()) then
+        client:setAction(L("unlocking"), time, function() end)
+        client:doStaredAction(door, function() ToggleLock(client, door, false) end, time, function() client:stopAction() end)
+        lia.log.add(client, "unlockDoor", door)
+    end
 end

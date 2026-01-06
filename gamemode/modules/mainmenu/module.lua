@@ -119,7 +119,7 @@ else
     end
 
     function MODULE:LoadMainCharacter()
-        local mainCharID = self:GetMainCharacterID()
+        local mainCharID = hook.Run("GetMainCharacterID")
         if not mainCharID then
             LocalPlayer():notifyErrorLocalized("noMainCharacter")
             return
