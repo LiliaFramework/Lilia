@@ -1,36 +1,36 @@
 # Compatibility Libraries
 
-- [Advanced Duplicator](https://liliaframework.github.io/Compatibility/advdupe/)
+- [Advdupe](./advdupe.md)
 
-- [Advanced Duplicator 2](https://liliaframework.github.io/Compatibility/advdupe2/)
+- [Advdupe2](./advdupe2.md)
 
-- [ARC9/ARCCW](https://liliaframework.github.io/Compatibility/arccw/)
+- [Arccw](./arccw.md)
 
-- [CAMI](https://liliaframework.github.io/Compatibility/cami/)
+- [Cami](./cami.md)
 
-- [LVS](https://liliaframework.github.io/Compatibility/lvs/)
+- [Lvs](./lvs.md)
 
-- [PAC3](https://liliaframework.github.io/Compatibility/pac/)
+- [Pac](./pac.md)
 
-- [Perma Props](https://liliaframework.github.io/Compatibility/permaprops/)
+- [Permaprops](./permaprops.md)
 
-- [Prone Mod](https://liliaframework.github.io/Compatibility/prone/)
+- [Prone](./prone.md)
 
-- [Sadmin](https://liliaframework.github.io/Compatibility/sadmin/)
+- [Sadmin](./sadmin.md)
 
-- [SAM](https://liliaframework.github.io/Compatibility/sam/)
+- [Sam](./sam.md)
 
-- [ServerGuard](https://liliaframework.github.io/Compatibility/serverguard/)
+- [Serverguard](./serverguard.md)
 
-- [Simfphys](https://liliaframework.github.io/Compatibility/simfphys/)
+- [Simfphys](./simfphys.md)
 
-- [Sit Anywhere](https://liliaframework.github.io/Compatibility/sitanywhere/)
+- [Sitanywhere](./sitanywhere.md)
 
-- [ULX](https://liliaframework.github.io/Compatibility/ulx/)
+- [Ulx](./ulx.md)
 
-- [VCMOD](https://liliaframework.github.io/Compatibility/vcmod/)
+- [Vcmod](./vcmod.md)
 
-- [VJ Base](https://liliaframework.github.io/Compatibility/vjbase/)
+- [Vjbase](./vjbase.md)
 
-- [Wiremod](https://liliaframework.github.io/Compatibility/wiremod/)
+- [Wiremod](./wiremod.md)
 
