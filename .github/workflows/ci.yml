@@ -224,7 +224,7 @@ jobs:
           rm -rf documentation/docs/definitions
           rm -rf documentation/docs/hooks
           rm -rf documentation/docs/modules
-          rm -rf documentation/docs/Compatibility
+          rm -rf documentation/docs/compatibility
       - run: |
           python3 generate_docs.py meta --force
           python3 generate_docs.py library --force
@@ -416,7 +416,7 @@ jobs:
           rm -rf documentation/docs/definitions
           rm -rf documentation/docs/hooks
           rm -rf documentation/docs/modules
-          rm -rf documentation/docs/Compatibility
+          rm -rf documentation/docs/compatibility
       - run: |
           python3 generate_docs.py meta --force
           python3 generate_docs.py library --force
