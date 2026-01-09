@@ -136,30 +136,6 @@ The following examples demonstrate how to use all the properties and methods tog
 Below is a comprehensive example showing how to define a complete item with all available properties and methods.
 
 ```lua
-    -- Set the aid item name
-    ITEM.name = "Medical Kit"
-
-    -- Set the aid item description
-    ITEM.desc = "A medical kit that restores health"
-
-    -- Set the aid item model
-    ITEM.model = "models/items/medkit.mdl"
-
-    -- Set inventory width
-    ITEM.width = 1
-
-    -- Set inventory height
-    ITEM.height = 1
-
-    -- Set health restoration amount
-    ITEM.health = 25
-
-    -- Set armor restoration amount
-    ITEM.armor = 10
-
-```
-
-```lua
     -- Basic item identification
         ITEM.name = "Medical Kit"                    -- Display name shown to players
         ITEM.desc = "A medical kit that restores 25 health points"  -- Description text

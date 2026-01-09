@@ -52,14 +52,8 @@ Interactive tool for generating Lilia faction definitions. Fill out the fields b
     <div class="generator-section">
         <h3>Models</h3>
         <div class="input-group">
-            <label for="male-models">Male Models:</label>
-            <textarea id="male-models" placeholder="models/player/police_male.mdl&#10;models/player/swat_male.mdl" rows="3"></textarea>
-            <small>One model path per line</small>
-        </div>
-
-        <div class="input-group">
-            <label for="female-models">Female Models:</label>
-            <textarea id="female-models" placeholder="models/player/police_female.mdl&#10;models/player/swat_female.mdl" rows="3"></textarea>
+            <label for="models">Models:</label>
+            <textarea id="models" placeholder="models/player/police.mdl&#10;models/player/swat.mdl&#10;models/player/citizen_male.mdl" rows="4"></textarea>
             <small>One model path per line</small>
         </div>
     </div>
@@ -147,17 +141,6 @@ Interactive tool for generating Lilia faction definitions. Fill out the fields b
         </div>
     </div>
 
-    <div class="generator-section">
-        <h3>Name Generation</h3>
-        <div class="input-group">
-            <label for="name-template">Name Template Function:</label>
-            <textarea id="name-template" placeholder="function FACTION:NameTemplate(info, client)
-    local badgeNumber = math.random(1000, 9999)
-    return &quot;Officer &quot; .. badgeNumber
-end" rows="4"></textarea>
-            <small>Optional: Leave blank for default name generation</small>
-        </div>
-    </div>
 
     <button onclick="generateFaction()" class="generate-btn">Generate Faction Code</button>
 </div>
@@ -165,138 +148,217 @@ end" rows="4"></textarea>
 ## Generated Code
 
 ```lua
--- Copy and paste this code into your faction file
--- Example: gamemode/factions/police.lua
-
-FACTION.name = "Police Department"
-FACTION.desc = "Law enforcement officers responsible for maintaining order and protecting citizens"
-FACTION.color = Color(0, 100, 255)
-
-FACTION.isDefault = false
-FACTION.oneCharOnly = true
-FACTION.limit = 12
-
-FACTION.models = {
-    male = {
-        "models/player/police_male.mdl",
-        "models/player/swat_male.mdl"
-    },
-    female = {
-        "models/player/police_female.mdl",
-        "models/player/swat_female.mdl"
-    }
-}
-
-FACTION.health = 120
-FACTION.armor = 50
-FACTION.runSpeed = 280
-FACTION.walkSpeed = 150
-FACTION.jumpPower = 200
-FACTION.pay = 100
-
-FACTION.weapons = {
-    "weapon_pistol",
-    "weapon_stunstick"
-}
-
-FACTION.items = {
-    "item_police_badge",
-    "item_handcuffs"
-}
-
-FACTION.RecognizesGlobally = true
-FACTION.isGloballyRecognized = true
-FACTION.MemberToMemberAutoRecognition = true
+-- Generated faction code will appear here after clicking "Generate Faction Code"
 ```
 
 <style>
+/* Material Design inspired styling for Lilia theme */
 #faction-generator {
-    max-width: 800px;
+    max-width: 900px;
     margin: 0 auto;
-    font-family: Arial, sans-serif;
+    font-family: 'Noto Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    line-height: 1.6;
 }
 
 .generator-section {
-    border: 1px solid #ddd;
-    border-radius: 8px;
-    padding: 20px;
-    margin-bottom: 20px;
-    background-color: #f9f9f9;
+    background: var(--md-default-fg-color--lightest);
+    border: 1px solid var(--md-default-fg-color--lighter);
+    border-radius: 12px;
+    padding: 24px;
+    margin-bottom: 24px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    transition: box-shadow 0.3s ease;
+}
+
+[data-md-color-scheme="slate"] .generator-section {
+    background: var(--md-default-fg-color--dark);
+    border-color: var(--md-default-fg-color--light);
+}
+
+.generator-section:hover {
+    box-shadow: 0 4px 16px rgba(0,0,0,0.15);
 }
 
 .generator-section h3 {
-    margin-top: 0;
-    color: #333;
-    border-bottom: 2px solid #007acc;
-    padding-bottom: 10px;
+    margin: -6px -6px 20px -6px;
+    padding: 16px 20px;
+    background: linear-gradient(135deg, #009688 0%, #e6a800 100%);
+    color: white;
+    border-radius: 8px 8px 0 0;
+    font-weight: 500;
+    font-size: 1.2em;
+    letter-spacing: 0.02em;
+}
+
+[data-md-color-scheme="slate"] .generator-section h3 {
+    background: linear-gradient(135deg, #26a69a 0%, #ffb300 100%);
 }
 
 .input-group {
-    margin-bottom: 15px;
+    margin-bottom: 20px;
 }
 
 .input-group label {
     display: block;
-    margin-bottom: 5px;
-    font-weight: bold;
-    color: #555;
+    margin-bottom: 8px;
+    font-weight: 500;
+    color: var(--md-default-fg-color);
+    font-size: 0.95em;
 }
 
 .input-group input[type="text"],
 .input-group input[type="number"],
 .input-group textarea {
     width: 100%;
-    padding: 8px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    font-family: 'Courier New', monospace;
+    padding: 12px 16px;
+    border: 2px solid var(--md-default-fg-color--lighter);
+    border-radius: 8px;
+    font-family: 'Roboto Mono', 'Courier New', monospace;
     font-size: 14px;
+    background: var(--md-default-fg-color--lightest);
+    color: var(--md-default-fg-color);
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+    box-sizing: border-box;
+}
+
+[data-md-color-scheme="slate"] .input-group input[type="text"],
+[data-md-color-scheme="slate"] .input-group input[type="number"],
+[data-md-color-scheme="slate"] .input-group textarea {
+    background: var(--md-default-fg-color--dark);
+    border-color: var(--md-default-fg-color--light);
+    color: var(--md-default-fg-color--light);
+}
+
+.input-group input[type="text"]:focus,
+.input-group input[type="number"]:focus,
+.input-group textarea:focus {
+    outline: none;
+    border-color: #009688;
+    box-shadow: 0 0 0 3px rgba(0, 150, 136, 0.1);
+}
+
+[data-md-color-scheme="slate"] .input-group input[type="text"]:focus,
+[data-md-color-scheme="slate"] .input-group input[type="number"]:focus,
+[data-md-color-scheme="slate"] .input-group textarea:focus {
+    border-color: #26a69a;
+    box-shadow: 0 0 0 3px rgba(38, 166, 154, 0.2);
 }
 
 .input-group textarea {
     resize: vertical;
-    min-height: 60px;
+    min-height: 80px;
+    line-height: 1.4;
 }
 
 .input-group small {
     display: block;
-    color: #666;
-    font-style: italic;
-    margin-top: 3px;
+    color: var(--md-default-fg-color--light);
+    font-style: normal;
+    margin-top: 6px;
+    font-size: 0.85em;
+}
+
+[data-md-color-scheme="slate"] .input-group small {
+    color: var(--md-default-fg-color--lighter);
 }
 
 .input-group label input[type="checkbox"] {
     width: auto;
-    margin-right: 8px;
+    margin-right: 10px;
+    accent-color: #009688;
+}
+
+[data-md-color-scheme="slate"] .input-group label input[type="checkbox"] {
+    accent-color: #26a69a;
 }
 
 .generate-btn {
-    background-color: #007acc;
+    background: linear-gradient(135deg, #009688 0%, #e6a800 100%);
     color: white;
     border: none;
-    padding: 12px 24px;
-    border-radius: 6px;
+    padding: 16px 32px;
+    border-radius: 8px;
     cursor: pointer;
     font-size: 16px;
-    font-weight: bold;
+    font-weight: 600;
     display: block;
     width: 100%;
-    margin: 20px 0;
-    transition: background-color 0.3s;
+    margin: 24px 0;
+    transition: all 0.3s ease;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    box-shadow: 0 4px 12px rgba(0, 150, 136, 0.3);
+}
+
+[data-md-color-scheme="slate"] .generate-btn {
+    background: linear-gradient(135deg, #26a69a 0%, #ffb300 100%);
+    box-shadow: 0 4px 12px rgba(38, 166, 154, 0.3);
 }
 
 .generate-btn:hover {
-    background-color: #005aa3;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(0, 150, 136, 0.4);
 }
 
-.code-output {
-    background-color: #f4f4f4;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-    padding: 15px;
-    font-family: 'Courier New', monospace;
-    white-space: pre-wrap;
-    margin-top: 20px;
+[data-md-color-scheme="slate"] .generate-btn:hover {
+    box-shadow: 0 6px 20px rgba(38, 166, 154, 0.4);
+}
+
+.generate-btn:active {
+    transform: translateY(0);
+}
+
+/* Code output styling */
+.hljs {
+    background: var(--md-code-bg-color) !important;
+    color: var(--md-code-fg-color) !important;
+}
+
+pre {
+    background: var(--md-code-bg-color) !important;
+    border: 1px solid var(--md-default-fg-color--lighter) !important;
+    border-radius: 8px !important;
+    padding: 20px !important;
+    overflow-x: auto !important;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1) !important;
+}
+
+code {
+    font-family: 'Roboto Mono', 'Courier New', monospace !important;
+    font-size: 13px !important;
+    line-height: 1.5 !important;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+    #faction-generator {
+        margin: 0 16px;
+    }
+
+    .generator-section {
+        padding: 16px;
+        margin-bottom: 16px;
+    }
+
+    .generator-section h3 {
+        font-size: 1.1em;
+        padding: 12px 16px;
+    }
+
+    .generate-btn {
+        padding: 14px 24px;
+        font-size: 15px;
+    }
+}
+
+/* Material Design elevation */
+.md-typeset .admonition {
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+[data-md-color-scheme="slate"] .md-typeset .admonition {
+    box-shadow: 0 2px 8px rgba(0,0,0,0.2);
 }
 </style>
 
@@ -312,8 +374,7 @@ function generateFaction() {
     const limit = document.getElementById('faction-limit').value || '0';
 
     // Models
-    const maleModels = document.getElementById('male-models').value.split('\n').filter(m => m.trim());
-    const femaleModels = document.getElementById('female-models').value.split('\n').filter(m => m.trim());
+    const models = document.getElementById('models').value.split('\n').filter(m => m.trim());
 
     // Gameplay properties
     const health = document.getElementById('health').value || '100';
@@ -336,8 +397,6 @@ function generateFaction() {
     const memberAutoRecognition = document.getElementById('member-auto-recognition').checked;
     const scoreboardHidden = document.getElementById('scoreboard-hidden').checked;
 
-    // Name template
-    const nameTemplate = document.getElementById('name-template').value.trim();
 
     // Generate the code
     let code = `-- Copy and paste this code into your faction file
@@ -355,24 +414,13 @@ FACTION.limit = ${limit}
 `;
 
     // Models section
-    if (maleModels.length > 0 || femaleModels.length > 0) {
+    if (models.length > 0) {
         code += `-- Models
 FACTION.models = {
 `;
-        if (maleModels.length > 0) {
-            code += `    male = {\n`;
-            maleModels.forEach(model => {
-                code += `        "${model.trim()}",\n`;
-            });
-            code += `    },\n`;
-        }
-        if (femaleModels.length > 0) {
-            code += `    female = {\n`;
-            femaleModels.forEach(model => {
-                code += `        "${model.trim()}",\n`;
-            });
-            code += `    },\n`;
-        }
+        models.forEach(model => {
+            code += `    "${model.trim()}",\n`;
+        });
         code += `}
 
 `;
@@ -440,12 +488,6 @@ FACTION.items = {
 `;
     }
 
-    // Name template
-    if (nameTemplate) {
-        code += `-- Name Generation
-${nameTemplate}
-`;
-    }
 
     // Update the code block
     const codeBlock = document.querySelector('code');
@@ -460,32 +502,6 @@ ${nameTemplate}
     }
 }
 
-// Auto-generate on page load with default values
-document.addEventListener('DOMContentLoaded', function() {
-    generateFaction();
-});
 </script>
 
 ---
-
-## Usage Instructions
-
-1. **Fill out the form fields** above with your faction's properties
-2. **Click "Generate Faction Code"** to create the Lua code
-3. **Copy the generated code** from the code block below
-4. **Create a new file** in your `gamemode/factions/` directory (e.g., `police.lua`)
-5. **Paste the code** into the file and save it
-6. **The faction will be automatically loaded** when the server starts
-
-## Tips
-
-- **Models**: Use the exact model paths from your game's materials
-- **Weapons**: Make sure the weapon classes exist on your server
-- **Items**: Use the uniqueID of items defined in your item system
-- **Limits**: Use 0 for unlimited, decimals for percentages (0.1 = 10% of server)
-- **Colors**: RGB values should be between 0-255
-- **Speeds**: Test these values to ensure balanced gameplay
-
-## Advanced Customization
-
-For more advanced faction features like custom callbacks, NPC relationships, or special spawn logic, refer to the [Faction Definitions documentation](./definitions/faction.md).
