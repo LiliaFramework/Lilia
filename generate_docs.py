@@ -313,6 +313,10 @@ def parse_comment_block(comment_text):
                 section_content.append(line)
         elif current_section == 'examples':
             # Handle example sections - but only if we're not inside a code block
+            # Skip comprehensive example headers (Example Item:, Example Class:, Example Faction:)
+            if line.strip() in ['Example Item:', 'Example Class:', 'Example Faction:']:
+                # These are just headers, not complexity levels - skip them
+                continue
             complexity_match = None
             if not (current_example and current_example.get('in_code_block', False)):
                 complexity_match = re.match(r'(\w+)(?:\s+Complexity)?(?:\s+Example)?:', line)
@@ -849,8 +853,11 @@ def parse_definition_property_blocks(file_path: Path, entity_prefixes: Tuple[str
     # Find all comment blocks with their positions
     for match in re.finditer(r'--\[\[.*?\]\]', text, re.DOTALL):
         block_text = match.group(0)
+        # Skip comprehensive example blocks - they're handled separately
+        if any(header in block_text for header in ['Example Item:', 'Example Class:', 'Example Faction:']):
+            continue
         # Only process structured comment blocks
-        if not any(header in block_text for header in ['Purpose:', 'When Called:', 'When Used:', 'Parameters:', 'Returns:', 'Realm:', 'Explanation of Panel:', 'Example Usage:', 'Example Item:']):
+        if not any(header in block_text for header in ['Purpose:', 'When Called:', 'When Used:', 'Parameters:', 'Returns:', 'Realm:', 'Explanation of Panel:', 'Example Usage:']):
             continue
 
         # Find the property name from the line immediately following this comment block
