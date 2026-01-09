@@ -58,12 +58,65 @@ local function cleanupCache()
     end
 end
 
+--[[
+    Purpose:
+        Determine if a net payload with given args is still fresh in cache.
+
+    When Called:
+        Before sending large net payloads to avoid duplicate work.
+
+    Parameters:
+        name (string)
+            Cache identifier.
+        args (table)
+            Arguments that define cache identity.
+
+    Returns:
+        boolean
+            true if cached entry exists within TTL.
+
+    Realm:
+        Shared
+
+    Example Usage:
+        ```lua
+        if not lia.net.isCacheHit("bigSync", {ply:SteamID64()}) then
+            lia.net.writeBigTable(ply, "liaBigSync", payload)
+            lia.net.addToCache("bigSync", {ply:SteamID64()})
+        end
+        ```
+]]
 function lia.net.isCacheHit(name, args)
     local key = generateCacheKey(name, args)
     local entry = lia.net.cache[key]
     return entry and CurTime() - entry.timestamp <= CACHE_TTL
 end
 
+--[[
+    Purpose:
+        Insert a cache marker for a named payload/args combination.
+
+    When Called:
+        Right after sending a large or expensive net payload.
+
+    Parameters:
+        name (string)
+            Cache identifier.
+        args (table)
+            Arguments that define cache identity.
+
+    Returns:
+        nil
+
+    Realm:
+        Shared
+
+    Example Usage:
+        ```lua
+        lia.net.writeBigTable(targets, "liaDialogSync", data)
+        lia.net.addToCache("dialogSync", {table.Count(data)})
+        ```
+]]
 function lia.net.addToCache(name, args)
     local key = generateCacheKey(name, args)
     lia.net.cache[key] = {
@@ -73,6 +126,35 @@ function lia.net.addToCache(name, args)
     cleanupCache()
 end
 
+--[[
+    Purpose:
+        Receive chunked JSON-compressed tables and reconstruct them.
+
+    When Called:
+        To register a receiver for big table streams (both realms).
+
+    Parameters:
+        netStr (string)
+            Net message name carrying the chunks.
+        callback (function)
+            Function called when table is fully received. Client: function(tbl), Server: function(ply, tbl).
+
+    Returns:
+        nil
+
+    Realm:
+        Shared
+
+    Example Usage:
+        ```lua
+        lia.net.readBigTable("liaDoorDataBulk", function(tbl)
+            if not tbl then return end
+            for doorID, data in pairs(tbl) do
+                lia.doors.updateCachedData(doorID, data)
+            end
+        end)
+        ```
+]]
 function lia.net.readBigTable(netStr, callback)
     lia.net.buffers[netStr] = lia.net.buffers[netStr] or {}
     net.Receive(netStr, function(_, ply)
@@ -163,6 +245,36 @@ if SERVER then
         end)
     end
 
+    --[[
+    Purpose:
+        Send a large table by compressing and chunking it across the net.
+
+    When Called:
+        For big payloads (dialog sync, door data, keybinds) that exceed net limits.
+
+    Parameters:
+        targets (Player|table|nil)
+            Single player, list of players, or nil to broadcast to humans.
+        netStr (string)
+            Net message name to use.
+        tbl (table)
+            Data to serialize.
+        chunkSize (number|nil)
+            Optional override for chunk size.
+
+    Returns:
+        nil
+
+    Realm:
+        Server
+
+    Example Usage:
+        ```lua
+        local payload = {doors = lia.doors.stored, ts = os.time()}
+        lia.net.writeBigTable(player.GetHumans(), "liaDoorDataBulk", payload, 2048)
+        lia.net.addToCache("doorBulk", {payload.ts})
+        ```
+    ]]
     function lia.net.writeBigTable(targets, netStr, tbl, chunkSize)
         if not istable(tbl) then return end
         local json = util.TableToJSON(tbl)
@@ -210,6 +322,31 @@ if SERVER then
         end
     end
 
+    --[[
+    Purpose:
+        Validate netvar payloads to prevent functions being networked.
+
+    When Called:
+        Internally before setting globals/locals.
+
+    Parameters:
+        name (string)
+            Identifier for error reporting.
+        object (any)
+            Value to validate for networking safety.
+
+    Returns:
+        boolean|nil
+            true if bad type detected.
+
+    Realm:
+        Server
+
+    Example Usage:
+        ```lua
+        if lia.net.checkBadType("example", someTable) then return end
+        ```
+    ]]
     function lia.net.checkBadType(name, object)
         if isfunction(object) then
             lia.error(L("netVarBadType", name))
@@ -221,9 +358,36 @@ if SERVER then
         end
     end
 
+    --[[
+    Purpose:
+        Set a global netvar and broadcast it (or send to specific receiver).
+
+    When Called:
+        Whenever shared state changes (config sync, feature flags, etc.).
+
+    Parameters:
+        key (string)
+            Netvar identifier.
+        value (any)
+            Value to set.
+        receiver (Player|table|nil)
+            Optional target(s); broadcasts when nil.
+
+    Returns:
+        nil
+
+    Realm:
+        Server
+
+    Example Usage:
+        ```lua
+        lia.net.setNetVar("eventActive", true)
+        lia.net.setNetVar("roundNumber", round, targetPlayers)
+        ```
+    ]]
     function lia.net.setNetVar(key, value, receiver)
-        if checkBadType(key, value) then return end
-        local oldValue = getNetVar(key)
+        if lia.net.checkBadType(key, value) then return end
+        local oldValue = lia.net.getNetVar(key)
         if oldValue == value then return end
         lia.net.globals[key] = value
         if not lia.shuttingDown then
@@ -244,6 +408,32 @@ if SERVER then
     hook.Add("PlayerInitialSpawn", "liaNetworkingSync", function(client) client:syncVars() end)
 end
 
+--[[
+    Purpose:
+        Retrieve a global netvar with a fallback default.
+
+    When Called:
+        Client/server code reading synchronized state.
+
+    Parameters:
+        key (string)
+            Netvar identifier.
+        default (any)
+            Fallback value if netvar is not set.
+
+    Returns:
+        any
+
+    Realm:
+        Shared
+
+    Example Usage:
+        ```lua
+        if lia.net.getNetVar("eventActive", false) then
+            DrawEventHUD()
+        end
+        ```
+]]
 function lia.net.getNetVar(key, default)
     local value = lia.net.globals[key]
     return value ~= nil and value or default

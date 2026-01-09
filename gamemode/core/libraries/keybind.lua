@@ -125,6 +125,48 @@ local KeybindKeys = {
     ["last"] = KEY_LAST
 }
 
+--[[
+    Purpose:
+        Register a keybind action with callbacks and optional metadata.
+
+    When Called:
+        During initialization to expose actions to the keybind system/UI.
+
+    Parameters:
+        k (string|number)
+            Key code or key name (or actionName when using table config form).
+        d (string|table)
+            Action name or config table when first arg is action name.
+        desc (string|nil)
+            Description when using legacy signature.
+        cb (table|nil)
+            Callback table {onPress, onRelease, shouldRun, serverOnly}.
+
+    Returns:
+        nil
+
+    Realm:
+        Shared
+
+    Example Usage:
+        ```lua
+            -- Table-based registration with shouldRun and serverOnly.
+            lia.keybind.add("toggleMap", {
+                keyBind = KEY_M,
+                desc = "Open the world map",
+                serverOnly = false,
+                shouldRun = function(client) return client:Alive() end,
+                onPress = function(client)
+                    if IsValid(client.mapPanel) then
+                        client.mapPanel:Close()
+                        client.mapPanel = nil
+                    else
+                        client.mapPanel = vgui.Create("liaWorldMap")
+                    end
+                end
+            })
+        ```
+]]
 function lia.keybind.add(k, d, desc, cb)
     local actionName, key, description, callbacks, category
     if isstring(k) and istable(d) and desc == nil and cb == nil then
@@ -346,12 +388,58 @@ if CLIENT then
         end
     end)
 
+    --[[
+    Purpose:
+        Get the key code assigned to an action, with default fallback.
+
+    When Called:
+        When populating keybind UI or triggering actions manually.
+
+    Parameters:
+        a (string)
+            Action name.
+        df (number|nil)
+            Default key code if not set.
+
+    Returns:
+        number|nil
+
+    Realm:
+        Client
+
+    Example Usage:
+        ```lua
+            local key = lia.keybind.get("openInventory", KEY_I)
+            print("Inventory key is:", input.GetKeyName(key))
+        ```
+    ]]
     function lia.keybind.get(a, df)
         local act = lia.keybind.stored[a]
         if act then return act.value or act.default or df end
         return df
     end
 
+    --[[
+    Purpose:
+        Persist current keybind overrides to disk.
+
+    When Called:
+        After users change keybinds in the config UI.
+
+    Parameters:
+        None
+
+    Returns:
+        nil
+
+    Realm:
+        Client
+
+    Example Usage:
+        ```lua
+            lia.keybind.save()
+        ```
+    ]]
     function lia.keybind.save()
         local path = "lilia/keybinds.json"
         local d = {}
@@ -363,6 +451,27 @@ if CLIENT then
         if j then file.Write(path, j) end
     end
 
+    --[[
+    Purpose:
+        Load keybind overrides from disk, falling back to defaults if missing.
+
+    When Called:
+        On client init/config load; rebuilds reverse lookup table for keys.
+
+    Parameters:
+        None
+
+    Returns:
+        nil
+
+    Realm:
+        Client
+
+    Example Usage:
+        ```lua
+            hook.Add("Initialize", "LoadLiliaKeybinds", lia.keybind.load)
+        ```
+    ]]
     function lia.keybind.load()
         local path = "lilia/keybinds.json"
         local d = file.Read(path, "DATA")

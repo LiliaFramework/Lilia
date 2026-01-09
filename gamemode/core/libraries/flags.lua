@@ -13,6 +13,38 @@
 ]]
 lia.flag = lia.flag or {}
 lia.flag.list = lia.flag.list or {}
+--[[
+    Purpose:
+        Register a flag with description and optional grant/remove callback.
+
+    When Called:
+        During framework setup to define permission flags.
+
+    Parameters:
+        flag (string)
+            Single-character flag id.
+        desc (string)
+            Localization key or plain description.
+        callback (function|nil)
+            function(client, isGiven) for grant/remove side effects.
+
+    Returns:
+        nil
+
+    Realm:
+        Shared
+
+    Example Usage:
+        ```lua
+            lia.flag.add("B", "flagBuildMenu", function(client, isGiven)
+                if isGiven then
+                    client:Give("weapon_physgun")
+                else
+                    client:StripWeapon("weapon_physgun")
+                end
+            end)
+        ```
+]]
 function lia.flag.add(flag, desc, callback)
     if lia.flag.list[flag] then return end
     lia.flag.list[flag] = {
@@ -22,6 +54,28 @@ function lia.flag.add(flag, desc, callback)
 end
 
 if SERVER then
+--[[
+    Purpose:
+        Execute flag callbacks for a player on spawn, ensuring each flag runs once.
+
+    When Called:
+        Automatically when characters spawn; can be hooked for reapplication.
+
+    Parameters:
+        client (Player)
+            Player whose flags should be processed.
+
+    Returns:
+        nil
+
+    Realm:
+        Server
+
+    Example Usage:
+        ```lua
+            hook.Add("PlayerSpawn", "ApplyFlagWeapons", lia.flag.onSpawn)
+        ```
+]]
     function lia.flag.onSpawn(client)
         local flags = client:getFlags()
         local processed = {}
@@ -62,7 +116,27 @@ lia.flag.add("t", "flagToolgun", function(client, isGiven)
         client:StripWeapon("gmod_tool")
     end
 end)
+--[[
+    Purpose:
+        Creates a character information panel displaying flag status for the local player.
 
+    When Called:
+        When the character information menu is opened to show available flag information panels.
+
+    Parameters:
+        pages (table)
+            Array of information panel configurations to add the flags panel to.
+
+    Returns:
+        nil
+
+    Realm:
+        Client
+
+    Example Usage:
+        This hook is automatically called by the framework when building information panels.
+        No manual calling is required.
+]]
 hook.Add("CreateInformationButtons", "liaInformationFlagsUnified", function(pages)
     local client = LocalPlayer()
     table.insert(pages, {

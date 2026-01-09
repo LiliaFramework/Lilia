@@ -14,6 +14,38 @@
 lia.config = lia.config or {}
 lia.config.stored = lia.config.stored or {}
 lia.config._lastSyncedValues = lia.config._lastSyncedValues or {}
+--[[
+    Purpose:
+        Register a config entry with defaults, UI metadata, and optional callback.
+
+    When Called:
+        During schema/module initialization to expose server-stored configuration.
+
+    Parameters:
+        key (string)
+            Unique identifier for the config entry.
+        name (string)
+            Display text or localization key for UI.
+        value (any)
+            Default value; type inferred when data.type is omitted.
+        callback (function|nil)
+            Invoked server-side as callback(oldValue, newValue) after set().
+        data (table)
+            Fields such as type, desc, category, options/optionsFunc, noNetworking, etc.
+
+    Returns:
+        nil
+
+    Realm:
+        Shared
+
+    Example Usage:
+        ```lua
+        lia.config.add("MaxThirdPersonDistance", "maxThirdPersonDistance", 100, function(old, new)
+            lia.option.set("thirdPersonDistance", math.min(lia.option.get("thirdPersonDistance", new), new))
+        end, {category = "categoryGameplay", type = "Int", min = 10, max = 200})
+        ```
+]]
 function lia.config.add(key, name, value, callback, data)
     assert(isstring(key), L("configKeyString", type(key)))
     assert(istable(data), L("configDataTable", type(data)))
@@ -55,6 +87,29 @@ function lia.config.add(key, name, value, callback, data)
     }
 end
 
+--[[
+    Purpose:
+        Resolve a config entry's selectable options, static list or generated.
+
+    When Called:
+        Before rendering dropdown-type configs or validating submitted values.
+
+    Parameters:
+        key (string)
+            Config key to resolve options for.
+
+    Returns:
+        table
+            Options array or key/value table; empty when unavailable.
+
+    Realm:
+        Shared
+
+    Example Usage:
+        ```lua
+        local opts = lia.config.getOptions("Theme")
+        ```
+]]
 function lia.config.getOptions(key)
     local config = lia.config.stored[key]
     if not config then return {} end
@@ -74,11 +129,61 @@ function lia.config.getOptions(key)
     return {}
 end
 
+--[[
+    Purpose:
+        Override the default value for an already registered config entry.
+
+    When Called:
+        During migrations, schema overrides, or backward-compatibility fixes.
+
+    Parameters:
+        key (string)
+            Config key to override.
+        value (any)
+            New default value.
+
+    Returns:
+        nil
+
+    Realm:
+        Shared
+
+    Example Usage:
+        ```lua
+        lia.config.setDefault("StartingMoney", 300)
+        ```
+]]
 function lia.config.setDefault(key, value)
     local config = lia.config.stored[key]
     if config then config.default = value end
 end
 
+--[[
+    Purpose:
+        Force-set a config value and fire update hooks without networking.
+
+    When Called:
+        Runtime adjustments (admin tools/commands) or hot reload scenarios.
+
+    Parameters:
+        key (string)
+            Config key to change.
+        value (any)
+            Value to assign.
+        noSave (boolean|nil)
+            When true, skip persisting to disk.
+
+    Returns:
+        nil
+
+    Realm:
+        Shared
+
+    Example Usage:
+        ```lua
+        lia.config.forceSet("MaxCharacters", 10, false)
+        ```
+]]
 function lia.config.forceSet(key, value, noSave)
     local config = lia.config.stored[key]
     if config then
@@ -90,6 +195,30 @@ function lia.config.forceSet(key, value, noSave)
     if not noSave then lia.config.save() end
 end
 
+--[[
+    Purpose:
+        Set a config value, fire update hooks, run server callbacks, network to clients, and persist.
+
+    When Called:
+        Through admin tools/commands or internal code updating configuration.
+
+    Parameters:
+        key (string)
+            Config key to change.
+        value (any)
+            Value to assign and broadcast.
+
+    Returns:
+        nil
+
+    Realm:
+        Shared
+
+    Example Usage:
+        ```lua
+        lia.config.set("RunSpeed", 420)
+        ```
+]]
 function lia.config.set(key, value)
     local config = lia.config.stored[key]
     if config then
@@ -110,6 +239,31 @@ function lia.config.set(key, value)
     end
 end
 
+--[[
+    Purpose:
+        Retrieve a config value with fallback to its stored default or a provided default.
+
+    When Called:
+        Anywhere configuration influences gameplay or UI logic.
+
+    Parameters:
+        key (string)
+            Config key to read.
+        default (any)
+            Optional fallback when no stored value or default exists.
+
+    Returns:
+        any
+            Stored value, default value, or supplied fallback.
+
+    Realm:
+        Shared
+
+    Example Usage:
+        ```lua
+        local walkSpeed = lia.config.get("WalkSpeed", 200)
+        ```
+]]
 function lia.config.get(key, default)
     local config = lia.config.stored[key]
     if config then
@@ -125,6 +279,28 @@ function lia.config.get(key, default)
     return default
 end
 
+--[[
+    Purpose:
+        Load config values from the database (server) or request them from the server (client).
+
+    When Called:
+        On initialization to hydrate lia.config.stored after database connectivity.
+
+    Parameters:
+        None
+
+    Returns:
+        nil
+            Server path is asynchronous; client path simply sends a request.
+
+    Realm:
+        Shared
+
+    Example Usage:
+        ```lua
+        hook.Add("DatabaseConnected", "LoadLiliaConfig", lia.config.load)
+        ```
+]]
 function lia.config.load()
     if SERVER then
         local gamemode = SCHEMA and SCHEMA.folder or engine.ActiveGamemode()
@@ -187,6 +363,30 @@ function lia.config.load()
 end
 
 if SERVER then
+    --[[
+    Purpose:
+        Collect config entries whose values differ from last synced values or their defaults.
+
+    When Called:
+        Prior to sending incremental config updates to clients.
+
+    Parameters:
+        includeDefaults (boolean|nil)
+            When true, compare against defaults instead of last synced values.
+
+    Returns:
+        table
+            key → value for configs that changed.
+
+    Realm:
+        Server
+
+    Example Usage:
+        ```lua
+        local changed = lia.config.getChangedValues()
+        if next(changed) then lia.config.send() end
+        ```
+    ]]
     function lia.config.getChangedValues(includeDefaults)
         local data = {}
         for k, v in pairs(lia.config.stored) do
@@ -211,6 +411,28 @@ if SERVER then
         return data
     end
 
+    --[[
+    Purpose:
+        Check whether any config values differ from the last synced snapshot.
+
+    When Called:
+        To determine if a resync to clients is required.
+
+    Parameters:
+        None
+
+    Returns:
+        boolean
+            True when at least one config value has changed.
+
+    Realm:
+        Server
+
+    Example Usage:
+        ```lua
+        if lia.config.hasChanges() then lia.config.send() end
+        ```
+    ]]
     function lia.config.hasChanges()
         if table.Count(lia.config._lastSyncedValues) == 0 and table.Count(lia.config.stored) > 0 then
             for key, config in pairs(lia.config.stored) do
@@ -229,6 +451,29 @@ if SERVER then
         return count > 0
     end
 
+    --[[
+    Purpose:
+        Send config values to one player (full payload) or broadcast only changed values.
+
+    When Called:
+        After config changes or when a player joins the server.
+
+    Parameters:
+        client (Player|nil)
+            Target player for full sync; nil broadcasts only changed values.
+
+    Returns:
+        nil
+
+    Realm:
+        Server
+
+    Example Usage:
+        ```lua
+        hook.Add("PlayerInitialSpawn", "SyncConfig", function(ply) lia.config.send(ply) end)
+        lia.config.send() -- broadcast diffs
+        ```
+    ]]
     function lia.config.send(client)
         local data
         if client then
@@ -302,6 +547,27 @@ if SERVER then
         end
     end
 
+    --[[
+    Purpose:
+        Persist all config values to the database.
+
+    When Called:
+        After changes, on shutdown, or during scheduled saves.
+
+    Parameters:
+        None
+
+    Returns:
+        nil
+
+    Realm:
+        Server
+
+    Example Usage:
+        ```lua
+        lia.config.save()
+        ```
+    ]]
     function lia.config.save()
         local gamemode = SCHEMA and SCHEMA.folder or engine.ActiveGamemode()
         local rows = {}
@@ -323,6 +589,27 @@ if SERVER then
         if #ops > 0 then deferred.all(ops) end
     end
 
+    --[[
+    Purpose:
+        Reset all config values to defaults, then save and sync to clients.
+
+    When Called:
+        During admin resets or troubleshooting.
+
+    Parameters:
+        None
+
+    Returns:
+        nil
+
+    Realm:
+        Server
+
+    Example Usage:
+        ```lua
+        lia.config.reset()
+        ```
+    ]]
     function lia.config.reset()
         for _, cfg in pairs(lia.config.stored) do
             local oldValue = cfg.value
@@ -1098,7 +1385,7 @@ lia.config.add("ClassDisplay", "displayClassesOnCharacters", true, nil, {
 })
 
 local function refreshScoreboard()
-    if CLIENT and IsValid(lia.gui.score) and lia.gui.score.ApplyConfig then lia.gui.score:ApplyConfig() end
+    if CLIENT and  IsValid(lia.gui.score) and lia.gui.score.ApplyConfig then lia.gui.score:ApplyConfig() end
 end
 
 lia.config.add("sbWidth", "sbWidth", 0.65, refreshScoreboard, {

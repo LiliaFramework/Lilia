@@ -22,12 +22,72 @@ local function findIndexByIdentifier(identifier)
     end
 end
 
+--[[
+    Purpose:
+        Retrieve a registered bar definition by its identifier.
+
+    When Called:
+        Before updating/removing an existing bar or inspecting its state.
+
+    Parameters:
+        identifier (string|nil)
+            Unique bar id supplied when added.
+
+    Returns:
+        table|nil
+            Stored bar data or nil if not found.
+
+    Realm:
+        Client
+
+    Example Usage:
+        ```lua
+            local staminaBar = lia.bar.get("stamina")
+            if staminaBar then
+                print("Current priority:", staminaBar.priority)
+            end
+        ```
+]]
 function lia.bar.get(identifier)
     for _, bar in ipairs(lia.bar.list) do
         if bar.identifier == identifier then return bar end
     end
 end
 
+--[[
+    Purpose:
+        Register a new dynamic bar with optional priority and identifier.
+
+    When Called:
+        Client HUD setup or when creating temporary action/status bars.
+
+    Parameters:
+        getValue (function)
+            Returns current fraction (0-1) when called.
+        color (Color|nil)
+            Bar color; random bright color if nil.
+        priority (number|nil)
+            Lower draws earlier; defaults to append order.
+        identifier (string|nil)
+            Unique id; replaces existing bar with same id.
+
+    Returns:
+        number
+            Priority used for the bar.
+
+    Realm:
+        Client
+
+    Example Usage:
+        ```lua
+            -- Add a stamina bar that fades after inactivity.
+            lia.bar.add(function()
+                local client = LocalPlayer()
+                local stamina = client:getLocalVar("stm", 100)
+                return math.Clamp(stamina / 100, 0, 1)
+            end, Color(120, 200, 80), 2, "stamina")
+        ```
+]]
 function lia.bar.add(getValue, color, priority, identifier)
     if identifier then
         local existingIdx = findIndexByIdentifier(identifier)
@@ -47,6 +107,28 @@ function lia.bar.add(getValue, color, priority, identifier)
     return priority
 end
 
+--[[
+    Purpose:
+        Remove a bar by its identifier.
+
+    When Called:
+        After a timed action completes or when disabling a HUD element.
+
+    Parameters:
+        identifier (string)
+            Unique id passed during add.
+
+    Returns:
+        nil
+
+    Realm:
+        Client
+
+    Example Usage:
+        ```lua
+            timer.Simple(5, function() lia.bar.remove("stamina") end)
+        ```
+]]
 function lia.bar.remove(identifier)
     local idx = findIndexByIdentifier(identifier)
     if idx then table.remove(lia.bar.list, idx) end
@@ -56,6 +138,37 @@ local function PaintPanel(x, y, w, h)
     lia.derma.rect(x, y, w, h):Rad(4):Color(Color(0, 0, 0, 150)):Draw()
 end
 
+--[[
+    Purpose:
+        Draw a single bar at a position with given fill and color.
+
+    When Called:
+        Internally from drawAll or for custom bars in panels.
+
+    Parameters:
+        x, y, w, h (number)
+            Position and size.
+        pos (number)
+            Current value.
+        max (number)
+            Maximum value.
+        color (Color)
+            Fill color.
+
+    Returns:
+        nil
+
+    Realm:
+        Client
+
+    Example Usage:
+        ```lua
+            -- Custom panel painting a download progress bar.
+            function PANEL:Paint(w, h)
+                lia.bar.drawBar(10, h - 24, w - 20, 16, self.progress, 1, Color(120, 180, 255))
+            end
+        ```
+]]
 function lia.bar.drawBar(x, y, w, h, pos, max, color)
     pos = math.min(pos, max)
     local usable = math.max(w - 6, 0)
@@ -64,6 +177,32 @@ function lia.bar.drawBar(x, y, w, h, pos, max, color)
     if fill > 0 then lia.derma.rect(x + 3, y + 3, fill, h - 6):Rad(3):Color(color):Draw() end
 end
 
+--[[
+    Purpose:
+        Show a centered action bar with text and timed progress.
+
+    When Called:
+        For timed actions like searching, hacking, or channeling abilities.
+
+    Parameters:
+        text (string)
+            Label to display.
+        duration (number)
+            Seconds to run before auto-removal.
+
+    Returns:
+        nil
+
+    Realm:
+        Client
+
+    Example Usage:
+        ```lua
+            hook.Add("OnStartSearch", "ShowSearchBar", function(duration)
+                lia.bar.drawAction(L("searching"), duration)
+            end)
+        ```
+]]
 function lia.bar.drawAction(text, duration)
     if IsValid(lia.gui.actionPanel) then lia.gui.actionPanel:Remove() end
     local startTime, endTime = CurTime(), CurTime() + duration
@@ -94,6 +233,28 @@ function lia.bar.drawAction(text, duration)
     lia.gui.actionPanel:SetMouseInputEnabled(false)
 end
 
+--[[
+    Purpose:
+        Render all registered bars with smoothing, lifetimes, and ordering.
+
+    When Called:
+        Each HUDPaintBackground (hooked at bottom of file).
+
+    Parameters:
+        None
+
+    Returns:
+        nil
+
+    Realm:
+        Client
+
+    Example Usage:
+        ```lua
+            -- Bars are drawn automatically via the HUDPaintBackground hook.
+            -- For custom derma panels, you could manually call lia.bar.drawAll().
+        ```
+]]
 function lia.bar.drawAll()
     if hook.Run("ShouldHideBars") then return end
     table.sort(lia.bar.list, function(a, b)

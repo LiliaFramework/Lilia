@@ -412,6 +412,107 @@ FACTION.oneCharOnly = false
 FACTION.limit = 0
 --[[
     Purpose:
+        Sets the default salary/paycheck amount for characters in this faction
+
+    When Called:
+        During faction definition
+
+    Example Usage:
+        ```lua
+        FACTION.pay = 100  -- $100 salary per paycheck
+        FACTION.pay = 0    -- No salary
+        ```
+]]
+FACTION.pay = 0
+--[[
+    Purpose:
+        Controls whether this faction appears in scoreboard categories
+
+    When Called:
+        During faction definition
+
+    Example Usage:
+        ```lua
+        FACTION.scoreboardHidden = true   -- Faction will not appear in scoreboard categories
+        FACTION.scoreboardHidden = false  -- Faction will appear in scoreboard (default)
+        ```
+]]
+FACTION.scoreboardHidden = false
+--[[
+    Purpose:
+        Overrides the main menu position for characters in this faction
+
+    When Called:
+        During faction definition (used by GM:GetMainMenuPosition)
+
+    Example Usage:
+        ```lua
+        FACTION.mainMenuPosition = Vector(0, 0, 64)
+        FACTION.mainMenuPosition = {
+            gm_construct = {
+                position = Vector(0, 0, 64),
+                angles = Angle(0, 0, 0)
+            }
+        }
+        ```
+]]
+FACTION.mainMenuPosition = nil
+--[[
+    Purpose:
+        Grants faction members implicit access to specific commands
+
+    When Called:
+        During faction definition (evaluated by lia.command.hasAccess)
+
+    Example Usage:
+        ```lua
+        FACTION.commands = {
+            lia_faction_chat = true
+        }
+        ```
+]]
+FACTION.commands = {}
+--[[
+    Purpose:
+        Marks the faction so its members are always globally recognized
+
+    When Called:
+        During faction definition (read by the recognition module)
+
+    Example Usage:
+        ```lua
+        FACTION.RecognizesGlobally = true
+        ```
+]]
+FACTION.RecognizesGlobally = false
+--[[
+    Purpose:
+        Treats the faction as globally recognizable to others
+
+    When Called:
+        During faction definition (evaluated in the recognition module)
+
+    Example Usage:
+        ```lua
+        FACTION.isGloballyRecognized = true
+        ```
+]]
+FACTION.isGloballyRecognized = false
+--[[
+    Purpose:
+        Allows members of this faction to auto-recognize each other
+
+    When Called:
+        During faction definition (part of the recognition checks)
+
+    Example Usage:
+        ```lua
+        FACTION.MemberToMemberAutoRecognition = true
+        ```
+]]
+FACTION.MemberToMemberAutoRecognition = false
+--[[
+    Purpose:
         Sets a function to generate default character names for this faction
 
     When Called:
@@ -425,7 +526,9 @@ FACTION.limit = 0
         end
         ```
 ]]
-FACTION.NameTemplate = nil
+function FACTION:NameTemplate(info, client)
+    return "Citizen-" .. math.random(1000, 9999)
+end
 --[[
     Purpose:
         Sets a method to get the default character name for this faction
@@ -440,7 +543,9 @@ FACTION.NameTemplate = nil
         end
         ```
 ]]
-FACTION.GetDefaultName = nil
+function FACTION:GetDefaultName(client)
+    return "Citizen " .. math.random(1000, 9999)
+end
 --[[
     Purpose:
         Sets a method to get the default character description for this faction
@@ -455,7 +560,9 @@ FACTION.GetDefaultName = nil
         end
         ```
 ]]
-FACTION.GetDefaultDesc = nil
+function FACTION:GetDefaultDesc(client)
+    return "A citizen of the city"
+end
 --[[
     Purpose:
         Custom callback to check if faction player limit is reached
@@ -488,7 +595,10 @@ FACTION.GetDefaultDesc = nil
         end
         ```
 ]]
-FACTION.OnCheckLimitReached = nil
+function FACTION:OnCheckLimitReached(character, client)
+    -- Custom logic for checking faction limits
+    return false -- Return true if limit is reached, false otherwise
+end
 --[[
     Purpose:
         Called when a player transfers to this faction
@@ -560,40 +670,6 @@ end
         FACTION.index = FACTION_POLICE  -- Team index for this faction
         -- FACTION.uniqueID is automatically set to the filename (e.g., "police" for police.lua)
 
-        -- Name Generation
-        function FACTION:NameTemplate(info, client)
-            local badgeNumber = math.random(1000, 9999)
-            return "Officer " .. badgeNumber
-        end
-
-        function FACTION:GetDefaultName(client)
-            return "Police Officer " .. math.random(1000, 9999)
-        end
-
-        function FACTION:GetDefaultDesc(client)
-            return "A law enforcement officer of the City Police Department"
-        end
-
-        function FACTION:OnCheckLimitReached(character, client)
-            -- Allow admins to bypass police limits
-            if client:hasFlags("L") then
-                return false
-            end
-
-            -- Check if character has police training
-            if not character:getData("police_training", false) then
-                client:notify("You need police training to join this faction.")
-                return true
-            end
-
-            -- Use default limit checking for others
-            local maxPlayers = self.limit or 0
-            if self.limit > 0 and self.limit < 1 then
-                maxPlayers = math.Round(player.GetCount() * self.limit)
-            end
-            return team.NumPlayers(self.index) >= maxPlayers
-        end
-
         -- Visual Properties
         FACTION.models = {
             male = {
@@ -641,7 +717,40 @@ end
             ["npc_rebel"]       = D_HT     -- Hated by rebels
         }
 
-        -- Callback Methods
+        -- Name Generation
+        function FACTION:NameTemplate(info, client)
+            local badgeNumber = math.random(1000, 9999)
+            return "Officer " .. badgeNumber
+        end
+
+        function FACTION:GetDefaultName(client)
+            return "Police Officer " .. math.random(1000, 9999)
+        end
+
+        function FACTION:GetDefaultDesc(client)
+            return "A law enforcement officer of the City Police Department"
+        end
+
+        function FACTION:OnCheckLimitReached(character, client)
+            -- Allow admins to bypass police limits
+            if client:hasFlags("L") then
+                return false
+            end
+
+            -- Check if character has police training
+            if not character:getData("police_training", false) then
+                client:notify("You need police training to join this faction.")
+                return true
+            end
+
+            -- Use default limit checking for others
+            local maxPlayers = self.limit or 0
+            if self.limit > 0 and self.limit < 1 then
+                maxPlayers = math.Round(player.GetCount() * self.limit)
+            end
+            return team.NumPlayers(self.index) >= maxPlayers
+        end
+
         function FACTION:OnTransferred(client)
             client:notify("Welcome to the City Police Department!")
 

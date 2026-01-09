@@ -46,6 +46,34 @@ lia.doors.defaultValues = {
 }
 
 if SERVER then
+--[[
+    Purpose:
+        Store door data overrides in memory and sync to clients, omitting defaults.
+
+    When Called:
+        After editing door settings (price, access, flags) server-side.
+
+    Parameters:
+        door (Entity)
+            Door entity.
+        data (table)
+            Door data overrides.
+
+    Returns:
+        nil
+
+    Realm:
+        Server
+
+    Example Usage:
+        ```lua
+        lia.doors.setCachedData(door, {
+            name = "Police HQ",
+            price = 0,
+            factions = {FACTION_POLICE}
+        })
+        ```
+]]
     function lia.doors.setCachedData(door, data)
         local doorID = door:MapCreationID()
         if not doorID or doorID <= 0 then return end
@@ -75,6 +103,29 @@ if SERVER then
         lia.doors.syncDoorData(door)
     end
 
+--[[
+    Purpose:
+        Retrieve cached door data merged with defaults.
+
+    When Called:
+        Before saving/loading or when building UI state for a door.
+
+    Parameters:
+        door (Entity)
+
+    Returns:
+        table
+            Complete door data with defaults filled.
+
+    Realm:
+        Server
+
+    Example Usage:
+        ```lua
+        local data = lia.doors.getCachedData(door)
+        print("Door price:", data.price)
+        ```
+]]
     function lia.doors.getCachedData(door)
         local doorID = door:MapCreationID()
         if not doorID or doorID <= 0 then return {} end
@@ -94,6 +145,27 @@ if SERVER then
         return fullData
     end
 
+--[[
+    Purpose:
+        Net-sync a single door's cached data to all clients.
+
+    When Called:
+        After updating a door's data.
+
+    Parameters:
+        door (Entity)
+
+    Returns:
+        nil
+
+    Realm:
+        Server
+
+    Example Usage:
+        ```lua
+        lia.doors.syncDoorData(door)
+        ```
+]]
     function lia.doors.syncDoorData(door)
         local doorID = door:MapCreationID()
         if not doorID or doorID <= 0 then return end
@@ -110,6 +182,29 @@ if SERVER then
         net.Broadcast()
     end
 
+--[[
+    Purpose:
+        Bulk-sync all cached doors to a single client.
+
+    When Called:
+        On player spawn/join or after admin refresh.
+
+    Parameters:
+        client (Player)
+
+    Returns:
+        nil
+
+    Realm:
+        Server
+
+    Example Usage:
+        ```lua
+        hook.Add("PlayerInitialSpawn", "SyncDoorsOnJoin", function(ply)
+            lia.doors.syncAllDoorsToClient(ply)
+        end)
+        ```
+]]
     function lia.doors.syncAllDoorsToClient(client)
         if not IsValid(client) then return end
         net.Start("liaDoorDataBulk")
@@ -122,10 +217,56 @@ if SERVER then
         net.Send(client)
     end
 
+--[[
+    Purpose:
+        Set data for a door (alias to setCachedData).
+
+    When Called:
+        Convenience wrapper used by other systems.
+
+    Parameters:
+        door (Entity)
+        data (table)
+
+    Returns:
+        nil
+
+    Realm:
+        Server
+    Example Usage:
+        ```lua
+        lia.doors.setData(door, {locked = true})
+        ```
+]]
     function lia.doors.setData(door, data)
         lia.doors.setCachedData(door, data)
     end
 
+--[[
+    Purpose:
+        Register a preset of door data for a specific map.
+
+    When Called:
+        During map setup to predefine door ownership/prices.
+
+    Parameters:
+        mapName (string)
+        presetData (table)
+
+    Returns:
+        nil
+
+    Realm:
+        Server
+
+    Example Usage:
+        ```lua
+        lia.doors.addPreset("rp_downtown", {
+            [1234] = {name = "Bank", price = 0, factions = {FACTION_POLICE}},
+            [5678] = {locked = true, hidden = true}
+        })
+        ```
+]]
     function lia.doors.addPreset(mapName, presetData)
         if not mapName or not presetData then
             error("lia.doors.addPreset: Missing required parameters (mapName, presetData)")
@@ -136,10 +277,53 @@ if SERVER then
         lia.information(L("addedDoorPresetForMap") .. ": " .. mapName)
     end
 
+--[[
+    Purpose:
+        Retrieve a door preset table for a map.
+
+    When Called:
+        During map load or admin inspection of presets.
+
+    Parameters:
+        mapName (string)
+
+    Returns:
+        table|nil
+
+    Realm:
+        Server
+
+    Example Usage:
+        ```lua
+        local preset = lia.doors.getPreset(game.GetMap())
+        if preset then PrintTable(preset) end
+        ```
+]]
     function lia.doors.getPreset(mapName)
         return lia.doors.presets[mapName]
     end
 
+--[[
+    Purpose:
+        Validate the doors database schema against expected columns.
+
+    When Called:
+        On startup or after migrations to detect missing/mismatched columns.
+
+    Parameters:
+        None
+
+    Returns:
+        nil
+
+    Realm:
+        Server
+
+    Example Usage:
+        ```lua
+        hook.Add("DatabaseConnected", "VerifyDoorSchema", lia.doors.verifyDatabaseSchema)
+        ```
+]]
     function lia.doors.verifyDatabaseSchema()
         lia.db.query("PRAGMA table_info(lia_doors)"):next(function(res)
             if not res or not res.results then
@@ -176,6 +360,30 @@ if SERVER then
         end):catch(function(err) lia.error(L("failedToVerifyDatabaseSchema") .. " " .. tostring(err)) end)
     end
 
+--[[
+    Purpose:
+        Detect and repair corrupted faction/class door data in the database.
+
+    When Called:
+        Maintenance task to clean malformed data entries.
+
+    Parameters:
+        None
+
+    Returns:
+        nil
+
+    Realm:
+        Server
+
+    Example Usage:
+        ```lua
+        concommand.Add("lia_fix_doors", function(admin)
+            if not IsValid(admin) or not admin:IsAdmin() then return end
+            lia.doors.cleanupCorruptedData()
+        end)
+        ```
+]]
     function lia.doors.cleanupCorruptedData()
         local gamemode = SCHEMA and SCHEMA.folder or engine.ActiveGamemode()
         local map = lia.data.getEquivalencyMap(game.GetMap())
@@ -215,6 +423,30 @@ if SERVER then
     end
 end
 
+--[[
+    Purpose:
+        Access cached door data (server/client wrapper).
+
+    When Called:
+        Anywhere door data is needed without hitting DB.
+
+    Parameters:
+        door (Entity)
+
+    Returns:
+        table
+
+    Realm:
+        Shared
+
+    Example Usage:
+        ```lua
+        local data = lia.doors.getData(ent)
+        if data.locked then
+            -- show locked icon
+        end
+        ```
+]]
 function lia.doors.getData(door)
     if SERVER then
         return lia.doors.getCachedData(door)
@@ -225,6 +457,28 @@ end
 
 if CLIENT then
     lia.doors.stored = lia.doors.stored or {}
+--[[
+    Purpose:
+        Client helper to build full door data from cached entries.
+
+    When Called:
+        For HUD/tooltips when interacting with doors.
+
+    Parameters:
+        door (Entity)
+
+    Returns:
+        table
+
+    Realm:
+        Client
+
+    Example Usage:
+        ```lua
+        local info = lia.doors.getCachedData(door)
+        draw.SimpleText(info.name or "Door", "LiliaFont.18", x, y, color_white)
+        ```
+]]
     function lia.doors.getCachedData(door)
         local doorID = door:MapCreationID()
         if not doorID or doorID <= 0 then return {} end
@@ -244,6 +498,29 @@ if CLIENT then
         return fullData
     end
 
+--[[
+    Purpose:
+        Update the client-side cache for a door ID (or clear it).
+
+    When Called:
+        After receiving sync updates from the server.
+
+    Parameters:
+        doorID (number)
+        data (table|nil)
+            nil clears the cache entry.
+
+    Returns:
+        nil
+
+    Realm:
+        Client
+
+    Example Usage:
+        ```lua
+        lia.doors.updateCachedData(doorID, net.ReadTable())
+        ```
+]]
     function lia.doors.updateCachedData(doorID, data)
         if data then
             lia.doors.stored[doorID] = data

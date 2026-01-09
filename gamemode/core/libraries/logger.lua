@@ -253,6 +253,34 @@ for category, logTypes in pairs(logTypeData) do
     end
 end
 
+--[[
+    Purpose:
+        Register a new log type with formatter and category.
+
+    When Called:
+        During init to add custom audit events (e.g., quests, crafting).
+
+    Parameters:
+        logType (string)
+            Unique log key.
+        func (function)
+            Formatter function (client, ... ) -> string.
+        category (string)
+            Category label used in console output and DB.
+
+    Returns:
+        nil
+
+    Realm:
+        Shared
+
+    Example Usage:
+        ```lua
+            lia.log.addType("questComplete", function(client, questID, reward)
+                return L("logQuestComplete", client:Name(), questID, reward)
+            end, L("quests"))
+        ```
+]]
 function lia.log.addType(logType, func, category)
     lia.log.types[logType] = {
         func = func,
@@ -260,6 +288,32 @@ function lia.log.addType(logType, func, category)
     }
 end
 
+--[[
+    Purpose:
+        Build a formatted log string and return its category.
+
+    When Called:
+        Internally by lia.log.add before printing/persisting logs.
+
+    Parameters:
+        client (Player|nil)
+        logType (string)
+        ... (vararg)
+            Arguments passed to formatter.
+
+    Returns:
+        string|nil, string|nil
+            logString, category
+
+    Realm:
+        Shared
+
+    Example Usage:
+        ```lua
+            local text, category = lia.log.getString(ply, "playerDeath", attackerName)
+            if text then print(category, text) end
+        ```
+]]
 function lia.log.getString(client, logType, ...)
     local logData = lia.log.types[logType]
     if not logData then return end
@@ -269,6 +323,31 @@ function lia.log.getString(client, logType, ...)
     end
 end
 
+--[[
+    Purpose:
+        Create and store a log entry (console + database) using a logType.
+
+    When Called:
+        Anywhere you need to audit player/admin/system actions.
+
+    Parameters:
+        client (Player|nil)
+        logType (string)
+        ... (vararg)
+            Formatter args for the log type.
+
+    Returns:
+        nil
+
+    Realm:
+        Shared
+
+    Example Usage:
+        ```lua
+            lia.log.add(client, "itemTake", itemName)
+            lia.log.add(nil, "frameworkOutdated") -- system log without player
+        ```
+]]
 function lia.log.add(client, logType, ...)
     local logString, category = lia.log.getString(client, logType, ...)
     if not isstring(category) then category = L("uncategorized") end

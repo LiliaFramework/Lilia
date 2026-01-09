@@ -99,6 +99,22 @@ CLASS.name = ""
 CLASS.desc = ""
 --[[
     Purpose:
+        Provides human-readable requirements or notes displayed in character screens
+
+    When Called:
+        During class definition
+
+    Example Usage:
+        ```lua
+        CLASS.requirements = {
+            "req_police_clearance",
+            "req_training_complete"
+        }
+        ```
+]]
+CLASS.requirements = nil
+--[[
+    Purpose:
         Sets the faction ID this class belongs to
 
     When Called:
@@ -110,6 +126,20 @@ CLASS.desc = ""
         ```
 ]]
 CLASS.faction = 0
+--[[
+    Purpose:
+        Groups related classes together for door access, allowing multiple classes to share permissions
+
+    When Called:
+        During class definition
+
+    Example Usage:
+        ```lua
+        CLASS.team = "law"
+        CLASS.team = "medical"
+        ```
+]]
+CLASS.team = nil
 --[[
     Purpose:
         Sets the maximum number of players allowed in this class
@@ -126,6 +156,22 @@ CLASS.faction = 0
 CLASS.limit = 0
 --[[
     Purpose:
+        Grants class members access to specific console/lia commands
+
+    When Called:
+        During class definition
+
+    Example Usage:
+        ```lua
+        CLASS.commands = {
+            kick = true,
+            give = true
+        }
+        ```
+]]
+CLASS.commands = {}
+--[[
+    Purpose:
         Sets the player model for this class
 
     When Called:
@@ -135,8 +181,67 @@ CLASS.limit = 0
         ```lua
         CLASS.model = "models/player/barney.mdl"
         ```
+    Notes:
+        You can also supply a table (`male`, `female`, or a flat list) to present alternative models.
 ]]
 CLASS.model = ""
+--[[
+    Purpose:
+        Supplies a custom emblem for UI components (scoreboard tabs, F1 menu, etc.)
+
+    When Called:
+        During class definition
+
+    Example Usage:
+        ```lua
+        CLASS.logo = "materials/ui/class/police_logo.png"
+        ```
+]]
+CLASS.logo = ""
+--[[
+    Purpose:
+        Sets the default skin index used by UI previews
+
+    When Called:
+        During class definition
+
+    Example Usage:
+        ```lua
+        CLASS.skin = 1
+        ```
+]]
+CLASS.skin = 0
+--[[
+    Purpose:
+        Defines bodygroup overrides used by UI previews and optional loadouts
+
+    When Called:
+        During class definition
+
+    Example Usage:
+        ```lua
+        CLASS.bodyGroups = {
+            {id = 2, value = 1}
+        }
+        ```
+]]
+CLASS.bodyGroups = {}
+--[[
+    Purpose:
+        Overrides sub-material entries used by preview panels
+
+    When Called:
+        During class definition
+
+    Example Usage:
+        ```lua
+        CLASS.subMaterials = {
+            "models/player/police_submaterial",
+            "models/player/police_submaterial2"
+        }
+        ```
+]]
+CLASS.subMaterials = {}
 --[[
     Purpose:
         Sets whether this class requires whitelist access
@@ -165,6 +270,32 @@ CLASS.isWhitelisted = false
         ```
 ]]
 CLASS.isDefault = false
+--[[
+    Purpose:
+        Allows this class to invite players into the faction using the interaction menu
+
+    When Called:
+        During class definition
+
+    Example Usage:
+        ```lua
+        CLASS.canInviteToFaction = true
+        ```
+]]
+CLASS.canInviteToFaction = false
+--[[
+    Purpose:
+        Allows this class to invite players into the same class using the interaction menu
+
+    When Called:
+        During class definition
+
+    Example Usage:
+        ```lua
+        CLASS.canInviteToClass = true
+        ```
+]]
+CLASS.canInviteToClass = false
 --[[
     Purpose:
         Hides this class from the scoreboard display
@@ -239,6 +370,19 @@ CLASS.index = FACTION_EXAMPLE
         ```
 ]]
 CLASS.Color = Color(255, 255, 255)
+--[[
+    Purpose:
+        Sets the accent color used by scoreboard entries and class info panels
+
+    When Called:
+        During class definition
+
+    Example Usage:
+        ```lua
+        CLASS.color = Color(0, 120, 255)  -- UI accent color
+        ```
+]]
+CLASS.color = Color(255, 255, 255)
 --[[
     Purpose:
         Sets the maximum health for players in this class

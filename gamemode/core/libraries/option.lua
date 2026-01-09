@@ -13,6 +13,46 @@
 ]]
 lia.option = lia.option or {}
 lia.option.stored = lia.option.stored or {}
+--[[
+    Purpose:
+        Register a configurable option with defaults, callbacks, and metadata.
+
+    When Called:
+        During initialization to expose settings to the config UI/system.
+
+    Parameters:
+        key (string)
+            Option identifier to resolve choices for.
+        name (string)
+            Display name or localization key.
+        desc (string)
+            Description or localization key.
+        default (any)
+            Default value; determines inferred type.
+        callback (function|nil)
+            function(old, new) invoked on change.
+        data (table)
+            Extra fields: category, min/max, options, visible, shouldNetwork, isQuick, type, etc.
+
+    Returns:
+        nil
+
+    Realm:
+        Shared
+
+    Example Usage:
+        ```lua
+        lia.option.add("hudScale", "HUD Scale", "Scale HUD elements", 1.0, function(old, new)
+            hook.Run("HUDScaleChanged", old, new)
+        end, {
+            category = "categoryInterface",
+            min = 0.5,
+            max = 1.5,
+            decimals = 2,
+            isQuick = true
+        })
+        ```
+]]
 function lia.option.add(key, name, desc, default, callback, data)
     assert(isstring(key), L("optionKeyString", type(key)))
     assert(isstring(name), L("optionNameString", type(name)))
@@ -53,6 +93,29 @@ function lia.option.add(key, name, desc, default, callback, data)
     hook.Run("OptionAdded", key, lia.option.stored[key])
 end
 
+--[[
+    Purpose:
+        Resolve option choices (static or generated) for dropdowns.
+
+    When Called:
+        By the config UI before rendering a Table option.
+
+    Parameters:
+        key (string)
+
+    Returns:
+        table
+            Array/map of options.
+
+    Realm:
+        Shared
+
+    Example Usage:
+        ```lua
+        local list = lia.option.getOptions("weaponSelectorPosition")
+        for _, opt in pairs(list) do print("Choice:", opt) end
+        ```
+]]
 function lia.option.getOptions(key)
     local option = lia.option.stored[key]
     if not option then return {} end
@@ -72,6 +135,28 @@ function lia.option.getOptions(key)
     return {}
 end
 
+--[[
+    Purpose:
+        Set an option value, run callbacks/hooks, persist and optionally network it.
+
+    When Called:
+        From UI interactions or programmatic changes.
+
+    Parameters:
+        key (string)
+        value (any)
+
+    Returns:
+        nil
+
+    Realm:
+        Shared
+
+    Example Usage:
+        ```lua
+        lia.option.set("BarsAlwaysVisible", true)
+        ```
+]]
 function lia.option.set(key, value)
     local opt = lia.option.stored[key]
     if not opt then return end
@@ -83,6 +168,28 @@ function lia.option.set(key, value)
     if opt.shouldNetwork and SERVER then hook.Run("OptionReceived", nil, key, value) end
 end
 
+--[[
+    Purpose:
+        Retrieve an option value with fallback to default or provided default.
+
+    When Called:
+        Anywhere an option influences behavior or UI.
+
+    Parameters:
+        key (string)
+        default (any)
+
+    Returns:
+        any
+
+    Realm:
+        Shared
+
+    Example Usage:
+        ```lua
+        local showTime = lia.option.get("ChatShowTime", false)
+        ```
+]]
 function lia.option.get(key, default)
     local opt = lia.option.stored[key]
     if opt then
@@ -92,6 +199,27 @@ function lia.option.get(key, default)
     return default
 end
 
+--[[
+    Purpose:
+        Persist option values to disk (data/lilia/options.json).
+
+    When Called:
+        After option changes; auto-called by lia.option.set.
+
+    Parameters:
+        None
+
+    Returns:
+        nil
+
+    Realm:
+        Shared
+
+    Example Usage:
+        ```lua
+        lia.option.save()
+        ```
+]]
 function lia.option.save()
     local path = "lilia/options.json"
     local out = {}
@@ -103,6 +231,27 @@ function lia.option.save()
     if json then file.Write(path, json) end
 end
 
+--[[
+    Purpose:
+        Load option values from disk or initialize defaults when missing.
+
+    When Called:
+        On client init or config menu load.
+
+    Parameters:
+        None
+
+    Returns:
+        nil
+
+    Realm:
+        Shared
+
+    Example Usage:
+        ```lua
+        hook.Add("Initialize", "LoadLiliaOptions", lia.option.load)
+        ```
+]]
 function lia.option.load()
     local path = "lilia/options.json"
     local data = file.Read(path, "DATA")

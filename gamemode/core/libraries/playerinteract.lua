@@ -19,12 +19,76 @@ lia.playerinteract.stored = lia.playerinteract.stored or {}
 lia.playerinteract.categories = lia.playerinteract.categories or {}
 lia.playerinteract._lastSyncInteractionCount = lia.playerinteract._lastSyncInteractionCount or 0
 lia.playerinteract._lastSyncCategoryCount = lia.playerinteract._lastSyncCategoryCount or 0
+--[[
+    Purpose:
+        Check if a client is within a usable range of an entity.
+
+    When Called:
+        Before running interaction logic or building interaction menus.
+
+    Parameters:
+        client (Player)
+            The player attempting the interaction.
+        entity (Entity)
+            Target entity to test.
+        customRange (number|nil)
+            Optional override distance in Hammer units (default 100).
+
+    Returns:
+        boolean
+            true if both are valid and distance is within range.
+
+    Realm:
+        Shared
+
+    Example Usage:
+        ```lua
+            -- Validate a timed hack action before starting the progress bar.
+            local function tryHackDoor(client, door)
+                if not lia.playerinteract.isWithinRange(client, door, 96) then
+                    client:notifyLocalized("tooFar")
+                    return
+                end
+                client:setAction("@hackingDoor", 5, function()
+                    if IsValid(door) then door:Fire("Unlock") end
+                end)
+            end
+        ```
+]]
 function lia.playerinteract.isWithinRange(client, entity, customRange)
     if not IsValid(client) or not IsValid(entity) then return false end
     local range = customRange or 100
     return entity:GetPos():DistToSqr(client:GetPos()) < range * range
 end
 
+--[[
+    Purpose:
+        Collect interaction options for the entity the player is aiming at.
+
+    When Called:
+        When opening the interaction menu (TAB keybind) to populate entries.
+
+    Parameters:
+        client (Player|nil)
+            Player to use for trace; defaults to LocalPlayer on client.
+
+    Returns:
+        table
+            Map of interaction name → data filtered for the target.
+
+    Realm:
+        Shared
+
+    Example Usage:
+        ```lua
+            -- Server: send only valid interactions for the traced entity.
+            net.Receive("liaRequestInteractOptions", function(_, ply)
+                local interactions = lia.playerinteract.getInteractions(ply)
+                local categorized = lia.playerinteract.getCategorizedOptions(interactions)
+                lia.net.writeBigTable(ply, "liaInteractionOptions", categorized)
+            end)
+        ```
+]]
 function lia.playerinteract.getInteractions(client)
     client = client or LocalPlayer()
     local ent = client:getTracedEntity(100)
@@ -41,6 +105,35 @@ function lia.playerinteract.getInteractions(client)
     return interactions
 end
 
+--[[
+    Purpose:
+        Gather personal actions that do not require a target entity.
+
+    When Called:
+        When opening the personal actions menu (G keybind).
+
+    Parameters:
+        client (Player|nil)
+            Player to evaluate; defaults to LocalPlayer on client.
+
+    Returns:
+        table
+            Map of action name → data available for this player.
+
+    Realm:
+        Shared
+
+    Example Usage:
+        ```lua
+            -- Filter actions for a character sheet panel.
+            local actions = lia.playerinteract.getActions(ply)
+            for name, data in pairs(actions) do
+                if name:find("changeTo") then
+                    -- add a voice toggle button
+                end
+            end
+        ```
+]]
 function lia.playerinteract.getActions(client)
     client = client or LocalPlayer()
     if not IsValid(client) or not client:getChar() then return {} end
@@ -51,6 +144,32 @@ function lia.playerinteract.getActions(client)
     return actions
 end
 
+--[[
+    Purpose:
+        Transform option map into a categorized, ordered list for UI display.
+
+    When Called:
+        Before rendering interaction/action menus that use category headers.
+
+    Parameters:
+        options (table)
+            Map of name → option entry (expects `opt.category`).
+
+    Returns:
+        table
+            Array containing category rows followed by option entries.
+
+    Realm:
+        Shared
+
+    Example Usage:
+        ```lua
+            -- Build an options array with headers for a custom menu.
+            local options = lia.playerinteract.getCategorizedOptions(interactions)
+            local panel = vgui.Create("liaOptionsPanel")
+            panel:Populate(options)
+        ```
+]]
 function lia.playerinteract.getCategorizedOptions(options)
     local categorized = {}
     local categories = {}
@@ -89,6 +208,44 @@ function lia.playerinteract.getCategorizedOptions(options)
 end
 
 if SERVER then
+--[[
+    Purpose:
+        Register a targeted interaction and ensure timed actions wrap onRun.
+
+    When Called:
+        Server startup or dynamically when new context interactions are added.
+
+    Parameters:
+        name (string)
+            Unique interaction key.
+        data (table)
+            Fields: `onRun`, `shouldShow`, `range`, `target`, `category`,
+            `timeToComplete`, `actionText`, `targetActionText`, etc.
+
+    Returns:
+        nil
+
+    Realm:
+        Server
+
+    Example Usage:
+        ```lua
+            lia.playerinteract.addInteraction("zipTie", {
+                target = "player",
+                range = 96,
+                category = "categoryRestraint",
+                timeToComplete = 4,
+                actionText = "@tying",
+                targetActionText = "@beingTied",
+                shouldShow = function(client, target)
+                    return target:IsPlayer() and not target:getNetVar("ziptied")
+                end,
+                onRun = function(client, target)
+                    target:setNetVar("ziptied", true)
+                end
+            })
+        ```
+]]
     function lia.playerinteract.addInteraction(name, data)
         data.type = "interaction"
         data.range = data.range or 100
@@ -116,6 +273,37 @@ if SERVER then
         end
     end
 
+--[[
+    Purpose:
+        Register a self-action (no target) and auto-wrap timed executions.
+
+    When Called:
+        Server startup or dynamically to add personal actions/emotes.
+
+    Parameters:
+        name (string)
+            Unique action key.
+        data (table)
+            Fields similar to interactions but no target differentiation.
+
+    Returns:
+        nil
+
+    Realm:
+        Server
+
+    Example Usage:
+        ```lua
+            lia.playerinteract.addAction("wave", {
+                category = "categoryEmotes",
+                timeToComplete = 1,
+                actionText = "@gesturing",
+                onRun = function(client)
+                    client:DoAnimation(ACT_GMOD_GESTURE_WAVE)
+                end
+            })
+        ```
+]]
     function lia.playerinteract.addAction(name, data)
         data.type = "action"
         data.range = data.range or 100
@@ -142,6 +330,30 @@ if SERVER then
         end
     end
 
+--[[
+    Purpose:
+        Push registered interactions/actions and categories to clients.
+
+    When Called:
+        After definitions change or when a player joins to keep menus current.
+
+    Parameters:
+        client (Player|nil)
+            Send to one player if provided; otherwise broadcast in batches.
+
+    Returns:
+        nil
+
+    Realm:
+        Server
+
+    Example Usage:
+        ```lua
+            if lia.playerinteract.hasChanges() then
+                lia.playerinteract.sync() -- broadcast updates
+            end
+        ```
+]]
     function lia.playerinteract.sync(client)
         local filteredData = {}
         for name, data in pairs(lia.playerinteract.stored) do
@@ -187,6 +399,30 @@ if SERVER then
         end
     end
 
+--[[
+    Purpose:
+        Determine if interaction/action definitions changed since last sync.
+
+    When Called:
+        Prior to syncing to avoid unnecessary network traffic.
+
+    Parameters:
+        None
+
+    Returns:
+        boolean
+            true when counts differ from the last broadcast.
+
+    Realm:
+        Server
+
+    Example Usage:
+        ```lua
+            if lia.playerinteract.hasChanges() then
+                lia.playerinteract.sync()
+            end
+        ```
+]]
     function lia.playerinteract.hasChanges()
         local currentInteractionCount = table.Count(lia.playerinteract.stored)
         local currentCategoryCount = table.Count(lia.playerinteract.categories)
@@ -268,6 +504,43 @@ if SERVER then
         serverOnly = true
     })
 else
+--[[
+    Purpose:
+        Open the interaction or personal action menu on the client.
+
+    When Called:
+        After receiving options from the server or when keybind handlers fire.
+
+    Parameters:
+        options (table)
+            Array of option entries plus category rows.
+        isInteraction (boolean)
+            true for interaction mode; false for personal actions.
+        titleText (string|nil)
+            Optional menu title override.
+        closeKey (number|nil)
+            Optional key code to close the menu.
+        netMsg (string|nil)
+            Net message name to send selections with.
+        preFiltered (boolean|nil)
+            If true, options are already filtered for target/range visibility.
+
+    Returns:
+        Panel|nil
+            The created menu panel.
+
+    Realm:
+        Client
+
+    Example Usage:
+        ```lua
+            net.Receive("liaSendInteractOptions", function()
+                local data = lia.net.readBigTable()
+                local categorized = lia.playerinteract.getCategorizedOptions(data)
+                lia.playerinteract.openMenu(categorized, true, L("interactionMenu"))
+            end)
+        ```
+]]
     function lia.playerinteract.openMenu(options, isInteraction, titleText, closeKey, netMsg, preFiltered)
         local client = LocalPlayer()
         if not IsValid(client) then return end

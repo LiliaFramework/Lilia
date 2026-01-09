@@ -32,7 +32,7 @@
 ]]
 --[[
     Overview:
-    This file contains detailed documentation for every panel in the Lilia framework. Each panel entry includes its purpose, explanation, usage scenarios, and available methods. This serves as a complete reference for developers working with Lilia's UI system, providing comprehensive information about panel functionality and parameters. The panels are organized into logical categories including character panels, attribute panels, basic UI panels, input/form panels, layout/container panels, specialized panels, inventory panels, and vendor panels. Each category groups related functionality together for easier navigation and understanding. Note: All panels documented below are actually implemented in the Lilia framework. A total of 60+ panels are available for use in UI development.
+    This file contains detailed documentation for every panel in the Lilia framework. Each panel entry includes its purpose, explanation, usage scenarios, and available methods. This serves as a complete reference for developers working with Lilia's UI system, providing comprehensive information about panel functionality and parameters. The panels are organized into logical categories including character panels, attribute panels, basic UI panels, input/form panels, layout/container panels, specialized panels, inventory panels, and vendor panels. Each category groups related functionality together for easier navigation and understanding. Note: All panels documented below are actually implemented in the Lilia framework. A total of 71 panels are available for use in UI development.
 ]]
 --[[
     Purpose:
@@ -92,34 +92,74 @@ liaCharacterCreation
 liaCharacterCreateStep
 --[[
     Purpose:
-        Displays attribute progress bar
-        A progress bar specifically designed for displaying attribute values
+        Styled button with Lilia theming and effects
+        A custom button panel with Lilia's visual styling, hover animations, ripple effects, and sound feedback
     When Used:
-        In character creation, attribute display, or skill interfaces
-]]
-liaAttribBar
---[[
-    Purpose:
-        Character attributes management panel
-        A panel for managing and displaying character attributes
-    When Used:
-        In character creation, attribute allocation, or character info screens
-]]
-liaCharacterAttribs
---[[
-    Purpose:
-        Styled button with Lilia theming
-        A custom button panel with Lilia's visual styling and effects
-    When Used:
-        Throughout the UI for interactive elements
+        Throughout the UI for interactive elements requiring prominent clickable areas
 ]]
 liaButton
 --[[
     Purpose:
-        Category header for organizing UI elements
-        A collapsible category header for grouping related UI elements
+        Large styled button with Lilia theming
+        A large button variant with Lilia's visual styling and effects
     When Used:
-        In settings panels, option menus, or any organized interface
+        For prominent UI elements requiring larger clickable areas
+]]
+liaBigButton
+--[[
+    Purpose:
+        Custom font styled button
+        A button variant that allows custom font specification
+    When Used:
+        When specific font styling is needed for buttons
+]]
+liaCustomFontButton
+--[[
+    Purpose:
+        Huge styled button with Lilia theming
+        The largest button variant with Lilia's visual styling and effects
+    When Used:
+        For very prominent UI elements or main actions
+]]
+liaHugeButton
+--[[
+    Purpose:
+        Lock circle progress indicator
+        A circular progress indicator with lock/unlock visual feedback
+    When Used:
+        For displaying lockpicking progress, loading states, or timed actions
+]]
+liaLockCircle
+--[[
+    Purpose:
+        Medium styled button with Lilia theming
+        A medium-sized button variant with Lilia's visual styling and effects
+    When Used:
+        For standard UI buttons that need moderate prominence
+]]
+liaMediumButton
+--[[
+    Purpose:
+        Miniature styled button with Lilia theming
+        A small button variant with Lilia's visual styling and effects
+    When Used:
+        For compact UI elements or secondary actions
+]]
+liaMiniButton
+--[[
+    Purpose:
+        No background styled button
+        A button variant without background styling for transparent effects
+    When Used:
+        When button text/icons need to appear without background panels
+]]
+liaNoBGButton
+--[[
+    Purpose:
+        Collapsible category header with Lilia styling
+        A styled category header that can expand/collapse to show/hide grouped content with smooth animations
+    When Used:
+        In settings panels, configuration menus, inventory categories, or any interface requiring organized content sections
 ]]
 liaCategory
 --[[
@@ -172,18 +212,18 @@ liaMenu
 liaClasses
 --[[
     Purpose:
-        Dropdown combo box
-        A dropdown selection box with custom styling
+        Styled dropdown selection box
+        A customizable dropdown combo box with Lilia theming, smooth animations, and enhanced selection interface
     When Used:
-        For selecting from multiple options
+        For character class/job selection, faction selection, or any multi-option choice requiring dropdown interface
 ]]
 liaComboBox
 --[[
     Purpose:
-        Custom context menu
-        A styled context menu for right-click actions
+        Enhanced context menu with Lilia styling
+        A fully customizable context menu with Lilia theming, icons, submenus, and smooth animations for right-click interactions
     When Used:
-        For context menus, right-click menus, or popup menus
+        For entity interaction menus, admin tools, inventory actions, or any context-sensitive popup menu
 ]]
 liaDermaMenu
 --[[
@@ -228,10 +268,10 @@ liaDoorMenu
 liaProgressBar
 --[[
     Purpose:
-        Text input entry field
-        A styled text input field with custom theming
+        Styled text input field with validation
+        A customizable text entry field with Lilia theming, placeholder text, character limits, and input validation
     When Used:
-        For text input, forms, or data entry
+        For character names, descriptions, search fields, or any text input requiring enhanced styling and validation
 ]]
 liaEntry
 --[[
@@ -300,18 +340,18 @@ liaTabButton
 liaLoadingFailure
 --[[
     Purpose:
-        3D model display panel
-        A panel for displaying 3D models with camera controls
+        Interactive 3D model viewer with controls
+        A 3D model display panel with mouse controls, zoom, rotation, and lighting for comprehensive model inspection
     When Used:
-        For model previews, character display, or 3D content
+        For character model previews, item model displays, weapon showcases, or any 3D content visualization
 ]]
 liaModelPanel
 --[[
     Purpose:
-        Facing model panel for character display
-        A specialized model panel that faces the camera
+        Portrait-style facing model display
+        A specialized model panel that automatically rotates models to face the camera for consistent portrait views
     When Used:
-        For character portraits or facing displays
+        For character selection screens, profile displays, or any interface requiring standardized model presentation
 ]]
 liaFacingModelPanel
 --[[
@@ -330,6 +370,14 @@ liaNotice
         For managing multiple notifications
 ]]
 liaNoticePanel
+--[[
+    Purpose:
+        Painted notification display
+        A custom notification panel with colored labels and styled text display
+    When Used:
+        For displaying server messages, system notifications, or custom alerts with colored labels
+]]
+liaPaintedNotification
 --[[
     Purpose:
         Blurred frame background
@@ -420,6 +468,14 @@ liaSlideBox
 liaSlider
 --[[
     Purpose:
+        Small styled button with Lilia theming
+        A small button variant with Lilia's visual styling and effects
+    When Used:
+        For compact UI elements or secondary actions requiring standard styling
+]]
+liaSmallButton
+--[[
+    Purpose:
         Spawn icon display
         A panel for displaying spawn icons with tooltips
     When Used:
@@ -428,18 +484,18 @@ liaSlider
 liaSpawnIcon
 --[[
     Purpose:
-        Data table display
-        A panel for displaying tabular data
+        Interactive data table with sorting and filtering
+        A fully featured data table with column sorting, row selection, custom cell rendering, and Lilia theming
     When Used:
-        For data tables, lists, or structured information
+        For displaying structured data like player lists, item catalogs, server statistics, or admin management interfaces
 ]]
 liaTable
 --[[
     Purpose:
-        Tab navigation container
-        A container that manages tab navigation
+        Tabbed interface container with smooth transitions
+        A container that manages multiple tabbed panels with smooth animations, custom styling, and organized content navigation
     When Used:
-        For tabbed interfaces or navigation
+        For multi-section interfaces like character creation steps, settings panels, or complex UI with multiple views
 ]]
 liaTabs
 --[[
@@ -476,73 +532,73 @@ liaVoicePanel
 liaMarkupPanel
 --[[
     Purpose:
-        Grid inventory item
-        A single item in a grid-based inventory
+        Interactive grid inventory item with drag-and-drop
+        A single item slot in a grid inventory with drag-and-drop functionality, tooltips, and visual feedback
     When Used:
-        In grid inventory displays
+        As individual cells in grid-based inventory systems for item management and interaction
 ]]
 liaGridInvItem
 --[[
     Purpose:
-        Grid inventory panel
-        A panel displaying inventory in grid format
+        Grid-based inventory display with pagination
+        A scrollable grid panel for displaying items in organized rows and columns with pagination support
     When Used:
-        For grid-based inventory systems
+        For comprehensive inventory management interfaces requiring organized item display and navigation
 ]]
 liaGridInventoryPanel
 --[[
     Purpose:
-        Main inventory interface
-        The primary inventory management interface
+        Main inventory management interface
+        The primary inventory interface with drag-and-drop, item tooltips, quick actions, and comprehensive item management
     When Used:
-        For inventory management and item handling
+        As the main player inventory interface for item storage, organization, and interaction
 ]]
 liaInventory
 --[[
     Purpose:
-        Grid inventory container
-        A container for grid-based inventory systems
+        Grid inventory container with advanced features
+        A feature-rich container for grid-based inventory systems with item filtering, search, and customization options
     When Used:
-        As the main container for grid inventories
+        As the main container for complex grid-based inventory systems requiring advanced functionality
 ]]
 liaGridInventory
 --[[
     Purpose:
-        Vendor interface
-        A panel for vendor interactions and trading
+        NPC vendor trading interface
+        A comprehensive vendor interface for buying and selling items with NPC merchants, including faction restrictions and pricing
     When Used:
-        For NPC vendors, trading interfaces, or shops
+        For NPC vendor interactions, marketplace systems, and economic trading interfaces
 ]]
 liaVendor
 --[[
     Purpose:
-        Vendor item display
-        A panel for displaying individual vendor items
+        Individual vendor item with pricing and actions
+        A single vendor item display showing price, stock, purchase options, and item details
     When Used:
-        In vendor interfaces for item display
+        Within vendor interfaces to display individual items available for purchase or sale
 ]]
 liaVendorItem
 --[[
     Purpose:
-        Vendor editor interface
-        A panel for editing vendor settings and items
+        Comprehensive vendor configuration editor
+        An administrative interface for creating and editing vendor NPCs, managing inventory, pricing, and vendor properties
     When Used:
-        In admin panels for vendor management
+        In admin panels for creating and configuring NPC vendors with full control over items and settings
 ]]
 liaVendorEditor
 --[[
     Purpose:
-        Vendor faction editor
-        A panel for editing vendor faction restrictions
+        Vendor faction restriction manager
+        A specialized editor for configuring which factions can access specific vendors and their trading restrictions
     When Used:
-        In admin panels for vendor faction management
+        In admin panels to set up faction-based access controls for vendor interactions
 ]]
 liaVendorFactionEditor
 --[[
     Purpose:
-        Vendor bodygroup editor
-        A panel for editing vendor bodygroup settings
+        Vendor appearance customization editor
+        An interface for customizing vendor NPC bodygroups, skins, and visual appearance options
     When Used:
-        In admin panels for vendor appearance management
+        In admin panels for fine-tuning vendor NPC visual presentation and customization options
 ]]
 liaVendorBodygroupEditor

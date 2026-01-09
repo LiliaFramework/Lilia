@@ -71,7 +71,7 @@ ATTRIBUTE.desc = ""
     ATTRIBUTE.maxValue = 50
     ```
 ]]
-ATTRIBUTE.maxValue = nil
+ATTRIBUTE.maxValue = 100
 --[[
     Purpose:
         Sets the maximum value this attribute can have during character creation
@@ -84,7 +84,7 @@ ATTRIBUTE.maxValue = nil
     ATTRIBUTE.startingMax = 20
     ```
 ]]
-ATTRIBUTE.startingMax = nil
+ATTRIBUTE.startingMax = 30
 --[[
     Purpose:
         Prevents this attribute from appearing in character creation attribute allocation
@@ -162,70 +162,6 @@ end
         local strength = char:getAttrib("str", 10)
         char:setVar("meleeDamageBonus", math.max(0, strength - 10))
         char:setVar("carryCapacityBonus", math.floor(strength / 2))
-    end
-    ```
-]]
---[[
-    Example Attribute: Intelligence
-
-    Below is another example showing how to define an "Intelligence" attribute
-    that demonstrates different configuration options and usage patterns.
-
-    ```lua
-    ATTRIBUTE.name = "Intelligence"
-    ATTRIBUTE.desc = "Mental acuity and reasoning ability. Affects learning speed and technical skills."
-
-    -- Configuration
-    ATTRIBUTE.maxValue = 40
-    ATTRIBUTE.startingMax = 20
-    ATTRIBUTE.noStartBonus = false
-
-    -- Callback Methods
-    function ATTRIBUTE:OnSetup(client, value)
-        local char = client:getChar()
-        if not char then return end
-
-        -- Set default intelligence value if not already set
-        if value == 0 then
-            char:setAttrib("int", 10)
-        end
-
-        -- Apply intelligence-based effects
-        local intelligence = char:getAttrib("int", 10)
-        char:setVar("learningSpeedBonus", math.max(0, intelligence - 10))
-        char:setVar("technicalSkillBonus", math.floor(intelligence / 3))
-    end
-    ```
-]]
---[[
-    Example Attribute: Luck (Hidden from Character Creation)
-
-    Below is an example showing how to define a "Luck" attribute that is hidden
-    from character creation but can still be modified through gameplay.
-
-    ```lua
-    ATTRIBUTE.name = "Luck"
-    ATTRIBUTE.desc = "Fortune and chance. Affects random events and critical success rates."
-
-    -- Configuration
-    ATTRIBUTE.maxValue = 20
-    ATTRIBUTE.startingMax = 5
-    ATTRIBUTE.noStartBonus = true  -- Hidden from character creation
-
-    -- Callback Methods
-    function ATTRIBUTE:OnSetup(client, value)
-        local char = client:getChar()
-        if not char then return end
-
-        -- Set default luck value if not already set
-        if value == 0 then
-            char:setAttrib("luck", 5)
-        end
-
-        -- Apply luck-based effects
-        local luck = char:getAttrib("luck", 5)
-        char:setVar("criticalChanceBonus", math.max(0, luck - 5) * 0.02)
-        char:setVar("randomEventBonus", math.floor(luck / 2))
     end
     ```
 ]]
