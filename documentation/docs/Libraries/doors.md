@@ -18,6 +18,26 @@ provides hooks for custom door behavior integration.
 
 ---
 
+### lia.doors.getDoorDefaultValues
+
+#### 📋 Purpose
+Retrieve door default values merged with any extra fields provided by modules.
+
+#### ⏰ When Called
+Anywhere door defaults are needed (initialization, schema checks, load/save).
+
+#### ↩️ Returns
+* table defaults
+Map of field -> default value including extra fields.
+table extras
+Map of extra field definitions collected via the CollectDoorDataFields hook.
+
+#### 🌐 Realm
+Shared
+]]
+
+---
+
 ### lia.doors.setCachedData
 
 #### 📋 Purpose

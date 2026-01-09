@@ -68,7 +68,9 @@ function lia.doors.getDoorDefaultValues()
     local extras = {}
     hook.Run("CollectDoorDataFields", extras)
     local defaults = table.Copy(lia.doors.defaultValues)
-    for key, info in pairs(extras) do defaults[key] = info and info.default end
+    for key, info in pairs(extras) do
+        defaults[key] = info and info.default
+    end
     return defaults, extras
 end
 
@@ -380,7 +382,9 @@ if SERVER then
             }
 
             local _, extraFields = lia.doors.getDoorDefaultValues()
-            for colName, info in pairs(extraFields) do expectedColumns[colName] = info and info.type or "text" end
+            for colName, info in pairs(extraFields) do
+                expectedColumns[colName] = info and info.type or "text"
+            end
 
             for colName, expectedType in pairs(expectedColumns) do
                 if not columns[colName] then
