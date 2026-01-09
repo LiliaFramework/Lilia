@@ -142,12 +142,12 @@ hook.Add("SAM.RankPermissionGiven", "liaSAMHandlePermissionGiven", function(rank
         })
     end
 
-    if SERVER then lia.administrator.addPermission(rankName, permission, true) end
+    if SERVER then lia.admin.addPermission(rankName, permission, true) end
 end)
 
 hook.Add("SAM.RankPermissionTaken", "liaSAMHandlePermissionTaken", function(rankName, permission)
     if not rankName or not permission then return end
-    if SERVER then lia.administrator.removePermission(rankName, permission, true) end
+    if SERVER then lia.admin.removePermission(rankName, permission, true) end
 end)
 
 lia.command.add("cleardecals", {

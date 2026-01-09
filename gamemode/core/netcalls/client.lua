@@ -1511,12 +1511,12 @@ net.Receive("liaGroupPermChanged", function()
     local group = net.ReadString()
     local privilege = net.ReadString()
     local value = net.ReadBool()
-    lia.administrator.groups = lia.administrator.groups or {}
-    lia.administrator.groups[group] = lia.administrator.groups[group] or {}
+    lia.admin.groups = lia.admin.groups or {}
+    lia.admin.groups[group] = lia.admin.groups[group] or {}
     if value then
-        lia.administrator.groups[group][privilege] = true
+        lia.admin.groups[group][privilege] = true
     else
-        lia.administrator.groups[group][privilege] = nil
+        lia.admin.groups[group][privilege] = nil
     end
 
     if IsValid(lia.gui.usergroups) and lia.gui.usergroups.groupsList then

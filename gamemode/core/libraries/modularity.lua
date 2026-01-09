@@ -18,7 +18,7 @@ local function loadPermissions(Privileges)
     for _, privilegeData in ipairs(Privileges) do
         local privilegeName = L(privilegeData.Name or privilegeData.ID)
         local privilegeCategory = privilegeData.Category or MODULE.name
-        lia.administrator.registerPrivilege({
+        lia.admin.registerPrivilege({
             Name = privilegeName,
             ID = privilegeData.ID,
             MinAccess = privilegeData.MinAccess or "admin",

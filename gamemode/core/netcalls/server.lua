@@ -1238,7 +1238,7 @@ local function broadcastGroups()
 
     local players = player.GetHumans()
     for _, ply in ipairs(players) do
-        if lia.net.ready[ply] then lia.net.writeBigTable(ply, "liaUpdateAdminGroups", lia.administrator.groups or {}) end
+        if lia.net.ready[ply] then lia.net.writeBigTable(ply, "liaUpdateAdminGroups", lia.admin.groups or {}) end
     end
 end
 
@@ -1249,7 +1249,7 @@ net.Receive("liaGroupsRequest", function(_, p)
     })
 
     lia.net.ready[p] = true
-    lia.administrator.sync(p)
+    lia.admin.sync(p)
 end)
 
 net.Receive("liaGroupsAdd", function(_, p)
@@ -1257,17 +1257,17 @@ net.Receive("liaGroupsAdd", function(_, p)
     local data = net.ReadTable()
     local n = string.Trim(tostring(data.name or ""))
     if n == "" then return end
-    lia.administrator.groups = lia.administrator.groups or {}
-    if lia.administrator.DefaultGroups and lia.administrator.DefaultGroups[n] then return end
-    if lia.administrator.groups[n] then return end
-    lia.administrator.createGroup(n, {
+    lia.admin.groups = lia.admin.groups or {}
+    if lia.admin.DefaultGroups and lia.admin.DefaultGroups[n] then return end
+    if lia.admin.groups[n] then return end
+    lia.admin.createGroup(n, {
         _info = {
             inheritance = data.inherit or "user",
             types = data.types or {}
         }
     })
 
-    lia.administrator.save()
+    lia.admin.save()
     broadcastGroups()
     p:notifySuccessLocalized("groupCreated", n)
 end)
@@ -1275,10 +1275,10 @@ end)
 net.Receive("liaGroupsRemove", function(_, p)
     if not p:hasPrivilege("manageUsergroups") then return end
     local n = net.ReadString()
-    if n == "" or lia.administrator.DefaultGroups and lia.administrator.DefaultGroups[n] then return end
-    lia.administrator.removeGroup(n)
-    if lia.administrator.groups then lia.administrator.groups[n] = nil end
-    lia.administrator.save()
+    if n == "" or lia.admin.DefaultGroups and lia.admin.DefaultGroups[n] then return end
+    lia.admin.removeGroup(n)
+    if lia.admin.groups then lia.admin.groups[n] = nil end
+    lia.admin.save()
     broadcastGroups()
     p:notifySuccessLocalized("groupRemoved", n)
 end)
@@ -1289,10 +1289,10 @@ net.Receive("liaGroupsRename", function(_, p)
     local new = string.Trim(net.ReadString() or "")
     if old == "" or new == "" then return end
     if old == new then return end
-    if not lia.administrator.groups or not lia.administrator.groups[old] then return end
-    if lia.administrator.groups[new] or lia.administrator.DefaultGroups and lia.administrator.DefaultGroups[new] then return end
-    if lia.administrator.DefaultGroups and lia.administrator.DefaultGroups[old] then return end
-    lia.administrator.renameGroup(old, new)
+    if not lia.admin.groups or not lia.admin.groups[old] then return end
+    if lia.admin.groups[new] or lia.admin.DefaultGroups and lia.admin.DefaultGroups[new] then return end
+    if lia.admin.DefaultGroups and lia.admin.DefaultGroups[old] then return end
+    lia.admin.renameGroup(old, new)
     broadcastGroups()
     p:notifySuccessLocalized("groupRenamed", old, new)
 end)
@@ -1303,13 +1303,13 @@ net.Receive("liaGroupsSetPerm", function(_, p)
     local privilege = net.ReadString()
     local value = net.ReadBool()
     if group == "" or privilege == "" then return end
-    if lia.administrator.DefaultGroups and lia.administrator.DefaultGroups[group] then return end
-    if not lia.administrator.groups or not lia.administrator.groups[group] then return end
+    if lia.admin.DefaultGroups and lia.admin.DefaultGroups[group] then return end
+    if not lia.admin.groups or not lia.admin.groups[group] then return end
     if SERVER then
         if value then
-            lia.administrator.addPermission(group, privilege, true)
+            lia.admin.addPermission(group, privilege, true)
         else
-            lia.administrator.removePermission(group, privilege, true)
+            lia.admin.removePermission(group, privilege, true)
         end
     end
 

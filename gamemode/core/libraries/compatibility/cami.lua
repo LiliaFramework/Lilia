@@ -17,7 +17,7 @@
 local groupLevelCache = {}
 local function getGroupLevel(group)
     if groupLevelCache[group] ~= nil then return groupLevelCache[group] end
-    local levels = lia.administrator.DefaultGroups or {}
+    local levels = lia.admin.DefaultGroups or {}
     if levels[group] then
         groupLevelCache[group] = levels[group]
         return levels[group]
@@ -27,7 +27,7 @@ local function getGroupLevel(group)
     for _ = 1, 16 do
         if visited[current] then break end
         visited[current] = true
-        local g = lia.administrator.groups and lia.administrator.groups[current]
+        local g = lia.admin.groups and lia.admin.groups[current]
         local inh = g and g._info and g._info.inheritance or "user"
         if levels[inh] then
             groupLevelCache[group] = levels[inh]
@@ -43,7 +43,7 @@ local function getGroupLevel(group)
 end
 
 local function shouldGrant(group, min)
-    local levels = lia.administrator.DefaultGroups or {}
+    local levels = lia.admin.DefaultGroups or {}
     local m = tostring(min or "user"):lower()
     return getGroupLevel(group) >= (levels[m] or 1)
 end
@@ -62,11 +62,11 @@ local function defaultAccessHandler(actor, privilege, callback, _, extra)
     if tostring(grp):lower() == "superadmin" then
         allow = true
     else
-        local g = lia.administrator.groups and lia.administrator.groups[grp] or nil
+        local g = lia.admin.groups and lia.admin.groups[grp] or nil
         if g and g[privilege] == true then
             allow = true
         else
-            local min = lia.administrator.privileges and lia.administrator.privileges[privilege] or "user"
+            local min = lia.admin.privileges and lia.admin.privileges[privilege] or "user"
             allow = shouldGrant(grp, min)
         end
     end
@@ -81,18 +81,18 @@ hook.Add("CAMI.OnUsergroupRegistered", "liaAdminUGAdded", function(usergroup)
     local ug = usergroup or {}
     local n = ug.Name
     if not isstring(n) or n == "" then return end
-    if not lia.administrator.groups[n] then
-        lia.administrator.groups[n] = {
+    if not lia.admin.groups[n] then
+        lia.admin.groups[n] = {
             _info = {
                 inheritance = ug.Inherits or "user",
                 types = {}
             }
         }
 
-        lia.administrator.applyInheritance(n)
+        lia.admin.applyInheritance(n)
         if SERVER then
-            lia.administrator.save()
-            lia.administrator.sync()
+            lia.admin.save()
+            lia.admin.sync()
         end
     end
 end)
@@ -101,11 +101,11 @@ hook.Add("CAMI.OnUsergroupUnregistered", "liaAdminUGRemoved", function(usergroup
     local ug = usergroup or {}
     local n = ug.Name
     if not isstring(n) or n == "" then return end
-    if lia.administrator.groups[n] and not lia.administrator.DefaultGroups[n] then
-        lia.administrator.groups[n] = nil
+    if lia.admin.groups[n] and not lia.admin.DefaultGroups[n] then
+        lia.admin.groups[n] = nil
         if SERVER then
-            lia.administrator.save()
-            lia.administrator.sync()
+            lia.admin.save()
+            lia.admin.sync()
         end
     end
 end)
@@ -113,35 +113,35 @@ end)
 hook.Add("CAMI.OnPrivilegeRegistered", "liaAdminPrivAdded", function(priv)
     local name = priv and priv.Name
     if not isstring(name) or name == "" then return end
-    if lia.administrator.privileges[name] ~= nil then return end
+    if lia.admin.privileges[name] ~= nil then return end
     local min = tostring(priv.MinAccess or "user"):lower()
-    lia.administrator.privileges[name] = min
-    if lia.administrator and lia.administrator.clearPrivilegeCategoryCache then lia.administrator.clearPrivilegeCategoryCache() end
-    local defaultGroups = lia.administrator.DefaultGroups or {}
+    lia.admin.privileges[name] = min
+    if lia.admin and lia.admin.clearPrivilegeCategoryCache then lia.admin.clearPrivilegeCategoryCache() end
+    local defaultGroups = lia.admin.DefaultGroups or {}
     local minLevel = defaultGroups[min] or 1
-    for groupName in pairs(lia.administrator.groups or {}) do
-        if getGroupLevel(groupName) >= minLevel then lia.administrator.groups[groupName][name] = true end
+    for groupName in pairs(lia.admin.groups or {}) do
+        if getGroupLevel(groupName) >= minLevel then lia.admin.groups[groupName][name] = true end
     end
 
     if SERVER then
-        lia.administrator.save()
-        lia.administrator.sync()
+        lia.admin.save()
+        lia.admin.sync()
     end
 end)
 
 hook.Add("CAMI.OnPrivilegeUnregistered", "liaAdminPrivRemoved", function(priv)
     local name = priv and priv.Name
     if not isstring(name) or name == "" then return end
-    if lia.administrator.privileges[name] == nil then return end
-    lia.administrator.privileges[name] = nil
-    if lia.administrator and lia.administrator.clearPrivilegeCategoryCache then lia.administrator.clearPrivilegeCategoryCache() end
-    for _, g in pairs(lia.administrator.groups or {}) do
+    if lia.admin.privileges[name] == nil then return end
+    lia.admin.privileges[name] = nil
+    if lia.admin and lia.admin.clearPrivilegeCategoryCache then lia.admin.clearPrivilegeCategoryCache() end
+    for _, g in pairs(lia.admin.groups or {}) do
         g[name] = nil
     end
 
     if SERVER then
-        lia.administrator.save()
-        lia.administrator.sync()
+        lia.admin.save()
+        lia.admin.sync()
     end
 end)
 

@@ -45,7 +45,7 @@ timer.Simple(10, function()
     concommand.Remove("vj_cleanup")
 end)
 
-lia.administrator.registerPrivilege({
+lia.admin.registerPrivilege({
     Name = "vjNpcProperties",
     ID = "property_vj_npc_properties",
     MinAccess = "superadmin",

@@ -111,7 +111,7 @@ function lia.command.add(command, data)
     if superAdminOnly or adminOnly then
         local privilegeName = data.privilege and L(data.privilege) or L("accessTo", command)
         local privilegeID = data.privilege or string.lower("command_" .. command)
-        lia.administrator.registerPrivilege({
+        lia.admin.registerPrivilege({
             Name = privilegeName,
             ID = privilegeID,
             MinAccess = superAdminOnly and "superadmin" or "admin",
@@ -162,7 +162,7 @@ function lia.command.add(command, data)
                 lia.command.list[v:lower()] = aliasData
                 if superAdminOnly or adminOnly then
                     local aliasPrivilegeID = data.privilege or string.lower("command_" .. v)
-                    lia.administrator.registerPrivilege({
+                    lia.admin.registerPrivilege({
                         Name = data.privilege and L(data.privilege) or L("accessTo", v),
                         ID = aliasPrivilegeID,
                         MinAccess = superAdminOnly and "superadmin" or "admin",
@@ -176,7 +176,7 @@ function lia.command.add(command, data)
             lia.command.list[alias:lower()] = aliasData
             if superAdminOnly or adminOnly then
                 local aliasPrivilegeID = data.privilege or string.lower("command_" .. alias)
-                lia.administrator.registerPrivilege({
+                lia.admin.registerPrivilege({
                     Name = data.privilege and L(data.privilege) or L("accessTo", alias),
                     ID = aliasPrivilegeID,
                     MinAccess = superAdminOnly and "superadmin" or "admin",
@@ -948,7 +948,7 @@ if SERVER then
     concommand.Add("kickbots", function()
         if timer.Exists("Bots_Add_Timer") then timer.Remove("Bots_Add_Timer") end
         for _, bot in player.Iterator() do
-            if bot:IsBot() then lia.administrator.execCommand("kick", bot, nil, L("allBotsKicked")) end
+            if bot:IsBot() then lia.admin.execCommand("kick", bot, nil, L("allBotsKicked")) end
         end
     end)
 
@@ -980,7 +980,7 @@ if SERVER then
             return
         end
 
-        if usergroup == "" or not lia.administrator.groups[usergroup] then
+        if usergroup == "" or not lia.admin.groups[usergroup] then
             if IsValid(ply) then
                 ply:notifyErrorLocalized("invalidUsergroup", usergroup)
             else
@@ -1003,7 +1003,7 @@ if SERVER then
             lia.db.updateTable({
                 userGroup = usergroup
             }, nil, "players", "steamID = " .. lia.db.convertDataType(steamID)):next(function()
-                lia.administrator.setSteamIDUsergroup(steamID, usergroup, IsValid(ply) and ply:Name() or "Console")
+                lia.admin.setSteamIDUsergroup(steamID, usergroup, IsValid(ply) and ply:Name() or "Console")
                 if IsValid(target) and isfunction(target.getName) then target:notifyInfoLocalized("userGroupSet", usergroup) end
                 if IsValid(ply) then
                     local targetName = isfunction(target and target.getName) and target:getName() or data.steamName or steamID
@@ -2307,7 +2307,7 @@ lia.command.add("plyban", {
         SubCategory = "adminStickSubCategoryBans",
         Icon = "icon16/lock.png"
     },
-    onRun = function(client, arguments) lia.administrator.serverExecCommand("ban", arguments[1], arguments[2], arguments[3], client) end
+    onRun = function(client, arguments) lia.admin.serverExecCommand("ban", arguments[1], arguments[2], arguments[3], client) end
 })
 
 lia.command.add("plykick", {
@@ -2330,7 +2330,7 @@ lia.command.add("plykick", {
         SubCategory = "adminStickSubCategoryBans",
         Icon = "icon16/user_delete.png"
     },
-    onRun = function(client, arguments) lia.administrator.serverExecCommand("kick", arguments[1], nil, arguments[2], client) end
+    onRun = function(client, arguments) lia.admin.serverExecCommand("kick", arguments[1], nil, arguments[2], client) end
 })
 
 lia.command.add("plykill", {
@@ -2348,7 +2348,7 @@ lia.command.add("plykill", {
         SubCategory = "moderationTools",
         Icon = "icon16/user_red.png"
     },
-    onRun = function(client, arguments) lia.administrator.serverExecCommand("kill", arguments[1], nil, nil, client) end
+    onRun = function(client, arguments) lia.admin.serverExecCommand("kill", arguments[1], nil, nil, client) end
 })
 
 lia.command.add("plyunban", {
@@ -2384,7 +2384,7 @@ lia.command.add("plyfreeze", {
             optional = true
         },
     },
-    onRun = function(client, arguments) lia.administrator.serverExecCommand("freeze", arguments[1], arguments[2], nil, client) end
+    onRun = function(client, arguments) lia.admin.serverExecCommand("freeze", arguments[1], arguments[2], nil, client) end
 })
 
 lia.command.add("plyunfreeze", {
@@ -2396,7 +2396,7 @@ lia.command.add("plyunfreeze", {
             type = "player"
         },
     },
-    onRun = function(client, arguments) lia.administrator.serverExecCommand("unfreeze", arguments[1], nil, nil, client) end
+    onRun = function(client, arguments) lia.admin.serverExecCommand("unfreeze", arguments[1], nil, nil, client) end
 })
 
 lia.command.add("plyslay", {
@@ -2408,7 +2408,7 @@ lia.command.add("plyslay", {
             type = "player"
         },
     },
-    onRun = function(client, arguments) lia.administrator.serverExecCommand("slay", arguments[1], nil, nil, client) end
+    onRun = function(client, arguments) lia.admin.serverExecCommand("slay", arguments[1], nil, nil, client) end
 })
 
 lia.command.add("plyrespawn", {
@@ -2426,7 +2426,7 @@ lia.command.add("plyrespawn", {
         SubCategory = "moderationTools",
         Icon = "icon16/arrow_refresh.png"
     },
-    onRun = function(client, arguments) lia.administrator.serverExecCommand("respawn", arguments[1], nil, nil, client) end
+    onRun = function(client, arguments) lia.admin.serverExecCommand("respawn", arguments[1], nil, nil, client) end
 })
 
 lia.command.add("plyblind", {
@@ -2443,7 +2443,7 @@ lia.command.add("plyblind", {
             optional = true
         },
     },
-    onRun = function(client, arguments) lia.administrator.serverExecCommand("blind", arguments[1], arguments[2], nil, client) end
+    onRun = function(client, arguments) lia.admin.serverExecCommand("blind", arguments[1], arguments[2], nil, client) end
 })
 
 lia.command.add("plyunblind", {
@@ -2455,7 +2455,7 @@ lia.command.add("plyunblind", {
             type = "player"
         },
     },
-    onRun = function(client, arguments) lia.administrator.serverExecCommand("unblind", arguments[1], nil, nil, client) end
+    onRun = function(client, arguments) lia.admin.serverExecCommand("unblind", arguments[1], nil, nil, client) end
 })
 
 lia.command.add("plyblindfade", {
@@ -2566,7 +2566,7 @@ lia.command.add("plygag", {
             type = "player"
         },
     },
-    onRun = function(client, arguments) lia.administrator.serverExecCommand("gag", arguments[1], nil, nil, client) end
+    onRun = function(client, arguments) lia.admin.serverExecCommand("gag", arguments[1], nil, nil, client) end
 })
 
 lia.command.add("plyungag", {
@@ -2578,7 +2578,7 @@ lia.command.add("plyungag", {
             type = "player"
         },
     },
-    onRun = function(client, arguments) lia.administrator.serverExecCommand("ungag", arguments[1], nil, nil, client) end
+    onRun = function(client, arguments) lia.admin.serverExecCommand("ungag", arguments[1], nil, nil, client) end
 })
 
 lia.command.add("plymute", {
@@ -2590,7 +2590,7 @@ lia.command.add("plymute", {
             type = "player"
         },
     },
-    onRun = function(client, arguments) lia.administrator.serverExecCommand("mute", arguments[1], nil, nil, client) end
+    onRun = function(client, arguments) lia.admin.serverExecCommand("mute", arguments[1], nil, nil, client) end
 })
 
 lia.command.add("plyunmute", {
@@ -2602,7 +2602,7 @@ lia.command.add("plyunmute", {
             type = "player"
         },
     },
-    onRun = function(client, arguments) lia.administrator.serverExecCommand("unmute", arguments[1], nil, nil, client) end
+    onRun = function(client, arguments) lia.admin.serverExecCommand("unmute", arguments[1], nil, nil, client) end
 })
 
 lia.command.add("plybring", {
@@ -2614,7 +2614,7 @@ lia.command.add("plybring", {
             type = "player"
         },
     },
-    onRun = function(client, arguments) lia.administrator.serverExecCommand("bring", arguments[1], nil, nil, client) end
+    onRun = function(client, arguments) lia.admin.serverExecCommand("bring", arguments[1], nil, nil, client) end
 })
 
 lia.command.add("plygoto", {
@@ -2626,7 +2626,7 @@ lia.command.add("plygoto", {
             type = "player"
         },
     },
-    onRun = function(client, arguments) lia.administrator.serverExecCommand("goto", arguments[1], nil, nil, client) end
+    onRun = function(client, arguments) lia.admin.serverExecCommand("goto", arguments[1], nil, nil, client) end
 })
 
 lia.command.add("plyreturn", {
@@ -2639,7 +2639,7 @@ lia.command.add("plyreturn", {
             optional = true
         },
     },
-    onRun = function(client, arguments) lia.administrator.serverExecCommand("return", arguments[1] or client:Name(), nil, nil, client) end
+    onRun = function(client, arguments) lia.admin.serverExecCommand("return", arguments[1] or client:Name(), nil, nil, client) end
 })
 
 lia.command.add("plyjail", {
@@ -2651,7 +2651,7 @@ lia.command.add("plyjail", {
             type = "player"
         },
     },
-    onRun = function(client, arguments) lia.administrator.serverExecCommand("jail", arguments[1], nil, nil, client) end
+    onRun = function(client, arguments) lia.admin.serverExecCommand("jail", arguments[1], nil, nil, client) end
 })
 
 lia.command.add("plyunjail", {
@@ -2663,7 +2663,7 @@ lia.command.add("plyunjail", {
             type = "player"
         },
     },
-    onRun = function(client, arguments) lia.administrator.serverExecCommand("unjail", arguments[1], nil, nil, client) end
+    onRun = function(client, arguments) lia.admin.serverExecCommand("unjail", arguments[1], nil, nil, client) end
 })
 
 lia.command.add("plycloak", {
@@ -2681,7 +2681,7 @@ lia.command.add("plycloak", {
         SubCategory = "moderationTools",
         Icon = "icon16/status_offline.png"
     },
-    onRun = function(client, arguments) lia.administrator.serverExecCommand("cloak", arguments[1], nil, nil, client) end
+    onRun = function(client, arguments) lia.admin.serverExecCommand("cloak", arguments[1], nil, nil, client) end
 })
 
 lia.command.add("plyuncloak", {
@@ -2699,7 +2699,7 @@ lia.command.add("plyuncloak", {
         SubCategory = "moderationTools",
         Icon = "icon16/status_online.png"
     },
-    onRun = function(client, arguments) lia.administrator.serverExecCommand("uncloak", arguments[1], nil, nil, client) end
+    onRun = function(client, arguments) lia.admin.serverExecCommand("uncloak", arguments[1], nil, nil, client) end
 })
 
 lia.command.add("plygod", {
@@ -2717,7 +2717,7 @@ lia.command.add("plygod", {
         SubCategory = "moderationTools",
         Icon = "icon16/shield.png"
     },
-    onRun = function(client, arguments) lia.administrator.serverExecCommand("god", arguments[1], nil, nil, client) end
+    onRun = function(client, arguments) lia.admin.serverExecCommand("god", arguments[1], nil, nil, client) end
 })
 
 lia.command.add("plyungod", {
@@ -2735,7 +2735,7 @@ lia.command.add("plyungod", {
         SubCategory = "moderationTools",
         Icon = "icon16/shield_delete.png"
     },
-    onRun = function(client, arguments) lia.administrator.serverExecCommand("ungod", arguments[1], nil, nil, client) end
+    onRun = function(client, arguments) lia.admin.serverExecCommand("ungod", arguments[1], nil, nil, client) end
 })
 
 lia.command.add("plyignite", {
@@ -2752,7 +2752,7 @@ lia.command.add("plyignite", {
             optional = true
         },
     },
-    onRun = function(client, arguments) lia.administrator.serverExecCommand("ignite", arguments[1], arguments[2], nil, client) end
+    onRun = function(client, arguments) lia.admin.serverExecCommand("ignite", arguments[1], arguments[2], nil, client) end
 })
 
 lia.command.add("plyextinguish", {
@@ -2764,7 +2764,7 @@ lia.command.add("plyextinguish", {
             type = "player"
         },
     },
-    onRun = function(client, arguments) lia.administrator.serverExecCommand("extinguish", arguments[1], nil, nil, client) end
+    onRun = function(client, arguments) lia.admin.serverExecCommand("extinguish", arguments[1], nil, nil, client) end
 })
 
 lia.command.add("plystrip", {
@@ -2782,7 +2782,7 @@ lia.command.add("plystrip", {
         SubCategory = "moderationTools",
         Icon = "icon16/gun.png"
     },
-    onRun = function(client, arguments) lia.administrator.serverExecCommand("strip", arguments[1], nil, nil, client) end
+    onRun = function(client, arguments) lia.admin.serverExecCommand("strip", arguments[1], nil, nil, client) end
 })
 
 lia.command.add("charunbanoffline", {
@@ -4599,13 +4599,13 @@ lia.command.add("getallinfos", {
             return
         end
 
-        lia.administrator(L("allInfoFor", char:getName()))
+        lia.admin(L("allInfoFor", char:getName()))
         for column, value in pairs(data) do
             if istable(value) then
-                lia.administrator(column .. ":")
+                lia.admin(column .. ":")
                 PrintTable(value)
             else
-                lia.administrator(column .. " = " .. tostring(value))
+                lia.admin(column .. " = " .. tostring(value))
             end
         end
 
@@ -4718,18 +4718,18 @@ lia.command.add("exportprivileges", {
 
         local srcs = {}
         if lia then
-            if lia.administrator then
-                table.insert(srcs, lia.administrator.privileges)
-                if isfunction(lia.administrator.getPrivileges) == "function" then
-                    local ok, r = pcall(lia.administrator.getPrivileges, lia.administrator)
+            if lia.admin then
+                table.insert(srcs, lia.admin.privileges)
+                if isfunction(lia.admin.getPrivileges) == "function" then
+                    local ok, r = pcall(lia.admin.getPrivileges, lia.admin)
                     if ok then table.insert(srcs, r) end
                 end
             end
 
-            if lia.administrator then
-                table.insert(srcs, lia.administrator.privileges)
-                if isfunction(lia.administrator.getPrivileges) then
-                    local ok, r = pcall(lia.administrator.getPrivileges, lia.administrator)
+            if lia.admin then
+                table.insert(srcs, lia.admin.privileges)
+                if isfunction(lia.admin.getPrivileges) then
+                    local ok, r = pcall(lia.admin.getPrivileges, lia.admin)
                     if ok then table.insert(srcs, r) end
                 end
             end

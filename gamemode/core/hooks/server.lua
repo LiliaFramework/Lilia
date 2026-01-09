@@ -593,7 +593,7 @@ function GM:ShutDown()
         if v:getChar() then v:getChar():save() end
     end
 
-    lia.administrator.save(true)
+    lia.admin.save(true)
 end
 
 function GM:PlayerAuthed(client, steamid)
@@ -651,7 +651,7 @@ function GM:PlayerInitialSpawn(client)
     client:SetNoDraw(true)
     lia.config.send(client)
     client.liaJoinTime = RealTime()
-    lia.administrator.sync(client)
+    lia.admin.sync(client)
     client:loadLiliaData(function(data)
         if not IsValid(client) then return end
         local address = client:IPAddress()
@@ -1066,7 +1066,7 @@ function GM:LiliaTablesLoaded()
     lia.db.addDatabaseFields()
     lia.data.loadTables()
     lia.data.loadPersistence()
-    lia.administrator.load()
+    lia.admin.load()
     lia.config.load()
     hook.Run("LoadData")
     hook.Run("PostLoadData")

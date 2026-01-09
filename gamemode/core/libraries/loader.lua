@@ -1021,11 +1021,11 @@ function lia.loader.initializeGamemode(isReload)
 
     lia.faction.formatModelData()
     if SERVER and isReload then
-        local adminHasChanges = lia.administrator.hasChanges()
+        local adminHasChanges = lia.admin.hasChanges()
         local playerInteractHasChanges = lia.playerinteract.hasChanges()
         local configHasChanges = lia.config.hasChanges()
         timer.Create("liaReloadConfigSync", 0.5, 1, function() if configHasChanges then lia.config.send() end end)
-        timer.Create("liaReloadAdminSync", 2.0, 1, function() if adminHasChanges then lia.administrator.sync() end end)
+        timer.Create("liaReloadAdminSync", 2.0, 1, function() if adminHasChanges then lia.admin.sync() end end)
         timer.Create("liaReloadPlayerInteractSync", 3.5, 1, function() if playerInteractHasChanges then lia.playerinteract.sync() end end)
         timer.Create("liaReloadComplete", 5.0, 1, function() lia.reloadInProgress = false end)
     end

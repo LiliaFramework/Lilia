@@ -44,8 +44,8 @@ function serverguard.permission:Add(identifier, priv)
                     MinAccess = "invalid"
                 })
 
-                if lia.administrator and lia.administrator.registerPrivilege then
-                    lia.administrator.registerPrivilege({
+                if lia.admin and lia.admin.registerPrivilege then
+                    lia.admin.registerPrivilege({
                         Name = identifier,
                         ID = identifier,
                         MinAccess = "admin",
@@ -64,7 +64,7 @@ end
 function serverguard.permission:Remove(identifier)
     if isstring(identifier) and self.stored[identifier] then
         self.stored[identifier] = nil
-        if lia.administrator and lia.administrator.unregisterPrivilege then lia.administrator.unregisterPrivilege(identifier) end
+        if lia.admin and lia.admin.unregisterPrivilege then lia.admin.unregisterPrivilege(identifier) end
     end
 end
 
@@ -125,12 +125,12 @@ hook.Add("serverguard.RankPermissionGiven", "liaServerGuardHandlePermissionGiven
         })
     end
 
-    if SERVER then lia.administrator.addPermission(rankName, permission, true) end
+    if SERVER then lia.admin.addPermission(rankName, permission, true) end
 end)
 
 hook.Add("serverguard.RankPermissionTaken", "liaServerGuardHandlePermissionTaken", function(rankName, permission)
     if not rankName or not permission then return end
-    if SERVER then lia.administrator.removePermission(rankName, permission, true) end
+    if SERVER then lia.admin.removePermission(rankName, permission, true) end
 end)
 
 hook.Add("CAMI.OnPrivilegeRegistered", "serverguard.CAMI.OnPrivilegeRegistered", OnPrivilegeRegistered)

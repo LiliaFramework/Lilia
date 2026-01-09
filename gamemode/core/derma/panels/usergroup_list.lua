@@ -38,7 +38,7 @@ function PANEL:RefreshGroups()
     local buttonType = self.buttonType or "liaUserGroupButton"
     for _, groupName in ipairs(keys) do
         local groupData = self.groups[groupName]
-        local isDefault = lia.administrator.DefaultGroups and lia.administrator.DefaultGroups[groupName] ~= nil
+        local isDefault = lia.admin.DefaultGroups and lia.admin.DefaultGroups[groupName] ~= nil
         local groupBtn
         if buttonType == "liaButton" then
             groupBtn = self.scrollPanel:Add("liaButton")

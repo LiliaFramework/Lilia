@@ -123,7 +123,7 @@ function playerMeta:hasPrivilege(privilegeName)
         lia.error(L("hasPrivilegeExpectedString", tostring(privilegeName)))
         return false
     end
-    return lia.administrator.hasAccess(self, privilegeName)
+    return lia.admin.hasAccess(self, privilegeName)
 end
 
 function playerMeta:removeRagdoll()
@@ -305,7 +305,7 @@ function playerMeta:canEditVendor(vendor)
 end
 
 local function groupHasType(groupName, t)
-    local groups = lia.administrator.groups or {}
+    local groups = lia.admin.groups or {}
     local visited = {}
     t = t:lower()
     while groupName and not visited[groupName] do

@@ -15,7 +15,7 @@ Superadmin automatically has all privileges and cannot be restricted by any perm
 
 ---
 
-### lia.administrator.applyPunishment
+### lia.admin.applyPunishment
 
 #### 📋 Purpose
 Applies kick or ban punishments to a player based on the provided parameters.
@@ -45,17 +45,17 @@ Shared
 
 ```lua
     -- Kick a player for spamming
-    lia.administrator.applyPunishment(player, "Spamming in chat", true, false, nil, nil, nil)
+    lia.admin.applyPunishment(player, "Spamming in chat", true, false, nil, nil, nil)
     -- Ban a player for griefing for 24 hours
-    lia.administrator.applyPunishment(player, "Griefing", false, true, 1440, nil, nil)
+    lia.admin.applyPunishment(player, "Griefing", false, true, 1440, nil, nil)
     -- Both kick and ban with custom messages
-    lia.administrator.applyPunishment(player, "Hacking", true, true, 10080, "kickedForHacking", "bannedForHacking")
+    lia.admin.applyPunishment(player, "Hacking", true, true, 10080, "kickedForHacking", "bannedForHacking")
 
 ```
 
 ---
 
-### lia.administrator.hasAccess
+### lia.admin.hasAccess
 
 #### 📋 Purpose
 Checks if a player has access to a specific privilege based on their usergroup and privilege requirements.
@@ -81,15 +81,15 @@ Shared
 
 ```lua
     -- Check if player can use kick command
-    if lia.administrator.hasAccess(player, "command_kick") then
+    if lia.admin.hasAccess(player, "command_kick") then
         -- Allow kicking
     end
     -- Check if player has access to a tool
-    if lia.administrator.hasAccess(player, "tool_remover") then
+    if lia.admin.hasAccess(player, "tool_remover") then
         -- Give tool access
     end
     -- Check usergroup access directly
-    if lia.administrator.hasAccess("admin", "command_ban") then
+    if lia.admin.hasAccess("admin", "command_ban") then
         -- Admin group has ban access
     end
 
@@ -97,7 +97,7 @@ Shared
 
 ---
 
-### lia.administrator.save
+### lia.admin.save
 
 #### 📋 Purpose
 Saves administrator group configurations and privileges to the database.
@@ -121,17 +121,17 @@ Shared
 
 ```lua
     -- Save admin groups without network sync
-    lia.administrator.save(true)
+    lia.admin.save(true)
     -- Save and sync with all clients
-    lia.administrator.save(false)
+    lia.admin.save(false)
     -- or simply:
-    lia.administrator.save()
+    lia.admin.save()
 
 ```
 
 ---
 
-### lia.administrator.registerPrivilege
+### lia.admin.registerPrivilege
 
 #### 📋 Purpose
 Registers a new privilege in the administrator system with specified access levels and categories.
@@ -159,14 +159,14 @@ Shared
 
 ```lua
     -- Register a custom admin command privilege
-    lia.administrator.registerPrivilege({
+    lia.admin.registerPrivilege({
         ID = "command_customban",
         Name = "Custom Ban Command",
         MinAccess = "admin",
         Category = "staffCommands"
     })
     -- Register a property privilege
-    lia.administrator.registerPrivilege({
+    lia.admin.registerPrivilege({
         ID = "property_teleport",
         Name = "Teleport Property",
         MinAccess = "admin",
@@ -177,7 +177,7 @@ Shared
 
 ---
 
-### lia.administrator.unregisterPrivilege
+### lia.admin.unregisterPrivilege
 
 #### 📋 Purpose
 Removes a privilege from the administrator system and cleans up all associated data.
@@ -201,15 +201,15 @@ Shared
 
 ```lua
     -- Unregister a custom privilege
-    lia.administrator.unregisterPrivilege("command_customban")
+    lia.admin.unregisterPrivilege("command_customban")
     -- Clean up a tool privilege
-    lia.administrator.unregisterPrivilege("tool_remover")
+    lia.admin.unregisterPrivilege("tool_remover")
 
 ```
 
 ---
 
-### lia.administrator.applyInheritance
+### lia.admin.applyInheritance
 
 #### 📋 Purpose
 Applies privilege inheritance to a usergroup, copying permissions from parent groups and ensuring appropriate access levels.
@@ -233,15 +233,15 @@ Shared
 
 ```lua
     -- Apply inheritance to a moderator group
-    lia.administrator.applyInheritance("moderator")
+    lia.admin.applyInheritance("moderator")
     -- Apply inheritance after creating a new usergroup
-    lia.administrator.applyInheritance("customadmin")
+    lia.admin.applyInheritance("customadmin")
 
 ```
 
 ---
 
-### lia.administrator.load
+### lia.admin.load
 
 #### 📋 Purpose
 Loads administrator group configurations from the database and initializes the admin system.
@@ -259,13 +259,13 @@ Shared
 
 ```lua
     -- Load admin system (called automatically during server initialization)
-    lia.administrator.load()
+    lia.admin.load()
 
 ```
 
 ---
 
-### lia.administrator.createGroup
+### lia.admin.createGroup
 
 #### 📋 Purpose
 Creates a new administrator usergroup with specified configuration and inheritance.
@@ -290,7 +290,7 @@ Shared
 
 ```lua
     -- Create a moderator group
-    lia.administrator.createGroup("moderator", {
+    lia.admin.createGroup("moderator", {
         _info = {
             inheritance = "user",
             types = {}
@@ -299,13 +299,13 @@ Shared
         command_mute = true
     })
     -- Create a custom admin group
-    lia.administrator.createGroup("customadmin")
+    lia.admin.createGroup("customadmin")
 
 ```
 
 ---
 
-### lia.administrator.removeGroup
+### lia.admin.removeGroup
 
 #### 📋 Purpose
 Removes an administrator usergroup from the system.
@@ -329,15 +329,15 @@ Shared
 
 ```lua
     -- Remove a custom moderator group
-    lia.administrator.removeGroup("moderator")
+    lia.admin.removeGroup("moderator")
     -- Remove a custom admin group
-    lia.administrator.removeGroup("customadmin")
+    lia.admin.removeGroup("customadmin")
 
 ```
 
 ---
 
-### lia.administrator.renameGroup
+### lia.admin.renameGroup
 
 #### 📋 Purpose
 Renames an existing administrator usergroup to a new name.
@@ -362,15 +362,15 @@ Shared
 
 ```lua
     -- Rename moderator group to staff
-    lia.administrator.renameGroup("moderator", "staff")
+    lia.admin.renameGroup("moderator", "staff")
     -- Rename admin group to administrator
-    lia.administrator.renameGroup("admin", "administrator")
+    lia.admin.renameGroup("admin", "administrator")
 
 ```
 
 ---
 
-### lia.administrator.notifyAdmin
+### lia.admin.notifyAdmin
 
 #### 📋 Purpose
 Sends a notification to all administrators who have permission to see admin notifications.
@@ -394,15 +394,15 @@ Server
 
 ```lua
     -- Notify admins of a potential exploit
-    lia.administrator.notifyAdmin("exploitDetected")
+    lia.admin.notifyAdmin("exploitDetected")
     -- Notify admins of a player report
-    lia.administrator.notifyAdmin("playerReportReceived")
+    lia.admin.notifyAdmin("playerReportReceived")
 
 ```
 
 ---
 
-### lia.administrator.addPermission
+### lia.admin.addPermission
 
 #### 📋 Purpose
 Grants a specific permission to an administrator usergroup.
@@ -428,15 +428,15 @@ Server
 
 ```lua
     -- Grant kick permission to moderators
-    lia.administrator.addPermission("moderator", "command_kick", false)
+    lia.admin.addPermission("moderator", "command_kick", false)
     -- Grant ban permission to admins silently
-    lia.administrator.addPermission("admin", "command_ban", true)
+    lia.admin.addPermission("admin", "command_ban", true)
 
 ```
 
 ---
 
-### lia.administrator.removePermission
+### lia.admin.removePermission
 
 #### 📋 Purpose
 Removes a specific permission from an administrator usergroup.
@@ -462,15 +462,15 @@ Server
 
 ```lua
     -- Remove kick permission from moderators
-    lia.administrator.removePermission("moderator", "command_kick", false)
+    lia.admin.removePermission("moderator", "command_kick", false)
     -- Remove ban permission from admins silently
-    lia.administrator.removePermission("admin", "command_ban", true)
+    lia.admin.removePermission("admin", "command_ban", true)
 
 ```
 
 ---
 
-### lia.administrator.sync
+### lia.admin.sync
 
 #### 📋 Purpose
 Synchronizes administrator privileges and usergroups with clients.
@@ -494,15 +494,15 @@ Server
 
 ```lua
     -- Sync admin data with all clients
-    lia.administrator.sync()
+    lia.admin.sync()
     -- Sync admin data with a specific player
-    lia.administrator.sync(specificPlayer)
+    lia.admin.sync(specificPlayer)
 
 ```
 
 ---
 
-### lia.administrator.hasChanges
+### lia.admin.hasChanges
 
 #### 📋 Purpose
 Checks if administrator privileges or groups have changed since the last sync.
@@ -521,15 +521,15 @@ Server
 
 ```lua
     -- Check if admin data needs syncing
-    if lia.administrator.hasChanges() then
-        lia.administrator.sync()
+    if lia.admin.hasChanges() then
+        lia.admin.sync()
     end
 
 ```
 
 ---
 
-### lia.administrator.setPlayerUsergroup
+### lia.admin.setPlayerUsergroup
 
 #### 📋 Purpose
 Sets the usergroup of a player entity.
@@ -555,15 +555,15 @@ Server
 
 ```lua
     -- Promote player to admin
-    lia.administrator.setPlayerUsergroup(player, "admin", "promotion")
+    lia.admin.setPlayerUsergroup(player, "admin", "promotion")
     -- Demote player to user
-    lia.administrator.setPlayerUsergroup(player, "user", "demotion")
+    lia.admin.setPlayerUsergroup(player, "user", "demotion")
 
 ```
 
 ---
 
-### lia.administrator.setSteamIDUsergroup
+### lia.admin.setSteamIDUsergroup
 
 #### 📋 Purpose
 Sets the usergroup of a player by their SteamID.
@@ -589,15 +589,15 @@ Server
 
 ```lua
     -- Set offline player's usergroup to admin
-    lia.administrator.setSteamIDUsergroup("STEAM_0:1:12345678", "admin", "promotion")
+    lia.admin.setSteamIDUsergroup("STEAM_0:1:12345678", "admin", "promotion")
     -- Demote player by SteamID
-    lia.administrator.setSteamIDUsergroup("STEAM_0:1:12345678", "user", "demotion")
+    lia.admin.setSteamIDUsergroup("STEAM_0:1:12345678", "user", "demotion")
 
 ```
 
 ---
 
-### lia.administrator.serverExecCommand
+### lia.admin.serverExecCommand
 
 #### 📋 Purpose
 Executes administrative commands on players with proper permission checking and logging.
@@ -626,19 +626,19 @@ Server
 
 ```lua
     -- Kick a player for spamming
-    lia.administrator.serverExecCommand("kick", targetPlayer, nil, "Spamming in chat", adminPlayer)
+    lia.admin.serverExecCommand("kick", targetPlayer, nil, "Spamming in chat", adminPlayer)
     -- Ban a player for 24 hours
-    lia.administrator.serverExecCommand("ban", targetPlayer, 1440, "Griefing", adminPlayer)
+    lia.admin.serverExecCommand("ban", targetPlayer, 1440, "Griefing", adminPlayer)
     -- Mute a player
-    lia.administrator.serverExecCommand("mute", targetPlayer, nil, nil, adminPlayer)
+    lia.admin.serverExecCommand("mute", targetPlayer, nil, nil, adminPlayer)
     -- Bring a player to admin's position
-    lia.administrator.serverExecCommand("bring", targetPlayer, nil, nil, adminPlayer)
+    lia.admin.serverExecCommand("bring", targetPlayer, nil, nil, adminPlayer)
 
 ```
 
 ---
 
-### lia.administrator.execCommand
+### lia.admin.execCommand
 
 #### 📋 Purpose
 Executes an administrative command using the client-side command system.
@@ -666,9 +666,9 @@ Server
 
 ```lua
     -- Kick a player via console command
-    lia.administrator.execCommand("kick", targetPlayer, nil, "Rule violation")
+    lia.admin.execCommand("kick", targetPlayer, nil, "Rule violation")
     -- Ban a player for 24 hours
-    lia.administrator.execCommand("ban", targetPlayer, 1440, "Griefing")
+    lia.admin.execCommand("ban", targetPlayer, 1440, "Griefing")
 
 ```
 

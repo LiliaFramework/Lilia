@@ -5,7 +5,7 @@
 
     For each function listed in `functions.md`, write documentation using the exact structure and field labels as shown in the example below. Use the checkboxes in `functions.md` to track your progress - check off each function as you complete its documentation.
 
-    `functions.md` serves as your master checklist containing all 412 undocumented library functions organized by category (lia, lia.administrator, lia.attribs, etc.). Each function has a checkbox that you must mark as completed once documented.
+    `functions.md` serves as your master checklist containing all 412 undocumented library functions organized by category (lia, lia.admin, lia.attribs, etc.). Each function has a checkbox that you must mark as completed once documented.
 
     You must follow this format exactly for every function:
         - Place the documentation block directly above the function it describes.
@@ -61,7 +61,7 @@
                 local infractionType = "Cheating"      -- This would typically come from some infractions check
                 local details = punishmentOptions[infractionType]
                 if details then
-                    lia.administrator.applyPunishment(
+                    lia.admin.applyPunishment(
                         player,
                         infractionType,
                         details.kick,

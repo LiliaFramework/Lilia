@@ -16,46 +16,46 @@ Count: 5 functions
 - [ ]`lia.warning(msg)`
   - Shared
 
-#### lia.administrator
+#### lia.admin
 Count: 19 functions
 
-- [ ]`lia.administrator.addPermission(groupName, permission, silent)`
+- [ ]`lia.admin.addPermission(groupName, permission, silent)`
   - Shared
-- [ ]`lia.administrator.applyInheritance(groupName)`
+- [ ]`lia.admin.applyInheritance(groupName)`
   - Shared
-- [ ]`lia.administrator.applyPunishment(client, infraction, kick, ban, time, kickKey, banKey)`
+- [ ]`lia.admin.applyPunishment(client, infraction, kick, ban, time, kickKey, banKey)`
   - Shared
-- [ ]`lia.administrator.createGroup(groupName, info)`
+- [ ]`lia.admin.createGroup(groupName, info)`
   - Shared
-- [ ]`lia.administrator.execCommand(cmd, victim, dur, reason)`
+- [ ]`lia.admin.execCommand(cmd, victim, dur, reason)`
   - Shared
-- [ ]`lia.administrator.hasAccess(ply, privilege)`
+- [ ]`lia.admin.hasAccess(ply, privilege)`
   - Shared
-- [ ]`lia.administrator.hasChanges()`
+- [ ]`lia.admin.hasChanges()`
   - Shared
-- [ ]`lia.administrator.load()`
+- [ ]`lia.admin.load()`
   - Shared
-- [ ]`lia.administrator.notifyAdmin(notification)`
+- [ ]`lia.admin.notifyAdmin(notification)`
   - Shared
-- [ ]`lia.administrator.registerPrivilege(priv)`
+- [ ]`lia.admin.registerPrivilege(priv)`
   - Shared
-- [ ]`lia.administrator.removeGroup(groupName)`
+- [ ]`lia.admin.removeGroup(groupName)`
   - Shared
-- [ ]`lia.administrator.removePermission(groupName, permission, silent)`
+- [ ]`lia.admin.removePermission(groupName, permission, silent)`
   - Shared
-- [ ]`lia.administrator.renameGroup(oldName, newName)`
+- [ ]`lia.admin.renameGroup(oldName, newName)`
   - Shared
-- [ ]`lia.administrator.save(noNetwork)`
+- [ ]`lia.admin.save(noNetwork)`
   - Shared
-- [ ]`lia.administrator.serverExecCommand(cmd, victim, dur, reason, admin)`
+- [ ]`lia.admin.serverExecCommand(cmd, victim, dur, reason, admin)`
   - Shared
-- [ ]`lia.administrator.setPlayerUsergroup(ply, newGroup, source)`
+- [ ]`lia.admin.setPlayerUsergroup(ply, newGroup, source)`
   - Shared
-- [ ]`lia.administrator.setSteamIDUsergroup(steamId, newGroup, source)`
+- [ ]`lia.admin.setSteamIDUsergroup(steamId, newGroup, source)`
   - Shared
-- [ ]`lia.administrator.sync(c)`
+- [ ]`lia.admin.sync(c)`
   - Shared
-- [ ]`lia.administrator.unregisterPrivilege(id)`
+- [ ]`lia.admin.unregisterPrivilege(id)`
   - Shared
 
 #### lia.attribs

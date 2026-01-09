@@ -16,15 +16,15 @@
         The system has three default user groups with inheritance levels: user (level 1), admin (level 2), and superadmin (level 3).
         Superadmin automatically has all privileges and cannot be restricted by any permission checks.
 ]]
-lia.administrator = lia.administrator or {}
-lia.administrator.groups = lia.administrator.groups or {}
-lia.administrator.privileges = lia.administrator.privileges or {}
-lia.administrator.privilegeCategories = lia.administrator.privilegeCategories or {}
-lia.administrator.privilegeNames = lia.administrator.privilegeNames or {}
-lia.administrator.missingGroups = lia.administrator.missingGroups or {}
-lia.administrator._lastSyncPrivilegeCount = lia.administrator._lastSyncPrivilegeCount or 0
-lia.administrator._lastSyncGroupCount = lia.administrator._lastSyncGroupCount or 0
-lia.administrator.DefaultGroups = {
+lia.admin = lia.admin or {}
+lia.admin.groups = lia.admin.groups or {}
+lia.admin.privileges = lia.admin.privileges or {}
+lia.admin.privilegeCategories = lia.admin.privilegeCategories or {}
+lia.admin.privilegeNames = lia.admin.privilegeNames or {}
+lia.admin.missingGroups = lia.admin.missingGroups or {}
+lia.admin._lastSyncPrivilegeCount = lia.admin._lastSyncPrivilegeCount or 0
+lia.admin._lastSyncGroupCount = lia.admin._lastSyncGroupCount or 0
+lia.admin.DefaultGroups = {
     user = 1,
     admin = 2,
     superadmin = 3
@@ -79,7 +79,7 @@ local function ensureDefaults(groups)
     return created
 end
 
-ensureDefaults(lia.administrator.groups)
+ensureDefaults(lia.admin.groups)
 local privilegeCategoryCache = {}
 function getPrivilegeCategory(privilegeName)
     if not privilegeName then return L("unassigned") end
@@ -124,8 +124,8 @@ function getPrivilegeCategory(privilegeName)
     }
 
     local category
-    if lia.administrator and lia.administrator.privilegeCategories and lia.administrator.privilegeCategories[privilegeName] then
-        category = L(lia.administrator.privilegeCategories[privilegeName])
+    if lia.admin and lia.admin.privilegeCategories and lia.admin.privilegeCategories[privilegeName] then
+        category = L(lia.admin.privilegeCategories[privilegeName])
     elseif lia.command and lia.command.list and lia.command.list[privilegeName] then
         category = L("staffPermissions")
     else
@@ -173,7 +173,7 @@ end
 
 local function getGroupLevel(group)
     if groupLevelCache[group] ~= nil then return groupLevelCache[group] end
-    local levels = lia.administrator.DefaultGroups or {}
+    local levels = lia.admin.DefaultGroups or {}
     if levels[group] then
         groupLevelCache[group] = levels[group]
         return levels[group]
@@ -183,7 +183,7 @@ local function getGroupLevel(group)
     for _ = 1, 16 do
         if visited[current] then break end
         visited[current] = true
-        local g = lia.administrator.groups and lia.administrator.groups[current]
+        local g = lia.admin.groups and lia.admin.groups[current]
         local inh = g and g._info and g._info.inheritance or "user"
         if levels[inh] then
             groupLevelCache[group] = levels[inh]
@@ -199,35 +199,35 @@ local function getGroupLevel(group)
 end
 
 local function shouldGrant(group, min)
-    local levels = lia.administrator.DefaultGroups or {}
+    local levels = lia.admin.DefaultGroups or {}
     local m = tostring(min or "user"):lower()
     return getGroupLevel(group) >= (levels[m] or 1)
 end
 
 local function rebuildPrivileges()
-    lia.administrator.privileges = lia.administrator.privileges or {}
+    lia.admin.privileges = lia.admin.privileges or {}
     local rebuildCache = {}
     local function getCachedGroupLevel(groupName)
         if rebuildCache[groupName] == nil then rebuildCache[groupName] = getGroupLevel(groupName) end
         return rebuildCache[groupName]
     end
 
-    for groupName, perms in pairs(lia.administrator.groups or {}) do
+    for groupName, perms in pairs(lia.admin.groups or {}) do
         local groupLevel = getCachedGroupLevel(groupName)
         for priv, allowed in pairs(perms) do
             if priv ~= "_info" and allowed == true then
-                local current = lia.administrator.privileges[priv]
+                local current = lia.admin.privileges[priv]
                 local currentLevel = current and getCachedGroupLevel(current) or math.huge
                 if not current or groupLevel < currentLevel then
                     local base
-                    for name, lvl in pairs(lia.administrator.DefaultGroups or {}) do
+                    for name, lvl in pairs(lia.admin.DefaultGroups or {}) do
                         if lvl == groupLevel then
                             base = name
                             break
                         end
                     end
 
-                    lia.administrator.privileges[priv] = base or "user"
+                    lia.admin.privileges[priv] = base or "user"
                 end
             end
         end
@@ -263,24 +263,24 @@ local function camiBootstrapFromExisting()
     for _, ug in ipairs(CAMI.GetUsergroups() or {}) do
         local n = ug.Name
         local inh = ug.Inherits or "user"
-        lia.administrator.groups[n] = lia.administrator.groups[n] or {
+        lia.admin.groups[n] = lia.admin.groups[n] or {
             _info = {
                 inheritance = inh,
                 types = {}
             }
         }
 
-        lia.administrator.applyInheritance(n)
+        lia.admin.applyInheritance(n)
     end
 
     for _, pr in ipairs(CAMI.GetPrivileges() or {}) do
         local n = pr.Name
         local m = tostring(pr.MinAccess or "user"):lower()
-        if lia.administrator.privileges[n] == nil then
-            lia.administrator.privileges[n] = m
+        if lia.admin.privileges[n] == nil then
+            lia.admin.privileges[n] = m
             clearPrivilegeCategoryCache()
-            for g in pairs(lia.administrator.groups or {}) do
-                if shouldGrant(g, m) then lia.administrator.groups[g][n] = true end
+            for g in pairs(lia.admin.groups or {}) do
+                if shouldGrant(g, m) then lia.admin.groups[g][n] = true end
             end
         end
     end
@@ -320,21 +320,21 @@ end
     Example Usage:
         ```lua
         -- Kick a player for spamming
-        lia.administrator.applyPunishment(player, "Spamming in chat", true, false, nil, nil, nil)
+        lia.admin.applyPunishment(player, "Spamming in chat", true, false, nil, nil, nil)
 
         -- Ban a player for griefing for 24 hours
-        lia.administrator.applyPunishment(player, "Griefing", false, true, 1440, nil, nil)
+        lia.admin.applyPunishment(player, "Griefing", false, true, 1440, nil, nil)
 
         -- Both kick and ban with custom messages
-        lia.administrator.applyPunishment(player, "Hacking", true, true, 10080, "kickedForHacking", "bannedForHacking")
+        lia.admin.applyPunishment(player, "Hacking", true, true, 10080, "kickedForHacking", "bannedForHacking")
         ```
 ]]
-function lia.administrator.applyPunishment(client, infraction, kick, ban, time, kickKey, banKey)
+function lia.admin.applyPunishment(client, infraction, kick, ban, time, kickKey, banKey)
     local bantime = time or 0
     kickKey = kickKey or "kickedForInfraction"
     banKey = banKey or "bannedForInfraction"
-    if kick then lia.administrator.execCommand("kick", client, nil, L(kickKey, infraction)) end
-    if ban then lia.administrator.execCommand("ban", client, bantime, L(banKey, infraction)) end
+    if kick then lia.admin.execCommand("kick", client, nil, L(kickKey, infraction)) end
+    if ban then lia.admin.execCommand("ban", client, bantime, L(banKey, infraction)) end
 end
 
 --[[
@@ -360,22 +360,22 @@ end
     Example Usage:
         ```lua
         -- Check if player can use kick command
-        if lia.administrator.hasAccess(player, "command_kick") then
+        if lia.admin.hasAccess(player, "command_kick") then
             -- Allow kicking
         end
 
         -- Check if player has access to a tool
-        if lia.administrator.hasAccess(player, "tool_remover") then
+        if lia.admin.hasAccess(player, "tool_remover") then
             -- Give tool access
         end
 
         -- Check usergroup access directly
-        if lia.administrator.hasAccess("admin", "command_ban") then
+        if lia.admin.hasAccess("admin", "command_ban") then
             -- Admin group has ban access
         end
         ```
 ]]
-function lia.administrator.hasAccess(ply, privilege)
+function lia.admin.hasAccess(ply, privilege)
     if not isstring(privilege) then
         lia.error(L("hasAccessExpectedString", tostring(privilege)))
         return false
@@ -392,12 +392,12 @@ function lia.administrator.hasAccess(ply, privilege)
         end
     end
 
-    if not lia.administrator.privileges[privilege] then
+    if not lia.admin.privileges[privilege] then
         if privilege:find("^property_") and properties and properties.List then
             local propName = privilege:sub(10)
             local prop = properties.List[propName]
             if prop then
-                lia.administrator.registerPrivilege({
+                lia.admin.registerPrivilege({
                     Name = L("accessPropertyPrivilege", prop.MenuLabel or propName),
                     ID = privilege,
                     MinAccess = "admin",
@@ -408,7 +408,7 @@ function lia.administrator.hasAccess(ply, privilege)
             local toolName = privilege:sub(6)
             for _, wep in ipairs(weapons.GetList()) do
                 if wep.ClassName == "gmod_tool" and wep.Tool and wep.Tool[toolName] then
-                    lia.administrator.registerPrivilege({
+                    lia.admin.registerPrivilege({
                         Name = L("accessToolPrivilege", toolName:gsub("^%l", string.upper)),
                         ID = privilege,
                         MinAccess = defaultUserTools[string.lower(toolName)] and "user" or "admin",
@@ -422,10 +422,10 @@ function lia.administrator.hasAccess(ply, privilege)
     end
 
     local groupLevel = getGroupLevel(grp)
-    local defaultGroups = lia.administrator.DefaultGroups or {}
+    local defaultGroups = lia.admin.DefaultGroups or {}
     local superadminLevel = defaultGroups.superadmin or 3
     local adminLevel = defaultGroups.admin or 3
-    if not lia.administrator.privileges[privilege] then
+    if not lia.admin.privileges[privilege] then
         if SERVER then
             local playerInfo = IsValid(ply) and ply:Nick() .. " (" .. ply:SteamID() .. ")" or "Unknown"
             lia.log.add(ply, "missingPrivilege", privilege, playerInfo, grp)
@@ -434,9 +434,9 @@ function lia.administrator.hasAccess(ply, privilege)
     end
 
     if groupLevel >= superadminLevel then return true end
-    local g = lia.administrator.groups and lia.administrator.groups[grp] or nil
+    local g = lia.admin.groups and lia.admin.groups[grp] or nil
     if g and g[privilege] == true then return true end
-    local min = lia.administrator.privileges[privilege]
+    local min = lia.admin.privileges[privilege]
     return shouldGrant(grp, min)
 end
 
@@ -460,18 +460,18 @@ end
     Example Usage:
         ```lua
         -- Save admin groups without network sync
-        lia.administrator.save(true)
+        lia.admin.save(true)
 
         -- Save and sync with all clients
-        lia.administrator.save(false)
+        lia.admin.save(false)
         -- or simply:
-        lia.administrator.save()
+        lia.admin.save()
         ```
 ]]
-function lia.administrator.save(noNetwork)
+function lia.admin.save(noNetwork)
     rebuildPrivileges()
     local rows = {}
-    for name, data in pairs(lia.administrator.groups) do
+    for name, data in pairs(lia.admin.groups) do
         local info = istable(data._info) and data._info or {}
         local privs = table.Copy(data)
         privs._info = nil
@@ -485,7 +485,7 @@ function lia.administrator.save(noNetwork)
 
     lia.db.query("DELETE FROM lia_admin")
     lia.db.bulkInsert("admin", rows)
-    if noNetwork or lia.administrator._loading then return end
+    if noNetwork or lia.admin._loading then return end
     lia.net.ready = lia.net.ready or setmetatable({}, {
         __mode = "k"
     })
@@ -499,7 +499,7 @@ function lia.administrator.save(noNetwork)
     end
 
     if not hasReady then return end
-    lia.administrator.sync()
+    lia.admin.sync()
 end
 
 --[[
@@ -526,7 +526,7 @@ end
     Example Usage:
         ```lua
         -- Register a custom admin command privilege
-        lia.administrator.registerPrivilege({
+        lia.admin.registerPrivilege({
             ID = "command_customban",
             Name = "Custom Ban Command",
             MinAccess = "admin",
@@ -534,7 +534,7 @@ end
         })
 
         -- Register a property privilege
-        lia.administrator.registerPrivilege({
+        lia.admin.registerPrivilege({
             ID = "property_teleport",
             Name = "Teleport Property",
             MinAccess = "admin",
@@ -542,7 +542,7 @@ end
         })
         ```
 ]]
-function lia.administrator.registerPrivilege(priv)
+function lia.admin.registerPrivilege(priv)
     if not priv or not priv.ID then
         lia.error(L("privilegeRegistrationError"))
         return
@@ -550,17 +550,17 @@ function lia.administrator.registerPrivilege(priv)
 
     local id = tostring(priv.ID)
     if id == "" then return end
-    if lia.administrator.privileges[id] ~= nil then return end
+    if lia.admin.privileges[id] ~= nil then return end
     local min = tostring(priv.MinAccess or "user"):lower()
-    lia.administrator.privileges[id] = min
-    lia.administrator.privilegeNames[id] = priv.Name or priv.ID
+    lia.admin.privileges[id] = min
+    lia.admin.privilegeNames[id] = priv.Name or priv.ID
     clearPrivilegeCategoryCache()
-    if priv.Category then lia.administrator.privilegeCategories[id] = priv.Category end
-    local defaultGroups = lia.administrator.DefaultGroups or {}
+    if priv.Category then lia.admin.privilegeCategories[id] = priv.Category end
+    local defaultGroups = lia.admin.DefaultGroups or {}
     local minLevel = defaultGroups[tostring(min):lower()] or 1
-    for groupName, perms in pairs(lia.administrator.groups) do
+    for groupName, perms in pairs(lia.admin.groups) do
         perms = perms or {}
-        lia.administrator.groups[groupName] = perms
+        lia.admin.groups[groupName] = perms
         if getGroupLevel(groupName) >= minLevel then perms[id] = true end
     end
 
@@ -574,7 +574,7 @@ function lia.administrator.registerPrivilege(priv)
         Category = category
     })
 
-    if SERVER then lia.administrator.save() end
+    if SERVER then lia.admin.save() end
 end
 
 --[[
@@ -597,20 +597,20 @@ end
     Example Usage:
         ```lua
         -- Unregister a custom privilege
-        lia.administrator.unregisterPrivilege("command_customban")
+        lia.admin.unregisterPrivilege("command_customban")
 
         -- Clean up a tool privilege
-        lia.administrator.unregisterPrivilege("tool_remover")
+        lia.admin.unregisterPrivilege("tool_remover")
         ```
 ]]
-function lia.administrator.unregisterPrivilege(id)
+function lia.admin.unregisterPrivilege(id)
     id = tostring(id or "")
-    if id == "" or lia.administrator.privileges[id] == nil then return end
-    lia.administrator.privileges[id] = nil
+    if id == "" or lia.admin.privileges[id] == nil then return end
+    lia.admin.privileges[id] = nil
     clearPrivilegeCategoryCache()
-    lia.administrator.privilegeCategories[id] = nil
-    lia.administrator.privilegeNames[id] = nil
-    for _, perms in pairs(lia.administrator.groups or {}) do
+    lia.admin.privilegeCategories[id] = nil
+    lia.admin.privilegeNames[id] = nil
+    for _, perms in pairs(lia.admin.groups or {}) do
         perms[id] = nil
     end
 
@@ -620,7 +620,7 @@ function lia.administrator.unregisterPrivilege(id)
         ID = id
     })
 
-    if SERVER then lia.administrator.save() end
+    if SERVER then lia.admin.save() end
 end
 
 --[[
@@ -643,14 +643,14 @@ end
     Example Usage:
         ```lua
         -- Apply inheritance to a moderator group
-        lia.administrator.applyInheritance("moderator")
+        lia.admin.applyInheritance("moderator")
 
         -- Apply inheritance after creating a new usergroup
-        lia.administrator.applyInheritance("customadmin")
+        lia.admin.applyInheritance("customadmin")
         ```
 ]]
-function lia.administrator.applyInheritance(groupName)
-    local groups = lia.administrator.groups or {}
+function lia.admin.applyInheritance(groupName)
+    local groups = lia.admin.groups or {}
     local g = groups[groupName]
     if not g then return end
     local info = g._info or {}
@@ -672,8 +672,8 @@ function lia.administrator.applyInheritance(groupName)
 
     copyFrom(inh)
     local groupLevel = getGroupLevel(groupName)
-    local defaultGroups = lia.administrator.DefaultGroups or {}
-    for priv, min in pairs(lia.administrator.privileges or {}) do
+    local defaultGroups = lia.admin.DefaultGroups or {}
+    for priv, min in pairs(lia.admin.privileges or {}) do
         local m = tostring(min or "user"):lower()
         if groupLevel >= (defaultGroups[m] or 1) then g[priv] = true end
     end
@@ -700,18 +700,18 @@ end
     Example Usage:
         ```lua
         -- Load admin system (called automatically during server initialization)
-        lia.administrator.load()
+        lia.admin.load()
         ```
 ]]
-function lia.administrator.load()
+function lia.admin.load()
     local function continueLoad(groups)
-        lia.administrator.groups = groups or {}
+        lia.admin.groups = groups or {}
         if CAMI then
-            for n, t in pairs(lia.administrator.groups) do
+            for n, t in pairs(lia.admin.groups) do
                 camiRegisterUsergroup(n, t._info and t._info.inheritance or "user")
             end
 
-            for n, m in pairs(lia.administrator.privileges or {}) do
+            for n, m in pairs(lia.admin.privileges or {}) do
                 camiRegisterPrivilege(n, m)
             end
 
@@ -721,7 +721,7 @@ function lia.administrator.load()
         MsgC(Color(83, 143, 239), "[Lilia] ", "[" .. L("logAdmin") .. "] ")
         MsgC(Color(255, 153, 0), L("adminSystemLoaded"), "\n")
         clearGroupLevelCache()
-        hook.Run("OnAdminSystemLoaded", lia.administrator.groups or {}, lia.administrator.privileges or {})
+        hook.Run("OnAdminSystemLoaded", lia.admin.groups or {}, lia.admin.privileges or {})
     end
 
     lia.db.select("*", "admin"):next(function(res)
@@ -741,15 +741,15 @@ function lia.administrator.load()
         end
 
         local created = ensureDefaults(groups)
-        lia.administrator._loading = true
-        lia.administrator.groups = groups
+        lia.admin._loading = true
+        lia.admin.groups = groups
         for n in pairs(groups) do
-            lia.administrator.applyInheritance(n)
+            lia.admin.applyInheritance(n)
         end
 
         rebuildPrivileges()
-        if created then lia.administrator.save(true) end
-        lia.administrator._loading = false
+        if created then lia.admin.save(true) end
+        lia.admin._loading = false
         continueLoad(groups)
     end)
 end
@@ -776,7 +776,7 @@ end
     Example Usage:
         ```lua
         -- Create a moderator group
-        lia.administrator.createGroup("moderator", {
+        lia.admin.createGroup("moderator", {
             _info = {
                 inheritance = "user",
                 types = {}
@@ -786,11 +786,11 @@ end
         })
 
         -- Create a custom admin group
-        lia.administrator.createGroup("customadmin")
+        lia.admin.createGroup("customadmin")
         ```
 ]]
-function lia.administrator.createGroup(groupName, info)
-    if lia.administrator.groups[groupName] then
+function lia.admin.createGroup(groupName, info)
+    if lia.admin.groups[groupName] then
         lia.error(L("usergroupExists"))
         return
     end
@@ -801,13 +801,13 @@ function lia.administrator.createGroup(groupName, info)
         types = {}
     }
 
-    lia.administrator.groups[groupName] = info
-    lia.administrator.missingGroups[groupName] = nil
-    lia.administrator.applyInheritance(groupName)
+    lia.admin.groups[groupName] = info
+    lia.admin.missingGroups[groupName] = nil
+    lia.admin.applyInheritance(groupName)
     camiRegisterUsergroup(groupName, info._info.inheritance or "user")
     clearGroupLevelCache()
-    hook.Run("OnUsergroupCreated", groupName, lia.administrator.groups[groupName])
-    if SERVER then lia.administrator.save() end
+    hook.Run("OnUsergroupCreated", groupName, lia.admin.groups[groupName])
+    if SERVER then lia.admin.save() end
 end
 
 --[[
@@ -830,28 +830,28 @@ end
     Example Usage:
         ```lua
         -- Remove a custom moderator group
-        lia.administrator.removeGroup("moderator")
+        lia.admin.removeGroup("moderator")
 
         -- Remove a custom admin group
-        lia.administrator.removeGroup("customadmin")
+        lia.admin.removeGroup("customadmin")
         ```
 ]]
-function lia.administrator.removeGroup(groupName)
+function lia.admin.removeGroup(groupName)
     if groupName == "user" or groupName == "admin" or groupName == "superadmin" then
         lia.error(L("baseUsergroupCannotBeRemoved"))
         return
     end
 
-    if not lia.administrator.groups[groupName] then
+    if not lia.admin.groups[groupName] then
         lia.error(L("usergroupDoesntExist", groupName))
         return
     end
 
-    lia.administrator.groups[groupName] = nil
+    lia.admin.groups[groupName] = nil
     camiUnregisterUsergroup(groupName)
     clearGroupLevelCache()
     hook.Run("OnUsergroupRemoved", groupName)
-    if SERVER then lia.administrator.save() end
+    if SERVER then lia.admin.save() end
 end
 
 --[[
@@ -876,39 +876,39 @@ end
     Example Usage:
         ```lua
         -- Rename moderator group to staff
-        lia.administrator.renameGroup("moderator", "staff")
+        lia.admin.renameGroup("moderator", "staff")
 
         -- Rename admin group to administrator
-        lia.administrator.renameGroup("admin", "administrator")
+        lia.admin.renameGroup("admin", "administrator")
         ```
 ]]
-function lia.administrator.renameGroup(oldName, newName)
-    if lia.administrator.DefaultGroups[oldName] then
+function lia.admin.renameGroup(oldName, newName)
+    if lia.admin.DefaultGroups[oldName] then
         lia.error(L("baseUsergroupCannotBeRenamed"))
         return
     end
 
-    if not lia.administrator.groups[oldName] then
+    if not lia.admin.groups[oldName] then
         lia.error(L("usergroupDoesntExist", oldName))
         return
     end
 
-    if lia.administrator.groups[newName] then
+    if lia.admin.groups[newName] then
         lia.error(L("usergroupExists"))
         return
     end
 
-    lia.administrator.groups[newName] = lia.administrator.groups[oldName]
-    lia.administrator.groups[oldName] = nil
-    lia.administrator.missingGroups[oldName] = nil
-    lia.administrator.missingGroups[newName] = nil
-    lia.administrator.applyInheritance(newName)
+    lia.admin.groups[newName] = lia.admin.groups[oldName]
+    lia.admin.groups[oldName] = nil
+    lia.admin.missingGroups[oldName] = nil
+    lia.admin.missingGroups[newName] = nil
+    lia.admin.applyInheritance(newName)
     camiUnregisterUsergroup(oldName)
-    local inh = lia.administrator.groups[newName]._info and lia.administrator.groups[newName]._info.inheritance or "user"
+    local inh = lia.admin.groups[newName]._info and lia.admin.groups[newName]._info.inheritance or "user"
     camiRegisterUsergroup(newName, inh)
     clearGroupLevelCache()
     hook.Run("OnUsergroupRenamed", oldName, newName)
-    if SERVER then lia.administrator.save() end
+    if SERVER then lia.admin.save() end
 end
 
 if SERVER then
@@ -932,13 +932,13 @@ if SERVER then
     Example Usage:
         ```lua
         -- Notify admins of a potential exploit
-        lia.administrator.notifyAdmin("exploitDetected")
+        lia.admin.notifyAdmin("exploitDetected")
 
         -- Notify admins of a player report
-        lia.administrator.notifyAdmin("playerReportReceived")
+        lia.admin.notifyAdmin("playerReportReceived")
         ```
 ]]
-    function lia.administrator.notifyAdmin(notification)
+    function lia.admin.notifyAdmin(notification)
         for _, client in player.Iterator() do
             if IsValid(client) and client:hasPrivilege("canSeeAltingNotifications") then client:notifyAdminLocalized(notification) end
         end
@@ -968,26 +968,26 @@ if SERVER then
     Example Usage:
         ```lua
         -- Grant kick permission to moderators
-        lia.administrator.addPermission("moderator", "command_kick", false)
+        lia.admin.addPermission("moderator", "command_kick", false)
 
         -- Grant ban permission to admins silently
-        lia.administrator.addPermission("admin", "command_ban", true)
+        lia.admin.addPermission("admin", "command_ban", true)
         ```
 ]]
-    function lia.administrator.addPermission(groupName, permission, silent)
-        if not lia.administrator.groups[groupName] then
-            if lia.administrator._loading then return end
-            if not lia.administrator.missingGroups[groupName] then
-                lia.administrator.missingGroups[groupName] = true
+    function lia.admin.addPermission(groupName, permission, silent)
+        if not lia.admin.groups[groupName] then
+            if lia.admin._loading then return end
+            if not lia.admin.missingGroups[groupName] then
+                lia.admin.missingGroups[groupName] = true
                 lia.error(L("usergroupDoesntExist", groupName))
             end
             return
         end
 
-        if lia.administrator.DefaultGroups[groupName] then return end
-        lia.administrator.groups[groupName][permission] = true
-        lia.administrator.save(silent and true or false)
-        hook.Run("OnUsergroupPermissionsChanged", groupName, lia.administrator.groups[groupName])
+        if lia.admin.DefaultGroups[groupName] then return end
+        lia.admin.groups[groupName][permission] = true
+        lia.admin.save(silent and true or false)
+        hook.Run("OnUsergroupPermissionsChanged", groupName, lia.admin.groups[groupName])
     end
 
     --[[
@@ -1014,26 +1014,26 @@ if SERVER then
     Example Usage:
         ```lua
         -- Remove kick permission from moderators
-        lia.administrator.removePermission("moderator", "command_kick", false)
+        lia.admin.removePermission("moderator", "command_kick", false)
 
         -- Remove ban permission from admins silently
-        lia.administrator.removePermission("admin", "command_ban", true)
+        lia.admin.removePermission("admin", "command_ban", true)
         ```
 ]]
-    function lia.administrator.removePermission(groupName, permission, silent)
-        if not lia.administrator.groups[groupName] then
-            if lia.administrator._loading then return end
-            if not lia.administrator.missingGroups[groupName] then
-                lia.administrator.missingGroups[groupName] = true
+    function lia.admin.removePermission(groupName, permission, silent)
+        if not lia.admin.groups[groupName] then
+            if lia.admin._loading then return end
+            if not lia.admin.missingGroups[groupName] then
+                lia.admin.missingGroups[groupName] = true
                 lia.error(L("usergroupDoesntExist", groupName))
             end
             return
         end
 
-        if lia.administrator.DefaultGroups[groupName] then return end
-        lia.administrator.groups[groupName][permission] = nil
-        lia.administrator.save(silent and true or false)
-        hook.Run("OnUsergroupPermissionsChanged", groupName, lia.administrator.groups[groupName])
+        if lia.admin.DefaultGroups[groupName] then return end
+        lia.admin.groups[groupName][permission] = nil
+        lia.admin.save(silent and true or false)
+        hook.Run("OnUsergroupPermissionsChanged", groupName, lia.admin.groups[groupName])
     end
 
     --[[
@@ -1056,13 +1056,13 @@ if SERVER then
     Example Usage:
         ```lua
         -- Sync admin data with all clients
-        lia.administrator.sync()
+        lia.admin.sync()
 
         -- Sync admin data with a specific player
-        lia.administrator.sync(specificPlayer)
+        lia.admin.sync(specificPlayer)
         ```
 ]]
-    function lia.administrator.sync(c)
+    function lia.admin.sync(c)
         lia.net.ready = lia.net.ready or setmetatable({}, {
             __mode = "k"
         })
@@ -1071,11 +1071,11 @@ if SERVER then
             if not IsValid(ply) then return end
             if not lia.net.ready[ply] then return end
             lia.net.writeBigTable(ply, "liaUpdateAdminPrivileges", {
-                privileges = lia.administrator.privileges or {},
-                names = lia.administrator.privilegeNames or {}
+                privileges = lia.admin.privileges or {},
+                names = lia.admin.privilegeNames or {}
             })
 
-            timer.Simple(0.05, function() if IsValid(ply) and lia.net.ready[ply] then lia.net.writeBigTable(ply, "liaUpdateAdminGroups", lia.administrator.groups or {}) end end)
+            timer.Simple(0.05, function() if IsValid(ply) and lia.net.ready[ply] then lia.net.writeBigTable(ply, "liaUpdateAdminGroups", lia.admin.groups or {}) end end)
         end
 
         if c and IsValid(c) then
@@ -1083,8 +1083,8 @@ if SERVER then
             return
         end
 
-        lia.administrator._lastSyncPrivilegeCount = table.Count(lia.administrator.privileges)
-        lia.administrator._lastSyncGroupCount = table.Count(lia.administrator.groups)
+        lia.admin._lastSyncPrivilegeCount = table.Count(lia.admin.privileges)
+        lia.admin._lastSyncGroupCount = table.Count(lia.admin.groups)
         local t = player.GetHumans()
         local batchSize = 5
         local delay = 0
@@ -1124,15 +1124,15 @@ if SERVER then
     Example Usage:
         ```lua
         -- Check if admin data needs syncing
-        if lia.administrator.hasChanges() then
-            lia.administrator.sync()
+        if lia.admin.hasChanges() then
+            lia.admin.sync()
         end
         ```
 ]]
-    function lia.administrator.hasChanges()
-        local currentPrivilegeCount = table.Count(lia.administrator.privileges)
-        local currentGroupCount = table.Count(lia.administrator.groups)
-        return currentPrivilegeCount ~= lia.administrator._lastSyncPrivilegeCount or currentGroupCount ~= lia.administrator._lastSyncGroupCount
+    function lia.admin.hasChanges()
+        local currentPrivilegeCount = table.Count(lia.admin.privileges)
+        local currentGroupCount = table.Count(lia.admin.groups)
+        return currentPrivilegeCount ~= lia.admin._lastSyncPrivilegeCount or currentGroupCount ~= lia.admin._lastSyncGroupCount
     end
 
     --[[
@@ -1159,15 +1159,15 @@ if SERVER then
     Example Usage:
         ```lua
         -- Promote player to admin
-        lia.administrator.setPlayerUsergroup(player, "admin", "promotion")
+        lia.admin.setPlayerUsergroup(player, "admin", "promotion")
 
         -- Demote player to user
-        lia.administrator.setPlayerUsergroup(player, "user", "demotion")
+        lia.admin.setPlayerUsergroup(player, "user", "demotion")
         ```
 ]]
-    function lia.administrator.setPlayerUsergroup(ply, newGroup, source)
+    function lia.admin.setPlayerUsergroup(ply, newGroup, source)
         if not IsValid(ply) then return end
-        lia.administrator.setSteamIDUsergroup(ply:SteamID(), newGroup, source)
+        lia.admin.setSteamIDUsergroup(ply:SteamID(), newGroup, source)
     end
 
     --[[
@@ -1194,17 +1194,17 @@ if SERVER then
     Example Usage:
         ```lua
         -- Set offline player's usergroup to admin
-        lia.administrator.setSteamIDUsergroup("STEAM_0:1:12345678", "admin", "promotion")
+        lia.admin.setSteamIDUsergroup("STEAM_0:1:12345678", "admin", "promotion")
 
         -- Demote player by SteamID
-        lia.administrator.setSteamIDUsergroup("STEAM_0:1:12345678", "user", "demotion")
+        lia.admin.setSteamIDUsergroup("STEAM_0:1:12345678", "user", "demotion")
         ```
 ]]
-    function lia.administrator.setSteamIDUsergroup(steamId, newGroup, source)
+    function lia.admin.setSteamIDUsergroup(steamId, newGroup, source)
         local sid = string.Trim(tostring(steamId or ""))
         if sid == "" or not string.match(sid, "^STEAM_%d+:%d+:%d+$") then return end
         local new = tostring(newGroup or "user")
-        if new ~= "user" and not lia.administrator.groups[new] then return end
+        if new ~= "user" and not lia.admin.groups[new] then return end
         local ply = lia.util.getBySteamID(sid)
         local old = IsValid(ply) and tostring(ply:GetUserGroup() or "user") or "user"
         if old == new then return end
@@ -1242,21 +1242,21 @@ if SERVER then
     Example Usage:
         ```lua
         -- Kick a player for spamming
-        lia.administrator.serverExecCommand("kick", targetPlayer, nil, "Spamming in chat", adminPlayer)
+        lia.admin.serverExecCommand("kick", targetPlayer, nil, "Spamming in chat", adminPlayer)
 
         -- Ban a player for 24 hours
-        lia.administrator.serverExecCommand("ban", targetPlayer, 1440, "Griefing", adminPlayer)
+        lia.admin.serverExecCommand("ban", targetPlayer, 1440, "Griefing", adminPlayer)
 
         -- Mute a player
-        lia.administrator.serverExecCommand("mute", targetPlayer, nil, nil, adminPlayer)
+        lia.admin.serverExecCommand("mute", targetPlayer, nil, nil, adminPlayer)
 
         -- Bring a player to admin's position
-        lia.administrator.serverExecCommand("bring", targetPlayer, nil, nil, adminPlayer)
+        lia.admin.serverExecCommand("bring", targetPlayer, nil, nil, adminPlayer)
         ```
 ]]
-    function lia.administrator.serverExecCommand(cmd, victim, dur, reason, admin)
+    function lia.admin.serverExecCommand(cmd, victim, dur, reason, admin)
         local privilegeID = string.lower("command_" .. cmd)
-        if not lia.administrator.hasAccess(admin, privilegeID) then
+        if not lia.admin.hasAccess(admin, privilegeID) then
             admin:notifyErrorLocalized("noPerm")
             lia.log.add(admin, "unauthorizedCommand", cmd)
             return false
@@ -1608,13 +1608,13 @@ else
     Example Usage:
         ```lua
         -- Kick a player via console command
-        lia.administrator.execCommand("kick", targetPlayer, nil, "Rule violation")
+        lia.admin.execCommand("kick", targetPlayer, nil, "Rule violation")
 
         -- Ban a player for 24 hours
-        lia.administrator.execCommand("ban", targetPlayer, 1440, "Griefing")
+        lia.admin.execCommand("ban", targetPlayer, 1440, "Griefing")
         ```
 ]]
-    function lia.administrator.execCommand(cmd, victim, dur, reason)
+    function lia.admin.execCommand(cmd, victim, dur, reason)
         local hookResult, callback = hook.Run("RunAdminSystemCommand", cmd, victim, dur, reason)
         if hookResult == true then
             callback()
@@ -1644,7 +1644,7 @@ if properties and properties.List then
     for name, prop in pairs(properties.List) do
         if name ~= "persist" and name ~= "drive" and name ~= "bonemanipulate" then
             local id = "property_" .. tostring(name)
-            lia.administrator.registerPrivilege({
+            lia.admin.registerPrivilege({
                 Name = L("accessPropertyPrivilege", prop.MenuLabel or name),
                 ID = id,
                 MinAccess = "admin",
@@ -1658,7 +1658,7 @@ for _, wep in ipairs(weapons.GetList()) do
     if wep.ClassName == "gmod_tool" and wep.Tool then
         for tool in pairs(wep.Tool) do
             local id = "tool_" .. tostring(tool)
-            lia.administrator.registerPrivilege({
+            lia.admin.registerPrivilege({
                 Name = L("accessToolPrivilege", tool:gsub("^%l", string.upper)),
                 ID = id,
                 MinAccess = defaultUserTools[string.lower(tool)] and "user" or "admin",
@@ -1670,9 +1670,9 @@ end
 
 if SERVER then
     local function ensureStructures()
-        lia.administrator.groups = lia.administrator.groups or {}
-        for n in pairs(lia.administrator.groups) do
-            lia.administrator.groups[n] = lia.administrator.groups[n] or {}
+        lia.admin.groups = lia.admin.groups or {}
+        for n in pairs(lia.admin.groups) do
+            lia.admin.groups[n] = lia.admin.groups[n] or {}
         end
     end
 
@@ -1729,7 +1729,7 @@ else
         if not groupsChanged and categoryMapCache and #categoryMapCache > 0 then return categoryMapCache end
         lastCacheGroups = currentGroupsTable
         local cats, labels, seen = {}, {}, {}
-        for name in pairs(lia.administrator.privileges or {}) do
+        for name in pairs(lia.admin.privileges or {}) do
             local c = tostring(getPrivilegeCategory(name))
             local key = c:lower()
             labels[key] = labels[key] or c
@@ -1847,16 +1847,16 @@ else
     end
 
     lia.net.readBigTable("liaUpdateAdminGroups", function(tbl)
-        lia.administrator.groups = tbl
+        lia.admin.groups = tbl
         if IsValid(lia.gui.usergroups) and lia.gui.usergroups.refreshTabs then lia.gui.usergroups.refreshTabs() end
     end)
 
     lia.net.readBigTable("liaUpdateAdminPrivileges", function(tbl)
         if tbl and tbl.privileges then
-            lia.administrator.privileges = tbl.privileges
-            lia.administrator.privilegeNames = tbl.names or {}
+            lia.admin.privileges = tbl.privileges
+            lia.admin.privilegeNames = tbl.names or {}
         else
-            lia.administrator.privileges = tbl
+            lia.admin.privileges = tbl
         end
 
         hook.Run("AdminPrivilegesUpdated")
@@ -1888,7 +1888,7 @@ else
         renameBtn.DoClick = function()
             local activeTab = tabs:GetActiveTab()
             if not activeTab or not activeTab.groupName then return end
-            if lia.administrator.DefaultGroups[activeTab.groupName] then
+            if lia.admin.DefaultGroups[activeTab.groupName] then
                 LocalPlayer():notifyErrorLocalized("baseUsergroupCannotBeRenamed")
                 return
             end
@@ -1912,7 +1912,7 @@ else
         deleteBtn.DoClick = function()
             local activeTab = tabs:GetActiveTab()
             if not activeTab or not activeTab.groupName then return end
-            if lia.administrator.DefaultGroups[activeTab.groupName] then
+            if lia.admin.DefaultGroups[activeTab.groupName] then
                 LocalPlayer():notifyErrorLocalized("baseUsergroupCannotBeRemoved")
                 return
             end
@@ -1931,7 +1931,7 @@ else
             local tabPanel = vgui.Create("DPanel")
             tabPanel:Dock(FILL)
             tabPanel.Paint = function(_, w, h) lia.derma.rect(0, 0, w, h):Rad(12):Color(lia.color.theme.panel[1]):Shape(lia.derma.SHAPE_IOS):Draw() end
-            local isDefault = lia.administrator.DefaultGroups and lia.administrator.DefaultGroups[groupName] ~= nil
+            local isDefault = lia.admin.DefaultGroups and lia.admin.DefaultGroups[groupName] ~= nil
             local editable = not isDefault
             local privContainer = tabPanel:Add("DPanel")
             privContainer:Dock(FILL)
@@ -1945,7 +1945,7 @@ else
 
         local function refreshTabs()
             tabs:Clear()
-            local groups = lia.administrator.groups or {}
+            local groups = lia.admin.groups or {}
             local keys = {}
             for g in pairs(groups) do
                 keys[#keys + 1] = g
@@ -1979,4 +1979,4 @@ else
     end)
 end
 
-hook.Add("OnAdminSystemLoaded", "liaAdminSyncAfterLoad", function() lia.administrator.sync() end)
+hook.Add("OnAdminSystemLoaded", "liaAdminSyncAfterLoad", function() lia.admin.sync() end)

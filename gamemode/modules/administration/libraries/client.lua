@@ -93,7 +93,7 @@ function MODULE:ShowPlayerOptions(target, options)
         table.insert(orderedOptions, {
             name = L("blind"),
             image = "icon16/eye.png",
-            func = function() lia.administrator.execCommand("blind", target) end
+            func = function() lia.admin.execCommand("blind", target) end
         })
     end
 
@@ -101,7 +101,7 @@ function MODULE:ShowPlayerOptions(target, options)
         table.insert(orderedOptions, {
             name = L("freeze"),
             image = "icon16/lock.png",
-            func = function() lia.administrator.execCommand("freeze", target) end
+            func = function() lia.admin.execCommand("freeze", target) end
         })
     end
 
@@ -109,7 +109,7 @@ function MODULE:ShowPlayerOptions(target, options)
         table.insert(orderedOptions, {
             name = L("gag"),
             image = "icon16/sound_mute.png",
-            func = function() lia.administrator.execCommand("gag", target) end
+            func = function() lia.admin.execCommand("gag", target) end
         })
     end
 
@@ -117,7 +117,7 @@ function MODULE:ShowPlayerOptions(target, options)
         table.insert(orderedOptions, {
             name = L("ignite"),
             image = "icon16/fire.png",
-            func = function() lia.administrator.execCommand("ignite", target) end
+            func = function() lia.admin.execCommand("ignite", target) end
         })
     end
 
@@ -125,7 +125,7 @@ function MODULE:ShowPlayerOptions(target, options)
         table.insert(orderedOptions, {
             name = L("jail"),
             image = "icon16/lock.png",
-            func = function() lia.administrator.execCommand("jail", target) end
+            func = function() lia.admin.execCommand("jail", target) end
         })
     end
 
@@ -133,45 +133,45 @@ function MODULE:ShowPlayerOptions(target, options)
         table.insert(orderedOptions, {
             name = L("mute"),
             image = "icon16/sound_delete.png",
-            func = function() lia.administrator.execCommand("mute", target) end
+            func = function() lia.admin.execCommand("mute", target) end
         })
     end
 
     table.insert(orderedOptions, {
         name = L("slay"),
         image = "icon16/bomb.png",
-        func = function() lia.administrator.execCommand("slay", target) end
+        func = function() lia.admin.execCommand("slay", target) end
     })
 
     table.insert(orderedOptions, {
         name = L("bring"),
         image = "icon16/arrow_down.png",
-        func = function() lia.administrator.execCommand("bring", target) end
+        func = function() lia.admin.execCommand("bring", target) end
     })
 
     table.insert(orderedOptions, {
         name = L("goTo"),
         image = "icon16/arrow_right.png",
-        func = function() lia.administrator.execCommand("goto", target) end
+        func = function() lia.admin.execCommand("goto", target) end
     })
 
     table.insert(orderedOptions, {
         name = L("respawn"),
         image = "icon16/arrow_refresh.png",
-        func = function() lia.administrator.execCommand("respawn", target) end
+        func = function() lia.admin.execCommand("respawn", target) end
     })
 
     table.insert(orderedOptions, {
         name = L("returnText"),
         image = "icon16/arrow_redo.png",
-        func = function() lia.administrator.execCommand("return", target) end
+        func = function() lia.admin.execCommand("return", target) end
     })
 
     if isBlinded then
         table.insert(orderedOptions, {
             name = L("unblind"),
             image = "icon16/eye.png",
-            func = function() lia.administrator.execCommand("unblind", target) end
+            func = function() lia.admin.execCommand("unblind", target) end
         })
     end
 
@@ -179,7 +179,7 @@ function MODULE:ShowPlayerOptions(target, options)
         table.insert(orderedOptions, {
             name = L("ungag"),
             image = "icon16/sound_low.png",
-            func = function() lia.administrator.execCommand("ungag", target) end
+            func = function() lia.admin.execCommand("ungag", target) end
         })
     end
 
@@ -187,7 +187,7 @@ function MODULE:ShowPlayerOptions(target, options)
         table.insert(orderedOptions, {
             name = L("unfreeze"),
             image = "icon16/accept.png",
-            func = function() lia.administrator.execCommand("unfreeze", target) end
+            func = function() lia.admin.execCommand("unfreeze", target) end
         })
     end
 
@@ -195,7 +195,7 @@ function MODULE:ShowPlayerOptions(target, options)
         table.insert(orderedOptions, {
             name = L("unmute"),
             image = "icon16/sound_add.png",
-            func = function() lia.administrator.execCommand("unmute", target) end
+            func = function() lia.admin.execCommand("unmute", target) end
         })
     end
 
@@ -203,7 +203,7 @@ function MODULE:ShowPlayerOptions(target, options)
         table.insert(orderedOptions, {
             name = L("extinguish"),
             image = "icon16/fire_delete.png",
-            func = function() lia.administrator.execCommand("extinguish", target) end
+            func = function() lia.admin.execCommand("extinguish", target) end
         })
     end
 
@@ -211,7 +211,7 @@ function MODULE:ShowPlayerOptions(target, options)
         table.insert(orderedOptions, {
             name = L("unjail"),
             image = "icon16/lock_open.png",
-            func = function() lia.administrator.execCommand("unjail", target) end
+            func = function() lia.admin.execCommand("unjail", target) end
         })
     end
 
@@ -1325,7 +1325,7 @@ end
 
 local function RunAdminCommand(cmd, tgt, dur, reason)
     local victim = IsValid(tgt) and tgt:IsPlayer() and (tgt:IsBot() and tgt:Name() or tgt:SteamID()) or tgt
-    lia.administrator.execCommand(cmd, victim, dur, reason)
+    lia.admin.execCommand(cmd, victim, dur, reason)
 end
 
 local function OpenPlayerModelUI(tgt)
@@ -3833,10 +3833,10 @@ local function CreateTicketFrame(requester, message, claimed)
     end
 
     local isLocalPlayer = requester == LocalPlayer()
-    createButton("goTo", 35, function() lia.administrator.execCommand("goto", requester) end, isLocalPlayer)
-    createButton("returnText", 60, function() lia.administrator.execCommand("return", requester) end, isLocalPlayer)
-    createButton("freeze", 85, function() lia.administrator.execCommand("freeze", requester) end, isLocalPlayer)
-    createButton("bring", 110, function() lia.administrator.execCommand("bring", requester) end, isLocalPlayer)
+    createButton("goTo", 35, function() lia.admin.execCommand("goto", requester) end, isLocalPlayer)
+    createButton("returnText", 60, function() lia.admin.execCommand("return", requester) end, isLocalPlayer)
+    createButton("freeze", 85, function() lia.admin.execCommand("freeze", requester) end, isLocalPlayer)
+    createButton("bring", 110, function() lia.admin.execCommand("bring", requester) end, isLocalPlayer)
     local shouldClose = false
     local claimButton
     claimButton = createButton("claimCase", 135, function()
