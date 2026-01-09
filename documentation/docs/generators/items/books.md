@@ -115,7 +115,7 @@ Interactive tool for generating Lilia books item definitions. Fill out the field
 .generator-section h3 {
     margin: -6px -6px 20px -6px;
     padding: 16px 20px;
-    background: linear-gradient(135deg, #009688 0%, #e6a800 100%);
+    background: linear-gradient(135deg, #009688 0%, #b39ddb 100%);
     color: white;
     border-radius: 8px 8px 0 0;
     font-weight: 500;
@@ -124,7 +124,7 @@ Interactive tool for generating Lilia books item definitions. Fill out the field
 }
 
 [data-md-color-scheme="slate"] .generator-section h3 {
-    background: linear-gradient(135deg, #26a69a 0%, #ffb300 100%);
+    background: linear-gradient(135deg, #26a69a 0%, #d1c4e9 100%);
 }
 
 .input-group {
@@ -206,7 +206,7 @@ Interactive tool for generating Lilia books item definitions. Fill out the field
 }
 
 .generate-btn {
-    background: linear-gradient(135deg, #009688 0%, #e6a800 100%);
+    background: linear-gradient(135deg, #009688 0%, #b39ddb 100%);
     color: white;
     border: none;
     padding: 16px 32px;
@@ -224,7 +224,7 @@ Interactive tool for generating Lilia books item definitions. Fill out the field
 }
 
 [data-md-color-scheme="slate"] .generate-btn {
-    background: linear-gradient(135deg, #26a69a 0%, #ffb300 100%);
+    background: linear-gradient(135deg, #26a69a 0%, #d1c4e9 100%);
     box-shadow: 0 4px 12px rgba(38, 166, 154, 0.3);
 }
 

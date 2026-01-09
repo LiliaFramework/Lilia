@@ -243,7 +243,6 @@ Sets whether the module is enabled by default
 #### 📋 Purpose
 Sets the folder path for the module
 Internal Variable: This is set automatically by the module system
-]]
 
 ---
 
@@ -252,7 +251,6 @@ Internal Variable: This is set automatically by the module system
 #### 📋 Purpose
 Sets the file path for the module
 Internal Variable: This is set automatically by the module system
-]]
 
 ---
 
@@ -261,7 +259,6 @@ Internal Variable: This is set automatically by the module system
 #### 📋 Purpose
 Sets the variable name for the module
 Internal Variable: This is set automatically by the module system
-]]
 
 ---
 
@@ -270,7 +267,6 @@ Internal Variable: This is set automatically by the module system
 #### 📋 Purpose
 Sets whether the module is currently loading
 Internal Variable: This is set automatically by the module system
-]]
 
 ---
 

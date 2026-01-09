@@ -18,7 +18,6 @@ A panel that shows and allows editing of character biography text
 
 #### ⏰ When Called
 In character creation, character info display, or biography editing interfaces
-]]
 
 ---
 
@@ -30,7 +29,6 @@ A model panel specifically designed for character model display and customizatio
 
 #### ⏰ When Called
 In character creation, model selection, or character preview interfaces
-]]
 
 ---
 
@@ -42,7 +40,6 @@ A panel for selecting and previewing background music for characters
 
 #### ⏰ When Called
 In character creation or settings interfaces
-]]
 
 ---
 
@@ -54,7 +51,6 @@ The primary panel for character information display and basic management
 
 #### ⏰ When Called
 In character selection, character info screens, or character management interfaces
-]]
 
 ---
 
@@ -66,7 +62,6 @@ A confirmation panel for character-related actions
 
 #### ⏰ When Called
 When confirming character creation, deletion, or other character actions
-]]
 
 ---
 
@@ -78,7 +73,6 @@ The main panel for creating new characters
 
 #### ⏰ When Called
 During the character creation process
-]]
 
 ---
 
@@ -90,7 +84,6 @@ A panel representing a single step in character creation
 
 #### ⏰ When Called
 As part of the character creation process
-]]
 
 ---
 
@@ -102,7 +95,6 @@ A custom button panel with Lilia's visual styling, hover animations, ripple effe
 
 #### ⏰ When Called
 Throughout the UI for interactive elements requiring prominent clickable areas
-]]
 
 ---
 
@@ -114,7 +106,6 @@ A large button variant with Lilia's visual styling and effects
 
 #### ⏰ When Called
 For prominent UI elements requiring larger clickable areas
-]]
 
 ---
 
@@ -126,7 +117,6 @@ A button variant that allows custom font specification
 
 #### ⏰ When Called
 When specific font styling is needed for buttons
-]]
 
 ---
 
@@ -138,7 +128,6 @@ The largest button variant with Lilia's visual styling and effects
 
 #### ⏰ When Called
 For very prominent UI elements or main actions
-]]
 
 ---
 
@@ -150,7 +139,6 @@ A circular progress indicator with lock/unlock visual feedback
 
 #### ⏰ When Called
 For displaying lockpicking progress, loading states, or timed actions
-]]
 
 ---
 
@@ -162,7 +150,6 @@ A medium-sized button variant with Lilia's visual styling and effects
 
 #### ⏰ When Called
 For standard UI buttons that need moderate prominence
-]]
 
 ---
 
@@ -174,7 +161,6 @@ A small button variant with Lilia's visual styling and effects
 
 #### ⏰ When Called
 For compact UI elements or secondary actions
-]]
 
 ---
 
@@ -186,7 +172,6 @@ A button variant without background styling for transparent effects
 
 #### ⏰ When Called
 When button text/icons need to appear without background panels
-]]
 
 ---
 
@@ -198,7 +183,6 @@ A styled category header that can expand/collapse to show/hide grouped content w
 
 #### ⏰ When Called
 In settings panels, configuration menus, inventory categories, or any interface requiring organized content sections
-]]
 
 ---
 
@@ -210,7 +194,6 @@ The primary chat system interface with message display and input
 
 #### ⏰ When Called
 For all chat communication in the game
-]]
 
 ---
 
@@ -222,7 +205,6 @@ A toggle checkbox with custom visual design
 
 #### ⏰ When Called
 For boolean options, settings, or toggles
-]]
 
 ---
 
@@ -234,7 +216,6 @@ A simplified checkbox without complex styling
 
 #### ⏰ When Called
 For basic boolean inputs where simple styling is preferred
-]]
 
 ---
 
@@ -246,7 +227,6 @@ A panel for displaying detailed character information
 
 #### ⏰ When Called
 In character selection, info screens, or character management
-]]
 
 ---
 
@@ -258,7 +238,6 @@ A container panel designed for menu layouts
 
 #### ⏰ When Called
 For main menus, submenus, or menu-based interfaces
-]]
 
 ---
 
@@ -270,7 +249,6 @@ A panel for selecting character classes or jobs
 
 #### ⏰ When Called
 In character creation or class selection interfaces
-]]
 
 ---
 
@@ -282,7 +260,6 @@ A customizable dropdown combo box with Lilia theming, smooth animations, and enh
 
 #### ⏰ When Called
 For character class/job selection, faction selection, or any multi-option choice requiring dropdown interface
-]]
 
 ---
 
@@ -294,7 +271,6 @@ A fully customizable context menu with Lilia theming, icons, submenus, and smoot
 
 #### ⏰ When Called
 For entity interaction menus, admin tools, inventory actions, or any context-sensitive popup menu
-]]
 
 ---
 
@@ -306,7 +282,6 @@ A comprehensive dialog system for NPC conversations with conversation history, r
 
 #### ⏰ When Called
 For NPC interactions, quest dialogs, or scripted conversations with non-player characters
-]]
 
 ---
 
@@ -318,7 +293,6 @@ The main dialog menu panel for NPC conversations with conversation history track
 
 #### ⏰ When Called
 When initiating NPC dialog interactions, quest conversations, or scripted dialogue sequences with non-player characters
-]]
 
 ---
 
@@ -330,7 +304,6 @@ A styled list view with custom theming
 
 #### ⏰ When Called
 For displaying lists of items, data, or options
-]]
 
 ---
 
@@ -342,7 +315,6 @@ A specialized menu for door interactions
 
 #### ⏰ When Called
 When interacting with doors or similar entities
-]]
 
 ---
 
@@ -354,7 +326,6 @@ A progress bar with Lilia theming and animations
 
 #### ⏰ When Called
 For loading bars, progress indicators, or value displays
-]]
 
 ---
 
@@ -366,7 +337,6 @@ A customizable text entry field with Lilia theming, placeholder text, character 
 
 #### ⏰ When Called
 For character names, descriptions, search fields, or any text input requiring enhanced styling and validation
-]]
 
 ---
 
@@ -378,7 +348,6 @@ The primary frame panel with title bar, close button, and theming
 
 #### ⏰ When Called
 As the main container for most UI windows and dialogs
-]]
 
 ---
 
@@ -390,7 +359,6 @@ A panel for displaying lists of items with icons and information
 
 #### ⏰ When Called
 In inventory interfaces, item selection, or item browsing
-]]
 
 ---
 
@@ -402,7 +370,6 @@ A specialized panel for selecting items from a list
 
 #### ⏰ When Called
 In item trading, crafting, or selection interfaces
-]]
 
 ---
 
@@ -414,7 +381,6 @@ A container that provides horizontal scrolling
 
 #### ⏰ When Called
 For horizontal layouts that need scrolling
-]]
 
 ---
 
@@ -426,7 +392,6 @@ A horizontal scroll bar control
 
 #### ⏰ When Called
 With horizontal scroll panels
-]]
 
 ---
 
@@ -438,7 +403,6 @@ A panel for displaying item icons with tooltips
 
 #### ⏰ When Called
 In inventory, item lists, or item displays
-]]
 
 ---
 
@@ -450,7 +414,6 @@ A button designed for tab navigation
 
 #### ⏰ When Called
 In tabbed interfaces or tab navigation
-]]
 
 ---
 
@@ -462,7 +425,6 @@ A panel shown when loading fails
 
 #### ⏰ When Called
 When content fails to load
-]]
 
 ---
 
@@ -474,7 +436,6 @@ A 3D model display panel with mouse controls, zoom, rotation, and lighting for c
 
 #### ⏰ When Called
 For character model previews, item model displays, weapon showcases, or any 3D content visualization
-]]
 
 ---
 
@@ -486,7 +447,6 @@ A specialized model panel that automatically rotates models to face the camera f
 
 #### ⏰ When Called
 For character selection screens, profile displays, or any interface requiring standardized model presentation
-]]
 
 ---
 
@@ -498,7 +458,6 @@ A panel for displaying notifications or alerts
 
 #### ⏰ When Called
 For system notifications, alerts, or messages
-]]
 
 ---
 
@@ -510,7 +469,6 @@ A container for multiple notice panels
 
 #### ⏰ When Called
 For managing multiple notifications
-]]
 
 ---
 
@@ -522,7 +480,6 @@ A custom notification panel with colored labels and styled text display
 
 #### ⏰ When Called
 For displaying server messages, system notifications, or custom alerts with colored labels
-]]
 
 ---
 
@@ -534,7 +491,6 @@ A frame with blurred background effect
 
 #### ⏰ When Called
 For modal dialogs or overlay frames
-]]
 
 ---
 
@@ -546,7 +502,6 @@ A frame with semi-transparent background
 
 #### ⏰ When Called
 For overlay panels or semi-transparent windows
-]]
 
 ---
 
@@ -558,7 +513,6 @@ A panel with semi-transparent background
 
 #### ⏰ When Called
 For overlay elements or semi-transparent containers
-]]
 
 ---
 
@@ -570,7 +524,6 @@ A panel for quick access to settings and options
 
 #### ⏰ When Called
 For quick settings access or option panels
-]]
 
 ---
 
@@ -582,7 +535,6 @@ A row displaying privilege information
 
 #### ⏰ When Called
 In admin panels or privilege management
-]]
 
 ---
 
@@ -594,7 +546,6 @@ A panel that arranges children in a radial pattern
 
 #### ⏰ When Called
 For radial menus, circular layouts, or radial interfaces
-]]
 
 ---
 
@@ -606,7 +557,6 @@ A panel displaying player scores and information
 
 #### ⏰ When Called
 For displaying player rankings, scores, or statistics
-]]
 
 ---
 
@@ -618,7 +568,6 @@ A panel that provides vertical scrolling for content
 
 #### ⏰ When Called
 For content that exceeds panel size
-]]
 
 ---
 
@@ -630,7 +579,6 @@ A container that manages multiple tabbed panels
 
 #### ⏰ When Called
 For organizing content into tabs
-]]
 
 ---
 
@@ -642,7 +590,6 @@ A container that slides content in and out
 
 #### ⏰ When Called
 For sliding panels or animated content
-]]
 
 ---
 
@@ -654,7 +601,6 @@ A styled slider panel for numeric value input with smooth animations, convar syn
 
 #### ⏰ When Called
 For settings panels, configuration interfaces, or any UI that requires smooth numeric value selection with visual feedback
-]]
 
 ---
 
@@ -666,7 +612,6 @@ A small button variant with Lilia's visual styling and effects
 
 #### ⏰ When Called
 For compact UI elements or secondary actions requiring standard styling
-]]
 
 ---
 
@@ -678,7 +623,6 @@ A panel for displaying spawn icons with tooltips
 
 #### ⏰ When Called
 For entity spawning, model selection, or icon displays
-]]
 
 ---
 
@@ -690,7 +634,6 @@ A fully featured data table with column sorting, row selection, custom cell rend
 
 #### ⏰ When Called
 For displaying structured data like player lists, item catalogs, server statistics, or admin management interfaces
-]]
 
 ---
 
@@ -702,7 +645,6 @@ A container that manages multiple tabbed panels with smooth animations, custom s
 
 #### ⏰ When Called
 For multi-section interfaces like character creation steps, settings panels, or complex UI with multiple views
-]]
 
 ---
 
@@ -714,7 +656,6 @@ A button representing a user group
 
 #### ⏰ When Called
 In admin panels or user management
-]]
 
 ---
 
@@ -726,7 +667,6 @@ A list displaying user groups
 
 #### ⏰ When Called
 In admin panels or user management interfaces
-]]
 
 ---
 
@@ -738,7 +678,6 @@ A panel for voice chat controls and indicators
 
 #### ⏰ When Called
 For voice chat interfaces or voice controls
-]]
 
 ---
 
@@ -750,7 +689,6 @@ A panel for displaying formatted markup text
 
 #### ⏰ When Called
 For rich text display, formatted content, or styled text
-]]
 
 ---
 
@@ -762,7 +700,6 @@ A single item slot in a grid inventory with drag-and-drop functionality, tooltip
 
 #### ⏰ When Called
 As individual cells in grid-based inventory systems for item management and interaction
-]]
 
 ---
 
@@ -774,7 +711,6 @@ A scrollable grid panel for displaying items in organized rows and columns with 
 
 #### ⏰ When Called
 For comprehensive inventory management interfaces requiring organized item display and navigation
-]]
 
 ---
 
@@ -786,7 +722,6 @@ The primary inventory interface with drag-and-drop, item tooltips, quick actions
 
 #### ⏰ When Called
 As the main player inventory interface for item storage, organization, and interaction
-]]
 
 ---
 
@@ -798,7 +733,6 @@ A feature-rich container for grid-based inventory systems with item filtering, s
 
 #### ⏰ When Called
 As the main container for complex grid-based inventory systems requiring advanced functionality
-]]
 
 ---
 
@@ -810,7 +744,6 @@ A comprehensive vendor interface for buying and selling items with NPC merchants
 
 #### ⏰ When Called
 For NPC vendor interactions, marketplace systems, and economic trading interfaces
-]]
 
 ---
 
@@ -822,7 +755,6 @@ A single vendor item display showing price, stock, purchase options, and item de
 
 #### ⏰ When Called
 Within vendor interfaces to display individual items available for purchase or sale
-]]
 
 ---
 
@@ -834,7 +766,6 @@ An administrative interface for creating and editing vendor NPCs, managing inven
 
 #### ⏰ When Called
 In admin panels for creating and configuring NPC vendors with full control over items and settings
-]]
 
 ---
 
@@ -846,7 +777,6 @@ A specialized editor for configuring which factions can access specific vendors 
 
 #### ⏰ When Called
 In admin panels to set up faction-based access controls for vendor interactions
-]]
 
 ---
 
@@ -858,7 +788,6 @@ An interface for customizing vendor NPC bodygroups, skins, and visual appearance
 
 #### ⏰ When Called
 In admin panels for fine-tuning vendor NPC visual presentation and customization options
-]]
 
 ---
 

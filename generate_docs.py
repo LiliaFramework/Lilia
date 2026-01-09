@@ -126,7 +126,7 @@ def parse_comment_block(comment_text):
         line = line.strip()
 
         # Skip comment markers and empty lines
-        if line.startswith('--[[') or line.startswith('--]]') or not line:
+        if line.startswith('--[[') or line.startswith('--]]') or line.strip() in ['[[', ']]', '--[[', '--]]'] or not line:
             continue
 
         # Check for section headers
@@ -970,62 +970,6 @@ def generate_markdown_for_definition_entries(title: str, subtitle: str, overview
                 md_parts.append('\n'.join(formatted_code))
                 md_parts.append('\n```\n\n')
         md_parts.append('---\n\n')
-
-    # Add comprehensive examples at the end
-    valid_comprehensive_examples = []
-    for example_entry in comprehensive_examples:
-        parsed = example_entry['parsed']
-        if parsed.get('examples'):
-            # Check if any examples have actual content
-            has_content = False
-            for example in parsed['examples']:
-                code_lines = example.get('code', [])
-                if code_lines and any(line.strip() for line in code_lines):
-                    has_content = True
-                    break
-            if has_content:
-                valid_comprehensive_examples.append(example_entry)
-
-    if valid_comprehensive_examples:
-        md_parts.append('## Complete Examples\n\n')
-        md_parts.append('The following examples demonstrate how to use all the properties and methods together to create complete definitions.\n\n')
-
-        for example_entry in valid_comprehensive_examples:
-            parsed = example_entry['parsed']
-            entry_name = example_entry['name']
-
-            # Set appropriate title based on entry type
-            if entry_name == 'example_class':
-                example_title = "Complete Class Example"
-                description = "Below is a comprehensive example showing how to define a complete class with all available properties and methods. This example creates a \"Police Officer\" class that demonstrates typical usage of the class system."
-            elif entry_name == 'example_faction':
-                example_title = "Complete Faction Example"
-                description = "Below is a comprehensive example showing how to define a complete faction with all available properties and methods."
-            elif entry_name == 'example_item':
-                example_title = "Complete Item Example"
-                description = "Below is a comprehensive example showing how to define a complete item with all available properties and methods."
-            else:
-                example_title = "Complete Example"
-                description = parsed.get('purpose', '')
-
-            md_parts.append(f'### {example_title}\n\n')
-
-            # Add description
-            if description:
-                md_parts.append(f'{description}\n\n')
-
-            # Add the example code
-            if parsed.get('examples'):
-                for example in parsed['examples']:
-                    code_lines = example.get('code', [])
-                    # Filter out empty examples
-                    if code_lines and any(line.strip() for line in code_lines):
-                        md_parts.append('```lua\n')
-                        formatted_code = format_lua_code(code_lines)
-                        md_parts.append('\n'.join(formatted_code))
-                        md_parts.append('\n```\n\n')
-
-            md_parts.append('---\n\n')
 
     return ''.join(md_parts)
 
