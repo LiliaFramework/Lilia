@@ -366,15 +366,80 @@ jobs:
       - run: |
           echo "Created workshop addon 3527535922.gma"
       - run: |
-          cat > changelog.txt <<EOF
-          Lilia ${VERSION}
+          echo "=== Extracting Changelog for Workshop ==="
+          if [ -f "documentation/docs/changelog.md" ]; then
+            python3 << EOF
+          import sys
+          import re
+          import os
+          
+          version = os.environ["VERSION"]
+          changelog_path = "documentation/docs/changelog.md"
+          
+          try:
+              with open(changelog_path, 'r', encoding='utf-8') as f:
+                  content = f.read()
+              
+              version_header = f"## Version {version}"
+              if version_header not in content:
+                  sys.stderr.write(f"Could not find changelog entry for version {version}\n")
+                  sys.exit(1)
+              
+              start_idx = content.find(version_header)
+              if start_idx == -1:
+                  sys.stderr.write(f"Could not find changelog entry for version {version}\n")
+                  sys.exit(1)
+              
+              next_version_idx = content.find("\n## Version ", start_idx + len(version_header))
+              if next_version_idx == -1:
+                  section = content[start_idx:]
+              else:
+                  section = content[start_idx:next_version_idx]
+              
+              lines = section.split('\n')
+              output = []
+              in_changes = False
+              
+              for line in lines:
+                  if line.startswith("## Version "):
+                      version_part = line.replace("## Version ", "Version ").split(" (")[0]
+                      output.append(f"{version_part}\n")
+                  elif line.startswith("### Changes"):
+                      in_changes = True
+                  elif in_changes and line.startswith('- '):
+                      output.append(f"• {line[2:]}\n")
+              
+              if not output:
+                  sys.stderr.write(f"Could not extract changes for version {version}\n")
+                  sys.exit(1)
+              
+              sys.stdout.write(''.join(output))
+              sys.exit(0)
+          except Exception as e:
+              sys.stderr.write(f"Error extracting changelog: {e}\n")
+              sys.exit(1)
           EOF
+          > changelog.txt || {
+              echo "Warning: Could not extract changelog for version ${VERSION}, using fallback"
+              echo "Lilia ${VERSION}" > changelog.txt
+          }
+          else
+            echo "Warning: changelog.md not found, using fallback"
+            echo "Lilia ${VERSION}" > changelog.txt
+          fi
+          
+          echo "Workshop changelog content:"
+          cat changelog.txt
+        env:
+          VERSION: ${{ env.VERSION }}
+      - run: |
+          CHANGELOG_CONTENT=$(cat changelog.txt | sed 's/"/\\"/g' | sed ':a;N;$!ba;s/\n/\\n/g')
           cat > workshop.vdf <<EOF
           "workshopitem"{
             "appid" "4000"
             "publishedfileid" "3527535922"
-            "contentfolder" "$(pwd)/3527535922.gma"
-            "changenote" "$(cat changelog.txt)"
+            "contentfolder" "$(pwd -P)/3527535922.gma"
+            "changenote" "${CHANGELOG_CONTENT}"
           }
           EOF
       - run: |
