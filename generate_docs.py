@@ -935,7 +935,7 @@ def generate_documentation_for_hooks_file(file_path: Path, output_dir: Path, bas
 
 def main():
     parser = argparse.ArgumentParser(description='Generate documentation from Lua comment blocks')
-    parser.add_argument('type', choices=['meta', 'library', 'definitions', 'hooks'], help='Type of files to process')
+    parser.add_argument('type', choices=['meta', 'library', 'compatibility', 'definitions', 'hooks'], help='Type of files to process')
     parser.add_argument('files', nargs='*', help='Specific files to process (if empty, processes defaults per type)')
     parser.add_argument('--force', action='store_true', help='Overwrite existing documentation files')
 
@@ -954,6 +954,9 @@ def main():
     elif args.type == 'library':
         input_dir = base_dir / 'libraries'
         output_dir = script_dir / 'documentation' / 'docs' / 'libraries'
+    elif args.type == 'compatibility':
+        input_dir = base_dir / 'libraries' / 'compatibility'
+        output_dir = script_dir / 'documentation' / 'docs' / 'compatibility'
     elif args.type == 'definitions':
         input_dir = docs_definitions_dir
         output_dir = script_dir / 'documentation' / 'docs' / 'definitions'
@@ -975,7 +978,7 @@ def main():
                 matches = glob.glob(file_pattern)
                 files_to_process.extend(matches)
     else:
-        if args.type in ('meta', 'library'):
+        if args.type in ('meta', 'library', 'compatibility'):
             files_to_process.extend(list(input_dir.glob('*.lua')))
 
             if args.type == 'library':
@@ -1016,13 +1019,15 @@ def main():
             generate_documentation_for_file(file_path, output_dir, False, base_docs_dir, args.force)
         elif args.type == 'library' and str(file_path).endswith('.lua'):
             generate_documentation_for_file(file_path, output_dir, True, base_docs_dir, args.force)
+        elif args.type == 'compatibility' and str(file_path).endswith('.lua'):
+            generate_documentation_for_file(file_path, output_dir, True, base_docs_dir, args.force)
         elif args.type == 'definitions' and str(file_path).endswith('.lua'):
             generate_documentation_for_definitions_file(Path(file_path), output_dir, base_docs_dir)
         elif args.type == 'hooks' and str(file_path).endswith('.lua'):
             generate_documentation_for_hooks_file(Path(file_path), output_dir, base_docs_dir)
 
 
-    if args.type in ('meta', 'library', 'definitions', 'hooks'):
+    if args.type in ('meta', 'library', 'compatibility', 'definitions', 'hooks'):
         output_dir.mkdir(parents=True, exist_ok=True)
         generate_index_file(output_dir, args.type)
         
@@ -1056,6 +1061,7 @@ def generate_index_file(output_dir: Path, doc_type: str) -> None:
     title_map = {
         'meta': 'Meta Tables',
         'library': 'Libraries',
+        'compatibility': 'Compatibility',
         'definitions': 'Definitions',
         'hooks': 'Hooks',
         'items': 'Item Definitions'
