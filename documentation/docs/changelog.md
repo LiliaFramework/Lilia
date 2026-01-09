@@ -1,5 +1,30 @@
 # Changelog
 
+## Version 7.254 (January 09, 2026)
+
+### Changes
+
+- Update generate_docs.py
+- Generators
+- Many Changes
+- Successfully updated workshop Lilia to 7.250
+- Delete index.md
+- Successfully updated workshop Lilia to 7.248
+- Generators
+- Successfully updated workshop Lilia to 7.246
+- Renamed
+- Successfully updated workshop Lilia to 7.244
+- Consistency
+- No More Dupes in Example Item
+- Generators
+- Workflow Typo
+- Successfully updated workshop Lilia to 7.239
+- Test Feature
+- Successfully updated workshop Lilia to 7.237
+- Update generate_docs.py
+- CanTakeEntity Hook
+- Weird Error Fix
+
 ## Version 7.250 (January 09, 2026)
 
 ### Changes
