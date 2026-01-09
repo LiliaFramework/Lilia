@@ -1,4 +1,4 @@
-﻿function MODULE:OnPlayerJoinClass(client, class, oldClass)
+function MODULE:OnPlayerJoinClass(client, class, oldClass)
     local info = lia.class.list[class]
     local info2 = lia.class.list[oldClass]
     if info then
@@ -100,20 +100,26 @@ local function applyAttributes(client, attr)
         client:SetModelScale(attr.scale)
     end
 
+    local configRunSpeed = lia.config.get("RunSpeed")
+    local configWalkSpeed = lia.config.get("WalkSpeed")
     if attr.runSpeed then
         if attr.runSpeedMultiplier then
-            client:SetRunSpeed(math.Round(lia.config.get("RunSpeed") * attr.runSpeed))
+            client:SetRunSpeed(math.Round(configRunSpeed * attr.runSpeed))
         else
             client:SetRunSpeed(attr.runSpeed)
         end
+    else
+        client:SetRunSpeed(configRunSpeed)
     end
 
     if attr.walkSpeed then
         if attr.walkSpeedMultiplier then
-            client:SetWalkSpeed(math.Round(lia.config.get("WalkSpeed") * attr.walkSpeed))
+            client:SetWalkSpeed(math.Round(configWalkSpeed * attr.walkSpeed))
         else
             client:SetWalkSpeed(attr.walkSpeed)
         end
+    else
+        client:SetWalkSpeed(configWalkSpeed)
     end
 
     if attr.jumpPower then
@@ -162,21 +168,30 @@ function MODULE:OnEntityCreated(entity)
     end
 end
 
-function MODULE:PlayerLoadout(client)
+function MODULE:PostPlayerLoadout(client)
     local character = client:getChar()
     if not character then return end
     local faction = lia.faction.indices[character:getFaction()]
+    local class = lia.class.list[character:getClass()]
     timer.Simple(0.2, function()
-        if IsValid(client) then applyAttributes(client, faction) end
-        timer.Simple(0.1, function()
-            if IsValid(client) then
-                local class = lia.class.list[character:getClass()]
-                if class then
-                    applyAttributes(client, class)
-                    if class.model and isstring(class.model) then client:SetModel(class.model) end
+        if IsValid(client) then
+            local mergedAttr = {}
+            if faction then
+                for k, v in pairs(faction) do
+                    mergedAttr[k] = v
                 end
             end
-        end)
+
+            if class then
+                for k, v in pairs(class) do
+                    mergedAttr[k] = v
+                end
+
+                if class.model and isstring(class.model) then client:SetModel(class.model) end
+            end
+
+            applyAttributes(client, mergedAttr)
+        end
     end)
 end
 
@@ -189,3 +204,11 @@ function MODULE:CanPlayerSwitchChar(client, currentCharacter, newCharacter)
     local faction = lia.faction.indices[newCharacter:getFaction()]
     if self:CheckFactionLimitReached(faction, newCharacter, client) then return false, L("limitFaction") end
 end
+
+lia.command.add("speed", {
+    desc = "Check your current movement speeds.",
+    onRun = function(client)
+        client:notify(string.format("Current speeds - Run: %d, Walk: %d", client:GetRunSpeed(), client:GetWalkSpeed()))
+        return ""
+    end
+})

@@ -514,8 +514,8 @@ def parse_overview_section(overview_text):
     # Remove comment block markers
     content = re.sub(r'--\[\[(.*)\]\]', r'\1', overview_text, flags=re.DOTALL).strip()
 
-    # Remove "Overview:" prefix if present
-    content = re.sub(r'^\s*Overview:\s*', '', content, flags=re.MULTILINE)
+    # Remove "Overview:" or "Improvements Done:" prefix if present
+    content = re.sub(r'^\s*(Overview|Improvements Done):\s*', '', content, flags=re.MULTILINE)
 
     raw_lines = content.split('\n')
     formatted_lines = []
@@ -688,10 +688,10 @@ def find_comment_blocks_in_file(file_path):
         all_comment_blocks.append(comment_text)
 
         # Check if this is a file header (first comment block that doesn't have function structure or overview, and isn't a folder/file directive)
-        if file_header is None and not any(header in comment_text for header in ['Purpose:', 'When Called:', 'Parameters:', 'Returns:', 'Realm:', 'Example Usage:', 'Overview:', 'Example Item:', 'Folder:', 'File:']):
+        if file_header is None and not any(header in comment_text for header in ['Purpose:', 'When Called:', 'Parameters:', 'Returns:', 'Realm:', 'Example Usage:', 'Overview:', 'Improvements Done:', 'Example Item:', 'Folder:', 'File:']):
             file_header = comment_text
-        # Check if this is an overview section (contains "Overview:")
-        elif 'Overview:' in comment_text and overview_section is None:
+        # Check if this is an overview section (contains "Overview:" or "Improvements Done:")
+        elif ('Overview:' in comment_text or 'Improvements Done:' in comment_text) and overview_section is None:
             overview_section = comment_text
 
     # Return all comment blocks for processing
