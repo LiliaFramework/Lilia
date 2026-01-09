@@ -45,6 +45,33 @@ lia.doors.defaultValues = {
     lastUsed = 0
 }
 
+--[[
+    Purpose:
+        Retrieve door default values merged with any extra fields provided by modules.
+
+    When Called:
+        Anywhere door defaults are needed (initialization, schema checks, load/save).
+
+    Parameters:
+        None
+
+    Returns:
+        table defaults
+            Map of field -> default value including extra fields.
+        table extras
+            Map of extra field definitions collected via the CollectDoorDataFields hook.
+
+    Realm:
+        Shared
+]]
+function lia.doors.getDoorDefaultValues()
+    local extras = {}
+    hook.Run("CollectDoorDataFields", extras)
+    local defaults = table.Copy(lia.doors.defaultValues)
+    for key, info in pairs(extras) do defaults[key] = info and info.default end
+    return defaults, extras
+end
+
 if SERVER then
     --[[
     Purpose:
@@ -77,10 +104,11 @@ if SERVER then
     function lia.doors.setCachedData(door, data)
         local doorID = door:MapCreationID()
         if not doorID or doorID <= 0 then return end
+        local defaults = lia.doors.getDoorDefaultValues()
         local filteredData = {}
         local hasData = false
         for key, value in pairs(data or {}) do
-            local defaultValue = lia.doors.defaultValues[key]
+            local defaultValue = defaults[key]
             if defaultValue ~= nil then
                 if istable(value) and istable(defaultValue) then
                     if not table.IsEmpty(value) then
@@ -130,8 +158,9 @@ if SERVER then
         local doorID = door:MapCreationID()
         if not doorID or doorID <= 0 then return {} end
         local cachedData = lia.doors.stored[doorID] or {}
+        local defaults = select(1, lia.doors.getDoorDefaultValues())
         local fullData = {}
-        for key, defaultValue in pairs(lia.doors.defaultValues) do
+        for key, defaultValue in pairs(defaults) do
             if cachedData[key] ~= nil then
                 fullData[key] = cachedData[key]
             else
@@ -350,11 +379,23 @@ if SERVER then
                 locked = "integer"
             }
 
+            local _, extraFields = lia.doors.getDoorDefaultValues()
+            for colName, info in pairs(extraFields) do expectedColumns[colName] = info and info.type or "text" end
+
             for colName, expectedType in pairs(expectedColumns) do
                 if not columns[colName] then
                     lia.error(L("missingExpectedColumn") .. " " .. colName)
                 elseif columns[colName]:lower() ~= expectedType:lower() then
                     lia.warning(L("column") .. " " .. colName .. " " .. L("hasType") .. " " .. columns[colName] .. ", " .. L("expected") .. " " .. expectedType)
+                end
+            end
+
+            for colName, info in pairs(extraFields) do
+                if not columns[colName] then
+                    local columnType = info and info.type or "text"
+                    local defaultValue = info and info.default
+                    local defaultSQL = defaultValue ~= nil and " DEFAULT " .. lia.db.convertDataType(defaultValue) or ""
+                    lia.db.query("ALTER TABLE lia_doors ADD COLUMN " .. colName .. " " .. columnType .. defaultSQL):catch(function(err) lia.error(L("failedToVerifyDatabaseSchema") .. " " .. tostring(err)) end)
                 end
             end
         end):catch(function(err) lia.error(L("failedToVerifyDatabaseSchema") .. " " .. tostring(err)) end)
@@ -483,8 +524,9 @@ if CLIENT then
         local doorID = door:MapCreationID()
         if not doorID or doorID <= 0 then return {} end
         local cachedData = lia.doors.stored[doorID] or {}
+        local defaults = select(1, lia.doors.getDoorDefaultValues())
         local fullData = {}
-        for key, defaultValue in pairs(lia.doors.defaultValues) do
+        for key, defaultValue in pairs(defaults) do
             if cachedData[key] ~= nil then
                 fullData[key] = cachedData[key]
             else

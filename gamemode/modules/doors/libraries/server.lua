@@ -30,6 +30,7 @@ function MODULE:LoadData()
     local gamemode = SCHEMA and SCHEMA.folder or engine.ActiveGamemode()
     local mapName = lia.data.getEquivalencyMap(game.GetMap())
     local condition = buildCondition(gamemode, mapName)
+    local _, extraFields = lia.doors.getDoorDefaultValues()
     local query = "SELECT * FROM lia_doors WHERE " .. condition
     lia.db.query(query):next(function(res)
         local rows = res.results or {}
@@ -164,6 +165,19 @@ function MODULE:LoadData()
                 hasData = true
             end
 
+            for fieldName, info in pairs(extraFields) do
+                local columnName = info and info.column or fieldName
+                local value = row[columnName]
+                local defaultValue = info and info.default
+                if value ~= nil then
+                    if info and info.type and string.find(string.lower(info.type), "int", 1, true) then value = tonumber(value) or defaultValue end
+                    doorData[fieldName] = value
+                    if defaultValue == nil or value ~= defaultValue then hasData = true end
+                elseif defaultValue ~= nil then
+                    doorData[fieldName] = defaultValue
+                end
+            end
+
             if hasData then
                 doorData = hook.Run("PostDoorDataLoad", ent, doorData) or doorData
                 lia.doors.setCachedData(ent, doorData)
@@ -259,6 +273,7 @@ function MODULE:SaveData()
     local map = lia.data.getEquivalencyMap(game.GetMap())
     local rows = {}
     local doorCount = 0
+    local _, extraFields = lia.doors.getDoorDefaultValues()
     for _, door in ents.Iterator() do
         if door:isDoor() then
             local mapID = door:MapCreationID()
@@ -307,7 +322,7 @@ function MODULE:SaveData()
             local hasFactions = istable(factionsTable) and #factionsTable > 0
             local hasClasses = istable(classesTable) and #classesTable > 0
             local isUnownable = doorData.noSell or hasFactions or hasClasses
-            rows[#rows + 1] = {
+            local row = {
                 gamemode = gamemode,
                 map = map,
                 id = mapID,
@@ -321,6 +336,17 @@ function MODULE:SaveData()
                 locked = doorData.locked and 1 or 0
             }
 
+            for fieldName, info in pairs(extraFields) do
+                local columnName = info and info.column or fieldName
+                local value = doorData[fieldName]
+                if value == nil then value = info and info.default end
+                if value ~= nil then
+                    if info and info.type and string.find(string.lower(info.type), "int", 1, true) then value = math.floor(tonumber(value) or 0) end
+                    row[columnName] = value
+                end
+            end
+
+            rows[#rows + 1] = row
             doorCount = doorCount + 1
         end
     end
