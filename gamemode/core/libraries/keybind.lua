@@ -335,6 +335,7 @@ lia.keybind.add("convertEntity", {
             return
         end
 
+        if hook.Run("CanTakeEntity", client, targetEntity, itemUniqueID) == false then return end
         local character = client:getChar()
         local inventory = character:getInv()
         if not inventory:canAdd(itemUniqueID) then
