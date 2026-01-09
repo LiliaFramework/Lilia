@@ -1,5 +1,30 @@
 # Changelog
 
+## Version 7.231 (January 09, 2026)
+
+### Changes
+
+- lia.administrator changed to lia.admin for consistency
+- Badly Named Var
+- Successfully updated workshop Lilia to 7.228
+- Docs Attempt
+- Successfully updated workshop Lilia to 7.226
+- Update ci.yml
+- Successfully updated workshop Lilia to 7.224
+- More Docs
+- Added Extra Compatibility Layer To Setting Usergroups
+- SAdmin Compatibility
+- Successfully updated workshop Lilia to 7.220
+- Doors Changes
+- Successfully updated workshop Lilia to 7.216
+- DrawPlayerInfoBackground Hook
+- Added Circle Panel
+- Update loader.lua
+- Successfully updated workshop Lilia to 7.214
+- Function Order
+- Successfully updated workshop Lilia to 7.212
+- Compile already :pray:
+
 ## Version 7.228 (January 09, 2026)
 
 ### Changes
