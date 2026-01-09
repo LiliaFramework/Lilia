@@ -158,7 +158,7 @@ function lia.dialog.getConfiguration(uniqueID)
 end
 
 if SERVER then
---[[
+    --[[
     Purpose:
         Retrieves sanitized NPC dialog data by unique identifier.
 
@@ -187,7 +187,7 @@ if SERVER then
         return nil
     end
 
---[[
+    --[[
     Purpose:
         Returns the original unsanitized NPC dialog definition including server-only callbacks.
 
@@ -341,7 +341,7 @@ if SERVER then
         return util.CRC(json or "")
     end
 
---[[
+    --[[
     Purpose:
         Sends sanitized dialog data to a specific client or all connected players.
 
@@ -390,7 +390,7 @@ if SERVER then
         end
     end
 
---[[
+    --[[
     Purpose:
         Broadcasts all dialog data to all connected clients.
 
@@ -415,7 +415,7 @@ if SERVER then
         lia.dialog.syncToClients()
     end
 
---[[
+    --[[
     Purpose:
         Registers an NPC dialog definition and optionally synchronizes changes to clients.
 
@@ -596,7 +596,7 @@ if SERVER then
         }
     })
 
---[[
+    --[[
     Purpose:
         Opens an NPC dialog for a player, filtering conversation options based on player permissions.
 
@@ -717,7 +717,7 @@ if SERVER then
         net.Send(client)
     end
 else
---[[
+    --[[
     Purpose:
         Retrieves sanitized NPC dialog data on the client.
 
@@ -746,7 +746,7 @@ else
         return nil
     end
 
---[[
+    --[[
     Purpose:
         Sends NPC customization data to the server for processing.
 
@@ -782,7 +782,7 @@ else
         net.SendToServer()
     end
 
---[[
+    --[[
     Purpose:
         Opens a comprehensive UI for customizing NPC appearance, animations, and dialog types.
 

@@ -94,7 +94,7 @@ function lia.attribs.register(uniqueID, data)
 end
 
 if SERVER then
---[[
+    --[[
     Purpose:
         Run attribute setup logic for a character on the server.
 

@@ -1,5 +1,30 @@
 # Changelog
 
+## Version 7.224 (January 09, 2026)
+
+### Changes
+
+- More Docs
+- Added Extra Compatibility Layer To Setting Usergroups
+- SAdmin Compatibility
+- Successfully updated workshop Lilia to 7.220
+- Doors Changes
+- Successfully updated workshop Lilia to 7.216
+- DrawPlayerInfoBackground Hook
+- Added Circle Panel
+- Update loader.lua
+- Successfully updated workshop Lilia to 7.214
+- Function Order
+- Successfully updated workshop Lilia to 7.212
+- Compile already :pray:
+- Documentation Update
+- Auto Save
+- Update config.lua
+- Update client.lua
+- Missing Localization
+- Moved Several Hooks To Local Functions
+- Update generate_docs.py
+
 ## Version 7.220 (January 06, 2026)
 
 ### Changes

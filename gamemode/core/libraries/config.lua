@@ -1385,7 +1385,7 @@ lia.config.add("ClassDisplay", "displayClassesOnCharacters", true, nil, {
 })
 
 local function refreshScoreboard()
-    if CLIENT and  IsValid(lia.gui.score) and lia.gui.score.ApplyConfig then lia.gui.score:ApplyConfig() end
+    if CLIENT and IsValid(lia.gui.score) and lia.gui.score.ApplyConfig then lia.gui.score:ApplyConfig() end
 end
 
 lia.config.add("sbWidth", "sbWidth", 0.65, refreshScoreboard, {

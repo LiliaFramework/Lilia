@@ -227,7 +227,12 @@ Sets whether the module is enabled by default
 
 ```lua
     -- Enable or disable the module by default
-    MODULE.enabled = true
+    MODULE.enabled = function()
+        if not lia.config.get("EnableInventory", true) then
+            return false, "Inventory has been disabled in configuration"
+        end
+        return true
+    end
 
 ```
 
@@ -269,26 +274,44 @@ Internal Variable: This is set automatically by the module system
 
 ---
 
-### OnLoaded
+### setData
 
 #### 📋 Purpose
-Called when the module is fully loaded
-
-#### ⏰ When Called
-After all module files have been loaded and initialized
-
-#### 🌐 Realm
-Shared
-
-#### ↩️ Returns
-* None
+Persists module-specific data via lia.data using the module's uniqueID
 
 #### 💡 Example Usage
 
 ```lua
-    -- Called after all module files are loaded
-    function MODULE:OnLoaded()
-        print("Module loaded successfully!")
+    MODULE:setData({ pinned = true })
+
+```
+
+---
+
+### getData
+
+#### 📋 Purpose
+Retrieves the table saved by `setData` and returns the supplied default when nothing was stored yet
+
+#### 💡 Example Usage
+
+```lua
+    local settings = MODULE:getData({ pinned = false })
+
+```
+
+---
+
+### ModuleLoaded
+
+#### 📋 Purpose
+Called once the module and its dependencies have been fully initialized (permissions, includes, submodules, etc.) so you can do final setup.
+
+#### 💡 Example Usage
+
+```lua
+    function MODULE:ModuleLoaded()
+        print(self.name .. " ready.")
     end
 
 ```

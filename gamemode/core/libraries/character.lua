@@ -908,7 +908,7 @@ function lia.char.getTeamColor(client)
 end
 
 if SERVER then
---[[
+    --[[
     Purpose:
         Create a new character row, build its object, and initialize inventories.
 
@@ -973,7 +973,7 @@ if SERVER then
         end)
     end
 
---[[
+    --[[
     Purpose:
         Load all characters for a player (or a specific ID) into memory and inventory.
 
@@ -1099,7 +1099,7 @@ if SERVER then
         end)
     end
 
---[[
+    --[[
     Purpose:
         Unload and save all characters cached for a player.
 
@@ -1139,7 +1139,7 @@ if SERVER then
         end
     end
 
---[[
+    --[[
     Purpose:
         Delete a character, its data, and inventories, and notify affected players.
 
@@ -1214,7 +1214,7 @@ if SERVER then
         end
     end
 
---[[
+    --[[
     Purpose:
         Check the ban state of a character in the database.
 
@@ -1244,7 +1244,7 @@ if SERVER then
         if istable(result) and result[1] then return tonumber(result[1].banned) or 0 end
     end
 
---[[
+    --[[
     Purpose:
         Write a character variable to the database and update any loaded instance.
 
@@ -1371,7 +1371,7 @@ if SERVER then
         end
     end
 
---[[
+    --[[
     Purpose:
         Save and unload a character from memory, clearing associated data vars.
 
@@ -1422,7 +1422,7 @@ if SERVER then
         return true
     end
 
---[[
+    --[[
     Purpose:
         Unload all cached characters for a player except the currently active one.
 
@@ -1455,7 +1455,7 @@ if SERVER then
         return unloadedCount
     end
 
---[[
+    --[[
     Purpose:
         Load a single character from the database, building inventories and caching it.
 

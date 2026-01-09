@@ -16,6 +16,8 @@
 
 - [Prone Mod](https://liliaframework.github.io/Compatibility/prone/)
 
+- [Sadmin](https://liliaframework.github.io/Compatibility/sadmin/)
+
 - [SAM](https://liliaframework.github.io/Compatibility/sam/)
 
 - [ServerGuard](https://liliaframework.github.io/Compatibility/serverguard/)

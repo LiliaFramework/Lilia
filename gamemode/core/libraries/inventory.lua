@@ -118,7 +118,7 @@ if SERVER then
     local DATA_FIELDS = {"key", "value"}
     local DATA_TABLE = "invdata"
     local ITEMS_TABLE = "items"
---[[
+    --[[
     Purpose:
         Loads an inventory instance by its ID, checking cache first and falling back to storage loading.
 
@@ -165,7 +165,7 @@ if SERVER then
         return lia.inventory.loadFromDefaultStorage(id, noCache)
     end
 
---[[
+    --[[
     Purpose:
         Loads an inventory from the default database storage, including associated data and items.
 
@@ -222,7 +222,7 @@ if SERVER then
         end)
     end
 
---[[
+    --[[
     Purpose:
         Creates a new inventory instance with persistent storage initialization.
 
@@ -264,7 +264,7 @@ if SERVER then
         end)
     end
 
---[[
+    --[[
     Purpose:
         Loads all inventories associated with a specific character ID.
 
@@ -301,7 +301,7 @@ if SERVER then
         return lia.db.select({"invID"}, INV_TABLE, "charID = " .. charID):next(function(res) return deferred.map(res.results or {}, function(result) return lia.inventory.loadByID(tonumber(result.invID)) end) end)
     end
 
---[[
+    --[[
     Purpose:
         Permanently deletes an inventory and all its associated data from the database.
 
@@ -333,7 +333,7 @@ if SERVER then
         if instance then instance:destroy() end
     end
 
---[[
+    --[[
     Purpose:
         Destroys all inventories associated with a character during cleanup.
 
@@ -363,7 +363,7 @@ if SERVER then
         end
     end
 
---[[
+    --[[
     Purpose:
         Checks for items that no longer fit in an inventory after resizing and moves them to overflow storage.
 
@@ -425,7 +425,7 @@ if SERVER then
         return false
     end
 
---[[
+    --[[
     Purpose:
         Registers a storage container configuration for entities with the specified model.
 
@@ -464,7 +464,7 @@ if SERVER then
         return data
     end
 
---[[
+    --[[
     Purpose:
         Retrieves the storage configuration for a specific model.
 
@@ -495,7 +495,7 @@ if SERVER then
         return lia.inventory.storage[model:lower()]
     end
 
---[[
+    --[[
     Purpose:
         Registers a vehicle trunk configuration for vehicles with the specified class.
 
@@ -538,7 +538,7 @@ if SERVER then
         return data
     end
 
---[[
+    --[[
     Purpose:
         Retrieves the trunk configuration for a specific vehicle class.
 
@@ -570,7 +570,7 @@ if SERVER then
         return trunkData and trunkData.isTrunk and trunkData or nil
     end
 
---[[
+    --[[
     Purpose:
         Retrieves all registered trunk configurations.
 
@@ -603,7 +603,7 @@ if SERVER then
         return trunks
     end
 
---[[
+    --[[
     Purpose:
         Retrieves all registered storage configurations, optionally excluding trunks.
 
@@ -642,7 +642,7 @@ if SERVER then
         end
     end
 else
---[[
+    --[[
     Purpose:
         Creates and displays an inventory panel for the specified inventory.
 
@@ -683,7 +683,7 @@ else
         return panel
     end
 
---[[
+    --[[
     Purpose:
         Creates and displays two inventory panels side by side for dual inventory interactions.
 

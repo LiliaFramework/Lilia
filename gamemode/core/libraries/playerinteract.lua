@@ -208,7 +208,7 @@ function lia.playerinteract.getCategorizedOptions(options)
 end
 
 if SERVER then
---[[
+    --[[
     Purpose:
         Register a targeted interaction and ensure timed actions wrap onRun.
 
@@ -273,7 +273,7 @@ if SERVER then
         end
     end
 
---[[
+    --[[
     Purpose:
         Register a self-action (no target) and auto-wrap timed executions.
 
@@ -330,7 +330,7 @@ if SERVER then
         end
     end
 
---[[
+    --[[
     Purpose:
         Push registered interactions/actions and categories to clients.
 
@@ -399,7 +399,7 @@ if SERVER then
         end
     end
 
---[[
+    --[[
     Purpose:
         Determine if interaction/action definitions changed since last sync.
 
@@ -504,7 +504,7 @@ if SERVER then
         serverOnly = true
     })
 else
---[[
+    --[[
     Purpose:
         Open the interaction or personal action menu on the client.
 

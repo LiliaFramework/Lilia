@@ -239,7 +239,9 @@ MODULE.loading = false
         MODULE:setData({ pinned = true })
         ```
 ]]
-function MODULE:setData(value, global, ignoreMap) end
+function MODULE:setData(value, global, ignoreMap)
+end
+
 --[[
     Purpose:
         Retrieves the table saved by `setData` and returns the supplied default when nothing was stored yet
@@ -249,7 +251,9 @@ function MODULE:setData(value, global, ignoreMap) end
         local settings = MODULE:getData({ pinned = false })
         ```
 ]]
-function MODULE:getData(default) end
+function MODULE:getData(default)
+end
+
 --[[
     Purpose:
         Called once the module and its dependencies have been fully initialized (permissions, includes, submodules, etc.) so you can do final setup.

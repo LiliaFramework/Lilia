@@ -529,6 +529,7 @@ FACTION.MemberToMemberAutoRecognition = false
 function FACTION:NameTemplate(info, client)
     return "Citizen-" .. math.random(1000, 9999)
 end
+
 --[[
     Purpose:
         Sets a method to get the default character name for this faction
@@ -546,6 +547,7 @@ end
 function FACTION:GetDefaultName(client)
     return "Citizen " .. math.random(1000, 9999)
 end
+
 --[[
     Purpose:
         Sets a method to get the default character description for this faction
@@ -563,6 +565,7 @@ end
 function FACTION:GetDefaultDesc(client)
     return "A citizen of the city"
 end
+
 --[[
     Purpose:
         Custom callback to check if faction player limit is reached
@@ -596,9 +599,9 @@ end
         ```
 ]]
 function FACTION:OnCheckLimitReached(character, client)
-    -- Custom logic for checking faction limits
-    return false -- Return true if limit is reached, false otherwise
+    return false
 end
+
 --[[
     Purpose:
         Called when a player transfers to this faction

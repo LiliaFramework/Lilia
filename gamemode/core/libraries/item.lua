@@ -1064,7 +1064,7 @@ function lia.item.generateAmmo()
 end
 
 if SERVER then
---[[
+    --[[
     Purpose:
         Sets data on an item instance by its ID and synchronizes the changes.
 
@@ -1111,7 +1111,7 @@ if SERVER then
         return true
     end
 
---[[
+    --[[
     Purpose:
         Creates a new item instance in the database and returns the created item.
 
@@ -1197,7 +1197,7 @@ if SERVER then
         return d
     end
 
---[[
+    --[[
     Purpose:
         Deletes an item instance by its ID from memory and/or database.
 
@@ -1228,7 +1228,7 @@ if SERVER then
         end
     end
 
---[[
+    --[[
     Purpose:
         Loads item instances from the database by their IDs and recreates them in memory.
 
@@ -1282,7 +1282,7 @@ if SERVER then
         end)
     end
 
---[[
+    --[[
     Purpose:
         Creates and spawns an item entity in the world at the specified position.
 
@@ -1345,7 +1345,7 @@ if SERVER then
         return d
     end
 
---[[
+    --[[
     Purpose:
         Restores an inventory from the database and sets its dimensions.
 

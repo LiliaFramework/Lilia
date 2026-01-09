@@ -647,7 +647,7 @@ FACTION_STAFF = lia.faction.register("staff", {
 })
 
 if CLIENT then
---[[
+    --[[
     Purpose:
         Checks if the local player has whitelist access to the specified faction on the client side.
 
@@ -687,7 +687,7 @@ if CLIENT then
         return false
     end
 else
---[[
+    --[[
     Purpose:
         Checks whitelist access for a faction on the server side (currently simplified implementation).
 

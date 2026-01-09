@@ -711,7 +711,7 @@ function lia.util.generateRandomName(firstNames, lastNames)
 end
 
 if SERVER then
---[[
+    --[[
     Purpose:
         Sends a localized table UI payload to a client.
 
@@ -764,7 +764,7 @@ if SERVER then
         lia.net.writeBigTable(client, "liaSendTableUI", tableUIData)
     end
 
---[[
+    --[[
     Purpose:
         Finds nearby empty positions around an entity using grid sampling.
 
@@ -836,7 +836,7 @@ else
     lia.util.approachExp = lia.derma.approachExp
     lia.util.easeOutCubic = lia.derma.easeOutCubic
     lia.util.easeInOutCubic = lia.derma.easeInOutCubic
---[[
+    --[[
     Purpose:
         Animates a panel appearing from a scaled, transparent state to its target size and opacity.
 
@@ -915,7 +915,7 @@ else
         end
     end
 
---[[
+    --[[
     Purpose:
         Keeps a menu panel within the screen bounds, respecting the character logo space.
 
@@ -968,7 +968,7 @@ else
         panel:SetPos(x, y)
     end
 
---[[
+    --[[
     Purpose:
         Draws a directional gradient rectangle.
 
@@ -1011,7 +1011,7 @@ else
         lia.derma.drawMaterial(radius, x, y, w, h, colorShadow, listGradients[direction], flags)
     end
 
---[[
+    --[[
     Purpose:
         Wraps text to a maximum width using a specified font.
 
@@ -1066,7 +1066,7 @@ else
         return lines, maxW
     end
 
---[[
+    --[[
     Purpose:
         Draws a blurred background behind a panel.
 
@@ -1112,7 +1112,7 @@ else
         end
     end
 
---[[
+    --[[
     Purpose:
         Draws a blurred background with a dark overlay in a panel's bounds.
 
@@ -1168,7 +1168,7 @@ else
         surface.DrawRect(x, y, panel:GetWide(), panel:GetTall())
     end
 
---[[
+    --[[
     Purpose:
         Draws a blur effect over a specific rectangle on the screen.
 
@@ -1219,7 +1219,7 @@ else
     end
 
     lia.util.requestArguments = lia.derma.requestArguments
---[[
+    --[[
     Purpose:
         Prompts the user for entity information and forwards the result.
 
@@ -1261,7 +1261,7 @@ else
         end)
     end
 
---[[
+    --[[
     Purpose:
         Builds and displays a table UI on the client.
 
@@ -1446,7 +1446,7 @@ else
         return frame, listView
     end
 
---[[
+    --[[
     Purpose:
         Displays a simple options menu with clickable entries.
 
@@ -1578,7 +1578,7 @@ else
     end
 
     lia.util.entsScales = lia.util.entsScales or {}
---[[
+    --[[
     Purpose:
         Draws floating text above an entity that eases in based on distance.
 
@@ -1664,7 +1664,7 @@ else
         EntText(text, screenPos.x, screenPos.y + posY, fade)
     end
 
---[[
+    --[[
     Purpose:
         Draws text at the player's look position with distance-based easing.
 

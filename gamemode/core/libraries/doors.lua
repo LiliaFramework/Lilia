@@ -46,7 +46,7 @@ lia.doors.defaultValues = {
 }
 
 if SERVER then
---[[
+    --[[
     Purpose:
         Store door data overrides in memory and sync to clients, omitting defaults.
 
@@ -103,7 +103,7 @@ if SERVER then
         lia.doors.syncDoorData(door)
     end
 
---[[
+    --[[
     Purpose:
         Retrieve cached door data merged with defaults.
 
@@ -145,7 +145,7 @@ if SERVER then
         return fullData
     end
 
---[[
+    --[[
     Purpose:
         Net-sync a single door's cached data to all clients.
 
@@ -182,7 +182,7 @@ if SERVER then
         net.Broadcast()
     end
 
---[[
+    --[[
     Purpose:
         Bulk-sync all cached doors to a single client.
 
@@ -217,7 +217,7 @@ if SERVER then
         net.Send(client)
     end
 
---[[
+    --[[
     Purpose:
         Set data for a door (alias to setCachedData).
 
@@ -242,7 +242,7 @@ if SERVER then
         lia.doors.setCachedData(door, data)
     end
 
---[[
+    --[[
     Purpose:
         Register a preset of door data for a specific map.
 
@@ -277,7 +277,7 @@ if SERVER then
         lia.information(L("addedDoorPresetForMap") .. ": " .. mapName)
     end
 
---[[
+    --[[
     Purpose:
         Retrieve a door preset table for a map.
 
@@ -303,7 +303,7 @@ if SERVER then
         return lia.doors.presets[mapName]
     end
 
---[[
+    --[[
     Purpose:
         Validate the doors database schema against expected columns.
 
@@ -360,7 +360,7 @@ if SERVER then
         end):catch(function(err) lia.error(L("failedToVerifyDatabaseSchema") .. " " .. tostring(err)) end)
     end
 
---[[
+    --[[
     Purpose:
         Detect and repair corrupted faction/class door data in the database.
 
@@ -457,7 +457,7 @@ end
 
 if CLIENT then
     lia.doors.stored = lia.doors.stored or {}
---[[
+    --[[
     Purpose:
         Client helper to build full door data from cached entries.
 
@@ -498,7 +498,7 @@ if CLIENT then
         return fullData
     end
 
---[[
+    --[[
     Purpose:
         Update the client-side cache for a door ID (or clear it).
 

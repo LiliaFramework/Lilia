@@ -86,6 +86,26 @@ During class definition
 
 ---
 
+### requirements
+
+#### 📋 Purpose
+Provides human-readable requirements or notes displayed in character screens
+
+#### ⏰ When Called
+During class definition
+
+#### 💡 Example Usage
+
+```lua
+    CLASS.requirements = {
+        "req_police_clearance",
+        "req_training_complete"
+    }
+
+```
+
+---
+
 ### faction
 
 #### 📋 Purpose
@@ -98,6 +118,24 @@ During class definition
 
 ```lua
     CLASS.faction = FACTION_POLICE
+
+```
+
+---
+
+### team
+
+#### 📋 Purpose
+Groups related classes together for door access, allowing multiple classes to share permissions
+
+#### ⏰ When Called
+During class definition
+
+#### 💡 Example Usage
+
+```lua
+    CLASS.team = "law"
+    CLASS.team = "medical"
 
 ```
 
@@ -121,6 +159,26 @@ During class definition
 
 ---
 
+### commands
+
+#### 📋 Purpose
+Grants class members access to specific console/lia commands
+
+#### ⏰ When Called
+During class definition
+
+#### 💡 Example Usage
+
+```lua
+    CLASS.commands = {
+        kick = true,
+        give = true
+    }
+
+```
+
+---
+
 ### model
 
 #### 📋 Purpose
@@ -133,6 +191,83 @@ During class definition
 
 ```lua
     CLASS.model = "models/player/barney.mdl"
+
+```
+
+```lua
+
+```
+
+---
+
+### logo
+
+#### 📋 Purpose
+Supplies a custom emblem for UI components (scoreboard tabs, F1 menu, etc.)
+
+#### ⏰ When Called
+During class definition
+
+#### 💡 Example Usage
+
+```lua
+    CLASS.logo = "materials/ui/class/police_logo.png"
+
+```
+
+---
+
+### skin
+
+#### 📋 Purpose
+Sets the default skin index used by UI previews
+
+#### ⏰ When Called
+During class definition
+
+#### 💡 Example Usage
+
+```lua
+    CLASS.skin = 1
+
+```
+
+---
+
+### bodyGroups
+
+#### 📋 Purpose
+Defines bodygroup overrides used by UI previews and optional loadouts
+
+#### ⏰ When Called
+During class definition
+
+#### 💡 Example Usage
+
+```lua
+    CLASS.bodyGroups = {
+        {id = 2, value = 1}
+    }
+
+```
+
+---
+
+### subMaterials
+
+#### 📋 Purpose
+Overrides sub-material entries used by preview panels
+
+#### ⏰ When Called
+During class definition
+
+#### 💡 Example Usage
+
+```lua
+    CLASS.subMaterials = {
+        "models/player/police_submaterial",
+        "models/player/police_submaterial2"
+    }
 
 ```
 
@@ -171,6 +306,40 @@ During class definition
 
 ```lua
     CLASS.isDefault = true
+
+```
+
+---
+
+### canInviteToFaction
+
+#### 📋 Purpose
+Allows this class to invite players into the faction using the interaction menu
+
+#### ⏰ When Called
+During class definition
+
+#### 💡 Example Usage
+
+```lua
+    CLASS.canInviteToFaction = true
+
+```
+
+---
+
+### canInviteToClass
+
+#### 📋 Purpose
+Allows this class to invite players into the same class using the interaction menu
+
+#### ⏰ When Called
+During class definition
+
+#### 💡 Example Usage
+
+```lua
+    CLASS.canInviteToClass = true
 
 ```
 
@@ -265,6 +434,23 @@ During class definition
 
 ```lua
     CLASS.Color = Color(0, 100, 255)  -- Blue color for police
+
+```
+
+---
+
+### color
+
+#### 📋 Purpose
+Sets the accent color used by scoreboard entries and class info panels
+
+#### ⏰ When Called
+During class definition
+
+#### 💡 Example Usage
+
+```lua
+    CLASS.color = Color(0, 120, 255)  -- UI accent color
 
 ```
 
@@ -664,12 +850,41 @@ Below is a comprehensive example showing how to define a complete class with all
 
     CLASS.desc = "A law enforcement officer responsible for maintaining order"
 
+    CLASS.requirements = {
+        "req_police_clearance",
+        "req_training_complete"
+    }
+
     CLASS.faction = FACTION_POLICE
+
+    CLASS.team = "law"
+    CLASS.team = "medical"
 
     CLASS.limit = 5  -- Maximum 5 players
     CLASS.limit = 0  -- Unlimited players
 
+    CLASS.commands = {
+        kick = true,
+        give = true
+    }
+
     CLASS.model = "models/player/barney.mdl"
+
+```
+
+```lua
+    CLASS.logo = "materials/ui/class/police_logo.png"
+
+    CLASS.skin = 1
+
+    CLASS.bodyGroups = {
+        {id = 2, value = 1}
+    }
+
+    CLASS.subMaterials = {
+        "models/player/police_submaterial",
+        "models/player/police_submaterial2"
+    }
 
     CLASS.isWhitelisted = true  -- Requires whitelist permission to join
 
@@ -677,6 +892,10 @@ Below is a comprehensive example showing how to define a complete class with all
 
 ```lua
     CLASS.isDefault = true
+
+    CLASS.canInviteToFaction = true
+
+    CLASS.canInviteToClass = true
 
     CLASS.scoreboardHidden = true  -- Class will not appear in scoreboard categories
 
@@ -695,6 +914,8 @@ Below is a comprehensive example showing how to define a complete class with all
     })
 
     CLASS.Color = Color(0, 100, 255)  -- Blue color for police
+
+    CLASS.color = Color(0, 120, 255)  -- UI accent color
 
     CLASS.health = 150  -- Police officers have 150 max health
 

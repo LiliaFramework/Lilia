@@ -216,7 +216,7 @@ function lia.chat.parse(client, message, noSend)
 end
 
 if SERVER then
---[[
+    --[[
     Purpose:
         Send a chat message to eligible listeners, honoring canHear/canSay rules.
 

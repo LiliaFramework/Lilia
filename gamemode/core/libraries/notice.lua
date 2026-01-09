@@ -13,7 +13,7 @@
 ]]
 lia.notices = lia.notices or {}
 if CLIENT then
---[[
+    --[[
     Purpose:
         Receives notification data from the server via network message and displays it to the client.
 
@@ -50,7 +50,7 @@ if CLIENT then
         end)
     end
 
---[[
+    --[[
     Purpose:
         Receives localized notification data from the server and displays the localized message to the client.
 
@@ -94,7 +94,7 @@ if CLIENT then
         end)
     end
 
---[[
+    --[[
     Purpose:
         Sends an informational notification to a client using a localized message key with optional parameters.
 
@@ -128,7 +128,7 @@ if CLIENT then
         lia.notices.notify(client, L(key, ...), "info")
     end
 
---[[
+    --[[
     Purpose:
         Sends a warning notification to a client using a localized message key with optional parameters.
 
@@ -162,7 +162,7 @@ if CLIENT then
         lia.notices.notify(client, L(key, ...), "warning")
     end
 
---[[
+    --[[
     Purpose:
         Sends an error notification to a client using a localized message key with optional parameters.
 
@@ -196,7 +196,7 @@ if CLIENT then
         lia.notices.notify(client, L(key, ...), "error")
     end
 
---[[
+    --[[
     Purpose:
         Sends a success notification to a client using a localized message key with optional parameters.
 
@@ -230,7 +230,7 @@ if CLIENT then
         lia.notices.notify(client, L(key, ...), "success")
     end
 
---[[
+    --[[
     Purpose:
         Sends a money-related notification to a client using a localized message key with optional parameters.
 
@@ -264,7 +264,7 @@ if CLIENT then
         lia.notices.notify(client, L(key, ...), "money")
     end
 
---[[
+    --[[
     Purpose:
         Sends an admin-related notification to a client using a localized message key with optional parameters.
 
@@ -298,7 +298,7 @@ if CLIENT then
         lia.notices.notify(client, L(key, ...), "admin")
     end
 
---[[
+    --[[
     Purpose:
         Provides compatibility with Garry's Mod's legacy notification system by mapping legacy notification types to Lilia's notification system.
 
@@ -338,8 +338,7 @@ if CLIENT then
     local cachedScrH = ScrH()
     local cachedScale = cachedScrH / 1080
     local lastScrHCheck = 0
-
---[[
+    --[[
     Purpose:
         Organizes and positions notification panels on the screen, ensuring they are properly spaced and positioned relative to screen resolution.
 

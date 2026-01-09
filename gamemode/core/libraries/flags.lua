@@ -54,7 +54,7 @@ function lia.flag.add(flag, desc, callback)
 end
 
 if SERVER then
---[[
+    --[[
     Purpose:
         Execute flag callbacks for a player on spawn, ensuring each flag runs once.
 
@@ -116,6 +116,7 @@ lia.flag.add("t", "flagToolgun", function(client, isGiven)
         client:StripWeapon("gmod_tool")
     end
 end)
+
 --[[
     Purpose:
         Creates a character information panel displaying flag status for the local player.

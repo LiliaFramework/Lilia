@@ -734,7 +734,7 @@ else
         end
     end
 
---[[
+    --[[
     Purpose:
         Send a command invocation to the server via net as a clientside helper.
 
@@ -1019,7 +1019,6 @@ if SERVER then
 
     concommand.Add("plysetgroup", handleSetUserGroup)
     concommand.Add("plysetusergroup", handleSetUserGroup)
-
     concommand.Add("stopsoundall", function(client)
         if client:hasPrivilege("stopSoundForEveryone") then
             for _, v in player.Iterator() do
