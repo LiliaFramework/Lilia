@@ -1,5 +1,30 @@
 # Changelog
 
+## Version 7.239 (January 09, 2026)
+
+### Changes
+
+- Test Feature
+- Successfully updated workshop Lilia to 7.237
+- Update generate_docs.py
+- CanTakeEntity Hook
+- Weird Error Fix
+- Successfully updated workshop Lilia to 7.233
+- Door Saving Improvements
+- Successfully updated workshop Lilia to 7.231
+- lia.administrator changed to lia.admin for consistency
+- Badly Named Var
+- Successfully updated workshop Lilia to 7.228
+- Docs Attempt
+- Successfully updated workshop Lilia to 7.226
+- Update ci.yml
+- Successfully updated workshop Lilia to 7.224
+- More Docs
+- Added Extra Compatibility Layer To Setting Usergroups
+- SAdmin Compatibility
+- Successfully updated workshop Lilia to 7.220
+- Doors Changes
+
 ## Version 7.237 (January 09, 2026)
 
 ### Changes
