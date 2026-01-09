@@ -109,6 +109,13 @@ else
     end)
 end
 
+hook.Add("OnSetUsergroup", "liaServerGuardSetUserGroup", function(steamID, group)
+    if not SERVER then return end
+    if not serverguard then return end
+    if not steamID or steamID == "" or not group or group == "" then return end
+    RunConsoleCommand("serverguard", "setrank", steamID, group)
+end)
+
 hook.Add("serverguard.RankPermissionGiven", "liaServerGuardHandlePermissionGiven", function(rankName, permission)
     if not rankName or not permission then return end
     if CAMI and not CAMI.GetPrivilege(permission) then

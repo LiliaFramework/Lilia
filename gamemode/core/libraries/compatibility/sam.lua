@@ -51,6 +51,12 @@ hook.Add("RunAdminSystemCommand", "liaSam", function(cmd, admin, victim, dur, re
     end
 end)
 
+hook.Add("OnSetUsergroup", "liaSAMSetUserGroup", function(steamID, group)
+    if not sam and not SAM then return end
+    if not steamID or steamID == "" or not group or group == "" then return end
+    RunConsoleCommand("sam", "setrankid", steamID, group)
+end)
+
 hook.Add("SAM.CanRunCommand", "liaSAM", function(client, _, _, cmd)
     if type(client) ~= "Player" then return true end
     if lia.config.get("SAMEnforceStaff", false) then

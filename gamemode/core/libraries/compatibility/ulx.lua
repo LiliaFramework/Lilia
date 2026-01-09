@@ -65,3 +65,9 @@ hook.Add("RunAdminSystemCommand", "liaULX", function(cmd, admin, target, dur, re
         return true, function() end
     end
 end)
+
+hook.Add("OnSetUsergroup", "liaULXSetUserGroup", function(steamID, group)
+    if not ULib then return end
+    if not steamID or steamID == "" or not group or group == "" then return end
+    RunConsoleCommand("ulx", "adduserid", steamID, group)
+end)
