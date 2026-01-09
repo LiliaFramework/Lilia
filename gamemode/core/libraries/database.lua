@@ -38,7 +38,7 @@ lia.db.modules = {
                             lastID = 0
                         })
                     end
-                    return
+                    return d
                 end
 
                 if d then
