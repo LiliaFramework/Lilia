@@ -10,3 +10,603 @@ The entity meta table provides comprehensive functionality for extending Garry's
 
 ---
 
+### EmitSound
+
+#### 📋 Purpose
+<Brief, clear description of what the function does.>
+
+#### ⏰ When Called
+<Describe when and why this function is invoked.>
+
+#### ↩️ Returns
+* <returnType>
+<Description or "nil".>
+
+#### 🌐 Realm
+<Client | Server | Shared>
+
+#### 💡 Example Usage
+
+```lua
+    <High Complexity and well documented Function Call Or Use Case Here>
+
+```
+
+---
+
+### isProp
+
+#### 📋 Purpose
+<Brief, clear description of what the function does.>
+
+#### ⏰ When Called
+<Describe when and why this function is invoked.>
+
+#### ↩️ Returns
+* <returnType>
+<Description or "nil".>
+
+#### 🌐 Realm
+<Client | Server | Shared>
+
+#### 💡 Example Usage
+
+```lua
+    <High Complexity and well documented Function Call Or Use Case Here>
+
+```
+
+---
+
+### isItem
+
+#### 📋 Purpose
+<Brief, clear description of what the function does.>
+
+#### ⏰ When Called
+<Describe when and why this function is invoked.>
+
+#### ↩️ Returns
+* <returnType>
+<Description or "nil".>
+
+#### 🌐 Realm
+<Client | Server | Shared>
+
+#### 💡 Example Usage
+
+```lua
+    <High Complexity and well documented Function Call Or Use Case Here>
+
+```
+
+---
+
+### isMoney
+
+#### 📋 Purpose
+<Brief, clear description of what the function does.>
+
+#### ⏰ When Called
+<Describe when and why this function is invoked.>
+
+#### ↩️ Returns
+* <returnType>
+<Description or "nil".>
+
+#### 🌐 Realm
+<Client | Server | Shared>
+
+#### 💡 Example Usage
+
+```lua
+    <High Complexity and well documented Function Call Or Use Case Here>
+
+```
+
+---
+
+### isSimfphysCar
+
+#### 📋 Purpose
+<Brief, clear description of what the function does.>
+
+#### ⏰ When Called
+<Describe when and why this function is invoked.>
+
+#### ↩️ Returns
+* <returnType>
+<Description or "nil".>
+
+#### 🌐 Realm
+<Client | Server | Shared>
+
+#### 💡 Example Usage
+
+```lua
+    <High Complexity and well documented Function Call Or Use Case Here>
+
+```
+
+---
+
+### checkDoorAccess
+
+#### 📋 Purpose
+<Brief, clear description of what the function does.>
+
+#### ⏰ When Called
+<Describe when and why this function is invoked.>
+
+#### ↩️ Returns
+* <returnType>
+<Description or "nil".>
+
+#### 🌐 Realm
+<Client | Server | Shared>
+
+#### 💡 Example Usage
+
+```lua
+    <High Complexity and well documented Function Call Or Use Case Here>
+
+```
+
+---
+
+### keysOwn
+
+#### 📋 Purpose
+<Brief, clear description of what the function does.>
+
+#### ⏰ When Called
+<Describe when and why this function is invoked.>
+
+#### ↩️ Returns
+* <returnType>
+<Description or "nil".>
+
+#### 🌐 Realm
+<Client | Server | Shared>
+
+#### 💡 Example Usage
+
+```lua
+    <High Complexity and well documented Function Call Or Use Case Here>
+
+```
+
+---
+
+### keysLock
+
+#### 📋 Purpose
+<Brief, clear description of what the function does.>
+
+#### ⏰ When Called
+<Describe when and why this function is invoked.>
+
+#### ↩️ Returns
+* <returnType>
+<Description or "nil".>
+
+#### 🌐 Realm
+<Client | Server | Shared>
+
+#### 💡 Example Usage
+
+```lua
+    <High Complexity and well documented Function Call Or Use Case Here>
+
+```
+
+---
+
+### keysUnLock
+
+#### 📋 Purpose
+<Brief, clear description of what the function does.>
+
+#### ⏰ When Called
+<Describe when and why this function is invoked.>
+
+#### ↩️ Returns
+* <returnType>
+<Description or "nil".>
+
+#### 🌐 Realm
+<Client | Server | Shared>
+
+#### 💡 Example Usage
+
+```lua
+    <High Complexity and well documented Function Call Or Use Case Here>
+
+```
+
+---
+
+### getDoorOwner
+
+#### 📋 Purpose
+<Brief, clear description of what the function does.>
+
+#### ⏰ When Called
+<Describe when and why this function is invoked.>
+
+#### ↩️ Returns
+* <returnType>
+<Description or "nil".>
+
+#### 🌐 Realm
+<Client | Server | Shared>
+
+#### 💡 Example Usage
+
+```lua
+    <High Complexity and well documented Function Call Or Use Case Here>
+
+```
+
+---
+
+### isLocked
+
+#### 📋 Purpose
+<Brief, clear description of what the function does.>
+
+#### ⏰ When Called
+<Describe when and why this function is invoked.>
+
+#### ↩️ Returns
+* <returnType>
+<Description or "nil".>
+
+#### 🌐 Realm
+<Client | Server | Shared>
+
+#### 💡 Example Usage
+
+```lua
+    <High Complexity and well documented Function Call Or Use Case Here>
+
+```
+
+---
+
+### isDoorLocked
+
+#### 📋 Purpose
+<Brief, clear description of what the function does.>
+
+#### ⏰ When Called
+<Describe when and why this function is invoked.>
+
+#### ↩️ Returns
+* <returnType>
+<Description or "nil".>
+
+#### 🌐 Realm
+<Client | Server | Shared>
+
+#### 💡 Example Usage
+
+```lua
+    <High Complexity and well documented Function Call Or Use Case Here>
+
+```
+
+---
+
+### isFemale
+
+#### 📋 Purpose
+<Brief, clear description of what the function does.>
+
+#### ⏰ When Called
+<Describe when and why this function is invoked.>
+
+#### ↩️ Returns
+* <returnType>
+<Description or "nil".>
+
+#### 🌐 Realm
+<Client | Server | Shared>
+
+#### 💡 Example Usage
+
+```lua
+    <High Complexity and well documented Function Call Or Use Case Here>
+
+```
+
+---
+
+### getDoorPartner
+
+#### 📋 Purpose
+<Brief, clear description of what the function does.>
+
+#### ⏰ When Called
+<Describe when and why this function is invoked.>
+
+#### ↩️ Returns
+* <returnType>
+<Description or "nil".>
+
+#### 🌐 Realm
+<Client | Server | Shared>
+
+#### 💡 Example Usage
+
+```lua
+    <High Complexity and well documented Function Call Or Use Case Here>
+
+```
+
+---
+
+### sendNetVar
+
+#### 📋 Purpose
+<Brief, clear description of what the function does.>
+
+#### ⏰ When Called
+<Describe when and why this function is invoked.>
+
+#### ↩️ Returns
+* <returnType>
+<Description or "nil".>
+
+#### 🌐 Realm
+<Client | Server | Shared>
+
+#### 💡 Example Usage
+
+```lua
+    <High Complexity and well documented Function Call Or Use Case Here>
+
+```
+
+---
+
+### clearNetVars
+
+#### 📋 Purpose
+<Brief, clear description of what the function does.>
+
+#### ⏰ When Called
+<Describe when and why this function is invoked.>
+
+#### ↩️ Returns
+* <returnType>
+<Description or "nil".>
+
+#### 🌐 Realm
+<Client | Server | Shared>
+
+#### 💡 Example Usage
+
+```lua
+    <High Complexity and well documented Function Call Or Use Case Here>
+
+```
+
+---
+
+### removeDoorAccessData
+
+#### 📋 Purpose
+<Brief, clear description of what the function does.>
+
+#### ⏰ When Called
+<Describe when and why this function is invoked.>
+
+#### ↩️ Returns
+* <returnType>
+<Description or "nil".>
+
+#### 🌐 Realm
+<Client | Server | Shared>
+
+#### 💡 Example Usage
+
+```lua
+    <High Complexity and well documented Function Call Or Use Case Here>
+
+```
+
+---
+
+### setLocked
+
+#### 📋 Purpose
+<Brief, clear description of what the function does.>
+
+#### ⏰ When Called
+<Describe when and why this function is invoked.>
+
+#### ↩️ Returns
+* <returnType>
+<Description or "nil".>
+
+#### 🌐 Realm
+<Client | Server | Shared>
+
+#### 💡 Example Usage
+
+```lua
+    <High Complexity and well documented Function Call Or Use Case Here>
+
+```
+
+---
+
+### setKeysNonOwnable
+
+#### 📋 Purpose
+<Brief, clear description of what the function does.>
+
+#### ⏰ When Called
+<Describe when and why this function is invoked.>
+
+#### ↩️ Returns
+* <returnType>
+<Description or "nil".>
+
+#### 🌐 Realm
+<Client | Server | Shared>
+
+#### 💡 Example Usage
+
+```lua
+    <High Complexity and well documented Function Call Or Use Case Here>
+
+```
+
+---
+
+### setNetVar
+
+#### 📋 Purpose
+<Brief, clear description of what the function does.>
+
+#### ⏰ When Called
+<Describe when and why this function is invoked.>
+
+#### ↩️ Returns
+* <returnType>
+<Description or "nil".>
+
+#### 🌐 Realm
+<Client | Server | Shared>
+
+#### 💡 Example Usage
+
+```lua
+    <High Complexity and well documented Function Call Or Use Case Here>
+
+```
+
+---
+
+### setLocalVar
+
+#### 📋 Purpose
+<Brief, clear description of what the function does.>
+
+#### ⏰ When Called
+<Describe when and why this function is invoked.>
+
+#### ↩️ Returns
+* <returnType>
+<Description or "nil".>
+
+#### 🌐 Realm
+<Client | Server | Shared>
+
+#### 💡 Example Usage
+
+```lua
+    <High Complexity and well documented Function Call Or Use Case Here>
+
+```
+
+---
+
+### getLocalVar
+
+#### 📋 Purpose
+<Brief, clear description of what the function does.>
+
+#### ⏰ When Called
+<Describe when and why this function is invoked.>
+
+#### ↩️ Returns
+* <returnType>
+<Description or "nil".>
+
+#### 🌐 Realm
+<Client | Server | Shared>
+
+#### 💡 Example Usage
+
+```lua
+    <High Complexity and well documented Function Call Or Use Case Here>
+
+```
+
+---
+
+### playFollowingSound
+
+#### 📋 Purpose
+<Brief, clear description of what the function does.>
+
+#### ⏰ When Called
+<Describe when and why this function is invoked.>
+
+#### ↩️ Returns
+* <returnType>
+<Description or "nil".>
+
+#### 🌐 Realm
+<Client | Server | Shared>
+
+#### 💡 Example Usage
+
+```lua
+    <High Complexity and well documented Function Call Or Use Case Here>
+
+```
+
+---
+
+### isDoor
+
+#### 📋 Purpose
+<Brief, clear description of what the function does.>
+
+#### ⏰ When Called
+<Describe when and why this function is invoked.>
+
+#### ↩️ Returns
+* <returnType>
+<Description or "nil".>
+
+#### 🌐 Realm
+<Client | Server | Shared>
+
+#### 💡 Example Usage
+
+```lua
+    <High Complexity and well documented Function Call Or Use Case Here>
+
+```
+
+---
+
+### getNetVar
+
+#### 📋 Purpose
+<Brief, clear description of what the function does.>
+
+#### ⏰ When Called
+<Describe when and why this function is invoked.>
+
+#### ↩️ Returns
+* <returnType>
+<Description or "nil".>
+
+#### 🌐 Realm
+<Client | Server | Shared>
+
+#### 💡 Example Usage
+
+```lua
+    <High Complexity and well documented Function Call Or Use Case Here>
+
+```
+
+---
+

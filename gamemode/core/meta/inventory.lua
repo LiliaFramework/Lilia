@@ -518,7 +518,7 @@ if SERVER then
             <High Complexity and well documented Function Call Or Use Case Here>
         ```
 ]]
-function Inventory:addItem(item, noReplicate)
+    function Inventory:addItem(item, noReplicate)
         self.items[item:getID()] = item
         item.invID = self:getID()
         local id = self.id
@@ -555,7 +555,7 @@ function Inventory:addItem(item, noReplicate)
             <High Complexity and well documented Function Call Or Use Case Here>
         ```
 ]]
-function Inventory:add(item)
+    function Inventory:add(item)
         return self:addItem(item)
     end
 
@@ -582,7 +582,7 @@ function Inventory:add(item)
             <High Complexity and well documented Function Call Or Use Case Here>
         ```
 ]]
-function Inventory:syncItemAdded(item)
+    function Inventory:syncItemAdded(item)
         assert(istable(item) and item.getID, L("cannotSyncNonItem"))
         assert(self.items[item:getID()], L("itemDoesNotBelong", item:getID(), self.id))
         local recipients = self:getRecipients()
@@ -616,7 +616,7 @@ function Inventory:syncItemAdded(item)
             <High Complexity and well documented Function Call Or Use Case Here>
         ```
 ]]
-function Inventory:initializeStorage(initialData)
+    function Inventory:initializeStorage(initialData)
         local d = deferred.new()
         local charID = initialData.char
         lia.db.insertTable({
@@ -665,7 +665,7 @@ function Inventory:initializeStorage(initialData)
             <High Complexity and well documented Function Call Or Use Case Here>
         ```
 ]]
-function Inventory:restoreFromStorage()
+    function Inventory:restoreFromStorage()
     end
 
     --[[
@@ -691,7 +691,7 @@ function Inventory:restoreFromStorage()
             <High Complexity and well documented Function Call Or Use Case Here>
         ```
 ]]
-function Inventory:removeItem(itemID, preserveItem)
+    function Inventory:removeItem(itemID, preserveItem)
         assert(isnumber(itemID), L("itemIDNumberRequired"))
         local d = deferred.new()
         local instance = self.items[itemID]
@@ -739,7 +739,7 @@ function Inventory:removeItem(itemID, preserveItem)
             <High Complexity and well documented Function Call Or Use Case Here>
         ```
 ]]
-function Inventory:remove(itemID)
+    function Inventory:remove(itemID)
         return self:removeItem(itemID)
     end
 
@@ -766,7 +766,7 @@ function Inventory:remove(itemID)
             <High Complexity and well documented Function Call Or Use Case Here>
         ```
 ]]
-function Inventory:setData(key, value)
+    function Inventory:setData(key, value)
         local oldValue = self.data[key]
         self.data[key] = value
         local keyData = self.config.data[key]
@@ -814,7 +814,7 @@ function Inventory:setData(key, value)
             <High Complexity and well documented Function Call Or Use Case Here>
         ```
 ]]
-function Inventory:canAccess(action, context)
+    function Inventory:canAccess(action, context)
         context = context or {}
         local result, reason
         for _, rule in ipairs(self.config.accessRules) do
@@ -846,7 +846,7 @@ function Inventory:canAccess(action, context)
             <High Complexity and well documented Function Call Or Use Case Here>
         ```
 ]]
-function Inventory:addAccessRule(rule, priority)
+    function Inventory:addAccessRule(rule, priority)
         if isnumber(priority) then
             table.insert(self.config.accessRules, priority, rule)
         else
@@ -878,7 +878,7 @@ function Inventory:addAccessRule(rule, priority)
             <High Complexity and well documented Function Call Or Use Case Here>
         ```
 ]]
-function Inventory:removeAccessRule(rule)
+    function Inventory:removeAccessRule(rule)
         table.RemoveByValue(self.config.accessRules, rule)
         return self
     end
@@ -906,7 +906,7 @@ function Inventory:removeAccessRule(rule)
             <High Complexity and well documented Function Call Or Use Case Here>
         ```
 ]]
-function Inventory:getRecipients()
+    function Inventory:getRecipients()
         local recipients = {}
         for _, client in player.Iterator() do
             if self:canAccess("repl", {
@@ -941,7 +941,7 @@ function Inventory:getRecipients()
             <High Complexity and well documented Function Call Or Use Case Here>
         ```
 ]]
-function Inventory:onInstanced()
+    function Inventory:onInstanced()
     end
 
     --[[
@@ -967,7 +967,7 @@ function Inventory:onInstanced()
             <High Complexity and well documented Function Call Or Use Case Here>
         ```
 ]]
-function Inventory:onLoaded()
+    function Inventory:onLoaded()
     end
 
     local ITEM_TABLE = "items"
@@ -995,7 +995,7 @@ function Inventory:onLoaded()
             <High Complexity and well documented Function Call Or Use Case Here>
         ```
 ]]
-function Inventory:loadItems()
+    function Inventory:loadItems()
         return lia.db.select(ITEM_FIELDS, ITEM_TABLE, "invID = " .. self.id):next(function(res)
             if not res or not istable(res) then
                 local items = {}
@@ -1056,7 +1056,7 @@ function Inventory:loadItems()
             <High Complexity and well documented Function Call Or Use Case Here>
         ```
 ]]
-function Inventory:onItemsLoaded()
+    function Inventory:onItemsLoaded()
     end
 
     --[[
@@ -1082,7 +1082,7 @@ function Inventory:onItemsLoaded()
             <High Complexity and well documented Function Call Or Use Case Here>
         ```
 ]]
-function Inventory:instance(initialData)
+    function Inventory:instance(initialData)
         return lia.inventory.instance(self.typeID, initialData)
     end
 
@@ -1109,7 +1109,7 @@ function Inventory:instance(initialData)
             <High Complexity and well documented Function Call Or Use Case Here>
         ```
 ]]
-function Inventory:syncData(key, recipients)
+    function Inventory:syncData(key, recipients)
         if self.config.data[key] and self.config.data[key].noReplication then return end
         net.Start("liaInventoryData")
         net.WriteType(self.id)
@@ -1141,7 +1141,7 @@ function Inventory:syncData(key, recipients)
             <High Complexity and well documented Function Call Or Use Case Here>
         ```
 ]]
-function Inventory:sync(recipients)
+    function Inventory:sync(recipients)
         net.Start("liaInventoryInit")
         net.WriteType(self.id)
         net.WriteString(self.typeID)
@@ -1192,7 +1192,7 @@ function Inventory:sync(recipients)
             <High Complexity and well documented Function Call Or Use Case Here>
         ```
 ]]
-function Inventory:delete()
+    function Inventory:delete()
         lia.inventory.deleteByID(self.id)
     end
 
@@ -1219,7 +1219,7 @@ function Inventory:delete()
             <High Complexity and well documented Function Call Or Use Case Here>
         ```
 ]]
-function Inventory:destroy()
+    function Inventory:destroy()
         for _, item in pairs(self:getItems()) do
             item:destroy()
         end
@@ -1253,7 +1253,7 @@ else
             <High Complexity and well documented Function Call Or Use Case Here>
         ```
 ]]
-function Inventory:show(parent)
+    function Inventory:show(parent)
         return lia.inventory.show(self, parent)
     end
 end

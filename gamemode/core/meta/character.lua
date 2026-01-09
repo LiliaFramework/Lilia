@@ -448,7 +448,7 @@ if SERVER then
             <High Complexity and well documented Function Call Or Use Case Here>
         ```
 ]]
-function characterMeta:recognize(character, name)
+    function characterMeta:recognize(character, name)
         local id
         if isnumber(character) then
             id = character
@@ -490,7 +490,7 @@ function characterMeta:recognize(character, name)
             <High Complexity and well documented Function Call Or Use Case Here>
         ```
 ]]
-function characterMeta:joinClass(class, isForced)
+    function characterMeta:joinClass(class, isForced)
         if not class then
             self:kickClass()
             return false
@@ -541,7 +541,7 @@ function characterMeta:joinClass(class, isForced)
             <High Complexity and well documented Function Call Or Use Case Here>
         ```
 ]]
-function characterMeta:kickClass()
+    function characterMeta:kickClass()
         local client = self:getPlayer()
         if not client then return end
         local validDefaultClass
@@ -583,7 +583,7 @@ function characterMeta:kickClass()
             <High Complexity and well documented Function Call Or Use Case Here>
         ```
 ]]
-function characterMeta:updateAttrib(key, value)
+    function characterMeta:updateAttrib(key, value)
         local client = self:getPlayer()
         local attribute = lia.attribs.list[key]
         if not attribute then return end
@@ -624,7 +624,7 @@ function characterMeta:updateAttrib(key, value)
             <High Complexity and well documented Function Call Or Use Case Here>
         ```
 ]]
-function characterMeta:setAttrib(key, value)
+    function characterMeta:setAttrib(key, value)
         local client = self:getPlayer()
         local attribute = lia.attribs.list[key]
         if attribute then
@@ -664,7 +664,7 @@ function characterMeta:setAttrib(key, value)
             <High Complexity and well documented Function Call Or Use Case Here>
         ```
 ]]
-function characterMeta:addBoost(boostID, attribID, boostAmount)
+    function characterMeta:addBoost(boostID, attribID, boostAmount)
         local boosts = self:getVar("boosts", {})
         boosts[attribID] = boosts[attribID] or {}
         boosts[attribID][boostID] = boostAmount
@@ -695,7 +695,7 @@ function characterMeta:addBoost(boostID, attribID, boostAmount)
             <High Complexity and well documented Function Call Or Use Case Here>
         ```
 ]]
-function characterMeta:removeBoost(boostID, attribID)
+    function characterMeta:removeBoost(boostID, attribID)
         local boosts = self:getVar("boosts", {})
         boosts[attribID] = boosts[attribID] or {}
         boosts[attribID][boostID] = nil
@@ -726,7 +726,7 @@ function characterMeta:removeBoost(boostID, attribID)
             <High Complexity and well documented Function Call Or Use Case Here>
         ```
 ]]
-function characterMeta:clearAllBoosts()
+    function characterMeta:clearAllBoosts()
         local client = self:getPlayer()
         local boosts = self:getVar("boosts", {})
         for attribID, attribBoosts in pairs(boosts) do
@@ -760,7 +760,7 @@ function characterMeta:clearAllBoosts()
             <High Complexity and well documented Function Call Or Use Case Here>
         ```
 ]]
-function characterMeta:setFlags(flags)
+    function characterMeta:setFlags(flags)
         local oldFlags = self:getFlags()
         self.vars.flags = flags
         net.Start("liaCharSet")
@@ -811,7 +811,7 @@ function characterMeta:setFlags(flags)
             <High Complexity and well documented Function Call Or Use Case Here>
         ```
 ]]
-function characterMeta:giveFlags(flags)
+    function characterMeta:giveFlags(flags)
         local addedFlags = ""
         local ply = self:getPlayer()
         for i = 1, #flags do
@@ -852,7 +852,7 @@ function characterMeta:giveFlags(flags)
             <High Complexity and well documented Function Call Or Use Case Here>
         ```
 ]]
-function characterMeta:takeFlags(flags)
+    function characterMeta:takeFlags(flags)
         local oldFlags = self:getFlags()
         local newFlags = oldFlags
         local ply = self:getPlayer()
@@ -894,7 +894,7 @@ function characterMeta:takeFlags(flags)
             <High Complexity and well documented Function Call Or Use Case Here>
         ```
 ]]
-function characterMeta:save(callback)
+    function characterMeta:save(callback)
         if self.isBot then return end
         local shouldSave = hook.Run("CharPreSave", self)
         if shouldSave ~= false then
@@ -933,7 +933,7 @@ function characterMeta:save(callback)
             <High Complexity and well documented Function Call Or Use Case Here>
         ```
 ]]
-function characterMeta:sync(receiver)
+    function characterMeta:sync(receiver)
         if receiver == nil then
             for _, v in player.Iterator() do
                 self:sync(v)
@@ -1007,7 +1007,7 @@ function characterMeta:sync(receiver)
             <High Complexity and well documented Function Call Or Use Case Here>
         ```
 ]]
-function characterMeta:setup(noNetworking)
+    function characterMeta:setup(noNetworking)
         local client = self:getPlayer()
         if IsValid(client) then
             local model = self:getModel()
@@ -1063,7 +1063,7 @@ function characterMeta:setup(noNetworking)
             <High Complexity and well documented Function Call Or Use Case Here>
         ```
 ]]
-function characterMeta:kick()
+    function characterMeta:kick()
         local client = self:getPlayer()
         client:KillSilent()
         local curChar, steamID = client:getChar(), client:SteamID()
@@ -1110,7 +1110,7 @@ function characterMeta:kick()
             <High Complexity and well documented Function Call Or Use Case Here>
         ```
 ]]
-function characterMeta:ban(time)
+    function characterMeta:ban(time)
         time = tonumber(time)
         local value
         if time then
@@ -1148,7 +1148,7 @@ function characterMeta:ban(time)
             <High Complexity and well documented Function Call Or Use Case Here>
         ```
 ]]
-function characterMeta:delete()
+    function characterMeta:delete()
         lia.char.delete(self:getID(), self:getPlayer())
     end
 
@@ -1175,7 +1175,7 @@ function characterMeta:delete()
             <High Complexity and well documented Function Call Or Use Case Here>
         ```
 ]]
-function characterMeta:destroy()
+    function characterMeta:destroy()
         local id = self:getID()
         lia.char.removeCharacter(id)
     end
@@ -1203,7 +1203,7 @@ function characterMeta:destroy()
             <High Complexity and well documented Function Call Or Use Case Here>
         ```
 ]]
-function characterMeta:giveMoney(amount)
+    function characterMeta:giveMoney(amount)
         local client = self:getPlayer()
         if not IsValid(client) then return false end
         return client:addMoney(amount)
@@ -1232,7 +1232,7 @@ function characterMeta:giveMoney(amount)
             <High Complexity and well documented Function Call Or Use Case Here>
         ```
 ]]
-function characterMeta:takeMoney(amount)
+    function characterMeta:takeMoney(amount)
         amount = math.abs(amount)
         self:giveMoney(-amount)
         lia.log.add(self:getPlayer(), "money", -amount)
@@ -1262,7 +1262,7 @@ function characterMeta:takeMoney(amount)
             <High Complexity and well documented Function Call Or Use Case Here>
         ```
 ]]
-function characterMeta:isMainCharacter()
+    function characterMeta:isMainCharacter()
         local client = self:getPlayer()
         if not IsValid(client) then return false end
         local mainCharID = client:getMainCharacter()

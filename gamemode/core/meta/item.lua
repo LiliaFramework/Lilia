@@ -660,7 +660,7 @@ if SERVER then
             <High Complexity and well documented Function Call Or Use Case Here>
         ```
 ]]
-function ITEM:removeFromInventory(preserveItem)
+    function ITEM:removeFromInventory(preserveItem)
         local inventory = lia.inventory.instances[self.invID]
         self.invID = 0
         if inventory then return inventory:removeItem(self:getID(), preserveItem) end
@@ -692,7 +692,7 @@ function ITEM:removeFromInventory(preserveItem)
             <High Complexity and well documented Function Call Or Use Case Here>
         ```
 ]]
-function ITEM:delete()
+    function ITEM:delete()
         self:destroy()
         return lia.db.delete("items", "itemID = " .. self:getID()):next(function() self:onRemoved() end)
     end
@@ -720,7 +720,7 @@ function ITEM:delete()
             <High Complexity and well documented Function Call Or Use Case Here>
         ```
 ]]
-function ITEM:remove()
+    function ITEM:remove()
         local d = deferred.new()
         if IsValid(self.entity) then SafeRemoveEntity(self.entity) end
         self:removeFromInventory():next(function()
@@ -753,7 +753,7 @@ function ITEM:remove()
             <High Complexity and well documented Function Call Or Use Case Here>
         ```
 ]]
-function ITEM:destroy()
+    function ITEM:destroy()
         net.Start("liaItemDelete")
         net.WriteUInt(self:getID(), 32)
         net.Broadcast()
@@ -784,7 +784,7 @@ function ITEM:destroy()
             <High Complexity and well documented Function Call Or Use Case Here>
         ```
 ]]
-function ITEM:onDisposed()
+    function ITEM:onDisposed()
     end
 
     --[[
@@ -810,7 +810,7 @@ function ITEM:onDisposed()
             <High Complexity and well documented Function Call Or Use Case Here>
         ```
 ]]
-function ITEM:getEntity()
+    function ITEM:getEntity()
         local id = self:getID()
         for _, v in ipairs(ents.FindByClass("lia_item")) do
             if v.liaItemID == id then return v end
@@ -840,7 +840,7 @@ function ITEM:getEntity()
             <High Complexity and well documented Function Call Or Use Case Here>
         ```
 ]]
-function ITEM:spawn(position, angles)
+    function ITEM:spawn(position, angles)
         local instance = lia.item.instances[self.id]
         if instance then
             if IsValid(instance.entity) then
@@ -920,7 +920,7 @@ function ITEM:spawn(position, angles)
             <High Complexity and well documented Function Call Or Use Case Here>
         ```
 ]]
-function ITEM:transfer(newInventory, bBypass)
+    function ITEM:transfer(newInventory, bBypass)
         if not bBypass and not newInventory:canAccess("transfer") then return false end
         local inventory = lia.inventory.instances[self.invID]
         inventory:removeItem(self.id, true):next(function() newInventory:add(self) end)
@@ -950,7 +950,7 @@ function ITEM:transfer(newInventory, bBypass)
             <High Complexity and well documented Function Call Or Use Case Here>
         ```
 ]]
-function ITEM:onInstanced()
+    function ITEM:onInstanced()
     end
 
     --[[
@@ -976,7 +976,7 @@ function ITEM:onInstanced()
             <High Complexity and well documented Function Call Or Use Case Here>
         ```
 ]]
-function ITEM:onSync()
+    function ITEM:onSync()
     end
 
     --[[
@@ -1002,7 +1002,7 @@ function ITEM:onSync()
             <High Complexity and well documented Function Call Or Use Case Here>
         ```
 ]]
-function ITEM:onRemoved()
+    function ITEM:onRemoved()
     end
 
     --[[
@@ -1028,7 +1028,7 @@ function ITEM:onRemoved()
             <High Complexity and well documented Function Call Or Use Case Here>
         ```
 ]]
-function ITEM:onRestored()
+    function ITEM:onRestored()
     end
 
     --[[
@@ -1054,7 +1054,7 @@ function ITEM:onRestored()
             <High Complexity and well documented Function Call Or Use Case Here>
         ```
 ]]
-function ITEM:sync(recipient)
+    function ITEM:sync(recipient)
         net.Start("liaItemInstance")
         net.WriteUInt(self:getID(), 32)
         net.WriteString(self.uniqueID)
@@ -1093,7 +1093,7 @@ function ITEM:sync(recipient)
             <High Complexity and well documented Function Call Or Use Case Here>
         ```
 ]]
-function ITEM:setData(key, value, receivers, noSave, noCheckEntity)
+    function ITEM:setData(key, value, receivers, noSave, noCheckEntity)
         self.data = self.data or {}
         self.data[key] = value
         if not noCheckEntity then
@@ -1154,7 +1154,7 @@ function ITEM:setData(key, value, receivers, noSave, noCheckEntity)
             <High Complexity and well documented Function Call Or Use Case Here>
         ```
 ]]
-function ITEM:addQuantity(quantity, receivers, noCheckEntity)
+    function ITEM:addQuantity(quantity, receivers, noCheckEntity)
         self:setQuantity(self:getQuantity() + quantity, receivers, noCheckEntity)
     end
 
@@ -1181,7 +1181,7 @@ function ITEM:addQuantity(quantity, receivers, noCheckEntity)
             <High Complexity and well documented Function Call Or Use Case Here>
         ```
 ]]
-function ITEM:setQuantity(quantity, receivers, noCheckEntity)
+    function ITEM:setQuantity(quantity, receivers, noCheckEntity)
         self.quantity = quantity
         if not noCheckEntity then
             local entity = self:getEntity()
@@ -1228,7 +1228,7 @@ function ITEM:setQuantity(quantity, receivers, noCheckEntity)
             <High Complexity and well documented Function Call Or Use Case Here>
         ```
 ]]
-function ITEM:interact(action, client, entity, data)
+    function ITEM:interact(action, client, entity, data)
         assert(client:IsPlayer() and IsValid(client), L("itemActionNoPlayer"))
         local canInteract, reason = hook.Run("CanPlayerInteractItem", client, action, self, data)
         if canInteract == false then
