@@ -933,50 +933,6 @@ def generate_documentation_for_hooks_file(file_path: Path, output_dir: Path, bas
     print(f"  Generated {output_path.name}")
 
 
-def generate_compatibility_index(output_dir: Path) -> None:
-    compatibility_dir = output_dir / 'Compatibility'
-
-    if not compatibility_dir.exists():
-        return
-
-    compatibility_files = []
-    for md_file in compatibility_dir.glob('*.md'):
-        if md_file.name != 'index.md':
-            compatibility_files.append(md_file.stem)
-
-    compatibility_files.sort()
-
-    friendly_names = {
-        'advdupe': 'Advanced Duplicator',
-        'advdupe2': 'Advanced Duplicator 2',
-        'arccw': 'ARC9/ARCCW',
-        'cami': 'CAMI',
-        'lvs': 'LVS',
-        'pac': 'PAC3',
-        'permaprops': 'Perma Props',
-        'prone': 'Prone Mod',
-        'sam': 'SAM',
-        'serverguard': 'ServerGuard',
-        'simfphys': 'Simfphys',
-        'sitanywhere': 'Sit Anywhere',
-        'ulx': 'ULX',
-        'vcmod': 'VCMOD',
-        'vjbase': 'VJ Base',
-        'wiremod': 'Wiremod'
-    }
-
-    index_content = '# Compatibility Libraries\n\n'
-    for filename in compatibility_files:
-        friendly_name = friendly_names.get(filename, filename.title())
-        index_content += f'- [{friendly_name}](https://liliaframework.github.io/Compatibility/{filename}/)\n\n'
-
-    index_path = compatibility_dir / 'index.md'
-    with open(index_path, 'w', encoding='utf-8') as f:
-        f.write(index_content)
-
-    print(f"  Generated compatibility index with {len(compatibility_files)} libraries")
-
-
 def main():
     parser = argparse.ArgumentParser(description='Generate documentation from Lua comment blocks')
     parser.add_argument('type', choices=['meta', 'library', 'definitions', 'hooks'], help='Type of files to process')

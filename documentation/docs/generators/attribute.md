@@ -50,18 +50,18 @@
 <style>
 /* Material Design inspired styling for Lilia theme */
 #attribute-generator {
-    max-width: 900px;
+    max-width: 1100px;
     margin: 0 auto;
     font-family: 'Noto Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-    line-height: 1.6;
+    line-height: 1.75;
 }
 
 .generator-section {
     background: var(--md-default-fg-color--lightest);
     border: 1px solid var(--md-default-fg-color--lighter);
-    border-radius: 12px;
-    padding: 24px;
-    margin-bottom: 24px;
+    border-radius: 14px;
+    padding: 28px;
+    margin-bottom: 28px;
     box-shadow: 0 2px 8px rgba(0,0,0,0.1);
     transition: box-shadow 0.3s ease;
 }
@@ -76,13 +76,13 @@
 }
 
 .generator-section h3 {
-    margin: -6px -6px 20px -6px;
-    padding: 16px 20px;
+    margin: -8px -8px 24px -8px;
+    padding: 18px 24px;
     background: linear-gradient(135deg, #009688 0%, #b39ddb 100%);
     color: white;
     border-radius: 8px 8px 0 0;
     font-weight: 500;
-    font-size: 1.4em;
+    font-size: 1.6em;
     letter-spacing: 0.02em;
 }
 
@@ -91,26 +91,26 @@
 }
 
 .input-group {
-    margin-bottom: 20px;
+    margin-bottom: 22px;
 }
 
 .input-group label {
     display: block;
     margin-bottom: 8px;
-    font-weight: 500;
+    font-weight: 600;
     color: var(--md-default-fg-color);
-    font-size: 1.1em;
+    font-size: 1.15em;
 }
 
 .input-group input[type="text"],
 .input-group input[type="number"],
 .input-group textarea {
     width: 100%;
-    padding: 12px 16px;
+    padding: 14px 18px;
     border: 2px solid var(--md-default-fg-color--lighter);
-    border-radius: 8px;
+    border-radius: 10px;
     font-family: 'Roboto Mono', 'Courier New', monospace;
-    font-size: 18px;
+    font-size: 19px;
     background: var(--md-default-fg-color--lightest);
     color: var(--md-default-fg-color);
     transition: border-color 0.3s ease, box-shadow 0.3s ease;
@@ -142,7 +142,7 @@
 
 .input-group textarea {
     resize: vertical;
-    min-height: 60px;
+    min-height: 80px;
     line-height: 1.4;
 }
 
@@ -151,7 +151,7 @@
     color: var(--md-default-fg-color--light);
     font-style: normal;
     margin-top: 6px;
-    font-size: 1.0em;
+    font-size: 1.05em;
 }
 
 [data-md-color-scheme="slate"] .input-group small {
@@ -172,14 +172,14 @@
     background: linear-gradient(135deg, #009688 0%, #b39ddb 100%);
     color: white;
     border: none;
-    padding: 16px 32px;
-    border-radius: 8px;
+    padding: 18px 34px;
+    border-radius: 10px;
     cursor: pointer;
-    font-size: 18px;
+    font-size: 20px;
     font-weight: 600;
     display: block;
     width: 100%;
-    margin: 24px 0;
+    margin: 28px 0;
     transition: all 0.3s ease;
     text-transform: uppercase;
     letter-spacing: 0.5px;
@@ -221,7 +221,7 @@ pre {
 
 code {
     font-family: 'Roboto Mono', 'Courier New', monospace !important;
-    font-size: 15px !important;
+    font-size: 16px !important;
     line-height: 1.5 !important;
 }
 
@@ -232,18 +232,18 @@ code {
     }
 
     .generator-section {
-        padding: 16px;
-        margin-bottom: 16px;
+        padding: 18px;
+        margin-bottom: 18px;
     }
 
     .generator-section h3 {
-        font-size: 1.3em;
-        padding: 12px 16px;
+        font-size: 1.4em;
+        padding: 14px 18px;
     }
 
     .generate-btn {
-        padding: 14px 24px;
-        font-size: 17px;
+        padding: 16px 26px;
+        font-size: 19px;
     }
 }
 
@@ -260,39 +260,31 @@ code {
 
 <script>
 function generateAttribute() {
-    const name = document.getElementById('attribute-name').value || 'Attribute Name';
-    const desc = document.getElementById('attribute-desc').value || 'Attribute description';
+    const name = (document.getElementById('attribute-name').value || '').trim() || 'Attribute Name';
+    const desc = (document.getElementById('attribute-desc').value || '').trim() || 'Attribute description';
     const maxValue = document.getElementById('max-value').value || '100';
     const startingMax = document.getElementById('starting-max').value.trim();
     const noStartBonus = document.getElementById('no-start-bonus').checked;
 
-    // Generate the code
-    let code = `-- Copy and paste this code into your attribute file
--- Example: gamemode/attributes/strength.lua
+    const lines = [
+        '-- Copy and paste this code into your attribute file',
+        '-- Example: gamemode/attributes/strength.lua',
+        '',
+        `ATTRIBUTE.name = ${JSON.stringify(name)}`,
+        `ATTRIBUTE.desc = ${JSON.stringify(desc)}`,
+        `ATTRIBUTE.maxValue = ${maxValue}`
+    ];
 
-ATTRIBUTE.name = "${name}"
-ATTRIBUTE.desc = "${desc}"
-ATTRIBUTE.maxValue = ${maxValue}
+    if (startingMax) lines.push(`ATTRIBUTE.startingMax = ${startingMax}`);
+    lines.push(`ATTRIBUTE.noStartBonus = ${noStartBonus ? 'true' : 'false'}`);
 
-`;
+    const code = `${lines.join('\n')}\n`;
 
-    if (startingMax) {
-        code += `ATTRIBUTE.startingMax = ${startingMax}
-`;
-    }
-
-    if (noStartBonus) {
-        code += `ATTRIBUTE.noStartBonus = true
-`;
-    }
-
-    // Update the code block
     const codeBlock = document.querySelector('code');
     if (codeBlock) {
         codeBlock.textContent = code;
     }
 
-    // Also update the pre element that contains the code
     const preElement = document.querySelector('pre');
     if (preElement) {
         preElement.innerHTML = `<code>${code.replace(/</g, '&lt;').replace(/>/g, '&gt;')}</code>`;

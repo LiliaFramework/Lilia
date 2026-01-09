@@ -46,6 +46,12 @@
     <div class="generator-section">
         <h3>Grenade Properties</h3>
         <div class="input-group">
+            <label for="weapon-class">Weapon Class:</label>
+            <input type="text" id="weapon-class" placeholder="weapon_frag">
+            <small>Weapon entity class that gets given to the player</small>
+        </div>
+
+        <div class="input-group">
             <label for="throw-force">Throw Force:</label>
             <input type="number" id="throw-force" placeholder="1000" min="1" value="1000">
             <small>Force applied when throwing the grenade</small>
@@ -55,6 +61,13 @@
             <label for="throw-sound">Throw Sound:</label>
             <input type="text" id="throw-sound" placeholder="weapons/grenade_throw.wav">
             <small>Sound played when throwing (optional)</small>
+        </div>
+
+        <div class="input-group">
+            <label>
+                <input type="checkbox" id="drop-on-death" checked> Drop On Death
+            </label>
+            <small>Keep grenade logic consistent on player death</small>
         </div>
     </div>
 
@@ -70,18 +83,18 @@
 <style>
 /* Material Design inspired styling for Lilia theme */
 #grenade-generator {
-    max-width: 900px;
+    max-width: 1100px;
     margin: 0 auto;
     font-family: 'Noto Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-    line-height: 1.6;
+    line-height: 1.75;
 }
 
 .generator-section {
     background: var(--md-default-fg-color--lightest);
     border: 1px solid var(--md-default-fg-color--lighter);
-    border-radius: 12px;
-    padding: 24px;
-    margin-bottom: 24px;
+    border-radius: 14px;
+    padding: 28px;
+    margin-bottom: 28px;
     box-shadow: 0 2px 8px rgba(0,0,0,0.1);
     transition: box-shadow 0.3s ease;
 }
@@ -96,13 +109,13 @@
 }
 
 .generator-section h3 {
-    margin: -6px -6px 20px -6px;
-    padding: 16px 20px;
+    margin: -8px -8px 24px -8px;
+    padding: 18px 24px;
     background: linear-gradient(135deg, #009688 0%, #b39ddb 100%);
     color: white;
     border-radius: 8px 8px 0 0;
     font-weight: 500;
-    font-size: 1.4em;
+    font-size: 1.6em;
     letter-spacing: 0.02em;
 }
 
@@ -111,26 +124,26 @@
 }
 
 .input-group {
-    margin-bottom: 20px;
+    margin-bottom: 22px;
 }
 
 .input-group label {
     display: block;
     margin-bottom: 8px;
-    font-weight: 500;
+    font-weight: 600;
     color: var(--md-default-fg-color);
-    font-size: 1.1em;
+    font-size: 1.15em;
 }
 
 .input-group input[type="text"],
 .input-group input[type="number"],
 .input-group textarea {
     width: 100%;
-    padding: 12px 16px;
+    padding: 14px 18px;
     border: 2px solid var(--md-default-fg-color--lighter);
-    border-radius: 8px;
+    border-radius: 10px;
     font-family: 'Roboto Mono', 'Courier New', monospace;
-    font-size: 18px;
+    font-size: 19px;
     background: var(--md-default-fg-color--lightest);
     color: var(--md-default-fg-color);
     transition: border-color 0.3s ease, box-shadow 0.3s ease;
@@ -162,7 +175,7 @@
 
 .input-group textarea {
     resize: vertical;
-    min-height: 60px;
+    min-height: 80px;
     line-height: 1.4;
 }
 
@@ -171,7 +184,7 @@
     color: var(--md-default-fg-color--light);
     font-style: normal;
     margin-top: 6px;
-    font-size: 1.0em;
+    font-size: 1.05em;
 }
 
 [data-md-color-scheme="slate"] .input-group small {
@@ -192,14 +205,14 @@
     background: linear-gradient(135deg, #009688 0%, #b39ddb 100%);
     color: white;
     border: none;
-    padding: 16px 32px;
-    border-radius: 8px;
+    padding: 18px 34px;
+    border-radius: 10px;
     cursor: pointer;
-    font-size: 18px;
+    font-size: 20px;
     font-weight: 600;
     display: block;
     width: 100%;
-    margin: 24px 0;
+    margin: 28px 0;
     transition: all 0.3s ease;
     text-transform: uppercase;
     letter-spacing: 0.5px;
@@ -241,7 +254,7 @@ pre {
 
 code {
     font-family: 'Roboto Mono', 'Courier New', monospace !important;
-    font-size: 15px !important;
+    font-size: 16px !important;
     line-height: 1.5 !important;
 }
 
@@ -252,18 +265,18 @@ code {
     }
 
     .generator-section {
-        padding: 16px;
-        margin-bottom: 16px;
+        padding: 18px;
+        margin-bottom: 18px;
     }
 
     .generator-section h3 {
-        font-size: 1.3em;
-        padding: 12px 16px;
+        font-size: 1.4em;
+        padding: 14px 18px;
     }
 
     .generate-btn {
-        padding: 14px 24px;
-        font-size: 17px;
+        padding: 16px 26px;
+        font-size: 19px;
     }
 }
 
@@ -280,43 +293,45 @@ code {
 
 <script>
 function generateGrenadeItem() {
-    const name = document.getElementById('item-name').value || 'Grenade Item';
-    const desc = document.getElementById('item-desc').value || 'An explosive grenade item';
-    const category = document.getElementById('item-category').value || 'explosives';
-    const model = document.getElementById('item-model').value || 'models/weapons/w_grenade.mdl';
+    const name = (document.getElementById('item-name').value || '').trim() || 'Grenade Item';
+    const desc = (document.getElementById('item-desc').value || '').trim() || 'An explosive grenade item';
+    const category = (document.getElementById('item-category').value || '').trim() || 'explosives';
+    const model = (document.getElementById('item-model').value || '').trim() || 'models/weapons/w_grenade.mdl';
     const width = document.getElementById('item-width').value || '1';
     const height = document.getElementById('item-height').value || '1';
+    const weaponClass = (document.getElementById('weapon-class').value || '').trim() || 'weapon_frag';
     const throwForce = document.getElementById('throw-force').value || '1000';
     const throwSound = document.getElementById('throw-sound').value.trim();
+    const dropOnDeath = document.getElementById('drop-on-death').checked;
 
-    // Generate the code
-    let code = `-- Copy and paste this code into your grenade item file
--- Example: gamemode/items/grenade/frag_grenade.lua
-
-ITEM.name = "${name}"
-ITEM.desc = "${desc}"
-ITEM.category = "${category}"
-
-ITEM.model = "${model}"
-ITEM.width = ${width}
-ITEM.height = ${height}
-
-ITEM.throwForce = ${throwForce}
-
-`;
+    const lines = [
+        '-- Copy and paste this code into your grenade item file',
+        '-- Example: gamemode/items/grenade/frag_grenade.lua',
+        '',
+        `ITEM.name = ${JSON.stringify(name)}`,
+        `ITEM.desc = ${JSON.stringify(desc)}`,
+        `ITEM.category = ${JSON.stringify(category)}`,
+        '',
+        `ITEM.model = ${JSON.stringify(model)}`,
+        `ITEM.width = ${width}`,
+        `ITEM.height = ${height}`,
+        '',
+        `ITEM.class = ${JSON.stringify(weaponClass)}`,
+        `ITEM.DropOnDeath = ${dropOnDeath ? 'true' : 'false'}`,
+        `ITEM.throwForce = ${throwForce}`
+    ];
 
     if (throwSound) {
-        code += `ITEM.throwSound = "${throwSound}"
-`;
+        lines.push('', `ITEM.throwSound = ${JSON.stringify(throwSound)}`);
     }
 
-    // Update the code block
+    const code = `${lines.join('\n')}\n`;
+
     const codeBlock = document.querySelector('code');
     if (codeBlock) {
         codeBlock.textContent = code;
     }
 
-    // Also update the pre element that contains the code
     const preElement = document.querySelector('pre');
     if (preElement) {
         preElement.innerHTML = `<code>${code.replace(/</g, '&lt;').replace(/>/g, '&gt;')}</code>`;

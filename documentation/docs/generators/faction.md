@@ -6,6 +6,12 @@
     <div class="generator-section">
         <h3>Basic Information</h3>
         <div class="input-group">
+            <label for="faction-index">Faction Index:</label>
+            <input type="text" id="faction-index" placeholder="e.g., FACTION_POLICE">
+            <small>The unique identifier for this faction (e.g., FACTION_POLICE)</small>
+        </div>
+
+        <div class="input-group">
             <label for="faction-name">Faction Name:</label>
             <input type="text" id="faction-name" placeholder="e.g., Police Department">
         </div>
@@ -150,18 +156,18 @@
 <style>
 /* Material Design inspired styling for Lilia theme */
 #faction-generator {
-    max-width: 900px;
+    max-width: 1100px;
     margin: 0 auto;
     font-family: 'Noto Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-    line-height: 1.6;
+    line-height: 1.75;
 }
 
 .generator-section {
     background: var(--md-default-fg-color--lightest);
     border: 1px solid var(--md-default-fg-color--lighter);
-    border-radius: 12px;
-    padding: 24px;
-    margin-bottom: 24px;
+    border-radius: 14px;
+    padding: 28px;
+    margin-bottom: 28px;
     box-shadow: 0 2px 8px rgba(0,0,0,0.1);
     transition: box-shadow 0.3s ease;
 }
@@ -176,13 +182,13 @@
 }
 
 .generator-section h3 {
-    margin: -6px -6px 20px -6px;
-    padding: 16px 20px;
+    margin: -8px -8px 24px -8px;
+    padding: 18px 24px;
     background: linear-gradient(135deg, #009688 0%, #b39ddb 100%);
     color: white;
     border-radius: 8px 8px 0 0;
     font-weight: 500;
-    font-size: 1.4em;
+    font-size: 1.6em;
     letter-spacing: 0.02em;
 }
 
@@ -191,26 +197,26 @@
 }
 
 .input-group {
-    margin-bottom: 20px;
+    margin-bottom: 22px;
 }
 
 .input-group label {
     display: block;
     margin-bottom: 8px;
-    font-weight: 500;
+    font-weight: 600;
     color: var(--md-default-fg-color);
-    font-size: 1.1em;
+    font-size: 1.15em;
 }
 
 .input-group input[type="text"],
 .input-group input[type="number"],
 .input-group textarea {
     width: 100%;
-    padding: 12px 16px;
+    padding: 14px 18px;
     border: 2px solid var(--md-default-fg-color--lighter);
-    border-radius: 8px;
+    border-radius: 10px;
     font-family: 'Roboto Mono', 'Courier New', monospace;
-    font-size: 16px;
+    font-size: 19px;
     background: var(--md-default-fg-color--lightest);
     color: var(--md-default-fg-color);
     transition: border-color 0.3s ease, box-shadow 0.3s ease;
@@ -251,7 +257,7 @@
     color: var(--md-default-fg-color--light);
     font-style: normal;
     margin-top: 6px;
-    font-size: 1.0em;
+    font-size: 1.05em;
 }
 
 [data-md-color-scheme="slate"] .input-group small {
@@ -272,14 +278,14 @@
     background: linear-gradient(135deg, #009688 0%, #b39ddb 100%);
     color: white;
     border: none;
-    padding: 16px 32px;
-    border-radius: 8px;
+    padding: 18px 34px;
+    border-radius: 10px;
     cursor: pointer;
-    font-size: 18px;
+    font-size: 20px;
     font-weight: 600;
     display: block;
     width: 100%;
-    margin: 24px 0;
+    margin: 28px 0;
     transition: all 0.3s ease;
     text-transform: uppercase;
     letter-spacing: 0.5px;
@@ -321,7 +327,7 @@ pre {
 
 code {
     font-family: 'Roboto Mono', 'Courier New', monospace !important;
-    font-size: 15px !important;
+    font-size: 16px !important;
     line-height: 1.5 !important;
 }
 
@@ -332,18 +338,18 @@ code {
     }
 
     .generator-section {
-        padding: 16px;
-        margin-bottom: 16px;
+        padding: 18px;
+        margin-bottom: 18px;
     }
 
     .generator-section h3 {
-        font-size: 1.3em;
-        padding: 12px 16px;
+        font-size: 1.4em;
+        padding: 14px 18px;
     }
 
     .generate-btn {
-        padding: 14px 24px;
-        font-size: 17px;
+        padding: 16px 26px;
+        font-size: 19px;
     }
 }
 
@@ -360,8 +366,9 @@ code {
 
 <script>
 function generateFaction() {
-    const name = document.getElementById('faction-name').value || 'Faction Name';
-    const desc = document.getElementById('faction-desc').value || 'Faction description';
+    const index = (document.getElementById('faction-index').value || '').trim() || 'FACTION_NAME';
+    const name = (document.getElementById('faction-name').value || '').trim() || 'Faction Name';
+    const desc = (document.getElementById('faction-desc').value || '').trim() || 'Faction description';
     const colorInput = document.getElementById('faction-color').value;
     const color = colorInput ? `Color(${colorInput})` : 'Color(100, 150, 200)';
 
@@ -369,10 +376,8 @@ function generateFaction() {
     const oneCharOnly = document.getElementById('one-char-only').checked;
     const limit = document.getElementById('faction-limit').value || '0';
 
-    // Models
     const models = document.getElementById('models').value.split('\n').filter(m => m.trim());
 
-    // Gameplay properties
     const health = document.getElementById('health').value || '100';
     const armor = document.getElementById('armor').value || '0';
     const runSpeed = document.getElementById('run-speed').value || '280';
@@ -383,115 +388,85 @@ function generateFaction() {
     const jumpPowerMultiplier = document.getElementById('jump-power-multiplier').checked;
     const pay = document.getElementById('pay').value || '0';
 
-    // Weapons and items
     const weapons = document.getElementById('weapons').value.split('\n').filter(w => w.trim());
     const startingItems = document.getElementById('starting-items').value.split('\n').filter(i => i.trim());
 
-    // Special features
     const recognizesGlobally = document.getElementById('recognizes-globally').checked;
     const globallyRecognized = document.getElementById('globally-recognized').checked;
     const memberAutoRecognition = document.getElementById('member-auto-recognition').checked;
     const scoreboardHidden = document.getElementById('scoreboard-hidden').checked;
 
+    const lines = [
+        '-- Copy and paste this code into your faction file',
+        `-- Example: gamemode/factions/${name.toLowerCase().replace(/[^a-z0-9]/g, '')}.lua`,
+        '',
+        `FACTION.name = ${JSON.stringify(name)}`,
+        `FACTION.desc = ${JSON.stringify(desc)}`,
+        `FACTION.color = ${color}`,
+        '',
+        '-- Access Control',
+        `FACTION.isDefault = ${isDefault}`,
+        `FACTION.oneCharOnly = ${oneCharOnly}`,
+        `FACTION.limit = ${limit}`
+    ];
 
-    // Generate the code
-    let code = `-- Copy and paste this code into your faction file
--- Example: gamemode/factions/${name.toLowerCase().replace(/[^a-z0-9]/g, '')}.lua
-
-FACTION.name = "${name}"
-FACTION.desc = "${desc}"
-FACTION.color = ${color}
-
--- Access Control
-FACTION.isDefault = ${isDefault}
-FACTION.oneCharOnly = ${oneCharOnly}
-FACTION.limit = ${limit}
-
-`;
-
-    // Models section
     if (models.length > 0) {
-        code += `-- Models
-FACTION.models = {
-`;
+        lines.push('', '-- Models', 'FACTION.models = {');
         models.forEach(model => {
-            code += `    "${model.trim()}",\n`;
+            lines.push(`    ${JSON.stringify(model.trim())},`);
         });
-        code += `}
-
-`;
+        lines.push('}');
     }
 
-    // Gameplay properties
-    code += `-- Gameplay Properties
-FACTION.health = ${health}
-FACTION.armor = ${armor}
-FACTION.runSpeed = ${runSpeed}
-FACTION.walkSpeed = ${walkSpeed}
-FACTION.jumpPower = ${jumpPower}
-`;
+    lines.push(
+        '',
+        '-- Gameplay Properties',
+        `FACTION.health = ${health}`,
+        `FACTION.armor = ${armor}`,
+        `FACTION.runSpeed = ${runSpeed}`,
+        `FACTION.walkSpeed = ${walkSpeed}`,
+        `FACTION.jumpPower = ${jumpPower}`
+    );
 
-    if (runSpeedMultiplier) code += `FACTION.runSpeedMultiplier = true
-`;
-    if (walkSpeedMultiplier) code += `FACTION.walkSpeedMultiplier = true
-`;
-    if (jumpPowerMultiplier) code += `FACTION.jumpPowerMultiplier = true
-`;
+    if (runSpeedMultiplier) lines.push('FACTION.runSpeedMultiplier = true');
+    if (walkSpeedMultiplier) lines.push('FACTION.walkSpeedMultiplier = true');
+    if (jumpPowerMultiplier) lines.push('FACTION.jumpPowerMultiplier = true');
 
-    code += `FACTION.pay = ${pay}
+    lines.push(`FACTION.pay = ${pay}`);
 
-`;
-
-    // Weapons
     if (weapons.length > 0) {
-        code += `-- Weapons
-FACTION.weapons = {
-`;
+        lines.push('', '-- Weapons', 'FACTION.weapons = {');
         weapons.forEach(weapon => {
-            code += `    "${weapon.trim()}",\n`;
+            lines.push(`    ${JSON.stringify(weapon.trim())},`);
         });
-        code += `}
-
-`;
+        lines.push('}');
     }
 
-    // Starting items
     if (startingItems.length > 0) {
-        code += `-- Starting Items
-FACTION.items = {
-`;
+        lines.push('', '-- Starting Items', 'FACTION.items = {');
         startingItems.forEach(item => {
-            code += `    "${item.trim()}",\n`;
+            lines.push(`    ${JSON.stringify(item.trim())},`);
         });
-        code += `}
-
-`;
+        lines.push('}');
     }
 
-    // Special features
     if (recognizesGlobally || globallyRecognized || memberAutoRecognition || scoreboardHidden) {
-        code += `-- Special Features
-`;
-        if (recognizesGlobally) code += `FACTION.RecognizesGlobally = true
-`;
-        if (globallyRecognized) code += `FACTION.isGloballyRecognized = true
-`;
-        if (memberAutoRecognition) code += `FACTION.MemberToMemberAutoRecognition = true
-`;
-        if (scoreboardHidden) code += `FACTION.scoreboardHidden = true
-`;
-        code += `
-`;
+        lines.push('', '-- Special Features');
+        if (recognizesGlobally) lines.push('FACTION.RecognizesGlobally = true');
+        if (globallyRecognized) lines.push('FACTION.isGloballyRecognized = true');
+        if (memberAutoRecognition) lines.push('FACTION.MemberToMemberAutoRecognition = true');
+        if (scoreboardHidden) lines.push('FACTION.scoreboardHidden = true');
     }
 
+    lines.push('', `${index} = FACTION.index`);
 
-    // Update the code block
+    const code = `${lines.join('\n')}\n`;
+
     const codeBlock = document.querySelector('code');
     if (codeBlock) {
         codeBlock.textContent = code;
     }
 
-    // Also update the pre element that contains the code
     const preElement = document.querySelector('pre');
     if (preElement) {
         preElement.innerHTML = `<code>${code.replace(/</g, '&lt;').replace(/>/g, '&gt;')}</code>`;

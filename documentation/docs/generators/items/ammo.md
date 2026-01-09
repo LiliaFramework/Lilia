@@ -17,7 +17,7 @@
 
         <div class="input-group">
             <label for="item-category">Category:</label>
-            <input type="text" id="item-category" placeholder="ammo" value="ammo">
+            <input type="text" id="item-category" placeholder="itemCatAmmunition" value="itemCatAmmunition">
             <small>Inventory category for organization</small>
         </div>
     </div>
@@ -70,18 +70,18 @@
 <style>
 /* Material Design inspired styling for Lilia theme */
 #ammo-generator {
-    max-width: 900px;
+    max-width: 1100px;
     margin: 0 auto;
     font-family: 'Noto Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-    line-height: 1.6;
+    line-height: 1.75;
 }
 
 .generator-section {
     background: var(--md-default-fg-color--lightest);
     border: 1px solid var(--md-default-fg-color--lighter);
-    border-radius: 12px;
-    padding: 24px;
-    margin-bottom: 24px;
+    border-radius: 14px;
+    padding: 28px;
+    margin-bottom: 28px;
     box-shadow: 0 2px 8px rgba(0,0,0,0.1);
     transition: box-shadow 0.3s ease;
 }
@@ -96,13 +96,13 @@
 }
 
 .generator-section h3 {
-    margin: -6px -6px 20px -6px;
-    padding: 16px 20px;
+    margin: -8px -8px 24px -8px;
+    padding: 18px 24px;
     background: linear-gradient(135deg, #009688 0%, #b39ddb 100%);
     color: white;
     border-radius: 8px 8px 0 0;
     font-weight: 500;
-    font-size: 1.4em;
+    font-size: 1.6em;
     letter-spacing: 0.02em;
 }
 
@@ -111,26 +111,26 @@
 }
 
 .input-group {
-    margin-bottom: 20px;
+    margin-bottom: 22px;
 }
 
 .input-group label {
     display: block;
     margin-bottom: 8px;
-    font-weight: 500;
+    font-weight: 600;
     color: var(--md-default-fg-color);
-    font-size: 1.1em;
+    font-size: 1.15em;
 }
 
 .input-group input[type="text"],
 .input-group input[type="number"],
 .input-group textarea {
     width: 100%;
-    padding: 12px 16px;
+    padding: 14px 18px;
     border: 2px solid var(--md-default-fg-color--lighter);
-    border-radius: 8px;
+    border-radius: 10px;
     font-family: 'Roboto Mono', 'Courier New', monospace;
-    font-size: 18px;
+    font-size: 19px;
     background: var(--md-default-fg-color--lightest);
     color: var(--md-default-fg-color);
     transition: border-color 0.3s ease, box-shadow 0.3s ease;
@@ -162,7 +162,7 @@
 
 .input-group textarea {
     resize: vertical;
-    min-height: 60px;
+    min-height: 80px;
     line-height: 1.4;
 }
 
@@ -171,7 +171,7 @@
     color: var(--md-default-fg-color--light);
     font-style: normal;
     margin-top: 6px;
-    font-size: 1.0em;
+    font-size: 1.05em;
 }
 
 [data-md-color-scheme="slate"] .input-group small {
@@ -192,14 +192,14 @@
     background: linear-gradient(135deg, #009688 0%, #b39ddb 100%);
     color: white;
     border: none;
-    padding: 16px 32px;
-    border-radius: 8px;
+    padding: 18px 34px;
+    border-radius: 10px;
     cursor: pointer;
-    font-size: 18px;
+    font-size: 20px;
     font-weight: 600;
     display: block;
     width: 100%;
-    margin: 24px 0;
+    margin: 28px 0;
     transition: all 0.3s ease;
     text-transform: uppercase;
     letter-spacing: 0.5px;
@@ -241,7 +241,7 @@ pre {
 
 code {
     font-family: 'Roboto Mono', 'Courier New', monospace !important;
-    font-size: 15px !important;
+    font-size: 16px !important;
     line-height: 1.5 !important;
 }
 
@@ -252,18 +252,18 @@ code {
     }
 
     .generator-section {
-        padding: 16px;
-        margin-bottom: 16px;
+        padding: 18px;
+        margin-bottom: 18px;
     }
 
     .generator-section h3 {
-        font-size: 1.3em;
-        padding: 12px 16px;
+        font-size: 1.4em;
+        padding: 14px 18px;
     }
 
     .generate-btn {
-        padding: 14px 24px;
-        font-size: 17px;
+        padding: 16px 26px;
+        font-size: 19px;
     }
 }
 
@@ -280,39 +280,38 @@ code {
 
 <script>
 function generateAmmoItem() {
-    const name = document.getElementById('item-name').value || 'Ammo Item';
-    const desc = document.getElementById('item-desc').value || 'Ammo item description';
-    const category = document.getElementById('item-category').value || 'ammo';
-    const model = document.getElementById('item-model').value || 'models/items/boxsrounds.mdl';
+    const name = (document.getElementById('item-name').value || '').trim() || 'Ammo Item';
+    const desc = (document.getElementById('item-desc').value || '').trim() || 'Ammo item description';
+    const category = (document.getElementById('item-category').value || '').trim() || 'itemCatAmmunition';
+    const model = (document.getElementById('item-model').value || '').trim() || 'models/items/boxsrounds.mdl';
     const width = document.getElementById('item-width').value || '1';
     const height = document.getElementById('item-height').value || '1';
-    const ammoType = document.getElementById('ammo-type').value || 'pistol';
+    const ammoType = (document.getElementById('ammo-type').value || '').trim() || 'pistol';
     const ammoAmount = document.getElementById('ammo-amount').value || '30';
 
-    // Generate the code
-    let code = `-- Copy and paste this code into your ammo item file
--- Example: gamemode/items/ammo/pistol_ammo.lua
+    const lines = [
+        '-- Copy and paste this code into your ammo item file',
+        '-- Example: gamemode/items/ammo/pistol_ammo.lua',
+        '',
+        `ITEM.name = ${JSON.stringify(name)}`,
+        `ITEM.desc = ${JSON.stringify(desc)}`,
+        `ITEM.category = ${JSON.stringify(category)}`,
+        '',
+        `ITEM.model = ${JSON.stringify(model)}`,
+        `ITEM.width = ${width}`,
+        `ITEM.height = ${height}`,
+        '',
+        `ITEM.ammo = ${JSON.stringify(ammoType)}`,
+        `ITEM.ammoAmount = ${ammoAmount}`
+    ];
 
-ITEM.name = "${name}"
-ITEM.desc = "${desc}"
-ITEM.category = "${category}"
+    const code = `${lines.join('\n')}\n`;
 
-ITEM.model = "${model}"
-ITEM.width = ${width}
-ITEM.height = ${height}
-
-ITEM.ammo = "${ammoType}"
-ITEM.ammoAmount = ${ammoAmount}
-
-`;
-
-    // Update the code block
     const codeBlock = document.querySelector('code');
     if (codeBlock) {
         codeBlock.textContent = code;
     }
 
-    // Also update the pre element that contains the code
     const preElement = document.querySelector('pre');
     if (preElement) {
         preElement.innerHTML = `<code>${code.replace(/</g, '&lt;').replace(/>/g, '&gt;')}</code>`;
