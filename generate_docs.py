@@ -694,7 +694,7 @@ def find_comment_blocks_in_file(file_path):
     return all_comment_blocks, file_header, overview_section
 
 
-def generate_documentation_for_file(file_path, output_dir, is_library=False, base_docs_dir=None):
+def generate_documentation_for_file(file_path, output_dir, is_library=False, base_docs_dir=None, force=False):
     """
     Generate documentation for a single Lua file.
     """
@@ -756,8 +756,7 @@ def generate_documentation_for_file(file_path, output_dir, is_library=False, bas
 
         output_path = Path(output_dir) / output_filename
 
-    # Check if file already exists and has content
-    if output_path.exists() and output_path.stat().st_size > 0:
+    if output_path.exists() and output_path.stat().st_size > 0 and not force:
         print(f"  {output_path.name} already exists, skipping")
         return
 
@@ -1325,6 +1324,7 @@ def main():
     parser = argparse.ArgumentParser(description='Generate documentation from Lua comment blocks')
     parser.add_argument('type', choices=['meta', 'library', 'definitions', 'hooks', 'compatibility'], help='Type of files to process')
     parser.add_argument('files', nargs='*', help='Specific files to process (if empty, processes defaults per type)')
+    parser.add_argument('--force', action='store_true', help='Overwrite existing documentation files')
 
     args = parser.parse_args()
 
@@ -1414,7 +1414,7 @@ def main():
     # Process each file
     for file_path in files_to_process:
         if args.type in ('meta', 'library', 'compatibility') and str(file_path).endswith('.lua'):
-            generate_documentation_for_file(file_path, output_dir, True, base_docs_dir)  # compatibility files are library files
+            generate_documentation_for_file(file_path, output_dir, True, base_docs_dir, args.force)  # compatibility files are library files
         elif args.type == 'definitions' and str(file_path).endswith('.lua'):
             generate_documentation_for_definitions_file(Path(file_path), output_dir, base_docs_dir)
         elif args.type == 'hooks' and str(file_path).endswith('.lua'):
