@@ -34,7 +34,6 @@ Map of extra field definitions collected via the CollectDoorDataFields hook.
 
 #### 🌐 Realm
 Shared
-]]
 
 ---
 
