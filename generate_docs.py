@@ -565,6 +565,8 @@ def generate_documentation_for_file(file_path, output_dir, is_library=False, bas
                     output_filename = f"lia.{filename}.md"
             else:
                 output_filename = f"lia.{filename}.md"
+        elif is_library and 'compatibility' in str(file_path):
+            output_filename = f"{filename}.md"
         elif is_library:
             output_filename = f"lia.{filename}.md"
         else:
@@ -935,7 +937,7 @@ def generate_documentation_for_hooks_file(file_path: Path, output_dir: Path, bas
 
 def main():
     parser = argparse.ArgumentParser(description='Generate documentation from Lua comment blocks')
-    parser.add_argument('type', choices=['meta', 'library', 'definitions', 'hooks'], help='Type of files to process')
+    parser.add_argument('type', choices=['meta', 'library', 'definitions', 'hooks', 'compatibility'], help='Type of files to process')
     parser.add_argument('files', nargs='*', help='Specific files to process (if empty, processes defaults per type)')
     parser.add_argument('--force', action='store_true', help='Overwrite existing documentation files')
 
@@ -960,6 +962,9 @@ def main():
     elif args.type == 'hooks':
         input_dir = docs_hooks_dir
         output_dir = script_dir / 'documentation' / 'docs' / 'hooks'
+    elif args.type == 'compatibility':
+        input_dir = base_dir / 'libraries' / 'compatibility'
+        output_dir = script_dir / 'documentation' / 'docs' / 'Compatibility'
 
     output_dir.mkdir(parents=True, exist_ok=True)
 
@@ -975,7 +980,7 @@ def main():
                 matches = glob.glob(file_pattern)
                 files_to_process.extend(matches)
     else:
-        if args.type in ('meta', 'library'):
+        if args.type in ('meta', 'library', 'compatibility'):
             files_to_process.extend(list(input_dir.glob('*.lua')))
 
             if args.type == 'library':
@@ -1012,7 +1017,7 @@ def main():
     print(f"Processing {len(files_to_process)} {args.type} files...")
 
     for file_path in files_to_process:
-        if args.type in ('meta', 'library') and str(file_path).endswith('.lua'):
+        if args.type in ('meta', 'library', 'compatibility') and str(file_path).endswith('.lua'):
             generate_documentation_for_file(file_path, output_dir, True, base_docs_dir, args.force)
         elif args.type == 'definitions' and str(file_path).endswith('.lua'):
             generate_documentation_for_definitions_file(Path(file_path), output_dir, base_docs_dir)
@@ -1020,7 +1025,66 @@ def main():
             generate_documentation_for_hooks_file(Path(file_path), output_dir, base_docs_dir)
 
 
+    if args.type in ('meta', 'library', 'definitions', 'hooks', 'compatibility'):
+        generate_index_file(output_dir, args.type)
+        
+        items_dir = output_dir / 'items'
+        if items_dir.exists():
+            generate_index_file(items_dir, 'items')
+
     print("Documentation generation complete!")
+
+
+def generate_index_file(output_dir: Path, doc_type: str) -> None:
+    """Generate an index.md file listing all documentation files in the directory."""
+    if not output_dir.exists():
+        return
+
+    md_files = sorted([f for f in output_dir.glob('*.md') if f.name != 'index.md'])
+    
+    subdirs = []
+    if doc_type == 'definitions':
+        items_dir = output_dir / 'items'
+        if items_dir.exists():
+            items_files = sorted([f for f in items_dir.glob('*.md') if f.name != 'index.md'])
+            if items_files:
+                subdirs.append(('items', items_files))
+    
+    if not md_files and not subdirs:
+        return
+
+    title_map = {
+        'meta': 'Meta Tables',
+        'library': 'Libraries',
+        'definitions': 'Definitions',
+        'hooks': 'Hooks',
+        'items': 'Item Definitions',
+        'compatibility': 'Compatibility Libraries'
+    }
+    
+    title = title_map.get(doc_type, doc_type.title())
+    
+    index_path = output_dir / 'index.md'
+    
+    with open(index_path, 'w', encoding='utf-8') as f:
+        f.write(f'# {title}\n\n')
+        
+        if md_files:
+            for md_file in md_files:
+                name = md_file.stem
+                display_name = name.replace('lia.', '').replace('_', ' ').title()
+                link_name = md_file.name
+                f.write(f'- [{display_name}](./{link_name})\n\n')
+        
+        for subdir_name, subdir_files in subdirs:
+            f.write(f'## {subdir_name.title()}\n\n')
+            for md_file in subdir_files:
+                name = md_file.stem
+                display_name = name.replace('lia.', '').replace('_', ' ').title()
+                link_name = f'{subdir_name}/{md_file.name}'
+                f.write(f'- [{display_name}](./{link_name})\n\n')
+    
+    print(f"  Generated index.md for {doc_type}")
 
 
 if __name__ == '__main__':
