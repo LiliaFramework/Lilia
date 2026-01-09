@@ -1,4 +1,4 @@
-﻿--[[
+--[[
     Folder: Definitions
     File:  grenade.md
 ]]
@@ -129,18 +129,3 @@ ITEM.functions.Use = {
         return true
     end,
 }
---[[
-Example Item:
-
-```lua
--- Basic item identification
-    ITEM.name = "Frag Grenade"                   -- Display name shown to players
-    ITEM.desc = "A high-explosive fragmentation grenade"  -- Description text
-    ITEM.category = "itemCatGrenades"            -- Category for inventory sorting
-    ITEM.model = "models/weapons/w_eq_fraggrenade.mdl"  -- 3D model for the grenade
-    ITEM.class = "weapon_frag"                   -- Weapon class to give to player
-    ITEM.width = 1                               -- Inventory width (1 slot)
-    ITEM.height = 1                              -- Inventory height (1 slot)
-    ITEM.DropOnDeath = true                      -- Grenade drops when player dies
-```
-]]

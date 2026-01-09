@@ -1,4 +1,4 @@
-﻿--[[
+--[[
     Folder: Definitions
     File:  weapons.md
 ]]
@@ -270,19 +270,3 @@ if CLIENT then
         end
     end
 end
---[[
-Example Item:
-
-```lua
--- Basic item identification
-    ITEM.name = "Pistol"                          -- Display name shown to players
-    ITEM.desc = "A standard 9mm pistol with moderate damage"  -- Description text
-    ITEM.category = "weapons"                     -- Category for inventory sorting
-    ITEM.model = "models/weapons/w_pistol.mdl"    -- 3D model for the item
-    ITEM.class = "weapon_pistol"                  -- Weapon class to give to player
-    ITEM.width = 2                                -- Inventory width (2 slots)
-    ITEM.height = 2                               -- Inventory height (2 slots)
-    ITEM.isWeapon = true                          -- Marks this as a weapon item
-    ITEM.DropOnDeath = true                       -- Weapon drops when player dies
-```
-]]

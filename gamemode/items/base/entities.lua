@@ -1,4 +1,4 @@
-﻿--[[
+--[[
     Folder: Definitions
     File:  entities.md
 ]]
@@ -89,17 +89,3 @@ ITEM.functions.Place = {
         return true
     end,
 }
---[[
-Example Item:
-
-```lua
--- Basic item identification
-    ITEM.name = "Vending Machine"                 -- Display name shown to players
-    ITEM.desc = "A functional vending machine that can be placed in the world"  -- Description text
-    ITEM.category = "entities"                    -- Category for inventory sorting
-    ITEM.model = "models/props_interiors/vendingmachinesoda01a.mdl"  -- 3D model for the item
-    ITEM.width = 2                                -- Inventory width (2 slots)
-    ITEM.height = 3                               -- Inventory height (3 slots)
-    ITEM.entityid = "lia_vendingmachine"          -- Entity class to spawn when placed
-```
-]]

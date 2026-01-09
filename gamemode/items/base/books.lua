@@ -1,4 +1,4 @@
-﻿--[[
+--[[
     Folder: Definitions
     File:  books.md
 ]]
@@ -92,24 +92,3 @@ ITEM.functions.Read = {
     onRun = function() return false end,
     icon = "icon16/book_open.png"
 }
---[[
-Example Item:
-
-```lua
--- Basic item identification
-    ITEM.name = "The Art of Programming"          -- Display name shown to players
-    ITEM.desc = "A comprehensive guide to programming principles"  -- Description text
-    ITEM.category = "itemCatLiterature"          -- Category for inventory sorting
-    ITEM.model = "models/props_lab/bindergraylabel01b.mdl"  -- 3D model for the book
-    ITEM.width = 1                               -- Inventory width (1 slot)
-    ITEM.height = 1                              -- Inventory height (1 slot)
-    ITEM.contents = "<h1>Chapter 1: Introduction</h1>" ..
-        "<p>Programming is the art of instructing computers to perform specific tasks...</p>" ..
-        "<h2>Key Concepts</h2>" ..
-        "<ul>" ..
-        "<li>Variables and data types</li>" ..
-        "<li>Control structures</li>" ..
-        "<li>Functions and modules</li>" ..
-        "</ul>"                                -- HTML content displayed when reading
-```
-]]

@@ -1,4 +1,4 @@
-﻿--[[
+--[[
     Folder: Definitions
     File:  outfit.md
 ]]
@@ -308,24 +308,3 @@ function ITEM:onRemoved()
 end
 
 ITEM:hook("drop", function(item) if item:getData("equip") then item:removeOutfit(item.player) end end)
---[[
-Example Item:
-
-```lua
--- Basic item identification
-    ITEM.name = "Police Uniform"                 -- Display name shown to players
-    ITEM.desc = "Standard police officer uniform with vest"  -- Description text
-    ITEM.category = "outfit"                     -- Category for inventory sorting
-    ITEM.model = "models/props_c17/BriefCase001a.mdl"  -- 3D model for the item
-    ITEM.width = 1                               -- Inventory width (1 slot)
-    ITEM.height = 1                              -- Inventory height (1 slot)
-    ITEM.outfitCategory = "model"                -- Category to prevent conflicting outfits
-    ITEM.pacData = {}                            -- PAC3 outfit data (empty for basic model replacement)
-    ITEM.isOutfit = true                         -- Marks this as an outfit item
-    ITEM.replacement = "models/player/police.mdl" -- Model to replace player's model with
-    ITEM.attribBoosts = {                        -- Attribute bonuses when equipped
-        ["endurance"] = 5,                        -- +5 endurance attribute
-        ["luck"] = -2                             -- -2 luck attribute
-    }
-```
-]]

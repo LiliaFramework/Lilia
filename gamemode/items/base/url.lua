@@ -1,4 +1,4 @@
-﻿--[[
+--[[
     Folder: Definitions
     File:  url.md
 ]]
@@ -75,16 +75,3 @@ ITEM.functions.use = {
         return false
     end,
 }
---[[
-Example Item:
-
-```lua
--- Basic item identification
-    ITEM.name = "Website Link"                   -- Display name shown to players
-    ITEM.desc = "Opens the Lilia framework documentation website"  -- Description text
-    ITEM.model = "models/props_lab/clipboard.mdl"  -- 3D model for the item
-    ITEM.width = 1                               -- Inventory width (1 slot)
-    ITEM.height = 1                              -- Inventory height (1 slot)
-    ITEM.url = "https://docs.getlilia.com"       -- URL that opens when item is used
-```
-]]

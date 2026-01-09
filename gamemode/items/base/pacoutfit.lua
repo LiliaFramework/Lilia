@@ -1,4 +1,4 @@
-﻿--[[
+--[[
     Folder: Definitions
     File:  pacoutfit.md
 ]]
@@ -201,38 +201,3 @@ ITEM:hook("drop", function(item)
     local client = item.player
     if item:getData("equip") then item:removePart(client) end
 end)
---[[
-Example Item:
-
-```lua
--- Basic item identification
-    ITEM.name = "Cool Sunglasses"                -- Display name shown to players
-    ITEM.desc = "Stylish sunglasses that look great"  -- Description text
-    ITEM.category = "outfit"                     -- Category for inventory sorting
-    ITEM.model = "models/Gibs/HGIBS.mdl"         -- 3D model for the item
-    ITEM.width = 1                               -- Inventory width (1 slot)
-    ITEM.height = 1                              -- Inventory height (1 slot)
-    ITEM.outfitCategory = "hat"                  -- Category to prevent conflicting PAC outfits
-    ITEM.pacData = {                             -- PAC3 outfit data
-        [1] = {                                   -- PAC part definition
-            ["children"] = {},
-            ["self"] = {
-                Skin = 0,
-                UniqueID = "sunglasses_example",
-                Size = 1,
-                Bone = "head",
-                Model = "models/captainbigbutt/skeyler/accessories/glasses01.mdl",
-                ClassName = "model",
-                Position = Vector(2.5, 0, 0),
-                Angles = Angle(0, 0, 0),
-                Scale = Vector(1, 1, 1),
-                PositionOffset = Vector(0, 0, 0),
-                AngleOffset = Angle(0, 0, 0),
-            },
-        },
-    }
-    ITEM.attribBoosts = {                        -- Attribute bonuses when equipped
-        ["luck"] = 1                             -- +1 luck attribute
-    }
-```
-]]

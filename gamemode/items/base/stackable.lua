@@ -1,4 +1,4 @@
-﻿--[[
+--[[
     Folder: Definitions
     File:  stackable.md
 ]]
@@ -120,18 +120,3 @@ function ITEM:onCombine(other)
     end
     return true
 end
---[[
-Example Item:
-
-```lua
--- Basic item identification
-    ITEM.name = "Wood Planks"                    -- Display name shown to players
-    ITEM.desc = "Stackable wooden planks for building"  -- Description text
-    ITEM.model = "models/props_debris/wood_board04a.mdl"  -- 3D model for the item
-    ITEM.width = 2                               -- Inventory width (2 slots)
-    ITEM.height = 1                              -- Inventory height (1 slot)
-    ITEM.isStackable = true                      -- Enables stacking functionality
-    ITEM.maxQuantity = 20                        -- Maximum quantity that can be stacked
-    ITEM.canSplit = true                         -- Allows splitting stacks into smaller amounts
-```
-]]
