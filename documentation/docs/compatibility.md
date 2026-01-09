@@ -91,17 +91,22 @@ Automatically configures ARCCW console variables to work seamlessly with Lilia's
 
 **Purpose**
 
-Provides integration between CAMI permission system and Lilia's administrator framework.
+Provides comprehensive integration between CAMI permission system and Lilia's administrator framework with performance optimizations and automatic synchronization.
 
 **Features**
 
 * Integrates CAMI permission system with Lilia's administrator framework
-* Handles privilege registration and usergroup management automatically
+* Implements performance caching mechanisms for optimized group level lookups
+* Handles automatic privilege registration and usergroup management
 * Provides compatibility for addons that rely on CAMI for permission checks
+* Synchronizes user group changes with the database automatically
+* Manages usergroup registration and unregistration dynamically
+* Supports both usergroup-based and SteamID-based user group changes
+* Includes frozen player protection in access handlers
 
 **Technical Details**
 
-Bridges CAMI's permission system with Lilia's built-in administrator system, allowing addons that depend on CAMI to function properly while maintaining Lilia's permission structure.
+Bridges CAMI's permission system with Lilia's built-in administrator system using advanced caching mechanisms and automatic database synchronization. The integration handles privilege registration/unregistration, usergroup management, and provides seamless compatibility for addons that depend on CAMI while maintaining Lilia's permission structure and performance.
 
 ---
 
@@ -125,7 +130,7 @@ Stops collisions or weapons fired from your own LVS vehicle from injuring you. D
 
 **Purpose**
 
-Provides comprehensive integration with the PAC3 outfit system.
+Provides comprehensive integration with the PAC3 outfit system including outfit management and security features.
 
 **Features**
 
@@ -133,10 +138,14 @@ Provides comprehensive integration with the PAC3 outfit system.
 * Adds commands for repairing, enabling, and disabling PAC3
 * Honors the `BlockPackURLoad` configuration to restrict loading outfits from URLs
 * Registers the "Staff Permissions - Can Use PAC3" privilege and the `P` flag for access control
+* Transfers PAC3 outfits to player ragdolls for consistent appearance
+* Integrates with Lilia's item system for automatic PAC part equipping
+* Includes player observation state handling for outfit management
+* Registers custom PAC3 events for weapon interactions
 
 **Technical Details**
 
-Exposes helper methods and network messages to synchronize PAC3 outfits, preventing missing or broken parts on clients.
+Exposes helper methods and network messages to synchronize PAC3 outfits, preventing missing or broken parts on clients. Includes comprehensive outfit management with ragdoll transfer, item-based equipping, and security restrictions for URL-based outfit loading.
 
 ---
 
@@ -187,11 +196,34 @@ Provides comprehensive integration with the SAM admin suite, combining SAM's pow
 * Checks staff privileges before executing sensitive commands
 * Provides configuration options for admin-only notifications and staff enforcement
 * Adds cleardecals command for server maintenance
+* Integrates with CAMI for permission management and privilege handling
+* Includes notification filtering system for staff-only messages
 * **Combines the best of both systems** - SAM's advanced admin features with Lilia's modern framework
 
 **Technical Details**
 
-Mirrors SAM commands and enforces Lilia's permission checks so admins can use familiar tools seamlessly. The integration layer ensures that SAM's powerful admin capabilities work perfectly with Lilia's permission system, character management, and modern architecture. This provides administrators with the full feature set of both systems working in harmony.
+Mirrors SAM commands and enforces Lilia's permission checks so admins can use familiar tools seamlessly. The integration layer ensures that SAM's powerful admin capabilities work perfectly with Lilia's permission system, character management, and modern architecture. Includes advanced features like blind/unblind functionality, playtime tracking integration, and CAMI-based permission management for comprehensive admin control.
+
+---
+
+### SAdmin
+
+**Purpose**
+
+Provides comprehensive integration with the SAdmin admin suite, combining SAdmin's admin tools with Lilia's permission system.
+
+**Features**
+
+* Recreates SAdmin chat commands via Lilia's command system
+* Provides command mapping for kick, ban, mute, gag, freeze, slay, and other administrative actions
+* Checks staff privileges before executing sensitive commands
+* Integrates with Lilia's staff system to enforce duty requirements and faction restrictions
+* Handles usergroup management and permission validation automatically
+* **Combines SAdmin's proven admin tools with Lilia's modern framework**
+
+**Technical Details**
+
+Mirrors SAdmin commands and enforces Lilia's permission checks so admins can use familiar tools seamlessly. The integration layer ensures that SAdmin's powerful admin capabilities work perfectly with Lilia's permission system, character management, and modern architecture. This provides administrators with the full feature set of both systems working in harmony.
 
 ---
 
@@ -306,3 +338,23 @@ Provides security and performance improvements for the VJBase NPC framework.
 **Technical Details**
 
 Intercepts exploitable VJBase network messages and disables resource-intensive hooks to maintain server security and performance. Automatically removes dangerous spawners and optimizes performance based on server population.
+
+---
+
+### Wiremod
+
+**Purpose**
+
+Provides security and access control measures for the Wiremod addon within the Lilia framework.
+
+**Features**
+
+* Implements upload restrictions for Expression 2 (E2) chip code
+* Restricts E2 uploads to administrators and donators only
+* Validates upload targets and provides proper error handling
+* Logs upload attempts and provides user notifications for failed uploads
+* Integrates with Wiremod's notification system for feedback
+
+**Technical Details**
+
+Ensures secure and controlled usage of Wiremod's Expression 2 chips by implementing server-side validation and access restrictions. Only players with administrator or donator privileges can upload E2 code, preventing potential exploits and ensuring responsible usage of advanced Wiremod features.

@@ -1,20 +1,4 @@
-﻿--[[
-    Folder: Compatibility
-    File:  vjbase.md
-]]
---[[
-    VJ Base Compatibility
-
-    Provides compatibility and security measures for the VJ Base NPC addon within the Lilia framework.
-]]
---[[
-    Improvements Done:
-        The VJ Base compatibility module ensures secure and controlled usage of the VJ Base NPC system, implementing security measures to prevent exploits and unauthorized network messages.
-        The module operates on the server side to block exploitable network messages, manage NPC spawners, and optimize NPC processing performance based on player count.
-        It includes logging functionality to track security violations and integrates with Lilia's administrator system for NPC property management.
-        The module provides entity cleanup, performance optimization, and privilege-based access control for VJ Base features.
-]]
-local exploitable_nets = {"VJSay", "vj_fireplace_turnon1", "vj_npcmover_sv_create", "vj_npcmover_sv_startmove", "vj_npcmover_removesingle", "vj_npcmover_removeall", "vj_npcspawner_sv_create", "vj_npcrelationship_sr_leftclick", "vj_testentity_runtextsd", "vj_fireplace_turnon2"}
+﻿local exploitable_nets = {"VJSay", "vj_fireplace_turnon1", "vj_npcmover_sv_create", "vj_npcmover_sv_startmove", "vj_npcmover_removesingle", "vj_npcmover_removeall", "vj_npcspawner_sv_create", "vj_npcrelationship_sr_leftclick", "vj_testentity_runtextsd", "vj_fireplace_turnon2"}
 local function handle_exploitable_net(client, name)
     if not IsValid(client) or not client:IsPlayer() then return end
     client:notifyErrorLocalized("unauthorizedNetMessage", name)

@@ -1,10 +1,6 @@
-# Grenade Item Generator
-
-Interactive tool for generating Lilia grenade item definitions. Fill out the fields below and click "Generate Grenade Item Code" to create your item code.
-
----
-
-## Grenade Item Generator
+<p align="center">
+  <h2 style="text-align: center;">Grenade Item Generator</h2>
+</p>
 
 <div id="grenade-generator">
     <div class="generator-section">
@@ -106,7 +102,7 @@ Interactive tool for generating Lilia grenade item definitions. Fill out the fie
     color: white;
     border-radius: 8px 8px 0 0;
     font-weight: 500;
-    font-size: 1.2em;
+    font-size: 1.4em;
     letter-spacing: 0.02em;
 }
 
@@ -123,7 +119,7 @@ Interactive tool for generating Lilia grenade item definitions. Fill out the fie
     margin-bottom: 8px;
     font-weight: 500;
     color: var(--md-default-fg-color);
-    font-size: 0.95em;
+    font-size: 1.1em;
 }
 
 .input-group input[type="text"],
@@ -134,7 +130,7 @@ Interactive tool for generating Lilia grenade item definitions. Fill out the fie
     border: 2px solid var(--md-default-fg-color--lighter);
     border-radius: 8px;
     font-family: 'Roboto Mono', 'Courier New', monospace;
-    font-size: 14px;
+    font-size: 18px;
     background: var(--md-default-fg-color--lightest);
     color: var(--md-default-fg-color);
     transition: border-color 0.3s ease, box-shadow 0.3s ease;
@@ -175,7 +171,7 @@ Interactive tool for generating Lilia grenade item definitions. Fill out the fie
     color: var(--md-default-fg-color--light);
     font-style: normal;
     margin-top: 6px;
-    font-size: 0.85em;
+    font-size: 1.0em;
 }
 
 [data-md-color-scheme="slate"] .input-group small {
@@ -199,7 +195,7 @@ Interactive tool for generating Lilia grenade item definitions. Fill out the fie
     padding: 16px 32px;
     border-radius: 8px;
     cursor: pointer;
-    font-size: 16px;
+    font-size: 18px;
     font-weight: 600;
     display: block;
     width: 100%;
@@ -245,7 +241,7 @@ pre {
 
 code {
     font-family: 'Roboto Mono', 'Courier New', monospace !important;
-    font-size: 13px !important;
+    font-size: 15px !important;
     line-height: 1.5 !important;
 }
 
@@ -261,13 +257,13 @@ code {
     }
 
     .generator-section h3 {
-        font-size: 1.1em;
+        font-size: 1.3em;
         padding: 12px 16px;
     }
 
     .generate-btn {
         padding: 14px 24px;
-        font-size: 15px;
+        font-size: 17px;
     }
 }
 

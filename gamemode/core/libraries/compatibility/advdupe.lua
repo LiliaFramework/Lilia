@@ -1,20 +1,4 @@
-﻿--[[
-    Folder: Compatibility
-    File:  advdupe.md
-]]
---[[
-    Advanced Duplicator Compatibility
-
-    Provides compatibility and security measures for the Advanced Duplicator addon within the Lilia framework.
-]]
---[[
-    Improvements Done:
-        The Advanced Duplicator compatibility module ensures safe and controlled usage of the Advanced Duplicator addon. It implements security measures to prevent crash exploits and unauthorized duplication.
-        The module operates on the server side to validate duplication attempts, checking for oversized models and entities marked as non-duplicable.
-        It includes logging functionality to track potential security violations and crash attempts.
-        The module integrates with the notification system to inform players of duplication restrictions and security measures.
-]]
-local function CheckDuplicationScale(client, entities)
+﻿local function CheckDuplicationScale(client, entities)
     entities = entities or {}
     for _, ent in pairs(entities) do
         if ent.ModelScale and ent.ModelScale > 10 then
