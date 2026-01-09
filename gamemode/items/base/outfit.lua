@@ -1,4 +1,4 @@
---[[
+﻿--[[
     Folder: Definitions
     File:  outfit.md
 ]]

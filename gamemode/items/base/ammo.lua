@@ -1,4 +1,4 @@
---[[
+﻿--[[
     Folder: Definitions
     File:  ammo.md
 ]]
