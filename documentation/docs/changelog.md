@@ -1,5 +1,30 @@
 # Changelog
 
+## Version 7.248 (January 09, 2026)
+
+### Changes
+
+- Generators
+- Successfully updated workshop Lilia to 7.246
+- Renamed
+- Successfully updated workshop Lilia to 7.244
+- Consistency
+- No More Dupes in Example Item
+- Generators
+- Workflow Typo
+- Successfully updated workshop Lilia to 7.239
+- Test Feature
+- Successfully updated workshop Lilia to 7.237
+- Update generate_docs.py
+- CanTakeEntity Hook
+- Weird Error Fix
+- Successfully updated workshop Lilia to 7.233
+- Door Saving Improvements
+- Successfully updated workshop Lilia to 7.231
+- lia.administrator changed to lia.admin for consistency
+- Badly Named Var
+- Successfully updated workshop Lilia to 7.228
+
 ## Version 7.246 (January 09, 2026)
 
 ### Changes
