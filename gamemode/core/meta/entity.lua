@@ -22,25 +22,37 @@ local validClasses = {
 
 --[[
     Purpose:
-        <Brief, clear description of what the function does.>
+        Plays a sound from this entity, handling web sound URLs and fallbacks.
 
     When Called:
-        <Describe when and why this function is invoked.>
+        Use whenever an entity needs to emit a sound that may be streamed.
 
     Parameters:
-        <paramName> (<type>)
-            <Description.>
+        soundName (string)
+            File path or URL to play.
+        soundLevel (number)
+            Sound level for attenuation.
+        pitchPercent (number)
+            Pitch modifier.
+        volume (number)
+            Volume from 0-100.
+        channel (number)
+            Optional sound channel.
+        flags (number)
+            Optional emit flags.
+        dsp (number)
+            Optional DSP effect index.
 
     Returns:
-        <returnType>
-            <Description or "nil".>
+        boolean
+            True when handled by websound logic; otherwise base emit result.
 
     Realm:
-        <Client | Server | Shared>
+        Shared
 
     Example Usage:
         ```lua
-            <High Complexity and well documented Function Call Or Use Case Here>
+            ent:EmitSound("lilia/websounds/example.mp3", 75)
         ```
 ]]
 function entityMeta:EmitSound(soundName, soundLevel, pitchPercent, volume, channel, flags, dsp)
@@ -86,25 +98,24 @@ end
 
 --[[
     Purpose:
-        <Brief, clear description of what the function does.>
+        Indicates whether this entity is a physics prop.
 
     When Called:
-        <Describe when and why this function is invoked.>
+        Use when filtering interactions to physical props only.
 
     Parameters:
-        <paramName> (<type>)
-            <Description.>
+        None.
 
     Returns:
-        <returnType>
-            <Description or "nil".>
+        boolean
+            True if the entity class is prop_physics.
 
     Realm:
-        <Client | Server | Shared>
+        Shared
 
     Example Usage:
         ```lua
-            <High Complexity and well documented Function Call Or Use Case Here>
+            if ent:isProp() then handleProp(ent) end
         ```
 ]]
 function entityMeta:isProp()
@@ -114,25 +125,24 @@ end
 
 --[[
     Purpose:
-        <Brief, clear description of what the function does.>
+        Checks if the entity represents a Lilia item.
 
     When Called:
-        <Describe when and why this function is invoked.>
+        Use when distinguishing item entities from other entities.
 
     Parameters:
-        <paramName> (<type>)
-            <Description.>
+        None.
 
     Returns:
-        <returnType>
-            <Description or "nil".>
+        boolean
+            True if the entity class is lia_item.
 
     Realm:
-        <Client | Server | Shared>
+        Shared
 
     Example Usage:
         ```lua
-            <High Complexity and well documented Function Call Or Use Case Here>
+            if ent:isItem() then pickUpItem(ent) end
         ```
 ]]
 function entityMeta:isItem()
@@ -142,25 +152,24 @@ end
 
 --[[
     Purpose:
-        <Brief, clear description of what the function does.>
+        Checks if the entity is a Lilia money pile.
 
     When Called:
-        <Describe when and why this function is invoked.>
+        Use when processing currency pickups or interactions.
 
     Parameters:
-        <paramName> (<type>)
-            <Description.>
+        None.
 
     Returns:
-        <returnType>
-            <Description or "nil".>
+        boolean
+            True if the entity class is lia_money.
 
     Realm:
-        <Client | Server | Shared>
+        Shared
 
     Example Usage:
         ```lua
-            <High Complexity and well documented Function Call Or Use Case Here>
+            if ent:isMoney() then ent:Remove() end
         ```
 ]]
 function entityMeta:isMoney()
@@ -170,25 +179,24 @@ end
 
 --[[
     Purpose:
-        <Brief, clear description of what the function does.>
+        Determines whether the entity belongs to supported vehicle classes.
 
     When Called:
-        <Describe when and why this function is invoked.>
+        Use when applying logic specific to Simfphys/LVS vehicles.
 
     Parameters:
-        <paramName> (<type>)
-            <Description.>
+        None.
 
     Returns:
-        <returnType>
-            <Description or "nil".>
+        boolean
+            True if the entity is a recognized vehicle type.
 
     Realm:
-        <Client | Server | Shared>
+        Shared
 
     Example Usage:
         ```lua
-            <High Complexity and well documented Function Call Or Use Case Here>
+            if ent:isSimfphysCar() then configureVehicle(ent) end
         ```
 ]]
 function entityMeta:isSimfphysCar()
@@ -198,25 +206,27 @@ end
 
 --[[
     Purpose:
-        <Brief, clear description of what the function does.>
+        Verifies whether a client has a specific level of access to a door.
 
     When Called:
-        <Describe when and why this function is invoked.>
+        Use when opening menus or performing actions gated by door access.
 
     Parameters:
-        <paramName> (<type>)
-            <Description.>
+        client (Player)
+            Player requesting access.
+        access (number)
+            Required access level, defaults to DOOR_GUEST.
 
     Returns:
-        <returnType>
-            <Description or "nil".>
+        boolean
+            True if the client meets the access requirement.
 
     Realm:
-        <Client | Server | Shared>
+        Shared
 
     Example Usage:
         ```lua
-            <High Complexity and well documented Function Call Or Use Case Here>
+            if door:checkDoorAccess(ply, DOOR_OWNER) then openDoor() end
         ```
 ]]
 function entityMeta:checkDoorAccess(client, access)
@@ -230,25 +240,24 @@ end
 
 --[[
     Purpose:
-        <Brief, clear description of what the function does.>
+        Assigns vehicle ownership metadata to a player.
 
     When Called:
-        <Describe when and why this function is invoked.>
+        Use when a player purchases or claims a vehicle entity.
 
     Parameters:
-        <paramName> (<type>)
-            <Description.>
+        client (Player)
+            Player to set as owner.
 
     Returns:
-        <returnType>
-            <Description or "nil".>
+        nil
 
     Realm:
-        <Client | Server | Shared>
+        Shared
 
     Example Usage:
         ```lua
-            <High Complexity and well documented Function Call Or Use Case Here>
+            vehicle:keysOwn(ply)
         ```
 ]]
 function entityMeta:keysOwn(client)
@@ -263,25 +272,23 @@ end
 
 --[[
     Purpose:
-        <Brief, clear description of what the function does.>
+        Locks a vehicle entity via its Fire interface.
 
     When Called:
-        <Describe when and why this function is invoked.>
+        Use when a player locks their owned vehicle.
 
     Parameters:
-        <paramName> (<type>)
-            <Description.>
+        None.
 
     Returns:
-        <returnType>
-            <Description or "nil".>
+        nil
 
     Realm:
-        <Client | Server | Shared>
+        Shared
 
     Example Usage:
         ```lua
-            <High Complexity and well documented Function Call Or Use Case Here>
+            vehicle:keysLock()
         ```
 ]]
 function entityMeta:keysLock()
@@ -291,25 +298,23 @@ end
 
 --[[
     Purpose:
-        <Brief, clear description of what the function does.>
+        Unlocks a vehicle entity via its Fire interface.
 
     When Called:
-        <Describe when and why this function is invoked.>
+        Use when giving a player access back to their vehicle.
 
     Parameters:
-        <paramName> (<type>)
-            <Description.>
+        None.
 
     Returns:
-        <returnType>
-            <Description or "nil".>
+        nil
 
     Realm:
-        <Client | Server | Shared>
+        Shared
 
     Example Usage:
         ```lua
-            <High Complexity and well documented Function Call Or Use Case Here>
+            vehicle:keysUnLock()
         ```
 ]]
 function entityMeta:keysUnLock()
@@ -319,25 +324,24 @@ end
 
 --[[
     Purpose:
-        <Brief, clear description of what the function does.>
+        Retrieves the owning player for a door or vehicle, if any.
 
     When Called:
-        <Describe when and why this function is invoked.>
+        Use when displaying ownership information.
 
     Parameters:
-        <paramName> (<type>)
-            <Description.>
+        None.
 
     Returns:
-        <returnType>
-            <Description or "nil".>
+        Player|nil
+            Owner entity or nil if unknown.
 
     Realm:
-        <Client | Server | Shared>
+        Shared
 
     Example Usage:
         ```lua
-            <High Complexity and well documented Function Call Or Use Case Here>
+            local owner = door:getDoorOwner()
         ```
 ]]
 function entityMeta:getDoorOwner()
@@ -347,25 +351,24 @@ end
 
 --[[
     Purpose:
-        <Brief, clear description of what the function does.>
+        Returns whether the entity is flagged as locked through net vars.
 
     When Called:
-        <Describe when and why this function is invoked.>
+        Use when deciding if interactions should be blocked.
 
     Parameters:
-        <paramName> (<type>)
-            <Description.>
+        None.
 
     Returns:
-        <returnType>
-            <Description or "nil".>
+        boolean
+            True if the entity's locked net var is set.
 
     Realm:
-        <Client | Server | Shared>
+        Shared
 
     Example Usage:
         ```lua
-            <High Complexity and well documented Function Call Or Use Case Here>
+            if door:isLocked() then denyUse() end
         ```
 ]]
 function entityMeta:isLocked()
@@ -375,25 +378,24 @@ end
 
 --[[
     Purpose:
-        <Brief, clear description of what the function does.>
+        Checks the underlying lock state of a door entity.
 
     When Called:
-        <Describe when and why this function is invoked.>
+        Use when syncing lock visuals or handling use attempts.
 
     Parameters:
-        <paramName> (<type>)
-            <Description.>
+        None.
 
     Returns:
-        <returnType>
-            <Description or "nil".>
+        boolean
+            True if the door reports itself as locked.
 
     Realm:
-        <Client | Server | Shared>
+        Shared
 
     Example Usage:
         ```lua
-            <High Complexity and well documented Function Call Or Use Case Here>
+            local locked = door:isDoorLocked()
         ```
 ]]
 function entityMeta:isDoorLocked()
@@ -403,25 +405,24 @@ end
 
 --[[
     Purpose:
-        <Brief, clear description of what the function does.>
+        Infers whether the entity's model is tagged as female.
 
     When Called:
-        <Describe when and why this function is invoked.>
+        Use for gender-specific animations or sounds.
 
     Parameters:
-        <paramName> (<type>)
-            <Description.>
+        None.
 
     Returns:
-        <returnType>
-            <Description or "nil".>
+        boolean
+            True if GetModelGender returns "female".
 
     Realm:
-        <Client | Server | Shared>
+        Shared
 
     Example Usage:
         ```lua
-            <High Complexity and well documented Function Call Or Use Case Here>
+            if ent:isFemale() then setFemaleVoice(ent) end
         ```
 ]]
 function entityMeta:isFemale()
@@ -431,25 +432,24 @@ end
 
 --[[
     Purpose:
-        <Brief, clear description of what the function does.>
+        Finds the paired door entity associated with this door.
 
     When Called:
-        <Describe when and why this function is invoked.>
+        Use when syncing double-door behavior or ownership.
 
     Parameters:
-        <paramName> (<type>)
-            <Description.>
+        None.
 
     Returns:
-        <returnType>
-            <Description or "nil".>
+        Entity|nil
+            Partner door entity when found.
 
     Realm:
-        <Client | Server | Shared>
+        Shared
 
     Example Usage:
         ```lua
-            <High Complexity and well documented Function Call Or Use Case Here>
+            local partner = door:getDoorPartner()
         ```
 ]]
 function entityMeta:getDoorPartner()
@@ -471,25 +471,26 @@ end
 if SERVER then
     --[[
     Purpose:
-        <Brief, clear description of what the function does.>
+        Sends a networked variable for this entity to one or more clients.
 
     When Called:
-        <Describe when and why this function is invoked.>
+        Use immediately after changing lia.net values to sync them.
 
     Parameters:
-        <paramName> (<type>)
-            <Description.>
+        key (string)
+            Net variable name to send.
+        receiver (Player|nil)
+            Optional player to send to; broadcasts when nil.
 
     Returns:
-        <returnType>
-            <Description or "nil".>
+        nil
 
     Realm:
-        <Client | Server | Shared>
+        Server
 
     Example Usage:
         ```lua
-            <High Complexity and well documented Function Call Or Use Case Here>
+            ent:sendNetVar("locked", ply)
         ```
 ]]
     function entityMeta:sendNetVar(key, receiver)
@@ -507,25 +508,24 @@ if SERVER then
 
     --[[
     Purpose:
-        <Brief, clear description of what the function does.>
+        Clears all stored net vars for this entity and notifies clients.
 
     When Called:
-        <Describe when and why this function is invoked.>
+        Use when an entity is being removed or reset.
 
     Parameters:
-        <paramName> (<type>)
-            <Description.>
+        receiver (Player|nil)
+            Optional target to notify; broadcasts when nil.
 
     Returns:
-        <returnType>
-            <Description or "nil".>
+        nil
 
     Realm:
-        <Client | Server | Shared>
+        Server
 
     Example Usage:
         ```lua
-            <High Complexity and well documented Function Call Or Use Case Here>
+            ent:clearNetVars()
         ```
 ]]
     function entityMeta:clearNetVars(receiver)
@@ -544,25 +544,23 @@ if SERVER then
 
     --[[
     Purpose:
-        <Brief, clear description of what the function does.>
+        Resets stored door access data and closes any open menus.
 
     When Called:
-        <Describe when and why this function is invoked.>
+        Use when clearing door permissions or transferring ownership.
 
     Parameters:
-        <paramName> (<type>)
-            <Description.>
+        None.
 
     Returns:
-        <returnType>
-            <Description or "nil".>
+        nil
 
     Realm:
-        <Client | Server | Shared>
+        Server
 
     Example Usage:
         ```lua
-            <High Complexity and well documented Function Call Or Use Case Here>
+            door:removeDoorAccessData()
         ```
 ]]
     function entityMeta:removeDoorAccessData()
@@ -579,25 +577,24 @@ if SERVER then
 
     --[[
     Purpose:
-        <Brief, clear description of what the function does.>
+        Sets the locked net var state for this entity.
 
     When Called:
-        <Describe when and why this function is invoked.>
+        Use when toggling lock status server-side.
 
     Parameters:
-        <paramName> (<type>)
-            <Description.>
+        state (boolean)
+            Whether the entity should be considered locked.
 
     Returns:
-        <returnType>
-            <Description or "nil".>
+        nil
 
     Realm:
-        <Client | Server | Shared>
+        Server
 
     Example Usage:
         ```lua
-            <High Complexity and well documented Function Call Or Use Case Here>
+            door:setLocked(true)
         ```
 ]]
     function entityMeta:setLocked(state)
@@ -607,25 +604,24 @@ if SERVER then
 
     --[[
     Purpose:
-        <Brief, clear description of what the function does.>
+        Marks an entity as non-ownable for keys/door systems.
 
     When Called:
-        <Describe when and why this function is invoked.>
+        Use when preventing selling or owning of a door/vehicle.
 
     Parameters:
-        <paramName> (<type>)
-            <Description.>
+        state (boolean)
+            True to make the entity non-ownable.
 
     Returns:
-        <returnType>
-            <Description or "nil".>
+        nil
 
     Realm:
-        <Client | Server | Shared>
+        Server
 
     Example Usage:
         ```lua
-            <High Complexity and well documented Function Call Or Use Case Here>
+            door:setKeysNonOwnable(true)
         ```
 ]]
     function entityMeta:setKeysNonOwnable(state)
@@ -641,25 +637,28 @@ if SERVER then
 
     --[[
     Purpose:
-        <Brief, clear description of what the function does.>
+        Stores a networked variable for this entity and notifies listeners.
 
     When Called:
-        <Describe when and why this function is invoked.>
+        Use when updating shared entity state that clients need.
 
     Parameters:
-        <paramName> (<type>)
-            <Description.>
+        key (string)
+            Net variable name.
+        value (any)
+            Value to store and broadcast.
+        receiver (Player|nil)
+            Optional player to send to; broadcasts when nil.
 
     Returns:
-        <returnType>
-            <Description or "nil".>
+        nil
 
     Realm:
-        <Client | Server | Shared>
+        Server
 
     Example Usage:
         ```lua
-            <High Complexity and well documented Function Call Or Use Case Here>
+            ent:setNetVar("color", Color(255, 0, 0))
         ```
 ]]
     function entityMeta:setNetVar(key, value, receiver)
@@ -674,25 +673,26 @@ if SERVER then
 
     --[[
     Purpose:
-        <Brief, clear description of what the function does.>
+        Saves a local (server-only) variable on the entity.
 
     When Called:
-        <Describe when and why this function is invoked.>
+        Use for transient server state that should not be networked.
 
     Parameters:
-        <paramName> (<type>)
-            <Description.>
+        key (string)
+            Local variable name.
+        value (any)
+            Value to store.
 
     Returns:
-        <returnType>
-            <Description or "nil".>
+        nil
 
     Realm:
-        <Client | Server | Shared>
+        Server
 
     Example Usage:
         ```lua
-            <High Complexity and well documented Function Call Or Use Case Here>
+            ent:setLocalVar("cooldown", CurTime())
         ```
 ]]
     function entityMeta:setLocalVar(key, value)
@@ -703,25 +703,27 @@ if SERVER then
 
     --[[
     Purpose:
-        <Brief, clear description of what the function does.>
+        Reads a server-side local variable stored on the entity.
 
     When Called:
-        <Describe when and why this function is invoked.>
+        Use when retrieving transient server-only state.
 
     Parameters:
-        <paramName> (<type>)
-            <Description.>
+        key (string)
+            Local variable name.
+        default (any)
+            Value to return if unset.
 
     Returns:
-        <returnType>
-            <Description or "nil".>
+        any
+            Stored local value or default.
 
     Realm:
-        <Client | Server | Shared>
+        Server
 
     Example Usage:
         ```lua
-            <High Complexity and well documented Function Call Or Use Case Here>
+            local cooldown = ent:getLocalVar("cooldown", 0)
         ```
 ]]
     function entityMeta:getLocalVar(key, default)
@@ -732,25 +734,40 @@ if SERVER then
 else
     --[[
     Purpose:
-        <Brief, clear description of what the function does.>
+        Plays a web sound locally on the client, optionally following the entity.
 
     When Called:
-        <Describe when and why this function is invoked.>
+        Use when the client must play a streamed sound attached to an entity.
 
     Parameters:
-        <paramName> (<type>)
-            <Description.>
+        soundPath (string)
+            URL or path to the sound.
+        volume (number)
+            Volume from 0-1.
+        shouldFollow (boolean)
+            Whether the sound follows the entity.
+        maxDistance (number)
+            Maximum audible distance.
+        startDelay (number)
+            Delay before playback starts.
+        minDistance (number)
+            Minimum distance for attenuation.
+        pitch (number)
+            Playback rate multiplier.
+        soundLevel (number)
+            Optional sound level for attenuation.
+        dsp (number)
+            Optional DSP effect index.
 
     Returns:
-        <returnType>
-            <Description or "nil".>
+        nil
 
     Realm:
-        <Client | Server | Shared>
+        Client
 
     Example Usage:
         ```lua
-            <High Complexity and well documented Function Call Or Use Case Here>
+            ent:playFollowingSound(url, 1, true, 1200)
         ```
 ]]
     function entityMeta:playFollowingSound(soundPath, volume, shouldFollow, maxDistance, startDelay, minDistance, pitch, soundLevel, dsp)
@@ -894,25 +911,24 @@ end
 
 --[[
     Purpose:
-        <Brief, clear description of what the function does.>
+        Determines whether this entity should be treated as a door.
 
     When Called:
-        <Describe when and why this function is invoked.>
+        Use when applying door-specific logic on an entity.
 
     Parameters:
-        <paramName> (<type>)
-            <Description.>
+        None.
 
     Returns:
-        <returnType>
-            <Description or "nil".>
+        boolean
+            True if the entity class matches common door types.
 
     Realm:
-        <Client | Server | Shared>
+        Shared
 
     Example Usage:
         ```lua
-            <High Complexity and well documented Function Call Or Use Case Here>
+            if ent:isDoor() then handleDoor(ent) end
         ```
 ]]
 function entityMeta:isDoor()
@@ -932,25 +948,27 @@ end
 
 --[[
     Purpose:
-        <Brief, clear description of what the function does.>
+        Retrieves a networked variable stored on this entity.
 
     When Called:
-        <Describe when and why this function is invoked.>
+        Use when reading shared entity state on either server or client.
 
     Parameters:
-        <paramName> (<type>)
-            <Description.>
+        key (string)
+            Net variable name.
+        default (any)
+            Fallback value if none is set.
 
     Returns:
-        <returnType>
-            <Description or "nil".>
+        any
+            Stored net var or default.
 
     Realm:
-        <Client | Server | Shared>
+        Shared
 
     Example Usage:
         ```lua
-            <High Complexity and well documented Function Call Or Use Case Here>
+            local locked = ent:getNetVar("locked", false)
         ```
 ]]
 function entityMeta:getNetVar(key, default)

@@ -19,25 +19,27 @@ Inventory.items = {}
 Inventory.id = -1
 --[[
     Purpose:
-        <Brief, clear description of what the function does.>
+        Retrieves a stored data value on the inventory.
 
     When Called:
-        <Describe when and why this function is invoked.>
+        Use whenever reading custom inventory metadata.
 
     Parameters:
-        <paramName> (<type>)
-            <Description.>
+        key (string)
+            Data key to read.
+        default (any)
+            Value returned when the key is missing.
 
     Returns:
-        <returnType>
-            <Description or "nil".>
+        any
+            Stored value or the provided default.
 
     Realm:
-        <Client | Server | Shared>
+        Shared
 
     Example Usage:
         ```lua
-            <High Complexity and well documented Function Call Or Use Case Here>
+            local owner = inv:getData("char")
         ```
 ]]
 function Inventory:getData(key, default)
@@ -48,25 +50,25 @@ end
 
 --[[
     Purpose:
-        <Brief, clear description of what the function does.>
+        Creates a subclass of Inventory with its own metatable.
 
     When Called:
-        <Describe when and why this function is invoked.>
+        Use when defining a new inventory type.
 
     Parameters:
-        <paramName> (<type>)
-            <Description.>
+        className (string)
+            Registry name for the new subclass.
 
     Returns:
-        <returnType>
-            <Description or "nil".>
+        table
+            Newly created subclass table.
 
     Realm:
-        <Client | Server | Shared>
+        Shared
 
     Example Usage:
         ```lua
-            <High Complexity and well documented Function Call Or Use Case Here>
+            local Backpack = Inventory:extend("liaBackpack")
         ```
 ]]
 function Inventory:extend(className)
@@ -80,25 +82,23 @@ end
 
 --[[
     Purpose:
-        <Brief, clear description of what the function does.>
+        Sets up inventory defaults; meant to be overridden.
 
     When Called:
-        <Describe when and why this function is invoked.>
+        Invoked during type registration to configure behavior.
 
     Parameters:
-        <paramName> (<type>)
-            <Description.>
+        None.
 
     Returns:
-        <returnType>
-            <Description or "nil".>
+        nil
 
     Realm:
-        <Client | Server | Shared>
+        Shared
 
     Example Usage:
         ```lua
-            <High Complexity and well documented Function Call Or Use Case Here>
+            function Inventory:configure() self.config.size = {4,4} end
         ```
 ]]
 function Inventory:configure()
@@ -106,25 +106,26 @@ end
 
 --[[
     Purpose:
-        <Brief, clear description of what the function does.>
+        Registers a proxy callback for a specific data key.
 
     When Called:
-        <Describe when and why this function is invoked.>
+        Use when you need to react to data changes.
 
     Parameters:
-        <paramName> (<type>)
-            <Description.>
+        key (string)
+            Data key to watch.
+        onChange (function)
+            Callback receiving old and new values.
 
     Returns:
-        <returnType>
-            <Description or "nil".>
+        nil
 
     Realm:
-        <Client | Server | Shared>
+        Shared
 
     Example Usage:
         ```lua
-            <High Complexity and well documented Function Call Or Use Case Here>
+            inv:addDataProxy("locked", function(o,n) end)
         ```
 ]]
 function Inventory:addDataProxy(key, onChange)
@@ -135,25 +136,27 @@ end
 
 --[[
     Purpose:
-        <Brief, clear description of what the function does.>
+        Returns all items in the inventory matching a uniqueID.
 
     When Called:
-        <Describe when and why this function is invoked.>
+        Use when finding all copies of a specific item type.
 
     Parameters:
-        <paramName> (<type>)
-            <Description.>
+        uniqueID (string)
+            Item unique identifier.
+        onlyMain (boolean)
+            Restrict search to main inventory when true.
 
     Returns:
-        <returnType>
-            <Description or "nil".>
+        table
+            Array of matching item instances.
 
     Realm:
-        <Client | Server | Shared>
+        Shared
 
     Example Usage:
         ```lua
-            <High Complexity and well documented Function Call Or Use Case Here>
+            local meds = inv:getItemsByUniqueID("medkit")
         ```
 ]]
 function Inventory:getItemsByUniqueID(uniqueID, onlyMain)
@@ -166,25 +169,24 @@ end
 
 --[[
     Purpose:
-        <Brief, clear description of what the function does.>
+        Registers this inventory type with the system.
 
     When Called:
-        <Describe when and why this function is invoked.>
+        Invoke once per subclass to set type ID and defaults.
 
     Parameters:
-        <paramName> (<type>)
-            <Description.>
+        typeID (string)
+            Unique identifier for this inventory type.
 
     Returns:
-        <returnType>
-            <Description or "nil".>
+        nil
 
     Realm:
-        <Client | Server | Shared>
+        Shared
 
     Example Usage:
         ```lua
-            <High Complexity and well documented Function Call Or Use Case Here>
+            Inventory:register("bag")
         ```
 ]]
 function Inventory:register(typeID)
@@ -208,25 +210,24 @@ end
 
 --[[
     Purpose:
-        <Brief, clear description of what the function does.>
+        Creates a new instance of this inventory type.
 
     When Called:
-        <Describe when and why this function is invoked.>
+        Use when a character or container needs a fresh inventory.
 
     Parameters:
-        <paramName> (<type>)
-            <Description.>
+        None.
 
     Returns:
-        <returnType>
-            <Description or "nil".>
+        table
+            Deferred inventory instance creation.
 
     Realm:
-        <Client | Server | Shared>
+        Shared
 
     Example Usage:
         ```lua
-            <High Complexity and well documented Function Call Or Use Case Here>
+            local inv = Inventory:new()
         ```
 ]]
 function Inventory:new()
@@ -235,25 +236,24 @@ end
 
 --[[
     Purpose:
-        <Brief, clear description of what the function does.>
+        Formats the inventory as a readable string with its ID.
 
     When Called:
-        <Describe when and why this function is invoked.>
+        Use for logging or debugging output.
 
     Parameters:
-        <paramName> (<type>)
-            <Description.>
+        None.
 
     Returns:
-        <returnType>
-            <Description or "nil".>
+        string
+            Localized class name and ID.
 
     Realm:
-        <Client | Server | Shared>
+        Shared
 
     Example Usage:
         ```lua
-            <High Complexity and well documented Function Call Or Use Case Here>
+            print(inv:tostring())
         ```
 ]]
 function Inventory:tostring()
@@ -262,25 +262,24 @@ end
 
 --[[
     Purpose:
-        <Brief, clear description of what the function does.>
+        Returns the inventory type definition table.
 
     When Called:
-        <Describe when and why this function is invoked.>
+        Use when accessing type-level configuration.
 
     Parameters:
-        <paramName> (<type>)
-            <Description.>
+        None.
 
     Returns:
-        <returnType>
-            <Description or "nil".>
+        table
+            Registered inventory type data.
 
     Realm:
-        <Client | Server | Shared>
+        Shared
 
     Example Usage:
         ```lua
-            <High Complexity and well documented Function Call Or Use Case Here>
+            local typeData = inv:getType()
         ```
 ]]
 function Inventory:getType()
@@ -289,25 +288,28 @@ end
 
 --[[
     Purpose:
-        <Brief, clear description of what the function does.>
+        Fires proxy callbacks when a tracked data value changes.
 
     When Called:
-        <Describe when and why this function is invoked.>
+        Internally after setData updates.
 
     Parameters:
-        <paramName> (<type>)
-            <Description.>
+        key (string)
+            Data key that changed.
+        oldValue (any)
+            Previous value.
+        newValue (any)
+            New value.
 
     Returns:
-        <returnType>
-            <Description or "nil".>
+        nil
 
     Realm:
-        <Client | Server | Shared>
+        Shared
 
     Example Usage:
         ```lua
-            <High Complexity and well documented Function Call Or Use Case Here>
+            inv:onDataChanged("locked", false, true)
         ```
 ]]
 function Inventory:onDataChanged(key, oldValue, newValue)
@@ -321,25 +323,24 @@ end
 
 --[[
     Purpose:
-        <Brief, clear description of what the function does.>
+        Returns the table of item instances in this inventory.
 
     When Called:
-        <Describe when and why this function is invoked.>
+        Use when iterating all items.
 
     Parameters:
-        <paramName> (<type>)
-            <Description.>
+        None.
 
     Returns:
-        <returnType>
-            <Description or "nil".>
+        table
+            Item instances keyed by item ID.
 
     Realm:
-        <Client | Server | Shared>
+        Shared
 
     Example Usage:
         ```lua
-            <High Complexity and well documented Function Call Or Use Case Here>
+            for id, itm in pairs(inv:getItems()) do end
         ```
 ]]
 function Inventory:getItems()
@@ -348,25 +349,25 @@ end
 
 --[[
     Purpose:
-        <Brief, clear description of what the function does.>
+        Collects items of a given type from the inventory.
 
     When Called:
-        <Describe when and why this function is invoked.>
+        Use when filtering for a specific item uniqueID.
 
     Parameters:
-        <paramName> (<type>)
-            <Description.>
+        itemType (string)
+            Unique item identifier to match.
 
     Returns:
-        <returnType>
-            <Description or "nil".>
+        table
+            Array of matching items.
 
     Realm:
-        <Client | Server | Shared>
+        Shared
 
     Example Usage:
         ```lua
-            <High Complexity and well documented Function Call Or Use Case Here>
+            local foods = inv:getItemsOfType("food")
         ```
 ]]
 function Inventory:getItemsOfType(itemType)
@@ -379,25 +380,25 @@ end
 
 --[[
     Purpose:
-        <Brief, clear description of what the function does.>
+        Returns the first item matching a uniqueID.
 
     When Called:
-        <Describe when and why this function is invoked.>
+        Use when only one instance of a type is needed.
 
     Parameters:
-        <paramName> (<type>)
-            <Description.>
+        itemType (string)
+            Unique item identifier to find.
 
     Returns:
-        <returnType>
-            <Description or "nil".>
+        table|nil
+            Item instance or nil if none found.
 
     Realm:
-        <Client | Server | Shared>
+        Shared
 
     Example Usage:
         ```lua
-            <High Complexity and well documented Function Call Or Use Case Here>
+            local gun = inv:getFirstItemOfType("pistol")
         ```
 ]]
 function Inventory:getFirstItemOfType(itemType)
@@ -408,25 +409,25 @@ end
 
 --[[
     Purpose:
-        <Brief, clear description of what the function does.>
+        Checks whether the inventory contains an item type.
 
     When Called:
-        <Describe when and why this function is invoked.>
+        Use before consuming or requiring an item.
 
     Parameters:
-        <paramName> (<type>)
-            <Description.>
+        itemType (string)
+            Unique item identifier to check.
 
     Returns:
-        <returnType>
-            <Description or "nil".>
+        boolean
+            True if at least one matching item exists.
 
     Realm:
-        <Client | Server | Shared>
+        Shared
 
     Example Usage:
         ```lua
-            <High Complexity and well documented Function Call Or Use Case Here>
+            if inv:hasItem("keycard") then unlock() end
         ```
 ]]
 function Inventory:hasItem(itemType)
@@ -438,25 +439,25 @@ end
 
 --[[
     Purpose:
-        <Brief, clear description of what the function does.>
+        Counts items, optionally filtering by uniqueID.
 
     When Called:
-        <Describe when and why this function is invoked.>
+        Use for capacity checks or UI badge counts.
 
     Parameters:
-        <paramName> (<type>)
-            <Description.>
+        itemType (string|nil)
+            Unique ID to filter by; nil counts all.
 
     Returns:
-        <returnType>
-            <Description or "nil".>
+        number
+            Total quantity of matching items.
 
     Realm:
-        <Client | Server | Shared>
+        Shared
 
     Example Usage:
         ```lua
-            <High Complexity and well documented Function Call Or Use Case Here>
+            local ammoCount = inv:getItemCount("ammo")
         ```
 ]]
 function Inventory:getItemCount(itemType)
@@ -469,25 +470,24 @@ end
 
 --[[
     Purpose:
-        <Brief, clear description of what the function does.>
+        Returns the numeric identifier for this inventory.
 
     When Called:
-        <Describe when and why this function is invoked.>
+        Use when networking, saving, or comparing inventories.
 
     Parameters:
-        <paramName> (<type>)
-            <Description.>
+        None.
 
     Returns:
-        <returnType>
-            <Description or "nil".>
+        number
+            Inventory ID.
 
     Realm:
-        <Client | Server | Shared>
+        Shared
 
     Example Usage:
         ```lua
-            <High Complexity and well documented Function Call Or Use Case Here>
+            local id = inv:getID()
         ```
 ]]
 function Inventory:getID()
@@ -497,25 +497,27 @@ end
 if SERVER then
     --[[
     Purpose:
-        <Brief, clear description of what the function does.>
+        Inserts an item into this inventory and persists its invID.
 
     When Called:
-        <Describe when and why this function is invoked.>
+        Use when adding an item to the inventory on the server.
 
     Parameters:
-        <paramName> (<type>)
-            <Description.>
+        item (Item)
+            Item instance to add.
+        noReplicate (boolean)
+            Skip replication hooks when true.
 
     Returns:
-        <returnType>
-            <Description or "nil".>
+        Inventory
+            The inventory for chaining.
 
     Realm:
-        <Client | Server | Shared>
+        Server
 
     Example Usage:
         ```lua
-            <High Complexity and well documented Function Call Or Use Case Here>
+            inv:addItem(item)
         ```
 ]]
     function Inventory:addItem(item, noReplicate)
@@ -534,25 +536,25 @@ if SERVER then
 
     --[[
     Purpose:
-        <Brief, clear description of what the function does.>
+        Alias to addItem for convenience.
 
     When Called:
-        <Describe when and why this function is invoked.>
+        Use wherever you would call addItem.
 
     Parameters:
-        <paramName> (<type>)
-            <Description.>
+        item (Item)
+            Item instance to add.
 
     Returns:
-        <returnType>
-            <Description or "nil".>
+        Inventory
+            The inventory for chaining.
 
     Realm:
-        <Client | Server | Shared>
+        Server
 
     Example Usage:
         ```lua
-            <High Complexity and well documented Function Call Or Use Case Here>
+            inv:add(item)
         ```
 ]]
     function Inventory:add(item)
@@ -561,25 +563,24 @@ if SERVER then
 
     --[[
     Purpose:
-        <Brief, clear description of what the function does.>
+        Notifies clients about an item newly added to this inventory.
 
     When Called:
-        <Describe when and why this function is invoked.>
+        Invoked after addItem to replicate state.
 
     Parameters:
-        <paramName> (<type>)
-            <Description.>
+        item (Item)
+            Item instance already inserted.
 
     Returns:
-        <returnType>
-            <Description or "nil".>
+        nil
 
     Realm:
-        <Client | Server | Shared>
+        Server
 
     Example Usage:
         ```lua
-            <High Complexity and well documented Function Call Or Use Case Here>
+            inv:syncItemAdded(item)
         ```
 ]]
     function Inventory:syncItemAdded(item)
@@ -595,25 +596,25 @@ if SERVER then
 
     --[[
     Purpose:
-        <Brief, clear description of what the function does.>
+        Creates a database record for a new inventory and its data.
 
     When Called:
-        <Describe when and why this function is invoked.>
+        Use during initial inventory creation.
 
     Parameters:
-        <paramName> (<type>)
-            <Description.>
+        initialData (table)
+            Key/value pairs to seed invdata rows; may include char.
 
     Returns:
-        <returnType>
-            <Description or "nil".>
+        Promise
+            Resolves with new inventory ID.
 
     Realm:
-        <Client | Server | Shared>
+        Server
 
     Example Usage:
         ```lua
-            <High Complexity and well documented Function Call Or Use Case Here>
+            inv:initializeStorage({char = charID})
         ```
 ]]
     function Inventory:initializeStorage(initialData)
@@ -644,25 +645,23 @@ if SERVER then
 
     --[[
     Purpose:
-        <Brief, clear description of what the function does.>
+        Hook for restoring inventory data from storage.
 
     When Called:
-        <Describe when and why this function is invoked.>
+        Override to load custom data during restoration.
 
     Parameters:
-        <paramName> (<type>)
-            <Description.>
+        None.
 
     Returns:
-        <returnType>
-            <Description or "nil".>
+        nil
 
     Realm:
-        <Client | Server | Shared>
+        Server
 
     Example Usage:
         ```lua
-            <High Complexity and well documented Function Call Or Use Case Here>
+            function Inventory:restoreFromStorage() end
         ```
 ]]
     function Inventory:restoreFromStorage()
@@ -670,25 +669,27 @@ if SERVER then
 
     --[[
     Purpose:
-        <Brief, clear description of what the function does.>
+        Removes an item from this inventory and updates clients/DB.
 
     When Called:
-        <Describe when and why this function is invoked.>
+        Use when deleting or moving items out of the inventory.
 
     Parameters:
-        <paramName> (<type>)
-            <Description.>
+        itemID (number)
+            ID of the item to remove.
+        preserveItem (boolean)
+            Keep the instance and DB row when true.
 
     Returns:
-        <returnType>
-            <Description or "nil".>
+        Promise
+            Resolves after removal finishes.
 
     Realm:
-        <Client | Server | Shared>
+        Server
 
     Example Usage:
         ```lua
-            <High Complexity and well documented Function Call Or Use Case Here>
+            inv:removeItem(itemID)
         ```
 ]]
     function Inventory:removeItem(itemID, preserveItem)
@@ -718,25 +719,25 @@ if SERVER then
 
     --[[
     Purpose:
-        <Brief, clear description of what the function does.>
+        Alias for removeItem.
 
     When Called:
-        <Describe when and why this function is invoked.>
+        Use interchangeably with removeItem.
 
     Parameters:
-        <paramName> (<type>)
-            <Description.>
+        itemID (number)
+            ID of the item to remove.
 
     Returns:
-        <returnType>
-            <Description or "nil".>
+        Promise
+            Resolves after removal.
 
     Realm:
-        <Client | Server | Shared>
+        Server
 
     Example Usage:
         ```lua
-            <High Complexity and well documented Function Call Or Use Case Here>
+            inv:remove(id)
         ```
 ]]
     function Inventory:remove(itemID)
@@ -745,25 +746,27 @@ if SERVER then
 
     --[[
     Purpose:
-        <Brief, clear description of what the function does.>
+        Updates inventory data, persists it, and notifies listeners.
 
     When Called:
-        <Describe when and why this function is invoked.>
+        Use to change stored metadata such as character assignment.
 
     Parameters:
-        <paramName> (<type>)
-            <Description.>
+        key (string)
+            Data key to set.
+        value (any)
+            New value or nil to delete.
 
     Returns:
-        <returnType>
-            <Description or "nil".>
+        Inventory
+            The inventory for chaining.
 
     Realm:
-        <Client | Server | Shared>
+        Server
 
     Example Usage:
         ```lua
-            <High Complexity and well documented Function Call Or Use Case Here>
+            inv:setData("locked", true)
         ```
 ]]
     function Inventory:setData(key, value)
@@ -793,25 +796,27 @@ if SERVER then
 
     --[[
     Purpose:
-        <Brief, clear description of what the function does.>
+        Evaluates access rules for a given action context.
 
     When Called:
-        <Describe when and why this function is invoked.>
+        Use before allowing inventory interactions.
 
     Parameters:
-        <paramName> (<type>)
-            <Description.>
+        action (string)
+            Action name (e.g., "repl", "transfer").
+        context (table)
+            Additional data such as client.
 
     Returns:
-        <returnType>
-            <Description or "nil".>
+        boolean|nil, string|nil
+            Decision and optional reason if a rule handled it.
 
     Realm:
-        <Client | Server | Shared>
+        Server
 
     Example Usage:
         ```lua
-            <High Complexity and well documented Function Call Or Use Case Here>
+            local ok = inv:canAccess("repl", {client = ply})
         ```
 ]]
     function Inventory:canAccess(action, context)
@@ -825,25 +830,27 @@ if SERVER then
 
     --[[
     Purpose:
-        <Brief, clear description of what the function does.>
+        Inserts an access rule into the rule list.
 
     When Called:
-        <Describe when and why this function is invoked.>
+        Use when configuring permissions for this inventory type.
 
     Parameters:
-        <paramName> (<type>)
-            <Description.>
+        rule (function)
+            Function returning decision and reason.
+        priority (number|nil)
+            Optional insert position.
 
     Returns:
-        <returnType>
-            <Description or "nil".>
+        Inventory
+            The inventory for chaining.
 
     Realm:
-        <Client | Server | Shared>
+        Server
 
     Example Usage:
         ```lua
-            <High Complexity and well documented Function Call Or Use Case Here>
+            inv:addAccessRule(myRule, 1)
         ```
 ]]
     function Inventory:addAccessRule(rule, priority)
@@ -857,25 +864,25 @@ if SERVER then
 
     --[[
     Purpose:
-        <Brief, clear description of what the function does.>
+        Removes a previously added access rule.
 
     When Called:
-        <Describe when and why this function is invoked.>
+        Use when unregistering dynamic permission logic.
 
     Parameters:
-        <paramName> (<type>)
-            <Description.>
+        rule (function)
+            The rule function to remove.
 
     Returns:
-        <returnType>
-            <Description or "nil".>
+        Inventory
+            The inventory for chaining.
 
     Realm:
-        <Client | Server | Shared>
+        Server
 
     Example Usage:
         ```lua
-            <High Complexity and well documented Function Call Or Use Case Here>
+            inv:removeAccessRule(myRule)
         ```
 ]]
     function Inventory:removeAccessRule(rule)
@@ -885,25 +892,24 @@ if SERVER then
 
     --[[
     Purpose:
-        <Brief, clear description of what the function does.>
+        Determines which players should receive inventory replication.
 
     When Called:
-        <Describe when and why this function is invoked.>
+        Use before sending inventory data to clients.
 
     Parameters:
-        <paramName> (<type>)
-            <Description.>
+        None.
 
     Returns:
-        <returnType>
-            <Description or "nil".>
+        table
+            List of player recipients allowed by access rules.
 
     Realm:
-        <Client | Server | Shared>
+        Server
 
     Example Usage:
         ```lua
-            <High Complexity and well documented Function Call Or Use Case Here>
+            local recips = inv:getRecipients()
         ```
 ]]
     function Inventory:getRecipients()
@@ -920,25 +926,23 @@ if SERVER then
 
     --[[
     Purpose:
-        <Brief, clear description of what the function does.>
+        Hook called when an inventory instance is created.
 
     When Called:
-        <Describe when and why this function is invoked.>
+        Override to perform custom initialization.
 
     Parameters:
-        <paramName> (<type>)
-            <Description.>
+        None.
 
     Returns:
-        <returnType>
-            <Description or "nil".>
+        nil
 
     Realm:
-        <Client | Server | Shared>
+        Server
 
     Example Usage:
         ```lua
-            <High Complexity and well documented Function Call Or Use Case Here>
+            function Inventory:onInstanced() end
         ```
 ]]
     function Inventory:onInstanced()
@@ -946,25 +950,23 @@ if SERVER then
 
     --[[
     Purpose:
-        <Brief, clear description of what the function does.>
+        Hook called after inventory data is loaded.
 
     When Called:
-        <Describe when and why this function is invoked.>
+        Override to react once storage data is retrieved.
 
     Parameters:
-        <paramName> (<type>)
-            <Description.>
+        None.
 
     Returns:
-        <returnType>
-            <Description or "nil".>
+        nil
 
     Realm:
-        <Client | Server | Shared>
+        Server
 
     Example Usage:
         ```lua
-            <High Complexity and well documented Function Call Or Use Case Here>
+            function Inventory:onLoaded() end
         ```
 ]]
     function Inventory:onLoaded()
@@ -974,25 +976,24 @@ if SERVER then
     local ITEM_FIELDS = {"itemID", "uniqueID", "data", "x", "y", "quantity"}
     --[[
     Purpose:
-        <Brief, clear description of what the function does.>
+        Loads item instances from the database into this inventory.
 
     When Called:
-        <Describe when and why this function is invoked.>
+        Use during inventory initialization to restore contents.
 
     Parameters:
-        <paramName> (<type>)
-            <Description.>
+        None.
 
     Returns:
-        <returnType>
-            <Description or "nil".>
+        Promise
+            Resolves with the loaded items table.
 
     Realm:
-        <Client | Server | Shared>
+        Server
 
     Example Usage:
         ```lua
-            <High Complexity and well documented Function Call Or Use Case Here>
+            inv:loadItems():next(function(items) end)
         ```
 ]]
     function Inventory:loadItems()
@@ -1035,25 +1036,24 @@ if SERVER then
 
     --[[
     Purpose:
-        <Brief, clear description of what the function does.>
+        Hook called after items are loaded into the inventory.
 
     When Called:
-        <Describe when and why this function is invoked.>
+        Override to run logic after contents are ready.
 
     Parameters:
-        <paramName> (<type>)
-            <Description.>
+        items (table)
+            Loaded items table.
 
     Returns:
-        <returnType>
-            <Description or "nil".>
+        nil
 
     Realm:
-        <Client | Server | Shared>
+        Server
 
     Example Usage:
         ```lua
-            <High Complexity and well documented Function Call Or Use Case Here>
+            function Inventory:onItemsLoaded(items) end
         ```
 ]]
     function Inventory:onItemsLoaded()
@@ -1061,25 +1061,25 @@ if SERVER then
 
     --[[
     Purpose:
-        <Brief, clear description of what the function does.>
+        Creates and registers an inventory instance with initial data.
 
     When Called:
-        <Describe when and why this function is invoked.>
+        Use to instantiate a server-side inventory of this type.
 
     Parameters:
-        <paramName> (<type>)
-            <Description.>
+        initialData (table)
+            Data used during creation (e.g., char assignment).
 
     Returns:
-        <returnType>
-            <Description or "nil".>
+        Promise
+            Resolves with the new inventory instance.
 
     Realm:
-        <Client | Server | Shared>
+        Server
 
     Example Usage:
         ```lua
-            <High Complexity and well documented Function Call Or Use Case Here>
+            Inventory:instance({char = charID})
         ```
 ]]
     function Inventory:instance(initialData)
@@ -1088,25 +1088,26 @@ if SERVER then
 
     --[[
     Purpose:
-        <Brief, clear description of what the function does.>
+        Sends a single inventory data key to recipients.
 
     When Called:
-        <Describe when and why this function is invoked.>
+        Use after setData to replicate a specific field.
 
     Parameters:
-        <paramName> (<type>)
-            <Description.>
+        key (string)
+            Data key to send.
+        recipients (Player|table|nil)
+            Targets to notify; defaults to recipients with access.
 
     Returns:
-        <returnType>
-            <Description or "nil".>
+        nil
 
     Realm:
-        <Client | Server | Shared>
+        Server
 
     Example Usage:
         ```lua
-            <High Complexity and well documented Function Call Or Use Case Here>
+            inv:syncData("locked")
         ```
 ]]
     function Inventory:syncData(key, recipients)
@@ -1120,25 +1121,24 @@ if SERVER then
 
     --[[
     Purpose:
-        <Brief, clear description of what the function does.>
+        Sends full inventory state and contained items to recipients.
 
     When Called:
-        <Describe when and why this function is invoked.>
+        Use when initializing or resyncing an inventory for clients.
 
     Parameters:
-        <paramName> (<type>)
-            <Description.>
+        recipients (Player|table|nil)
+            Targets to receive the update; defaults to access list.
 
     Returns:
-        <returnType>
-            <Description or "nil".>
+        nil
 
     Realm:
-        <Client | Server | Shared>
+        Server
 
     Example Usage:
         ```lua
-            <High Complexity and well documented Function Call Or Use Case Here>
+            inv:sync(ply)
         ```
 ]]
     function Inventory:sync(recipients)
@@ -1171,25 +1171,23 @@ if SERVER then
 
     --[[
     Purpose:
-        <Brief, clear description of what the function does.>
+        Deletes this inventory via the inventory manager.
 
     When Called:
-        <Describe when and why this function is invoked.>
+        Use when permanently removing an inventory record.
 
     Parameters:
-        <paramName> (<type>)
-            <Description.>
+        None.
 
     Returns:
-        <returnType>
-            <Description or "nil".>
+        nil
 
     Realm:
-        <Client | Server | Shared>
+        Server
 
     Example Usage:
         ```lua
-            <High Complexity and well documented Function Call Or Use Case Here>
+            inv:delete()
         ```
 ]]
     function Inventory:delete()
@@ -1198,25 +1196,23 @@ if SERVER then
 
     --[[
     Purpose:
-        <Brief, clear description of what the function does.>
+        Clears inventory items, removes it from cache, and notifies clients.
 
     When Called:
-        <Describe when and why this function is invoked.>
+        Use when unloading or destroying an inventory instance.
 
     Parameters:
-        <paramName> (<type>)
-            <Description.>
+        None.
 
     Returns:
-        <returnType>
-            <Description or "nil".>
+        nil
 
     Realm:
-        <Client | Server | Shared>
+        Server
 
     Example Usage:
         ```lua
-            <High Complexity and well documented Function Call Or Use Case Here>
+            inv:destroy()
         ```
 ]]
     function Inventory:destroy()
@@ -1232,25 +1228,25 @@ if SERVER then
 else
     --[[
     Purpose:
-        <Brief, clear description of what the function does.>
+        Opens the inventory UI on the client.
 
     When Called:
-        <Describe when and why this function is invoked.>
+        Use to display this inventory to the player.
 
     Parameters:
-        <paramName> (<type>)
-            <Description.>
+        parent (Panel)
+            Optional parent panel.
 
     Returns:
-        <returnType>
-            <Description or "nil".>
+        Panel
+            The created inventory panel.
 
     Realm:
-        <Client | Server | Shared>
+        Client
 
     Example Usage:
         ```lua
-            <High Complexity and well documented Function Call Or Use Case Here>
+            inv:show()
         ```
 ]]
     function Inventory:show(parent)

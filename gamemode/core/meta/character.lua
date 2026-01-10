@@ -17,25 +17,24 @@ characterMeta.id = characterMeta.id or 0
 characterMeta.vars = characterMeta.vars or {}
 --[[
     Purpose:
-        <Brief, clear description of what the function does.>
+        Returns this character's unique numeric identifier.
 
     When Called:
-        <Describe when and why this function is invoked.>
+        Use when persisting, comparing, or networking character state.
 
     Parameters:
-        <paramName> (<type>)
-            <Description.>
+        None.
 
     Returns:
-        <returnType>
-            <Description or "nil".>
+        number
+            Character ID.
 
     Realm:
-        <Client | Server | Shared>
+        Shared
 
     Example Usage:
         ```lua
-            <High Complexity and well documented Function Call Or Use Case Here>
+            local id = char:getID()
         ```
 ]]
 function characterMeta:getID()
@@ -44,25 +43,24 @@ end
 
 --[[
     Purpose:
-        <Brief, clear description of what the function does.>
+        Retrieves the player entity associated with this character.
 
     When Called:
-        <Describe when and why this function is invoked.>
+        Use whenever you need the live player controlling this character.
 
     Parameters:
-        <paramName> (<type>)
-            <Description.>
+        None.
 
     Returns:
-        <returnType>
-            <Description or "nil".>
+        Player|nil
+            Player that owns the character, or nil if not found.
 
     Realm:
-        <Client | Server | Shared>
+        Shared
 
     Example Usage:
         ```lua
-            <High Complexity and well documented Function Call Or Use Case Here>
+            local ply = char:getPlayer()
         ```
 ]]
 function characterMeta:getPlayer()
@@ -85,25 +83,25 @@ end
 
 --[[
     Purpose:
-        <Brief, clear description of what the function does.>
+        Returns the name to show to a viewing client, honoring recognition rules.
 
     When Called:
-        <Describe when and why this function is invoked.>
+        Use when rendering a character's name to another player.
 
     Parameters:
-        <paramName> (<type>)
-            <Description.>
+        client (Player)
+            The viewer whose recognition determines the name.
 
     Returns:
-        <returnType>
-            <Description or "nil".>
+        string
+            Display name or a localized "unknown" placeholder.
 
     Realm:
-        <Client | Server | Shared>
+        Shared
 
     Example Usage:
         ```lua
-            <High Complexity and well documented Function Call Or Use Case Here>
+            local name = targetChar:getDisplayedName(viewer)
         ```
 ]]
 function characterMeta:getDisplayedName(client)
@@ -122,25 +120,25 @@ end
 
 --[[
     Purpose:
-        <Brief, clear description of what the function does.>
+        Checks if the character has at least the given amount of money.
 
     When Called:
-        <Describe when and why this function is invoked.>
+        Use before charging a character to ensure they can afford a cost.
 
     Parameters:
-        <paramName> (<type>)
-            <Description.>
+        amount (number)
+            The amount to verify.
 
     Returns:
-        <returnType>
-            <Description or "nil".>
+        boolean
+            True if the character's balance is equal or higher.
 
     Realm:
-        <Client | Server | Shared>
+        Shared
 
     Example Usage:
         ```lua
-            <High Complexity and well documented Function Call Or Use Case Here>
+            if char:hasMoney(100) then purchase() end
         ```
 ]]
 function characterMeta:hasMoney(amount)
@@ -151,25 +149,25 @@ end
 
 --[[
     Purpose:
-        <Brief, clear description of what the function does.>
+        Determines whether the character possesses any flag in the string.
 
     When Called:
-        <Describe when and why this function is invoked.>
+        Use when gating actions behind one or more privilege flags.
 
     Parameters:
-        <paramName> (<type>)
-            <Description.>
+        flagStr (string)
+            One or more flag characters to test.
 
     Returns:
-        <returnType>
-            <Description or "nil".>
+        boolean
+            True if at least one provided flag is present.
 
     Realm:
-        <Client | Server | Shared>
+        Shared
 
     Example Usage:
         ```lua
-            <High Complexity and well documented Function Call Or Use Case Here>
+            if char:hasFlags("ab") then grantAccess() end
         ```
 ]]
 function characterMeta:hasFlags(flagStr)
@@ -183,25 +181,27 @@ end
 
 --[[
     Purpose:
-        <Brief, clear description of what the function does.>
+        Gets the character's attribute value including any active boosts.
 
     When Called:
-        <Describe when and why this function is invoked.>
+        Use when calculating rolls or stats that depend on attributes.
 
     Parameters:
-        <paramName> (<type>)
-            <Description.>
+        key (string)
+            Attribute identifier.
+        default (number)
+            Fallback value if the attribute is missing.
 
     Returns:
-        <returnType>
-            <Description or "nil".>
+        number
+            Attribute level plus stacked boosts.
 
     Realm:
-        <Client | Server | Shared>
+        Shared
 
     Example Usage:
         ```lua
-            <High Complexity and well documented Function Call Or Use Case Here>
+            local strength = char:getAttrib("str", 0)
         ```
 ]]
 function characterMeta:getAttrib(key, default)
@@ -217,25 +217,25 @@ end
 
 --[[
     Purpose:
-        <Brief, clear description of what the function does.>
+        Determines whether this character recognizes another character.
 
     When Called:
-        <Describe when and why this function is invoked.>
+        Use when deciding if a viewer should see a real name or remain unknown.
 
     Parameters:
-        <paramName> (<type>)
-            <Description.>
+        id (number|table)
+            Character ID or object implementing getID.
 
     Returns:
-        <returnType>
-            <Description or "nil".>
+        boolean
+            True if recognition is allowed by hooks.
 
     Realm:
-        <Client | Server | Shared>
+        Shared
 
     Example Usage:
         ```lua
-            <High Complexity and well documented Function Call Or Use Case Here>
+            if viewerChar:doesRecognize(targetChar) then showName() end
         ```
 ]]
 function characterMeta:doesRecognize(id)
@@ -245,25 +245,25 @@ end
 
 --[[
     Purpose:
-        <Brief, clear description of what the function does.>
+        Checks if the character recognizes another under a fake name.
 
     When Called:
-        <Describe when and why this function is invoked.>
+        Use when evaluating disguise or alias recognition logic.
 
     Parameters:
-        <paramName> (<type>)
-            <Description.>
+        id (number|table)
+            Character ID or object implementing getID.
 
     Returns:
-        <returnType>
-            <Description or "nil".>
+        boolean
+            True if fake recognition passes custom hooks.
 
     Realm:
-        <Client | Server | Shared>
+        Shared
 
     Example Usage:
         ```lua
-            <High Complexity and well documented Function Call Or Use Case Here>
+            local canFake = char:doesFakeRecognize(otherChar)
         ```
 ]]
 function characterMeta:doesFakeRecognize(id)
@@ -273,25 +273,30 @@ end
 
 --[[
     Purpose:
-        <Brief, clear description of what the function does.>
+        Stores custom data on the character and optionally replicates it.
 
     When Called:
-        <Describe when and why this function is invoked.>
+        Use when adding persistent or networked character metadata.
 
     Parameters:
-        <paramName> (<type>)
-            <Description.>
+        k (string|table)
+            Key to set or table of key/value pairs.
+        v (any)
+            Value to store when k is a string.
+        noReplication (boolean)
+            Skip networking when true.
+        receiver (Player|nil)
+            Specific client to receive the update instead of owner.
 
     Returns:
-        <returnType>
-            <Description or "nil".>
+        nil
 
     Realm:
-        <Client | Server | Shared>
+        Shared
 
     Example Usage:
         ```lua
-            <High Complexity and well documented Function Call Or Use Case Here>
+            char:setData("lastLogin", os.time())
         ```
 ]]
 function characterMeta:setData(k, v, noReplication, receiver)
@@ -355,25 +360,27 @@ end
 
 --[[
     Purpose:
-        <Brief, clear description of what the function does.>
+        Retrieves previously stored custom character data.
 
     When Called:
-        <Describe when and why this function is invoked.>
+        Use when you need saved custom fields or default fallbacks.
 
     Parameters:
-        <paramName> (<type>)
-            <Description.>
+        key (string|nil)
+            Specific key to fetch or nil for the whole table.
+        default (any)
+            Value to return if the key is unset.
 
     Returns:
-        <returnType>
-            <Description or "nil".>
+        any
+            Stored value, default, or entire data table.
 
     Realm:
-        <Client | Server | Shared>
+        Shared
 
     Example Usage:
         ```lua
-            <High Complexity and well documented Function Call Or Use Case Here>
+            local note = char:getData("note", "")
         ```
 ]]
 function characterMeta:getData(key, default)
@@ -398,25 +405,24 @@ end
 
 --[[
     Purpose:
-        <Brief, clear description of what the function does.>
+        Reports whether the character is currently banned.
 
     When Called:
-        <Describe when and why this function is invoked.>
+        Use when validating character selection or spawning.
 
     Parameters:
-        <paramName> (<type>)
-            <Description.>
+        None.
 
     Returns:
-        <returnType>
-            <Description or "nil".>
+        boolean
+            True if banned permanently or until a future time.
 
     Realm:
-        <Client | Server | Shared>
+        Shared
 
     Example Usage:
         ```lua
-            <High Complexity and well documented Function Call Or Use Case Here>
+            if char:isBanned() then denyJoin() end
         ```
 ]]
 function characterMeta:isBanned()
@@ -427,25 +433,27 @@ end
 if SERVER then
     --[[
     Purpose:
-        <Brief, clear description of what the function does.>
+        Marks another character as recognized, optionally storing a fake name.
 
     When Called:
-        <Describe when and why this function is invoked.>
+        Invoke when a player learns or is assigned recognition of someone.
 
     Parameters:
-        <paramName> (<type>)
-            <Description.>
+        character (number|table)
+            Target character ID or object implementing getID.
+        name (string|nil)
+            Optional alias to remember instead of real recognition.
 
     Returns:
-        <returnType>
-            <Description or "nil".>
+        boolean
+            True after recognition is recorded.
 
     Realm:
-        <Client | Server | Shared>
+        Server
 
     Example Usage:
         ```lua
-            <High Complexity and well documented Function Call Or Use Case Here>
+            char:recognize(otherChar)
         ```
 ]]
     function characterMeta:recognize(character, name)
@@ -469,25 +477,27 @@ if SERVER then
 
     --[[
     Purpose:
-        <Brief, clear description of what the function does.>
+        Attempts to place the character into the specified class.
 
     When Called:
-        <Describe when and why this function is invoked.>
+        Use during class selection or forced reassignment.
 
     Parameters:
-        <paramName> (<type>)
-            <Description.>
+        class (number)
+            Class ID to join.
+        isForced (boolean)
+            Skip eligibility checks when true.
 
     Returns:
-        <returnType>
-            <Description or "nil".>
+        boolean
+            True if the class change succeeded.
 
     Realm:
-        <Client | Server | Shared>
+        Server
 
     Example Usage:
         ```lua
-            <High Complexity and well documented Function Call Or Use Case Here>
+            local ok = char:joinClass(newClassID)
         ```
 ]]
     function characterMeta:joinClass(class, isForced)
@@ -520,25 +530,23 @@ if SERVER then
 
     --[[
     Purpose:
-        <Brief, clear description of what the function does.>
+        Removes the character from its current class, falling back to default.
 
     When Called:
-        <Describe when and why this function is invoked.>
+        Use when a class is invalid, revoked, or explicitly left.
 
     Parameters:
-        <paramName> (<type>)
-            <Description.>
+        None.
 
     Returns:
-        <returnType>
-            <Description or "nil".>
+        nil
 
     Realm:
-        <Client | Server | Shared>
+        Server
 
     Example Usage:
         ```lua
-            <High Complexity and well documented Function Call Or Use Case Here>
+            char:kickClass()
         ```
 ]]
     function characterMeta:kickClass()
@@ -562,25 +570,26 @@ if SERVER then
 
     --[[
     Purpose:
-        <Brief, clear description of what the function does.>
+        Increases an attribute by the given amount, respecting maximums.
 
     When Called:
-        <Describe when and why this function is invoked.>
+        Use when awarding experience toward an attribute.
 
     Parameters:
-        <paramName> (<type>)
-            <Description.>
+        key (string)
+            Attribute identifier.
+        value (number)
+            Amount to add.
 
     Returns:
-        <returnType>
-            <Description or "nil".>
+        nil
 
     Realm:
-        <Client | Server | Shared>
+        Server
 
     Example Usage:
         ```lua
-            <High Complexity and well documented Function Call Or Use Case Here>
+            char:updateAttrib("stm", 5)
         ```
 ]]
     function characterMeta:updateAttrib(key, value)
@@ -603,25 +612,26 @@ if SERVER then
 
     --[[
     Purpose:
-        <Brief, clear description of what the function does.>
+        Directly sets an attribute to a specific value and syncs it.
 
     When Called:
-        <Describe when and why this function is invoked.>
+        Use when loading characters or forcing an attribute level.
 
     Parameters:
-        <paramName> (<type>)
-            <Description.>
+        key (string)
+            Attribute identifier.
+        value (number)
+            New attribute level.
 
     Returns:
-        <returnType>
-            <Description or "nil".>
+        nil
 
     Realm:
-        <Client | Server | Shared>
+        Server
 
     Example Usage:
         ```lua
-            <High Complexity and well documented Function Call Or Use Case Here>
+            char:setAttrib("str", 15)
         ```
 ]]
     function characterMeta:setAttrib(key, value)
@@ -643,25 +653,29 @@ if SERVER then
 
     --[[
     Purpose:
-        <Brief, clear description of what the function does.>
+        Adds a temporary boost to an attribute and propagates it.
 
     When Called:
-        <Describe when and why this function is invoked.>
+        Use when buffs or debuffs modify an attribute value.
 
     Parameters:
-        <paramName> (<type>)
-            <Description.>
+        boostID (string)
+            Unique identifier for the boost source.
+        attribID (string)
+            Attribute being boosted.
+        boostAmount (number)
+            Amount to add (can be negative).
 
     Returns:
-        <returnType>
-            <Description or "nil".>
+        boolean
+            Result from setVar update.
 
     Realm:
-        <Client | Server | Shared>
+        Server
 
     Example Usage:
         ```lua
-            <High Complexity and well documented Function Call Or Use Case Here>
+            char:addBoost("stimpack", "end", 2)
         ```
 ]]
     function characterMeta:addBoost(boostID, attribID, boostAmount)
@@ -674,25 +688,27 @@ if SERVER then
 
     --[[
     Purpose:
-        <Brief, clear description of what the function does.>
+        Removes a previously applied attribute boost.
 
     When Called:
-        <Describe when and why this function is invoked.>
+        Use when a buff expires or is cancelled.
 
     Parameters:
-        <paramName> (<type>)
-            <Description.>
+        boostID (string)
+            Identifier of the boost source.
+        attribID (string)
+            Attribute to adjust.
 
     Returns:
-        <returnType>
-            <Description or "nil".>
+        boolean
+            Result from setVar update.
 
     Realm:
-        <Client | Server | Shared>
+        Server
 
     Example Usage:
         ```lua
-            <High Complexity and well documented Function Call Or Use Case Here>
+            char:removeBoost("stimpack", "end")
         ```
 ]]
     function characterMeta:removeBoost(boostID, attribID)
@@ -705,25 +721,24 @@ if SERVER then
 
     --[[
     Purpose:
-        <Brief, clear description of what the function does.>
+        Clears all attribute boosts and notifies listeners.
 
     When Called:
-        <Describe when and why this function is invoked.>
+        Use when resetting a character's temporary modifiers.
 
     Parameters:
-        <paramName> (<type>)
-            <Description.>
+        None.
 
     Returns:
-        <returnType>
-            <Description or "nil".>
+        boolean
+            Result from resetting the boost table.
 
     Realm:
-        <Client | Server | Shared>
+        Server
 
     Example Usage:
         ```lua
-            <High Complexity and well documented Function Call Or Use Case Here>
+            char:clearAllBoosts()
         ```
 ]]
     function characterMeta:clearAllBoosts()
@@ -739,25 +754,24 @@ if SERVER then
 
     --[[
     Purpose:
-        <Brief, clear description of what the function does.>
+        Replaces the character's flag string and synchronizes it.
 
     When Called:
-        <Describe when and why this function is invoked.>
+        Use when setting privileges wholesale (e.g., admin changes).
 
     Parameters:
-        <paramName> (<type>)
-            <Description.>
+        flags (string)
+            Complete set of flags to apply.
 
     Returns:
-        <returnType>
-            <Description or "nil".>
+        nil
 
     Realm:
-        <Client | Server | Shared>
+        Server
 
     Example Usage:
         ```lua
-            <High Complexity and well documented Function Call Or Use Case Here>
+            char:setFlags("abc")
         ```
 ]]
     function characterMeta:setFlags(flags)
@@ -790,25 +804,24 @@ if SERVER then
 
     --[[
     Purpose:
-        <Brief, clear description of what the function does.>
+        Adds one or more flags to the character if they are missing.
 
     When Called:
-        <Describe when and why this function is invoked.>
+        Use when granting new permissions or perks.
 
     Parameters:
-        <paramName> (<type>)
-            <Description.>
+        flags (string)
+            Concatenated flag characters to grant.
 
     Returns:
-        <returnType>
-            <Description or "nil".>
+        nil
 
     Realm:
-        <Client | Server | Shared>
+        Server
 
     Example Usage:
         ```lua
-            <High Complexity and well documented Function Call Or Use Case Here>
+            char:giveFlags("z")
         ```
 ]]
     function characterMeta:giveFlags(flags)
@@ -831,25 +844,24 @@ if SERVER then
 
     --[[
     Purpose:
-        <Brief, clear description of what the function does.>
+        Removes specific flags from the character and triggers callbacks.
 
     When Called:
-        <Describe when and why this function is invoked.>
+        Use when revoking privileges or perks.
 
     Parameters:
-        <paramName> (<type>)
-            <Description.>
+        flags (string)
+            Concatenated flag characters to remove.
 
     Returns:
-        <returnType>
-            <Description or "nil".>
+        nil
 
     Realm:
-        <Client | Server | Shared>
+        Server
 
     Example Usage:
         ```lua
-            <High Complexity and well documented Function Call Or Use Case Here>
+            char:takeFlags("z")
         ```
 ]]
     function characterMeta:takeFlags(flags)
@@ -873,25 +885,24 @@ if SERVER then
 
     --[[
     Purpose:
-        <Brief, clear description of what the function does.>
+        Persists the character's current variables to the database.
 
     When Called:
-        <Describe when and why this function is invoked.>
+        Use during saves, character switches, or shutdown to keep data.
 
     Parameters:
-        <paramName> (<type>)
-            <Description.>
+        callback (function|nil)
+            Invoked after the save completes.
 
     Returns:
-        <returnType>
-            <Description or "nil".>
+        nil
 
     Realm:
-        <Client | Server | Shared>
+        Server
 
     Example Usage:
         ```lua
-            <High Complexity and well documented Function Call Or Use Case Here>
+            char:save(function() print("saved") end)
         ```
 ]]
     function characterMeta:save(callback)
@@ -912,25 +923,24 @@ if SERVER then
 
     --[[
     Purpose:
-        <Brief, clear description of what the function does.>
+        Sends character data to a specific player or all players.
 
     When Called:
-        <Describe when and why this function is invoked.>
+        Use after character creation, load, or when vars change.
 
     Parameters:
-        <paramName> (<type>)
-            <Description.>
+        receiver (Player|nil)
+            Target player to sync to; nil broadcasts to everyone.
 
     Returns:
-        <returnType>
-            <Description or "nil".>
+        nil
 
     Realm:
-        <Client | Server | Shared>
+        Server
 
     Example Usage:
         ```lua
-            <High Complexity and well documented Function Call Or Use Case Here>
+            char:sync(client)
         ```
 ]]
     function characterMeta:sync(receiver)
@@ -986,25 +996,24 @@ if SERVER then
 
     --[[
     Purpose:
-        <Brief, clear description of what the function does.>
+        Applies the character state to the owning player and optionally syncs.
 
     When Called:
-        <Describe when and why this function is invoked.>
+        Use right after a character is loaded or swapped in.
 
     Parameters:
-        <paramName> (<type>)
-            <Description.>
+        noNetworking (boolean)
+            Skip inventory and char networking when true.
 
     Returns:
-        <returnType>
-            <Description or "nil".>
+        nil
 
     Realm:
-        <Client | Server | Shared>
+        Server
 
     Example Usage:
         ```lua
-            <High Complexity and well documented Function Call Or Use Case Here>
+            char:setup()
         ```
 ]]
     function characterMeta:setup(noNetworking)
@@ -1042,25 +1051,23 @@ if SERVER then
 
     --[[
     Purpose:
-        <Brief, clear description of what the function does.>
+        Forces the owning player off this character and cleans up state.
 
     When Called:
-        <Describe when and why this function is invoked.>
+        Use when removing access, kicking, or swapping characters.
 
     Parameters:
-        <paramName> (<type>)
-            <Description.>
+        None.
 
     Returns:
-        <returnType>
-            <Description or "nil".>
+        nil
 
     Realm:
-        <Client | Server | Shared>
+        Server
 
     Example Usage:
         ```lua
-            <High Complexity and well documented Function Call Or Use Case Here>
+            char:kick()
         ```
 ]]
     function characterMeta:kick()
@@ -1089,25 +1096,24 @@ if SERVER then
 
     --[[
     Purpose:
-        <Brief, clear description of what the function does.>
+        Bans the character for a duration or permanently and kicks them.
 
     When Called:
-        <Describe when and why this function is invoked.>
+        Use for disciplinary actions like permakill or timed bans.
 
     Parameters:
-        <paramName> (<type>)
-            <Description.>
+        time (number|nil)
+            Ban duration in seconds; nil makes it permanent.
 
     Returns:
-        <returnType>
-            <Description or "nil".>
+        nil
 
     Realm:
-        <Client | Server | Shared>
+        Server
 
     Example Usage:
         ```lua
-            <High Complexity and well documented Function Call Or Use Case Here>
+            char:ban(3600)
         ```
 ]]
     function characterMeta:ban(time)
@@ -1127,25 +1133,23 @@ if SERVER then
 
     --[[
     Purpose:
-        <Brief, clear description of what the function does.>
+        Deletes the character from persistent storage.
 
     When Called:
-        <Describe when and why this function is invoked.>
+        Use when a character is intentionally removed by the player or admin.
 
     Parameters:
-        <paramName> (<type>)
-            <Description.>
+        None.
 
     Returns:
-        <returnType>
-            <Description or "nil".>
+        nil
 
     Realm:
-        <Client | Server | Shared>
+        Server
 
     Example Usage:
         ```lua
-            <High Complexity and well documented Function Call Or Use Case Here>
+            char:delete()
         ```
 ]]
     function characterMeta:delete()
@@ -1154,25 +1158,23 @@ if SERVER then
 
     --[[
     Purpose:
-        <Brief, clear description of what the function does.>
+        Removes the character from the active cache without DB interaction.
 
     When Called:
-        <Describe when and why this function is invoked.>
+        Use when unloading a character instance entirely.
 
     Parameters:
-        <paramName> (<type>)
-            <Description.>
+        None.
 
     Returns:
-        <returnType>
-            <Description or "nil".>
+        nil
 
     Realm:
-        <Client | Server | Shared>
+        Server
 
     Example Usage:
         ```lua
-            <High Complexity and well documented Function Call Or Use Case Here>
+            char:destroy()
         ```
 ]]
     function characterMeta:destroy()
@@ -1182,25 +1184,25 @@ if SERVER then
 
     --[[
     Purpose:
-        <Brief, clear description of what the function does.>
+        Adds money to the character through the owning player object.
 
     When Called:
-        <Describe when and why this function is invoked.>
+        Use when rewarding or refunding currency.
 
     Parameters:
-        <paramName> (<type>)
-            <Description.>
+        amount (number)
+            Amount to add (can be negative to deduct).
 
     Returns:
-        <returnType>
-            <Description or "nil".>
+        boolean
+            False if no valid player exists; otherwise result of addMoney.
 
     Realm:
-        <Client | Server | Shared>
+        Server
 
     Example Usage:
         ```lua
-            <High Complexity and well documented Function Call Or Use Case Here>
+            char:giveMoney(250)
         ```
 ]]
     function characterMeta:giveMoney(amount)
@@ -1211,25 +1213,25 @@ if SERVER then
 
     --[[
     Purpose:
-        <Brief, clear description of what the function does.>
+        Deducts money from the character and logs the transaction.
 
     When Called:
-        <Describe when and why this function is invoked.>
+        Use when charging a player for purchases or penalties.
 
     Parameters:
-        <paramName> (<type>)
-            <Description.>
+        amount (number)
+            Amount to remove; the absolute value is used.
 
     Returns:
-        <returnType>
-            <Description or "nil".>
+        boolean
+            True after the deduction process runs.
 
     Realm:
-        <Client | Server | Shared>
+        Server
 
     Example Usage:
         ```lua
-            <High Complexity and well documented Function Call Or Use Case Here>
+            char:takeMoney(50)
         ```
 ]]
     function characterMeta:takeMoney(amount)
@@ -1241,25 +1243,24 @@ if SERVER then
 
     --[[
     Purpose:
-        <Brief, clear description of what the function does.>
+        Checks whether this character matches the player's main character ID.
 
     When Called:
-        <Describe when and why this function is invoked.>
+        Use when showing main character indicators or restrictions.
 
     Parameters:
-        <paramName> (<type>)
-            <Description.>
+        None.
 
     Returns:
-        <returnType>
-            <Description or "nil".>
+        boolean
+            True if this character is the player's main selection.
 
     Realm:
-        <Client | Server | Shared>
+        Server
 
     Example Usage:
         ```lua
-            <High Complexity and well documented Function Call Or Use Case Here>
+            if char:isMainCharacter() then highlight() end
         ```
 ]]
     function characterMeta:isMainCharacter()

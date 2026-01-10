@@ -26,25 +26,24 @@ ITEM.canSplit = true
 ITEM.scale = 1
 --[[
     Purpose:
-        <Brief, clear description of what the function does.>
+        Reports whether the item is stored in a rotated state.
 
     When Called:
-        <Describe when and why this function is invoked.>
+        Use when calculating grid dimensions or rendering the item icon.
 
     Parameters:
-        <paramName> (<type>)
-            <Description.>
+        None.
 
     Returns:
-        <returnType>
-            <Description or "nil".>
+        boolean
+            True if the item is rotated.
 
     Realm:
-        <Client | Server | Shared>
+        Shared
 
     Example Usage:
         ```lua
-            <High Complexity and well documented Function Call Or Use Case Here>
+            if item:isRotated() then swapDims() end
         ```
 ]]
 function ITEM:isRotated()
@@ -53,25 +52,24 @@ end
 
 --[[
     Purpose:
-        <Brief, clear description of what the function does.>
+        Returns the item's width considering rotation and defaults.
 
     When Called:
-        <Describe when and why this function is invoked.>
+        Use when placing the item into a grid inventory.
 
     Parameters:
-        <paramName> (<type>)
-            <Description.>
+        None.
 
     Returns:
-        <returnType>
-            <Description or "nil".>
+        number
+            Width in grid cells.
 
     Realm:
-        <Client | Server | Shared>
+        Shared
 
     Example Usage:
         ```lua
-            <High Complexity and well documented Function Call Or Use Case Here>
+            local w = item:getWidth()
         ```
 ]]
 function ITEM:getWidth()
@@ -80,25 +78,24 @@ end
 
 --[[
     Purpose:
-        <Brief, clear description of what the function does.>
+        Returns the item's height considering rotation and defaults.
 
     When Called:
-        <Describe when and why this function is invoked.>
+        Use when calculating how much vertical space an item needs.
 
     Parameters:
-        <paramName> (<type>)
-            <Description.>
+        None.
 
     Returns:
-        <returnType>
-            <Description or "nil".>
+        number
+            Height in grid cells.
 
     Realm:
-        <Client | Server | Shared>
+        Shared
 
     Example Usage:
         ```lua
-            <High Complexity and well documented Function Call Or Use Case Here>
+            local h = item:getHeight()
         ```
 ]]
 function ITEM:getHeight()
@@ -107,25 +104,24 @@ end
 
 --[[
     Purpose:
-        <Brief, clear description of what the function does.>
+        Returns the current stack quantity for this item.
 
     When Called:
-        <Describe when and why this function is invoked.>
+        Use when showing stack counts or validating transfers.
 
     Parameters:
-        <paramName> (<type>)
-            <Description.>
+        None.
 
     Returns:
-        <returnType>
-            <Description or "nil".>
+        number
+            Quantity within the stack.
 
     Realm:
-        <Client | Server | Shared>
+        Shared
 
     Example Usage:
         ```lua
-            <High Complexity and well documented Function Call Or Use Case Here>
+            local count = item:getQuantity()
         ```
 ]]
 function ITEM:getQuantity()
@@ -135,25 +131,24 @@ end
 
 --[[
     Purpose:
-        <Brief, clear description of what the function does.>
+        Builds a readable string identifier for the item.
 
     When Called:
-        <Describe when and why this function is invoked.>
+        Use for logging, debugging, or console output.
 
     Parameters:
-        <paramName> (<type>)
-            <Description.>
+        None.
 
     Returns:
-        <returnType>
-            <Description or "nil".>
+        string
+            Formatted identifier including uniqueID and item id.
 
     Realm:
-        <Client | Server | Shared>
+        Shared
 
     Example Usage:
         ```lua
-            <High Complexity and well documented Function Call Or Use Case Here>
+            print(item:tostring())
         ```
 ]]
 function ITEM:tostring()
@@ -162,25 +157,24 @@ end
 
 --[[
     Purpose:
-        <Brief, clear description of what the function does.>
+        Retrieves the numeric identifier for this item instance.
 
     When Called:
-        <Describe when and why this function is invoked.>
+        Use when persisting, networking, or comparing items.
 
     Parameters:
-        <paramName> (<type>)
-            <Description.>
+        None.
 
     Returns:
-        <returnType>
-            <Description or "nil".>
+        number
+            Unique item ID.
 
     Realm:
-        <Client | Server | Shared>
+        Shared
 
     Example Usage:
         ```lua
-            <High Complexity and well documented Function Call Or Use Case Here>
+            local id = item:getID()
         ```
 ]]
 function ITEM:getID()
@@ -189,25 +183,24 @@ end
 
 --[[
     Purpose:
-        <Brief, clear description of what the function does.>
+        Returns the model path assigned to this item.
 
     When Called:
-        <Describe when and why this function is invoked.>
+        Use when spawning an entity or rendering the item icon.
 
     Parameters:
-        <paramName> (<type>)
-            <Description.>
+        None.
 
     Returns:
-        <returnType>
-            <Description or "nil".>
+        string
+            Model file path.
 
     Realm:
-        <Client | Server | Shared>
+        Shared
 
     Example Usage:
         ```lua
-            <High Complexity and well documented Function Call Or Use Case Here>
+            local mdl = item:getModel()
         ```
 ]]
 function ITEM:getModel()
@@ -216,25 +209,24 @@ end
 
 --[[
     Purpose:
-        <Brief, clear description of what the function does.>
+        Returns the skin index assigned to this item.
 
     When Called:
-        <Describe when and why this function is invoked.>
+        Use when spawning the entity or applying cosmetics.
 
     Parameters:
-        <paramName> (<type>)
-            <Description.>
+        None.
 
     Returns:
-        <returnType>
-            <Description or "nil".>
+        number|nil
+            Skin index or nil when not set.
 
     Realm:
-        <Client | Server | Shared>
+        Shared
 
     Example Usage:
         ```lua
-            <High Complexity and well documented Function Call Or Use Case Here>
+            local skin = item:getSkin()
         ```
 ]]
 function ITEM:getSkin()
@@ -243,25 +235,24 @@ end
 
 --[[
     Purpose:
-        <Brief, clear description of what the function does.>
+        Provides the bodygroup configuration for the item model.
 
     When Called:
-        <Describe when and why this function is invoked.>
+        Use when spawning or rendering to ensure correct bodygroups.
 
     Parameters:
-        <paramName> (<type>)
-            <Description.>
+        None.
 
     Returns:
-        <returnType>
-            <Description or "nil".>
+        table
+            Key-value pairs of bodygroup indexes to values.
 
     Realm:
-        <Client | Server | Shared>
+        Shared
 
     Example Usage:
         ```lua
-            <High Complexity and well documented Function Call Or Use Case Here>
+            local groups = item:getBodygroups()
         ```
 ]]
 function ITEM:getBodygroups()
@@ -270,25 +261,24 @@ end
 
 --[[
     Purpose:
-        <Brief, clear description of what the function does.>
+        Calculates the current sale price for the item.
 
     When Called:
-        <Describe when and why this function is invoked.>
+        Use when selling, buying, or displaying item cost.
 
     Parameters:
-        <paramName> (<type>)
-            <Description.>
+        None.
 
     Returns:
-        <returnType>
-            <Description or "nil".>
+        number
+            Price value, possibly adjusted by calcPrice.
 
     Realm:
-        <Client | Server | Shared>
+        Shared
 
     Example Usage:
         ```lua
-            <High Complexity and well documented Function Call Or Use Case Here>
+            local cost = item:getPrice()
         ```
 ]]
 function ITEM:getPrice()
@@ -299,25 +289,31 @@ end
 
 --[[
     Purpose:
-        <Brief, clear description of what the function does.>
+        Invokes an item method while temporarily setting context.
 
     When Called:
-        <Describe when and why this function is invoked.>
+        Use when you need to call an item function with player/entity context.
 
     Parameters:
-        <paramName> (<type>)
-            <Description.>
+        method (string)
+            Name of the item method to invoke.
+        client (Player|nil)
+            Player to treat as the caller.
+        entity (Entity|nil)
+            Entity representing the item.
+        ... (any)
+            Additional arguments passed to the method.
 
     Returns:
-        <returnType>
-            <Description or "nil".>
+        any
+            Return values from the invoked method.
 
     Realm:
-        <Client | Server | Shared>
+        Shared
 
     Example Usage:
         ```lua
-            <High Complexity and well documented Function Call Or Use Case Here>
+            item:call("onUse", ply, ent)
         ```
 ]]
 function ITEM:call(method, client, entity, ...)
@@ -338,25 +334,24 @@ end
 
 --[[
     Purpose:
-        <Brief, clear description of what the function does.>
+        Attempts to find the player that currently owns this item.
 
     When Called:
-        <Describe when and why this function is invoked.>
+        Use when routing notifications or networking to the item owner.
 
     Parameters:
-        <paramName> (<type>)
-            <Description.>
+        None.
 
     Returns:
-        <returnType>
-            <Description or "nil".>
+        Player|nil
+            Owning player if found.
 
     Realm:
-        <Client | Server | Shared>
+        Shared
 
     Example Usage:
         ```lua
-            <High Complexity and well documented Function Call Or Use Case Here>
+            local owner = item:getOwner()
         ```
 ]]
 function ITEM:getOwner()
@@ -371,25 +366,27 @@ end
 
 --[[
     Purpose:
-        <Brief, clear description of what the function does.>
+        Reads a stored data value from the item or its entity.
 
     When Called:
-        <Describe when and why this function is invoked.>
+        Use for custom item metadata such as durability or rotation.
 
     Parameters:
-        <paramName> (<type>)
-            <Description.>
+        key (string)
+            Data key to read.
+        default (any)
+            Value to return when the key is missing.
 
     Returns:
-        <returnType>
-            <Description or "nil".>
+        any
+            Stored value or default.
 
     Realm:
-        <Client | Server | Shared>
+        Shared
 
     Example Usage:
         ```lua
-            <High Complexity and well documented Function Call Or Use Case Here>
+            local durability = item:getData("durability", 100)
         ```
 ]]
 function ITEM:getData(key, default)
@@ -406,25 +403,24 @@ end
 
 --[[
     Purpose:
-        <Brief, clear description of what the function does.>
+        Returns a merged table of all item data, including entity netvars.
 
     When Called:
-        <Describe when and why this function is invoked.>
+        Use when syncing the entire data payload to clients.
 
     Parameters:
-        <paramName> (<type>)
-            <Description.>
+        None.
 
     Returns:
-        <returnType>
-            <Description or "nil".>
+        table
+            Combined data table.
 
     Realm:
-        <Client | Server | Shared>
+        Shared
 
     Example Usage:
         ```lua
-            <High Complexity and well documented Function Call Or Use Case Here>
+            local data = item:getAllData()
         ```
 ]]
 function ITEM:getAllData()
@@ -441,25 +437,26 @@ end
 
 --[[
     Purpose:
-        <Brief, clear description of what the function does.>
+        Registers a pre-run hook for an item interaction.
 
     When Called:
-        <Describe when and why this function is invoked.>
+        Use when adding custom behavior before an action executes.
 
     Parameters:
-        <paramName> (<type>)
-            <Description.>
+        name (string)
+            Hook name to bind.
+        func (function)
+            Callback to execute.
 
     Returns:
-        <returnType>
-            <Description or "nil".>
+        nil
 
     Realm:
-        <Client | Server | Shared>
+        Shared
 
     Example Usage:
         ```lua
-            <High Complexity and well documented Function Call Or Use Case Here>
+            item:hook("use", function(itm) end)
         ```
 ]]
 function ITEM:hook(name, func)
@@ -468,25 +465,26 @@ end
 
 --[[
     Purpose:
-        <Brief, clear description of what the function does.>
+        Registers a post-run hook for an item interaction.
 
     When Called:
-        <Describe when and why this function is invoked.>
+        Use when you need to react after an action completes.
 
     Parameters:
-        <paramName> (<type>)
-            <Description.>
+        name (string)
+            Hook name to bind.
+        func (function)
+            Callback to execute with results.
 
     Returns:
-        <returnType>
-            <Description or "nil".>
+        nil
 
     Realm:
-        <Client | Server | Shared>
+        Shared
 
     Example Usage:
         ```lua
-            <High Complexity and well documented Function Call Or Use Case Here>
+            item:postHook("use", function(itm, result) end)
         ```
 ]]
 function ITEM:postHook(name, func)
@@ -495,25 +493,23 @@ end
 
 --[[
     Purpose:
-        <Brief, clear description of what the function does.>
+        Performs setup tasks after an item definition is registered.
 
     When Called:
-        <Describe when and why this function is invoked.>
+        Automatically invoked once the item type is loaded.
 
     Parameters:
-        <paramName> (<type>)
-            <Description.>
+        None.
 
     Returns:
-        <returnType>
-            <Description or "nil".>
+        nil
 
     Realm:
-        <Client | Server | Shared>
+        Shared
 
     Example Usage:
         ```lua
-            <High Complexity and well documented Function Call Or Use Case Here>
+            item:onRegistered()
         ```
 ]]
 function ITEM:onRegistered()
@@ -522,25 +518,24 @@ end
 
 --[[
     Purpose:
-        <Brief, clear description of what the function does.>
+        Prints a concise or detailed identifier for the item.
 
     When Called:
-        <Describe when and why this function is invoked.>
+        Use during debugging or admin commands.
 
     Parameters:
-        <paramName> (<type>)
-            <Description.>
+        detail (boolean)
+            Include owner and grid info when true.
 
     Returns:
-        <returnType>
-            <Description or "nil".>
+        nil
 
     Realm:
-        <Client | Server | Shared>
+        Shared
 
     Example Usage:
         ```lua
-            <High Complexity and well documented Function Call Or Use Case Here>
+            item:print(true)
         ```
 ]]
 function ITEM:print(detail)
@@ -553,25 +548,23 @@ end
 
 --[[
     Purpose:
-        <Brief, clear description of what the function does.>
+        Outputs item metadata and all stored data fields.
 
     When Called:
-        <Describe when and why this function is invoked.>
+        Use for diagnostics to inspect an item's state.
 
     Parameters:
-        <paramName> (<type>)
-            <Description.>
+        None.
 
     Returns:
-        <returnType>
-            <Description or "nil".>
+        nil
 
     Realm:
-        <Client | Server | Shared>
+        Shared
 
     Example Usage:
         ```lua
-            <High Complexity and well documented Function Call Or Use Case Here>
+            item:printData()
         ```
 ]]
 function ITEM:printData()
@@ -584,25 +577,24 @@ end
 
 --[[
     Purpose:
-        <Brief, clear description of what the function does.>
+        Returns the display name of the item.
 
     When Called:
-        <Describe when and why this function is invoked.>
+        Use for UI labels, tooltips, and logs.
 
     Parameters:
-        <paramName> (<type>)
-            <Description.>
+        None.
 
     Returns:
-        <returnType>
-            <Description or "nil".>
+        string
+            Item name.
 
     Realm:
-        <Client | Server | Shared>
+        Shared
 
     Example Usage:
         ```lua
-            <High Complexity and well documented Function Call Or Use Case Here>
+            local name = item:getName()
         ```
 ]]
 function ITEM:getName()
@@ -611,25 +603,24 @@ end
 
 --[[
     Purpose:
-        <Brief, clear description of what the function does.>
+        Returns the description text for the item.
 
     When Called:
-        <Describe when and why this function is invoked.>
+        Use in tooltips or inventory details.
 
     Parameters:
-        <paramName> (<type>)
-            <Description.>
+        None.
 
     Returns:
-        <returnType>
-            <Description or "nil".>
+        string
+            Item description.
 
     Realm:
-        <Client | Server | Shared>
+        Shared
 
     Example Usage:
         ```lua
-            <High Complexity and well documented Function Call Or Use Case Here>
+            local desc = item:getDesc()
         ```
 ]]
 function ITEM:getDesc()
@@ -639,25 +630,25 @@ end
 if SERVER then
     --[[
     Purpose:
-        <Brief, clear description of what the function does.>
+        Removes the item from its current inventory instance.
 
     When Called:
-        <Describe when and why this function is invoked.>
+        Use when dropping, deleting, or transferring the item out.
 
     Parameters:
-        <paramName> (<type>)
-            <Description.>
+        preserveItem (boolean)
+            When true, keeps the instance for later use.
 
     Returns:
-        <returnType>
-            <Description or "nil".>
+        Promise
+            Deferred resolution for removal completion.
 
     Realm:
-        <Client | Server | Shared>
+        Server
 
     Example Usage:
         ```lua
-            <High Complexity and well documented Function Call Or Use Case Here>
+            item:removeFromInventory():next(function() end)
         ```
 ]]
     function ITEM:removeFromInventory(preserveItem)
@@ -671,25 +662,24 @@ if SERVER then
 
     --[[
     Purpose:
-        <Brief, clear description of what the function does.>
+        Deletes the item record from storage after destroying it in-game.
 
     When Called:
-        <Describe when and why this function is invoked.>
+        Use when an item should be permanently removed.
 
     Parameters:
-        <paramName> (<type>)
-            <Description.>
+        None.
 
     Returns:
-        <returnType>
-            <Description or "nil".>
+        Promise
+            Resolves after the database delete and callbacks run.
 
     Realm:
-        <Client | Server | Shared>
+        Server
 
     Example Usage:
         ```lua
-            <High Complexity and well documented Function Call Or Use Case Here>
+            item:delete()
         ```
 ]]
     function ITEM:delete()
@@ -699,25 +689,24 @@ if SERVER then
 
     --[[
     Purpose:
-        <Brief, clear description of what the function does.>
+        Removes the world entity, inventory reference, and database entry.
 
     When Called:
-        <Describe when and why this function is invoked.>
+        Use when the item is consumed or otherwise removed entirely.
 
     Parameters:
-        <paramName> (<type>)
-            <Description.>
+        None.
 
     Returns:
-        <returnType>
-            <Description or "nil".>
+        Promise
+            Resolves once removal and deletion complete.
 
     Realm:
-        <Client | Server | Shared>
+        Server
 
     Example Usage:
         ```lua
-            <High Complexity and well documented Function Call Or Use Case Here>
+            item:remove()
         ```
 ]]
     function ITEM:remove()
@@ -732,25 +721,23 @@ if SERVER then
 
     --[[
     Purpose:
-        <Brief, clear description of what the function does.>
+        Broadcasts item deletion to clients and frees the instance.
 
     When Called:
-        <Describe when and why this function is invoked.>
+        Use internally before removing an item from memory.
 
     Parameters:
-        <paramName> (<type>)
-            <Description.>
+        None.
 
     Returns:
-        <returnType>
-            <Description or "nil".>
+        nil
 
     Realm:
-        <Client | Server | Shared>
+        Server
 
     Example Usage:
         ```lua
-            <High Complexity and well documented Function Call Or Use Case Here>
+            item:destroy()
         ```
 ]]
     function ITEM:destroy()
@@ -763,25 +750,23 @@ if SERVER then
 
     --[[
     Purpose:
-        <Brief, clear description of what the function does.>
+        Hook called after an item is destroyed; intended for overrides.
 
     When Called:
-        <Describe when and why this function is invoked.>
+        Automatically triggered when the item instance is disposed.
 
     Parameters:
-        <paramName> (<type>)
-            <Description.>
+        None.
 
     Returns:
-        <returnType>
-            <Description or "nil".>
+        nil
 
     Realm:
-        <Client | Server | Shared>
+        Server
 
     Example Usage:
         ```lua
-            <High Complexity and well documented Function Call Or Use Case Here>
+            function ITEM:onDisposed() end
         ```
 ]]
     function ITEM:onDisposed()
@@ -789,25 +774,24 @@ if SERVER then
 
     --[[
     Purpose:
-        <Brief, clear description of what the function does.>
+        Finds the world entity representing this item instance.
 
     When Called:
-        <Describe when and why this function is invoked.>
+        Use when needing the spawned entity from the item data.
 
     Parameters:
-        <paramName> (<type>)
-            <Description.>
+        None.
 
     Returns:
-        <returnType>
-            <Description or "nil".>
+        Entity|nil
+            Spawned item entity if present.
 
     Realm:
-        <Client | Server | Shared>
+        Server
 
     Example Usage:
         ```lua
-            <High Complexity and well documented Function Call Or Use Case Here>
+            local ent = item:getEntity()
         ```
 ]]
     function ITEM:getEntity()
@@ -819,25 +803,27 @@ if SERVER then
 
     --[[
     Purpose:
-        <Brief, clear description of what the function does.>
+        Spawns a world entity for this item at the given position and angle.
 
     When Called:
-        <Describe when and why this function is invoked.>
+        Use when dropping an item into the world.
 
     Parameters:
-        <paramName> (<type>)
-            <Description.>
+        position (Vector|table|Entity)
+            Where to spawn, or the player dropping the item.
+        angles (Angle|Vector|table|nil)
+            Orientation for the spawned entity.
 
     Returns:
-        <returnType>
-            <Description or "nil".>
+        Entity|nil
+            Spawned entity on success.
 
     Realm:
-        <Client | Server | Shared>
+        Server
 
     Example Usage:
         ```lua
-            <High Complexity and well documented Function Call Or Use Case Here>
+            local ent = item:spawn(ply, Angle(0, 0, 0))
         ```
 ]]
     function ITEM:spawn(position, angles)
@@ -899,25 +885,27 @@ if SERVER then
 
     --[[
     Purpose:
-        <Brief, clear description of what the function does.>
+        Moves the item into another inventory if access rules allow.
 
     When Called:
-        <Describe when and why this function is invoked.>
+        Use when transferring items between containers or players.
 
     Parameters:
-        <paramName> (<type>)
-            <Description.>
+        newInventory (Inventory)
+            Destination inventory.
+        bBypass (boolean)
+            Skip access checks when true.
 
     Returns:
-        <returnType>
-            <Description or "nil".>
+        boolean
+            True if the transfer was initiated.
 
     Realm:
-        <Client | Server | Shared>
+        Server
 
     Example Usage:
         ```lua
-            <High Complexity and well documented Function Call Or Use Case Here>
+            item:transfer(otherInv)
         ```
 ]]
     function ITEM:transfer(newInventory, bBypass)
@@ -929,25 +917,23 @@ if SERVER then
 
     --[[
     Purpose:
-        <Brief, clear description of what the function does.>
+        Hook called when a new item instance is created.
 
     When Called:
-        <Describe when and why this function is invoked.>
+        Automatically invoked after instancing; override to customize.
 
     Parameters:
-        <paramName> (<type>)
-            <Description.>
+        None.
 
     Returns:
-        <returnType>
-            <Description or "nil".>
+        nil
 
     Realm:
-        <Client | Server | Shared>
+        Server
 
     Example Usage:
         ```lua
-            <High Complexity and well documented Function Call Or Use Case Here>
+            function ITEM:onInstanced() end
         ```
 ]]
     function ITEM:onInstanced()
@@ -955,25 +941,24 @@ if SERVER then
 
     --[[
     Purpose:
-        <Brief, clear description of what the function does.>
+        Hook called after the item data is synchronized to clients.
 
     When Called:
-        <Describe when and why this function is invoked.>
+        Triggered by sync calls; override for custom behavior.
 
     Parameters:
-        <paramName> (<type>)
-            <Description.>
+        recipient (Player|nil)
+            The player who received the sync, or nil for broadcast.
 
     Returns:
-        <returnType>
-            <Description or "nil".>
+        nil
 
     Realm:
-        <Client | Server | Shared>
+        Server
 
     Example Usage:
         ```lua
-            <High Complexity and well documented Function Call Or Use Case Here>
+            function ITEM:onSync(ply) end
         ```
 ]]
     function ITEM:onSync()
@@ -981,25 +966,23 @@ if SERVER then
 
     --[[
     Purpose:
-        <Brief, clear description of what the function does.>
+        Hook called after the item has been removed from the world/inventory.
 
     When Called:
-        <Describe when and why this function is invoked.>
+        Automatically invoked once deletion finishes.
 
     Parameters:
-        <paramName> (<type>)
-            <Description.>
+        None.
 
     Returns:
-        <returnType>
-            <Description or "nil".>
+        nil
 
     Realm:
-        <Client | Server | Shared>
+        Server
 
     Example Usage:
         ```lua
-            <High Complexity and well documented Function Call Or Use Case Here>
+            function ITEM:onRemoved() end
         ```
 ]]
     function ITEM:onRemoved()
@@ -1007,25 +990,23 @@ if SERVER then
 
     --[[
     Purpose:
-        <Brief, clear description of what the function does.>
+        Hook called after an item is restored from persistence.
 
     When Called:
-        <Describe when and why this function is invoked.>
+        Automatically invoked after loading an item from the database.
 
     Parameters:
-        <paramName> (<type>)
-            <Description.>
+        None.
 
     Returns:
-        <returnType>
-            <Description or "nil".>
+        nil
 
     Realm:
-        <Client | Server | Shared>
+        Server
 
     Example Usage:
         ```lua
-            <High Complexity and well documented Function Call Or Use Case Here>
+            function ITEM:onRestored() end
         ```
 ]]
     function ITEM:onRestored()
@@ -1033,25 +1014,24 @@ if SERVER then
 
     --[[
     Purpose:
-        <Brief, clear description of what the function does.>
+        Sends this item instance to a recipient or all clients for syncing.
 
     When Called:
-        <Describe when and why this function is invoked.>
+        Use after creating or updating an item instance.
 
     Parameters:
-        <paramName> (<type>)
-            <Description.>
+        recipient (Player|nil)
+            Specific player to sync; broadcasts when nil.
 
     Returns:
-        <returnType>
-            <Description or "nil".>
+        nil
 
     Realm:
-        <Client | Server | Shared>
+        Server
 
     Example Usage:
         ```lua
-            <High Complexity and well documented Function Call Or Use Case Here>
+            item:sync(ply)
         ```
 ]]
     function ITEM:sync(recipient)
@@ -1072,25 +1052,32 @@ if SERVER then
 
     --[[
     Purpose:
-        <Brief, clear description of what the function does.>
+        Sets a custom data value on the item, networking and saving as needed.
 
     When Called:
-        <Describe when and why this function is invoked.>
+        Use when updating item metadata that clients or persistence require.
 
     Parameters:
-        <paramName> (<type>)
-            <Description.>
+        key (string)
+            Data key to set.
+        value (any)
+            Value to store.
+        receivers (Player|table|nil)
+            Targets to send the update to; defaults to owner.
+        noSave (boolean)
+            Skip database write when true.
+        noCheckEntity (boolean)
+            Skip updating the world entity netvar when true.
 
     Returns:
-        <returnType>
-            <Description or "nil".>
+        nil
 
     Realm:
-        <Client | Server | Shared>
+        Server
 
     Example Usage:
         ```lua
-            <High Complexity and well documented Function Call Or Use Case Here>
+            item:setData("durability", 80, item:getOwner())
         ```
 ]]
     function ITEM:setData(key, value, receivers, noSave, noCheckEntity)
@@ -1133,25 +1120,28 @@ if SERVER then
 
     --[[
     Purpose:
-        <Brief, clear description of what the function does.>
+        Increases the item quantity by the given amount.
 
     When Called:
-        <Describe when and why this function is invoked.>
+        Use for stacking items or consuming partial quantities.
 
     Parameters:
-        <paramName> (<type>)
-            <Description.>
+        quantity (number)
+            Amount to add (can be negative).
+        receivers (Player|table|nil)
+            Targets to notify; defaults to owner.
+        noCheckEntity (boolean)
+            Skip updating the entity netvar when true.
 
     Returns:
-        <returnType>
-            <Description or "nil".>
+        nil
 
     Realm:
-        <Client | Server | Shared>
+        Server
 
     Example Usage:
         ```lua
-            <High Complexity and well documented Function Call Or Use Case Here>
+            item:addQuantity(-1, ply)
         ```
 ]]
     function ITEM:addQuantity(quantity, receivers, noCheckEntity)
@@ -1160,25 +1150,28 @@ if SERVER then
 
     --[[
     Purpose:
-        <Brief, clear description of what the function does.>
+        Sets the item quantity, updating entities, clients, and storage.
 
     When Called:
-        <Describe when and why this function is invoked.>
+        Use after splitting stacks or consuming items.
 
     Parameters:
-        <paramName> (<type>)
-            <Description.>
+        quantity (number)
+            New stack amount.
+        receivers (Player|table|nil)
+            Targets to notify; defaults to owner.
+        noCheckEntity (boolean)
+            Skip updating the world entity netvar when true.
 
     Returns:
-        <returnType>
-            <Description or "nil".>
+        nil
 
     Realm:
-        <Client | Server | Shared>
+        Server
 
     Example Usage:
         ```lua
-            <High Complexity and well documented Function Call Or Use Case Here>
+            item:setQuantity(5, ply)
         ```
 ]]
     function ITEM:setQuantity(quantity, receivers, noCheckEntity)
@@ -1207,25 +1200,31 @@ if SERVER then
 
     --[[
     Purpose:
-        <Brief, clear description of what the function does.>
+        Handles an item interaction action, running hooks and callbacks.
 
     When Called:
-        <Describe when and why this function is invoked.>
+        Use when a player selects an action from an item's context menu.
 
     Parameters:
-        <paramName> (<type>)
-            <Description.>
+        action (string)
+            Action identifier from the item's functions table.
+        client (Player)
+            Player performing the action.
+        entity (Entity|nil)
+            World entity representing the item, if any.
+        data (any)
+            Additional data for multi-option actions.
 
     Returns:
-        <returnType>
-            <Description or "nil".>
+        boolean
+            True if the action was processed; false otherwise.
 
     Realm:
-        <Client | Server | Shared>
+        Server
 
     Example Usage:
         ```lua
-            <High Complexity and well documented Function Call Or Use Case Here>
+            item:interact("use", ply, ent)
         ```
 ]]
     function ITEM:interact(action, client, entity, data)
@@ -1300,25 +1299,24 @@ end
 
 --[[
     Purpose:
-        <Brief, clear description of what the function does.>
+        Returns the item's localized category label.
 
     When Called:
-        <Describe when and why this function is invoked.>
+        Use when grouping or displaying items by category.
 
     Parameters:
-        <paramName> (<type>)
-            <Description.>
+        None.
 
     Returns:
-        <returnType>
-            <Description or "nil".>
+        string
+            Localized category name, or "misc" if undefined.
 
     Realm:
-        <Client | Server | Shared>
+        Shared
 
     Example Usage:
         ```lua
-            <High Complexity and well documented Function Call Or Use Case Here>
+            local category = item:getCategory()
         ```
 ]]
 function ITEM:getCategory()

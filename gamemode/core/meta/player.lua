@@ -17,25 +17,24 @@ do
     playerMeta.SteamName = playerMeta.steamName
     --[[
     Purpose:
-        <Brief, clear description of what the function does.>
+        Returns the active character object associated with this player.
 
     When Called:
-        <Describe when and why this function is invoked.>
+        Use whenever you need the player's character state.
 
     Parameters:
-        <paramName> (<type>)
-            <Description.>
+        None.
 
     Returns:
-        <returnType>
-            <Description or "nil".>
+        table|nil
+            Character instance or nil if none is selected.
 
     Realm:
-        <Client | Server | Shared>
+        Shared
 
     Example Usage:
         ```lua
-            <High Complexity and well documented Function Call Or Use Case Here>
+            local char = ply:getChar()
         ```
 ]]
     function playerMeta:getChar()
@@ -44,25 +43,24 @@ do
 
     --[[
     Purpose:
-        <Brief, clear description of what the function does.>
+        Builds a readable name for the player preferring character name.
 
     When Called:
-        <Describe when and why this function is invoked.>
+        Use for logging or UI when displaying player identity.
 
     Parameters:
-        <paramName> (<type>)
-            <Description.>
+        None.
 
     Returns:
-        <returnType>
-            <Description or "nil".>
+        string
+            Character name if available, otherwise Steam name.
 
     Realm:
-        <Client | Server | Shared>
+        Shared
 
     Example Usage:
         ```lua
-            <High Complexity and well documented Function Call Or Use Case Here>
+            print(ply:tostring())
         ```
 ]]
     function playerMeta:tostring()
@@ -76,25 +74,24 @@ do
 
     --[[
     Purpose:
-        <Brief, clear description of what the function does.>
+        Returns the display name, falling back to Steam name if no character.
 
     When Called:
-        <Describe when and why this function is invoked.>
+        Use wherever Garry's Mod expects Name/Nick/GetName.
 
     Parameters:
-        <paramName> (<type>)
-            <Description.>
+        None.
 
     Returns:
-        <returnType>
-            <Description or "nil".>
+        string
+            Character or Steam name.
 
     Realm:
-        <Client | Server | Shared>
+        Shared
 
     Example Usage:
         ```lua
-            <High Complexity and well documented Function Call Or Use Case Here>
+            local name = ply:Name()
         ```
 ]]
     function playerMeta:Name()
@@ -108,25 +105,28 @@ end
 
 --[[
     Purpose:
-        <Brief, clear description of what the function does.>
+        Restarts a gesture animation and replicates it.
 
     When Called:
-        <Describe when and why this function is invoked.>
+        Use to play a gesture on the player and sync to others.
 
     Parameters:
-        <paramName> (<type>)
-            <Description.>
+        a (number)
+            Gesture activity.
+        b (number)
+            Layer or slot.
+        c (number)
+            Playback rate or weight.
 
     Returns:
-        <returnType>
-            <Description or "nil".>
+        nil
 
     Realm:
-        <Client | Server | Shared>
+        Shared
 
     Example Usage:
         ```lua
-            <High Complexity and well documented Function Call Or Use Case Here>
+            ply:doGesture(ACT_GMOD_GESTURE_WAVE, 0, 1)
         ```
 ]]
 function playerMeta:doGesture(a, b, c)
@@ -137,25 +137,28 @@ end
 
 --[[
     Purpose:
-        <Brief, clear description of what the function does.>
+        Shows an action bar for the player and runs a callback when done.
 
     When Called:
-        <Describe when and why this function is invoked.>
+        Use to gate actions behind a timed progress bar.
 
     Parameters:
-        <paramName> (<type>)
-            <Description.>
+        text (string|nil)
+            Message to display; nil cancels the bar.
+        time (number)
+            Duration in seconds.
+        callback (function|nil)
+            Invoked when the timer completes.
 
     Returns:
-        <returnType>
-            <Description or "nil".>
+        nil
 
     Realm:
-        <Client | Server | Shared>
+        Shared
 
     Example Usage:
         ```lua
-            <High Complexity and well documented Function Call Or Use Case Here>
+            ply:setAction("Lockpicking", 5, onFinish)
         ```
 ]]
 function playerMeta:setAction(text, time, callback)
@@ -196,25 +199,32 @@ end
 
 --[[
     Purpose:
-        <Brief, clear description of what the function does.>
+        Runs a callback after the player stares at an entity for a duration.
 
     When Called:
-        <Describe when and why this function is invoked.>
+        Use for interactions requiring sustained aim on a target.
 
     Parameters:
-        <paramName> (<type>)
-            <Description.>
+        entity (Entity)
+            Target entity to watch.
+        callback (function)
+            Function called after staring completes.
+        time (number)
+            Duration in seconds required.
+        onCancel (function|nil)
+            Called if the stare is interrupted.
+        distance (number|nil)
+            Max distance trace length.
 
     Returns:
-        <returnType>
-            <Description or "nil".>
+        nil
 
     Realm:
-        <Client | Server | Shared>
+        Shared
 
     Example Usage:
         ```lua
-            <High Complexity and well documented Function Call Or Use Case Here>
+            ply:doStaredAction(door, onComplete, 3)
         ```
 ]]
 function playerMeta:doStaredAction(entity, callback, time, onCancel, distance)
@@ -250,25 +260,23 @@ end
 
 --[[
     Purpose:
-        <Brief, clear description of what the function does.>
+        Cancels any active action or stare timers and hides the bar.
 
     When Called:
-        <Describe when and why this function is invoked.>
+        Use when an action is interrupted or completed early.
 
     Parameters:
-        <paramName> (<type>)
-            <Description.>
+        None.
 
     Returns:
-        <returnType>
-            <Description or "nil".>
+        nil
 
     Realm:
-        <Client | Server | Shared>
+        Shared
 
     Example Usage:
         ```lua
-            <High Complexity and well documented Function Call Or Use Case Here>
+            ply:stopAction()
         ```
 ]]
 function playerMeta:stopAction()
@@ -281,25 +289,25 @@ end
 
 --[[
     Purpose:
-        <Brief, clear description of what the function does.>
+        Checks if the player has a specific admin privilege.
 
     When Called:
-        <Describe when and why this function is invoked.>
+        Use before allowing privileged actions.
 
     Parameters:
-        <paramName> (<type>)
-            <Description.>
+        privilegeName (string)
+            Permission to query.
 
     Returns:
-        <returnType>
-            <Description or "nil".>
+        boolean
+            True if the player has access.
 
     Realm:
-        <Client | Server | Shared>
+        Shared
 
     Example Usage:
         ```lua
-            <High Complexity and well documented Function Call Or Use Case Here>
+            if ply:hasPrivilege("canBan") then ...
         ```
 ]]
 function playerMeta:hasPrivilege(privilegeName)
@@ -312,25 +320,23 @@ end
 
 --[[
     Purpose:
-        <Brief, clear description of what the function does.>
+        Deletes the player's ragdoll entity and clears the net var.
 
     When Called:
-        <Describe when and why this function is invoked.>
+        Use when respawning or cleaning up ragdolls.
 
     Parameters:
-        <paramName> (<type>)
-            <Description.>
+        None.
 
     Returns:
-        <returnType>
-            <Description or "nil".>
+        nil
 
     Realm:
-        <Client | Server | Shared>
+        Shared
 
     Example Usage:
         ```lua
-            <High Complexity and well documented Function Call Or Use Case Here>
+            ply:removeRagdoll()
         ```
 ]]
 function playerMeta:removeRagdoll()
@@ -343,25 +349,24 @@ end
 
 --[[
     Purpose:
-        <Brief, clear description of what the function does.>
+        Returns the active weapon and matching inventory item if equipped.
 
     When Called:
-        <Describe when and why this function is invoked.>
+        Use when syncing weapon state with inventory data.
 
     Parameters:
-        <paramName> (<type>)
-            <Description.>
+        None.
 
     Returns:
-        <returnType>
-            <Description or "nil".>
+        Weapon|nil, Item|nil
+            Active weapon entity and corresponding item, if found.
 
     Realm:
-        <Client | Server | Shared>
+        Shared
 
     Example Usage:
         ```lua
-            <High Complexity and well documented Function Call Or Use Case Here>
+            local wep, itm = ply:getItemWeapon()
         ```
 ]]
 function playerMeta:getItemWeapon()
@@ -383,25 +388,24 @@ end
 
 --[[
     Purpose:
-        <Brief, clear description of what the function does.>
+        Detects whether the account is being used via Steam Family Sharing.
 
     When Called:
-        <Describe when and why this function is invoked.>
+        Use for restrictions or messaging on shared accounts.
 
     Parameters:
-        <paramName> (<type>)
-            <Description.>
+        None.
 
     Returns:
-        <returnType>
-            <Description or "nil".>
+        boolean
+            True if OwnerSteamID64 differs from SteamID.
 
     Realm:
-        <Client | Server | Shared>
+        Shared
 
     Example Usage:
         ```lua
-            <High Complexity and well documented Function Call Or Use Case Here>
+            if ply:isFamilySharedAccount() then warn() end
         ```
 ]]
 function playerMeta:isFamilySharedAccount()
@@ -410,25 +414,24 @@ end
 
 --[[
     Purpose:
-        <Brief, clear description of what the function does.>
+        Calculates a suitable position in front of the player to drop items.
 
     When Called:
-        <Describe when and why this function is invoked.>
+        Use before spawning a world item.
 
     Parameters:
-        <paramName> (<type>)
-            <Description.>
+        None.
 
     Returns:
-        <returnType>
-            <Description or "nil".>
+        Vector
+            Drop position.
 
     Realm:
-        <Client | Server | Shared>
+        Shared
 
     Example Usage:
         ```lua
-            <High Complexity and well documented Function Call Or Use Case Here>
+            local pos = ply:getItemDropPos()
         ```
 ]]
 function playerMeta:getItemDropPos()
@@ -446,25 +449,24 @@ end
 
 --[[
     Purpose:
-        <Brief, clear description of what the function does.>
+        Retrieves the player's inventory items if a character exists.
 
     When Called:
-        <Describe when and why this function is invoked.>
+        Use when accessing a player's item list directly.
 
     Parameters:
-        <paramName> (<type>)
-            <Description.>
+        None.
 
     Returns:
-        <returnType>
-            <Description or "nil".>
+        table|nil
+            Items table or nil if no inventory.
 
     Realm:
-        <Client | Server | Shared>
+        Shared
 
     Example Usage:
         ```lua
-            <High Complexity and well documented Function Call Or Use Case Here>
+            local items = ply:getItems()
         ```
 ]]
 function playerMeta:getItems()
@@ -477,25 +479,25 @@ end
 
 --[[
     Purpose:
-        <Brief, clear description of what the function does.>
+        Returns the entity the player is aiming at within a distance.
 
     When Called:
-        <Describe when and why this function is invoked.>
+        Use for interaction traces.
 
     Parameters:
-        <paramName> (<type>)
-            <Description.>
+        distance (number)
+            Max trace length; default 96.
 
     Returns:
-        <returnType>
-            <Description or "nil".>
+        Entity|nil
+            Hit entity or nil.
 
     Realm:
-        <Client | Server | Shared>
+        Shared
 
     Example Usage:
         ```lua
-            <High Complexity and well documented Function Call Or Use Case Here>
+            local ent = ply:getTracedEntity(128)
         ```
 ]]
 function playerMeta:getTracedEntity(distance)
@@ -510,25 +512,26 @@ end
 
 --[[
     Purpose:
-        <Brief, clear description of what the function does.>
+        Sends a notification to this player (or locally on client).
 
     When Called:
-        <Describe when and why this function is invoked.>
+        Use to display a generic notice.
 
     Parameters:
-        <paramName> (<type>)
-            <Description.>
+        message (string)
+            Text to show.
+        notifType (string)
+            Optional type key.
 
     Returns:
-        <returnType>
-            <Description or "nil".>
+        nil
 
     Realm:
-        <Client | Server | Shared>
+        Shared
 
     Example Usage:
         ```lua
-            <High Complexity and well documented Function Call Or Use Case Here>
+            ply:notify("Hello")
         ```
 ]]
 function playerMeta:notify(message, notifType)
@@ -541,25 +544,28 @@ end
 
 --[[
     Purpose:
-        <Brief, clear description of what the function does.>
+        Sends a localized notification to this player or locally.
 
     When Called:
-        <Describe when and why this function is invoked.>
+        Use when the message is a localization token.
 
     Parameters:
-        <paramName> (<type>)
-            <Description.>
+        message (string)
+            Localization key.
+        notifType (string)
+            Optional type key.
+        ... (any)
+            Format arguments.
 
     Returns:
-        <returnType>
-            <Description or "nil".>
+        nil
 
     Realm:
-        <Client | Server | Shared>
+        Shared
 
     Example Usage:
         ```lua
-            <High Complexity and well documented Function Call Or Use Case Here>
+            ply:notifyLocalized("itemTaken", "apple")
         ```
 ]]
 function playerMeta:notifyLocalized(message, notifType, ...)
@@ -572,25 +578,24 @@ end
 
 --[[
     Purpose:
-        <Brief, clear description of what the function does.>
+        Sends an error notification to this player or locally.
 
     When Called:
-        <Describe when and why this function is invoked.>
+        Use to display error messages in a consistent style.
 
     Parameters:
-        <paramName> (<type>)
-            <Description.>
+        message (string)
+            Error text.
 
     Returns:
-        <returnType>
-            <Description or "nil".>
+        nil
 
     Realm:
-        <Client | Server | Shared>
+        Shared
 
     Example Usage:
         ```lua
-            <High Complexity and well documented Function Call Or Use Case Here>
+            ply:notifyError("Invalid action")
         ```
 ]]
 function playerMeta:notifyError(message)
@@ -603,25 +608,24 @@ end
 
 --[[
     Purpose:
-        <Brief, clear description of what the function does.>
+        Sends a warning notification to this player or locally.
 
     When Called:
-        <Describe when and why this function is invoked.>
+        Use for cautionary messages.
 
     Parameters:
-        <paramName> (<type>)
-            <Description.>
+        message (string)
+            Text to display.
 
     Returns:
-        <returnType>
-            <Description or "nil".>
+        nil
 
     Realm:
-        <Client | Server | Shared>
+        Shared
 
     Example Usage:
         ```lua
-            <High Complexity and well documented Function Call Or Use Case Here>
+            ply:notifyWarning("Low health")
         ```
 ]]
 function playerMeta:notifyWarning(message)
@@ -634,25 +638,24 @@ end
 
 --[[
     Purpose:
-        <Brief, clear description of what the function does.>
+        Sends an info notification to this player or locally.
 
     When Called:
-        <Describe when and why this function is invoked.>
+        Use for neutral informational messages.
 
     Parameters:
-        <paramName> (<type>)
-            <Description.>
+        message (string)
+            Text to display.
 
     Returns:
-        <returnType>
-            <Description or "nil".>
+        nil
 
     Realm:
-        <Client | Server | Shared>
+        Shared
 
     Example Usage:
         ```lua
-            <High Complexity and well documented Function Call Or Use Case Here>
+            ply:notifyInfo("Quest updated")
         ```
 ]]
 function playerMeta:notifyInfo(message)
@@ -665,25 +668,24 @@ end
 
 --[[
     Purpose:
-        <Brief, clear description of what the function does.>
+        Sends a success notification to this player or locally.
 
     When Called:
-        <Describe when and why this function is invoked.>
+        Use to indicate successful actions.
 
     Parameters:
-        <paramName> (<type>)
-            <Description.>
+        message (string)
+            Text to display.
 
     Returns:
-        <returnType>
-            <Description or "nil".>
+        nil
 
     Realm:
-        <Client | Server | Shared>
+        Shared
 
     Example Usage:
         ```lua
-            <High Complexity and well documented Function Call Or Use Case Here>
+            ply:notifySuccess("Saved")
         ```
 ]]
 function playerMeta:notifySuccess(message)
@@ -696,25 +698,24 @@ end
 
 --[[
     Purpose:
-        <Brief, clear description of what the function does.>
+        Sends a money-themed notification to this player or locally.
 
     When Called:
-        <Describe when and why this function is invoked.>
+        Use for currency gain/spend messages.
 
     Parameters:
-        <paramName> (<type>)
-            <Description.>
+        message (string)
+            Text to display.
 
     Returns:
-        <returnType>
-            <Description or "nil".>
+        nil
 
     Realm:
-        <Client | Server | Shared>
+        Shared
 
     Example Usage:
         ```lua
-            <High Complexity and well documented Function Call Or Use Case Here>
+            ply:notifyMoney("+$50")
         ```
 ]]
 function playerMeta:notifyMoney(message)
@@ -727,25 +728,24 @@ end
 
 --[[
     Purpose:
-        <Brief, clear description of what the function does.>
+        Sends an admin-level notification to this player or locally.
 
     When Called:
-        <Describe when and why this function is invoked.>
+        Use for staff-oriented alerts.
 
     Parameters:
-        <paramName> (<type>)
-            <Description.>
+        message (string)
+            Text to display.
 
     Returns:
-        <returnType>
-            <Description or "nil".>
+        nil
 
     Realm:
-        <Client | Server | Shared>
+        Shared
 
     Example Usage:
         ```lua
-            <High Complexity and well documented Function Call Or Use Case Here>
+            ply:notifyAdmin("Ticket opened")
         ```
 ]]
 function playerMeta:notifyAdmin(message)
@@ -758,25 +758,26 @@ end
 
 --[[
     Purpose:
-        <Brief, clear description of what the function does.>
+        Sends a localized error notification to the player or locally.
 
     When Called:
-        <Describe when and why this function is invoked.>
+        Use for localized error tokens.
 
     Parameters:
-        <paramName> (<type>)
-            <Description.>
+        key (string)
+            Localization key.
+        ... (any)
+            Format args.
 
     Returns:
-        <returnType>
-            <Description or "nil".>
+        nil
 
     Realm:
-        <Client | Server | Shared>
+        Shared
 
     Example Usage:
         ```lua
-            <High Complexity and well documented Function Call Or Use Case Here>
+            ply:notifyErrorLocalized("invalidArg")
         ```
 ]]
 function playerMeta:notifyErrorLocalized(key, ...)
@@ -789,25 +790,26 @@ end
 
 --[[
     Purpose:
-        <Brief, clear description of what the function does.>
+        Sends a localized warning notification to the player or locally.
 
     When Called:
-        <Describe when and why this function is invoked.>
+        Use for localized warnings.
 
     Parameters:
-        <paramName> (<type>)
-            <Description.>
+        key (string)
+            Localization key.
+        ... (any)
+            Format args.
 
     Returns:
-        <returnType>
-            <Description or "nil".>
+        nil
 
     Realm:
-        <Client | Server | Shared>
+        Shared
 
     Example Usage:
         ```lua
-            <High Complexity and well documented Function Call Or Use Case Here>
+            ply:notifyWarningLocalized("lowHealth")
         ```
 ]]
 function playerMeta:notifyWarningLocalized(key, ...)
@@ -820,25 +822,26 @@ end
 
 --[[
     Purpose:
-        <Brief, clear description of what the function does.>
+        Sends a localized info notification to the player or locally.
 
     When Called:
-        <Describe when and why this function is invoked.>
+        Use for localized informational messages.
 
     Parameters:
-        <paramName> (<type>)
-            <Description.>
+        key (string)
+            Localization key.
+        ... (any)
+            Format args.
 
     Returns:
-        <returnType>
-            <Description or "nil".>
+        nil
 
     Realm:
-        <Client | Server | Shared>
+        Shared
 
     Example Usage:
         ```lua
-            <High Complexity and well documented Function Call Or Use Case Here>
+            ply:notifyInfoLocalized("questUpdate")
         ```
 ]]
 function playerMeta:notifyInfoLocalized(key, ...)
@@ -851,25 +854,26 @@ end
 
 --[[
     Purpose:
-        <Brief, clear description of what the function does.>
+        Sends a localized success notification to the player or locally.
 
     When Called:
-        <Describe when and why this function is invoked.>
+        Use for localized success confirmations.
 
     Parameters:
-        <paramName> (<type>)
-            <Description.>
+        key (string)
+            Localization key.
+        ... (any)
+            Format args.
 
     Returns:
-        <returnType>
-            <Description or "nil".>
+        nil
 
     Realm:
-        <Client | Server | Shared>
+        Shared
 
     Example Usage:
         ```lua
-            <High Complexity and well documented Function Call Or Use Case Here>
+            ply:notifySuccessLocalized("saved")
         ```
 ]]
 function playerMeta:notifySuccessLocalized(key, ...)
@@ -882,25 +886,26 @@ end
 
 --[[
     Purpose:
-        <Brief, clear description of what the function does.>
+        Sends a localized money notification to the player or locally.
 
     When Called:
-        <Describe when and why this function is invoked.>
+        Use for localized currency messages.
 
     Parameters:
-        <paramName> (<type>)
-            <Description.>
+        key (string)
+            Localization key.
+        ... (any)
+            Format args.
 
     Returns:
-        <returnType>
-            <Description or "nil".>
+        nil
 
     Realm:
-        <Client | Server | Shared>
+        Shared
 
     Example Usage:
         ```lua
-            <High Complexity and well documented Function Call Or Use Case Here>
+            ply:notifyMoneyLocalized("moneyGained", 50)
         ```
 ]]
 function playerMeta:notifyMoneyLocalized(key, ...)
@@ -913,25 +918,26 @@ end
 
 --[[
     Purpose:
-        <Brief, clear description of what the function does.>
+        Sends a localized admin notification to the player or locally.
 
     When Called:
-        <Describe when and why this function is invoked.>
+        Use for staff messages with localization.
 
     Parameters:
-        <paramName> (<type>)
-            <Description.>
+        key (string)
+            Localization key.
+        ... (any)
+            Format args.
 
     Returns:
-        <returnType>
-            <Description or "nil".>
+        nil
 
     Realm:
-        <Client | Server | Shared>
+        Shared
 
     Example Usage:
         ```lua
-            <High Complexity and well documented Function Call Or Use Case Here>
+            ply:notifyAdminLocalized("ticketOpened")
         ```
 ]]
 function playerMeta:notifyAdminLocalized(key, ...)
@@ -944,25 +950,25 @@ end
 
 --[[
     Purpose:
-        <Brief, clear description of what the function does.>
+        Checks if the player can edit a vendor.
 
     When Called:
-        <Describe when and why this function is invoked.>
+        Use before opening vendor edit interfaces.
 
     Parameters:
-        <paramName> (<type>)
-            <Description.>
+        vendor (Entity)
+            Vendor entity to check.
 
     Returns:
-        <returnType>
-            <Description or "nil".>
+        boolean
+            True if editing is permitted.
 
     Realm:
-        <Client | Server | Shared>
+        Shared
 
     Example Usage:
         ```lua
-            <High Complexity and well documented Function Call Or Use Case Here>
+            if ply:canEditVendor(vendor) then ...
         ```
 ]]
 function playerMeta:canEditVendor(vendor)
@@ -991,25 +997,24 @@ end
 
 --[[
     Purpose:
-        <Brief, clear description of what the function does.>
+        Determines if the player's user group is marked as Staff.
 
     When Called:
-        <Describe when and why this function is invoked.>
+        Use for gating staff-only features.
 
     Parameters:
-        <paramName> (<type>)
-            <Description.>
+        None.
 
     Returns:
-        <returnType>
-            <Description or "nil".>
+        boolean
+            True if their usergroup includes the Staff type.
 
     Realm:
-        <Client | Server | Shared>
+        Shared
 
     Example Usage:
         ```lua
-            <High Complexity and well documented Function Call Or Use Case Here>
+            if ply:isStaff() then ...
         ```
 ]]
 function playerMeta:isStaff()
@@ -1018,25 +1023,24 @@ end
 
 --[[
     Purpose:
-        <Brief, clear description of what the function does.>
+        Checks if the player is currently on the staff faction.
 
     When Called:
-        <Describe when and why this function is invoked.>
+        Use when features apply only to on-duty staff.
 
     Parameters:
-        <paramName> (<type>)
-            <Description.>
+        None.
 
     Returns:
-        <returnType>
-            <Description or "nil".>
+        boolean
+            True if the player is in FACTION_STAFF.
 
     Realm:
-        <Client | Server | Shared>
+        Shared
 
     Example Usage:
         ```lua
-            <High Complexity and well documented Function Call Or Use Case Here>
+            if ply:isStaffOnDuty() then ...
         ```
 ]]
 function playerMeta:isStaffOnDuty()
@@ -1045,25 +1049,25 @@ end
 
 --[[
     Purpose:
-        <Brief, clear description of what the function does.>
+        Checks if the player has whitelist access to a faction.
 
     When Called:
-        <Describe when and why this function is invoked.>
+        Use before allowing faction selection.
 
     Parameters:
-        <paramName> (<type>)
-            <Description.>
+        faction (number)
+            Faction ID.
 
     Returns:
-        <returnType>
-            <Description or "nil".>
+        boolean
+            True if default or whitelisted.
 
     Realm:
-        <Client | Server | Shared>
+        Shared
 
     Example Usage:
         ```lua
-            <High Complexity and well documented Function Call Or Use Case Here>
+            if ply:hasWhitelist(factionID) then ...
         ```
 ]]
 function playerMeta:hasWhitelist(faction)
@@ -1079,25 +1083,24 @@ end
 
 --[[
     Purpose:
-        <Brief, clear description of what the function does.>
+        Retrieves the class table for the player's current character.
 
     When Called:
-        <Describe when and why this function is invoked.>
+        Use when needing class metadata like limits or permissions.
 
     Parameters:
-        <paramName> (<type>)
-            <Description.>
+        None.
 
     Returns:
-        <returnType>
-            <Description or "nil".>
+        table|nil
+            Class definition or nil if unavailable.
 
     Realm:
-        <Client | Server | Shared>
+        Shared
 
     Example Usage:
         ```lua
-            <High Complexity and well documented Function Call Or Use Case Here>
+            local classData = ply:getClassData()
         ```
 ]]
 function playerMeta:getClassData()
@@ -1113,25 +1116,25 @@ end
 
 --[[
     Purpose:
-        <Brief, clear description of what the function does.>
+        Provides DarkRP compatibility for money queries.
 
     When Called:
-        <Describe when and why this function is invoked.>
+        Use when DarkRP expects getDarkRPVar("money").
 
     Parameters:
-        <paramName> (<type>)
-            <Description.>
+        var (string)
+            Variable name, only "money" supported.
 
     Returns:
-        <returnType>
-            <Description or "nil".>
+        number|nil
+            Character money or nil if unsupported var.
 
     Realm:
-        <Client | Server | Shared>
+        Shared
 
     Example Usage:
         ```lua
-            <High Complexity and well documented Function Call Or Use Case Here>
+            local cash = ply:getDarkRPVar("money")
         ```
 ]]
 function playerMeta:getDarkRPVar(var)
@@ -1142,25 +1145,24 @@ end
 
 --[[
     Purpose:
-        <Brief, clear description of what the function does.>
+        Returns the character's money or zero if unavailable.
 
     When Called:
-        <Describe when and why this function is invoked.>
+        Use whenever reading player currency.
 
     Parameters:
-        <paramName> (<type>)
-            <Description.>
+        None.
 
     Returns:
-        <returnType>
-            <Description or "nil".>
+        number
+            Current money amount.
 
     Realm:
-        <Client | Server | Shared>
+        Shared
 
     Example Usage:
         ```lua
-            <High Complexity and well documented Function Call Or Use Case Here>
+            local cash = ply:getMoney()
         ```
 ]]
 function playerMeta:getMoney()
@@ -1170,25 +1172,25 @@ end
 
 --[[
     Purpose:
-        <Brief, clear description of what the function does.>
+        Returns whether the player can afford a cost.
 
     When Called:
-        <Describe when and why this function is invoked.>
+        Use before charging the player.
 
     Parameters:
-        <paramName> (<type>)
-            <Description.>
+        amount (number)
+            Cost to check.
 
     Returns:
-        <returnType>
-            <Description or "nil".>
+        boolean
+            True if the player has enough money.
 
     Realm:
-        <Client | Server | Shared>
+        Shared
 
     Example Usage:
         ```lua
-            <High Complexity and well documented Function Call Or Use Case Here>
+            if ply:canAfford(100) then ...
         ```
 ]]
 function playerMeta:canAfford(amount)
@@ -1198,25 +1200,27 @@ end
 
 --[[
     Purpose:
-        <Brief, clear description of what the function does.>
+        Checks if the player meets a specific skill level requirement.
 
     When Called:
-        <Describe when and why this function is invoked.>
+        Use for gating actions behind skills.
 
     Parameters:
-        <paramName> (<type>)
-            <Description.>
+        skill (string)
+            Attribute key.
+        level (number)
+            Required level.
 
     Returns:
-        <returnType>
-            <Description or "nil".>
+        boolean
+            True if the player meets or exceeds the level.
 
     Realm:
-        <Client | Server | Shared>
+        Shared
 
     Example Usage:
         ```lua
-            <High Complexity and well documented Function Call Or Use Case Here>
+            if ply:hasSkillLevel("lockpick", 3) then ...
         ```
 ]]
 function playerMeta:hasSkillLevel(skill, level)
@@ -1226,25 +1230,25 @@ end
 
 --[[
     Purpose:
-        <Brief, clear description of what the function does.>
+        Verifies all required skills meet their target levels.
 
     When Called:
-        <Describe when and why this function is invoked.>
+        Use when checking multiple skill prerequisites.
 
     Parameters:
-        <paramName> (<type>)
-            <Description.>
+        requiredSkillLevels (table)
+            Map of skill keys to required levels.
 
     Returns:
-        <returnType>
-            <Description or "nil".>
+        boolean
+            True if all requirements pass.
 
     Realm:
-        <Client | Server | Shared>
+        Shared
 
     Example Usage:
         ```lua
-            <High Complexity and well documented Function Call Or Use Case Here>
+            if ply:meetsRequiredSkills(reqs) then ...
         ```
 ]]
 function playerMeta:meetsRequiredSkills(requiredSkillLevels)
@@ -1257,25 +1261,31 @@ end
 
 --[[
     Purpose:
-        <Brief, clear description of what the function does.>
+        Forces the player to play a sequence and freezes movement if needed.
 
     When Called:
-        <Describe when and why this function is invoked.>
+        Use for scripted animations like sit or interact sequences.
 
     Parameters:
-        <paramName> (<type>)
-            <Description.>
+        sequenceName (string|nil)
+            Sequence to play; nil clears the current sequence.
+        callback (function|nil)
+            Called when the sequence ends.
+        time (number|nil)
+            Override duration.
+        noFreeze (boolean)
+            Prevent movement freeze when true.
 
     Returns:
-        <returnType>
-            <Description or "nil".>
+        number|boolean|nil
+            Duration when started, false on failure, or nil when clearing.
 
     Realm:
-        <Client | Server | Shared>
+        Shared
 
     Example Usage:
         ```lua
-            <High Complexity and well documented Function Call Or Use Case Here>
+            ply:forceSequence("sit", nil, 5)
         ```
 ]]
 function playerMeta:forceSequence(sequenceName, callback, time, noFreeze)
@@ -1312,25 +1322,23 @@ end
 
 --[[
     Purpose:
-        <Brief, clear description of what the function does.>
+        Stops the forced sequence, unfreezes movement, and runs callbacks.
 
     When Called:
-        <Describe when and why this function is invoked.>
+        Use when a sequence finishes or must be cancelled.
 
     Parameters:
-        <paramName> (<type>)
-            <Description.>
+        None.
 
     Returns:
-        <returnType>
-            <Description or "nil".>
+        nil
 
     Realm:
-        <Client | Server | Shared>
+        Shared
 
     Example Usage:
         ```lua
-            <High Complexity and well documented Function Call Or Use Case Here>
+            ply:leaveSequence()
         ```
 ]]
 function playerMeta:leaveSequence()
@@ -1347,25 +1355,24 @@ end
 
 --[[
     Purpose:
-        <Brief, clear description of what the function does.>
+        Returns the flag string from the player's character.
 
     When Called:
-        <Describe when and why this function is invoked.>
+        Use when checking player permissions.
 
     Parameters:
-        <paramName> (<type>)
-            <Description.>
+        None.
 
     Returns:
-        <returnType>
-            <Description or "nil".>
+        string
+            Concatenated flags or empty string.
 
     Realm:
-        <Client | Server | Shared>
+        Shared
 
     Example Usage:
         ```lua
-            <High Complexity and well documented Function Call Or Use Case Here>
+            local flags = ply:getFlags()
         ```
 ]]
 function playerMeta:getFlags()
@@ -1375,25 +1382,24 @@ end
 
 --[[
     Purpose:
-        <Brief, clear description of what the function does.>
+        Grants one or more flags to the player's character.
 
     When Called:
-        <Describe when and why this function is invoked.>
+        Use when adding privileges.
 
     Parameters:
-        <paramName> (<type>)
-            <Description.>
+        flags (string)
+            Flags to give.
 
     Returns:
-        <returnType>
-            <Description or "nil".>
+        nil
 
     Realm:
-        <Client | Server | Shared>
+        Shared
 
     Example Usage:
         ```lua
-            <High Complexity and well documented Function Call Or Use Case Here>
+            ply:giveFlags("z")
         ```
 ]]
 function playerMeta:giveFlags(flags)
@@ -1403,25 +1409,24 @@ end
 
 --[[
     Purpose:
-        <Brief, clear description of what the function does.>
+        Removes flags from the player's character.
 
     When Called:
-        <Describe when and why this function is invoked.>
+        Use when revoking privileges.
 
     Parameters:
-        <paramName> (<type>)
-            <Description.>
+        flags (string)
+            Flags to remove.
 
     Returns:
-        <returnType>
-            <Description or "nil".>
+        nil
 
     Realm:
-        <Client | Server | Shared>
+        Shared
 
     Example Usage:
         ```lua
-            <High Complexity and well documented Function Call Or Use Case Here>
+            ply:takeFlags("z")
         ```
 ]]
 function playerMeta:takeFlags(flags)
@@ -1431,25 +1436,26 @@ end
 
 --[[
     Purpose:
-        <Brief, clear description of what the function does.>
+        Synchronizes or applies a bone animation state across server/client.
 
     When Called:
-        <Describe when and why this function is invoked.>
+        Use when enabling or disabling custom bone angles.
 
     Parameters:
-        <paramName> (<type>)
-            <Description.>
+        active (boolean)
+            Whether the animation is active.
+        boneData (table)
+            Map of bone names to Angle values.
 
     Returns:
-        <returnType>
-            <Description or "nil".>
+        nil
 
     Realm:
-        <Client | Server | Shared>
+        Shared
 
     Example Usage:
         ```lua
-            <High Complexity and well documented Function Call Or Use Case Here>
+            ply:networkAnimation(true, bones)
         ```
 ]]
 function playerMeta:networkAnimation(active, boneData)
@@ -1483,25 +1489,24 @@ end
 
 --[[
     Purpose:
-        <Brief, clear description of what the function does.>
+        Returns the table storing Lilia-specific player data.
 
     When Called:
-        <Describe when and why this function is invoked.>
+        Use when reading or writing persistent player data.
 
     Parameters:
-        <paramName> (<type>)
-            <Description.>
+        None.
 
     Returns:
-        <returnType>
-            <Description or "nil".>
+        table
+            Data table per realm.
 
     Realm:
-        <Client | Server | Shared>
+        Shared
 
     Example Usage:
         ```lua
-            <High Complexity and well documented Function Call Or Use Case Here>
+            local data = ply:getAllLiliaData()
         ```
 ]]
 function playerMeta:getAllLiliaData()
@@ -1516,25 +1521,30 @@ end
 
 --[[
     Purpose:
-        <Brief, clear description of what the function does.>
+        Sets a waypoint for the player and draws HUD guidance clientside.
 
     When Called:
-        <Describe when and why this function is invoked.>
+        Use when directing a player to a position or objective.
 
     Parameters:
-        <paramName> (<type>)
-            <Description.>
+        name (string)
+            Label shown on the HUD.
+        vector (Vector)
+            Target world position.
+        logo (string|nil)
+            Optional material path for the icon.
+        onReach (function|nil)
+            Callback fired when the waypoint is reached.
 
     Returns:
-        <returnType>
-            <Description or "nil".>
+        nil
 
     Realm:
-        <Client | Server | Shared>
+        Shared
 
     Example Usage:
         ```lua
-            <High Complexity and well documented Function Call Or Use Case Here>
+            ply:setWaypoint("Stash", pos)
         ```
 ]]
 function playerMeta:setWaypoint(name, vector, logo, onReach)
@@ -1619,25 +1629,27 @@ end
 
 --[[
     Purpose:
-        <Brief, clear description of what the function does.>
+        Reads stored Lilia player data, returning a default when missing.
 
     When Called:
-        <Describe when and why this function is invoked.>
+        Use for persistent per-player data such as settings or cooldowns.
 
     Parameters:
-        <paramName> (<type>)
-            <Description.>
+        key (string)
+            Data key to fetch.
+        default (any)
+            Value to return when unset.
 
     Returns:
-        <returnType>
-            <Description or "nil".>
+        any
+            Stored value or default.
 
     Realm:
-        <Client | Server | Shared>
+        Shared
 
     Example Usage:
         ```lua
-            <High Complexity and well documented Function Call Or Use Case Here>
+            local last = ply:getLiliaData("lastIP", "")
         ```
 ]]
 function playerMeta:getLiliaData(key, default)
@@ -1657,48 +1669,24 @@ end
 
 --[[
     Purpose:
-        <Brief, clear description of what the function does.>
+        Returns the player's recorded main character ID, if set.
 
     When Called:
-        <Describe when and why this function is invoked.>
+        Use to highlight or auto-select the main character.
 
     Parameters:
-        <paramName> (<type>)
-            <Description.>
+        None.
 
     Returns:
-        <returnType>
-            <Description or "nil".>
+        number|nil
+            Character ID or nil when unset.
 
     Realm:
-        <Client | Server | Shared>
+        Shared
 
     Example Usage:
         ```lua
-            <High Complexity and well documented Function Call Or Use Case Here>
-        ```
-]]
---[[
-    Purpose:
-        <Brief, clear description of what the function does.>
-
-    When Called:
-        <Describe when and why this function is invoked.>
-
-    Parameters:
-        <paramName> (<type>)
-            <Description.>
-
-    Returns:
-        <returnType>
-            <Description or "nil".>
-
-    Realm:
-        <Client | Server | Shared>
-
-    Example Usage:
-        ```lua
-            <High Complexity and well documented Function Call Or Use Case Here>
+            local main = ply:getMainCharacter()
         ```
 ]]
 function playerMeta:getMainCharacter()
@@ -1716,25 +1704,25 @@ end
 
 --[[
     Purpose:
-        <Brief, clear description of what the function does.>
+        Sets the player's main character, applying cooldown rules server-side.
 
     When Called:
-        <Describe when and why this function is invoked.>
+        Use when a player picks or clears their main character.
 
     Parameters:
-        <paramName> (<type>)
-            <Description.>
+        charID (number|nil)
+            Character ID to set, or nil/0 to clear.
 
     Returns:
-        <returnType>
-            <Description or "nil".>
+        boolean, string|nil
+            True on success, or false with a reason.
 
     Realm:
-        <Client | Server | Shared>
+        Shared
 
     Example Usage:
         ```lua
-            <High Complexity and well documented Function Call Or Use Case Here>
+            ply:setMainCharacter(charID)
         ```
 ]]
 function playerMeta:setMainCharacter(charID)
@@ -1786,25 +1774,25 @@ end
 
 --[[
     Purpose:
-        <Brief, clear description of what the function does.>
+        Checks if the player (via their character) has any of the given flags.
 
     When Called:
-        <Describe when and why this function is invoked.>
+        Use when gating actions behind flag permissions.
 
     Parameters:
-        <paramName> (<type>)
-            <Description.>
+        flags (string)
+            One or more flag characters to test.
 
     Returns:
-        <returnType>
-            <Description or "nil".>
+        boolean
+            True if at least one flag is present.
 
     Realm:
-        <Client | Server | Shared>
+        Shared
 
     Example Usage:
         ```lua
-            <High Complexity and well documented Function Call Or Use Case Here>
+            if ply:hasFlags("z") then ...
         ```
 ]]
 function playerMeta:hasFlags(flags)
@@ -1817,25 +1805,25 @@ end
 
 --[[
     Purpose:
-        <Brief, clear description of what the function does.>
+        Returns true if the player's recorded playtime exceeds a value.
 
     When Called:
-        <Describe when and why this function is invoked.>
+        Use for requirements based on time played.
 
     Parameters:
-        <paramName> (<type>)
-            <Description.>
+        time (number)
+            Threshold in seconds.
 
     Returns:
-        <returnType>
-            <Description or "nil".>
+        boolean
+            True if playtime is greater than the threshold.
 
     Realm:
-        <Client | Server | Shared>
+        Shared
 
     Example Usage:
         ```lua
-            <High Complexity and well documented Function Call Or Use Case Here>
+            if ply:playTimeGreaterThan(3600) then ...
         ```
 ]]
 function playerMeta:playTimeGreaterThan(time)
@@ -1846,25 +1834,33 @@ end
 
 --[[
     Purpose:
-        <Brief, clear description of what the function does.>
+        Presents a list of options to the player and returns selected values.
 
     When Called:
-        <Describe when and why this function is invoked.>
+        Use for multi-choice prompts that may return multiple selections.
 
     Parameters:
-        <paramName> (<type>)
-            <Description.>
+        title (string)
+            Dialog title.
+        subTitle (string)
+            Subtitle/description.
+        options (table)
+            Array of option labels.
+        limit (number)
+            Max selections allowed.
+        callback (function)
+            Called with selections when chosen.
 
     Returns:
-        <returnType>
-            <Description or "nil".>
+        deferred|nil
+            Promise when callback omitted, otherwise nil.
 
     Realm:
-        <Client | Server | Shared>
+        Shared
 
     Example Usage:
         ```lua
-            <High Complexity and well documented Function Call Or Use Case Here>
+            ply:requestOptions("Pick", "Choose one", {"A","B"}, 1, cb)
         ```
 ]]
 function playerMeta:requestOptions(title, subTitle, options, limit, callback)
@@ -1890,25 +1886,29 @@ end
 
 --[[
     Purpose:
-        <Brief, clear description of what the function does.>
+        Prompts the player for a string value and returns it.
 
     When Called:
-        <Describe when and why this function is invoked.>
+        Use when collecting free-form text input.
 
     Parameters:
-        <paramName> (<type>)
-            <Description.>
+        title (string)
+        subTitle (string)
+        callback (function|nil)
+            Receives the string result; optional if using deferred.
+        default (string|nil)
+            Prefilled value.
 
     Returns:
-        <returnType>
-            <Description or "nil".>
+        deferred|nil
+            Promise when callback omitted, otherwise nil.
 
     Realm:
-        <Client | Server | Shared>
+        Shared
 
     Example Usage:
         ```lua
-            <High Complexity and well documented Function Call Or Use Case Here>
+            ply:requestString("Name", "Enter name", onDone)
         ```
 ]]
 function playerMeta:requestString(title, subTitle, callback, default)
@@ -1937,25 +1937,29 @@ end
 
 --[[
     Purpose:
-        <Brief, clear description of what the function does.>
+        Requests typed arguments from the player based on a specification.
 
     When Called:
-        <Describe when and why this function is invoked.>
+        Use for admin commands requiring typed input.
 
     Parameters:
-        <paramName> (<type>)
-            <Description.>
+        title (string)
+            Dialog title.
+        argTypes (table)
+            Schema describing required arguments.
+        callback (function|nil)
+            Receives parsed values; optional if using deferred.
 
     Returns:
-        <returnType>
-            <Description or "nil".>
+        deferred|nil
+            Promise when callback omitted.
 
     Realm:
-        <Client | Server | Shared>
+        Shared
 
     Example Usage:
         ```lua
-            <High Complexity and well documented Function Call Or Use Case Here>
+            ply:requestArguments("Teleport", spec, cb)
         ```
 ]]
 function playerMeta:requestArguments(title, argTypes, callback)
@@ -1986,25 +1990,32 @@ end
 
 --[[
     Purpose:
-        <Brief, clear description of what the function does.>
+        Shows a binary (two-button) question to the player and returns choice.
 
     When Called:
-        <Describe when and why this function is invoked.>
+        Use for yes/no confirmations.
 
     Parameters:
-        <paramName> (<type>)
-            <Description.>
+        question (string)
+            Prompt text.
+        option1 (string)
+            Label for first option.
+        option2 (string)
+            Label for second option.
+        manualDismiss (boolean)
+            Require manual close; optional.
+        callback (function)
+            Receives 0/1 result.
 
     Returns:
-        <returnType>
-            <Description or "nil".>
+        nil
 
     Realm:
-        <Client | Server | Shared>
+        Shared
 
     Example Usage:
         ```lua
-            <High Complexity and well documented Function Call Or Use Case Here>
+            ply:requestBinaryQuestion("Proceed?", "Yes", "No", false, cb)
         ```
 ]]
 function playerMeta:requestBinaryQuestion(question, option1, option2, manualDismiss, callback)
@@ -2036,25 +2047,26 @@ end
 
 --[[
     Purpose:
-        <Brief, clear description of what the function does.>
+        Displays a popup question with arbitrary buttons and handles responses.
 
     When Called:
-        <Describe when and why this function is invoked.>
+        Use for multi-button confirmations or admin prompts.
 
     Parameters:
-        <paramName> (<type>)
-            <Description.>
+        question (string)
+            Prompt text.
+        buttons (table)
+            Array of strings or {label, callback} pairs.
 
     Returns:
-        <returnType>
-            <Description or "nil".>
+        nil
 
     Realm:
-        <Client | Server | Shared>
+        Shared
 
     Example Usage:
         ```lua
-            <High Complexity and well documented Function Call Or Use Case Here>
+            ply:requestPopupQuestion("Choose", {{"A", cbA}, {"B", cbB}})
         ```
 ]]
 function playerMeta:requestPopupQuestion(question, buttons)
@@ -2083,25 +2095,26 @@ end
 
 --[[
     Purpose:
-        <Brief, clear description of what the function does.>
+        Sends a button list prompt to the player and routes callbacks.
 
     When Called:
-        <Describe when and why this function is invoked.>
+        Use when a simple list of actions is needed.
 
     Parameters:
-        <paramName> (<type>)
-            <Description.>
+        title (string)
+            Dialog title.
+        buttons (table)
+            Array of {text=, callback=} entries.
 
     Returns:
-        <returnType>
-            <Description or "nil".>
+        nil
 
     Realm:
-        <Client | Server | Shared>
+        Shared
 
     Example Usage:
         ```lua
-            <High Complexity and well documented Function Call Or Use Case Here>
+            ply:requestButtons("Actions", {{text="A", callback=cb}})
         ```
 ]]
 function playerMeta:requestButtons(title, buttons)
@@ -2131,25 +2144,28 @@ end
 
 --[[
     Purpose:
-        <Brief, clear description of what the function does.>
+        Presents a dropdown selection dialog to the player.
 
     When Called:
-        <Describe when and why this function is invoked.>
+        Use for single-choice option selection.
 
     Parameters:
-        <paramName> (<type>)
-            <Description.>
+        title (string)
+        subTitle (string)
+        options (table)
+            Available options.
+        callback (function)
+            Invoked with chosen option.
 
     Returns:
-        <returnType>
-            <Description or "nil".>
+        nil
 
     Realm:
-        <Client | Server | Shared>
+        Shared
 
     Example Usage:
         ```lua
-            <High Complexity and well documented Function Call Or Use Case Here>
+            ply:requestDropdown("Pick class", "Choose", opts, cb)
         ```
 ]]
 function playerMeta:requestDropdown(title, subTitle, options, callback)
@@ -2174,25 +2190,24 @@ end
 if SERVER then
     --[[
     Purpose:
-        <Brief, clear description of what the function does.>
+        Restores stamina by an amount, clamping to the character's maximum.
 
     When Called:
-        <Describe when and why this function is invoked.>
+        Use when giving the player stamina back (e.g., resting or items).
 
     Parameters:
-        <paramName> (<type>)
-            <Description.>
+        amount (number)
+            Stamina to add.
 
     Returns:
-        <returnType>
-            <Description or "nil".>
+        nil
 
     Realm:
-        <Client | Server | Shared>
+        Server
 
     Example Usage:
         ```lua
-            <High Complexity and well documented Function Call Or Use Case Here>
+            ply:restoreStamina(10)
         ```
 ]]
     function playerMeta:restoreStamina(amount)
@@ -2209,25 +2224,24 @@ if SERVER then
 
     --[[
     Purpose:
-        <Brief, clear description of what the function does.>
+        Reduces stamina by an amount and handles exhaustion state.
 
     When Called:
-        <Describe when and why this function is invoked.>
+        Use when sprinting or performing actions that consume stamina.
 
     Parameters:
-        <paramName> (<type>)
-            <Description.>
+        amount (number)
+            Stamina to subtract.
 
     Returns:
-        <returnType>
-            <Description or "nil".>
+        nil
 
     Realm:
-        <Client | Server | Shared>
+        Server
 
     Example Usage:
         ```lua
-            <High Complexity and well documented Function Call Or Use Case Here>
+            ply:consumeStamina(5)
         ```
 ]]
     function playerMeta:consumeStamina(amount)
@@ -2246,25 +2260,25 @@ if SERVER then
 
     --[[
     Purpose:
-        <Brief, clear description of what the function does.>
+        Adds money to the player's character and logs the change.
 
     When Called:
-        <Describe when and why this function is invoked.>
+        Use when rewarding currency server-side.
 
     Parameters:
-        <paramName> (<type>)
-            <Description.>
+        amount (number)
+            Amount to add (can be negative via takeMoney).
 
     Returns:
-        <returnType>
-            <Description or "nil".>
+        boolean
+            False if no character exists.
 
     Realm:
-        <Client | Server | Shared>
+        Server
 
     Example Usage:
         ```lua
-            <High Complexity and well documented Function Call Or Use Case Here>
+            ply:addMoney(50)
         ```
 ]]
     function playerMeta:addMoney(amount)
@@ -2279,25 +2293,24 @@ if SERVER then
 
     --[[
     Purpose:
-        <Brief, clear description of what the function does.>
+        Removes money from the player's character by delegating to giveMoney.
 
     When Called:
-        <Describe when and why this function is invoked.>
+        Use when charging the player server-side.
 
     Parameters:
-        <paramName> (<type>)
-            <Description.>
+        amount (number)
+            Amount to deduct.
 
     Returns:
-        <returnType>
-            <Description or "nil".>
+        nil
 
     Realm:
-        <Client | Server | Shared>
+        Server
 
     Example Usage:
         ```lua
-            <High Complexity and well documented Function Call Or Use Case Here>
+            ply:takeMoney(20)
         ```
 ]]
     function playerMeta:takeMoney(amount)
@@ -2307,25 +2320,24 @@ if SERVER then
 
     --[[
     Purpose:
-        <Brief, clear description of what the function does.>
+        Loads persistent Lilia player data from the database.
 
     When Called:
-        <Describe when and why this function is invoked.>
+        Use during player initial spawn to hydrate data.
 
     Parameters:
-        <paramName> (<type>)
-            <Description.>
+        callback (function|nil)
+            Invoked with loaded data table.
 
     Returns:
-        <returnType>
-            <Description or "nil".>
+        nil
 
     Realm:
-        <Client | Server | Shared>
+        Server
 
     Example Usage:
         ```lua
-            <High Complexity and well documented Function Call Or Use Case Here>
+            ply:loadLiliaData()
         ```
 ]]
     function playerMeta:loadLiliaData(callback)
@@ -2367,25 +2379,23 @@ if SERVER then
 
     --[[
     Purpose:
-        <Brief, clear description of what the function does.>
+        Persists the player's Lilia data back to the database.
 
     When Called:
-        <Describe when and why this function is invoked.>
+        Use on disconnect or after updating persistent data.
 
     Parameters:
-        <paramName> (<type>)
-            <Description.>
+        None.
 
     Returns:
-        <returnType>
-            <Description or "nil".>
+        nil
 
     Realm:
-        <Client | Server | Shared>
+        Server
 
     Example Usage:
         ```lua
-            <High Complexity and well documented Function Call Or Use Case Here>
+            ply:saveLiliaData()
         ```
 ]]
     function playerMeta:saveLiliaData()
@@ -2410,25 +2420,30 @@ if SERVER then
 
     --[[
     Purpose:
-        <Brief, clear description of what the function does.>
+        Sets a key in the player's Lilia data, optionally syncing and saving.
 
     When Called:
-        <Describe when and why this function is invoked.>
+        Use when updating persistent player-specific values.
 
     Parameters:
-        <paramName> (<type>)
-            <Description.>
+        key (string)
+            Data key.
+        value (any)
+            Value to store.
+        noNetworking (boolean)
+            Skip net sync when true.
+        noSave (boolean)
+            Skip immediate DB save when true.
 
     Returns:
-        <returnType>
-            <Description or "nil".>
+        nil
 
     Realm:
-        <Client | Server | Shared>
+        Server
 
     Example Usage:
         ```lua
-            <High Complexity and well documented Function Call Or Use Case Here>
+            ply:setLiliaData("lastIP", ip)
         ```
 ]]
     function playerMeta:setLiliaData(key, value, noNetworking, noSave)
@@ -2446,25 +2461,28 @@ if SERVER then
 
     --[[
     Purpose:
-        <Brief, clear description of what the function does.>
+        Records a ban entry and kicks the player with a ban message.
 
     When Called:
-        <Describe when and why this function is invoked.>
+        Use when banning a player via scripts.
 
     Parameters:
-        <paramName> (<type>)
-            <Description.>
+        reason (string)
+            Ban reason.
+        duration (number)
+            Duration in minutes; 0 or nil for perm.
+        banner (Player|nil)
+            Staff issuing the ban.
 
     Returns:
-        <returnType>
-            <Description or "nil".>
+        nil
 
     Realm:
-        <Client | Server | Shared>
+        Server
 
     Example Usage:
         ```lua
-            <High Complexity and well documented Function Call Or Use Case Here>
+            ply:banPlayer("RDM", 60, admin)
         ```
 ]]
     function playerMeta:banPlayer(reason, duration, banner)
@@ -2484,25 +2502,24 @@ if SERVER then
 
     --[[
     Purpose:
-        <Brief, clear description of what the function does.>
+        Returns the player's total playtime in seconds (server calculation).
 
     When Called:
-        <Describe when and why this function is invoked.>
+        Use for server-side playtime checks.
 
     Parameters:
-        <paramName> (<type>)
-            <Description.>
+        None.
 
     Returns:
-        <returnType>
-            <Description or "nil".>
+        number
+            Playtime in seconds.
 
     Realm:
-        <Client | Server | Shared>
+        Server
 
     Example Usage:
         ```lua
-            <High Complexity and well documented Function Call Or Use Case Here>
+            local t = ply:getPlayTime()
         ```
 ]]
     function playerMeta:getPlayTime()
@@ -2528,25 +2545,30 @@ if SERVER then
 
     --[[
     Purpose:
-        <Brief, clear description of what the function does.>
+        Toggles ragdoll state for the player, handling weapons, timers, and get-up.
 
     When Called:
-        <Describe when and why this function is invoked.>
+        Use when knocking out or reviving a player.
 
     Parameters:
-        <paramName> (<type>)
-            <Description.>
+        state (boolean)
+            True to ragdoll, false to restore.
+        baseTime (number|nil)
+            Duration to stay ragdolled.
+        getUpGrace (number|nil)
+            Additional grace time before getting up.
+        getUpMessage (string|nil)
+            Action bar text while ragdolled.
 
     Returns:
-        <returnType>
-            <Description or "nil".>
+        nil
 
     Realm:
-        <Client | Server | Shared>
+        Server
 
     Example Usage:
         ```lua
-            <High Complexity and well documented Function Call Or Use Case Here>
+            ply:setRagdolled(true, 10)
         ```
 ]]
     function playerMeta:setRagdolled(state, baseTime, getUpGrace, getUpMessage)
@@ -2700,25 +2722,23 @@ if SERVER then
 
     --[[
     Purpose:
-        <Brief, clear description of what the function does.>
+        Sends all known net variables to this player.
 
     When Called:
-        <Describe when and why this function is invoked.>
+        Use when a player joins or needs a full resync.
 
     Parameters:
-        <paramName> (<type>)
-            <Description.>
+        None.
 
     Returns:
-        <returnType>
-            <Description or "nil".>
+        nil
 
     Realm:
-        <Client | Server | Shared>
+        Server
 
     Example Usage:
         ```lua
-            <High Complexity and well documented Function Call Or Use Case Here>
+            ply:syncVars()
         ```
 ]]
     function playerMeta:syncVars()
@@ -2753,25 +2773,26 @@ if SERVER then
 
     --[[
     Purpose:
-        <Brief, clear description of what the function does.>
+        Sets a networked variable for this player and broadcasts it.
 
     When Called:
-        <Describe when and why this function is invoked.>
+        Use when updating shared player state.
 
     Parameters:
-        <paramName> (<type>)
-            <Description.>
+        key (string)
+            Variable name.
+        value (any)
+            Value to store.
 
     Returns:
-        <returnType>
-            <Description or "nil".>
+        nil
 
     Realm:
-        <Client | Server | Shared>
+        Server
 
     Example Usage:
         ```lua
-            <High Complexity and well documented Function Call Or Use Case Here>
+            ply:setNetVar("hasKey", true)
         ```
 ]]
     function playerMeta:setNetVar(key, value)
@@ -2797,25 +2818,26 @@ if SERVER then
 
     --[[
     Purpose:
-        <Brief, clear description of what the function does.>
+        Sets a server-local variable for this player and sends it only to them.
 
     When Called:
-        <Describe when and why this function is invoked.>
+        Use for per-player state that should not broadcast.
 
     Parameters:
-        <paramName> (<type>)
-            <Description.>
+        key (string)
+            Variable name.
+        value (any)
+            Value to store.
 
     Returns:
-        <returnType>
-            <Description or "nil".>
+        nil
 
     Realm:
-        <Client | Server | Shared>
+        Server
 
     Example Usage:
         ```lua
-            <High Complexity and well documented Function Call Or Use Case Here>
+            ply:setLocalVar("stamina", 80)
         ```
 ]]
     function playerMeta:setLocalVar(key, value)
@@ -2837,25 +2859,27 @@ if SERVER then
 
     --[[
     Purpose:
-        <Brief, clear description of what the function does.>
+        Reads a server-local variable for this player.
 
     When Called:
-        <Describe when and why this function is invoked.>
+        Use when accessing non-networked state.
 
     Parameters:
-        <paramName> (<type>)
-            <Description.>
+        key (string)
+            Variable name.
+        default (any)
+            Fallback when unset.
 
     Returns:
-        <returnType>
-            <Description or "nil".>
+        any
+            Stored value or default.
 
     Realm:
-        <Client | Server | Shared>
+        Server
 
     Example Usage:
         ```lua
-            <High Complexity and well documented Function Call Or Use Case Here>
+            local stamina = ply:getLocalVar("stamina", 100)
         ```
 ]]
     function playerMeta:getLocalVar(key, default)
@@ -2866,25 +2890,27 @@ if SERVER then
 else
     --[[
     Purpose:
-        <Brief, clear description of what the function does.>
+        Reads a networked variable for this player on the client.
 
     When Called:
-        <Describe when and why this function is invoked.>
+        Use clientside when accessing shared netvars.
 
     Parameters:
-        <paramName> (<type>)
-            <Description.>
+        key (string)
+            Variable name.
+        default (any)
+            Fallback when unset.
 
     Returns:
-        <returnType>
-            <Description or "nil".>
+        any
+            Stored value or default.
 
     Realm:
-        <Client | Server | Shared>
+        Client
 
     Example Usage:
         ```lua
-            <High Complexity and well documented Function Call Or Use Case Here>
+            local val = ply:getLocalVar("stamina", 0)
         ```
 ]]
     function playerMeta:getLocalVar(key, default)
@@ -2896,25 +2922,24 @@ else
 
     --[[
     Purpose:
-        <Brief, clear description of what the function does.>
+        Returns the player's playtime (client-calculated fallback).
 
     When Called:
-        <Describe when and why this function is invoked.>
+        Use on the client when server data is unavailable.
 
     Parameters:
-        <paramName> (<type>)
-            <Description.>
+        None.
 
     Returns:
-        <returnType>
-            <Description or "nil".>
+        number
+            Playtime in seconds.
 
     Realm:
-        <Client | Server | Shared>
+        Client
 
     Example Usage:
         ```lua
-            <High Complexity and well documented Function Call Or Use Case Here>
+            local t = ply:getPlayTime()
         ```
 ]]
     function playerMeta:getPlayTime()
