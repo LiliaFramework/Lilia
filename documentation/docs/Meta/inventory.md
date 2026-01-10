@@ -13,22 +13,29 @@ The inventory meta table provides comprehensive functionality for managing inven
 ### getData
 
 #### 📋 Purpose
-<Brief, clear description of what the function does.>
+Retrieves a stored data value on the inventory.
 
 #### ⏰ When Called
-<Describe when and why this function is invoked.>
+Use whenever reading custom inventory metadata.
+
+#### ⚙️ Parameters
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `key` | **string** | Data key to read. |
+| `default` | **any** | Value returned when the key is missing. |
 
 #### ↩️ Returns
-* <returnType>
-<Description or "nil".>
+* any
+Stored value or the provided default.
 
 #### 🌐 Realm
-<Client | Server | Shared>
+Shared
 
 #### 💡 Example Usage
 
 ```lua
-    <High Complexity and well documented Function Call Or Use Case Here>
+    local owner = inv:getData("char")
 
 ```
 
@@ -37,22 +44,28 @@ The inventory meta table provides comprehensive functionality for managing inven
 ### extend
 
 #### 📋 Purpose
-<Brief, clear description of what the function does.>
+Creates a subclass of Inventory with its own metatable.
 
 #### ⏰ When Called
-<Describe when and why this function is invoked.>
+Use when defining a new inventory type.
+
+#### ⚙️ Parameters
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `className` | **string** | Registry name for the new subclass. |
 
 #### ↩️ Returns
-* <returnType>
-<Description or "nil".>
+* table
+Newly created subclass table.
 
 #### 🌐 Realm
-<Client | Server | Shared>
+Shared
 
 #### 💡 Example Usage
 
 ```lua
-    <High Complexity and well documented Function Call Or Use Case Here>
+    local Backpack = Inventory:extend("liaBackpack")
 
 ```
 
@@ -61,22 +74,44 @@ The inventory meta table provides comprehensive functionality for managing inven
 ### configure
 
 #### 📋 Purpose
-<Brief, clear description of what the function does.>
+Sets up inventory defaults; meant to be overridden.
 
 #### ⏰ When Called
-<Describe when and why this function is invoked.>
+Invoked during type registration to configure behavior.
 
 #### ↩️ Returns
-* <returnType>
-<Description or "nil".>
+* nil
 
 #### 🌐 Realm
-<Client | Server | Shared>
+Shared
 
 #### 💡 Example Usage
 
 ```lua
-    <High Complexity and well documented Function Call Or Use Case Here>
+    function Inventory:configure() self.config.size = {4,4} end
+
+```
+
+---
+
+### configure
+
+#### 📋 Purpose
+Sets up inventory defaults; meant to be overridden.
+
+#### ⏰ When Called
+Invoked during type registration to configure behavior.
+
+#### ↩️ Returns
+* nil
+
+#### 🌐 Realm
+Shared
+
+#### 💡 Example Usage
+
+```lua
+    function Inventory:configure() self.config.size = {4,4} end
 
 ```
 
@@ -85,22 +120,28 @@ The inventory meta table provides comprehensive functionality for managing inven
 ### addDataProxy
 
 #### 📋 Purpose
-<Brief, clear description of what the function does.>
+Registers a proxy callback for a specific data key.
 
 #### ⏰ When Called
-<Describe when and why this function is invoked.>
+Use when you need to react to data changes.
+
+#### ⚙️ Parameters
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `key` | **string** | Data key to watch. |
+| `onChange` | **function** | Callback receiving old and new values. |
 
 #### ↩️ Returns
-* <returnType>
-<Description or "nil".>
+* nil
 
 #### 🌐 Realm
-<Client | Server | Shared>
+Shared
 
 #### 💡 Example Usage
 
 ```lua
-    <High Complexity and well documented Function Call Or Use Case Here>
+    inv:addDataProxy("locked", function(o,n) end)
 
 ```
 
@@ -109,22 +150,29 @@ The inventory meta table provides comprehensive functionality for managing inven
 ### getItemsByUniqueID
 
 #### 📋 Purpose
-<Brief, clear description of what the function does.>
+Returns all items in the inventory matching a uniqueID.
 
 #### ⏰ When Called
-<Describe when and why this function is invoked.>
+Use when finding all copies of a specific item type.
+
+#### ⚙️ Parameters
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `uniqueID` | **string** | Item unique identifier. |
+| `onlyMain` | **boolean** | Restrict search to main inventory when true. |
 
 #### ↩️ Returns
-* <returnType>
-<Description or "nil".>
+* table
+Array of matching item instances.
 
 #### 🌐 Realm
-<Client | Server | Shared>
+Shared
 
 #### 💡 Example Usage
 
 ```lua
-    <High Complexity and well documented Function Call Or Use Case Here>
+    local meds = inv:getItemsByUniqueID("medkit")
 
 ```
 
@@ -133,22 +181,27 @@ The inventory meta table provides comprehensive functionality for managing inven
 ### register
 
 #### 📋 Purpose
-<Brief, clear description of what the function does.>
+Registers this inventory type with the system.
 
 #### ⏰ When Called
-<Describe when and why this function is invoked.>
+Invoke once per subclass to set type ID and defaults.
+
+#### ⚙️ Parameters
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `typeID` | **string** | Unique identifier for this inventory type. |
 
 #### ↩️ Returns
-* <returnType>
-<Description or "nil".>
+* nil
 
 #### 🌐 Realm
-<Client | Server | Shared>
+Shared
 
 #### 💡 Example Usage
 
 ```lua
-    <High Complexity and well documented Function Call Or Use Case Here>
+    Inventory:register("bag")
 
 ```
 
@@ -157,22 +210,22 @@ The inventory meta table provides comprehensive functionality for managing inven
 ### new
 
 #### 📋 Purpose
-<Brief, clear description of what the function does.>
+Creates a new instance of this inventory type.
 
 #### ⏰ When Called
-<Describe when and why this function is invoked.>
+Use when a character or container needs a fresh inventory.
 
 #### ↩️ Returns
-* <returnType>
-<Description or "nil".>
+* table
+Deferred inventory instance creation.
 
 #### 🌐 Realm
-<Client | Server | Shared>
+Shared
 
 #### 💡 Example Usage
 
 ```lua
-    <High Complexity and well documented Function Call Or Use Case Here>
+    local inv = Inventory:new()
 
 ```
 
@@ -181,22 +234,22 @@ The inventory meta table provides comprehensive functionality for managing inven
 ### tostring
 
 #### 📋 Purpose
-<Brief, clear description of what the function does.>
+Formats the inventory as a readable string with its ID.
 
 #### ⏰ When Called
-<Describe when and why this function is invoked.>
+Use for logging or debugging output.
 
 #### ↩️ Returns
-* <returnType>
-<Description or "nil".>
+* string
+Localized class name and ID.
 
 #### 🌐 Realm
-<Client | Server | Shared>
+Shared
 
 #### 💡 Example Usage
 
 ```lua
-    <High Complexity and well documented Function Call Or Use Case Here>
+    print(inv:tostring())
 
 ```
 
@@ -205,22 +258,22 @@ The inventory meta table provides comprehensive functionality for managing inven
 ### getType
 
 #### 📋 Purpose
-<Brief, clear description of what the function does.>
+Returns the inventory type definition table.
 
 #### ⏰ When Called
-<Describe when and why this function is invoked.>
+Use when accessing type-level configuration.
 
 #### ↩️ Returns
-* <returnType>
-<Description or "nil".>
+* table
+Registered inventory type data.
 
 #### 🌐 Realm
-<Client | Server | Shared>
+Shared
 
 #### 💡 Example Usage
 
 ```lua
-    <High Complexity and well documented Function Call Or Use Case Here>
+    local typeData = inv:getType()
 
 ```
 
@@ -229,22 +282,29 @@ The inventory meta table provides comprehensive functionality for managing inven
 ### onDataChanged
 
 #### 📋 Purpose
-<Brief, clear description of what the function does.>
+Fires proxy callbacks when a tracked data value changes.
 
 #### ⏰ When Called
-<Describe when and why this function is invoked.>
+Internally after setData updates.
+
+#### ⚙️ Parameters
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `key` | **string** | Data key that changed. |
+| `oldValue` | **any** | Previous value. |
+| `newValue` | **any** | New value. |
 
 #### ↩️ Returns
-* <returnType>
-<Description or "nil".>
+* nil
 
 #### 🌐 Realm
-<Client | Server | Shared>
+Shared
 
 #### 💡 Example Usage
 
 ```lua
-    <High Complexity and well documented Function Call Or Use Case Here>
+    inv:onDataChanged("locked", false, true)
 
 ```
 
@@ -253,22 +313,22 @@ The inventory meta table provides comprehensive functionality for managing inven
 ### getItems
 
 #### 📋 Purpose
-<Brief, clear description of what the function does.>
+Returns the table of item instances in this inventory.
 
 #### ⏰ When Called
-<Describe when and why this function is invoked.>
+Use when iterating all items.
 
 #### ↩️ Returns
-* <returnType>
-<Description or "nil".>
+* table
+Item instances keyed by item ID.
 
 #### 🌐 Realm
-<Client | Server | Shared>
+Shared
 
 #### 💡 Example Usage
 
 ```lua
-    <High Complexity and well documented Function Call Or Use Case Here>
+    for id, itm in pairs(inv:getItems()) do end
 
 ```
 
@@ -277,22 +337,28 @@ The inventory meta table provides comprehensive functionality for managing inven
 ### getItemsOfType
 
 #### 📋 Purpose
-<Brief, clear description of what the function does.>
+Collects items of a given type from the inventory.
 
 #### ⏰ When Called
-<Describe when and why this function is invoked.>
+Use when filtering for a specific item uniqueID.
+
+#### ⚙️ Parameters
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `itemType` | **string** | Unique item identifier to match. |
 
 #### ↩️ Returns
-* <returnType>
-<Description or "nil".>
+* table
+Array of matching items.
 
 #### 🌐 Realm
-<Client | Server | Shared>
+Shared
 
 #### 💡 Example Usage
 
 ```lua
-    <High Complexity and well documented Function Call Or Use Case Here>
+    local foods = inv:getItemsOfType("food")
 
 ```
 
@@ -301,22 +367,28 @@ The inventory meta table provides comprehensive functionality for managing inven
 ### getFirstItemOfType
 
 #### 📋 Purpose
-<Brief, clear description of what the function does.>
+Returns the first item matching a uniqueID.
 
 #### ⏰ When Called
-<Describe when and why this function is invoked.>
+Use when only one instance of a type is needed.
+
+#### ⚙️ Parameters
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `itemType` | **string** | Unique item identifier to find. |
 
 #### ↩️ Returns
-* <returnType>
-<Description or "nil".>
+* table|nil
+Item instance or nil if none found.
 
 #### 🌐 Realm
-<Client | Server | Shared>
+Shared
 
 #### 💡 Example Usage
 
 ```lua
-    <High Complexity and well documented Function Call Or Use Case Here>
+    local gun = inv:getFirstItemOfType("pistol")
 
 ```
 
@@ -325,22 +397,28 @@ The inventory meta table provides comprehensive functionality for managing inven
 ### hasItem
 
 #### 📋 Purpose
-<Brief, clear description of what the function does.>
+Checks whether the inventory contains an item type.
 
 #### ⏰ When Called
-<Describe when and why this function is invoked.>
+Use before consuming or requiring an item.
+
+#### ⚙️ Parameters
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `itemType` | **string** | Unique item identifier to check. |
 
 #### ↩️ Returns
-* <returnType>
-<Description or "nil".>
+* boolean
+True if at least one matching item exists.
 
 #### 🌐 Realm
-<Client | Server | Shared>
+Shared
 
 #### 💡 Example Usage
 
 ```lua
-    <High Complexity and well documented Function Call Or Use Case Here>
+    if inv:hasItem("keycard") then unlock() end
 
 ```
 
@@ -349,22 +427,28 @@ The inventory meta table provides comprehensive functionality for managing inven
 ### getItemCount
 
 #### 📋 Purpose
-<Brief, clear description of what the function does.>
+Counts items, optionally filtering by uniqueID.
 
 #### ⏰ When Called
-<Describe when and why this function is invoked.>
+Use for capacity checks or UI badge counts.
+
+#### ⚙️ Parameters
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `itemType` | **string|nil** | Unique ID to filter by; nil counts all. |
 
 #### ↩️ Returns
-* <returnType>
-<Description or "nil".>
+* number
+Total quantity of matching items.
 
 #### 🌐 Realm
-<Client | Server | Shared>
+Shared
 
 #### 💡 Example Usage
 
 ```lua
-    <High Complexity and well documented Function Call Or Use Case Here>
+    local ammoCount = inv:getItemCount("ammo")
 
 ```
 
@@ -373,22 +457,22 @@ The inventory meta table provides comprehensive functionality for managing inven
 ### getID
 
 #### 📋 Purpose
-<Brief, clear description of what the function does.>
+Returns the numeric identifier for this inventory.
 
 #### ⏰ When Called
-<Describe when and why this function is invoked.>
+Use when networking, saving, or comparing inventories.
 
 #### ↩️ Returns
-* <returnType>
-<Description or "nil".>
+* number
+Inventory ID.
 
 #### 🌐 Realm
-<Client | Server | Shared>
+Shared
 
 #### 💡 Example Usage
 
 ```lua
-    <High Complexity and well documented Function Call Or Use Case Here>
+    local id = inv:getID()
 
 ```
 
@@ -397,22 +481,29 @@ The inventory meta table provides comprehensive functionality for managing inven
 ### addItem
 
 #### 📋 Purpose
-<Brief, clear description of what the function does.>
+Inserts an item into this inventory and persists its invID.
 
 #### ⏰ When Called
-<Describe when and why this function is invoked.>
+Use when adding an item to the inventory on the server.
+
+#### ⚙️ Parameters
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `item` | **Item** | Item instance to add. |
+| `noReplicate` | **boolean** | Skip replication hooks when true. |
 
 #### ↩️ Returns
-* <returnType>
-<Description or "nil".>
+* Inventory
+The inventory for chaining.
 
 #### 🌐 Realm
-<Client | Server | Shared>
+Server
 
 #### 💡 Example Usage
 
 ```lua
-    <High Complexity and well documented Function Call Or Use Case Here>
+    inv:addItem(item)
 
 ```
 
@@ -421,22 +512,28 @@ The inventory meta table provides comprehensive functionality for managing inven
 ### add
 
 #### 📋 Purpose
-<Brief, clear description of what the function does.>
+Alias to addItem for convenience.
 
 #### ⏰ When Called
-<Describe when and why this function is invoked.>
+Use wherever you would call addItem.
+
+#### ⚙️ Parameters
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `item` | **Item** | Item instance to add. |
 
 #### ↩️ Returns
-* <returnType>
-<Description or "nil".>
+* Inventory
+The inventory for chaining.
 
 #### 🌐 Realm
-<Client | Server | Shared>
+Server
 
 #### 💡 Example Usage
 
 ```lua
-    <High Complexity and well documented Function Call Or Use Case Here>
+    inv:add(item)
 
 ```
 
@@ -445,22 +542,27 @@ The inventory meta table provides comprehensive functionality for managing inven
 ### syncItemAdded
 
 #### 📋 Purpose
-<Brief, clear description of what the function does.>
+Notifies clients about an item newly added to this inventory.
 
 #### ⏰ When Called
-<Describe when and why this function is invoked.>
+Invoked after addItem to replicate state.
+
+#### ⚙️ Parameters
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `item` | **Item** | Item instance already inserted. |
 
 #### ↩️ Returns
-* <returnType>
-<Description or "nil".>
+* nil
 
 #### 🌐 Realm
-<Client | Server | Shared>
+Server
 
 #### 💡 Example Usage
 
 ```lua
-    <High Complexity and well documented Function Call Or Use Case Here>
+    inv:syncItemAdded(item)
 
 ```
 
@@ -469,22 +571,28 @@ The inventory meta table provides comprehensive functionality for managing inven
 ### initializeStorage
 
 #### 📋 Purpose
-<Brief, clear description of what the function does.>
+Creates a database record for a new inventory and its data.
 
 #### ⏰ When Called
-<Describe when and why this function is invoked.>
+Use during initial inventory creation.
+
+#### ⚙️ Parameters
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `initialData` | **table** | Key/value pairs to seed invdata rows; may include char. |
 
 #### ↩️ Returns
-* <returnType>
-<Description or "nil".>
+* Promise
+Resolves with new inventory ID.
 
 #### 🌐 Realm
-<Client | Server | Shared>
+Server
 
 #### 💡 Example Usage
 
 ```lua
-    <High Complexity and well documented Function Call Or Use Case Here>
+    inv:initializeStorage({char = charID})
 
 ```
 
@@ -493,22 +601,44 @@ The inventory meta table provides comprehensive functionality for managing inven
 ### restoreFromStorage
 
 #### 📋 Purpose
-<Brief, clear description of what the function does.>
+Hook for restoring inventory data from storage.
 
 #### ⏰ When Called
-<Describe when and why this function is invoked.>
+Override to load custom data during restoration.
 
 #### ↩️ Returns
-* <returnType>
-<Description or "nil".>
+* nil
 
 #### 🌐 Realm
-<Client | Server | Shared>
+Server
 
 #### 💡 Example Usage
 
 ```lua
-    <High Complexity and well documented Function Call Or Use Case Here>
+    function Inventory:restoreFromStorage() end
+
+```
+
+---
+
+### restoreFromStorage
+
+#### 📋 Purpose
+Hook for restoring inventory data from storage.
+
+#### ⏰ When Called
+Override to load custom data during restoration.
+
+#### ↩️ Returns
+* nil
+
+#### 🌐 Realm
+Server
+
+#### 💡 Example Usage
+
+```lua
+    function Inventory:restoreFromStorage() end
 
 ```
 
@@ -517,22 +647,29 @@ The inventory meta table provides comprehensive functionality for managing inven
 ### removeItem
 
 #### 📋 Purpose
-<Brief, clear description of what the function does.>
+Removes an item from this inventory and updates clients/DB.
 
 #### ⏰ When Called
-<Describe when and why this function is invoked.>
+Use when deleting or moving items out of the inventory.
+
+#### ⚙️ Parameters
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `itemID` | **number** | ID of the item to remove. |
+| `preserveItem` | **boolean** | Keep the instance and DB row when true. |
 
 #### ↩️ Returns
-* <returnType>
-<Description or "nil".>
+* Promise
+Resolves after removal finishes.
 
 #### 🌐 Realm
-<Client | Server | Shared>
+Server
 
 #### 💡 Example Usage
 
 ```lua
-    <High Complexity and well documented Function Call Or Use Case Here>
+    inv:removeItem(itemID)
 
 ```
 
@@ -541,22 +678,28 @@ The inventory meta table provides comprehensive functionality for managing inven
 ### remove
 
 #### 📋 Purpose
-<Brief, clear description of what the function does.>
+Alias for removeItem.
 
 #### ⏰ When Called
-<Describe when and why this function is invoked.>
+Use interchangeably with removeItem.
+
+#### ⚙️ Parameters
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `itemID` | **number** | ID of the item to remove. |
 
 #### ↩️ Returns
-* <returnType>
-<Description or "nil".>
+* Promise
+Resolves after removal.
 
 #### 🌐 Realm
-<Client | Server | Shared>
+Server
 
 #### 💡 Example Usage
 
 ```lua
-    <High Complexity and well documented Function Call Or Use Case Here>
+    inv:remove(id)
 
 ```
 
@@ -565,22 +708,29 @@ The inventory meta table provides comprehensive functionality for managing inven
 ### setData
 
 #### 📋 Purpose
-<Brief, clear description of what the function does.>
+Updates inventory data, persists it, and notifies listeners.
 
 #### ⏰ When Called
-<Describe when and why this function is invoked.>
+Use to change stored metadata such as character assignment.
+
+#### ⚙️ Parameters
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `key` | **string** | Data key to set. |
+| `value` | **any** | New value or nil to delete. |
 
 #### ↩️ Returns
-* <returnType>
-<Description or "nil".>
+* Inventory
+The inventory for chaining.
 
 #### 🌐 Realm
-<Client | Server | Shared>
+Server
 
 #### 💡 Example Usage
 
 ```lua
-    <High Complexity and well documented Function Call Or Use Case Here>
+    inv:setData("locked", true)
 
 ```
 
@@ -589,22 +739,29 @@ The inventory meta table provides comprehensive functionality for managing inven
 ### canAccess
 
 #### 📋 Purpose
-<Brief, clear description of what the function does.>
+Evaluates access rules for a given action context.
 
 #### ⏰ When Called
-<Describe when and why this function is invoked.>
+Use before allowing inventory interactions.
+
+#### ⚙️ Parameters
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `action` | **string** | Action name (e.g., "repl", "transfer"). |
+| `context` | **table** | Additional data such as client. |
 
 #### ↩️ Returns
-* <returnType>
-<Description or "nil".>
+* boolean|nil, string|nil
+Decision and optional reason if a rule handled it.
 
 #### 🌐 Realm
-<Client | Server | Shared>
+Server
 
 #### 💡 Example Usage
 
 ```lua
-    <High Complexity and well documented Function Call Or Use Case Here>
+    local ok = inv:canAccess("repl", {client = ply})
 
 ```
 
@@ -613,22 +770,29 @@ The inventory meta table provides comprehensive functionality for managing inven
 ### addAccessRule
 
 #### 📋 Purpose
-<Brief, clear description of what the function does.>
+Inserts an access rule into the rule list.
 
 #### ⏰ When Called
-<Describe when and why this function is invoked.>
+Use when configuring permissions for this inventory type.
+
+#### ⚙️ Parameters
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `rule` | **function** | Function returning decision and reason. |
+| `priority` | **number|nil** | Optional insert position. |
 
 #### ↩️ Returns
-* <returnType>
-<Description or "nil".>
+* Inventory
+The inventory for chaining.
 
 #### 🌐 Realm
-<Client | Server | Shared>
+Server
 
 #### 💡 Example Usage
 
 ```lua
-    <High Complexity and well documented Function Call Or Use Case Here>
+    inv:addAccessRule(myRule, 1)
 
 ```
 
@@ -637,22 +801,28 @@ The inventory meta table provides comprehensive functionality for managing inven
 ### removeAccessRule
 
 #### 📋 Purpose
-<Brief, clear description of what the function does.>
+Removes a previously added access rule.
 
 #### ⏰ When Called
-<Describe when and why this function is invoked.>
+Use when unregistering dynamic permission logic.
+
+#### ⚙️ Parameters
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `rule` | **function** | The rule function to remove. |
 
 #### ↩️ Returns
-* <returnType>
-<Description or "nil".>
+* Inventory
+The inventory for chaining.
 
 #### 🌐 Realm
-<Client | Server | Shared>
+Server
 
 #### 💡 Example Usage
 
 ```lua
-    <High Complexity and well documented Function Call Or Use Case Here>
+    inv:removeAccessRule(myRule)
 
 ```
 
@@ -661,22 +831,22 @@ The inventory meta table provides comprehensive functionality for managing inven
 ### getRecipients
 
 #### 📋 Purpose
-<Brief, clear description of what the function does.>
+Determines which players should receive inventory replication.
 
 #### ⏰ When Called
-<Describe when and why this function is invoked.>
+Use before sending inventory data to clients.
 
 #### ↩️ Returns
-* <returnType>
-<Description or "nil".>
+* table
+List of player recipients allowed by access rules.
 
 #### 🌐 Realm
-<Client | Server | Shared>
+Server
 
 #### 💡 Example Usage
 
 ```lua
-    <High Complexity and well documented Function Call Or Use Case Here>
+    local recips = inv:getRecipients()
 
 ```
 
@@ -685,22 +855,44 @@ The inventory meta table provides comprehensive functionality for managing inven
 ### onInstanced
 
 #### 📋 Purpose
-<Brief, clear description of what the function does.>
+Hook called when an inventory instance is created.
 
 #### ⏰ When Called
-<Describe when and why this function is invoked.>
+Override to perform custom initialization.
 
 #### ↩️ Returns
-* <returnType>
-<Description or "nil".>
+* nil
 
 #### 🌐 Realm
-<Client | Server | Shared>
+Server
 
 #### 💡 Example Usage
 
 ```lua
-    <High Complexity and well documented Function Call Or Use Case Here>
+    function Inventory:onInstanced() end
+
+```
+
+---
+
+### onInstanced
+
+#### 📋 Purpose
+Hook called when an inventory instance is created.
+
+#### ⏰ When Called
+Override to perform custom initialization.
+
+#### ↩️ Returns
+* nil
+
+#### 🌐 Realm
+Server
+
+#### 💡 Example Usage
+
+```lua
+    function Inventory:onInstanced() end
 
 ```
 
@@ -709,22 +901,44 @@ The inventory meta table provides comprehensive functionality for managing inven
 ### onLoaded
 
 #### 📋 Purpose
-<Brief, clear description of what the function does.>
+Hook called after inventory data is loaded.
 
 #### ⏰ When Called
-<Describe when and why this function is invoked.>
+Override to react once storage data is retrieved.
 
 #### ↩️ Returns
-* <returnType>
-<Description or "nil".>
+* nil
 
 #### 🌐 Realm
-<Client | Server | Shared>
+Server
 
 #### 💡 Example Usage
 
 ```lua
-    <High Complexity and well documented Function Call Or Use Case Here>
+    function Inventory:onLoaded() end
+
+```
+
+---
+
+### onLoaded
+
+#### 📋 Purpose
+Hook called after inventory data is loaded.
+
+#### ⏰ When Called
+Override to react once storage data is retrieved.
+
+#### ↩️ Returns
+* nil
+
+#### 🌐 Realm
+Server
+
+#### 💡 Example Usage
+
+```lua
+    function Inventory:onLoaded() end
 
 ```
 
@@ -733,22 +947,22 @@ The inventory meta table provides comprehensive functionality for managing inven
 ### loadItems
 
 #### 📋 Purpose
-<Brief, clear description of what the function does.>
+Loads item instances from the database into this inventory.
 
 #### ⏰ When Called
-<Describe when and why this function is invoked.>
+Use during inventory initialization to restore contents.
 
 #### ↩️ Returns
-* <returnType>
-<Description or "nil".>
+* Promise
+Resolves with the loaded items table.
 
 #### 🌐 Realm
-<Client | Server | Shared>
+Server
 
 #### 💡 Example Usage
 
 ```lua
-    <High Complexity and well documented Function Call Or Use Case Here>
+    inv:loadItems():next(function(items) end)
 
 ```
 
@@ -757,22 +971,56 @@ The inventory meta table provides comprehensive functionality for managing inven
 ### onItemsLoaded
 
 #### 📋 Purpose
-<Brief, clear description of what the function does.>
+Hook called after items are loaded into the inventory.
 
 #### ⏰ When Called
-<Describe when and why this function is invoked.>
+Override to run logic after contents are ready.
+
+#### ⚙️ Parameters
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `items` | **table** | Loaded items table. |
 
 #### ↩️ Returns
-* <returnType>
-<Description or "nil".>
+* nil
 
 #### 🌐 Realm
-<Client | Server | Shared>
+Server
 
 #### 💡 Example Usage
 
 ```lua
-    <High Complexity and well documented Function Call Or Use Case Here>
+    function Inventory:onItemsLoaded(items) end
+
+```
+
+---
+
+### onItemsLoaded
+
+#### 📋 Purpose
+Hook called after items are loaded into the inventory.
+
+#### ⏰ When Called
+Override to run logic after contents are ready.
+
+#### ⚙️ Parameters
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `items` | **table** | Loaded items table. |
+
+#### ↩️ Returns
+* nil
+
+#### 🌐 Realm
+Server
+
+#### 💡 Example Usage
+
+```lua
+    function Inventory:onItemsLoaded(items) end
 
 ```
 
@@ -781,22 +1029,28 @@ The inventory meta table provides comprehensive functionality for managing inven
 ### instance
 
 #### 📋 Purpose
-<Brief, clear description of what the function does.>
+Creates and registers an inventory instance with initial data.
 
 #### ⏰ When Called
-<Describe when and why this function is invoked.>
+Use to instantiate a server-side inventory of this type.
+
+#### ⚙️ Parameters
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `initialData` | **table** | Data used during creation (e.g., char assignment). |
 
 #### ↩️ Returns
-* <returnType>
-<Description or "nil".>
+* Promise
+Resolves with the new inventory instance.
 
 #### 🌐 Realm
-<Client | Server | Shared>
+Server
 
 #### 💡 Example Usage
 
 ```lua
-    <High Complexity and well documented Function Call Or Use Case Here>
+    Inventory:instance({char = charID})
 
 ```
 
@@ -805,22 +1059,28 @@ The inventory meta table provides comprehensive functionality for managing inven
 ### syncData
 
 #### 📋 Purpose
-<Brief, clear description of what the function does.>
+Sends a single inventory data key to recipients.
 
 #### ⏰ When Called
-<Describe when and why this function is invoked.>
+Use after setData to replicate a specific field.
+
+#### ⚙️ Parameters
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `key` | **string** | Data key to send. |
+| `recipients` | **Player|table|nil** | Targets to notify; defaults to recipients with access. |
 
 #### ↩️ Returns
-* <returnType>
-<Description or "nil".>
+* nil
 
 #### 🌐 Realm
-<Client | Server | Shared>
+Server
 
 #### 💡 Example Usage
 
 ```lua
-    <High Complexity and well documented Function Call Or Use Case Here>
+    inv:syncData("locked")
 
 ```
 
@@ -829,22 +1089,27 @@ The inventory meta table provides comprehensive functionality for managing inven
 ### sync
 
 #### 📋 Purpose
-<Brief, clear description of what the function does.>
+Sends full inventory state and contained items to recipients.
 
 #### ⏰ When Called
-<Describe when and why this function is invoked.>
+Use when initializing or resyncing an inventory for clients.
+
+#### ⚙️ Parameters
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `recipients` | **Player|table|nil** | Targets to receive the update; defaults to access list. |
 
 #### ↩️ Returns
-* <returnType>
-<Description or "nil".>
+* nil
 
 #### 🌐 Realm
-<Client | Server | Shared>
+Server
 
 #### 💡 Example Usage
 
 ```lua
-    <High Complexity and well documented Function Call Or Use Case Here>
+    inv:sync(ply)
 
 ```
 
@@ -853,22 +1118,21 @@ The inventory meta table provides comprehensive functionality for managing inven
 ### delete
 
 #### 📋 Purpose
-<Brief, clear description of what the function does.>
+Deletes this inventory via the inventory manager.
 
 #### ⏰ When Called
-<Describe when and why this function is invoked.>
+Use when permanently removing an inventory record.
 
 #### ↩️ Returns
-* <returnType>
-<Description or "nil".>
+* nil
 
 #### 🌐 Realm
-<Client | Server | Shared>
+Server
 
 #### 💡 Example Usage
 
 ```lua
-    <High Complexity and well documented Function Call Or Use Case Here>
+    inv:delete()
 
 ```
 
@@ -877,22 +1141,21 @@ The inventory meta table provides comprehensive functionality for managing inven
 ### destroy
 
 #### 📋 Purpose
-<Brief, clear description of what the function does.>
+Clears inventory items, removes it from cache, and notifies clients.
 
 #### ⏰ When Called
-<Describe when and why this function is invoked.>
+Use when unloading or destroying an inventory instance.
 
 #### ↩️ Returns
-* <returnType>
-<Description or "nil".>
+* nil
 
 #### 🌐 Realm
-<Client | Server | Shared>
+Server
 
 #### 💡 Example Usage
 
 ```lua
-    <High Complexity and well documented Function Call Or Use Case Here>
+    inv:destroy()
 
 ```
 
@@ -901,22 +1164,28 @@ The inventory meta table provides comprehensive functionality for managing inven
 ### show
 
 #### 📋 Purpose
-<Brief, clear description of what the function does.>
+Opens the inventory UI on the client.
 
 #### ⏰ When Called
-<Describe when and why this function is invoked.>
+Use to display this inventory to the player.
+
+#### ⚙️ Parameters
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `parent` | **Panel** | Optional parent panel. |
 
 #### ↩️ Returns
-* <returnType>
-<Description or "nil".>
+* Panel
+The created inventory panel.
 
 #### 🌐 Realm
-<Client | Server | Shared>
+Client
 
 #### 💡 Example Usage
 
 ```lua
-    <High Complexity and well documented Function Call Or Use Case Here>
+    inv:show()
 
 ```
 

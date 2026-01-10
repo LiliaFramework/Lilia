@@ -1,5 +1,30 @@
 # Changelog
 
+## Version 7.261 (January 10, 2026)
+
+### Changes
+
+- More Docs
+- Successfully updated workshop Lilia to 7.259
+- More Docs
+- Linting
+- Update generate_docs.py
+- Removed Legacy
+- Successfully updated workshop Lilia to 7.254
+- Update generate_docs.py
+- Generators
+- Many Changes
+- Successfully updated workshop Lilia to 7.250
+- Delete index.md
+- Successfully updated workshop Lilia to 7.248
+- Generators
+- Successfully updated workshop Lilia to 7.246
+- Renamed
+- Successfully updated workshop Lilia to 7.244
+- Consistency
+- No More Dupes in Example Item
+- Generators
+
 ## Version 7.259 (January 09, 2026)
 
 ### Changes
