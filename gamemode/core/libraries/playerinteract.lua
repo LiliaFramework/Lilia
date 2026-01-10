@@ -46,7 +46,7 @@ lia.playerinteract._lastSyncCategoryCount = lia.playerinteract._lastSyncCategory
             -- Validate a timed hack action before starting the progress bar.
             local function tryHackDoor(client, door)
                 if not lia.playerinteract.isWithinRange(client, door, 96) then
-                    client:notifyLocalized("tooFar")
+                    client:notifyLocalized("tooFarAway")
                     return
                 end
                 client:setAction("@hackingDoor", 5, function()

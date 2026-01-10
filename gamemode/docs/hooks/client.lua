@@ -323,6 +323,39 @@ end
 
 --[[
     Purpose:
+        Determines if a player can take/convert an entity into an item.
+
+    When Called:
+        Before attempting to convert an entity into an item using the take entity keybind.
+
+    Parameters:
+        client (Player)
+            The player attempting to take the entity.
+        targetEntity (Entity)
+            The entity being targeted for conversion.
+        itemUniqueID (string)
+            The unique ID of the item that would be created.
+
+    Returns:
+        boolean
+            False to prevent taking the entity; nil/true to allow.
+
+    Realm:
+        Client
+
+    Example Usage:
+        ```lua
+            hook.Add("CanTakeEntity", "RestrictEntityTaking", function(client, targetEntity, itemUniqueID)
+                if targetEntity:IsPlayer() then return false end
+                return true
+            end)
+        ```
+]]
+function CanTakeEntity(client, targetEntity, itemUniqueID)
+end
+
+--[[
+    Purpose:
         Determine if the local player can open their inventory UI.
 
     When Called:
@@ -781,6 +814,33 @@ end
 
 --[[
     Purpose:
+        Called when the chatbox panel needs to be created or recreated.
+
+    When Called:
+        When the chatbox module initializes, when the chatbox panel is closed and needs to be reopened, or when certain chat-related events occur.
+
+    Parameters:
+        nil
+
+    Returns:
+        nil
+            The hook doesn't expect a return value but allows for custom chatbox panel setup.
+
+    Realm:
+        Client
+
+    Example Usage:
+        ```lua
+            hook.Add("CreateChatboxPanel", "ExampleCreateChatboxPanel", function(...)
+                -- add custom client-side behavior
+            end)
+        ```
+]]
+function CreateChatboxPanel()
+end
+
+--[[
+    Purpose:
         Choose what inventory implementation to instantiate for a newly created character.
 
     When Called:
@@ -1167,33 +1227,6 @@ end
 
 --[[
     Purpose:
-        Handle teardown when a storage interface is closed.
-
-    When Called:
-        Right after the storage UI is dismissed.
-
-    Parameters:
-        None
-
-    Returns:
-        nil
-            Clean up local state or panels.
-
-    Realm:
-        Client
-
-    Example Usage:
-        ```lua
-            hook.Add("ExitStorage", "ExampleExitStorage", function(...)
-                -- add custom client-side behavior
-            end)
-        ```
-]]
-function ExitStorage()
-end
-
---[[
-    Purpose:
         React to the F1 menu closing.
 
     When Called:
@@ -1335,6 +1368,268 @@ end
         ```
 ]]
 function GetAdjustedPartData(wearer, id)
+end
+
+--[[
+    Purpose:
+        Allows overriding the tooltip text for the character creation button.
+
+    When Called:
+        When the character creation button tooltip is being determined in the main menu.
+
+    Parameters:
+        client (Player)
+            The player viewing the menu.
+        currentChars (number)
+            Number of characters the player currently has.
+        maxChars (number)
+            Maximum number of characters allowed.
+
+    Returns:
+        string|nil
+            Custom tooltip text, or nil to use default tooltip.
+
+    Realm:
+        Client
+
+    Example Usage:
+        ```lua
+            hook.Add("GetCharacterCreateButtonTooltip", "ExampleGetCharacterCreateButtonTooltip", function(...)
+                -- add custom client-side behavior
+            end)
+        ```
+]]
+function GetCharacterCreateButtonTooltip(client, currentChars, maxChars)
+end
+
+--[[
+    Purpose:
+        Allows overriding the tooltip text for the character disconnect button.
+
+    When Called:
+        When the character disconnect button tooltip is being determined in the main menu.
+
+    Parameters:
+        client (Player)
+            The player viewing the menu.
+
+    Returns:
+        string|nil
+            Custom tooltip text, or nil to use default tooltip.
+
+    Realm:
+        Client
+
+    Example Usage:
+        ```lua
+            hook.Add("GetCharacterDisconnectButtonTooltip", "ExampleGetCharacterDisconnectButtonTooltip", function(...)
+                -- add custom client-side behavior
+            end)
+        ```
+]]
+function GetCharacterDisconnectButtonTooltip(client)
+end
+
+--[[
+    Purpose:
+        Allows overriding the tooltip text for the Discord button.
+
+    When Called:
+        When the Discord button tooltip is being determined in the main menu.
+
+    Parameters:
+        client (Player)
+            The player viewing the menu.
+        discordURL (string)
+            The Discord server URL.
+
+    Returns:
+        string|nil
+            Custom tooltip text, or nil to use default tooltip.
+
+    Realm:
+        Client
+
+    Example Usage:
+        ```lua
+            hook.Add("GetCharacterDiscordButtonTooltip", "ExampleGetCharacterDiscordButtonTooltip", function(...)
+                -- add custom client-side behavior
+            end)
+        ```
+]]
+function GetCharacterDiscordButtonTooltip(client, discordURL)
+end
+
+--[[
+    Purpose:
+        Allows overriding the tooltip text for the character load button.
+
+    When Called:
+        When the character load button tooltip is being determined in the main menu.
+
+    Parameters:
+        client (Player)
+            The player viewing the menu.
+
+    Returns:
+        string|nil
+            Custom tooltip text, or nil to use default tooltip.
+
+    Realm:
+        Client
+
+    Example Usage:
+        ```lua
+            hook.Add("GetCharacterLoadButtonTooltip", "ExampleGetCharacterLoadButtonTooltip", function(...)
+                -- add custom client-side behavior
+            end)
+        ```
+]]
+function GetCharacterLoadButtonTooltip(client)
+end
+
+--[[
+    Purpose:
+        Allows overriding the tooltip text for the main character load button.
+
+    When Called:
+        When the main character load button tooltip is being determined in the main menu.
+
+    Parameters:
+        client (Player)
+            The player viewing the menu.
+
+    Returns:
+        string|nil
+            Custom tooltip text, or nil to use default tooltip.
+
+    Realm:
+        Client
+
+    Example Usage:
+        ```lua
+            hook.Add("GetCharacterLoadMainButtonTooltip", "ExampleGetCharacterLoadMainButtonTooltip", function(...)
+                -- add custom client-side behavior
+            end)
+        ```
+]]
+function GetCharacterLoadMainButtonTooltip(client)
+end
+
+--[[
+    Purpose:
+        Allows overriding the tooltip text for the character mount button.
+
+    When Called:
+        When the character mount button tooltip is being determined in the main menu.
+
+    Parameters:
+        client (Player)
+            The player viewing the menu.
+
+    Returns:
+        string|nil
+            Custom tooltip text, or nil to use default tooltip.
+
+    Realm:
+        Client
+
+    Example Usage:
+        ```lua
+            hook.Add("GetCharacterMountButtonTooltip", "ExampleGetCharacterMountButtonTooltip", function(...)
+                -- add custom client-side behavior
+            end)
+        ```
+]]
+function GetCharacterMountButtonTooltip(client)
+end
+
+--[[
+    Purpose:
+        Allows overriding the tooltip text for the character return button.
+
+    When Called:
+        When the character return button tooltip is being determined in the main menu.
+
+    Parameters:
+        client (Player)
+            The player viewing the menu.
+
+    Returns:
+        string|nil
+            Custom tooltip text, or nil to use default tooltip.
+
+    Realm:
+        Client
+
+    Example Usage:
+        ```lua
+            hook.Add("GetCharacterReturnButtonTooltip", "ExampleGetCharacterReturnButtonTooltip", function(...)
+                -- add custom client-side behavior
+            end)
+        ```
+]]
+function GetCharacterReturnButtonTooltip(client)
+end
+
+--[[
+    Purpose:
+        Allows overriding the tooltip text for the staff character button.
+
+    When Called:
+        When the staff character button tooltip is being determined in the main menu.
+
+    Parameters:
+        client (Player)
+            The player viewing the menu.
+        hasStaffChar (boolean)
+            Whether the player has a staff character.
+
+    Returns:
+        string|nil
+            Custom tooltip text, or nil to use default tooltip.
+
+    Realm:
+        Client
+
+    Example Usage:
+        ```lua
+            hook.Add("GetCharacterStaffButtonTooltip", "ExampleGetCharacterStaffButtonTooltip", function(...)
+                -- add custom client-side behavior
+            end)
+        ```
+]]
+function GetCharacterStaffButtonTooltip(client, hasStaffChar)
+end
+
+--[[
+    Purpose:
+        Allows overriding the tooltip text for the workshop button.
+
+    When Called:
+        When the workshop button tooltip is being determined in the main menu.
+
+    Parameters:
+        client (Player)
+            The player viewing the menu.
+        workshopURL (string)
+            The workshop URL.
+
+    Returns:
+        string|nil
+            Custom tooltip text, or nil to use default tooltip.
+
+    Realm:
+        Client
+
+    Example Usage:
+        ```lua
+            hook.Add("GetCharacterWorkshopButtonTooltip", "ExampleGetCharacterWorkshopButtonTooltip", function(...)
+                -- add custom client-side behavior
+            end)
+        ```
+]]
+function GetCharacterWorkshopButtonTooltip(client, workshopURL)
 end
 
 --[[

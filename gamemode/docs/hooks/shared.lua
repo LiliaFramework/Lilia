@@ -2489,6 +2489,95 @@ end
 
 --[[
     Purpose:
+        Called when a player drops an item from their inventory.
+
+    When Called:
+        After an item has been successfully dropped from a player's inventory.
+
+    Parameters:
+        client (Player)
+            The player who dropped the item.
+        spawnedItem (Entity)
+            The spawned item entity that was created.
+
+    Returns:
+        nil
+
+    Realm:
+        Shared
+
+    Example Usage:
+        ```lua
+            hook.Add("OnPlayerDroppedItem", "LogItemDrop", function(client, spawnedItem)
+                print(client:Name() .. " dropped an item")
+            end)
+        ```
+]]
+function OnPlayerDroppedItem(client, spawnedItem)
+end
+
+--[[
+    Purpose:
+        Called when a player rotates an item in their inventory.
+
+    When Called:
+        After an item has been successfully rotated in a player's inventory.
+
+    Parameters:
+        arg1 (Player)
+            The player who rotated the item.
+        item (Item)
+            The item that was rotated.
+        newRot (number)
+            The new rotation value.
+
+    Returns:
+        nil
+
+    Realm:
+        Shared
+
+    Example Usage:
+        ```lua
+            hook.Add("OnPlayerRotateItem", "LogItemRotation", function(client, item, newRot)
+                print(client:Name() .. " rotated " .. item:getName() .. " to " .. newRot)
+            end)
+        ```
+]]
+function OnPlayerRotateItem(arg1, item, newRot)
+end
+
+--[[
+    Purpose:
+        Called when a player takes an item into their inventory.
+
+    When Called:
+        After an item has been successfully taken into a player's inventory.
+
+    Parameters:
+        client (Player)
+            The player who took the item.
+        item (Item)
+            The item that was taken.
+
+    Returns:
+        nil
+
+    Realm:
+        Shared
+
+    Example Usage:
+        ```lua
+            hook.Add("OnPlayerTakeItem", "LogItemPickup", function(client, item)
+                print(client:Name() .. " took " .. item:getName())
+            end)
+        ```
+]]
+function OnPlayerTakeItem(client, item)
+end
+
+--[[
+    Purpose:
         React when an admin privilege is registered.
 
     When Called:
@@ -3020,4 +3109,35 @@ end
         ```
 ]]
 function SetupPACDataFromItems()
+end
+
+--[[
+    Purpose:
+        Allows overriding the view model entity for PAC compatibility.
+
+    When Called:
+        When determining the view model entity for PAC events.
+
+    Parameters:
+        entity (Entity)
+            The potential view model entity.
+
+    Returns:
+        Entity
+            The corrected view model entity, or the original if no correction needed.
+
+    Realm:
+        Shared
+
+    Example Usage:
+        ```lua
+            hook.Add("TryViewModel", "PACViewModelFix", function(entity)
+                if entity == pac.LocalPlayer:GetViewModel() then
+                    return pac.LocalPlayer
+                end
+                return entity
+            end)
+        ```
+]]
+function TryViewModel(entity)
 end

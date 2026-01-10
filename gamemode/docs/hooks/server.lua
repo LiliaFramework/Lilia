@@ -56,6 +56,34 @@ end
 
 --[[
     Purpose:
+        Collect additional field definitions for door data.
+
+    When Called:
+        When retrieving default door values and field definitions.
+
+    Parameters:
+        extras (table)
+            Table to populate with additional field definitions in the format {fieldName = {default = value, ...}}.
+
+    Returns:
+        nil
+            Modify the extras table directly.
+
+    Realm:
+        Server
+
+    Example Usage:
+        ```lua
+            hook.Add("CollectDoorDataFields", "ExampleCollectDoorDataFields", function(extras)
+                extras.customField = {default = false, type = "boolean"}
+            end)
+        ```
+]]
+function CollectDoorDataFields(extras)
+end
+
+--[[
+    Purpose:
         Determines if an item move is allowed before completing a transfer between inventories.
 
     When Called:
@@ -668,6 +696,33 @@ end
         ```
 ]]
 function CanSaveData(ent, inventory)
+end
+
+--[[
+    Purpose:
+        Called when salary timers need to be created or recreated.
+
+    When Called:
+        During server initialization and when salary timers need to be reset.
+
+    Parameters:
+        nil
+
+    Returns:
+        nil
+            The hook doesn't expect a return value but allows for custom salary timer setup.
+
+    Realm:
+        Server
+
+    Example Usage:
+        ```lua
+            hook.Add("CreateSalaryTimers", "ExampleCreateSalaryTimers", function(...)
+                -- add custom server-side behavior
+            end)
+        ```
+]]
+function CreateSalaryTimers()
 end
 
 --[[
@@ -3112,6 +3167,39 @@ end
 
 --[[
     Purpose:
+        Called when a player's usergroup is changed.
+
+    When Called:
+        After a player's usergroup has been successfully changed.
+
+    Parameters:
+        sid (string)
+            Steam ID of the player whose usergroup changed.
+        new (string)
+            New usergroup name.
+        source (string)
+            Source of the change (e.g., "Lilia").
+        ply (Player)
+            Player entity whose usergroup changed.
+
+    Returns:
+        nil
+
+    Realm:
+        Server
+
+    Example Usage:
+        ```lua
+            hook.Add("OnSetUsergroup", "LogUsergroupChange", function(sid, new, source, ply)
+                print(string.format("Usergroup changed for %s to %s by %s", sid, new, source))
+            end)
+        ```
+]]
+function OnSetUsergroup(sid, new, source, ply)
+end
+
+--[[
+    Purpose:
         Notifies that saved item instances have been loaded from storage.
 
     When Called:
@@ -4406,6 +4494,33 @@ end
         ```
 ]]
 function ShouldDataBeSaved()
+end
+
+--[[
+    Purpose:
+        Determines if the default salary timer creation should be overridden.
+
+    When Called:
+        Before creating salary timers to allow custom salary systems.
+
+    Parameters:
+        nil
+
+    Returns:
+        boolean
+            True to prevent default salary timer creation; false/nil to allow.
+
+    Realm:
+        Server
+
+    Example Usage:
+        ```lua
+            hook.Add("ShouldOverrideSalaryTimers", "CustomSalarySystem", function()
+                return true -- Prevent default timers, handle salary elsewhere
+            end)
+        ```
+]]
+function ShouldOverrideSalaryTimers()
 end
 
 --[[

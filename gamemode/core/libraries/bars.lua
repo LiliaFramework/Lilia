@@ -199,7 +199,7 @@ end
     Example Usage:
         ```lua
             hook.Add("OnStartSearch", "ShowSearchBar", function(duration)
-                lia.bar.drawAction(L("searching"), duration)
+                lia.bar.drawAction(L("searchingChar"), duration)
             end)
         ```
 ]]
