@@ -1,810 +1,414 @@
 # Hooks
 
+## Client
+
 - [ ]`AddBarField(sectionName, fieldName, labelText, minFunc, maxFunc, valueFunc)`
-  - Client
 - [ ]`AddSection(sectionName, color, priority, location)`
-  - Client
 - [ ]`AddTextField(sectionName, fieldName, labelText, valueFunc)`
-  - Client
 - [ ]`AddToAdminStickHUD(client, target, information)`
-  - Client
-- [ ]`AddWarning(charID, warned, warnedSteamID, timestamp, message, warner, warnerSteamID, severity)`
-  - Server
-- [ ]`AdjustCreationData(client, data, newData, originalData)`
-  - Shared
-- [ ]`AdjustPACPartData(wearer, id, data)`
-  - Shared
-- [ ]`AdjustStaminaOffset(client, offset)`
-  - Shared
 - [ ]`AdminPrivilegesUpdated()`
-  - Client
 - [ ]`AdminStickAddModels(allModList, tgt)`
-  - Client
-- [ ]`AdvDupe_FinishPasting(tbl)`
-  - Shared
-- [ ]`AttachPart(client, id)`
-  - Shared
-- [ ]`BagInventoryReady(bagItem, inventory)`
-  - Shared
-- [ ]`BagInventoryRemoved(bagItem, inventory)`
-  - Shared
-- [ ]`CalcStaminaChange(client)`
-  - Shared
-- [ ]`CanCharBeTransfered(tChar, faction, arg3)`
-  - Shared
 - [ ]`CanDeleteChar(client, character)`
-  - Client
 - [ ]`CanDisplayCharInfo(name)`
-  - Client
-- [ ]`CanInviteToClass(client, target)`
-  - Shared
-- [ ]`CanInviteToFaction(client, target)`
-  - Shared
-- [ ]`CanItemBeTransfered(item, inventory, VendorInventoryMeasure, client)`
-  - Server
 - [ ]`CanOpenBagPanel(item)`
-  - Client
-- [ ]`CanOutfitChangeModel(item)`
-  - Shared
-- [ ]`CanPerformVendorEdit(client, vendor)`
-  - Shared
-- [ ]`CanPersistEntity(entity)`
-  - Server
-- [ ]`CanPickupMoney(activator, moneyEntity)`
-  - Shared
-- [ ]`CanPlayerAccessDoor(client, door, access)`
-  - Server
-- [ ]`CanPlayerAccessVendor(client, vendor)`
-  - Server
-- [ ]`CanPlayerChooseWeapon(weapon)`
-  - Shared
-- [ ]`CanPlayerCreateChar(client, data)`
-  - Shared
-- [ ]`CanPlayerDropItem(client, item)`
-  - Server
-- [ ]`CanPlayerEarnSalary(client)`
-  - Server
-- [ ]`CanPlayerEquipItem(client, item)`
-  - Server
-- [ ]`CanPlayerHoldObject(client, entity)`
-  - Server
-- [ ]`CanPlayerInteractItem(client, action, item, data)`
-  - Server
-- [ ]`CanPlayerJoinClass(client, class, info)`
-  - Shared
-- [ ]`CanPlayerKnock(arg1)`
-  - Shared
-- [ ]`CanPlayerLock(client, door)`
-  - Server
-- [ ]`CanPlayerModifyConfig(client, key)`
-  - Shared
 - [ ]`CanPlayerOpenScoreboard(arg1)`
-  - Client
-- [ ]`CanPlayerRotateItem(client, item)`
-  - Shared
-- [ ]`CanPlayerSeeLogCategory(client, category)`
-  - Server
-- [ ]`CanPlayerSpawnStorage(client, entity, info)`
-  - Server
-- [ ]`CanPlayerSwitchChar(client, currentCharacter, newCharacter)`
-  - Server
-- [ ]`CanPlayerTakeItem(client, item)`
-  - Server
-- [ ]`CanPlayerThrowPunch(client)`
-  - Shared
-- [ ]`CanPlayerTradeWithVendor(client, vendor, itemType, isSellingToVendor)`
-  - Server
-- [ ]`CanPlayerUnequipItem(client, item)`
-  - Server
-- [ ]`CanPlayerUnlock(client, door)`
-  - Server
-- [ ]`CanPlayerUseChar(client, character)`
-  - Server
-- [ ]`CanPlayerUseCommand(client, command)`
-  - Shared
-- [ ]`CanPlayerUseDoor(client, door)`
-  - Server
 - [ ]`CanPlayerViewInventory()`
-  - Client
-- [ ]`CanRunItemAction(tempItem, key)`
-  - Shared
-- [ ]`CanSaveData(ent, inventory)`
-  - Server
-- [ ]`CharCleanUp(character)`
-  - Server
-- [ ]`CharDeleted(client, character)`
-  - Server
-- [ ]`CharForceRecognized(ply, range)`
-  - Shared
-- [ ]`CharHasFlags(client, flags)`
-  - Shared
 - [ ]`CharListColumns(columns)`
-  - Client
 - [ ]`CharListEntry(entry, row)`
-  - Client
-- [ ]`CharListExtraDetails(client, entry, stored)`
-  - Server
 - [ ]`CharListLoaded(newCharList)`
-  - Client
 - [ ]`CharListUpdated(oldCharList, newCharList)`
-  - Client
 - [ ]`CharLoaded(character)`
-  - Client
 - [ ]`CharMenuClosed()`
-  - Client
 - [ ]`CharMenuOpened(charMenu)`
-  - Client
-- [ ]`CharPostSave(character)`
-  - Server
-- [ ]`CharPreSave(character)`
-  - Server
 - [ ]`CharRestored(character)`
-  - Client
 - [ ]`ChatAddText(text, ...)`
-  - Client
-- [ ]`ChatParsed(client, chatType, message, anonymous)`
-  - Shared
 - [ ]`ChatboxPanelCreated(arg1)`
-  - Client
 - [ ]`ChatboxTextAdded(arg1)`
-  - Client
-- [ ]`CheckFactionLimitReached(faction, character, client)`
-  - Server
 - [ ]`ChooseCharacter(id)`
-  - Client
-- [ ]`CommandAdded(command, data)`
-  - Shared
 - [ ]`CommandRan(client, command, arg3, results)`
-  - Client
-- [ ]`ConfigChanged(key, value, oldValue, client)`
-  - Shared
 - [ ]`ConfigureCharacterCreationSteps(creationPanel)`
-  - Client
 - [ ]`CreateCharacter(data)`
-  - Client
 - [ ]`CreateDefaultInventory(character)`
-  - Client
 - [ ]`CreateInformationButtons(pages)`
-  - Client
 - [ ]`CreateInventoryPanel(inventory, parent)`
-  - Client
 - [ ]`CreateMenuButtons(tabs)`
-  - Client
-- [ ]`DatabaseConnected()`
-  - Server
 - [ ]`DeleteCharacter(id)`
-  - Client
 - [ ]`DermaSkinChanged(newSkin)`
-  - Client
-- [ ]`DiscordRelaySend(embed)`
-  - Server
-- [ ]`DiscordRelayUnavailable()`
-  - Server
-- [ ]`DiscordRelayed(embed)`
-  - Server
 - [ ]`DisplayPlayerHUDInformation(client, hudInfos)`
-  - Client
-- [ ]`DoModuleIncludes(path, MODULE)`
-  - Shared
 - [ ]`DoorDataReceived(door, syncData)`
-  - Client
-- [ ]`DoorEnabledToggled(client, door, newState)`
-  - Server
-- [ ]`DoorHiddenToggled(client, entity, newState)`
-  - Server
-- [ ]`DoorLockToggled(client, door, state)`
-  - Server
-- [ ]`DoorOwnableToggled(client, door, newState)`
-  - Server
-- [ ]`DoorPriceSet(client, door, price)`
-  - Server
-- [ ]`DoorTitleSet(client, door, name)`
-  - Server
 - [ ]`DrawCharInfo(client, character, info)`
-  - Client
 - [ ]`DrawEntityInfo(e, a, pos)`
-  - Client
 - [ ]`DrawItemEntityInfo(itemEntity, item, infoTable, alpha)`
-  - Client
 - [ ]`DrawLiliaModelView(client, entity)`
-  - Client
 - [ ]`DrawPlayerRagdoll(entity)`
-  - Client
 - [ ]`ExitStorage()`
-  - Client
 - [ ]`F1MenuClosed()`
-  - Client
 - [ ]`F1MenuOpened(f1MenuPanel)`
-  - Client
-- [ ]`FetchSpawns()`
-  - Server
 - [ ]`FilterCharModels(arg1)`
-  - Client
 - [ ]`FilterDoorInfo(entity, doorData, doorInfo)`
-  - Client
-- [ ]`ForceRecognizeRange(ply, range, fakeName)`
-  - Shared
 - [ ]`GetAdjustedPartData(wearer, id)`
-  - Client
 - [ ]`GetAdminESPTarget(ent, client)`
-  - Client
 - [ ]`GetAdminStickLists(tgt, lists)`
-  - Client
-- [ ]`GetAllCaseClaims()`
-  - Server
-- [ ]`GetAttributeMax(client, id)`
-  - Shared
-- [ ]`GetAttributeStartingMax(client, attribute)`
-  - Shared
-- [ ]`GetBotModel(client, faction)`
-  - Server
-- [ ]`GetCharMaxStamina(char)`
-  - Shared
-- [ ]`GetDamageScale(hitgroup, dmgInfo, damageScale)`
-  - Server
-- [ ]`GetDefaultCharDesc(client, arg2, data)`
-  - Shared
-- [ ]`GetDefaultCharName(client, faction, data)`
-  - Shared
-- [ ]`GetDefaultInventorySize(client, char)`
-  - Shared
-- [ ]`GetDefaultInventoryType(character)`
-  - Server
 - [ ]`GetDisplayedDescription(client, isHUD)`
-  - Client
-- [ ]`GetDisplayedName(client, chatType)`
-  - Shared
 - [ ]`GetDoorInfo(entity, doorData, doorInfo)`
-  - Client
 - [ ]`GetDoorInfoForAdminStick(target, extraInfo)`
-  - Client
-- [ ]`GetEntitySaveData(ent)`
-  - Server
-- [ ]`GetHandsAttackSpeed(arg1)`
-  - Shared
 - [ ]`GetInjuredText(c)`
-  - Client
-- [ ]`GetItemDropModel(itemTable, itemEntity)`
-  - Shared
 - [ ]`GetMainCharacterID()`
-  - Client
 - [ ]`GetMainMenuPosition(character)`
-  - Client
-- [ ]`GetMaxPlayerChar(client)`
-  - Shared
-- [ ]`GetMaxStartingAttributePoints(client, count)`
-  - Shared
-- [ ]`GetModelGender(model)`
-  - Shared
-- [ ]`GetMoneyModel(arg1)`
-  - Shared
-- [ ]`GetNPCDialogOptions(arg1)`
-  - Shared
-- [ ]`GetOOCDelay(speaker)`
-  - Server
-- [ ]`GetPlayTime(client)`
-  - Server
-- [ ]`GetPlayerDeathSound(client, isFemale)`
-  - Server
-- [ ]`GetPlayerPainSound(client, paintype, isFemale)`
-  - Server
-- [ ]`GetPlayerPunchDamage(arg1)`
-  - Shared
-- [ ]`GetPlayerPunchRagdollTime(arg1)`
-  - Shared
-- [ ]`GetPlayerRespawnLocation(client, character)`
-  - Server
-- [ ]`GetPlayerSpawnLocation(client, character)`
-  - Server
-- [ ]`GetPrestigePayBonus(client, char, pay, faction, class)`
-  - Server
-- [ ]`GetPriceOverride(vendor, uniqueID, price, isSellingToVendor)`
-  - Shared
-- [ ]`GetRagdollTime(client, time)`
-  - Shared
-- [ ]`GetSalaryAmount(client, faction, class)`
-  - Server
-- [ ]`GetTicketsByRequester(steamID)`
-  - Server
-- [ ]`GetVendorSaleScale(vendor)`
-  - Shared
-- [ ]`GetWarnings(charID)`
-  - Server
-- [ ]`GetWarningsByIssuer(steamID)`
-  - Server
-- [ ]`GetWeaponName(weapon)`
-  - Shared
-- [ ]`HandleItemTransferRequest(client, itemID, x, y, invID)`
-  - Server
-- [ ]`InitializeStorage(entity)`
-  - Shared
-- [ ]`InitializedConfig()`
-  - Shared
-- [ ]`InitializedItems()`
-  - Shared
-- [ ]`InitializedKeybinds()`
-  - Shared
-- [ ]`InitializedModules()`
-  - Shared
-- [ ]`InitializedOptions()`
-  - Shared
-- [ ]`InitializedSchema()`
-  - Shared
 - [ ]`InteractionMenuClosed()`
-  - Client
 - [ ]`InteractionMenuOpened(frame)`
-  - Client
 - [ ]`InterceptClickItemIcon(inventoryPanel, itemIcon, keyCode)`
-  - Client
 - [ ]`InventoryClosed(inventoryPanel, inventory)`
-  - Client
-- [ ]`InventoryDataChanged(instance, key, oldValue, value)`
-  - Shared
-- [ ]`InventoryDeleted(instance)`
-  - Server
-- [ ]`InventoryInitialized(instance)`
-  - Shared
-- [ ]`InventoryItemAdded(inventory, item)`
-  - Shared
 - [ ]`InventoryItemDataChanged(item, key, oldValue, newValue, inventory)`
-  - Client
 - [ ]`InventoryItemIconCreated(icon, item, inventoryPanel)`
-  - Client
-- [ ]`InventoryItemRemoved(inventory, instance, preserveItem)`
-  - Shared
 - [ ]`InventoryOpened(panel, inventory)`
-  - Client
 - [ ]`InventoryPanelCreated(panel, inventory, parent)`
-  - Client
-- [ ]`IsCharFakeRecognized(character, id)`
-  - Shared
-- [ ]`IsCharRecognized(a, arg2)`
-  - Shared
-- [ ]`IsRecognizedChatType(chatType)`
-  - Shared
-- [ ]`IsSuitableForTrunk(ent)`
-  - Shared
-- [ ]`ItemCombine(client, item, target)`
-  - Server
-- [ ]`ItemDataChanged(item, key, oldValue, newValue)`
-  - Shared
-- [ ]`ItemDefaultFunctions(arg1)`
-  - Shared
-- [ ]`ItemDeleted(instance)`
-  - Server
 - [ ]`ItemDraggedOutOfInventory(client, item)`
-  - Client
-- [ ]`ItemFunctionCalled(item, method, client, entity, results)`
-  - Server
-- [ ]`ItemInitialized(item)`
-  - Shared
 - [ ]`ItemPaintOver(itemIcon, itemTable, w, h)`
-  - Client
-- [ ]`ItemQuantityChanged(item, oldValue, quantity)`
-  - Shared
 - [ ]`ItemShowEntityMenu(entity)`
-  - Client
-- [ ]`ItemTransfered(context)`
-  - Server
-- [ ]`KeyLock(client, door, time)`
-  - Server
-- [ ]`KeyUnlock(client, door, time)`
-  - Server
-- [ ]`KickedFromChar(characterID, isCurrentChar)`
-  - Server
-- [ ]`LiliaLoaded()`
-  - Shared
-- [ ]`LiliaTablesLoaded()`
-  - Server
 - [ ]`LoadCharInformation()`
-  - Client
-- [ ]`LoadData()`
-  - Server
 - [ ]`LoadMainCharacter()`
-  - Client
 - [ ]`LoadMainMenuInformation(info, character)`
-  - Client
-- [ ]`ModifyCharacterModel(arg1, character)`
-  - Server
 - [ ]`ModifyScoreboardModel(arg1, ply)`
-  - Client
 - [ ]`ModifyVoiceIndicatorText(client, voiceText, voiceType)`
-  - Client
-- [ ]`NetVarChanged(client, key, oldValue, value)`
-  - Shared
-  - [ ]`DrawPlayerInfoBackground()`
-  - Client
+- [ ]`DrawPlayerInfoBackground()`
 - [ ]`OnAdminStickMenuClosed()`
-  - Client
-- [ ]`OnAdminSystemLoaded(arg1, arg2)`
-  - Shared
-- [ ]`OnCharAttribBoosted(client, character, attribID, boostID, arg5)`
-  - Server
-- [ ]`OnCharAttribUpdated(client, character, key, arg4)`
-  - Server
-- [ ]`OnCharCreated(client, character, originalData)`
-  - Server
-- [ ]`OnCharDelete(client, id)`
-  - Server
-- [ ]`OnCharDisconnect(client, character)`
-  - Server
-- [ ]`OnCharFlagsGiven(ply, character, addedFlags)`
-  - Server
-- [ ]`OnCharFlagsTaken(ply, character, removedFlags)`
-  - Server
-- [ ]`OnCharGetup(target, entity)`
-  - Shared
-- [ ]`OnCharKick(character, client)`
-  - Server
-- [ ]`OnCharNetVarChanged(character, key, oldVar, value)`
-  - Server
-- [ ]`OnCharPermakilled(character, time)`
-  - Server
-- [ ]`OnCharRecognized(client, arg2)`
-  - Server
-- [ ]`OnCharTradeVendor(client, vendor, item, isSellingToVendor, character, itemType, isFailed)`
-  - Server
-- [ ]`OnCharVarChanged(character, varName, oldVar, newVar)`
-  - Shared
 - [ ]`OnChatReceived(client, chatType, text, anonymous)`
-  - Client
-- [ ]`OnCheaterCaught(client)`
-  - Server
-- [ ]`OnConfigUpdated(key, oldValue, value)`
-  - Shared
 - [ ]`OnCreateDualInventoryPanels(panel1, panel2, inventory1, inventory2)`
-  - Client
 - [ ]`OnCreateItemInteractionMenu(itemIcon, menu, itemTable)`
-  - Client
 - [ ]`OnCreateStoragePanel(localInvPanel, storageInvPanel, storage)`
-  - Client
-- [ ]`OnDataSet(key, value, gamemode, map)`
-  - Server
-- [ ]`OnDatabaseLoaded()`
-  - Server
-- [ ]`OnDeathSoundPlayed(client, deathSound)`
-  - Server
-- [ ]`OnEntityLoaded(ent, data)`
-  - Server
-- [ ]`OnEntityPersistUpdated(ent, data)`
-  - Server
-- [ ]`OnEntityPersisted(ent, entData)`
-  - Server
-- [ ]`OnItemAdded(owner, item)`
-  - Shared
-- [ ]`OnItemCreated(itemTable, itemEntity)`
-  - Shared
-- [ ]`OnItemOverridden(item, overrides)`
-  - Shared
-- [ ]`OnItemRegistered(ITEM)`
-  - Shared
-- [ ]`OnItemSpawned(itemEntity)`
-  - Server
-- [ ]`OnLoadTables()`
-  - Server
 - [ ]`OnLocalVarSet(key, value)`
-  - Client
-- [ ]`OnLocalizationLoaded()`
-  - Shared
-- [ ]`OnNPCTypeSet(client, npc, npcID, filteredData)`
-  - Server
-- [ ]`OnOOCMessageSent(client, message)`
-  - Server
 - [ ]`OnOpenVendorMenu(vendorPanel, vendor)`
-  - Client
-- [ ]`OnPAC3PartTransfered(part)`
-  - Shared
-- [ ]`OnPainSoundPlayed(entity, painSound)`
-  - Server
-- [ ]`OnPickupMoney(activator, moneyEntity)`
-  - Server
-- [ ]`OnPlayerEnterSequence(client, sequenceName, callback, time, noFreeze)`
-  - Server
-- [ ]`OnPlayerInteractItem(client, action, item, result, data)`
-  - Server
-- [ ]`OnPlayerJoinClass(target, arg2, oldClass)`
-  - Server
-- [ ]`OnPlayerLeaveSequence(client)`
-  - Server
-- [ ]`OnPlayerLostStackItem(itemTypeOrItem)`
-  - Server
-- [ ]`OnPlayerObserve(client, state)`
-  - Server
-- [ ]`OnPlayerPurchaseDoor(client, door, arg3)`
-  - Shared
-- [ ]`OnPlayerRagdolled(client, ragdoll)`
-  - Server
-- [ ]`OnPlayerSwitchClass(client, class, oldClass)`
-  - Server
-- [ ]`OnPrivilegeRegistered(arg1, arg2, arg3, arg4)`
-  - Shared
-- [ ]`OnPrivilegeUnregistered(arg1, arg2)`
-  - Shared
-- [ ]`OnRequestItemTransfer(inventoryPanel, itemID, targetInventoryID, x, y)`
-  - Server
-- [ ]`OnSalaryAdjust(client)`
-  - Server
-- [ ]`OnSalaryGiven(client, char, pay, faction, class)`
-  - Server
-- [ ]`OnSavedItemLoaded(loadedItems)`
-  - Server
-- [ ]`OnServerLog(client, logType, logString, category)`
-  - Server
-- [ ]`OnThemeChanged(themeName, useTransition)`
-  - Shared
-- [ ]`OnTicketClaimed(client, requester, ticketMessage)`
-  - Server
-- [ ]`OnTicketClosed(client, requester, ticketMessage)`
-  - Server
-- [ ]`OnTicketCreated(noob, message)`
-  - Server
-- [ ]`OnTransferred(target)`
-  - Shared
-- [ ]`OnUsergroupCreated(groupName, arg2)`
-  - Shared
-- [ ]`OnUsergroupPermissionsChanged(groupName, arg2)`
-  - Server
-- [ ]`OnUsergroupRemoved(groupName)`
-  - Shared
-- [ ]`OnUsergroupRenamed(oldName, newName)`
-  - Shared
-- [ ]`OnVendorEdited(client, vendor, key)`
-  - Server
-- [ ]`OnVoiceTypeChanged(client)`
-  - Server
 - [ ]`OnlineStaffDataReceived(staffData)`
-  - Client
 - [ ]`OpenAdminStickUI(tgt)`
-  - Client
-- [ ]`OptionAdded(key, name, option)`
-  - Shared
-- [ ]`OptionChanged(key, old, value)`
-  - Shared
-- [ ]`OptionReceived(arg1, key, value)`
-  - Server
-- [ ]`OverrideFactionDesc(uniqueID, arg2)`
-  - Shared
-- [ ]`OverrideFactionModels(uniqueID, arg2)`
-  - Shared
-- [ ]`OverrideFactionName(uniqueID, arg2)`
-  - Shared
-- [ ]`OverrideSpawnTime(ply, baseTime)`
-  - Shared
 - [ ]`PaintItem(item)`
-  - Client
-- [ ]`PlayerAccessVendor(client, vendor)`
-  - Server
-- [ ]`PlayerCheatDetected(client)`
-  - Server
-- [ ]`PlayerGagged(target, admin)`
-  - Server
-- [ ]`PlayerLiliaDataLoaded(client)`
-  - Server
-- [ ]`PlayerLoadedChar(client, character, currentChar)`
-  - Server
-- [ ]`PlayerMessageSend(speaker, chatType, text, anonymous, receivers)`
-  - Server
-- [ ]`PlayerModelChanged(client, value)`
-  - Server
-- [ ]`PlayerMuted(target, admin)`
-  - Server
-- [ ]`PlayerShouldPermaKill(client, inflictor, attacker)`
-  - Server
-- [ ]`PlayerSpawnPointSelected(client, pos, ang)`
-  - Server
-- [ ]`PlayerStaminaGained(client)`
-  - Server
-- [ ]`PlayerStaminaLost(client)`
-  - Server
-- [ ]`PlayerThrowPunch(client)`
-  - Shared
-- [ ]`PlayerUngagged(target, admin)`
-  - Server
-- [ ]`PlayerUnmuted(target, admin)`
-  - Server
-- [ ]`PlayerUseDoor(client, door)`
-  - Server
 - [ ]`PopulateAdminStick(currentMenu, currentTarget, currentStores)`
-  - Client
 - [ ]`PopulateAdminTabs(pages)`
-  - Client
 - [ ]`PopulateConfigurationButtons(pages)`
-  - Client
 - [ ]`PopulateInventoryItems(pnlContent, tree)`
-  - Client
-- [ ]`PostDoorDataLoad(ent, doorData)`
-  - Server
 - [ ]`PostDrawInventory(mainPanel, parentPanel)`
-  - Client
-- [ ]`PostLoadData()`
-  - Server
 - [ ]`PostLoadFonts(mainFont, mainFont)`
-  - Client
-- [ ]`PostPlayerInitialSpawn(client)`
-  - Server
-- [ ]`PostPlayerLoadedChar(client, character, currentChar)`
-  - Server
-- [ ]`PostPlayerLoadout(client)`
-  - Server
-- [ ]`PostPlayerSay(client, message, chatType, anonymous)`
-  - Server
-- [ ]`PostScaleDamage(hitgroup, dmgInfo, damageScale)`
-  - Server
-- [ ]`PreCharDelete(id)`
-  - Server
-- [ ]`PreDoorDataSave(door, doorData)`
-  - Server
 - [ ]`DrawPhysgunBeam()`
-  - Client
-- [ ]`PreLiliaLoaded()`
-  - Shared
-- [ ]`PrePlayerInteractItem(client, action, item)`
-  - Server
-- [ ]`PrePlayerLoadedChar(client, character, currentChar)`
-  - Server
-- [ ]`PreSalaryGive(client, char, pay, faction, class)`
-  - Server
-- [ ]`PreScaleDamage(hitgroup, dmgInfo, damageScale)`
-  - Server
 - [ ]`RefreshFonts()`
-  - Client
 - [ ]`RegisterAdminStickSubcategories(categories)`
-  - Client
-- [ ]`RemovePart(client, id)`
-  - Shared
-- [ ]`RemoveWarning(charID, index)`
-  - Server
 - [ ]`ResetCharacterPanel()`
-  - Client
 - [ ]`RunAdminSystemCommand(cmd, admin, victim, dur, reason)`
-  - Client
-- [ ]`SaveData()`
-  - Server
 - [ ]`ScoreboardClosed(scoreboardPanel)`
-  - Client
 - [ ]`ScoreboardOpened(scoreboardPanel)`
-  - Client
 - [ ]`ScoreboardRowCreated(slot, ply)`
-  - Client
 - [ ]`ScoreboardRowRemoved(scoreboardPanel, ply)`
-  - Client
-- [ ]`SendPopup(noob, message)`
-  - Server
 - [ ]`SetMainCharacter(charID)`
-  - Client
-- [ ]`SetupBagInventoryAccessRules(inventory)`
-  - Shared
-- [ ]`SetupBotPlayer(client)`
-  - Server
-- [ ]`SetupDatabase()`
-  - Server
-- [ ]`SetupPACDataFromItems()`
-  - Shared
-- [ ]`SetupPlayerModel(modelEntity, character)`
-  - Server
 - [ ]`SetupQuickMenu(quickMenuPanel)`
-  - Client
 - [ ]`ShouldAllowScoreboardOverride(client, var)`
-  - Client
 - [ ]`ShouldBarDraw(bar)`
-  - Client
-- [ ]`ShouldDataBeSaved()`
-  - Server
-- [ ]`ShouldDeleteSavedItems()`
-  - Server
 - [ ]`ShouldDisableThirdperson(client)`
-  - Client
 - [ ]`ShouldDrawAmmo(wpn)`
-  - Client
 - [ ]`ShouldDrawEntityInfo(e)`
-  - Client
 - [ ]`ShouldDrawPlayerInfo(e)`
-  - Client
 - [ ]`ShouldDrawWepSelect(client)`
-  - Client
 - [ ]`ShouldHideBars()`
-  - Client
 - [ ]`ShouldMenuButtonShow(arg1)`
-  - Client
-- [ ]`ShouldPlayDeathSound(client, deathSound)`
-  - Server
-- [ ]`ShouldPlayPainSound(entity, painSound)`
-  - Server
 - [ ]`ShouldRespawnScreenAppear()`
-  - Client
 - [ ]`ShouldShowCharVarInCreation(key)`
-  - Client
 - [ ]`ShouldShowClassOnScoreboard(clsData)`
-  - Client
 - [ ]`ShouldShowFactionOnScoreboard(ply)`
-  - Client
 - [ ]`ShouldShowPlayerOnScoreboard(ply)`
-  - Client
 - [ ]`ShouldShowQuickMenu()`
-  - Client
-- [ ]`ShouldSpawnClientRagdoll(client)`
-  - Server
 - [ ]`ShowPlayerOptions(target, options)`
-  - Client
-- [ ]`StorageCanTransferItem(client, storage, item)`
-  - Server
-- [ ]`StorageEntityRemoved(storageEntity, inventory)`
-  - Server
-- [ ]`StorageInventorySet(entity, inventory, isCar)`
-  - Server
-- [ ]`StorageItemRemoved()`
-  - Server
 - [ ]`StorageOpen(storage, isCar)`
-  - Client
-- [ ]`StorageRestored(ent, inventory)`
-  - Server
 - [ ]`StorageUnlockPrompt(entity)`
-  - Client
-- [ ]`StoreSpawns(spawns)`
-  - Server
-- [ ]`SyncCharList(client)`
-  - Server
 - [ ]`ThirdPersonToggled(arg1)`
-  - Client
-- [ ]`TicketSystemClaim(client, requester, ticketMessage)`
-  - Server
-- [ ]`TicketSystemClose(client, requester, ticketMessage)`
-  - Server
-- [ ]`ToggleLock(client, door, state)`
-  - Server
 - [ ]`TooltipInitialize(var, panel)`
-  - Client
 - [ ]`TooltipLayout(var)`
-  - Client
 - [ ]`TooltipPaint(var, w, h)`
-  - Client
-- [ ]`UpdateEntityPersistence(vendor)`
-  - Server
-- [ ]`VendorClassUpdated(vendor, id, allowed)`
-  - Server
-- [ ]`VendorEdited(liaVendorEnt, key)`
-  - Server
 - [ ]`VendorExited()`
-  - Client
-- [ ]`VendorFactionBuyScaleUpdated(vendor, factionID, scale)`
-  - Server
-- [ ]`VendorFactionSellScaleUpdated(vendor, factionID, scale)`
-  - Server
-- [ ]`VendorFactionUpdated(vendor, id, allowed)`
-  - Server
-- [ ]`VendorItemMaxStockUpdated(vendor, itemType, value)`
-  - Server
-- [ ]`VendorItemModeUpdated(vendor, itemType, value)`
-  - Server
-- [ ]`VendorItemPriceUpdated(vendor, itemType, value)`
-  - Server
-- [ ]`VendorItemStockUpdated(vendor, itemType, value)`
-  - Server
-- [ ]`VendorMessagesUpdated(vendor)`
-  - Server
 - [ ]`VendorOpened(vendor)`
-  - Client
-- [ ]`VendorSynchronized(vendor)`
-  - Server
-- [ ]`VendorTradeEvent(client, vendor, itemType, isSellingToVendor)`
-  - Server
 - [ ]`VoiceToggled(enabled)`
-  - Client
-- [ ]`WarningIssued(client, target, reason, severity, count, warnerSteamID, targetSteamID)`
-  - Server
-- [ ]`WarningRemoved(client, targetClient, arg3, arg4, arg5, arg6)`
-  - Server
 - [ ]`WeaponCycleSound()`
-  - Client
 - [ ]`WeaponSelectSound()`
-  - Client
 - [ ]`WebImageDownloaded(n, arg2)`
-  - Client
 - [ ]`WebSoundDownloaded(name, path)`
-  - Client
-- [ ]`getData(default)`
-  - Shared
+
+## Server
+
+- [ ]`AddWarning(charID, warned, warnedSteamID, timestamp, message, warner, warnerSteamID, severity)`
+- [ ]`CanItemBeTransfered(item, inventory, VendorInventoryMeasure, client)`
+- [ ]`CanPersistEntity(entity)`
+- [ ]`CanPlayerAccessDoor(client, door, access)`
+- [ ]`CanPlayerAccessVendor(client, vendor)`
+- [ ]`CanPlayerDropItem(client, item)`
+- [ ]`CanPlayerEarnSalary(client)`
+- [ ]`CanPlayerEquipItem(client, item)`
+- [ ]`CanPlayerHoldObject(client, entity)`
+- [ ]`CanPlayerInteractItem(client, action, item, data)`
+- [ ]`CanPlayerLock(client, door)`
+- [ ]`CanPlayerSeeLogCategory(client, category)`
+- [ ]`CanPlayerSpawnStorage(client, entity, info)`
+- [ ]`CanPlayerSwitchChar(client, currentCharacter, newCharacter)`
+- [ ]`CanPlayerTakeItem(client, item)`
+- [ ]`CanPlayerTradeWithVendor(client, vendor, itemType, isSellingToVendor)`
+- [ ]`CanPlayerUnequipItem(client, item)`
+- [ ]`CanPlayerUnlock(client, door)`
+- [ ]`CanPlayerUseChar(client, character)`
+- [ ]`CanPlayerUseDoor(client, door)`
+- [ ]`CanSaveData(ent, inventory)`
+- [ ]`CharCleanUp(character)`
+- [ ]`CharDeleted(client, character)`
+- [ ]`CharListExtraDetails(client, entry, stored)`
+- [ ]`CharPostSave(character)`
+- [ ]`CharPreSave(character)`
+- [ ]`CheckFactionLimitReached(faction, character, client)`
+- [ ]`DatabaseConnected()`
+- [ ]`DiscordRelaySend(embed)`
+- [ ]`DiscordRelayUnavailable()`
+- [ ]`DiscordRelayed(embed)`
+- [ ]`DoorEnabledToggled(client, door, newState)`
+- [ ]`DoorHiddenToggled(client, entity, newState)`
+- [ ]`DoorLockToggled(client, door, state)`
+- [ ]`DoorOwnableToggled(client, door, newState)`
+- [ ]`DoorPriceSet(client, door, price)`
+- [ ]`DoorTitleSet(client, door, name)`
+- [ ]`FetchSpawns()`
+- [ ]`GetAllCaseClaims()`
+- [ ]`GetBotModel(client, faction)`
+- [ ]`GetDamageScale(hitgroup, dmgInfo, damageScale)`
+- [ ]`GetDefaultInventoryType(character)`
+- [ ]`GetEntitySaveData(ent)`
+- [ ]`GetOOCDelay(speaker)`
+- [ ]`GetPlayTime(client)`
+- [ ]`GetPlayerDeathSound(client, isFemale)`
+- [ ]`GetPlayerPainSound(client, paintype, isFemale)`
+- [ ]`GetPlayerRespawnLocation(client, character)`
+- [ ]`GetPlayerSpawnLocation(client, character)`
+- [ ]`GetPrestigePayBonus(client, char, pay, faction, class)`
+- [ ]`GetSalaryAmount(client, faction, class)`
+- [ ]`GetTicketsByRequester(steamID)`
+- [ ]`GetWarnings(charID)`
+- [ ]`GetWarningsByIssuer(steamID)`
+- [ ]`HandleItemTransferRequest(client, itemID, x, y, invID)`
+- [ ]`InventoryDeleted(instance)`
+- [ ]`ItemCombine(client, item, target)`
+- [ ]`ItemDeleted(instance)`
+- [ ]`ItemFunctionCalled(item, method, client, entity, results)`
+- [ ]`ItemTransfered(context)`
+- [ ]`KeyLock(client, door, time)`
+- [ ]`KeyUnlock(client, door, time)`
+- [ ]`KickedFromChar(characterID, isCurrentChar)`
+- [ ]`LiliaTablesLoaded()`
+- [ ]`LoadData()`
+- [ ]`ModifyCharacterModel(arg1, character)`
+- [ ]`OnCharAttribBoosted(client, character, attribID, boostID, arg5)`
+- [ ]`OnCharAttribUpdated(client, character, key, arg4)`
+- [ ]`OnCharCreated(client, character, originalData)`
+- [ ]`OnCharDelete(client, id)`
+- [ ]`OnCharDisconnect(client, character)`
+- [ ]`OnCharFlagsGiven(ply, character, addedFlags)`
+- [ ]`OnCharFlagsTaken(ply, character, removedFlags)`
+- [ ]`OnCharKick(character, client)`
+- [ ]`OnCharNetVarChanged(character, key, oldVar, value)`
+- [ ]`OnCharPermakilled(character, time)`
+- [ ]`OnCharRecognized(client, arg2)`
+- [ ]`OnCharTradeVendor(client, vendor, item, isSellingToVendor, character, itemType, isFailed)`
+- [ ]`OnCheaterCaught(client)`
+- [ ]`OnDataSet(key, value, gamemode, map)`
+- [ ]`OnDatabaseLoaded()`
+- [ ]`OnDeathSoundPlayed(client, deathSound)`
+- [ ]`OnEntityLoaded(ent, data)`
+- [ ]`OnEntityPersistUpdated(ent, data)`
+- [ ]`OnEntityPersisted(ent, entData)`
+- [ ]`OnItemSpawned(itemEntity)`
+- [ ]`OnLoadTables()`
+- [ ]`OnNPCTypeSet(client, npc, npcID, filteredData)`
+- [ ]`OnOOCMessageSent(client, message)`
+- [ ]`OnPainSoundPlayed(entity, painSound)`
+- [ ]`OnPickupMoney(activator, moneyEntity)`
+- [ ]`OnPlayerEnterSequence(client, sequenceName, callback, time, noFreeze)`
+- [ ]`OnPlayerInteractItem(client, action, item, result, data)`
+- [ ]`OnPlayerJoinClass(target, arg2, oldClass)`
+- [ ]`OnPlayerLeaveSequence(client)`
+- [ ]`OnPlayerLostStackItem(itemTypeOrItem)`
+- [ ]`OnPlayerObserve(client, state)`
+- [ ]`OnPlayerRagdolled(client, ragdoll)`
+- [ ]`OnPlayerSwitchClass(client, class, oldClass)`
+- [ ]`OnRequestItemTransfer(inventoryPanel, itemID, targetInventoryID, x, y)`
+- [ ]`OnSalaryAdjust(client)`
+- [ ]`OnSalaryGiven(client, char, pay, faction, class)`
+- [ ]`OnSavedItemLoaded(loadedItems)`
+- [ ]`OnServerLog(client, logType, logString, category)`
+- [ ]`OnTicketClaimed(client, requester, ticketMessage)`
+- [ ]`OnTicketClosed(client, requester, ticketMessage)`
+- [ ]`OnTicketCreated(noob, message)`
+- [ ]`OnUsergroupPermissionsChanged(groupName, arg2)`
+- [ ]`OnVendorEdited(client, vendor, key)`
+- [ ]`OnVoiceTypeChanged(client)`
+- [ ]`OptionReceived(arg1, key, value)`
+- [ ]`PlayerAccessVendor(client, vendor)`
+- [ ]`PlayerCheatDetected(client)`
+- [ ]`PlayerGagged(target, admin)`
+- [ ]`PlayerLiliaDataLoaded(client)`
+- [ ]`PlayerLoadedChar(client, character, currentChar)`
+- [ ]`PlayerMessageSend(speaker, chatType, text, anonymous, receivers)`
+- [ ]`PlayerModelChanged(client, value)`
+- [ ]`PlayerMuted(target, admin)`
+- [ ]`PlayerShouldPermaKill(client, inflictor, attacker)`
+- [ ]`PlayerSpawnPointSelected(client, pos, ang)`
+- [ ]`PlayerStaminaGained(client)`
+- [ ]`PlayerStaminaLost(client)`
+- [ ]`PlayerUngagged(target, admin)`
+- [ ]`PlayerUnmuted(target, admin)`
+- [ ]`PlayerUseDoor(client, door)`
+- [ ]`PostDoorDataLoad(ent, doorData)`
+- [ ]`PostLoadData()`
+- [ ]`PostPlayerInitialSpawn(client)`
+- [ ]`PostPlayerLoadedChar(client, character, currentChar)`
+- [ ]`PostPlayerLoadout(client)`
+- [ ]`PostPlayerSay(client, message, chatType, anonymous)`
+- [ ]`PostScaleDamage(hitgroup, dmgInfo, damageScale)`
+- [ ]`PreCharDelete(id)`
+- [ ]`PreDoorDataSave(door, doorData)`
+- [ ]`PrePlayerInteractItem(client, action, item)`
+- [ ]`PrePlayerLoadedChar(client, character, currentChar)`
+- [ ]`PreSalaryGive(client, char, pay, faction, class)`
+- [ ]`PreScaleDamage(hitgroup, dmgInfo, damageScale)`
+- [ ]`RemoveWarning(charID, index)`
+- [ ]`SaveData()`
+- [ ]`SendPopup(noob, message)`
+- [ ]`SetupBotPlayer(client)`
+- [ ]`SetupDatabase()`
+- [ ]`SetupPlayerModel(modelEntity, character)`
+- [ ]`ShouldDataBeSaved()`
+- [ ]`ShouldDeleteSavedItems()`
+- [ ]`ShouldPlayDeathSound(client, deathSound)`
+- [ ]`ShouldPlayPainSound(entity, painSound)`
+- [ ]`ShouldSpawnClientRagdoll(client)`
+- [ ]`StorageCanTransferItem(client, storage, item)`
+- [ ]`StorageEntityRemoved(storageEntity, inventory)`
+- [ ]`StorageInventorySet(entity, inventory, isCar)`
+- [ ]`StorageItemRemoved()`
+- [ ]`StorageRestored(ent, inventory)`
+- [ ]`StoreSpawns(spawns)`
+- [ ]`SyncCharList(client)`
+- [ ]`TicketSystemClaim(client, requester, ticketMessage)`
+- [ ]`TicketSystemClose(client, requester, ticketMessage)`
+- [ ]`ToggleLock(client, door, state)`
+- [ ]`UpdateEntityPersistence(vendor)`
+- [ ]`VendorClassUpdated(vendor, id, allowed)`
+- [ ]`VendorEdited(liaVendorEnt, key)`
+- [ ]`VendorFactionBuyScaleUpdated(vendor, factionID, scale)`
+- [ ]`VendorFactionSellScaleUpdated(vendor, factionID, scale)`
+- [ ]`VendorFactionUpdated(vendor, id, allowed)`
+- [ ]`VendorItemMaxStockUpdated(vendor, itemType, value)`
+- [ ]`VendorItemModeUpdated(vendor, itemType, value)`
+- [ ]`VendorItemPriceUpdated(vendor, itemType, value)`
+- [ ]`VendorItemStockUpdated(vendor, itemType, value)`
+- [ ]`VendorMessagesUpdated(vendor)`
+- [ ]`VendorSynchronized(vendor)`
+- [ ]`VendorTradeEvent(client, vendor, itemType, isSellingToVendor)`
+- [ ]`WarningIssued(client, target, reason, severity, count, warnerSteamID, targetSteamID)`
+- [ ]`WarningRemoved(client, targetClient, arg3, arg4, arg5, arg6)`
 - [ ]`setData(value, global, ignoreMap)`
-  - Server
 - [ ]`syncVendorDataToClient(client)`
-  - Server
+
+## Shared
+
+- [ ]`AdjustCreationData(client, data, newData, originalData)`
+- [ ]`AdjustPACPartData(wearer, id, data)`
+- [ ]`AdjustStaminaOffset(client, offset)`
+- [ ]`AdvDupe_FinishPasting(tbl)`
+- [ ]`AttachPart(client, id)`
+- [ ]`BagInventoryReady(bagItem, inventory)`
+- [ ]`BagInventoryRemoved(bagItem, inventory)`
+- [ ]`CalcStaminaChange(client)`
+- [ ]`CanCharBeTransfered(tChar, faction, arg3)`
+- [ ]`CanInviteToClass(client, target)`
+- [ ]`CanInviteToFaction(client, target)`
+- [ ]`CanOutfitChangeModel(item)`
+- [ ]`CanPerformVendorEdit(client, vendor)`
+- [ ]`CanPickupMoney(activator, moneyEntity)`
+- [ ]`CanPlayerChooseWeapon(weapon)`
+- [ ]`CanPlayerCreateChar(client, data)`
+- [ ]`CanPlayerJoinClass(client, class, info)`
+- [ ]`CanPlayerKnock(arg1)`
+- [ ]`CanPlayerModifyConfig(client, key)`
+- [ ]`CanPlayerRotateItem(client, item)`
+- [ ]`CanPlayerThrowPunch(client)`
+- [ ]`CanPlayerUseCommand(client, command)`
+- [ ]`CanRunItemAction(tempItem, key)`
+- [ ]`CharForceRecognized(ply, range)`
+- [ ]`CharHasFlags(client, flags)`
+- [ ]`ChatParsed(client, chatType, message, anonymous)`
+- [ ]`CommandAdded(command, data)`
+- [ ]`ConfigChanged(key, value, oldValue, client)`
+- [ ]`DoModuleIncludes(path, MODULE)`
+- [ ]`ForceRecognizeRange(ply, range, fakeName)`
+- [ ]`GetAttributeMax(client, id)`
+- [ ]`GetAttributeStartingMax(client, attribute)`
+- [ ]`GetCharMaxStamina(char)`
+- [ ]`GetDefaultCharDesc(client, arg2, data)`
+- [ ]`GetDefaultCharName(client, faction, data)`
+- [ ]`GetDefaultInventorySize(client, char)`
+- [ ]`GetDisplayedName(client, chatType)`
+- [ ]`GetHandsAttackSpeed(arg1)`
+- [ ]`GetItemDropModel(itemTable, itemEntity)`
+- [ ]`GetMaxPlayerChar(client)`
+- [ ]`GetMaxStartingAttributePoints(client, count)`
+- [ ]`GetModelGender(model)`
+- [ ]`GetMoneyModel(arg1)`
+- [ ]`GetNPCDialogOptions(arg1)`
+- [ ]`GetPlayerPunchDamage(arg1)`
+- [ ]`GetPlayerPunchRagdollTime(arg1)`
+- [ ]`GetPriceOverride(vendor, uniqueID, price, isSellingToVendor)`
+- [ ]`GetRagdollTime(client, time)`
+- [ ]`GetVendorSaleScale(vendor)`
+- [ ]`GetWeaponName(weapon)`
+- [ ]`InitializeStorage(entity)`
+- [ ]`InitializedConfig()`
+- [ ]`InitializedItems()`
+- [ ]`InitializedKeybinds()`
+- [ ]`InitializedModules()`
+- [ ]`InitializedOptions()`
+- [ ]`InitializedSchema()`
+- [ ]`InventoryDataChanged(instance, key, oldValue, value)`
+- [ ]`InventoryInitialized(instance)`
+- [ ]`InventoryItemAdded(inventory, item)`
+- [ ]`InventoryItemRemoved(inventory, instance, preserveItem)`
+- [ ]`IsCharFakeRecognized(character, id)`
+- [ ]`IsCharRecognized(a, arg2)`
+- [ ]`IsRecognizedChatType(chatType)`
+- [ ]`IsSuitableForTrunk(ent)`
+- [ ]`ItemDataChanged(item, key, oldValue, newValue)`
+- [ ]`ItemDefaultFunctions(arg1)`
+- [ ]`ItemInitialized(item)`
+- [ ]`ItemQuantityChanged(item, oldValue, quantity)`
+- [ ]`LiliaLoaded()`
+- [ ]`NetVarChanged(client, key, oldValue, value)`
+- [ ]`OnAdminSystemLoaded(arg1, arg2)`
+- [ ]`OnCharGetup(target, entity)`
+- [ ]`OnCharVarChanged(character, varName, oldVar, newVar)`
+- [ ]`OnConfigUpdated(key, oldValue, value)`
+- [ ]`OnItemAdded(owner, item)`
+- [ ]`OnItemCreated(itemTable, itemEntity)`
+- [ ]`OnItemOverridden(item, overrides)`
+- [ ]`OnItemRegistered(ITEM)`
+- [ ]`OnLocalizationLoaded()`
+- [ ]`OnPAC3PartTransfered(part)`
+- [ ]`OnPlayerPurchaseDoor(client, door, arg3)`
+- [ ]`OnPrivilegeRegistered(arg1, arg2, arg3, arg4)`
+- [ ]`OnPrivilegeUnregistered(arg1, arg2)`
+- [ ]`OnThemeChanged(themeName, useTransition)`
+- [ ]`OnTransferred(target)`
+- [ ]`OnUsergroupCreated(groupName, arg2)`
+- [ ]`OnUsergroupRemoved(groupName)`
+- [ ]`OnUsergroupRenamed(oldName, newName)`
+- [ ]`OptionAdded(key, name, option)`
+- [ ]`OptionChanged(key, old, value)`
+- [ ]`OverrideFactionDesc(uniqueID, arg2)`
+- [ ]`OverrideFactionModels(uniqueID, arg2)`
+- [ ]`OverrideFactionName(uniqueID, arg2)`
+- [ ]`OverrideSpawnTime(ply, baseTime)`
+- [ ]`PlayerThrowPunch(client)`
+- [ ]`PreLiliaLoaded()`
+- [ ]`RemovePart(client, id)`
+- [ ]`SetupBagInventoryAccessRules(inventory)`
+- [ ]`SetupPACDataFromItems()`
+- [ ]`getData(default)`
