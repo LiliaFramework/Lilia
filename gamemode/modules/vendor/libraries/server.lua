@@ -77,15 +77,15 @@ function MODULE:CanPlayerTradeWithVendor(client, vendor, itemType, isSellingToVe
 end
 
 function MODULE:VendorTradeEvent(client, vendor, itemType, isSellingToVendor)
-    if not VENDOR_INVENTORY_MEASURE and lia.inventory.types["GridInv"] then
-        VENDOR_INVENTORY_MEASURE = lia.inventory.types["GridInv"]:new()
-        VENDOR_INVENTORY_MEASURE.data = {
+    if not VendorInventoryMeasure and lia.inventory.types["GridInv"] then
+        VendorInventoryMeasure = lia.inventory.types["GridInv"]:new()
+        VendorInventoryMeasure.data = {
             w = 8,
             h = 8
         }
 
-        VENDOR_INVENTORY_MEASURE.virtual = true
-        VENDOR_INVENTORY_MEASURE:onInstanced()
+        VendorInventoryMeasure.virtual = true
+        VendorInventoryMeasure:onInstanced()
     end
 
     local canAccess, reason, param1 = hook.Run("CanPlayerTradeWithVendor", client, vendor, itemType, isSellingToVendor)
@@ -113,17 +113,17 @@ function MODULE:VendorTradeEvent(client, vendor, itemType, isSellingToVendor)
                 client = client,
                 item = item,
                 from = inventory,
-                to = VENDOR_INVENTORY_MEASURE
+                to = VendorInventoryMeasure
             }
 
-            local canTransfer, transferReason = VENDOR_INVENTORY_MEASURE:canAccess("transfer", context)
+            local canTransfer, transferReason = VendorInventoryMeasure:canAccess("transfer", context)
             if not canTransfer then
                 client:notifyErrorLocalized(transferReason or L("vendorError"))
                 client.vendorTransaction = nil
                 return
             end
 
-            local canTransferItem, itemTransferReason = hook.Run("CanItemBeTransfered", item, inventory, VENDOR_INVENTORY_MEASURE, client)
+            local canTransferItem, itemTransferReason = hook.Run("CanItemBeTransfered", item, inventory, VendorInventoryMeasure, client)
             if canTransferItem == false then
                 client:notifyErrorLocalized(itemTransferReason or L("vendorError"))
                 client.vendorTransaction = nil
