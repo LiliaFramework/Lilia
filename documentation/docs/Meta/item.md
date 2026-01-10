@@ -13,22 +13,22 @@ The item meta table provides comprehensive functionality for managing item data,
 ### isRotated
 
 #### 📋 Purpose
-<Brief, clear description of what the function does.>
+Reports whether the item is stored in a rotated state.
 
 #### ⏰ When Called
-<Describe when and why this function is invoked.>
+Use when calculating grid dimensions or rendering the item icon.
 
 #### ↩️ Returns
-* <returnType>
-<Description or "nil".>
+* boolean
+True if the item is rotated.
 
 #### 🌐 Realm
-<Client | Server | Shared>
+Shared
 
 #### 💡 Example Usage
 
 ```lua
-    <High Complexity and well documented Function Call Or Use Case Here>
+    if item:isRotated() then swapDims() end
 
 ```
 
@@ -37,22 +37,22 @@ The item meta table provides comprehensive functionality for managing item data,
 ### getWidth
 
 #### 📋 Purpose
-<Brief, clear description of what the function does.>
+Returns the item's width considering rotation and defaults.
 
 #### ⏰ When Called
-<Describe when and why this function is invoked.>
+Use when placing the item into a grid inventory.
 
 #### ↩️ Returns
-* <returnType>
-<Description or "nil".>
+* number
+Width in grid cells.
 
 #### 🌐 Realm
-<Client | Server | Shared>
+Shared
 
 #### 💡 Example Usage
 
 ```lua
-    <High Complexity and well documented Function Call Or Use Case Here>
+    local w = item:getWidth()
 
 ```
 
@@ -61,22 +61,22 @@ The item meta table provides comprehensive functionality for managing item data,
 ### getHeight
 
 #### 📋 Purpose
-<Brief, clear description of what the function does.>
+Returns the item's height considering rotation and defaults.
 
 #### ⏰ When Called
-<Describe when and why this function is invoked.>
+Use when calculating how much vertical space an item needs.
 
 #### ↩️ Returns
-* <returnType>
-<Description or "nil".>
+* number
+Height in grid cells.
 
 #### 🌐 Realm
-<Client | Server | Shared>
+Shared
 
 #### 💡 Example Usage
 
 ```lua
-    <High Complexity and well documented Function Call Or Use Case Here>
+    local h = item:getHeight()
 
 ```
 
@@ -85,22 +85,22 @@ The item meta table provides comprehensive functionality for managing item data,
 ### getQuantity
 
 #### 📋 Purpose
-<Brief, clear description of what the function does.>
+Returns the current stack quantity for this item.
 
 #### ⏰ When Called
-<Describe when and why this function is invoked.>
+Use when showing stack counts or validating transfers.
 
 #### ↩️ Returns
-* <returnType>
-<Description or "nil".>
+* number
+Quantity within the stack.
 
 #### 🌐 Realm
-<Client | Server | Shared>
+Shared
 
 #### 💡 Example Usage
 
 ```lua
-    <High Complexity and well documented Function Call Or Use Case Here>
+    local count = item:getQuantity()
 
 ```
 
@@ -109,22 +109,22 @@ The item meta table provides comprehensive functionality for managing item data,
 ### tostring
 
 #### 📋 Purpose
-<Brief, clear description of what the function does.>
+Builds a readable string identifier for the item.
 
 #### ⏰ When Called
-<Describe when and why this function is invoked.>
+Use for logging, debugging, or console output.
 
 #### ↩️ Returns
-* <returnType>
-<Description or "nil".>
+* string
+Formatted identifier including uniqueID and item id.
 
 #### 🌐 Realm
-<Client | Server | Shared>
+Shared
 
 #### 💡 Example Usage
 
 ```lua
-    <High Complexity and well documented Function Call Or Use Case Here>
+    print(item:tostring())
 
 ```
 
@@ -133,22 +133,22 @@ The item meta table provides comprehensive functionality for managing item data,
 ### getID
 
 #### 📋 Purpose
-<Brief, clear description of what the function does.>
+Retrieves the numeric identifier for this item instance.
 
 #### ⏰ When Called
-<Describe when and why this function is invoked.>
+Use when persisting, networking, or comparing items.
 
 #### ↩️ Returns
-* <returnType>
-<Description or "nil".>
+* number
+Unique item ID.
 
 #### 🌐 Realm
-<Client | Server | Shared>
+Shared
 
 #### 💡 Example Usage
 
 ```lua
-    <High Complexity and well documented Function Call Or Use Case Here>
+    local id = item:getID()
 
 ```
 
@@ -157,22 +157,22 @@ The item meta table provides comprehensive functionality for managing item data,
 ### getModel
 
 #### 📋 Purpose
-<Brief, clear description of what the function does.>
+Returns the model path assigned to this item.
 
 #### ⏰ When Called
-<Describe when and why this function is invoked.>
+Use when spawning an entity or rendering the item icon.
 
 #### ↩️ Returns
-* <returnType>
-<Description or "nil".>
+* string
+Model file path.
 
 #### 🌐 Realm
-<Client | Server | Shared>
+Shared
 
 #### 💡 Example Usage
 
 ```lua
-    <High Complexity and well documented Function Call Or Use Case Here>
+    local mdl = item:getModel()
 
 ```
 
@@ -181,22 +181,22 @@ The item meta table provides comprehensive functionality for managing item data,
 ### getSkin
 
 #### 📋 Purpose
-<Brief, clear description of what the function does.>
+Returns the skin index assigned to this item.
 
 #### ⏰ When Called
-<Describe when and why this function is invoked.>
+Use when spawning the entity or applying cosmetics.
 
 #### ↩️ Returns
-* <returnType>
-<Description or "nil".>
+* number|nil
+Skin index or nil when not set.
 
 #### 🌐 Realm
-<Client | Server | Shared>
+Shared
 
 #### 💡 Example Usage
 
 ```lua
-    <High Complexity and well documented Function Call Or Use Case Here>
+    local skin = item:getSkin()
 
 ```
 
@@ -205,22 +205,22 @@ The item meta table provides comprehensive functionality for managing item data,
 ### getBodygroups
 
 #### 📋 Purpose
-<Brief, clear description of what the function does.>
+Provides the bodygroup configuration for the item model.
 
 #### ⏰ When Called
-<Describe when and why this function is invoked.>
+Use when spawning or rendering to ensure correct bodygroups.
 
 #### ↩️ Returns
-* <returnType>
-<Description or "nil".>
+* table
+Key-value pairs of bodygroup indexes to values.
 
 #### 🌐 Realm
-<Client | Server | Shared>
+Shared
 
 #### 💡 Example Usage
 
 ```lua
-    <High Complexity and well documented Function Call Or Use Case Here>
+    local groups = item:getBodygroups()
 
 ```
 
@@ -229,22 +229,22 @@ The item meta table provides comprehensive functionality for managing item data,
 ### getPrice
 
 #### 📋 Purpose
-<Brief, clear description of what the function does.>
+Calculates the current sale price for the item.
 
 #### ⏰ When Called
-<Describe when and why this function is invoked.>
+Use when selling, buying, or displaying item cost.
 
 #### ↩️ Returns
-* <returnType>
-<Description or "nil".>
+* number
+Price value, possibly adjusted by calcPrice.
 
 #### 🌐 Realm
-<Client | Server | Shared>
+Shared
 
 #### 💡 Example Usage
 
 ```lua
-    <High Complexity and well documented Function Call Or Use Case Here>
+    local cost = item:getPrice()
 
 ```
 
@@ -253,22 +253,30 @@ The item meta table provides comprehensive functionality for managing item data,
 ### call
 
 #### 📋 Purpose
-<Brief, clear description of what the function does.>
+Invokes an item method while temporarily setting context.
 
 #### ⏰ When Called
-<Describe when and why this function is invoked.>
+Use when you need to call an item function with player/entity context.
+
+#### ⚙️ Parameters
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `method` | **string** | Name of the item method to invoke. |
+| `client` | **Player|nil** | Player to treat as the caller. |
+| `entity` | **Entity|nil** | Entity representing the item. |
 
 #### ↩️ Returns
-* <returnType>
-<Description or "nil".>
+* any
+Return values from the invoked method.
 
 #### 🌐 Realm
-<Client | Server | Shared>
+Shared
 
 #### 💡 Example Usage
 
 ```lua
-    <High Complexity and well documented Function Call Or Use Case Here>
+    item:call("onUse", ply, ent)
 
 ```
 
@@ -277,22 +285,22 @@ The item meta table provides comprehensive functionality for managing item data,
 ### getOwner
 
 #### 📋 Purpose
-<Brief, clear description of what the function does.>
+Attempts to find the player that currently owns this item.
 
 #### ⏰ When Called
-<Describe when and why this function is invoked.>
+Use when routing notifications or networking to the item owner.
 
 #### ↩️ Returns
-* <returnType>
-<Description or "nil".>
+* Player|nil
+Owning player if found.
 
 #### 🌐 Realm
-<Client | Server | Shared>
+Shared
 
 #### 💡 Example Usage
 
 ```lua
-    <High Complexity and well documented Function Call Or Use Case Here>
+    local owner = item:getOwner()
 
 ```
 
@@ -301,22 +309,29 @@ The item meta table provides comprehensive functionality for managing item data,
 ### getData
 
 #### 📋 Purpose
-<Brief, clear description of what the function does.>
+Reads a stored data value from the item or its entity.
 
 #### ⏰ When Called
-<Describe when and why this function is invoked.>
+Use for custom item metadata such as durability or rotation.
+
+#### ⚙️ Parameters
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `key` | **string** | Data key to read. |
+| `default` | **any** | Value to return when the key is missing. |
 
 #### ↩️ Returns
-* <returnType>
-<Description or "nil".>
+* any
+Stored value or default.
 
 #### 🌐 Realm
-<Client | Server | Shared>
+Shared
 
 #### 💡 Example Usage
 
 ```lua
-    <High Complexity and well documented Function Call Or Use Case Here>
+    local durability = item:getData("durability", 100)
 
 ```
 
@@ -325,22 +340,22 @@ The item meta table provides comprehensive functionality for managing item data,
 ### getAllData
 
 #### 📋 Purpose
-<Brief, clear description of what the function does.>
+Returns a merged table of all item data, including entity netvars.
 
 #### ⏰ When Called
-<Describe when and why this function is invoked.>
+Use when syncing the entire data payload to clients.
 
 #### ↩️ Returns
-* <returnType>
-<Description or "nil".>
+* table
+Combined data table.
 
 #### 🌐 Realm
-<Client | Server | Shared>
+Shared
 
 #### 💡 Example Usage
 
 ```lua
-    <High Complexity and well documented Function Call Or Use Case Here>
+    local data = item:getAllData()
 
 ```
 
@@ -349,22 +364,28 @@ The item meta table provides comprehensive functionality for managing item data,
 ### hook
 
 #### 📋 Purpose
-<Brief, clear description of what the function does.>
+Registers a pre-run hook for an item interaction.
 
 #### ⏰ When Called
-<Describe when and why this function is invoked.>
+Use when adding custom behavior before an action executes.
+
+#### ⚙️ Parameters
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `name` | **string** | Hook name to bind. |
+| `func` | **function** | Callback to execute. |
 
 #### ↩️ Returns
-* <returnType>
-<Description or "nil".>
+* nil
 
 #### 🌐 Realm
-<Client | Server | Shared>
+Shared
 
 #### 💡 Example Usage
 
 ```lua
-    <High Complexity and well documented Function Call Or Use Case Here>
+    item:hook("use", function(itm) end)
 
 ```
 
@@ -373,22 +394,28 @@ The item meta table provides comprehensive functionality for managing item data,
 ### postHook
 
 #### 📋 Purpose
-<Brief, clear description of what the function does.>
+Registers a post-run hook for an item interaction.
 
 #### ⏰ When Called
-<Describe when and why this function is invoked.>
+Use when you need to react after an action completes.
+
+#### ⚙️ Parameters
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `name` | **string** | Hook name to bind. |
+| `func` | **function** | Callback to execute with results. |
 
 #### ↩️ Returns
-* <returnType>
-<Description or "nil".>
+* nil
 
 #### 🌐 Realm
-<Client | Server | Shared>
+Shared
 
 #### 💡 Example Usage
 
 ```lua
-    <High Complexity and well documented Function Call Or Use Case Here>
+    item:postHook("use", function(itm, result) end)
 
 ```
 
@@ -397,22 +424,21 @@ The item meta table provides comprehensive functionality for managing item data,
 ### onRegistered
 
 #### 📋 Purpose
-<Brief, clear description of what the function does.>
+Performs setup tasks after an item definition is registered.
 
 #### ⏰ When Called
-<Describe when and why this function is invoked.>
+Automatically invoked once the item type is loaded.
 
 #### ↩️ Returns
-* <returnType>
-<Description or "nil".>
+* nil
 
 #### 🌐 Realm
-<Client | Server | Shared>
+Shared
 
 #### 💡 Example Usage
 
 ```lua
-    <High Complexity and well documented Function Call Or Use Case Here>
+    item:onRegistered()
 
 ```
 
@@ -421,22 +447,27 @@ The item meta table provides comprehensive functionality for managing item data,
 ### print
 
 #### 📋 Purpose
-<Brief, clear description of what the function does.>
+Prints a concise or detailed identifier for the item.
 
 #### ⏰ When Called
-<Describe when and why this function is invoked.>
+Use during debugging or admin commands.
+
+#### ⚙️ Parameters
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `detail` | **boolean** | Include owner and grid info when true. |
 
 #### ↩️ Returns
-* <returnType>
-<Description or "nil".>
+* nil
 
 #### 🌐 Realm
-<Client | Server | Shared>
+Shared
 
 #### 💡 Example Usage
 
 ```lua
-    <High Complexity and well documented Function Call Or Use Case Here>
+    item:print(true)
 
 ```
 
@@ -445,22 +476,21 @@ The item meta table provides comprehensive functionality for managing item data,
 ### printData
 
 #### 📋 Purpose
-<Brief, clear description of what the function does.>
+Outputs item metadata and all stored data fields.
 
 #### ⏰ When Called
-<Describe when and why this function is invoked.>
+Use for diagnostics to inspect an item's state.
 
 #### ↩️ Returns
-* <returnType>
-<Description or "nil".>
+* nil
 
 #### 🌐 Realm
-<Client | Server | Shared>
+Shared
 
 #### 💡 Example Usage
 
 ```lua
-    <High Complexity and well documented Function Call Or Use Case Here>
+    item:printData()
 
 ```
 
@@ -469,22 +499,22 @@ The item meta table provides comprehensive functionality for managing item data,
 ### getName
 
 #### 📋 Purpose
-<Brief, clear description of what the function does.>
+Returns the display name of the item.
 
 #### ⏰ When Called
-<Describe when and why this function is invoked.>
+Use for UI labels, tooltips, and logs.
 
 #### ↩️ Returns
-* <returnType>
-<Description or "nil".>
+* string
+Item name.
 
 #### 🌐 Realm
-<Client | Server | Shared>
+Shared
 
 #### 💡 Example Usage
 
 ```lua
-    <High Complexity and well documented Function Call Or Use Case Here>
+    local name = item:getName()
 
 ```
 
@@ -493,22 +523,22 @@ The item meta table provides comprehensive functionality for managing item data,
 ### getDesc
 
 #### 📋 Purpose
-<Brief, clear description of what the function does.>
+Returns the description text for the item.
 
 #### ⏰ When Called
-<Describe when and why this function is invoked.>
+Use in tooltips or inventory details.
 
 #### ↩️ Returns
-* <returnType>
-<Description or "nil".>
+* string
+Item description.
 
 #### 🌐 Realm
-<Client | Server | Shared>
+Shared
 
 #### 💡 Example Usage
 
 ```lua
-    <High Complexity and well documented Function Call Or Use Case Here>
+    local desc = item:getDesc()
 
 ```
 
@@ -517,22 +547,28 @@ The item meta table provides comprehensive functionality for managing item data,
 ### removeFromInventory
 
 #### 📋 Purpose
-<Brief, clear description of what the function does.>
+Removes the item from its current inventory instance.
 
 #### ⏰ When Called
-<Describe when and why this function is invoked.>
+Use when dropping, deleting, or transferring the item out.
+
+#### ⚙️ Parameters
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `preserveItem` | **boolean** | When true, keeps the instance for later use. |
 
 #### ↩️ Returns
-* <returnType>
-<Description or "nil".>
+* Promise
+Deferred resolution for removal completion.
 
 #### 🌐 Realm
-<Client | Server | Shared>
+Server
 
 #### 💡 Example Usage
 
 ```lua
-    <High Complexity and well documented Function Call Or Use Case Here>
+    item:removeFromInventory():next(function() end)
 
 ```
 
@@ -541,22 +577,22 @@ The item meta table provides comprehensive functionality for managing item data,
 ### delete
 
 #### 📋 Purpose
-<Brief, clear description of what the function does.>
+Deletes the item record from storage after destroying it in-game.
 
 #### ⏰ When Called
-<Describe when and why this function is invoked.>
+Use when an item should be permanently removed.
 
 #### ↩️ Returns
-* <returnType>
-<Description or "nil".>
+* Promise
+Resolves after the database delete and callbacks run.
 
 #### 🌐 Realm
-<Client | Server | Shared>
+Server
 
 #### 💡 Example Usage
 
 ```lua
-    <High Complexity and well documented Function Call Or Use Case Here>
+    item:delete()
 
 ```
 
@@ -565,22 +601,22 @@ The item meta table provides comprehensive functionality for managing item data,
 ### remove
 
 #### 📋 Purpose
-<Brief, clear description of what the function does.>
+Removes the world entity, inventory reference, and database entry.
 
 #### ⏰ When Called
-<Describe when and why this function is invoked.>
+Use when the item is consumed or otherwise removed entirely.
 
 #### ↩️ Returns
-* <returnType>
-<Description or "nil".>
+* Promise
+Resolves once removal and deletion complete.
 
 #### 🌐 Realm
-<Client | Server | Shared>
+Server
 
 #### 💡 Example Usage
 
 ```lua
-    <High Complexity and well documented Function Call Or Use Case Here>
+    item:remove()
 
 ```
 
@@ -589,22 +625,21 @@ The item meta table provides comprehensive functionality for managing item data,
 ### destroy
 
 #### 📋 Purpose
-<Brief, clear description of what the function does.>
+Broadcasts item deletion to clients and frees the instance.
 
 #### ⏰ When Called
-<Describe when and why this function is invoked.>
+Use internally before removing an item from memory.
 
 #### ↩️ Returns
-* <returnType>
-<Description or "nil".>
+* nil
 
 #### 🌐 Realm
-<Client | Server | Shared>
+Server
 
 #### 💡 Example Usage
 
 ```lua
-    <High Complexity and well documented Function Call Or Use Case Here>
+    item:destroy()
 
 ```
 
@@ -613,22 +648,44 @@ The item meta table provides comprehensive functionality for managing item data,
 ### onDisposed
 
 #### 📋 Purpose
-<Brief, clear description of what the function does.>
+Hook called after an item is destroyed; intended for overrides.
 
 #### ⏰ When Called
-<Describe when and why this function is invoked.>
+Automatically triggered when the item instance is disposed.
 
 #### ↩️ Returns
-* <returnType>
-<Description or "nil".>
+* nil
 
 #### 🌐 Realm
-<Client | Server | Shared>
+Server
 
 #### 💡 Example Usage
 
 ```lua
-    <High Complexity and well documented Function Call Or Use Case Here>
+    function ITEM:onDisposed() end
+
+```
+
+---
+
+### onDisposed
+
+#### 📋 Purpose
+Hook called after an item is destroyed; intended for overrides.
+
+#### ⏰ When Called
+Automatically triggered when the item instance is disposed.
+
+#### ↩️ Returns
+* nil
+
+#### 🌐 Realm
+Server
+
+#### 💡 Example Usage
+
+```lua
+    function ITEM:onDisposed() end
 
 ```
 
@@ -637,22 +694,22 @@ The item meta table provides comprehensive functionality for managing item data,
 ### getEntity
 
 #### 📋 Purpose
-<Brief, clear description of what the function does.>
+Finds the world entity representing this item instance.
 
 #### ⏰ When Called
-<Describe when and why this function is invoked.>
+Use when needing the spawned entity from the item data.
 
 #### ↩️ Returns
-* <returnType>
-<Description or "nil".>
+* Entity|nil
+Spawned item entity if present.
 
 #### 🌐 Realm
-<Client | Server | Shared>
+Server
 
 #### 💡 Example Usage
 
 ```lua
-    <High Complexity and well documented Function Call Or Use Case Here>
+    local ent = item:getEntity()
 
 ```
 
@@ -661,22 +718,29 @@ The item meta table provides comprehensive functionality for managing item data,
 ### spawn
 
 #### 📋 Purpose
-<Brief, clear description of what the function does.>
+Spawns a world entity for this item at the given position and angle.
 
 #### ⏰ When Called
-<Describe when and why this function is invoked.>
+Use when dropping an item into the world.
+
+#### ⚙️ Parameters
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `position` | **Vector|table|Entity** | Where to spawn, or the player dropping the item. |
+| `angles` | **Angle|Vector|table|nil** | Orientation for the spawned entity. |
 
 #### ↩️ Returns
-* <returnType>
-<Description or "nil".>
+* Entity|nil
+Spawned entity on success.
 
 #### 🌐 Realm
-<Client | Server | Shared>
+Server
 
 #### 💡 Example Usage
 
 ```lua
-    <High Complexity and well documented Function Call Or Use Case Here>
+    local ent = item:spawn(ply, Angle(0, 0, 0))
 
 ```
 
@@ -685,22 +749,29 @@ The item meta table provides comprehensive functionality for managing item data,
 ### transfer
 
 #### 📋 Purpose
-<Brief, clear description of what the function does.>
+Moves the item into another inventory if access rules allow.
 
 #### ⏰ When Called
-<Describe when and why this function is invoked.>
+Use when transferring items between containers or players.
+
+#### ⚙️ Parameters
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `newInventory` | **Inventory** | Destination inventory. |
+| `bBypass` | **boolean** | Skip access checks when true. |
 
 #### ↩️ Returns
-* <returnType>
-<Description or "nil".>
+* boolean
+True if the transfer was initiated.
 
 #### 🌐 Realm
-<Client | Server | Shared>
+Server
 
 #### 💡 Example Usage
 
 ```lua
-    <High Complexity and well documented Function Call Or Use Case Here>
+    item:transfer(otherInv)
 
 ```
 
@@ -709,22 +780,44 @@ The item meta table provides comprehensive functionality for managing item data,
 ### onInstanced
 
 #### 📋 Purpose
-<Brief, clear description of what the function does.>
+Hook called when a new item instance is created.
 
 #### ⏰ When Called
-<Describe when and why this function is invoked.>
+Automatically invoked after instancing; override to customize.
 
 #### ↩️ Returns
-* <returnType>
-<Description or "nil".>
+* nil
 
 #### 🌐 Realm
-<Client | Server | Shared>
+Server
 
 #### 💡 Example Usage
 
 ```lua
-    <High Complexity and well documented Function Call Or Use Case Here>
+    function ITEM:onInstanced() end
+
+```
+
+---
+
+### onInstanced
+
+#### 📋 Purpose
+Hook called when a new item instance is created.
+
+#### ⏰ When Called
+Automatically invoked after instancing; override to customize.
+
+#### ↩️ Returns
+* nil
+
+#### 🌐 Realm
+Server
+
+#### 💡 Example Usage
+
+```lua
+    function ITEM:onInstanced() end
 
 ```
 
@@ -733,22 +826,56 @@ The item meta table provides comprehensive functionality for managing item data,
 ### onSync
 
 #### 📋 Purpose
-<Brief, clear description of what the function does.>
+Hook called after the item data is synchronized to clients.
 
 #### ⏰ When Called
-<Describe when and why this function is invoked.>
+Triggered by sync calls; override for custom behavior.
+
+#### ⚙️ Parameters
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `recipient` | **Player|nil** | The player who received the sync, or nil for broadcast. |
 
 #### ↩️ Returns
-* <returnType>
-<Description or "nil".>
+* nil
 
 #### 🌐 Realm
-<Client | Server | Shared>
+Server
 
 #### 💡 Example Usage
 
 ```lua
-    <High Complexity and well documented Function Call Or Use Case Here>
+    function ITEM:onSync(ply) end
+
+```
+
+---
+
+### onSync
+
+#### 📋 Purpose
+Hook called after the item data is synchronized to clients.
+
+#### ⏰ When Called
+Triggered by sync calls; override for custom behavior.
+
+#### ⚙️ Parameters
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `recipient` | **Player|nil** | The player who received the sync, or nil for broadcast. |
+
+#### ↩️ Returns
+* nil
+
+#### 🌐 Realm
+Server
+
+#### 💡 Example Usage
+
+```lua
+    function ITEM:onSync(ply) end
 
 ```
 
@@ -757,22 +884,44 @@ The item meta table provides comprehensive functionality for managing item data,
 ### onRemoved
 
 #### 📋 Purpose
-<Brief, clear description of what the function does.>
+Hook called after the item has been removed from the world/inventory.
 
 #### ⏰ When Called
-<Describe when and why this function is invoked.>
+Automatically invoked once deletion finishes.
 
 #### ↩️ Returns
-* <returnType>
-<Description or "nil".>
+* nil
 
 #### 🌐 Realm
-<Client | Server | Shared>
+Server
 
 #### 💡 Example Usage
 
 ```lua
-    <High Complexity and well documented Function Call Or Use Case Here>
+    function ITEM:onRemoved() end
+
+```
+
+---
+
+### onRemoved
+
+#### 📋 Purpose
+Hook called after the item has been removed from the world/inventory.
+
+#### ⏰ When Called
+Automatically invoked once deletion finishes.
+
+#### ↩️ Returns
+* nil
+
+#### 🌐 Realm
+Server
+
+#### 💡 Example Usage
+
+```lua
+    function ITEM:onRemoved() end
 
 ```
 
@@ -781,22 +930,44 @@ The item meta table provides comprehensive functionality for managing item data,
 ### onRestored
 
 #### 📋 Purpose
-<Brief, clear description of what the function does.>
+Hook called after an item is restored from persistence.
 
 #### ⏰ When Called
-<Describe when and why this function is invoked.>
+Automatically invoked after loading an item from the database.
 
 #### ↩️ Returns
-* <returnType>
-<Description or "nil".>
+* nil
 
 #### 🌐 Realm
-<Client | Server | Shared>
+Server
 
 #### 💡 Example Usage
 
 ```lua
-    <High Complexity and well documented Function Call Or Use Case Here>
+    function ITEM:onRestored() end
+
+```
+
+---
+
+### onRestored
+
+#### 📋 Purpose
+Hook called after an item is restored from persistence.
+
+#### ⏰ When Called
+Automatically invoked after loading an item from the database.
+
+#### ↩️ Returns
+* nil
+
+#### 🌐 Realm
+Server
+
+#### 💡 Example Usage
+
+```lua
+    function ITEM:onRestored() end
 
 ```
 
@@ -805,22 +976,27 @@ The item meta table provides comprehensive functionality for managing item data,
 ### sync
 
 #### 📋 Purpose
-<Brief, clear description of what the function does.>
+Sends this item instance to a recipient or all clients for syncing.
 
 #### ⏰ When Called
-<Describe when and why this function is invoked.>
+Use after creating or updating an item instance.
+
+#### ⚙️ Parameters
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `recipient` | **Player|nil** | Specific player to sync; broadcasts when nil. |
 
 #### ↩️ Returns
-* <returnType>
-<Description or "nil".>
+* nil
 
 #### 🌐 Realm
-<Client | Server | Shared>
+Server
 
 #### 💡 Example Usage
 
 ```lua
-    <High Complexity and well documented Function Call Or Use Case Here>
+    item:sync(ply)
 
 ```
 
@@ -829,22 +1005,31 @@ The item meta table provides comprehensive functionality for managing item data,
 ### setData
 
 #### 📋 Purpose
-<Brief, clear description of what the function does.>
+Sets a custom data value on the item, networking and saving as needed.
 
 #### ⏰ When Called
-<Describe when and why this function is invoked.>
+Use when updating item metadata that clients or persistence require.
+
+#### ⚙️ Parameters
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `key` | **string** | Data key to set. |
+| `value` | **any** | Value to store. |
+| `receivers` | **Player|table|nil** | Targets to send the update to; defaults to owner. |
+| `noSave` | **boolean** | Skip database write when true. |
+| `noCheckEntity` | **boolean** | Skip updating the world entity netvar when true. |
 
 #### ↩️ Returns
-* <returnType>
-<Description or "nil".>
+* nil
 
 #### 🌐 Realm
-<Client | Server | Shared>
+Server
 
 #### 💡 Example Usage
 
 ```lua
-    <High Complexity and well documented Function Call Or Use Case Here>
+    item:setData("durability", 80, item:getOwner())
 
 ```
 
@@ -853,22 +1038,29 @@ The item meta table provides comprehensive functionality for managing item data,
 ### addQuantity
 
 #### 📋 Purpose
-<Brief, clear description of what the function does.>
+Increases the item quantity by the given amount.
 
 #### ⏰ When Called
-<Describe when and why this function is invoked.>
+Use for stacking items or consuming partial quantities.
+
+#### ⚙️ Parameters
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `quantity` | **number** | Amount to add (can be negative). |
+| `receivers` | **Player|table|nil** | Targets to notify; defaults to owner. |
+| `noCheckEntity` | **boolean** | Skip updating the entity netvar when true. |
 
 #### ↩️ Returns
-* <returnType>
-<Description or "nil".>
+* nil
 
 #### 🌐 Realm
-<Client | Server | Shared>
+Server
 
 #### 💡 Example Usage
 
 ```lua
-    <High Complexity and well documented Function Call Or Use Case Here>
+    item:addQuantity(-1, ply)
 
 ```
 
@@ -877,22 +1069,29 @@ The item meta table provides comprehensive functionality for managing item data,
 ### setQuantity
 
 #### 📋 Purpose
-<Brief, clear description of what the function does.>
+Sets the item quantity, updating entities, clients, and storage.
 
 #### ⏰ When Called
-<Describe when and why this function is invoked.>
+Use after splitting stacks or consuming items.
+
+#### ⚙️ Parameters
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `quantity` | **number** | New stack amount. |
+| `receivers` | **Player|table|nil** | Targets to notify; defaults to owner. |
+| `noCheckEntity` | **boolean** | Skip updating the world entity netvar when true. |
 
 #### ↩️ Returns
-* <returnType>
-<Description or "nil".>
+* nil
 
 #### 🌐 Realm
-<Client | Server | Shared>
+Server
 
 #### 💡 Example Usage
 
 ```lua
-    <High Complexity and well documented Function Call Or Use Case Here>
+    item:setQuantity(5, ply)
 
 ```
 
@@ -901,22 +1100,31 @@ The item meta table provides comprehensive functionality for managing item data,
 ### interact
 
 #### 📋 Purpose
-<Brief, clear description of what the function does.>
+Handles an item interaction action, running hooks and callbacks.
 
 #### ⏰ When Called
-<Describe when and why this function is invoked.>
+Use when a player selects an action from an item's context menu.
+
+#### ⚙️ Parameters
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `action` | **string** | Action identifier from the item's functions table. |
+| `client` | **Player** | Player performing the action. |
+| `entity` | **Entity|nil** | World entity representing the item, if any. |
+| `data` | **any** | Additional data for multi-option actions. |
 
 #### ↩️ Returns
-* <returnType>
-<Description or "nil".>
+* boolean
+True if the action was processed; false otherwise.
 
 #### 🌐 Realm
-<Client | Server | Shared>
+Server
 
 #### 💡 Example Usage
 
 ```lua
-    <High Complexity and well documented Function Call Or Use Case Here>
+    item:interact("use", ply, ent)
 
 ```
 
@@ -925,22 +1133,22 @@ The item meta table provides comprehensive functionality for managing item data,
 ### getCategory
 
 #### 📋 Purpose
-<Brief, clear description of what the function does.>
+Returns the item's localized category label.
 
 #### ⏰ When Called
-<Describe when and why this function is invoked.>
+Use when grouping or displaying items by category.
 
 #### ↩️ Returns
-* <returnType>
-<Description or "nil".>
+* string
+Localized category name, or "misc" if undefined.
 
 #### 🌐 Realm
-<Client | Server | Shared>
+Shared
 
 #### 💡 Example Usage
 
 ```lua
-    <High Complexity and well documented Function Call Or Use Case Here>
+    local category = item:getCategory()
 
 ```
 
