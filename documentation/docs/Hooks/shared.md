@@ -13,22 +13,33 @@ Shared hooks in the Lilia framework handle functionality available on both clien
 ### AdjustCreationData
 
 #### 📋 Purpose
-<Brief, clear description of what the function does.>
+Let schemas modify validated character creation data before it is saved.
 
 #### ⏰ When Called
-<Describe when and why this function is invoked.>
+After creation data is sanitized and validated in `liaCharCreate`, before the final table is merged and written.
+
+#### ⚙️ Parameters
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `client` | **Player** | Player creating the character. |
+| `data` | **table** | Sanitized values for registered character variables. |
+| `newData` | **table** | Table you can populate with overrides that will be merged into `data`. |
+| `originalData` | **table** | Copy of the raw client payload prior to sanitation. |
 
 #### ↩️ Returns
-* <returnType>
-<Description or "nil".>
+* nil
+Mutate `data` or `newData`; return value is ignored.
 
 #### 🌐 Realm
-<Client | Server | Shared>
+Shared
 
 #### 💡 Example Usage
 
 ```lua
-    <High Complexity and well documented Function Call Or Use Case Here>
+    hook.Add("AdjustCreationData", "ForcePrefix", function(client, data, newData)
+        if data.faction == FACTION_STAFF then newData.name = "[STAFF] " .. (newData.name or data.name) end
+    end)
 
 ```
 
@@ -37,22 +48,32 @@ Shared hooks in the Lilia framework handle functionality available on both clien
 ### AdjustPACPartData
 
 #### 📋 Purpose
-<Brief, clear description of what the function does.>
+Allow items or modules to tweak PAC3 part data before it is attached.
 
 #### ⏰ When Called
-<Describe when and why this function is invoked.>
+Client-side when PAC3 builds part data for an outfit id before `AttachPart` runs.
+
+#### ⚙️ Parameters
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `wearer` | **Player** | Entity that will wear the PAC part. |
+| `id` | **string** | Unique part identifier, usually an item uniqueID. |
+| `data` | **table** | PAC3 data table that can be edited. |
 
 #### ↩️ Returns
-* <returnType>
-<Description or "nil".>
+* table|nil
+Return a replacement data table, or nil to keep the modified `data`.
 
 #### 🌐 Realm
-<Client | Server | Shared>
+Shared
 
 #### 💡 Example Usage
 
 ```lua
-    <High Complexity and well documented Function Call Or Use Case Here>
+    hook.Add("AdjustPACPartData", "TintPoliceVisors", function(wearer, id, data)
+        if wearer:Team() == FACTION_POLICE and data.Material then data.Material = "models/shiny" end
+    end)
 
 ```
 
@@ -61,22 +82,31 @@ Shared hooks in the Lilia framework handle functionality available on both clien
 ### AdjustStaminaOffset
 
 #### 📋 Purpose
-<Brief, clear description of what the function does.>
+Change the stamina delta applied on a tick.
 
 #### ⏰ When Called
-<Describe when and why this function is invoked.>
+Each stamina update before the offset is clamped and written to the player.
+
+#### ⚙️ Parameters
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `client` | **Player** | Player whose stamina is being processed. |
+| `offset` | **number** | Positive regen or negative drain calculated from movement. |
 
 #### ↩️ Returns
-* <returnType>
-<Description or "nil".>
+* number|nil
+Override for the stamina offset; nil keeps the existing value.
 
 #### 🌐 Realm
-<Client | Server | Shared>
+Shared
 
 #### 💡 Example Usage
 
 ```lua
-    <High Complexity and well documented Function Call Or Use Case Here>
+    hook.Add("AdjustStaminaOffset", "HeavyArmorTax", function(client, offset)
+        if client:GetNWBool("HeavyArmor") then return offset - 1 end
+    end)
 
 ```
 
@@ -85,22 +115,31 @@ Shared hooks in the Lilia framework handle functionality available on both clien
 ### AdvDupe_FinishPasting
 
 #### 📋 Purpose
-<Brief, clear description of what the function does.>
+React when an Advanced Dupe 2 paste finishes under BetterDupe.
 
 #### ⏰ When Called
-<Describe when and why this function is invoked.>
+After AdvDupe2 completes the paste queue so compatibility state can be reset.
+
+#### ⚙️ Parameters
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `tbl` | **table** | Paste context provided by AdvDupe2 (first entry is the player). |
 
 #### ↩️ Returns
-* <returnType>
-<Description or "nil".>
+* nil
+Perform cleanup; return value is ignored.
 
 #### 🌐 Realm
-<Client | Server | Shared>
+Shared
 
 #### 💡 Example Usage
 
 ```lua
-    <High Complexity and well documented Function Call Or Use Case Here>
+    hook.Add("AdvDupe_FinishPasting", "ClearTempState", function(info)
+        local ply = info[1] and info[1].Player
+        if IsValid(ply) then ply.tempBetterDupe = nil end
+    end)
 
 ```
 
@@ -109,22 +148,31 @@ Shared hooks in the Lilia framework handle functionality available on both clien
 ### AttachPart
 
 #### 📋 Purpose
-<Brief, clear description of what the function does.>
+Notify when a PAC3 part is attached to a player.
 
 #### ⏰ When Called
-<Describe when and why this function is invoked.>
+Client-side after PAC3 part data is retrieved and before it is tracked locally.
+
+#### ⚙️ Parameters
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `client` | **Player** | Player receiving the PAC part. |
+| `id` | **string** | Identifier of the part or outfit. |
 
 #### ↩️ Returns
-* <returnType>
-<Description or "nil".>
+* nil
+Use for side effects such as bookkeeping.
 
 #### 🌐 Realm
-<Client | Server | Shared>
+Shared
 
 #### 💡 Example Usage
 
 ```lua
-    <High Complexity and well documented Function Call Or Use Case Here>
+    hook.Add("AttachPart", "TrackPACAttachment", function(client, id)
+        lia.log.add(client, "pacAttach", id)
+    end)
 
 ```
 
@@ -133,22 +181,31 @@ Shared hooks in the Lilia framework handle functionality available on both clien
 ### BagInventoryReady
 
 #### 📋 Purpose
-<Brief, clear description of what the function does.>
+Respond when a bag item finishes creating or loading its child inventory.
 
 #### ⏰ When Called
-<Describe when and why this function is invoked.>
+After a bag instance allocates an inventory (on instancing or restore) and access rules are applied.
+
+#### ⚙️ Parameters
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `bagItem` | **Item** | The bag item that owns the inventory. |
+| `inventory` | **Inventory** | Child inventory created for the bag. |
 
 #### ↩️ Returns
-* <returnType>
-<Description or "nil".>
+* nil
+Use for setup such as adding access rules or syncing UI.
 
 #### 🌐 Realm
-<Client | Server | Shared>
+Shared
 
 #### 💡 Example Usage
 
 ```lua
-    <High Complexity and well documented Function Call Or Use Case Here>
+    hook.Add("BagInventoryReady", "AutoLabelBag", function(bagItem, inventory)
+        inventory:setData("bagName", bagItem:getName())
+    end)
 
 ```
 
@@ -157,22 +214,31 @@ Shared hooks in the Lilia framework handle functionality available on both clien
 ### BagInventoryRemoved
 
 #### 📋 Purpose
-<Brief, clear description of what the function does.>
+React when a bag's inventory is being removed.
 
 #### ⏰ When Called
-<Describe when and why this function is invoked.>
+Before a bag item deletes its child inventory (e.g., on item removal).
+
+#### ⚙️ Parameters
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `bagItem` | **Item** | Bag being removed. |
+| `inventory` | **Inventory** | Child inventory scheduled for deletion. |
 
 #### ↩️ Returns
-* <returnType>
-<Description or "nil".>
+* nil
+Perform cleanup such as unloading items.
 
 #### 🌐 Realm
-<Client | Server | Shared>
+Shared
 
 #### 💡 Example Usage
 
 ```lua
-    <High Complexity and well documented Function Call Or Use Case Here>
+    hook.Add("BagInventoryRemoved", "DropBagContents", function(bagItem, inv)
+        for _, item in pairs(inv:getItems()) do item:transfer(nil, nil, nil, nil, true) end
+    end)
 
 ```
 
@@ -181,22 +247,66 @@ Shared hooks in the Lilia framework handle functionality available on both clien
 ### CalcStaminaChange
 
 #### 📋 Purpose
-<Brief, clear description of what the function does.>
+Calculate the stamina change for a player on a tick.
 
 #### ⏰ When Called
-<Describe when and why this function is invoked.>
+From the stamina timer in the attributes module every 0.25s and on client prediction.
+
+#### ⚙️ Parameters
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `client` | **Player** | Player being processed. |
 
 #### ↩️ Returns
-* <returnType>
-<Description or "nil".>
+* number
+Positive regen or negative drain applied to the player's stamina pool.
 
 #### 🌐 Realm
-<Client | Server | Shared>
+Shared
 
 #### 💡 Example Usage
 
 ```lua
-    <High Complexity and well documented Function Call Or Use Case Here>
+    function MODULE:CalcStaminaChange(client)
+        local offset = self.BaseClass.CalcStaminaChange(self, client)
+        if client:IsAdmin() then offset = offset + 1 end
+        return offset
+    end
+
+```
+
+---
+
+### CalcStaminaChange
+
+#### 📋 Purpose
+Calculate the stamina change for a player on a tick.
+
+#### ⏰ When Called
+From the stamina timer in the attributes module every 0.25s and on client prediction.
+
+#### ⚙️ Parameters
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `client` | **Player** | Player being processed. |
+
+#### ↩️ Returns
+* number
+Positive regen or negative drain applied to the player's stamina pool.
+
+#### 🌐 Realm
+Shared
+
+#### 💡 Example Usage
+
+```lua
+    function MODULE:CalcStaminaChange(client)
+        local offset = self.BaseClass.CalcStaminaChange(self, client)
+        if client:IsAdmin() then offset = offset + 1 end
+        return offset
+    end
 
 ```
 
@@ -205,22 +315,38 @@ Shared hooks in the Lilia framework handle functionality available on both clien
 ### CanCharBeTransfered
 
 #### 📋 Purpose
-<Brief, clear description of what the function does.>
+Decide whether a character can be transferred to a new faction or class.
 
 #### ⏰ When Called
-<Describe when and why this function is invoked.>
+Before character transfer commands/classes move a character to another faction/class.
+
+#### ⚙️ Parameters
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `tChar` | **Character** | Character being transferred. |
+| `faction` | **number|string** | Target faction or class identifier. |
+| `arg3` | **number|string** | Current faction or class being left. |
 
 #### ↩️ Returns
-* <returnType>
-<Description or "nil".>
+* boolean, string|nil
+Return false and an optional reason to block the transfer.
 
 #### 🌐 Realm
-<Client | Server | Shared>
+Shared
 
 #### 💡 Example Usage
 
 ```lua
-    <High Complexity and well documented Function Call Or Use Case Here>
+    hook.Add("CanCharBeTransfered", "PreventDuplicateFaction", function(char, factionID)
+        if lia.faction.indices[factionID] and lia.faction.indices[factionID].oneCharOnly then
+            for _, other in pairs(lia.char.getAll()) do
+                if other.steamID == char.steamID and other:getFaction() == factionID then
+                    return false, L("charAlreadyInFaction")
+                end
+            end
+        end
+    end)
 
 ```
 
@@ -229,22 +355,31 @@ Shared hooks in the Lilia framework handle functionality available on both clien
 ### CanInviteToClass
 
 #### 📋 Purpose
-<Brief, clear description of what the function does.>
+Control whether a player can invite another player into a class.
 
 #### ⏰ When Called
-<Describe when and why this function is invoked.>
+Before sending a class invite through the team management menu.
+
+#### ⚙️ Parameters
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `client` | **Player** | Player issuing the invite. |
+| `target` | **Player** | Player being invited. |
 
 #### ↩️ Returns
-* <returnType>
-<Description or "nil".>
+* boolean, string|nil
+Return false (optionally with reason) to block the invite.
 
 #### 🌐 Realm
-<Client | Server | Shared>
+Shared
 
 #### 💡 Example Usage
 
 ```lua
-    <High Complexity and well documented Function Call Or Use Case Here>
+    hook.Add("CanInviteToClass", "RestrictByRank", function(client, target)
+        if not client:IsAdmin() then return false, L("insufficientPermissions") end
+    end)
 
 ```
 
@@ -253,22 +388,34 @@ Shared hooks in the Lilia framework handle functionality available on both clien
 ### CanInviteToFaction
 
 #### 📋 Purpose
-<Brief, clear description of what the function does.>
+Control whether a player can invite another player into their faction.
 
 #### ⏰ When Called
-<Describe when and why this function is invoked.>
+When a player tries to invite someone to join their faction in the team menu.
+
+#### ⚙️ Parameters
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `client` | **Player** | Player issuing the invite. |
+| `target` | **Player** | Player being invited. |
 
 #### ↩️ Returns
-* <returnType>
-<Description or "nil".>
+* boolean, string|nil
+Return false to deny the invitation with an optional message.
 
 #### 🌐 Realm
-<Client | Server | Shared>
+Shared
 
 #### 💡 Example Usage
 
 ```lua
-    <High Complexity and well documented Function Call Or Use Case Here>
+    hook.Add("CanInviteToFaction", "BlockFullFaction", function(client, target)
+        local faction = lia.faction.indices[client:Team()]
+        if faction and faction.memberLimit and faction.memberLimit <= faction:countMembers() then
+            return false, L("limitFaction")
+        end
+    end)
 
 ```
 
@@ -277,22 +424,30 @@ Shared hooks in the Lilia framework handle functionality available on both clien
 ### CanOutfitChangeModel
 
 #### 📋 Purpose
-<Brief, clear description of what the function does.>
+Decide whether an outfit item is allowed to change a player's model.
 
 #### ⏰ When Called
-<Describe when and why this function is invoked.>
+Before an outfit applies its model change during equip or removal.
+
+#### ⚙️ Parameters
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `item` | **Item** | Outfit attempting to change the player's model. |
 
 #### ↩️ Returns
-* <returnType>
-<Description or "nil".>
+* boolean
+Return false to prevent the outfit from changing the model.
 
 #### 🌐 Realm
-<Client | Server | Shared>
+Shared
 
 #### 💡 Example Usage
 
 ```lua
-    <High Complexity and well documented Function Call Or Use Case Here>
+    hook.Add("CanOutfitChangeModel", "RestrictModelSwap", function(item)
+        return not item.player:getNetVar("NoModelChange", false)
+    end)
 
 ```
 
@@ -301,22 +456,31 @@ Shared hooks in the Lilia framework handle functionality available on both clien
 ### CanPerformVendorEdit
 
 #### 📋 Purpose
-<Brief, clear description of what the function does.>
+Determine if a player can edit a vendor's configuration.
 
 #### ⏰ When Called
-<Describe when and why this function is invoked.>
+When opening the vendor editor or applying vendor changes through the UI.
+
+#### ⚙️ Parameters
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `client` | **Player** | Player attempting to edit. |
+| `vendor` | **Entity** | Vendor entity being edited. |
 
 #### ↩️ Returns
-* <returnType>
-<Description or "nil".>
+* boolean, string|nil
+Return false to block edits with an optional reason.
 
 #### 🌐 Realm
-<Client | Server | Shared>
+Shared
 
 #### 💡 Example Usage
 
 ```lua
-    <High Complexity and well documented Function Call Or Use Case Here>
+    hook.Add("CanPerformVendorEdit", "AdminOnlyVendors", function(client, vendor)
+        if not client:IsAdmin() then return false, L("insufficientPermissions") end
+    end)
 
 ```
 
@@ -325,22 +489,31 @@ Shared hooks in the Lilia framework handle functionality available on both clien
 ### CanPickupMoney
 
 #### 📋 Purpose
-<Brief, clear description of what the function does.>
+Allow or prevent a player from picking up a money entity.
 
 #### ⏰ When Called
-<Describe when and why this function is invoked.>
+When a player uses a `lia_money` entity to collect currency.
+
+#### ⚙️ Parameters
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `activator` | **Entity** | Entity attempting to pick up the money (usually a Player). |
+| `moneyEntity` | **Entity** | Money entity being collected. |
 
 #### ↩️ Returns
-* <returnType>
-<Description or "nil".>
+* boolean, string|nil
+Return false to block pickup with an optional message.
 
 #### 🌐 Realm
-<Client | Server | Shared>
+Shared
 
 #### 💡 Example Usage
 
 ```lua
-    <High Complexity and well documented Function Call Or Use Case Here>
+    hook.Add("CanPickupMoney", "RespectWantedStatus", function(client, money)
+        if client:getNetVar("isWanted") then return false, L("cannotPickupWhileWanted") end
+    end)
 
 ```
 
@@ -349,22 +522,30 @@ Shared hooks in the Lilia framework handle functionality available on both clien
 ### CanPlayerChooseWeapon
 
 #### 📋 Purpose
-<Brief, clear description of what the function does.>
+Filter which weapons appear as selectable in the weapon selector.
 
 #### ⏰ When Called
-<Describe when and why this function is invoked.>
+When building the client weapon selection UI before allowing a weapon choice.
+
+#### ⚙️ Parameters
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `weapon` | **Weapon** | Weapon entity being considered. |
 
 #### ↩️ Returns
-* <returnType>
-<Description or "nil".>
+* boolean
+Return false to hide or block selection of the weapon.
 
 #### 🌐 Realm
-<Client | Server | Shared>
+Shared
 
 #### 💡 Example Usage
 
 ```lua
-    <High Complexity and well documented Function Call Or Use Case Here>
+    hook.Add("CanPlayerChooseWeapon", "HideUnsafeWeapons", function(weapon)
+        if weapon:GetClass():find("admin") then return false end
+    end)
 
 ```
 
@@ -373,22 +554,31 @@ Shared hooks in the Lilia framework handle functionality available on both clien
 ### CanPlayerCreateChar
 
 #### 📋 Purpose
-<Brief, clear description of what the function does.>
+Allow schemas to veto or validate a character creation attempt.
 
 #### ⏰ When Called
-<Describe when and why this function is invoked.>
+On the server when a player submits the creation form and before processing begins.
+
+#### ⚙️ Parameters
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `client` | **Player** | Player creating the character. |
+| `data` | **table** | Raw creation data received from the client. |
 
 #### ↩️ Returns
-* <returnType>
-<Description or "nil".>
+* boolean, string|nil
+Return false and an optional message to deny creation.
 
 #### 🌐 Realm
-<Client | Server | Shared>
+Shared
 
 #### 💡 Example Usage
 
 ```lua
-    <High Complexity and well documented Function Call Or Use Case Here>
+    hook.Add("CanPlayerCreateChar", "LimitByPlaytime", function(client)
+        if not client:playTimeGreaterThan(3600) then return false, L("needMorePlaytime") end
+    end)
 
 ```
 
@@ -397,22 +587,34 @@ Shared hooks in the Lilia framework handle functionality available on both clien
 ### CanPlayerJoinClass
 
 #### 📋 Purpose
-<Brief, clear description of what the function does.>
+Decide if a player may join a given class.
 
 #### ⏰ When Called
-<Describe when and why this function is invoked.>
+Before assigning a class in the class library and character selection.
+
+#### ⚙️ Parameters
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `client` | **Player** | Player requesting the class. |
+| `class` | **number** | Target class index. |
+| `info` | **table** | Class data table for convenience. |
 
 #### ↩️ Returns
-* <returnType>
-<Description or "nil".>
+* boolean, string|nil
+Return false to block the class switch with an optional reason.
 
 #### 🌐 Realm
-<Client | Server | Shared>
+Shared
 
 #### 💡 Example Usage
 
 ```lua
-    <High Complexity and well documented Function Call Or Use Case Here>
+    hook.Add("CanPlayerJoinClass", "WhitelistCheck", function(client, class, info)
+        if info.requiresWhitelist and not client:getChar():getClasswhitelists()[class] then
+            return false, L("noWhitelist")
+        end
+    end)
 
 ```
 
@@ -421,22 +623,31 @@ Shared hooks in the Lilia framework handle functionality available on both clien
 ### CanPlayerKnock
 
 #### 📋 Purpose
-<Brief, clear description of what the function does.>
+Control whether a player can knock on a door with their hands.
 
 #### ⏰ When Called
-<Describe when and why this function is invoked.>
+When the hands SWEP secondary attack is used on a door entity.
+
+#### ⚙️ Parameters
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `arg1` | **Player** | Player attempting to knock. |
+| `arg2` | **Entity** | Door entity being knocked on. |
 
 #### ↩️ Returns
-* <returnType>
-<Description or "nil".>
+* boolean
+Return false to prevent the knock action.
 
 #### 🌐 Realm
-<Client | Server | Shared>
+Shared
 
 #### 💡 Example Usage
 
 ```lua
-    <High Complexity and well documented Function Call Or Use Case Here>
+    hook.Add("CanPlayerKnock", "BlockPoliceDoors", function(client, door)
+        if door.isPoliceDoor then return false end
+    end)
 
 ```
 
@@ -445,22 +656,31 @@ Shared hooks in the Lilia framework handle functionality available on both clien
 ### CanPlayerModifyConfig
 
 #### 📋 Purpose
-<Brief, clear description of what the function does.>
+Gate whether a player can change a configuration variable.
 
 #### ⏰ When Called
-<Describe when and why this function is invoked.>
+Client- and server-side when a config edit is attempted through the admin tools or config UI.
+
+#### ⚙️ Parameters
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `client` | **Player** | Player attempting the change. |
+| `key` | **string** | Config key being modified. |
 
 #### ↩️ Returns
-* <returnType>
-<Description or "nil".>
+* boolean, string|nil
+Return false to deny the modification with an optional message.
 
 #### 🌐 Realm
-<Client | Server | Shared>
+Shared
 
 #### 💡 Example Usage
 
 ```lua
-    <High Complexity and well documented Function Call Or Use Case Here>
+    hook.Add("CanPlayerModifyConfig", "SuperAdminOnly", function(client)
+        if not client:IsSuperAdmin() then return false, L("insufficientPermissions") end
+    end)
 
 ```
 
@@ -469,22 +689,31 @@ Shared hooks in the Lilia framework handle functionality available on both clien
 ### CanPlayerRotateItem
 
 #### 📋 Purpose
-<Brief, clear description of what the function does.>
+Determine if a player may rotate an item in an inventory grid.
 
 #### ⏰ When Called
-<Describe when and why this function is invoked.>
+When handling the client drag/drop rotate action for an item slot.
+
+#### ⚙️ Parameters
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `client` | **Player** | Player requesting the rotation. |
+| `item` | **Item** | Item instance being rotated. |
 
 #### ↩️ Returns
-* <returnType>
-<Description or "nil".>
+* boolean, string|nil
+Return false to block rotation with an optional error message.
 
 #### 🌐 Realm
-<Client | Server | Shared>
+Shared
 
 #### 💡 Example Usage
 
 ```lua
-    <High Complexity and well documented Function Call Or Use Case Here>
+    hook.Add("CanPlayerRotateItem", "LockQuestItems", function(client, item)
+        if item:getData("questLocked") then return false, L("itemLocked") end
+    end)
 
 ```
 
@@ -493,22 +722,30 @@ Shared hooks in the Lilia framework handle functionality available on both clien
 ### CanPlayerThrowPunch
 
 #### 📋 Purpose
-<Brief, clear description of what the function does.>
+Gate whether a player is allowed to throw a punch.
 
 #### ⏰ When Called
-<Describe when and why this function is invoked.>
+Before the hands SWEP starts a punch, after playtime and stamina checks.
+
+#### ⚙️ Parameters
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `client` | **Player** | Player attempting to punch. |
 
 #### ↩️ Returns
-* <returnType>
-<Description or "nil".>
+* boolean|string|nil
+Return false to stop the punch; optionally return a reason string.
 
 #### 🌐 Realm
-<Client | Server | Shared>
+Shared
 
 #### 💡 Example Usage
 
 ```lua
-    <High Complexity and well documented Function Call Or Use Case Here>
+    hook.Add("CanPlayerThrowPunch", "DisallowTiedPlayers", function(client)
+        if client:getNetVar("tied") then return false, L("cannotWhileTied") end
+    end)
 
 ```
 
@@ -517,22 +754,31 @@ Shared hooks in the Lilia framework handle functionality available on both clien
 ### CanPlayerUseCommand
 
 #### 📋 Purpose
-<Brief, clear description of what the function does.>
+Decide if a player can execute a specific console/chat command.
 
 #### ⏰ When Called
-<Describe when and why this function is invoked.>
+Each time a command is run through the command library before execution.
+
+#### ⚙️ Parameters
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `client` | **Player** | Player running the command. |
+| `command` | **table** | Command definition table. |
 
 #### ↩️ Returns
-* <returnType>
-<Description or "nil".>
+* boolean, string|nil
+Return false to block the command with an optional reason.
 
 #### 🌐 Realm
-<Client | Server | Shared>
+Shared
 
 #### 💡 Example Usage
 
 ```lua
-    <High Complexity and well documented Function Call Or Use Case Here>
+    hook.Add("CanPlayerUseCommand", "RestrictNonStaff", function(client, command)
+        if command.adminOnly and not client:IsAdmin() then return false, L("insufficientPermissions") end
+    end)
 
 ```
 
@@ -541,22 +787,31 @@ Shared hooks in the Lilia framework handle functionality available on both clien
 ### CanRunItemAction
 
 #### 📋 Purpose
-<Brief, clear description of what the function does.>
+Control whether an item action should be available.
 
 #### ⏰ When Called
-<Describe when and why this function is invoked.>
+While building item action menus both client-side (UI) and server-side (validation).
+
+#### ⚙️ Parameters
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `tempItem` | **Item** | Item being acted on. |
+| `key` | **string** | Action identifier (e.g., "equip", "drop"). |
 
 #### ↩️ Returns
-* <returnType>
-<Description or "nil".>
+* boolean
+Return false to hide or block the action.
 
 #### 🌐 Realm
-<Client | Server | Shared>
+Shared
 
 #### 💡 Example Usage
 
 ```lua
-    <High Complexity and well documented Function Call Or Use Case Here>
+    hook.Add("CanRunItemAction", "NoDropQuestItems", function(item, action)
+        if action == "drop" and item:getData("questLocked") then return false end
+    end)
 
 ```
 
@@ -565,22 +820,31 @@ Shared hooks in the Lilia framework handle functionality available on both clien
 ### CharForceRecognized
 
 #### 📋 Purpose
-<Brief, clear description of what the function does.>
+Force a character to recognize others within a range.
 
 #### ⏰ When Called
-<Describe when and why this function is invoked.>
+When the recognition module sets recognition for every character around a player.
+
+#### ⚙️ Parameters
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `ply` | **Player** | Player whose character will recognize others. |
+| `range` | **string|number** | Range preset ("whisper", "normal", "yell") or numeric distance. |
 
 #### ↩️ Returns
-* <returnType>
-<Description or "nil".>
+* nil
+Perform side effects such as marking characters recognized.
 
 #### 🌐 Realm
-<Client | Server | Shared>
+Shared
 
 #### 💡 Example Usage
 
 ```lua
-    <High Complexity and well documented Function Call Or Use Case Here>
+    hook.Add("CharForceRecognized", "AlwaysRecognizeStaff", function(ply)
+        if ply:IsAdmin() then ply:getChar():giveAllRecognition() end
+    end)
 
 ```
 
@@ -589,22 +853,31 @@ Shared hooks in the Lilia framework handle functionality available on both clien
 ### CharHasFlags
 
 #### 📋 Purpose
-<Brief, clear description of what the function does.>
+Override how character flag checks are evaluated.
 
 #### ⏰ When Called
-<Describe when and why this function is invoked.>
+Whenever `playerMeta:hasFlags` is queried to determine character permissions.
+
+#### ⚙️ Parameters
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `client` | **Player** | Player whose character is being checked. |
+| `flags` | **string** | Flag string to test. |
 
 #### ↩️ Returns
-* <returnType>
-<Description or "nil".>
+* boolean
+Return true to force pass, false to force fail, or nil to defer to default logic.
 
 #### 🌐 Realm
-<Client | Server | Shared>
+Shared
 
 #### 💡 Example Usage
 
 ```lua
-    <High Complexity and well documented Function Call Or Use Case Here>
+    hook.Add("CharHasFlags", "HonorVIP", function(client, flags)
+        if client:IsUserGroup("vip") and flags:find("V") then return true end
+    end)
 
 ```
 
@@ -613,22 +886,33 @@ Shared hooks in the Lilia framework handle functionality available on both clien
 ### ChatParsed
 
 #### 📋 Purpose
-<Brief, clear description of what the function does.>
+Modify chat metadata before it is dispatched.
 
 #### ⏰ When Called
-<Describe when and why this function is invoked.>
+After chat parsing but before the chat type and message are sent to recipients.
+
+#### ⚙️ Parameters
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `client` | **Player** | Speaker. |
+| `chatType` | **string** | Parsed chat command (ic, ooc, etc.). |
+| `message` | **string** | Original chat text. |
+| `anonymous` | **boolean** | Whether the message is anonymous. |
 
 #### ↩️ Returns
-* <returnType>
-<Description or "nil".>
+* string, string, boolean|nil
+Optionally return a replacement chatType, message, and anonymous flag.
 
 #### 🌐 Realm
-<Client | Server | Shared>
+Shared
 
 #### 💡 Example Usage
 
 ```lua
-    <High Complexity and well documented Function Call Or Use Case Here>
+    hook.Add("ChatParsed", "AddOOCPrefix", function(client, chatType, message, anonymous)
+        if chatType == "ooc" then return chatType, "[GLOBAL] " .. message, anonymous end
+    end)
 
 ```
 
@@ -637,22 +921,31 @@ Shared hooks in the Lilia framework handle functionality available on both clien
 ### CommandAdded
 
 #### 📋 Purpose
-<Brief, clear description of what the function does.>
+React when a new chat/console command is registered.
 
 #### ⏰ When Called
-<Describe when and why this function is invoked.>
+Immediately after a command is added to the command library.
+
+#### ⚙️ Parameters
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `command` | **string** | Command identifier. |
+| `data` | **table** | Command definition table. |
 
 #### ↩️ Returns
-* <returnType>
-<Description or "nil".>
+* nil
+Use for bookkeeping or adding aliases.
 
 #### 🌐 Realm
-<Client | Server | Shared>
+Shared
 
 #### 💡 Example Usage
 
 ```lua
-    <High Complexity and well documented Function Call Or Use Case Here>
+    hook.Add("CommandAdded", "LogCommands", function(name, data)
+        print("Command registered:", name, "adminOnly:", data.adminOnly)
+    end)
 
 ```
 
@@ -661,22 +954,33 @@ Shared hooks in the Lilia framework handle functionality available on both clien
 ### ConfigChanged
 
 #### 📋 Purpose
-<Brief, clear description of what the function does.>
+Run logic after a configuration value changes.
 
 #### ⏰ When Called
-<Describe when and why this function is invoked.>
+When a config entry is updated via admin tools or code on the server.
+
+#### ⚙️ Parameters
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `key` | **string** | Config key that changed. |
+| `value` | **any** | New value. |
+| `oldValue` | **any** | Previous value. |
+| `client` | **Player|nil** | Player who made the change, if any. |
 
 #### ↩️ Returns
-* <returnType>
-<Description or "nil".>
+* nil
+Use for reacting to config updates.
 
 #### 🌐 Realm
-<Client | Server | Shared>
+Shared
 
 #### 💡 Example Usage
 
 ```lua
-    <High Complexity and well documented Function Call Or Use Case Here>
+    hook.Add("ConfigChanged", "BroadcastChange", function(key, value, old, client)
+        if SERVER then lia.log.add(client, "configChanged", key, tostring(old), tostring(value)) end
+    end)
 
 ```
 
@@ -685,22 +989,32 @@ Shared hooks in the Lilia framework handle functionality available on both clien
 ### DoModuleIncludes
 
 #### 📋 Purpose
-<Brief, clear description of what the function does.>
+Customize how module files are included.
 
 #### ⏰ When Called
-<Describe when and why this function is invoked.>
+During module loading in the modularity library for each include path.
+
+#### ⚙️ Parameters
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `path` | **string** | Path of the file being included. |
+| `MODULE` | **table** | Module table receiving the include. |
 
 #### ↩️ Returns
-* <returnType>
-<Description or "nil".>
+* nil
+Perform side effects; return value is ignored.
 
 #### 🌐 Realm
-<Client | Server | Shared>
+Shared
 
 #### 💡 Example Usage
 
 ```lua
-    <High Complexity and well documented Function Call Or Use Case Here>
+    hook.Add("DoModuleIncludes", "TrackModuleIncludes", function(path, MODULE)
+        MODULE.loadedFiles = MODULE.loadedFiles or {}
+        table.insert(MODULE.loadedFiles, path)
+    end)
 
 ```
 
@@ -709,22 +1023,32 @@ Shared hooks in the Lilia framework handle functionality available on both clien
 ### ForceRecognizeRange
 
 #### 📋 Purpose
-<Brief, clear description of what the function does.>
+Force a character to recognize everyone within a given chat range.
 
 #### ⏰ When Called
-<Describe when and why this function is invoked.>
+By recognition commands to mark nearby characters as recognized.
+
+#### ⚙️ Parameters
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `ply` | **Player** | Player whose recognition list is being updated. |
+| `range` | **string|number** | Range preset ("whisper", "normal", "yell") or numeric distance. |
+| `fakeName` | **string|nil** | Optional fake name to record for recognition. |
 
 #### ↩️ Returns
-* <returnType>
-<Description or "nil".>
+* nil
+Perform side effects such as logging or extra notifications.
 
 #### 🌐 Realm
-<Client | Server | Shared>
+Shared
 
 #### 💡 Example Usage
 
 ```lua
-    <High Complexity and well documented Function Call Or Use Case Here>
+    hook.Add("ForceRecognizeRange", "LogForcedRecognition", function(ply, range)
+        lia.log.add(ply, "charRecognizeRange", tostring(range))
+    end)
 
 ```
 
@@ -733,22 +1057,31 @@ Shared hooks in the Lilia framework handle functionality available on both clien
 ### GetAttributeMax
 
 #### 📋 Purpose
-<Brief, clear description of what the function does.>
+Override the maximum level a character can reach for a given attribute.
 
 #### ⏰ When Called
-<Describe when and why this function is invoked.>
+Whenever attribute caps are checked, such as when spending points or granting boosts.
+
+#### ⚙️ Parameters
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `client` | **Player** | Player whose attribute cap is being queried. |
+| `id` | **string** | Attribute identifier. |
 
 #### ↩️ Returns
-* <returnType>
-<Description or "nil".>
+* number|nil
+Maximum allowed level (defaults to infinity).
 
 #### 🌐 Realm
-<Client | Server | Shared>
+Shared
 
 #### 💡 Example Usage
 
 ```lua
-    <High Complexity and well documented Function Call Or Use Case Here>
+    hook.Add("GetAttributeMax", "HardCapEndurance", function(client, id)
+        if id == "end" then return 50 end
+    end)
 
 ```
 
@@ -757,22 +1090,31 @@ Shared hooks in the Lilia framework handle functionality available on both clien
 ### GetAttributeStartingMax
 
 #### 📋 Purpose
-<Brief, clear description of what the function does.>
+Define the maximum starting value for an attribute during character creation.
 
 #### ⏰ When Called
-<Describe when and why this function is invoked.>
+While allocating starting attribute points to limit each stat.
+
+#### ⚙️ Parameters
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `client` | **Player** | Player creating the character. |
+| `attribute` | **string** | Attribute identifier. |
 
 #### ↩️ Returns
-* <returnType>
-<Description or "nil".>
+* number|nil
+Maximum value allowed at creation; nil falls back to default limits.
 
 #### 🌐 Realm
-<Client | Server | Shared>
+Shared
 
 #### 💡 Example Usage
 
 ```lua
-    <High Complexity and well documented Function Call Or Use Case Here>
+    hook.Add("GetAttributeStartingMax", "LowStartForStrength", function(client, attribute)
+        if attribute == "str" then return 5 end
+    end)
 
 ```
 
@@ -781,22 +1123,30 @@ Shared hooks in the Lilia framework handle functionality available on both clien
 ### GetCharMaxStamina
 
 #### 📋 Purpose
-<Brief, clear description of what the function does.>
+Specify a character's maximum stamina pool.
 
 #### ⏰ When Called
-<Describe when and why this function is invoked.>
+Whenever stamina is clamped, restored, or initialized.
+
+#### ⚙️ Parameters
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `char` | **Character** | Character whose stamina cap is being read. |
 
 #### ↩️ Returns
-* <returnType>
-<Description or "nil".>
+* number|nil
+Max stamina value; defaults to `DefaultStamina` config when nil.
 
 #### 🌐 Realm
-<Client | Server | Shared>
+Shared
 
 #### 💡 Example Usage
 
 ```lua
-    <High Complexity and well documented Function Call Or Use Case Here>
+    hook.Add("GetCharMaxStamina", "PerkBonus", function(char)
+        if char:hasFlags("S") then return lia.config.get("DefaultStamina", 100) + 25 end
+    end)
 
 ```
 
@@ -805,22 +1155,32 @@ Shared hooks in the Lilia framework handle functionality available on both clien
 ### GetDefaultCharDesc
 
 #### 📋 Purpose
-<Brief, clear description of what the function does.>
+Provide a default character description for a faction.
 
 #### ⏰ When Called
-<Describe when and why this function is invoked.>
+During creation validation and adjustment for the `desc` character variable.
+
+#### ⚙️ Parameters
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `client` | **Player** | Player creating the character. |
+| `arg2` | **number** | Faction index being created. |
+| `data` | **table** | Creation payload. |
 
 #### ↩️ Returns
-* <returnType>
-<Description or "nil".>
+* string, boolean|nil
+Description text and a flag indicating whether to override the player's input.
 
 #### 🌐 Realm
-<Client | Server | Shared>
+Shared
 
 #### 💡 Example Usage
 
 ```lua
-    <High Complexity and well documented Function Call Or Use Case Here>
+    hook.Add("GetDefaultCharDesc", "StaffDesc", function(client, faction)
+        if faction == FACTION_STAFF then return L("staffCharacterDiscordSteamID", "n/a", client:SteamID()), true end
+    end)
 
 ```
 
@@ -829,22 +1189,32 @@ Shared hooks in the Lilia framework handle functionality available on both clien
 ### GetDefaultCharName
 
 #### 📋 Purpose
-<Brief, clear description of what the function does.>
+Provide a default character name for a faction.
 
 #### ⏰ When Called
-<Describe when and why this function is invoked.>
+During creation validation and adjustment for the `name` character variable.
+
+#### ⚙️ Parameters
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `client` | **Player** | Player creating the character. |
+| `faction` | **number** | Target faction index. |
+| `data` | **table** | Creation payload. |
 
 #### ↩️ Returns
-* <returnType>
-<Description or "nil".>
+* string, boolean|nil
+Name text and a flag indicating whether to override the player's input.
 
 #### 🌐 Realm
-<Client | Server | Shared>
+Shared
 
 #### 💡 Example Usage
 
 ```lua
-    <High Complexity and well documented Function Call Or Use Case Here>
+    hook.Add("GetDefaultCharName", "StaffTemplate", function(client, faction, data)
+        if faction == FACTION_STAFF then return "Staff - " .. client:SteamName(), true end
+    end)
 
 ```
 
@@ -853,22 +1223,31 @@ Shared hooks in the Lilia framework handle functionality available on both clien
 ### GetDefaultInventorySize
 
 #### 📋 Purpose
-<Brief, clear description of what the function does.>
+Override the default inventory dimensions a character starts with.
 
 #### ⏰ When Called
-<Describe when and why this function is invoked.>
+During inventory setup on character creation and load.
+
+#### ⚙️ Parameters
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `client` | **Player** | Player owning the character. |
+| `char` | **Character** | Character whose inventory size is being set. |
 
 #### ↩️ Returns
-* <returnType>
-<Description or "nil".>
+* number, number|nil
+Inventory width and height; nil values fall back to config defaults.
 
 #### 🌐 Realm
-<Client | Server | Shared>
+Shared
 
 #### 💡 Example Usage
 
 ```lua
-    <High Complexity and well documented Function Call Or Use Case Here>
+    hook.Add("GetDefaultInventorySize", "LargeBagsForStaff", function(client, char)
+        if client:IsAdmin() then return 8, 6 end
+    end)
 
 ```
 
@@ -877,22 +1256,31 @@ Shared hooks in the Lilia framework handle functionality available on both clien
 ### GetDisplayedName
 
 #### 📋 Purpose
-<Brief, clear description of what the function does.>
+Decide what name is shown for a player in chat based on recognition.
 
 #### ⏰ When Called
-<Describe when and why this function is invoked.>
+Client-side when rendering chat messages to resolve a display name.
+
+#### ⚙️ Parameters
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `client` | **Player** | Speaker whose name is being displayed. |
+| `chatType` | **string** | Chat channel identifier. |
 
 #### ↩️ Returns
-* <returnType>
-<Description or "nil".>
+* string|nil
+Name to display; nil lets the default recognition logic run.
 
 #### 🌐 Realm
-<Client | Server | Shared>
+Shared
 
 #### 💡 Example Usage
 
 ```lua
-    <High Complexity and well documented Function Call Or Use Case Here>
+    hook.Add("GetDisplayedName", "ShowAliasInWhisper", function(client, chatType)
+        if chatType == "w" then return client:getChar():getData("alias") end
+    end)
 
 ```
 
@@ -901,22 +1289,31 @@ Shared hooks in the Lilia framework handle functionality available on both clien
 ### GetHandsAttackSpeed
 
 #### 📋 Purpose
-<Brief, clear description of what the function does.>
+Adjust the delay between punches for the hands SWEP.
 
 #### ⏰ When Called
-<Describe when and why this function is invoked.>
+Each time the fists are swung to determine the next attack delay.
+
+#### ⚙️ Parameters
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `arg1` | **Player** | Player punching. |
+| `arg2` | **number** | Default delay before the next punch. |
 
 #### ↩️ Returns
-* <returnType>
-<Description or "nil".>
+* number|nil
+Replacement delay; nil keeps the default.
 
 #### 🌐 Realm
-<Client | Server | Shared>
+Shared
 
 #### 💡 Example Usage
 
 ```lua
-    <High Complexity and well documented Function Call Or Use Case Here>
+    hook.Add("GetHandsAttackSpeed", "FasterCombatDrugs", function(client, defaultDelay)
+        if client:getNetVar("combatStim") then return defaultDelay * 0.75 end
+    end)
 
 ```
 
@@ -925,22 +1322,31 @@ Shared hooks in the Lilia framework handle functionality available on both clien
 ### GetItemDropModel
 
 #### 📋 Purpose
-<Brief, clear description of what the function does.>
+Override the model used when an item spawns as a world entity.
 
 #### ⏰ When Called
-<Describe when and why this function is invoked.>
+When an item entity is created server-side to set its model.
+
+#### ⚙️ Parameters
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `itemTable` | **table** | Item definition table. |
+| `itemEntity` | **Entity** | Spawned item entity. |
 
 #### ↩️ Returns
-* <returnType>
-<Description or "nil".>
+* string|nil
+Model path to use; nil keeps the item's configured model.
 
 #### 🌐 Realm
-<Client | Server | Shared>
+Shared
 
 #### 💡 Example Usage
 
 ```lua
-    <High Complexity and well documented Function Call Or Use Case Here>
+    hook.Add("GetItemDropModel", "IconicMoneyBag", function(itemTable)
+        if itemTable.uniqueID == "moneycase" then return "models/props_c17/briefcase001a.mdl" end
+    end)
 
 ```
 
@@ -949,22 +1355,30 @@ Shared hooks in the Lilia framework handle functionality available on both clien
 ### GetMaxPlayerChar
 
 #### 📋 Purpose
-<Brief, clear description of what the function does.>
+Override the maximum number of characters a player may create.
 
 #### ⏰ When Called
-<Describe when and why this function is invoked.>
+When rendering the character list and validating new character creation.
+
+#### ⚙️ Parameters
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `client` | **Player** | Player whose limit is being checked. |
 
 #### ↩️ Returns
-* <returnType>
-<Description or "nil".>
+* number|nil
+Maximum character slots; nil falls back to `MaxCharacters` config.
 
 #### 🌐 Realm
-<Client | Server | Shared>
+Shared
 
 #### 💡 Example Usage
 
 ```lua
-    <High Complexity and well documented Function Call Or Use Case Here>
+    hook.Add("GetMaxPlayerChar", "VIPExtraSlot", function(client)
+        if client:IsUserGroup("vip") then return (lia.config.get("MaxCharacters") or 5) + 1 end
+    end)
 
 ```
 
@@ -973,22 +1387,31 @@ Shared hooks in the Lilia framework handle functionality available on both clien
 ### GetMaxStartingAttributePoints
 
 #### 📋 Purpose
-<Brief, clear description of what the function does.>
+Set the total attribute points available during character creation.
 
 #### ⏰ When Called
-<Describe when and why this function is invoked.>
+On the creation screen when allocating starting attributes.
+
+#### ⚙️ Parameters
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `client` | **Player** | Player creating the character. |
+| `count` | **number** | Default maximum points. |
 
 #### ↩️ Returns
-* <returnType>
-<Description or "nil".>
+* number|nil
+Maximum points allowed; nil keeps the default.
 
 #### 🌐 Realm
-<Client | Server | Shared>
+Shared
 
 #### 💡 Example Usage
 
 ```lua
-    <High Complexity and well documented Function Call Or Use Case Here>
+    hook.Add("GetMaxStartingAttributePoints", "PerkBonusPoints", function(client, count)
+        if client:IsAdmin() then return count + 5 end
+    end)
 
 ```
 
@@ -997,22 +1420,30 @@ Shared hooks in the Lilia framework handle functionality available on both clien
 ### GetModelGender
 
 #### 📋 Purpose
-<Brief, clear description of what the function does.>
+Identify the gender classification for a player model.
 
 #### ⏰ When Called
-<Describe when and why this function is invoked.>
+When entity meta needs to know if a model is treated as female for voice/animations.
+
+#### ⚙️ Parameters
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `model` | **string** | Model path being inspected. |
 
 #### ↩️ Returns
-* <returnType>
-<Description or "nil".>
+* string|nil
+"female" to treat as female, or nil for default male handling.
 
 #### 🌐 Realm
-<Client | Server | Shared>
+Shared
 
 #### 💡 Example Usage
 
 ```lua
-    <High Complexity and well documented Function Call Or Use Case Here>
+    hook.Add("GetModelGender", "CustomFemaleModels", function(model)
+        if model:find("female_custom") then return "female" end
+    end)
 
 ```
 
@@ -1021,22 +1452,30 @@ Shared hooks in the Lilia framework handle functionality available on both clien
 ### GetMoneyModel
 
 #### 📋 Purpose
-<Brief, clear description of what the function does.>
+Pick the world model used by a money entity based on its amount.
 
 #### ⏰ When Called
-<Describe when and why this function is invoked.>
+When a `lia_money` entity initializes and sets its model.
+
+#### ⚙️ Parameters
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `arg1` | **number** | Amount of currency the entity holds. |
 
 #### ↩️ Returns
-* <returnType>
-<Description or "nil".>
+* string|nil
+Model path override; nil falls back to `MoneyModel` config.
 
 #### 🌐 Realm
-<Client | Server | Shared>
+Shared
 
 #### 💡 Example Usage
 
 ```lua
-    <High Complexity and well documented Function Call Or Use Case Here>
+    hook.Add("GetMoneyModel", "HighValueCash", function(amount)
+        if amount >= 1000 then return "models/props_lab/box01a.mdl" end
+    end)
 
 ```
 
@@ -1045,22 +1484,32 @@ Shared hooks in the Lilia framework handle functionality available on both clien
 ### GetNPCDialogOptions
 
 #### 📋 Purpose
-<Brief, clear description of what the function does.>
+Supply additional dialog options for an NPC conversation.
 
 #### ⏰ When Called
-<Describe when and why this function is invoked.>
+When the client requests dialog options for an NPC and builds the menu.
+
+#### ⚙️ Parameters
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `arg1` | **Player** | Player interacting with the NPC. |
+| `arg2` | **Entity** | NPC being talked to. |
+| `arg3` | **boolean** | Whether the NPC supports customization options. |
 
 #### ↩️ Returns
-* <returnType>
-<Description or "nil".>
+* table|nil
+Extra dialog options keyed by unique id; nil keeps defaults only.
 
 #### 🌐 Realm
-<Client | Server | Shared>
+Shared
 
 #### 💡 Example Usage
 
 ```lua
-    <High Complexity and well documented Function Call Or Use Case Here>
+    hook.Add("GetNPCDialogOptions", "AddShopGreeting", function(client, npc)
+        return {special = {name = "Ask about wares", callback = function() net.Start("npcShop") net.SendToServer() end}}
+    end)
 
 ```
 
@@ -1069,22 +1518,33 @@ Shared hooks in the Lilia framework handle functionality available on both clien
 ### GetPlayerPunchDamage
 
 #### 📋 Purpose
-<Brief, clear description of what the function does.>
+Adjust fist damage output for a punch.
 
 #### ⏰ When Called
-<Describe when and why this function is invoked.>
+Just before a punch trace applies damage in the hands SWEP.
+
+#### ⚙️ Parameters
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `arg1` | **Player** | Punching player. |
+| `arg2` | **number** | Default damage. |
+| `arg3` | **table** | Context table you may mutate (e.g., `context.damage`). |
 
 #### ↩️ Returns
-* <returnType>
-<Description or "nil".>
+* number|nil
+New damage value; nil uses `context.damage` or the original.
 
 #### 🌐 Realm
-<Client | Server | Shared>
+Shared
 
 #### 💡 Example Usage
 
 ```lua
-    <High Complexity and well documented Function Call Or Use Case Here>
+    hook.Add("GetPlayerPunchDamage", "StrengthAffectsPunch", function(client, damage, ctx)
+        local char = client:getChar()
+        if char then ctx.damage = ctx.damage + char:getAttrib("str", 0) * 0.2 end
+    end)
 
 ```
 
@@ -1093,22 +1553,31 @@ Shared hooks in the Lilia framework handle functionality available on both clien
 ### GetPlayerPunchRagdollTime
 
 #### 📋 Purpose
-<Brief, clear description of what the function does.>
+Set how long a target is ragdolled when nonlethal punches knock them down.
 
 #### ⏰ When Called
-<Describe when and why this function is invoked.>
+When a punch would kill a player while lethality is disabled.
+
+#### ⚙️ Parameters
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `arg1` | **Player** | Attacker. |
+| `arg2` | **Entity** | Target player being knocked out. |
 
 #### ↩️ Returns
-* <returnType>
-<Description or "nil".>
+* number|nil
+Ragdoll duration in seconds; nil uses `PunchRagdollTime` config.
 
 #### 🌐 Realm
-<Client | Server | Shared>
+Shared
 
 #### 💡 Example Usage
 
 ```lua
-    <High Complexity and well documented Function Call Or Use Case Here>
+    hook.Add("GetPlayerPunchRagdollTime", "ShorterKO", function(client, target)
+        if target:IsAdmin() then return 5 end
+    end)
 
 ```
 
@@ -1117,22 +1586,33 @@ Shared hooks in the Lilia framework handle functionality available on both clien
 ### GetPriceOverride
 
 #### 📋 Purpose
-<Brief, clear description of what the function does.>
+Override a vendor's buy/sell price for an item.
 
 #### ⏰ When Called
-<Describe when and why this function is invoked.>
+When a vendor calculates price for buying from or selling to a player.
+
+#### ⚙️ Parameters
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `vendor` | **Entity** | Vendor entity. |
+| `uniqueID` | **string** | Item unique ID being priced. |
+| `price` | **number** | Base price before modifiers. |
+| `isSellingToVendor` | **boolean** | True if the player is selling an item to the vendor. |
 
 #### ↩️ Returns
-* <returnType>
-<Description or "nil".>
+* number|nil
+Replacement price; nil keeps the existing calculation.
 
 #### 🌐 Realm
-<Client | Server | Shared>
+Shared
 
 #### 💡 Example Usage
 
 ```lua
-    <High Complexity and well documented Function Call Or Use Case Here>
+    hook.Add("GetPriceOverride", "FactionDiscount", function(vendor, uniqueID, price, selling)
+        if vendor.factionDiscount and not selling then return math.Round(price * vendor.factionDiscount) end
+    end)
 
 ```
 
@@ -1141,22 +1621,31 @@ Shared hooks in the Lilia framework handle functionality available on both clien
 ### GetRagdollTime
 
 #### 📋 Purpose
-<Brief, clear description of what the function does.>
+Set the ragdoll duration when a player is knocked out.
 
 #### ⏰ When Called
-<Describe when and why this function is invoked.>
+Whenever `playerMeta:setRagdolled` determines the ragdoll time.
+
+#### ⚙️ Parameters
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `client` | **Player** | Player being ragdolled. |
+| `time` | **number** | Proposed ragdoll time. |
 
 #### ↩️ Returns
-* <returnType>
-<Description or "nil".>
+* number|nil
+Replacement time; nil keeps the proposed duration.
 
 #### 🌐 Realm
-<Client | Server | Shared>
+Shared
 
 #### 💡 Example Usage
 
 ```lua
-    <High Complexity and well documented Function Call Or Use Case Here>
+    hook.Add("GetRagdollTime", "ShorterStaffRagdoll", function(client, time)
+        if client:IsAdmin() then return math.min(time, 5) end
+    end)
 
 ```
 
@@ -1165,22 +1654,30 @@ Shared hooks in the Lilia framework handle functionality available on both clien
 ### GetVendorSaleScale
 
 #### 📋 Purpose
-<Brief, clear description of what the function does.>
+Apply a global sale/markup scale to vendor transactions.
 
 #### ⏰ When Called
-<Describe when and why this function is invoked.>
+When vendors compute sale or purchase totals.
+
+#### ⚙️ Parameters
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `vendor` | **Entity** | Vendor entity performing the sale. |
 
 #### ↩️ Returns
-* <returnType>
-<Description or "nil".>
+* number|nil
+Multiplier applied to prices (e.g., 0.9 for 10% off); nil keeps vendor defaults.
 
 #### 🌐 Realm
-<Client | Server | Shared>
+Shared
 
 #### 💡 Example Usage
 
 ```lua
-    <High Complexity and well documented Function Call Or Use Case Here>
+    hook.Add("GetVendorSaleScale", "HappyHour", function(vendor)
+        if vendor:GetNWBool("happyHour") then return 0.8 end
+    end)
 
 ```
 
@@ -1189,22 +1686,30 @@ Shared hooks in the Lilia framework handle functionality available on both clien
 ### GetWeaponName
 
 #### 📋 Purpose
-<Brief, clear description of what the function does.>
+Override the display name derived from a weapon when creating an item or showing UI.
 
 #### ⏰ When Called
-<Describe when and why this function is invoked.>
+When generating item data from a weapon or showing weapon names in selectors.
+
+#### ⚙️ Parameters
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `weapon` | **Entity** | Weapon entity whose name is being resolved. |
 
 #### ↩️ Returns
-* <returnType>
-<Description or "nil".>
+* string|nil
+Custom weapon name; nil falls back to print name.
 
 #### 🌐 Realm
-<Client | Server | Shared>
+Shared
 
 #### 💡 Example Usage
 
 ```lua
-    <High Complexity and well documented Function Call Or Use Case Here>
+    hook.Add("GetWeaponName", "PrettySWEPNames", function(weapon)
+        return language.GetPhrase(weapon:GetClass() .. "_friendly") or weapon:GetPrintName()
+    end)
 
 ```
 
@@ -1213,22 +1718,30 @@ Shared hooks in the Lilia framework handle functionality available on both clien
 ### InitializeStorage
 
 #### 📋 Purpose
-<Brief, clear description of what the function does.>
+Initialize a storage entity's inventory rules or data.
 
 #### ⏰ When Called
-<Describe when and why this function is invoked.>
+After a storage entity is created or loaded and before player interaction.
+
+#### ⚙️ Parameters
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `entity` | **Entity** | Storage entity being prepared. |
 
 #### ↩️ Returns
-* <returnType>
-<Description or "nil".>
+* nil
+Perform setup such as assigning inventory IDs or access rules.
 
 #### 🌐 Realm
-<Client | Server | Shared>
+Shared
 
 #### 💡 Example Usage
 
 ```lua
-    <High Complexity and well documented Function Call Or Use Case Here>
+    hook.Add("InitializeStorage", "SetTrunkOwner", function(ent)
+        if ent:isVehicle() then ent:setNetVar("storageOwner", ent:GetNWString("owner")) end
+    end)
 
 ```
 
@@ -1237,22 +1750,24 @@ Shared hooks in the Lilia framework handle functionality available on both clien
 ### InitializedConfig
 
 #### 📋 Purpose
-<Brief, clear description of what the function does.>
+Signal that configuration definitions have been loaded client-side.
 
 #### ⏰ When Called
-<Describe when and why this function is invoked.>
+After the administration config UI finishes building available options.
 
 #### ↩️ Returns
-* <returnType>
-<Description or "nil".>
+* nil
+Use to populate UI or cache config data.
 
 #### 🌐 Realm
-<Client | Server | Shared>
+Shared
 
 #### 💡 Example Usage
 
 ```lua
-    <High Complexity and well documented Function Call Or Use Case Here>
+    hook.Add("InitializedConfig", "BuildConfigUI", function()
+        lia.config.buildList()
+    end)
 
 ```
 
@@ -1261,22 +1776,24 @@ Shared hooks in the Lilia framework handle functionality available on both clien
 ### InitializedItems
 
 #### 📋 Purpose
-<Brief, clear description of what the function does.>
+Notify that all items have been registered.
 
 #### ⏰ When Called
-<Describe when and why this function is invoked.>
+After item scripts finish loading during initialization.
 
 #### ↩️ Returns
-* <returnType>
-<Description or "nil".>
+* nil
+Use to add global item behaviors or cache lookups.
 
 #### 🌐 Realm
-<Client | Server | Shared>
+Shared
 
 #### 💡 Example Usage
 
 ```lua
-    <High Complexity and well documented Function Call Or Use Case Here>
+    hook.Add("InitializedItems", "CacheItemIDs", function()
+        lia.itemIDCache = table.GetKeys(lia.item.list)
+    end)
 
 ```
 
@@ -1285,22 +1802,24 @@ Shared hooks in the Lilia framework handle functionality available on both clien
 ### InitializedKeybinds
 
 #### 📋 Purpose
-<Brief, clear description of what the function does.>
+Signal that keybind definitions are loaded.
 
 #### ⏰ When Called
-<Describe when and why this function is invoked.>
+After keybinds are registered during initialization.
 
 #### ↩️ Returns
-* <returnType>
-<Description or "nil".>
+* nil
+Useful for binding post-load UI actions.
 
 #### 🌐 Realm
-<Client | Server | Shared>
+Shared
 
 #### 💡 Example Usage
 
 ```lua
-    <High Complexity and well documented Function Call Or Use Case Here>
+    hook.Add("InitializedKeybinds", "RegisterCustomBind", function()
+        lia.key.addBind("ToggleHUD", KEY_F6, "Toggle HUD", function(client) hook.Run("ToggleHUD") end)
+    end)
 
 ```
 
@@ -1309,22 +1828,24 @@ Shared hooks in the Lilia framework handle functionality available on both clien
 ### InitializedModules
 
 #### 📋 Purpose
-<Brief, clear description of what the function does.>
+Announce that all modules have finished loading.
 
 #### ⏰ When Called
-<Describe when and why this function is invoked.>
+After module include phase completes, including reloads.
 
 #### ↩️ Returns
-* <returnType>
-<Description or "nil".>
+* nil
+Use to initialize systems that depend on all modules being present.
 
 #### 🌐 Realm
-<Client | Server | Shared>
+Shared
 
 #### 💡 Example Usage
 
 ```lua
-    <High Complexity and well documented Function Call Or Use Case Here>
+    hook.Add("InitializedModules", "WarmWorkshopCache", function()
+        lia.workshop.cache = lia.workshop.gather()
+    end)
 
 ```
 
@@ -1333,22 +1854,24 @@ Shared hooks in the Lilia framework handle functionality available on both clien
 ### InitializedOptions
 
 #### 📋 Purpose
-<Brief, clear description of what the function does.>
+Notify that all options have been registered and loaded.
 
 #### ⏰ When Called
-<Describe when and why this function is invoked.>
+After the option library finishes loading saved values on the client.
 
 #### ↩️ Returns
-* <returnType>
-<Description or "nil".>
+* nil
+Use to refresh UI or apply option-driven settings.
 
 #### 🌐 Realm
-<Client | Server | Shared>
+Shared
 
 #### 💡 Example Usage
 
 ```lua
-    <High Complexity and well documented Function Call Or Use Case Here>
+    hook.Add("InitializedOptions", "ApplyThemeOption", function()
+        hook.Run("OnThemeChanged", lia.option.get("Theme", "Teal"), false)
+    end)
 
 ```
 
@@ -1357,22 +1880,24 @@ Shared hooks in the Lilia framework handle functionality available on both clien
 ### InitializedSchema
 
 #### 📋 Purpose
-<Brief, clear description of what the function does.>
+Fire once the schema finishes loading.
 
 #### ⏰ When Called
-<Describe when and why this function is invoked.>
+After schema initialization completes; useful for schema-level setup.
 
 #### ↩️ Returns
-* <returnType>
-<Description or "nil".>
+* nil
+Use to perform final initialization dependent on the full schema.
 
 #### 🌐 Realm
-<Client | Server | Shared>
+Shared
 
 #### 💡 Example Usage
 
 ```lua
-    <High Complexity and well documented Function Call Or Use Case Here>
+    hook.Add("InitializedSchema", "SetupSchemaData", function()
+        lia.schema.setupComplete = true
+    end)
 
 ```
 
@@ -1381,22 +1906,33 @@ Shared hooks in the Lilia framework handle functionality available on both clien
 ### InventoryDataChanged
 
 #### 📋 Purpose
-<Brief, clear description of what the function does.>
+React to inventory metadata changes.
 
 #### ⏰ When Called
-<Describe when and why this function is invoked.>
+When an inventory's data key is updated and replicated to clients.
+
+#### ⚙️ Parameters
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `instance` | **Inventory** | Inventory whose data changed. |
+| `key` | **string** | Data key. |
+| `oldValue` | **any** | Previous value. |
+| `value` | **any** | New value. |
 
 #### ↩️ Returns
-* <returnType>
-<Description or "nil".>
+* nil
+Use for UI updates or logic tied to inventory metadata.
 
 #### 🌐 Realm
-<Client | Server | Shared>
+Shared
 
 #### 💡 Example Usage
 
 ```lua
-    <High Complexity and well documented Function Call Or Use Case Here>
+    hook.Add("InventoryDataChanged", "UpdateBagLabel", function(inv, key, old, new)
+        if key == "bagName" then inv:getOwner():notify("Bag renamed to " .. tostring(new)) end
+    end)
 
 ```
 
@@ -1405,22 +1941,30 @@ Shared hooks in the Lilia framework handle functionality available on both clien
 ### InventoryInitialized
 
 #### 📋 Purpose
-<Brief, clear description of what the function does.>
+Signal that an inventory has finished initializing on the client.
 
 #### ⏰ When Called
-<Describe when and why this function is invoked.>
+After an inventory is created or received over the network.
+
+#### ⚙️ Parameters
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `instance` | **Inventory** | Inventory that is ready. |
 
 #### ↩️ Returns
-* <returnType>
-<Description or "nil".>
+* nil
+Use to hook UI creation or caching.
 
 #### 🌐 Realm
-<Client | Server | Shared>
+Shared
 
 #### 💡 Example Usage
 
 ```lua
-    <High Complexity and well documented Function Call Or Use Case Here>
+    hook.Add("InventoryInitialized", "ShowInventoryUI", function(inv)
+        if inv:getOwner() == LocalPlayer() then lia.inventory.show(inv) end
+    end)
 
 ```
 
@@ -1429,22 +1973,32 @@ Shared hooks in the Lilia framework handle functionality available on both clien
 ### InventoryItemAdded
 
 #### 📋 Purpose
-<Brief, clear description of what the function does.>
+React when an item is added to an inventory.
 
 #### ⏰ When Called
-<Describe when and why this function is invoked.>
+After an item successfully enters an inventory, both server- and client-side.
+
+#### ⚙️ Parameters
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `inventory` | **Inventory** | Inventory receiving the item. |
+| `item` | **Item** | Item instance added. |
 
 #### ↩️ Returns
-* <returnType>
-<Description or "nil".>
+* nil
+Use for logging, UI refresh, or triggers.
 
 #### 🌐 Realm
-<Client | Server | Shared>
+Shared
 
 #### 💡 Example Usage
 
 ```lua
-    <High Complexity and well documented Function Call Or Use Case Here>
+    hook.Add("InventoryItemAdded", "PlayPickupSound", function(inv, item)
+        local owner = inv:getOwner()
+        if IsValid(owner) then owner:EmitSound("items/ammocrate_open.wav", 60) end
+    end)
 
 ```
 
@@ -1453,22 +2007,32 @@ Shared hooks in the Lilia framework handle functionality available on both clien
 ### InventoryItemRemoved
 
 #### 📋 Purpose
-<Brief, clear description of what the function does.>
+React when an item leaves an inventory.
 
 #### ⏰ When Called
-<Describe when and why this function is invoked.>
+After an item is removed from an inventory, optionally preserving the instance.
+
+#### ⚙️ Parameters
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `inventory` | **Inventory** | Inventory losing the item. |
+| `instance` | **Item** | Item removed. |
+| `preserveItem` | **boolean** | True if the item instance is kept alive (e.g., dropped) instead of deleted. |
 
 #### ↩️ Returns
-* <returnType>
-<Description or "nil".>
+* nil
+Use for cleanup, UI refresh, or logging.
 
 #### 🌐 Realm
-<Client | Server | Shared>
+Shared
 
 #### 💡 Example Usage
 
 ```lua
-    <High Complexity and well documented Function Call Or Use Case Here>
+    hook.Add("InventoryItemRemoved", "LogRemoval", function(inv, item, preserve)
+        lia.log.add(inv:getOwner(), "itemRemoved", item.uniqueID, preserve and "preserved" or "deleted")
+    end)
 
 ```
 
@@ -1477,22 +2041,31 @@ Shared hooks in the Lilia framework handle functionality available on both clien
 ### IsCharFakeRecognized
 
 #### 📋 Purpose
-<Brief, clear description of what the function does.>
+Decide if a character is recognized under a fake name.
 
 #### ⏰ When Called
-<Describe when and why this function is invoked.>
+When checking recognition with fake names enabled.
+
+#### ⚙️ Parameters
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `character` | **Character** | Character performing the recognition check. |
+| `id` | **number** | Target character ID. |
 
 #### ↩️ Returns
-* <returnType>
-<Description or "nil".>
+* boolean
+Return true if recognized via fake name, false otherwise.
 
 #### 🌐 Realm
-<Client | Server | Shared>
+Shared
 
 #### 💡 Example Usage
 
 ```lua
-    <High Complexity and well documented Function Call Or Use Case Here>
+    hook.Add("IsCharFakeRecognized", "AlwaysRecognizeSelf", function(character, id)
+        if character.id == id then return true end
+    end)
 
 ```
 
@@ -1501,22 +2074,32 @@ Shared hooks in the Lilia framework handle functionality available on both clien
 ### IsCharRecognized
 
 #### 📋 Purpose
-<Brief, clear description of what the function does.>
+Override whether one character recognizes another.
 
 #### ⏰ When Called
-<Describe when and why this function is invoked.>
+Whenever recognition checks are performed for chat or display logic.
+
+#### ⚙️ Parameters
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `a` | **Character** | Character performing the check. |
+| `arg2` | **number** | Target character ID. |
 
 #### ↩️ Returns
-* <returnType>
-<Description or "nil".>
+* boolean
+Return false to force unrecognized, true to force recognized, or nil to use default logic.
 
 #### 🌐 Realm
-<Client | Server | Shared>
+Shared
 
 #### 💡 Example Usage
 
 ```lua
-    <High Complexity and well documented Function Call Or Use Case Here>
+    hook.Add("IsCharRecognized", "FactionAutoRecognize", function(character, id)
+        local other = lia.char.getCharacter(id, character:getPlayer())
+        if other and other:getFaction() == character:getFaction() then return true end
+    end)
 
 ```
 
@@ -1525,22 +2108,30 @@ Shared hooks in the Lilia framework handle functionality available on both clien
 ### IsRecognizedChatType
 
 #### 📋 Purpose
-<Brief, clear description of what the function does.>
+Declare which chat types should hide names when unrecognized.
 
 #### ⏰ When Called
-<Describe when and why this function is invoked.>
+Client-side when choosing to display `[Unknown]` instead of a name.
+
+#### ⚙️ Parameters
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `chatType` | **string** | Chat channel identifier. |
 
 #### ↩️ Returns
-* <returnType>
-<Description or "nil".>
+* boolean
+Return true to treat the chat type as requiring recognition.
 
 #### 🌐 Realm
-<Client | Server | Shared>
+Shared
 
 #### 💡 Example Usage
 
 ```lua
-    <High Complexity and well documented Function Call Or Use Case Here>
+    hook.Add("IsRecognizedChatType", "RecognizedEmote", function(chatType)
+        if chatType == "me" then return true end
+    end)
 
 ```
 
@@ -1549,22 +2140,30 @@ Shared hooks in the Lilia framework handle functionality available on both clien
 ### IsSuitableForTrunk
 
 #### 📋 Purpose
-<Brief, clear description of what the function does.>
+Check if an entity can host a storage trunk.
 
 #### ⏰ When Called
-<Describe when and why this function is invoked.>
+Before creating or opening storage tied to an entity (e.g., vehicles).
+
+#### ⚙️ Parameters
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `ent` | **Entity** | Entity being evaluated. |
 
 #### ↩️ Returns
-* <returnType>
-<Description or "nil".>
+* boolean
+Return false to disallow trunk storage on this entity.
 
 #### 🌐 Realm
-<Client | Server | Shared>
+Shared
 
 #### 💡 Example Usage
 
 ```lua
-    <High Complexity and well documented Function Call Or Use Case Here>
+    hook.Add("IsSuitableForTrunk", "AllowSpecificVehicles", function(vehicle)
+        if vehicle:isSimfphysCar() then return true end
+    end)
 
 ```
 
@@ -1573,22 +2172,33 @@ Shared hooks in the Lilia framework handle functionality available on both clien
 ### ItemDataChanged
 
 #### 📋 Purpose
-<Brief, clear description of what the function does.>
+React when persistent data on an item changes.
 
 #### ⏰ When Called
-<Describe when and why this function is invoked.>
+When an item's data key is updated via networking and propagated to clients.
+
+#### ⚙️ Parameters
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `item` | **Item** | Item whose data changed. |
+| `key` | **string** | Data key. |
+| `oldValue` | **any** | Previous value. |
+| `newValue` | **any** | Updated value. |
 
 #### ↩️ Returns
-* <returnType>
-<Description or "nil".>
+* nil
+Use to update UI or dependent state.
 
 #### 🌐 Realm
-<Client | Server | Shared>
+Shared
 
 #### 💡 Example Usage
 
 ```lua
-    <High Complexity and well documented Function Call Or Use Case Here>
+    hook.Add("ItemDataChanged", "UpdateDurabilityUI", function(item, key, old, new)
+        if key == "durability" then item:refreshPanels() end
+    end)
 
 ```
 
@@ -1597,22 +2207,33 @@ Shared hooks in the Lilia framework handle functionality available on both clien
 ### ItemDefaultFunctions
 
 #### 📋 Purpose
-<Brief, clear description of what the function does.>
+Inject or modify the default function set applied to every item.
 
 #### ⏰ When Called
-<Describe when and why this function is invoked.>
+During item registration when the base functions table is copied to a new item.
+
+#### ⚙️ Parameters
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `arg1` | **table** | Functions table for the item being registered. |
 
 #### ↩️ Returns
-* <returnType>
-<Description or "nil".>
+* nil
+Mutate the functions table directly.
 
 #### 🌐 Realm
-<Client | Server | Shared>
+Shared
 
 #### 💡 Example Usage
 
 ```lua
-    <High Complexity and well documented Function Call Or Use Case Here>
+    hook.Add("ItemDefaultFunctions", "AddInspect", function(funcs)
+        funcs.Inspect = {
+            name = "inspect",
+            onRun = function(item) item.player:notify(item:getDesc()) end
+        }
+    end)
 
 ```
 
@@ -1621,22 +2242,30 @@ Shared hooks in the Lilia framework handle functionality available on both clien
 ### ItemInitialized
 
 #### 📋 Purpose
-<Brief, clear description of what the function does.>
+Notify that an item instance has been initialized client-side.
 
 #### ⏰ When Called
-<Describe when and why this function is invoked.>
+When item data is received over the network and the item is constructed.
+
+#### ⚙️ Parameters
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `item` | **Item** | Newly initialized item instance. |
 
 #### ↩️ Returns
-* <returnType>
-<Description or "nil".>
+* nil
+Use for client-side setup such as caching icons.
 
 #### 🌐 Realm
-<Client | Server | Shared>
+Shared
 
 #### 💡 Example Usage
 
 ```lua
-    <High Complexity and well documented Function Call Or Use Case Here>
+    hook.Add("ItemInitialized", "PrimeItemPanels", function(item)
+        if item.panel then item.panel:Refresh() end
+    end)
 
 ```
 
@@ -1645,22 +2274,32 @@ Shared hooks in the Lilia framework handle functionality available on both clien
 ### ItemQuantityChanged
 
 #### 📋 Purpose
-<Brief, clear description of what the function does.>
+React when an item's quantity changes.
 
 #### ⏰ When Called
-<Describe when and why this function is invoked.>
+After quantity is updated and replicated to clients.
+
+#### ⚙️ Parameters
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `item` | **Item** | Item whose quantity changed. |
+| `oldValue` | **number** | Previous quantity. |
+| `quantity` | **number** | New quantity. |
 
 #### ↩️ Returns
-* <returnType>
-<Description or "nil".>
+* nil
+Use for UI refresh or logic tied to stack counts.
 
 #### 🌐 Realm
-<Client | Server | Shared>
+Shared
 
 #### 💡 Example Usage
 
 ```lua
-    <High Complexity and well documented Function Call Or Use Case Here>
+    hook.Add("ItemQuantityChanged", "UpdateStackLabel", function(item, old, new)
+        if item.panel then item.panel:SetStack(new) end
+    end)
 
 ```
 
@@ -1669,22 +2308,24 @@ Shared hooks in the Lilia framework handle functionality available on both clien
 ### LiliaLoaded
 
 #### 📋 Purpose
-<Brief, clear description of what the function does.>
+Signal that the Lilia client has finished loading.
 
 #### ⏰ When Called
-<Describe when and why this function is invoked.>
+After pre-load hooks complete on the client startup sequence.
 
 #### ↩️ Returns
-* <returnType>
-<Description or "nil".>
+* nil
+Use to kick off client-only systems.
 
 #### 🌐 Realm
-<Client | Server | Shared>
+Shared
 
 #### 💡 Example Usage
 
 ```lua
-    <High Complexity and well documented Function Call Or Use Case Here>
+    hook.Add("LiliaLoaded", "OpenHUD", function()
+        lia.hud.init()
+    end)
 
 ```
 
@@ -1693,22 +2334,33 @@ Shared hooks in the Lilia framework handle functionality available on both clien
 ### NetVarChanged
 
 #### 📋 Purpose
-<Brief, clear description of what the function does.>
+Respond to networked variable changes on entities, players, or characters.
 
 #### ⏰ When Called
-<Describe when and why this function is invoked.>
+Whenever a netVar is updated via `setNetVar` on players, entities, or characters.
+
+#### ⚙️ Parameters
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `client` | **Entity** | Entity whose netVar changed (player or entity). |
+| `key` | **string** | NetVar key. |
+| `oldValue` | **any** | Previous value. |
+| `value` | **any** | New value. |
 
 #### ↩️ Returns
-* <returnType>
-<Description or "nil".>
+* nil
+Use for side effects or client updates.
 
 #### 🌐 Realm
-<Client | Server | Shared>
+Shared
 
 #### 💡 Example Usage
 
 ```lua
-    <High Complexity and well documented Function Call Or Use Case Here>
+    hook.Add("NetVarChanged", "TrackStamina", function(entity, key, old, new)
+        if key == "stamina" and entity:IsPlayer() then entity.lastStamina = new end
+    end)
 
 ```
 
@@ -1717,22 +2369,31 @@ Shared hooks in the Lilia framework handle functionality available on both clien
 ### OnAdminSystemLoaded
 
 #### 📋 Purpose
-<Brief, clear description of what the function does.>
+Signal that the admin system integration has loaded.
 
 #### ⏰ When Called
-<Describe when and why this function is invoked.>
+After administration modules finish initializing and privileges are available.
+
+#### ⚙️ Parameters
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `arg1` | **table|nil** | Admin integration data, if provided. |
+| `arg2` | **table|nil** | Additional metadata from the admin system. |
 
 #### ↩️ Returns
-* <returnType>
-<Description or "nil".>
+* nil
+Use to register custom permissions or UI once admin hooks exist.
 
 #### 🌐 Realm
-<Client | Server | Shared>
+Shared
 
 #### 💡 Example Usage
 
 ```lua
-    <High Complexity and well documented Function Call Or Use Case Here>
+    hook.Add("OnAdminSystemLoaded", "RegisterCustomPrivileges", function()
+        lia.admin.addPrivilege("spawnVehicles", "Spawn Vehicles")
+    end)
 
 ```
 
@@ -1741,22 +2402,31 @@ Shared hooks in the Lilia framework handle functionality available on both clien
 ### OnCharGetup
 
 #### 📋 Purpose
-<Brief, clear description of what the function does.>
+Notify when a ragdolled character finishes getting up.
 
 #### ⏰ When Called
-<Describe when and why this function is invoked.>
+After a get-up action completes and the ragdoll entity is removed.
+
+#### ⚙️ Parameters
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `target` | **Player** | Player whose character stood up. |
+| `entity` | **Entity** | Ragdoll entity that was removed. |
 
 #### ↩️ Returns
-* <returnType>
-<Description or "nil".>
+* nil
+Use to restore state or apply effects after getting up.
 
 #### 🌐 Realm
-<Client | Server | Shared>
+Shared
 
 #### 💡 Example Usage
 
 ```lua
-    <High Complexity and well documented Function Call Or Use Case Here>
+    hook.Add("OnCharGetup", "ClearRagdollState", function(player, ragdoll)
+        player:setLocalVar("brth", nil)
+    end)
 
 ```
 
@@ -1765,22 +2435,33 @@ Shared hooks in the Lilia framework handle functionality available on both clien
 ### OnCharVarChanged
 
 #### 📋 Purpose
-<Brief, clear description of what the function does.>
+React whenever a character variable changes.
 
 #### ⏰ When Called
-<Describe when and why this function is invoked.>
+After a char var setter updates a value and broadcasts it.
+
+#### ⚙️ Parameters
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `character` | **Character** | Character whose variable changed. |
+| `varName` | **string** | Variable key. |
+| `oldVar` | **any** | Previous value. |
+| `newVar` | **any** | New value. |
 
 #### ↩️ Returns
-* <returnType>
-<Description or "nil".>
+* nil
+Use for syncing dependent systems or logging.
 
 #### 🌐 Realm
-<Client | Server | Shared>
+Shared
 
 #### 💡 Example Usage
 
 ```lua
-    <High Complexity and well documented Function Call Or Use Case Here>
+    hook.Add("OnCharVarChanged", "FlagChangeNotice", function(char, key, old, new)
+        if key == "flags" then lia.log.add(char:getPlayer(), "flagsChanged", tostring(old), tostring(new)) end
+    end)
 
 ```
 
@@ -1789,22 +2470,32 @@ Shared hooks in the Lilia framework handle functionality available on both clien
 ### OnConfigUpdated
 
 #### 📋 Purpose
-<Brief, clear description of what the function does.>
+React on the client when a config value updates.
 
 #### ⏰ When Called
-<Describe when and why this function is invoked.>
+Client-side after a config entry changes and is broadcast.
+
+#### ⚙️ Parameters
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `key` | **string** | Config key. |
+| `oldValue` | **any** | Previous value. |
+| `value` | **any** | New value. |
 
 #### ↩️ Returns
-* <returnType>
-<Description or "nil".>
+* nil
+Use to refresh cached data or UI.
 
 #### 🌐 Realm
-<Client | Server | Shared>
+Shared
 
 #### 💡 Example Usage
 
 ```lua
-    <High Complexity and well documented Function Call Or Use Case Here>
+    hook.Add("OnConfigUpdated", "ReloadLanguage", function(key, old, new)
+        if key == "Language" then lia.lang.clearCache() end
+    end)
 
 ```
 
@@ -1813,22 +2504,31 @@ Shared hooks in the Lilia framework handle functionality available on both clien
 ### OnItemAdded
 
 #### 📋 Purpose
-<Brief, clear description of what the function does.>
+Handle server-side logic when an item is added to an inventory.
 
 #### ⏰ When Called
-<Describe when and why this function is invoked.>
+After an item successfully enters an inventory on the server.
+
+#### ⚙️ Parameters
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `owner` | **Player|nil** | Owner player of the inventory, if applicable. |
+| `item` | **Item** | Item instance that was added. |
 
 #### ↩️ Returns
-* <returnType>
-<Description or "nil".>
+* nil
+Use for logging, analytics, or triggers.
 
 #### 🌐 Realm
-<Client | Server | Shared>
+Shared
 
 #### 💡 Example Usage
 
 ```lua
-    <High Complexity and well documented Function Call Or Use Case Here>
+    hook.Add("OnItemAdded", "NotifyPickup", function(owner, item)
+        if IsValid(owner) then owner:notifyLocalized("itemAdded", item:getName()) end
+    end)
 
 ```
 
@@ -1837,22 +2537,31 @@ Shared hooks in the Lilia framework handle functionality available on both clien
 ### OnItemCreated
 
 #### 📋 Purpose
-<Brief, clear description of what the function does.>
+React when an item entity is spawned into the world.
 
 #### ⏰ When Called
-<Describe when and why this function is invoked.>
+When `lia_item` entities are created for dropped or spawned items.
+
+#### ⚙️ Parameters
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `itemTable` | **table** | Static item definition. |
+| `itemEntity` | **Entity** | Spawned entity representing the item. |
 
 #### ↩️ Returns
-* <returnType>
-<Description or "nil".>
+* nil
+Use for modifying the entity (physics, model, etc.).
 
 #### 🌐 Realm
-<Client | Server | Shared>
+Shared
 
 #### 💡 Example Usage
 
 ```lua
-    <High Complexity and well documented Function Call Or Use Case Here>
+    hook.Add("OnItemCreated", "EnableGlow", function(itemTable, entity)
+        if itemTable.rare then entity:SetRenderFX(kRenderFxHologram) end
+    end)
 
 ```
 
@@ -1861,22 +2570,31 @@ Shared hooks in the Lilia framework handle functionality available on both clien
 ### OnItemOverridden
 
 #### 📋 Purpose
-<Brief, clear description of what the function does.>
+Inspect or modify item override data during registration.
 
 #### ⏰ When Called
-<Describe when and why this function is invoked.>
+When overrides are applied to an item definition at load time.
+
+#### ⚙️ Parameters
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `item` | **table** | Item definition being overridden. |
+| `overrides` | **table** | Table of override values. |
 
 #### ↩️ Returns
-* <returnType>
-<Description or "nil".>
+* nil
+Adjust fields directly in `item` or `overrides`.
 
 #### 🌐 Realm
-<Client | Server | Shared>
+Shared
 
 #### 💡 Example Usage
 
 ```lua
-    <High Complexity and well documented Function Call Or Use Case Here>
+    hook.Add("OnItemOverridden", "EnsureCategory", function(item, overrides)
+        if overrides.category == nil then overrides.category = "misc" end
+    end)
 
 ```
 
@@ -1885,22 +2603,30 @@ Shared hooks in the Lilia framework handle functionality available on both clien
 ### OnItemRegistered
 
 #### 📋 Purpose
-<Brief, clear description of what the function does.>
+Run logic immediately after an item type is registered.
 
 #### ⏰ When Called
-<Describe when and why this function is invoked.>
+At the end of `lia.item.register` once the item table is stored.
+
+#### ⚙️ Parameters
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `ITEM` | **table** | Registered item definition. |
 
 #### ↩️ Returns
-* <returnType>
-<Description or "nil".>
+* nil
+Use for post-registration setup such as caching or localization.
 
 #### 🌐 Realm
-<Client | Server | Shared>
+Shared
 
 #### 💡 Example Usage
 
 ```lua
-    <High Complexity and well documented Function Call Or Use Case Here>
+    hook.Add("OnItemRegistered", "CollectWeaponItems", function(item)
+        if item.isWeapon then lia.weaponItems = lia.weaponItems or {} table.insert(lia.weaponItems, item.uniqueID) end
+    end)
 
 ```
 
@@ -1909,22 +2635,24 @@ Shared hooks in the Lilia framework handle functionality available on both clien
 ### OnLocalizationLoaded
 
 #### 📋 Purpose
-<Brief, clear description of what the function does.>
+Notify that localization files have finished loading.
 
 #### ⏰ When Called
-<Describe when and why this function is invoked.>
+After language files and cached phrases are loaded/cleared.
 
 #### ↩️ Returns
-* <returnType>
-<Description or "nil".>
+* nil
+Use to refresh UI text or reload cached translations.
 
 #### 🌐 Realm
-<Client | Server | Shared>
+Shared
 
 #### 💡 Example Usage
 
 ```lua
-    <High Complexity and well documented Function Call Or Use Case Here>
+    hook.Add("OnLocalizationLoaded", "RefreshLanguageDependentUI", function()
+        if IsValid(lia.menu.panel) then lia.menu.panel:InvalidateLayout(true) end
+    end)
 
 ```
 
@@ -1933,22 +2661,30 @@ Shared hooks in the Lilia framework handle functionality available on both clien
 ### OnPAC3PartTransfered
 
 #### 📋 Purpose
-<Brief, clear description of what the function does.>
+Handle PAC3 parts being reassigned to a ragdoll.
 
 #### ⏰ When Called
-<Describe when and why this function is invoked.>
+When a player's PAC parts transfer to their ragdoll entity during rendering.
+
+#### ⚙️ Parameters
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `part` | **Entity|table** | PAC3 part being transferred. |
 
 #### ↩️ Returns
-* <returnType>
-<Description or "nil".>
+* nil
+Use for cleanup or tracking.
 
 #### 🌐 Realm
-<Client | Server | Shared>
+Shared
 
 #### 💡 Example Usage
 
 ```lua
-    <High Complexity and well documented Function Call Or Use Case Here>
+    hook.Add("OnPAC3PartTransfered", "DisableRagdollPAC", function(part)
+        part:SetNoDraw(true)
+    end)
 
 ```
 
@@ -1957,22 +2693,32 @@ Shared hooks in the Lilia framework handle functionality available on both clien
 ### OnPlayerPurchaseDoor
 
 #### 📋 Purpose
-<Brief, clear description of what the function does.>
+React when a player purchases or sells a door.
 
 #### ⏰ When Called
-<Describe when and why this function is invoked.>
+During door buy/sell commands after payment/ownership changes are processed.
+
+#### ⚙️ Parameters
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `client` | **Player** | Player performing the transaction. |
+| `door` | **Entity** | Door entity involved. |
+| `arg3` | **boolean** | True if selling/refunding, false if buying. |
 
 #### ↩️ Returns
-* <returnType>
-<Description or "nil".>
+* nil
+Use for logging or custom ownership logic.
 
 #### 🌐 Realm
-<Client | Server | Shared>
+Shared
 
 #### 💡 Example Usage
 
 ```lua
-    <High Complexity and well documented Function Call Or Use Case Here>
+    hook.Add("OnPlayerPurchaseDoor", "LogDoorSale", function(client, door, selling)
+        lia.log.add(client, selling and "doorSold" or "doorBought", tostring(door))
+    end)
 
 ```
 
@@ -1981,22 +2727,33 @@ Shared hooks in the Lilia framework handle functionality available on both clien
 ### OnPrivilegeRegistered
 
 #### 📋 Purpose
-<Brief, clear description of what the function does.>
+React when an admin privilege is registered.
 
 #### ⏰ When Called
-<Describe when and why this function is invoked.>
+When CAMI/compatibility layers add a new privilege.
+
+#### ⚙️ Parameters
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `arg1` | **table** | CAMI privilege table or simplified privilege data. |
+| `arg2` | **any** | Optional extra data from the source integration. |
+| `arg3` | **any** | Optional extra data from the source integration. |
+| `arg4` | **any** | Optional extra data from the source integration. |
 
 #### ↩️ Returns
-* <returnType>
-<Description or "nil".>
+* nil
+Use to mirror privileges into other systems.
 
 #### 🌐 Realm
-<Client | Server | Shared>
+Shared
 
 #### 💡 Example Usage
 
 ```lua
-    <High Complexity and well documented Function Call Or Use Case Here>
+    hook.Add("OnPrivilegeRegistered", "SyncPrivileges", function(priv)
+        print("Privilege added:", priv.Name or priv.name)
+    end)
 
 ```
 
@@ -2005,22 +2762,31 @@ Shared hooks in the Lilia framework handle functionality available on both clien
 ### OnPrivilegeUnregistered
 
 #### 📋 Purpose
-<Brief, clear description of what the function does.>
+React when an admin privilege is removed.
 
 #### ⏰ When Called
-<Describe when and why this function is invoked.>
+When CAMI/compatibility layers unregister a privilege.
+
+#### ⚙️ Parameters
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `arg1` | **table** | Privilege data being removed. |
+| `arg2` | **any** | Optional extra data. |
 
 #### ↩️ Returns
-* <returnType>
-<Description or "nil".>
+* nil
+Use for cleanup or UI updates.
 
 #### 🌐 Realm
-<Client | Server | Shared>
+Shared
 
 #### 💡 Example Usage
 
 ```lua
-    <High Complexity and well documented Function Call Or Use Case Here>
+    hook.Add("OnPrivilegeUnregistered", "CleanupPrivilegeCache", function(priv)
+        lia.admin.cache[priv.Name] = nil
+    end)
 
 ```
 
@@ -2029,22 +2795,31 @@ Shared hooks in the Lilia framework handle functionality available on both clien
 ### OnThemeChanged
 
 #### 📋 Purpose
-<Brief, clear description of what the function does.>
+Notify clients that the active UI theme changed.
 
 #### ⏰ When Called
-<Describe when and why this function is invoked.>
+After a theme is applied or a transition completes.
+
+#### ⚙️ Parameters
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `themeName` | **string** | Name of the theme applied. |
+| `useTransition` | **boolean** | True if the theme is transitioning over time. |
 
 #### ↩️ Returns
-* <returnType>
-<Description or "nil".>
+* nil
+Update UI elements to match the new theme.
 
 #### 🌐 Realm
-<Client | Server | Shared>
+Shared
 
 #### 💡 Example Usage
 
 ```lua
-    <High Complexity and well documented Function Call Or Use Case Here>
+    hook.Add("OnThemeChanged", "RefreshPanels", function(name)
+        for _, panel in ipairs(vgui.GetWorldPanel():GetChildren()) do if panel.RefreshTheme then panel:RefreshTheme() end end
+    end)
 
 ```
 
@@ -2053,22 +2828,30 @@ Shared hooks in the Lilia framework handle functionality available on both clien
 ### OnTransferred
 
 #### 📋 Purpose
-<Brief, clear description of what the function does.>
+Respond after a character is transferred between factions or classes.
 
 #### ⏰ When Called
-<Describe when and why this function is invoked.>
+Immediately after transfer logic completes in team management.
+
+#### ⚙️ Parameters
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `target` | **Player** | Player whose character was transferred. |
 
 #### ↩️ Returns
-* <returnType>
-<Description or "nil".>
+* nil
+Use for notifications or cleanup.
 
 #### 🌐 Realm
-<Client | Server | Shared>
+Shared
 
 #### 💡 Example Usage
 
 ```lua
-    <High Complexity and well documented Function Call Or Use Case Here>
+    hook.Add("OnTransferred", "StripOldClassWeapons", function(client)
+        client:StripWeapons()
+    end)
 
 ```
 
@@ -2077,22 +2860,31 @@ Shared hooks in the Lilia framework handle functionality available on both clien
 ### OnUsergroupCreated
 
 #### 📋 Purpose
-<Brief, clear description of what the function does.>
+React when a new usergroup is created in the admin system.
 
 #### ⏰ When Called
-<Describe when and why this function is invoked.>
+When an admin integration registers a new group.
+
+#### ⚙️ Parameters
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `groupName` | **string** | Name of the new group. |
+| `arg2` | **any** | Optional extra data (e.g., privilege list). |
 
 #### ↩️ Returns
-* <returnType>
-<Description or "nil".>
+* nil
+Use to sync UI or caches.
 
 #### 🌐 Realm
-<Client | Server | Shared>
+Shared
 
 #### 💡 Example Usage
 
 ```lua
-    <High Complexity and well documented Function Call Or Use Case Here>
+    hook.Add("OnUsergroupCreated", "CacheNewGroup", function(name)
+        lia.admin.refreshGroupCache(name)
+    end)
 
 ```
 
@@ -2101,22 +2893,30 @@ Shared hooks in the Lilia framework handle functionality available on both clien
 ### OnUsergroupRemoved
 
 #### 📋 Purpose
-<Brief, clear description of what the function does.>
+React when a usergroup is removed.
 
 #### ⏰ When Called
-<Describe when and why this function is invoked.>
+When an admin integration deletes a group.
+
+#### ⚙️ Parameters
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `groupName` | **string** | Name of the removed group. |
 
 #### ↩️ Returns
-* <returnType>
-<Description or "nil".>
+* nil
+Use to clear caches or revoke permissions.
 
 #### 🌐 Realm
-<Client | Server | Shared>
+Shared
 
 #### 💡 Example Usage
 
 ```lua
-    <High Complexity and well documented Function Call Or Use Case Here>
+    hook.Add("OnUsergroupRemoved", "PurgeRemovedGroup", function(name)
+        lia.admin.groups[name] = nil
+    end)
 
 ```
 
@@ -2125,22 +2925,32 @@ Shared hooks in the Lilia framework handle functionality available on both clien
 ### OnUsergroupRenamed
 
 #### 📋 Purpose
-<Brief, clear description of what the function does.>
+React when a usergroup is renamed.
 
 #### ⏰ When Called
-<Describe when and why this function is invoked.>
+After the admin system renames an existing group.
+
+#### ⚙️ Parameters
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `oldName` | **string** | Previous group name. |
+| `newName` | **string** | Updated group name. |
 
 #### ↩️ Returns
-* <returnType>
-<Description or "nil".>
+* nil
+Use to migrate references or update UI.
 
 #### 🌐 Realm
-<Client | Server | Shared>
+Shared
 
 #### 💡 Example Usage
 
 ```lua
-    <High Complexity and well documented Function Call Or Use Case Here>
+    hook.Add("OnUsergroupRenamed", "UpdateGroupCache", function(oldName, newName)
+        lia.admin.groups[newName] = lia.admin.groups[oldName]
+        lia.admin.groups[oldName] = nil
+    end)
 
 ```
 
@@ -2149,22 +2959,32 @@ Shared hooks in the Lilia framework handle functionality available on both clien
 ### OptionAdded
 
 #### 📋 Purpose
-<Brief, clear description of what the function does.>
+Notify that a new option has been registered.
 
 #### ⏰ When Called
-<Describe when and why this function is invoked.>
+Immediately after `lia.option.add` stores an option.
+
+#### ⚙️ Parameters
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `key` | **string** | Option key. |
+| `name` | **table** | Stored option table (name is the localized display name). |
+| `option` | **table** | Option metadata table. |
 
 #### ↩️ Returns
-* <returnType>
-<Description or "nil".>
+* nil
+Use for UI updates or caching quick options.
 
 #### 🌐 Realm
-<Client | Server | Shared>
+Shared
 
 #### 💡 Example Usage
 
 ```lua
-    <High Complexity and well documented Function Call Or Use Case Here>
+    hook.Add("OptionAdded", "InvalidateQuickOptions", function(key, opt)
+        if opt.isQuick or (opt.data and opt.data.isQuick) then lia.option.invalidateCache() end
+    end)
 
 ```
 
@@ -2173,22 +2993,32 @@ Shared hooks in the Lilia framework handle functionality available on both clien
 ### OptionChanged
 
 #### 📋 Purpose
-<Brief, clear description of what the function does.>
+Handle updates to option values.
 
 #### ⏰ When Called
-<Describe when and why this function is invoked.>
+After `lia.option.set` changes a value (client or server).
+
+#### ⚙️ Parameters
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `key` | **string** | Option key. |
+| `old` | **any** | Previous value. |
+| `value` | **any** | New value. |
 
 #### ↩️ Returns
-* <returnType>
-<Description or "nil".>
+* nil
+Use for reacting to option changes.
 
 #### 🌐 Realm
-<Client | Server | Shared>
+Shared
 
 #### 💡 Example Usage
 
 ```lua
-    <High Complexity and well documented Function Call Or Use Case Here>
+    hook.Add("OptionChanged", "ApplyHUDScale", function(key, old, new)
+        if key == "HUDScale" then lia.hud.setScale(new) end
+    end)
 
 ```
 
@@ -2197,22 +3027,31 @@ Shared hooks in the Lilia framework handle functionality available on both clien
 ### OverrideFactionDesc
 
 #### 📋 Purpose
-<Brief, clear description of what the function does.>
+Override the description shown for a faction.
 
 #### ⏰ When Called
-<Describe when and why this function is invoked.>
+During faction registration/loading while assembling faction data.
+
+#### ⚙️ Parameters
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `uniqueID` | **string** | Faction unique identifier. |
+| `arg2` | **string** | Current description. |
 
 #### ↩️ Returns
-* <returnType>
-<Description or "nil".>
+* string|nil
+Replacement description; nil keeps the existing text.
 
 #### 🌐 Realm
-<Client | Server | Shared>
+Shared
 
 #### 💡 Example Usage
 
 ```lua
-    <High Complexity and well documented Function Call Or Use Case Here>
+    hook.Add("OverrideFactionDesc", "CustomStaffDesc", function(id, desc)
+        if id == "staff" then return "Lilia staff team" end
+    end)
 
 ```
 
@@ -2221,22 +3060,31 @@ Shared hooks in the Lilia framework handle functionality available on both clien
 ### OverrideFactionModels
 
 #### 📋 Purpose
-<Brief, clear description of what the function does.>
+Override the model list for a faction.
 
 #### ⏰ When Called
-<Describe when and why this function is invoked.>
+During faction registration/loading while choosing models.
+
+#### ⚙️ Parameters
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `uniqueID` | **string** | Faction identifier. |
+| `arg2` | **table** | Default models table. |
 
 #### ↩️ Returns
-* <returnType>
-<Description or "nil".>
+* table|nil
+Replacement models table; nil keeps defaults.
 
 #### 🌐 Realm
-<Client | Server | Shared>
+Shared
 
 #### 💡 Example Usage
 
 ```lua
-    <High Complexity and well documented Function Call Or Use Case Here>
+    hook.Add("OverrideFactionModels", "SwapCitizenModels", function(id, models)
+        if id == "citizen" then return {"models/player/alyx.mdl"} end
+    end)
 
 ```
 
@@ -2245,22 +3093,31 @@ Shared hooks in the Lilia framework handle functionality available on both clien
 ### OverrideFactionName
 
 #### 📋 Purpose
-<Brief, clear description of what the function does.>
+Override the display name for a faction.
 
 #### ⏰ When Called
-<Describe when and why this function is invoked.>
+During faction registration/loading before teams are created.
+
+#### ⚙️ Parameters
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `uniqueID` | **string** | Faction identifier. |
+| `arg2` | **string** | Default faction name. |
 
 #### ↩️ Returns
-* <returnType>
-<Description or "nil".>
+* string|nil
+Replacement name; nil keeps the default.
 
 #### 🌐 Realm
-<Client | Server | Shared>
+Shared
 
 #### 💡 Example Usage
 
 ```lua
-    <High Complexity and well documented Function Call Or Use Case Here>
+    hook.Add("OverrideFactionName", "RenameCombine", function(id, name)
+        if id == "combine" then return "Civil Protection" end
+    end)
 
 ```
 
@@ -2269,22 +3126,31 @@ Shared hooks in the Lilia framework handle functionality available on both clien
 ### OverrideSpawnTime
 
 #### 📋 Purpose
-<Brief, clear description of what the function does.>
+Adjust the respawn timer for a player.
 
 #### ⏰ When Called
-<Describe when and why this function is invoked.>
+When calculating respawn delay on client and server.
+
+#### ⚙️ Parameters
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `ply` | **Player** | Player that will respawn. |
+| `baseTime` | **number** | Base respawn time in seconds. |
 
 #### ↩️ Returns
-* <returnType>
-<Description or "nil".>
+* number|nil
+New respawn time; nil keeps the base value.
 
 #### 🌐 Realm
-<Client | Server | Shared>
+Shared
 
 #### 💡 Example Usage
 
 ```lua
-    <High Complexity and well documented Function Call Or Use Case Here>
+    hook.Add("OverrideSpawnTime", "VIPFastRespawn", function(ply, base)
+        if ply:IsUserGroup("vip") then return math.max(base * 0.5, 1) end
+    end)
 
 ```
 
@@ -2293,22 +3159,30 @@ Shared hooks in the Lilia framework handle functionality available on both clien
 ### PlayerThrowPunch
 
 #### 📋 Purpose
-<Brief, clear description of what the function does.>
+Perform post-punch logic such as stamina consumption.
 
 #### ⏰ When Called
-<Describe when and why this function is invoked.>
+After a punch trace completes in the hands SWEP.
+
+#### ⚙️ Parameters
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `client` | **Player** | Player who just punched. |
 
 #### ↩️ Returns
-* <returnType>
-<Description or "nil".>
+* nil
+Use for additional effects like cooldowns or logging.
 
 #### 🌐 Realm
-<Client | Server | Shared>
+Shared
 
 #### 💡 Example Usage
 
 ```lua
-    <High Complexity and well documented Function Call Or Use Case Here>
+    hook.Add("PlayerThrowPunch", "TrackPunches", function(client)
+        client.punchesThrown = (client.punchesThrown or 0) + 1
+    end)
 
 ```
 
@@ -2317,22 +3191,24 @@ Shared hooks in the Lilia framework handle functionality available on both clien
 ### PreLiliaLoaded
 
 #### 📋 Purpose
-<Brief, clear description of what the function does.>
+Run right before the client finishes loading Lilia.
 
 #### ⏰ When Called
-<Describe when and why this function is invoked.>
+At the start of the client load sequence before `LiliaLoaded`.
 
 #### ↩️ Returns
-* <returnType>
-<Description or "nil".>
+* nil
+Use to prepare resources needed immediately after load.
 
 #### 🌐 Realm
-<Client | Server | Shared>
+Shared
 
 #### 💡 Example Usage
 
 ```lua
-    <High Complexity and well documented Function Call Or Use Case Here>
+    hook.Add("PreLiliaLoaded", "SetupFonts", function()
+        lia.util.createFont("liaBig", 32)
+    end)
 
 ```
 
@@ -2341,22 +3217,31 @@ Shared hooks in the Lilia framework handle functionality available on both clien
 ### RemovePart
 
 #### 📋 Purpose
-<Brief, clear description of what the function does.>
+Notify when a PAC3 part should be removed from a player.
 
 #### ⏰ When Called
-<Describe when and why this function is invoked.>
+Client-side when a part id is marked for removal from a player.
+
+#### ⚙️ Parameters
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `client` | **Player** | Player losing the part. |
+| `id` | **string** | Identifier of the part to remove. |
 
 #### ↩️ Returns
-* <returnType>
-<Description or "nil".>
+* nil
+Use for cleanup or bookkeeping.
 
 #### 🌐 Realm
-<Client | Server | Shared>
+Shared
 
 #### 💡 Example Usage
 
 ```lua
-    <High Complexity and well documented Function Call Or Use Case Here>
+    hook.Add("RemovePart", "ClearCachedPart", function(client, id)
+        if client.liaPACParts then client.liaPACParts[id] = nil end
+    end)
 
 ```
 
@@ -2365,22 +3250,30 @@ Shared hooks in the Lilia framework handle functionality available on both clien
 ### SetupBagInventoryAccessRules
 
 #### 📋 Purpose
-<Brief, clear description of what the function does.>
+Apply standard access rules to a bag's child inventory.
 
 #### ⏰ When Called
-<Describe when and why this function is invoked.>
+Immediately after a bag inventory is created or loaded.
+
+#### ⚙️ Parameters
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `inventory` | **Inventory** | Bag inventory being configured. |
 
 #### ↩️ Returns
-* <returnType>
-<Description or "nil".>
+* nil
+Mutate the inventory by adding access rules.
 
 #### 🌐 Realm
-<Client | Server | Shared>
+Shared
 
 #### 💡 Example Usage
 
 ```lua
-    <High Complexity and well documented Function Call Or Use Case Here>
+    hook.Add("SetupBagInventoryAccessRules", "CustomBagRule", function(inventory)
+        inventory:addAccessRule(function(_, action) if action == "transfer" then return true end end, 2)
+    end)
 
 ```
 
@@ -2389,46 +3282,24 @@ Shared hooks in the Lilia framework handle functionality available on both clien
 ### SetupPACDataFromItems
 
 #### 📋 Purpose
-<Brief, clear description of what the function does.>
+Build PAC3 data from equipped items and push it to clients.
 
 #### ⏰ When Called
-<Describe when and why this function is invoked.>
+Shortly after PAC compatibility initializes to rebuild outfit data.
 
 #### ↩️ Returns
-* <returnType>
-<Description or "nil".>
+* nil
+Use to extend or replace the default PAC data build pipeline.
 
 #### 🌐 Realm
-<Client | Server | Shared>
+Shared
 
 #### 💡 Example Usage
 
 ```lua
-    <High Complexity and well documented Function Call Or Use Case Here>
-
-```
-
----
-
-### getData
-
-#### 📋 Purpose
-<Brief, clear description of what the function does.>
-
-#### ⏰ When Called
-<Describe when and why this function is invoked.>
-
-#### ↩️ Returns
-* <returnType>
-<Description or "nil".>
-
-#### 🌐 Realm
-<Client | Server | Shared>
-
-#### 💡 Example Usage
-
-```lua
-    <High Complexity and well documented Function Call Or Use Case Here>
+    hook.Add("SetupPACDataFromItems", "AddCustomPAC", function()
+        for _, client in player.Iterator() do client:syncParts() end
+    end)
 
 ```
 

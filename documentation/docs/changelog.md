@@ -1,5 +1,30 @@
 # Changelog
 
+## Version 7.267 (January 10, 2026)
+
+### Changes
+
+- Hooks Docs
+- Successfully updated workshop Lilia to 7.265
+- More Docs
+- Update functions.md
+- Update server.lua
+- Successfully updated workshop Lilia to 7.261
+- More Docs
+- Successfully updated workshop Lilia to 7.259
+- More Docs
+- Linting
+- Update generate_docs.py
+- Removed Legacy
+- Successfully updated workshop Lilia to 7.254
+- Update generate_docs.py
+- Generators
+- Many Changes
+- Successfully updated workshop Lilia to 7.250
+- Delete index.md
+- Successfully updated workshop Lilia to 7.248
+- Generators
+
 ## Version 7.265 (January 10, 2026)
 
 ### Changes
