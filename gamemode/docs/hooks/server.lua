@@ -14,25 +14,41 @@
 ]]
 --[[
     Purpose:
-        <Brief, clear description of what the function does.>
+        Records a warning entry for a character and lets modules react to the new warning.
 
     When Called:
-        <Describe when and why this function is invoked.>
+        Fired whenever a warning is issued via admin commands, anti-cheat triggers, or net requests.
 
     Parameters:
-        <paramName> (<type>)
-            <Description.>
+        charID (number|string)
+            Character database identifier being warned.
+        warned (string)
+            Display name of the warned player.
+        warnedSteamID (string)
+            SteamID of the warned player.
+        timestamp (number)
+            Unix timestamp when the warning was created.
+        message (string)
+            Reason text for the warning.
+        warner (string)
+            Name of the admin or system issuing the warning.
+        warnerSteamID (string)
+            SteamID of the issuer.
+        severity (string)
+            Severity label such as Low/Medium/High.
 
     Returns:
-        <returnType>
-            <Description or "nil".>
+        string
+            Final severity value chosen (if modified) or nil.
 
     Realm:
-        <Client | Server | Shared>
+        Server
 
     Example Usage:
         ```lua
-            <High Complexity and well documented Function Call Or Use Case Here>
+            hook.Add("AddWarning", "LogWarning", function(charID, warned, warnedSteamID, timestamp, message, warner, warnerSteamID, severity)
+                lia.log.add(warner, "warningIssued", warned, severity, message)
+            end)
         ```
 ]]
 function AddWarning(charID, warned, warnedSteamID, timestamp, message, warner, warnerSteamID, severity)
@@ -40,25 +56,33 @@ end
 
 --[[
     Purpose:
-        <Brief, clear description of what the function does.>
+        Determines if an item move is allowed before completing a transfer between inventories.
 
     When Called:
-        <Describe when and why this function is invoked.>
+        Checked whenever an item is about to be moved to another inventory (including vendors).
 
     Parameters:
-        <paramName> (<type>)
-            <Description.>
+        item (Item)
+            Item instance being transferred.
+        inventory (Inventory)
+            Destination inventory.
+        VendorInventoryMeasure (boolean)
+            True when the transfer originates from a vendor panel.
+        client (Player)
+            Player requesting the transfer.
 
     Returns:
-        <returnType>
-            <Description or "nil".>
+        boolean
+            False to block the transfer; nil/true to allow.
 
     Realm:
-        <Client | Server | Shared>
+        Server
 
     Example Usage:
         ```lua
-            <High Complexity and well documented Function Call Or Use Case Here>
+            hook.Add("CanItemBeTransfered", "LimitAmmoMoves", function(item, inventory, isVendor, client)
+                if isVendor and item.isWeapon then return false end
+            end)
         ```
 ]]
 function CanItemBeTransfered(item, inventory, VendorInventoryMeasure, client)
@@ -66,25 +90,27 @@ end
 
 --[[
     Purpose:
-        <Brief, clear description of what the function does.>
+        Decides if an entity should be recorded in the persistence system.
 
     When Called:
-        <Describe when and why this function is invoked.>
+        Invoked while scanning entities for persistence during map saves.
 
     Parameters:
-        <paramName> (<type>)
-            <Description.>
+        entity (Entity)
+            The world entity being evaluated.
 
     Returns:
-        <returnType>
-            <Description or "nil".>
+        boolean
+            False to skip saving this entity; nil/true to include it.
 
     Realm:
-        <Client | Server | Shared>
+        Server
 
     Example Usage:
         ```lua
-            <High Complexity and well documented Function Call Or Use Case Here>
+            hook.Add("CanPersistEntity", "IgnoreRagdolls", function(ent)
+                if ent:IsRagdoll() then return false end
+            end)
         ```
 ]]
 function CanPersistEntity(entity)
@@ -92,25 +118,31 @@ end
 
 --[[
     Purpose:
-        <Brief, clear description of what the function does.>
+        Lets modules override door access checks before built-in permissions are evaluated.
 
     When Called:
-        <Describe when and why this function is invoked.>
+        Queried whenever door access is validated in entity:checkDoorAccess.
 
     Parameters:
-        <paramName> (<type>)
-            <Description.>
+        client (Player)
+            Player requesting access.
+        door (Entity)
+            Door entity being checked.
+        access (number)
+            Required access level (e.g., DOOR_OWNER, DOOR_TENANT, DOOR_GUEST).
 
     Returns:
-        <returnType>
-            <Description or "nil".>
+        boolean
+            True to grant access regardless of stored permissions; nil to fall back to defaults.
 
     Realm:
-        <Client | Server | Shared>
+        Server
 
     Example Usage:
         ```lua
-            <High Complexity and well documented Function Call Or Use Case Here>
+            hook.Add("CanPlayerAccessDoor", "StaffOverrideDoor", function(client, door)
+                if client:isStaffOnDuty() then return true end
+            end)
         ```
 ]]
 function CanPlayerAccessDoor(client, door, access)
@@ -118,25 +150,29 @@ end
 
 --[[
     Purpose:
-        <Brief, clear description of what the function does.>
+        Allows or denies a player opening/using a vendor entity.
 
     When Called:
-        <Describe when and why this function is invoked.>
+        Checked when a player attempts to access a vendor UI.
 
     Parameters:
-        <paramName> (<type>)
-            <Description.>
+        client (Player)
+            Player interacting with the vendor.
+        vendor (Entity)
+            Vendor entity being accessed.
 
     Returns:
-        <returnType>
-            <Description or "nil".>
+        boolean
+            False to block interaction; true/nil to allow.
 
     Realm:
-        <Client | Server | Shared>
+        Server
 
     Example Usage:
         ```lua
-            <High Complexity and well documented Function Call Or Use Case Here>
+            hook.Add("CanPlayerAccessVendor", "FactionLockVendors", function(client, vendor)
+                if not vendor:isFactionAllowed(client:Team()) then return false end
+            end)
         ```
 ]]
 function CanPlayerAccessVendor(client, vendor)
@@ -144,25 +180,29 @@ end
 
 --[[
     Purpose:
-        <Brief, clear description of what the function does.>
+        Controls whether a player may drop a specific item from their inventory.
 
     When Called:
-        <Describe when and why this function is invoked.>
+        Triggered before an item drop is performed.
 
     Parameters:
-        <paramName> (<type>)
-            <Description.>
+        client (Player)
+            Player attempting to drop the item.
+        item (Item)
+            Item instance being dropped.
 
     Returns:
-        <returnType>
-            <Description or "nil".>
+        boolean
+            False to block the drop; true/nil to permit.
 
     Realm:
-        <Client | Server | Shared>
+        Server
 
     Example Usage:
         ```lua
-            <High Complexity and well documented Function Call Or Use Case Here>
+            hook.Add("CanPlayerDropItem", "NoQuestItemDrops", function(client, item)
+                if item.isQuestItem then return false end
+            end)
         ```
 ]]
 function CanPlayerDropItem(client, item)
@@ -170,25 +210,27 @@ end
 
 --[[
     Purpose:
-        <Brief, clear description of what the function does.>
+        Checks whether a player is eligible to receive their periodic salary.
 
     When Called:
-        <Describe when and why this function is invoked.>
+        Evaluated each time salary is about to be granted.
 
     Parameters:
-        <paramName> (<type>)
-            <Description.>
+        client (Player)
+            Player due to receive salary.
 
     Returns:
-        <returnType>
-            <Description or "nil".>
+        boolean
+            False to block salary payment; true/nil to allow.
 
     Realm:
-        <Client | Server | Shared>
+        Server
 
     Example Usage:
         ```lua
-            <High Complexity and well documented Function Call Or Use Case Here>
+            hook.Add("CanPlayerEarnSalary", "JailedNoSalary", function(client)
+                if client:isJailed() then return false end
+            end)
         ```
 ]]
 function CanPlayerEarnSalary(client)
@@ -196,25 +238,29 @@ end
 
 --[[
     Purpose:
-        <Brief, clear description of what the function does.>
+        Decides if a player is allowed to equip a given item.
 
     When Called:
-        <Describe when and why this function is invoked.>
+        Checked before the equip logic for any item runs.
 
     Parameters:
-        <paramName> (<type>)
-            <Description.>
+        client (Player)
+            Player equipping the item.
+        item (Item)
+            Item instance being equipped.
 
     Returns:
-        <returnType>
-            <Description or "nil".>
+        boolean
+            False to prevent equipping; true/nil to allow.
 
     Realm:
-        <Client | Server | Shared>
+        Server
 
     Example Usage:
         ```lua
-            <High Complexity and well documented Function Call Or Use Case Here>
+            hook.Add("CanPlayerEquipItem", "RestrictHeavyArmor", function(client, item)
+                if item.weight and item.weight > 20 then return false end
+            end)
         ```
 ]]
 function CanPlayerEquipItem(client, item)
@@ -222,25 +268,29 @@ end
 
 --[[
     Purpose:
-        <Brief, clear description of what the function does.>
+        Allows or blocks a player from picking up physics objects with their hands tool.
 
     When Called:
-        <Describe when and why this function is invoked.>
+        Checked before a player grabs an entity with lia_hands.
 
     Parameters:
-        <paramName> (<type>)
-            <Description.>
+        client (Player)
+            Player attempting to hold the object.
+        entity (Entity)
+            Target entity being picked up.
 
     Returns:
-        <returnType>
-            <Description or "nil".>
+        boolean
+            False to prevent picking up; true/nil to allow.
 
     Realm:
-        <Client | Server | Shared>
+        Server
 
     Example Usage:
         ```lua
-            <High Complexity and well documented Function Call Or Use Case Here>
+            hook.Add("CanPlayerHoldObject", "NoHoldingDoors", function(client, ent)
+                if ent:isDoor() then return false end
+            end)
         ```
 ]]
 function CanPlayerHoldObject(client, entity)
@@ -248,25 +298,33 @@ end
 
 --[[
     Purpose:
-        <Brief, clear description of what the function does.>
+        Lets modules validate or modify player item interactions (use, drop, split, etc.).
 
     When Called:
-        <Describe when and why this function is invoked.>
+        Fired before an inventory action runs on an item.
 
     Parameters:
-        <paramName> (<type>)
-            <Description.>
+        client (Player)
+            Player performing the action.
+        action (string)
+            Interaction verb such as "drop", "combine", or a custom action ID.
+        item (Item)
+            Item instance being interacted with.
+        data (table)
+            Extra data supplied by the action (position, merge target, etc.).
 
     Returns:
-        <returnType>
-            <Description or "nil".>
+        boolean, string
+            False or false,reason to block; true/nil to allow.
 
     Realm:
-        <Client | Server | Shared>
+        Server
 
     Example Usage:
         ```lua
-            <High Complexity and well documented Function Call Or Use Case Here>
+            hook.Add("CanPlayerInteractItem", "StopHotbarDrop", function(client, action, item)
+                if action == "drop" and item.noDrop then return false, L("cannotDrop") end
+            end)
         ```
 ]]
 function CanPlayerInteractItem(client, action, item, data)
@@ -274,25 +332,29 @@ end
 
 --[[
     Purpose:
-        <Brief, clear description of what the function does.>
+        Decides if a player may lock a door or vehicle using provided access rights.
 
     When Called:
-        <Describe when and why this function is invoked.>
+        Evaluated before lock attempts are processed.
 
     Parameters:
-        <paramName> (<type>)
-            <Description.>
+        client (Player)
+            Player performing the lock.
+        door (Entity)
+            Door or vehicle entity targeted.
 
     Returns:
-        <returnType>
-            <Description or "nil".>
+        boolean
+            False to prevent locking; true/nil to allow.
 
     Realm:
-        <Client | Server | Shared>
+        Server
 
     Example Usage:
         ```lua
-            <High Complexity and well documented Function Call Or Use Case Here>
+            hook.Add("CanPlayerLock", "OnlyOwnersLock", function(client, door)
+                if not door:checkDoorAccess(client, DOOR_OWNER) then return false end
+            end)
         ```
 ]]
 function CanPlayerLock(client, door)
@@ -300,25 +362,29 @@ end
 
 --[[
     Purpose:
-        <Brief, clear description of what the function does.>
+        Controls visibility of specific log categories to a player.
 
     When Called:
-        <Describe when and why this function is invoked.>
+        Checked before sending a log entry or opening the log viewer.
 
     Parameters:
-        <paramName> (<type>)
-            <Description.>
+        client (Player)
+            Player requesting or receiving logs.
+        category (string)
+            Category identifier of the log.
 
     Returns:
-        <returnType>
-            <Description or "nil".>
+        boolean
+            False to hide the category; true/nil to show.
 
     Realm:
-        <Client | Server | Shared>
+        Server
 
     Example Usage:
         ```lua
-            <High Complexity and well documented Function Call Or Use Case Here>
+            hook.Add("CanPlayerSeeLogCategory", "HideAdminLogs", function(client, category)
+                if category == "admin" and not client:isStaffOnDuty() then return false end
+            end)
         ```
 ]]
 function CanPlayerSeeLogCategory(client, category)
@@ -326,25 +392,31 @@ end
 
 --[[
     Purpose:
-        <Brief, clear description of what the function does.>
+        Determines whether a player is permitted to spawn a storage entity.
 
     When Called:
-        <Describe when and why this function is invoked.>
+        Invoked when a storage deploy action is requested.
 
     Parameters:
-        <paramName> (<type>)
-            <Description.>
+        client (Player)
+            Player spawning the storage.
+        entity (Entity)
+            Storage entity class about to be created.
+        info (table)
+            Context info such as item data or position.
 
     Returns:
-        <returnType>
-            <Description or "nil".>
+        boolean
+            False to block spawning; true/nil to allow.
 
     Realm:
-        <Client | Server | Shared>
+        Server
 
     Example Usage:
         ```lua
-            <High Complexity and well documented Function Call Or Use Case Here>
+            hook.Add("CanPlayerSpawnStorage", "LimitStoragePerPlayer", function(client, entity)
+                if client:GetCount("lia_storage") >= 2 then return false end
+            end)
         ```
 ]]
 function CanPlayerSpawnStorage(client, entity, info)
@@ -352,25 +424,31 @@ end
 
 --[[
     Purpose:
-        <Brief, clear description of what the function does.>
+        Validates whether a player may switch from their current character to another.
 
     When Called:
-        <Describe when and why this function is invoked.>
+        Checked when a player initiates a character switch.
 
     Parameters:
-        <paramName> (<type>)
-            <Description.>
+        client (Player)
+            Player requesting the swap.
+        currentCharacter (Character)
+            Active character.
+        newCharacter (Character)
+            Target character to switch to.
 
     Returns:
-        <returnType>
-            <Description or "nil".>
+        boolean
+            False to deny the swap; true/nil to allow.
 
     Realm:
-        <Client | Server | Shared>
+        Server
 
     Example Usage:
         ```lua
-            <High Complexity and well documented Function Call Or Use Case Here>
+            hook.Add("CanPlayerSwitchChar", "BlockDuringCombat", function(client)
+                if client:isInCombat() then return false end
+            end)
         ```
 ]]
 function CanPlayerSwitchChar(client, currentCharacter, newCharacter)
@@ -378,25 +456,29 @@ end
 
 --[[
     Purpose:
-        <Brief, clear description of what the function does.>
+        Checks if a player may take an item out of a container or ground entity.
 
     When Called:
-        <Describe when and why this function is invoked.>
+        Fired before item pickup/move from a world/container inventory.
 
     Parameters:
-        <paramName> (<type>)
-            <Description.>
+        client (Player)
+            Player attempting to take the item.
+        item (Item)
+            Item instance being taken.
 
     Returns:
-        <returnType>
-            <Description or "nil".>
+        boolean
+            False to block taking; true/nil to allow.
 
     Realm:
-        <Client | Server | Shared>
+        Server
 
     Example Usage:
         ```lua
-            <High Complexity and well documented Function Call Or Use Case Here>
+            hook.Add("CanPlayerTakeItem", "LockdownLooting", function(client, item)
+                if lia.state.isLockdown() then return false end
+            end)
         ```
 ]]
 function CanPlayerTakeItem(client, item)
@@ -404,25 +486,35 @@ end
 
 --[[
     Purpose:
-        <Brief, clear description of what the function does.>
+        Approves or denies a vendor transaction before money/items exchange.
 
     When Called:
-        <Describe when and why this function is invoked.>
+        Invoked when a player tries to buy from or sell to a vendor.
 
     Parameters:
-        <paramName> (<type>)
-            <Description.>
+        client (Player)
+            Player trading with the vendor.
+        vendor (Entity)
+            Vendor entity.
+        itemType (string)
+            UniqueID of the item being traded.
+        isSellingToVendor (boolean)
+            True when the player sells an item to the vendor.
 
     Returns:
-        <returnType>
-            <Description or "nil".>
+        boolean, string, any
+            False,reason to cancel; true/nil to allow. Optional third param for formatted message data.
 
     Realm:
-        <Client | Server | Shared>
+        Server
 
     Example Usage:
         ```lua
-            <High Complexity and well documented Function Call Or Use Case Here>
+            hook.Add("CanPlayerTradeWithVendor", "RestrictRareItems", function(client, vendor, itemType)
+                if lia.item.list[itemType].rarity == "legendary" and not client:isVIP() then
+                    return false, L("vendorVIPOnly")
+                end
+            end)
         ```
 ]]
 function CanPlayerTradeWithVendor(client, vendor, itemType, isSellingToVendor)
@@ -430,25 +522,29 @@ end
 
 --[[
     Purpose:
-        <Brief, clear description of what the function does.>
+        Decides if a player may unequip an item currently worn/active.
 
     When Called:
-        <Describe when and why this function is invoked.>
+        Checked before unequip logic runs.
 
     Parameters:
-        <paramName> (<type>)
-            <Description.>
+        client (Player)
+            Player requesting to unequip.
+        item (Item)
+            Item being unequipped.
 
     Returns:
-        <returnType>
-            <Description or "nil".>
+        boolean
+            False to block; true/nil to allow.
 
     Realm:
-        <Client | Server | Shared>
+        Server
 
     Example Usage:
         ```lua
-            <High Complexity and well documented Function Call Or Use Case Here>
+            hook.Add("CanPlayerUnequipItem", "PreventCombatUnequip", function(client, item)
+                if client:isInCombat() then return false end
+            end)
         ```
 ]]
 function CanPlayerUnequipItem(client, item)
@@ -456,25 +552,29 @@ end
 
 --[[
     Purpose:
-        <Brief, clear description of what the function does.>
+        Decides if a player can unlock a door or vehicle.
 
     When Called:
-        <Describe when and why this function is invoked.>
+        Evaluated before unlock attempts are processed.
 
     Parameters:
-        <paramName> (<type>)
-            <Description.>
+        client (Player)
+            Player performing the unlock.
+        door (Entity)
+            Door or vehicle entity targeted.
 
     Returns:
-        <returnType>
-            <Description or "nil".>
+        boolean
+            False to block unlocking; true/nil to allow.
 
     Realm:
-        <Client | Server | Shared>
+        Server
 
     Example Usage:
         ```lua
-            <High Complexity and well documented Function Call Or Use Case Here>
+            hook.Add("CanPlayerUnlock", "OnlyOwnersUnlock", function(client, door)
+                if not door:checkDoorAccess(client, DOOR_OWNER) then return false end
+            end)
         ```
 ]]
 function CanPlayerUnlock(client, door)
@@ -482,25 +582,29 @@ end
 
 --[[
     Purpose:
-        <Brief, clear description of what the function does.>
+        Validates that a player can use/load a given character record.
 
     When Called:
-        <Describe when and why this function is invoked.>
+        Checked before spawning the character into the world.
 
     Parameters:
-        <paramName> (<type>)
-            <Description.>
+        client (Player)
+            Player requesting to use the character.
+        character (Character)
+            Character record being selected.
 
     Returns:
-        <returnType>
-            <Description or "nil".>
+        boolean
+            False to prevent selection; true/nil to allow.
 
     Realm:
-        <Client | Server | Shared>
+        Server
 
     Example Usage:
         ```lua
-            <High Complexity and well documented Function Call Or Use Case Here>
+            hook.Add("CanPlayerUseChar", "BanSpecificChar", function(client, character)
+                if character:getData("locked") then return false end
+            end)
         ```
 ]]
 function CanPlayerUseChar(client, character)
@@ -508,25 +612,29 @@ end
 
 --[[
     Purpose:
-        <Brief, clear description of what the function does.>
+        Final gate before a player uses a door (open, interact).
 
     When Called:
-        <Describe when and why this function is invoked.>
+        Fired when a player attempts to use a door entity.
 
     Parameters:
-        <paramName> (<type>)
-            <Description.>
+        client (Player)
+            Player using the door.
+        door (Entity)
+            Door entity being used.
 
     Returns:
-        <returnType>
-            <Description or "nil".>
+        boolean
+            False to deny use; true/nil to allow.
 
     Realm:
-        <Client | Server | Shared>
+        Server
 
     Example Usage:
         ```lua
-            <High Complexity and well documented Function Call Or Use Case Here>
+            hook.Add("CanPlayerUseDoor", "LockdownUse", function(client, door)
+                if lia.state.isLockdown() then return false end
+            end)
         ```
 ]]
 function CanPlayerUseDoor(client, door)
@@ -534,25 +642,29 @@ end
 
 --[[
     Purpose:
-        <Brief, clear description of what the function does.>
+        Decides if an entity's data should be included when saving persistent map state.
 
     When Called:
-        <Describe when and why this function is invoked.>
+        During persistence save routines.
 
     Parameters:
-        <paramName> (<type>)
-            <Description.>
+        ent (Entity)
+            Entity being evaluated for save.
+        inventory (Inventory)
+            Inventory attached to the entity (if any).
 
     Returns:
-        <returnType>
-            <Description or "nil".>
+        boolean
+            False to skip saving; true/nil to save.
 
     Realm:
-        <Client | Server | Shared>
+        Server
 
     Example Usage:
         ```lua
-            <High Complexity and well documented Function Call Or Use Case Here>
+            hook.Add("CanSaveData", "SkipTempProps", function(ent)
+                if ent.tempSpawned then return false end
+            end)
         ```
 ]]
 function CanSaveData(ent, inventory)
@@ -560,25 +672,27 @@ end
 
 --[[
     Purpose:
-        <Brief, clear description of what the function does.>
+        Provides a cleanup hook when a character is fully removed from the server.
 
     When Called:
-        <Describe when and why this function is invoked.>
+        After character deletion/cleanup logic runs.
 
     Parameters:
-        <paramName> (<type>)
-            <Description.>
+        character (Character)
+            Character object being cleaned up.
 
     Returns:
-        <returnType>
-            <Description or "nil".>
+        nil
+            Use side effects only.
 
     Realm:
-        <Client | Server | Shared>
+        Server
 
     Example Usage:
         ```lua
-            <High Complexity and well documented Function Call Or Use Case Here>
+            hook.Add("CharCleanUp", "RemoveCharTimers", function(character)
+                timer.Remove("char_timer_" .. character:getID())
+            end)
         ```
 ]]
 function CharCleanUp(character)
@@ -586,25 +700,29 @@ end
 
 --[[
     Purpose:
-        <Brief, clear description of what the function does.>
+        Notifies that a character has been removed from the database and game.
 
     When Called:
-        <Describe when and why this function is invoked.>
+        After a character is deleted by the player or admin.
 
     Parameters:
-        <paramName> (<type>)
-            <Description.>
+        client (Player)
+            Player who owned the character (may be nil if offline).
+        character (Character)
+            The character that was deleted.
 
     Returns:
-        <returnType>
-            <Description or "nil".>
+        nil
+            Use for cleanup and logging.
 
     Realm:
-        <Client | Server | Shared>
+        Server
 
     Example Usage:
         ```lua
-            <High Complexity and well documented Function Call Or Use Case Here>
+            hook.Add("CharDeleted", "LogDeletion", function(client, character)
+                lia.log.add(client, "charDeleted", character:getName())
+            end)
         ```
 ]]
 function CharDeleted(client, character)
@@ -612,25 +730,32 @@ end
 
 --[[
     Purpose:
-        <Brief, clear description of what the function does.>
+        Adds extra per-character info to the character selection list entry.
 
     When Called:
-        <Describe when and why this function is invoked.>
+        While building the char list shown to the client.
 
     Parameters:
-        <paramName> (<type>)
-            <Description.>
+        client (Player)
+            Player viewing the list.
+        entry (table)
+            Table of character info to be sent.
+        stored (table)
+            Raw character data from storage.
 
     Returns:
-        <returnType>
-            <Description or "nil".>
+        table
+            Optionally return modified entry data.
 
     Realm:
-        <Client | Server | Shared>
+        Server
 
     Example Usage:
         ```lua
-            <High Complexity and well documented Function Call Or Use Case Here>
+            hook.Add("CharListExtraDetails", "AddPlaytime", function(client, entry, stored)
+                entry.playtime = stored.playtime or 0
+                return entry
+            end)
         ```
 ]]
 function CharListExtraDetails(client, entry, stored)
@@ -638,25 +763,27 @@ end
 
 --[[
     Purpose:
-        <Brief, clear description of what the function does.>
+        Runs after a character has been saved to persistence.
 
     When Called:
-        <Describe when and why this function is invoked.>
+        Immediately after character data write completes.
 
     Parameters:
-        <paramName> (<type>)
-            <Description.>
+        character (Character)
+            Character that was saved.
 
     Returns:
-        <returnType>
-            <Description or "nil".>
+        nil
+            Use for follow-up actions or logging.
 
     Realm:
-        <Client | Server | Shared>
+        Server
 
     Example Usage:
         ```lua
-            <High Complexity and well documented Function Call Or Use Case Here>
+            hook.Add("CharPostSave", "QueueBackup", function(character)
+                lia.backup.queue(character:getID())
+            end)
         ```
 ]]
 function CharPostSave(character)
@@ -664,25 +791,28 @@ end
 
 --[[
     Purpose:
-        <Brief, clear description of what the function does.>
+        Pre-save hook for characters to sync state into the database payload.
 
     When Called:
-        <Describe when and why this function is invoked.>
+        Right before character data is persisted.
 
     Parameters:
-        <paramName> (<type>)
-            <Description.>
+        character (Character)
+            Character about to be saved.
 
     Returns:
-        <returnType>
-            <Description or "nil".>
+        nil
+            Use to modify character data or run side effects.
 
     Realm:
-        <Client | Server | Shared>
+        Server
 
     Example Usage:
         ```lua
-            <High Complexity and well documented Function Call Or Use Case Here>
+            hook.Add("CharPreSave", "StoreTempAmmo", function(character)
+                local client = character:getPlayer()
+                if IsValid(client) then character:setData("ammo", client:GetAmmo()) end
+            end)
         ```
 ]]
 function CharPreSave(character)
@@ -690,25 +820,31 @@ end
 
 --[[
     Purpose:
-        <Brief, clear description of what the function does.>
+        Allows factions to enforce population limits before creation/join.
 
     When Called:
-        <Describe when and why this function is invoked.>
+        Checked when a player attempts to create or switch to a faction.
 
     Parameters:
-        <paramName> (<type>)
-            <Description.>
+        faction (table)
+            Faction definition table.
+        character (Character)
+            Character requesting the faction.
+        client (Player)
+            Player owning the character.
 
     Returns:
-        <returnType>
-            <Description or "nil".>
+        boolean
+            False to block joining; true/nil to allow.
 
     Realm:
-        <Client | Server | Shared>
+        Server
 
     Example Usage:
         ```lua
-            <High Complexity and well documented Function Call Or Use Case Here>
+            hook.Add("CheckFactionLimitReached", "CapCombine", function(faction)
+                if faction.uniqueID == "combine" and faction:onlineCount() >= 10 then return false end
+            end)
         ```
 ]]
 function CheckFactionLimitReached(faction, character, client)
@@ -716,25 +852,26 @@ end
 
 --[[
     Purpose:
-        <Brief, clear description of what the function does.>
+        Signals that the database connection is established and ready.
 
     When Called:
-        <Describe when and why this function is invoked.>
+        Once the SQL connection succeeds during initialization.
 
     Parameters:
-        <paramName> (<type>)
-            <Description.>
+        None.
 
     Returns:
-        <returnType>
-            <Description or "nil".>
+        nil
+            Perform setup tasks here.
 
     Realm:
-        <Client | Server | Shared>
+        Server
 
     Example Usage:
         ```lua
-            <High Complexity and well documented Function Call Or Use Case Here>
+            hook.Add("DatabaseConnected", "InitPlugins", function()
+                lia.plugin.loadAll()
+            end)
         ```
 ]]
 function DatabaseConnected()
@@ -742,25 +879,28 @@ end
 
 --[[
     Purpose:
-        <Brief, clear description of what the function does.>
+        Allows modules to intercept and modify Discord relay embeds before sending.
 
     When Called:
-        <Describe when and why this function is invoked.>
+        Right before an embed is pushed to the Discord relay webhook.
 
     Parameters:
-        <paramName> (<type>)
-            <Description.>
+        embed (table)
+            Table describing the Discord embed payload.
 
     Returns:
-        <returnType>
-            <Description or "nil".>
+        table
+            Optionally return a modified embed.
 
     Realm:
-        <Client | Server | Shared>
+        Server
 
     Example Usage:
         ```lua
-            <High Complexity and well documented Function Call Or Use Case Here>
+            hook.Add("DiscordRelaySend", "AddFooter", function(embed)
+                embed.footer = {text = "Lilia Relay"}
+                return embed
+            end)
         ```
 ]]
 function DiscordRelaySend(embed)
@@ -768,25 +908,26 @@ end
 
 --[[
     Purpose:
-        <Brief, clear description of what the function does.>
+        Notifies the game that the Discord relay feature became unavailable.
 
     When Called:
-        <Describe when and why this function is invoked.>
+        Triggered when the relay HTTP endpoint cannot be reached or is disabled.
 
     Parameters:
-        <paramName> (<type>)
-            <Description.>
+        None.
 
     Returns:
-        <returnType>
-            <Description or "nil".>
+        nil
+            Use for fallbacks or alerts.
 
     Realm:
-        <Client | Server | Shared>
+        Server
 
     Example Usage:
         ```lua
-            <High Complexity and well documented Function Call Or Use Case Here>
+            hook.Add("DiscordRelayUnavailable", "AlertStaff", function()
+                lia.log.add(nil, "discordRelayDown")
+            end)
         ```
 ]]
 function DiscordRelayUnavailable()
@@ -794,25 +935,27 @@ end
 
 --[[
     Purpose:
-        <Brief, clear description of what the function does.>
+        Fired after a Discord relay message has been successfully sent.
 
     When Called:
-        <Describe when and why this function is invoked.>
+        Immediately after the relay HTTP request completes.
 
     Parameters:
-        <paramName> (<type>)
-            <Description.>
+        embed (table)
+            Embed table that was sent.
 
     Returns:
-        <returnType>
-            <Description or "nil".>
+        nil
+            Use to log or chain notifications.
 
     Realm:
-        <Client | Server | Shared>
+        Server
 
     Example Usage:
         ```lua
-            <High Complexity and well documented Function Call Or Use Case Here>
+            hook.Add("DiscordRelayed", "TrackRelayCount", function(embed)
+                lia.metrics.bump("discordRelay")
+            end)
         ```
 ]]
 function DiscordRelayed(embed)
@@ -820,25 +963,31 @@ end
 
 --[[
     Purpose:
-        <Brief, clear description of what the function does.>
+        Signals that a door's enabled/disabled state has been toggled.
 
     When Called:
-        <Describe when and why this function is invoked.>
+        After admin tools enable or disable door ownership/usage.
 
     Parameters:
-        <paramName> (<type>)
-            <Description.>
+        client (Player)
+            Player who toggled the state.
+        door (Entity)
+            Door entity affected.
+        newState (boolean)
+            True when enabled, false when disabled.
 
     Returns:
-        <returnType>
-            <Description or "nil".>
+        nil
+            Use for syncing or logging.
 
     Realm:
-        <Client | Server | Shared>
+        Server
 
     Example Usage:
         ```lua
-            <High Complexity and well documented Function Call Or Use Case Here>
+            hook.Add("DoorEnabledToggled", "AnnounceToggle", function(client, door, state)
+                lia.log.add(client, "doorEnabledToggle", tostring(state))
+            end)
         ```
 ]]
 function DoorEnabledToggled(client, door, newState)
@@ -846,25 +995,31 @@ end
 
 --[[
     Purpose:
-        <Brief, clear description of what the function does.>
+        Signals that a door has been hidden or unhidden from ownership.
 
     When Called:
-        <Describe when and why this function is invoked.>
+        After the hidden flag is toggled for a door entity.
 
     Parameters:
-        <paramName> (<type>)
-            <Description.>
+        client (Player)
+            Player performing the change.
+        entity (Entity)
+            Door entity affected.
+        newState (boolean)
+            True when hidden, false when shown.
 
     Returns:
-        <returnType>
-            <Description or "nil".>
+        nil
+            Use for syncing or side effects.
 
     Realm:
-        <Client | Server | Shared>
+        Server
 
     Example Usage:
         ```lua
-            <High Complexity and well documented Function Call Or Use Case Here>
+            hook.Add("DoorHiddenToggled", "MirrorToClients", function(_, door, state)
+                net.Start("liaDoorHidden") net.WriteEntity(door) net.WriteBool(state) net.Broadcast()
+            end)
         ```
 ]]
 function DoorHiddenToggled(client, entity, newState)
@@ -872,25 +1027,31 @@ end
 
 --[[
     Purpose:
-        <Brief, clear description of what the function does.>
+        Fired when a door lock state is toggled (locked/unlocked).
 
     When Called:
-        <Describe when and why this function is invoked.>
+        After lock/unlock succeeds via key or command.
 
     Parameters:
-        <paramName> (<type>)
-            <Description.>
+        client (Player)
+            Player who toggled the lock.
+        door (Entity)
+            Door entity.
+        state (boolean)
+            True if now locked.
 
     Returns:
-        <returnType>
-            <Description or "nil".>
+        nil
+            Use for logging or notifications.
 
     Realm:
-        <Client | Server | Shared>
+        Server
 
     Example Usage:
         ```lua
-            <High Complexity and well documented Function Call Or Use Case Here>
+            hook.Add("DoorLockToggled", "SoundDoorLock", function(_, door, state)
+                door:EmitSound(state and "doors/door_latch3.wav" or "doors/door_latch1.wav")
+            end)
         ```
 ]]
 function DoorLockToggled(client, door, state)
@@ -898,25 +1059,30 @@ end
 
 --[[
     Purpose:
-        <Brief, clear description of what the function does.>
+        Signals that a door has been marked ownable or unownable.
 
     When Called:
-        <Describe when and why this function is invoked.>
+        After toggling door ownership availability.
 
     Parameters:
-        <paramName> (<type>)
-            <Description.>
+        client (Player)
+            Player performing the toggle.
+        door (Entity)
+            Door entity affected.
+        newState (boolean)
+            True when ownable.
 
     Returns:
-        <returnType>
-            <Description or "nil".>
+        nil
 
     Realm:
-        <Client | Server | Shared>
+        Server
 
     Example Usage:
         ```lua
-            <High Complexity and well documented Function Call Or Use Case Here>
+            hook.Add("DoorOwnableToggled", "SyncOwnableState", function(_, door, state)
+                net.Start("liaDoorOwnable") net.WriteEntity(door) net.WriteBool(state) net.Broadcast()
+            end)
         ```
 ]]
 function DoorOwnableToggled(client, door, newState)
@@ -924,25 +1090,30 @@ end
 
 --[[
     Purpose:
-        <Brief, clear description of what the function does.>
+        Fired when a door purchase price is changed.
 
     When Called:
-        <Describe when and why this function is invoked.>
+        After a player sets a new door price via management tools.
 
     Parameters:
-        <paramName> (<type>)
-            <Description.>
+        client (Player)
+            Player setting the price.
+        door (Entity)
+            Door entity.
+        price (number)
+            New purchase price.
 
     Returns:
-        <returnType>
-            <Description or "nil".>
+        nil
 
     Realm:
-        <Client | Server | Shared>
+        Server
 
     Example Usage:
         ```lua
-            <High Complexity and well documented Function Call Or Use Case Here>
+            hook.Add("DoorPriceSet", "LogDoorPrice", function(client, door, price)
+                lia.log.add(client, "doorPriceSet", price)
+            end)
         ```
 ]]
 function DoorPriceSet(client, door, price)
@@ -950,25 +1121,30 @@ end
 
 --[[
     Purpose:
-        <Brief, clear description of what the function does.>
+        Fired when a door's title/name is changed.
 
     When Called:
-        <Describe when and why this function is invoked.>
+        After a player renames a door via the interface or command.
 
     Parameters:
-        <paramName> (<type>)
-            <Description.>
+        client (Player)
+            Player setting the title.
+        door (Entity)
+            Door entity.
+        name (string)
+            New door title.
 
     Returns:
-        <returnType>
-            <Description or "nil".>
+        nil
 
     Realm:
-        <Client | Server | Shared>
+        Server
 
     Example Usage:
         ```lua
-            <High Complexity and well documented Function Call Or Use Case Here>
+            hook.Add("DoorTitleSet", "SaveDoorTitle", function(client, door, name)
+                door:setNetVar("doorTitle", name)
+            end)
         ```
 ]]
 function DoorTitleSet(client, door, name)
@@ -976,25 +1152,26 @@ end
 
 --[[
     Purpose:
-        <Brief, clear description of what the function does.>
+        Requests the server spawn list; gives modules a chance to override or inject spawns.
 
     When Called:
-        <Describe when and why this function is invoked.>
+        When spawn points are being loaded or refreshed.
 
     Parameters:
-        <paramName> (<type>)
-            <Description.>
+        None.
 
     Returns:
-        <returnType>
-            <Description or "nil".>
+        table
+            Custom spawn data table or nil to use defaults.
 
     Realm:
-        <Client | Server | Shared>
+        Server
 
     Example Usage:
         ```lua
-            <High Complexity and well documented Function Call Or Use Case Here>
+            hook.Add("FetchSpawns", "UseCustomSpawns", function()
+                return lia.spawns.getCustom()
+            end)
         ```
 ]]
 function FetchSpawns()
@@ -1002,25 +1179,26 @@ end
 
 --[[
     Purpose:
-        <Brief, clear description of what the function does.>
+        Returns a list of all active support tickets claimed by staff.
 
     When Called:
-        <Describe when and why this function is invoked.>
+        When the ticket system needs to display open claims.
 
     Parameters:
-        <paramName> (<type>)
-            <Description.>
+        None.
 
     Returns:
-        <returnType>
-            <Description or "nil".>
+        table
+            Array of ticket claim data.
 
     Realm:
-        <Client | Server | Shared>
+        Server
 
     Example Usage:
         ```lua
-            <High Complexity and well documented Function Call Or Use Case Here>
+            hook.Add("GetAllCaseClaims", "MirrorTickets", function()
+                return lia.ticket.getClaims()
+            end)
         ```
 ]]
 function GetAllCaseClaims()
@@ -1028,25 +1206,29 @@ end
 
 --[[
     Purpose:
-        <Brief, clear description of what the function does.>
+        Provides the model to use for spawning a bot player given a faction.
 
     When Called:
-        <Describe when and why this function is invoked.>
+        During bot setup when choosing a model.
 
     Parameters:
-        <paramName> (<type>)
-            <Description.>
+        client (Player)
+            Bot player entity.
+        faction (table)
+            Faction data assigned to the bot.
 
     Returns:
-        <returnType>
-            <Description or "nil".>
+        string
+            Model path to use for the bot.
 
     Realm:
-        <Client | Server | Shared>
+        Server
 
     Example Usage:
         ```lua
-            <High Complexity and well documented Function Call Or Use Case Here>
+            hook.Add("GetBotModel", "RandomCitizenModel", function(client, faction)
+                if faction.uniqueID == "citizen" then return "models/Humans/Group01/male_07.mdl" end
+            end)
         ```
 ]]
 function GetBotModel(client, faction)
@@ -1054,25 +1236,31 @@ end
 
 --[[
     Purpose:
-        <Brief, clear description of what the function does.>
+        Lets modules adjust the final damage scale applied to a hitgroup.
 
     When Called:
-        <Describe when and why this function is invoked.>
+        During ScalePlayerDamage after base scaling has been calculated.
 
     Parameters:
-        <paramName> (<type>)
-            <Description.>
+        hitgroup (number)
+            Hitgroup constant from the damage trace.
+        dmgInfo (CTakeDamageInfo)
+            Damage info object.
+        damageScale (number)
+            Current scale value about to be applied.
 
     Returns:
-        <returnType>
-            <Description or "nil".>
+        number
+            New scale value to apply or nil to keep current.
 
     Realm:
-        <Client | Server | Shared>
+        Server
 
     Example Usage:
         ```lua
-            <High Complexity and well documented Function Call Or Use Case Here>
+            hook.Add("GetDamageScale", "HelmetProtection", function(hitgroup, dmgInfo, scale)
+                if hitgroup == HITGROUP_HEAD and dmgInfo:IsBulletDamage() then return scale * 0.5 end
+            end)
         ```
 ]]
 function GetDamageScale(hitgroup, dmgInfo, damageScale)
@@ -1080,25 +1268,27 @@ end
 
 --[[
     Purpose:
-        <Brief, clear description of what the function does.>
+        Specifies which inventory type to create for a character by default.
 
     When Called:
-        <Describe when and why this function is invoked.>
+        During character creation and bot setup before inventories are instanced.
 
     Parameters:
-        <paramName> (<type>)
-            <Description.>
+        character (Character)
+            Character being initialized (may be nil for bots).
 
     Returns:
-        <returnType>
-            <Description or "nil".>
+        string
+            Inventory type ID (e.g., "GridInv").
 
     Realm:
-        <Client | Server | Shared>
+        Server
 
     Example Usage:
         ```lua
-            <High Complexity and well documented Function Call Or Use Case Here>
+            hook.Add("GetDefaultInventoryType", "UseListInventory", function(character)
+                return "ListInv"
+            end)
         ```
 ]]
 function GetDefaultInventoryType(character)
@@ -1106,25 +1296,27 @@ end
 
 --[[
     Purpose:
-        <Brief, clear description of what the function does.>
+        Provides custom data to persist for an entity.
 
     When Called:
-        <Describe when and why this function is invoked.>
+        While serializing entities for persistence saves.
 
     Parameters:
-        <paramName> (<type>)
-            <Description.>
+        ent (Entity)
+            Entity being saved.
 
     Returns:
-        <returnType>
-            <Description or "nil".>
+        table
+            Data table to store or nil for none.
 
     Realm:
-        <Client | Server | Shared>
+        Server
 
     Example Usage:
         ```lua
-            <High Complexity and well documented Function Call Or Use Case Here>
+            hook.Add("GetEntitySaveData", "SaveHealth", function(ent)
+                return {health = ent:Health()}
+            end)
         ```
 ]]
 function GetEntitySaveData(ent)
@@ -1132,25 +1324,27 @@ end
 
 --[[
     Purpose:
-        <Brief, clear description of what the function does.>
+        Allows modules to set or modify the OOC chat cooldown for a speaker.
 
     When Called:
-        <Describe when and why this function is invoked.>
+        Each time an OOC message is about to be sent.
 
     Parameters:
-        <paramName> (<type>)
-            <Description.>
+        speaker (Player)
+            Player sending the OOC message.
 
     Returns:
-        <returnType>
-            <Description or "nil".>
+        number
+            Cooldown in seconds, or nil to use config default.
 
     Realm:
-        <Client | Server | Shared>
+        Server
 
     Example Usage:
         ```lua
-            <High Complexity and well documented Function Call Or Use Case Here>
+            hook.Add("GetOOCDelay", "VIPShorterCooldown", function(speaker)
+                if speaker:isVIP() then return 5 end
+            end)
         ```
 ]]
 function GetOOCDelay(speaker)
@@ -1158,25 +1352,27 @@ end
 
 --[[
     Purpose:
-        <Brief, clear description of what the function does.>
+        Override or calculate a player's tracked playtime value.
 
     When Called:
-        <Describe when and why this function is invoked.>
+        When playtime is requested for display or logic.
 
     Parameters:
-        <paramName> (<type>)
-            <Description.>
+        client (Player)
+            Player whose playtime is queried.
 
     Returns:
-        <returnType>
-            <Description or "nil".>
+        number
+            Seconds of playtime.
 
     Realm:
-        <Client | Server | Shared>
+        Server
 
     Example Usage:
         ```lua
-            <High Complexity and well documented Function Call Or Use Case Here>
+            hook.Add("GetPlayTime", "CustomPlaytime", function(client)
+                return client:getChar():getData("customPlaytime", 0)
+            end)
         ```
 ]]
 function GetPlayTime(client)
@@ -1184,25 +1380,29 @@ end
 
 --[[
     Purpose:
-        <Brief, clear description of what the function does.>
+        Supplies the death sound file to play for a player.
 
     When Called:
-        <Describe when and why this function is invoked.>
+        During PlayerDeath when death sounds are enabled.
 
     Parameters:
-        <paramName> (<type>)
-            <Description.>
+        client (Player)
+            Player who died.
+        isFemale (boolean)
+            Gender flag.
 
     Returns:
-        <returnType>
-            <Description or "nil".>
+        string
+            Sound path to emit.
 
     Realm:
-        <Client | Server | Shared>
+        Server
 
     Example Usage:
         ```lua
-            <High Complexity and well documented Function Call Or Use Case Here>
+            hook.Add("GetPlayerDeathSound", "FactionDeathSounds", function(client)
+                if client:Team() == FACTION_CP then return "npc/metropolice/pain1.wav" end
+            end)
         ```
 ]]
 function GetPlayerDeathSound(client, isFemale)
@@ -1210,25 +1410,31 @@ end
 
 --[[
     Purpose:
-        <Brief, clear description of what the function does.>
+        Provides the pain sound to play for a hurt entity.
 
     When Called:
-        <Describe when and why this function is invoked.>
+        During damage processing when selecting pain sounds.
 
     Parameters:
-        <paramName> (<type>)
-            <Description.>
+        paintype (string)
+            Pain type identifier ("hurt", etc.).
+        isFemale (boolean)
+            Gender flag.
+        client (Entity)
+            Entity that is hurt.
 
     Returns:
-        <returnType>
-            <Description or "nil".>
+        string
+            Sound path to emit, or nil to use default.
 
     Realm:
-        <Client | Server | Shared>
+        Server
 
     Example Usage:
         ```lua
-            <High Complexity and well documented Function Call Or Use Case Here>
+            hook.Add("GetPlayerPainSound", "RobotPain", function(client, paintype)
+                if client:IsPlayer() and client:IsCombine() then return "npc/combine_soldier/pain1.wav" end
+            end)
         ```
 ]]
 function GetPlayerPainSound(client, paintype, isFemale)
@@ -1236,25 +1442,29 @@ end
 
 --[[
     Purpose:
-        <Brief, clear description of what the function does.>
+        Selects where a player should respawn after death.
 
     When Called:
-        <Describe when and why this function is invoked.>
+        During respawn processing to determine the spawn location.
 
     Parameters:
-        <paramName> (<type>)
-            <Description.>
+        client (Player)
+            Player respawning.
+        character (Character)
+            Character data of the player.
 
     Returns:
-        <returnType>
-            <Description or "nil".>
+        vector, angle
+            Position and angle for the respawn; nil to use default.
 
     Realm:
-        <Client | Server | Shared>
+        Server
 
     Example Usage:
         ```lua
-            <High Complexity and well documented Function Call Or Use Case Here>
+            hook.Add("GetPlayerRespawnLocation", "HospitalRespawn", function(client)
+                return lia.spawns.getHospitalPos(), lia.spawns.getHospitalAng()
+            end)
         ```
 ]]
 function GetPlayerRespawnLocation(client, character)
@@ -1262,25 +1472,29 @@ end
 
 --[[
     Purpose:
-        <Brief, clear description of what the function does.>
+        Chooses the spawn location for a player when initially joining the server.
 
     When Called:
-        <Describe when and why this function is invoked.>
+        During first spawn/character load to position the player.
 
     Parameters:
-        <paramName> (<type>)
-            <Description.>
+        client (Player)
+            Player spawning.
+        character (Character)
+            Character data of the player.
 
     Returns:
-        <returnType>
-            <Description or "nil".>
+        vector, angle
+            Position and angle; nil to use map spawns.
 
     Realm:
-        <Client | Server | Shared>
+        Server
 
     Example Usage:
         ```lua
-            <High Complexity and well documented Function Call Or Use Case Here>
+            hook.Add("GetPlayerSpawnLocation", "FactionSpawns", function(client, character)
+                return lia.spawns.getFactionSpawn(character:getFaction())
+            end)
         ```
 ]]
 function GetPlayerSpawnLocation(client, character)
@@ -1288,25 +1502,35 @@ end
 
 --[[
     Purpose:
-        <Brief, clear description of what the function does.>
+        Allows adjusting the salary amount using a prestige bonus.
 
     When Called:
-        <Describe when and why this function is invoked.>
+        Each time salary is calculated for a character.
 
     Parameters:
-        <paramName> (<type>)
-            <Description.>
+        client (Player)
+            Player receiving salary.
+        char (Character)
+            Character data.
+        pay (number)
+            Current salary amount.
+        faction (table)
+            Faction definition.
+        class (table)
+            Class definition (if any).
 
     Returns:
-        <returnType>
-            <Description or "nil".>
+        number
+            Modified pay amount or nil to keep.
 
     Realm:
-        <Client | Server | Shared>
+        Server
 
     Example Usage:
         ```lua
-            <High Complexity and well documented Function Call Or Use Case Here>
+            hook.Add("GetPrestigePayBonus", "PrestigeScaling", function(client, char, pay)
+                return pay + (char:getData("prestigeLevel", 0) * 50)
+            end)
         ```
 ]]
 function GetPrestigePayBonus(client, char, pay, faction, class)
@@ -1314,25 +1538,31 @@ end
 
 --[[
     Purpose:
-        <Brief, clear description of what the function does.>
+        Provides the base salary amount for a player based on faction/class.
 
     When Called:
-        <Describe when and why this function is invoked.>
+        Whenever salary is being computed for payout.
 
     Parameters:
-        <paramName> (<type>)
-            <Description.>
+        client (Player)
+            Player receiving salary.
+        faction (table)
+            Faction definition.
+        class (table)
+            Class definition (may be nil).
 
     Returns:
-        <returnType>
-            <Description or "nil".>
+        number
+            Salary amount.
 
     Realm:
-        <Client | Server | Shared>
+        Server
 
     Example Usage:
         ```lua
-            <High Complexity and well documented Function Call Or Use Case Here>
+            hook.Add("GetSalaryAmount", "VIPSalary", function(client, faction, class)
+                if client:isVIP() then return 500 end
+            end)
         ```
 ]]
 function GetSalaryAmount(client, faction, class)
@@ -1340,25 +1570,27 @@ end
 
 --[[
     Purpose:
-        <Brief, clear description of what the function does.>
+        Retrieves all ticket entries made by a specific requester SteamID.
 
     When Called:
-        <Describe when and why this function is invoked.>
+        During ticket queries filtered by requester.
 
     Parameters:
-        <paramName> (<type>)
-            <Description.>
+        steamID (string)
+            SteamID64 or SteamID of the requester.
 
     Returns:
-        <returnType>
-            <Description or "nil".>
+        table
+            List of ticket rows.
 
     Realm:
-        <Client | Server | Shared>
+        Server
 
     Example Usage:
         ```lua
-            <High Complexity and well documented Function Call Or Use Case Here>
+            hook.Add("GetTicketsByRequester", "MaskRequester", function(steamID)
+                return lia.tickets.byRequester(steamID)
+            end)
         ```
 ]]
 function GetTicketsByRequester(steamID)
@@ -1366,25 +1598,27 @@ end
 
 --[[
     Purpose:
-        <Brief, clear description of what the function does.>
+        Fetches all warnings stored for a character ID.
 
     When Called:
-        <Describe when and why this function is invoked.>
+        When viewing a character's warning history.
 
     Parameters:
-        <paramName> (<type>)
-            <Description.>
+        charID (number|string)
+            Character database identifier.
 
     Returns:
-        <returnType>
-            <Description or "nil".>
+        table
+            Array of warning rows.
 
     Realm:
-        <Client | Server | Shared>
+        Server
 
     Example Usage:
         ```lua
-            <High Complexity and well documented Function Call Or Use Case Here>
+            hook.Add("GetWarnings", "MirrorWarnings", function(charID)
+                return lia.warn.get(charID)
+            end)
         ```
 ]]
 function GetWarnings(charID)
@@ -1392,25 +1626,27 @@ end
 
 --[[
     Purpose:
-        <Brief, clear description of what the function does.>
+        Retrieves warnings issued by a specific SteamID.
 
     When Called:
-        <Describe when and why this function is invoked.>
+        When filtering warnings by issuing admin.
 
     Parameters:
-        <paramName> (<type>)
-            <Description.>
+        steamID (string)
+            SteamID of the issuer.
 
     Returns:
-        <returnType>
-            <Description or "nil".>
+        table
+            Array of warning rows.
 
     Realm:
-        <Client | Server | Shared>
+        Server
 
     Example Usage:
         ```lua
-            <High Complexity and well documented Function Call Or Use Case Here>
+            hook.Add("GetWarningsByIssuer", "ListIssuerWarnings", function(steamID)
+                return lia.warn.getByIssuer(steamID)
+            end)
         ```
 ]]
 function GetWarningsByIssuer(steamID)
@@ -1418,25 +1654,35 @@ end
 
 --[[
     Purpose:
-        <Brief, clear description of what the function does.>
+        Handles the server-side logic when a client requests to move an item.
 
     When Called:
-        <Describe when and why this function is invoked.>
+        When the inventory UI sends a transfer request.
 
     Parameters:
-        <paramName> (<type>)
-            <Description.>
+        client (Player)
+            Player requesting the transfer.
+        itemID (number|string)
+            Item instance identifier.
+        x (number)
+            Target X slot.
+        y (number)
+            Target Y slot.
+        invID (number|string)
+            Destination inventory ID.
 
     Returns:
-        <returnType>
-            <Description or "nil".>
+        nil
+            Perform transfer handling inside the hook.
 
     Realm:
-        <Client | Server | Shared>
+        Server
 
     Example Usage:
         ```lua
-            <High Complexity and well documented Function Call Or Use Case Here>
+            hook.Add("HandleItemTransferRequest", "LogTransfers", function(client, itemID, x, y, invID)
+                lia.log.add(client, "itemMove", itemID, invID, x, y)
+            end)
         ```
 ]]
 function HandleItemTransferRequest(client, itemID, x, y, invID)
@@ -1444,25 +1690,26 @@ end
 
 --[[
     Purpose:
-        <Brief, clear description of what the function does.>
+        Notifies that an inventory has been removed or destroyed.
 
     When Called:
-        <Describe when and why this function is invoked.>
+        After an inventory instance is deleted.
 
     Parameters:
-        <paramName> (<type>)
-            <Description.>
+        instance (Inventory)
+            Inventory object that was removed.
 
     Returns:
-        <returnType>
-            <Description or "nil".>
+        nil
 
     Realm:
-        <Client | Server | Shared>
+        Server
 
     Example Usage:
         ```lua
-            <High Complexity and well documented Function Call Or Use Case Here>
+            hook.Add("InventoryDeleted", "CleanupInvCache", function(instance)
+                lia.inventory.cache[instance:getID()] = nil
+            end)
         ```
 ]]
 function InventoryDeleted(instance)
@@ -1470,25 +1717,31 @@ end
 
 --[[
     Purpose:
-        <Brief, clear description of what the function does.>
+        Fired when a player combines an item with another (stacking or crafting).
 
     When Called:
-        <Describe when and why this function is invoked.>
+        After the combine action has been requested.
 
     Parameters:
-        <paramName> (<type>)
-            <Description.>
+        client (Player)
+            Player performing the combine.
+        item (Item)
+            Primary item.
+        target (Item)
+            Target item being combined into.
 
     Returns:
-        <returnType>
-            <Description or "nil".>
+        boolean
+            False to block the combine; true/nil to allow.
 
     Realm:
-        <Client | Server | Shared>
+        Server
 
     Example Usage:
         ```lua
-            <High Complexity and well documented Function Call Or Use Case Here>
+            hook.Add("ItemCombine", "BlockCertainCombines", function(client, item, target)
+                if target.noCombine then return false end
+            end)
         ```
 ]]
 function ItemCombine(client, item, target)
@@ -1496,25 +1749,26 @@ end
 
 --[[
     Purpose:
-        <Brief, clear description of what the function does.>
+        Notifies that an item instance has been deleted from storage.
 
     When Called:
-        <Describe when and why this function is invoked.>
+        Immediately after an item is removed from persistence.
 
     Parameters:
-        <paramName> (<type>)
-            <Description.>
+        instance (Item)
+            Item instance that was deleted.
 
     Returns:
-        <returnType>
-            <Description or "nil".>
+        nil
 
     Realm:
-        <Client | Server | Shared>
+        Server
 
     Example Usage:
         ```lua
-            <High Complexity and well documented Function Call Or Use Case Here>
+            hook.Add("ItemDeleted", "LogItemDelete", function(instance)
+                lia.log.add(nil, "itemDeleted", instance.uniqueID)
+            end)
         ```
 ]]
 function ItemDeleted(instance)
@@ -1522,25 +1776,34 @@ end
 
 --[[
     Purpose:
-        <Brief, clear description of what the function does.>
+        Called whenever an item method is executed so modules can react or modify results.
 
     When Called:
-        <Describe when and why this function is invoked.>
+        After an item function such as OnUse or custom actions is invoked.
 
     Parameters:
-        <paramName> (<type>)
-            <Description.>
+        item (Item)
+            Item instance whose method was called.
+        method (string)
+            Name of the method invoked.
+        client (Player)
+            Player who triggered the call.
+        entity (Entity)
+            Entity representation if applicable.
+        results (table)
+            Return values from the method.
 
     Returns:
-        <returnType>
-            <Description or "nil".>
+        nil
 
     Realm:
-        <Client | Server | Shared>
+        Server
 
     Example Usage:
         ```lua
-            <High Complexity and well documented Function Call Or Use Case Here>
+            hook.Add("ItemFunctionCalled", "AuditItemUse", function(item, method, client)
+                lia.log.add(client, "itemFunction", item.uniqueID, method)
+            end)
         ```
 ]]
 function ItemFunctionCalled(item, method, client, entity, results)
@@ -1548,25 +1811,26 @@ end
 
 --[[
     Purpose:
-        <Brief, clear description of what the function does.>
+        Fires after an item has been successfully transferred between inventories.
 
     When Called:
-        <Describe when and why this function is invoked.>
+        Right after a transfer completes.
 
     Parameters:
-        <paramName> (<type>)
-            <Description.>
+        context (table)
+            Transfer context containing client, item, from, and to inventories.
 
     Returns:
-        <returnType>
-            <Description or "nil".>
+        nil
 
     Realm:
-        <Client | Server | Shared>
+        Server
 
     Example Usage:
         ```lua
-            <High Complexity and well documented Function Call Or Use Case Here>
+            hook.Add("ItemTransfered", "NotifyTransfer", function(context)
+                lia.log.add(context.client, "itemTransferred", context.item.uniqueID)
+            end)
         ```
 ]]
 function ItemTransfered(context)
@@ -1574,25 +1838,32 @@ end
 
 --[[
     Purpose:
-        <Brief, clear description of what the function does.>
+        Allows overriding the key lock timing or behavior when using key items.
 
     When Called:
-        <Describe when and why this function is invoked.>
+        When a player uses a key to lock a door for a set duration.
 
     Parameters:
-        <paramName> (<type>)
-            <Description.>
+        client (Player)
+            Player locking.
+        door (Entity)
+            Door entity.
+        time (number)
+            Duration of the lock action.
 
     Returns:
-        <returnType>
-            <Description or "nil".>
+        nil
+            Return false to stop the lock sequence.
 
     Realm:
-        <Client | Server | Shared>
+        Server
 
     Example Usage:
         ```lua
-            <High Complexity and well documented Function Call Or Use Case Here>
+            hook.Add("KeyLock", "InstantLock", function(client, door)
+                door:Fire("lock")
+                return false
+            end)
         ```
 ]]
 function KeyLock(client, door, time)
@@ -1600,25 +1871,32 @@ end
 
 --[[
     Purpose:
-        <Brief, clear description of what the function does.>
+        Allows overriding key-based unlock timing or behavior.
 
     When Called:
-        <Describe when and why this function is invoked.>
+        When a player uses a key to unlock a door for a duration.
 
     Parameters:
-        <paramName> (<type>)
-            <Description.>
+        client (Player)
+            Player unlocking.
+        door (Entity)
+            Door entity.
+        time (number)
+            Duration for unlock action.
 
     Returns:
-        <returnType>
-            <Description or "nil".>
+        nil
+            Return false to stop the unlock sequence.
 
     Realm:
-        <Client | Server | Shared>
+        Server
 
     Example Usage:
         ```lua
-            <High Complexity and well documented Function Call Or Use Case Here>
+            hook.Add("KeyUnlock", "InstantUnlock", function(client, door)
+                door:Fire("unlock")
+                return false
+            end)
         ```
 ]]
 function KeyUnlock(client, door, time)
@@ -1626,25 +1904,28 @@ end
 
 --[[
     Purpose:
-        <Brief, clear description of what the function does.>
+        Fired when a character is kicked from the session and forced to select another.
 
     When Called:
-        <Describe when and why this function is invoked.>
+        After the character kick is processed.
 
     Parameters:
-        <paramName> (<type>)
-            <Description.>
+        characterID (number)
+            ID of the character kicked.
+        isCurrentChar (boolean)
+            True if it was the active character at time of kick.
 
     Returns:
-        <returnType>
-            <Description or "nil".>
+        nil
 
     Realm:
-        <Client | Server | Shared>
+        Server
 
     Example Usage:
         ```lua
-            <High Complexity and well documented Function Call Or Use Case Here>
+            hook.Add("KickedFromChar", "LogCharKick", function(characterID, wasCurrent)
+                lia.log.add(nil, "charKicked", characterID, wasCurrent)
+            end)
         ```
 ]]
 function KickedFromChar(characterID, isCurrentChar)
@@ -1652,25 +1933,25 @@ end
 
 --[[
     Purpose:
-        <Brief, clear description of what the function does.>
+        Indicates that all Lilia database tables have been created/loaded.
 
     When Called:
-        <Describe when and why this function is invoked.>
+        After tables are created during startup.
 
     Parameters:
-        <paramName> (<type>)
-            <Description.>
+        None.
 
     Returns:
-        <returnType>
-            <Description or "nil".>
+        nil
 
     Realm:
-        <Client | Server | Shared>
+        Server
 
     Example Usage:
         ```lua
-            <High Complexity and well documented Function Call Or Use Case Here>
+            hook.Add("LiliaTablesLoaded", "SeedDefaults", function()
+                lia.seed.run()
+            end)
         ```
 ]]
 function LiliaTablesLoaded()
@@ -1678,25 +1959,25 @@ end
 
 --[[
     Purpose:
-        <Brief, clear description of what the function does.>
+        Allows modules to inject data when the gamemode performs a data load.
 
     When Called:
-        <Describe when and why this function is invoked.>
+        During server startup after initial load begins.
 
     Parameters:
-        <paramName> (<type>)
-            <Description.>
+        None.
 
     Returns:
-        <returnType>
-            <Description or "nil".>
+        nil
 
     Realm:
-        <Client | Server | Shared>
+        Server
 
     Example Usage:
         ```lua
-            <High Complexity and well documented Function Call Or Use Case Here>
+            hook.Add("LoadData", "LoadCustomData", function()
+                lia.data.loadCustom()
+            end)
         ```
 ]]
 function LoadData()
@@ -1704,25 +1985,29 @@ end
 
 --[[
     Purpose:
-        <Brief, clear description of what the function does.>
+        Lets modules change the model chosen for a character before it is set.
 
     When Called:
-        <Describe when and why this function is invoked.>
+        During character creation or model updates.
 
     Parameters:
-        <paramName> (<type>)
-            <Description.>
+        arg1 (any)
+            Context value (varies by caller).
+        character (Character)
+            Character being modified.
 
     Returns:
-        <returnType>
-            <Description or "nil".>
+        string
+            Model path override or nil to keep current.
 
     Realm:
-        <Client | Server | Shared>
+        Server
 
     Example Usage:
         ```lua
-            <High Complexity and well documented Function Call Or Use Case Here>
+            hook.Add("ModifyCharacterModel", "ForceFactionModel", function(_, character)
+                if character:getFaction() == FACTION_STAFF then return "models/player/police_fem.mdl" end
+            end)
         ```
 ]]
 function ModifyCharacterModel(arg1, character)
@@ -1730,25 +2015,34 @@ end
 
 --[[
     Purpose:
-        <Brief, clear description of what the function does.>
+        Notifies when an attribute boost is applied to a character.
 
     When Called:
-        <Describe when and why this function is invoked.>
+        After lia.attrib has boosted an attribute.
 
     Parameters:
-        <paramName> (<type>)
-            <Description.>
+        client (Player)
+            Player whose character was boosted.
+        character (Character)
+            Character receiving the boost.
+        attribID (string|number)
+            Attribute identifier.
+        boostID (string)
+            Boost source identifier.
+        arg5 (any)
+            Additional data supplied by the boost.
 
     Returns:
-        <returnType>
-            <Description or "nil".>
+        nil
 
     Realm:
-        <Client | Server | Shared>
+        Server
 
     Example Usage:
         ```lua
-            <High Complexity and well documented Function Call Or Use Case Here>
+            hook.Add("OnCharAttribBoosted", "LogBoost", function(client, character, attribID, boostID)
+                lia.log.add(client, "attribBoosted", attribID, boostID)
+            end)
         ```
 ]]
 function OnCharAttribBoosted(client, character, attribID, boostID, arg5)
@@ -1756,25 +2050,32 @@ end
 
 --[[
     Purpose:
-        <Brief, clear description of what the function does.>
+        Notifies that a character attribute value has been updated.
 
     When Called:
-        <Describe when and why this function is invoked.>
+        After attribute points are changed.
 
     Parameters:
-        <paramName> (<type>)
-            <Description.>
+        client (Player)
+            Player whose character changed.
+        character (Character)
+            Character object.
+        key (string|number)
+            Attribute identifier.
+        arg4 (any)
+            Old value.
 
     Returns:
-        <returnType>
-            <Description or "nil".>
+        nil
 
     Realm:
-        <Client | Server | Shared>
+        Server
 
     Example Usage:
         ```lua
-            <High Complexity and well documented Function Call Or Use Case Here>
+            hook.Add("OnCharAttribUpdated", "SyncAttrib", function(client, character, key, oldValue)
+                lia.log.add(client, "attribUpdated", key, oldValue, character:getAttrib(key))
+            end)
         ```
 ]]
 function OnCharAttribUpdated(client, character, key, arg4)
@@ -1782,25 +2083,30 @@ end
 
 --[[
     Purpose:
-        <Brief, clear description of what the function does.>
+        Signals that a new character has been created.
 
     When Called:
-        <Describe when and why this function is invoked.>
+        Immediately after character creation succeeds.
 
     Parameters:
-        <paramName> (<type>)
-            <Description.>
+        client (Player)
+            Player who created the character.
+        character (Character)
+            New character object.
+        originalData (table)
+            Raw creation data submitted.
 
     Returns:
-        <returnType>
-            <Description or "nil".>
+        nil
 
     Realm:
-        <Client | Server | Shared>
+        Server
 
     Example Usage:
         ```lua
-            <High Complexity and well documented Function Call Or Use Case Here>
+            hook.Add("OnCharCreated", "WelcomeMessage", function(client, character)
+                client:notifyLocalized("charCreated", character:getName())
+            end)
         ```
 ]]
 function OnCharCreated(client, character, originalData)
@@ -1808,25 +2114,28 @@ end
 
 --[[
     Purpose:
-        <Brief, clear description of what the function does.>
+        Invoked just before a character is deleted from persistence.
 
     When Called:
-        <Describe when and why this function is invoked.>
+        Right before deletion is executed.
 
     Parameters:
-        <paramName> (<type>)
-            <Description.>
+        client (Player)
+            Player requesting deletion.
+        id (number)
+            Character ID to delete.
 
     Returns:
-        <returnType>
-            <Description or "nil".>
+        nil
 
     Realm:
-        <Client | Server | Shared>
+        Server
 
     Example Usage:
         ```lua
-            <High Complexity and well documented Function Call Or Use Case Here>
+            hook.Add("OnCharDelete", "BackupChar", function(client, id)
+                lia.backup.character(id)
+            end)
         ```
 ]]
 function OnCharDelete(client, id)
@@ -1834,25 +2143,28 @@ end
 
 --[[
     Purpose:
-        <Brief, clear description of what the function does.>
+        Called when a player disconnects while owning a character.
 
     When Called:
-        <Describe when and why this function is invoked.>
+        Immediately after the player leaves the server.
 
     Parameters:
-        <paramName> (<type>)
-            <Description.>
+        client (Player)
+            Player who disconnected.
+        character (Character)
+            Character they had active.
 
     Returns:
-        <returnType>
-            <Description or "nil".>
+        nil
 
     Realm:
-        <Client | Server | Shared>
+        Server
 
     Example Usage:
         ```lua
-            <High Complexity and well documented Function Call Or Use Case Here>
+            hook.Add("OnCharDisconnect", "SaveOnLeave", function(client, character)
+                character:save()
+            end)
         ```
 ]]
 function OnCharDisconnect(client, character)
@@ -1860,25 +2172,30 @@ end
 
 --[[
     Purpose:
-        <Brief, clear description of what the function does.>
+        Notifies that flags have been granted to a character.
 
     When Called:
-        <Describe when and why this function is invoked.>
+        After permanent or session flags are added.
 
     Parameters:
-        <paramName> (<type>)
-            <Description.>
+        ply (Player)
+            Player whose character received flags.
+        character (Character)
+            Character instance.
+        addedFlags (string)
+            Flags added.
 
     Returns:
-        <returnType>
-            <Description or "nil".>
+        nil
 
     Realm:
-        <Client | Server | Shared>
+        Server
 
     Example Usage:
         ```lua
-            <High Complexity and well documented Function Call Or Use Case Here>
+            hook.Add("OnCharFlagsGiven", "LogFlagGrant", function(ply, character, addedFlags)
+                lia.log.add(ply, "flagsGiven", addedFlags)
+            end)
         ```
 ]]
 function OnCharFlagsGiven(ply, character, addedFlags)
@@ -1886,25 +2203,30 @@ end
 
 --[[
     Purpose:
-        <Brief, clear description of what the function does.>
+        Notifies that flags have been removed from a character.
 
     When Called:
-        <Describe when and why this function is invoked.>
+        After flag removal occurs.
 
     Parameters:
-        <paramName> (<type>)
-            <Description.>
+        ply (Player)
+            Player whose character lost flags.
+        character (Character)
+            Character affected.
+        removedFlags (string)
+            Flags removed.
 
     Returns:
-        <returnType>
-            <Description or "nil".>
+        nil
 
     Realm:
-        <Client | Server | Shared>
+        Server
 
     Example Usage:
         ```lua
-            <High Complexity and well documented Function Call Or Use Case Here>
+            hook.Add("OnCharFlagsTaken", "LogFlagRemoval", function(ply, character, removedFlags)
+                lia.log.add(ply, "flagsTaken", removedFlags)
+            end)
         ```
 ]]
 function OnCharFlagsTaken(ply, character, removedFlags)
@@ -1912,25 +2234,28 @@ end
 
 --[[
     Purpose:
-        <Brief, clear description of what the function does.>
+        Runs when a character is kicked out of the game or forced to menu.
 
     When Called:
-        <Describe when and why this function is invoked.>
+        After kicking logic completes.
 
     Parameters:
-        <paramName> (<type>)
-            <Description.>
+        character (Character)
+            Character that was kicked.
+        client (Player)
+            Player owning the character (may be nil).
 
     Returns:
-        <returnType>
-            <Description or "nil".>
+        nil
 
     Realm:
-        <Client | Server | Shared>
+        Server
 
     Example Usage:
         ```lua
-            <High Complexity and well documented Function Call Or Use Case Here>
+            hook.Add("OnCharKick", "LogCharKick", function(character, client)
+                lia.log.add(client, "charKicked", character:getName())
+            end)
         ```
 ]]
 function OnCharKick(character, client)
@@ -1938,25 +2263,32 @@ end
 
 --[[
     Purpose:
-        <Brief, clear description of what the function does.>
+        Fired when a character networked variable changes.
 
     When Called:
-        <Describe when and why this function is invoked.>
+        Whenever character:setNetVar updates a value.
 
     Parameters:
-        <paramName> (<type>)
-            <Description.>
+        character (Character)
+            Character whose var changed.
+        key (string)
+            Net var key.
+        oldVar (any)
+            Previous value.
+        value (any)
+            New value.
 
     Returns:
-        <returnType>
-            <Description or "nil".>
+        nil
 
     Realm:
-        <Client | Server | Shared>
+        Server
 
     Example Usage:
         ```lua
-            <High Complexity and well documented Function Call Or Use Case Here>
+            hook.Add("OnCharNetVarChanged", "TrackWantedState", function(character, key, old, value)
+                if key == "wanted" then lia.log.add(nil, "wantedToggle", character:getName(), value) end
+            end)
         ```
 ]]
 function OnCharNetVarChanged(character, key, oldVar, value)
@@ -1964,25 +2296,28 @@ end
 
 --[[
     Purpose:
-        <Brief, clear description of what the function does.>
+        Reports that a character has been permanently killed.
 
     When Called:
-        <Describe when and why this function is invoked.>
+        After perma-kill logic marks the character as dead.
 
     Parameters:
-        <paramName> (<type>)
-            <Description.>
+        character (Character)
+            Character that was permakilled.
+        time (number)
+            Timestamp of the perma-kill.
 
     Returns:
-        <returnType>
-            <Description or "nil".>
+        nil
 
     Realm:
-        <Client | Server | Shared>
+        Server
 
     Example Usage:
         ```lua
-            <High Complexity and well documented Function Call Or Use Case Here>
+            hook.Add("OnCharPermakilled", "AnnouncePerma", function(character)
+                lia.chat.send(nil, "event", L("permakilled", character:getName()))
+            end)
         ```
 ]]
 function OnCharPermakilled(character, time)
@@ -1990,25 +2325,29 @@ end
 
 --[[
     Purpose:
-        <Brief, clear description of what the function does.>
+        Notifies when a recognition check is performed between characters.
 
     When Called:
-        <Describe when and why this function is invoked.>
+        When determining if one character recognizes another.
 
     Parameters:
-        <paramName> (<type>)
-            <Description.>
+        client (Player)
+            Player performing the recognition.
+        arg2 (any)
+            Target data (player or character).
 
     Returns:
-        <returnType>
-            <Description or "nil".>
+        boolean
+            True if recognized; nil/false otherwise.
 
     Realm:
-        <Client | Server | Shared>
+        Server
 
     Example Usage:
         ```lua
-            <High Complexity and well documented Function Call Or Use Case Here>
+            hook.Add("OnCharRecognized", "AlwaysRecognizeTeam", function(client, target)
+                if target:getFaction() == client:Team() then return true end
+            end)
         ```
 ]]
 function OnCharRecognized(client, arg2)
@@ -2016,25 +2355,38 @@ end
 
 --[[
     Purpose:
-        <Brief, clear description of what the function does.>
+        Fired after a player completes a vendor trade interaction.
 
     When Called:
-        <Describe when and why this function is invoked.>
+        After buy/sell attempt is processed, including failures.
 
     Parameters:
-        <paramName> (<type>)
-            <Description.>
+        client (Player)
+            Player trading.
+        vendor (Entity)
+            Vendor entity.
+        item (Item)
+            Item instance if available.
+        isSellingToVendor (boolean)
+            True if player sold to vendor.
+        character (Character)
+            Player character.
+        itemType (string)
+            Item uniqueID.
+        isFailed (boolean)
+            True if the trade failed.
 
     Returns:
-        <returnType>
-            <Description or "nil".>
+        nil
 
     Realm:
-        <Client | Server | Shared>
+        Server
 
     Example Usage:
         ```lua
-            <High Complexity and well documented Function Call Or Use Case Here>
+            hook.Add("OnCharTradeVendor", "TrackVendorTrade", function(client, vendor, item, selling)
+                lia.log.add(client, selling and "vendorSell" or "vendorBuy", item and item.uniqueID or "unknown")
+            end)
         ```
 ]]
 function OnCharTradeVendor(client, vendor, item, isSellingToVendor, character, itemType, isFailed)
@@ -2042,25 +2394,26 @@ end
 
 --[[
     Purpose:
-        <Brief, clear description of what the function does.>
+        Triggered when a player is flagged as a cheater by detection logic.
 
     When Called:
-        <Describe when and why this function is invoked.>
+        After anti-cheat routines identify suspicious behavior.
 
     Parameters:
-        <paramName> (<type>)
-            <Description.>
+        client (Player)
+            Player detected.
 
     Returns:
-        <returnType>
-            <Description or "nil".>
+        nil
 
     Realm:
-        <Client | Server | Shared>
+        Server
 
     Example Usage:
         ```lua
-            <High Complexity and well documented Function Call Or Use Case Here>
+            hook.Add("OnCheaterCaught", "AutoKickCheaters", function(client)
+                client:Kick("Cheating detected")
+            end)
         ```
 ]]
 function OnCheaterCaught(client)
@@ -2068,25 +2421,32 @@ end
 
 --[[
     Purpose:
-        <Brief, clear description of what the function does.>
+        Fires when lia.data.set writes a value so other modules can react.
 
     When Called:
-        <Describe when and why this function is invoked.>
+        Immediately after a data key is set.
 
     Parameters:
-        <paramName> (<type>)
-            <Description.>
+        key (string)
+            Data key.
+        value (any)
+            Value written.
+        gamemode (string)
+            Gamemode identifier (namespace).
+        map (string)
+            Map name associated with the data.
 
     Returns:
-        <returnType>
-            <Description or "nil".>
+        nil
 
     Realm:
-        <Client | Server | Shared>
+        Server
 
     Example Usage:
         ```lua
-            <High Complexity and well documented Function Call Or Use Case Here>
+            hook.Add("OnDataSet", "MirrorToCache", function(key, value)
+                lia.cache.set(key, value)
+            end)
         ```
 ]]
 function OnDataSet(key, value, gamemode, map)
@@ -2094,25 +2454,25 @@ end
 
 --[[
     Purpose:
-        <Brief, clear description of what the function does.>
+        Indicates that the database has finished loading queued data.
 
     When Called:
-        <Describe when and why this function is invoked.>
+        After tables/data are loaded on startup.
 
     Parameters:
-        <paramName> (<type>)
-            <Description.>
+        None.
 
     Returns:
-        <returnType>
-            <Description or "nil".>
+        nil
 
     Realm:
-        <Client | Server | Shared>
+        Server
 
     Example Usage:
         ```lua
-            <High Complexity and well documented Function Call Or Use Case Here>
+            hook.Add("OnDatabaseLoaded", "StartSalaryTimers", function()
+                hook.Run("CreateSalaryTimers")
+            end)
         ```
 ]]
 function OnDatabaseLoaded()
@@ -2120,25 +2480,28 @@ end
 
 --[[
     Purpose:
-        <Brief, clear description of what the function does.>
+        Notifies that a death sound has been played for a player.
 
     When Called:
-        <Describe when and why this function is invoked.>
+        After emitting the death sound in PlayerDeath.
 
     Parameters:
-        <paramName> (<type>)
-            <Description.>
+        client (Player)
+            Player who died.
+        deathSound (string)
+            Sound path played.
 
     Returns:
-        <returnType>
-            <Description or "nil".>
+        nil
 
     Realm:
-        <Client | Server | Shared>
+        Server
 
     Example Usage:
         ```lua
-            <High Complexity and well documented Function Call Or Use Case Here>
+            hook.Add("OnDeathSoundPlayed", "BroadcastDeathSound", function(client, sound)
+                lia.log.add(client, "deathSound", sound)
+            end)
         ```
 ]]
 function OnDeathSoundPlayed(client, deathSound)
@@ -2146,25 +2509,28 @@ end
 
 --[[
     Purpose:
-        <Brief, clear description of what the function does.>
+        Called when an entity is loaded from persistence with its saved data.
 
     When Called:
-        <Describe when and why this function is invoked.>
+        After entity creation during map load and persistence restore.
 
     Parameters:
-        <paramName> (<type>)
-            <Description.>
+        ent (Entity)
+            Entity loaded.
+        data (table)
+            Saved data applied.
 
     Returns:
-        <returnType>
-            <Description or "nil".>
+        nil
 
     Realm:
-        <Client | Server | Shared>
+        Server
 
     Example Usage:
         ```lua
-            <High Complexity and well documented Function Call Or Use Case Here>
+            hook.Add("OnEntityLoaded", "RestoreHealth", function(ent, data)
+                if data.health then ent:SetHealth(data.health) end
+            end)
         ```
 ]]
 function OnEntityLoaded(ent, data)
@@ -2172,25 +2538,28 @@ end
 
 --[[
     Purpose:
-        <Brief, clear description of what the function does.>
+        Notifies that persistent data for an entity has been updated.
 
     When Called:
-        <Describe when and why this function is invoked.>
+        After persistence storage for an entity is rewritten.
 
     Parameters:
-        <paramName> (<type>)
-            <Description.>
+        ent (Entity)
+            Entity whose data changed.
+        data (table)
+            New persistence data.
 
     Returns:
-        <returnType>
-            <Description or "nil".>
+        nil
 
     Realm:
-        <Client | Server | Shared>
+        Server
 
     Example Usage:
         ```lua
-            <High Complexity and well documented Function Call Or Use Case Here>
+            hook.Add("OnEntityPersistUpdated", "RefreshDataCache", function(ent, data)
+                ent.cachedPersist = data
+            end)
         ```
 ]]
 function OnEntityPersistUpdated(ent, data)
@@ -2198,25 +2567,28 @@ end
 
 --[[
     Purpose:
-        <Brief, clear description of what the function does.>
+        Called when an entity is first persisted to storage.
 
     When Called:
-        <Describe when and why this function is invoked.>
+        At the moment entity data is captured for saving.
 
     Parameters:
-        <paramName> (<type>)
-            <Description.>
+        ent (Entity)
+            Entity being persisted.
+        entData (table)
+            Data collected for saving.
 
     Returns:
-        <returnType>
-            <Description or "nil".>
+        nil
 
     Realm:
-        <Client | Server | Shared>
+        Server
 
     Example Usage:
         ```lua
-            <High Complexity and well documented Function Call Or Use Case Here>
+            hook.Add("OnEntityPersisted", "AddOwnerData", function(ent, data)
+                if ent:GetNWString("owner") then data.owner = ent:GetNWString("owner") end
+            end)
         ```
 ]]
 function OnEntityPersisted(ent, entData)
@@ -2224,25 +2596,26 @@ end
 
 --[[
     Purpose:
-        <Brief, clear description of what the function does.>
+        Fired when an item entity spawns into the world.
 
     When Called:
-        <Describe when and why this function is invoked.>
+        After an item entity is created (drop or spawn).
 
     Parameters:
-        <paramName> (<type>)
-            <Description.>
+        itemEntity (Entity)
+            Item entity instance.
 
     Returns:
-        <returnType>
-            <Description or "nil".>
+        nil
 
     Realm:
-        <Client | Server | Shared>
+        Server
 
     Example Usage:
         ```lua
-            <High Complexity and well documented Function Call Or Use Case Here>
+            hook.Add("OnItemSpawned", "ApplyItemGlow", function(itemEntity)
+                itemEntity:SetRenderFX(kRenderFxGlowShell)
+            end)
         ```
 ]]
 function OnItemSpawned(itemEntity)
@@ -2250,25 +2623,25 @@ end
 
 --[[
     Purpose:
-        <Brief, clear description of what the function does.>
+        Signals that data tables for the gamemode have been loaded.
 
     When Called:
-        <Describe when and why this function is invoked.>
+        After loading tables during startup.
 
     Parameters:
-        <paramName> (<type>)
-            <Description.>
+        None.
 
     Returns:
-        <returnType>
-            <Description or "nil".>
+        nil
 
     Realm:
-        <Client | Server | Shared>
+        Server
 
     Example Usage:
         ```lua
-            <High Complexity and well documented Function Call Or Use Case Here>
+            hook.Add("OnLoadTables", "InitVendors", function()
+                lia.vendor.loadAll()
+            end)
         ```
 ]]
 function OnLoadTables()
@@ -2276,25 +2649,32 @@ end
 
 --[[
     Purpose:
-        <Brief, clear description of what the function does.>
+        Allows overriding the NPC type assignment for an NPC entity.
 
     When Called:
-        <Describe when and why this function is invoked.>
+        When setting an NPC's type using management tools.
 
     Parameters:
-        <paramName> (<type>)
-            <Description.>
+        client (Player)
+            Player setting the type.
+        npc (Entity)
+            NPC entity.
+        npcID (string)
+            Target NPC type ID.
+        filteredData (table)
+            Data prepared for the NPC.
 
     Returns:
-        <returnType>
-            <Description or "nil".>
+        nil
 
     Realm:
-        <Client | Server | Shared>
+        Server
 
     Example Usage:
         ```lua
-            <High Complexity and well documented Function Call Or Use Case Here>
+            hook.Add("OnNPCTypeSet", "LogNPCType", function(client, npc, npcID)
+                lia.log.add(client, "npcTypeSet", npcID)
+            end)
         ```
 ]]
 function OnNPCTypeSet(client, npc, npcID, filteredData)
@@ -2302,25 +2682,28 @@ end
 
 --[[
     Purpose:
-        <Brief, clear description of what the function does.>
+        Fired when an OOC chat message is sent to the server.
 
     When Called:
-        <Describe when and why this function is invoked.>
+        After an OOC message passes cooldown checks.
 
     Parameters:
-        <paramName> (<type>)
-            <Description.>
+        client (Player)
+            Speaker.
+        message (string)
+            Message text.
 
     Returns:
-        <returnType>
-            <Description or "nil".>
+        nil
 
     Realm:
-        <Client | Server | Shared>
+        Server
 
     Example Usage:
         ```lua
-            <High Complexity and well documented Function Call Or Use Case Here>
+            hook.Add("OnOOCMessageSent", "RelayToDiscord", function(client, message)
+                lia.discord.send("OOC", client:Name(), message)
+            end)
         ```
 ]]
 function OnOOCMessageSent(client, message)
@@ -2328,25 +2711,28 @@ end
 
 --[[
     Purpose:
-        <Brief, clear description of what the function does.>
+        Notifies that a pain sound has been played for an entity.
 
     When Called:
-        <Describe when and why this function is invoked.>
+        After a pain sound is emitted.
 
     Parameters:
-        <paramName> (<type>)
-            <Description.>
+        entity (Entity)
+            Entity that made the sound.
+        painSound (string)
+            Sound path.
 
     Returns:
-        <returnType>
-            <Description or "nil".>
+        nil
 
     Realm:
-        <Client | Server | Shared>
+        Server
 
     Example Usage:
         ```lua
-            <High Complexity and well documented Function Call Or Use Case Here>
+            hook.Add("OnPainSoundPlayed", "CountPainSounds", function(entity, sound)
+                lia.metrics.bump("painSounds")
+            end)
         ```
 ]]
 function OnPainSoundPlayed(entity, painSound)
@@ -2354,25 +2740,28 @@ end
 
 --[[
     Purpose:
-        <Brief, clear description of what the function does.>
+        Fired when a player picks up a money entity from the world.
 
     When Called:
-        <Describe when and why this function is invoked.>
+        After money is collected.
 
     Parameters:
-        <paramName> (<type>)
-            <Description.>
+        activator (Player)
+            Player who picked up the money.
+        moneyEntity (Entity)
+            Money entity removed.
 
     Returns:
-        <returnType>
-            <Description or "nil".>
+        nil
 
     Realm:
-        <Client | Server | Shared>
+        Server
 
     Example Usage:
         ```lua
-            <High Complexity and well documented Function Call Or Use Case Here>
+            hook.Add("OnPickupMoney", "LogMoneyPickup", function(ply, moneyEnt)
+                lia.log.add(ply, "moneyPickup", moneyEnt:getAmount())
+            end)
         ```
 ]]
 function OnPickupMoney(activator, moneyEntity)
@@ -2380,25 +2769,34 @@ end
 
 --[[
     Purpose:
-        <Brief, clear description of what the function does.>
+        Called when a player starts an animated sequence (e.g., sit or custom act).
 
     When Called:
-        <Describe when and why this function is invoked.>
+        When sequence playback is initiated through player sequences.
 
     Parameters:
-        <paramName> (<type>)
-            <Description.>
+        client (Player)
+            Player entering the sequence.
+        sequenceName (string)
+            Sequence identifier.
+        callback (function)
+            Function to call when sequence ends.
+        time (number)
+            Duration of the sequence.
+        noFreeze (boolean)
+            Whether player movement is frozen.
 
     Returns:
-        <returnType>
-            <Description or "nil".>
+        nil
 
     Realm:
-        <Client | Server | Shared>
+        Server
 
     Example Usage:
         ```lua
-            <High Complexity and well documented Function Call Or Use Case Here>
+            hook.Add("OnPlayerEnterSequence", "SequenceLog", function(client, sequenceName)
+                lia.log.add(client, "sequenceStart", sequenceName)
+            end)
         ```
 ]]
 function OnPlayerEnterSequence(client, sequenceName, callback, time, noFreeze)
@@ -2406,25 +2804,34 @@ end
 
 --[[
     Purpose:
-        <Brief, clear description of what the function does.>
+        Runs after a player interacts with an item and receives a result.
 
     When Called:
-        <Describe when and why this function is invoked.>
+        After item interaction logic completes.
 
     Parameters:
-        <paramName> (<type>)
-            <Description.>
+        client (Player)
+            Player performing the action.
+        action (string)
+            Action identifier.
+        item (Item)
+            Item involved.
+        result (boolean|string|table)
+            Result of the action.
+        data (table)
+            Additional action data.
 
     Returns:
-        <returnType>
-            <Description or "nil".>
+        nil
 
     Realm:
-        <Client | Server | Shared>
+        Server
 
     Example Usage:
         ```lua
-            <High Complexity and well documented Function Call Or Use Case Here>
+            hook.Add("OnPlayerInteractItem", "NotifyUse", function(client, action, item, result)
+                if result then client:notifyLocalized("itemAction", action, item:getName()) end
+            end)
         ```
 ]]
 function OnPlayerInteractItem(client, action, item, result, data)
@@ -2432,25 +2839,30 @@ end
 
 --[[
     Purpose:
-        <Brief, clear description of what the function does.>
+        Triggered when a player joins a class or team variant.
 
     When Called:
-        <Describe when and why this function is invoked.>
+        After the class change is applied.
 
     Parameters:
-        <paramName> (<type>)
-            <Description.>
+        target (Player)
+            Player who changed class.
+        arg2 (any)
+            New class data/index.
+        oldClass (any)
+            Previous class data/index.
 
     Returns:
-        <returnType>
-            <Description or "nil".>
+        nil
 
     Realm:
-        <Client | Server | Shared>
+        Server
 
     Example Usage:
         ```lua
-            <High Complexity and well documented Function Call Or Use Case Here>
+            hook.Add("OnPlayerJoinClass", "ClassLog", function(client, newClass, oldClass)
+                lia.log.add(client, "classJoined", tostring(newClass))
+            end)
         ```
 ]]
 function OnPlayerJoinClass(target, arg2, oldClass)
@@ -2458,25 +2870,26 @@ end
 
 --[[
     Purpose:
-        <Brief, clear description of what the function does.>
+        Fired when a player exits an animated sequence.
 
     When Called:
-        <Describe when and why this function is invoked.>
+        When the sequence finishes or is cancelled.
 
     Parameters:
-        <paramName> (<type>)
-            <Description.>
+        client (Player)
+            Player leaving the sequence.
 
     Returns:
-        <returnType>
-            <Description or "nil".>
+        nil
 
     Realm:
-        <Client | Server | Shared>
+        Server
 
     Example Usage:
         ```lua
-            <High Complexity and well documented Function Call Or Use Case Here>
+            hook.Add("OnPlayerLeaveSequence", "SequenceEndLog", function(client)
+                lia.log.add(client, "sequenceEnd")
+            end)
         ```
 ]]
 function OnPlayerLeaveSequence(client)
@@ -2484,25 +2897,26 @@ end
 
 --[[
     Purpose:
-        <Brief, clear description of what the function does.>
+        Notifies when a player loses a stackable item (stack count reaches zero).
 
     When Called:
-        <Describe when and why this function is invoked.>
+        After stack removal logic.
 
     Parameters:
-        <paramName> (<type>)
-            <Description.>
+        itemTypeOrItem (string|Item)
+            Item uniqueID or item instance removed.
 
     Returns:
-        <returnType>
-            <Description or "nil".>
+        nil
 
     Realm:
-        <Client | Server | Shared>
+        Server
 
     Example Usage:
         ```lua
-            <High Complexity and well documented Function Call Or Use Case Here>
+            hook.Add("OnPlayerLostStackItem", "RevokeBuff", function(itemTypeOrItem)
+                if itemTypeOrItem == "medkit" then lia.buff.remove("healing") end
+            end)
         ```
 ]]
 function OnPlayerLostStackItem(itemTypeOrItem)
@@ -2510,25 +2924,28 @@ end
 
 --[[
     Purpose:
-        <Brief, clear description of what the function does.>
+        Notifies when a player toggles observer mode (freecam/third person).
 
     When Called:
-        <Describe when and why this function is invoked.>
+        When observation state changes via admin commands or mechanics.
 
     Parameters:
-        <paramName> (<type>)
-            <Description.>
+        client (Player)
+            Player entering or exiting observe.
+        state (boolean)
+            True when entering observe mode.
 
     Returns:
-        <returnType>
-            <Description or "nil".>
+        nil
 
     Realm:
-        <Client | Server | Shared>
+        Server
 
     Example Usage:
         ```lua
-            <High Complexity and well documented Function Call Or Use Case Here>
+            hook.Add("OnPlayerObserve", "HideHUD", function(client, state)
+                client:setNetVar("hideHUD", state)
+            end)
         ```
 ]]
 function OnPlayerObserve(client, state)
@@ -2536,25 +2953,28 @@ end
 
 --[[
     Purpose:
-        <Brief, clear description of what the function does.>
+        Fired when a player is ragdolled (knocked out, physics ragdoll).
 
     When Called:
-        <Describe when and why this function is invoked.>
+        Immediately after the ragdoll is created.
 
     Parameters:
-        <paramName> (<type>)
-            <Description.>
+        client (Player)
+            Player ragdolled.
+        ragdoll (Entity)
+            Ragdoll entity created.
 
     Returns:
-        <returnType>
-            <Description or "nil".>
+        nil
 
     Realm:
-        <Client | Server | Shared>
+        Server
 
     Example Usage:
         ```lua
-            <High Complexity and well documented Function Call Or Use Case Here>
+            hook.Add("OnPlayerRagdolled", "TrackRagdoll", function(client, ragdoll)
+                ragdoll:SetCollisionGroup(COLLISION_GROUP_DEBRIS_TRIGGER)
+            end)
         ```
 ]]
 function OnPlayerRagdolled(client, ragdoll)
@@ -2562,25 +2982,30 @@ end
 
 --[[
     Purpose:
-        <Brief, clear description of what the function does.>
+        Notifies that a player switched to a different class.
 
     When Called:
-        <Describe when and why this function is invoked.>
+        After the class transition is applied.
 
     Parameters:
-        <paramName> (<type>)
-            <Description.>
+        client (Player)
+            Player switching class.
+        class (table|number)
+            New class identifier or data.
+        oldClass (table|number)
+            Previous class identifier or data.
 
     Returns:
-        <returnType>
-            <Description or "nil".>
+        nil
 
     Realm:
-        <Client | Server | Shared>
+        Server
 
     Example Usage:
         ```lua
-            <High Complexity and well documented Function Call Or Use Case Here>
+            hook.Add("OnPlayerSwitchClass", "RefreshLoadout", function(client, class, oldClass)
+                lia.loadout.give(client)
+            end)
         ```
 ]]
 function OnPlayerSwitchClass(client, class, oldClass)
@@ -2588,25 +3013,35 @@ end
 
 --[[
     Purpose:
-        <Brief, clear description of what the function does.>
+        Allows modules to override item transfer requests before processing.
 
     When Called:
-        <Describe when and why this function is invoked.>
+        When an inventory panel asks to move an item to another inventory.
 
     Parameters:
-        <paramName> (<type>)
-            <Description.>
+        inventoryPanel (Panel)
+            UI panel requesting transfer.
+        itemID (number|string)
+            Item instance ID.
+        targetInventoryID (number|string)
+            Destination inventory.
+        x (number)
+            X slot.
+        y (number)
+            Y slot.
 
     Returns:
-        <returnType>
-            <Description or "nil".>
+        nil
+            Return false to block.
 
     Realm:
-        <Client | Server | Shared>
+        Server
 
     Example Usage:
         ```lua
-            <High Complexity and well documented Function Call Or Use Case Here>
+            hook.Add("OnRequestItemTransfer", "BlockDuringTrade", function(_, _, targetInv)
+                if lia.trade.isActive(targetInv) then return false end
+            end)
         ```
 ]]
 function OnRequestItemTransfer(inventoryPanel, itemID, targetInventoryID, x, y)
@@ -2614,25 +3049,27 @@ end
 
 --[[
     Purpose:
-        <Brief, clear description of what the function does.>
+        Allows adjusting salary amount just before payment.
 
     When Called:
-        <Describe when and why this function is invoked.>
+        During salary payout calculation.
 
     Parameters:
-        <paramName> (<type>)
-            <Description.>
+        client (Player)
+            Player receiving pay.
 
     Returns:
-        <returnType>
-            <Description or "nil".>
+        number
+            Modified salary value.
 
     Realm:
-        <Client | Server | Shared>
+        Server
 
     Example Usage:
         ```lua
-            <High Complexity and well documented Function Call Or Use Case Here>
+            hook.Add("OnSalaryAdjust", "TaxSalary", function(client)
+                return client:isTaxed() and -50 or 0
+            end)
         ```
 ]]
 function OnSalaryAdjust(client)
@@ -2640,25 +3077,34 @@ end
 
 --[[
     Purpose:
-        <Brief, clear description of what the function does.>
+        Fired when salary is granted to a player.
 
     When Called:
-        <Describe when and why this function is invoked.>
+        After salary is deposited into the character.
 
     Parameters:
-        <paramName> (<type>)
-            <Description.>
+        client (Player)
+            Player receiving salary.
+        char (Character)
+            Character object.
+        pay (number)
+            Amount paid.
+        faction (table)
+            Faction data.
+        class (table)
+            Class data (if any).
 
     Returns:
-        <returnType>
-            <Description or "nil".>
+        nil
 
     Realm:
-        <Client | Server | Shared>
+        Server
 
     Example Usage:
         ```lua
-            <High Complexity and well documented Function Call Or Use Case Here>
+            hook.Add("OnSalaryGiven", "LogSalary", function(client, char, pay)
+                lia.log.add(client, "salaryGiven", pay)
+            end)
         ```
 ]]
 function OnSalaryGiven(client, char, pay, faction, class)
@@ -2666,25 +3112,26 @@ end
 
 --[[
     Purpose:
-        <Brief, clear description of what the function does.>
+        Notifies that saved item instances have been loaded from storage.
 
     When Called:
-        <Describe when and why this function is invoked.>
+        After loading saved items on startup.
 
     Parameters:
-        <paramName> (<type>)
-            <Description.>
+        loadedItems (table)
+            Table of item instances.
 
     Returns:
-        <returnType>
-            <Description or "nil".>
+        nil
 
     Realm:
-        <Client | Server | Shared>
+        Server
 
     Example Usage:
         ```lua
-            <High Complexity and well documented Function Call Or Use Case Here>
+            hook.Add("OnSavedItemLoaded", "IndexCustomData", function(loadedItems)
+                lia.items.buildCache(loadedItems)
+            end)
         ```
 ]]
 function OnSavedItemLoaded(loadedItems)
@@ -2692,25 +3139,32 @@ end
 
 --[[
     Purpose:
-        <Brief, clear description of what the function does.>
+        Central logging hook for server log entries.
 
     When Called:
-        <Describe when and why this function is invoked.>
+        Whenever lia.log.add writes to the server log.
 
     Parameters:
-        <paramName> (<type>)
-            <Description.>
+        client (Player)
+            Player associated with the log (may be nil).
+        logType (string)
+            Log type identifier.
+        logString (string)
+            Formatted log message.
+        category (string)
+            Log category.
 
     Returns:
-        <returnType>
-            <Description or "nil".>
+        nil
 
     Realm:
-        <Client | Server | Shared>
+        Server
 
     Example Usage:
         ```lua
-            <High Complexity and well documented Function Call Or Use Case Here>
+            hook.Add("OnServerLog", "ForwardToDiscord", function(client, logType, text, category)
+                lia.discord.send(category, logType, text)
+            end)
         ```
 ]]
 function OnServerLog(client, logType, logString, category)
@@ -2718,25 +3172,30 @@ end
 
 --[[
     Purpose:
-        <Brief, clear description of what the function does.>
+        Fired when a staff member claims a support ticket.
 
     When Called:
-        <Describe when and why this function is invoked.>
+        After claim assignment succeeds.
 
     Parameters:
-        <paramName> (<type>)
-            <Description.>
+        client (Player)
+            Staff claiming the ticket.
+        requester (string)
+            SteamID of the requester.
+        ticketMessage (string)
+            Ticket text.
 
     Returns:
-        <returnType>
-            <Description or "nil".>
+        nil
 
     Realm:
-        <Client | Server | Shared>
+        Server
 
     Example Usage:
         ```lua
-            <High Complexity and well documented Function Call Or Use Case Here>
+            hook.Add("OnTicketClaimed", "AnnounceClaim", function(client, requester)
+                client:notifyLocalized("ticketClaimed", requester)
+            end)
         ```
 ]]
 function OnTicketClaimed(client, requester, ticketMessage)
@@ -2744,25 +3203,30 @@ end
 
 --[[
     Purpose:
-        <Brief, clear description of what the function does.>
+        Fired when a support ticket is closed.
 
     When Called:
-        <Describe when and why this function is invoked.>
+        After the ticket is marked closed and responders notified.
 
     Parameters:
-        <paramName> (<type>)
-            <Description.>
+        client (Player)
+            Staff closing the ticket.
+        requester (string)
+            SteamID of the requester.
+        ticketMessage (string)
+            Original ticket text.
 
     Returns:
-        <returnType>
-            <Description or "nil".>
+        nil
 
     Realm:
-        <Client | Server | Shared>
+        Server
 
     Example Usage:
         ```lua
-            <High Complexity and well documented Function Call Or Use Case Here>
+            hook.Add("OnTicketClosed", "LogTicketClose", function(client, requester)
+                lia.log.add(client, "ticketClosed", requester)
+            end)
         ```
 ]]
 function OnTicketClosed(client, requester, ticketMessage)
@@ -2770,25 +3234,28 @@ end
 
 --[[
     Purpose:
-        <Brief, clear description of what the function does.>
+        Fired when a support ticket is created.
 
     When Called:
-        <Describe when and why this function is invoked.>
+        Right after a player submits a ticket.
 
     Parameters:
-        <paramName> (<type>)
-            <Description.>
+        noob (Player)
+            Player submitting the ticket.
+        message (string)
+            Ticket text.
 
     Returns:
-        <returnType>
-            <Description or "nil".>
+        nil
 
     Realm:
-        <Client | Server | Shared>
+        Server
 
     Example Usage:
         ```lua
-            <High Complexity and well documented Function Call Or Use Case Here>
+            hook.Add("OnTicketCreated", "NotifyStaff", function(noob, message)
+                lia.staff.notifyAll(noob:Nick() .. ": " .. message)
+            end)
         ```
 ]]
 function OnTicketCreated(noob, message)
@@ -2796,25 +3263,28 @@ end
 
 --[[
     Purpose:
-        <Brief, clear description of what the function does.>
+        Notifies that usergroup permissions have changed.
 
     When Called:
-        <Describe when and why this function is invoked.>
+        After a usergroup permission update occurs.
 
     Parameters:
-        <paramName> (<type>)
-            <Description.>
+        groupName (string)
+            Usergroup name.
+        arg2 (table)
+            New permission data.
 
     Returns:
-        <returnType>
-            <Description or "nil".>
+        nil
 
     Realm:
-        <Client | Server | Shared>
+        Server
 
     Example Usage:
         ```lua
-            <High Complexity and well documented Function Call Or Use Case Here>
+            hook.Add("OnUsergroupPermissionsChanged", "RefreshCachedPerms", function(groupName)
+                lia.permissions.refresh(groupName)
+            end)
         ```
 ]]
 function OnUsergroupPermissionsChanged(groupName, arg2)
@@ -2822,25 +3292,30 @@ end
 
 --[[
     Purpose:
-        <Brief, clear description of what the function does.>
+        Fired when a vendor entity is edited via the vendor interface.
 
     When Called:
-        <Describe when and why this function is invoked.>
+        After vendor key/value is changed.
 
     Parameters:
-        <paramName> (<type>)
-            <Description.>
+        client (Player)
+            Player editing.
+        vendor (Entity)
+            Vendor entity.
+        key (string)
+            Property key edited.
 
     Returns:
-        <returnType>
-            <Description or "nil".>
+        nil
 
     Realm:
-        <Client | Server | Shared>
+        Server
 
     Example Usage:
         ```lua
-            <High Complexity and well documented Function Call Or Use Case Here>
+            hook.Add("OnVendorEdited", "SyncVendorEdits", function(client, vendor, key)
+                lia.vendor.sync(vendor)
+            end)
         ```
 ]]
 function OnVendorEdited(client, vendor, key)
@@ -2848,25 +3323,26 @@ end
 
 --[[
     Purpose:
-        <Brief, clear description of what the function does.>
+        Signals that a player's voice chat style has changed (whisper/talk/yell).
 
     When Called:
-        <Describe when and why this function is invoked.>
+        After a player updates their voice type.
 
     Parameters:
-        <paramName> (<type>)
-            <Description.>
+        client (Player)
+            Player whose voice type changed.
 
     Returns:
-        <returnType>
-            <Description or "nil".>
+        nil
 
     Realm:
-        <Client | Server | Shared>
+        Server
 
     Example Usage:
         ```lua
-            <High Complexity and well documented Function Call Or Use Case Here>
+            hook.Add("OnVoiceTypeChanged", "UpdateVoiceRadius", function(client)
+                lia.voice.updateHearTables()
+            end)
         ```
 ]]
 function OnVoiceTypeChanged(client)
@@ -2874,25 +3350,30 @@ end
 
 --[[
     Purpose:
-        <Brief, clear description of what the function does.>
+        Called when a networked option value is received or changed.
 
     When Called:
-        <Describe when and why this function is invoked.>
+        When lia.option.set broadcasts an option that should network.
 
     Parameters:
-        <paramName> (<type>)
-            <Description.>
+        arg1 (Player|nil)
+            Player who triggered the change (nil when server initiated).
+        key (string)
+            Option key.
+        value (any)
+            New value.
 
     Returns:
-        <returnType>
-            <Description or "nil".>
+        nil
 
     Realm:
-        <Client | Server | Shared>
+        Server
 
     Example Usage:
         ```lua
-            <High Complexity and well documented Function Call Or Use Case Here>
+            hook.Add("OptionReceived", "ApplyOption", function(_, key, value)
+                if key == "TalkRange" then lia.config.set("TalkRange", value) end
+            end)
         ```
 ]]
 function OptionReceived(arg1, key, value)
@@ -2900,25 +3381,29 @@ end
 
 --[[
     Purpose:
-        <Brief, clear description of what the function does.>
+        Checks if a player is permitted to access vendor management.
 
     When Called:
-        <Describe when and why this function is invoked.>
+        When a player attempts to open vendor edit controls.
 
     Parameters:
-        <paramName> (<type>)
-            <Description.>
+        client (Player)
+            Player requesting access.
+        vendor (Entity)
+            Vendor entity.
 
     Returns:
-        <returnType>
-            <Description or "nil".>
+        boolean
+            False to block, true/nil to allow.
 
     Realm:
-        <Client | Server | Shared>
+        Server
 
     Example Usage:
         ```lua
-            <High Complexity and well documented Function Call Or Use Case Here>
+            hook.Add("PlayerAccessVendor", "AdminOnlyVendorEdit", function(client)
+                if not client:IsAdmin() then return false end
+            end)
         ```
 ]]
 function PlayerAccessVendor(client, vendor)
@@ -2926,25 +3411,26 @@ end
 
 --[[
     Purpose:
-        <Brief, clear description of what the function does.>
+        Triggered when cheat detection flags a player.
 
     When Called:
-        <Describe when and why this function is invoked.>
+        After the cheat system confirms suspicious behavior.
 
     Parameters:
-        <paramName> (<type>)
-            <Description.>
+        client (Player)
+            Player detected.
 
     Returns:
-        <returnType>
-            <Description or "nil".>
+        nil
 
     Realm:
-        <Client | Server | Shared>
+        Server
 
     Example Usage:
         ```lua
-            <High Complexity and well documented Function Call Or Use Case Here>
+            hook.Add("PlayerCheatDetected", "AutoBan", function(client)
+                lia.bans.add(client:SteamID(), "Cheat detected", 0)
+            end)
         ```
 ]]
 function PlayerCheatDetected(client)
@@ -2952,25 +3438,28 @@ end
 
 --[[
     Purpose:
-        <Brief, clear description of what the function does.>
+        Fired when a player is gagged (voice chat disabled).
 
     When Called:
-        <Describe when and why this function is invoked.>
+        After gag state toggles to true.
 
     Parameters:
-        <paramName> (<type>)
-            <Description.>
+        target (Player)
+            Player gagged.
+        admin (Player)
+            Admin who issued the gag.
 
     Returns:
-        <returnType>
-            <Description or "nil".>
+        nil
 
     Realm:
-        <Client | Server | Shared>
+        Server
 
     Example Usage:
         ```lua
-            <High Complexity and well documented Function Call Or Use Case Here>
+            hook.Add("PlayerGagged", "LogGag", function(target, admin)
+                lia.log.add(admin, "playerGagged", target:Name())
+            end)
         ```
 ]]
 function PlayerGagged(target, admin)
@@ -2978,25 +3467,26 @@ end
 
 --[[
     Purpose:
-        <Brief, clear description of what the function does.>
+        Notifies that Lilia player data has finished loading for a client.
 
     When Called:
-        <Describe when and why this function is invoked.>
+        After lia data, items, doors, and panels are synced to the client.
 
     Parameters:
-        <paramName> (<type>)
-            <Description.>
+        client (Player)
+            Player whose data is loaded.
 
     Returns:
-        <returnType>
-            <Description or "nil".>
+        nil
 
     Realm:
-        <Client | Server | Shared>
+        Server
 
     Example Usage:
         ```lua
-            <High Complexity and well documented Function Call Or Use Case Here>
+            hook.Add("PlayerLiliaDataLoaded", "SendWelcome", function(client)
+                client:notifyLocalized("welcomeBack")
+            end)
         ```
 ]]
 function PlayerLiliaDataLoaded(client)
@@ -3004,25 +3494,30 @@ end
 
 --[[
     Purpose:
-        <Brief, clear description of what the function does.>
+        Fired after a player's character has been fully loaded.
 
     When Called:
-        <Describe when and why this function is invoked.>
+        Once character variables are applied and the player is spawned.
 
     Parameters:
-        <paramName> (<type>)
-            <Description.>
+        client (Player)
+            Player whose character loaded.
+        character (Character)
+            Active character.
+        currentChar (number)
+            Character ID index.
 
     Returns:
-        <returnType>
-            <Description or "nil".>
+        nil
 
     Realm:
-        <Client | Server | Shared>
+        Server
 
     Example Usage:
         ```lua
-            <High Complexity and well documented Function Call Or Use Case Here>
+            hook.Add("PlayerLoadedChar", "ApplyLoadout", function(client, character)
+                lia.loadout.give(client)
+            end)
         ```
 ]]
 function PlayerLoadedChar(client, character, currentChar)
@@ -3030,25 +3525,35 @@ end
 
 --[[
     Purpose:
-        <Brief, clear description of what the function does.>
+        Allows modifying chat text before it is sent to listeners.
 
     When Called:
-        <Describe when and why this function is invoked.>
+        During chat send for all chat types.
 
     Parameters:
-        <paramName> (<type>)
-            <Description.>
+        speaker (Player)
+            Player speaking.
+        chatType (string)
+            Chat class identifier.
+        text (string)
+            Raw message text.
+        anonymous (boolean)
+            Whether the message is anonymous.
+        receivers (table)
+            List of recipients (optional).
 
     Returns:
-        <returnType>
-            <Description or "nil".>
+        string
+            Replacement message text, or nil to keep.
 
     Realm:
-        <Client | Server | Shared>
+        Server
 
     Example Usage:
         ```lua
-            <High Complexity and well documented Function Call Or Use Case Here>
+            hook.Add("PlayerMessageSend", "CensorCurseWords", function(_, _, text)
+                return text:gsub("badword", "****")
+            end)
         ```
 ]]
 function PlayerMessageSend(speaker, chatType, text, anonymous, receivers)
@@ -3056,25 +3561,28 @@ end
 
 --[[
     Purpose:
-        <Brief, clear description of what the function does.>
+        Triggered when a player's model changes.
 
     When Called:
-        <Describe when and why this function is invoked.>
+        After a new model is set on the player.
 
     Parameters:
-        <paramName> (<type>)
-            <Description.>
+        client (Player)
+            Player whose model changed.
+        value (string)
+            New model path.
 
     Returns:
-        <returnType>
-            <Description or "nil".>
+        nil
 
     Realm:
-        <Client | Server | Shared>
+        Server
 
     Example Usage:
         ```lua
-            <High Complexity and well documented Function Call Or Use Case Here>
+            hook.Add("PlayerModelChanged", "ReapplyBodygroups", function(client)
+                lia.models.applyBodygroups(client)
+            end)
         ```
 ]]
 function PlayerModelChanged(client, value)
@@ -3082,25 +3590,28 @@ end
 
 --[[
     Purpose:
-        <Brief, clear description of what the function does.>
+        Fired when a player is muted (text chat disabled).
 
     When Called:
-        <Describe when and why this function is invoked.>
+        After muting is applied.
 
     Parameters:
-        <paramName> (<type>)
-            <Description.>
+        target (Player)
+            Player muted.
+        admin (Player)
+            Admin who muted.
 
     Returns:
-        <returnType>
-            <Description or "nil".>
+        nil
 
     Realm:
-        <Client | Server | Shared>
+        Server
 
     Example Usage:
         ```lua
-            <High Complexity and well documented Function Call Or Use Case Here>
+            hook.Add("PlayerMuted", "LogMute", function(target, admin)
+                lia.log.add(admin, "playerMuted", target:Name())
+            end)
         ```
 ]]
 function PlayerMuted(target, admin)
@@ -3108,25 +3619,31 @@ end
 
 --[[
     Purpose:
-        <Brief, clear description of what the function does.>
+        Determines if a death should result in a permanent character kill.
 
     When Called:
-        <Describe when and why this function is invoked.>
+        During PlayerDeath when checking perma-kill conditions.
 
     Parameters:
-        <paramName> (<type>)
-            <Description.>
+        client (Player)
+            Player who died.
+        inflictor (Entity)
+            Entity inflicting damage.
+        attacker (Entity)
+            Attacker entity.
 
     Returns:
-        <returnType>
-            <Description or "nil".>
+        boolean
+            True to perma-kill, false/nil to avoid.
 
     Realm:
-        <Client | Server | Shared>
+        Server
 
     Example Usage:
         ```lua
-            <High Complexity and well documented Function Call Or Use Case Here>
+            hook.Add("PlayerShouldPermaKill", "HardcoreMode", function(client)
+                return lia.config.get("HardcoreMode", false)
+            end)
         ```
 ]]
 function PlayerShouldPermaKill(client, inflictor, attacker)
@@ -3134,25 +3651,31 @@ end
 
 --[[
     Purpose:
-        <Brief, clear description of what the function does.>
+        Allows overriding the spawn point chosen for a player.
 
     When Called:
-        <Describe when and why this function is invoked.>
+        When selecting a specific spawn point entity/position.
 
     Parameters:
-        <paramName> (<type>)
-            <Description.>
+        client (Player)
+            Player spawning.
+        pos (Vector)
+            Proposed position.
+        ang (Angle)
+            Proposed angle.
 
     Returns:
-        <returnType>
-            <Description or "nil".>
+        vector, angle
+            Replacement spawn location or nil to keep.
 
     Realm:
-        <Client | Server | Shared>
+        Server
 
     Example Usage:
         ```lua
-            <High Complexity and well documented Function Call Or Use Case Here>
+            hook.Add("PlayerSpawnPointSelected", "SpawnInZone", function(client)
+                return lia.spawns.pickSafe(), Angle(0, 0, 0)
+            end)
         ```
 ]]
 function PlayerSpawnPointSelected(client, pos, ang)
@@ -3160,25 +3683,26 @@ end
 
 --[[
     Purpose:
-        <Brief, clear description of what the function does.>
+        Notifies that stamina has been gained by a player.
 
     When Called:
-        <Describe when and why this function is invoked.>
+        After stamina increase is applied.
 
     Parameters:
-        <paramName> (<type>)
-            <Description.>
+        client (Player)
+            Player gaining stamina.
 
     Returns:
-        <returnType>
-            <Description or "nil".>
+        nil
 
     Realm:
-        <Client | Server | Shared>
+        Server
 
     Example Usage:
         ```lua
-            <High Complexity and well documented Function Call Or Use Case Here>
+            hook.Add("PlayerStaminaGained", "RewardRecovery", function(client)
+                client:notifyLocalized("staminaRestored")
+            end)
         ```
 ]]
 function PlayerStaminaGained(client)
@@ -3186,25 +3710,26 @@ end
 
 --[[
     Purpose:
-        <Brief, clear description of what the function does.>
+        Notifies that stamina has been reduced for a player.
 
     When Called:
-        <Describe when and why this function is invoked.>
+        After stamina drain is applied.
 
     Parameters:
-        <paramName> (<type>)
-            <Description.>
+        client (Player)
+            Player losing stamina.
 
     Returns:
-        <returnType>
-            <Description or "nil".>
+        nil
 
     Realm:
-        <Client | Server | Shared>
+        Server
 
     Example Usage:
         ```lua
-            <High Complexity and well documented Function Call Or Use Case Here>
+            hook.Add("PlayerStaminaLost", "WarnLowStamina", function(client)
+                if client:getLocalVar("stm", 100) < 10 then client:notifyLocalized("lowStamina") end
+            end)
         ```
 ]]
 function PlayerStaminaLost(client)
@@ -3212,25 +3737,28 @@ end
 
 --[[
     Purpose:
-        <Brief, clear description of what the function does.>
+        Fired when a gag on a player is removed.
 
     When Called:
-        <Describe when and why this function is invoked.>
+        After gag state switches to false.
 
     Parameters:
-        <paramName> (<type>)
-            <Description.>
+        target (Player)
+            Player ungagged.
+        admin (Player)
+            Admin lifting the gag.
 
     Returns:
-        <returnType>
-            <Description or "nil".>
+        nil
 
     Realm:
-        <Client | Server | Shared>
+        Server
 
     Example Usage:
         ```lua
-            <High Complexity and well documented Function Call Or Use Case Here>
+            hook.Add("PlayerUngagged", "LogUngag", function(target, admin)
+                lia.log.add(admin, "playerUngagged", target:Name())
+            end)
         ```
 ]]
 function PlayerUngagged(target, admin)
@@ -3238,25 +3766,28 @@ end
 
 --[[
     Purpose:
-        <Brief, clear description of what the function does.>
+        Fired when a mute on a player is removed.
 
     When Called:
-        <Describe when and why this function is invoked.>
+        After muting state switches to false.
 
     Parameters:
-        <paramName> (<type>)
-            <Description.>
+        target (Player)
+            Player unmuted.
+        admin (Player)
+            Admin lifting the mute.
 
     Returns:
-        <returnType>
-            <Description or "nil".>
+        nil
 
     Realm:
-        <Client | Server | Shared>
+        Server
 
     Example Usage:
         ```lua
-            <High Complexity and well documented Function Call Or Use Case Here>
+            hook.Add("PlayerUnmuted", "LogUnmute", function(target, admin)
+                lia.log.add(admin, "playerUnmuted", target:Name())
+            end)
         ```
 ]]
 function PlayerUnmuted(target, admin)
@@ -3264,25 +3795,29 @@ end
 
 --[[
     Purpose:
-        <Brief, clear description of what the function does.>
+        Final permission check before a player uses a door entity.
 
     When Called:
-        <Describe when and why this function is invoked.>
+        When a use input is received on a door.
 
     Parameters:
-        <paramName> (<type>)
-            <Description.>
+        client (Player)
+            Player using the door.
+        door (Entity)
+            Door entity.
 
     Returns:
-        <returnType>
-            <Description or "nil".>
+        boolean
+            False to block use; true/nil to allow.
 
     Realm:
-        <Client | Server | Shared>
+        Server
 
     Example Usage:
         ```lua
-            <High Complexity and well documented Function Call Or Use Case Here>
+            hook.Add("PlayerUseDoor", "RaidLockdown", function(client)
+                if lia.state.isRaid() then return false end
+            end)
         ```
 ]]
 function PlayerUseDoor(client, door)
@@ -3290,25 +3825,28 @@ end
 
 --[[
     Purpose:
-        <Brief, clear description of what the function does.>
+        Runs after door data has been loaded from persistence.
 
     When Called:
-        <Describe when and why this function is invoked.>
+        After door ownership/vars are applied on map load.
 
     Parameters:
-        <paramName> (<type>)
-            <Description.>
+        ent (Entity)
+            Door entity.
+        doorData (table)
+            Data restored for the door.
 
     Returns:
-        <returnType>
-            <Description or "nil".>
+        nil
 
     Realm:
-        <Client | Server | Shared>
+        Server
 
     Example Usage:
         ```lua
-            <High Complexity and well documented Function Call Or Use Case Here>
+            hook.Add("PostDoorDataLoad", "ApplyDoorSkin", function(ent, data)
+                if data.skin then ent:SetSkin(data.skin) end
+            end)
         ```
 ]]
 function PostDoorDataLoad(ent, doorData)
@@ -3316,25 +3854,25 @@ end
 
 --[[
     Purpose:
-        <Brief, clear description of what the function does.>
+        Called after all gamemode data loading is complete.
 
     When Called:
-        <Describe when and why this function is invoked.>
+        At the end of server initialization once stored data is in memory.
 
     Parameters:
-        <paramName> (<type>)
-            <Description.>
+        None.
 
     Returns:
-        <returnType>
-            <Description or "nil".>
+        nil
 
     Realm:
-        <Client | Server | Shared>
+        Server
 
     Example Usage:
         ```lua
-            <High Complexity and well documented Function Call Or Use Case Here>
+            hook.Add("PostLoadData", "WarmCache", function()
+                lia.cache.preload()
+            end)
         ```
 ]]
 function PostLoadData()
@@ -3342,25 +3880,26 @@ end
 
 --[[
     Purpose:
-        <Brief, clear description of what the function does.>
+        Runs after the player's initial spawn setup finishes.
 
     When Called:
-        <Describe when and why this function is invoked.>
+        Right after PlayerInitialSpawn processing completes.
 
     Parameters:
-        <paramName> (<type>)
-            <Description.>
+        client (Player)
+            Newly spawned player.
 
     Returns:
-        <returnType>
-            <Description or "nil".>
+        nil
 
     Realm:
-        <Client | Server | Shared>
+        Server
 
     Example Usage:
         ```lua
-            <High Complexity and well documented Function Call Or Use Case Here>
+            hook.Add("PostPlayerInitialSpawn", "SendMOTD", function(client)
+                lia.motd.send(client)
+            end)
         ```
 ]]
 function PostPlayerInitialSpawn(client)
@@ -3368,25 +3907,30 @@ end
 
 --[[
     Purpose:
-        <Brief, clear description of what the function does.>
+        Runs after a player's character and inventories have been loaded.
 
     When Called:
-        <Describe when and why this function is invoked.>
+        Immediately after PlayerLoadedChar finishes syncing.
 
     Parameters:
-        <paramName> (<type>)
-            <Description.>
+        client (Player)
+            Player.
+        character (Character)
+            Loaded character.
+        currentChar (number)
+            Character index.
 
     Returns:
-        <returnType>
-            <Description or "nil".>
+        nil
 
     Realm:
-        <Client | Server | Shared>
+        Server
 
     Example Usage:
         ```lua
-            <High Complexity and well documented Function Call Or Use Case Here>
+            hook.Add("PostPlayerLoadedChar", "GiveStarterItems", function(client, character)
+                lia.items.giveStarter(character)
+            end)
         ```
 ]]
 function PostPlayerLoadedChar(client, character, currentChar)
@@ -3394,25 +3938,26 @@ end
 
 --[[
     Purpose:
-        <Brief, clear description of what the function does.>
+        Fired after PlayerLoadout has finished giving items and weapons.
 
     When Called:
-        <Describe when and why this function is invoked.>
+        After the default loadout logic completes.
 
     Parameters:
-        <paramName> (<type>)
-            <Description.>
+        client (Player)
+            Player who spawned.
 
     Returns:
-        <returnType>
-            <Description or "nil".>
+        nil
 
     Realm:
-        <Client | Server | Shared>
+        Server
 
     Example Usage:
         ```lua
-            <High Complexity and well documented Function Call Or Use Case Here>
+            hook.Add("PostPlayerLoadout", "AddExtraGear", function(client)
+                client:Give("weapon_crowbar")
+            end)
         ```
 ]]
 function PostPlayerLoadout(client)
@@ -3420,25 +3965,33 @@ end
 
 --[[
     Purpose:
-        <Brief, clear description of what the function does.>
+        Allows modules to modify chat behavior after PlayerSay builds recipients.
 
     When Called:
-        <Describe when and why this function is invoked.>
+        After chat data is prepared but before sending to clients.
 
     Parameters:
-        <paramName> (<type>)
-            <Description.>
+        client (Player)
+            Speaker.
+        message (string)
+            Message text.
+        chatType (string)
+            Chat class.
+        anonymous (boolean)
+            Whether the message is anonymous.
 
     Returns:
-        <returnType>
-            <Description or "nil".>
+        string, boolean
+            Optionally return modified text and anonymity.
 
     Realm:
-        <Client | Server | Shared>
+        Server
 
     Example Usage:
         ```lua
-            <High Complexity and well documented Function Call Or Use Case Here>
+            hook.Add("PostPlayerSay", "AddOOCPrefix", function(client, message, chatType, anonymous)
+                if chatType == "ooc" then return "[OOC] " .. message, anonymous end
+            end)
         ```
 ]]
 function PostPlayerSay(client, message, chatType, anonymous)
@@ -3446,25 +3999,30 @@ end
 
 --[[
     Purpose:
-        <Brief, clear description of what the function does.>
+        Fired after damage scaling is applied to a hitgroup.
 
     When Called:
-        <Describe when and why this function is invoked.>
+        At the end of ScalePlayerDamage.
 
     Parameters:
-        <paramName> (<type>)
-            <Description.>
+        hitgroup (number)
+            Hitgroup hit.
+        dmgInfo (CTakeDamageInfo)
+            Damage info object.
+        damageScale (number)
+            Scale that was applied.
 
     Returns:
-        <returnType>
-            <Description or "nil".>
+        nil
 
     Realm:
-        <Client | Server | Shared>
+        Server
 
     Example Usage:
         ```lua
-            <High Complexity and well documented Function Call Or Use Case Here>
+            hook.Add("PostScaleDamage", "TrackDamage", function(hitgroup, dmgInfo, scale)
+                lia.metrics.bump("damage", dmgInfo:GetDamage() * scale)
+            end)
         ```
 ]]
 function PostScaleDamage(hitgroup, dmgInfo, damageScale)
@@ -3472,25 +4030,26 @@ end
 
 --[[
     Purpose:
-        <Brief, clear description of what the function does.>
+        Pre-deletion hook for characters to run cleanup logic.
 
     When Called:
-        <Describe when and why this function is invoked.>
+        Just before a character is removed from the database.
 
     Parameters:
-        <paramName> (<type>)
-            <Description.>
+        id (number)
+            Character ID to delete.
 
     Returns:
-        <returnType>
-            <Description or "nil".>
+        nil
 
     Realm:
-        <Client | Server | Shared>
+        Server
 
     Example Usage:
         ```lua
-            <High Complexity and well documented Function Call Or Use Case Here>
+            hook.Add("PreCharDelete", "ArchiveChar", function(id)
+                lia.backup.character(id)
+            end)
         ```
 ]]
 function PreCharDelete(id)
@@ -3498,25 +4057,28 @@ end
 
 --[[
     Purpose:
-        <Brief, clear description of what the function does.>
+        Allows adding extra data before door data is saved to persistence.
 
     When Called:
-        <Describe when and why this function is invoked.>
+        During door save routines.
 
     Parameters:
-        <paramName> (<type>)
-            <Description.>
+        door (Entity)
+            Door entity.
+        doorData (table)
+            Data about to be saved.
 
     Returns:
-        <returnType>
-            <Description or "nil".>
+        nil
 
     Realm:
-        <Client | Server | Shared>
+        Server
 
     Example Usage:
         ```lua
-            <High Complexity and well documented Function Call Or Use Case Here>
+            hook.Add("PreDoorDataSave", "SaveDoorSkin", function(door, data)
+                data.skin = door:GetSkin()
+            end)
         ```
 ]]
 function PreDoorDataSave(door, doorData)
@@ -3524,25 +4086,31 @@ end
 
 --[[
     Purpose:
-        <Brief, clear description of what the function does.>
+        Lets modules validate an item interaction before it runs.
 
     When Called:
-        <Describe when and why this function is invoked.>
+        Prior to executing an item action.
 
     Parameters:
-        <paramName> (<type>)
-            <Description.>
+        client (Player)
+            Player performing the action.
+        action (string)
+            Action identifier.
+        item (Item)
+            Item being interacted with.
 
     Returns:
-        <returnType>
-            <Description or "nil".>
+        boolean
+            False to block; true/nil to allow.
 
     Realm:
-        <Client | Server | Shared>
+        Server
 
     Example Usage:
         ```lua
-            <High Complexity and well documented Function Call Or Use Case Here>
+            hook.Add("PrePlayerInteractItem", "BlockWhileBusy", function(client)
+                if client:isBusy() then return false end
+            end)
         ```
 ]]
 function PrePlayerInteractItem(client, action, item)
@@ -3550,25 +4118,30 @@ end
 
 --[[
     Purpose:
-        <Brief, clear description of what the function does.>
+        Runs before character data is fully loaded into a player.
 
     When Called:
-        <Describe when and why this function is invoked.>
+        Prior to PlayerLoadedChar logic.
 
     Parameters:
-        <paramName> (<type>)
-            <Description.>
+        client (Player)
+            Player about to load a character.
+        character (Character)
+            Character object.
+        currentChar (number)
+            Character index.
 
     Returns:
-        <returnType>
-            <Description or "nil".>
+        nil
 
     Realm:
-        <Client | Server | Shared>
+        Server
 
     Example Usage:
         ```lua
-            <High Complexity and well documented Function Call Or Use Case Here>
+            hook.Add("PrePlayerLoadedChar", "ResetRagdoll", function(client)
+                client:removeRagdoll()
+            end)
         ```
 ]]
 function PrePlayerLoadedChar(client, character, currentChar)
@@ -3576,25 +4149,35 @@ end
 
 --[[
     Purpose:
-        <Brief, clear description of what the function does.>
+        Allows modification of salary payout before it is given.
 
     When Called:
-        <Describe when and why this function is invoked.>
+        During salary calculation loop, before pay is issued.
 
     Parameters:
-        <paramName> (<type>)
-            <Description.>
+        client (Player)
+            Player due for salary.
+        char (Character)
+            Character.
+        pay (number)
+            Current calculated pay.
+        faction (table)
+            Faction data.
+        class (table)
+            Class data.
 
     Returns:
-        <returnType>
-            <Description or "nil".>
+        number
+            Adjusted pay or nil to keep.
 
     Realm:
-        <Client | Server | Shared>
+        Server
 
     Example Usage:
         ```lua
-            <High Complexity and well documented Function Call Or Use Case Here>
+            hook.Add("PreSalaryGive", "ApplyTax", function(client, char, pay)
+                return pay * 0.9
+            end)
         ```
 ]]
 function PreSalaryGive(client, char, pay, faction, class)
@@ -3602,25 +4185,30 @@ end
 
 --[[
     Purpose:
-        <Brief, clear description of what the function does.>
+        Called before damage scaling is calculated.
 
     When Called:
-        <Describe when and why this function is invoked.>
+        At the start of ScalePlayerDamage.
 
     Parameters:
-        <paramName> (<type>)
-            <Description.>
+        hitgroup (number)
+            Hitgroup hit.
+        dmgInfo (CTakeDamageInfo)
+            Damage info object.
+        damageScale (number)
+            Starting scale value.
 
     Returns:
-        <returnType>
-            <Description or "nil".>
+        nil
 
     Realm:
-        <Client | Server | Shared>
+        Server
 
     Example Usage:
         ```lua
-            <High Complexity and well documented Function Call Or Use Case Here>
+            hook.Add("PreScaleDamage", "ArmorPiercing", function(hitgroup, dmgInfo, scale)
+                if dmgInfo:IsExplosionDamage() then dmgInfo:ScaleDamage(scale * 1.2) end
+            end)
         ```
 ]]
 function PreScaleDamage(hitgroup, dmgInfo, damageScale)
@@ -3628,25 +4216,29 @@ end
 
 --[[
     Purpose:
-        <Brief, clear description of what the function does.>
+        Removes a warning entry for a character and informs listeners.
 
     When Called:
-        <Describe when and why this function is invoked.>
+        When an admin deletes a warning record.
 
     Parameters:
-        <paramName> (<type>)
-            <Description.>
+        charID (number|string)
+            Character database ID.
+        index (number)
+            Position of the warning in the list to remove.
 
     Returns:
-        <returnType>
-            <Description or "nil".>
+        deferred|table
+            Deferred resolving to removed warning row or nil.
 
     Realm:
-        <Client | Server | Shared>
+        Server
 
     Example Usage:
         ```lua
-            <High Complexity and well documented Function Call Or Use Case Here>
+            hook.Add("RemoveWarning", "MirrorWarningRemoval", function(charID, index)
+                print("Warning removed", charID, index)
+            end)
         ```
 ]]
 function RemoveWarning(charID, index)
@@ -3654,25 +4246,25 @@ end
 
 --[[
     Purpose:
-        <Brief, clear description of what the function does.>
+        Performs a full save of gamemode persistence (entities, data, etc.).
 
     When Called:
-        <Describe when and why this function is invoked.>
+        When persistence save is triggered manually or automatically.
 
     Parameters:
-        <paramName> (<type>)
-            <Description.>
+        None.
 
     Returns:
-        <returnType>
-            <Description or "nil".>
+        nil
 
     Realm:
-        <Client | Server | Shared>
+        Server
 
     Example Usage:
         ```lua
-            <High Complexity and well documented Function Call Or Use Case Here>
+            hook.Add("SaveData", "ExtraSave", function()
+                lia.custom.saveAll()
+            end)
         ```
 ]]
 function SaveData()
@@ -3680,25 +4272,28 @@ end
 
 --[[
     Purpose:
-        <Brief, clear description of what the function does.>
+        Displays a popup notification to a player with custom text.
 
     When Called:
-        <Describe when and why this function is invoked.>
+        Whenever the server wants to send a popup dialog.
 
     Parameters:
-        <paramName> (<type>)
-            <Description.>
+        noob (Player)
+            Player receiving the popup.
+        message (string)
+            Text to show.
 
     Returns:
-        <returnType>
-            <Description or "nil".>
+        nil
 
     Realm:
-        <Client | Server | Shared>
+        Server
 
     Example Usage:
         ```lua
-            <High Complexity and well documented Function Call Or Use Case Here>
+            hook.Add("SendPopup", "PopupExample", function(client, message)
+                client:notifyLocalized(message)
+            end)
         ```
 ]]
 function SendPopup(noob, message)
@@ -3706,25 +4301,26 @@ end
 
 --[[
     Purpose:
-        <Brief, clear description of what the function does.>
+        Builds and spawns a bot player with default character data.
 
     When Called:
-        <Describe when and why this function is invoked.>
+        When the server requests creation of a bot player.
 
     Parameters:
-        <paramName> (<type>)
-            <Description.>
+        client (Player)
+            Bot player entity.
 
     Returns:
-        <returnType>
-            <Description or "nil".>
+        nil
 
     Realm:
-        <Client | Server | Shared>
+        Server
 
     Example Usage:
         ```lua
-            <High Complexity and well documented Function Call Or Use Case Here>
+            hook.Add("SetupBotPlayer", "BotWelcome", function(client)
+                print("Bot setup complete", client)
+            end)
         ```
 ]]
 function SetupBotPlayer(client)
@@ -3732,25 +4328,25 @@ end
 
 --[[
     Purpose:
-        <Brief, clear description of what the function does.>
+        Sets up database tables, indexes, and initial schema.
 
     When Called:
-        <Describe when and why this function is invoked.>
+        During gamemode initialization after database connection is established.
 
     Parameters:
-        <paramName> (<type>)
-            <Description.>
+        None.
 
     Returns:
-        <returnType>
-            <Description or "nil".>
+        nil
 
     Realm:
-        <Client | Server | Shared>
+        Server
 
     Example Usage:
         ```lua
-            <High Complexity and well documented Function Call Or Use Case Here>
+            hook.Add("SetupDatabase", "InitCustomTables", function()
+                lia.db.query("CREATE TABLE IF NOT EXISTS custom(id INT)")
+            end)
         ```
 ]]
 function SetupDatabase()
@@ -3758,25 +4354,28 @@ end
 
 --[[
     Purpose:
-        <Brief, clear description of what the function does.>
+        Configure a player model entity after it has been created.
 
     When Called:
-        <Describe when and why this function is invoked.>
+        When spawning a playable model entity for preview or vendors.
 
     Parameters:
-        <paramName> (<type>)
-            <Description.>
+        modelEntity (Entity)
+            The spawned model entity.
+        character (Character)
+            Character data used for appearance.
 
     Returns:
-        <returnType>
-            <Description or "nil".>
+        nil
 
     Realm:
-        <Client | Server | Shared>
+        Server
 
     Example Usage:
         ```lua
-            <High Complexity and well documented Function Call Or Use Case Here>
+            hook.Add("SetupPlayerModel", "ApplyCharSkin", function(modelEntity, character)
+                modelEntity:SetSkin(character:getSkin() or 0)
+            end)
         ```
 ]]
 function SetupPlayerModel(modelEntity, character)
@@ -3784,25 +4383,26 @@ end
 
 --[[
     Purpose:
-        <Brief, clear description of what the function does.>
+        Determines if persistence data should be saved at this time.
 
     When Called:
-        <Describe when and why this function is invoked.>
+        Before performing a save cycle.
 
     Parameters:
-        <paramName> (<type>)
-            <Description.>
+        None.
 
     Returns:
-        <returnType>
-            <Description or "nil".>
+        boolean
+            False to skip saving; true/nil to proceed.
 
     Realm:
-        <Client | Server | Shared>
+        Server
 
     Example Usage:
         ```lua
-            <High Complexity and well documented Function Call Or Use Case Here>
+            hook.Add("ShouldDataBeSaved", "OnlyDuringGrace", function()
+                return not lia.state.isCombatPhase()
+            end)
         ```
 ]]
 function ShouldDataBeSaved()
@@ -3810,25 +4410,26 @@ end
 
 --[[
     Purpose:
-        <Brief, clear description of what the function does.>
+        Decides whether saved item data should be deleted on map cleanup.
 
     When Called:
-        <Describe when and why this function is invoked.>
+        Before removing saved items.
 
     Parameters:
-        <paramName> (<type>)
-            <Description.>
+        None.
 
     Returns:
-        <returnType>
-            <Description or "nil".>
+        boolean
+            False to keep saved items; true/nil to delete.
 
     Realm:
-        <Client | Server | Shared>
+        Server
 
     Example Usage:
         ```lua
-            <High Complexity and well documented Function Call Or Use Case Here>
+            hook.Add("ShouldDeleteSavedItems", "KeepForTesting", function()
+                return false
+            end)
         ```
 ]]
 function ShouldDeleteSavedItems()
@@ -3836,25 +4437,29 @@ end
 
 --[[
     Purpose:
-        <Brief, clear description of what the function does.>
+        Decide if a death sound should play for a player.
 
     When Called:
-        <Describe when and why this function is invoked.>
+        Right before emitting the death sound.
 
     Parameters:
-        <paramName> (<type>)
-            <Description.>
+        client (Player)
+            Player who died.
+        deathSound (string)
+            Sound that would be played.
 
     Returns:
-        <returnType>
-            <Description or "nil".>
+        boolean
+            False to suppress; true/nil to allow.
 
     Realm:
-        <Client | Server | Shared>
+        Server
 
     Example Usage:
         ```lua
-            <High Complexity and well documented Function Call Or Use Case Here>
+            hook.Add("ShouldPlayDeathSound", "MuteStaff", function(client)
+                if client:Team() == FACTION_STAFF then return false end
+            end)
         ```
 ]]
 function ShouldPlayDeathSound(client, deathSound)
@@ -3862,25 +4467,29 @@ end
 
 --[[
     Purpose:
-        <Brief, clear description of what the function does.>
+        Decide if a pain sound should play for an entity.
 
     When Called:
-        <Describe when and why this function is invoked.>
+        When choosing whether to emit pain audio.
 
     Parameters:
-        <paramName> (<type>)
-            <Description.>
+        entity (Entity)
+            Entity that would play the sound.
+        painSound (string)
+            Sound path.
 
     Returns:
-        <returnType>
-            <Description or "nil".>
+        boolean
+            False to suppress; true/nil to allow.
 
     Realm:
-        <Client | Server | Shared>
+        Server
 
     Example Usage:
         ```lua
-            <High Complexity and well documented Function Call Or Use Case Here>
+            hook.Add("ShouldPlayPainSound", "MuteRobots", function(entity)
+                if entity:IsPlayer() and entity:IsCombine() then return false end
+            end)
         ```
 ]]
 function ShouldPlayPainSound(entity, painSound)
@@ -3888,25 +4497,27 @@ end
 
 --[[
     Purpose:
-        <Brief, clear description of what the function does.>
+        Controls whether a client ragdoll should be spawned on death.
 
     When Called:
-        <Describe when and why this function is invoked.>
+        During PlayerDeath ragdoll handling.
 
     Parameters:
-        <paramName> (<type>)
-            <Description.>
+        client (Player)
+            Player who died.
 
     Returns:
-        <returnType>
-            <Description or "nil".>
+        boolean
+            False to prevent ragdoll; true/nil to allow.
 
     Realm:
-        <Client | Server | Shared>
+        Server
 
     Example Usage:
         ```lua
-            <High Complexity and well documented Function Call Or Use Case Here>
+            hook.Add("ShouldSpawnClientRagdoll", "NoRagdollInVehicles", function(client)
+                return not client:InVehicle()
+            end)
         ```
 ]]
 function ShouldSpawnClientRagdoll(client)
@@ -3914,25 +4525,31 @@ end
 
 --[[
     Purpose:
-        <Brief, clear description of what the function does.>
+        Validates whether an item can be transferred to/from storage inventories.
 
     When Called:
-        <Describe when and why this function is invoked.>
+        When an item move involving storage is requested.
 
     Parameters:
-        <paramName> (<type>)
-            <Description.>
+        client (Player)
+            Player performing the move.
+        storage (Entity|table)
+            Storage entity or inventory table.
+        item (Item)
+            Item being moved.
 
     Returns:
-        <returnType>
-            <Description or "nil".>
+        boolean
+            False to block; true/nil to allow.
 
     Realm:
-        <Client | Server | Shared>
+        Server
 
     Example Usage:
         ```lua
-            <High Complexity and well documented Function Call Or Use Case Here>
+            hook.Add("StorageCanTransferItem", "LimitWeapons", function(client, storage, item)
+                if item.isWeapon then return false end
+            end)
         ```
 ]]
 function StorageCanTransferItem(client, storage, item)
@@ -3940,25 +4557,28 @@ end
 
 --[[
     Purpose:
-        <Brief, clear description of what the function does.>
+        Fired when a storage entity is removed from the world.
 
     When Called:
-        <Describe when and why this function is invoked.>
+        On removal/deletion of the storage entity.
 
     Parameters:
-        <paramName> (<type>)
-            <Description.>
+        storageEntity (Entity)
+            Storage entity removed.
+        inventory (Inventory)
+            Inventory associated.
 
     Returns:
-        <returnType>
-            <Description or "nil".>
+        nil
 
     Realm:
-        <Client | Server | Shared>
+        Server
 
     Example Usage:
         ```lua
-            <High Complexity and well documented Function Call Or Use Case Here>
+            hook.Add("StorageEntityRemoved", "SaveStorage", function(storageEntity, inventory)
+                lia.storage.saveInventory(inventory)
+            end)
         ```
 ]]
 function StorageEntityRemoved(storageEntity, inventory)
@@ -3966,25 +4586,30 @@ end
 
 --[[
     Purpose:
-        <Brief, clear description of what the function does.>
+        Fired when a storage inventory is assigned to an entity.
 
     When Called:
-        <Describe when and why this function is invoked.>
+        After inventory is set on a storage entity.
 
     Parameters:
-        <paramName> (<type>)
-            <Description.>
+        entity (Entity)
+            Entity receiving the inventory.
+        inventory (Inventory)
+            Inventory assigned.
+        isCar (boolean)
+            True if the storage is a vehicle trunk.
 
     Returns:
-        <returnType>
-            <Description or "nil".>
+        nil
 
     Realm:
-        <Client | Server | Shared>
+        Server
 
     Example Usage:
         ```lua
-            <High Complexity and well documented Function Call Or Use Case Here>
+            hook.Add("StorageInventorySet", "TrackStorage", function(ent, inv)
+                lia.log.add(nil, "storageSet", inv:getID())
+            end)
         ```
 ]]
 function StorageInventorySet(entity, inventory, isCar)
@@ -3992,25 +4617,25 @@ end
 
 --[[
     Purpose:
-        <Brief, clear description of what the function does.>
+        Notifies that an item was removed from a storage inventory.
 
     When Called:
-        <Describe when and why this function is invoked.>
+        After removal occurs.
 
     Parameters:
-        <paramName> (<type>)
-            <Description.>
+        None explicitly (context provided via global variables).
 
     Returns:
-        <returnType>
-            <Description or "nil".>
+        nil
 
     Realm:
-        <Client | Server | Shared>
+        Server
 
     Example Usage:
         ```lua
-            <High Complexity and well documented Function Call Or Use Case Here>
+            hook.Add("StorageItemRemoved", "RecountStorage", function()
+                lia.storage.updateCapacity()
+            end)
         ```
 ]]
 function StorageItemRemoved()
@@ -4018,25 +4643,28 @@ end
 
 --[[
     Purpose:
-        <Brief, clear description of what the function does.>
+        Fired when a storage inventory is restored from disk.
 
     When Called:
-        <Describe when and why this function is invoked.>
+        During storage load routines.
 
     Parameters:
-        <paramName> (<type>)
-            <Description.>
+        ent (Entity)
+            Storage entity.
+        inventory (Inventory)
+            Inventory object restored.
 
     Returns:
-        <returnType>
-            <Description or "nil".>
+        nil
 
     Realm:
-        <Client | Server | Shared>
+        Server
 
     Example Usage:
         ```lua
-            <High Complexity and well documented Function Call Or Use Case Here>
+            hook.Add("StorageRestored", "SyncRestoredStorage", function(ent, inventory)
+                inventory:sync(ent)
+            end)
         ```
 ]]
 function StorageRestored(ent, inventory)
@@ -4044,25 +4672,26 @@ end
 
 --[[
     Purpose:
-        <Brief, clear description of what the function does.>
+        Persists the current spawn positions to storage.
 
     When Called:
-        <Describe when and why this function is invoked.>
+        When spawns are being saved.
 
     Parameters:
-        <paramName> (<type>)
-            <Description.>
+        spawns (table)
+            Spawn data to store.
 
     Returns:
-        <returnType>
-            <Description or "nil".>
+        nil
 
     Realm:
-        <Client | Server | Shared>
+        Server
 
     Example Usage:
         ```lua
-            <High Complexity and well documented Function Call Or Use Case Here>
+            hook.Add("StoreSpawns", "CustomSpawnStore", function(spawns)
+                file.Write("lilia/spawns.json", util.TableToJSON(spawns))
+            end)
         ```
 ]]
 function StoreSpawns(spawns)
@@ -4070,25 +4699,26 @@ end
 
 --[[
     Purpose:
-        <Brief, clear description of what the function does.>
+        Syncs the character list data to a specific client.
 
     When Called:
-        <Describe when and why this function is invoked.>
+        When a player requests an updated character list.
 
     Parameters:
-        <paramName> (<type>)
-            <Description.>
+        client (Player)
+            Player receiving the list.
 
     Returns:
-        <returnType>
-            <Description or "nil".>
+        nil
 
     Realm:
-        <Client | Server | Shared>
+        Server
 
     Example Usage:
         ```lua
-            <High Complexity and well documented Function Call Or Use Case Here>
+            hook.Add("SyncCharList", "AddExtraFields", function(client)
+                lia.char.sync(client)
+            end)
         ```
 ]]
 function SyncCharList(client)
@@ -4096,25 +4726,31 @@ end
 
 --[[
     Purpose:
-        <Brief, clear description of what the function does.>
+        Allows custom validation when a player attempts to claim a support ticket.
 
     When Called:
-        <Describe when and why this function is invoked.>
+        When a claim request is made for a ticket.
 
     Parameters:
-        <paramName> (<type>)
-            <Description.>
+        client (Player)
+            Player claiming the ticket.
+        requester (Player|string)
+            Ticket requester or their SteamID.
+        ticketMessage (string)
+            Ticket description.
 
     Returns:
-        <returnType>
-            <Description or "nil".>
+        boolean
+            False to block; true/nil to allow.
 
     Realm:
-        <Client | Server | Shared>
+        Server
 
     Example Usage:
         ```lua
-            <High Complexity and well documented Function Call Or Use Case Here>
+            hook.Add("TicketSystemClaim", "AllowStaffOnlyClaims", function(client)
+                if not client:isStaffOnDuty() then return false end
+            end)
         ```
 ]]
 function TicketSystemClaim(client, requester, ticketMessage)
@@ -4122,25 +4758,31 @@ end
 
 --[[
     Purpose:
-        <Brief, clear description of what the function does.>
+        Allows custom validation when a player attempts to close a support ticket.
 
     When Called:
-        <Describe when and why this function is invoked.>
+        When a close request is made for a ticket.
 
     Parameters:
-        <paramName> (<type>)
-            <Description.>
+        client (Player)
+            Player closing the ticket.
+        requester (Player|string)
+            Ticket requester or SteamID.
+        ticketMessage (string)
+            Ticket description.
 
     Returns:
-        <returnType>
-            <Description or "nil".>
+        boolean
+            False to block; true/nil to allow.
 
     Realm:
-        <Client | Server | Shared>
+        Server
 
     Example Usage:
         ```lua
-            <High Complexity and well documented Function Call Or Use Case Here>
+            hook.Add("TicketSystemClose", "OnlyOwnerOrStaff", function(client, requester)
+                if client ~= requester and not client:isStaffOnDuty() then return false end
+            end)
         ```
 ]]
 function TicketSystemClose(client, requester, ticketMessage)
@@ -4148,25 +4790,30 @@ end
 
 --[[
     Purpose:
-        <Brief, clear description of what the function does.>
+        Signals that a door lock state was toggled.
 
     When Called:
-        <Describe when and why this function is invoked.>
+        After a lock/unlock action completes.
 
     Parameters:
-        <paramName> (<type>)
-            <Description.>
+        client (Player)
+            Player toggling.
+        door (Entity)
+            Door entity.
+        state (boolean)
+            True if locked after toggle.
 
     Returns:
-        <returnType>
-            <Description or "nil".>
+        nil
 
     Realm:
-        <Client | Server | Shared>
+        Server
 
     Example Usage:
         ```lua
-            <High Complexity and well documented Function Call Or Use Case Here>
+            hook.Add("ToggleLock", "LogToggleLock", function(client, door, state)
+                lia.log.add(client, "toggleLock", tostring(state))
+            end)
         ```
 ]]
 function ToggleLock(client, door, state)
@@ -4174,25 +4821,26 @@ end
 
 --[[
     Purpose:
-        <Brief, clear description of what the function does.>
+        Writes updated persistence data for an entity (commonly vendors).
 
     When Called:
-        <Describe when and why this function is invoked.>
+        After data changes that must be persisted.
 
     Parameters:
-        <paramName> (<type>)
-            <Description.>
+        vendor (Entity)
+            Entity whose persistence should be updated.
 
     Returns:
-        <returnType>
-            <Description or "nil".>
+        nil
 
     Realm:
-        <Client | Server | Shared>
+        Server
 
     Example Usage:
         ```lua
-            <High Complexity and well documented Function Call Or Use Case Here>
+            hook.Add("UpdateEntityPersistence", "SaveVendorChanges", function(vendor)
+                lia.entity.save(vendor)
+            end)
         ```
 ]]
 function UpdateEntityPersistence(vendor)
@@ -4200,25 +4848,30 @@ end
 
 --[[
     Purpose:
-        <Brief, clear description of what the function does.>
+        Fired when a vendor's class allow list changes.
 
     When Called:
-        <Describe when and why this function is invoked.>
+        After toggling a class for vendor access.
 
     Parameters:
-        <paramName> (<type>)
-            <Description.>
+        vendor (Entity)
+            Vendor entity.
+        id (number|string)
+            Class identifier.
+        allowed (boolean)
+            Whether the class is allowed.
 
     Returns:
-        <returnType>
-            <Description or "nil".>
+        nil
 
     Realm:
-        <Client | Server | Shared>
+        Server
 
     Example Usage:
         ```lua
-            <High Complexity and well documented Function Call Or Use Case Here>
+            hook.Add("VendorClassUpdated", "SyncVendorClassUpdate", function(vendor)
+                lia.vendor.sync(vendor)
+            end)
         ```
 ]]
 function VendorClassUpdated(vendor, id, allowed)
@@ -4226,25 +4879,28 @@ end
 
 --[[
     Purpose:
-        <Brief, clear description of what the function does.>
+        General notification that a vendor property was edited.
 
     When Called:
-        <Describe when and why this function is invoked.>
+        Whenever vendor data is modified through the editor.
 
     Parameters:
-        <paramName> (<type>)
-            <Description.>
+        liaVendorEnt (Entity)
+            Vendor entity.
+        key (string)
+            Property key changed.
 
     Returns:
-        <returnType>
-            <Description or "nil".>
+        nil
 
     Realm:
-        <Client | Server | Shared>
+        Server
 
     Example Usage:
         ```lua
-            <High Complexity and well documented Function Call Or Use Case Here>
+            hook.Add("VendorEdited", "ResyncOnEdit", function(vendor)
+                lia.vendor.sync(vendor)
+            end)
         ```
 ]]
 function VendorEdited(liaVendorEnt, key)
@@ -4252,25 +4908,30 @@ end
 
 --[[
     Purpose:
-        <Brief, clear description of what the function does.>
+        Notifies that a vendor's faction-specific buy multiplier was updated.
 
     When Called:
-        <Describe when and why this function is invoked.>
+        After setting faction buy scale.
 
     Parameters:
-        <paramName> (<type>)
-            <Description.>
+        vendor (Entity)
+            Vendor entity.
+        factionID (number|string)
+            Faction identifier.
+        scale (number)
+            New buy scale.
 
     Returns:
-        <returnType>
-            <Description or "nil".>
+        nil
 
     Realm:
-        <Client | Server | Shared>
+        Server
 
     Example Usage:
         ```lua
-            <High Complexity and well documented Function Call Or Use Case Here>
+            hook.Add("VendorFactionBuyScaleUpdated", "SyncFactionBuyScale", function(vendor)
+                lia.vendor.sync(vendor)
+            end)
         ```
 ]]
 function VendorFactionBuyScaleUpdated(vendor, factionID, scale)
@@ -4278,25 +4939,30 @@ end
 
 --[[
     Purpose:
-        <Brief, clear description of what the function does.>
+        Notifies that a vendor's faction-specific sell multiplier was updated.
 
     When Called:
-        <Describe when and why this function is invoked.>
+        After setting faction sell scale.
 
     Parameters:
-        <paramName> (<type>)
-            <Description.>
+        vendor (Entity)
+            Vendor entity.
+        factionID (number|string)
+            Faction identifier.
+        scale (number)
+            New sell scale.
 
     Returns:
-        <returnType>
-            <Description or "nil".>
+        nil
 
     Realm:
-        <Client | Server | Shared>
+        Server
 
     Example Usage:
         ```lua
-            <High Complexity and well documented Function Call Or Use Case Here>
+            hook.Add("VendorFactionSellScaleUpdated", "SyncFactionSellScale", function(vendor)
+                lia.vendor.sync(vendor)
+            end)
         ```
 ]]
 function VendorFactionSellScaleUpdated(vendor, factionID, scale)
@@ -4304,25 +4970,30 @@ end
 
 --[[
     Purpose:
-        <Brief, clear description of what the function does.>
+        Fired when a vendor's faction allow/deny list is changed.
 
     When Called:
-        <Describe when and why this function is invoked.>
+        After toggling faction access.
 
     Parameters:
-        <paramName> (<type>)
-            <Description.>
+        vendor (Entity)
+            Vendor entity.
+        id (number|string)
+            Faction identifier.
+        allowed (boolean)
+            Whether the faction is allowed.
 
     Returns:
-        <returnType>
-            <Description or "nil".>
+        nil
 
     Realm:
-        <Client | Server | Shared>
+        Server
 
     Example Usage:
         ```lua
-            <High Complexity and well documented Function Call Or Use Case Here>
+            hook.Add("VendorFactionUpdated", "SyncFactionAccess", function(vendor)
+                lia.vendor.sync(vendor)
+            end)
         ```
 ]]
 function VendorFactionUpdated(vendor, id, allowed)
@@ -4330,25 +5001,30 @@ end
 
 --[[
     Purpose:
-        <Brief, clear description of what the function does.>
+        Fired when the maximum stock for a vendor item is updated.
 
     When Called:
-        <Describe when and why this function is invoked.>
+        After editing item stock limits.
 
     Parameters:
-        <paramName> (<type>)
-            <Description.>
+        vendor (Entity)
+            Vendor entity.
+        itemType (string)
+            Item uniqueID.
+        value (number)
+            New max stock.
 
     Returns:
-        <returnType>
-            <Description or "nil".>
+        nil
 
     Realm:
-        <Client | Server | Shared>
+        Server
 
     Example Usage:
         ```lua
-            <High Complexity and well documented Function Call Or Use Case Here>
+            hook.Add("VendorItemMaxStockUpdated", "SyncMaxStockChange", function(vendor)
+                lia.vendor.sync(vendor)
+            end)
         ```
 ]]
 function VendorItemMaxStockUpdated(vendor, itemType, value)
@@ -4356,25 +5032,30 @@ end
 
 --[[
     Purpose:
-        <Brief, clear description of what the function does.>
+        Fired when a vendor item's trade mode changes (buy/sell/both).
 
     When Called:
-        <Describe when and why this function is invoked.>
+        After updating item mode.
 
     Parameters:
-        <paramName> (<type>)
-            <Description.>
+        vendor (Entity)
+            Vendor entity.
+        itemType (string)
+            Item uniqueID.
+        value (number)
+            Mode constant.
 
     Returns:
-        <returnType>
-            <Description or "nil".>
+        nil
 
     Realm:
-        <Client | Server | Shared>
+        Server
 
     Example Usage:
         ```lua
-            <High Complexity and well documented Function Call Or Use Case Here>
+            hook.Add("VendorItemModeUpdated", "SyncItemModeChange", function(vendor)
+                lia.vendor.sync(vendor)
+            end)
         ```
 ]]
 function VendorItemModeUpdated(vendor, itemType, value)
@@ -4382,25 +5063,30 @@ end
 
 --[[
     Purpose:
-        <Brief, clear description of what the function does.>
+        Fired when a vendor item's price is changed.
 
     When Called:
-        <Describe when and why this function is invoked.>
+        After setting a new price for an item.
 
     Parameters:
-        <paramName> (<type>)
-            <Description.>
+        vendor (Entity)
+            Vendor entity.
+        itemType (string)
+            Item uniqueID.
+        value (number)
+            New price.
 
     Returns:
-        <returnType>
-            <Description or "nil".>
+        nil
 
     Realm:
-        <Client | Server | Shared>
+        Server
 
     Example Usage:
         ```lua
-            <High Complexity and well documented Function Call Or Use Case Here>
+            hook.Add("VendorItemPriceUpdated", "SyncPriceChange", function(vendor)
+                lia.vendor.sync(vendor)
+            end)
         ```
 ]]
 function VendorItemPriceUpdated(vendor, itemType, value)
@@ -4408,25 +5094,30 @@ end
 
 --[[
     Purpose:
-        <Brief, clear description of what the function does.>
+        Fired when a vendor item's current stock value changes.
 
     When Called:
-        <Describe when and why this function is invoked.>
+        After stock is set manually.
 
     Parameters:
-        <paramName> (<type>)
-            <Description.>
+        vendor (Entity)
+            Vendor entity.
+        itemType (string)
+            Item uniqueID.
+        value (number)
+            New stock.
 
     Returns:
-        <returnType>
-            <Description or "nil".>
+        nil
 
     Realm:
-        <Client | Server | Shared>
+        Server
 
     Example Usage:
         ```lua
-            <High Complexity and well documented Function Call Or Use Case Here>
+            hook.Add("VendorItemStockUpdated", "SyncStockChange", function(vendor)
+                lia.vendor.sync(vendor)
+            end)
         ```
 ]]
 function VendorItemStockUpdated(vendor, itemType, value)
@@ -4434,25 +5125,26 @@ end
 
 --[[
     Purpose:
-        <Brief, clear description of what the function does.>
+        Fired when vendor dialogue/messages are updated.
 
     When Called:
-        <Describe when and why this function is invoked.>
+        After editing vendor message strings.
 
     Parameters:
-        <paramName> (<type>)
-            <Description.>
+        vendor (Entity)
+            Vendor entity.
 
     Returns:
-        <returnType>
-            <Description or "nil".>
+        nil
 
     Realm:
-        <Client | Server | Shared>
+        Server
 
     Example Usage:
         ```lua
-            <High Complexity and well documented Function Call Or Use Case Here>
+            hook.Add("VendorMessagesUpdated", "SyncVendorMsgs", function(vendor)
+                lia.vendor.sync(vendor)
+            end)
         ```
 ]]
 function VendorMessagesUpdated(vendor)
@@ -4460,25 +5152,26 @@ end
 
 --[[
     Purpose:
-        <Brief, clear description of what the function does.>
+        Notifies that vendor data has been synchronized to clients.
 
     When Called:
-        <Describe when and why this function is invoked.>
+        After vendor network sync completes.
 
     Parameters:
-        <paramName> (<type>)
-            <Description.>
+        vendor (Entity)
+            Vendor entity.
 
     Returns:
-        <returnType>
-            <Description or "nil".>
+        nil
 
     Realm:
-        <Client | Server | Shared>
+        Server
 
     Example Usage:
         ```lua
-            <High Complexity and well documented Function Call Or Use Case Here>
+            hook.Add("VendorSynchronized", "AfterVendorSync", function(vendor)
+                print("Vendor synced", vendor)
+            end)
         ```
 ]]
 function VendorSynchronized(vendor)
@@ -4486,25 +5179,32 @@ end
 
 --[[
     Purpose:
-        <Brief, clear description of what the function does.>
+        Generic hook for vendor trade events (buying or selling).
 
     When Called:
-        <Describe when and why this function is invoked.>
+        After a vendor transaction completes.
 
     Parameters:
-        <paramName> (<type>)
-            <Description.>
+        client (Player)
+            Player trading.
+        vendor (Entity)
+            Vendor entity.
+        itemType (string)
+            Item uniqueID.
+        isSellingToVendor (boolean)
+            True if player sold to vendor.
 
     Returns:
-        <returnType>
-            <Description or "nil".>
+        nil
 
     Realm:
-        <Client | Server | Shared>
+        Server
 
     Example Usage:
         ```lua
-            <High Complexity and well documented Function Call Or Use Case Here>
+            hook.Add("VendorTradeEvent", "TrackTrade", function(client, vendor, itemType, selling)
+                lia.log.add(client, selling and "vendorSell" or "vendorBuy", itemType)
+            end)
         ```
 ]]
 function VendorTradeEvent(client, vendor, itemType, isSellingToVendor)
@@ -4512,25 +5212,38 @@ end
 
 --[[
     Purpose:
-        <Brief, clear description of what the function does.>
+        Fired when a warning is issued to a player.
 
     When Called:
-        <Describe when and why this function is invoked.>
+        Immediately after creating a warning record.
 
     Parameters:
-        <paramName> (<type>)
-            <Description.>
+        client (Player)
+            Admin issuing the warning.
+        target (Player)
+            Player receiving the warning.
+        reason (string)
+            Warning reason.
+        severity (string)
+            Severity level.
+        count (number)
+            Total warnings after issuance.
+        warnerSteamID (string)
+            Issuer SteamID.
+        targetSteamID (string)
+            Target SteamID.
 
     Returns:
-        <returnType>
-            <Description or "nil".>
+        nil
 
     Realm:
-        <Client | Server | Shared>
+        Server
 
     Example Usage:
         ```lua
-            <High Complexity and well documented Function Call Or Use Case Here>
+            hook.Add("WarningIssued", "RelayToDiscord", function(client, target, reason, severity)
+                lia.discord.send("warnings", client:Name(), reason .. " (" .. severity .. ")")
+            end)
         ```
 ]]
 function WarningIssued(client, target, reason, severity, count, warnerSteamID, targetSteamID)
@@ -4538,78 +5251,37 @@ end
 
 --[[
     Purpose:
-        <Brief, clear description of what the function does.>
+        Fired when a warning is removed from a player.
 
     When Called:
-        <Describe when and why this function is invoked.>
+        After the warning record is deleted.
 
     Parameters:
-        <paramName> (<type>)
-            <Description.>
+        client (Player)
+            Admin removing the warning.
+        targetClient (Player)
+            Player whose warning was removed.
+        arg3 (table)
+            Warning data table.
+        arg4 (any)
+            Additional context.
+        arg5 (any)
+            Additional context.
+        arg6 (any)
+            Additional context.
 
     Returns:
-        <returnType>
-            <Description or "nil".>
+        nil
 
     Realm:
-        <Client | Server | Shared>
+        Server
 
     Example Usage:
         ```lua
-            <High Complexity and well documented Function Call Or Use Case Here>
+            hook.Add("WarningRemoved", "NotifyRemoval", function(client, targetClient, data)
+                targetClient:notifyLocalized("warningRemovedNotify", client:Name())
+            end)
         ```
 ]]
 function WarningRemoved(client, targetClient, arg3, arg4, arg5, arg6)
-end
-
---[[
-    Purpose:
-        <Brief, clear description of what the function does.>
-
-    When Called:
-        <Describe when and why this function is invoked.>
-
-    Parameters:
-        <paramName> (<type>)
-            <Description.>
-
-    Returns:
-        <returnType>
-            <Description or "nil".>
-
-    Realm:
-        <Client | Server | Shared>
-
-    Example Usage:
-        ```lua
-            <High Complexity and well documented Function Call Or Use Case Here>
-        ```
-]]
-function setData(value, global, ignoreMap)
-end
-
---[[
-    Purpose:
-        <Brief, clear description of what the function does.>
-
-    When Called:
-        <Describe when and why this function is invoked.>
-
-    Parameters:
-        <paramName> (<type>)
-            <Description.>
-
-    Returns:
-        <returnType>
-            <Description or "nil".>
-
-    Realm:
-        <Client | Server | Shared>
-
-    Example Usage:
-        ```lua
-            <High Complexity and well documented Function Call Or Use Case Here>
-        ```
-]]
-function syncVendorDataToClient(client)
 end
