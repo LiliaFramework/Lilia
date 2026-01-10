@@ -2724,6 +2724,103 @@ Shared
 
 ---
 
+### OnPlayerDroppedItem
+
+#### 📋 Purpose
+Called when a player drops an item from their inventory.
+
+#### ⏰ When Called
+After an item has been successfully dropped from a player's inventory.
+
+#### ⚙️ Parameters
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `client` | **Player** | The player who dropped the item. |
+| `spawnedItem` | **Entity** | The spawned item entity that was created. |
+
+#### ↩️ Returns
+* nil
+
+#### 🌐 Realm
+Shared
+
+#### 💡 Example Usage
+
+```lua
+    hook.Add("OnPlayerDroppedItem", "LogItemDrop", function(client, spawnedItem)
+        print(client:Name() .. " dropped an item")
+    end)
+
+```
+
+---
+
+### OnPlayerRotateItem
+
+#### 📋 Purpose
+Called when a player rotates an item in their inventory.
+
+#### ⏰ When Called
+After an item has been successfully rotated in a player's inventory.
+
+#### ⚙️ Parameters
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `arg1` | **Player** | The player who rotated the item. |
+| `item` | **Item** | The item that was rotated. |
+| `newRot` | **number** | The new rotation value. |
+
+#### ↩️ Returns
+* nil
+
+#### 🌐 Realm
+Shared
+
+#### 💡 Example Usage
+
+```lua
+    hook.Add("OnPlayerRotateItem", "LogItemRotation", function(client, item, newRot)
+        print(client:Name() .. " rotated " .. item:getName() .. " to " .. newRot)
+    end)
+
+```
+
+---
+
+### OnPlayerTakeItem
+
+#### 📋 Purpose
+Called when a player takes an item into their inventory.
+
+#### ⏰ When Called
+After an item has been successfully taken into a player's inventory.
+
+#### ⚙️ Parameters
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `client` | **Player** | The player who took the item. |
+| `item` | **Item** | The item that was taken. |
+
+#### ↩️ Returns
+* nil
+
+#### 🌐 Realm
+Shared
+
+#### 💡 Example Usage
+
+```lua
+    hook.Add("OnPlayerTakeItem", "LogItemPickup", function(client, item)
+        print(client:Name() .. " took " .. item:getName())
+    end)
+
+```
+
+---
+
 ### OnPrivilegeRegistered
 
 #### 📋 Purpose
@@ -3299,6 +3396,41 @@ Shared
 ```lua
     hook.Add("SetupPACDataFromItems", "AddCustomPAC", function()
         for _, client in player.Iterator() do client:syncParts() end
+    end)
+
+```
+
+---
+
+### TryViewModel
+
+#### 📋 Purpose
+Allows overriding the view model entity for PAC compatibility.
+
+#### ⏰ When Called
+When determining the view model entity for PAC events.
+
+#### ⚙️ Parameters
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `entity` | **Entity** | The potential view model entity. |
+
+#### ↩️ Returns
+* Entity
+The corrected view model entity, or the original if no correction needed.
+
+#### 🌐 Realm
+Shared
+
+#### 💡 Example Usage
+
+```lua
+    hook.Add("TryViewModel", "PACViewModelFix", function(entity)
+        if entity == pac.LocalPlayer:GetViewModel() then
+            return pac.LocalPlayer
+        end
+        return entity
     end)
 
 ```

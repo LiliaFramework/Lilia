@@ -49,6 +49,38 @@ Server
 
 ---
 
+### CollectDoorDataFields
+
+#### 📋 Purpose
+Collect additional field definitions for door data.
+
+#### ⏰ When Called
+When retrieving default door values and field definitions.
+
+#### ⚙️ Parameters
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `extras` | **table** | Table to populate with additional field definitions in the format {fieldName = {default = value, ...}}. |
+
+#### ↩️ Returns
+* nil
+Modify the extras table directly.
+
+#### 🌐 Realm
+Server
+
+#### 💡 Example Usage
+
+```lua
+    hook.Add("CollectDoorDataFields", "ExampleCollectDoorDataFields", function(extras)
+        extras.customField = {default = false, type = "boolean"}
+    end)
+
+```
+
+---
+
 ### CanItemBeTransfered
 
 #### 📋 Purpose
@@ -712,6 +744,32 @@ Server
 ```lua
     hook.Add("CanSaveData", "SkipTempProps", function(ent)
         if ent.tempSpawned then return false end
+    end)
+
+```
+
+---
+
+### CreateSalaryTimers
+
+#### 📋 Purpose
+Called when salary timers need to be created or recreated.
+
+#### ⏰ When Called
+During server initialization and when salary timers need to be reset.
+
+#### ↩️ Returns
+* nil
+The hook doesn't expect a return value but allows for custom salary timer setup.
+
+#### 🌐 Realm
+Server
+
+#### 💡 Example Usage
+
+```lua
+    hook.Add("CreateSalaryTimers", "ExampleCreateSalaryTimers", function(...)
+        -- add custom server-side behavior
     end)
 
 ```
@@ -3333,6 +3391,40 @@ Server
 
 ---
 
+### OnSetUsergroup
+
+#### 📋 Purpose
+Called when a player's usergroup is changed.
+
+#### ⏰ When Called
+After a player's usergroup has been successfully changed.
+
+#### ⚙️ Parameters
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `sid` | **string** | Steam ID of the player whose usergroup changed. |
+| `new` | **string** | New usergroup name. |
+| `source` | **string** | Source of the change (e.g., "Lilia"). |
+| `ply` | **Player** | Player entity whose usergroup changed. |
+
+#### ↩️ Returns
+* nil
+
+#### 🌐 Realm
+Server
+
+#### 💡 Example Usage
+
+```lua
+    hook.Add("OnSetUsergroup", "LogUsergroupChange", function(sid, new, source, ply)
+        print(string.format("Usergroup changed for %s to %s by %s", sid, new, source))
+    end)
+
+```
+
+---
+
 ### OnSavedItemLoaded
 
 #### 📋 Purpose
@@ -4729,6 +4821,32 @@ Server
 ```lua
     hook.Add("ShouldDataBeSaved", "OnlyDuringGrace", function()
         return not lia.state.isCombatPhase()
+    end)
+
+```
+
+---
+
+### ShouldOverrideSalaryTimers
+
+#### 📋 Purpose
+Determines if the default salary timer creation should be overridden.
+
+#### ⏰ When Called
+Before creating salary timers to allow custom salary systems.
+
+#### ↩️ Returns
+* boolean
+True to prevent default salary timer creation; false/nil to allow.
+
+#### 🌐 Realm
+Server
+
+#### 💡 Example Usage
+
+```lua
+    hook.Add("ShouldOverrideSalaryTimers", "CustomSalarySystem", function()
+        return true -- Prevent default timers, handle salary elsewhere
     end)
 
 ```
