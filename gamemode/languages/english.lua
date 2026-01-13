@@ -3445,8 +3445,6 @@ LANGUAGE = {
     lastSaved = "Last saved",
     noSavedNotesYet = "No saved notes yet",
     titleAndBodyRequired = "Title and body are required.",
-
-    -- Missing localization keys
     itemTaken = "You have taken %s.",
     lowHealth = "Your health is low!",
     questUpdate = "Quest updated.",

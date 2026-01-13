@@ -3445,8 +3445,6 @@ LANGUAGE = {
     webImageStats = "Imágenes web: %s descargadas, %s almacenadas (reinicio: %s).",
     webSoundStats = "Sonidos web: %s descargados, %s almacenados (reinicio: %s).",
     welcomeUser = "¡Bienvenido, %s! (%s)",
-
-    -- Missing localization keys
     itemTaken = "Has tomado %s.",
     lowHealth = "¡Tu salud está baja!",
     questUpdate = "Misión actualizada.",
