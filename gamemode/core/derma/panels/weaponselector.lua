@@ -1,7 +1,5 @@
-﻿local pi = math.pi
-local index = index or 1
+﻿local index = index or 1
 local deltaIndex = deltaIndex or index
-local infoAlpha = infoAlpha or 0
 local alpha = alpha or 0
 local alphaDelta = alphaDelta or alpha
 local fadeTime = fadeTime or 0
@@ -25,7 +23,6 @@ local function shouldDrawWepSelect(client)
     return hook.Run("ShouldDrawWepSelect", client) ~= false
 end
 
-local infoMarkup
 local function HUDPaint()
     if not shouldDrawWepSelect() then return end
     local frameTime = FrameTime()
@@ -39,66 +36,136 @@ local function HUDPaint()
 
     local client = LocalPlayer()
     local weapons = client:GetWeapons()
+    local total = #weapons
+    if total == 0 then return end
+    if index > total then index = total end
+    if index < 1 then index = 1 end
+    deltaIndex = Lerp(frameTime * 12, deltaIndex, index)
+    local screenW, screenH = ScrW(), ScrH()
     local position = lia.option.get("weaponSelectorPosition", "Left")
-    local x, y, shiftX
+    local centerX = screenW * 0.5
     if position == "Left" then
-        shiftX = ScrW() * 0.02
-        x, y = ScrW() * 0.05, ScrH() * 0.5
+        centerX = screenW * 0.35
     elseif position == "Right" then
-        shiftX = -ScrW() * 0.02
-        x, y = ScrW() * 0.95, ScrH() * 0.5
-    else
-        shiftX = 0
-        x, y = ScrW() * 0.5, ScrH() * 0.5
+        centerX = screenW * 0.65
     end
 
-    local spacing = pi * 0.85
-    local radius = 240 * alphaDelta
-    deltaIndex = Lerp(frameTime * 12, deltaIndex, index)
-    local activeColor = lia.config.get("Color")
-    for realIndex, weapon in ipairs(weapons) do
-        local theta = (realIndex - deltaIndex) * 0.1
-        local isActive = realIndex == index
-        local colAlpha = (255 - math.abs(theta * 3) * 255) * fraction
-        local col = ColorAlpha(isActive and activeColor or color_white, colAlpha)
-        local lastY = 0
-        if infoMarkup and (realIndex == 1 or realIndex < index) then
-            local _, h = infoMarkup:Size()
-            lastY = h * fraction
-            if realIndex == index - 1 or realIndex == 1 then
-                infoAlpha = Lerp(frameTime * 5, infoAlpha, 255)
-                local infoX = x + 6 + shiftX
-                if position == "Right" then
-                    infoX = x + 6 + shiftX
-                elseif position == "Center" then
-                    infoX = x + 6 + shiftX
+    local centerY = screenH * 0.5
+    local cardW = math.min(screenW * 0.35, 360)
+    local baseH = 80
+    local accent = lia.color.theme.accent or lia.color.theme.header or lia.color.theme.theme or color_white
+    local background = lia.color.theme.background_alpha or lia.color.theme.background or Color(40, 40, 40, 230)
+    local detailColor = Color(200, 200, 200)
+    local function wrapText(text, font, maxWidth, lineHeight)
+        surface.SetFont(font)
+        local lines = {}
+        local textLines = string.Explode("\n", text or "")
+        for _, textLine in ipairs(textLines) do
+            local words = string.Explode(" ", textLine)
+            local line = ""
+            for _, word in ipairs(words) do
+                local test = line ~= "" and (line .. " " .. word) or word
+                local textW = surface.GetTextSize(test)
+                if textW > maxWidth and line ~= "" then
+                    table.insert(lines, line)
+                    line = word
+                else
+                    line = test
                 end
-
-                infoMarkup:Draw(infoX, y + 30, 0, 0, infoAlpha * fraction)
             end
 
-            if index == 1 then lastY = 0 end
+            if line ~= "" then table.insert(lines, line) end
+        end
+        return lines, #lines > 0 and #lines * lineHeight or 0
+    end
+
+    local function buildInfoLines(weapon, maxWidth)
+        local lines = {}
+        local lineHeight = 20
+        local function addBlock(label, value)
+            if not value or not value:find("%S") then return end
+            local block = label .. ": " .. value
+            local blockLines = wrapText(block, "LiliaFont.17", maxWidth, lineHeight)
+            for _, l in ipairs(blockLines) do
+                table.insert(lines, l)
+            end
         end
 
-        surface.SetFont("LiliaFont.36")
+        if weapon.Purpose and weapon.Purpose:find("%S") then addBlock("Purpose", weapon.Purpose) end
+        if weapon.Instructions and weapon.Instructions:find("%S") then
+            table.insert(lines, "Instructions:")
+            local instructionLines = wrapText(weapon.Instructions, "LiliaFont.17", maxWidth, lineHeight)
+            for _, l in ipairs(instructionLines) do
+                table.insert(lines, l)
+            end
+        end
+        return lines, #lines > 0 and #lines * lineHeight or 0, lineHeight
+    end
+
+    local maxHeight = 0
+    for i = 1, total do
+        local offset = i - deltaIndex
+        local scale = math.max(0.85, 1 - math.abs(offset) * 0.08)
+        local w = cardW * scale
+        local infoHeight = 0
+        if i == index then
+            local _, hInfo = buildInfoLines(weapons[i], w - 36 * scale)
+            infoHeight = hInfo
+        end
+
+        local h = (baseH + infoHeight) * scale
+        if h > maxHeight then maxHeight = h end
+    end
+
+    local spacing = maxHeight * 1.08
+    for i = 1, total do
+        local offset = i - deltaIndex
+        local scale = math.max(0.85, 1 - math.abs(offset) * 0.08)
+        local entryAlpha = math.Clamp(255 - math.abs(offset) * 90, 60, 255) * fraction
+        local w = cardW * scale
+        local weapon = weapons[i]
+        local infoLines, infoHeight, lineHeight = {}, 0, 20
+        if i == index then infoLines, infoHeight, lineHeight = buildInfoLines(weapon, w - 36 * scale) end
+        local h = (baseH + infoHeight) * scale
+        local x = centerX - w / 2
+        local y = centerY + offset * spacing - h / 2
+        lia.derma.rect(x, y, w, h):Rad(6):Color(Color(background.r, background.g, background.b, entryAlpha)):Shadow(8, 12):Shape(lia.derma.SHAPE_IOS):Draw()
+        lia.util.drawBlurAt(x, y, w, h)
+        surface.SetDrawColor(accent.r, accent.g, accent.b, math.min(entryAlpha, accent.a or entryAlpha))
+        surface.DrawRect(x, y, w, 2)
+        local isActive = i == index
+        surface.SetFont("LiliaFont.28")
+        surface.SetTextColor(255, 255, 255, entryAlpha)
+        surface.SetTextPos(x + 18 * scale, y + 12 * scale)
         local name = hook.Run("GetWeaponName", weapon) or language.GetPhrase(weapon:GetPrintName())
-        local _, ty = surface.GetTextSize(name)
-        local scale = math.max(1 - math.abs(theta * 2), 0)
-        local matrix = Matrix()
-        local textX, textY
-        if position == "Right" then
-            textX = shiftX + x + math.cos(theta * spacing + pi) * radius - radius
-            textY = y + lastY + math.sin(theta * spacing + pi) * radius - ty / 2
-        else
-            textX = shiftX + x + math.cos(theta * spacing + pi) * radius + radius
-            textY = y + lastY + math.sin(theta * spacing + pi) * radius - ty / 2
+        surface.DrawText(name)
+        local detailY = y + 44 * scale
+        local ammoName = game.GetAmmoName(weapon:GetPrimaryAmmoType() or -1)
+        local clip = weapon:Clip1()
+        local reserve = ammoName and client:GetAmmoCount(ammoName) or nil
+        local infoText = ""
+        if ammoName and ammoName ~= "" then
+            if clip and clip >= 0 then
+                infoText = string.format("%s %d/%d", ammoName, clip, reserve or 0)
+            else
+                infoText = ammoName
+            end
         end
 
-        matrix:Translate(Vector(textX, textY, 1))
-        matrix:Scale(Vector(scale, scale, 1))
-        cam.PushModelMatrix(matrix)
-        lia.util.drawText(name, 2, ty / 2, col, 0, 1, "LiliaFont.36")
-        cam.PopModelMatrix()
+        surface.SetFont("LiliaFont.18")
+        surface.SetTextColor(detailColor.r, detailColor.g, detailColor.b, entryAlpha)
+        surface.SetTextPos(x + 18 * scale, detailY)
+        surface.DrawText(infoText)
+        if isActive and #infoLines > 0 then
+            local hasPurpose = weapon.Purpose and weapon.Purpose:find("%S")
+            local descY = detailY + (hasPurpose and 22 or 12) * scale
+            surface.SetFont("LiliaFont.17")
+            surface.SetTextColor(detailColor.r, detailColor.g, detailColor.b, entryAlpha)
+            for li, line in ipairs(infoLines) do
+                surface.SetTextPos(x + 18 * scale, descY + (li - 1) * lineHeight)
+                surface.DrawText(line)
+            end
+        end
     end
 
     if fadeTime < CurTime() and alpha > 0 then alpha = 0 end
@@ -111,20 +178,7 @@ local function onIndexChanged()
     local client = LocalPlayer()
     local weapons = client:GetWeapons()
     local weapon = getWeaponFromIndex(index, weapons)
-    infoMarkup = nil
-    infoAlpha = 0
     if IsValid(weapon) then
-        local textParts = {}
-        local activeColor = lia.config.get("Color")
-        for _, key in ipairs({"Author", "Contact", "Purpose", "Instructions"}) do
-            if weapon[key] and weapon[key]:find("%S") then table.insert(textParts, string.format("<font=LiliaFont.17b><color=%d,%d,%d>%s</font></color>\n%s\n", activeColor.r, activeColor.g, activeColor.b, L(key:lower()), weapon[key])) end
-        end
-
-        if #textParts > 0 then
-            local text = table.concat(textParts)
-            infoMarkup = markup.Parse("<font=LiliaFont.17>" .. text, ScrW() * 0.3)
-        end
-
         local source, pitch = hook.Run("WeaponCycleSound")
         source = source or "common/talk.wav"
         pitch = pitch or 180
@@ -165,7 +219,6 @@ local function PlayerBindPress(client, bind, pressed)
         local selectedWeapon = getWeaponFromIndex(index, weapons)
         if not IsValid(selectedWeapon) then
             alpha = 0
-            infoAlpha = 0
             return
         end
 
@@ -175,7 +228,6 @@ local function PlayerBindPress(client, bind, pressed)
         client:EmitSound(source, 75, pitch)
         client:SelectWeapon(selectedWeapon:GetClass())
         alpha = 0
-        infoAlpha = 0
         return true
     end
 end

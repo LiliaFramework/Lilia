@@ -228,14 +228,6 @@ liaComboBox
 liaDermaMenu
 --[[
     Purpose:
-        NPC dialog interface
-        A comprehensive dialog system for NPC conversations with conversation history, response options, and server-side callbacks
-    When Used:
-        For NPC interactions, quest dialogs, or scripted conversations with non-player characters
-]]
-liaDialogMenu
---[[
-    Purpose:
         NPC dialog interface panel
         The main dialog menu panel for NPC conversations with conversation history tracking, response display, and interactive dialog options
     When Used:
@@ -330,14 +322,6 @@ liaItemIcon
         In tabbed interfaces or tab navigation
 ]]
 liaTabButton
---[[
-    Purpose:
-        Loading failure display
-        A panel shown when loading fails
-    When Used:
-        When content fails to load
-]]
-liaLoadingFailure
 --[[
     Purpose:
         Interactive 3D model viewer with controls

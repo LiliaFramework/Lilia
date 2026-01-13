@@ -313,6 +313,7 @@ def parse_folder_directives(file_content):
     lines = file_content.split('\n')
     folder = None
     filename = None
+    append = False
 
     in_comment = False
     for line in lines:
@@ -331,8 +332,11 @@ def parse_folder_directives(file_content):
                 folder = line_content.replace('Folder:', '').strip()
             elif line_content.startswith('File:'):
                 filename = line_content.replace('File:', '').strip()
+            elif line_content.startswith('Append:'):
+                append_value = line_content.replace('Append:', '').strip().lower()
+                append = append_value in ('true', 'yes', '1')
 
-    return folder, filename
+    return folder, filename, append
 
 
 def format_lua_code(code_lines):
@@ -533,7 +537,7 @@ def generate_documentation_for_file(file_path, output_dir, is_library=False, bas
         print(f"Warning: Could not read {file_path} due to encoding issues")
         return
 
-    custom_folder, custom_filename = parse_folder_directives(file_content)
+    custom_folder, custom_filename, append = parse_folder_directives(file_content)
     comment_blocks, file_header, overview_section = find_comment_blocks_in_file(file_path)
 
     if file_header and ('Folder:' in file_header or 'File:' in file_header):
@@ -599,33 +603,35 @@ def generate_documentation_for_file(file_path, output_dir, is_library=False, bas
     output_path.parent.mkdir(parents=True, exist_ok=True)
     output_filename = output_path.name
 
-    with open(output_path, 'w', encoding='utf-8') as f:
-        if custom_filename:
-            display_name = custom_filename.replace('.md', '').title()
-        else:
-            display_name = Path(file_path).stem.title()
+    file_mode = 'a' if append else 'w'
+    with open(output_path, file_mode, encoding='utf-8') as f:
+        if not append:
+            if custom_filename:
+                display_name = custom_filename.replace('.md', '').title()
+            else:
+                display_name = Path(file_path).stem.title()
 
-        title = display_name
-        subtitle = f'This page documents the functions and methods in the { "Lilia library" if is_library else "meta table" }.'
+            title = display_name
+            subtitle = f'This page documents the functions and methods in the { "Lilia library" if is_library else "meta table" }.'
 
-        if file_header:
-            parsed_header = parse_file_header(file_header)
-            if '\n\n' in parsed_header:
-                parts = parsed_header.split('\n\n', 1)
-                title = parts[0].replace('**', '').replace('*', '').strip()
-                if len(parts) > 1 and parts[1].strip():
-                    subtitle = parts[1].strip()
+            if file_header:
+                parsed_header = parse_file_header(file_header)
+                if '\n\n' in parsed_header:
+                    parts = parsed_header.split('\n\n', 1)
+                    title = parts[0].replace('**', '').replace('*', '').strip()
+                    if len(parts) > 1 and parts[1].strip():
+                        subtitle = parts[1].strip()
 
-        f.write(f'# {title}\n\n')
-        f.write(f'{subtitle}\n\n')
-        f.write('---\n\n')
-
-        if overview_section:
-            f.write('Overview\n\n')
-            overview_content = parse_overview_section(overview_section)
-            f.write(overview_content)
-            f.write('\n\n')
+            f.write(f'# {title}\n\n')
+            f.write(f'{subtitle}\n\n')
             f.write('---\n\n')
+
+            if overview_section:
+                f.write('Overview\n\n')
+                overview_content = parse_overview_section(overview_section)
+                f.write(overview_content)
+                f.write('\n\n')
+                f.write('---\n\n')
 
         for section in sections:
             f.write(section)
@@ -791,7 +797,7 @@ def generate_documentation_for_definitions_file(file_path: Path, output_dir: Pat
         return
 
     is_item_file = 'items' in str(file_path)
-    custom_folder, custom_filename = parse_folder_directives(file_content)
+    custom_folder, custom_filename, append = parse_folder_directives(file_content)
 
     if custom_folder and custom_filename:
         output_path = base_docs_dir / custom_folder / custom_filename
@@ -865,7 +871,8 @@ def generate_documentation_for_definitions_file(file_path: Path, output_dir: Pat
     final_overview = overview_section
     md = generate_markdown_for_definition_entries(title, subtitle, final_overview, entries)
     output_path.parent.mkdir(parents=True, exist_ok=True)
-    with open(output_path, 'w', encoding='utf-8') as f:
+    file_mode = 'a' if append else 'w'
+    with open(output_path, file_mode, encoding='utf-8') as f:
         f.write(md)
     print(f"  Generated {output_path.name}")
 
@@ -880,7 +887,7 @@ def generate_documentation_for_hooks_file(file_path: Path, output_dir: Path, bas
         print(f"Warning: Could not read {file_path} due to encoding issues")
         return
 
-    custom_folder, custom_filename = parse_folder_directives(file_content)
+    custom_folder, custom_filename, append = parse_folder_directives(file_content)
 
     if custom_folder and custom_filename:
         output_path = base_docs_dir / custom_folder / custom_filename
@@ -919,14 +926,16 @@ def generate_documentation_for_hooks_file(file_path: Path, output_dir: Path, bas
                 subtitle = parts[1].strip()
 
     output_path.parent.mkdir(parents=True, exist_ok=True)
-    with open(output_path, 'w', encoding='utf-8') as f:
-        f.write(f'# {title}\n\n')
-        f.write(subtitle + '\n\n')
-        f.write('---\n\n')
-        if overview_section:
-            f.write('Overview\n\n')
-            f.write(parse_overview_section(overview_section) + '\n\n')
+    file_mode = 'a' if append else 'w'
+    with open(output_path, file_mode, encoding='utf-8') as f:
+        if not append:
+            f.write(f'# {title}\n\n')
+            f.write(subtitle + '\n\n')
             f.write('---\n\n')
+            if overview_section:
+                f.write('Overview\n\n')
+                f.write(parse_overview_section(overview_section) + '\n\n')
+                f.write('---\n\n')
         for section in sections:
             f.write(section)
             f.write('---\n\n')
@@ -1020,7 +1029,15 @@ def main():
         elif args.type == 'library' and str(file_path).endswith('.lua'):
             generate_documentation_for_file(file_path, output_dir, True, base_docs_dir, args.force)
         elif args.type == 'compatibility' and str(file_path).endswith('.lua'):
-            generate_documentation_for_file(file_path, output_dir, True, base_docs_dir, args.force)
+            # Check if this is a meta file with custom directives
+            try:
+                with open(file_path, 'r', encoding='utf-8-sig') as f:
+                    content = f.read()
+                custom_folder, custom_filename, _ = parse_folder_directives(content)
+                is_meta_file = custom_folder and custom_folder.lower() == 'meta'
+                generate_documentation_for_file(file_path, output_dir, not is_meta_file, base_docs_dir, args.force)
+            except:
+                generate_documentation_for_file(file_path, output_dir, True, base_docs_dir, args.force)
         elif args.type == 'definitions' and str(file_path).endswith('.lua'):
             generate_documentation_for_definitions_file(Path(file_path), output_dir, base_docs_dir)
         elif args.type == 'hooks' and str(file_path).endswith('.lua'):

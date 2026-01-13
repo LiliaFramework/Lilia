@@ -643,7 +643,7 @@ lia.color.registerTheme("Dark", {
 
 lia.color.registerTheme("Dark Mono", {
     header = Color(40, 40, 40),
-    header_text = Color(100, 100, 100),
+    header_text = Color(255, 255, 255),
     background = Color(25, 25, 25),
     background_alpha = Color(25, 25, 25, 210),
     background_panelpopup = Color(20, 20, 20, 150),
@@ -661,8 +661,8 @@ lia.color.registerTheme("Dark Mono", {
     hover = Color(60, 65, 80),
     window_shadow = Color(0, 0, 0, 100),
     gray = Color(150, 150, 150, 220),
-    text = Color(255, 255, 255),
-    text_entry = Color(255, 255, 255),
+    text = Color(180, 180, 180),
+    text_entry = Color(180, 180, 180),
     accent = Color(121, 121, 121),
     chat = Color(255, 239, 150),
     chatListen = Color(168, 240, 170)
@@ -722,33 +722,6 @@ lia.color.registerTheme("Red", {
     chatListen = Color(168, 240, 170)
 })
 
-lia.color.registerTheme("Light", {
-    header = Color(240, 240, 240),
-    header_text = Color(150, 150, 150),
-    background = Color(255, 255, 255),
-    background_alpha = Color(255, 255, 255, 170),
-    background_panelpopup = Color(245, 245, 245, 150),
-    button = Color(235, 235, 235),
-    button_shadow = Color(0, 0, 0, 15),
-    button_hovered = Color(196, 199, 218),
-    category = Color(240, 240, 245),
-    category_opened = Color(240, 240, 245, 0),
-    theme = Color(106, 108, 197),
-    maincolor = Color(106, 108, 197),
-    panel = {Color(250, 250, 255), Color(240, 240, 245), Color(230, 230, 235)},
-    panel_alpha = {ColorAlpha(Color(250, 250, 255), 120), ColorAlpha(Color(240, 240, 245), 120), ColorAlpha(Color(230, 230, 235), 120)},
-    toggle = Color(220, 220, 230),
-    focus_panel = Color(245, 245, 255),
-    hover = Color(235, 240, 255),
-    window_shadow = Color(0, 0, 0, 50),
-    gray = Color(130, 130, 130, 220),
-    text = Color(20, 20, 20),
-    text_entry = Color(20, 20, 20),
-    accent = Color(106, 108, 197),
-    chat = Color(255, 239, 150),
-    chatListen = Color(168, 240, 170)
-})
-
 lia.color.registerTheme("Green", {
     header = Color(36, 54, 40),
     header_text = Color(109, 159, 109),
@@ -772,33 +745,6 @@ lia.color.registerTheme("Green", {
     text = Color(210, 235, 210),
     text_entry = Color(210, 235, 210),
     accent = Color(80, 180, 120),
-    chat = Color(255, 239, 150),
-    chatListen = Color(168, 240, 170)
-})
-
-lia.color.registerTheme("Orange", {
-    header = Color(70, 35, 10),
-    header_text = Color(250, 230, 210),
-    background = Color(255, 250, 240),
-    background_alpha = Color(255, 250, 240, 220),
-    background_panelpopup = Color(255, 245, 235, 160),
-    button = Color(184, 122, 64),
-    button_shadow = Color(20, 10, 0, 30),
-    button_hovered = Color(197, 129, 65),
-    category = Color(255, 245, 235),
-    category_opened = Color(255, 245, 235, 0),
-    theme = Color(245, 130, 50),
-    maincolor = Color(245, 130, 50),
-    panel = {Color(255, 250, 240), Color(250, 220, 180), Color(235, 150, 90)},
-    panel_alpha = {ColorAlpha(Color(255, 250, 240), 120), ColorAlpha(Color(250, 220, 180), 120), ColorAlpha(Color(235, 150, 90), 120)},
-    toggle = Color(143, 121, 104),
-    focus_panel = Color(255, 240, 225),
-    hover = Color(255, 165, 80, 90),
-    window_shadow = Color(20, 8, 0, 100),
-    gray = Color(180, 161, 150, 200),
-    text = Color(45, 20, 10),
-    text_entry = Color(45, 20, 10),
-    accent = Color(245, 130, 50),
     chat = Color(255, 239, 150),
     chatListen = Color(168, 240, 170)
 })
@@ -853,33 +799,6 @@ lia.color.registerTheme("Coffee", {
     text = Color(235, 225, 210),
     text_entry = Color(235, 225, 210),
     accent = Color(150, 110, 75),
-    chat = Color(255, 239, 150),
-    chatListen = Color(168, 240, 170)
-})
-
-lia.color.registerTheme("Ice", {
-    header = Color(190, 225, 250),
-    header_text = Color(68, 104, 139),
-    background = Color(235, 245, 255),
-    background_alpha = Color(235, 245, 255, 200),
-    background_panelpopup = Color(220, 235, 245, 150),
-    button = Color(145, 185, 225),
-    button_shadow = Color(80, 110, 140, 40),
-    button_hovered = Color(170, 210, 255),
-    category = Color(200, 225, 245),
-    category_opened = Color(200, 225, 245, 0),
-    theme = Color(100, 170, 230),
-    maincolor = Color(100, 170, 230),
-    panel = {Color(146, 186, 211), Color(107, 157, 190), Color(74, 132, 184)},
-    panel_alpha = {ColorAlpha(Color(146, 186, 211), 120), ColorAlpha(Color(107, 157, 190), 120), ColorAlpha(Color(74, 132, 184), 120)},
-    toggle = Color(168, 194, 219),
-    focus_panel = Color(205, 230, 245),
-    hover = Color(100, 170, 230, 80),
-    window_shadow = Color(60, 100, 140, 100),
-    gray = Color(92, 112, 133, 200),
-    text = Color(20, 35, 50),
-    text_entry = Color(20, 35, 50),
-    accent = Color(100, 170, 230),
     chat = Color(255, 239, 150),
     chatListen = Color(168, 240, 170)
 })

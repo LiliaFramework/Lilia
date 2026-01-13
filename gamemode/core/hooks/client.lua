@@ -321,11 +321,50 @@ function GM:DrawEntityInfo(e, a, pos)
     end
 end
 
-local function drawVoiceIndicator()
+local voiceIndicatorPanel = nil
+local function clearLegacyVoiceIndicatorPanels()
+    local world = vgui.GetWorldPanel()
+    if not IsValid(world) then return end
+    for _, child in ipairs(world:GetChildren()) do
+        if child:GetName() == "liaVoiceIndicatorPanel" then child:Remove() end
+    end
+end
+
+clearLegacyVoiceIndicatorPanels()
+local function updateVoiceIndicator()
     local client = LocalPlayer()
-    if not IsValid(client) or not client:IsSpeaking() then return end
+    if not IsValid(client) then
+        if IsValid(voiceIndicatorPanel) then
+            voiceIndicatorPanel:Remove()
+            voiceIndicatorPanel = nil
+        end
+        return
+    end
+
+    local isSpeaking = client:IsSpeaking()
+    if not isSpeaking then
+        if IsValid(voiceIndicatorPanel) then
+            voiceIndicatorPanel:Remove()
+            voiceIndicatorPanel = nil
+        end
+        return
+    end
+
+    if not IsValid(voiceIndicatorPanel) then
+        clearLegacyVoiceIndicatorPanels()
+        voiceIndicatorPanel = vgui.Create("DPanel")
+        voiceIndicatorPanel:SetName("liaVoiceIndicatorPanel")
+        voiceIndicatorPanel:SetSize(300, 40)
+        voiceIndicatorPanel:SetPos(ScrW() / 2 - 150, 50)
+        voiceIndicatorPanel:SetDrawOnTop(true)
+        voiceIndicatorPanel:SetMouseInputEnabled(false)
+        voiceIndicatorPanel:SetKeyboardInputEnabled(false)
+        voiceIndicatorPanel:ParentToHUD()
+    end
+
     local voiceType = client:getLocalVar("VoiceType", VOICE_TALKING)
     local voiceText = L("youAre") .. " " .. L(voiceType)
+    local tooltipLines = {}
     if lia.option.get("voiceRange", false) then
         local radius = VoiceRanges[voiceType] or VoiceRanges[VOICE_TALKING]
         local clientPos = client:GetPos()
@@ -337,25 +376,27 @@ local function drawVoiceIndicator()
             end
         end
 
-        if count > 0 then voiceText = voiceText .. " - " .. count .. " people can hear you" end
+        if count > 0 then
+            voiceText = voiceText .. " - " .. count .. " people can hear you"
+            tooltipLines[#tooltipLines + 1] = "<font=LiliaFont.16>" .. count .. " people can hear you</font>"
+        end
     end
 
     local modifiedText = hook.Run("ModifyVoiceIndicatorText", client, voiceText, voiceType)
     if modifiedText then voiceText = modifiedText end
-    local boxX = ScrW() / 2
-    local boxY = 50
-    lia.derma.drawBoxWithText(voiceText, boxX, boxY, {
-        font = "LiliaFont.18",
-        textColor = Color(255, 255, 255),
-        backgroundColor = Color(0, 0, 0, 150),
-        borderColor = lia.color.theme.theme,
-        borderRadius = 8,
-        borderThickness = 2,
-        padding = 20,
-        textAlignX = TEXT_ALIGN_CENTER,
-        textAlignY = TEXT_ALIGN_CENTER,
-        autoSize = true
-    })
+    table.insert(tooltipLines, "<font=LiliaFont.16b>" .. voiceText .. "</font>")
+    table.insert(tooltipLines, "<font=LiliaFont.16>" .. L("voiceRange") .. ": " .. (VoiceRanges[voiceType] or VoiceRanges[VOICE_TALKING]) .. " units</font>")
+    voiceIndicatorPanel:SetTooltip(table.concat(tooltipLines, "\n"))
+    voiceIndicatorPanel.Paint = function(pnl, w, h)
+        lia.util.drawBlur(pnl, 4, 2)
+        lia.derma.rect(0, 0, w, h):Rad(8):Color(Color(0, 0, 0, 150)):Draw()
+        lia.derma.rect(0, 0, w, h):Rad(8):Color(lia.color.theme.theme):Outline(2):Draw()
+        draw.SimpleText(voiceText, "LiliaFont.18", w / 2, h / 2, Color(255, 255, 255), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
+    end
+end
+
+local function drawVoiceIndicator()
+    updateVoiceIndicator()
 end
 
 function GM:HUDPaint()
@@ -370,8 +411,29 @@ function GM:HUDPaint()
             for _, info in ipairs(hudInfos) do
                 if info.text and info.position then
                     local drawOptions = {
-                        textColor = info.color or Color(255, 255, 255),
-                        font = info.font or "LiliaFont.24"
+                        textColor = info.color or Color(180, 180, 180),
+                        font = info.font or "LiliaFont.16",
+                        backgroundColor = lia.color.theme.background_alpha or lia.color.theme.background or Color(40, 40, 40, 240),
+                        borderRadius = 6,
+                        borderThickness = 0,
+                        padding = 12,
+                        blur = {
+                            enabled = true,
+                            amount = 1,
+                            passes = 1,
+                            alpha = 1.0
+                        },
+                        shadow = {
+                            enabled = true,
+                            offsetX = 8,
+                            offsetY = 12,
+                            color = lia.color.theme.window_shadow or Color(0, 0, 0, 50)
+                        },
+                        accentBorder = {
+                            enabled = true,
+                            height = 2,
+                            color = lia.color.theme.accent or lia.color.theme.header or lia.color.theme.theme
+                        }
                     }
 
                     if info.backgroundColor then drawOptions.backgroundColor = info.backgroundColor end

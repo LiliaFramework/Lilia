@@ -47,21 +47,6 @@ net.Receive("liaCharList", function()
     hook.Run("ResetCharacterPanel")
 end)
 
-net.Receive("liaLoadingFailure", function()
-    local reason = net.ReadString()
-    local details = net.ReadString()
-    local errorCount = net.ReadUInt(8)
-    if IsValid(lia.loadingFailurePanel) then lia.loadingFailurePanel:Remove() end
-    lia.loadingFailurePanel = vgui.Create("liaLoadingFailure")
-    lia.loadingFailurePanel:SetFailureInfo(reason, details)
-    for _ = 1, errorCount do
-        local errorMessage = net.ReadString()
-        local line = net.ReadString()
-        local file = net.ReadString()
-        lia.loadingFailurePanel:AddError(errorMessage, line, file)
-    end
-end)
-
 local function wrapText(text, font, maxWidth)
     surface.SetFont(font)
     local words = {}

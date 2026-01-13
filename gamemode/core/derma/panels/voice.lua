@@ -2,6 +2,13 @@
 local VOICE_TALKING = "talking"
 local VOICE_YELLING = "yelling"
 VoicePanels = {}
+local function ClearVoicePanels()
+    for client, pnl in pairs(VoicePanels) do
+        if IsValid(pnl) then pnl:Remove() end
+        VoicePanels[client] = nil
+    end
+end
+
 local ICON_MAP = {
     [VOICE_WHISPERING] = "whispertalk.png",
     [VOICE_YELLING] = "yelltalk.png",
@@ -29,6 +36,7 @@ function PANEL:Setup(client)
     self.name = hook.Run("ShouldAllowScoreboardOverride", client, "name") and hook.Run("GetDisplayedName", client) or client:Nick()
     self.LabelName:SetText(self.name)
     self:UpdateIcon()
+    self:UpdateTooltip()
     self:SetAlpha(255)
 end
 
@@ -39,6 +47,27 @@ function PANEL:UpdateIcon()
         self.currentIcon = img
         self.Icon:SetImage(img)
     end
+
+    self:UpdateTooltip()
+end
+
+function PANEL:UpdateTooltip()
+    if not IsValid(self.client) then return end
+    local vt = self.cachedVoiceType or VOICE_TALKING
+    local voiceTypeText = L(vt)
+    local displayName = self.name or "Unknown"
+    local lines = {}
+    lines[#lines + 1] = "<font=LiliaFont.16b>" .. displayName .. "</font>"
+    lines[#lines + 1] = "<font=LiliaFont.16>" .. L("youAre") .. " " .. voiceTypeText .. "</font>"
+    local voiceRanges = {
+        [VOICE_WHISPERING] = lia.config.get("WhisperRange", 70),
+        [VOICE_TALKING] = lia.config.get("TalkRange", 280),
+        [VOICE_YELLING] = lia.config.get("YellRange", 840)
+    }
+
+    local range = voiceRanges[vt]
+    if range then lines[#lines + 1] = "<font=LiliaFont.16>" .. L("voiceRange") .. ": " .. range .. " units</font>" end
+    self:SetTooltip(table.concat(lines, "\n"))
 end
 
 function PANEL:Paint(w, h)
@@ -81,11 +110,8 @@ end
 
 vgui.Register("liaVoicePanel", PANEL, "DPanel")
 local function CreateVoicePanelList()
+    ClearVoicePanels()
     if IsValid(g_VoicePanelList) then g_VoicePanelList:Remove() end
-    for _, pnl in pairs(VoicePanels) do
-        if IsValid(pnl) then pnl:Remove() end
-    end
-
     g_VoicePanelList = vgui.Create("DPanel")
     g_VoicePanelList:ParentToHUD()
     g_VoicePanelList:SetSize(270, ScrH() - 200)
@@ -93,6 +119,7 @@ local function CreateVoicePanelList()
     g_VoicePanelList:SetPaintBackground(false)
 end
 
+timer.Remove("VoiceClean")
 timer.Create("VoiceClean", 1, 0, function()
     for client in pairs(VoicePanels) do
         if not IsValid(client) then hook.Run("PlayerEndVoice", client) end

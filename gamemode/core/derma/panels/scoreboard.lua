@@ -265,13 +265,14 @@ function PANEL:addPlayer(ply, parent)
         hook.Run("ShowPlayerOptions", ply, opts)
         if #opts > 0 then
             local frame = vgui.Create("liaFrame", self)
-            frame:SetSize(300, 450)
+            frame:SetSize(360, 450)
             frame:Center()
             frame:MakePopup()
             frame:SetTitle(L("sbOptions"))
             frame:LiteMode()
             table.insert(self.playerOptionFrames, frame)
             frame.OnRemove = function()
+                if not self.playerOptionFrames then return end
                 for i, f in ipairs(self.playerOptionFrames) do
                     if f == frame then
                         table.remove(self.playerOptionFrames, i)
@@ -284,23 +285,20 @@ function PANEL:addPlayer(ply, parent)
             scrollPanel:Dock(FILL)
             scrollPanel:DockMargin(5, 5, 5, 5)
             for _, o in ipairs(opts) do
-                local button = vgui.Create("liaButton", scrollPanel)
+                local button = vgui.Create("DButton", scrollPanel)
                 button:Dock(TOP)
                 button:DockMargin(5, 5, 5, 0)
                 button:SetTall(32)
                 button:SetText("")
+                button:SetCursor("hand")
                 button.Paint = function(s, w, h)
-                    if s:IsHovered() then
-                        lia.derma.rect(0, 0, w, h):Rad(8):Color(lia.color.theme.button_hovered):Shape(lia.derma.SHAPE_IOS):Draw()
-                    else
-                        lia.derma.rect(0, 0, w, h):Rad(8):Color(lia.color.theme.button):Shape(lia.derma.SHAPE_IOS):Draw()
-                    end
-
-                    local localIconSize = 16
+                    local baseColor = s:IsHovered() and lia.color.theme.button_hovered or lia.color.theme.button
+                    draw.RoundedBox(8, 0, 0, w, h, baseColor)
+                    local iconDrawSize = 16
                     if o.image then
-                        surface.SetDrawColor(lia.color.theme.text)
                         surface.SetMaterial(Material(o.image))
-                        surface.DrawTexturedRect(8, (h - localIconSize) / 2, localIconSize, localIconSize)
+                        surface.SetDrawColor(lia.color.theme.text)
+                        surface.DrawTexturedRect(8, (h - iconDrawSize) / 2, iconDrawSize, iconDrawSize)
                     end
 
                     draw.SimpleText(L(o.name), "LiliaFont.17", 32, h / 2, lia.color.theme.text, TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)

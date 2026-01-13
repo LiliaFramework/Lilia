@@ -112,6 +112,7 @@ function lia.derma.optionsMenu(rawOptions, config)
     if registryKey == nil then registryKey = mode ~= "custom" and "InteractionMenu" or "OptionsMenu" end
     lia.gui = lia.gui or {}
     if registryKey and IsValid(lia.gui[registryKey]) then lia.gui[registryKey]:Remove() end
+    if mode == "interaction" or mode == "action" then return lia.derma.interactionTooltip(rawOptions, config) end
     local visible = {}
     local function addOption(id, option, overrideLabel)
         if not option then return end
@@ -370,6 +371,354 @@ function lia.derma.optionsMenu(rawOptions, config)
 
     if registryKey then lia.gui[registryKey] = frame end
     return frame
+end
+
+--[[
+    Purpose:
+        Creates and displays a tooltip-style interaction menu similar to magic/item tooltips, with enhanced visual effects and modern styling.
+
+    When Called:
+        Automatically called when opening player interaction (TAB) or personal actions (G) menus to provide a polished tooltip interface.
+
+    Parameters:
+        rawOptions (table)
+            Raw interaction/action options data from playerinteract system.
+        config (table)
+            Configuration options including:
+            - mode (string): "interaction", "action", or "custom"
+            - entity (Entity): Target entity for interactions
+            - title (string): Menu title override
+            - closeKey (number): Key code to close menu
+            - netMsg (string): Network message for server communication
+            - preFiltered (boolean): Whether options are already filtered
+            - emitHooks (boolean): Whether to trigger interaction hooks
+            - registryKey (string): Key for GUI registry
+            - autoCloseDelay (number): Auto-close timeout in seconds
+
+    Returns:
+        Panel|nil
+            The created tooltip panel, or nil if no valid options.
+
+    Realm:
+        Client
+
+    Example Usage:
+        ```lua
+            -- Automatically called by lia.playerinteract.openMenu()
+            -- Can also be called directly:
+            local tooltip = lia.derma.interactionTooltip(interactions, {
+                mode = "interaction",
+                title = "Player Interactions",
+                entity = targetPlayer
+            })
+        ```
+]]
+function lia.derma.interactionTooltip(rawOptions, config)
+    config = config or {}
+    local mode = config.mode
+    if mode ~= "interaction" and mode ~= "action" then mode = "custom" end
+    local client = LocalPlayer()
+    if not IsValid(client) then return end
+    local ent = config.entity
+    if ent == nil and (mode ~= "custom" or config.resolveEntity ~= false) then
+        if isfunction(client.getTracedEntity) then
+            ent = client:getTracedEntity()
+        else
+            ent = NULL
+        end
+    end
+
+    local netMsg = config.netMsg
+    local preFiltered = config.preFiltered == true
+    local emitHooks = config.emitHooks
+    if emitHooks == nil then emitHooks = mode ~= "custom" end
+    local registryKey = config.registryKey
+    if registryKey == nil then registryKey = mode ~= "custom" and "InteractionMenu" or "OptionsMenu" end
+    lia.gui = lia.gui or {}
+    if registryKey and IsValid(lia.gui[registryKey]) then lia.gui[registryKey]:Remove() end
+    local visible = {}
+    local function addOption(id, option, overrideLabel)
+        if not option then return end
+        local label = overrideLabel or option.displayName or option.label or option.title or option.name or id
+        visible[#visible + 1] = {
+            id = id or label,
+            label = label,
+            opt = option
+        }
+    end
+
+    if preFiltered then
+        if liaDermaIsSequential(rawOptions) then
+            for _, entry in ipairs(rawOptions) do
+                if istable(entry) then addOption(entry.id or entry.name or tostring(), entry.opt or entry, entry.label) end
+            end
+        else
+            for id, option in pairs(rawOptions) do
+                addOption(id, option)
+            end
+        end
+    elseif mode == "interaction" then
+        if not IsValid(ent) then return end
+        for id, option in pairs(rawOptions or {}) do
+            if option.type == "interaction" and lia.playerinteract then
+                local maxRange = option.range and math.min(option.range, 100) or 100
+                if lia.playerinteract.isWithinRange(client, ent, maxRange) then
+                    local targetType = option.target or "player"
+                    local isPlayerTarget = ent:IsPlayer()
+                    local targetMatches = targetType == "any" or targetType == "player" and isPlayerTarget or targetType == "entity" and not isPlayerTarget
+                    if targetMatches then
+                        local shouldShow = true
+                        if option.shouldShow then shouldShow = option.shouldShow(client, ent) end
+                        if shouldShow then addOption(id, option) end
+                    end
+                end
+            end
+        end
+    elseif mode == "action" then
+        for id, option in pairs(rawOptions or {}) do
+            if option.type == "action" and (not option.shouldShow or option.shouldShow(client)) then addOption(id, option) end
+        end
+    else
+        if liaDermaIsSequential(rawOptions) then
+            for index, option in ipairs(rawOptions) do
+                if istable(option) then
+                    local id = option.identifier or option.id or option.name or tostring(index)
+                    addOption(id, option)
+                end
+            end
+        else
+            for id, option in pairs(rawOptions or {}) do
+                if istable(option) then addOption(option.identifier or option.id or id, option) end
+            end
+        end
+    end
+
+    if #visible == 0 then return end
+    local optionsList
+    if mode ~= "custom" and lia.playerinteract and lia.playerinteract.getCategorizedOptions then
+        optionsList = lia.playerinteract.getCategorizedOptions(visible)
+    else
+        optionsList = visible
+    end
+
+    local maxWidth = 350
+    local lineHeight = 20
+    local padding = 16
+    local iconSize = 32
+    local titleHeight = 28
+    local sectionSpacing = 8
+    local contentHeight = titleHeight + sectionSpacing
+    local currentCategory = nil
+    for _, entry in ipairs(optionsList) do
+        if entry.isCategory then
+            if currentCategory then contentHeight = contentHeight + sectionSpacing end
+            contentHeight = contentHeight + 24
+            currentCategory = entry.name
+        else
+            contentHeight = contentHeight + lineHeight + 2
+        end
+    end
+
+    local tooltipWidth = maxWidth
+    local tooltipHeight = math.min(contentHeight + padding * 2, ScrH() * 0.7)
+    local screenW, screenH = ScrW(), ScrH()
+    local tooltipX = screenW - tooltipWidth - 20
+    local tooltipY = math.max(80, (screenH - tooltipHeight) / 2)
+    local tooltip = vgui.Create("DPanel")
+    tooltip:SetSize(tooltipWidth, tooltipHeight)
+    tooltip:SetPos(tooltipX, tooltipY)
+    tooltip:MakePopup()
+    tooltip:SetDrawOnTop(true)
+    tooltip:SetZPos(10000)
+    tooltip:SetAlpha(0)
+    tooltip:AlphaTo(255, 0.1)
+    function tooltip:Paint(w, h)
+        local radius = 8
+        local accent = lia.color.theme.accent or lia.color.theme.header or lia.color.theme.theme or Color(100, 150, 200)
+        local background = lia.color.theme.background_alpha or lia.color.theme.background or Color(40, 40, 40, 240)
+        lia.derma.rect(0, 0, w, h):Rad(radius):Color(lia.color.theme.window_shadow or Color(0, 0, 0, 50)):Shadow(8, 12):Shape(lia.derma.SHAPE_IOS):Draw()
+        lia.util.drawBlurAt(tooltipX, tooltipY, w, h)
+        lia.derma.rect(0, 0, w, h):Rad(radius):Color(background):Draw()
+        surface.SetDrawColor(accent.r, accent.g, accent.b, accent.a or 255)
+        surface.DrawRect(0, 0, w, 3)
+        local titleText = config.title
+        if not titleText then
+            if mode == "interaction" then
+                titleText = L("interactionMenu")
+            elseif mode == "action" then
+                titleText = L("personalActions")
+            else
+                titleText = L("options")
+            end
+        end
+
+        surface.SetFont("LiliaFont.18")
+        surface.SetTextColor(255, 255, 255, 255)
+        surface.SetTextPos(padding, padding - 2)
+        surface.DrawText(titleText)
+    end
+
+    if emitHooks then hook.Run("InteractionMenuOpened", tooltip) end
+    local oldOnRemove = tooltip.OnRemove
+    function tooltip:OnRemove()
+        if oldOnRemove then oldOnRemove(self) end
+        if emitHooks then hook.Run("InteractionMenuClosed") end
+        if registryKey and lia.gui[registryKey] == self then lia.gui[registryKey] = nil end
+    end
+
+    local closeKey = config.closeKey
+    if closeKey then
+        function tooltip:Think()
+            if not input.IsKeyDown(closeKey) then self:Remove() end
+        end
+    end
+
+    local timerName = config.timerName or (mode ~= "custom" and "InteractionTooltip_Frame_Timer" or "OptionsTooltip_Frame_Timer")
+    local autoCloseDelay = config.autoCloseDelay
+    if autoCloseDelay == nil then autoCloseDelay = 30 end
+    if timerName and autoCloseDelay and autoCloseDelay > 0 then
+        timer.Remove(timerName)
+        timer.Create(timerName, autoCloseDelay, 1, function() if IsValid(tooltip) then tooltip:Remove() end end)
+    end
+
+    local scroll = tooltip:Add("liaScrollPanel")
+    scroll:SetPos(0, titleHeight + padding)
+    scroll:SetSize(tooltipWidth, tooltipHeight - titleHeight - padding * 2)
+    local layout = vgui.Create("DListLayout", scroll)
+    layout:Dock(FILL)
+    currentCategory = nil
+    for _, entry in ipairs(optionsList) do
+        if entry.isCategory then
+            if currentCategory then
+                local spacer = vgui.Create("DPanel", layout)
+                spacer:SetTall(sectionSpacing)
+                spacer:SetPaintBackground(false)
+                layout:Add(spacer)
+            end
+
+            local categoryPanel = vgui.Create("DPanel", layout)
+            categoryPanel:SetTall(20)
+            categoryPanel:Dock(TOP)
+            categoryPanel:DockMargin(padding, 0, padding, 4)
+            categoryPanel:SetPaintBackground(false)
+            function categoryPanel:Paint(w, h)
+                local theme = lia.color.theme
+                local categoryColor = entry.color or (theme and theme.category_accent or Color(100, 150, 200, 255))
+                local textColor = theme and theme.category_text or theme and theme.text or color_white
+                local lineColor = theme and theme.category_line or Color(255, 255, 255, 20)
+                surface.SetDrawColor(categoryColor.r, categoryColor.g, categoryColor.b, 100)
+                surface.DrawRect(0, h - 1, w, 1)
+                local displayText = entry.name or ""
+                if L then
+                    local localized = L(displayText)
+                    if localized and localized ~= "" then displayText = localized end
+                end
+
+                surface.SetFont("LiliaFont.16")
+                surface.SetTextColor(textColor.r, textColor.g, textColor.b, textColor.a or 255)
+                surface.SetTextPos(0, 0)
+                surface.DrawText(displayText)
+                surface.SetDrawColor(lineColor.r, lineColor.g, lineColor.b, lineColor.a or 255)
+                surface.DrawRect(0, h - 2, w, 1)
+            end
+
+            layout:Add(categoryPanel)
+            currentCategory = entry.name
+        else
+            local btn = vgui.Create("DButton", layout)
+            btn:SetTall(lineHeight)
+            btn:Dock(TOP)
+            btn:DockMargin(padding + iconSize + 8, 0, padding, 2)
+            btn:SetText("")
+            btn:SetPaintBackground(false)
+            btn:SetCursor("hand")
+            local displayText = entry.label or entry.id or ""
+            if entry.opt and entry.opt.localized ~= false and L then
+                local localized = L(displayText)
+                if localized and localized ~= "" then displayText = localized end
+            end
+
+            function btn:Paint(w, h)
+                local isHovered = self:IsHovered()
+                if isHovered then
+                    surface.SetDrawColor(255, 255, 255, 20)
+                    surface.DrawRect(0, 0, w, h)
+                end
+
+                surface.SetFont("LiliaFont.16")
+                local textColor = entry.opt and entry.opt.textColor or color_white
+                if isHovered then textColor = Color(200, 220, 255, 255) end
+                surface.SetTextColor(textColor.r, textColor.g, textColor.b, textColor.a or 255)
+                surface.SetTextPos(0, 2)
+                surface.DrawText(displayText)
+            end
+
+            local iconMat = entry.opt and entry.opt.icon
+            if iconMat then
+                function btn:PaintOver(w, h)
+                    surface.SetDrawColor(255, 255, 255, 200)
+                    surface.SetMaterial(iconMat)
+                    surface.DrawTexturedRect(-iconSize - 8, (h - iconSize) / 2, iconSize, iconSize)
+                end
+            end
+
+            btn.DoClick = function()
+                tooltip:AlphaTo(0, 0.1, 0, function() if IsValid(tooltip) then tooltip:Remove() end end)
+                local optionData = entry.opt or {}
+                local callback = optionData.callback or optionData.onRun
+                if callback and not optionData.serverOnly then
+                    if mode == "interaction" then
+                        if not IsValid(ent) then return end
+                        local target = ent
+                        if ent:IsPlayer() and ent:IsBot() and client:Team() == FACTION_STAFF then target = client end
+                        callback(client, target)
+                        return
+                    end
+
+                    if mode == "action" then
+                        callback(client, ent)
+                        return
+                    end
+
+                    local passContext = optionData.passContext
+                    if passContext == true then
+                        callback(client, ent, entry, tooltip)
+                        return
+                    end
+
+                    if istable(passContext) then
+                        callback(unpack(passContext))
+                        return
+                    end
+
+                    callback()
+                end
+
+                local messageName = optionData.serverOnly and (optionData.netMessage or netMsg) or nil
+                if messageName then
+                    net.Start(messageName)
+                    net.WriteString(optionData.networkID or entry.id)
+                    net.WriteBool(mode == "interaction")
+                    net.WriteEntity(IsValid(ent) and ent or Entity(0))
+                    if isfunction(optionData.writePayload) then optionData.writePayload() end
+                    net.SendToServer()
+                end
+
+                if isfunction(optionData.onSelect) then optionData.onSelect(client, ent, entry, tooltip) end
+            end
+
+            local description = entry.opt and (entry.opt.description or entry.opt.desc)
+            if isstring(description) and description ~= "" then
+                if entry.opt.localizedDescription ~= false and L then description = L(description) end
+                btn:SetTooltip(description)
+            end
+
+            layout:Add(btn)
+        end
+    end
+
+    if registryKey then lia.gui[registryKey] = tooltip end
+    return tooltip
 end
 
 --[[
@@ -2038,6 +2387,8 @@ end
             local w, h = lia.derma.drawBoxWithText("Saved", ScrW() * 0.5, 120, {textAlignX = TEXT_ALIGN_CENTER})
         ```
 ]]
+local drawBoxOverlaps = {}
+local drawBoxFrame = 0
 function lia.derma.drawBoxWithText(text, x, y, options)
     options = options or {}
     local font = options.font or "LiliaFont.16"
@@ -2058,6 +2409,7 @@ function lia.derma.drawBoxWithText(text, x, y, options)
     local textAlignY = options.textAlignY or TEXT_ALIGN_CENTER
     local autoSize = options.autoSize ~= false
     local lineSpacing = options.lineSpacing or 4
+    local overlapMargin = options.overlapMargin or 8
     local textLines = istable(text) and text or {text}
     surface.SetFont(font)
     local maxWidth, totalHeight = 0, 0
@@ -2094,9 +2446,54 @@ function lia.derma.drawBoxWithText(text, x, y, options)
         boxY = y - boxHeight / 2
     end
 
+    if drawBoxFrame ~= FrameNumber() then
+        drawBoxOverlaps = {}
+        drawBoxFrame = FrameNumber()
+    end
+
+    local screenW, screenH = ScrW(), ScrH()
+    local function intersects(cx, cy)
+        for _, rect in ipairs(drawBoxOverlaps) do
+            if cx < rect.x + rect.w + overlapMargin and cx + boxWidth + overlapMargin > rect.x and cy < rect.y + rect.h + overlapMargin and cy + boxHeight + overlapMargin > rect.y then return rect end
+        end
+    end
+
+    boxX = math.Clamp(boxX, 0, screenW - boxWidth)
+    boxY = math.Clamp(boxY, 0, screenH - boxHeight)
+    local overlap = intersects(boxX, boxY)
+    local attempts = 0
+    while overlap and attempts < 8 do
+        local down = overlap.y + overlap.h + overlapMargin
+        local up = overlap.y - boxHeight - overlapMargin
+        local nextY
+        if down + boxHeight <= screenH then
+            nextY = down
+        else
+            nextY = math.max(0, up)
+        end
+
+        boxY = math.Clamp(nextY, 0, screenH - boxHeight)
+        overlap = intersects(boxX, boxY)
+        attempts = attempts + 1
+    end
+
+    local shadow = options.shadow or {
+        enabled = false
+    }
+
+    if shadow.enabled then lia.derma.rect(boxX, boxY, boxWidth, boxHeight):Rad(borderRadius):Color(shadow.color or Color(0, 0, 0, 50)):Shadow(shadow.offsetX or 8, shadow.offsetY or 12):Shape(lia.derma.SHAPE_IOS):Draw() end
     if blur.enabled then lia.util.drawBlurAt(boxX, boxY, boxWidth, boxHeight, blur.amount, blur.passes, blur.alpha) end
     lia.derma.rect(boxX, boxY, boxWidth, boxHeight):Color(backgroundColor):Rad(borderRadius):Draw()
     if borderThickness > 0 then lia.derma.rect(boxX, boxY, boxWidth, boxHeight):Color(borderColor):Rad(borderRadius):Outline(borderThickness):Draw() end
+    local accentBorder = options.accentBorder or {
+        enabled = false
+    }
+
+    if accentBorder.enabled then
+        surface.SetDrawColor((accentBorder.color or lia.color.theme.theme):Unpack())
+        surface.DrawRect(boxX, boxY, boxWidth, accentBorder.height or 2)
+    end
+
     local startY = boxY + padding / 2
     if textAlignY == TEXT_ALIGN_CENTER then
         startY = boxY + (boxHeight - totalHeight) / 2
@@ -2121,6 +2518,13 @@ function lia.derma.drawBoxWithText(text, x, y, options)
             currentY = currentY + t_h + lineSpacing
         end
     end
+
+    drawBoxOverlaps[#drawBoxOverlaps + 1] = {
+        x = boxX,
+        y = boxY,
+        w = boxWidth,
+        h = boxHeight
+    }
     return boxWidth, boxHeight
 end
 

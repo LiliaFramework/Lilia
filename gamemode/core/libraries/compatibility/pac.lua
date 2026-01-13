@@ -1,14 +1,87 @@
-﻿local playerMeta = FindMetaTable("Player")
+﻿--[[
+    Folder: Meta
+    File:  player.md
+    Append: True
+]]
+local playerMeta = FindMetaTable("Player")
+--[[
+    Purpose:
+        Returns the player's active PAC parts.
+
+    When Called:
+        Use to check which PAC parts are currently equipped on the player.
+
+    Parameters:
+        None.
+
+    Returns:
+        table
+            Table of active PAC part IDs.
+
+    Realm:
+        Shared
+
+    Example Usage:
+        ```lua
+            local parts = ply:getParts()
+            if parts["helmet"] then
+                print("Player has helmet equipped")
+            end
+        ```
+]]
 function playerMeta:getParts()
     return self:getNetVar("parts", {})
 end
 
 if SERVER then
+    --[[
+    Purpose:
+        Synchronizes the player's PAC parts with the client.
+
+    When Called:
+        Use to ensure the client has the correct PAC parts data.
+
+    Parameters:
+        None.
+
+    Returns:
+        None.
+
+    Realm:
+        Server
+
+    Example Usage:
+        ```lua
+            ply:syncParts()
+        ```
+]]
     function playerMeta:syncParts()
         net.Start("liaPacSync")
         net.Send(self)
     end
 
+    --[[
+    Purpose:
+        Adds a PAC part to the player.
+
+    When Called:
+        Use when equipping PAC parts on a player.
+
+    Parameters:
+        partID (string)
+            The unique ID of the PAC part to add.
+
+    Returns:
+        None.
+
+    Realm:
+        Server
+
+    Example Usage:
+        ```lua
+            ply:addPart("helmet_model")
+        ```
+]]
     function playerMeta:addPart(partID)
         if self:getParts()[partID] then return end
         net.Start("liaPacPartAdd")
@@ -20,6 +93,28 @@ if SERVER then
         self:setNetVar("parts", parts)
     end
 
+    --[[
+    Purpose:
+        Removes a PAC part from the player.
+
+    When Called:
+        Use when unequipping PAC parts from a player.
+
+    Parameters:
+        partID (string)
+            The unique ID of the PAC part to remove.
+
+    Returns:
+        None.
+
+    Realm:
+        Server
+
+    Example Usage:
+        ```lua
+            ply:removePart("helmet_model")
+        ```
+]]
     function playerMeta:removePart(partID)
         net.Start("liaPacPartRemove")
         net.WriteEntity(self)
@@ -30,6 +125,27 @@ if SERVER then
         self:setNetVar("parts", parts)
     end
 
+    --[[
+    Purpose:
+        Removes all PAC parts from the player.
+
+    When Called:
+        Use to clear all equipped PAC parts from a player.
+
+    Parameters:
+        None.
+
+    Returns:
+        None.
+
+    Realm:
+        Server
+
+    Example Usage:
+        ```lua
+            ply:resetParts()
+        ```
+]]
     function playerMeta:resetParts()
         net.Start("liaPacPartReset")
         net.WriteEntity(self)
