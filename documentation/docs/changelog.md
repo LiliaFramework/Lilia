@@ -1,5 +1,30 @@
 # Changelog
 
+## Version 7.275 (January 13, 2026)
+
+### Changes
+
+- Docs Update
+- Successfully updated workshop Lilia to 7.273
+- Improved Scroll Wheel
+- Missing Lang
+- Now most panels use theme
+- Successfully updated workshop Lilia to 7.269
+- Missing Localization and Docs
+- Successfully updated workshop Lilia to 7.267
+- Hooks Docs
+- Successfully updated workshop Lilia to 7.265
+- More Docs
+- Update functions.md
+- Update server.lua
+- Successfully updated workshop Lilia to 7.261
+- More Docs
+- Successfully updated workshop Lilia to 7.259
+- More Docs
+- Linting
+- Update generate_docs.py
+- Removed Legacy
+
 ## Version 7.273 (January 13, 2026)
 
 ### Changes

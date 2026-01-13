@@ -69,6 +69,52 @@ Client
 
 ---
 
+### lia.derma.interactionTooltip
+
+#### 📋 Purpose
+Creates and displays a tooltip-style interaction menu similar to magic/item tooltips, with enhanced visual effects and modern styling.
+
+#### ⏰ When Called
+Automatically called when opening player interaction (TAB) or personal actions (G) menus to provide a polished tooltip interface.
+
+#### ⚙️ Parameters
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `rawOptions` | **table** | Raw interaction/action options data from playerinteract system. |
+| `config` | **table** | Configuration options including: |
+| `mode` | **string** | "interaction", "action", or "custom" |
+| `entity` | **Entity** | Target entity for interactions |
+| `title` | **string** | Menu title override |
+| `closeKey` | **number** | Key code to close menu |
+| `netMsg` | **string** | Network message for server communication |
+| `preFiltered` | **boolean** | Whether options are already filtered |
+| `emitHooks` | **boolean** | Whether to trigger interaction hooks |
+| `registryKey` | **string** | Key for GUI registry |
+| `autoCloseDelay` | **number** | Auto-close timeout in seconds |
+
+#### ↩️ Returns
+* Panel|nil
+The created tooltip panel, or nil if no valid options.
+
+#### 🌐 Realm
+Client
+
+#### 💡 Example Usage
+
+```lua
+    -- Automatically called by lia.playerinteract.openMenu()
+    -- Can also be called directly:
+    local tooltip = lia.derma.interactionTooltip(interactions, {
+        mode = "interaction",
+        title = "Player Interactions",
+        entity = targetPlayer
+    })
+
+```
+
+---
+
 ### lia.derma.requestColorPicker
 
 #### 📋 Purpose
