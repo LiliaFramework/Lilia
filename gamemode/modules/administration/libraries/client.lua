@@ -700,7 +700,7 @@ spawnmenu.AddContentType("inventoryitem", function(container, data)
     end
 
     local lines = {}
-    lines[#lines + 1] = "<font=LiliaFont.16b>" .. itemData:getName() .. "</font>"
+    lines[#lines + 1] = "<font=LiliaFont.16>" .. itemData:getName() .. "</font>"
     local rarity = itemData:getData("rarity") or itemData.rarity
     if rarity and rarity ~= "" then
         local rarityText = rarity
@@ -4239,12 +4239,34 @@ local function DisplayAdminStickHUD(client, hudInfos, weapon)
         table.insert(hudInfos, {
             text = infoLines,
             font = "LiliaFont.20",
+            color = Color(180, 180, 180),
             position = {
                 x = ScrW() * 0.5,
                 y = IsValid(lia.gui and lia.gui.actionCircle) and (ScrH() - 170) or (ScrH() - 30)
             },
             textAlignX = TEXT_ALIGN_CENTER,
-            textAlignY = TEXT_ALIGN_BOTTOM
+            textAlignY = TEXT_ALIGN_BOTTOM,
+            backgroundColor = lia.color.theme.background_alpha or lia.color.theme.background or Color(40, 40, 40, 240),
+            borderRadius = 6,
+            borderThickness = 0,
+            padding = 12,
+            blur = {
+                enabled = true,
+                amount = 1,
+                passes = 1,
+                alpha = 1.0
+            },
+            shadow = {
+                enabled = true,
+                offsetX = 8,
+                offsetY = 12,
+                color = lia.color.theme.window_shadow or Color(0, 0, 0, 50)
+            },
+            accentBorder = {
+                enabled = true,
+                height = 2,
+                color = lia.color.theme.accent or lia.color.theme.header or lia.color.theme.theme
+            }
         })
     end
 
@@ -4252,12 +4274,34 @@ local function DisplayAdminStickHUD(client, hudInfos, weapon)
     table.insert(hudInfos, {
         text = instructions,
         font = "LiliaFont.18",
+        color = Color(180, 180, 180),
         position = {
             x = ScrW() - 20,
             y = 20
         },
         textAlignX = TEXT_ALIGN_RIGHT,
-        textAlignY = TEXT_ALIGN_TOP
+        textAlignY = TEXT_ALIGN_TOP,
+        backgroundColor = lia.color.theme.background_alpha or lia.color.theme.background or Color(40, 40, 40, 240),
+        borderRadius = 6,
+        borderThickness = 0,
+        padding = 12,
+        blur = {
+            enabled = true,
+            amount = 1,
+            passes = 1,
+            alpha = 1.0
+        },
+        shadow = {
+            enabled = true,
+            offsetX = 8,
+            offsetY = 12,
+            color = lia.color.theme.window_shadow or Color(0, 0, 0, 50)
+        },
+        accentBorder = {
+            enabled = true,
+            height = 2,
+            color = lia.color.theme.accent or lia.color.theme.header or lia.color.theme.theme
+        }
     })
 end
 
@@ -4266,12 +4310,34 @@ local function DisplayDistanceToolHUD(client, hudInfos, weapon)
     table.insert(hudInfos, {
         text = instructions,
         font = "LiliaFont.18",
+        color = Color(180, 180, 180),
         position = {
             x = ScrW() - 20,
             y = 20
         },
         textAlignX = TEXT_ALIGN_RIGHT,
-        textAlignY = TEXT_ALIGN_TOP
+        textAlignY = TEXT_ALIGN_TOP,
+        backgroundColor = lia.color.theme.background_alpha or lia.color.theme.background or Color(40, 40, 40, 240),
+        borderRadius = 6,
+        borderThickness = 0,
+        padding = 12,
+        blur = {
+            enabled = true,
+            amount = 1,
+            passes = 1,
+            alpha = 1.0
+        },
+        shadow = {
+            enabled = true,
+            offsetX = 8,
+            offsetY = 12,
+            color = lia.color.theme.window_shadow or Color(0, 0, 0, 50)
+        },
+        accentBorder = {
+            enabled = true,
+            height = 2,
+            color = lia.color.theme.accent or lia.color.theme.header or lia.color.theme.theme
+        }
     })
 
     if weapon.StartPos then
@@ -4280,24 +4346,68 @@ local function DisplayDistanceToolHUD(client, hudInfos, weapon)
         local distanceText = string.format("Distance: %.1f units", distance)
         table.insert(hudInfos, {
             text = distanceText,
-            font = "LiliaFont.24",
+            font = "LiliaFont.20",
+            color = Color(255, 255, 255),
             position = {
                 x = ScrW() * 0.5,
                 y = 30
             },
             textAlignX = TEXT_ALIGN_CENTER,
-            textAlignY = TEXT_ALIGN_TOP
+            textAlignY = TEXT_ALIGN_TOP,
+            backgroundColor = lia.color.theme.background_alpha or lia.color.theme.background or Color(40, 40, 40, 240),
+            borderRadius = 6,
+            borderThickness = 0,
+            padding = 12,
+            blur = {
+                enabled = true,
+                amount = 1,
+                passes = 1,
+                alpha = 1.0
+            },
+            shadow = {
+                enabled = true,
+                offsetX = 8,
+                offsetY = 12,
+                color = lia.color.theme.window_shadow or Color(0, 0, 0, 50)
+            },
+            accentBorder = {
+                enabled = true,
+                height = 2,
+                color = lia.color.theme.accent or lia.color.theme.header or lia.color.theme.theme
+            }
         })
     else
         table.insert(hudInfos, {
             text = "Click to set start point",
-            font = "LiliaFont.20",
+            font = "LiliaFont.16",
+            color = Color(180, 180, 180),
             position = {
                 x = ScrW() * 0.5,
                 y = 30
             },
             textAlignX = TEXT_ALIGN_CENTER,
-            textAlignY = TEXT_ALIGN_TOP
+            textAlignY = TEXT_ALIGN_TOP,
+            backgroundColor = lia.color.theme.background_alpha or lia.color.theme.background or Color(40, 40, 40, 240),
+            borderRadius = 6,
+            borderThickness = 0,
+            padding = 12,
+            blur = {
+                enabled = true,
+                amount = 1,
+                passes = 1,
+                alpha = 1.0
+            },
+            shadow = {
+                enabled = true,
+                offsetX = 8,
+                offsetY = 12,
+                color = lia.color.theme.window_shadow or Color(0, 0, 0, 50)
+            },
+            accentBorder = {
+                enabled = true,
+                height = 2,
+                color = lia.color.theme.accent or lia.color.theme.header or lia.color.theme.theme
+            }
         })
     end
 

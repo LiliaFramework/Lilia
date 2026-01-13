@@ -6,7 +6,6 @@ SWEP.DrawCrosshair = true
 SWEP.Author = "liliaplayer"
 SWEP.Contact = "@liliaplayer"
 SWEP.Instructions = L("handsInstructions")
-SWEP.Purpose = L("handsPurpose")
 SWEP.Drop = false
 SWEP.ViewModelFOV = 45
 SWEP.ViewModelFlip = false

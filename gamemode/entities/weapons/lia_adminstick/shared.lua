@@ -1,7 +1,7 @@
 ﻿SWEP.Author = "liliaplayer"
 SWEP.Contact = "@liliaplayer"
 SWEP.PrintName = L("adminStick")
-SWEP.Purpose = L("adminStickPurpose")
+SWEP.Instructions = L("adminStickPurpose")
 SWEP.Category = "Lilia"
 SWEP.ViewModelFOV = 50
 SWEP.ViewModelFlip = false

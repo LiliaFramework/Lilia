@@ -2,7 +2,7 @@
 SWEP.PrintName = L("distanceTool")
 SWEP.Author = "liliaplayer"
 SWEP.Contact = "@liliaplayer"
-SWEP.Purpose = L("measureDistanceBetweenTwoPoints")
+SWEP.Instructions = L("distanceInstructions")
 SWEP.Category = "Lilia"
 SWEP.Spawnable = true
 SWEP.AdminOnly = false
