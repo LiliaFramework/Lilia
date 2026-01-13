@@ -259,18 +259,20 @@ function PANEL:Init()
     local schemaName = SCHEMA and SCHEMA.name or nil
     topBar.Paint = function(pnl, w, h)
         lia.util.drawBlur(pnl)
-        surface.SetDrawColor(34, 34, 34, 220)
+        local headerColor = lia.color.theme.header or Color(34, 34, 34, 220)
+        surface.SetDrawColor(headerColor.r, headerColor.g, headerColor.b, 220)
         surface.DrawRect(0, 0, w, h)
-        local col = lia.config.get("Color")
-        surface.SetDrawColor(col.r, col.g, col.b, 255)
+        local accentColor = lia.color.theme.accent or lia.color.theme.theme or lia.config.get("Color")
+        surface.SetDrawColor(accentColor.r, accentColor.g, accentColor.b, 255)
         surface.DrawRect(0, h - 4, w, 4)
         if schemaIconMat and schemaName then
             local iconSize = h * 0.5
             surface.SetMaterial(schemaIconMat)
-            surface.SetDrawColor(255, 255, 255)
+            local headerTextColor = lia.color.theme.header_text or Color(255, 255, 255)
+            surface.SetDrawColor(headerTextColor.r, headerTextColor.g, headerTextColor.b)
             surface.DrawTexturedRect(30, (h - iconSize) * 0.5, iconSize, iconSize)
             surface.SetFont("LiliaFont.25")
-            surface.SetTextColor(255, 255, 255)
+            surface.SetTextColor(headerTextColor.r, headerTextColor.g, headerTextColor.b)
             local txt = L(schemaName)
             local _, th = surface.GetTextSize(txt)
             surface.SetTextPos(30 + iconSize + 10, (h - th) * 0.5)
@@ -278,7 +280,8 @@ function PANEL:Init()
         end
 
         surface.SetMaterial(iconMat)
-        surface.SetDrawColor(255, 255, 255)
+        local headerTextColor = lia.color.theme.header_text or Color(255, 255, 255)
+        surface.SetDrawColor(headerTextColor.r, headerTextColor.g, headerTextColor.b)
         local baseSize = h - 10
         local iconSize = baseSize * 0.9
         local iconY = (h - iconSize) * 0.5

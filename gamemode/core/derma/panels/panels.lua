@@ -165,12 +165,23 @@ function QuickPanel:Init()
 end
 
 function QuickPanel:Paint(w, h)
-    local theme = lia.color.theme
-    local bgColor = theme and theme.background_alpha or Color(34, 34, 34, 210)
-    local headerColor = theme and theme.header or Color(34, 34, 34, 210)
-    draw.RoundedBox(6, 0, 0, w, h, bgColor)
-    draw.RoundedBox(6, 0, 0, w, 24, headerColor)
-    if self.title and self.title ~= "" then draw.SimpleText(self.title, "LiliaFont.16", 6, 4, theme and theme.header_text or Color(255, 255, 255)) end
+    local theme = lia.color.theme or {}
+    local accent = theme.accent or theme.header or theme.theme or Color(100, 150, 200, 255)
+    local background = theme.background_alpha or theme.background or Color(40, 40, 40, 220)
+    local headerColor = theme.header or Color(34, 34, 34, 210)
+    local headerText = theme.header_text or color_white
+    local shadow = theme.window_shadow or Color(0, 0, 0, 60)
+    local radius = 10
+    local screenX, screenY = self:LocalToScreen(0, 0)
+    lia.derma.rect(0, 0, w, h):Rad(radius):Color(shadow):Shape(lia.derma.SHAPE_IOS):Shadow(12, 18):Draw()
+    lia.util.drawBlurAt(screenX, screenY, w, h)
+    lia.derma.rect(0, 0, w, h):Rad(radius):Color(background):Draw()
+    surface.SetDrawColor(accent.r, accent.g, accent.b, accent.a or 255)
+    surface.DrawRect(0, 0, w, 4)
+    lia.derma.rect(0, 0, w, 24):Radii(radius, radius, 0, 0):Color(headerColor):Draw()
+    if self.title and self.title ~= "" then draw.SimpleText(self.title, "LiliaFont.16", 12, 12, headerText, TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER) end
+    surface.SetDrawColor(accent.r, accent.g, accent.b, 40)
+    surface.DrawOutlinedRect(1, 1, w - 2, h - 2)
 end
 
 function QuickPanel:PerformLayout(w)
@@ -213,7 +224,8 @@ function QuickPanel:addCategoryHeader(categoryName, categoryColor)
         local theme = lia.color.theme
         local bgColor = theme and theme.category_header or Color(45, 55, 65, 100)
         local accentColor = categoryColor or (theme and theme.category_accent or Color(100, 150, 200, 255))
-        local textColor = theme and theme.text or color_white
+        local textColor = theme and theme.category_text or theme and theme.text or color_white
+        local lineColor = theme and theme.category_line or Color(255, 255, 255, 20)
         lia.derma.rect(0, 0, w, h):Rad(8):Color(bgColor):Shape(lia.derma.SHAPE_IOS):Draw()
         surface.SetDrawColor(accentColor)
         surface.DrawRect(0, 0, 3, h)
@@ -221,6 +233,8 @@ function QuickPanel:addCategoryHeader(categoryName, categoryColor)
         local localized = L(displayText)
         if localized and localized ~= "" then displayText = localized end
         draw.SimpleText(displayText, "LiliaFont.17", w / 2, h / 2, textColor, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
+        surface.SetDrawColor(lineColor)
+        surface.DrawRect(0, h - 1, w, 1)
     end
 
     self.items[#self.items + 1] = header

@@ -15,9 +15,9 @@ function PANEL:Init()
     self.headerHeight = 64
     self:DockPadding(12, self.headerHeight, 12, 8)
     self.Paint = function(_, w, h)
-        surface.SetDrawColor(45, 45, 45, 250)
+        surface.SetDrawColor(lia.color.theme.background or Color(45, 45, 45, 250))
         surface.DrawRect(0, 0, w, h)
-        draw.SimpleText(self.windowTitle, "LiliaFont.25", w / 2, self.headerHeight / 2, Color(255, 255, 255, 255), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
+        draw.SimpleText(self.windowTitle, "LiliaFont.25", w / 2, self.headerHeight / 2, lia.color.theme.text or Color(255, 255, 255, 255), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
     end
 
     self.topBar = vgui.Create("DPanel", self)
@@ -73,7 +73,7 @@ function PANEL:Init()
     self.statusBar = vgui.Create("DPanel", self)
     self.statusBar:Dock(BOTTOM)
     self.statusBar:SetTall(24)
-    self.statusBar.Paint = function() draw.SimpleText(L("total") .. " " .. tostring(self.visibleCount or 0), "LiliaFont.17", 5, 4, Color(200, 200, 200, 255), TEXT_ALIGN_LEFT) end
+    self.statusBar.Paint = function() draw.SimpleText(L("total") .. " " .. tostring(self.visibleCount or 0), "LiliaFont.17", 5, 4, lia.color.theme.gray or Color(200, 200, 200, 255), TEXT_ALIGN_LEFT) end
 end
 
 function PANEL:SetWindowTitle(t)

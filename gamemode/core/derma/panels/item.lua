@@ -32,7 +32,7 @@ function PANEL:Init()
 end
 
 function PANEL:PaintBehind(w, h)
-    surface.SetDrawColor(0, 0, 0, 85)
+    surface.SetDrawColor(lia.color.theme.window_shadow or Color(0, 0, 0, 85))
     surface.DrawRect(2, 2, w - 4, h - 4)
 end
 

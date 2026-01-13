@@ -1,6 +1,5 @@
 ﻿local function getAccentColor()
-    if lia.color and lia.color.getMainColor then return lia.color.getMainColor() end
-    return Color(160, 120, 255)
+    return lia.color.theme.accent or lia.color.theme.theme or lia.color.getMainColor() or Color(160, 120, 255)
 end
 
 local PANEL = {}
@@ -21,7 +20,7 @@ function PANEL:Start(text, duration, options)
         endTime = now + duration,
         holdTime = options.holdTime or 0,
         color = options.color or getAccentColor(),
-        background = options.background or Color(205, 205, 205, 255),
+        background = options.background or lia.color.theme.background or Color(205, 205, 205, 255),
         textColor = options.textColor or color_white,
         percentFont = options.percentFont or "LiliaFont.24b",
         labelFont = options.labelFont or "LiliaFont.18b",
