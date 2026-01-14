@@ -975,7 +975,7 @@ if SERVER then
             if IsValid(ply) then
                 ply:notifyErrorLocalized("invalidPlayer", steamID)
             else
-                MsgC(Color(255, 0, 0), "[Lilia] ", Color(255, 255, 255), L("invalidPlayer") .. " \"" .. steamID .. "\"\n")
+                MsgC(Color(255, 0, 0), "[Lilia] ", Color(255, 255, 255), L("invalidPlayer", steamID) .. "\n")
             end
             return
         end
@@ -984,7 +984,7 @@ if SERVER then
             if IsValid(ply) then
                 ply:notifyErrorLocalized("invalidUsergroup", usergroup)
             else
-                MsgC(Color(255, 0, 0), "[Lilia] ", Color(255, 255, 255), L("invalidUsergroup") .. " \"" .. usergroup .. "\"\n")
+                MsgC(Color(255, 0, 0), "[Lilia] ", Color(255, 255, 255), L("invalidUsergroup", usergroup) .. "\n")
             end
             return
         end
@@ -995,7 +995,7 @@ if SERVER then
                 if IsValid(ply) then
                     ply:notifyErrorLocalized("plyNoExist")
                 else
-                    MsgC(Color(255, 0, 0), "[Lilia] ", Color(255, 255, 255), L("invalidPlayer") .. " \"" .. steamID .. "\"\n")
+                    MsgC(Color(255, 0, 0), "[Lilia] ", Color(255, 255, 255), L("invalidPlayer", steamID) .. "\n")
                 end
                 return
             end
