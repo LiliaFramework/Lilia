@@ -94,6 +94,42 @@ As part of the character creation process
 
 ---
 
+<a id="liaattribbar"></a>
+### liaAttribBar
+
+#### 📋 Purpose
+Interactive attribute value bar with increment/decrement controls
+A progress bar panel with add/subtract buttons for adjusting numeric values, featuring smooth animations, boost value visualization, and customizable maximum limits
+
+#### ⏰ When Called
+For attribute point allocation, skill point distribution, or any numeric value adjustment interface requiring visual feedback
+
+---
+
+<a id="liacharacterattribs"></a>
+### liaCharacterAttribs
+
+#### 📋 Purpose
+Character attribute allocation interface
+A comprehensive panel for managing character attribute point distribution during character creation, displaying available points and individual attribute controls
+
+#### ⏰ When Called
+In character creation interfaces for allocating starting attribute points, managing attribute bonuses, or configuring character statistics
+
+---
+
+<a id="liacharacterattribsrow"></a>
+### liaCharacterAttribsRow
+
+#### 📋 Purpose
+Individual attribute row with point controls
+A single row panel displaying an attribute name, current point value, and increment/decrement buttons for adjusting attribute allocation
+
+#### ⏰ When Called
+Within character attribute interfaces to display and manage individual attribute point allocation with visual feedback and sound cues
+
+---
+
 <a id="liabutton"></a>
 ### liaButton
 

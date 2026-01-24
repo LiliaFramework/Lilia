@@ -1,5 +1,30 @@
 # Changelog
 
+## Version 7.287 (January 24, 2026)
+
+### Changes
+
+- Pretty Print
+- Removed Redudant Returns Nil From Docs
+- Added lia.item.registerItem
+- Added FACTION.payTimer
+- ChatBox Command Finder now  supports high case
+- Better Looking Character Creation
+- Improved GetPriceOverride
+- Huge Documentation Changes
+- Successfully updated workshop Lilia to 7.278
+- Fixed Slowdown not happening
+- Argument Mistmatch
+- Successfully updated workshop Lilia to 7.275
+- Docs Update
+- Successfully updated workshop Lilia to 7.273
+- Improved Scroll Wheel
+- Missing Lang
+- Now most panels use theme
+- Successfully updated workshop Lilia to 7.269
+- Missing Localization and Docs
+- Successfully updated workshop Lilia to 7.267
+
 ## Version 7.275 (January 13, 2026)
 
 ### Changes
