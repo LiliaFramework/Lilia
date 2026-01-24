@@ -177,8 +177,9 @@ function PANEL:setActive(state)
                 self.commandList:MakePopup()
                 self.commandList:SetKeyboardInputEnabled(false)
                 self.commandListCreateTime = CurTime()
+                self.commandList.Paint = function(s, w, h) lia.derma.rect(0, 0, w, h):Rad(6):Color(lia.color.theme.background_alpha or Color(34, 34, 34, 240)):Draw() end
                 for cmdName, cmdInfo in SortedPairs(self.commands) do
-                    if not tobool(string.find(cmdName, input:sub(2), 1, true)) then continue end
+                    if not tobool(string.find(cmdName:lower(), "^" .. input:sub(2):lower())) then continue end
                     local btn = self.commandList:Add("liaButton")
                     btn:SetText("/" .. cmdName .. " - " .. (cmdInfo.desc ~= "" and L(cmdInfo.desc) or L("noDesc")))
                     btn:Dock(TOP)
@@ -197,9 +198,14 @@ function PANEL:setActive(state)
                     btn:SetTextColor(lia.color.theme.text or Color(255, 255, 255))
                     local originalPaint = btn.Paint
                     btn.Paint = function(s, w, h)
+                        if s.isSelected then
+                            draw.RoundedBox(4, 0, 0, w, h, lia.color.theme.hover or Color(50, 150, 255, 100))
+                            s:SetTextColor(Color(255, 255, 255))
+                        else
+                            s:SetTextColor(lia.color.theme.text or Color(255, 255, 255))
+                        end
+
                         if originalPaint then originalPaint(s, w, h) end
-                        local highlightColor = lia.color.theme.hover or Color(255, 255, 255, 30)
-                        if s.isSelected then draw.RoundedBox(4, 0, 0, w, h, highlightColor) end
                     end
                 end
 
@@ -208,7 +214,7 @@ function PANEL:setActive(state)
                     for _, prefix in ipairs(chatInfo.prefix) do
                         if prefix:sub(1, 1) == "/" then
                             local cmd = prefix:gsub("^/", ""):lower()
-                            if cmd ~= "" and not self.commands[cmd] and tobool(string.find(cmd, input:sub(2), 1, true)) then
+                            if cmd ~= "" and not self.commands[cmd] and tobool(string.find(cmd, "^" .. input:sub(2):lower())) then
                                 local btn = self.commandList:Add("liaButton")
                                 btn:SetText(prefix .. " - " .. (chatInfo.desc ~= "" and L(chatInfo.desc) or L("noDesc")))
                                 btn:Dock(TOP)
@@ -227,9 +233,14 @@ function PANEL:setActive(state)
                                 btn:SetTextColor(lia.color.theme.text or Color(255, 255, 255))
                                 local originalPaint = btn.Paint
                                 btn.Paint = function(s, w, h)
+                                    if s.isSelected then
+                                        draw.RoundedBox(4, 0, 0, w, h, lia.color.theme.hover or Color(50, 150, 255, 100))
+                                        s:SetTextColor(Color(255, 255, 255))
+                                    else
+                                        s:SetTextColor(lia.color.theme.text or Color(255, 255, 255))
+                                    end
+
                                     if originalPaint then originalPaint(s, w, h) end
-                                    local highlightColor = lia.color.theme.hover or Color(255, 255, 255, 30)
-                                    if s.isSelected then draw.RoundedBox(4, 0, 0, w, h, highlightColor) end
                                 end
                             end
                         end
@@ -448,6 +459,8 @@ function PANEL:OnThemeChanged()
                 if IsValid(child) and child.SetTextColor then child:SetTextColor(lia.color.theme.text or Color(255, 255, 255)) end
             end
         end
+
+        self.commandList:InvalidateLayout()
     end
 
     for _, panel in ipairs(self.list or {}) do
