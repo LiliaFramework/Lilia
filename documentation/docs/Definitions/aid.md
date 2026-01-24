@@ -22,6 +22,7 @@ USAGE:
 
 ---
 
+<a id="name"></a>
 ### name
 
 #### 📋 Purpose
@@ -37,6 +38,7 @@ Sets the display name shown to players
 
 ---
 
+<a id="desc"></a>
 ### desc
 
 #### 📋 Purpose
@@ -52,6 +54,7 @@ Sets the description text shown to players
 
 ---
 
+<a id="model"></a>
 ### model
 
 #### 📋 Purpose
@@ -67,6 +70,7 @@ Sets the 3D model used for the item
 
 ---
 
+<a id="width"></a>
 ### width
 
 #### 📋 Purpose
@@ -82,6 +86,7 @@ Sets the inventory width in slots
 
 ---
 
+<a id="height"></a>
 ### height
 
 #### 📋 Purpose
@@ -97,6 +102,7 @@ Sets the inventory height in slots
 
 ---
 
+<a id="health"></a>
 ### health
 
 #### 📋 Purpose
@@ -112,6 +118,7 @@ Sets the amount of health restored when used
 
 ---
 
+<a id="armor"></a>
 ### armor
 
 #### 📋 Purpose
@@ -122,6 +129,22 @@ Sets the amount of armor restored when used
 ```lua
     -- Set armor restoration amount
     ITEM.armor = 10
+
+```
+
+---
+
+<a id="stamina"></a>
+### stamina
+
+#### 📋 Purpose
+Sets the amount of stamina restored when used
+
+#### 💡 Example Usage
+
+```lua
+    -- Set stamina restoration amount
+    ITEM.stamina = 50
 
 ```
 

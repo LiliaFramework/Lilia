@@ -10,4334 +10,2495 @@ Client-side hooks in the Lilia framework handle UI, rendering, input, and other 
 
 ---
 
-### AddBarField
+<details class="realm-client">
+<summary><a id=AddBarField></a>AddBarField(sectionName, fieldName, labelText, minFunc, maxFunc, valueFunc)</summary>
+<a id="addbarfield"></a>
+<p>Register a dynamic bar entry to show in the character information panel (e.g., stamina or custom stats).</p>
+<p>During character info build, before the F1 menu renders the bar sections.</p>
+<p><h3>Parameters:</h3>
+<span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a></span> <span class="parameter">sectionName</span> Localized or raw section label to group the bar under.</p>
+<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a></span> <span class="parameter">fieldName</span> Unique key for the bar entry.</p>
+<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a></span> <span class="parameter">labelText</span> Text shown next to the bar.</p>
+<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.6">function</a></span> <span class="parameter">minFunc</span> Callback returning the minimum numeric value.</p>
+<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.6">function</a></span> <span class="parameter">maxFunc</span> Callback returning the maximum numeric value.</p>
+<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.6">function</a></span> <span class="parameter">valueFunc</span> Callback returning the current numeric value to display.</p>
 
-#### 📋 Purpose
-Register a dynamic bar entry to show in the character information panel (e.g., stamina or custom stats).
-
-#### ⏰ When Called
-During character info build, before the F1 menu renders the bar sections.
-
-#### ⚙️ Parameters
-
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `sectionName` | **string** | Localized or raw section label to group the bar under. |
-| `fieldName` | **string** | Unique key for the bar entry. |
-| `labelText` | **string** | Text shown next to the bar. |
-| `minFunc` | **function** | Callback returning the minimum numeric value. |
-| `maxFunc` | **function** | Callback returning the maximum numeric value. |
-| `valueFunc` | **function** | Callback returning the current numeric value to display. |
-
-#### ↩️ Returns
-* nil
-Add the bar when valid; return nil to continue other hooks.
-
-#### 🌐 Realm
-Client
-
-#### 💡 Example Usage
-
-```lua
-    hook.Add("AddBarField", "ExampleAddBarField", function(...)
+<h3>Example Usage:</h3>
+<pre><code class="language-lua">    hook.Add("AddBarField", "ExampleAddBarField", function(...)
         -- add custom client-side behavior
     end)
-
-```
+</code></pre>
+</details>
 
 ---
 
-### AddSection
+<details class="realm-client">
+<summary><a id=AddSection></a>AddSection(sectionName, color, priority, location)</summary>
+<a id="addsection"></a>
+<p>Ensure a character information section exists and optionally override its styling and position.</p>
+<p>When the F1 character info UI is initialized or refreshed.</p>
+<p><h3>Parameters:</h3>
+<span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a></span> <span class="parameter">sectionName</span> Localized or raw name of the section (e.g., “generalInfo”).</p>
+<p><span class="types"><a class="type" href="https://wiki.facepunch.com/gmod/Color">Color</a></span> <span class="parameter">color</span> Accent color used for the section header.</p>
+<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.3">number</a></span> <span class="parameter">priority</span> Sort order; lower numbers appear first.</p>
+<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.3">number</a></span> <span class="parameter">location</span> Column index in the character info layout.</p>
 
-#### 📋 Purpose
-Ensure a character information section exists and optionally override its styling and position.
-
-#### ⏰ When Called
-When the F1 character info UI is initialized or refreshed.
-
-#### ⚙️ Parameters
-
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `sectionName` | **string** | Localized or raw name of the section (e.g., “generalInfo”). |
-| `color` | **Color** | Accent color used for the section header. |
-| `priority` | **number** | Sort order; lower numbers appear first. |
-| `location` | **number** | Column index in the character info layout. |
-
-#### ↩️ Returns
-* nil
-Modify or create the section in-place.
-
-#### 🌐 Realm
-Client
-
-#### 💡 Example Usage
-
-```lua
-    hook.Add("AddSection", "ExampleAddSection", function(...)
+<h3>Example Usage:</h3>
+<pre><code class="language-lua">    hook.Add("AddSection", "ExampleAddSection", function(...)
         -- add custom client-side behavior
     end)
-
-```
+</code></pre>
+</details>
 
 ---
 
-### AddTextField
+<details class="realm-client">
+<summary><a id=AddTextField></a>AddTextField(sectionName, fieldName, labelText, valueFunc)</summary>
+<a id="addtextfield"></a>
+<p>Register a text field for the character information panel.</p>
+<p>While building character info just before the F1 menu renders.</p>
+<p><h3>Parameters:</h3>
+<span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a></span> <span class="parameter">sectionName</span> Target section to append the field to.</p>
+<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a></span> <span class="parameter">fieldName</span> Unique identifier for the field.</p>
+<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a></span> <span class="parameter">labelText</span> Caption displayed before the value.</p>
+<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.6">function</a></span> <span class="parameter">valueFunc</span> Callback that returns the string to render.</p>
 
-#### 📋 Purpose
-Register a text field for the character information panel.
-
-#### ⏰ When Called
-While building character info just before the F1 menu renders.
-
-#### ⚙️ Parameters
-
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `sectionName` | **string** | Target section to append the field to. |
-| `fieldName` | **string** | Unique identifier for the field. |
-| `labelText` | **string** | Caption displayed before the value. |
-| `valueFunc` | **function** | Callback that returns the string to render. |
-
-#### ↩️ Returns
-* nil
-Appends the text field if the section exists.
-
-#### 🌐 Realm
-Client
-
-#### 💡 Example Usage
-
-```lua
-    hook.Add("AddTextField", "ExampleAddTextField", function(...)
+<h3>Example Usage:</h3>
+<pre><code class="language-lua">    hook.Add("AddTextField", "ExampleAddTextField", function(...)
         -- add custom client-side behavior
     end)
-
-```
+</code></pre>
+</details>
 
 ---
 
-### AddToAdminStickHUD
+<details class="realm-client">
+<summary><a id=AddToAdminStickHUD></a>AddToAdminStickHUD(client, target, information)</summary>
+<a id="addtoadminstickhud"></a>
+<p>Add extra lines to the on-screen admin-stick HUD that appears while aiming with the admin stick.</p>
+<p>Each HUDPaint tick when the admin stick is active and a target is valid.</p>
+<p><h3>Parameters:</h3>
+<span class="types"><a class="type" href="https://wiki.facepunch.com/gmod/Player">Player</a></span> <span class="parameter">client</span> Local player using the admin stick.</p>
+<p><span class="types"><a class="type" href="https://wiki.facepunch.com/gmod/Entity">Entity</a></span> <span class="parameter">target</span> Entity currently traced by the admin stick.</p>
+<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.5">table</a></span> <span class="parameter">information</span> Table of strings; insert new lines to show additional info.</p>
 
-#### 📋 Purpose
-Add extra lines to the on-screen admin-stick HUD that appears while aiming with the admin stick.
-
-#### ⏰ When Called
-Each HUDPaint tick when the admin stick is active and a target is valid.
-
-#### ⚙️ Parameters
-
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `client` | **Player** | Local player using the admin stick. |
-| `target` | **Entity** | Entity currently traced by the admin stick. |
-| `information` | **table** | Table of strings; insert new lines to show additional info. |
-
-#### ↩️ Returns
-* nil
-Mutate the information table in place.
-
-#### 🌐 Realm
-Client
-
-#### 💡 Example Usage
-
-```lua
-    hook.Add("AddToAdminStickHUD", "ExampleAddToAdminStickHUD", function(...)
+<h3>Example Usage:</h3>
+<pre><code class="language-lua">    hook.Add("AddToAdminStickHUD", "ExampleAddToAdminStickHUD", function(...)
         -- add custom client-side behavior
     end)
-
-```
+</code></pre>
+</details>
 
 ---
 
-### AdminPrivilegesUpdated
-
-#### 📋 Purpose
-React to privilege list updates pushed from the server (used by the admin stick UI).
-
-#### ⏰ When Called
-After the server syncs admin privilege changes to the client.
-
-#### ↩️ Returns
-* nil
-Perform any client-side refresh logic.
-
-#### 🌐 Realm
-Client
-
-#### 💡 Example Usage
-
-```lua
-    hook.Add("AdminPrivilegesUpdated", "ExampleAdminPrivilegesUpdated", function(...)
+<details class="realm-client">
+<summary><a id=AdminPrivilegesUpdated></a>AdminPrivilegesUpdated()</summary>
+<a id="adminprivilegesupdated"></a>
+<p>React to privilege list updates pushed from the server (used by the admin stick UI).</p>
+<p>After the server syncs admin privilege changes to the client.</p>
+<h3>Example Usage:</h3>
+<pre><code class="language-lua">    hook.Add("AdminPrivilegesUpdated", "ExampleAdminPrivilegesUpdated", function(...)
         -- add custom client-side behavior
     end)
-
-```
+</code></pre>
+</details>
 
 ---
 
-### AdminStickAddModels
+<details class="realm-client">
+<summary><a id=AdminStickAddModels></a>AdminStickAddModels(allModList, tgt)</summary>
+<a id="adminstickaddmodels"></a>
+<p>Provide model and icon overrides for the admin stick spawn menu list.</p>
+<p>When the admin stick UI collects available models and props to display.</p>
+<p><h3>Parameters:</h3>
+<span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.5">table</a></span> <span class="parameter">allModList</span> Table of model entries to be displayed; append or modify entries here.</p>
+<p><span class="types"><a class="type" href="https://wiki.facepunch.com/gmod/Entity">Entity</a></span> <span class="parameter">tgt</span> Entity currently targeted by the admin stick.</p>
 
-#### 📋 Purpose
-Provide model and icon overrides for the admin stick spawn menu list.
-
-#### ⏰ When Called
-When the admin stick UI collects available models and props to display.
-
-#### ⚙️ Parameters
-
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `allModList` | **table** | Table of model entries to be displayed; append or modify entries here. |
-| `tgt` | **Entity** | Entity currently targeted by the admin stick. |
-
-#### ↩️ Returns
-* nil
-Modify allModList in place.
-
-#### 🌐 Realm
-Client
-
-#### 💡 Example Usage
-
-```lua
-    hook.Add("AdminStickAddModels", "ExampleAdminStickAddModels", function(...)
+<h3>Example Usage:</h3>
+<pre><code class="language-lua">    hook.Add("AdminStickAddModels", "ExampleAdminStickAddModels", function(...)
         -- add custom client-side behavior
     end)
-
-```
+</code></pre>
+</details>
 
 ---
 
-### CanDeleteChar
+<details class="realm-client">
+<summary><a id=CanDeleteChar></a>CanDeleteChar(client, character)</summary>
+<a id="candeletechar"></a>
+<p>Decide whether a client is allowed to delete a specific character.</p>
+<p>When the delete character button is pressed in the character menu.</p>
+<p><h3>Parameters:</h3>
+<span class="types"><a class="type" href="https://wiki.facepunch.com/gmod/Player">Player</a></span> <span class="parameter">client</span> Player requesting the deletion.</p>
+<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#2.2">Character|table</a></span> <span class="parameter">character</span> Character object slated for deletion.</p>
 
-#### 📋 Purpose
-Decide whether a client is allowed to delete a specific character.
+<p><h3>Returns:</h3>
+<span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.2">boolean</a></span> false to block deletion; nil/true to allow.</p>
 
-#### ⏰ When Called
-When the delete character button is pressed in the character menu.
-
-#### ⚙️ Parameters
-
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `client` | **Player** | Player requesting the deletion. |
-| `character` | **Character|table** | Character object slated for deletion. |
-
-#### ↩️ Returns
-* boolean
-false to block deletion; nil/true to allow.
-
-#### 🌐 Realm
-Client
-
-#### 💡 Example Usage
-
-```lua
-    hook.Add("CanDeleteChar", "ExampleCanDeleteChar", function(...)
+<h3>Example Usage:</h3>
+<pre><code class="language-lua">    hook.Add("CanDeleteChar", "ExampleCanDeleteChar", function(...)
         -- add custom client-side behavior
     end)
-
-```
+</code></pre>
+</details>
 
 ---
 
-### CanDisplayCharInfo
+<details class="realm-client">
+<summary><a id=CanDisplayCharInfo></a>CanDisplayCharInfo(name)</summary>
+<a id="candisplaycharinfo"></a>
+<p>Control whether the name above a character can be shown to the local player.</p>
+<p>Before drawing a player’s overhead information.</p>
+<p><h3>Parameters:</h3>
+<span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a></span> <span class="parameter">name</span> The formatted name that would be displayed.</p>
 
-#### 📋 Purpose
-Control whether the name above a character can be shown to the local player.
+<p><h3>Returns:</h3>
+<span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.2">boolean</a></span> false to hide the name; nil/true to show.</p>
 
-#### ⏰ When Called
-Before drawing a player’s overhead information.
-
-#### ⚙️ Parameters
-
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `name` | **string** | The formatted name that would be displayed. |
-
-#### ↩️ Returns
-* boolean
-false to hide the name; nil/true to show.
-
-#### 🌐 Realm
-Client
-
-#### 💡 Example Usage
-
-```lua
-    hook.Add("CanDisplayCharInfo", "ExampleCanDisplayCharInfo", function(...)
+<h3>Example Usage:</h3>
+<pre><code class="language-lua">    hook.Add("CanDisplayCharInfo", "ExampleCanDisplayCharInfo", function(...)
         -- add custom client-side behavior
     end)
-
-```
+</code></pre>
+</details>
 
 ---
 
-### CanOpenBagPanel
+<details class="realm-client">
+<summary><a id=CanOpenBagPanel></a>CanOpenBagPanel(item)</summary>
+<a id="canopenbagpanel"></a>
+<p>Allow or block opening the bag inventory panel for a specific item.</p>
+<p>When a bag or storage item icon is activated to open its contents.</p>
+<p><h3>Parameters:</h3>
+<span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#2.2">Item</a></span> <span class="parameter">item</span> The bag item whose inventory is being opened.</p>
 
-#### 📋 Purpose
-Allow or block opening the bag inventory panel for a specific item.
+<p><h3>Returns:</h3>
+<span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.2">boolean</a></span> false to prevent opening; nil/true to allow.</p>
 
-#### ⏰ When Called
-When a bag or storage item icon is activated to open its contents.
-
-#### ⚙️ Parameters
-
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `item` | **Item** | The bag item whose inventory is being opened. |
-
-#### ↩️ Returns
-* boolean
-false to prevent opening; nil/true to allow.
-
-#### 🌐 Realm
-Client
-
-#### 💡 Example Usage
-
-```lua
-    hook.Add("CanOpenBagPanel", "ExampleCanOpenBagPanel", function(...)
+<h3>Example Usage:</h3>
+<pre><code class="language-lua">    hook.Add("CanOpenBagPanel", "ExampleCanOpenBagPanel", function(...)
         -- add custom client-side behavior
     end)
-
-```
+</code></pre>
+</details>
 
 ---
 
-### CanPlayerOpenScoreboard
+<details class="realm-client">
+<summary><a id=CanPlayerOpenScoreboard></a>CanPlayerOpenScoreboard(arg1)</summary>
+<a id="canplayeropenscoreboard"></a>
+<p>Decide whether the scoreboard should open for the requesting client.</p>
+<p>When the scoreboard key is pressed and before building the panel.</p>
+<p><h3>Parameters:</h3>
+<span class="types"><a class="type" href="https://wiki.facepunch.com/gmod/Player">Player</a></span> <span class="parameter">arg1</span> Player attempting to open the scoreboard.</p>
 
-#### 📋 Purpose
-Decide whether the scoreboard should open for the requesting client.
+<p><h3>Returns:</h3>
+<span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.2">boolean</a></span> false to block; nil/true to show.</p>
 
-#### ⏰ When Called
-When the scoreboard key is pressed and before building the panel.
-
-#### ⚙️ Parameters
-
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `arg1` | **Player** | Player attempting to open the scoreboard. |
-
-#### ↩️ Returns
-* boolean
-false to block; nil/true to show.
-
-#### 🌐 Realm
-Client
-
-#### 💡 Example Usage
-
-```lua
-    hook.Add("CanPlayerOpenScoreboard", "ExampleCanPlayerOpenScoreboard", function(...)
+<h3>Example Usage:</h3>
+<pre><code class="language-lua">    hook.Add("CanPlayerOpenScoreboard", "ExampleCanPlayerOpenScoreboard", function(...)
         -- add custom client-side behavior
     end)
-
-```
+</code></pre>
+</details>
 
 ---
 
-### CanTakeEntity
+<details class="realm-client">
+<summary><a id=CanTakeEntity></a>CanTakeEntity(client, targetEntity, itemUniqueID)</summary>
+<a id="cantakeentity"></a>
+<p>Determines if a player can take/convert an entity into an item.</p>
+<p>Before attempting to convert an entity into an item using the take entity keybind.</p>
+<p><h3>Parameters:</h3>
+<span class="types"><a class="type" href="https://wiki.facepunch.com/gmod/Player">Player</a></span> <span class="parameter">client</span> The player attempting to take the entity.</p>
+<p><span class="types"><a class="type" href="https://wiki.facepunch.com/gmod/Entity">Entity</a></span> <span class="parameter">targetEntity</span> The entity being targeted for conversion.</p>
+<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a></span> <span class="parameter">itemUniqueID</span> The unique ID of the item that would be created.</p>
 
-#### 📋 Purpose
-Determines if a player can take/convert an entity into an item.
+<p><h3>Returns:</h3>
+<span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.2">boolean</a></span> False to prevent taking the entity; nil/true to allow.</p>
 
-#### ⏰ When Called
-Before attempting to convert an entity into an item using the take entity keybind.
-
-#### ⚙️ Parameters
-
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `client` | **Player** | The player attempting to take the entity. |
-| `targetEntity` | **Entity** | The entity being targeted for conversion. |
-| `itemUniqueID` | **string** | The unique ID of the item that would be created. |
-
-#### ↩️ Returns
-* boolean
-False to prevent taking the entity; nil/true to allow.
-
-#### 🌐 Realm
-Client
-
-#### 💡 Example Usage
-
-```lua
-    hook.Add("CanTakeEntity", "RestrictEntityTaking", function(client, targetEntity, itemUniqueID)
+<h3>Example Usage:</h3>
+<pre><code class="language-lua">    hook.Add("CanTakeEntity", "RestrictEntityTaking", function(client, targetEntity, itemUniqueID)
         if targetEntity:IsPlayer() then return false end
         return true
     end)
+</code></pre>
+</details>
 
-```
-
----
-
-### CanPlayerViewInventory
-
-#### 📋 Purpose
-Determine if the local player can open their inventory UI.
-
-#### ⏰ When Called
-Before spawning any inventory window.
-
-#### ↩️ Returns
-* boolean
-false to stop the inventory from opening; nil/true to allow.
-
-#### 🌐 Realm
-Client
-
-#### 💡 Example Usage
-
-```lua
-    hook.Add("CanPlayerViewInventory", "ExampleCanPlayerViewInventory", function(...)
-        -- add custom client-side behavior
-    end)
-
-```
-
----
-
-### CharListColumns
-
-#### 📋 Purpose
-Add or adjust columns in the character list panel.
-
-#### ⏰ When Called
-Right before the character selection table is rendered.
-
-#### ⚙️ Parameters
-
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `columns` | **table** | Table of column definitions; modify in place to add/remove columns. |
-
-#### ↩️ Returns
-* nil
-Mutate the provided columns table.
-
-#### 🌐 Realm
-Client
-
-#### 💡 Example Usage
-
-```lua
-    hook.Add("CharListColumns", "ExampleCharListColumns", function(...)
-        -- add custom client-side behavior
-    end)
-
-```
-
----
-
-### CharListEntry
-
-#### 📋 Purpose
-Modify how each character entry renders in the character list.
-
-#### ⏰ When Called
-For every row when the character list is constructed.
-
-#### ⚙️ Parameters
-
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `entry` | **table** | Data for the character (id, name, faction, etc.). |
-| `row` | **Panel** | The row panel being built. |
-
-#### ↩️ Returns
-* nil
-Customize the row directly.
-
-#### 🌐 Realm
-Client
-
-#### 💡 Example Usage
-
-```lua
-    hook.Add("CharListEntry", "ExampleCharListEntry", function(...)
-        -- add custom client-side behavior
-    end)
-
-```
-
----
-
-### CharListLoaded
-
-#### 📋 Purpose
-Seed character info sections and fields after the client receives the character list.
-
-#### ⏰ When Called
-Once the client finishes downloading the character list from the server.
-
-#### ⚙️ Parameters
-
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `newCharList` | **table** | Array of character summaries. |
-
-#### ↩️ Returns
-* nil
-Perform setup; return false to stop default population.
-
-#### 🌐 Realm
-Client
-
-#### 💡 Example Usage
-
-```lua
-    hook.Add("CharListLoaded", "ExampleCharListLoaded", function(...)
-        -- add custom client-side behavior
-    end)
-
-```
-
----
-
-### CharListUpdated
-
-#### 📋 Purpose
-React to changes between the old and new character lists.
-
-#### ⏰ When Called
-After the server sends an updated character list (e.g., after delete/create).
-
-#### ⚙️ Parameters
-
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `oldCharList` | **table** | Previous list snapshot. |
-| `newCharList` | **table** | Updated list snapshot. |
-
-#### ↩️ Returns
-* nil
-Handle syncing UI/state.
-
-#### 🌐 Realm
-Client
-
-#### 💡 Example Usage
-
-```lua
-    hook.Add("CharListUpdated", "ExampleCharListUpdated", function(...)
-        -- add custom client-side behavior
-    end)
-
-```
-
----
-
-### CharLoaded
-
-#### 📋 Purpose
-Handle local initialization once a character has fully loaded on the client.
-
-#### ⏰ When Called
-After the server confirms the character load and sets netvars.
-
-#### ⚙️ Parameters
-
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `character` | **Character|number** | Character object or id that was loaded. |
-
-#### ↩️ Returns
-* nil
-Perform client-side setup.
-
-#### 🌐 Realm
-Client
-
-#### 💡 Example Usage
-
-```lua
-    hook.Add("CharLoaded", "ExampleCharLoaded", function(...)
-        -- add custom client-side behavior
-    end)
-
-```
-
----
-
-### CharMenuClosed
-
-#### 📋 Purpose
-Cleanup or state changes when the character menu is closed.
-
-#### ⏰ When Called
-Right after the character menu panel is removed.
-
-#### ↩️ Returns
-* nil
-Execute any shutdown logic.
-
-#### 🌐 Realm
-Client
-
-#### 💡 Example Usage
-
-```lua
-    hook.Add("CharMenuClosed", "ExampleCharMenuClosed", function(...)
-        -- add custom client-side behavior
-    end)
-
-```
-
----
-
-### CharMenuOpened
-
-#### 📋 Purpose
-Perform setup each time the character menu is opened.
-
-#### ⏰ When Called
-Immediately after constructing the character menu panel.
-
-#### ⚙️ Parameters
-
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `charMenu` | **Panel** | The created menu panel. |
-
-#### ↩️ Returns
-* nil
-Adjust the panel or block with false.
-
-#### 🌐 Realm
-Client
-
-#### 💡 Example Usage
-
-```lua
-    hook.Add("CharMenuOpened", "ExampleCharMenuOpened", function(...)
-        -- add custom client-side behavior
-    end)
-
-```
-
----
-
-### CharRestored
-
-#### 📋 Purpose
-Handle client-side work after a character is restored from deletion.
-
-#### ⏰ When Called
-When the server finishes restoring a deleted character.
-
-#### ⚙️ Parameters
-
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `character` | **Character|number** | The restored character object or id. |
-
-#### ↩️ Returns
-* nil
-Update UI or caches.
-
-#### 🌐 Realm
-Client
-
-#### 💡 Example Usage
-
-```lua
-    hook.Add("CharRestored", "ExampleCharRestored", function(...)
-        -- add custom client-side behavior
-    end)
-
-```
-
----
-
-### ChatAddText
-
-#### 📋 Purpose
-Override how chat text is appended to the chat box.
-
-#### ⏰ When Called
-Whenever chat text is about to be printed locally.
-
-#### ⚙️ Parameters
-
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `text` | **any** | First argument passed to chat.AddText. |
-
-#### ↩️ Returns
-* nil
-Return false to suppress default printing.
-
-#### 🌐 Realm
-Client
-
-#### 💡 Example Usage
-
-```lua
-    hook.Add("ChatAddText", "ExampleChatAddText", function(...)
-        -- add custom client-side behavior
-    end)
-
-```
-
----
-
-### ChatboxPanelCreated
-
-#### 📋 Purpose
-Adjust the chatbox panel right after it is created.
-
-#### ⏰ When Called
-Once the chat UI instance is built client-side.
-
-#### ⚙️ Parameters
-
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `arg1` | **Panel** | The chatbox panel instance. |
-
-#### ↩️ Returns
-* nil
-Modify the panel as needed.
-
-#### 🌐 Realm
-Client
-
-#### 💡 Example Usage
-
-```lua
-    hook.Add("ChatboxPanelCreated", "ExampleChatboxPanelCreated", function(...)
-        -- add custom client-side behavior
-    end)
-
-```
-
----
-
-### ChatboxTextAdded
-
-#### 📋 Purpose
-Intercept a newly added chat line before it renders in the chatbox.
-
-#### ⏰ When Called
-After chat text is parsed but before it is drawn in the panel.
-
-#### ⚙️ Parameters
-
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `arg1` | **Panel** | Chat panel or message object being added. |
-
-#### ↩️ Returns
-* nil
-Modify or cancel rendering by returning false.
-
-#### 🌐 Realm
-Client
-
-#### 💡 Example Usage
-
-```lua
-    hook.Add("ChatboxTextAdded", "ExampleChatboxTextAdded", function(...)
-        -- add custom client-side behavior
-    end)
-
-```
-
----
-
-### ChooseCharacter
-
-#### 📋 Purpose
-Respond to character selection from the list.
-
-#### ⏰ When Called
-When a user clicks the play button on a character slot.
-
-#### ⚙️ Parameters
-
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `id` | **number** | The selected character’s id. |
-
-#### ↩️ Returns
-* nil
-Proceed with default selection unless false is returned.
-
-#### 🌐 Realm
-Client
-
-#### 💡 Example Usage
-
-```lua
-    hook.Add("ChooseCharacter", "ExampleChooseCharacter", function(...)
-        -- add custom client-side behavior
-    end)
-
-```
-
----
-
-### CommandRan
-
-#### 📋 Purpose
-React after a command finishes executing client-side.
-
-#### ⏰ When Called
-Immediately after a console/chat command is processed on the client.
-
-#### ⚙️ Parameters
-
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `client` | **Player** | Player who ran the command. |
-| `command` | **string** | Command name. |
-| `arg3` | **table|string** | Arguments or raw text passed. |
-| `results` | **any** | Return data from the command handler, if any. |
-
-#### ↩️ Returns
-* nil
-Use to display extra feedback or analytics.
-
-#### 🌐 Realm
-Client
-
-#### 💡 Example Usage
-
-```lua
-    hook.Add("CommandRan", "ExampleCommandRan", function(...)
-        -- add custom client-side behavior
-    end)
-
-```
-
----
-
-### ConfigureCharacterCreationSteps
-
-#### 📋 Purpose
-Reorder or add steps to the character creation wizard.
-
-#### ⏰ When Called
-When the creation UI is building its step list.
-
-#### ⚙️ Parameters
-
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `creationPanel` | **Panel** | The root creation panel containing step definitions. |
-
-#### ↩️ Returns
-* nil
-Modify the panel or return false to replace defaults.
-
-#### 🌐 Realm
-Client
-
-#### 💡 Example Usage
-
-```lua
-    hook.Add("ConfigureCharacterCreationSteps", "ExampleConfigureCharacterCreationSteps", function(...)
-        -- add custom client-side behavior
-    end)
-
-```
-
----
-
-### CreateCharacter
-
-#### 📋 Purpose
-Validate or mutate character data immediately before it is submitted to the server.
-
-#### ⏰ When Called
-When the user presses the final create/submit button.
-
-#### ⚙️ Parameters
-
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `data` | **table** | Character creation payload (name, model, faction, etc.). |
-
-#### ↩️ Returns
-* boolean
-false to abort submission; nil/true to continue.
-
-#### 🌐 Realm
-Client
-
-#### 💡 Example Usage
-
-```lua
-    hook.Add("CreateCharacter", "ExampleCreateCharacter", function(...)
-        -- add custom client-side behavior
-    end)
-
-```
-
----
-
-### CreateChatboxPanel
-
-#### 📋 Purpose
-Called when the chatbox panel needs to be created or recreated.
-
-#### ⏰ When Called
-When the chatbox module initializes, when the chatbox panel is closed and needs to be reopened, or when certain chat-related events occur.
-
-#### ↩️ Returns
-* nil
-The hook doesn't expect a return value but allows for custom chatbox panel setup.
-
-#### 🌐 Realm
-Client
-
-#### 💡 Example Usage
-
-```lua
-    hook.Add("CreateChatboxPanel", "ExampleCreateChatboxPanel", function(...)
-        -- add custom client-side behavior
-    end)
-
-```
-
----
-
-### CreateDefaultInventory
-
-#### 📋 Purpose
-Choose what inventory implementation to instantiate for a newly created character.
-
-#### ⏰ When Called
-After the client finishes character creation but before the inventory is built.
-
-#### ⚙️ Parameters
-
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `character` | **Character** | The character being initialized. |
-
-#### ↩️ Returns
-* string
-Inventory type id to create (e.g., “GridInv”).
-
-#### 🌐 Realm
-Client
-
-#### 💡 Example Usage
-
-```lua
-    hook.Add("CreateDefaultInventory", "ExampleCreateDefaultInventory", function(...)
-        -- add custom client-side behavior
-    end)
-
-```
-
----
-
-### CreateInformationButtons
-
-#### 📋 Purpose
-Populate the list of buttons for the Information tab in the F1 menu.
-
-#### ⏰ When Called
-When the Information tab is created and ready to collect pages.
-
-#### ⚙️ Parameters
-
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `pages` | **table** | Table of page descriptors; insert entries with name/icon/build function. |
-
-#### ↩️ Returns
-* nil
-Fill the pages table.
-
-#### 🌐 Realm
-Client
-
-#### 💡 Example Usage
-
-```lua
-    hook.Add("CreateInformationButtons", "ExampleCreateInformationButtons", function(...)
-        -- add custom client-side behavior
-    end)
-
-```
-
----
-
-### CreateInventoryPanel
-
-#### 📋 Purpose
-Build the root panel used for displaying an inventory instance.
-
-#### ⏰ When Called
-Each time an inventory needs a panel representation.
-
-#### ⚙️ Parameters
-
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `inventory` | **Inventory** | Inventory object to show. |
-| `parent` | **Panel** | Parent UI element the panel should attach to. |
-
-#### ↩️ Returns
-* Panel
-The created inventory panel.
-
-#### 🌐 Realm
-Client
-
-#### 💡 Example Usage
-
-```lua
-    hook.Add("CreateInventoryPanel", "ExampleCreateInventoryPanel", function(...)
-        -- add custom client-side behavior
-    end)
-
-```
-
----
-
-### CreateMenuButtons
-
-#### 📋 Purpose
-Register custom tabs for the F1 menu.
-
-#### ⏰ When Called
-When the F1 menu initializes its tab definitions.
-
-#### ⚙️ Parameters
-
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `tabs` | **table** | Table of tab constructors keyed by tab id; add new entries to inject tabs. |
-
-#### ↩️ Returns
-* nil
-Mutate the tabs table.
-
-#### 🌐 Realm
-Client
-
-#### 💡 Example Usage
-
-```lua
-    hook.Add("CreateMenuButtons", "ExampleCreateMenuButtons", function(...)
-        -- add custom client-side behavior
-    end)
-
-```
-
----
-
-### DeleteCharacter
-
-#### 📋 Purpose
-Handle client-side removal of a character slot.
-
-#### ⏰ When Called
-After a deletion request succeeds.
-
-#### ⚙️ Parameters
-
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `id` | **number** | ID of the character that was removed. |
-
-#### ↩️ Returns
-* nil
-Update UI accordingly.
-
-#### 🌐 Realm
-Client
-
-#### 💡 Example Usage
-
-```lua
-    hook.Add("DeleteCharacter", "ExampleDeleteCharacter", function(...)
-        -- add custom client-side behavior
-    end)
-
-```
-
----
-
-### DermaSkinChanged
-
-#### 📋 Purpose
-React when the active Derma skin changes client-side.
-
-#### ⏰ When Called
-Immediately after the skin is switched.
-
-#### ⚙️ Parameters
-
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `newSkin` | **string** | Name of the newly applied skin. |
-
-#### ↩️ Returns
-* nil
-Rebuild or refresh UI if needed.
-
-#### 🌐 Realm
-Client
-
-#### 💡 Example Usage
-
-```lua
-    hook.Add("DermaSkinChanged", "ExampleDermaSkinChanged", function(...)
-        -- add custom client-side behavior
-    end)
-
-```
-
----
-
-### DisplayPlayerHUDInformation
-
-#### 📋 Purpose
-Inject custom HUD info boxes into the player HUD.
-
-#### ⏰ When Called
-Every HUDPaint frame while the player is alive and has a character.
-
-#### ⚙️ Parameters
-
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `client` | **Player** | Local player. |
-| `hudInfos` | **table** | Array to be filled with info tables (text, position, styling). |
-
-#### ↩️ Returns
-* nil
-Append to hudInfos; return false to suppress defaults.
-
-#### 🌐 Realm
-Client
-
-#### 💡 Example Usage
-
-```lua
-    hook.Add("DisplayPlayerHUDInformation", "ExampleDisplayPlayerHUDInformation", function(...)
-        -- add custom client-side behavior
-    end)
-
-```
-
----
-
-### DoorDataReceived
-
-#### 📋 Purpose
-Handle incoming door synchronization data from the server.
-
-#### ⏰ When Called
-When the server sends door ownership or data updates.
-
-#### ⚙️ Parameters
-
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `door` | **Entity** | Door entity being updated. |
-| `syncData` | **table** | Data payload containing door state/owners. |
-
-#### ↩️ Returns
-* nil
-Update local state; return false to block default apply.
-
-#### 🌐 Realm
-Client
-
-#### 💡 Example Usage
-
-```lua
-    hook.Add("DoorDataReceived", "ExampleDoorDataReceived", function(...)
-        -- add custom client-side behavior
-    end)
-
-```
-
----
-
-### DrawCharInfo
-
-#### 📋 Purpose
-Add custom lines to the character info overlay drawn above players.
-
-#### ⏰ When Called
-Right before drawing info for a player (name/description).
-
-#### ⚙️ Parameters
-
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `client` | **Player** | Player whose info is being drawn. |
-| `character` | **Character** | Character belonging to the player. |
-| `info` | **table** | Array of `{text, color}` rows; append to extend display. |
-
-#### ↩️ Returns
-* nil
-Modify info in place.
-
-#### 🌐 Realm
-Client
-
-#### 💡 Example Usage
-
-```lua
-    hook.Add("DrawCharInfo", "ExampleDrawCharInfo", function(...)
-        -- add custom client-side behavior
-    end)
-
-```
-
----
-
-### DrawEntityInfo
-
-#### 📋 Purpose
-Customize how entity information panels render in the world.
-
-#### ⏰ When Called
-When an entity has been marked to display info and is being drawn.
-
-#### ⚙️ Parameters
-
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `e` | **Entity** | Target entity. |
-| `a` | **number** | Alpha value (0-255) for fade in/out. |
-| `pos` | **table|Vector** | Screen position for the info panel (optional). |
-
-#### ↩️ Returns
-* nil
-Draw your own panel; return true to suppress default.
-
-#### 🌐 Realm
-Client
-
-#### 💡 Example Usage
-
-```lua
-    hook.Add("DrawEntityInfo", "ExampleDrawEntityInfo", function(...)
-        -- add custom client-side behavior
-    end)
-
-```
-
----
-
-### DrawItemEntityInfo
-
-#### 📋 Purpose
-Adjust or add lines for dropped item entity info.
-
-#### ⏰ When Called
-When hovering/aiming at a dropped item that is rendering its info.
-
-#### ⚙️ Parameters
-
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `itemEntity` | **Entity** | World entity representing the item. |
-| `item` | **Item** | Item table attached to the entity. |
-| `infoTable` | **table** | Lines describing the item; modify to add details. |
-| `alpha` | **number** | Current alpha used for drawing. |
-
-#### ↩️ Returns
-* nil
-Change infoTable contents.
-
-#### 🌐 Realm
-Client
-
-#### 💡 Example Usage
-
-```lua
-    hook.Add("DrawItemEntityInfo", "ExampleDrawItemEntityInfo", function(...)
-        -- add custom client-side behavior
-    end)
-
-```
-
----
-
-### DrawLiliaModelView
-
-#### 📋 Purpose
-Draw extra elements in the character preview model (e.g., held weapon).
-
-#### ⏰ When Called
-When the character model view panel paints.
-
-#### ⚙️ Parameters
-
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `client` | **Player** | Local player being previewed. |
-| `entity` | **Entity** | The model panel entity. |
-
-#### ↩️ Returns
-* nil
-Add custom draws; return false to skip default.
-
-#### 🌐 Realm
-Client
-
-#### 💡 Example Usage
-
-```lua
-    hook.Add("DrawLiliaModelView", "ExampleDrawLiliaModelView", function(...)
-        -- add custom client-side behavior
-    end)
-
-```
-
----
-
-### DrawPlayerRagdoll
-
-#### 📋 Purpose
-Draw attachments or cosmetics on a player’s ragdoll entity.
-
-#### ⏰ When Called
-During ragdoll RenderOverride when a player’s corpse is rendered.
-
-#### ⚙️ Parameters
-
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `entity` | **Entity** | The ragdoll entity being drawn. |
-
-#### ↩️ Returns
-* nil
-Perform custom drawing; return false to skip.
-
-#### 🌐 Realm
-Client
-
-#### 💡 Example Usage
-
-```lua
-    hook.Add("DrawPlayerRagdoll", "ExampleDrawPlayerRagdoll", function(...)
-        -- add custom client-side behavior
-    end)
-
-```
-
----
-
-### F1MenuClosed
-
-#### 📋 Purpose
-React to the F1 menu closing.
-
-#### ⏰ When Called
-Immediately after the F1 menu panel is removed.
-
-#### ↩️ Returns
-* nil
-Run custom cleanup logic.
-
-#### 🌐 Realm
-Client
-
-#### 💡 Example Usage
-
-```lua
-    hook.Add("F1MenuClosed", "ExampleF1MenuClosed", function(...)
-        -- add custom client-side behavior
-    end)
-
-```
-
----
-
-### F1MenuOpened
-
-#### 📋 Purpose
-Perform setup when the F1 menu opens.
-
-#### ⏰ When Called
-Immediately after the F1 menu is created.
-
-#### ⚙️ Parameters
-
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `f1MenuPanel` | **Panel** | The opened menu panel. |
-
-#### ↩️ Returns
-* nil
-Initialize controls or return false to stop defaults.
-
-#### 🌐 Realm
-Client
-
-#### 💡 Example Usage
-
-```lua
-    hook.Add("F1MenuOpened", "ExampleF1MenuOpened", function(...)
-        -- add custom client-side behavior
-    end)
-
-```
-
----
-
-### FilterCharModels
-
-#### 📋 Purpose
-Whitelist or blacklist models shown in the character creation model list.
-
-#### ⏰ When Called
-While building the selectable model list for character creation.
-
-#### ⚙️ Parameters
-
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `arg1` | **table** | Table of available model paths; mutate to filter. |
-
-#### ↩️ Returns
-* nil
-Modify the table; return false to block default filtering.
-
-#### 🌐 Realm
-Client
-
-#### 💡 Example Usage
-
-```lua
-    hook.Add("FilterCharModels", "ExampleFilterCharModels", function(...)
-        -- add custom client-side behavior
-    end)
-
-```
-
----
-
-### FilterDoorInfo
-
-#### 📋 Purpose
-Adjust door information before it is shown on the HUD.
-
-#### ⏰ When Called
-After door data is prepared for display but before drawing text.
-
-#### ⚙️ Parameters
-
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `entity` | **Entity** | The door being inspected. |
-| `doorData` | **table** | Raw door data (owners, title, etc.). |
-| `doorInfo` | **table** | Table of display lines; mutate to change output. |
-
-#### ↩️ Returns
-* nil
-Modify doorInfo in place.
-
-#### 🌐 Realm
-Client
-
-#### 💡 Example Usage
-
-```lua
-    hook.Add("FilterDoorInfo", "ExampleFilterDoorInfo", function(...)
-        -- add custom client-side behavior
-    end)
-
-```
-
----
-
-### GetAdjustedPartData
-
-#### 📋 Purpose
-Provide PAC part data overrides before parts attach to a player.
-
-#### ⏰ When Called
-When a PAC part is requested for attachment.
-
-#### ⚙️ Parameters
-
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `wearer` | **Player** | Player the part will attach to. |
-| `id` | **string** | Identifier for the part/item. |
-
-#### ↩️ Returns
-* table
-Adjusted part data; return nil to use cached defaults.
-
-#### 🌐 Realm
-Client
-
-#### 💡 Example Usage
-
-```lua
-    hook.Add("GetAdjustedPartData", "ExampleGetAdjustedPartData", function(...)
-        -- add custom client-side behavior
-    end)
-
-```
-
----
-
-### GetCharacterCreateButtonTooltip
-
-#### 📋 Purpose
-Allows overriding the tooltip text for the character creation button.
-
-#### ⏰ When Called
-When the character creation button tooltip is being determined in the main menu.
-
-#### ⚙️ Parameters
-
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `client` | **Player** | The player viewing the menu. |
-| `currentChars` | **number** | Number of characters the player currently has. |
-| `maxChars` | **number** | Maximum number of characters allowed. |
-
-#### ↩️ Returns
-* string|nil
-Custom tooltip text, or nil to use default tooltip.
-
-#### 🌐 Realm
-Client
-
-#### 💡 Example Usage
-
-```lua
-    hook.Add("GetCharacterCreateButtonTooltip", "ExampleGetCharacterCreateButtonTooltip", function(...)
-        -- add custom client-side behavior
-    end)
-
-```
-
----
-
-### GetCharacterDisconnectButtonTooltip
-
-#### 📋 Purpose
-Allows overriding the tooltip text for the character disconnect button.
-
-#### ⏰ When Called
-When the character disconnect button tooltip is being determined in the main menu.
-
-#### ⚙️ Parameters
-
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `client` | **Player** | The player viewing the menu. |
-
-#### ↩️ Returns
-* string|nil
-Custom tooltip text, or nil to use default tooltip.
-
-#### 🌐 Realm
-Client
-
-#### 💡 Example Usage
-
-```lua
-    hook.Add("GetCharacterDisconnectButtonTooltip", "ExampleGetCharacterDisconnectButtonTooltip", function(...)
-        -- add custom client-side behavior
-    end)
-
-```
-
----
-
-### GetCharacterDiscordButtonTooltip
-
-#### 📋 Purpose
-Allows overriding the tooltip text for the Discord button.
-
-#### ⏰ When Called
-When the Discord button tooltip is being determined in the main menu.
-
-#### ⚙️ Parameters
-
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `client` | **Player** | The player viewing the menu. |
-| `discordURL` | **string** | The Discord server URL. |
-
-#### ↩️ Returns
-* string|nil
-Custom tooltip text, or nil to use default tooltip.
-
-#### 🌐 Realm
-Client
-
-#### 💡 Example Usage
-
-```lua
-    hook.Add("GetCharacterDiscordButtonTooltip", "ExampleGetCharacterDiscordButtonTooltip", function(...)
-        -- add custom client-side behavior
-    end)
-
-```
-
----
-
-### GetCharacterLoadButtonTooltip
-
-#### 📋 Purpose
-Allows overriding the tooltip text for the character load button.
-
-#### ⏰ When Called
-When the character load button tooltip is being determined in the main menu.
-
-#### ⚙️ Parameters
-
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `client` | **Player** | The player viewing the menu. |
-
-#### ↩️ Returns
-* string|nil
-Custom tooltip text, or nil to use default tooltip.
-
-#### 🌐 Realm
-Client
-
-#### 💡 Example Usage
-
-```lua
-    hook.Add("GetCharacterLoadButtonTooltip", "ExampleGetCharacterLoadButtonTooltip", function(...)
-        -- add custom client-side behavior
-    end)
-
-```
-
----
-
-### GetCharacterLoadMainButtonTooltip
-
-#### 📋 Purpose
-Allows overriding the tooltip text for the main character load button.
-
-#### ⏰ When Called
-When the main character load button tooltip is being determined in the main menu.
-
-#### ⚙️ Parameters
-
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `client` | **Player** | The player viewing the menu. |
-
-#### ↩️ Returns
-* string|nil
-Custom tooltip text, or nil to use default tooltip.
-
-#### 🌐 Realm
-Client
-
-#### 💡 Example Usage
-
-```lua
-    hook.Add("GetCharacterLoadMainButtonTooltip", "ExampleGetCharacterLoadMainButtonTooltip", function(...)
-        -- add custom client-side behavior
-    end)
-
-```
-
----
-
-### GetCharacterMountButtonTooltip
-
-#### 📋 Purpose
-Allows overriding the tooltip text for the character mount button.
-
-#### ⏰ When Called
-When the character mount button tooltip is being determined in the main menu.
-
-#### ⚙️ Parameters
-
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `client` | **Player** | The player viewing the menu. |
-
-#### ↩️ Returns
-* string|nil
-Custom tooltip text, or nil to use default tooltip.
-
-#### 🌐 Realm
-Client
-
-#### 💡 Example Usage
-
-```lua
-    hook.Add("GetCharacterMountButtonTooltip", "ExampleGetCharacterMountButtonTooltip", function(...)
-        -- add custom client-side behavior
-    end)
-
-```
-
----
-
-### GetCharacterReturnButtonTooltip
-
-#### 📋 Purpose
-Allows overriding the tooltip text for the character return button.
-
-#### ⏰ When Called
-When the character return button tooltip is being determined in the main menu.
-
-#### ⚙️ Parameters
-
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `client` | **Player** | The player viewing the menu. |
-
-#### ↩️ Returns
-* string|nil
-Custom tooltip text, or nil to use default tooltip.
-
-#### 🌐 Realm
-Client
-
-#### 💡 Example Usage
-
-```lua
-    hook.Add("GetCharacterReturnButtonTooltip", "ExampleGetCharacterReturnButtonTooltip", function(...)
-        -- add custom client-side behavior
-    end)
-
-```
-
----
-
-### GetCharacterStaffButtonTooltip
-
-#### 📋 Purpose
-Allows overriding the tooltip text for the staff character button.
-
-#### ⏰ When Called
-When the staff character button tooltip is being determined in the main menu.
-
-#### ⚙️ Parameters
-
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `client` | **Player** | The player viewing the menu. |
-| `hasStaffChar` | **boolean** | Whether the player has a staff character. |
-
-#### ↩️ Returns
-* string|nil
-Custom tooltip text, or nil to use default tooltip.
-
-#### 🌐 Realm
-Client
-
-#### 💡 Example Usage
-
-```lua
-    hook.Add("GetCharacterStaffButtonTooltip", "ExampleGetCharacterStaffButtonTooltip", function(...)
-        -- add custom client-side behavior
-    end)
-
-```
-
----
-
-### GetCharacterWorkshopButtonTooltip
-
-#### 📋 Purpose
-Allows overriding the tooltip text for the workshop button.
-
-#### ⏰ When Called
-When the workshop button tooltip is being determined in the main menu.
-
-#### ⚙️ Parameters
-
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `client` | **Player** | The player viewing the menu. |
-| `workshopURL` | **string** | The workshop URL. |
-
-#### ↩️ Returns
-* string|nil
-Custom tooltip text, or nil to use default tooltip.
-
-#### 🌐 Realm
-Client
-
-#### 💡 Example Usage
-
-```lua
-    hook.Add("GetCharacterWorkshopButtonTooltip", "ExampleGetCharacterWorkshopButtonTooltip", function(...)
-        -- add custom client-side behavior
-    end)
-
-```
-
----
-
-### GetAdminESPTarget
-
-#### 📋 Purpose
-Choose the entity that admin ESP should highlight.
-
-#### ⏰ When Called
-When the admin ESP overlay evaluates the current trace target.
-
-#### ⚙️ Parameters
-
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `ent` | **Entity** | Entity under the admin’s crosshair. |
-| `client` | **Player** | Admin requesting the ESP target. |
-
-#### ↩️ Returns
-* Entity|nil
-Replacement target entity, or nil to use the traced entity.
-
-#### 🌐 Realm
-Client
-
-#### 💡 Example Usage
-
-```lua
-    hook.Add("GetAdminESPTarget", "ExampleGetAdminESPTarget", function(...)
-        -- add custom client-side behavior
-    end)
-
-```
-
----
-
-### GetAdminStickLists
-
-#### 📋 Purpose
-Contribute additional tab lists for the admin stick menu.
-
-#### ⏰ When Called
-While compiling list definitions for the admin stick UI.
-
-#### ⚙️ Parameters
-
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `tgt` | **Entity** | Current admin stick target. |
-| `lists` | **table** | Table of list definitions; append your own entries. |
-
-#### ↩️ Returns
-* nil
-Modify lists in place.
-
-#### 🌐 Realm
-Client
-
-#### 💡 Example Usage
-
-```lua
-    hook.Add("GetAdminStickLists", "ExampleGetAdminStickLists", function(...)
-        -- add custom client-side behavior
-    end)
-
-```
-
----
-
-### GetDisplayedDescription
-
-#### 📋 Purpose
-Override the description text shown for a player.
-
-#### ⏰ When Called
-When building a player’s info panel for HUD or menus.
-
-#### ⚙️ Parameters
-
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `client` | **Player** | Player being described. |
-| `isHUD` | **boolean** | True when drawing the 3D HUD info; false for menus. |
-
-#### ↩️ Returns
-* string
-Description to display; return nil to use default.
-
-#### 🌐 Realm
-Client
-
-#### 💡 Example Usage
-
-```lua
-    hook.Add("GetDisplayedDescription", "ExampleGetDisplayedDescription", function(...)
-        -- add custom client-side behavior
-    end)
-
-```
-
----
-
-### GetDoorInfo
-
-#### 📋 Purpose
-Build or modify door info data before it is shown to players.
-
-#### ⏰ When Called
-When a door is targeted and info lines are generated.
-
-#### ⚙️ Parameters
-
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `entity` | **Entity** | Door entity. |
-| `doorData` | **table** | Data about owners, titles, etc. |
-| `doorInfo` | **table** | Display lines; modify to add/remove fields. |
-
-#### ↩️ Returns
-* nil
-Update doorInfo; return false to block defaults.
-
-#### 🌐 Realm
-Client
-
-#### 💡 Example Usage
-
-```lua
-    hook.Add("GetDoorInfo", "ExampleGetDoorInfo", function(...)
-        -- add custom client-side behavior
-    end)
-
-```
-
----
-
-### GetDoorInfoForAdminStick
-
-#### 📋 Purpose
-Supply extra admin-only door info shown in the admin stick UI.
-
-#### ⏰ When Called
-When the admin stick inspects a door and builds its detail view.
-
-#### ⚙️ Parameters
-
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `target` | **Entity** | Door or entity being inspected. |
-| `extraInfo` | **table** | Table of strings to display; append data here. |
-
-#### ↩️ Returns
-* nil
-Modify extraInfo.
-
-#### 🌐 Realm
-Client
-
-#### 💡 Example Usage
-
-```lua
-    hook.Add("GetDoorInfoForAdminStick", "ExampleGetDoorInfoForAdminStick", function(...)
-        -- add custom client-side behavior
-    end)
-
-```
-
----
-
-### GetInjuredText
-
-#### 📋 Purpose
-Return the localized injury descriptor and color for a player.
-
-#### ⏰ When Called
-When drawing player info overlays that show health status.
-
-#### ⚙️ Parameters
-
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `c` | **Player** | Target player. |
-
-#### ↩️ Returns
-* table
-`{text, color}` describing injury level, or nil to skip.
-
-#### 🌐 Realm
-Client
-
-#### 💡 Example Usage
-
-```lua
-    hook.Add("GetInjuredText", "ExampleGetInjuredText", function(...)
-        -- add custom client-side behavior
-    end)
-
-```
-
----
-
-### GetMainCharacterID
-
-#### 📋 Purpose
-Decide which character ID should be treated as the “main” one for menus.
-
-#### ⏰ When Called
-Before selecting or loading the default character in the main menu.
-
-#### ↩️ Returns
-* number
-Character ID to treat as primary, or nil for default logic.
-
-#### 🌐 Realm
-Client
-
-#### 💡 Example Usage
-
-```lua
-    hook.Add("GetMainCharacterID", "ExampleGetMainCharacterID", function(...)
-        -- add custom client-side behavior
-    end)
-
-```
-
----
-
-### GetMainMenuPosition
-
-#### 📋 Purpose
-Provide camera position/angles for the 3D main menu scene.
-
-#### ⏰ When Called
-Each time the main menu loads and needs a camera transform.
-
-#### ⚙️ Parameters
-
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `character` | **Character** | Character to base the position on. |
-
-#### ↩️ Returns
-* Vector, Angle
-Position and angle to use; return nils to use defaults.
-
-#### 🌐 Realm
-Client
-
-#### 💡 Example Usage
-
-```lua
-    hook.Add("GetMainMenuPosition", "ExampleGetMainMenuPosition", function(...)
-        -- add custom client-side behavior
-    end)
-
-```
-
----
-
-### InteractionMenuClosed
-
-#### 📋 Purpose
-Handle logic when the interaction menu (context quick menu) closes.
-
-#### ⏰ When Called
-Right after the interaction menu panel is removed.
-
-#### ↩️ Returns
-* nil
-Run cleanup logic.
-
-#### 🌐 Realm
-Client
-
-#### 💡 Example Usage
-
-```lua
-    hook.Add("InteractionMenuClosed", "ExampleInteractionMenuClosed", function(...)
-        -- add custom client-side behavior
-    end)
-
-```
-
----
-
-### InteractionMenuOpened
-
-#### 📋 Purpose
-Set up the interaction menu when it is created.
-
-#### ⏰ When Called
-Immediately after the interaction menu frame is instantiated.
-
-#### ⚙️ Parameters
-
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `frame` | **Panel** | The interaction menu frame. |
-
-#### ↩️ Returns
-* nil
-Customize the frame as needed.
-
-#### 🌐 Realm
-Client
-
-#### 💡 Example Usage
-
-```lua
-    hook.Add("InteractionMenuOpened", "ExampleInteractionMenuOpened", function(...)
-        -- add custom client-side behavior
-    end)
-
-```
-
----
-
-### InterceptClickItemIcon
-
-#### 📋 Purpose
-Intercept mouse/keyboard clicks on an inventory item icon.
-
-#### ⏰ When Called
-Whenever an inventory icon receives an input event.
-
-#### ⚙️ Parameters
-
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `inventoryPanel` | **Panel** | Panel hosting the inventory grid. |
-| `itemIcon` | **Panel** | Icon that was clicked. |
-| `keyCode` | **number** | Mouse or keyboard code that triggered the event. |
-
-#### ↩️ Returns
-* boolean
-true to consume the click and prevent default behavior.
-
-#### 🌐 Realm
-Client
-
-#### 💡 Example Usage
-
-```lua
-    hook.Add("InterceptClickItemIcon", "ExampleInterceptClickItemIcon", function(...)
-        -- add custom client-side behavior
-    end)
-
-```
-
----
-
-### InventoryClosed
-
-#### 📋 Purpose
-React when an inventory window is closed.
-
-#### ⏰ When Called
-Immediately after an inventory panel is removed.
-
-#### ⚙️ Parameters
-
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `inventoryPanel` | **Panel** | The panel that was closed. |
-| `inventory` | **Inventory** | Inventory instance tied to the panel. |
-
-#### ↩️ Returns
-* nil
-Cleanup or save state.
-
-#### 🌐 Realm
-Client
-
-#### 💡 Example Usage
-
-```lua
-    hook.Add("InventoryClosed", "ExampleInventoryClosed", function(...)
-        -- add custom client-side behavior
-    end)
-
-```
-
----
-
-### InventoryItemDataChanged
-
-#### 📋 Purpose
-Respond to item data changes that arrive on the client.
-
-#### ⏰ When Called
-After an item’s data table updates (networked from the server).
-
-#### ⚙️ Parameters
-
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `item` | **Item** | The item that changed. |
-| `key` | **string** | Data key that changed. |
-| `oldValue` | **any** | Previous value. |
-| `newValue` | **any** | New value. |
-| `inventory` | **Inventory** | Inventory containing the item. |
-
-#### ↩️ Returns
-* nil
-Refresh UI or derived state.
-
-#### 🌐 Realm
-Client
-
-#### 💡 Example Usage
-
-```lua
-    hook.Add("InventoryItemDataChanged", "ExampleInventoryItemDataChanged", function(...)
-        -- add custom client-side behavior
-    end)
-
-```
-
----
-
-### InventoryItemIconCreated
-
-#### 📋 Purpose
-Customize an inventory item icon immediately after it is created.
-
-#### ⏰ When Called
-When a new icon panel is spawned for an item.
-
-#### ⚙️ Parameters
-
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `icon` | **Panel** | Icon panel. |
-| `item` | **Item** | Item represented by the icon. |
-| `inventoryPanel` | **Panel** | Parent inventory panel. |
-
-#### ↩️ Returns
-* nil
-Apply visual tweaks.
-
-#### 🌐 Realm
-Client
-
-#### 💡 Example Usage
-
-```lua
-    hook.Add("InventoryItemIconCreated", "ExampleInventoryItemIconCreated", function(...)
-        -- add custom client-side behavior
-    end)
-
-```
-
----
-
-### InventoryOpened
-
-#### 📋 Purpose
-Handle logic after an inventory panel is opened.
-
-#### ⏰ When Called
-When an inventory is displayed on screen.
-
-#### ⚙️ Parameters
-
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `panel` | **Panel** | Inventory panel. |
-| `inventory` | **Inventory** | Inventory instance. |
-
-#### ↩️ Returns
-* nil
-Perform additional setup.
-
-#### 🌐 Realm
-Client
-
-#### 💡 Example Usage
-
-```lua
-    hook.Add("InventoryOpened", "ExampleInventoryOpened", function(...)
-        -- add custom client-side behavior
-    end)
-
-```
-
----
-
-### InventoryPanelCreated
-
-#### 📋 Purpose
-Customize the inventory panel when it is created.
-
-#### ⏰ When Called
-Immediately after constructing a panel for an inventory.
-
-#### ⚙️ Parameters
-
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `panel` | **Panel** | The new inventory panel. |
-| `inventory` | **Inventory** | Inventory the panel represents. |
-| `parent` | **Panel** | Parent container. |
-
-#### ↩️ Returns
-* nil
-Adjust layout or styling.
-
-#### 🌐 Realm
-Client
-
-#### 💡 Example Usage
-
-```lua
-    hook.Add("InventoryPanelCreated", "ExampleInventoryPanelCreated", function(...)
-        -- add custom client-side behavior
-    end)
-
-```
-
----
-
-### ItemDraggedOutOfInventory
-
-#### 📋 Purpose
-Handle dragging an item outside of an inventory grid.
-
-#### ⏰ When Called
-When an item is released outside valid slots.
-
-#### ⚙️ Parameters
-
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `client` | **Player** | Local player performing the drag. |
-| `item` | **Item** | Item being dragged. |
-
-#### ↩️ Returns
-* nil
-Decide what to do (drop, cancel, etc.).
-
-#### 🌐 Realm
-Client
-
-#### 💡 Example Usage
-
-```lua
-    hook.Add("ItemDraggedOutOfInventory", "ExampleItemDraggedOutOfInventory", function(...)
-        -- add custom client-side behavior
-    end)
-
-```
-
----
-
-### ItemPaintOver
-
-#### 📋 Purpose
-Draw overlays on an item’s icon (e.g., status markers).
-
-#### ⏰ When Called
-During icon paint for each inventory slot.
-
-#### ⚙️ Parameters
-
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `itemIcon` | **Panel** | Icon panel being drawn. |
-| `itemTable` | **Item** | Item represented. |
-| `w` | **number** | Icon width. |
-| `h` | **number** | Icon height. |
-
-#### ↩️ Returns
-* nil
-Perform custom painting.
-
-#### 🌐 Realm
-Client
-
-#### 💡 Example Usage
-
-```lua
-    hook.Add("ItemPaintOver", "ExampleItemPaintOver", function(...)
-        -- add custom client-side behavior
-    end)
-
-```
-
 ---
-
-### ItemShowEntityMenu
-
-#### 📋 Purpose
-Show a context menu for a world item entity.
-
-#### ⏰ When Called
-When the use key/menu key is pressed on a dropped item with actions.
-
-#### ⚙️ Parameters
-
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `entity` | **Entity** | Item entity in the world. |
 
-#### ↩️ Returns
-* nil
-Build and display the menu; return false to block default.
+<details class="realm-client">
+<summary><a id=CanPlayerViewInventory></a>CanPlayerViewInventory()</summary>
+<a id="canplayerviewinventory"></a>
+<p>Determine if the local player can open their inventory UI.</p>
+<p>Before spawning any inventory window.</p>
+<p><h3>Returns:</h3>
+<span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.2">boolean</a></span> false to stop the inventory from opening; nil/true to allow.</p>
 
-#### 🌐 Realm
-Client
-
-#### 💡 Example Usage
-
-```lua
-    hook.Add("ItemShowEntityMenu", "ExampleItemShowEntityMenu", function(...)
+<h3>Example Usage:</h3>
+<pre><code class="language-lua">    hook.Add("CanPlayerViewInventory", "ExampleCanPlayerViewInventory", function(...)
         -- add custom client-side behavior
     end)
+</code></pre>
+</details>
 
-```
-
 ---
-
-### LoadCharInformation
-
-#### 📋 Purpose
-Seed the character information sections for the F1 menu.
-
-#### ⏰ When Called
-When the character info is about to be populated.
-
-#### ↩️ Returns
-* nil
-Add sections/fields via AddSection/AddTextField hooks.
-
-#### 🌐 Realm
-Client
 
-#### 💡 Example Usage
+<details class="realm-client">
+<summary><a id=CharListColumns></a>CharListColumns(columns)</summary>
+<a id="charlistcolumns"></a>
+<p>Add or adjust columns in the character list panel.</p>
+<p>Right before the character selection table is rendered.</p>
+<p><h3>Parameters:</h3>
+<span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.5">table</a></span> <span class="parameter">columns</span> Table of column definitions; modify in place to add/remove columns.</p>
 
-```lua
-    hook.Add("LoadCharInformation", "ExampleLoadCharInformation", function(...)
+<h3>Example Usage:</h3>
+<pre><code class="language-lua">    hook.Add("CharListColumns", "ExampleCharListColumns", function(...)
         -- add custom client-side behavior
     end)
+</code></pre>
+</details>
 
-```
-
 ---
-
-### LoadMainCharacter
-
-#### 📋 Purpose
-Select and load the player’s main character when the menu opens.
-
-#### ⏰ When Called
-During main menu initialization if a saved main character exists.
 
-#### ↩️ Returns
-* nil
-Trigger loading routines.
+<details class="realm-client">
+<summary><a id=CharListEntry></a>CharListEntry(entry, row)</summary>
+<a id="charlistentry"></a>
+<p>Modify how each character entry renders in the character list.</p>
+<p>For every row when the character list is constructed.</p>
+<p><h3>Parameters:</h3>
+<span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.5">table</a></span> <span class="parameter">entry</span> Data for the character (id, name, faction, etc.).</p>
+<p><span class="types"><a class="type" href="https://wiki.facepunch.com/gmod/Panel">Panel</a></span> <span class="parameter">row</span> The row panel being built.</p>
 
-#### 🌐 Realm
-Client
-
-#### 💡 Example Usage
-
-```lua
-    hook.Add("LoadMainCharacter", "ExampleLoadMainCharacter", function(...)
+<h3>Example Usage:</h3>
+<pre><code class="language-lua">    hook.Add("CharListEntry", "ExampleCharListEntry", function(...)
         -- add custom client-side behavior
     end)
+</code></pre>
+</details>
 
-```
-
 ---
-
-### LoadMainMenuInformation
 
-#### 📋 Purpose
-Populate informational text and preview for the main menu character card.
+<details class="realm-client">
+<summary><a id=CharListLoaded></a>CharListLoaded(newCharList)</summary>
+<a id="charlistloaded"></a>
+<p>Seed character info sections and fields after the client receives the character list.</p>
+<p>Once the client finishes downloading the character list from the server.</p>
+<p><h3>Parameters:</h3>
+<span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.5">table</a></span> <span class="parameter">newCharList</span> Array of character summaries.</p>
 
-#### ⏰ When Called
-When the main menu needs to show summary info for a character.
-
-#### ⚙️ Parameters
-
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `info` | **table** | Table to fill with display fields. |
-| `character` | **Character** | Character being previewed. |
-
-#### ↩️ Returns
-* nil
-Mutate the info table.
-
-#### 🌐 Realm
-Client
-
-#### 💡 Example Usage
-
-```lua
-    hook.Add("LoadMainMenuInformation", "ExampleLoadMainMenuInformation", function(...)
+<h3>Example Usage:</h3>
+<pre><code class="language-lua">    hook.Add("CharListLoaded", "ExampleCharListLoaded", function(...)
         -- add custom client-side behavior
     end)
+</code></pre>
+</details>
 
-```
-
 ---
-
-### ModifyScoreboardModel
 
-#### 📋 Purpose
-Adjust the 3D model used in the scoreboard (pose, skin, etc.).
+<details class="realm-client">
+<summary><a id=CharListUpdated></a>CharListUpdated(oldCharList, newCharList)</summary>
+<a id="charlistupdated"></a>
+<p>React to changes between the old and new character lists.</p>
+<p>After the server sends an updated character list (e.g., after delete/create).</p>
+<p><h3>Parameters:</h3>
+<span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.5">table</a></span> <span class="parameter">oldCharList</span> Previous list snapshot.</p>
+<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.5">table</a></span> <span class="parameter">newCharList</span> Updated list snapshot.</p>
 
-#### ⏰ When Called
-When a scoreboard slot builds its player model preview.
-
-#### ⚙️ Parameters
-
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `arg1` | **Panel** | Model panel or data table for the slot. |
-| `ply` | **Player** | Player represented by the slot. |
-
-#### ↩️ Returns
-* nil
-Apply modifications directly.
-
-#### 🌐 Realm
-Client
-
-#### 💡 Example Usage
-
-```lua
-    hook.Add("ModifyScoreboardModel", "ExampleModifyScoreboardModel", function(...)
+<h3>Example Usage:</h3>
+<pre><code class="language-lua">    hook.Add("CharListUpdated", "ExampleCharListUpdated", function(...)
         -- add custom client-side behavior
     end)
+</code></pre>
+</details>
 
-```
-
 ---
-
-### ModifyVoiceIndicatorText
 
-#### 📋 Purpose
-Override the string shown in the voice indicator HUD.
+<details class="realm-client">
+<summary><a id=CharLoaded></a>CharLoaded(character)</summary>
+<a id="charloaded"></a>
+<p>Handle local initialization once a character has fully loaded on the client.</p>
+<p>After the server confirms the character load and sets netvars.</p>
+<p><h3>Parameters:</h3>
+<span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#2.2">Character|number</a></span> <span class="parameter">character</span> Character object or id that was loaded.</p>
 
-#### ⏰ When Called
-Each frame the local player is speaking.
-
-#### ⚙️ Parameters
-
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `client` | **Player** | Speaking player (local). |
-| `voiceText` | **string** | Default text to display. |
-| `voiceType` | **string** | Current voice range (“whispering”, “talking”, “yelling”). |
-
-#### ↩️ Returns
-* string
-Replacement text; return nil to keep default.
-
-#### 🌐 Realm
-Client
-
-#### 💡 Example Usage
-
-```lua
-    hook.Add("ModifyVoiceIndicatorText", "ExampleModifyVoiceIndicatorText", function(...)
+<h3>Example Usage:</h3>
+<pre><code class="language-lua">    hook.Add("CharLoaded", "ExampleCharLoaded", function(...)
         -- add custom client-side behavior
     end)
+</code></pre>
+</details>
 
-```
-
 ---
-
-### DrawPlayerInfoBackground
 
-#### 📋 Purpose
-Draw the background panel behind player info overlays.
-
-#### ⏰ When Called
-Just before drawing wrapped player info text in the HUD.
-
-#### ↩️ Returns
-* boolean
-Return false to suppress the default blurred background.
-
-#### 🌐 Realm
-Client
-
-#### 💡 Example Usage
-
-```lua
-    hook.Add("DrawPlayerInfoBackground", "ExampleDrawPlayerInfoBackground", function(...)
+<details class="realm-client">
+<summary><a id=CharMenuClosed></a>CharMenuClosed()</summary>
+<a id="charmenuclosed"></a>
+<p>Cleanup or state changes when the character menu is closed.</p>
+<p>Right after the character menu panel is removed.</p>
+<h3>Example Usage:</h3>
+<pre><code class="language-lua">    hook.Add("CharMenuClosed", "ExampleCharMenuClosed", function(...)
         -- add custom client-side behavior
     end)
-
-```
+</code></pre>
+</details>
 
 ---
-
-### OnAdminStickMenuClosed
-
-#### 📋 Purpose
-Handle state cleanup when the admin stick menu closes.
 
-#### ⏰ When Called
-When the admin stick UI window is removed.
+<details class="realm-client">
+<summary><a id=CharMenuOpened></a>CharMenuOpened(charMenu)</summary>
+<a id="charmenuopened"></a>
+<p>Perform setup each time the character menu is opened.</p>
+<p>Immediately after constructing the character menu panel.</p>
+<p><h3>Parameters:</h3>
+<span class="types"><a class="type" href="https://wiki.facepunch.com/gmod/Panel">Panel</a></span> <span class="parameter">charMenu</span> The created menu panel.</p>
 
-#### ↩️ Returns
-* nil
-Clear cached targets or flags.
-
-#### 🌐 Realm
-Client
-
-#### 💡 Example Usage
-
-```lua
-    hook.Add("OnAdminStickMenuClosed", "ExampleOnAdminStickMenuClosed", function(...)
+<h3>Example Usage:</h3>
+<pre><code class="language-lua">    hook.Add("CharMenuOpened", "ExampleCharMenuOpened", function(...)
         -- add custom client-side behavior
     end)
-
-```
+</code></pre>
+</details>
 
 ---
-
-### OnChatReceived
-
-#### 📋 Purpose
-React to chat messages received by the local client.
-
-#### ⏰ When Called
-After a chat message is parsed and before it is displayed.
-
-#### ⚙️ Parameters
 
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `client` | **Player** | Sender of the message. |
-| `chatType` | **string** | Chat channel identifier. |
-| `text` | **string** | Message content. |
-| `anonymous` | **boolean** | Whether the message should hide the sender. |
+<details class="realm-client">
+<summary><a id=CharRestored></a>CharRestored(character)</summary>
+<a id="charrestored"></a>
+<p>Handle client-side work after a character is restored from deletion.</p>
+<p>When the server finishes restoring a deleted character.</p>
+<p><h3>Parameters:</h3>
+<span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#2.2">Character|number</a></span> <span class="parameter">character</span> The restored character object or id.</p>
 
-#### ↩️ Returns
-* nil
-Return false to suppress default handling.
-
-#### 🌐 Realm
-Client
-
-#### 💡 Example Usage
-
-```lua
-    hook.Add("OnChatReceived", "ExampleOnChatReceived", function(...)
+<h3>Example Usage:</h3>
+<pre><code class="language-lua">    hook.Add("CharRestored", "ExampleCharRestored", function(...)
         -- add custom client-side behavior
     end)
-
-```
+</code></pre>
+</details>
 
 ---
-
-### OnCreateDualInventoryPanels
-
-#### 📋 Purpose
-Customize paired inventory panels when two inventories are shown side by side.
-
-#### ⏰ When Called
-Right after both inventory panels are created (e.g., player + storage).
-
-#### ⚙️ Parameters
 
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `panel1` | **Panel** | First inventory panel. |
-| `panel2` | **Panel** | Second inventory panel. |
-| `inventory1` | **Inventory** | Inventory bound to panel1. |
-| `inventory2` | **Inventory** | Inventory bound to panel2. |
+<details class="realm-client">
+<summary><a id=ChatAddText></a>ChatAddText(text)</summary>
+<a id="chataddtext"></a>
+<p>Override how chat text is appended to the chat box.</p>
+<p>Whenever chat text is about to be printed locally.</p>
+<p><h3>Parameters:</h3>
+<span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#2.2">any</a></span> <span class="parameter">text</span> First argument passed to chat.AddText.</p>
 
-#### ↩️ Returns
-* nil
-Adjust layout or behavior.
-
-#### 🌐 Realm
-Client
-
-#### 💡 Example Usage
-
-```lua
-    hook.Add("OnCreateDualInventoryPanels", "ExampleOnCreateDualInventoryPanels", function(...)
+<h3>Example Usage:</h3>
+<pre><code class="language-lua">    hook.Add("ChatAddText", "ExampleChatAddText", function(...)
         -- add custom client-side behavior
     end)
-
-```
+</code></pre>
+</details>
 
 ---
-
-### OnCreateItemInteractionMenu
-
-#### 📋 Purpose
-Augment the context menu shown when right-clicking an inventory item icon.
-
-#### ⏰ When Called
-Immediately after the interaction menu for an item icon is built.
-
-#### ⚙️ Parameters
 
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `itemIcon` | **Panel** | The icon being interacted with. |
-| `menu` | **Panel** | The context menu object. |
-| `itemTable` | **Item** | Item associated with the icon. |
+<details class="realm-client">
+<summary><a id=ChatboxPanelCreated></a>ChatboxPanelCreated(arg1)</summary>
+<a id="chatboxpanelcreated"></a>
+<p>Adjust the chatbox panel right after it is created.</p>
+<p>Once the chat UI instance is built client-side.</p>
+<p><h3>Parameters:</h3>
+<span class="types"><a class="type" href="https://wiki.facepunch.com/gmod/Panel">Panel</a></span> <span class="parameter">arg1</span> The chatbox panel instance.</p>
 
-#### ↩️ Returns
-* nil
-Add menu options or return false to cancel.
-
-#### 🌐 Realm
-Client
-
-#### 💡 Example Usage
-
-```lua
-    hook.Add("OnCreateItemInteractionMenu", "ExampleOnCreateItemInteractionMenu", function(...)
+<h3>Example Usage:</h3>
+<pre><code class="language-lua">    hook.Add("ChatboxPanelCreated", "ExampleChatboxPanelCreated", function(...)
         -- add custom client-side behavior
     end)
-
-```
+</code></pre>
+</details>
 
 ---
-
-### OnCreateStoragePanel
-
-#### 📋 Purpose
-Customize the dual-inventory storage panel layout.
-
-#### ⏰ When Called
-After the local and storage inventory panels are created for a storage entity.
-
-#### ⚙️ Parameters
 
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `localInvPanel` | **Panel** | Panel showing the player inventory. |
-| `storageInvPanel` | **Panel** | Panel showing the storage inventory. |
-| `storage` | **Entity|table** | Storage object or entity. |
+<details class="realm-client">
+<summary><a id=ChatboxTextAdded></a>ChatboxTextAdded(arg1)</summary>
+<a id="chatboxtextadded"></a>
+<p>Intercept a newly added chat line before it renders in the chatbox.</p>
+<p>After chat text is parsed but before it is drawn in the panel.</p>
+<p><h3>Parameters:</h3>
+<span class="types"><a class="type" href="https://wiki.facepunch.com/gmod/Panel">Panel</a></span> <span class="parameter">arg1</span> Chat panel or message object being added.</p>
 
-#### ↩️ Returns
-* nil
-Adjust panels; return false to block defaults.
-
-#### 🌐 Realm
-Client
-
-#### 💡 Example Usage
-
-```lua
-    hook.Add("OnCreateStoragePanel", "ExampleOnCreateStoragePanel", function(...)
+<h3>Example Usage:</h3>
+<pre><code class="language-lua">    hook.Add("ChatboxTextAdded", "ExampleChatboxTextAdded", function(...)
         -- add custom client-side behavior
     end)
-
-```
+</code></pre>
+</details>
 
 ---
-
-### OnLocalVarSet
-
-#### 📋 Purpose
-React to a local networked variable being set.
-
-#### ⏰ When Called
-Whenever a net var assigned to the local player changes.
-
-#### ⚙️ Parameters
 
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `key` | **string** | Variable name. |
-| `value` | **any** | New value. |
+<details class="realm-client">
+<summary><a id=ChooseCharacter></a>ChooseCharacter(id)</summary>
+<a id="choosecharacter"></a>
+<p>Respond to character selection from the list.</p>
+<p>When a user clicks the play button on a character slot.</p>
+<p><h3>Parameters:</h3>
+<span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.3">number</a></span> <span class="parameter">id</span> The selected character’s id.</p>
 
-#### ↩️ Returns
-* nil
-Update client state or UI.
-
-#### 🌐 Realm
-Client
-
-#### 💡 Example Usage
-
-```lua
-    hook.Add("OnLocalVarSet", "ExampleOnLocalVarSet", function(...)
+<h3>Example Usage:</h3>
+<pre><code class="language-lua">    hook.Add("ChooseCharacter", "ExampleChooseCharacter", function(...)
         -- add custom client-side behavior
     end)
-
-```
+</code></pre>
+</details>
 
 ---
-
-### OnOpenVendorMenu
-
-#### 📋 Purpose
-Populate the vendor UI when it opens.
-
-#### ⏰ When Called
-After the vendor panel is created client-side.
-
-#### ⚙️ Parameters
 
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `vendorPanel` | **Panel** | Panel used to display vendor goods. |
-| `vendor` | **Entity** | Vendor entity interacted with. |
+<details class="realm-client">
+<summary><a id=CommandRan></a>CommandRan(client, command, arg3, results)</summary>
+<a id="commandran"></a>
+<p>React after a command finishes executing client-side.</p>
+<p>Immediately after a console/chat command is processed on the client.</p>
+<p><h3>Parameters:</h3>
+<span class="types"><a class="type" href="https://wiki.facepunch.com/gmod/Player">Player</a></span> <span class="parameter">client</span> Player who ran the command.</p>
+<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a></span> <span class="parameter">command</span> Command name.</p>
+<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.5">table|string</a></span> <span class="parameter">arg3</span> Arguments or raw text passed.</p>
+<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#2.2">any</a></span> <span class="parameter">results</span> Return data from the command handler, if any.</p>
 
-#### ↩️ Returns
-* nil
-Modify the panel contents.
-
-#### 🌐 Realm
-Client
-
-#### 💡 Example Usage
-
-```lua
-    hook.Add("OnOpenVendorMenu", "ExampleOnOpenVendorMenu", function(...)
+<h3>Example Usage:</h3>
+<pre><code class="language-lua">    hook.Add("CommandRan", "ExampleCommandRan", function(...)
         -- add custom client-side behavior
     end)
-
-```
+</code></pre>
+</details>
 
 ---
-
-### OnlineStaffDataReceived
-
-#### 📋 Purpose
-Handle the list of online staff received from the server.
-
-#### ⏰ When Called
-When staff data is synchronized to the client.
-
-#### ⚙️ Parameters
 
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `staffData` | **table** | Array of staff entries (name, steamID, duty status). |
+<details class="realm-client">
+<summary><a id=ConfigureCharacterCreationSteps></a>ConfigureCharacterCreationSteps(creationPanel)</summary>
+<a id="configurecharactercreationsteps"></a>
+<p>Reorder or add steps to the character creation wizard.</p>
+<p>When the creation UI is building its step list.</p>
+<p><h3>Parameters:</h3>
+<span class="types"><a class="type" href="https://wiki.facepunch.com/gmod/Panel">Panel</a></span> <span class="parameter">creationPanel</span> The root creation panel containing step definitions.</p>
 
-#### ↩️ Returns
-* nil
-Update displays such as admin stick lists.
-
-#### 🌐 Realm
-Client
-
-#### 💡 Example Usage
-
-```lua
-    hook.Add("OnlineStaffDataReceived", "ExampleOnlineStaffDataReceived", function(...)
+<h3>Example Usage:</h3>
+<pre><code class="language-lua">    hook.Add("ConfigureCharacterCreationSteps", "ExampleConfigureCharacterCreationSteps", function(...)
         -- add custom client-side behavior
     end)
-
-```
+</code></pre>
+</details>
 
 ---
-
-### OpenAdminStickUI
-
-#### 📋 Purpose
-Open the admin stick interface for a target entity or player.
-
-#### ⏰ When Called
-When the admin stick weapon requests to show its UI.
-
-#### ⚙️ Parameters
 
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `tgt` | **Entity** | Target entity/player selected by the admin stick. |
+<details class="realm-client">
+<summary><a id=CreateCharacter></a>CreateCharacter(data)</summary>
+<a id="createcharacter"></a>
+<p>Validate or mutate character data immediately before it is submitted to the server.</p>
+<p>When the user presses the final create/submit button.</p>
+<p><h3>Parameters:</h3>
+<span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.5">table</a></span> <span class="parameter">data</span> Character creation payload (name, model, faction, etc.).</p>
 
-#### ↩️ Returns
-* nil
-Create the UI; return false to cancel.
+<p><h3>Returns:</h3>
+<span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.2">boolean</a></span> false to abort submission; nil/true to continue.</p>
 
-#### 🌐 Realm
-Client
-
-#### 💡 Example Usage
-
-```lua
-    hook.Add("OpenAdminStickUI", "ExampleOpenAdminStickUI", function(...)
+<h3>Example Usage:</h3>
+<pre><code class="language-lua">    hook.Add("CreateCharacter", "ExampleCreateCharacter", function(...)
         -- add custom client-side behavior
     end)
+</code></pre>
+</details>
 
-```
-
 ---
-
-### PaintItem
-
-#### 📋 Purpose
-Draw or tint an item icon before it is painted to the grid.
-
-#### ⏰ When Called
-Prior to rendering each item icon surface.
-
-#### ⚙️ Parameters
-
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `item` | **Item** | Item being drawn. |
 
-#### ↩️ Returns
-* nil
-Perform custom painting.
-
-#### 🌐 Realm
-Client
-
-#### 💡 Example Usage
-
-```lua
-    hook.Add("PaintItem", "ExamplePaintItem", function(...)
+<details class="realm-client">
+<summary><a id=CreateChatboxPanel></a>CreateChatboxPanel()</summary>
+<a id="createchatboxpanel"></a>
+<p>Called when the chatbox panel needs to be created or recreated.</p>
+<p>When the chatbox module initializes, when the chatbox panel is closed and needs to be reopened, or when certain chat-related events occur.</p>
+<h3>Example Usage:</h3>
+<pre><code class="language-lua">    hook.Add("CreateChatboxPanel", "ExampleCreateChatboxPanel", function(...)
         -- add custom client-side behavior
     end)
-
-```
+</code></pre>
+</details>
 
 ---
-
-### PopulateAdminStick
-
-#### 📋 Purpose
-Add tabs and actions to the admin stick UI.
-
-#### ⏰ When Called
-While constructing the admin stick menu for the current target.
-
-#### ⚙️ Parameters
 
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `currentMenu` | **Panel** | Root menu panel. |
-| `currentTarget` | **Entity** | Entity being acted upon. |
-| `currentStores` | **table** | Cached admin stick data (lists, categories). |
+<details class="realm-client">
+<summary><a id=CreateDefaultInventory></a>CreateDefaultInventory(character)</summary>
+<a id="createdefaultinventory"></a>
+<p>Choose what inventory implementation to instantiate for a newly created character.</p>
+<p>After the client finishes character creation but before the inventory is built.</p>
+<p><h3>Parameters:</h3>
+<span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#2.2">Character</a></span> <span class="parameter">character</span> The character being initialized.</p>
 
-#### ↩️ Returns
-* nil
-Populate menu sections.
+<p><h3>Returns:</h3>
+<span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a></span> Inventory type id to create (e.g., “GridInv”).</p>
 
-#### 🌐 Realm
-Client
-
-#### 💡 Example Usage
-
-```lua
-    hook.Add("PopulateAdminStick", "ExamplePopulateAdminStick", function(...)
+<h3>Example Usage:</h3>
+<pre><code class="language-lua">    hook.Add("CreateDefaultInventory", "ExampleCreateDefaultInventory", function(...)
         -- add custom client-side behavior
     end)
+</code></pre>
+</details>
 
-```
-
 ---
-
-### PopulateAdminTabs
-
-#### 📋 Purpose
-Register admin tabs for the F1 administration menu.
-
-#### ⏰ When Called
-When building the admin tab list.
-
-#### ⚙️ Parameters
-
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `pages` | **table** | Table to append tab definitions `{name, icon, build=function}`. |
 
-#### ↩️ Returns
-* nil
-Add or reorder tabs.
+<details class="realm-client">
+<summary><a id=CreateInformationButtons></a>CreateInformationButtons(pages)</summary>
+<a id="createinformationbuttons"></a>
+<p>Populate the list of buttons for the Information tab in the F1 menu.</p>
+<p>When the Information tab is created and ready to collect pages.</p>
+<p><h3>Parameters:</h3>
+<span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.5">table</a></span> <span class="parameter">pages</span> Table of page descriptors; insert entries with name/icon/build function.</p>
 
-#### 🌐 Realm
-Client
-
-#### 💡 Example Usage
-
-```lua
-    hook.Add("PopulateAdminTabs", "ExamplePopulateAdminTabs", function(...)
+<h3>Example Usage:</h3>
+<pre><code class="language-lua">    hook.Add("CreateInformationButtons", "ExampleCreateInformationButtons", function(...)
         -- add custom client-side behavior
     end)
+</code></pre>
+</details>
 
-```
-
 ---
-
-### PopulateConfigurationButtons
-
-#### 📋 Purpose
-Add configuration buttons for the options/configuration tab.
-
-#### ⏰ When Called
-When creating the configuration pages in the menu.
-
-#### ⚙️ Parameters
-
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `pages` | **table** | Collection of page descriptors to populate. |
 
-#### ↩️ Returns
-* nil
-Insert new pages/buttons.
+<details class="realm-client">
+<summary><a id=CreateInventoryPanel></a>CreateInventoryPanel(inventory, parent)</summary>
+<a id="createinventorypanel"></a>
+<p>Build the root panel used for displaying an inventory instance.</p>
+<p>Each time an inventory needs a panel representation.</p>
+<p><h3>Parameters:</h3>
+<span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#2.2">Inventory</a></span> <span class="parameter">inventory</span> Inventory object to show.</p>
+<p><span class="types"><a class="type" href="https://wiki.facepunch.com/gmod/Panel">Panel</a></span> <span class="parameter">parent</span> Parent UI element the panel should attach to.</p>
 
-#### 🌐 Realm
-Client
+<p><h3>Returns:</h3>
+<span class="types"><a class="type" href="https://wiki.facepunch.com/gmod/Panel">Panel</a></span> The created inventory panel.</p>
 
-#### 💡 Example Usage
-
-```lua
-    hook.Add("PopulateConfigurationButtons", "ExamplePopulateConfigurationButtons", function(...)
+<h3>Example Usage:</h3>
+<pre><code class="language-lua">    hook.Add("CreateInventoryPanel", "ExampleCreateInventoryPanel", function(...)
         -- add custom client-side behavior
     end)
-
-```
+</code></pre>
+</details>
 
 ---
-
-### PopulateInventoryItems
-
-#### 📋 Purpose
-Populate the inventory items tree used in the admin menu.
-
-#### ⏰ When Called
-When the inventory item browser is built.
-
-#### ⚙️ Parameters
-
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `pnlContent` | **Panel** | Content panel to fill. |
-| `tree` | **Panel** | Tree/list control to populate. |
-
-#### ↩️ Returns
-* nil
-Add nodes representing items.
 
-#### 🌐 Realm
-Client
+<details class="realm-client">
+<summary><a id=CreateMenuButtons></a>CreateMenuButtons(tabs)</summary>
+<a id="createmenubuttons"></a>
+<p>Register custom tabs for the F1 menu.</p>
+<p>When the F1 menu initializes its tab definitions.</p>
+<p><h3>Parameters:</h3>
+<span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.5">table</a></span> <span class="parameter">tabs</span> Table of tab constructors keyed by tab id; add new entries to inject tabs.</p>
 
-#### 💡 Example Usage
-
-```lua
-    hook.Add("PopulateInventoryItems", "ExamplePopulateInventoryItems", function(...)
+<h3>Example Usage:</h3>
+<pre><code class="language-lua">    hook.Add("CreateMenuButtons", "ExampleCreateMenuButtons", function(...)
         -- add custom client-side behavior
     end)
-
-```
+</code></pre>
+</details>
 
 ---
-
-### PostDrawInventory
-
-#### 📋 Purpose
-Draw additional UI after the main inventory panels are painted.
-
-#### ⏰ When Called
-After inventory drawing completes.
-
-#### ⚙️ Parameters
-
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `mainPanel` | **Panel** | Primary inventory panel. |
-| `parentPanel` | **Panel** | Parent container. |
-
-#### ↩️ Returns
-* nil
-Overlay custom elements.
 
-#### 🌐 Realm
-Client
+<details class="realm-client">
+<summary><a id=DeleteCharacter></a>DeleteCharacter(id)</summary>
+<a id="deletecharacter"></a>
+<p>Handle client-side removal of a character slot.</p>
+<p>After a deletion request succeeds.</p>
+<p><h3>Parameters:</h3>
+<span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.3">number</a></span> <span class="parameter">id</span> ID of the character that was removed.</p>
 
-#### 💡 Example Usage
-
-```lua
-    hook.Add("PostDrawInventory", "ExamplePostDrawInventory", function(...)
+<h3>Example Usage:</h3>
+<pre><code class="language-lua">    hook.Add("DeleteCharacter", "ExampleDeleteCharacter", function(...)
         -- add custom client-side behavior
     end)
-
-```
+</code></pre>
+</details>
 
 ---
-
-### PostLoadFonts
-
-#### 📋 Purpose
-Adjust fonts after they are loaded.
-
-#### ⏰ When Called
-Immediately after main fonts are initialized.
-
-#### ⚙️ Parameters
-
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `mainFont` | **string** | Primary font name (duplicate parameter kept for API compatibility). |
-| `mainFont` | **string** | Alias of the same font name. |
-
-#### ↩️ Returns
-* nil
-Rebuild derived fonts or sizes.
 
-#### 🌐 Realm
-Client
+<details class="realm-client">
+<summary><a id=DermaSkinChanged></a>DermaSkinChanged(newSkin)</summary>
+<a id="dermaskinchanged"></a>
+<p>React when the active Derma skin changes client-side.</p>
+<p>Immediately after the skin is switched.</p>
+<p><h3>Parameters:</h3>
+<span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a></span> <span class="parameter">newSkin</span> Name of the newly applied skin.</p>
 
-#### 💡 Example Usage
-
-```lua
-    hook.Add("PostLoadFonts", "ExamplePostLoadFonts", function(...)
+<h3>Example Usage:</h3>
+<pre><code class="language-lua">    hook.Add("DermaSkinChanged", "ExampleDermaSkinChanged", function(...)
         -- add custom client-side behavior
     end)
-
-```
+</code></pre>
+</details>
 
 ---
-
-### DrawPhysgunBeam
-
-#### 📋 Purpose
-Decide whether to draw the physgun beam for the local player.
 
-#### ⏰ When Called
-During physgun render.
+<details class="realm-client">
+<summary><a id=DisplayPlayerHUDInformation></a>DisplayPlayerHUDInformation(client, hudInfos)</summary>
+<a id="displayplayerhudinformation"></a>
+<p>Inject custom HUD info boxes into the player HUD.</p>
+<p>Every HUDPaint frame while the player is alive and has a character.</p>
+<p><h3>Parameters:</h3>
+<span class="types"><a class="type" href="https://wiki.facepunch.com/gmod/Player">Player</a></span> <span class="parameter">client</span> Local player.</p>
+<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.5">table</a></span> <span class="parameter">hudInfos</span> Array to be filled with info tables (text, position, styling).</p>
 
-#### ↩️ Returns
-* boolean
-false to suppress the beam; nil/true to allow.
-
-#### 🌐 Realm
-Client
-
-#### 💡 Example Usage
-
-```lua
-    hook.Add("DrawPhysgunBeam", "ExampleDrawPhysgunBeam", function(...)
+<h3>Example Usage:</h3>
+<pre><code class="language-lua">    hook.Add("DisplayPlayerHUDInformation", "ExampleDisplayPlayerHUDInformation", function(...)
         -- add custom client-side behavior
     end)
-
-```
+</code></pre>
+</details>
 
 ---
 
-### RefreshFonts
+<details class="realm-client">
+<summary><a id=DoorDataReceived></a>DoorDataReceived(door, syncData)</summary>
+<a id="doordatareceived"></a>
+<p>Handle incoming door synchronization data from the server.</p>
+<p>When the server sends door ownership or data updates.</p>
+<p><h3>Parameters:</h3>
+<span class="types"><a class="type" href="https://wiki.facepunch.com/gmod/Entity">Entity</a></span> <span class="parameter">door</span> Door entity being updated.</p>
+<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.5">table</a></span> <span class="parameter">syncData</span> Data payload containing door state/owners.</p>
 
-#### 📋 Purpose
-Recreate or refresh fonts when settings change.
-
-#### ⏰ When Called
-After option changes that impact font sizes or faces.
-
-#### ↩️ Returns
-* nil
-Rebuild font definitions.
-
-#### 🌐 Realm
-Client
-
-#### 💡 Example Usage
-
-```lua
-    hook.Add("RefreshFonts", "ExampleRefreshFonts", function(...)
+<h3>Example Usage:</h3>
+<pre><code class="language-lua">    hook.Add("DoorDataReceived", "ExampleDoorDataReceived", function(...)
         -- add custom client-side behavior
     end)
-
-```
+</code></pre>
+</details>
 
 ---
-
-### RegisterAdminStickSubcategories
-
-#### 📋 Purpose
-Register admin stick subcategories used to group commands.
 
-#### ⏰ When Called
-When assembling the category tree for the admin stick.
+<details class="realm-client">
+<summary><a id=DrawCharInfo></a>DrawCharInfo(client, character, info)</summary>
+<a id="drawcharinfo"></a>
+<p>Add custom lines to the character info overlay drawn above players.</p>
+<p>Right before drawing info for a player (name/description).</p>
+<p><h3>Parameters:</h3>
+<span class="types"><a class="type" href="https://wiki.facepunch.com/gmod/Player">Player</a></span> <span class="parameter">client</span> Player whose info is being drawn.</p>
+<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#2.2">Character</a></span> <span class="parameter">character</span> Character belonging to the player.</p>
+<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.5">table</a></span> <span class="parameter">info</span> Array of `{text, color}` rows; append to extend display.</p>
 
-#### ⚙️ Parameters
-
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `categories` | **table** | Table of category -> subcategory mappings; modify in place. |
-
-#### ↩️ Returns
-* nil
-Add or change subcategories.
-
-#### 🌐 Realm
-Client
-
-#### 💡 Example Usage
-
-```lua
-    hook.Add("RegisterAdminStickSubcategories", "ExampleRegisterAdminStickSubcategories", function(...)
+<h3>Example Usage:</h3>
+<pre><code class="language-lua">    hook.Add("DrawCharInfo", "ExampleDrawCharInfo", function(...)
         -- add custom client-side behavior
     end)
-
-```
+</code></pre>
+</details>
 
 ---
-
-### ResetCharacterPanel
-
-#### 📋 Purpose
-Reset the character panel to its initial state.
 
-#### ⏰ When Called
-When the character menu needs to clear cached data/layout.
+<details class="realm-client">
+<summary><a id=DrawEntityInfo></a>DrawEntityInfo(e, a, pos)</summary>
+<a id="drawentityinfo"></a>
+<p>Customize how entity information panels render in the world.</p>
+<p>When an entity has been marked to display info and is being drawn.</p>
+<p><h3>Parameters:</h3>
+<span class="types"><a class="type" href="https://wiki.facepunch.com/gmod/Entity">Entity</a></span> <span class="parameter">e</span> Target entity.</p>
+<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.3">number</a></span> <span class="parameter">a</span> Alpha value (0-255) for fade in/out.</p>
+<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.5">table|Vector</a></span> <span class="parameter">pos</span> Screen position for the info panel (optional).</p>
 
-#### ↩️ Returns
-* nil
-Perform reset logic.
-
-#### 🌐 Realm
-Client
-
-#### 💡 Example Usage
-
-```lua
-    hook.Add("ResetCharacterPanel", "ExampleResetCharacterPanel", function(...)
+<h3>Example Usage:</h3>
+<pre><code class="language-lua">    hook.Add("DrawEntityInfo", "ExampleDrawEntityInfo", function(...)
         -- add custom client-side behavior
     end)
-
-```
-
----
-
-### RunAdminSystemCommand
-
-#### 📋 Purpose
-Execute an admin-system command initiated from the UI.
-
-#### ⏰ When Called
-When the admin stick or admin menu triggers a command.
+</code></pre>
+</details>
 
-#### ⚙️ Parameters
+---
 
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `cmd` | **string** | Command identifier. |
-| `admin` | **Player** | Admin issuing the command. |
-| `victim` | **Entity|Player** | Target of the command. |
-| `dur` | **number|string** | Duration parameter if applicable. |
-| `reason` | **string** | Optional reason text. |
+<details class="realm-client">
+<summary><a id=DrawItemEntityInfo></a>DrawItemEntityInfo(itemEntity, item, infoTable, alpha)</summary>
+<a id="drawitementityinfo"></a>
+<p>Adjust or add lines for dropped item entity info.</p>
+<p>When hovering/aiming at a dropped item that is rendering its info.</p>
+<p><h3>Parameters:</h3>
+<span class="types"><a class="type" href="https://wiki.facepunch.com/gmod/Entity">Entity</a></span> <span class="parameter">itemEntity</span> World entity representing the item.</p>
+<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#2.2">Item</a></span> <span class="parameter">item</span> Item table attached to the entity.</p>
+<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.5">table</a></span> <span class="parameter">infoTable</span> Lines describing the item; modify to add details.</p>
+<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.3">number</a></span> <span class="parameter">alpha</span> Current alpha used for drawing.</p>
 
-#### ↩️ Returns
-* nil
-Allow custom handling; return false to cancel default.
+<h3>Example Usage:</h3>
+<pre><code class="language-lua">    hook.Add("DrawItemEntityInfo", "ExampleDrawItemEntityInfo", function(...)
+        -- add custom client-side behavior
+    end)
+</code></pre>
+</details>
 
-#### 🌐 Realm
-Client
+---
 
-#### 💡 Example Usage
+<details class="realm-client">
+<summary><a id=DrawLiliaModelView></a>DrawLiliaModelView(client, entity)</summary>
+<a id="drawliliamodelview"></a>
+<p>Draw extra elements in the character preview model (e.g., held weapon).</p>
+<p>When the character model view panel paints.</p>
+<p><h3>Parameters:</h3>
+<span class="types"><a class="type" href="https://wiki.facepunch.com/gmod/Player">Player</a></span> <span class="parameter">client</span> Local player being previewed.</p>
+<p><span class="types"><a class="type" href="https://wiki.facepunch.com/gmod/Entity">Entity</a></span> <span class="parameter">entity</span> The model panel entity.</p>
 
-```lua
-    hook.Add("RunAdminSystemCommand", "ExampleRunAdminSystemCommand", function(...)
+<h3>Example Usage:</h3>
+<pre><code class="language-lua">    hook.Add("DrawLiliaModelView", "ExampleDrawLiliaModelView", function(...)
         -- add custom client-side behavior
     end)
+</code></pre>
+</details>
 
-```
-
 ---
-
-### ScoreboardClosed
 
-#### 📋 Purpose
-Perform teardown when the scoreboard closes.
+<details class="realm-client">
+<summary><a id=DrawPlayerRagdoll></a>DrawPlayerRagdoll(entity)</summary>
+<a id="drawplayerragdoll"></a>
+<p>Draw attachments or cosmetics on a player’s ragdoll entity.</p>
+<p>During ragdoll RenderOverride when a player’s corpse is rendered.</p>
+<p><h3>Parameters:</h3>
+<span class="types"><a class="type" href="https://wiki.facepunch.com/gmod/Entity">Entity</a></span> <span class="parameter">entity</span> The ragdoll entity being drawn.</p>
 
-#### ⏰ When Called
-After the scoreboard panel is hidden or destroyed.
-
-#### ⚙️ Parameters
+<h3>Example Usage:</h3>
+<pre><code class="language-lua">    hook.Add("DrawPlayerRagdoll", "ExampleDrawPlayerRagdoll", function(...)
+        -- add custom client-side behavior
+    end)
+</code></pre>
+</details>
 
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `scoreboardPanel` | **Panel** | The scoreboard instance that was closed. |
+---
 
-#### ↩️ Returns
-* nil
-Clean up references or timers.
+<details class="realm-client">
+<summary><a id=F1MenuClosed></a>F1MenuClosed()</summary>
+<a id="f1menuclosed"></a>
+<p>React to the F1 menu closing.</p>
+<p>Immediately after the F1 menu panel is removed.</p>
+<h3>Example Usage:</h3>
+<pre><code class="language-lua">    hook.Add("F1MenuClosed", "ExampleF1MenuClosed", function(...)
+        -- add custom client-side behavior
+    end)
+</code></pre>
+</details>
 
-#### 🌐 Realm
-Client
+---
 
-#### 💡 Example Usage
+<details class="realm-client">
+<summary><a id=F1MenuOpened></a>F1MenuOpened(f1MenuPanel)</summary>
+<a id="f1menuopened"></a>
+<p>Perform setup when the F1 menu opens.</p>
+<p>Immediately after the F1 menu is created.</p>
+<p><h3>Parameters:</h3>
+<span class="types"><a class="type" href="https://wiki.facepunch.com/gmod/Panel">Panel</a></span> <span class="parameter">f1MenuPanel</span> The opened menu panel.</p>
 
-```lua
-    hook.Add("ScoreboardClosed", "ExampleScoreboardClosed", function(...)
+<h3>Example Usage:</h3>
+<pre><code class="language-lua">    hook.Add("F1MenuOpened", "ExampleF1MenuOpened", function(...)
         -- add custom client-side behavior
     end)
-
-```
+</code></pre>
+</details>
 
 ---
 
-### ScoreboardOpened
+<details class="realm-client">
+<summary><a id=FilterCharModels></a>FilterCharModels(arg1)</summary>
+<a id="filtercharmodels"></a>
+<p>Whitelist or blacklist models shown in the character creation model list.</p>
+<p>While building the selectable model list for character creation.</p>
+<p><h3>Parameters:</h3>
+<span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.5">table</a></span> <span class="parameter">arg1</span> Table of available model paths; mutate to filter.</p>
 
-#### 📋 Purpose
-Initialize the scoreboard after it is created.
+<h3>Example Usage:</h3>
+<pre><code class="language-lua">    hook.Add("FilterCharModels", "ExampleFilterCharModels", function(...)
+        -- add custom client-side behavior
+    end)
+</code></pre>
+</details>
 
-#### ⏰ When Called
-Right after the scoreboard panel is shown.
+---
 
-#### ⚙️ Parameters
+<details class="realm-client">
+<summary><a id=FilterDoorInfo></a>FilterDoorInfo(entity, doorData, doorInfo)</summary>
+<a id="filterdoorinfo"></a>
+<p>Adjust door information before it is shown on the HUD.</p>
+<p>After door data is prepared for display but before drawing text.</p>
+<p><h3>Parameters:</h3>
+<span class="types"><a class="type" href="https://wiki.facepunch.com/gmod/Entity">Entity</a></span> <span class="parameter">entity</span> The door being inspected.</p>
+<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.5">table</a></span> <span class="parameter">doorData</span> Raw door data (owners, title, etc.).</p>
+<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.5">table</a></span> <span class="parameter">doorInfo</span> Table of display lines; mutate to change output.</p>
 
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `scoreboardPanel` | **Panel** | The scoreboard instance that opened. |
+<h3>Example Usage:</h3>
+<pre><code class="language-lua">    hook.Add("FilterDoorInfo", "ExampleFilterDoorInfo", function(...)
+        -- add custom client-side behavior
+    end)
+</code></pre>
+</details>
 
-#### ↩️ Returns
-* nil
-Add extra columns or styling.
+---
 
-#### 🌐 Realm
-Client
+<details class="realm-client">
+<summary><a id=GetAdjustedPartData></a>GetAdjustedPartData(wearer, id)</summary>
+<a id="getadjustedpartdata"></a>
+<p>Provide PAC part data overrides before parts attach to a player.</p>
+<p>When a PAC part is requested for attachment.</p>
+<p><h3>Parameters:</h3>
+<span class="types"><a class="type" href="https://wiki.facepunch.com/gmod/Player">Player</a></span> <span class="parameter">wearer</span> Player the part will attach to.</p>
+<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a></span> <span class="parameter">id</span> Identifier for the part/item.</p>
 
-#### 💡 Example Usage
+<p><h3>Returns:</h3>
+<span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.5">table</a></span> Adjusted part data; return nil to use cached defaults.</p>
 
-```lua
-    hook.Add("ScoreboardOpened", "ExampleScoreboardOpened", function(...)
+<h3>Example Usage:</h3>
+<pre><code class="language-lua">    hook.Add("GetAdjustedPartData", "ExampleGetAdjustedPartData", function(...)
         -- add custom client-side behavior
     end)
+</code></pre>
+</details>
 
-```
-
 ---
-
-### ScoreboardRowCreated
 
-#### 📋 Purpose
-Customize a newly created scoreboard row.
+<details class="realm-client">
+<summary><a id=GetCharacterCreateButtonTooltip></a>GetCharacterCreateButtonTooltip(client, currentChars, maxChars)</summary>
+<a id="getcharactercreatebuttontooltip"></a>
+<p>Allows overriding the tooltip text for the character creation button.</p>
+<p>When the character creation button tooltip is being determined in the main menu.</p>
+<p><h3>Parameters:</h3>
+<span class="types"><a class="type" href="https://wiki.facepunch.com/gmod/Player">Player</a></span> <span class="parameter">client</span> The player viewing the menu.</p>
+<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.3">number</a></span> <span class="parameter">currentChars</span> Number of characters the player currently has.</p>
+<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.3">number</a></span> <span class="parameter">maxChars</span> Maximum number of characters allowed.</p>
 
-#### ⏰ When Called
-When a player slot is added to the scoreboard.
+<p><h3>Returns:</h3>
+<span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string|nil</a></span> Custom tooltip text, or nil to use default tooltip.</p>
 
-#### ⚙️ Parameters
-
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `slot` | **Panel** | Scoreboard row panel. |
-| `ply` | **Player** | Player represented by the row. |
+<h3>Example Usage:</h3>
+<pre><code class="language-lua">    hook.Add("GetCharacterCreateButtonTooltip", "ExampleGetCharacterCreateButtonTooltip", function(...)
+        -- add custom client-side behavior
+    end)
+</code></pre>
+</details>
 
-#### ↩️ Returns
-* nil
-Modify the row content.
+---
 
-#### 🌐 Realm
-Client
+<details class="realm-client">
+<summary><a id=GetCharacterDisconnectButtonTooltip></a>GetCharacterDisconnectButtonTooltip(client)</summary>
+<a id="getcharacterdisconnectbuttontooltip"></a>
+<p>Allows overriding the tooltip text for the character disconnect button.</p>
+<p>When the character disconnect button tooltip is being determined in the main menu.</p>
+<p><h3>Parameters:</h3>
+<span class="types"><a class="type" href="https://wiki.facepunch.com/gmod/Player">Player</a></span> <span class="parameter">client</span> The player viewing the menu.</p>
 
-#### 💡 Example Usage
+<p><h3>Returns:</h3>
+<span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string|nil</a></span> Custom tooltip text, or nil to use default tooltip.</p>
 
-```lua
-    hook.Add("ScoreboardRowCreated", "ExampleScoreboardRowCreated", function(...)
+<h3>Example Usage:</h3>
+<pre><code class="language-lua">    hook.Add("GetCharacterDisconnectButtonTooltip", "ExampleGetCharacterDisconnectButtonTooltip", function(...)
         -- add custom client-side behavior
     end)
+</code></pre>
+</details>
 
-```
-
 ---
-
-### ScoreboardRowRemoved
 
-#### 📋 Purpose
-React when a scoreboard row is removed.
+<details class="realm-client">
+<summary><a id=GetCharacterDiscordButtonTooltip></a>GetCharacterDiscordButtonTooltip(client, discordURL)</summary>
+<a id="getcharacterdiscordbuttontooltip"></a>
+<p>Allows overriding the tooltip text for the Discord button.</p>
+<p>When the Discord button tooltip is being determined in the main menu.</p>
+<p><h3>Parameters:</h3>
+<span class="types"><a class="type" href="https://wiki.facepunch.com/gmod/Player">Player</a></span> <span class="parameter">client</span> The player viewing the menu.</p>
+<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a></span> <span class="parameter">discordURL</span> The Discord server URL.</p>
 
-#### ⏰ When Called
-When a player leaves or is otherwise removed from the scoreboard.
+<p><h3>Returns:</h3>
+<span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string|nil</a></span> Custom tooltip text, or nil to use default tooltip.</p>
 
-#### ⚙️ Parameters
-
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `scoreboardPanel` | **Panel** | Scoreboard instance. |
-| `ply` | **Player** | Player whose row was removed. |
+<h3>Example Usage:</h3>
+<pre><code class="language-lua">    hook.Add("GetCharacterDiscordButtonTooltip", "ExampleGetCharacterDiscordButtonTooltip", function(...)
+        -- add custom client-side behavior
+    end)
+</code></pre>
+</details>
 
-#### ↩️ Returns
-* nil
-Update any caches or counts.
+---
 
-#### 🌐 Realm
-Client
+<details class="realm-client">
+<summary><a id=GetCharacterLoadButtonTooltip></a>GetCharacterLoadButtonTooltip(client)</summary>
+<a id="getcharacterloadbuttontooltip"></a>
+<p>Allows overriding the tooltip text for the character load button.</p>
+<p>When the character load button tooltip is being determined in the main menu.</p>
+<p><h3>Parameters:</h3>
+<span class="types"><a class="type" href="https://wiki.facepunch.com/gmod/Player">Player</a></span> <span class="parameter">client</span> The player viewing the menu.</p>
 
-#### 💡 Example Usage
+<p><h3>Returns:</h3>
+<span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string|nil</a></span> Custom tooltip text, or nil to use default tooltip.</p>
 
-```lua
-    hook.Add("ScoreboardRowRemoved", "ExampleScoreboardRowRemoved", function(...)
+<h3>Example Usage:</h3>
+<pre><code class="language-lua">    hook.Add("GetCharacterLoadButtonTooltip", "ExampleGetCharacterLoadButtonTooltip", function(...)
         -- add custom client-side behavior
     end)
+</code></pre>
+</details>
 
-```
-
 ---
-
-### SetMainCharacter
 
-#### 📋 Purpose
-Set the main character ID for future automatic selection.
+<details class="realm-client">
+<summary><a id=GetCharacterLoadMainButtonTooltip></a>GetCharacterLoadMainButtonTooltip(client)</summary>
+<a id="getcharacterloadmainbuttontooltip"></a>
+<p>Allows overriding the tooltip text for the main character load button.</p>
+<p>When the main character load button tooltip is being determined in the main menu.</p>
+<p><h3>Parameters:</h3>
+<span class="types"><a class="type" href="https://wiki.facepunch.com/gmod/Player">Player</a></span> <span class="parameter">client</span> The player viewing the menu.</p>
 
-#### ⏰ When Called
-When the player chooses a character to become their main.
+<p><h3>Returns:</h3>
+<span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string|nil</a></span> Custom tooltip text, or nil to use default tooltip.</p>
 
-#### ⚙️ Parameters
-
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `charID` | **number** | Chosen character ID. |
+<h3>Example Usage:</h3>
+<pre><code class="language-lua">    hook.Add("GetCharacterLoadMainButtonTooltip", "ExampleGetCharacterLoadMainButtonTooltip", function(...)
+        -- add custom client-side behavior
+    end)
+</code></pre>
+</details>
 
-#### ↩️ Returns
-* nil
-Persist the selection.
+---
 
-#### 🌐 Realm
-Client
+<details class="realm-client">
+<summary><a id=GetCharacterMountButtonTooltip></a>GetCharacterMountButtonTooltip(client)</summary>
+<a id="getcharactermountbuttontooltip"></a>
+<p>Allows overriding the tooltip text for the character mount button.</p>
+<p>When the character mount button tooltip is being determined in the main menu.</p>
+<p><h3>Parameters:</h3>
+<span class="types"><a class="type" href="https://wiki.facepunch.com/gmod/Player">Player</a></span> <span class="parameter">client</span> The player viewing the menu.</p>
 
-#### 💡 Example Usage
+<p><h3>Returns:</h3>
+<span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string|nil</a></span> Custom tooltip text, or nil to use default tooltip.</p>
 
-```lua
-    hook.Add("SetMainCharacter", "ExampleSetMainCharacter", function(...)
+<h3>Example Usage:</h3>
+<pre><code class="language-lua">    hook.Add("GetCharacterMountButtonTooltip", "ExampleGetCharacterMountButtonTooltip", function(...)
         -- add custom client-side behavior
     end)
+</code></pre>
+</details>
 
-```
-
 ---
-
-### SetupQuickMenu
 
-#### 📋 Purpose
-Build the quick access menu when the context menu opens.
+<details class="realm-client">
+<summary><a id=GetCharacterReturnButtonTooltip></a>GetCharacterReturnButtonTooltip(client)</summary>
+<a id="getcharacterreturnbuttontooltip"></a>
+<p>Allows overriding the tooltip text for the character return button.</p>
+<p>When the character return button tooltip is being determined in the main menu.</p>
+<p><h3>Parameters:</h3>
+<span class="types"><a class="type" href="https://wiki.facepunch.com/gmod/Player">Player</a></span> <span class="parameter">client</span> The player viewing the menu.</p>
 
-#### ⏰ When Called
-After the quick menu panel is created.
+<p><h3>Returns:</h3>
+<span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string|nil</a></span> Custom tooltip text, or nil to use default tooltip.</p>
 
-#### ⚙️ Parameters
-
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `quickMenuPanel` | **Panel** | Panel that holds quick actions. |
+<h3>Example Usage:</h3>
+<pre><code class="language-lua">    hook.Add("GetCharacterReturnButtonTooltip", "ExampleGetCharacterReturnButtonTooltip", function(...)
+        -- add custom client-side behavior
+    end)
+</code></pre>
+</details>
 
-#### ↩️ Returns
-* nil
-Populate with buttons or pages.
+---
 
-#### 🌐 Realm
-Client
+<details class="realm-client">
+<summary><a id=GetCharacterStaffButtonTooltip></a>GetCharacterStaffButtonTooltip(client, hasStaffChar)</summary>
+<a id="getcharacterstaffbuttontooltip"></a>
+<p>Allows overriding the tooltip text for the staff character button.</p>
+<p>When the staff character button tooltip is being determined in the main menu.</p>
+<p><h3>Parameters:</h3>
+<span class="types"><a class="type" href="https://wiki.facepunch.com/gmod/Player">Player</a></span> <span class="parameter">client</span> The player viewing the menu.</p>
+<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.2">boolean</a></span> <span class="parameter">hasStaffChar</span> Whether the player has a staff character.</p>
 
-#### 💡 Example Usage
+<p><h3>Returns:</h3>
+<span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string|nil</a></span> Custom tooltip text, or nil to use default tooltip.</p>
 
-```lua
-    hook.Add("SetupQuickMenu", "ExampleSetupQuickMenu", function(...)
+<h3>Example Usage:</h3>
+<pre><code class="language-lua">    hook.Add("GetCharacterStaffButtonTooltip", "ExampleGetCharacterStaffButtonTooltip", function(...)
         -- add custom client-side behavior
     end)
+</code></pre>
+</details>
 
-```
-
 ---
-
-### ShouldAllowScoreboardOverride
 
-#### 📋 Purpose
-Decide if a player is permitted to override the scoreboard UI.
+<details class="realm-client">
+<summary><a id=GetCharacterWorkshopButtonTooltip></a>GetCharacterWorkshopButtonTooltip(client, workshopURL)</summary>
+<a id="getcharacterworkshopbuttontooltip"></a>
+<p>Allows overriding the tooltip text for the workshop button.</p>
+<p>When the workshop button tooltip is being determined in the main menu.</p>
+<p><h3>Parameters:</h3>
+<span class="types"><a class="type" href="https://wiki.facepunch.com/gmod/Player">Player</a></span> <span class="parameter">client</span> The player viewing the menu.</p>
+<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a></span> <span class="parameter">workshopURL</span> The workshop URL.</p>
 
-#### ⏰ When Called
-Before applying any scoreboard override logic.
+<p><h3>Returns:</h3>
+<span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string|nil</a></span> Custom tooltip text, or nil to use default tooltip.</p>
 
-#### ⚙️ Parameters
-
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `client` | **Player** | Player requesting the override. |
-| `var` | **any** | Additional context or override data. |
+<h3>Example Usage:</h3>
+<pre><code class="language-lua">    hook.Add("GetCharacterWorkshopButtonTooltip", "ExampleGetCharacterWorkshopButtonTooltip", function(...)
+        -- add custom client-side behavior
+    end)
+</code></pre>
+</details>
 
-#### ↩️ Returns
-* boolean
-false to deny override; nil/true to allow.
+---
 
-#### 🌐 Realm
-Client
+<details class="realm-client">
+<summary><a id=GetAdminESPTarget></a>GetAdminESPTarget(ent, client)</summary>
+<a id="getadminesptarget"></a>
+<p>Choose the entity that admin ESP should highlight.</p>
+<p>When the admin ESP overlay evaluates the current trace target.</p>
+<p><h3>Parameters:</h3>
+<span class="types"><a class="type" href="https://wiki.facepunch.com/gmod/Entity">Entity</a></span> <span class="parameter">ent</span> Entity under the admin’s crosshair.</p>
+<p><span class="types"><a class="type" href="https://wiki.facepunch.com/gmod/Player">Player</a></span> <span class="parameter">client</span> Admin requesting the ESP target.</p>
 
-#### 💡 Example Usage
+<p><h3>Returns:</h3>
+<span class="types"><a class="type" href="https://wiki.facepunch.com/gmod/Entity">Entity|nil</a></span> Replacement target entity, or nil to use the traced entity.</p>
 
-```lua
-    hook.Add("ShouldAllowScoreboardOverride", "ExampleShouldAllowScoreboardOverride", function(...)
+<h3>Example Usage:</h3>
+<pre><code class="language-lua">    hook.Add("GetAdminESPTarget", "ExampleGetAdminESPTarget", function(...)
         -- add custom client-side behavior
     end)
+</code></pre>
+</details>
 
-```
-
 ---
 
-### ShouldBarDraw
+<details class="realm-client">
+<summary><a id=GetAdminStickLists></a>GetAdminStickLists(tgt, lists)</summary>
+<a id="getadminsticklists"></a>
+<p>Contribute additional tab lists for the admin stick menu.</p>
+<p>While compiling list definitions for the admin stick UI.</p>
+<p><h3>Parameters:</h3>
+<span class="types"><a class="type" href="https://wiki.facepunch.com/gmod/Entity">Entity</a></span> <span class="parameter">tgt</span> Current admin stick target.</p>
+<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.5">table</a></span> <span class="parameter">lists</span> Table of list definitions; append your own entries.</p>
 
-#### 📋 Purpose
-Determine whether a HUD bar should render.
+<h3>Example Usage:</h3>
+<pre><code class="language-lua">    hook.Add("GetAdminStickLists", "ExampleGetAdminStickLists", function(...)
+        -- add custom client-side behavior
+    end)
+</code></pre>
+</details>
 
-#### ⏰ When Called
-When evaluating each registered bar before drawing.
+---
 
-#### ⚙️ Parameters
+<details class="realm-client">
+<summary><a id=GetDisplayedDescription></a>GetDisplayedDescription(client, isHUD)</summary>
+<a id="getdisplayeddescription"></a>
+<p>Override the description text shown for a player.</p>
+<p>When building a player’s info panel for HUD or menus.</p>
+<p><h3>Parameters:</h3>
+<span class="types"><a class="type" href="https://wiki.facepunch.com/gmod/Player">Player</a></span> <span class="parameter">client</span> Player being described.</p>
+<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.2">boolean</a></span> <span class="parameter">isHUD</span> True when drawing the 3D HUD info; false for menus.</p>
 
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `bar` | **table** | Bar definition. |
+<p><h3>Returns:</h3>
+<span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a></span> Description to display; return nil to use default.</p>
 
-#### ↩️ Returns
-* boolean
-false to hide the bar; nil/true to show.
+<h3>Example Usage:</h3>
+<pre><code class="language-lua">    hook.Add("GetDisplayedDescription", "ExampleGetDisplayedDescription", function(...)
+        -- add custom client-side behavior
+    end)
+</code></pre>
+</details>
 
-#### 🌐 Realm
-Client
+---
 
-#### 💡 Example Usage
+<details class="realm-client">
+<summary><a id=GetDoorInfo></a>GetDoorInfo(entity, doorData, doorInfo)</summary>
+<a id="getdoorinfo"></a>
+<p>Build or modify door info data before it is shown to players.</p>
+<p>When a door is targeted and info lines are generated.</p>
+<p><h3>Parameters:</h3>
+<span class="types"><a class="type" href="https://wiki.facepunch.com/gmod/Entity">Entity</a></span> <span class="parameter">entity</span> Door entity.</p>
+<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.5">table</a></span> <span class="parameter">doorData</span> Data about owners, titles, etc.</p>
+<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.5">table</a></span> <span class="parameter">doorInfo</span> Display lines; modify to add/remove fields.</p>
 
-```lua
-    hook.Add("ShouldBarDraw", "ExampleShouldBarDraw", function(...)
+<h3>Example Usage:</h3>
+<pre><code class="language-lua">    hook.Add("GetDoorInfo", "ExampleGetDoorInfo", function(...)
         -- add custom client-side behavior
     end)
-
-```
+</code></pre>
+</details>
 
 ---
 
-### ShouldDisableThirdperson
+<details class="realm-client">
+<summary><a id=GetDoorInfoForAdminStick></a>GetDoorInfoForAdminStick(target, extraInfo)</summary>
+<a id="getdoorinfoforadminstick"></a>
+<p>Supply extra admin-only door info shown in the admin stick UI.</p>
+<p>When the admin stick inspects a door and builds its detail view.</p>
+<p><h3>Parameters:</h3>
+<span class="types"><a class="type" href="https://wiki.facepunch.com/gmod/Entity">Entity</a></span> <span class="parameter">target</span> Door or entity being inspected.</p>
+<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.5">table</a></span> <span class="parameter">extraInfo</span> Table of strings to display; append data here.</p>
 
-#### 📋 Purpose
-Decide whether third-person mode should be forcibly disabled.
+<h3>Example Usage:</h3>
+<pre><code class="language-lua">    hook.Add("GetDoorInfoForAdminStick", "ExampleGetDoorInfoForAdminStick", function(...)
+        -- add custom client-side behavior
+    end)
+</code></pre>
+</details>
 
-#### ⏰ When Called
-When the third-person toggle state changes.
+---
 
-#### ⚙️ Parameters
+<details class="realm-client">
+<summary><a id=GetInjuredText></a>GetInjuredText(c)</summary>
+<a id="getinjuredtext"></a>
+<p>Return the localized injury descriptor and color for a player.</p>
+<p>When drawing player info overlays that show health status.</p>
+<p><h3>Parameters:</h3>
+<span class="types"><a class="type" href="https://wiki.facepunch.com/gmod/Player">Player</a></span> <span class="parameter">c</span> Target player.</p>
 
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `client` | **Player** | Local player toggling third person. |
+<p><h3>Returns:</h3>
+<span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.5">table</a></span> `{text, color}` describing injury level, or nil to skip.</p>
 
-#### ↩️ Returns
-* boolean
-false to block third-person; nil/true to allow.
+<h3>Example Usage:</h3>
+<pre><code class="language-lua">    hook.Add("GetInjuredText", "ExampleGetInjuredText", function(...)
+        -- add custom client-side behavior
+    end)
+</code></pre>
+</details>
 
-#### 🌐 Realm
-Client
+---
 
-#### 💡 Example Usage
+<details class="realm-client">
+<summary><a id=GetMainCharacterID></a>GetMainCharacterID()</summary>
+<a id="getmaincharacterid"></a>
+<p>Decide which character ID should be treated as the “main” one for menus.</p>
+<p>Before selecting or loading the default character in the main menu.</p>
+<p><h3>Returns:</h3>
+<span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.3">number</a></span> Character ID to treat as primary, or nil for default logic.</p>
 
-```lua
-    hook.Add("ShouldDisableThirdperson", "ExampleShouldDisableThirdperson", function(...)
+<h3>Example Usage:</h3>
+<pre><code class="language-lua">    hook.Add("GetMainCharacterID", "ExampleGetMainCharacterID", function(...)
         -- add custom client-side behavior
     end)
+</code></pre>
+</details>
 
-```
-
 ---
-
-### ShouldDrawAmmo
 
-#### 📋 Purpose
-Let modules veto drawing the ammo HUD for a weapon.
+<details class="realm-client">
+<summary><a id=GetMainMenuPosition></a>GetMainMenuPosition(character)</summary>
+<a id="getmainmenuposition"></a>
+<p>Provide camera position/angles for the 3D main menu scene.</p>
+<p>Each time the main menu loads and needs a camera transform.</p>
+<p><h3>Parameters:</h3>
+<span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#2.2">Character</a></span> <span class="parameter">character</span> Character to base the position on.</p>
 
-#### ⏰ When Called
-Each HUDPaint frame before ammo boxes render.
+<p><h3>Returns:</h3>
+Vector, Angle Position and angle to use; return nils to use defaults.</p>
 
-#### ⚙️ Parameters
+<h3>Example Usage:</h3>
+<pre><code class="language-lua">    hook.Add("GetMainMenuPosition", "ExampleGetMainMenuPosition", function(...)
+        -- add custom client-side behavior
+    end)
+</code></pre>
+</details>
 
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `wpn` | **Weapon** | Active weapon. |
+---
 
-#### ↩️ Returns
-* boolean
-false to hide ammo; nil/true to show.
+<details class="realm-client">
+<summary><a id=InteractionMenuClosed></a>InteractionMenuClosed()</summary>
+<a id="interactionmenuclosed"></a>
+<p>Handle logic when the interaction menu (context quick menu) closes.</p>
+<p>Right after the interaction menu panel is removed.</p>
+<h3>Example Usage:</h3>
+<pre><code class="language-lua">    hook.Add("InteractionMenuClosed", "ExampleInteractionMenuClosed", function(...)
+        -- add custom client-side behavior
+    end)
+</code></pre>
+</details>
 
-#### 🌐 Realm
-Client
+---
 
-#### 💡 Example Usage
+<details class="realm-client">
+<summary><a id=InteractionMenuOpened></a>InteractionMenuOpened(frame)</summary>
+<a id="interactionmenuopened"></a>
+<p>Set up the interaction menu when it is created.</p>
+<p>Immediately after the interaction menu frame is instantiated.</p>
+<p><h3>Parameters:</h3>
+<span class="types"><a class="type" href="https://wiki.facepunch.com/gmod/Panel">Panel</a></span> <span class="parameter">frame</span> The interaction menu frame.</p>
 
-```lua
-    hook.Add("ShouldDrawAmmo", "ExampleShouldDrawAmmo", function(...)
+<h3>Example Usage:</h3>
+<pre><code class="language-lua">    hook.Add("InteractionMenuOpened", "ExampleInteractionMenuOpened", function(...)
         -- add custom client-side behavior
     end)
+</code></pre>
+</details>
 
-```
-
 ---
 
-### ShouldDrawEntityInfo
+<details class="realm-client">
+<summary><a id=InterceptClickItemIcon></a>InterceptClickItemIcon(inventoryPanel, itemIcon, keyCode)</summary>
+<a id="interceptclickitemicon"></a>
+<p>Intercept mouse/keyboard clicks on an inventory item icon.</p>
+<p>Whenever an inventory icon receives an input event.</p>
+<p><h3>Parameters:</h3>
+<span class="types"><a class="type" href="https://wiki.facepunch.com/gmod/Panel">Panel</a></span> <span class="parameter">inventoryPanel</span> Panel hosting the inventory grid.</p>
+<p><span class="types"><a class="type" href="https://wiki.facepunch.com/gmod/Panel">Panel</a></span> <span class="parameter">itemIcon</span> Icon that was clicked.</p>
+<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.3">number</a></span> <span class="parameter">keyCode</span> Mouse or keyboard code that triggered the event.</p>
 
-#### 📋 Purpose
-Control whether an entity should display info when looked at.
+<p><h3>Returns:</h3>
+<span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.2">boolean</a></span> true to consume the click and prevent default behavior.</p>
 
-#### ⏰ When Called
-When deciding if entity info overlays should be generated.
+<h3>Example Usage:</h3>
+<pre><code class="language-lua">    hook.Add("InterceptClickItemIcon", "ExampleInterceptClickItemIcon", function(...)
+        -- add custom client-side behavior
+    end)
+</code></pre>
+</details>
 
-#### ⚙️ Parameters
+---
 
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `e` | **Entity** | Entity under consideration. |
+<details class="realm-client">
+<summary><a id=InventoryClosed></a>InventoryClosed(inventoryPanel, inventory)</summary>
+<a id="inventoryclosed"></a>
+<p>React when an inventory window is closed.</p>
+<p>Immediately after an inventory panel is removed.</p>
+<p><h3>Parameters:</h3>
+<span class="types"><a class="type" href="https://wiki.facepunch.com/gmod/Panel">Panel</a></span> <span class="parameter">inventoryPanel</span> The panel that was closed.</p>
+<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#2.2">Inventory</a></span> <span class="parameter">inventory</span> Inventory instance tied to the panel.</p>
 
-#### ↩️ Returns
-* boolean
-false to prevent info; nil/true to allow.
+<h3>Example Usage:</h3>
+<pre><code class="language-lua">    hook.Add("InventoryClosed", "ExampleInventoryClosed", function(...)
+        -- add custom client-side behavior
+    end)
+</code></pre>
+</details>
 
-#### 🌐 Realm
-Client
+---
 
-#### 💡 Example Usage
+<details class="realm-client">
+<summary><a id=InventoryItemDataChanged></a>InventoryItemDataChanged(item, key, oldValue, newValue, inventory)</summary>
+<a id="inventoryitemdatachanged"></a>
+<p>Respond to item data changes that arrive on the client.</p>
+<p>After an item’s data table updates (networked from the server).</p>
+<p><h3>Parameters:</h3>
+<span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#2.2">Item</a></span> <span class="parameter">item</span> The item that changed.</p>
+<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a></span> <span class="parameter">key</span> Data key that changed.</p>
+<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#2.2">any</a></span> <span class="parameter">oldValue</span> Previous value.</p>
+<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#2.2">any</a></span> <span class="parameter">newValue</span> New value.</p>
+<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#2.2">Inventory</a></span> <span class="parameter">inventory</span> Inventory containing the item.</p>
 
-```lua
-    hook.Add("ShouldDrawEntityInfo", "ExampleShouldDrawEntityInfo", function(...)
+<h3>Example Usage:</h3>
+<pre><code class="language-lua">    hook.Add("InventoryItemDataChanged", "ExampleInventoryItemDataChanged", function(...)
         -- add custom client-side behavior
     end)
-
-```
+</code></pre>
+</details>
 
 ---
 
-### ShouldDrawPlayerInfo
+<details class="realm-client">
+<summary><a id=InventoryItemIconCreated></a>InventoryItemIconCreated(icon, item, inventoryPanel)</summary>
+<a id="inventoryitemiconcreated"></a>
+<p>Customize an inventory item icon immediately after it is created.</p>
+<p>When a new icon panel is spawned for an item.</p>
+<p><h3>Parameters:</h3>
+<span class="types"><a class="type" href="https://wiki.facepunch.com/gmod/Panel">Panel</a></span> <span class="parameter">icon</span> Icon panel.</p>
+<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#2.2">Item</a></span> <span class="parameter">item</span> Item represented by the icon.</p>
+<p><span class="types"><a class="type" href="https://wiki.facepunch.com/gmod/Panel">Panel</a></span> <span class="parameter">inventoryPanel</span> Parent inventory panel.</p>
 
-#### 📋 Purpose
-Decide whether player-specific info should be drawn for a target.
-
-#### ⏰ When Called
-Before rendering the player info panel above a player.
+<h3>Example Usage:</h3>
+<pre><code class="language-lua">    hook.Add("InventoryItemIconCreated", "ExampleInventoryItemIconCreated", function(...)
+        -- add custom client-side behavior
+    end)
+</code></pre>
+</details>
 
-#### ⚙️ Parameters
+---
 
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `e` | **Player** | Player entity being drawn. |
+<details class="realm-client">
+<summary><a id=InventoryOpened></a>InventoryOpened(panel, inventory)</summary>
+<a id="inventoryopened"></a>
+<p>Handle logic after an inventory panel is opened.</p>
+<p>When an inventory is displayed on screen.</p>
+<p><h3>Parameters:</h3>
+<span class="types"><a class="type" href="https://wiki.facepunch.com/gmod/Panel">Panel</a></span> <span class="parameter">panel</span> Inventory panel.</p>
+<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#2.2">Inventory</a></span> <span class="parameter">inventory</span> Inventory instance.</p>
 
-#### ↩️ Returns
-* boolean
-false to hide info; nil/true to draw.
+<h3>Example Usage:</h3>
+<pre><code class="language-lua">    hook.Add("InventoryOpened", "ExampleInventoryOpened", function(...)
+        -- add custom client-side behavior
+    end)
+</code></pre>
+</details>
 
-#### 🌐 Realm
-Client
+---
 
-#### 💡 Example Usage
+<details class="realm-client">
+<summary><a id=InventoryPanelCreated></a>InventoryPanelCreated(panel, inventory, parent)</summary>
+<a id="inventorypanelcreated"></a>
+<p>Customize the inventory panel when it is created.</p>
+<p>Immediately after constructing a panel for an inventory.</p>
+<p><h3>Parameters:</h3>
+<span class="types"><a class="type" href="https://wiki.facepunch.com/gmod/Panel">Panel</a></span> <span class="parameter">panel</span> The new inventory panel.</p>
+<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#2.2">Inventory</a></span> <span class="parameter">inventory</span> Inventory the panel represents.</p>
+<p><span class="types"><a class="type" href="https://wiki.facepunch.com/gmod/Panel">Panel</a></span> <span class="parameter">parent</span> Parent container.</p>
 
-```lua
-    hook.Add("ShouldDrawPlayerInfo", "ExampleShouldDrawPlayerInfo", function(...)
+<h3>Example Usage:</h3>
+<pre><code class="language-lua">    hook.Add("InventoryPanelCreated", "ExampleInventoryPanelCreated", function(...)
         -- add custom client-side behavior
     end)
-
-```
+</code></pre>
+</details>
 
 ---
 
-### ShouldDrawWepSelect
+<details class="realm-client">
+<summary><a id=ItemDraggedOutOfInventory></a>ItemDraggedOutOfInventory(client, item)</summary>
+<a id="itemdraggedoutofinventory"></a>
+<p>Handle dragging an item outside of an inventory grid.</p>
+<p>When an item is released outside valid slots.</p>
+<p><h3>Parameters:</h3>
+<span class="types"><a class="type" href="https://wiki.facepunch.com/gmod/Player">Player</a></span> <span class="parameter">client</span> Local player performing the drag.</p>
+<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#2.2">Item</a></span> <span class="parameter">item</span> Item being dragged.</p>
 
-#### 📋 Purpose
-Decide if the custom weapon selector should draw for a player.
-
-#### ⏰ When Called
-Each frame the selector evaluates visibility.
+<h3>Example Usage:</h3>
+<pre><code class="language-lua">    hook.Add("ItemDraggedOutOfInventory", "ExampleItemDraggedOutOfInventory", function(...)
+        -- add custom client-side behavior
+    end)
+</code></pre>
+</details>
 
-#### ⚙️ Parameters
+---
 
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `client` | **Player** | Local player. |
+<details class="realm-client">
+<summary><a id=ItemPaintOver></a>ItemPaintOver(itemIcon, itemTable, w, h)</summary>
+<a id="itempaintover"></a>
+<p>Draw overlays on an item’s icon (e.g., status markers).</p>
+<p>During icon paint for each inventory slot.</p>
+<p><h3>Parameters:</h3>
+<span class="types"><a class="type" href="https://wiki.facepunch.com/gmod/Panel">Panel</a></span> <span class="parameter">itemIcon</span> Icon panel being drawn.</p>
+<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#2.2">Item</a></span> <span class="parameter">itemTable</span> Item represented.</p>
+<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.3">number</a></span> <span class="parameter">w</span> Icon width.</p>
+<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.3">number</a></span> <span class="parameter">h</span> Icon height.</p>
 
-#### ↩️ Returns
-* boolean
-false to hide the selector; nil/true to allow.
+<h3>Example Usage:</h3>
+<pre><code class="language-lua">    hook.Add("ItemPaintOver", "ExampleItemPaintOver", function(...)
+        -- add custom client-side behavior
+    end)
+</code></pre>
+</details>
 
-#### 🌐 Realm
-Client
+---
 
-#### 💡 Example Usage
+<details class="realm-client">
+<summary><a id=ItemShowEntityMenu></a>ItemShowEntityMenu(entity)</summary>
+<a id="itemshowentitymenu"></a>
+<p>Show a context menu for a world item entity.</p>
+<p>When the use key/menu key is pressed on a dropped item with actions.</p>
+<p><h3>Parameters:</h3>
+<span class="types"><a class="type" href="https://wiki.facepunch.com/gmod/Entity">Entity</a></span> <span class="parameter">entity</span> Item entity in the world.</p>
 
-```lua
-    hook.Add("ShouldDrawWepSelect", "ExampleShouldDrawWepSelect", function(...)
+<h3>Example Usage:</h3>
+<pre><code class="language-lua">    hook.Add("ItemShowEntityMenu", "ExampleItemShowEntityMenu", function(...)
         -- add custom client-side behavior
     end)
-
-```
+</code></pre>
+</details>
 
 ---
 
-### ShouldHideBars
-
-#### 📋 Purpose
-Hide all HUD bars based on external conditions.
+<details class="realm-client">
+<summary><a id=LoadCharInformation></a>LoadCharInformation()</summary>
+<a id="loadcharinformation"></a>
+<p>Seed the character information sections for the F1 menu.</p>
+<p>When the character info is about to be populated.</p>
+<h3>Example Usage:</h3>
+<pre><code class="language-lua">    hook.Add("LoadCharInformation", "ExampleLoadCharInformation", function(...)
+        -- add custom client-side behavior
+    end)
+</code></pre>
+</details>
 
-#### ⏰ When Called
-Before drawing any bars on the HUD.
+---
 
-#### ↩️ Returns
-* boolean
-true to hide all bars; nil/false to render them.
+<details class="realm-client">
+<summary><a id=LoadMainCharacter></a>LoadMainCharacter()</summary>
+<a id="loadmaincharacter"></a>
+<p>Select and load the player’s main character when the menu opens.</p>
+<p>During main menu initialization if a saved main character exists.</p>
+<h3>Example Usage:</h3>
+<pre><code class="language-lua">    hook.Add("LoadMainCharacter", "ExampleLoadMainCharacter", function(...)
+        -- add custom client-side behavior
+    end)
+</code></pre>
+</details>
 
-#### 🌐 Realm
-Client
+---
 
-#### 💡 Example Usage
+<details class="realm-client">
+<summary><a id=LoadMainMenuInformation></a>LoadMainMenuInformation(info, character)</summary>
+<a id="loadmainmenuinformation"></a>
+<p>Populate informational text and preview for the main menu character card.</p>
+<p>When the main menu needs to show summary info for a character.</p>
+<p><h3>Parameters:</h3>
+<span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.5">table</a></span> <span class="parameter">info</span> Table to fill with display fields.</p>
+<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#2.2">Character</a></span> <span class="parameter">character</span> Character being previewed.</p>
 
-```lua
-    hook.Add("ShouldHideBars", "ExampleShouldHideBars", function(...)
+<h3>Example Usage:</h3>
+<pre><code class="language-lua">    hook.Add("LoadMainMenuInformation", "ExampleLoadMainMenuInformation", function(...)
         -- add custom client-side behavior
     end)
-
-```
+</code></pre>
+</details>
 
 ---
 
-### ShouldMenuButtonShow
+<details class="realm-client">
+<summary><a id=ModifyScoreboardModel></a>ModifyScoreboardModel(arg1, ply)</summary>
+<a id="modifyscoreboardmodel"></a>
+<p>Adjust the 3D model used in the scoreboard (pose, skin, etc.).</p>
+<p>When a scoreboard slot builds its player model preview.</p>
+<p><h3>Parameters:</h3>
+<span class="types"><a class="type" href="https://wiki.facepunch.com/gmod/Panel">Panel</a></span> <span class="parameter">arg1</span> Model panel or data table for the slot.</p>
+<p><span class="types"><a class="type" href="https://wiki.facepunch.com/gmod/Player">Player</a></span> <span class="parameter">ply</span> Player represented by the slot.</p>
 
-#### 📋 Purpose
-Decide whether a button should appear in the menu bar.
+<h3>Example Usage:</h3>
+<pre><code class="language-lua">    hook.Add("ModifyScoreboardModel", "ExampleModifyScoreboardModel", function(...)
+        -- add custom client-side behavior
+    end)
+</code></pre>
+</details>
 
-#### ⏰ When Called
-When building quick menu buttons.
+---
 
-#### ⚙️ Parameters
+<details class="realm-client">
+<summary><a id=ModifyVoiceIndicatorText></a>ModifyVoiceIndicatorText(client, voiceText, voiceType)</summary>
+<a id="modifyvoiceindicatortext"></a>
+<p>Override the string shown in the voice indicator HUD.</p>
+<p>Each frame the local player is speaking.</p>
+<p><h3>Parameters:</h3>
+<span class="types"><a class="type" href="https://wiki.facepunch.com/gmod/Player">Player</a></span> <span class="parameter">client</span> Speaking player (local).</p>
+<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a></span> <span class="parameter">voiceText</span> Default text to display.</p>
+<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a></span> <span class="parameter">voiceType</span> Current voice range (“whispering”, “talking”, “yelling”).</p>
 
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `arg1` | **table|string** | Button identifier or data. |
+<p><h3>Returns:</h3>
+<span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a></span> Replacement text; return nil to keep default.</p>
 
-#### ↩️ Returns
-* boolean
-false to hide; nil/true to show.
+<h3>Example Usage:</h3>
+<pre><code class="language-lua">    hook.Add("ModifyVoiceIndicatorText", "ExampleModifyVoiceIndicatorText", function(...)
+        -- add custom client-side behavior
+    end)
+</code></pre>
+</details>
 
-#### 🌐 Realm
-Client
+---
 
-#### 💡 Example Usage
+<details class="realm-client">
+<summary><a id=DrawPlayerInfoBackground></a>DrawPlayerInfoBackground()</summary>
+<a id="drawplayerinfobackground"></a>
+<p>Draw the background panel behind player info overlays.</p>
+<p>Just before drawing wrapped player info text in the HUD.</p>
+<p><h3>Returns:</h3>
+<span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.2">boolean</a></span> Return false to suppress the default blurred background.</p>
 
-```lua
-    hook.Add("ShouldMenuButtonShow", "ExampleShouldMenuButtonShow", function(...)
+<h3>Example Usage:</h3>
+<pre><code class="language-lua">    hook.Add("DrawPlayerInfoBackground", "ExampleDrawPlayerInfoBackground", function(...)
         -- add custom client-side behavior
     end)
+</code></pre>
+</details>
 
-```
-
 ---
 
-### ShouldRespawnScreenAppear
+<details class="realm-client">
+<summary><a id=OnAdminStickMenuClosed></a>OnAdminStickMenuClosed()</summary>
+<a id="onadminstickmenuclosed"></a>
+<p>Handle state cleanup when the admin stick menu closes.</p>
+<p>When the admin stick UI window is removed.</p>
+<h3>Example Usage:</h3>
+<pre><code class="language-lua">    hook.Add("OnAdminStickMenuClosed", "ExampleOnAdminStickMenuClosed", function(...)
+        -- add custom client-side behavior
+    end)
+</code></pre>
+</details>
 
-#### 📋 Purpose
-Control whether the respawn screen should be displayed.
+---
 
-#### ⏰ When Called
-When the client dies and the respawn UI might show.
+<details class="realm-client">
+<summary><a id=OnChatReceived></a>OnChatReceived(client, chatType, text, anonymous)</summary>
+<a id="onchatreceived"></a>
+<p>React to chat messages received by the local client.</p>
+<p>After a chat message is parsed and before it is displayed.</p>
+<p><h3>Parameters:</h3>
+<span class="types"><a class="type" href="https://wiki.facepunch.com/gmod/Player">Player</a></span> <span class="parameter">client</span> Sender of the message.</p>
+<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a></span> <span class="parameter">chatType</span> Chat channel identifier.</p>
+<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a></span> <span class="parameter">text</span> Message content.</p>
+<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.2">boolean</a></span> <span class="parameter">anonymous</span> Whether the message should hide the sender.</p>
 
-#### ↩️ Returns
-* boolean
-false to suppress; nil/true to display.
+<h3>Example Usage:</h3>
+<pre><code class="language-lua">    hook.Add("OnChatReceived", "ExampleOnChatReceived", function(...)
+        -- add custom client-side behavior
+    end)
+</code></pre>
+</details>
 
-#### 🌐 Realm
-Client
+---
 
-#### 💡 Example Usage
+<details class="realm-client">
+<summary><a id=OnCreateDualInventoryPanels></a>OnCreateDualInventoryPanels(panel1, panel2, inventory1, inventory2)</summary>
+<a id="oncreatedualinventorypanels"></a>
+<p>Customize paired inventory panels when two inventories are shown side by side.</p>
+<p>Right after both inventory panels are created (e.g., player + storage).</p>
+<p><h3>Parameters:</h3>
+<span class="types"><a class="type" href="https://wiki.facepunch.com/gmod/Panel">Panel</a></span> <span class="parameter">panel1</span> First inventory panel.</p>
+<p><span class="types"><a class="type" href="https://wiki.facepunch.com/gmod/Panel">Panel</a></span> <span class="parameter">panel2</span> Second inventory panel.</p>
+<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#2.2">Inventory</a></span> <span class="parameter">inventory1</span> Inventory bound to panel1.</p>
+<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#2.2">Inventory</a></span> <span class="parameter">inventory2</span> Inventory bound to panel2.</p>
 
-```lua
-    hook.Add("ShouldRespawnScreenAppear", "ExampleShouldRespawnScreenAppear", function(...)
+<h3>Example Usage:</h3>
+<pre><code class="language-lua">    hook.Add("OnCreateDualInventoryPanels", "ExampleOnCreateDualInventoryPanels", function(...)
         -- add custom client-side behavior
     end)
-
-```
+</code></pre>
+</details>
 
 ---
 
-### ShouldShowCharVarInCreation
+<details class="realm-client">
+<summary><a id=OnCreateItemInteractionMenu></a>OnCreateItemInteractionMenu(itemIcon, menu, itemTable)</summary>
+<a id="oncreateiteminteractionmenu"></a>
+<p>Augment the context menu shown when right-clicking an inventory item icon.</p>
+<p>Immediately after the interaction menu for an item icon is built.</p>
+<p><h3>Parameters:</h3>
+<span class="types"><a class="type" href="https://wiki.facepunch.com/gmod/Panel">Panel</a></span> <span class="parameter">itemIcon</span> The icon being interacted with.</p>
+<p><span class="types"><a class="type" href="https://wiki.facepunch.com/gmod/Panel">Panel</a></span> <span class="parameter">menu</span> The context menu object.</p>
+<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#2.2">Item</a></span> <span class="parameter">itemTable</span> Item associated with the icon.</p>
 
-#### 📋 Purpose
-Determine if a character variable should appear in the creation form.
-
-#### ⏰ When Called
-While assembling the list of editable character variables.
+<h3>Example Usage:</h3>
+<pre><code class="language-lua">    hook.Add("OnCreateItemInteractionMenu", "ExampleOnCreateItemInteractionMenu", function(...)
+        -- add custom client-side behavior
+    end)
+</code></pre>
+</details>
 
-#### ⚙️ Parameters
+---
 
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `key` | **string** | Character variable identifier. |
+<details class="realm-client">
+<summary><a id=OnCreateStoragePanel></a>OnCreateStoragePanel(localInvPanel, storageInvPanel, storage)</summary>
+<a id="oncreatestoragepanel"></a>
+<p>Customize the dual-inventory storage panel layout.</p>
+<p>After the local and storage inventory panels are created for a storage entity.</p>
+<p><h3>Parameters:</h3>
+<span class="types"><a class="type" href="https://wiki.facepunch.com/gmod/Panel">Panel</a></span> <span class="parameter">localInvPanel</span> Panel showing the player inventory.</p>
+<p><span class="types"><a class="type" href="https://wiki.facepunch.com/gmod/Panel">Panel</a></span> <span class="parameter">storageInvPanel</span> Panel showing the storage inventory.</p>
+<p><span class="types"><a class="type" href="https://wiki.facepunch.com/gmod/Entity">Entity|table</a></span> <span class="parameter">storage</span> Storage object or entity.</p>
 
-#### ↩️ Returns
-* boolean
-false to hide; nil/true to show.
+<h3>Example Usage:</h3>
+<pre><code class="language-lua">    hook.Add("OnCreateStoragePanel", "ExampleOnCreateStoragePanel", function(...)
+        -- add custom client-side behavior
+    end)
+</code></pre>
+</details>
 
-#### 🌐 Realm
-Client
+---
 
-#### 💡 Example Usage
+<details class="realm-client">
+<summary><a id=OnLocalVarSet></a>OnLocalVarSet(key, value)</summary>
+<a id="onlocalvarset"></a>
+<p>React to a local networked variable being set.</p>
+<p>Whenever a net var assigned to the local player changes.</p>
+<p><h3>Parameters:</h3>
+<span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a></span> <span class="parameter">key</span> Variable name.</p>
+<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#2.2">any</a></span> <span class="parameter">value</span> New value.</p>
 
-```lua
-    hook.Add("ShouldShowCharVarInCreation", "ExampleShouldShowCharVarInCreation", function(...)
+<h3>Example Usage:</h3>
+<pre><code class="language-lua">    hook.Add("OnLocalVarSet", "ExampleOnLocalVarSet", function(...)
         -- add custom client-side behavior
     end)
-
-```
+</code></pre>
+</details>
 
 ---
 
-### ShouldShowClassOnScoreboard
+<details class="realm-client">
+<summary><a id=OnOpenVendorMenu></a>OnOpenVendorMenu(vendorPanel, vendor)</summary>
+<a id="onopenvendormenu"></a>
+<p>Populate the vendor UI when it opens.</p>
+<p>After the vendor panel is created client-side.</p>
+<p><h3>Parameters:</h3>
+<span class="types"><a class="type" href="https://wiki.facepunch.com/gmod/Panel">Panel</a></span> <span class="parameter">vendorPanel</span> Panel used to display vendor goods.</p>
+<p><span class="types"><a class="type" href="https://wiki.facepunch.com/gmod/Entity">Entity</a></span> <span class="parameter">vendor</span> Vendor entity interacted with.</p>
 
-#### 📋 Purpose
-Decide whether to display a player’s class on the scoreboard.
-
-#### ⏰ When Called
-When rendering scoreboard rows that include class info.
+<h3>Example Usage:</h3>
+<pre><code class="language-lua">    hook.Add("OnOpenVendorMenu", "ExampleOnOpenVendorMenu", function(...)
+        -- add custom client-side behavior
+    end)
+</code></pre>
+</details>
 
-#### ⚙️ Parameters
+---
 
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `clsData` | **table** | Class data table for the player. |
+<details class="realm-client">
+<summary><a id=OnlineStaffDataReceived></a>OnlineStaffDataReceived(staffData)</summary>
+<a id="onlinestaffdatareceived"></a>
+<p>Handle the list of online staff received from the server.</p>
+<p>When staff data is synchronized to the client.</p>
+<p><h3>Parameters:</h3>
+<span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.5">table</a></span> <span class="parameter">staffData</span> Array of staff entries (name, steamID, duty status).</p>
 
-#### ↩️ Returns
-* boolean
-false to hide class; nil/true to show.
+<h3>Example Usage:</h3>
+<pre><code class="language-lua">    hook.Add("OnlineStaffDataReceived", "ExampleOnlineStaffDataReceived", function(...)
+        -- add custom client-side behavior
+    end)
+</code></pre>
+</details>
 
-#### 🌐 Realm
-Client
+---
 
-#### 💡 Example Usage
+<details class="realm-client">
+<summary><a id=OpenAdminStickUI></a>OpenAdminStickUI(tgt)</summary>
+<a id="openadminstickui"></a>
+<p>Open the admin stick interface for a target entity or player.</p>
+<p>When the admin stick weapon requests to show its UI.</p>
+<p><h3>Parameters:</h3>
+<span class="types"><a class="type" href="https://wiki.facepunch.com/gmod/Entity">Entity</a></span> <span class="parameter">tgt</span> Target entity/player selected by the admin stick.</p>
 
-```lua
-    hook.Add("ShouldShowClassOnScoreboard", "ExampleShouldShowClassOnScoreboard", function(...)
+<h3>Example Usage:</h3>
+<pre><code class="language-lua">    hook.Add("OpenAdminStickUI", "ExampleOpenAdminStickUI", function(...)
         -- add custom client-side behavior
     end)
-
-```
+</code></pre>
+</details>
 
 ---
 
-### ShouldShowFactionOnScoreboard
+<details class="realm-client">
+<summary><a id=PaintItem></a>PaintItem(item)</summary>
+<a id="paintitem"></a>
+<p>Draw or tint an item icon before it is painted to the grid.</p>
+<p>Prior to rendering each item icon surface.</p>
+<p><h3>Parameters:</h3>
+<span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#2.2">Item</a></span> <span class="parameter">item</span> Item being drawn.</p>
 
-#### 📋 Purpose
-Decide whether to display a player’s faction on the scoreboard.
-
-#### ⏰ When Called
-When rendering a scoreboard row.
+<h3>Example Usage:</h3>
+<pre><code class="language-lua">    hook.Add("PaintItem", "ExamplePaintItem", function(...)
+        -- add custom client-side behavior
+    end)
+</code></pre>
+</details>
 
-#### ⚙️ Parameters
+---
 
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `ply` | **Player** | Player being displayed. |
+<details class="realm-client">
+<summary><a id=PopulateAdminStick></a>PopulateAdminStick(currentMenu, currentTarget, currentStores)</summary>
+<a id="populateadminstick"></a>
+<p>Add tabs and actions to the admin stick UI.</p>
+<p>While constructing the admin stick menu for the current target.</p>
+<p><h3>Parameters:</h3>
+<span class="types"><a class="type" href="https://wiki.facepunch.com/gmod/Panel">Panel</a></span> <span class="parameter">currentMenu</span> Root menu panel.</p>
+<p><span class="types"><a class="type" href="https://wiki.facepunch.com/gmod/Entity">Entity</a></span> <span class="parameter">currentTarget</span> Entity being acted upon.</p>
+<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.5">table</a></span> <span class="parameter">currentStores</span> Cached admin stick data (lists, categories).</p>
 
-#### ↩️ Returns
-* boolean
-false to hide faction; nil/true to show.
+<h3>Example Usage:</h3>
+<pre><code class="language-lua">    hook.Add("PopulateAdminStick", "ExamplePopulateAdminStick", function(...)
+        -- add custom client-side behavior
+    end)
+</code></pre>
+</details>
 
-#### 🌐 Realm
-Client
+---
 
-#### 💡 Example Usage
+<details class="realm-client">
+<summary><a id=PopulateAdminTabs></a>PopulateAdminTabs(pages)</summary>
+<a id="populateadmintabs"></a>
+<p>Register admin tabs for the F1 administration menu.</p>
+<p>When building the admin tab list.</p>
+<p><h3>Parameters:</h3>
+<span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.5">table</a></span> <span class="parameter">pages</span> Table to append tab definitions `{name, icon, build=function}`.</p>
 
-```lua
-    hook.Add("ShouldShowFactionOnScoreboard", "ExampleShouldShowFactionOnScoreboard", function(...)
+<h3>Example Usage:</h3>
+<pre><code class="language-lua">    hook.Add("PopulateAdminTabs", "ExamplePopulateAdminTabs", function(...)
         -- add custom client-side behavior
     end)
-
-```
+</code></pre>
+</details>
 
 ---
 
-### ShouldShowPlayerOnScoreboard
+<details class="realm-client">
+<summary><a id=PopulateConfigurationButtons></a>PopulateConfigurationButtons(pages)</summary>
+<a id="populateconfigurationbuttons"></a>
+<p>Add configuration buttons for the options/configuration tab.</p>
+<p>When creating the configuration pages in the menu.</p>
+<p><h3>Parameters:</h3>
+<span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.5">table</a></span> <span class="parameter">pages</span> Collection of page descriptors to populate.</p>
 
-#### 📋 Purpose
-Decide whether a player should appear on the scoreboard at all.
-
-#### ⏰ When Called
-Before adding a player row to the scoreboard.
+<h3>Example Usage:</h3>
+<pre><code class="language-lua">    hook.Add("PopulateConfigurationButtons", "ExamplePopulateConfigurationButtons", function(...)
+        -- add custom client-side behavior
+    end)
+</code></pre>
+</details>
 
-#### ⚙️ Parameters
+---
 
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `ply` | **Player** | Player under consideration. |
+<details class="realm-client">
+<summary><a id=PopulateInventoryItems></a>PopulateInventoryItems(pnlContent, tree)</summary>
+<a id="populateinventoryitems"></a>
+<p>Populate the inventory items tree used in the admin menu.</p>
+<p>When the inventory item browser is built.</p>
+<p><h3>Parameters:</h3>
+<span class="types"><a class="type" href="https://wiki.facepunch.com/gmod/Panel">Panel</a></span> <span class="parameter">pnlContent</span> Content panel to fill.</p>
+<p><span class="types"><a class="type" href="https://wiki.facepunch.com/gmod/Panel">Panel</a></span> <span class="parameter">tree</span> Tree/list control to populate.</p>
 
-#### ↩️ Returns
-* boolean
-false to omit the player; nil/true to include.
+<h3>Example Usage:</h3>
+<pre><code class="language-lua">    hook.Add("PopulateInventoryItems", "ExamplePopulateInventoryItems", function(...)
+        -- add custom client-side behavior
+    end)
+</code></pre>
+</details>
 
-#### 🌐 Realm
-Client
+---
 
-#### 💡 Example Usage
+<details class="realm-client">
+<summary><a id=PostDrawInventory></a>PostDrawInventory(mainPanel, parentPanel)</summary>
+<a id="postdrawinventory"></a>
+<p>Draw additional UI after the main inventory panels are painted.</p>
+<p>After inventory drawing completes.</p>
+<p><h3>Parameters:</h3>
+<span class="types"><a class="type" href="https://wiki.facepunch.com/gmod/Panel">Panel</a></span> <span class="parameter">mainPanel</span> Primary inventory panel.</p>
+<p><span class="types"><a class="type" href="https://wiki.facepunch.com/gmod/Panel">Panel</a></span> <span class="parameter">parentPanel</span> Parent container.</p>
 
-```lua
-    hook.Add("ShouldShowPlayerOnScoreboard", "ExampleShouldShowPlayerOnScoreboard", function(...)
+<h3>Example Usage:</h3>
+<pre><code class="language-lua">    hook.Add("PostDrawInventory", "ExamplePostDrawInventory", function(...)
         -- add custom client-side behavior
     end)
-
-```
+</code></pre>
+</details>
 
 ---
 
-### ShouldShowQuickMenu
+<details class="realm-client">
+<summary><a id=PostLoadFonts></a>PostLoadFonts(mainFont, mainFont)</summary>
+<a id="postloadfonts"></a>
+<p>Adjust fonts after they are loaded.</p>
+<p>Immediately after main fonts are initialized.</p>
+<p><h3>Parameters:</h3>
+<span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a></span> <span class="parameter">mainFont</span> Primary font name (duplicate parameter kept for API compatibility).</p>
+<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a></span> <span class="parameter">mainFont</span> Alias of the same font name.</p>
 
-#### 📋 Purpose
-Control whether the quick menu should open when the context menu is toggled.
+<h3>Example Usage:</h3>
+<pre><code class="language-lua">    hook.Add("PostLoadFonts", "ExamplePostLoadFonts", function(...)
+        -- add custom client-side behavior
+    end)
+</code></pre>
+</details>
 
-#### ⏰ When Called
-When the context menu is opened.
+---
 
-#### ↩️ Returns
-* boolean
-false to prevent quick menu creation; nil/true to allow.
+<details class="realm-client">
+<summary><a id=DrawPhysgunBeam></a>DrawPhysgunBeam()</summary>
+<a id="drawphysgunbeam"></a>
+<p>Decide whether to draw the physgun beam for the local player.</p>
+<p>During physgun render.</p>
+<p><h3>Returns:</h3>
+<span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.2">boolean</a></span> false to suppress the beam; nil/true to allow.</p>
 
-#### 🌐 Realm
-Client
+<h3>Example Usage:</h3>
+<pre><code class="language-lua">    hook.Add("DrawPhysgunBeam", "ExampleDrawPhysgunBeam", function(...)
+        -- add custom client-side behavior
+    end)
+</code></pre>
+</details>
 
-#### 💡 Example Usage
+---
 
-```lua
-    hook.Add("ShouldShowQuickMenu", "ExampleShouldShowQuickMenu", function(...)
+<details class="realm-client">
+<summary><a id=RefreshFonts></a>RefreshFonts()</summary>
+<a id="refreshfonts"></a>
+<p>Recreate or refresh fonts when settings change.</p>
+<p>After option changes that impact font sizes or faces.</p>
+<h3>Example Usage:</h3>
+<pre><code class="language-lua">    hook.Add("RefreshFonts", "ExampleRefreshFonts", function(...)
         -- add custom client-side behavior
     end)
+</code></pre>
+</details>
 
-```
-
 ---
+
+<details class="realm-client">
+<summary><a id=RegisterAdminStickSubcategories></a>RegisterAdminStickSubcategories(categories)</summary>
+<a id="registeradminsticksubcategories"></a>
+<p>Register admin stick subcategories used to group commands.</p>
+<p>When assembling the category tree for the admin stick.</p>
+<p><h3>Parameters:</h3>
+<span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.5">table</a></span> <span class="parameter">categories</span> Table of category -> subcategory mappings; modify in place.</p>
 
-### ShowPlayerOptions
+<h3>Example Usage:</h3>
+<pre><code class="language-lua">    hook.Add("RegisterAdminStickSubcategories", "ExampleRegisterAdminStickSubcategories", function(...)
+        -- add custom client-side behavior
+    end)
+</code></pre>
+</details>
 
-#### 📋 Purpose
-Populate the options menu for a specific player (e.g., mute, profile).
+---
 
-#### ⏰ When Called
-When opening a player interaction context menu.
+<details class="realm-client">
+<summary><a id=ResetCharacterPanel></a>ResetCharacterPanel()</summary>
+<a id="resetcharacterpanel"></a>
+<p>Reset the character panel to its initial state.</p>
+<p>When the character menu needs to clear cached data/layout.</p>
+<h3>Example Usage:</h3>
+<pre><code class="language-lua">    hook.Add("ResetCharacterPanel", "ExampleResetCharacterPanel", function(...)
+        -- add custom client-side behavior
+    end)
+</code></pre>
+</details>
 
-#### ⚙️ Parameters
+---
 
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `target` | **Player** | Player the options apply to. |
-| `options` | **table** | Table of options to display; modify in place. |
+<details class="realm-client">
+<summary><a id=RunAdminSystemCommand></a>RunAdminSystemCommand(cmd, admin, victim, dur, reason)</summary>
+<a id="runadminsystemcommand"></a>
+<p>Execute an admin-system command initiated from the UI.</p>
+<p>When the admin stick or admin menu triggers a command.</p>
+<p><h3>Parameters:</h3>
+<span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a></span> <span class="parameter">cmd</span> Command identifier.</p>
+<p><span class="types"><a class="type" href="https://wiki.facepunch.com/gmod/Player">Player</a></span> <span class="parameter">admin</span> Admin issuing the command.</p>
+<p><span class="types"><a class="type" href="https://wiki.facepunch.com/gmod/Entity">Entity|Player</a></span> <span class="parameter">victim</span> Target of the command.</p>
+<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.3">number|string</a></span> <span class="parameter">dur</span> Duration parameter if applicable.</p>
+<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a></span> <span class="parameter">reason</span> Optional reason text.</p>
 
-#### ↩️ Returns
-* nil
-Add or remove entries.
+<h3>Example Usage:</h3>
+<pre><code class="language-lua">    hook.Add("RunAdminSystemCommand", "ExampleRunAdminSystemCommand", function(...)
+        -- add custom client-side behavior
+    end)
+</code></pre>
+</details>
 
-#### 🌐 Realm
-Client
+---
 
-#### 💡 Example Usage
+<details class="realm-client">
+<summary><a id=ScoreboardClosed></a>ScoreboardClosed(scoreboardPanel)</summary>
+<a id="scoreboardclosed"></a>
+<p>Perform teardown when the scoreboard closes.</p>
+<p>After the scoreboard panel is hidden or destroyed.</p>
+<p><h3>Parameters:</h3>
+<span class="types"><a class="type" href="https://wiki.facepunch.com/gmod/Panel">Panel</a></span> <span class="parameter">scoreboardPanel</span> The scoreboard instance that was closed.</p>
 
-```lua
-    hook.Add("ShowPlayerOptions", "ExampleShowPlayerOptions", function(...)
+<h3>Example Usage:</h3>
+<pre><code class="language-lua">    hook.Add("ScoreboardClosed", "ExampleScoreboardClosed", function(...)
         -- add custom client-side behavior
     end)
-
-```
+</code></pre>
+</details>
 
 ---
 
-### StorageOpen
+<details class="realm-client">
+<summary><a id=ScoreboardOpened></a>ScoreboardOpened(scoreboardPanel)</summary>
+<a id="scoreboardopened"></a>
+<p>Initialize the scoreboard after it is created.</p>
+<p>Right after the scoreboard panel is shown.</p>
+<p><h3>Parameters:</h3>
+<span class="types"><a class="type" href="https://wiki.facepunch.com/gmod/Panel">Panel</a></span> <span class="parameter">scoreboardPanel</span> The scoreboard instance that opened.</p>
 
-#### 📋 Purpose
-Handle the client opening a storage entity inventory.
-
-#### ⏰ When Called
-When storage access is approved and panels are about to show.
+<h3>Example Usage:</h3>
+<pre><code class="language-lua">    hook.Add("ScoreboardOpened", "ExampleScoreboardOpened", function(...)
+        -- add custom client-side behavior
+    end)
+</code></pre>
+</details>
 
-#### ⚙️ Parameters
+---
 
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `storage` | **Entity|table** | Storage entity or custom storage table. |
-| `isCar` | **boolean** | True if the storage is a vehicle trunk. |
+<details class="realm-client">
+<summary><a id=ScoreboardRowCreated></a>ScoreboardRowCreated(slot, ply)</summary>
+<a id="scoreboardrowcreated"></a>
+<p>Customize a newly created scoreboard row.</p>
+<p>When a player slot is added to the scoreboard.</p>
+<p><h3>Parameters:</h3>
+<span class="types"><a class="type" href="https://wiki.facepunch.com/gmod/Panel">Panel</a></span> <span class="parameter">slot</span> Scoreboard row panel.</p>
+<p><span class="types"><a class="type" href="https://wiki.facepunch.com/gmod/Player">Player</a></span> <span class="parameter">ply</span> Player represented by the row.</p>
 
-#### ↩️ Returns
-* nil
-Build storage panels.
+<h3>Example Usage:</h3>
+<pre><code class="language-lua">    hook.Add("ScoreboardRowCreated", "ExampleScoreboardRowCreated", function(...)
+        -- add custom client-side behavior
+    end)
+</code></pre>
+</details>
 
-#### 🌐 Realm
-Client
+---
 
-#### 💡 Example Usage
+<details class="realm-client">
+<summary><a id=ScoreboardRowRemoved></a>ScoreboardRowRemoved(scoreboardPanel, ply)</summary>
+<a id="scoreboardrowremoved"></a>
+<p>React when a scoreboard row is removed.</p>
+<p>When a player leaves or is otherwise removed from the scoreboard.</p>
+<p><h3>Parameters:</h3>
+<span class="types"><a class="type" href="https://wiki.facepunch.com/gmod/Panel">Panel</a></span> <span class="parameter">scoreboardPanel</span> Scoreboard instance.</p>
+<p><span class="types"><a class="type" href="https://wiki.facepunch.com/gmod/Player">Player</a></span> <span class="parameter">ply</span> Player whose row was removed.</p>
 
-```lua
-    hook.Add("StorageOpen", "ExampleStorageOpen", function(...)
+<h3>Example Usage:</h3>
+<pre><code class="language-lua">    hook.Add("ScoreboardRowRemoved", "ExampleScoreboardRowRemoved", function(...)
         -- add custom client-side behavior
     end)
-
-```
+</code></pre>
+</details>
 
 ---
 
-### StorageUnlockPrompt
+<details class="realm-client">
+<summary><a id=SetMainCharacter></a>SetMainCharacter(charID)</summary>
+<a id="setmaincharacter"></a>
+<p>Set the main character ID for future automatic selection.</p>
+<p>When the player chooses a character to become their main.</p>
+<p><h3>Parameters:</h3>
+<span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.3">number</a></span> <span class="parameter">charID</span> Chosen character ID.</p>
 
-#### 📋 Purpose
-Prompt the player to unlock a locked storage entity.
+<h3>Example Usage:</h3>
+<pre><code class="language-lua">    hook.Add("SetMainCharacter", "ExampleSetMainCharacter", function(...)
+        -- add custom client-side behavior
+    end)
+</code></pre>
+</details>
 
-#### ⏰ When Called
-When the client interacts with a locked storage container.
+---
 
-#### ⚙️ Parameters
+<details class="realm-client">
+<summary><a id=SetupQuickMenu></a>SetupQuickMenu(quickMenuPanel)</summary>
+<a id="setupquickmenu"></a>
+<p>Build the quick access menu when the context menu opens.</p>
+<p>After the quick menu panel is created.</p>
+<p><h3>Parameters:</h3>
+<span class="types"><a class="type" href="https://wiki.facepunch.com/gmod/Panel">Panel</a></span> <span class="parameter">quickMenuPanel</span> Panel that holds quick actions.</p>
 
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `entity` | **Entity** | Storage entity requiring an unlock prompt. |
+<h3>Example Usage:</h3>
+<pre><code class="language-lua">    hook.Add("SetupQuickMenu", "ExampleSetupQuickMenu", function(...)
+        -- add custom client-side behavior
+    end)
+</code></pre>
+</details>
 
-#### ↩️ Returns
-* nil
-Show prompt UI; return false to suppress.
+---
 
-#### 🌐 Realm
-Client
+<details class="realm-client">
+<summary><a id=ShouldAllowScoreboardOverride></a>ShouldAllowScoreboardOverride(client, var)</summary>
+<a id="shouldallowscoreboardoverride"></a>
+<p>Decide if a player is permitted to override the scoreboard UI.</p>
+<p>Before applying any scoreboard override logic.</p>
+<p><h3>Parameters:</h3>
+<span class="types"><a class="type" href="https://wiki.facepunch.com/gmod/Player">Player</a></span> <span class="parameter">client</span> Player requesting the override.</p>
+<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#2.2">any</a></span> <span class="parameter">var</span> Additional context or override data.</p>
 
-#### 💡 Example Usage
+<p><h3>Returns:</h3>
+<span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.2">boolean</a></span> false to deny override; nil/true to allow.</p>
 
-```lua
-    hook.Add("StorageUnlockPrompt", "ExampleStorageUnlockPrompt", function(...)
+<h3>Example Usage:</h3>
+<pre><code class="language-lua">    hook.Add("ShouldAllowScoreboardOverride", "ExampleShouldAllowScoreboardOverride", function(...)
         -- add custom client-side behavior
     end)
+</code></pre>
+</details>
 
-```
-
 ---
-
-### ThirdPersonToggled
 
-#### 📋 Purpose
-React when the third-person toggle state changes.
+<details class="realm-client">
+<summary><a id=ShouldBarDraw></a>ShouldBarDraw(bar)</summary>
+<a id="shouldbardraw"></a>
+<p>Determine whether a HUD bar should render.</p>
+<p>When evaluating each registered bar before drawing.</p>
+<p><h3>Parameters:</h3>
+<span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.5">table</a></span> <span class="parameter">bar</span> Bar definition.</p>
 
-#### ⏰ When Called
-After third-person mode is turned on or off.
+<p><h3>Returns:</h3>
+<span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.2">boolean</a></span> false to hide the bar; nil/true to show.</p>
 
-#### ⚙️ Parameters
-
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `arg1` | **boolean** | New third-person enabled state. |
+<h3>Example Usage:</h3>
+<pre><code class="language-lua">    hook.Add("ShouldBarDraw", "ExampleShouldBarDraw", function(...)
+        -- add custom client-side behavior
+    end)
+</code></pre>
+</details>
 
-#### ↩️ Returns
-* nil
-Apply additional camera logic.
+---
 
-#### 🌐 Realm
-Client
+<details class="realm-client">
+<summary><a id=ShouldDisableThirdperson></a>ShouldDisableThirdperson(client)</summary>
+<a id="shoulddisablethirdperson"></a>
+<p>Decide whether third-person mode should be forcibly disabled.</p>
+<p>When the third-person toggle state changes.</p>
+<p><h3>Parameters:</h3>
+<span class="types"><a class="type" href="https://wiki.facepunch.com/gmod/Player">Player</a></span> <span class="parameter">client</span> Local player toggling third person.</p>
 
-#### 💡 Example Usage
+<p><h3>Returns:</h3>
+<span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.2">boolean</a></span> false to block third-person; nil/true to allow.</p>
 
-```lua
-    hook.Add("ThirdPersonToggled", "ExampleThirdPersonToggled", function(...)
+<h3>Example Usage:</h3>
+<pre><code class="language-lua">    hook.Add("ShouldDisableThirdperson", "ExampleShouldDisableThirdperson", function(...)
         -- add custom client-side behavior
     end)
+</code></pre>
+</details>
 
-```
-
 ---
-
-### TooltipInitialize
 
-#### 📋 Purpose
-Initialize tooltip contents and sizing for Lilia tooltips.
+<details class="realm-client">
+<summary><a id=ShouldDrawAmmo></a>ShouldDrawAmmo(wpn)</summary>
+<a id="shoulddrawammo"></a>
+<p>Let modules veto drawing the ammo HUD for a weapon.</p>
+<p>Each HUDPaint frame before ammo boxes render.</p>
+<p><h3>Parameters:</h3>
+<span class="types"><a class="type" href="https://wiki.facepunch.com/gmod/Weapon">Weapon</a></span> <span class="parameter">wpn</span> Active weapon.</p>
 
-#### ⏰ When Called
-When a tooltip panel is created.
+<p><h3>Returns:</h3>
+<span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.2">boolean</a></span> false to hide ammo; nil/true to show.</p>
 
-#### ⚙️ Parameters
-
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `var` | **Panel** | Tooltip panel. |
-| `panel` | **Panel** | Source panel that spawned the tooltip. |
+<h3>Example Usage:</h3>
+<pre><code class="language-lua">    hook.Add("ShouldDrawAmmo", "ExampleShouldDrawAmmo", function(...)
+        -- add custom client-side behavior
+    end)
+</code></pre>
+</details>
 
-#### ↩️ Returns
-* nil
-Configure markup, padding, and size.
+---
 
-#### 🌐 Realm
-Client
+<details class="realm-client">
+<summary><a id=ShouldDrawEntityInfo></a>ShouldDrawEntityInfo(e)</summary>
+<a id="shoulddrawentityinfo"></a>
+<p>Control whether an entity should display info when looked at.</p>
+<p>When deciding if entity info overlays should be generated.</p>
+<p><h3>Parameters:</h3>
+<span class="types"><a class="type" href="https://wiki.facepunch.com/gmod/Entity">Entity</a></span> <span class="parameter">e</span> Entity under consideration.</p>
 
-#### 💡 Example Usage
+<p><h3>Returns:</h3>
+<span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.2">boolean</a></span> false to prevent info; nil/true to allow.</p>
 
-```lua
-    hook.Add("TooltipInitialize", "ExampleTooltipInitialize", function(...)
+<h3>Example Usage:</h3>
+<pre><code class="language-lua">    hook.Add("ShouldDrawEntityInfo", "ExampleShouldDrawEntityInfo", function(...)
         -- add custom client-side behavior
     end)
+</code></pre>
+</details>
 
-```
-
 ---
-
-### TooltipLayout
 
-#### 📋 Purpose
-Control tooltip layout; return true to keep the custom layout.
+<details class="realm-client">
+<summary><a id=ShouldDrawPlayerInfo></a>ShouldDrawPlayerInfo(e)</summary>
+<a id="shoulddrawplayerinfo"></a>
+<p>Decide whether player-specific info should be drawn for a target.</p>
+<p>Before rendering the player info panel above a player.</p>
+<p><h3>Parameters:</h3>
+<span class="types"><a class="type" href="https://wiki.facepunch.com/gmod/Player">Player</a></span> <span class="parameter">e</span> Player entity being drawn.</p>
 
-#### ⏰ When Called
-Each frame the tooltip is laid out.
+<p><h3>Returns:</h3>
+<span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.2">boolean</a></span> false to hide info; nil/true to draw.</p>
 
-#### ⚙️ Parameters
-
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `var` | **Panel** | Tooltip panel. |
+<h3>Example Usage:</h3>
+<pre><code class="language-lua">    hook.Add("ShouldDrawPlayerInfo", "ExampleShouldDrawPlayerInfo", function(...)
+        -- add custom client-side behavior
+    end)
+</code></pre>
+</details>
 
-#### ↩️ Returns
-* boolean
-true if a custom layout was applied.
+---
 
-#### 🌐 Realm
-Client
+<details class="realm-client">
+<summary><a id=ShouldDrawWepSelect></a>ShouldDrawWepSelect(client)</summary>
+<a id="shoulddrawwepselect"></a>
+<p>Decide if the custom weapon selector should draw for a player.</p>
+<p>Each frame the selector evaluates visibility.</p>
+<p><h3>Parameters:</h3>
+<span class="types"><a class="type" href="https://wiki.facepunch.com/gmod/Player">Player</a></span> <span class="parameter">client</span> Local player.</p>
 
-#### 💡 Example Usage
+<p><h3>Returns:</h3>
+<span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.2">boolean</a></span> false to hide the selector; nil/true to allow.</p>
 
-```lua
-    hook.Add("TooltipLayout", "ExampleTooltipLayout", function(...)
+<h3>Example Usage:</h3>
+<pre><code class="language-lua">    hook.Add("ShouldDrawWepSelect", "ExampleShouldDrawWepSelect", function(...)
         -- add custom client-side behavior
     end)
+</code></pre>
+</details>
 
-```
-
 ---
 
-### TooltipPaint
+<details class="realm-client">
+<summary><a id=ShouldHideBars></a>ShouldHideBars()</summary>
+<a id="shouldhidebars"></a>
+<p>Hide all HUD bars based on external conditions.</p>
+<p>Before drawing any bars on the HUD.</p>
+<p><h3>Returns:</h3>
+<span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.2">boolean</a></span> true to hide all bars; nil/false to render them.</p>
 
-#### 📋 Purpose
-Paint the custom tooltip background and contents.
+<h3>Example Usage:</h3>
+<pre><code class="language-lua">    hook.Add("ShouldHideBars", "ExampleShouldHideBars", function(...)
+        -- add custom client-side behavior
+    end)
+</code></pre>
+</details>
 
-#### ⏰ When Called
-When a tooltip panel is drawn.
+---
 
-#### ⚙️ Parameters
+<details class="realm-client">
+<summary><a id=ShouldMenuButtonShow></a>ShouldMenuButtonShow(arg1)</summary>
+<a id="shouldmenubuttonshow"></a>
+<p>Decide whether a button should appear in the menu bar.</p>
+<p>When building quick menu buttons.</p>
+<p><h3>Parameters:</h3>
+<span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.5">table|string</a></span> <span class="parameter">arg1</span> Button identifier or data.</p>
 
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `var` | **Panel** | Tooltip panel. |
-| `w` | **number** | Width. |
-| `h` | **number** | Height. |
+<p><h3>Returns:</h3>
+<span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.2">boolean</a></span> false to hide; nil/true to show.</p>
 
-#### ↩️ Returns
-* boolean
-true if the tooltip was fully painted.
+<h3>Example Usage:</h3>
+<pre><code class="language-lua">    hook.Add("ShouldMenuButtonShow", "ExampleShouldMenuButtonShow", function(...)
+        -- add custom client-side behavior
+    end)
+</code></pre>
+</details>
 
-#### 🌐 Realm
-Client
+---
 
-#### 💡 Example Usage
+<details class="realm-client">
+<summary><a id=ShouldRespawnScreenAppear></a>ShouldRespawnScreenAppear()</summary>
+<a id="shouldrespawnscreenappear"></a>
+<p>Control whether the respawn screen should be displayed.</p>
+<p>When the client dies and the respawn UI might show.</p>
+<p><h3>Returns:</h3>
+<span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.2">boolean</a></span> false to suppress; nil/true to display.</p>
 
-```lua
-    hook.Add("TooltipPaint", "ExampleTooltipPaint", function(...)
+<h3>Example Usage:</h3>
+<pre><code class="language-lua">    hook.Add("ShouldRespawnScreenAppear", "ExampleShouldRespawnScreenAppear", function(...)
         -- add custom client-side behavior
     end)
-
-```
+</code></pre>
+</details>
 
 ---
 
-### VendorExited
+<details class="realm-client">
+<summary><a id=ShouldShowCharVarInCreation></a>ShouldShowCharVarInCreation(key)</summary>
+<a id="shouldshowcharvarincreation"></a>
+<p>Determine if a character variable should appear in the creation form.</p>
+<p>While assembling the list of editable character variables.</p>
+<p><h3>Parameters:</h3>
+<span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a></span> <span class="parameter">key</span> Character variable identifier.</p>
 
-#### 📋 Purpose
-Handle logic when exiting a vendor menu.
+<p><h3>Returns:</h3>
+<span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.2">boolean</a></span> false to hide; nil/true to show.</p>
 
-#### ⏰ When Called
-After the vendor UI is closed.
+<h3>Example Usage:</h3>
+<pre><code class="language-lua">    hook.Add("ShouldShowCharVarInCreation", "ExampleShouldShowCharVarInCreation", function(...)
+        -- add custom client-side behavior
+    end)
+</code></pre>
+</details>
 
-#### ↩️ Returns
-* nil
-Run cleanup tasks.
+---
 
-#### 🌐 Realm
-Client
+<details class="realm-client">
+<summary><a id=ShouldShowClassOnScoreboard></a>ShouldShowClassOnScoreboard(clsData)</summary>
+<a id="shouldshowclassonscoreboard"></a>
+<p>Decide whether to display a player’s class on the scoreboard.</p>
+<p>When rendering scoreboard rows that include class info.</p>
+<p><h3>Parameters:</h3>
+<span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.5">table</a></span> <span class="parameter">clsData</span> Class data table for the player.</p>
 
-#### 💡 Example Usage
+<p><h3>Returns:</h3>
+<span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.2">boolean</a></span> false to hide class; nil/true to show.</p>
 
-```lua
-    hook.Add("VendorExited", "ExampleVendorExited", function(...)
+<h3>Example Usage:</h3>
+<pre><code class="language-lua">    hook.Add("ShouldShowClassOnScoreboard", "ExampleShouldShowClassOnScoreboard", function(...)
         -- add custom client-side behavior
     end)
-
-```
+</code></pre>
+</details>
 
 ---
 
-### VendorOpened
+<details class="realm-client">
+<summary><a id=ShouldShowFactionOnScoreboard></a>ShouldShowFactionOnScoreboard(ply)</summary>
+<a id="shouldshowfactiononscoreboard"></a>
+<p>Decide whether to display a player’s faction on the scoreboard.</p>
+<p>When rendering a scoreboard row.</p>
+<p><h3>Parameters:</h3>
+<span class="types"><a class="type" href="https://wiki.facepunch.com/gmod/Player">Player</a></span> <span class="parameter">ply</span> Player being displayed.</p>
 
-#### 📋 Purpose
-Perform setup when a vendor menu opens.
+<p><h3>Returns:</h3>
+<span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.2">boolean</a></span> false to hide faction; nil/true to show.</p>
 
-#### ⏰ When Called
-Immediately after opening the vendor UI.
-
-#### ⚙️ Parameters
-
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `vendor` | **Entity|table** | Vendor being accessed. |
+<h3>Example Usage:</h3>
+<pre><code class="language-lua">    hook.Add("ShouldShowFactionOnScoreboard", "ExampleShouldShowFactionOnScoreboard", function(...)
+        -- add custom client-side behavior
+    end)
+</code></pre>
+</details>
 
-#### ↩️ Returns
-* nil
-Populate panels or return false to abort.
+---
 
-#### 🌐 Realm
-Client
+<details class="realm-client">
+<summary><a id=ShouldShowPlayerOnScoreboard></a>ShouldShowPlayerOnScoreboard(ply)</summary>
+<a id="shouldshowplayeronscoreboard"></a>
+<p>Decide whether a player should appear on the scoreboard at all.</p>
+<p>Before adding a player row to the scoreboard.</p>
+<p><h3>Parameters:</h3>
+<span class="types"><a class="type" href="https://wiki.facepunch.com/gmod/Player">Player</a></span> <span class="parameter">ply</span> Player under consideration.</p>
 
-#### 💡 Example Usage
+<p><h3>Returns:</h3>
+<span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.2">boolean</a></span> false to omit the player; nil/true to include.</p>
 
-```lua
-    hook.Add("VendorOpened", "ExampleVendorOpened", function(...)
+<h3>Example Usage:</h3>
+<pre><code class="language-lua">    hook.Add("ShouldShowPlayerOnScoreboard", "ExampleShouldShowPlayerOnScoreboard", function(...)
         -- add custom client-side behavior
     end)
-
-```
+</code></pre>
+</details>
 
 ---
 
-### VoiceToggled
+<details class="realm-client">
+<summary><a id=ShouldShowQuickMenu></a>ShouldShowQuickMenu()</summary>
+<a id="shouldshowquickmenu"></a>
+<p>Control whether the quick menu should open when the context menu is toggled.</p>
+<p>When the context menu is opened.</p>
+<p><h3>Returns:</h3>
+<span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.2">boolean</a></span> false to prevent quick menu creation; nil/true to allow.</p>
 
-#### 📋 Purpose
-Respond to voice chat being toggled on or off.
-
-#### ⏰ When Called
-When the client enables or disables in-game voice.
+<h3>Example Usage:</h3>
+<pre><code class="language-lua">    hook.Add("ShouldShowQuickMenu", "ExampleShouldShowQuickMenu", function(...)
+        -- add custom client-side behavior
+    end)
+</code></pre>
+</details>
 
-#### ⚙️ Parameters
+---
 
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `enabled` | **boolean** | New voice toggle state. |
+<details class="realm-client">
+<summary><a id=ShowPlayerOptions></a>ShowPlayerOptions(target, options)</summary>
+<a id="showplayeroptions"></a>
+<p>Populate the options menu for a specific player (e.g., mute, profile).</p>
+<p>When opening a player interaction context menu.</p>
+<p><h3>Parameters:</h3>
+<span class="types"><a class="type" href="https://wiki.facepunch.com/gmod/Player">Player</a></span> <span class="parameter">target</span> Player the options apply to.</p>
+<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.5">table</a></span> <span class="parameter">options</span> Table of options to display; modify in place.</p>
 
-#### ↩️ Returns
-* nil
-Update voice panels or clean up.
+<h3>Example Usage:</h3>
+<pre><code class="language-lua">    hook.Add("ShowPlayerOptions", "ExampleShowPlayerOptions", function(...)
+        -- add custom client-side behavior
+    end)
+</code></pre>
+</details>
 
-#### 🌐 Realm
-Client
+---
 
-#### 💡 Example Usage
+<details class="realm-client">
+<summary><a id=StorageOpen></a>StorageOpen(storage, isCar)</summary>
+<a id="storageopen"></a>
+<p>Handle the client opening a storage entity inventory.</p>
+<p>When storage access is approved and panels are about to show.</p>
+<p><h3>Parameters:</h3>
+<span class="types"><a class="type" href="https://wiki.facepunch.com/gmod/Entity">Entity|table</a></span> <span class="parameter">storage</span> Storage entity or custom storage table.</p>
+<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.2">boolean</a></span> <span class="parameter">isCar</span> True if the storage is a vehicle trunk.</p>
 
-```lua
-    hook.Add("VoiceToggled", "ExampleVoiceToggled", function(...)
+<h3>Example Usage:</h3>
+<pre><code class="language-lua">    hook.Add("StorageOpen", "ExampleStorageOpen", function(...)
         -- add custom client-side behavior
     end)
-
-```
+</code></pre>
+</details>
 
 ---
 
-### WeaponCycleSound
+<details class="realm-client">
+<summary><a id=StorageUnlockPrompt></a>StorageUnlockPrompt(entity)</summary>
+<a id="storageunlockprompt"></a>
+<p>Prompt the player to unlock a locked storage entity.</p>
+<p>When the client interacts with a locked storage container.</p>
+<p><h3>Parameters:</h3>
+<span class="types"><a class="type" href="https://wiki.facepunch.com/gmod/Entity">Entity</a></span> <span class="parameter">entity</span> Storage entity requiring an unlock prompt.</p>
+
+<h3>Example Usage:</h3>
+<pre><code class="language-lua">    hook.Add("StorageUnlockPrompt", "ExampleStorageUnlockPrompt", function(...)
+        -- add custom client-side behavior
+    end)
+</code></pre>
+</details>
 
-#### 📋 Purpose
-Play a custom sound when cycling weapons.
+---
 
-#### ⏰ When Called
-When the weapon selector changes selection.
+<details class="realm-client">
+<summary><a id=ThirdPersonToggled></a>ThirdPersonToggled(arg1)</summary>
+<a id="thirdpersontoggled"></a>
+<p>React when the third-person toggle state changes.</p>
+<p>After third-person mode is turned on or off.</p>
+<p><h3>Parameters:</h3>
+<span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.2">boolean</a></span> <span class="parameter">arg1</span> New third-person enabled state.</p>
 
-#### ↩️ Returns
-* string|nil
-Sound path to play; nil to use default.
+<h3>Example Usage:</h3>
+<pre><code class="language-lua">    hook.Add("ThirdPersonToggled", "ExampleThirdPersonToggled", function(...)
+        -- add custom client-side behavior
+    end)
+</code></pre>
+</details>
 
-#### 🌐 Realm
-Client
+---
 
-#### 💡 Example Usage
+<details class="realm-client">
+<summary><a id=TooltipInitialize></a>TooltipInitialize(var, panel)</summary>
+<a id="tooltipinitialize"></a>
+<p>Initialize tooltip contents and sizing for Lilia tooltips.</p>
+<p>When a tooltip panel is created.</p>
+<p><h3>Parameters:</h3>
+<span class="types"><a class="type" href="https://wiki.facepunch.com/gmod/Panel">Panel</a></span> <span class="parameter">var</span> Tooltip panel.</p>
+<p><span class="types"><a class="type" href="https://wiki.facepunch.com/gmod/Panel">Panel</a></span> <span class="parameter">panel</span> Source panel that spawned the tooltip.</p>
 
-```lua
-    hook.Add("WeaponCycleSound", "ExampleWeaponCycleSound", function(...)
+<h3>Example Usage:</h3>
+<pre><code class="language-lua">    hook.Add("TooltipInitialize", "ExampleTooltipInitialize", function(...)
         -- add custom client-side behavior
     end)
-
-```
+</code></pre>
+</details>
 
 ---
 
-### WeaponSelectSound
+<details class="realm-client">
+<summary><a id=TooltipLayout></a>TooltipLayout(var)</summary>
+<a id="tooltiplayout"></a>
+<p>Control tooltip layout; return true to keep the custom layout.</p>
+<p>Each frame the tooltip is laid out.</p>
+<p><h3>Parameters:</h3>
+<span class="types"><a class="type" href="https://wiki.facepunch.com/gmod/Panel">Panel</a></span> <span class="parameter">var</span> Tooltip panel.</p>
 
-#### 📋 Purpose
-Play a sound when confirming weapon selection.
+<p><h3>Returns:</h3>
+<span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.2">boolean</a></span> true if a custom layout was applied.</p>
 
-#### ⏰ When Called
-When the weapon selector picks the highlighted weapon.
+<h3>Example Usage:</h3>
+<pre><code class="language-lua">    hook.Add("TooltipLayout", "ExampleTooltipLayout", function(...)
+        -- add custom client-side behavior
+    end)
+</code></pre>
+</details>
 
-#### ↩️ Returns
-* string|nil
-Sound path to play; nil for default.
+---
 
-#### 🌐 Realm
-Client
+<details class="realm-client">
+<summary><a id=TooltipPaint></a>TooltipPaint(var, w, h)</summary>
+<a id="tooltippaint"></a>
+<p>Paint the custom tooltip background and contents.</p>
+<p>When a tooltip panel is drawn.</p>
+<p><h3>Parameters:</h3>
+<span class="types"><a class="type" href="https://wiki.facepunch.com/gmod/Panel">Panel</a></span> <span class="parameter">var</span> Tooltip panel.</p>
+<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.3">number</a></span> <span class="parameter">w</span> Width.</p>
+<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.3">number</a></span> <span class="parameter">h</span> Height.</p>
 
-#### 💡 Example Usage
+<p><h3>Returns:</h3>
+<span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.2">boolean</a></span> true if the tooltip was fully painted.</p>
 
-```lua
-    hook.Add("WeaponSelectSound", "ExampleWeaponSelectSound", function(...)
+<h3>Example Usage:</h3>
+<pre><code class="language-lua">    hook.Add("TooltipPaint", "ExampleTooltipPaint", function(...)
         -- add custom client-side behavior
     end)
-
-```
+</code></pre>
+</details>
 
 ---
+
+<details class="realm-client">
+<summary><a id=VendorExited></a>VendorExited()</summary>
+<a id="vendorexited"></a>
+<p>Handle logic when exiting a vendor menu.</p>
+<p>After the vendor UI is closed.</p>
+<h3>Example Usage:</h3>
+<pre><code class="language-lua">    hook.Add("VendorExited", "ExampleVendorExited", function(...)
+        -- add custom client-side behavior
+    end)
+</code></pre>
+</details>
 
-### WebImageDownloaded
+---
 
-#### 📋 Purpose
-Handle a downloaded web image asset.
+<details class="realm-client">
+<summary><a id=VendorOpened></a>VendorOpened(vendor)</summary>
+<a id="vendoropened"></a>
+<p>Perform setup when a vendor menu opens.</p>
+<p>Immediately after opening the vendor UI.</p>
+<p><h3>Parameters:</h3>
+<span class="types"><a class="type" href="https://wiki.facepunch.com/gmod/Entity">Entity|table</a></span> <span class="parameter">vendor</span> Vendor being accessed.</p>
 
-#### ⏰ When Called
-After a remote image finishes downloading.
+<h3>Example Usage:</h3>
+<pre><code class="language-lua">    hook.Add("VendorOpened", "ExampleVendorOpened", function(...)
+        -- add custom client-side behavior
+    end)
+</code></pre>
+</details>
 
-#### ⚙️ Parameters
+---
 
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `n` | **string** | Image identifier. |
-| `arg2` | **string** | Local path or URL of the image. |
+<details class="realm-client">
+<summary><a id=VoiceToggled></a>VoiceToggled(enabled)</summary>
+<a id="voicetoggled"></a>
+<p>Respond to voice chat being toggled on or off.</p>
+<p>When the client enables or disables in-game voice.</p>
+<p><h3>Parameters:</h3>
+<span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.2">boolean</a></span> <span class="parameter">enabled</span> New voice toggle state.</p>
 
-#### ↩️ Returns
-* nil
-Use the image or cache it.
+<h3>Example Usage:</h3>
+<pre><code class="language-lua">    hook.Add("VoiceToggled", "ExampleVoiceToggled", function(...)
+        -- add custom client-side behavior
+    end)
+</code></pre>
+</details>
 
-#### 🌐 Realm
-Client
+---
 
-#### 💡 Example Usage
+<details class="realm-client">
+<summary><a id=WeaponCycleSound></a>WeaponCycleSound()</summary>
+<a id="weaponcyclesound"></a>
+<p>Play a custom sound when cycling weapons.</p>
+<p>When the weapon selector changes selection.</p>
+<p><h3>Returns:</h3>
+<span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string|nil</a></span> Sound path to play; nil to use default.</p>
 
-```lua
-    hook.Add("WebImageDownloaded", "ExampleWebImageDownloaded", function(...)
+<h3>Example Usage:</h3>
+<pre><code class="language-lua">    hook.Add("WeaponCycleSound", "ExampleWeaponCycleSound", function(...)
         -- add custom client-side behavior
     end)
+</code></pre>
+</details>
 
-```
-
 ---
-
-### WebSoundDownloaded
 
-#### 📋 Purpose
-Handle a downloaded web sound asset.
+<details class="realm-client">
+<summary><a id=WeaponSelectSound></a>WeaponSelectSound()</summary>
+<a id="weaponselectsound"></a>
+<p>Play a sound when confirming weapon selection.</p>
+<p>When the weapon selector picks the highlighted weapon.</p>
+<p><h3>Returns:</h3>
+<span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string|nil</a></span> Sound path to play; nil for default.</p>
 
-#### ⏰ When Called
-After a remote sound file is fetched.
+<h3>Example Usage:</h3>
+<pre><code class="language-lua">    hook.Add("WeaponSelectSound", "ExampleWeaponSelectSound", function(...)
+        -- add custom client-side behavior
+    end)
+</code></pre>
+</details>
 
-#### ⚙️ Parameters
+---
 
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `name` | **string** | Sound identifier. |
-| `path` | **string** | Local file path where the sound was saved. |
+<details class="realm-client">
+<summary><a id=WebImageDownloaded></a>WebImageDownloaded(n, arg2)</summary>
+<a id="webimagedownloaded"></a>
+<p>Handle a downloaded web image asset.</p>
+<p>After a remote image finishes downloading.</p>
+<p><h3>Parameters:</h3>
+<span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a></span> <span class="parameter">n</span> Image identifier.</p>
+<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a></span> <span class="parameter">arg2</span> Local path or URL of the image.</p>
 
-#### ↩️ Returns
-* nil
-Cache or play the sound as needed.
+<h3>Example Usage:</h3>
+<pre><code class="language-lua">    hook.Add("WebImageDownloaded", "ExampleWebImageDownloaded", function(...)
+        -- add custom client-side behavior
+    end)
+</code></pre>
+</details>
 
-#### 🌐 Realm
-Client
+---
 
-#### 💡 Example Usage
+<details class="realm-client">
+<summary><a id=WebSoundDownloaded></a>WebSoundDownloaded(name, path)</summary>
+<a id="websounddownloaded"></a>
+<p>Handle a downloaded web sound asset.</p>
+<p>After a remote sound file is fetched.</p>
+<p><h3>Parameters:</h3>
+<span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a></span> <span class="parameter">name</span> Sound identifier.</p>
+<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a></span> <span class="parameter">path</span> Local file path where the sound was saved.</p>
 
-```lua
-    hook.Add("WebSoundDownloaded", "ExampleWebSoundDownloaded", function(...)
+<h3>Example Usage:</h3>
+<pre><code class="language-lua">    hook.Add("WebSoundDownloaded", "ExampleWebSoundDownloaded", function(...)
         -- add custom client-side behavior
     end)
-
-```
+</code></pre>
+</details>
 
 ---
 

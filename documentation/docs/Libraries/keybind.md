@@ -10,33 +10,19 @@ The keybind library provides comprehensive functionality for managing keyboard b
 
 ---
 
-### lia.keybind.add
+<details class="realm-shared">
+<summary><a id=lia.keybind.add></a>lia.keybind.add(k, d, desc, cb)</summary>
+<a id="liakeybindadd"></a>
+<p>Register a keybind action with callbacks and optional metadata.</p>
+<p>During initialization to expose actions to the keybind system/UI.</p>
+<p><h3>Parameters:</h3>
+<span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string|number</a></span> <span class="parameter">k</span> Key code or key name (or actionName when using table config form).</p>
+<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string|table</a></span> <span class="parameter">d</span> Action name or config table when first arg is action name.</p>
+<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a></span> <span class="parameter">desc</span> <span class="optional">optional</span> Description when using legacy signature.</p>
+<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.5">table</a></span> <span class="parameter">cb</span> <span class="optional">optional</span> Callback table {onPress, onRelease, shouldRun, serverOnly}.</p>
 
-#### 📋 Purpose
-Register a keybind action with callbacks and optional metadata.
-
-#### ⏰ When Called
-During initialization to expose actions to the keybind system/UI.
-
-#### ⚙️ Parameters
-
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `k` | **string|number** | Key code or key name (or actionName when using table config form). |
-| `d` | **string|table** | Action name or config table when first arg is action name. |
-| `desc` | **string|nil** | Description when using legacy signature. |
-| `cb` | **table|nil** | Callback table {onPress, onRelease, shouldRun, serverOnly}. |
-
-#### ↩️ Returns
-* nil
-
-#### 🌐 Realm
-Shared
-
-#### 💡 Example Usage
-
-```lua
-    -- Table-based registration with shouldRun and serverOnly.
+<h3>Example Usage:</h3>
+<pre><code class="language-lua">    -- Table-based registration with shouldRun and serverOnly.
     lia.keybind.add("toggleMap", {
         keyBind = KEY_M,
         desc = "Open the world map",
@@ -51,85 +37,52 @@ Shared
             end
         end
     })
-
-```
+</code></pre>
+</details>
 
 ---
 
-### lia.keybind.get
+<details class="realm-client">
+<summary><a id=lia.keybind.get></a>lia.keybind.get(a, df)</summary>
+<a id="liakeybindget"></a>
+<p>Get the key code assigned to an action, with default fallback.</p>
+<p>When populating keybind UI or triggering actions manually.</p>
+<p><h3>Parameters:</h3>
+<span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a></span> <span class="parameter">a</span> Action name.</p>
+<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.3">number</a></span> <span class="parameter">df</span> <span class="optional">optional</span> Default key code if not set.</p>
 
-#### 📋 Purpose
-Get the key code assigned to an action, with default fallback.
+<p><h3>Returns:</h3>
+<span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.3">number|nil</a></span></p>
 
-#### ⏰ When Called
-When populating keybind UI or triggering actions manually.
-
-#### ⚙️ Parameters
-
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `a` | **string** | Action name. |
-| `df` | **number|nil** | Default key code if not set. |
-
-#### ↩️ Returns
-* number|nil
-
-#### 🌐 Realm
-Client
-
-#### 💡 Example Usage
-
-```lua
-    local key = lia.keybind.get("openInventory", KEY_I)
+<h3>Example Usage:</h3>
+<pre><code class="language-lua">    local key = lia.keybind.get("openInventory", KEY_I)
     print("Inventory key is:", input.GetKeyName(key))
-
-```
-
----
-
-### lia.keybind.save
-
-#### 📋 Purpose
-Persist current keybind overrides to disk.
-
-#### ⏰ When Called
-After users change keybinds in the config UI.
-
-#### ↩️ Returns
-* nil
-
-#### 🌐 Realm
-Client
-
-#### 💡 Example Usage
-
-```lua
-    lia.keybind.save()
-
-```
+</code></pre>
+</details>
 
 ---
 
-### lia.keybind.load
+<details class="realm-client">
+<summary><a id=lia.keybind.save></a>lia.keybind.save()</summary>
+<a id="liakeybindsave"></a>
+<p>Persist current keybind overrides to disk.</p>
+<p>After users change keybinds in the config UI.</p>
+<h3>Example Usage:</h3>
+<pre><code class="language-lua">    lia.keybind.save()
+</code></pre>
+</details>
 
-#### 📋 Purpose
-Load keybind overrides from disk, falling back to defaults if missing.
+---
 
-#### ⏰ When Called
-On client init/config load; rebuilds reverse lookup table for keys.
-
-#### ↩️ Returns
-* nil
-
-#### 🌐 Realm
-Client
-
-#### 💡 Example Usage
-
-```lua
-    hook.Add("Initialize", "LoadLiliaKeybinds", lia.keybind.load)
-
-```
+<details class="realm-client">
+<summary><a id=lia.keybind.load></a>lia.keybind.load()</summary>
+<a id="liakeybindload"></a>
+<p>Load keybind overrides from disk, falling back to defaults if missing.</p>
+<p>On client init/config load; rebuilds reverse lookup table for keys.</p>
+<h3>Example Usage:</h3>
+<pre><code class="language-lua">    hook.Add("Initialize", "LoadLiliaKeybinds", lia.keybind.load)
+</code></pre>
+</details>
 
 ---
 

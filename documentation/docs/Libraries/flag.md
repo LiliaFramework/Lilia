@@ -10,71 +10,43 @@ The flags library provides a comprehensive permission system for managing charac
 
 ---
 
-### lia.flag.add
+<details class="realm-shared">
+<summary><a id=lia.flag.add></a>lia.flag.add(flag, Single, Single, desc, callback)</summary>
+<a id="liaflagadd"></a>
+<p>Register a flag with description and optional grant/remove callback.</p>
+<p>During framework setup to define permission flags.</p>
+<p><h3>Parameters:</h3>
+<span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a></span> <span class="parameter">flag</span> Single-character flag id.</p>
+<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#2.2">unknown</a></span> <span class="parameter">Single</span> character flag id.</p>
+<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#2.2">unknown</a></span> <span class="parameter">Single</span> character flag id.</p>
+<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a></span> <span class="parameter">desc</span> Localization key or plain description.</p>
+<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.6">function</a></span> <span class="parameter">callback</span> <span class="optional">optional</span> function(client, isGiven) for grant/remove side effects.</p>
 
-#### 📋 Purpose
-Register a flag with description and optional grant/remove callback.
-
-#### ⏰ When Called
-During framework setup to define permission flags.
-
-#### ⚙️ Parameters
-
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `flag` | **string** | Single-character flag id. |
-| `Single` | **unknown** | character flag id. |
-| `Single` | **unknown** | character flag id. |
-| `desc` | **string** | Localization key or plain description. |
-| `callback` | **function|nil** | function(client, isGiven) for grant/remove side effects. |
-
-#### ↩️ Returns
-* nil
-
-#### 🌐 Realm
-Shared
-
-#### 💡 Example Usage
-
-```lua
-    lia.flag.add("B", "flagBuildMenu", function(client, isGiven)
+<h3>Example Usage:</h3>
+<pre><code class="language-lua">    lia.flag.add("B", "flagBuildMenu", function(client, isGiven)
         if isGiven then
             client:Give("weapon_physgun")
         else
             client:StripWeapon("weapon_physgun")
         end
     end)
-
-```
+</code></pre>
+</details>
 
 ---
 
-### lia.flag.onSpawn
+<details class="realm-server">
+<summary><a id=lia.flag.onSpawn></a>lia.flag.onSpawn(client)</summary>
+<a id="liaflagonspawn"></a>
+<p>Execute flag callbacks for a player on spawn, ensuring each flag runs once.</p>
+<p>Automatically when characters spawn; can be hooked for reapplication.</p>
+<p><h3>Parameters:</h3>
+<span class="types"><a class="type" href="https://wiki.facepunch.com/gmod/Player">Player</a></span> <span class="parameter">client</span> Player whose flags should be processed.</p>
 
-#### 📋 Purpose
-Execute flag callbacks for a player on spawn, ensuring each flag runs once.
-
-#### ⏰ When Called
-Automatically when characters spawn; can be hooked for reapplication.
-
-#### ⚙️ Parameters
-
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `client` | **Player** | Player whose flags should be processed. |
-
-#### ↩️ Returns
-* nil
-
-#### 🌐 Realm
-Server
-
-#### 💡 Example Usage
-
-```lua
-    hook.Add("PlayerSpawn", "ApplyFlagWeapons", lia.flag.onSpawn)
-
-```
+<h3>Example Usage:</h3>
+<pre><code class="language-lua">    hook.Add("PlayerSpawn", "ApplyFlagWeapons", lia.flag.onSpawn)
+</code></pre>
+</details>
 
 ---
 

@@ -10,6 +10,7 @@ The module system provides comprehensive functionality for defining modules with
 
 ---
 
+<a id="name"></a>
 ### name
 
 #### 📋 Purpose
@@ -25,6 +26,7 @@ Sets the display name of the module
 
 ---
 
+<a id="author"></a>
 ### author
 
 #### 📋 Purpose
@@ -40,6 +42,7 @@ Sets the author of the module
 
 ---
 
+<a id="discord"></a>
 ### discord
 
 #### 📋 Purpose
@@ -55,6 +58,7 @@ Sets the Discord contact for the module author
 
 ---
 
+<a id="desc"></a>
 ### desc
 
 #### 📋 Purpose
@@ -70,6 +74,7 @@ Sets the description of the module
 
 ---
 
+<a id="version"></a>
 ### version
 
 #### 📋 Purpose
@@ -85,6 +90,7 @@ Sets the version number of the module
 
 ---
 
+<a id="versionid"></a>
 ### versionID
 
 #### 📋 Purpose
@@ -100,6 +106,7 @@ Sets the unique version identifier for the module
 
 ---
 
+<a id="uniqueid"></a>
 ### uniqueID
 
 #### 📋 Purpose
@@ -119,6 +126,7 @@ Note: This property is internal and should not be modified directly
 
 ---
 
+<a id="privileges"></a>
 ### Privileges
 
 #### 📋 Purpose
@@ -136,6 +144,7 @@ Sets the privileges required for this module
 
 ---
 
+<a id="dependencies"></a>
 ### Dependencies
 
 #### 📋 Purpose
@@ -153,6 +162,7 @@ Sets the file dependencies for this module
 
 ---
 
+<a id="networkstrings"></a>
 ### NetworkStrings
 
 #### 📋 Purpose
@@ -168,6 +178,7 @@ Sets the network strings used by this module
 
 ---
 
+<a id="workshopcontent"></a>
 ### WorkshopContent
 
 #### 📋 Purpose
@@ -184,6 +195,7 @@ Sets the Workshop content IDs required by this module
 
 ---
 
+<a id="websounds"></a>
 ### WebSounds
 
 #### 📋 Purpose
@@ -201,6 +213,7 @@ Sets the web-hosted sound files used by this module
 
 ---
 
+<a id="webimages"></a>
 ### WebImages
 
 #### 📋 Purpose
@@ -218,6 +231,7 @@ Sets the web-hosted image files used by this module
 
 ---
 
+<a id="enabled"></a>
 ### enabled
 
 #### 📋 Purpose
@@ -238,6 +252,7 @@ Sets whether the module is enabled by default
 
 ---
 
+<a id="folder"></a>
 ### folder
 
 #### 📋 Purpose
@@ -246,6 +261,7 @@ Internal Variable: This is set automatically by the module system
 
 ---
 
+<a id="path"></a>
 ### path
 
 #### 📋 Purpose
@@ -254,6 +270,7 @@ Internal Variable: This is set automatically by the module system
 
 ---
 
+<a id="variable"></a>
 ### variable
 
 #### 📋 Purpose
@@ -262,6 +279,7 @@ Internal Variable: This is set automatically by the module system
 
 ---
 
+<a id="loading"></a>
 ### loading
 
 #### 📋 Purpose
@@ -270,6 +288,7 @@ Internal Variable: This is set automatically by the module system
 
 ---
 
+<a id="setdata"></a>
 ### setData
 
 #### 📋 Purpose
@@ -284,6 +303,7 @@ Persists module-specific data via lia.data using the module's uniqueID
 
 ---
 
+<a id="getdata"></a>
 ### getData
 
 #### 📋 Purpose
@@ -298,6 +318,7 @@ Retrieves the table saved by `setData` and returns the supplied default when not
 
 ---
 
+<a id="moduleloaded"></a>
 ### ModuleLoaded
 
 #### 📋 Purpose

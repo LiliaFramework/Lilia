@@ -6,6 +6,12 @@
     <div class="generator-section">
         <h3>Basic Information</h3>
         <div class="input-group">
+            <label for="item-id">Unique ID:</label>
+            <input type="text" id="item-id" placeholder="e.g., ammo_9mm">
+            <small>Unique identifier for this item (no spaces, lowercase)</small>
+        </div>
+
+        <div class="input-group">
             <label for="item-name">Item Name:</label>
             <input type="text" id="item-name" placeholder="e.g., 9mm Ammo">
         </div>
@@ -280,6 +286,7 @@ code {
 
 <script>
 function generateAmmoItem() {
+    const uniqueId = (document.getElementById('item-id').value || '').trim() || 'ammo_example';
     const name = (document.getElementById('item-name').value || '').trim() || 'Ammo Item';
     const desc = (document.getElementById('item-desc').value || '').trim() || 'Ammo item description';
     const category = (document.getElementById('item-category').value || '').trim() || 'itemCatAmmunition';
@@ -289,20 +296,24 @@ function generateAmmoItem() {
     const ammoType = (document.getElementById('ammo-type').value || '').trim() || 'pistol';
     const ammoAmount = document.getElementById('ammo-amount').value || '30';
 
+    const properties = [
+        `    name = ${JSON.stringify(name)}`,
+        `    desc = ${JSON.stringify(desc)}`,
+        `    category = ${JSON.stringify(category)}`,
+        `    model = ${JSON.stringify(model)}`,
+        `    width = ${width}`,
+        `    height = ${height}`,
+        `    ammo = ${JSON.stringify(ammoType)}`,
+        `    ammoAmount = ${ammoAmount}`
+    ];
+
     const lines = [
-        '-- Copy and paste this code into your ammo item file',
-        '-- Example: gamemode/items/ammo/pistol_ammo.lua',
+        '-- Copy and paste this code into any Lua file that loads during initialization',
+        '-- Example: gamemode/items/ammo.lua or gamemode/sh_items.lua',
         '',
-        `ITEM.name = ${JSON.stringify(name)}`,
-        `ITEM.desc = ${JSON.stringify(desc)}`,
-        `ITEM.category = ${JSON.stringify(category)}`,
-        '',
-        `ITEM.model = ${JSON.stringify(model)}`,
-        `ITEM.width = ${width}`,
-        `ITEM.height = ${height}`,
-        '',
-        `ITEM.ammo = ${JSON.stringify(ammoType)}`,
-        `ITEM.ammoAmount = ${ammoAmount}`
+        `lia.item.registerItem(${JSON.stringify(uniqueId)}, "base_ammo", {`,
+        ...properties,
+        '})'
     ];
 
     const code = `${lines.join('\n')}\n`;

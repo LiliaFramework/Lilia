@@ -10,562 +10,352 @@ The inventory library provides comprehensive functionality for managing inventor
 
 ---
 
-### lia.inventory.newType
+<details class="realm-shared">
+<summary><a id=lia.inventory.newType></a>lia.inventory.newType(typeID, invTypeStruct)</summary>
+<a id="liainventorynewtype"></a>
+<p>Registers a new inventory type with the specified ID and structure.</p>
+<p>Called during gamemode initialization or when defining custom inventory types that extend the base inventory system.</p>
+<p><h3>Parameters:</h3>
+<span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a></span> <span class="parameter">typeID</span> Unique identifier for the inventory type.</p>
+<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.5">table</a></span> <span class="parameter">invTypeStruct</span> Table containing the inventory type definition with required fields like className, config, and methods.</p>
 
-#### 📋 Purpose
-Registers a new inventory type with the specified ID and structure.
-
-#### ⏰ When Called
-Called during gamemode initialization or when defining custom inventory types that extend the base inventory system.
-
-#### ⚙️ Parameters
-
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `typeID` | **string** | Unique identifier for the inventory type. |
-| `invTypeStruct` | **table** | Table containing the inventory type definition with required fields like className, config, and methods. |
-
-#### ↩️ Returns
-* nil
-No return value.
-
-#### 🌐 Realm
-Shared
-
-#### 💡 Example Usage
-
-```lua
-    lia.inventory.newType("grid", {
+<h3>Example Usage:</h3>
+<pre><code class="language-lua">    lia.inventory.newType("grid", {
         className = "GridInv",
         config = {w = 10, h = 10},
         add = function(self, item) end,
         remove = function(self, item) end,
         sync = function(self, client) end
     })
-
-```
+</code></pre>
+</details>
 
 ---
 
-### lia.inventory.new
+<details class="realm-shared">
+<summary><a id=lia.inventory.new></a>lia.inventory.new(typeID)</summary>
+<a id="liainventorynew"></a>
+<p>Creates a new inventory instance of the specified type.</p>
+<p>Called when instantiating inventories during loading, character creation, or when creating new storage containers.</p>
+<p><h3>Parameters:</h3>
+<span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a></span> <span class="parameter">typeID</span> The inventory type identifier that was previously registered with newType.</p>
 
-#### 📋 Purpose
-Creates a new inventory instance of the specified type.
+<p><h3>Returns:</h3>
+<span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.5">table</a></span> A new inventory instance with items table and copied config from the type definition.</p>
 
-#### ⏰ When Called
-Called when instantiating inventories during loading, character creation, or when creating new storage containers.
-
-#### ⚙️ Parameters
-
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `typeID` | **string** | The inventory type identifier that was previously registered with newType. |
-
-#### ↩️ Returns
-* table
-A new inventory instance with items table and copied config from the type definition.
-
-#### 🌐 Realm
-Shared
-
-#### 💡 Example Usage
-
-```lua
-    local myInventory = lia.inventory.new("grid")
+<h3>Example Usage:</h3>
+<pre><code class="language-lua">    local myInventory = lia.inventory.new("grid")
     -- Creates a new grid-based inventory instance
-
-```
+</code></pre>
+</details>
 
 ---
 
-### lia.inventory.loadByID
+<details class="realm-server">
+<summary><a id=lia.inventory.loadByID></a>lia.inventory.loadByID(id, noCache)</summary>
+<a id="liainventoryloadbyid"></a>
+<p>Loads an inventory instance by its ID, checking cache first and falling back to storage loading.</p>
+<p>Called when accessing inventories by ID, typically during character loading, item operations, or storage access.</p>
+<p><h3>Parameters:</h3>
+<span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.3">number</a></span> <span class="parameter">id</span> The unique inventory ID to load.</p>
+<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.2">boolean</a></span> <span class="parameter">noCache</span> Optional flag to bypass cache and force loading from storage.</p>
 
-#### 📋 Purpose
-Loads an inventory instance by its ID, checking cache first and falling back to storage loading.
+<p><h3>Returns:</h3>
+<span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#2.2">Deferred</a></span> A deferred object that resolves to the loaded inventory instance, or rejects if loading fails.</p>
 
-#### ⏰ When Called
-Called when accessing inventories by ID, typically during character loading, item operations, or storage access.
-
-#### ⚙️ Parameters
-
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `id` | **number** | The unique inventory ID to load. |
-| `noCache` | **boolean** | Optional flag to bypass cache and force loading from storage. |
-
-#### ↩️ Returns
-* Deferred
-A deferred object that resolves to the loaded inventory instance, or rejects if loading fails.
-
-#### 🌐 Realm
-Server
-
-#### 💡 Example Usage
-
-```lua
-    lia.inventory.loadByID(123):next(function(inventory)
+<h3>Example Usage:</h3>
+<pre><code class="language-lua">    lia.inventory.loadByID(123):next(function(inventory)
         print("Loaded inventory:", inventory.id)
     end)
-
-```
+</code></pre>
+</details>
 
 ---
 
-### lia.inventory.loadFromDefaultStorage
+<details class="realm-server">
+<summary><a id=lia.inventory.loadFromDefaultStorage></a>lia.inventory.loadFromDefaultStorage(id, noCache)</summary>
+<a id="liainventoryloadfromdefaultstorage"></a>
+<p>Loads an inventory from the default database storage, including associated data and items.</p>
+<p>Called by loadByID when no custom storage loader is found, or when directly loading from database storage.</p>
+<p><h3>Parameters:</h3>
+<span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.3">number</a></span> <span class="parameter">id</span> The inventory ID to load from database storage.</p>
+<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.2">boolean</a></span> <span class="parameter">noCache</span> Optional flag to bypass cache and force fresh loading.</p>
 
-#### 📋 Purpose
-Loads an inventory from the default database storage, including associated data and items.
+<p><h3>Returns:</h3>
+<span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#2.2">Deferred</a></span> A deferred object that resolves to the fully loaded inventory instance with data and items.</p>
 
-#### ⏰ When Called
-Called by loadByID when no custom storage loader is found, or when directly loading from database storage.
-
-#### ⚙️ Parameters
-
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `id` | **number** | The inventory ID to load from database storage. |
-| `noCache` | **boolean** | Optional flag to bypass cache and force fresh loading. |
-
-#### ↩️ Returns
-* Deferred
-A deferred object that resolves to the fully loaded inventory instance with data and items.
-
-#### 🌐 Realm
-Server
-
-#### 💡 Example Usage
-
-```lua
-    lia.inventory.loadFromDefaultStorage(456, true):next(function(inventory)
+<h3>Example Usage:</h3>
+<pre><code class="language-lua">    lia.inventory.loadFromDefaultStorage(456, true):next(function(inventory)
         -- Inventory loaded with fresh data, bypassing cache
     end)
-
-```
+</code></pre>
+</details>
 
 ---
 
-### lia.inventory.instance
+<details class="realm-server">
+<summary><a id=lia.inventory.instance></a>lia.inventory.instance(typeID, initialData)</summary>
+<a id="liainventoryinstance"></a>
+<p>Creates a new inventory instance with persistent storage initialization.</p>
+<p>Called when creating new inventories that need database persistence, such as character inventories or storage containers.</p>
+<p><h3>Parameters:</h3>
+<span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a></span> <span class="parameter">typeID</span> The inventory type identifier.</p>
+<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.5">table</a></span> <span class="parameter">initialData</span> Optional initial data to store with the inventory instance.</p>
 
-#### 📋 Purpose
-Creates a new inventory instance with persistent storage initialization.
+<p><h3>Returns:</h3>
+<span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#2.2">Deferred</a></span> A deferred object that resolves to the created inventory instance after storage initialization.</p>
 
-#### ⏰ When Called
-Called when creating new inventories that need database persistence, such as character inventories or storage containers.
-
-#### ⚙️ Parameters
-
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `typeID` | **string** | The inventory type identifier. |
-| `initialData` | **table** | Optional initial data to store with the inventory instance. |
-
-#### ↩️ Returns
-* Deferred
-A deferred object that resolves to the created inventory instance after storage initialization.
-
-#### 🌐 Realm
-Server
-
-#### 💡 Example Usage
-
-```lua
-    lia.inventory.instance("grid", {char = 1}):next(function(inventory)
+<h3>Example Usage:</h3>
+<pre><code class="language-lua">    lia.inventory.instance("grid", {char = 1}):next(function(inventory)
         -- New inventory created and stored in database
     end)
-
-```
+</code></pre>
+</details>
 
 ---
 
-### lia.inventory.loadAllFromCharID
+<details class="realm-server">
+<summary><a id=lia.inventory.loadAllFromCharID></a>lia.inventory.loadAllFromCharID(charID)</summary>
+<a id="liainventoryloadallfromcharid"></a>
+<p>Loads all inventories associated with a specific character ID.</p>
+<p>Called during character loading to restore all inventory data for a character.</p>
+<p><h3>Parameters:</h3>
+<span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.3">number|string</a></span> <span class="parameter">charID</span> The character ID to load inventories for (will be converted to number).</p>
 
-#### 📋 Purpose
-Loads all inventories associated with a specific character ID.
+<p><h3>Returns:</h3>
+<span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#2.2">Deferred</a></span> A deferred object that resolves to an array of loaded inventory instances.</p>
 
-#### ⏰ When Called
-Called during character loading to restore all inventory data for a character.
-
-#### ⚙️ Parameters
-
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `charID` | **number|string** | The character ID to load inventories for (will be converted to number). |
-
-#### ↩️ Returns
-* Deferred
-A deferred object that resolves to an array of loaded inventory instances.
-
-#### 🌐 Realm
-Server
-
-#### 💡 Example Usage
-
-```lua
-    lia.inventory.loadAllFromCharID(42):next(function(inventories)
+<h3>Example Usage:</h3>
+<pre><code class="language-lua">    lia.inventory.loadAllFromCharID(42):next(function(inventories)
         for _, inv in ipairs(inventories) do
             print("Loaded inventory:", inv.id)
         end
     end)
-
-```
+</code></pre>
+</details>
 
 ---
 
-### lia.inventory.deleteByID
+<details class="realm-server">
+<summary><a id=lia.inventory.deleteByID></a>lia.inventory.deleteByID(id)</summary>
+<a id="liainventorydeletebyid"></a>
+<p>Permanently deletes an inventory and all its associated data from the database.</p>
+<p>Called when removing inventories, such as during character deletion or storage cleanup.</p>
+<p><h3>Parameters:</h3>
+<span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.3">number</a></span> <span class="parameter">id</span> The inventory ID to delete.</p>
 
-#### 📋 Purpose
-Permanently deletes an inventory and all its associated data from the database.
-
-#### ⏰ When Called
-Called when removing inventories, such as during character deletion or storage cleanup.
-
-#### ⚙️ Parameters
-
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `id` | **number** | The inventory ID to delete. |
-
-#### ↩️ Returns
-* nil
-No return value.
-
-#### 🌐 Realm
-Server
-
-#### 💡 Example Usage
-
-```lua
-    lia.inventory.deleteByID(123)
+<h3>Example Usage:</h3>
+<pre><code class="language-lua">    lia.inventory.deleteByID(123)
     -- Inventory 123 and all its data/items are permanently removed
-
-```
+</code></pre>
+</details>
 
 ---
 
-### lia.inventory.cleanUpForCharacter
+<details class="realm-server">
+<summary><a id=lia.inventory.cleanUpForCharacter></a>lia.inventory.cleanUpForCharacter(character)</summary>
+<a id="liainventorycleanupforcharacter"></a>
+<p>Destroys all inventories associated with a character during cleanup.</p>
+<p>Called during character deletion or when cleaning up character data to prevent memory leaks.</p>
+<p><h3>Parameters:</h3>
+<span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.5">table</a></span> <span class="parameter">character</span> The character object whose inventories should be destroyed.</p>
 
-#### 📋 Purpose
-Destroys all inventories associated with a character during cleanup.
-
-#### ⏰ When Called
-Called during character deletion or when cleaning up character data to prevent memory leaks.
-
-#### ⚙️ Parameters
-
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `character` | **table** | The character object whose inventories should be destroyed. |
-
-#### ↩️ Returns
-* nil
-No return value.
-
-#### 🌐 Realm
-Server
-
-#### 💡 Example Usage
-
-```lua
-    lia.inventory.cleanUpForCharacter(player:getChar())
+<h3>Example Usage:</h3>
+<pre><code class="language-lua">    lia.inventory.cleanUpForCharacter(player:getChar())
     -- All inventories for this character are destroyed
-
-```
+</code></pre>
+</details>
 
 ---
 
-### lia.inventory.checkOverflow
+<details class="realm-server">
+<summary><a id=lia.inventory.checkOverflow></a>lia.inventory.checkOverflow(inv, character, oldW, oldH)</summary>
+<a id="liainventorycheckoverflow"></a>
+<p>Checks for items that no longer fit in an inventory after resizing and moves them to overflow storage.</p>
+<p>Called when inventory dimensions change (like when upgrading inventory size) to handle items that no longer fit.</p>
+<p><h3>Parameters:</h3>
+<span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.5">table</a></span> <span class="parameter">inv</span> The inventory instance to check for overflow.</p>
+<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.5">table</a></span> <span class="parameter">character</span> The character object to store overflow items on.</p>
+<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.3">number</a></span> <span class="parameter">oldW</span> The previous width of the inventory.</p>
+<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.3">number</a></span> <span class="parameter">oldH</span> The previous height of the inventory.</p>
 
-#### 📋 Purpose
-Checks for items that no longer fit in an inventory after resizing and moves them to overflow storage.
+<p><h3>Returns:</h3>
+<span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.2">boolean</a></span> True if overflow items were found and moved, false otherwise.</p>
 
-#### ⏰ When Called
-Called when inventory dimensions change (like when upgrading inventory size) to handle items that no longer fit.
-
-#### ⚙️ Parameters
-
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `inv` | **table** | The inventory instance to check for overflow. |
-| `character` | **table** | The character object to store overflow items on. |
-| `oldW` | **number** | The previous width of the inventory. |
-| `oldH` | **number** | The previous height of the inventory. |
-
-#### ↩️ Returns
-* boolean
-True if overflow items were found and moved, false otherwise.
-
-#### 🌐 Realm
-Server
-
-#### 💡 Example Usage
-
-```lua
-    if lia.inventory.checkOverflow(inventory, player:getChar(), 5, 5) then
+<h3>Example Usage:</h3>
+<pre><code class="language-lua">    if lia.inventory.checkOverflow(inventory, player:getChar(), 5, 5) then
         -- Items were moved to overflow storage
     end
-
-```
+</code></pre>
+</details>
 
 ---
 
-### lia.inventory.registerStorage
+<details class="realm-server">
+<summary><a id=lia.inventory.registerStorage></a>lia.inventory.registerStorage(model, data)</summary>
+<a id="liainventoryregisterstorage"></a>
+<p>Registers a storage container configuration for entities with the specified model.</p>
+<p>Called during gamemode initialization to define storage containers like lockers, crates, or other inventory-holding entities.</p>
+<p><h3>Parameters:</h3>
+<span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a></span> <span class="parameter">model</span> The model path of the entity that will have storage capability.</p>
+<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.5">table</a></span> <span class="parameter">data</span> Configuration table containing name, invType, invData, and other storage properties.</p>
 
-#### 📋 Purpose
-Registers a storage container configuration for entities with the specified model.
+<p><h3>Returns:</h3>
+<span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.5">table</a></span> The registered storage data table.</p>
 
-#### ⏰ When Called
-Called during gamemode initialization to define storage containers like lockers, crates, or other inventory-holding entities.
-
-#### ⚙️ Parameters
-
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `model` | **string** | The model path of the entity that will have storage capability. |
-| `data` | **table** | Configuration table containing name, invType, invData, and other storage properties. |
-
-#### ↩️ Returns
-* table
-The registered storage data table.
-
-#### 🌐 Realm
-Server
-
-#### 💡 Example Usage
-
-```lua
-    lia.inventory.registerStorage("models/props_c17/lockers001a.mdl", {
+<h3>Example Usage:</h3>
+<pre><code class="language-lua">    lia.inventory.registerStorage("models/props_c17/lockers001a.mdl", {
         name = "Locker",
         invType = "grid",
         invData = {w = 4, h = 6}
     })
-
-```
+</code></pre>
+</details>
 
 ---
 
-### lia.inventory.getStorage
+<details class="realm-server">
+<summary><a id=lia.inventory.getStorage></a>lia.inventory.getStorage(model)</summary>
+<a id="liainventorygetstorage"></a>
+<p>Retrieves the storage configuration for a specific model.</p>
+<p>Called when checking if an entity model has storage capabilities or retrieving storage properties.</p>
+<p><h3>Parameters:</h3>
+<span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a></span> <span class="parameter">model</span> The model path to look up storage configuration for.</p>
 
-#### 📋 Purpose
-Retrieves the storage configuration for a specific model.
+<p><h3>Returns:</h3>
+<span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.5">table|nil</a></span> The storage configuration table if found, nil otherwise.</p>
 
-#### ⏰ When Called
-Called when checking if an entity model has storage capabilities or retrieving storage properties.
-
-#### ⚙️ Parameters
-
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `model` | **string** | The model path to look up storage configuration for. |
-
-#### ↩️ Returns
-* table|nil
-The storage configuration table if found, nil otherwise.
-
-#### 🌐 Realm
-Server
-
-#### 💡 Example Usage
-
-```lua
-    local storage = lia.inventory.getStorage("models/props_c17/lockers001a.mdl")
+<h3>Example Usage:</h3>
+<pre><code class="language-lua">    local storage = lia.inventory.getStorage("models/props_c17/lockers001a.mdl")
     if storage then
         print("Storage name:", storage.name)
     end
-
-```
+</code></pre>
+</details>
 
 ---
 
-### lia.inventory.registerTrunk
+<details class="realm-server">
+<summary><a id=lia.inventory.registerTrunk></a>lia.inventory.registerTrunk(vehicleClass, data)</summary>
+<a id="liainventoryregistertrunk"></a>
+<p>Registers a vehicle trunk configuration for vehicles with the specified class.</p>
+<p>Called during gamemode initialization to define vehicle trunk storage capabilities.</p>
+<p><h3>Parameters:</h3>
+<span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a></span> <span class="parameter">vehicleClass</span> The vehicle class name that will have trunk capability.</p>
+<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.5">table</a></span> <span class="parameter">data</span> Configuration table containing name, invType, invData, and trunk-specific properties.</p>
 
-#### 📋 Purpose
-Registers a vehicle trunk configuration for vehicles with the specified class.
+<p><h3>Returns:</h3>
+<span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.5">table</a></span> The registered trunk data table with trunk flags set.</p>
 
-#### ⏰ When Called
-Called during gamemode initialization to define vehicle trunk storage capabilities.
-
-#### ⚙️ Parameters
-
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `vehicleClass` | **string** | The vehicle class name that will have trunk capability. |
-| `data` | **table** | Configuration table containing name, invType, invData, and trunk-specific properties. |
-
-#### ↩️ Returns
-* table
-The registered trunk data table with trunk flags set.
-
-#### 🌐 Realm
-Server
-
-#### 💡 Example Usage
-
-```lua
-    lia.inventory.registerTrunk("vehicle_class", {
+<h3>Example Usage:</h3>
+<pre><code class="language-lua">    lia.inventory.registerTrunk("vehicle_class", {
         name = "Car Trunk",
         invType = "grid",
         invData = {w = 8, h = 4}
     })
-
-```
+</code></pre>
+</details>
 
 ---
 
-### lia.inventory.getTrunk
+<details class="realm-server">
+<summary><a id=lia.inventory.getTrunk></a>lia.inventory.getTrunk(vehicleClass)</summary>
+<a id="liainventorygettrunk"></a>
+<p>Retrieves the trunk configuration for a specific vehicle class.</p>
+<p>Called when checking if a vehicle class has trunk capabilities or retrieving trunk properties.</p>
+<p><h3>Parameters:</h3>
+<span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a></span> <span class="parameter">vehicleClass</span> The vehicle class name to look up trunk configuration for.</p>
 
-#### 📋 Purpose
-Retrieves the trunk configuration for a specific vehicle class.
+<p><h3>Returns:</h3>
+<span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.5">table|nil</a></span> The trunk configuration table if found and it's a trunk, nil otherwise.</p>
 
-#### ⏰ When Called
-Called when checking if a vehicle class has trunk capabilities or retrieving trunk properties.
-
-#### ⚙️ Parameters
-
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `vehicleClass` | **string** | The vehicle class name to look up trunk configuration for. |
-
-#### ↩️ Returns
-* table|nil
-The trunk configuration table if found and it's a trunk, nil otherwise.
-
-#### 🌐 Realm
-Server
-
-#### 💡 Example Usage
-
-```lua
-    local trunk = lia.inventory.getTrunk("vehicle_class")
+<h3>Example Usage:</h3>
+<pre><code class="language-lua">    local trunk = lia.inventory.getTrunk("vehicle_class")
     if trunk then
         print("Trunk capacity:", trunk.invData.w, "x", trunk.invData.h)
     end
-
-```
+</code></pre>
+</details>
 
 ---
 
-### lia.inventory.getAllTrunks
+<details class="realm-server">
+<summary><a id=lia.inventory.getAllTrunks></a>lia.inventory.getAllTrunks()</summary>
+<a id="liainventorygetalltrunks"></a>
+<p>Retrieves all registered trunk configurations.</p>
+<p>Called when listing all available vehicle trunk types or for administrative purposes.</p>
+<p><h3>Returns:</h3>
+<span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.5">table</a></span> A table containing all registered trunk configurations keyed by vehicle class.</p>
 
-#### 📋 Purpose
-Retrieves all registered trunk configurations.
-
-#### ⏰ When Called
-Called when listing all available vehicle trunk types or for administrative purposes.
-
-#### ↩️ Returns
-* table
-A table containing all registered trunk configurations keyed by vehicle class.
-
-#### 🌐 Realm
-Server
-
-#### 💡 Example Usage
-
-```lua
-    local trunks = lia.inventory.getAllTrunks()
+<h3>Example Usage:</h3>
+<pre><code class="language-lua">    local trunks = lia.inventory.getAllTrunks()
     for class, config in pairs(trunks) do
         print("Trunk for", class, ":", config.name)
     end
-
-```
+</code></pre>
+</details>
 
 ---
 
-### lia.inventory.getAllStorage
+<details class="realm-server">
+<summary><a id=lia.inventory.getAllStorage></a>lia.inventory.getAllStorage(includeTrunks)</summary>
+<a id="liainventorygetallstorage"></a>
+<p>Retrieves all registered storage configurations, optionally excluding trunks.</p>
+<p>Called when listing all available storage types or for administrative purposes.</p>
+<p><h3>Parameters:</h3>
+<span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.2">boolean</a></span> <span class="parameter">includeTrunks</span> Optional flag to include (true) or exclude (false) trunk configurations. Defaults to true.</p>
 
-#### 📋 Purpose
-Retrieves all registered storage configurations, optionally excluding trunks.
+<p><h3>Returns:</h3>
+<span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.5">table</a></span> A table containing all registered storage configurations, optionally filtered.</p>
 
-#### ⏰ When Called
-Called when listing all available storage types or for administrative purposes.
-
-#### ⚙️ Parameters
-
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `includeTrunks` | **boolean** | Optional flag to include (true) or exclude (false) trunk configurations. Defaults to true. |
-
-#### ↩️ Returns
-* table
-A table containing all registered storage configurations, optionally filtered.
-
-#### 🌐 Realm
-Server
-
-#### 💡 Example Usage
-
-```lua
-    -- Get all storage including trunks
+<h3>Example Usage:</h3>
+<pre><code class="language-lua">    -- Get all storage including trunks
     local allStorage = lia.inventory.getAllStorage(true)
     -- Get only non-trunk storage
     local storageOnly = lia.inventory.getAllStorage(false)
-
-```
+</code></pre>
+</details>
 
 ---
 
-### lia.inventory.show
+<details class="realm-client">
+<summary><a id=lia.inventory.show></a>lia.inventory.show(inventory, parent)</summary>
+<a id="liainventoryshow"></a>
+<p>Creates and displays an inventory panel for the specified inventory.</p>
+<p>Called when opening inventory interfaces, such as character inventories, storage containers, or other inventory UIs.</p>
+<p><h3>Parameters:</h3>
+<span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.5">table</a></span> <span class="parameter">inventory</span> The inventory instance to display in the panel.</p>
+<p><span class="types"><a class="type" href="https://wiki.facepunch.com/gmod/Panel">Panel</a></span> <span class="parameter">parent</span> Optional parent panel for the inventory panel.</p>
 
-#### 📋 Purpose
-Creates and displays an inventory panel for the specified inventory.
+<p><h3>Returns:</h3>
+<span class="types"><a class="type" href="https://wiki.facepunch.com/gmod/Panel">Panel</a></span> The created inventory panel instance.</p>
 
-#### ⏰ When Called
-Called when opening inventory interfaces, such as character inventories, storage containers, or other inventory UIs.
-
-#### ⚙️ Parameters
-
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `inventory` | **table** | The inventory instance to display in the panel. |
-| `parent` | **Panel** | Optional parent panel for the inventory panel. |
-
-#### ↩️ Returns
-* Panel
-The created inventory panel instance.
-
-#### 🌐 Realm
-Client
-
-#### 💡 Example Usage
-
-```lua
-    local panel = lia.inventory.show(myInventory)
+<h3>Example Usage:</h3>
+<pre><code class="language-lua">    local panel = lia.inventory.show(myInventory)
     -- Opens the inventory UI for myInventory
-
-```
+</code></pre>
+</details>
 
 ---
 
-### lia.inventory.showDual
+<details class="realm-client">
+<summary><a id=lia.inventory.showDual></a>lia.inventory.showDual(inventory1, inventory2, parent)</summary>
+<a id="liainventoryshowdual"></a>
+<p>Creates and displays two inventory panels side by side for dual inventory interactions.</p>
+<p>Called when opening dual inventory interfaces, such as trading, transferring items between inventories, or accessing storage.</p>
+<p><h3>Parameters:</h3>
+<span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.5">table</a></span> <span class="parameter">inventory1</span> The first inventory instance to display.</p>
+<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.5">table</a></span> <span class="parameter">inventory2</span> The second inventory instance to display.</p>
+<p><span class="types"><a class="type" href="https://wiki.facepunch.com/gmod/Panel">Panel</a></span> <span class="parameter">parent</span> Optional parent panel for the inventory panels.</p>
 
-#### 📋 Purpose
-Creates and displays two inventory panels side by side for dual inventory interactions.
+<p><h3>Returns:</h3>
+<span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.5">table</a></span> An array containing both created inventory panel instances {panel1, panel2}.</p>
 
-#### ⏰ When Called
-Called when opening dual inventory interfaces, such as trading, transferring items between inventories, or accessing storage.
-
-#### ⚙️ Parameters
-
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `inventory1` | **table** | The first inventory instance to display. |
-| `inventory2` | **table** | The second inventory instance to display. |
-| `parent` | **Panel** | Optional parent panel for the inventory panels. |
-
-#### ↩️ Returns
-* table
-An array containing both created inventory panel instances {panel1, panel2}.
-
-#### 🌐 Realm
-Client
-
-#### 💡 Example Usage
-
-```lua
-    local panels = lia.inventory.showDual(playerInv, storageInv)
+<h3>Example Usage:</h3>
+<pre><code class="language-lua">    local panels = lia.inventory.showDual(playerInv, storageInv)
     -- Opens dual inventory UI for trading between player and storage
-
-```
+</code></pre>
+</details>
 
 ---
 

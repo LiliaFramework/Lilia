@@ -10,99 +10,59 @@ The logger library provides comprehensive logging functionality for the Lilia fr
 
 ---
 
-### lia.log.addType
+<details class="realm-shared">
+<summary><a id=lia.log.addType></a>lia.log.addType(logType, func, category)</summary>
+<a id="lialogaddtype"></a>
+<p>Register a new log type with formatter and category.</p>
+<p>During init to add custom audit events (e.g., quests, crafting).</p>
+<p><h3>Parameters:</h3>
+<span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a></span> <span class="parameter">logType</span> Unique log key.</p>
+<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.6">function</a></span> <span class="parameter">func</span> Formatter function (client, ... ) -> string.</p>
+<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a></span> <span class="parameter">category</span> Category label used in console output and DB.</p>
 
-#### 📋 Purpose
-Register a new log type with formatter and category.
-
-#### ⏰ When Called
-During init to add custom audit events (e.g., quests, crafting).
-
-#### ⚙️ Parameters
-
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `logType` | **string** | Unique log key. |
-| `func` | **function** | Formatter function (client, ... ) -> string. |
-| `category` | **string** | Category label used in console output and DB. |
-
-#### ↩️ Returns
-* nil
-
-#### 🌐 Realm
-Shared
-
-#### 💡 Example Usage
-
-```lua
-    lia.log.addType("questComplete", function(client, questID, reward)
+<h3>Example Usage:</h3>
+<pre><code class="language-lua">    lia.log.addType("questComplete", function(client, questID, reward)
         return L("logQuestComplete", client:Name(), questID, reward)
     end, L("quests"))
-
-```
+</code></pre>
+</details>
 
 ---
 
-### lia.log.getString
+<details class="realm-shared">
+<summary><a id=lia.log.getString></a>lia.log.getString(client, logType)</summary>
+<a id="lialoggetstring"></a>
+<p>Build a formatted log string and return its category.</p>
+<p>Internally by lia.log.add before printing/persisting logs.</p>
+<p><h3>Parameters:</h3>
+<span class="types"><a class="type" href="https://wiki.facepunch.com/gmod/Player">Player</a></span> <span class="parameter">client</span> <span class="optional">optional</span></p>
+<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a></span> <span class="parameter">logType</span> ... (vararg)</p>
 
-#### 📋 Purpose
-Build a formatted log string and return its category.
+<p><h3>Returns:</h3>
+string|nil, string|nil logString, category</p>
 
-#### ⏰ When Called
-Internally by lia.log.add before printing/persisting logs.
-
-#### ⚙️ Parameters
-
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `client` | **Player|nil** |  |
-| `logType` | **string** | ... (vararg) |
-
-#### ↩️ Returns
-* string|nil, string|nil
-logString, category
-
-#### 🌐 Realm
-Shared
-
-#### 💡 Example Usage
-
-```lua
-    local text, category = lia.log.getString(ply, "playerDeath", attackerName)
+<h3>Example Usage:</h3>
+<pre><code class="language-lua">    local text, category = lia.log.getString(ply, "playerDeath", attackerName)
     if text then print(category, text) end
-
-```
+</code></pre>
+</details>
 
 ---
 
-### lia.log.add
+<details class="realm-shared">
+<summary><a id=lia.log.add></a>lia.log.add(client, logType)</summary>
+<a id="lialogadd"></a>
+<p>Create and store a log entry (console + database) using a logType.</p>
+<p>Anywhere you need to audit player/admin/system actions.</p>
+<p><h3>Parameters:</h3>
+<span class="types"><a class="type" href="https://wiki.facepunch.com/gmod/Player">Player</a></span> <span class="parameter">client</span> <span class="optional">optional</span></p>
+<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a></span> <span class="parameter">logType</span> ... (vararg)</p>
 
-#### 📋 Purpose
-Create and store a log entry (console + database) using a logType.
-
-#### ⏰ When Called
-Anywhere you need to audit player/admin/system actions.
-
-#### ⚙️ Parameters
-
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `client` | **Player|nil** |  |
-| `logType` | **string** | ... (vararg) |
-
-#### ↩️ Returns
-* nil
-
-#### 🌐 Realm
-Shared
-
-#### 💡 Example Usage
-
-```lua
-    lia.log.add(client, "itemTake", itemName)
+<h3>Example Usage:</h3>
+<pre><code class="language-lua">    lia.log.add(client, "itemTake", itemName)
     lia.log.add(nil, "frameworkOutdated") -- system log without player
-
-```
+</code></pre>
+</details>
 
 ---
 

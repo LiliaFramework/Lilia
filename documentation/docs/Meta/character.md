@@ -10,907 +10,522 @@ The character meta table provides comprehensive functionality for managing chara
 
 ---
 
-### getID
+<details class="realm-shared">
+<summary><a id=getID></a>getID()</summary>
+<a id="getid"></a>
+<p>Returns this character's unique numeric identifier.</p>
+<p>Use when persisting, comparing, or networking character state.</p>
+<p><h3>Returns:</h3>
+<span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.3">number</a></span> Character ID.</p>
 
-#### 📋 Purpose
-Returns this character's unique numeric identifier.
-
-#### ⏰ When Called
-Use when persisting, comparing, or networking character state.
-
-#### ↩️ Returns
-* number
-Character ID.
-
-#### 🌐 Realm
-Shared
-
-#### 💡 Example Usage
-
-```lua
-    local id = char:getID()
-
-```
+<h3>Example Usage:</h3>
+<pre><code class="language-lua">    local id = char:getID()
+</code></pre>
+</details>
 
 ---
 
-### getPlayer
+<details class="realm-shared">
+<summary><a id=getPlayer></a>getPlayer()</summary>
+<a id="getplayer"></a>
+<p>Retrieves the player entity associated with this character.</p>
+<p>Use whenever you need the live player controlling this character.</p>
+<p><h3>Returns:</h3>
+<span class="types"><a class="type" href="https://wiki.facepunch.com/gmod/Player">Player|nil</a></span> Player that owns the character, or nil if not found.</p>
 
-#### 📋 Purpose
-Retrieves the player entity associated with this character.
-
-#### ⏰ When Called
-Use whenever you need the live player controlling this character.
-
-#### ↩️ Returns
-* Player|nil
-Player that owns the character, or nil if not found.
-
-#### 🌐 Realm
-Shared
-
-#### 💡 Example Usage
-
-```lua
-    local ply = char:getPlayer()
-
-```
+<h3>Example Usage:</h3>
+<pre><code class="language-lua">    local ply = char:getPlayer()
+</code></pre>
+</details>
 
 ---
 
-### getDisplayedName
+<details class="realm-shared">
+<summary><a id=getDisplayedName></a>getDisplayedName(client)</summary>
+<a id="getdisplayedname"></a>
+<p>Returns the name to show to a viewing client, honoring recognition rules.</p>
+<p>Use when rendering a character's name to another player.</p>
+<p><h3>Parameters:</h3>
+<span class="types"><a class="type" href="https://wiki.facepunch.com/gmod/Player">Player</a></span> <span class="parameter">client</span> The viewer whose recognition determines the name.</p>
 
-#### 📋 Purpose
-Returns the name to show to a viewing client, honoring recognition rules.
+<p><h3>Returns:</h3>
+<span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a></span> Display name or a localized "unknown" placeholder.</p>
 
-#### ⏰ When Called
-Use when rendering a character's name to another player.
-
-#### ⚙️ Parameters
-
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `client` | **Player** | The viewer whose recognition determines the name. |
-
-#### ↩️ Returns
-* string
-Display name or a localized "unknown" placeholder.
-
-#### 🌐 Realm
-Shared
-
-#### 💡 Example Usage
-
-```lua
-    local name = targetChar:getDisplayedName(viewer)
-
-```
+<h3>Example Usage:</h3>
+<pre><code class="language-lua">    local name = targetChar:getDisplayedName(viewer)
+</code></pre>
+</details>
 
 ---
 
-### hasMoney
+<details class="realm-shared">
+<summary><a id=hasMoney></a>hasMoney(amount)</summary>
+<a id="hasmoney"></a>
+<p>Checks if the character has at least the given amount of money.</p>
+<p>Use before charging a character to ensure they can afford a cost.</p>
+<p><h3>Parameters:</h3>
+<span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.3">number</a></span> <span class="parameter">amount</span> The amount to verify.</p>
 
-#### 📋 Purpose
-Checks if the character has at least the given amount of money.
+<p><h3>Returns:</h3>
+<span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.2">boolean</a></span> True if the character's balance is equal or higher.</p>
 
-#### ⏰ When Called
-Use before charging a character to ensure they can afford a cost.
-
-#### ⚙️ Parameters
-
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `amount` | **number** | The amount to verify. |
-
-#### ↩️ Returns
-* boolean
-True if the character's balance is equal or higher.
-
-#### 🌐 Realm
-Shared
-
-#### 💡 Example Usage
-
-```lua
-    if char:hasMoney(100) then purchase() end
-
-```
+<h3>Example Usage:</h3>
+<pre><code class="language-lua">    if char:hasMoney(100) then purchase() end
+</code></pre>
+</details>
 
 ---
 
-### hasFlags
+<details class="realm-shared">
+<summary><a id=hasFlags></a>hasFlags(flagStr)</summary>
+<a id="hasflags"></a>
+<p>Determines whether the character possesses any flag in the string.</p>
+<p>Use when gating actions behind one or more privilege flags.</p>
+<p><h3>Parameters:</h3>
+<span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a></span> <span class="parameter">flagStr</span> One or more flag characters to test.</p>
 
-#### 📋 Purpose
-Determines whether the character possesses any flag in the string.
+<p><h3>Returns:</h3>
+<span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.2">boolean</a></span> True if at least one provided flag is present.</p>
 
-#### ⏰ When Called
-Use when gating actions behind one or more privilege flags.
-
-#### ⚙️ Parameters
-
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `flagStr` | **string** | One or more flag characters to test. |
-
-#### ↩️ Returns
-* boolean
-True if at least one provided flag is present.
-
-#### 🌐 Realm
-Shared
-
-#### 💡 Example Usage
-
-```lua
-    if char:hasFlags("ab") then grantAccess() end
-
-```
+<h3>Example Usage:</h3>
+<pre><code class="language-lua">    if char:hasFlags("ab") then grantAccess() end
+</code></pre>
+</details>
 
 ---
 
-### getAttrib
+<details class="realm-shared">
+<summary><a id=getAttrib></a>getAttrib(key, default)</summary>
+<a id="getattrib"></a>
+<p>Gets the character's attribute value including any active boosts.</p>
+<p>Use when calculating rolls or stats that depend on attributes.</p>
+<p><h3>Parameters:</h3>
+<span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a></span> <span class="parameter">key</span> Attribute identifier.</p>
+<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.3">number</a></span> <span class="parameter">default</span> Fallback value if the attribute is missing.</p>
 
-#### 📋 Purpose
-Gets the character's attribute value including any active boosts.
+<p><h3>Returns:</h3>
+<span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.3">number</a></span> Attribute level plus stacked boosts.</p>
 
-#### ⏰ When Called
-Use when calculating rolls or stats that depend on attributes.
-
-#### ⚙️ Parameters
-
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `key` | **string** | Attribute identifier. |
-| `default` | **number** | Fallback value if the attribute is missing. |
-
-#### ↩️ Returns
-* number
-Attribute level plus stacked boosts.
-
-#### 🌐 Realm
-Shared
-
-#### 💡 Example Usage
-
-```lua
-    local strength = char:getAttrib("str", 0)
-
-```
+<h3>Example Usage:</h3>
+<pre><code class="language-lua">    local strength = char:getAttrib("str", 0)
+</code></pre>
+</details>
 
 ---
 
-### doesRecognize
+<details class="realm-shared">
+<summary><a id=doesRecognize></a>doesRecognize(id)</summary>
+<a id="doesrecognize"></a>
+<p>Determines whether this character recognizes another character.</p>
+<p>Use when deciding if a viewer should see a real name or remain unknown.</p>
+<p><h3>Parameters:</h3>
+<span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.3">number|table</a></span> <span class="parameter">id</span> Character ID or object implementing getID.</p>
 
-#### 📋 Purpose
-Determines whether this character recognizes another character.
+<p><h3>Returns:</h3>
+<span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.2">boolean</a></span> True if recognition is allowed by hooks.</p>
 
-#### ⏰ When Called
-Use when deciding if a viewer should see a real name or remain unknown.
-
-#### ⚙️ Parameters
-
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `id` | **number|table** | Character ID or object implementing getID. |
-
-#### ↩️ Returns
-* boolean
-True if recognition is allowed by hooks.
-
-#### 🌐 Realm
-Shared
-
-#### 💡 Example Usage
-
-```lua
-    if viewerChar:doesRecognize(targetChar) then showName() end
-
-```
+<h3>Example Usage:</h3>
+<pre><code class="language-lua">    if viewerChar:doesRecognize(targetChar) then showName() end
+</code></pre>
+</details>
 
 ---
 
-### doesFakeRecognize
+<details class="realm-shared">
+<summary><a id=doesFakeRecognize></a>doesFakeRecognize(id)</summary>
+<a id="doesfakerecognize"></a>
+<p>Checks if the character recognizes another under a fake name.</p>
+<p>Use when evaluating disguise or alias recognition logic.</p>
+<p><h3>Parameters:</h3>
+<span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.3">number|table</a></span> <span class="parameter">id</span> Character ID or object implementing getID.</p>
 
-#### 📋 Purpose
-Checks if the character recognizes another under a fake name.
+<p><h3>Returns:</h3>
+<span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.2">boolean</a></span> True if fake recognition passes custom hooks.</p>
 
-#### ⏰ When Called
-Use when evaluating disguise or alias recognition logic.
-
-#### ⚙️ Parameters
-
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `id` | **number|table** | Character ID or object implementing getID. |
-
-#### ↩️ Returns
-* boolean
-True if fake recognition passes custom hooks.
-
-#### 🌐 Realm
-Shared
-
-#### 💡 Example Usage
-
-```lua
-    local canFake = char:doesFakeRecognize(otherChar)
-
-```
+<h3>Example Usage:</h3>
+<pre><code class="language-lua">    local canFake = char:doesFakeRecognize(otherChar)
+</code></pre>
+</details>
 
 ---
 
-### setData
+<details class="realm-shared">
+<summary><a id=setData></a>setData(k, v, noReplication, receiver)</summary>
+<a id="setdata"></a>
+<p>Stores custom data on the character and optionally replicates it.</p>
+<p>Use when adding persistent or networked character metadata.</p>
+<p><h3>Parameters:</h3>
+<span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string|table</a></span> <span class="parameter">k</span> Key to set or table of key/value pairs.</p>
+<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#2.2">any</a></span> <span class="parameter">v</span> Value to store when k is a string.</p>
+<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.2">boolean</a></span> <span class="parameter">noReplication</span> Skip networking when true.</p>
+<p><span class="types"><a class="type" href="https://wiki.facepunch.com/gmod/Player">Player</a></span> <span class="parameter">receiver</span> <span class="optional">optional</span> Specific client to receive the update instead of owner.</p>
 
-#### 📋 Purpose
-Stores custom data on the character and optionally replicates it.
-
-#### ⏰ When Called
-Use when adding persistent or networked character metadata.
-
-#### ⚙️ Parameters
-
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `k` | **string|table** | Key to set or table of key/value pairs. |
-| `v` | **any** | Value to store when k is a string. |
-| `noReplication` | **boolean** | Skip networking when true. |
-| `receiver` | **Player|nil** | Specific client to receive the update instead of owner. |
-
-#### ↩️ Returns
-* nil
-
-#### 🌐 Realm
-Shared
-
-#### 💡 Example Usage
-
-```lua
-    char:setData("lastLogin", os.time())
-
-```
+<h3>Example Usage:</h3>
+<pre><code class="language-lua">    char:setData("lastLogin", os.time())
+</code></pre>
+</details>
 
 ---
 
-### getData
+<details class="realm-shared">
+<summary><a id=getData></a>getData(key, default)</summary>
+<a id="getdata"></a>
+<p>Retrieves previously stored custom character data.</p>
+<p>Use when you need saved custom fields or default fallbacks.</p>
+<p><h3>Parameters:</h3>
+<span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a></span> <span class="parameter">key</span> <span class="optional">optional</span> Specific key to fetch or nil for the whole table.</p>
+<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#2.2">any</a></span> <span class="parameter">default</span> Value to return if the key is unset.</p>
 
-#### 📋 Purpose
-Retrieves previously stored custom character data.
+<p><h3>Returns:</h3>
+<span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#2.2">any</a></span> Stored value, default, or entire data table.</p>
 
-#### ⏰ When Called
-Use when you need saved custom fields or default fallbacks.
-
-#### ⚙️ Parameters
-
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `key` | **string|nil** | Specific key to fetch or nil for the whole table. |
-| `default` | **any** | Value to return if the key is unset. |
-
-#### ↩️ Returns
-* any
-Stored value, default, or entire data table.
-
-#### 🌐 Realm
-Shared
-
-#### 💡 Example Usage
-
-```lua
-    local note = char:getData("note", "")
-
-```
+<h3>Example Usage:</h3>
+<pre><code class="language-lua">    local note = char:getData("note", "")
+</code></pre>
+</details>
 
 ---
 
-### isBanned
+<details class="realm-shared">
+<summary><a id=isBanned></a>isBanned()</summary>
+<a id="isbanned"></a>
+<p>Reports whether the character is currently banned.</p>
+<p>Use when validating character selection or spawning.</p>
+<p><h3>Returns:</h3>
+<span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.2">boolean</a></span> True if banned permanently or until a future time.</p>
 
-#### 📋 Purpose
-Reports whether the character is currently banned.
-
-#### ⏰ When Called
-Use when validating character selection or spawning.
-
-#### ↩️ Returns
-* boolean
-True if banned permanently or until a future time.
-
-#### 🌐 Realm
-Shared
-
-#### 💡 Example Usage
-
-```lua
-    if char:isBanned() then denyJoin() end
-
-```
+<h3>Example Usage:</h3>
+<pre><code class="language-lua">    if char:isBanned() then denyJoin() end
+</code></pre>
+</details>
 
 ---
 
-### recognize
+<details class="realm-server">
+<summary><a id=recognize></a>recognize(character, name)</summary>
+<a id="recognize"></a>
+<p>Marks another character as recognized, optionally storing a fake name.</p>
+<p>Invoke when a player learns or is assigned recognition of someone.</p>
+<p><h3>Parameters:</h3>
+<span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.3">number|table</a></span> <span class="parameter">character</span> Target character ID or object implementing getID.</p>
+<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a></span> <span class="parameter">name</span> <span class="optional">optional</span> Optional alias to remember instead of real recognition.</p>
 
-#### 📋 Purpose
-Marks another character as recognized, optionally storing a fake name.
+<p><h3>Returns:</h3>
+<span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.2">boolean</a></span> True after recognition is recorded.</p>
 
-#### ⏰ When Called
-Invoke when a player learns or is assigned recognition of someone.
-
-#### ⚙️ Parameters
-
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `character` | **number|table** | Target character ID or object implementing getID. |
-| `name` | **string|nil** | Optional alias to remember instead of real recognition. |
-
-#### ↩️ Returns
-* boolean
-True after recognition is recorded.
-
-#### 🌐 Realm
-Server
-
-#### 💡 Example Usage
-
-```lua
-    char:recognize(otherChar)
-
-```
+<h3>Example Usage:</h3>
+<pre><code class="language-lua">    char:recognize(otherChar)
+</code></pre>
+</details>
 
 ---
 
-### joinClass
+<details class="realm-server">
+<summary><a id=joinClass></a>joinClass(class, isForced)</summary>
+<a id="joinclass"></a>
+<p>Attempts to place the character into the specified class.</p>
+<p>Use during class selection or forced reassignment.</p>
+<p><h3>Parameters:</h3>
+<span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.3">number</a></span> <span class="parameter">class</span> Class ID to join.</p>
+<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.2">boolean</a></span> <span class="parameter">isForced</span> Skip eligibility checks when true.</p>
 
-#### 📋 Purpose
-Attempts to place the character into the specified class.
+<p><h3>Returns:</h3>
+<span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.2">boolean</a></span> True if the class change succeeded.</p>
 
-#### ⏰ When Called
-Use during class selection or forced reassignment.
-
-#### ⚙️ Parameters
-
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `class` | **number** | Class ID to join. |
-| `isForced` | **boolean** | Skip eligibility checks when true. |
-
-#### ↩️ Returns
-* boolean
-True if the class change succeeded.
-
-#### 🌐 Realm
-Server
-
-#### 💡 Example Usage
-
-```lua
-    local ok = char:joinClass(newClassID)
-
-```
+<h3>Example Usage:</h3>
+<pre><code class="language-lua">    local ok = char:joinClass(newClassID)
+</code></pre>
+</details>
 
 ---
 
-### kickClass
-
-#### 📋 Purpose
-Removes the character from its current class, falling back to default.
-
-#### ⏰ When Called
-Use when a class is invalid, revoked, or explicitly left.
-
-#### ↩️ Returns
-* nil
-
-#### 🌐 Realm
-Server
-
-#### 💡 Example Usage
-
-```lua
-    char:kickClass()
-
-```
+<details class="realm-server">
+<summary><a id=kickClass></a>kickClass()</summary>
+<a id="kickclass"></a>
+<p>Removes the character from its current class, falling back to default.</p>
+<p>Use when a class is invalid, revoked, or explicitly left.</p>
+<h3>Example Usage:</h3>
+<pre><code class="language-lua">    char:kickClass()
+</code></pre>
+</details>
 
 ---
 
-### updateAttrib
+<details class="realm-server">
+<summary><a id=updateAttrib></a>updateAttrib(key, value)</summary>
+<a id="updateattrib"></a>
+<p>Increases an attribute by the given amount, respecting maximums.</p>
+<p>Use when awarding experience toward an attribute.</p>
+<p><h3>Parameters:</h3>
+<span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a></span> <span class="parameter">key</span> Attribute identifier.</p>
+<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.3">number</a></span> <span class="parameter">value</span> Amount to add.</p>
 
-#### 📋 Purpose
-Increases an attribute by the given amount, respecting maximums.
-
-#### ⏰ When Called
-Use when awarding experience toward an attribute.
-
-#### ⚙️ Parameters
-
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `key` | **string** | Attribute identifier. |
-| `value` | **number** | Amount to add. |
-
-#### ↩️ Returns
-* nil
-
-#### 🌐 Realm
-Server
-
-#### 💡 Example Usage
-
-```lua
-    char:updateAttrib("stm", 5)
-
-```
+<h3>Example Usage:</h3>
+<pre><code class="language-lua">    char:updateAttrib("stm", 5)
+</code></pre>
+</details>
 
 ---
 
-### setAttrib
+<details class="realm-server">
+<summary><a id=setAttrib></a>setAttrib(key, value)</summary>
+<a id="setattrib"></a>
+<p>Directly sets an attribute to a specific value and syncs it.</p>
+<p>Use when loading characters or forcing an attribute level.</p>
+<p><h3>Parameters:</h3>
+<span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a></span> <span class="parameter">key</span> Attribute identifier.</p>
+<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.3">number</a></span> <span class="parameter">value</span> New attribute level.</p>
 
-#### 📋 Purpose
-Directly sets an attribute to a specific value and syncs it.
-
-#### ⏰ When Called
-Use when loading characters or forcing an attribute level.
-
-#### ⚙️ Parameters
-
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `key` | **string** | Attribute identifier. |
-| `value` | **number** | New attribute level. |
-
-#### ↩️ Returns
-* nil
-
-#### 🌐 Realm
-Server
-
-#### 💡 Example Usage
-
-```lua
-    char:setAttrib("str", 15)
-
-```
+<h3>Example Usage:</h3>
+<pre><code class="language-lua">    char:setAttrib("str", 15)
+</code></pre>
+</details>
 
 ---
 
-### addBoost
+<details class="realm-server">
+<summary><a id=addBoost></a>addBoost(boostID, attribID, boostAmount)</summary>
+<a id="addboost"></a>
+<p>Adds a temporary boost to an attribute and propagates it.</p>
+<p>Use when buffs or debuffs modify an attribute value.</p>
+<p><h3>Parameters:</h3>
+<span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a></span> <span class="parameter">boostID</span> Unique identifier for the boost source.</p>
+<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a></span> <span class="parameter">attribID</span> Attribute being boosted.</p>
+<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.3">number</a></span> <span class="parameter">boostAmount</span> Amount to add (can be negative).</p>
 
-#### 📋 Purpose
-Adds a temporary boost to an attribute and propagates it.
+<p><h3>Returns:</h3>
+<span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.2">boolean</a></span> Result from setVar update.</p>
 
-#### ⏰ When Called
-Use when buffs or debuffs modify an attribute value.
-
-#### ⚙️ Parameters
-
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `boostID` | **string** | Unique identifier for the boost source. |
-| `attribID` | **string** | Attribute being boosted. |
-| `boostAmount` | **number** | Amount to add (can be negative). |
-
-#### ↩️ Returns
-* boolean
-Result from setVar update.
-
-#### 🌐 Realm
-Server
-
-#### 💡 Example Usage
-
-```lua
-    char:addBoost("stimpack", "end", 2)
-
-```
+<h3>Example Usage:</h3>
+<pre><code class="language-lua">    char:addBoost("stimpack", "end", 2)
+</code></pre>
+</details>
 
 ---
 
-### removeBoost
+<details class="realm-server">
+<summary><a id=removeBoost></a>removeBoost(boostID, attribID)</summary>
+<a id="removeboost"></a>
+<p>Removes a previously applied attribute boost.</p>
+<p>Use when a buff expires or is cancelled.</p>
+<p><h3>Parameters:</h3>
+<span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a></span> <span class="parameter">boostID</span> Identifier of the boost source.</p>
+<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a></span> <span class="parameter">attribID</span> Attribute to adjust.</p>
 
-#### 📋 Purpose
-Removes a previously applied attribute boost.
+<p><h3>Returns:</h3>
+<span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.2">boolean</a></span> Result from setVar update.</p>
 
-#### ⏰ When Called
-Use when a buff expires or is cancelled.
-
-#### ⚙️ Parameters
-
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `boostID` | **string** | Identifier of the boost source. |
-| `attribID` | **string** | Attribute to adjust. |
-
-#### ↩️ Returns
-* boolean
-Result from setVar update.
-
-#### 🌐 Realm
-Server
-
-#### 💡 Example Usage
-
-```lua
-    char:removeBoost("stimpack", "end")
-
-```
+<h3>Example Usage:</h3>
+<pre><code class="language-lua">    char:removeBoost("stimpack", "end")
+</code></pre>
+</details>
 
 ---
 
-### clearAllBoosts
+<details class="realm-server">
+<summary><a id=clearAllBoosts></a>clearAllBoosts()</summary>
+<a id="clearallboosts"></a>
+<p>Clears all attribute boosts and notifies listeners.</p>
+<p>Use when resetting a character's temporary modifiers.</p>
+<p><h3>Returns:</h3>
+<span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.2">boolean</a></span> Result from resetting the boost table.</p>
 
-#### 📋 Purpose
-Clears all attribute boosts and notifies listeners.
-
-#### ⏰ When Called
-Use when resetting a character's temporary modifiers.
-
-#### ↩️ Returns
-* boolean
-Result from resetting the boost table.
-
-#### 🌐 Realm
-Server
-
-#### 💡 Example Usage
-
-```lua
-    char:clearAllBoosts()
-
-```
+<h3>Example Usage:</h3>
+<pre><code class="language-lua">    char:clearAllBoosts()
+</code></pre>
+</details>
 
 ---
 
-### setFlags
+<details class="realm-server">
+<summary><a id=setFlags></a>setFlags(flags)</summary>
+<a id="setflags"></a>
+<p>Replaces the character's flag string and synchronizes it.</p>
+<p>Use when setting privileges wholesale (e.g., admin changes).</p>
+<p><h3>Parameters:</h3>
+<span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a></span> <span class="parameter">flags</span> Complete set of flags to apply.</p>
 
-#### 📋 Purpose
-Replaces the character's flag string and synchronizes it.
-
-#### ⏰ When Called
-Use when setting privileges wholesale (e.g., admin changes).
-
-#### ⚙️ Parameters
-
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `flags` | **string** | Complete set of flags to apply. |
-
-#### ↩️ Returns
-* nil
-
-#### 🌐 Realm
-Server
-
-#### 💡 Example Usage
-
-```lua
-    char:setFlags("abc")
-
-```
+<h3>Example Usage:</h3>
+<pre><code class="language-lua">    char:setFlags("abc")
+</code></pre>
+</details>
 
 ---
 
-### giveFlags
+<details class="realm-server">
+<summary><a id=giveFlags></a>giveFlags(flags)</summary>
+<a id="giveflags"></a>
+<p>Adds one or more flags to the character if they are missing.</p>
+<p>Use when granting new permissions or perks.</p>
+<p><h3>Parameters:</h3>
+<span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a></span> <span class="parameter">flags</span> Concatenated flag characters to grant.</p>
 
-#### 📋 Purpose
-Adds one or more flags to the character if they are missing.
-
-#### ⏰ When Called
-Use when granting new permissions or perks.
-
-#### ⚙️ Parameters
-
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `flags` | **string** | Concatenated flag characters to grant. |
-
-#### ↩️ Returns
-* nil
-
-#### 🌐 Realm
-Server
-
-#### 💡 Example Usage
-
-```lua
-    char:giveFlags("z")
-
-```
+<h3>Example Usage:</h3>
+<pre><code class="language-lua">    char:giveFlags("z")
+</code></pre>
+</details>
 
 ---
 
-### takeFlags
+<details class="realm-server">
+<summary><a id=takeFlags></a>takeFlags(flags)</summary>
+<a id="takeflags"></a>
+<p>Removes specific flags from the character and triggers callbacks.</p>
+<p>Use when revoking privileges or perks.</p>
+<p><h3>Parameters:</h3>
+<span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a></span> <span class="parameter">flags</span> Concatenated flag characters to remove.</p>
 
-#### 📋 Purpose
-Removes specific flags from the character and triggers callbacks.
-
-#### ⏰ When Called
-Use when revoking privileges or perks.
-
-#### ⚙️ Parameters
-
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `flags` | **string** | Concatenated flag characters to remove. |
-
-#### ↩️ Returns
-* nil
-
-#### 🌐 Realm
-Server
-
-#### 💡 Example Usage
-
-```lua
-    char:takeFlags("z")
-
-```
+<h3>Example Usage:</h3>
+<pre><code class="language-lua">    char:takeFlags("z")
+</code></pre>
+</details>
 
 ---
 
-### save
+<details class="realm-server">
+<summary><a id=save></a>save(callback)</summary>
+<a id="save"></a>
+<p>Persists the character's current variables to the database.</p>
+<p>Use during saves, character switches, or shutdown to keep data.</p>
+<p><h3>Parameters:</h3>
+<span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.6">function</a></span> <span class="parameter">callback</span> <span class="optional">optional</span> Invoked after the save completes.</p>
 
-#### 📋 Purpose
-Persists the character's current variables to the database.
-
-#### ⏰ When Called
-Use during saves, character switches, or shutdown to keep data.
-
-#### ⚙️ Parameters
-
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `callback` | **function|nil** | Invoked after the save completes. |
-
-#### ↩️ Returns
-* nil
-
-#### 🌐 Realm
-Server
-
-#### 💡 Example Usage
-
-```lua
-    char:save(function() print("saved") end)
-
-```
+<h3>Example Usage:</h3>
+<pre><code class="language-lua">    char:save(function() print("saved") end)
+</code></pre>
+</details>
 
 ---
 
-### sync
+<details class="realm-server">
+<summary><a id=sync></a>sync(receiver)</summary>
+<a id="sync"></a>
+<p>Sends character data to a specific player or all players.</p>
+<p>Use after character creation, load, or when vars change.</p>
+<p><h3>Parameters:</h3>
+<span class="types"><a class="type" href="https://wiki.facepunch.com/gmod/Player">Player</a></span> <span class="parameter">receiver</span> <span class="optional">optional</span> Target player to sync to; nil broadcasts to everyone.</p>
 
-#### 📋 Purpose
-Sends character data to a specific player or all players.
-
-#### ⏰ When Called
-Use after character creation, load, or when vars change.
-
-#### ⚙️ Parameters
-
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `receiver` | **Player|nil** | Target player to sync to; nil broadcasts to everyone. |
-
-#### ↩️ Returns
-* nil
-
-#### 🌐 Realm
-Server
-
-#### 💡 Example Usage
-
-```lua
-    char:sync(client)
-
-```
+<h3>Example Usage:</h3>
+<pre><code class="language-lua">    char:sync(client)
+</code></pre>
+</details>
 
 ---
 
-### setup
+<details class="realm-server">
+<summary><a id=setup></a>setup(noNetworking)</summary>
+<a id="setup"></a>
+<p>Applies the character state to the owning player and optionally syncs.</p>
+<p>Use right after a character is loaded or swapped in.</p>
+<p><h3>Parameters:</h3>
+<span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.2">boolean</a></span> <span class="parameter">noNetworking</span> Skip inventory and char networking when true.</p>
 
-#### 📋 Purpose
-Applies the character state to the owning player and optionally syncs.
-
-#### ⏰ When Called
-Use right after a character is loaded or swapped in.
-
-#### ⚙️ Parameters
-
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `noNetworking` | **boolean** | Skip inventory and char networking when true. |
-
-#### ↩️ Returns
-* nil
-
-#### 🌐 Realm
-Server
-
-#### 💡 Example Usage
-
-```lua
-    char:setup()
-
-```
+<h3>Example Usage:</h3>
+<pre><code class="language-lua">    char:setup()
+</code></pre>
+</details>
 
 ---
 
-### kick
-
-#### 📋 Purpose
-Forces the owning player off this character and cleans up state.
-
-#### ⏰ When Called
-Use when removing access, kicking, or swapping characters.
-
-#### ↩️ Returns
-* nil
-
-#### 🌐 Realm
-Server
-
-#### 💡 Example Usage
-
-```lua
-    char:kick()
-
-```
+<details class="realm-server">
+<summary><a id=kick></a>kick()</summary>
+<a id="kick"></a>
+<p>Forces the owning player off this character and cleans up state.</p>
+<p>Use when removing access, kicking, or swapping characters.</p>
+<h3>Example Usage:</h3>
+<pre><code class="language-lua">    char:kick()
+</code></pre>
+</details>
 
 ---
 
-### ban
+<details class="realm-server">
+<summary><a id=ban></a>ban(time)</summary>
+<a id="ban"></a>
+<p>Bans the character for a duration or permanently and kicks them.</p>
+<p>Use for disciplinary actions like permakill or timed bans.</p>
+<p><h3>Parameters:</h3>
+<span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.3">number</a></span> <span class="parameter">time</span> <span class="optional">optional</span> Ban duration in seconds; nil makes it permanent.</p>
 
-#### 📋 Purpose
-Bans the character for a duration or permanently and kicks them.
-
-#### ⏰ When Called
-Use for disciplinary actions like permakill or timed bans.
-
-#### ⚙️ Parameters
-
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `time` | **number|nil** | Ban duration in seconds; nil makes it permanent. |
-
-#### ↩️ Returns
-* nil
-
-#### 🌐 Realm
-Server
-
-#### 💡 Example Usage
-
-```lua
-    char:ban(3600)
-
-```
+<h3>Example Usage:</h3>
+<pre><code class="language-lua">    char:ban(3600)
+</code></pre>
+</details>
 
 ---
 
-### delete
-
-#### 📋 Purpose
-Deletes the character from persistent storage.
-
-#### ⏰ When Called
-Use when a character is intentionally removed by the player or admin.
-
-#### ↩️ Returns
-* nil
-
-#### 🌐 Realm
-Server
-
-#### 💡 Example Usage
-
-```lua
-    char:delete()
-
-```
+<details class="realm-server">
+<summary><a id=delete></a>delete()</summary>
+<a id="delete"></a>
+<p>Deletes the character from persistent storage.</p>
+<p>Use when a character is intentionally removed by the player or admin.</p>
+<h3>Example Usage:</h3>
+<pre><code class="language-lua">    char:delete()
+</code></pre>
+</details>
 
 ---
 
-### destroy
-
-#### 📋 Purpose
-Removes the character from the active cache without DB interaction.
-
-#### ⏰ When Called
-Use when unloading a character instance entirely.
-
-#### ↩️ Returns
-* nil
-
-#### 🌐 Realm
-Server
-
-#### 💡 Example Usage
-
-```lua
-    char:destroy()
-
-```
+<details class="realm-server">
+<summary><a id=destroy></a>destroy()</summary>
+<a id="destroy"></a>
+<p>Removes the character from the active cache without DB interaction.</p>
+<p>Use when unloading a character instance entirely.</p>
+<h3>Example Usage:</h3>
+<pre><code class="language-lua">    char:destroy()
+</code></pre>
+</details>
 
 ---
 
-### giveMoney
+<details class="realm-server">
+<summary><a id=giveMoney></a>giveMoney(amount)</summary>
+<a id="givemoney"></a>
+<p>Adds money to the character through the owning player object.</p>
+<p>Use when rewarding or refunding currency.</p>
+<p><h3>Parameters:</h3>
+<span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.3">number</a></span> <span class="parameter">amount</span> Amount to add (can be negative to deduct).</p>
 
-#### 📋 Purpose
-Adds money to the character through the owning player object.
+<p><h3>Returns:</h3>
+<span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.2">boolean</a></span> False if no valid player exists; otherwise result of addMoney.</p>
 
-#### ⏰ When Called
-Use when rewarding or refunding currency.
-
-#### ⚙️ Parameters
-
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `amount` | **number** | Amount to add (can be negative to deduct). |
-
-#### ↩️ Returns
-* boolean
-False if no valid player exists; otherwise result of addMoney.
-
-#### 🌐 Realm
-Server
-
-#### 💡 Example Usage
-
-```lua
-    char:giveMoney(250)
-
-```
+<h3>Example Usage:</h3>
+<pre><code class="language-lua">    char:giveMoney(250)
+</code></pre>
+</details>
 
 ---
 
-### takeMoney
+<details class="realm-server">
+<summary><a id=takeMoney></a>takeMoney(amount)</summary>
+<a id="takemoney"></a>
+<p>Deducts money from the character and logs the transaction.</p>
+<p>Use when charging a player for purchases or penalties.</p>
+<p><h3>Parameters:</h3>
+<span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.3">number</a></span> <span class="parameter">amount</span> Amount to remove; the absolute value is used.</p>
 
-#### 📋 Purpose
-Deducts money from the character and logs the transaction.
+<p><h3>Returns:</h3>
+<span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.2">boolean</a></span> True after the deduction process runs.</p>
 
-#### ⏰ When Called
-Use when charging a player for purchases or penalties.
-
-#### ⚙️ Parameters
-
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `amount` | **number** | Amount to remove; the absolute value is used. |
-
-#### ↩️ Returns
-* boolean
-True after the deduction process runs.
-
-#### 🌐 Realm
-Server
-
-#### 💡 Example Usage
-
-```lua
-    char:takeMoney(50)
-
-```
+<h3>Example Usage:</h3>
+<pre><code class="language-lua">    char:takeMoney(50)
+</code></pre>
+</details>
 
 ---
 
-### isMainCharacter
+<details class="realm-server">
+<summary><a id=isMainCharacter></a>isMainCharacter()</summary>
+<a id="ismaincharacter"></a>
+<p>Checks whether this character matches the player's main character ID.</p>
+<p>Use when showing main character indicators or restrictions.</p>
+<p><h3>Returns:</h3>
+<span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.2">boolean</a></span> True if this character is the player's main selection.</p>
 
-#### 📋 Purpose
-Checks whether this character matches the player's main character ID.
-
-#### ⏰ When Called
-Use when showing main character indicators or restrictions.
-
-#### ↩️ Returns
-* boolean
-True if this character is the player's main selection.
-
-#### 🌐 Realm
-Server
-
-#### 💡 Example Usage
-
-```lua
-    if char:isMainCharacter() then highlight() end
-
-```
+<h3>Example Usage:</h3>
+<pre><code class="language-lua">    if char:isMainCharacter() then highlight() end
+</code></pre>
+</details>
 
 ---
 

@@ -22,6 +22,7 @@ USAGE:
 
 ---
 
+<a id="name"></a>
 ### name
 
 #### 📋 Purpose
@@ -37,6 +38,7 @@ Sets the display name shown to players
 
 ---
 
+<a id="desc"></a>
 ### desc
 
 #### 📋 Purpose
@@ -52,6 +54,7 @@ Sets the description text shown to players
 
 ---
 
+<a id="category"></a>
 ### category
 
 #### 📋 Purpose
@@ -67,6 +70,7 @@ Sets the category for inventory sorting and organization
 
 ---
 
+<a id="model"></a>
 ### model
 
 #### 📋 Purpose
@@ -82,6 +86,7 @@ Sets the 3D model used for the item
 
 ---
 
+<a id="class"></a>
 ### class
 
 #### 📋 Purpose
@@ -97,6 +102,7 @@ Sets the weapon entity class that gets given to players
 
 ---
 
+<a id="width"></a>
 ### width
 
 #### 📋 Purpose
@@ -112,6 +118,7 @@ Sets the inventory width in slots
 
 ---
 
+<a id="height"></a>
 ### height
 
 #### 📋 Purpose
@@ -127,6 +134,7 @@ Sets the inventory height in slots
 
 ---
 
+<a id="isweapon"></a>
 ### isWeapon
 
 #### 📋 Purpose
@@ -142,6 +150,7 @@ Marks this item as a weapon for special handling
 
 ---
 
+<a id="requiredskilllevels"></a>
 ### RequiredSkillLevels
 
 #### 📋 Purpose
@@ -159,6 +168,7 @@ Sets required skill levels to equip this weapon
 
 ---
 
+<a id="dropondeath"></a>
 ### DropOnDeath
 
 #### 📋 Purpose

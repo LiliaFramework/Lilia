@@ -10,685 +10,403 @@ The entity meta table provides comprehensive functionality for extending Garry's
 
 ---
 
-### EmitSound
+<details class="realm-shared">
+<summary><a id=EmitSound></a>EmitSound(soundName, soundLevel, pitchPercent, volume, channel, flags, dsp)</summary>
+<a id="emitsound"></a>
+<p>Detour of Entity:EmitSound that plays a sound from this entity, handling web sound URLs and fallbacks.
+This function overrides the base game's EmitSound method to add support for web-sourced audio streams.</p>
+<p>Use whenever an entity needs to emit a sound that may be streamed.</p>
+<p><h3>Parameters:</h3>
+<span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a></span> <span class="parameter">soundName</span> File path or URL to play.</p>
+<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.3">number</a></span> <span class="parameter">soundLevel</span> Sound level for attenuation.</p>
+<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.3">number</a></span> <span class="parameter">pitchPercent</span> Pitch modifier.</p>
+<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.3">number</a></span> <span class="parameter">volume</span> Volume from 0-100.</p>
+<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.3">number</a></span> <span class="parameter">channel</span> Optional sound channel.</p>
+<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.3">number</a></span> <span class="parameter">flags</span> Optional emit flags.</p>
+<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.3">number</a></span> <span class="parameter">dsp</span> Optional DSP effect index.</p>
 
-#### 📋 Purpose
-Plays a sound from this entity, handling web sound URLs and fallbacks.
+<p><h3>Returns:</h3>
+<span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.2">boolean</a></span> True when handled by websound logic; otherwise base emit result.</p>
 
-#### ⏰ When Called
-Use whenever an entity needs to emit a sound that may be streamed.
-
-#### ⚙️ Parameters
-
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `soundName` | **string** | File path or URL to play. |
-| `soundLevel` | **number** | Sound level for attenuation. |
-| `pitchPercent` | **number** | Pitch modifier. |
-| `volume` | **number** | Volume from 0-100. |
-| `channel` | **number** | Optional sound channel. |
-| `flags` | **number** | Optional emit flags. |
-| `dsp` | **number** | Optional DSP effect index. |
-
-#### ↩️ Returns
-* boolean
-True when handled by websound logic; otherwise base emit result.
-
-#### 🌐 Realm
-Shared
-
-#### 💡 Example Usage
-
-```lua
-    ent:EmitSound("lilia/websounds/example.mp3", 75)
-
-```
+<h3>Example Usage:</h3>
+<pre><code class="language-lua">    ent:EmitSound("lilia/websounds/example.mp3", 75)
+</code></pre>
+</details>
 
 ---
 
-### isProp
+<details class="realm-shared">
+<summary><a id=isProp></a>isProp()</summary>
+<a id="isprop"></a>
+<p>Indicates whether this entity is a physics prop.</p>
+<p>Use when filtering interactions to physical props only.</p>
+<p><h3>Returns:</h3>
+<span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.2">boolean</a></span> True if the entity class is prop_physics.</p>
 
-#### 📋 Purpose
-Indicates whether this entity is a physics prop.
-
-#### ⏰ When Called
-Use when filtering interactions to physical props only.
-
-#### ↩️ Returns
-* boolean
-True if the entity class is prop_physics.
-
-#### 🌐 Realm
-Shared
-
-#### 💡 Example Usage
-
-```lua
-    if ent:isProp() then handleProp(ent) end
-
-```
+<h3>Example Usage:</h3>
+<pre><code class="language-lua">    if ent:isProp() then handleProp(ent) end
+</code></pre>
+</details>
 
 ---
 
-### isItem
+<details class="realm-shared">
+<summary><a id=isItem></a>isItem()</summary>
+<a id="isitem"></a>
+<p>Checks if the entity represents a Lilia item.</p>
+<p>Use when distinguishing item entities from other entities.</p>
+<p><h3>Returns:</h3>
+<span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.2">boolean</a></span> True if the entity class is lia_item.</p>
 
-#### 📋 Purpose
-Checks if the entity represents a Lilia item.
-
-#### ⏰ When Called
-Use when distinguishing item entities from other entities.
-
-#### ↩️ Returns
-* boolean
-True if the entity class is lia_item.
-
-#### 🌐 Realm
-Shared
-
-#### 💡 Example Usage
-
-```lua
-    if ent:isItem() then pickUpItem(ent) end
-
-```
+<h3>Example Usage:</h3>
+<pre><code class="language-lua">    if ent:isItem() then pickUpItem(ent) end
+</code></pre>
+</details>
 
 ---
 
-### isMoney
+<details class="realm-shared">
+<summary><a id=isMoney></a>isMoney()</summary>
+<a id="ismoney"></a>
+<p>Checks if the entity is a Lilia money pile.</p>
+<p>Use when processing currency pickups or interactions.</p>
+<p><h3>Returns:</h3>
+<span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.2">boolean</a></span> True if the entity class is lia_money.</p>
 
-#### 📋 Purpose
-Checks if the entity is a Lilia money pile.
-
-#### ⏰ When Called
-Use when processing currency pickups or interactions.
-
-#### ↩️ Returns
-* boolean
-True if the entity class is lia_money.
-
-#### 🌐 Realm
-Shared
-
-#### 💡 Example Usage
-
-```lua
-    if ent:isMoney() then ent:Remove() end
-
-```
+<h3>Example Usage:</h3>
+<pre><code class="language-lua">    if ent:isMoney() then ent:Remove() end
+</code></pre>
+</details>
 
 ---
 
-### isSimfphysCar
+<details class="realm-shared">
+<summary><a id=isSimfphysCar></a>isSimfphysCar()</summary>
+<a id="issimfphyscar"></a>
+<p>Determines whether the entity belongs to supported vehicle classes.</p>
+<p>Use when applying logic specific to Simfphys/LVS vehicles.</p>
+<p><h3>Returns:</h3>
+<span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.2">boolean</a></span> True if the entity is a recognized vehicle type.</p>
 
-#### 📋 Purpose
-Determines whether the entity belongs to supported vehicle classes.
-
-#### ⏰ When Called
-Use when applying logic specific to Simfphys/LVS vehicles.
-
-#### ↩️ Returns
-* boolean
-True if the entity is a recognized vehicle type.
-
-#### 🌐 Realm
-Shared
-
-#### 💡 Example Usage
-
-```lua
-    if ent:isSimfphysCar() then configureVehicle(ent) end
-
-```
+<h3>Example Usage:</h3>
+<pre><code class="language-lua">    if ent:isSimfphysCar() then configureVehicle(ent) end
+</code></pre>
+</details>
 
 ---
 
-### checkDoorAccess
+<details class="realm-shared">
+<summary><a id=checkDoorAccess></a>checkDoorAccess(client, access)</summary>
+<a id="checkdooraccess"></a>
+<p>Verifies whether a client has a specific level of access to a door.</p>
+<p>Use when opening menus or performing actions gated by door access.</p>
+<p><h3>Parameters:</h3>
+<span class="types"><a class="type" href="https://wiki.facepunch.com/gmod/Player">Player</a></span> <span class="parameter">client</span> Player requesting access.</p>
+<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.3">number</a></span> <span class="parameter">access</span> Required access level, defaults to DOOR_GUEST.</p>
 
-#### 📋 Purpose
-Verifies whether a client has a specific level of access to a door.
+<p><h3>Returns:</h3>
+<span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.2">boolean</a></span> True if the client meets the access requirement.</p>
 
-#### ⏰ When Called
-Use when opening menus or performing actions gated by door access.
-
-#### ⚙️ Parameters
-
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `client` | **Player** | Player requesting access. |
-| `access` | **number** | Required access level, defaults to DOOR_GUEST. |
-
-#### ↩️ Returns
-* boolean
-True if the client meets the access requirement.
-
-#### 🌐 Realm
-Shared
-
-#### 💡 Example Usage
-
-```lua
-    if door:checkDoorAccess(ply, DOOR_OWNER) then openDoor() end
-
-```
+<h3>Example Usage:</h3>
+<pre><code class="language-lua">    if door:checkDoorAccess(ply, DOOR_OWNER) then openDoor() end
+</code></pre>
+</details>
 
 ---
 
-### keysOwn
+<details class="realm-shared">
+<summary><a id=keysOwn></a>keysOwn(client)</summary>
+<a id="keysown"></a>
+<p>Assigns vehicle ownership metadata to a player.</p>
+<p>Use when a player purchases or claims a vehicle entity.</p>
+<p><h3>Parameters:</h3>
+<span class="types"><a class="type" href="https://wiki.facepunch.com/gmod/Player">Player</a></span> <span class="parameter">client</span> Player to set as owner.</p>
 
-#### 📋 Purpose
-Assigns vehicle ownership metadata to a player.
-
-#### ⏰ When Called
-Use when a player purchases or claims a vehicle entity.
-
-#### ⚙️ Parameters
-
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `client` | **Player** | Player to set as owner. |
-
-#### ↩️ Returns
-* nil
-
-#### 🌐 Realm
-Shared
-
-#### 💡 Example Usage
-
-```lua
-    vehicle:keysOwn(ply)
-
-```
+<h3>Example Usage:</h3>
+<pre><code class="language-lua">    vehicle:keysOwn(ply)
+</code></pre>
+</details>
 
 ---
 
-### keysLock
-
-#### 📋 Purpose
-Locks a vehicle entity via its Fire interface.
-
-#### ⏰ When Called
-Use when a player locks their owned vehicle.
-
-#### ↩️ Returns
-* nil
-
-#### 🌐 Realm
-Shared
-
-#### 💡 Example Usage
-
-```lua
-    vehicle:keysLock()
-
-```
+<details class="realm-shared">
+<summary><a id=keysLock></a>keysLock()</summary>
+<a id="keyslock"></a>
+<p>Locks a vehicle entity via its Fire interface.</p>
+<p>Use when a player locks their owned vehicle.</p>
+<h3>Example Usage:</h3>
+<pre><code class="language-lua">    vehicle:keysLock()
+</code></pre>
+</details>
 
 ---
 
-### keysUnLock
-
-#### 📋 Purpose
-Unlocks a vehicle entity via its Fire interface.
-
-#### ⏰ When Called
-Use when giving a player access back to their vehicle.
-
-#### ↩️ Returns
-* nil
-
-#### 🌐 Realm
-Shared
-
-#### 💡 Example Usage
-
-```lua
-    vehicle:keysUnLock()
-
-```
+<details class="realm-shared">
+<summary><a id=keysUnLock></a>keysUnLock()</summary>
+<a id="keysunlock"></a>
+<p>Unlocks a vehicle entity via its Fire interface.</p>
+<p>Use when giving a player access back to their vehicle.</p>
+<h3>Example Usage:</h3>
+<pre><code class="language-lua">    vehicle:keysUnLock()
+</code></pre>
+</details>
 
 ---
 
-### getDoorOwner
+<details class="realm-shared">
+<summary><a id=getDoorOwner></a>getDoorOwner()</summary>
+<a id="getdoorowner"></a>
+<p>Retrieves the owning player for a door or vehicle, if any.</p>
+<p>Use when displaying ownership information.</p>
+<p><h3>Returns:</h3>
+<span class="types"><a class="type" href="https://wiki.facepunch.com/gmod/Player">Player|nil</a></span> Owner entity or nil if unknown.</p>
 
-#### 📋 Purpose
-Retrieves the owning player for a door or vehicle, if any.
-
-#### ⏰ When Called
-Use when displaying ownership information.
-
-#### ↩️ Returns
-* Player|nil
-Owner entity or nil if unknown.
-
-#### 🌐 Realm
-Shared
-
-#### 💡 Example Usage
-
-```lua
-    local owner = door:getDoorOwner()
-
-```
+<h3>Example Usage:</h3>
+<pre><code class="language-lua">    local owner = door:getDoorOwner()
+</code></pre>
+</details>
 
 ---
 
-### isLocked
+<details class="realm-shared">
+<summary><a id=isLocked></a>isLocked()</summary>
+<a id="islocked"></a>
+<p>Returns whether the entity is flagged as locked through net vars.</p>
+<p>Use when deciding if interactions should be blocked.</p>
+<p><h3>Returns:</h3>
+<span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.2">boolean</a></span> True if the entity's locked net var is set.</p>
 
-#### 📋 Purpose
-Returns whether the entity is flagged as locked through net vars.
-
-#### ⏰ When Called
-Use when deciding if interactions should be blocked.
-
-#### ↩️ Returns
-* boolean
-True if the entity's locked net var is set.
-
-#### 🌐 Realm
-Shared
-
-#### 💡 Example Usage
-
-```lua
-    if door:isLocked() then denyUse() end
-
-```
+<h3>Example Usage:</h3>
+<pre><code class="language-lua">    if door:isLocked() then denyUse() end
+</code></pre>
+</details>
 
 ---
 
-### isDoorLocked
+<details class="realm-shared">
+<summary><a id=isDoorLocked></a>isDoorLocked()</summary>
+<a id="isdoorlocked"></a>
+<p>Checks the underlying lock state of a door entity.</p>
+<p>Use when syncing lock visuals or handling use attempts.</p>
+<p><h3>Returns:</h3>
+<span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.2">boolean</a></span> True if the door reports itself as locked.</p>
 
-#### 📋 Purpose
-Checks the underlying lock state of a door entity.
-
-#### ⏰ When Called
-Use when syncing lock visuals or handling use attempts.
-
-#### ↩️ Returns
-* boolean
-True if the door reports itself as locked.
-
-#### 🌐 Realm
-Shared
-
-#### 💡 Example Usage
-
-```lua
-    local locked = door:isDoorLocked()
-
-```
+<h3>Example Usage:</h3>
+<pre><code class="language-lua">    local locked = door:isDoorLocked()
+</code></pre>
+</details>
 
 ---
 
-### isFemale
+<details class="realm-shared">
+<summary><a id=isFemale></a>isFemale()</summary>
+<a id="isfemale"></a>
+<p>Infers whether the entity's model is tagged as female.</p>
+<p>Use for gender-specific animations or sounds.</p>
+<p><h3>Returns:</h3>
+<span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.2">boolean</a></span> True if GetModelGender returns "female".</p>
 
-#### 📋 Purpose
-Infers whether the entity's model is tagged as female.
-
-#### ⏰ When Called
-Use for gender-specific animations or sounds.
-
-#### ↩️ Returns
-* boolean
-True if GetModelGender returns "female".
-
-#### 🌐 Realm
-Shared
-
-#### 💡 Example Usage
-
-```lua
-    if ent:isFemale() then setFemaleVoice(ent) end
-
-```
+<h3>Example Usage:</h3>
+<pre><code class="language-lua">    if ent:isFemale() then setFemaleVoice(ent) end
+</code></pre>
+</details>
 
 ---
 
-### getDoorPartner
+<details class="realm-shared">
+<summary><a id=getDoorPartner></a>getDoorPartner()</summary>
+<a id="getdoorpartner"></a>
+<p>Finds the paired door entity associated with this door.</p>
+<p>Use when syncing double-door behavior or ownership.</p>
+<p><h3>Returns:</h3>
+<span class="types"><a class="type" href="https://wiki.facepunch.com/gmod/Entity">Entity|nil</a></span> Partner door entity when found.</p>
 
-#### 📋 Purpose
-Finds the paired door entity associated with this door.
-
-#### ⏰ When Called
-Use when syncing double-door behavior or ownership.
-
-#### ↩️ Returns
-* Entity|nil
-Partner door entity when found.
-
-#### 🌐 Realm
-Shared
-
-#### 💡 Example Usage
-
-```lua
-    local partner = door:getDoorPartner()
-
-```
+<h3>Example Usage:</h3>
+<pre><code class="language-lua">    local partner = door:getDoorPartner()
+</code></pre>
+</details>
 
 ---
 
-### sendNetVar
+<details class="realm-server">
+<summary><a id=sendNetVar></a>sendNetVar(key, receiver)</summary>
+<a id="sendnetvar"></a>
+<p>Sends a networked variable for this entity to one or more clients.</p>
+<p>Use immediately after changing lia.net values to sync them.</p>
+<p><h3>Parameters:</h3>
+<span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a></span> <span class="parameter">key</span> Net variable name to send.</p>
+<p><span class="types"><a class="type" href="https://wiki.facepunch.com/gmod/Player">Player</a></span> <span class="parameter">receiver</span> <span class="optional">optional</span> Optional player to send to; broadcasts when nil.</p>
 
-#### 📋 Purpose
-Sends a networked variable for this entity to one or more clients.
-
-#### ⏰ When Called
-Use immediately after changing lia.net values to sync them.
-
-#### ⚙️ Parameters
-
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `key` | **string** | Net variable name to send. |
-| `receiver` | **Player|nil** | Optional player to send to; broadcasts when nil. |
-
-#### ↩️ Returns
-* nil
-
-#### 🌐 Realm
-Server
-
-#### 💡 Example Usage
-
-```lua
-    ent:sendNetVar("locked", ply)
-
-```
+<h3>Example Usage:</h3>
+<pre><code class="language-lua">    ent:sendNetVar("locked", ply)
+</code></pre>
+</details>
 
 ---
 
-### clearNetVars
+<details class="realm-server">
+<summary><a id=clearNetVars></a>clearNetVars(receiver)</summary>
+<a id="clearnetvars"></a>
+<p>Clears all stored net vars for this entity and notifies clients.</p>
+<p>Use when an entity is being removed or reset.</p>
+<p><h3>Parameters:</h3>
+<span class="types"><a class="type" href="https://wiki.facepunch.com/gmod/Player">Player</a></span> <span class="parameter">receiver</span> <span class="optional">optional</span> Optional target to notify; broadcasts when nil.</p>
 
-#### 📋 Purpose
-Clears all stored net vars for this entity and notifies clients.
-
-#### ⏰ When Called
-Use when an entity is being removed or reset.
-
-#### ⚙️ Parameters
-
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `receiver` | **Player|nil** | Optional target to notify; broadcasts when nil. |
-
-#### ↩️ Returns
-* nil
-
-#### 🌐 Realm
-Server
-
-#### 💡 Example Usage
-
-```lua
-    ent:clearNetVars()
-
-```
+<h3>Example Usage:</h3>
+<pre><code class="language-lua">    ent:clearNetVars()
+</code></pre>
+</details>
 
 ---
 
-### removeDoorAccessData
-
-#### 📋 Purpose
-Resets stored door access data and closes any open menus.
-
-#### ⏰ When Called
-Use when clearing door permissions or transferring ownership.
-
-#### ↩️ Returns
-* nil
-
-#### 🌐 Realm
-Server
-
-#### 💡 Example Usage
-
-```lua
-    door:removeDoorAccessData()
-
-```
+<details class="realm-server">
+<summary><a id=removeDoorAccessData></a>removeDoorAccessData()</summary>
+<a id="removedooraccessdata"></a>
+<p>Resets stored door access data and closes any open menus.</p>
+<p>Use when clearing door permissions or transferring ownership.</p>
+<h3>Example Usage:</h3>
+<pre><code class="language-lua">    door:removeDoorAccessData()
+</code></pre>
+</details>
 
 ---
 
-### setLocked
+<details class="realm-server">
+<summary><a id=setLocked></a>setLocked(state)</summary>
+<a id="setlocked"></a>
+<p>Sets the locked net var state for this entity.</p>
+<p>Use when toggling lock status server-side.</p>
+<p><h3>Parameters:</h3>
+<span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.2">boolean</a></span> <span class="parameter">state</span> Whether the entity should be considered locked.</p>
 
-#### 📋 Purpose
-Sets the locked net var state for this entity.
-
-#### ⏰ When Called
-Use when toggling lock status server-side.
-
-#### ⚙️ Parameters
-
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `state` | **boolean** | Whether the entity should be considered locked. |
-
-#### ↩️ Returns
-* nil
-
-#### 🌐 Realm
-Server
-
-#### 💡 Example Usage
-
-```lua
-    door:setLocked(true)
-
-```
+<h3>Example Usage:</h3>
+<pre><code class="language-lua">    door:setLocked(true)
+</code></pre>
+</details>
 
 ---
 
-### setKeysNonOwnable
+<details class="realm-server">
+<summary><a id=setKeysNonOwnable></a>setKeysNonOwnable(state)</summary>
+<a id="setkeysnonownable"></a>
+<p>Marks an entity as non-ownable for keys/door systems.</p>
+<p>Use when preventing selling or owning of a door/vehicle.</p>
+<p><h3>Parameters:</h3>
+<span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.2">boolean</a></span> <span class="parameter">state</span> True to make the entity non-ownable.</p>
 
-#### 📋 Purpose
-Marks an entity as non-ownable for keys/door systems.
-
-#### ⏰ When Called
-Use when preventing selling or owning of a door/vehicle.
-
-#### ⚙️ Parameters
-
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `state` | **boolean** | True to make the entity non-ownable. |
-
-#### ↩️ Returns
-* nil
-
-#### 🌐 Realm
-Server
-
-#### 💡 Example Usage
-
-```lua
-    door:setKeysNonOwnable(true)
-
-```
+<h3>Example Usage:</h3>
+<pre><code class="language-lua">    door:setKeysNonOwnable(true)
+</code></pre>
+</details>
 
 ---
 
-### setNetVar
+<details class="realm-server">
+<summary><a id=setNetVar></a>setNetVar(key, value, receiver)</summary>
+<a id="setnetvar"></a>
+<p>Stores a networked variable for this entity and notifies listeners.</p>
+<p>Use when updating shared entity state that clients need.</p>
+<p><h3>Parameters:</h3>
+<span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a></span> <span class="parameter">key</span> Net variable name.</p>
+<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#2.2">any</a></span> <span class="parameter">value</span> Value to store and broadcast.</p>
+<p><span class="types"><a class="type" href="https://wiki.facepunch.com/gmod/Player">Player</a></span> <span class="parameter">receiver</span> <span class="optional">optional</span> Optional player to send to; broadcasts when nil.</p>
 
-#### 📋 Purpose
-Stores a networked variable for this entity and notifies listeners.
-
-#### ⏰ When Called
-Use when updating shared entity state that clients need.
-
-#### ⚙️ Parameters
-
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `key` | **string** | Net variable name. |
-| `value` | **any** | Value to store and broadcast. |
-| `receiver` | **Player|nil** | Optional player to send to; broadcasts when nil. |
-
-#### ↩️ Returns
-* nil
-
-#### 🌐 Realm
-Server
-
-#### 💡 Example Usage
-
-```lua
-    ent:setNetVar("color", Color(255, 0, 0))
-
-```
+<h3>Example Usage:</h3>
+<pre><code class="language-lua">    ent:setNetVar("color", Color(255, 0, 0))
+</code></pre>
+</details>
 
 ---
 
-### setLocalVar
+<details class="realm-server">
+<summary><a id=setLocalVar></a>setLocalVar(key, value)</summary>
+<a id="setlocalvar"></a>
+<p>Saves a local (server-only) variable on the entity.</p>
+<p>Use for transient server state that should not be networked.</p>
+<p><h3>Parameters:</h3>
+<span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a></span> <span class="parameter">key</span> Local variable name.</p>
+<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#2.2">any</a></span> <span class="parameter">value</span> Value to store.</p>
 
-#### 📋 Purpose
-Saves a local (server-only) variable on the entity.
-
-#### ⏰ When Called
-Use for transient server state that should not be networked.
-
-#### ⚙️ Parameters
-
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `key` | **string** | Local variable name. |
-| `value` | **any** | Value to store. |
-
-#### ↩️ Returns
-* nil
-
-#### 🌐 Realm
-Server
-
-#### 💡 Example Usage
-
-```lua
-    ent:setLocalVar("cooldown", CurTime())
-
-```
+<h3>Example Usage:</h3>
+<pre><code class="language-lua">    ent:setLocalVar("cooldown", CurTime())
+</code></pre>
+</details>
 
 ---
 
-### getLocalVar
+<details class="realm-server">
+<summary><a id=getLocalVar></a>getLocalVar(key, default)</summary>
+<a id="getlocalvar"></a>
+<p>Reads a server-side local variable stored on the entity.</p>
+<p>Use when retrieving transient server-only state.</p>
+<p><h3>Parameters:</h3>
+<span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a></span> <span class="parameter">key</span> Local variable name.</p>
+<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#2.2">any</a></span> <span class="parameter">default</span> Value to return if unset.</p>
 
-#### 📋 Purpose
-Reads a server-side local variable stored on the entity.
+<p><h3>Returns:</h3>
+<span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#2.2">any</a></span> Stored local value or default.</p>
 
-#### ⏰ When Called
-Use when retrieving transient server-only state.
-
-#### ⚙️ Parameters
-
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `key` | **string** | Local variable name. |
-| `default` | **any** | Value to return if unset. |
-
-#### ↩️ Returns
-* any
-Stored local value or default.
-
-#### 🌐 Realm
-Server
-
-#### 💡 Example Usage
-
-```lua
-    local cooldown = ent:getLocalVar("cooldown", 0)
-
-```
+<h3>Example Usage:</h3>
+<pre><code class="language-lua">    local cooldown = ent:getLocalVar("cooldown", 0)
+</code></pre>
+</details>
 
 ---
 
-### playFollowingSound
+<details class="realm-client">
+<summary><a id=playFollowingSound></a>playFollowingSound(soundPath, volume, shouldFollow, maxDistance, startDelay, minDistance, pitch, soundLevel, dsp)</summary>
+<a id="playfollowingsound"></a>
+<p>Plays a web sound locally on the client, optionally following the entity.</p>
+<p>Use when the client must play a streamed sound attached to an entity.</p>
+<p><h3>Parameters:</h3>
+<span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a></span> <span class="parameter">soundPath</span> URL or path to the sound.</p>
+<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.3">number</a></span> <span class="parameter">volume</span> Volume from 0-1.</p>
+<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.2">boolean</a></span> <span class="parameter">shouldFollow</span> Whether the sound follows the entity.</p>
+<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.3">number</a></span> <span class="parameter">maxDistance</span> Maximum audible distance.</p>
+<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.3">number</a></span> <span class="parameter">startDelay</span> Delay before playback starts.</p>
+<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.3">number</a></span> <span class="parameter">minDistance</span> Minimum distance for attenuation.</p>
+<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.3">number</a></span> <span class="parameter">pitch</span> Playback rate multiplier.</p>
+<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.3">number</a></span> <span class="parameter">soundLevel</span> Optional sound level for attenuation.</p>
+<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.3">number</a></span> <span class="parameter">dsp</span> Optional DSP effect index.</p>
 
-#### 📋 Purpose
-Plays a web sound locally on the client, optionally following the entity.
-
-#### ⏰ When Called
-Use when the client must play a streamed sound attached to an entity.
-
-#### ⚙️ Parameters
-
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `soundPath` | **string** | URL or path to the sound. |
-| `volume` | **number** | Volume from 0-1. |
-| `shouldFollow` | **boolean** | Whether the sound follows the entity. |
-| `maxDistance` | **number** | Maximum audible distance. |
-| `startDelay` | **number** | Delay before playback starts. |
-| `minDistance` | **number** | Minimum distance for attenuation. |
-| `pitch` | **number** | Playback rate multiplier. |
-| `soundLevel` | **number** | Optional sound level for attenuation. |
-| `dsp` | **number** | Optional DSP effect index. |
-
-#### ↩️ Returns
-* nil
-
-#### 🌐 Realm
-Client
-
-#### 💡 Example Usage
-
-```lua
-    ent:playFollowingSound(url, 1, true, 1200)
-
-```
+<h3>Example Usage:</h3>
+<pre><code class="language-lua">    ent:playFollowingSound(url, 1, true, 1200)
+</code></pre>
+</details>
 
 ---
 
-### isDoor
+<details class="realm-shared">
+<summary><a id=isDoor></a>isDoor()</summary>
+<a id="isdoor"></a>
+<p>Determines whether this entity should be treated as a door.</p>
+<p>Use when applying door-specific logic on an entity.</p>
+<p><h3>Returns:</h3>
+<span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.2">boolean</a></span> True if the entity class matches common door types.</p>
 
-#### 📋 Purpose
-Determines whether this entity should be treated as a door.
-
-#### ⏰ When Called
-Use when applying door-specific logic on an entity.
-
-#### ↩️ Returns
-* boolean
-True if the entity class matches common door types.
-
-#### 🌐 Realm
-Shared
-
-#### 💡 Example Usage
-
-```lua
-    if ent:isDoor() then handleDoor(ent) end
-
-```
+<h3>Example Usage:</h3>
+<pre><code class="language-lua">    if ent:isDoor() then handleDoor(ent) end
+</code></pre>
+</details>
 
 ---
 
-### getNetVar
+<details class="realm-shared">
+<summary><a id=getNetVar></a>getNetVar(key, default)</summary>
+<a id="getnetvar"></a>
+<p>Retrieves a networked variable stored on this entity.</p>
+<p>Use when reading shared entity state on either server or client.</p>
+<p><h3>Parameters:</h3>
+<span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a></span> <span class="parameter">key</span> Net variable name.</p>
+<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#2.2">any</a></span> <span class="parameter">default</span> Fallback value if none is set.</p>
 
-#### 📋 Purpose
-Retrieves a networked variable stored on this entity.
+<p><h3>Returns:</h3>
+<span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#2.2">any</a></span> Stored net var or default.</p>
 
-#### ⏰ When Called
-Use when reading shared entity state on either server or client.
-
-#### ⚙️ Parameters
-
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `key` | **string** | Net variable name. |
-| `default` | **any** | Fallback value if none is set. |
-
-#### ↩️ Returns
-* any
-Stored net var or default.
-
-#### 🌐 Realm
-Shared
-
-#### 💡 Example Usage
-
-```lua
-    local locked = ent:getNetVar("locked", false)
-
-```
+<h3>Example Usage:</h3>
+<pre><code class="language-lua">    local locked = ent:getNetVar("locked", false)
+</code></pre>
+</details>
 
 ---
 

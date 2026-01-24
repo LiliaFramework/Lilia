@@ -10,31 +10,17 @@ The vendor library provides comprehensive functionality for managing NPC vendors
 
 ---
 
-### lia.vendor.addPreset
+<details class="realm-shared">
+<summary><a id=lia.vendor.addPreset></a>lia.vendor.addPreset(name, items)</summary>
+<a id="liavendoraddpreset"></a>
+<p>Register a reusable vendor item preset with validated entries.</p>
+<p>During initialization to define canned loadouts for vendors (e.g., weapon dealer, medic).</p>
+<p><h3>Parameters:</h3>
+<span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a></span> <span class="parameter">name</span> Unique preset name.</p>
+<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.5">table</a></span> <span class="parameter">items</span> Map of item uniqueIDs to tables with pricing/stock metadata.</p>
 
-#### 📋 Purpose
-Register a reusable vendor item preset with validated entries.
-
-#### ⏰ When Called
-During initialization to define canned loadouts for vendors (e.g., weapon dealer, medic).
-
-#### ⚙️ Parameters
-
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `name` | **string** | Unique preset name. |
-| `items` | **table** | Map of item uniqueIDs to tables with pricing/stock metadata. |
-
-#### ↩️ Returns
-* nil
-
-#### 🌐 Realm
-Shared
-
-#### 💡 Example Usage
-
-```lua
-    -- Define a preset and apply it dynamically based on map location.
+<h3>Example Usage:</h3>
+<pre><code class="language-lua">    -- Define a preset and apply it dynamically based on map location.
     lia.vendor.addPreset("gunsmith", {
         ar15 = {stock = 3, price = 3500},
         akm = {stock = 2, price = 3200},
@@ -48,36 +34,24 @@ Shared
             vendorEnt:setFactionAllowed(FACTION_POLICE, true)
         end
     end)
-
-```
+</code></pre>
+</details>
 
 ---
 
-### lia.vendor.getPreset
+<details class="realm-shared">
+<summary><a id=lia.vendor.getPreset></a>lia.vendor.getPreset(name)</summary>
+<a id="liavendorgetpreset"></a>
+<p>Retrieve a preset definition by name.</p>
+<p>While applying presets to vendors or inspecting available vendor templates.</p>
+<p><h3>Parameters:</h3>
+<span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a></span> <span class="parameter">name</span> Preset identifier (case-insensitive).</p>
 
-#### 📋 Purpose
-Retrieve a preset definition by name.
+<p><h3>Returns:</h3>
+<span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.5">table|nil</a></span> Item definition table if present.</p>
 
-#### ⏰ When Called
-While applying presets to vendors or inspecting available vendor templates.
-
-#### ⚙️ Parameters
-
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `name` | **string** | Preset identifier (case-insensitive). |
-
-#### ↩️ Returns
-* table|nil
-Item definition table if present.
-
-#### 🌐 Realm
-Shared
-
-#### 💡 Example Usage
-
-```lua
-    -- Clone and tweak a preset before applying to a specific vendor.
+<h3>Example Usage:</h3>
+<pre><code class="language-lua">    -- Clone and tweak a preset before applying to a specific vendor.
     local preset = table.Copy(lia.vendor.getPreset("gunsmith") or {})
     if preset then
         preset["9mm"].price = 25
@@ -88,74 +62,48 @@ Shared
             if data.stock then vendor:setMaxStock(item, data.stock) end
         end
     end
-
-```
+</code></pre>
+</details>
 
 ---
 
-### lia.vendor.getVendorProperty
+<details class="realm-shared">
+<summary><a id=lia.vendor.getVendorProperty></a>lia.vendor.getVendorProperty(entity, property)</summary>
+<a id="liavendorgetvendorproperty"></a>
+<p>Fetch a vendor property from cache with default fallback.</p>
+<p>Anywhere vendor state is read (pricing, stock, model, etc.).</p>
+<p><h3>Parameters:</h3>
+<span class="types"><a class="type" href="https://wiki.facepunch.com/gmod/Entity">Entity</a></span> <span class="parameter">entity</span> Vendor NPC entity.</p>
+<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a></span> <span class="parameter">property</span> Property key from `lia.vendor.defaults`.</p>
 
-#### 📋 Purpose
-Fetch a vendor property from cache with default fallback.
+<p><h3>Returns:</h3>
+<span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#2.2">any</a></span> Cached property value or default.</p>
 
-#### ⏰ When Called
-Anywhere vendor state is read (pricing, stock, model, etc.).
-
-#### ⚙️ Parameters
-
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `entity` | **Entity** | Vendor NPC entity. |
-| `property` | **string** | Property key from `lia.vendor.defaults`. |
-
-#### ↩️ Returns
-* any
-Cached property value or default.
-
-#### 🌐 Realm
-Shared
-
-#### 💡 Example Usage
-
-```lua
-    -- Build a UI row with live vendor state (including defaults).
+<h3>Example Usage:</h3>
+<pre><code class="language-lua">    -- Build a UI row with live vendor state (including defaults).
     local function addVendorRow(list, vendorEnt)
         local name = lia.vendor.getVendorProperty(vendorEnt, "name")
         local cash = lia.vendor.getVendorProperty(vendorEnt, "money") or 0
         local items = lia.vendor.getVendorProperty(vendorEnt, "items")
         list:AddLine(name, cash, table.Count(items or {}))
     end
-
-```
+</code></pre>
+</details>
 
 ---
 
-### lia.vendor.setVendorProperty
+<details class="realm-shared">
+<summary><a id=lia.vendor.setVendorProperty></a>lia.vendor.setVendorProperty(entity, property, value)</summary>
+<a id="liavendorsetvendorproperty"></a>
+<p>Mutate a vendor property, pruning defaults to keep network/state lean.</p>
+<p>During vendor edits (net messages) or when scripting dynamic vendor behavior.</p>
+<p><h3>Parameters:</h3>
+<span class="types"><a class="type" href="https://wiki.facepunch.com/gmod/Entity">Entity</a></span> <span class="parameter">entity</span> Vendor NPC entity.</p>
+<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a></span> <span class="parameter">property</span> Key to update.</p>
+<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#2.2">any</a></span> <span class="parameter">value</span> New value to store; default-equivalent values clear the entry.</p>
 
-#### 📋 Purpose
-Mutate a vendor property, pruning defaults to keep network/state lean.
-
-#### ⏰ When Called
-During vendor edits (net messages) or when scripting dynamic vendor behavior.
-
-#### ⚙️ Parameters
-
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `entity` | **Entity** | Vendor NPC entity. |
-| `property` | **string** | Key to update. |
-| `value` | **any** | New value to store; default-equivalent values clear the entry. |
-
-#### ↩️ Returns
-* nil
-
-#### 🌐 Realm
-Shared
-
-#### 💡 Example Usage
-
-```lua
-    -- Dynamically flip vendor inventory for an event and prune defaults.
+<h3>Example Usage:</h3>
+<pre><code class="language-lua">    -- Dynamically flip vendor inventory for an event and prune defaults.
     hook.Add("EventStarted", "StockEventVendors", function()
         for _, vendorEnt in ipairs(ents.FindByClass("lia_vendor")) do
             lia.vendor.setVendorProperty(vendorEnt, "items", {
@@ -164,74 +112,48 @@ Shared
             })
         end
     end)
-
-```
+</code></pre>
+</details>
 
 ---
 
-### lia.vendor.syncVendorProperty
+<details class="realm-server">
+<summary><a id=lia.vendor.syncVendorProperty></a>lia.vendor.syncVendorProperty(entity, property, value, isDefault)</summary>
+<a id="liavendorsyncvendorproperty"></a>
+<p>Broadcast a vendor property update to all clients.</p>
+<p>Server-side after mutating vendor properties to keep clients in sync.</p>
+<p><h3>Parameters:</h3>
+<span class="types"><a class="type" href="https://wiki.facepunch.com/gmod/Entity">Entity</a></span> <span class="parameter">entity</span> Vendor NPC entity.</p>
+<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a></span> <span class="parameter">property</span> Key being synchronized.</p>
+<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#2.2">any</a></span> <span class="parameter">value</span> New value for the property.</p>
+<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.2">boolean</a></span> <span class="parameter">isDefault</span> Whether the property should be cleared (uses defaults clientside).</p>
 
-#### 📋 Purpose
-Broadcast a vendor property update to all clients.
-
-#### ⏰ When Called
-Server-side after mutating vendor properties to keep clients in sync.
-
-#### ⚙️ Parameters
-
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `entity` | **Entity** | Vendor NPC entity. |
-| `property` | **string** | Key being synchronized. |
-| `value` | **any** | New value for the property. |
-| `isDefault` | **boolean** | Whether the property should be cleared (uses defaults clientside). |
-
-#### ↩️ Returns
-* nil
-
-#### 🌐 Realm
-Server
-
-#### 💡 Example Usage
-
-```lua
-    -- Force sync after a server-side rebuild of vendor data.
+<h3>Example Usage:</h3>
+<pre><code class="language-lua">    -- Force sync after a server-side rebuild of vendor data.
     local function rebuildVendor(vendorEnt)
         lia.vendor.setVendorProperty(vendorEnt, "name", "Quartermaster")
         lia.vendor.setVendorProperty(vendorEnt, "factionSellScales", { [FACTION_POLICE] = 0.8 })
         lia.vendor.syncVendorProperty(vendorEnt, "name", "Quartermaster", false)
         lia.vendor.syncVendorProperty(vendorEnt, "factionSellScales", { [FACTION_POLICE] = 0.8 }, false)
     end
-
-```
+</code></pre>
+</details>
 
 ---
 
-### lia.vendor.getAllVendorData
+<details class="realm-shared">
+<summary><a id=lia.vendor.getAllVendorData></a>lia.vendor.getAllVendorData(entity)</summary>
+<a id="liavendorgetallvendordata"></a>
+<p>Build a full vendor state table with defaults applied.</p>
+<p>Before serializing vendor data for saving or sending to clients.</p>
+<p><h3>Parameters:</h3>
+<span class="types"><a class="type" href="https://wiki.facepunch.com/gmod/Entity">Entity</a></span> <span class="parameter">entity</span> Vendor NPC entity.</p>
 
-#### 📋 Purpose
-Build a full vendor state table with defaults applied.
+<p><h3>Returns:</h3>
+<span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.5">table</a></span> Key-value table covering every defaulted vendor property.</p>
 
-#### ⏰ When Called
-Before serializing vendor data for saving or sending to clients.
-
-#### ⚙️ Parameters
-
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `entity` | **Entity** | Vendor NPC entity. |
-
-#### ↩️ Returns
-* table
-Key-value table covering every defaulted vendor property.
-
-#### 🌐 Realm
-Shared
-
-#### 💡 Example Usage
-
-```lua
-    -- Serialize full vendor state for a persistence layer.
+<h3>Example Usage:</h3>
+<pre><code class="language-lua">    -- Serialize full vendor state for a persistence layer.
     net.Receive("RequestVendorSnapshot", function(_, ply)
         local ent = net.ReadEntity()
         local data = lia.vendor.getAllVendorData(ent)
@@ -241,8 +163,8 @@ Shared
         net.WriteTable(data)
         net.Send(ply)
     end)
-
-```
+</code></pre>
+</details>
 
 ---
 

@@ -1,9 +1,12 @@
 arrange:
   - index.md
   - gettingstarted.md
+  - guides
+  - generators
   - libraries
   - hooks
   - meta
-  - modules
+  - definitions
   - compatibility.md
   - changelog.md
+  - stylesheets

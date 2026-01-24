@@ -6,6 +6,12 @@
     <div class="generator-section">
         <h3>Basic Information</h3>
         <div class="input-group">
+            <label for="item-id">Unique ID:</label>
+            <input type="text" id="item-id" placeholder="e.g., pistol_9mm">
+            <small>Unique identifier for this item (no spaces, lowercase)</small>
+        </div>
+
+        <div class="input-group">
             <label for="item-name">Item Name:</label>
             <input type="text" id="item-name" placeholder="e.g., 9mm Pistol">
         </div>
@@ -72,6 +78,7 @@
 
 ```lua
 -- Generated weapons item code will appear here after clicking "Generate Weapons Item Code"
+-- This code uses lia.item.registerItem for programmatic item registration
 ```
 
 <style>
@@ -287,6 +294,7 @@ code {
 
 <script>
 function generateWeaponsItem() {
+    const uniqueId = (document.getElementById('item-id').value || '').trim() || 'weapon_example';
     const name = (document.getElementById('item-name').value || '').trim() || 'Weapon Name';
     const desc = (document.getElementById('item-desc').value || '').trim() || 'Weapon description';
     const category = (document.getElementById('item-category').value || '').trim() || 'weapons';
@@ -297,31 +305,35 @@ function generateWeaponsItem() {
     const skillLevels = document.getElementById('skill-levels').value.trim();
     const dropOnDeath = document.getElementById('drop-on-death').checked;
 
-    const lines = [
-        '-- Copy and paste this code into your weapons item file',
-        '-- Example: gamemode/items/weapons/pistol.lua',
-        '',
-        `ITEM.name = ${JSON.stringify(name)}`,
-        `ITEM.desc = ${JSON.stringify(desc)}`,
-        `ITEM.category = ${JSON.stringify(category)}`,
-        '',
-        `ITEM.model = ${JSON.stringify(model)}`,
-        `ITEM.width = ${width}`,
-        `ITEM.height = ${height}`,
-        '',
-        `ITEM.class = ${JSON.stringify(weaponClass)}`,
-        'ITEM.isWeapon = true',
-        `ITEM.DropOnDeath = ${dropOnDeath ? 'true' : 'false'}`
+    let properties = [
+        `    name = ${JSON.stringify(name)}`,
+        `    desc = ${JSON.stringify(desc)}`,
+        `    category = ${JSON.stringify(category)}`,
+        `    model = ${JSON.stringify(model)}`,
+        `    width = ${width}`,
+        `    height = ${height}`,
+        `    class = ${JSON.stringify(weaponClass)}`,
+        `    isWeapon = true`,
+        `    DropOnDeath = ${dropOnDeath ? 'true' : 'false'}`
     ];
 
     if (skillLevels) {
         try {
             JSON.parse(skillLevels);
-            lines.push('', `ITEM.RequiredSkillLevels = ${skillLevels}`);
+            properties.push(`    RequiredSkillLevels = ${skillLevels}`);
         } catch (e) {
-            lines.push('', `-- ITEM.RequiredSkillLevels = ${skillLevels} -- Invalid JSON format`);
+            properties.push(`    -- RequiredSkillLevels = ${skillLevels} -- Invalid JSON format`);
         }
     }
+
+    const lines = [
+        '-- Copy and paste this code into any Lua file that loads during initialization',
+        '-- Example: gamemode/items/weapons.lua or gamemode/sh_items.lua',
+        '',
+        `lia.item.registerItem(${JSON.stringify(uniqueId)}, "base_weapons", {`,
+        ...properties,
+        '})'
+    ];
 
     const code = `${lines.join('\n')}\n`;
 

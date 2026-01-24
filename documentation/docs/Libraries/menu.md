@@ -10,33 +10,21 @@ The menu library provides a comprehensive context menu system for the Lilia fram
 
 ---
 
-### lia.menu.add
+<details class="realm-client">
+<summary><a id=lia.menu.add></a>lia.menu.add(opts, pos, onRemove)</summary>
+<a id="liamenuadd"></a>
+<p>Adds a new interactive context menu to the system that can be displayed in 3D world space or attached to entities.</p>
+<p>Called when creating context menus for world interactions, entity interactions, or any situation requiring a visual menu interface.</p>
+<p><h3>Parameters:</h3>
+<span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.5">table</a></span> <span class="parameter">opts</span> A table containing menu options where keys are display text and values are callback functions.</p>
+<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#2.2">Vector or Entity</a></span> <span class="parameter">pos</span> The world position for the menu, or an entity to attach the menu to.</p>
+<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.6">function</a></span> <span class="parameter">onRemove</span> Optional callback function called when the menu is removed.</p>
 
-#### 📋 Purpose
-Adds a new interactive context menu to the system that can be displayed in 3D world space or attached to entities.
+<p><h3>Returns:</h3>
+<span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.3">number</a></span> The index of the newly added menu in the menu list.</p>
 
-#### ⏰ When Called
-Called when creating context menus for world interactions, entity interactions, or any situation requiring a visual menu interface.
-
-#### ⚙️ Parameters
-
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `opts` | **table** | A table containing menu options where keys are display text and values are callback functions. |
-| `pos` | **Vector or Entity** | The world position for the menu, or an entity to attach the menu to. |
-| `onRemove` | **function** | Optional callback function called when the menu is removed. |
-
-#### ↩️ Returns
-* number
-The index of the newly added menu in the menu list.
-
-#### 🌐 Realm
-Client
-
-#### 💡 Example Usage
-
-```lua
-    -- Create a simple menu for an entity
+<h3>Example Usage:</h3>
+<pre><code class="language-lua">    -- Create a simple menu for an entity
     lia.menu.add({
         ["Open"] = function() print("Opening...") end,
         ["Close"] = function() print("Closing...") end
@@ -45,57 +33,37 @@ Client
     lia.menu.add({
         ["Pickup"] = function() print("Picked up!") end
     }, Vector(0, 0, 0))
-
-```
+</code></pre>
+</details>
 
 ---
 
-### lia.menu.drawAll
-
-#### 📋 Purpose
-Renders all active context menus on the screen with smooth animations, range checking, and mouse interaction highlighting.
-
-#### ⏰ When Called
-Called every frame during the HUD/rendering phase to draw all active menus. Typically hooked into the drawing system.
-
-#### ↩️ Returns
-* nil
-
-#### 🌐 Realm
-Client
-
-#### 💡 Example Usage
-
-```lua
-    -- Called automatically by the framework's rendering system
+<details class="realm-client">
+<summary><a id=lia.menu.drawAll></a>lia.menu.drawAll()</summary>
+<a id="liamenudrawall"></a>
+<p>Renders all active context menus on the screen with smooth animations, range checking, and mouse interaction highlighting.</p>
+<p>Called every frame during the HUD/rendering phase to draw all active menus. Typically hooked into the drawing system.</p>
+<h3>Example Usage:</h3>
+<pre><code class="language-lua">    -- Called automatically by the framework's rendering system
     -- Can be manually called if needed for custom rendering setups
     hook.Add("HUDPaint", "DrawMenus", function()
         lia.menu.drawAll()
     end)
-
-```
+</code></pre>
+</details>
 
 ---
 
-### lia.menu.getActiveMenu
+<details class="realm-client">
+<summary><a id=lia.menu.getActiveMenu></a>lia.menu.getActiveMenu()</summary>
+<a id="liamenugetactivemenu"></a>
+<p>Determines which menu item is currently under the mouse cursor and within interaction range.</p>
+<p>Called when checking for menu interactions, mouse clicks, or determining which menu option the player is hovering over.</p>
+<p><h3>Returns:</h3>
+number, function or nil Returns the menu index and the callback function of the active menu item, or nil if no active menu item is found.</p>
 
-#### 📋 Purpose
-Determines which menu item is currently under the mouse cursor and within interaction range.
-
-#### ⏰ When Called
-Called when checking for menu interactions, mouse clicks, or determining which menu option the player is hovering over.
-
-#### ↩️ Returns
-* number, function or nil
-Returns the menu index and the callback function of the active menu item, or nil if no active menu item is found.
-
-#### 🌐 Realm
-Client
-
-#### 💡 Example Usage
-
-```lua
-    -- Check for menu interactions in a click handler
+<h3>Example Usage:</h3>
+<pre><code class="language-lua">    -- Check for menu interactions in a click handler
     local menuIndex, callback = lia.menu.getActiveMenu()
     if menuIndex and callback then
         lia.menu.onButtonPressed(menuIndex, callback)
@@ -105,37 +73,25 @@ Client
     if activeMenu then
         -- Player is hovering over a menu item
     end
-
-```
+</code></pre>
+</details>
 
 ---
 
-### lia.menu.onButtonPressed
+<details class="realm-client">
+<summary><a id=lia.menu.onButtonPressed></a>lia.menu.onButtonPressed(id, cb)</summary>
+<a id="liamenuonbuttonpressed"></a>
+<p>Handles menu button press events by removing the menu and executing the associated callback function.</p>
+<p>Called when a menu button is clicked to process the interaction and clean up the menu.</p>
+<p><h3>Parameters:</h3>
+<span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.3">number</a></span> <span class="parameter">id</span> The index of the menu to remove from the menu list.</p>
+<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.6">function</a></span> <span class="parameter">cb</span> The callback function to execute when the button is pressed.</p>
 
-#### 📋 Purpose
-Handles menu button press events by removing the menu and executing the associated callback function.
+<p><h3>Returns:</h3>
+<span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.2">boolean</a></span> Returns true if a callback was executed, false otherwise.</p>
 
-#### ⏰ When Called
-Called when a menu button is clicked to process the interaction and clean up the menu.
-
-#### ⚙️ Parameters
-
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `id` | **number** | The index of the menu to remove from the menu list. |
-| `cb` | **function** | The callback function to execute when the button is pressed. |
-
-#### ↩️ Returns
-* boolean
-Returns true if a callback was executed, false otherwise.
-
-#### 🌐 Realm
-Client
-
-#### 💡 Example Usage
-
-```lua
-    -- Handle a menu button press
+<h3>Example Usage:</h3>
+<pre><code class="language-lua">    -- Handle a menu button press
     local menuIndex, callback = lia.menu.getActiveMenu()
     if menuIndex then
         local success = lia.menu.onButtonPressed(menuIndex, callback)
@@ -145,8 +101,8 @@ Client
     end
     -- Remove a menu without executing callback
     lia.menu.onButtonPressed(specificMenuId)
-
-```
+</code></pre>
+</details>
 
 ---
 

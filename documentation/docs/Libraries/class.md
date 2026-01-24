@@ -10,290 +10,178 @@ The classes library provides comprehensive functionality for managing character 
 
 ---
 
-### lia.class.register
+<details class="realm-shared">
+<summary><a id=lia.class.register></a>lia.class.register(uniqueID, data)</summary>
+<a id="liaclassregister"></a>
+<p>Registers or updates a class definition within the global class list.</p>
+<p>Invoked during schema initialization or dynamic class creation to
+ensure a class entry exists before use.</p>
+<p><h3>Parameters:</h3>
+<span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a></span> <span class="parameter">uniqueID</span> Unique identifier for the class; must be consistent across loads.</p>
+<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.5">table</a></span> <span class="parameter">data</span> Class metadata such as name, desc, faction, limit, OnCanBe, etc.</p>
 
-#### 📋 Purpose
-Registers or updates a class definition within the global class list.
+<p><h3>Returns:</h3>
+<span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.5">table</a></span> The registered class table with applied defaults.</p>
 
-#### ⏰ When Called
-Invoked during schema initialization or dynamic class creation to
-ensure a class entry exists before use.
-
-#### ⚙️ Parameters
-
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `uniqueID` | **string** | Unique identifier for the class; must be consistent across loads. |
-| `data` | **table** | Class metadata such as name, desc, faction, limit, OnCanBe, etc. |
-
-#### ↩️ Returns
-* table
-The registered class table with applied defaults.
-
-#### 🌐 Realm
-Shared
-
-#### 💡 Example Usage
-
-```lua
-    lia.class.register("soldier", {
+<h3>Example Usage:</h3>
+<pre><code class="language-lua">    lia.class.register("soldier", {
         name = "Soldier",
         faction = FACTION_MILITARY,
         limit = 4
     })
-
-```
-
----
-
-### lia.class.loadFromDir
-
-#### 📋 Purpose
-Loads and registers all class definitions from a directory.
-
-#### ⏰ When Called
-Used during schema loading to automatically include class files in a
-folder following the naming convention.
-
-#### ⚙️ Parameters
-
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `directory` | **string** | Path to the directory containing class Lua files. |
-
-#### ↩️ Returns
-* nil
-Operates for side effects of registering classes.
-
-#### 🌐 Realm
-Shared
-
-#### 💡 Example Usage
-
-```lua
-    lia.class.loadFromDir("lilia/gamemode/classes")
-
-```
+</code></pre>
+</details>
 
 ---
 
-### lia.class.canBe
+<details class="realm-shared">
+<summary><a id=lia.class.loadFromDir></a>lia.class.loadFromDir(directory)</summary>
+<a id="liaclassloadfromdir"></a>
+<p>Loads and registers all class definitions from a directory.</p>
+<p>Used during schema loading to automatically include class files in a
+folder following the naming convention.</p>
+<p><h3>Parameters:</h3>
+<span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a></span> <span class="parameter">directory</span> Path to the directory containing class Lua files.</p>
 
-#### 📋 Purpose
-Determines whether a client can join a specific class.
+<h3>Example Usage:</h3>
+<pre><code class="language-lua">    lia.class.loadFromDir("lilia/gamemode/classes")
+</code></pre>
+</details>
 
-#### ⏰ When Called
-Checked before class selection to enforce faction, limits, whitelist,
-and custom restrictions.
+---
 
-#### ⚙️ Parameters
+<details class="realm-shared">
+<summary><a id=lia.class.canBe></a>lia.class.canBe(client, class)</summary>
+<a id="liaclasscanbe"></a>
+<p>Determines whether a client can join a specific class.</p>
+<p>Checked before class selection to enforce faction, limits, whitelist,
+and custom restrictions.</p>
+<p><h3>Parameters:</h3>
+<span class="types"><a class="type" href="https://wiki.facepunch.com/gmod/Player">Player</a></span> <span class="parameter">client</span> Player attempting to join the class.</p>
+<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.3">number|string</a></span> <span class="parameter">class</span> Class index or unique identifier.</p>
 
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `client` | **Player** | Player attempting to join the class. |
-| `class` | **number|string** | Class index or unique identifier. |
+<p><h3>Returns:</h3>
+<span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.2">boolean|string</a></span> False and a reason string on failure; otherwise returns the class's isDefault value.</p>
 
-#### ↩️ Returns
-* boolean|string
-False and a reason string on failure; otherwise returns the
-class's isDefault value.
-
-#### 🌐 Realm
-Shared
-
-#### 💡 Example Usage
-
-```lua
-    local ok, reason = lia.class.canBe(ply, CLASS_CITIZEN)
+<h3>Example Usage:</h3>
+<pre><code class="language-lua">    local ok, reason = lia.class.canBe(ply, CLASS_CITIZEN)
     if ok then
         -- proceed with class change
     end
-
-```
-
----
-
-### lia.class.get
-
-#### 📋 Purpose
-Retrieves a class table by index or unique identifier.
-
-#### ⏰ When Called
-Used whenever class metadata is needed given a known identifier.
-
-#### ⚙️ Parameters
-
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `identifier` | **number|string** | Class list index or unique identifier. |
-
-#### ↩️ Returns
-* table|nil
-The class table if found; otherwise nil.
-
-#### 🌐 Realm
-Shared
-
-#### 💡 Example Usage
-
-```lua
-    local classData = lia.class.get("soldier")
-
-```
+</code></pre>
+</details>
 
 ---
 
-### lia.class.getPlayers
+<details class="realm-shared">
+<summary><a id=lia.class.get></a>lia.class.get(identifier)</summary>
+<a id="liaclassget"></a>
+<p>Retrieves a class table by index or unique identifier.</p>
+<p>Used whenever class metadata is needed given a known identifier.</p>
+<p><h3>Parameters:</h3>
+<span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.3">number|string</a></span> <span class="parameter">identifier</span> Class list index or unique identifier.</p>
 
-#### 📋 Purpose
-Collects all players currently assigned to the given class.
+<p><h3>Returns:</h3>
+<span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.5">table|nil</a></span> The class table if found; otherwise nil.</p>
 
-#### ⏰ When Called
-Used when enforcing limits or displaying membership lists.
+<h3>Example Usage:</h3>
+<pre><code class="language-lua">    local classData = lia.class.get("soldier")
+</code></pre>
+</details>
 
-#### ⚙️ Parameters
+---
 
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `class` | **number|string** | Class list index or unique identifier. |
+<details class="realm-shared">
+<summary><a id=lia.class.getPlayers></a>lia.class.getPlayers(class)</summary>
+<a id="liaclassgetplayers"></a>
+<p>Collects all players currently assigned to the given class.</p>
+<p>Used when enforcing limits or displaying membership lists.</p>
+<p><h3>Parameters:</h3>
+<span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.3">number|string</a></span> <span class="parameter">class</span> Class list index or unique identifier.</p>
 
-#### ↩️ Returns
-* table
-Array of player entities in the class.
+<p><h3>Returns:</h3>
+<span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.5">table</a></span> Array of player entities in the class.</p>
 
-#### 🌐 Realm
-Shared
-
-#### 💡 Example Usage
-
-```lua
-    for _, ply in ipairs(lia.class.getPlayers("soldier")) do
+<h3>Example Usage:</h3>
+<pre><code class="language-lua">    for _, ply in ipairs(lia.class.getPlayers("soldier")) do
         -- notify class members
     end
-
-```
-
----
-
-### lia.class.getPlayerCount
-
-#### 📋 Purpose
-Counts how many players are in the specified class.
-
-#### ⏰ When Called
-Used to check class limits or display class population.
-
-#### ⚙️ Parameters
-
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `class` | **number|string** | Class list index or unique identifier. |
-
-#### ↩️ Returns
-* number
-Current number of players in the class.
-
-#### 🌐 Realm
-Shared
-
-#### 💡 Example Usage
-
-```lua
-    local count = lia.class.getPlayerCount(CLASS_ENGINEER)
-
-```
+</code></pre>
+</details>
 
 ---
 
-### lia.class.retrieveClass
+<details class="realm-shared">
+<summary><a id=lia.class.getPlayerCount></a>lia.class.getPlayerCount(class)</summary>
+<a id="liaclassgetplayercount"></a>
+<p>Counts how many players are in the specified class.</p>
+<p>Used to check class limits or display class population.</p>
+<p><h3>Parameters:</h3>
+<span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.3">number|string</a></span> <span class="parameter">class</span> Class list index or unique identifier.</p>
 
-#### 📋 Purpose
-Finds the class index by matching uniqueID or display name.
+<p><h3>Returns:</h3>
+<span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.3">number</a></span> Current number of players in the class.</p>
 
-#### ⏰ When Called
-Used to resolve user input to a class entry before further lookups.
-
-#### ⚙️ Parameters
-
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `class` | **string** | Text to match against class uniqueID or name. |
-
-#### ↩️ Returns
-* number|nil
-The class index if a match is found; otherwise nil.
-
-#### 🌐 Realm
-Shared
-
-#### 💡 Example Usage
-
-```lua
-    local idx = lia.class.retrieveClass("Engineer")
-
-```
+<h3>Example Usage:</h3>
+<pre><code class="language-lua">    local count = lia.class.getPlayerCount(CLASS_ENGINEER)
+</code></pre>
+</details>
 
 ---
 
-### lia.class.hasWhitelist
+<details class="realm-shared">
+<summary><a id=lia.class.retrieveClass></a>lia.class.retrieveClass(class)</summary>
+<a id="liaclassretrieveclass"></a>
+<p>Finds the class index by matching uniqueID or display name.</p>
+<p>Used to resolve user input to a class entry before further lookups.</p>
+<p><h3>Parameters:</h3>
+<span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a></span> <span class="parameter">class</span> Text to match against class uniqueID or name.</p>
 
-#### 📋 Purpose
-Checks whether a class uses whitelist access.
+<p><h3>Returns:</h3>
+<span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.3">number|nil</a></span> The class index if a match is found; otherwise nil.</p>
 
-#### ⏰ When Called
-Queried before allowing class selection or displaying class info.
+<h3>Example Usage:</h3>
+<pre><code class="language-lua">    local idx = lia.class.retrieveClass("Engineer")
+</code></pre>
+</details>
 
-#### ⚙️ Parameters
+---
 
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `class` | **number|string** | Class list index or unique identifier. |
+<details class="realm-shared">
+<summary><a id=lia.class.hasWhitelist></a>lia.class.hasWhitelist(class)</summary>
+<a id="liaclasshaswhitelist"></a>
+<p>Checks whether a class uses whitelist access.</p>
+<p>Queried before allowing class selection or displaying class info.</p>
+<p><h3>Parameters:</h3>
+<span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.3">number|string</a></span> <span class="parameter">class</span> Class list index or unique identifier.</p>
 
-#### ↩️ Returns
-* boolean
-True if the class is whitelisted and not default; otherwise false.
+<p><h3>Returns:</h3>
+<span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.2">boolean</a></span> True if the class is whitelisted and not default; otherwise false.</p>
 
-#### 🌐 Realm
-Shared
-
-#### 💡 Example Usage
-
-```lua
-    if lia.class.hasWhitelist(CLASS_PILOT) then
+<h3>Example Usage:</h3>
+<pre><code class="language-lua">    if lia.class.hasWhitelist(CLASS_PILOT) then
         -- restrict to whitelisted players
     end
-
-```
+</code></pre>
+</details>
 
 ---
 
-### lia.class.retrieveJoinable
+<details class="realm-shared">
+<summary><a id=lia.class.retrieveJoinable></a>lia.class.retrieveJoinable(client)</summary>
+<a id="liaclassretrievejoinable"></a>
+<p>Returns a list of classes the provided client is allowed to join.</p>
+<p>Used to build class selection menus and enforce availability.</p>
+<p><h3>Parameters:</h3>
+<span class="types"><a class="type" href="https://wiki.facepunch.com/gmod/Player">Player</a></span> <span class="parameter">client</span> <span class="optional">optional</span> Target player; defaults to LocalPlayer on the client.</p>
 
-#### 📋 Purpose
-Returns a list of classes the provided client is allowed to join.
+<p><h3>Returns:</h3>
+<span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.5">table</a></span> Array of class tables the client can currently join.</p>
 
-#### ⏰ When Called
-Used to build class selection menus and enforce availability.
-
-#### ⚙️ Parameters
-
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `client` | **Player|nil** | Target player; defaults to LocalPlayer on the client. |
-
-#### ↩️ Returns
-* table
-Array of class tables the client can currently join.
-
-#### 🌐 Realm
-Shared
-
-#### 💡 Example Usage
-
-```lua
-    local options = lia.class.retrieveJoinable(ply)
-
-```
+<h3>Example Usage:</h3>
+<pre><code class="language-lua">    local options = lia.class.retrieveJoinable(ply)
+</code></pre>
+</details>
 
 ---
 

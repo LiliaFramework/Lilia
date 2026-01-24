@@ -52,6 +52,7 @@ classwhitelists to control which classes a character has access to.
 
 ---
 
+<a id="name"></a>
 ### name
 
 #### 📋 Purpose
@@ -69,6 +70,7 @@ During class definition
 
 ---
 
+<a id="desc"></a>
 ### desc
 
 #### 📋 Purpose
@@ -86,6 +88,7 @@ During class definition
 
 ---
 
+<a id="requirements"></a>
 ### requirements
 
 #### 📋 Purpose
@@ -106,6 +109,7 @@ During class definition
 
 ---
 
+<a id="faction"></a>
 ### faction
 
 #### 📋 Purpose
@@ -123,6 +127,7 @@ During class definition
 
 ---
 
+<a id="team"></a>
 ### team
 
 #### 📋 Purpose
@@ -141,6 +146,7 @@ During class definition
 
 ---
 
+<a id="limit"></a>
 ### limit
 
 #### 📋 Purpose
@@ -159,6 +165,7 @@ During class definition
 
 ---
 
+<a id="commands"></a>
 ### commands
 
 #### 📋 Purpose
@@ -179,6 +186,7 @@ During class definition
 
 ---
 
+<a id="model"></a>
 ### model
 
 #### 📋 Purpose
@@ -200,6 +208,7 @@ During class definition
 
 ---
 
+<a id="logo"></a>
 ### logo
 
 #### 📋 Purpose
@@ -217,6 +226,7 @@ During class definition
 
 ---
 
+<a id="skin"></a>
 ### skin
 
 #### 📋 Purpose
@@ -234,6 +244,7 @@ During class definition
 
 ---
 
+<a id="bodygroups"></a>
 ### bodyGroups
 
 #### 📋 Purpose
@@ -253,6 +264,7 @@ During class definition
 
 ---
 
+<a id="submaterials"></a>
 ### subMaterials
 
 #### 📋 Purpose
@@ -273,6 +285,7 @@ During class definition
 
 ---
 
+<a id="iswhitelisted"></a>
 ### isWhitelisted
 
 #### 📋 Purpose
@@ -294,6 +307,7 @@ During class definition
 
 ---
 
+<a id="isdefault"></a>
 ### isDefault
 
 #### 📋 Purpose
@@ -311,6 +325,7 @@ During class definition
 
 ---
 
+<a id="caninvitetofaction"></a>
 ### canInviteToFaction
 
 #### 📋 Purpose
@@ -328,6 +343,7 @@ During class definition
 
 ---
 
+<a id="caninvitetoclass"></a>
 ### canInviteToClass
 
 #### 📋 Purpose
@@ -345,6 +361,7 @@ During class definition
 
 ---
 
+<a id="scoreboardhidden"></a>
 ### scoreboardHidden
 
 #### 📋 Purpose
@@ -362,6 +379,7 @@ During class definition
 
 ---
 
+<a id="pay"></a>
 ### pay
 
 #### 📋 Purpose
@@ -379,6 +397,7 @@ During class definition
 
 ---
 
+<a id="uniqueid"></a>
 ### uniqueID
 
 #### 📋 Purpose
@@ -401,6 +420,7 @@ Note: This property is internal and should not be modified directly
 
 ---
 
+<a id="index"></a>
 ### index
 
 #### 📋 Purpose
@@ -422,6 +442,7 @@ Set automatically during class registration
 
 ---
 
+<a id="color"></a>
 ### Color
 
 #### 📋 Purpose
@@ -439,6 +460,7 @@ During class definition
 
 ---
 
+<a id="color"></a>
 ### color
 
 #### 📋 Purpose
@@ -456,6 +478,7 @@ During class definition
 
 ---
 
+<a id="health"></a>
 ### health
 
 #### 📋 Purpose
@@ -473,6 +496,7 @@ During class definition (applied when player joins class)
 
 ---
 
+<a id="armor"></a>
 ### armor
 
 #### 📋 Purpose
@@ -490,6 +514,7 @@ During class definition (applied when player joins class)
 
 ---
 
+<a id="weapons"></a>
 ### weapons
 
 #### 📋 Purpose
@@ -508,6 +533,7 @@ During class definition (applied when player spawns)
 
 ---
 
+<a id="scale"></a>
 ### scale
 
 #### 📋 Purpose
@@ -525,6 +551,7 @@ During class definition (applied when player joins class)
 
 ---
 
+<a id="runspeed"></a>
 ### runSpeed
 
 #### 📋 Purpose
@@ -544,6 +571,7 @@ During class definition (applied when player joins class)
 
 ---
 
+<a id="walkspeed"></a>
 ### walkSpeed
 
 #### 📋 Purpose
@@ -563,6 +591,7 @@ During class definition (applied when player joins class)
 
 ---
 
+<a id="jumppower"></a>
 ### jumpPower
 
 #### 📋 Purpose
@@ -582,6 +611,7 @@ During class definition (applied when player joins class)
 
 ---
 
+<a id="npcrelations"></a>
 ### NPCRelations
 
 #### 📋 Purpose
@@ -602,6 +632,7 @@ During class definition (applied when player joins class)
 
 ---
 
+<a id="bloodcolor"></a>
 ### bloodcolor
 
 #### 📋 Purpose
@@ -620,6 +651,7 @@ During class definition (applied when player joins class)
 
 ---
 
+<a id="runspeedmultiplier"></a>
 ### runSpeedMultiplier
 
 #### 📋 Purpose
@@ -638,6 +670,7 @@ During class definition (used with runSpeed property)
 
 ---
 
+<a id="walkspeedmultiplier"></a>
 ### walkSpeedMultiplier
 
 #### 📋 Purpose
@@ -656,6 +689,7 @@ During class definition (used with walkSpeed property)
 
 ---
 
+<a id="jumppowermultiplier"></a>
 ### jumpPowerMultiplier
 
 #### 📋 Purpose
@@ -674,6 +708,7 @@ During class definition (used with jumpPower property)
 
 ---
 
+<a id="oncanbe"></a>
 ### OnCanBe
 
 #### 📋 Purpose
@@ -682,14 +717,11 @@ Check if a player can join this class
 #### ⏰ When Called
 When a player attempts to join this class
 
-#### ⚙️ Parameters
+<p><h3>Parameters:</h3>
+<span class="types"><a class="type" href="https://wiki.facepunch.com/gmod/Player">Player</a></span> <span class="parameter">client</span> The player trying to join</p>
 
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `client` | **Player** | The player trying to join |
-
-#### ↩️ Returns
-* true to allow, false to deny
+<p><h3>Returns:</h3>
+true to allow, false to deny</p>
 
 #### 💡 Example Usage
 
@@ -720,6 +752,7 @@ When a player attempts to join this class
 
 ---
 
+<a id="onset"></a>
 ### OnSet
 
 #### 📋 Purpose
@@ -731,11 +764,8 @@ When a player is assigned to this class
 #### 🌐 Realm
 Server
 
-#### ⚙️ Parameters
-
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `client` | **Player** | The player joining the class |
+<p><h3>Parameters:</h3>
+<span class="types"><a class="type" href="https://wiki.facepunch.com/gmod/Player">Player</a></span> <span class="parameter">client</span> The player joining the class</p>
 
 #### 💡 Example Usage
 
@@ -748,6 +778,7 @@ Server
 
 ---
 
+<a id="ontransferred"></a>
 ### OnTransferred
 
 #### 📋 Purpose
@@ -759,12 +790,9 @@ When a player switches classes and this becomes the new class
 #### 🌐 Realm
 Server
 
-#### ⚙️ Parameters
-
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `client` | **Player** | The player switching classes |
-| `oldClass` | **table** | The previous class data |
+<p><h3>Parameters:</h3>
+<span class="types"><a class="type" href="https://wiki.facepunch.com/gmod/Player">Player</a></span> <span class="parameter">client</span> The player switching classes</p>
+<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.5">table</a></span> <span class="parameter">oldClass</span> The previous class data</p>
 
 #### 💡 Example Usage
 
@@ -779,6 +807,7 @@ Server
 
 ---
 
+<a id="onspawn"></a>
 ### OnSpawn
 
 #### 📋 Purpose
@@ -790,11 +819,8 @@ When a player spawns with this class
 #### 🌐 Realm
 Server
 
-#### ⚙️ Parameters
-
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `client` | **Player** | The player spawning |
+<p><h3>Parameters:</h3>
+<span class="types"><a class="type" href="https://wiki.facepunch.com/gmod/Player">Player</a></span> <span class="parameter">client</span> The player spawning</p>
 
 #### 💡 Example Usage
 
@@ -809,6 +835,7 @@ Server
 
 ---
 
+<a id="onleave"></a>
 ### OnLeave
 
 #### 📋 Purpose
@@ -820,11 +847,8 @@ When a player leaves this class
 #### 🌐 Realm
 Server
 
-#### ⚙️ Parameters
-
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `client` | **Player** | The player leaving |
+<p><h3>Parameters:</h3>
+<span class="types"><a class="type" href="https://wiki.facepunch.com/gmod/Player">Player</a></span> <span class="parameter">client</span> The player leaving</p>
 
 #### 💡 Example Usage
 

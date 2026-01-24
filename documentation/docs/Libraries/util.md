@@ -10,1011 +10,612 @@ The utility library provides comprehensive functionality for common operations a
 
 ---
 
-### lia.util.findPlayersInBox
+<details class="realm-shared">
+<summary><a id=lia.util.findPlayersInBox></a>lia.util.findPlayersInBox(mins, maxs)</summary>
+<a id="liautilfindplayersinbox"></a>
+<p>Finds all players within an axis-aligned bounding box.</p>
+<p>Use when you need the players contained inside specific world bounds (e.g. triggers or zones).</p>
+<p><h3>Parameters:</h3>
+<span class="types"><a class="type" href="https://wiki.facepunch.com/gmod/Vector">Vector</a></span> <span class="parameter">mins</span> Minimum corner of the search box.</p>
+<p><span class="types"><a class="type" href="https://wiki.facepunch.com/gmod/Vector">Vector</a></span> <span class="parameter">maxs</span> Maximum corner of the search box.</p>
 
-#### 📋 Purpose
-Finds all players within an axis-aligned bounding box.
+<p><h3>Returns:</h3>
+<span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.5">table</a></span> List of player entities inside the box.</p>
 
-#### ⏰ When Called
-Use when you need the players contained inside specific world bounds (e.g. triggers or zones).
-
-#### ⚙️ Parameters
-
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `mins` | **Vector** | Minimum corner of the search box. |
-| `maxs` | **Vector** | Maximum corner of the search box. |
-
-#### ↩️ Returns
-* table
-List of player entities inside the box.
-
-#### 🌐 Realm
-Shared
-
-#### 💡 Example Usage
-
-```lua
-    local players = lia.util.findPlayersInBox(Vector(-128, -128, 0), Vector(128, 128, 128))
-
-```
+<h3>Example Usage:</h3>
+<pre><code class="language-lua">    local players = lia.util.findPlayersInBox(Vector(-128, -128, 0), Vector(128, 128, 128))
+</code></pre>
+</details>
 
 ---
 
-### lia.util.getBySteamID
+<details class="realm-shared">
+<summary><a id=lia.util.getBySteamID></a>lia.util.getBySteamID(steamID)</summary>
+<a id="liautilgetbysteamid"></a>
+<p>Locates a connected player by SteamID or SteamID64 and requires an active character.</p>
+<p>Use when commands or systems need to resolve a Steam identifier to a live player with a character loaded.</p>
+<p><h3>Parameters:</h3>
+<span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a></span> <span class="parameter">steamID</span> SteamID (e.g. "STEAM_0:1:12345") or SteamID64; empty/invalid strings are ignored.</p>
 
-#### 📋 Purpose
-Locates a connected player by SteamID or SteamID64 and requires an active character.
+<p><h3>Returns:</h3>
+<span class="types"><a class="type" href="https://wiki.facepunch.com/gmod/Player">Player|nil</a></span> The matching player with a loaded character, or nil if not found/invalid input.</p>
 
-#### ⏰ When Called
-Use when commands or systems need to resolve a Steam identifier to a live player with a character loaded.
-
-#### ⚙️ Parameters
-
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `steamID` | **string** | SteamID (e.g. "STEAM_0:1:12345") or SteamID64; empty/invalid strings are ignored. |
-
-#### ↩️ Returns
-* Player|nil
-The matching player with a loaded character, or nil if not found/invalid input.
-
-#### 🌐 Realm
-Shared
-
-#### 💡 Example Usage
-
-```lua
-    local ply = lia.util.getBySteamID("76561198000000000")
+<h3>Example Usage:</h3>
+<pre><code class="language-lua">    local ply = lia.util.getBySteamID("76561198000000000")
     if ply then print("Found", ply:Name()) end
-
-```
+</code></pre>
+</details>
 
 ---
 
-### lia.util.findPlayersInSphere
+<details class="realm-shared">
+<summary><a id=lia.util.findPlayersInSphere></a>lia.util.findPlayersInSphere(origin, radius)</summary>
+<a id="liautilfindplayersinsphere"></a>
+<p>Returns all players inside a spherical radius from a point.</p>
+<p>Use to gather players near a position for proximity-based effects or checks.</p>
+<p><h3>Parameters:</h3>
+<span class="types"><a class="type" href="https://wiki.facepunch.com/gmod/Vector">Vector</a></span> <span class="parameter">origin</span> Center of the search sphere.</p>
+<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.3">number</a></span> <span class="parameter">radius</span> Radius of the search sphere.</p>
 
-#### 📋 Purpose
-Returns all players inside a spherical radius from a point.
+<p><h3>Returns:</h3>
+<span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.5">table</a></span> Players whose positions are within the given radius.</p>
 
-#### ⏰ When Called
-Use to gather players near a position for proximity-based effects or checks.
-
-#### ⚙️ Parameters
-
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `origin` | **Vector** | Center of the search sphere. |
-| `radius` | **number** | Radius of the search sphere. |
-
-#### ↩️ Returns
-* table
-Players whose positions are within the given radius.
-
-#### 🌐 Realm
-Shared
-
-#### 💡 Example Usage
-
-```lua
-    for _, ply in ipairs(lia.util.findPlayersInSphere(pos, 256)) do
+<h3>Example Usage:</h3>
+<pre><code class="language-lua">    for _, ply in ipairs(lia.util.findPlayersInSphere(pos, 256)) do
         ply:ChatPrint("You feel a nearby pulse.")
     end
-
-```
+</code></pre>
+</details>
 
 ---
 
-### lia.util.findPlayer
+<details class="realm-shared">
+<summary><a id=lia.util.findPlayer></a>lia.util.findPlayer(client, identifier)</summary>
+<a id="liautilfindplayer"></a>
+<p>Resolves a player from various identifiers and optionally informs the caller on failure.</p>
+<p>Use in admin/command handlers that accept flexible player identifiers (SteamID, SteamID64, name, "^", "@").</p>
+<p><h3>Parameters:</h3>
+<span class="types"><a class="type" href="https://wiki.facepunch.com/gmod/Player">Player</a></span> <span class="parameter">client</span> <span class="optional">optional</span> The player requesting the lookup; used for localized error notifications.</p>
+<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a></span> <span class="parameter">identifier</span> Identifier to match: SteamID, SteamID64, "^" (self), "@" (trace target), or partial name.</p>
 
-#### 📋 Purpose
-Resolves a player from various identifiers and optionally informs the caller on failure.
+<p><h3>Returns:</h3>
+<span class="types"><a class="type" href="https://wiki.facepunch.com/gmod/Player">Player|nil</a></span> Matched player or nil when no match is found/identifier is invalid.</p>
 
-#### ⏰ When Called
-Use in admin/command handlers that accept flexible player identifiers (SteamID, SteamID64, name, "^", "@").
-
-#### ⚙️ Parameters
-
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `client` | **Player|nil** | The player requesting the lookup; used for localized error notifications. |
-| `identifier` | **string** | Identifier to match: SteamID, SteamID64, "^" (self), "@" (trace target), or partial name. |
-
-#### ↩️ Returns
-* Player|nil
-Matched player or nil when no match is found/identifier is invalid.
-
-#### 🌐 Realm
-Shared
-
-#### 💡 Example Usage
-
-```lua
-    local target = lia.util.findPlayer(caller, args[1])
+<h3>Example Usage:</h3>
+<pre><code class="language-lua">    local target = lia.util.findPlayer(caller, args[1])
     if not target then return end
     target:kick("Example")
-
-```
+</code></pre>
+</details>
 
 ---
 
-### lia.util.findPlayerItems
+<details class="realm-shared">
+<summary><a id=lia.util.findPlayerItems></a>lia.util.findPlayerItems(client)</summary>
+<a id="liautilfindplayeritems"></a>
+<p>Collects all spawned item entities created by a specific player.</p>
+<p>Use when cleaning up or inspecting items a player has spawned into the world.</p>
+<p><h3>Parameters:</h3>
+<span class="types"><a class="type" href="https://wiki.facepunch.com/gmod/Player">Player</a></span> <span class="parameter">client</span> Player whose created item entities should be found.</p>
 
-#### 📋 Purpose
-Collects all spawned item entities created by a specific player.
+<p><h3>Returns:</h3>
+<span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.5">table</a></span> List of item entities created by the player.</p>
 
-#### ⏰ When Called
-Use when cleaning up or inspecting items a player has spawned into the world.
-
-#### ⚙️ Parameters
-
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `client` | **Player** | Player whose created item entities should be found. |
-
-#### ↩️ Returns
-* table
-List of item entities created by the player.
-
-#### 🌐 Realm
-Shared
-
-#### 💡 Example Usage
-
-```lua
-    for _, ent in ipairs(lia.util.findPlayerItems(ply)) do
+<h3>Example Usage:</h3>
+<pre><code class="language-lua">    for _, ent in ipairs(lia.util.findPlayerItems(ply)) do
         ent:Remove()
     end
-
-```
-
----
-
-### lia.util.findPlayerItemsByClass
-
-#### 📋 Purpose
-Collects spawned item entities from a player filtered by item class.
-
-#### ⏰ When Called
-Use when you need only specific item classes (by netvar "id") created by a player.
-
-#### ⚙️ Parameters
-
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `client` | **Player** | Player whose item entities are being inspected. |
-| `class` | **string** | Item class/netvar id to match. |
-
-#### ↩️ Returns
-* table
-Item entities created by the player that match the class.
-
-#### 🌐 Realm
-Shared
-
-#### 💡 Example Usage
-
-```lua
-    local ammo = lia.util.findPlayerItemsByClass(ply, "ammo_9mm")
-
-```
+</code></pre>
+</details>
 
 ---
 
-### lia.util.findPlayerEntities
+<details class="realm-shared">
+<summary><a id=lia.util.findPlayerItemsByClass></a>lia.util.findPlayerItemsByClass(client, class)</summary>
+<a id="liautilfindplayeritemsbyclass"></a>
+<p>Collects spawned item entities from a player filtered by item class.</p>
+<p>Use when you need only specific item classes (by netvar "id") created by a player.</p>
+<p><h3>Parameters:</h3>
+<span class="types"><a class="type" href="https://wiki.facepunch.com/gmod/Player">Player</a></span> <span class="parameter">client</span> Player whose item entities are being inspected.</p>
+<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a></span> <span class="parameter">class</span> Item class/netvar id to match.</p>
 
-#### 📋 Purpose
-Finds entities created by or associated with a player, optionally by class.
+<p><h3>Returns:</h3>
+<span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.5">table</a></span> Item entities created by the player that match the class.</p>
 
-#### ⏰ When Called
-Use to track props or scripted entities a player spawned or owns.
-
-#### ⚙️ Parameters
-
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `client` | **Player** | Player whose entities should be matched. |
-| `class` | **string|nil** | Optional entity class filter; nil includes all classes. |
-
-#### ↩️ Returns
-* table
-Entities created by or linked via entity.client to the player that match the class filter.
-
-#### 🌐 Realm
-Shared
-
-#### 💡 Example Usage
-
-```lua
-    local ragdolls = lia.util.findPlayerEntities(ply, "prop_ragdoll")
-
-```
+<h3>Example Usage:</h3>
+<pre><code class="language-lua">    local ammo = lia.util.findPlayerItemsByClass(ply, "ammo_9mm")
+</code></pre>
+</details>
 
 ---
 
-### lia.util.stringMatches
+<details class="realm-shared">
+<summary><a id=lia.util.findPlayerEntities></a>lia.util.findPlayerEntities(client, class)</summary>
+<a id="liautilfindplayerentities"></a>
+<p>Finds entities created by or associated with a player, optionally by class.</p>
+<p>Use to track props or scripted entities a player spawned or owns.</p>
+<p><h3>Parameters:</h3>
+<span class="types"><a class="type" href="https://wiki.facepunch.com/gmod/Player">Player</a></span> <span class="parameter">client</span> Player whose entities should be matched.</p>
+<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a></span> <span class="parameter">class</span> <span class="optional">optional</span> Optional entity class filter; nil includes all classes.</p>
 
-#### 📋 Purpose
-Performs case-insensitive equality and substring comparison between two strings.
+<p><h3>Returns:</h3>
+<span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.5">table</a></span> Entities created by or linked via entity.client to the player that match the class filter.</p>
 
-#### ⏰ When Called
-Use for loose name matching where exact case is not important.
-
-#### ⚙️ Parameters
-
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `a` | **string** | First string to compare. |
-| `b` | **string** | Second string to compare. |
-
-#### ↩️ Returns
-* boolean
-True if the strings are equal (case-insensitive) or one contains the other; otherwise false.
-
-#### 🌐 Realm
-Shared
-
-#### 💡 Example Usage
-
-```lua
-    if lia.util.stringMatches(ply:Name(), "john") then print("Matched player") end
-
-```
+<h3>Example Usage:</h3>
+<pre><code class="language-lua">    local ragdolls = lia.util.findPlayerEntities(ply, "prop_ragdoll")
+</code></pre>
+</details>
 
 ---
 
-### lia.util.getAdmins
+<details class="realm-shared">
+<summary><a id=lia.util.stringMatches></a>lia.util.stringMatches(a, b)</summary>
+<a id="liautilstringmatches"></a>
+<p>Performs case-insensitive equality and substring comparison between two strings.</p>
+<p>Use for loose name matching where exact case is not important.</p>
+<p><h3>Parameters:</h3>
+<span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a></span> <span class="parameter">a</span> First string to compare.</p>
+<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a></span> <span class="parameter">b</span> Second string to compare.</p>
 
-#### 📋 Purpose
-Returns all connected staff members.
+<p><h3>Returns:</h3>
+<span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.2">boolean</a></span> True if the strings are equal (case-insensitive) or one contains the other; otherwise false.</p>
 
-#### ⏰ When Called
-Use when broadcasting staff notifications or iterating over staff-only recipients.
+<h3>Example Usage:</h3>
+<pre><code class="language-lua">    if lia.util.stringMatches(ply:Name(), "john") then print("Matched player") end
+</code></pre>
+</details>
 
-#### ↩️ Returns
-* table
-Players that pass `isStaff()`.
+---
 
-#### 🌐 Realm
-Shared
+<details class="realm-shared">
+<summary><a id=lia.util.getAdmins></a>lia.util.getAdmins()</summary>
+<a id="liautilgetadmins"></a>
+<p>Returns all connected staff members.</p>
+<p>Use when broadcasting staff notifications or iterating over staff-only recipients.</p>
+<p><h3>Returns:</h3>
+<span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.5">table</a></span> Players that pass `isStaff()`.</p>
 
-#### 💡 Example Usage
-
-```lua
-    for _, admin in ipairs(lia.util.getAdmins()) do
+<h3>Example Usage:</h3>
+<pre><code class="language-lua">    for _, admin in ipairs(lia.util.getAdmins()) do
         admin:notify("Server restart in 5 minutes.")
     end
-
-```
-
----
-
-### lia.util.findPlayerBySteamID64
-
-#### 📋 Purpose
-Resolves a player from a SteamID64 wrapper around `findPlayerBySteamID`.
-
-#### ⏰ When Called
-Use when you have a 64-bit SteamID and need the corresponding player entity.
-
-#### ⚙️ Parameters
-
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `SteamID64` | **string** | SteamID64 to resolve. |
-
-#### ↩️ Returns
-* Player|nil
-Matching player or nil when none is found/SteamID64 is invalid.
-
-#### 🌐 Realm
-Shared
-
-#### 💡 Example Usage
-
-```lua
-    local ply = lia.util.findPlayerBySteamID64(steamID64)
-
-```
+</code></pre>
+</details>
 
 ---
 
-### lia.util.findPlayerBySteamID
+<details class="realm-shared">
+<summary><a id=lia.util.findPlayerBySteamID64></a>lia.util.findPlayerBySteamID64(SteamID64)</summary>
+<a id="liautilfindplayerbysteamid64"></a>
+<p>Resolves a player from a SteamID64 wrapper around `findPlayerBySteamID`.</p>
+<p>Use when you have a 64-bit SteamID and need the corresponding player entity.</p>
+<p><h3>Parameters:</h3>
+<span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a></span> <span class="parameter">SteamID64</span> SteamID64 to resolve.</p>
 
-#### 📋 Purpose
-Searches connected players for a matching SteamID.
+<p><h3>Returns:</h3>
+<span class="types"><a class="type" href="https://wiki.facepunch.com/gmod/Player">Player|nil</a></span> Matching player or nil when none is found/SteamID64 is invalid.</p>
 
-#### ⏰ When Called
-Use when you need to map a SteamID string to the in-game player.
-
-#### ⚙️ Parameters
-
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `SteamID` | **string** | SteamID in legacy format (e.g. "STEAM_0:1:12345"). |
-
-#### ↩️ Returns
-* Player|nil
-Player whose SteamID matches, or nil if none.
-
-#### 🌐 Realm
-Shared
-
-#### 💡 Example Usage
-
-```lua
-    local ply = lia.util.findPlayerBySteamID("STEAM_0:1:12345")
-
-```
+<h3>Example Usage:</h3>
+<pre><code class="language-lua">    local ply = lia.util.findPlayerBySteamID64(steamID64)
+</code></pre>
+</details>
 
 ---
 
-### lia.util.canFit
+<details class="realm-shared">
+<summary><a id=lia.util.findPlayerBySteamID></a>lia.util.findPlayerBySteamID(SteamID)</summary>
+<a id="liautilfindplayerbysteamid"></a>
+<p>Searches connected players for a matching SteamID.</p>
+<p>Use when you need to map a SteamID string to the in-game player.</p>
+<p><h3>Parameters:</h3>
+<span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a></span> <span class="parameter">SteamID</span> SteamID in legacy format (e.g. "STEAM_0:1:12345").</p>
 
-#### 📋 Purpose
-Checks whether a bounding hull can fit at a position without collisions.
+<p><h3>Returns:</h3>
+<span class="types"><a class="type" href="https://wiki.facepunch.com/gmod/Player">Player|nil</a></span> Player whose SteamID matches, or nil if none.</p>
 
-#### ⏰ When Called
-Use before spawning or teleporting entities to ensure the space is clear.
+<h3>Example Usage:</h3>
+<pre><code class="language-lua">    local ply = lia.util.findPlayerBySteamID("STEAM_0:1:12345")
+</code></pre>
+</details>
 
-#### ⚙️ Parameters
+---
 
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `pos` | **Vector** | Position to test. |
-| `mins` | **Vector** | Hull minimums; defaults to Vector(16, 16, 0) mirrored if positive. |
-| `maxs` | **Vector|nil** | Hull maximums; defaults to mins when nil. |
-| `filter` | **Entity|table|nil** | Entity or filter list to ignore in the trace. |
+<details class="realm-shared">
+<summary><a id=lia.util.canFit></a>lia.util.canFit(pos, mins, maxs, filter)</summary>
+<a id="liautilcanfit"></a>
+<p>Checks whether a bounding hull can fit at a position without collisions.</p>
+<p>Use before spawning or teleporting entities to ensure the space is clear.</p>
+<p><h3>Parameters:</h3>
+<span class="types"><a class="type" href="https://wiki.facepunch.com/gmod/Vector">Vector</a></span> <span class="parameter">pos</span> Position to test.</p>
+<p><span class="types"><a class="type" href="https://wiki.facepunch.com/gmod/Vector">Vector</a></span> <span class="parameter">mins</span> Hull minimums; defaults to Vector(16, 16, 0) mirrored if positive.</p>
+<p><span class="types"><a class="type" href="https://wiki.facepunch.com/gmod/Vector">Vector</a></span> <span class="parameter">maxs</span> <span class="optional">optional</span> Hull maximums; defaults to mins when nil.</p>
+<p><span class="types"><a class="type" href="https://wiki.facepunch.com/gmod/Entity">Entity|table</a></span> <span class="parameter">filter</span> <span class="optional">optional</span> Entity or filter list to ignore in the trace.</p>
 
-#### ↩️ Returns
-* boolean
-True if the hull does not hit anything solid, false otherwise.
+<p><h3>Returns:</h3>
+<span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.2">boolean</a></span> True if the hull does not hit anything solid, false otherwise.</p>
 
-#### 🌐 Realm
-Shared
-
-#### 💡 Example Usage
-
-```lua
-    if lia.util.canFit(pos, Vector(16, 16, 0)) then
+<h3>Example Usage:</h3>
+<pre><code class="language-lua">    if lia.util.canFit(pos, Vector(16, 16, 0)) then
         ent:SetPos(pos)
     end
-
-```
+</code></pre>
+</details>
 
 ---
 
-### lia.util.playerInRadius
+<details class="realm-shared">
+<summary><a id=lia.util.playerInRadius></a>lia.util.playerInRadius(pos, dist)</summary>
+<a id="liautilplayerinradius"></a>
+<p>Finds all players within a given radius.</p>
+<p>Use for proximity-based logic such as AoE effects or notifications.</p>
+<p><h3>Parameters:</h3>
+<span class="types"><a class="type" href="https://wiki.facepunch.com/gmod/Vector">Vector</a></span> <span class="parameter">pos</span> Center position for the search.</p>
+<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.3">number</a></span> <span class="parameter">dist</span> Radius to search, in units.</p>
 
-#### 📋 Purpose
-Finds all players within a given radius.
+<p><h3>Returns:</h3>
+<span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.5">table</a></span> Players whose distance squared to pos is less than dist^2.</p>
 
-#### ⏰ When Called
-Use for proximity-based logic such as AoE effects or notifications.
-
-#### ⚙️ Parameters
-
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `pos` | **Vector** | Center position for the search. |
-| `dist` | **number** | Radius to search, in units. |
-
-#### ↩️ Returns
-* table
-Players whose distance squared to pos is less than dist^2.
-
-#### 🌐 Realm
-Shared
-
-#### 💡 Example Usage
-
-```lua
-    for _, ply in ipairs(lia.util.playerInRadius(pos, 512)) do
+<h3>Example Usage:</h3>
+<pre><code class="language-lua">    for _, ply in ipairs(lia.util.playerInRadius(pos, 512)) do
         ply:notify("You are near the beacon.")
     end
-
-```
+</code></pre>
+</details>
 
 ---
 
-### lia.util.formatStringNamed
+<details class="realm-shared">
+<summary><a id=lia.util.formatStringNamed></a>lia.util.formatStringNamed(format)</summary>
+<a id="liautilformatstringnamed"></a>
+<p>Formats a string using named placeholders or positional arguments.</p>
+<p>Use to substitute tokens in a template string with table keys or ordered arguments.</p>
+<p><h3>Parameters:</h3>
+<span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a></span> <span class="parameter">format</span> Template containing placeholders like "{name}".</p>
 
-#### 📋 Purpose
-Formats a string using named placeholders or positional arguments.
+<p><h3>Returns:</h3>
+<span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a></span> The formatted string with placeholders replaced.</p>
 
-#### ⏰ When Called
-Use to substitute tokens in a template string with table keys or ordered arguments.
-
-#### ⚙️ Parameters
-
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `format` | **string** | Template containing placeholders like "{name}". |
-
-#### ↩️ Returns
-* string
-The formatted string with placeholders replaced.
-
-#### 🌐 Realm
-Shared
-
-#### 💡 Example Usage
-
-```lua
-    lia.util.formatStringNamed("Hello {who}", {who = "world"})
+<h3>Example Usage:</h3>
+<pre><code class="language-lua">    lia.util.formatStringNamed("Hello {who}", {who = "world"})
     lia.util.formatStringNamed("{1} + {2}", 1, 2)
-
-```
-
----
-
-### lia.util.getMaterial
-
-#### 📋 Purpose
-Retrieves and caches a material by path and parameters.
-
-#### ⏰ When Called
-Use whenever drawing materials repeatedly to avoid recreating them.
-
-#### ⚙️ Parameters
-
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `materialPath` | **string** | Path to the material. |
-| `materialParameters` | **string|nil** | Optional material creation parameters. |
-
-#### ↩️ Returns
-* IMaterial
-Cached or newly created material instance.
-
-#### 🌐 Realm
-Shared
-
-#### 💡 Example Usage
-
-```lua
-    local blurMat = lia.util.getMaterial("pp/blurscreen")
-
-```
+</code></pre>
+</details>
 
 ---
 
-### lia.util.findFaction
+<details class="realm-shared">
+<summary><a id=lia.util.getMaterial></a>lia.util.getMaterial(materialPath, materialParameters)</summary>
+<a id="liautilgetmaterial"></a>
+<p>Retrieves and caches a material by path and parameters.</p>
+<p>Use whenever drawing materials repeatedly to avoid recreating them.</p>
+<p><h3>Parameters:</h3>
+<span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a></span> <span class="parameter">materialPath</span> Path to the material.</p>
+<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a></span> <span class="parameter">materialParameters</span> <span class="optional">optional</span> Optional material creation parameters.</p>
 
-#### 📋 Purpose
-Resolves a faction table by name or unique ID and notifies the caller on failure.
+<p><h3>Returns:</h3>
+<span class="types"><a class="type" href="https://wiki.facepunch.com/gmod/IMaterial">IMaterial</a></span> Cached or newly created material instance.</p>
 
-#### ⏰ When Called
-Use in commands or UI when users input a faction identifier.
+<h3>Example Usage:</h3>
+<pre><code class="language-lua">    local blurMat = lia.util.getMaterial("pp/blurscreen")
+</code></pre>
+</details>
 
-#### ⚙️ Parameters
+---
 
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `client` | **Player** | Player to notify on invalid faction. |
-| `name` | **string** | Faction name or uniqueID to search for. |
+<details class="realm-shared">
+<summary><a id=lia.util.findFaction></a>lia.util.findFaction(client, name)</summary>
+<a id="liautilfindfaction"></a>
+<p>Resolves a faction table by name or unique ID and notifies the caller on failure.</p>
+<p>Use in commands or UI when users input a faction identifier.</p>
+<p><h3>Parameters:</h3>
+<span class="types"><a class="type" href="https://wiki.facepunch.com/gmod/Player">Player</a></span> <span class="parameter">client</span> Player to notify on invalid faction.</p>
+<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a></span> <span class="parameter">name</span> Faction name or uniqueID to search for.</p>
 
-#### ↩️ Returns
-* table|nil
-Matching faction table, or nil if not found.
+<p><h3>Returns:</h3>
+<span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.5">table|nil</a></span> Matching faction table, or nil if not found.</p>
 
-#### 🌐 Realm
-Shared
-
-#### 💡 Example Usage
-
-```lua
-    local faction = lia.util.findFaction(ply, "combine")
+<h3>Example Usage:</h3>
+<pre><code class="language-lua">    local faction = lia.util.findFaction(ply, "combine")
     if faction then print(faction.name) end
-
-```
-
----
-
-### lia.util.generateRandomName
-
-#### 📋 Purpose
-Generates a random full name from provided or default name lists.
-
-#### ⏰ When Called
-Use when creating placeholder or randomized character names.
-
-#### ⚙️ Parameters
-
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `firstNames` | **table|nil** | Optional list of first names to draw from; defaults to built-in list when nil/empty. |
-| `lastNames` | **table|nil** | Optional list of last names to draw from; defaults to built-in list when nil/empty. |
-
-#### ↩️ Returns
-* string
-Concatenated first and last name.
-
-#### 🌐 Realm
-Shared
-
-#### 💡 Example Usage
-
-```lua
-    local name = lia.util.generateRandomName()
-
-```
+</code></pre>
+</details>
 
 ---
 
-### lia.util.sendTableUI
+<details class="realm-shared">
+<summary><a id=lia.util.generateRandomName></a>lia.util.generateRandomName(firstNames, lastNames)</summary>
+<a id="liautilgeneraterandomname"></a>
+<p>Generates a random full name from provided or default name lists.</p>
+<p>Use when creating placeholder or randomized character names.</p>
+<p><h3>Parameters:</h3>
+<span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.5">table</a></span> <span class="parameter">firstNames</span> <span class="optional">optional</span> Optional list of first names to draw from; defaults to built-in list when nil/empty.</p>
+<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.5">table</a></span> <span class="parameter">lastNames</span> <span class="optional">optional</span> Optional list of last names to draw from; defaults to built-in list when nil/empty.</p>
 
-#### 📋 Purpose
-Sends a localized table UI payload to a client.
+<p><h3>Returns:</h3>
+<span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a></span> Concatenated first and last name.</p>
 
-#### ⏰ When Called
-Use when the server needs to present tabular data/options to a specific player.
-
-#### ⚙️ Parameters
-
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `client` | **Player** | Recipient player. |
-| `title` | **string|nil** | Localization key for the window title; defaults to "tableListTitle". |
-| `columns` | **table** | Column definitions; names are localized if present. |
-| `data` | **table** | Row data to display. |
-| `options` | **table|nil** | Optional menu options to accompany the table. |
-| `characterID` | **number|nil** | Optional character identifier to send with the payload. |
-
-#### ↩️ Returns
-* nil
-Communicates with the client via net message only.
-
-#### 🌐 Realm
-Server
-
-#### 💡 Example Usage
-
-```lua
-    lia.util.sendTableUI(ply, "staffList", columns, rows, options, charID)
-
-```
+<h3>Example Usage:</h3>
+<pre><code class="language-lua">    local name = lia.util.generateRandomName()
+</code></pre>
+</details>
 
 ---
 
-### lia.util.findEmptySpace
+<details class="realm-server">
+<summary><a id=lia.util.sendTableUI></a>lia.util.sendTableUI(client, title, columns, data, options, characterID)</summary>
+<a id="liautilsendtableui"></a>
+<p>Sends a localized table UI payload to a client.</p>
+<p>Use when the server needs to present tabular data/options to a specific player.</p>
+<p><h3>Parameters:</h3>
+<span class="types"><a class="type" href="https://wiki.facepunch.com/gmod/Player">Player</a></span> <span class="parameter">client</span> Recipient player.</p>
+<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a></span> <span class="parameter">title</span> <span class="optional">optional</span> Localization key for the window title; defaults to "tableListTitle".</p>
+<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.5">table</a></span> <span class="parameter">columns</span> Column definitions; names are localized if present.</p>
+<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.5">table</a></span> <span class="parameter">data</span> Row data to display.</p>
+<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.5">table</a></span> <span class="parameter">options</span> <span class="optional">optional</span> Optional menu options to accompany the table.</p>
+<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.3">number</a></span> <span class="parameter">characterID</span> <span class="optional">optional</span> Optional character identifier to send with the payload.</p>
 
-#### 📋 Purpose
-Finds nearby empty positions around an entity using grid sampling.
+<h3>Example Usage:</h3>
+<pre><code class="language-lua">    lia.util.sendTableUI(ply, "staffList", columns, rows, options, charID)
+</code></pre>
+</details>
 
-#### ⏰ When Called
-Use when spawning items or players near an entity while avoiding collisions and the void.
+---
 
-#### ⚙️ Parameters
+<details class="realm-server">
+<summary><a id=lia.util.findEmptySpace></a>lia.util.findEmptySpace(entity, filter, spacing, size, height, tolerance)</summary>
+<a id="liautilfindemptyspace"></a>
+<p>Finds nearby empty positions around an entity using grid sampling.</p>
+<p>Use when spawning items or players near an entity while avoiding collisions and the void.</p>
+<p><h3>Parameters:</h3>
+<span class="types"><a class="type" href="https://wiki.facepunch.com/gmod/Entity">Entity</a></span> <span class="parameter">entity</span> Origin entity to search around.</p>
+<p><span class="types"><a class="type" href="https://wiki.facepunch.com/gmod/Entity">Entity|table</a></span> <span class="parameter">filter</span> <span class="optional">optional</span> Optional trace filter to ignore certain entities; defaults to the origin entity.</p>
+<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.3">number</a></span> <span class="parameter">spacing</span> Grid spacing between samples; defaults to 32.</p>
+<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.3">number</a></span> <span class="parameter">size</span> Number of steps in each direction from the origin; defaults to 3.</p>
+<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.3">number</a></span> <span class="parameter">height</span> Hull height used for traces; defaults to 36.</p>
+<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.3">number</a></span> <span class="parameter">tolerance</span> Upward offset to avoid starting inside the ground; defaults to 5.</p>
 
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `entity` | **Entity** | Origin entity to search around. |
-| `filter` | **Entity|table|nil** | Optional trace filter to ignore certain entities; defaults to the origin entity. |
-| `spacing` | **number** | Grid spacing between samples; defaults to 32. |
-| `size` | **number** | Number of steps in each direction from the origin; defaults to 3. |
-| `height` | **number** | Hull height used for traces; defaults to 36. |
-| `tolerance` | **number** | Upward offset to avoid starting inside the ground; defaults to 5. |
+<p><h3>Returns:</h3>
+<span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.5">table</a></span> Sorted list of valid origin positions, nearest to farthest from the entity.</p>
 
-#### ↩️ Returns
-* table
-Sorted list of valid origin positions, nearest to farthest from the entity.
-
-#### 🌐 Realm
-Server
-
-#### 💡 Example Usage
-
-```lua
-    local spots = lia.util.findEmptySpace(ent, nil, 24)
+<h3>Example Usage:</h3>
+<pre><code class="language-lua">    local spots = lia.util.findEmptySpace(ent, nil, 24)
     local pos = spots[1]
-
-```
-
----
-
-### lia.util.animateAppearance
-
-#### 📋 Purpose
-Animates a panel appearing from a scaled, transparent state to its target size and opacity.
-
-#### ⏰ When Called
-Use when showing popups or menus that should ease into view.
-
-#### ⚙️ Parameters
-
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `panel` | **Panel** | Panel to animate. |
-| `targetWidth` | **number** | Final width of the panel. |
-| `targetHeight` | **number** | Final height of the panel. |
-| `duration` | **number|nil** | Duration for size/position easing; defaults to 0.18 seconds. |
-| `alphaDuration` | **number|nil** | Duration for alpha easing; defaults to duration. |
-| `callback` | **function|nil** | Called when the animation finishes. |
-| `scaleFactor` | **number|nil** | Initial size scale relative to target; defaults to 0.8. |
-
-#### ↩️ Returns
-* nil
-Mutates the panel over time via its Think hook.
-
-#### 🌐 Realm
-Client
-
-#### 💡 Example Usage
-
-```lua
-    lia.util.animateAppearance(panel, 300, 200)
-
-```
+</code></pre>
+</details>
 
 ---
 
-### lia.util.clampMenuPosition
+<details class="realm-client">
+<summary><a id=lia.util.animateAppearance></a>lia.util.animateAppearance(panel, targetWidth, targetHeight, duration, alphaDuration, callback, scaleFactor)</summary>
+<a id="liautilanimateappearance"></a>
+<p>Animates a panel appearing from a scaled, transparent state to its target size and opacity.</p>
+<p>Use when showing popups or menus that should ease into view.</p>
+<p><h3>Parameters:</h3>
+<span class="types"><a class="type" href="https://wiki.facepunch.com/gmod/Panel">Panel</a></span> <span class="parameter">panel</span> Panel to animate.</p>
+<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.3">number</a></span> <span class="parameter">targetWidth</span> Final width of the panel.</p>
+<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.3">number</a></span> <span class="parameter">targetHeight</span> Final height of the panel.</p>
+<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.3">number</a></span> <span class="parameter">duration</span> <span class="optional">optional</span> Duration for size/position easing; defaults to 0.18 seconds.</p>
+<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.3">number</a></span> <span class="parameter">alphaDuration</span> <span class="optional">optional</span> Duration for alpha easing; defaults to duration.</p>
+<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.6">function</a></span> <span class="parameter">callback</span> <span class="optional">optional</span> Called when the animation finishes.</p>
+<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.3">number</a></span> <span class="parameter">scaleFactor</span> <span class="optional">optional</span> Initial size scale relative to target; defaults to 0.8.</p>
 
-#### 📋 Purpose
-Keeps a menu panel within the screen bounds, respecting the character logo space.
-
-#### ⏰ When Called
-Use after positioning a menu to prevent it from going off-screen.
-
-#### ⚙️ Parameters
-
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `panel` | **Panel** | Menu panel to clamp. |
-
-#### ↩️ Returns
-* nil
-Adjusts the panel position in place.
-
-#### 🌐 Realm
-Client
-
-#### 💡 Example Usage
-
-```lua
-    lia.util.clampMenuPosition(menu)
-
-```
+<h3>Example Usage:</h3>
+<pre><code class="language-lua">    lia.util.animateAppearance(panel, 300, 200)
+</code></pre>
+</details>
 
 ---
 
-### lia.util.drawGradient
+<details class="realm-client">
+<summary><a id=lia.util.clampMenuPosition></a>lia.util.clampMenuPosition(panel)</summary>
+<a id="liautilclampmenuposition"></a>
+<p>Keeps a menu panel within the screen bounds, respecting the character logo space.</p>
+<p>Use after positioning a menu to prevent it from going off-screen.</p>
+<p><h3>Parameters:</h3>
+<span class="types"><a class="type" href="https://wiki.facepunch.com/gmod/Panel">Panel</a></span> <span class="parameter">panel</span> Menu panel to clamp.</p>
 
-#### 📋 Purpose
-Draws a directional gradient rectangle.
-
-#### ⏰ When Called
-Use in panel paints when you need simple gradient backgrounds.
-
-#### ⚙️ Parameters
-
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `x` | **number** | X position of the gradient. |
-| `y` | **number** | Y position of the gradient. |
-| `w` | **number** | Width of the gradient. |
-| `h` | **number** | Height of the gradient. |
-| `direction` | **number** | Gradient direction index (1 up, 2 down, 3 left, 4 right). |
-| `colorShadow` | **Color** | Color tint for the gradient. |
-| `radius` | **number|nil** | Corner radius for drawing helper; defaults to 0. |
-| `flags` | **number|nil** | Optional draw flags passed to `drawMaterial`. |
-
-#### ↩️ Returns
-* nil
-Performs immediate drawing operations.
-
-#### 🌐 Realm
-Client
-
-#### 💡 Example Usage
-
-```lua
-    lia.util.drawGradient(0, 0, w, h, 2, Color(0, 0, 0, 180))
-
-```
+<h3>Example Usage:</h3>
+<pre><code class="language-lua">    lia.util.clampMenuPosition(menu)
+</code></pre>
+</details>
 
 ---
 
-### lia.util.wrapText
+<details class="realm-client">
+<summary><a id=lia.util.drawGradient></a>lia.util.drawGradient(x, y, w, h, direction, colorShadow, radius, flags)</summary>
+<a id="liautildrawgradient"></a>
+<p>Draws a directional gradient rectangle.</p>
+<p>Use in panel paints when you need simple gradient backgrounds.</p>
+<p><h3>Parameters:</h3>
+<span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.3">number</a></span> <span class="parameter">x</span> X position of the gradient.</p>
+<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.3">number</a></span> <span class="parameter">y</span> Y position of the gradient.</p>
+<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.3">number</a></span> <span class="parameter">w</span> Width of the gradient.</p>
+<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.3">number</a></span> <span class="parameter">h</span> Height of the gradient.</p>
+<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.3">number</a></span> <span class="parameter">direction</span> Gradient direction index (1 up, 2 down, 3 left, 4 right).</p>
+<p><span class="types"><a class="type" href="https://wiki.facepunch.com/gmod/Color">Color</a></span> <span class="parameter">colorShadow</span> Color tint for the gradient.</p>
+<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.3">number</a></span> <span class="parameter">radius</span> <span class="optional">optional</span> Corner radius for drawing helper; defaults to 0.</p>
+<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.3">number</a></span> <span class="parameter">flags</span> <span class="optional">optional</span> Optional draw flags passed to `drawMaterial`.</p>
 
-#### 📋 Purpose
-Wraps text to a maximum width using a specified font.
-
-#### ⏰ When Called
-Use when drawing text that must fit inside a set horizontal space.
-
-#### ⚙️ Parameters
-
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `text` | **string** | Text to wrap. |
-| `width` | **number** | Maximum width in pixels. |
-| `font` | **string|nil** | Font name to measure with; defaults to "LiliaFont.16". |
-
-#### ↩️ Returns
-* table, number
-Array of wrapped lines and the widest line width.
-
-#### 🌐 Realm
-Client
-
-#### 💡 Example Usage
-
-```lua
-    local lines = lia.util.wrapText(description, 300, "LiliaFont.17")
-
-```
+<h3>Example Usage:</h3>
+<pre><code class="language-lua">    lia.util.drawGradient(0, 0, w, h, 2, Color(0, 0, 0, 180))
+</code></pre>
+</details>
 
 ---
 
-### lia.util.drawBlur
+<details class="realm-client">
+<summary><a id=lia.util.wrapText></a>lia.util.wrapText(text, width, font)</summary>
+<a id="liautilwraptext"></a>
+<p>Wraps text to a maximum width using a specified font.</p>
+<p>Use when drawing text that must fit inside a set horizontal space.</p>
+<p><h3>Parameters:</h3>
+<span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a></span> <span class="parameter">text</span> Text to wrap.</p>
+<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.3">number</a></span> <span class="parameter">width</span> Maximum width in pixels.</p>
+<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a></span> <span class="parameter">font</span> <span class="optional">optional</span> Font name to measure with; defaults to "LiliaFont.16".</p>
 
-#### 📋 Purpose
-Draws a blurred background behind a panel.
+<p><h3>Returns:</h3>
+table, number Array of wrapped lines and the widest line width.</p>
 
-#### ⏰ When Called
-Use inside a panel's Paint hook to soften the content behind it.
-
-#### ⚙️ Parameters
-
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `panel` | **Panel** | Panel whose screen area will be blurred. |
-| `amount` | **number|nil** | Blur strength; defaults to 5. |
-| `passes` | **number|nil** | Unused; kept for signature compatibility. |
-| `alpha` | **number|nil** | Draw color alpha; defaults to 255. |
-
-#### ↩️ Returns
-* nil
-Renders blur to the screen.
-
-#### 🌐 Realm
-Client
-
-#### 💡 Example Usage
-
-```lua
-    lia.util.drawBlur(self, 4)
-
-```
+<h3>Example Usage:</h3>
+<pre><code class="language-lua">    local lines = lia.util.wrapText(description, 300, "LiliaFont.17")
+</code></pre>
+</details>
 
 ---
 
-### lia.util.drawBlackBlur
+<details class="realm-client">
+<summary><a id=lia.util.drawBlur></a>lia.util.drawBlur(panel, amount, passes, alpha)</summary>
+<a id="liautildrawblur"></a>
+<p>Draws a blurred background behind a panel.</p>
+<p>Use inside a panel's Paint hook to soften the content behind it.</p>
+<p><h3>Parameters:</h3>
+<span class="types"><a class="type" href="https://wiki.facepunch.com/gmod/Panel">Panel</a></span> <span class="parameter">panel</span> Panel whose screen area will be blurred.</p>
+<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.3">number</a></span> <span class="parameter">amount</span> <span class="optional">optional</span> Blur strength; defaults to 5.</p>
+<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.3">number</a></span> <span class="parameter">passes</span> <span class="optional">optional</span> Unused; kept for signature compatibility.</p>
+<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.3">number</a></span> <span class="parameter">alpha</span> <span class="optional">optional</span> Draw color alpha; defaults to 255.</p>
 
-#### 📋 Purpose
-Draws a blurred background with a dark overlay in a panel's bounds.
-
-#### ⏰ When Called
-Use for modal overlays where both blur and darkening are desired.
-
-#### ⚙️ Parameters
-
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `panel` | **Panel** | Panel area to blur. |
-| `amount` | **number|nil** | Blur strength; defaults to 6. |
-| `passes` | **number|nil** | Number of blur passes; defaults to 5. |
-| `alpha` | **number|nil** | Blur draw alpha; defaults to 255. |
-| `darkAlpha` | **number|nil** | Alpha for the black overlay; defaults to 220. |
-
-#### ↩️ Returns
-* nil
-Renders blur and overlay.
-
-#### 🌐 Realm
-Client
-
-#### 💡 Example Usage
-
-```lua
-    lia.util.drawBlackBlur(self, 6, 4, 255, 200)
-
-```
+<h3>Example Usage:</h3>
+<pre><code class="language-lua">    lia.util.drawBlur(self, 4)
+</code></pre>
+</details>
 
 ---
 
-### lia.util.drawBlurAt
+<details class="realm-client">
+<summary><a id=lia.util.drawBlackBlur></a>lia.util.drawBlackBlur(panel, amount, passes, alpha, darkAlpha)</summary>
+<a id="liautildrawblackblur"></a>
+<p>Draws a blurred background with a dark overlay in a panel's bounds.</p>
+<p>Use for modal overlays where both blur and darkening are desired.</p>
+<p><h3>Parameters:</h3>
+<span class="types"><a class="type" href="https://wiki.facepunch.com/gmod/Panel">Panel</a></span> <span class="parameter">panel</span> Panel area to blur.</p>
+<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.3">number</a></span> <span class="parameter">amount</span> <span class="optional">optional</span> Blur strength; defaults to 6.</p>
+<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.3">number</a></span> <span class="parameter">passes</span> <span class="optional">optional</span> Number of blur passes; defaults to 5.</p>
+<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.3">number</a></span> <span class="parameter">alpha</span> <span class="optional">optional</span> Blur draw alpha; defaults to 255.</p>
+<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.3">number</a></span> <span class="parameter">darkAlpha</span> <span class="optional">optional</span> Alpha for the black overlay; defaults to 220.</p>
 
-#### 📋 Purpose
-Draws a blur effect over a specific rectangle on the screen.
-
-#### ⏰ When Called
-Use when you need a localized blur that is not tied to a panel.
-
-#### ⚙️ Parameters
-
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `x` | **number** | X coordinate of the rectangle. |
-| `y` | **number** | Y coordinate of the rectangle. |
-| `w` | **number** | Width of the rectangle. |
-| `h` | **number** | Height of the rectangle. |
-| `amount` | **number|nil** | Blur strength; defaults to 5. |
-| `passes` | **number|nil** | Number of blur samples; defaults to 0.2 steps when nil. |
-| `alpha` | **number|nil** | Draw alpha; defaults to 255. |
-
-#### ↩️ Returns
-* nil
-Renders blur to the specified area.
-
-#### 🌐 Realm
-Client
-
-#### 💡 Example Usage
-
-```lua
-    lia.util.drawBlurAt(100, 100, 200, 150, 4)
-
-```
+<h3>Example Usage:</h3>
+<pre><code class="language-lua">    lia.util.drawBlackBlur(self, 6, 4, 255, 200)
+</code></pre>
+</details>
 
 ---
 
-### lia.util.requestEntityInformation
+<details class="realm-client">
+<summary><a id=lia.util.drawBlurAt></a>lia.util.drawBlurAt(x, y, w, h, amount, passes, alpha)</summary>
+<a id="liautildrawblurat"></a>
+<p>Draws a blur effect over a specific rectangle on the screen.</p>
+<p>Use when you need a localized blur that is not tied to a panel.</p>
+<p><h3>Parameters:</h3>
+<span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.3">number</a></span> <span class="parameter">x</span> X coordinate of the rectangle.</p>
+<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.3">number</a></span> <span class="parameter">y</span> Y coordinate of the rectangle.</p>
+<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.3">number</a></span> <span class="parameter">w</span> Width of the rectangle.</p>
+<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.3">number</a></span> <span class="parameter">h</span> Height of the rectangle.</p>
+<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.3">number</a></span> <span class="parameter">amount</span> <span class="optional">optional</span> Blur strength; defaults to 5.</p>
+<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.3">number</a></span> <span class="parameter">passes</span> <span class="optional">optional</span> Number of blur samples; defaults to 0.2 steps when nil.</p>
+<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.3">number</a></span> <span class="parameter">alpha</span> <span class="optional">optional</span> Draw alpha; defaults to 255.</p>
 
-#### 📋 Purpose
-Prompts the user for entity information and forwards the result.
-
-#### ⏰ When Called
-Use when a client must supply additional data for an entity action.
-
-#### ⚙️ Parameters
-
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `entity` | **Entity** | Entity that the information pertains to; removed if the request fails. |
-| `argTypes` | **table** | Argument descriptors passed to `requestArguments`. |
-| `callback` | **function|nil** | Invoked with the collected information on success. |
-
-#### ↩️ Returns
-* nil
-Handles UI flow and optional callback invocation.
-
-#### 🌐 Realm
-Client
-
-#### 💡 Example Usage
-
-```lua
-    lia.util.requestEntityInformation(ent, argTypes, function(info) print(info) end)
-
-```
+<h3>Example Usage:</h3>
+<pre><code class="language-lua">    lia.util.drawBlurAt(100, 100, 200, 150, 4)
+</code></pre>
+</details>
 
 ---
 
-### lia.util.createTableUI
+<details class="realm-client">
+<summary><a id=lia.util.requestEntityInformation></a>lia.util.requestEntityInformation(entity, argTypes, callback)</summary>
+<a id="liautilrequestentityinformation"></a>
+<p>Prompts the user for entity information and forwards the result.</p>
+<p>Use when a client must supply additional data for an entity action.</p>
+<p><h3>Parameters:</h3>
+<span class="types"><a class="type" href="https://wiki.facepunch.com/gmod/Entity">Entity</a></span> <span class="parameter">entity</span> Entity that the information pertains to; removed if the request fails.</p>
+<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.5">table</a></span> <span class="parameter">argTypes</span> Argument descriptors passed to `requestArguments`.</p>
+<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.6">function</a></span> <span class="parameter">callback</span> <span class="optional">optional</span> Invoked with the collected information on success.</p>
 
-#### 📋 Purpose
-Builds and displays a table UI on the client.
-
-#### ⏰ When Called
-Use when the client needs to view tabular data with optional menu actions.
-
-#### ⚙️ Parameters
-
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `title` | **string|nil** | Localization key for the frame title; defaults to "tableListTitle". |
-| `columns` | **table** | Column definitions with `name`, `width`, `align`, and `sortable` fields. |
-| `data` | **table** | Row data keyed by column field names. |
-| `options` | **table|nil** | Optional menu options with callbacks or net names. |
-| `charID` | **number|nil** | Character identifier forwarded with net options. |
-
-#### ↩️ Returns
-* Panel, Panel
-The created frame and table list view.
-
-#### 🌐 Realm
-Client
-
-#### 💡 Example Usage
-
-```lua
-    local frame, list = lia.util.createTableUI("myData", cols, rows)
-
-```
+<h3>Example Usage:</h3>
+<pre><code class="language-lua">    lia.util.requestEntityInformation(ent, argTypes, function(info) print(info) end)
+</code></pre>
+</details>
 
 ---
 
-### lia.util.openOptionsMenu
+<details class="realm-client">
+<summary><a id=lia.util.createTableUI></a>lia.util.createTableUI(title, columns, data, options, charID)</summary>
+<a id="liautilcreatetableui"></a>
+<p>Builds and displays a table UI on the client.</p>
+<p>Use when the client needs to view tabular data with optional menu actions.</p>
+<p><h3>Parameters:</h3>
+<span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a></span> <span class="parameter">title</span> <span class="optional">optional</span> Localization key for the frame title; defaults to "tableListTitle".</p>
+<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.5">table</a></span> <span class="parameter">columns</span> Column definitions with `name`, `width`, `align`, and `sortable` fields.</p>
+<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.5">table</a></span> <span class="parameter">data</span> Row data keyed by column field names.</p>
+<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.5">table</a></span> <span class="parameter">options</span> <span class="optional">optional</span> Optional menu options with callbacks or net names.</p>
+<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.3">number</a></span> <span class="parameter">charID</span> <span class="optional">optional</span> Character identifier forwarded with net options.</p>
 
-#### 📋 Purpose
-Displays a simple options menu with clickable entries.
+<p><h3>Returns:</h3>
+Panel, Panel The created frame and table list view.</p>
 
-#### ⏰ When Called
-Use to quickly prompt the user with a list of named actions.
-
-#### ⚙️ Parameters
-
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `title` | **string|nil** | Title text to show at the top of the menu; defaults to "options". |
-| `options` | **table** | Either an array of {name, callback} or a map of name -> callback. |
-
-#### ↩️ Returns
-* Panel|nil
-The created frame, or nil if no valid options exist.
-
-#### 🌐 Realm
-Client
-
-#### 💡 Example Usage
-
-```lua
-    lia.util.openOptionsMenu("choose", {{"Yes", onYes}, {"No", onNo}})
-
-```
+<h3>Example Usage:</h3>
+<pre><code class="language-lua">    local frame, list = lia.util.createTableUI("myData", cols, rows)
+</code></pre>
+</details>
 
 ---
 
-### lia.util.drawEntText
+<details class="realm-client">
+<summary><a id=lia.util.openOptionsMenu></a>lia.util.openOptionsMenu(title, options)</summary>
+<a id="liautilopenoptionsmenu"></a>
+<p>Displays a simple options menu with clickable entries.</p>
+<p>Use to quickly prompt the user with a list of named actions.</p>
+<p><h3>Parameters:</h3>
+<span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a></span> <span class="parameter">title</span> <span class="optional">optional</span> Title text to show at the top of the menu; defaults to "options".</p>
+<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.5">table</a></span> <span class="parameter">options</span> Either an array of {name, callback} or a map of name -> callback.</p>
 
-#### 📋 Purpose
-Draws floating text above an entity that eases in based on distance.
+<p><h3>Returns:</h3>
+<span class="types"><a class="type" href="https://wiki.facepunch.com/gmod/Panel">Panel|nil</a></span> The created frame, or nil if no valid options exist.</p>
 
-#### ⏰ When Called
-Use in HUD painting to label world entities when nearby.
+<h3>Example Usage:</h3>
+<pre><code class="language-lua">    lia.util.openOptionsMenu("choose", {{"Yes", onYes}, {"No", onNo}})
+</code></pre>
+</details>
 
-#### ⚙️ Parameters
+---
 
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `ent` | **Entity** | Entity to draw text above. |
-| `text` | **string** | Text to display. |
-| `posY` | **number|nil** | Vertical offset in screen space; defaults to 0. |
-| `alphaOverride` | **number|nil** | Optional alpha multiplier (0-1 or 0-255). |
+<details class="realm-client">
+<summary><a id=lia.util.drawEntText></a>lia.util.drawEntText(ent, text, posY, alphaOverride)</summary>
+<a id="liautildrawenttext"></a>
+<p>Draws floating text above an entity that eases in based on distance.</p>
+<p>Use in HUD painting to label world entities when nearby.</p>
+<p><h3>Parameters:</h3>
+<span class="types"><a class="type" href="https://wiki.facepunch.com/gmod/Entity">Entity</a></span> <span class="parameter">ent</span> Entity to draw text above.</p>
+<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a></span> <span class="parameter">text</span> Text to display.</p>
+<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.3">number</a></span> <span class="parameter">posY</span> <span class="optional">optional</span> Vertical offset in screen space; defaults to 0.</p>
+<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.3">number</a></span> <span class="parameter">alphaOverride</span> <span class="optional">optional</span> Optional alpha multiplier (0-1 or 0-255).</p>
 
-#### ↩️ Returns
-* nil
-Performs drawing only; caches fade state per-entity.
-
-#### 🌐 Realm
-Client
-
-#### 💡 Example Usage
-
-```lua
-    hook.Add("HUDPaint", "DrawEntLabels", function()
+<h3>Example Usage:</h3>
+<pre><code class="language-lua">    hook.Add("HUDPaint", "DrawEntLabels", function()
         lia.util.drawEntText(ent, "Storage")
     end)
-
-```
+</code></pre>
+</details>
 
 ---
 
-### lia.util.drawLookText
+<details class="realm-client">
+<summary><a id=lia.util.drawLookText></a>lia.util.drawLookText(text, posY, Screen, Screen, alphaOverride, maxDist)</summary>
+<a id="liautildrawlooktext"></a>
+<p>Draws text at the player's look position with distance-based easing.</p>
+<p>Use to display contextual prompts or hints where the player is aiming.</p>
+<p><h3>Parameters:</h3>
+<span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a></span> <span class="parameter">text</span> Text to render at the hit position.</p>
+<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.3">number</a></span> <span class="parameter">posY</span> <span class="optional">optional</span> Screen-space vertical offset; defaults to 0.</p>
+<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#2.2">unknown</a></span> <span class="parameter">Screen</span> space vertical offset; defaults to 0.</p>
+<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#2.2">unknown</a></span> <span class="parameter">Screen</span> space vertical offset; defaults to 0.</p>
+<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.3">number</a></span> <span class="parameter">alphaOverride</span> <span class="optional">optional</span> Optional alpha multiplier (0-1 or 0-255).</p>
+<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.3">number</a></span> <span class="parameter">maxDist</span> <span class="optional">optional</span> Maximum trace distance; defaults to 380 units.</p>
 
-#### 📋 Purpose
-Draws text at the player's look position with distance-based easing.
-
-#### ⏰ When Called
-Use to display contextual prompts or hints where the player is aiming.
-
-#### ⚙️ Parameters
-
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `text` | **string** | Text to render at the hit position. |
-| `posY` | **number|nil** | Screen-space vertical offset; defaults to 0. |
-| `Screen` | **unknown** | space vertical offset; defaults to 0. |
-| `Screen` | **unknown** | space vertical offset; defaults to 0. |
-| `alphaOverride` | **number|nil** | Optional alpha multiplier (0-1 or 0-255). |
-| `maxDist` | **number|nil** | Maximum trace distance; defaults to 380 units. |
-
-#### ↩️ Returns
-* nil
-Draws text when a trace hits within range.
-
-#### 🌐 Realm
-Client
-
-#### 💡 Example Usage
-
-```lua
-    lia.util.drawLookText("Press E to interact")
-
-```
+<h3>Example Usage:</h3>
+<pre><code class="language-lua">    lia.util.drawLookText("Press E to interact")
+</code></pre>
+</details>
 
 ---
 

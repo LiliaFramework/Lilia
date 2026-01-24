@@ -10,6 +10,7 @@ This file contains detailed documentation for every panel in the Lilia framework
 
 ---
 
+<a id="liacharacterbiography"></a>
 ### liaCharacterBiography
 
 #### 📋 Purpose
@@ -21,6 +22,7 @@ In character creation, character info display, or biography editing interfaces
 
 ---
 
+<a id="liacharactermodel"></a>
 ### liaCharacterModel
 
 #### 📋 Purpose
@@ -32,6 +34,7 @@ In character creation, model selection, or character preview interfaces
 
 ---
 
+<a id="liacharbgmusic"></a>
 ### liaCharBGMusic
 
 #### 📋 Purpose
@@ -43,6 +46,7 @@ In character creation or settings interfaces
 
 ---
 
+<a id="liacharacter"></a>
 ### liaCharacter
 
 #### 📋 Purpose
@@ -54,6 +58,7 @@ In character selection, character info screens, or character management interfac
 
 ---
 
+<a id="liacharacterconfirm"></a>
 ### liaCharacterConfirm
 
 #### 📋 Purpose
@@ -65,6 +70,7 @@ When confirming character creation, deletion, or other character actions
 
 ---
 
+<a id="liacharactercreation"></a>
 ### liaCharacterCreation
 
 #### 📋 Purpose
@@ -76,6 +82,7 @@ During the character creation process
 
 ---
 
+<a id="liacharactercreatestep"></a>
 ### liaCharacterCreateStep
 
 #### 📋 Purpose
@@ -87,6 +94,7 @@ As part of the character creation process
 
 ---
 
+<a id="liabutton"></a>
 ### liaButton
 
 #### 📋 Purpose
@@ -98,6 +106,7 @@ Throughout the UI for interactive elements requiring prominent clickable areas
 
 ---
 
+<a id="liabigbutton"></a>
 ### liaBigButton
 
 #### 📋 Purpose
@@ -109,6 +118,7 @@ For prominent UI elements requiring larger clickable areas
 
 ---
 
+<a id="liacustomfontbutton"></a>
 ### liaCustomFontButton
 
 #### 📋 Purpose
@@ -120,6 +130,7 @@ When specific font styling is needed for buttons
 
 ---
 
+<a id="liahugebutton"></a>
 ### liaHugeButton
 
 #### 📋 Purpose
@@ -131,6 +142,7 @@ For very prominent UI elements or main actions
 
 ---
 
+<a id="lialockcircle"></a>
 ### liaLockCircle
 
 #### 📋 Purpose
@@ -142,6 +154,7 @@ For displaying lockpicking progress, loading states, or timed actions
 
 ---
 
+<a id="liamediumbutton"></a>
 ### liaMediumButton
 
 #### 📋 Purpose
@@ -153,6 +166,7 @@ For standard UI buttons that need moderate prominence
 
 ---
 
+<a id="liaminibutton"></a>
 ### liaMiniButton
 
 #### 📋 Purpose
@@ -164,6 +178,7 @@ For compact UI elements or secondary actions
 
 ---
 
+<a id="lianobgbutton"></a>
 ### liaNoBGButton
 
 #### 📋 Purpose
@@ -175,6 +190,7 @@ When button text/icons need to appear without background panels
 
 ---
 
+<a id="liacategory"></a>
 ### liaCategory
 
 #### 📋 Purpose
@@ -186,6 +202,7 @@ In settings panels, configuration menus, inventory categories, or any interface 
 
 ---
 
+<a id="liachatbox"></a>
 ### liaChatBox
 
 #### 📋 Purpose
@@ -197,6 +214,7 @@ For all chat communication in the game
 
 ---
 
+<a id="liacheckbox"></a>
 ### liaCheckbox
 
 #### 📋 Purpose
@@ -208,6 +226,7 @@ For boolean options, settings, or toggles
 
 ---
 
+<a id="liasimplecheckbox"></a>
 ### liaSimpleCheckbox
 
 #### 📋 Purpose
@@ -219,6 +238,7 @@ For basic boolean inputs where simple styling is preferred
 
 ---
 
+<a id="liacharinfo"></a>
 ### liaCharInfo
 
 #### 📋 Purpose
@@ -230,6 +250,7 @@ In character selection, info screens, or character management
 
 ---
 
+<a id="liamenu"></a>
 ### liaMenu
 
 #### 📋 Purpose
@@ -241,6 +262,7 @@ For main menus, submenus, or menu-based interfaces
 
 ---
 
+<a id="liaclasses"></a>
 ### liaClasses
 
 #### 📋 Purpose
@@ -252,6 +274,7 @@ In character creation or class selection interfaces
 
 ---
 
+<a id="liacombobox"></a>
 ### liaComboBox
 
 #### 📋 Purpose
@@ -263,6 +286,7 @@ For character class/job selection, faction selection, or any multi-option choice
 
 ---
 
+<a id="liadermamenu"></a>
 ### liaDermaMenu
 
 #### 📋 Purpose
@@ -274,6 +298,7 @@ For entity interaction menus, admin tools, inventory actions, or any context-sen
 
 ---
 
+<a id="dialogmenu"></a>
 ### DialogMenu
 
 #### 📋 Purpose
@@ -285,6 +310,7 @@ When initiating NPC dialog interactions, quest conversations, or scripted dialog
 
 ---
 
+<a id="liadlistview"></a>
 ### liaDListView
 
 #### 📋 Purpose
@@ -296,6 +322,7 @@ For displaying lists of items, data, or options
 
 ---
 
+<a id="liadoormenu"></a>
 ### liaDoorMenu
 
 #### 📋 Purpose
@@ -307,6 +334,7 @@ When interacting with doors or similar entities
 
 ---
 
+<a id="liaprogressbar"></a>
 ### liaProgressBar
 
 #### 📋 Purpose
@@ -318,6 +346,7 @@ For loading bars, progress indicators, or value displays
 
 ---
 
+<a id="liaentry"></a>
 ### liaEntry
 
 #### 📋 Purpose
@@ -329,6 +358,7 @@ For character names, descriptions, search fields, or any text input requiring en
 
 ---
 
+<a id="liaframe"></a>
 ### liaFrame
 
 #### 📋 Purpose
@@ -340,6 +370,7 @@ As the main container for most UI windows and dialogs
 
 ---
 
+<a id="liaitemlist"></a>
 ### liaItemList
 
 #### 📋 Purpose
@@ -351,6 +382,7 @@ In inventory interfaces, item selection, or item browsing
 
 ---
 
+<a id="liaitemselector"></a>
 ### liaItemSelector
 
 #### 📋 Purpose
@@ -362,6 +394,7 @@ In item trading, crafting, or selection interfaces
 
 ---
 
+<a id="liahorizontalscroll"></a>
 ### liaHorizontalScroll
 
 #### 📋 Purpose
@@ -373,6 +406,7 @@ For horizontal layouts that need scrolling
 
 ---
 
+<a id="liahorizontalscrollbar"></a>
 ### liaHorizontalScrollBar
 
 #### 📋 Purpose
@@ -384,6 +418,7 @@ With horizontal scroll panels
 
 ---
 
+<a id="liaitemicon"></a>
 ### liaItemIcon
 
 #### 📋 Purpose
@@ -395,6 +430,7 @@ In inventory, item lists, or item displays
 
 ---
 
+<a id="liatabbutton"></a>
 ### liaTabButton
 
 #### 📋 Purpose
@@ -406,6 +442,7 @@ In tabbed interfaces or tab navigation
 
 ---
 
+<a id="liamodelpanel"></a>
 ### liaModelPanel
 
 #### 📋 Purpose
@@ -417,6 +454,7 @@ For character model previews, item model displays, weapon showcases, or any 3D c
 
 ---
 
+<a id="liafacingmodelpanel"></a>
 ### liaFacingModelPanel
 
 #### 📋 Purpose
@@ -428,6 +466,7 @@ For character selection screens, profile displays, or any interface requiring st
 
 ---
 
+<a id="lianotice"></a>
 ### liaNotice
 
 #### 📋 Purpose
@@ -439,6 +478,7 @@ For system notifications, alerts, or messages
 
 ---
 
+<a id="lianoticepanel"></a>
 ### liaNoticePanel
 
 #### 📋 Purpose
@@ -450,6 +490,7 @@ For managing multiple notifications
 
 ---
 
+<a id="liapaintednotification"></a>
 ### liaPaintedNotification
 
 #### 📋 Purpose
@@ -461,6 +502,7 @@ For displaying server messages, system notifications, or custom alerts with colo
 
 ---
 
+<a id="liablurreddframe"></a>
 ### liaBlurredDFrame
 
 #### 📋 Purpose
@@ -472,6 +514,7 @@ For modal dialogs or overlay frames
 
 ---
 
+<a id="liasemitransparentdframe"></a>
 ### liaSemiTransparentDFrame
 
 #### 📋 Purpose
@@ -483,6 +526,7 @@ For overlay panels or semi-transparent windows
 
 ---
 
+<a id="liasemitransparentdpanel"></a>
 ### liaSemiTransparentDPanel
 
 #### 📋 Purpose
@@ -494,6 +538,7 @@ For overlay elements or semi-transparent containers
 
 ---
 
+<a id="liaquick"></a>
 ### liaQuick
 
 #### 📋 Purpose
@@ -505,6 +550,7 @@ For quick settings access or option panels
 
 ---
 
+<a id="liaprivilegerow"></a>
 ### liaPrivilegeRow
 
 #### 📋 Purpose
@@ -516,6 +562,7 @@ In admin panels or privilege management
 
 ---
 
+<a id="liaradialpanel"></a>
 ### liaRadialPanel
 
 #### 📋 Purpose
@@ -527,6 +574,7 @@ For radial menus, circular layouts, or radial interfaces
 
 ---
 
+<a id="liascoreboard"></a>
 ### liaScoreboard
 
 #### 📋 Purpose
@@ -538,6 +586,7 @@ For displaying player rankings, scores, or statistics
 
 ---
 
+<a id="liascrollpanel"></a>
 ### liaScrollPanel
 
 #### 📋 Purpose
@@ -549,6 +598,7 @@ For content that exceeds panel size
 
 ---
 
+<a id="liasheet"></a>
 ### liaSheet
 
 #### 📋 Purpose
@@ -560,6 +610,7 @@ For organizing content into tabs
 
 ---
 
+<a id="liaslidebox"></a>
 ### liaSlideBox
 
 #### 📋 Purpose
@@ -571,6 +622,7 @@ For sliding panels or animated content
 
 ---
 
+<a id="liaslider"></a>
 ### liaSlider
 
 #### 📋 Purpose
@@ -582,6 +634,7 @@ For settings panels, configuration interfaces, or any UI that requires smooth nu
 
 ---
 
+<a id="liasmallbutton"></a>
 ### liaSmallButton
 
 #### 📋 Purpose
@@ -593,6 +646,7 @@ For compact UI elements or secondary actions requiring standard styling
 
 ---
 
+<a id="liaspawnicon"></a>
 ### liaSpawnIcon
 
 #### 📋 Purpose
@@ -604,6 +658,7 @@ For entity spawning, model selection, or icon displays
 
 ---
 
+<a id="liatable"></a>
 ### liaTable
 
 #### 📋 Purpose
@@ -615,6 +670,7 @@ For displaying structured data like player lists, item catalogs, server statisti
 
 ---
 
+<a id="liatabs"></a>
 ### liaTabs
 
 #### 📋 Purpose
@@ -626,6 +682,7 @@ For multi-section interfaces like character creation steps, settings panels, or 
 
 ---
 
+<a id="liausergroupbutton"></a>
 ### liaUserGroupButton
 
 #### 📋 Purpose
@@ -637,6 +694,7 @@ In admin panels or user management
 
 ---
 
+<a id="liausergrouplist"></a>
 ### liaUserGroupList
 
 #### 📋 Purpose
@@ -648,6 +706,7 @@ In admin panels or user management interfaces
 
 ---
 
+<a id="liavoicepanel"></a>
 ### liaVoicePanel
 
 #### 📋 Purpose
@@ -659,6 +718,7 @@ For voice chat interfaces or voice controls
 
 ---
 
+<a id="liamarkuppanel"></a>
 ### liaMarkupPanel
 
 #### 📋 Purpose
@@ -670,6 +730,7 @@ For rich text display, formatted content, or styled text
 
 ---
 
+<a id="liagridinvitem"></a>
 ### liaGridInvItem
 
 #### 📋 Purpose
@@ -681,6 +742,7 @@ As individual cells in grid-based inventory systems for item management and inte
 
 ---
 
+<a id="liagridinventorypanel"></a>
 ### liaGridInventoryPanel
 
 #### 📋 Purpose
@@ -692,6 +754,7 @@ For comprehensive inventory management interfaces requiring organized item displ
 
 ---
 
+<a id="liainventory"></a>
 ### liaInventory
 
 #### 📋 Purpose
@@ -703,6 +766,7 @@ As the main player inventory interface for item storage, organization, and inter
 
 ---
 
+<a id="liagridinventory"></a>
 ### liaGridInventory
 
 #### 📋 Purpose
@@ -714,6 +778,7 @@ As the main container for complex grid-based inventory systems requiring advance
 
 ---
 
+<a id="liavendor"></a>
 ### liaVendor
 
 #### 📋 Purpose
@@ -725,6 +790,7 @@ For NPC vendor interactions, marketplace systems, and economic trading interface
 
 ---
 
+<a id="liavendoritem"></a>
 ### liaVendorItem
 
 #### 📋 Purpose
@@ -736,6 +802,7 @@ Within vendor interfaces to display individual items available for purchase or s
 
 ---
 
+<a id="liavendoreditor"></a>
 ### liaVendorEditor
 
 #### 📋 Purpose
@@ -747,6 +814,7 @@ In admin panels for creating and configuring NPC vendors with full control over 
 
 ---
 
+<a id="liavendorfactioneditor"></a>
 ### liaVendorFactionEditor
 
 #### 📋 Purpose
@@ -758,6 +826,7 @@ In admin panels to set up faction-based access controls for vendor interactions
 
 ---
 
+<a id="liavendorbodygroupeditor"></a>
 ### liaVendorBodygroupEditor
 
 #### 📋 Purpose

@@ -6,6 +6,12 @@
     <div class="generator-section">
         <h3>Basic Information</h3>
         <div class="input-group">
+            <label for="item-id">Unique ID:</label>
+            <input type="text" id="item-id" placeholder="e.g., police_uniform">
+            <small>Unique identifier for this item (no spaces, lowercase)</small>
+        </div>
+
+        <div class="input-group">
             <label for="item-name">Item Name:</label>
             <input type="text" id="item-name" placeholder="e.g., Police Uniform">
         </div>
@@ -287,6 +293,7 @@ code {
 
 <script>
 function generateOutfitItem() {
+    const uniqueId = (document.getElementById('item-id').value || '').trim() || 'outfit_example';
     const name = (document.getElementById('item-name').value || '').trim() || 'Outfit Item';
     const desc = (document.getElementById('item-desc').value || '').trim() || 'A wearable outfit item';
     const category = (document.getElementById('item-category').value || '').trim() || 'clothing';
@@ -297,35 +304,39 @@ function generateOutfitItem() {
     const replaceBodygroups = document.getElementById('replace-bodygroups').checked;
     const pacData = document.getElementById('pac-data').value.trim();
 
-    const lines = [
-        '-- Copy and paste this code into your outfit item file',
-        '-- Example: gamemode/items/outfit/police_uniform.lua',
-        '',
-        `ITEM.name = ${JSON.stringify(name)}`,
-        `ITEM.desc = ${JSON.stringify(desc)}`,
-        `ITEM.category = ${JSON.stringify(category)}`,
-        '',
-        `ITEM.model = ${JSON.stringify(model)}`,
-        `ITEM.width = ${width}`,
-        `ITEM.height = ${height}`,
-        '',
-        'ITEM.isOutfit = true',
-        `ITEM.outfitCategory = ${JSON.stringify(outfitCategory)}`,
-        'ITEM.pacData = {}'
+    let properties = [
+        `    name = ${JSON.stringify(name)}`,
+        `    desc = ${JSON.stringify(desc)}`,
+        `    category = ${JSON.stringify(category)}`,
+        `    model = ${JSON.stringify(model)}`,
+        `    width = ${width}`,
+        `    height = ${height}`,
+        `    isOutfit = true`,
+        `    outfitCategory = ${JSON.stringify(outfitCategory)}`,
+        `    pacData = {}`
     ];
 
     if (replaceBodygroups) {
-        lines.push('', 'ITEM.replaceBodygroups = true');
+        properties.push(`    replaceBodygroups = true`);
     }
 
     if (pacData) {
         try {
             JSON.parse(pacData);
-            lines.push('', `ITEM.pacData = ${pacData}`);
+            properties.push(`    pacData = ${pacData}`);
         } catch (e) {
-            lines.push('', `-- ITEM.pacData = ${pacData} -- Invalid JSON format`);
+            properties.push(`    -- pacData = ${pacData} -- Invalid JSON format`);
         }
     }
+
+    const lines = [
+        '-- Copy and paste this code into any Lua file that loads during initialization',
+        '-- Example: gamemode/items/outfit.lua or gamemode/sh_items.lua',
+        '',
+        `lia.item.registerItem(${JSON.stringify(uniqueId)}, "base_outfit", {`,
+        ...properties,
+        '})'
+    ];
 
     const code = `${lines.join('\n')}\n`;
 

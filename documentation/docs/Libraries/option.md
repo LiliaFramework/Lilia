@@ -10,182 +10,109 @@ The option library provides comprehensive functionality for managing user-config
 
 ---
 
-### lia.option.add
+<details class="realm-shared">
+<summary><a id=lia.option.add></a>lia.option.add(key, name, desc, default, callback, data)</summary>
+<a id="liaoptionadd"></a>
+<p>Register a configurable option with defaults, callbacks, and metadata.</p>
+<p>During initialization to expose settings to the config UI/system.</p>
+<p><h3>Parameters:</h3>
+<span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a></span> <span class="parameter">key</span> Option identifier to resolve choices for.</p>
+<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a></span> <span class="parameter">name</span> Display name or localization key.</p>
+<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a></span> <span class="parameter">desc</span> Description or localization key.</p>
+<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#2.2">any</a></span> <span class="parameter">default</span> Default value; determines inferred type.</p>
+<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.6">function</a></span> <span class="parameter">callback</span> <span class="optional">optional</span> function(old, new) invoked on change.</p>
+<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.5">table</a></span> <span class="parameter">data</span> Extra fields: category, min/max, options, visible, shouldNetwork, isQuick, type, etc.</p>
 
-#### 📋 Purpose
-Register a configurable option with defaults, callbacks, and metadata.
-
-#### ⏰ When Called
-During initialization to expose settings to the config UI/system.
-
-#### ⚙️ Parameters
-
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `key` | **string** | Option identifier to resolve choices for. |
-| `name` | **string** | Display name or localization key. |
-| `desc` | **string** | Description or localization key. |
-| `default` | **any** | Default value; determines inferred type. |
-| `callback` | **function|nil** | function(old, new) invoked on change. |
-| `data` | **table** | Extra fields: category, min/max, options, visible, shouldNetwork, isQuick, type, etc. |
-
-#### ↩️ Returns
-* nil
-
-#### 🌐 Realm
-Shared
-
-#### 💡 Example Usage
-
-```lua
-    lia.option.add("hudScale", "HUD Scale", "Scale HUD elements", 1.0, function(old, new)
+<h3>Example Usage:</h3>
+<pre><code class="language-lua">    lia.option.add("hudScale", "HUD Scale", "Scale HUD elements", 1.0, function(old, new)
         hook.Run("HUDScaleChanged", old, new)
     end, {
-        category = "categoryInterface",
+        category = "Core",
         min = 0.5,
         max = 1.5,
         decimals = 2,
         isQuick = true
     })
-
-```
+</code></pre>
+</details>
 
 ---
 
-### lia.option.getOptions
+<details class="realm-shared">
+<summary><a id=lia.option.getOptions></a>lia.option.getOptions(key)</summary>
+<a id="liaoptiongetoptions"></a>
+<p>Resolve option choices (static or generated) for dropdowns.</p>
+<p>By the config UI before rendering a Table option.</p>
+<p><h3>Parameters:</h3>
+<span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a></span> <span class="parameter">key</span></p>
 
-#### 📋 Purpose
-Resolve option choices (static or generated) for dropdowns.
+<p><h3>Returns:</h3>
+<span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.5">table</a></span> Array/map of options.</p>
 
-#### ⏰ When Called
-By the config UI before rendering a Table option.
-
-#### ⚙️ Parameters
-
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `key` | **string** |  |
-
-#### ↩️ Returns
-* table
-Array/map of options.
-
-#### 🌐 Realm
-Shared
-
-#### 💡 Example Usage
-
-```lua
-    local list = lia.option.getOptions("weaponSelectorPosition")
+<h3>Example Usage:</h3>
+<pre><code class="language-lua">    local list = lia.option.getOptions("weaponSelectorPosition")
     for _, opt in pairs(list) do print("Choice:", opt) end
-
-```
-
----
-
-### lia.option.set
-
-#### 📋 Purpose
-Set an option value, run callbacks/hooks, persist and optionally network it.
-
-#### ⏰ When Called
-From UI interactions or programmatic changes.
-
-#### ⚙️ Parameters
-
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `key` | **string** |  |
-| `value` | **any** |  |
-
-#### ↩️ Returns
-* nil
-
-#### 🌐 Realm
-Shared
-
-#### 💡 Example Usage
-
-```lua
-    lia.option.set("BarsAlwaysVisible", true)
-
-```
+</code></pre>
+</details>
 
 ---
 
-### lia.option.get
+<details class="realm-shared">
+<summary><a id=lia.option.set></a>lia.option.set(key, value)</summary>
+<a id="liaoptionset"></a>
+<p>Set an option value, run callbacks/hooks, persist and optionally network it.</p>
+<p>From UI interactions or programmatic changes.</p>
+<p><h3>Parameters:</h3>
+<span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a></span> <span class="parameter">key</span></p>
+<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#2.2">any</a></span> <span class="parameter">value</span></p>
 
-#### 📋 Purpose
-Retrieve an option value with fallback to default or provided default.
-
-#### ⏰ When Called
-Anywhere an option influences behavior or UI.
-
-#### ⚙️ Parameters
-
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `key` | **string** |  |
-| `default` | **any** |  |
-
-#### ↩️ Returns
-* any
-
-#### 🌐 Realm
-Shared
-
-#### 💡 Example Usage
-
-```lua
-    local showTime = lia.option.get("ChatShowTime", false)
-
-```
+<h3>Example Usage:</h3>
+<pre><code class="language-lua">    lia.option.set("BarsAlwaysVisible", true)
+</code></pre>
+</details>
 
 ---
 
-### lia.option.save
+<details class="realm-shared">
+<summary><a id=lia.option.get></a>lia.option.get(key, default)</summary>
+<a id="liaoptionget"></a>
+<p>Retrieve an option value with fallback to default or provided default.</p>
+<p>Anywhere an option influences behavior or UI.</p>
+<p><h3>Parameters:</h3>
+<span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a></span> <span class="parameter">key</span></p>
+<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#2.2">any</a></span> <span class="parameter">default</span></p>
 
-#### 📋 Purpose
-Persist option values to disk (data/lilia/options.json).
+<p><h3>Returns:</h3>
+<span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#2.2">any</a></span></p>
 
-#### ⏰ When Called
-After option changes; auto-called by lia.option.set.
-
-#### ↩️ Returns
-* nil
-
-#### 🌐 Realm
-Shared
-
-#### 💡 Example Usage
-
-```lua
-    lia.option.save()
-
-```
+<h3>Example Usage:</h3>
+<pre><code class="language-lua">    local showTime = lia.option.get("ChatShowTime", false)
+</code></pre>
+</details>
 
 ---
 
-### lia.option.load
+<details class="realm-shared">
+<summary><a id=lia.option.save></a>lia.option.save()</summary>
+<a id="liaoptionsave"></a>
+<p>Persist option values to disk (data/lilia/options.json).</p>
+<p>After option changes; auto-called by lia.option.set.</p>
+<h3>Example Usage:</h3>
+<pre><code class="language-lua">    lia.option.save()
+</code></pre>
+</details>
 
-#### 📋 Purpose
-Load option values from disk or initialize defaults when missing.
+---
 
-#### ⏰ When Called
-On client init or config menu load.
-
-#### ↩️ Returns
-* nil
-
-#### 🌐 Realm
-Shared
-
-#### 💡 Example Usage
-
-```lua
-    hook.Add("Initialize", "LoadLiliaOptions", lia.option.load)
-
-```
+<details class="realm-shared">
+<summary><a id=lia.option.load></a>lia.option.load()</summary>
+<a id="liaoptionload"></a>
+<p>Load option values from disk or initialize defaults when missing.</p>
+<p>On client init or config menu load.</p>
+<h3>Example Usage:</h3>
+<pre><code class="language-lua">    hook.Add("Initialize", "LoadLiliaOptions", lia.option.load)
+</code></pre>
+</details>
 
 ---
 

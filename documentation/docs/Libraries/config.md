@@ -10,345 +10,196 @@ The configuration library provides comprehensive functionality for managing user
 
 ---
 
-### lia.config.add
+<details class="realm-shared">
+<summary><a id=lia.config.add></a>lia.config.add(key, name, value, callback, data)</summary>
+<a id="liaconfigadd"></a>
+<p>Register a config entry with defaults, UI metadata, and optional callback.</p>
+<p>During schema/module initialization to expose server-stored configuration.</p>
+<p><h3>Parameters:</h3>
+<span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a></span> <span class="parameter">key</span> Unique identifier for the config entry.</p>
+<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a></span> <span class="parameter">name</span> Display text or localization key for UI.</p>
+<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#2.2">any</a></span> <span class="parameter">value</span> Default value; type inferred when data.type is omitted.</p>
+<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.6">function</a></span> <span class="parameter">callback</span> <span class="optional">optional</span> Invoked server-side as callback(oldValue, newValue) after set().</p>
+<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.5">table</a></span> <span class="parameter">data</span> Fields such as type, desc, category, options/optionsFunc, noNetworking, etc.</p>
 
-#### 📋 Purpose
-Register a config entry with defaults, UI metadata, and optional callback.
-
-#### ⏰ When Called
-During schema/module initialization to expose server-stored configuration.
-
-#### ⚙️ Parameters
-
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `key` | **string** | Unique identifier for the config entry. |
-| `name` | **string** | Display text or localization key for UI. |
-| `value` | **any** | Default value; type inferred when data.type is omitted. |
-| `callback` | **function|nil** | Invoked server-side as callback(oldValue, newValue) after set(). |
-| `data` | **table** | Fields such as type, desc, category, options/optionsFunc, noNetworking, etc. |
-
-#### ↩️ Returns
-* nil
-
-#### 🌐 Realm
-Shared
-
-#### 💡 Example Usage
-
-```lua
-    lia.config.add("MaxThirdPersonDistance", "maxThirdPersonDistance", 100, function(old, new)
+<h3>Example Usage:</h3>
+<pre><code class="language-lua">    lia.config.add("MaxThirdPersonDistance", "maxThirdPersonDistance", 100, function(old, new)
         lia.option.set("thirdPersonDistance", math.min(lia.option.get("thirdPersonDistance", new), new))
-    end, {category = "categoryGameplay", type = "Int", min = 10, max = 200})
-
-```
-
----
-
-### lia.config.getOptions
-
-#### 📋 Purpose
-Resolve a config entry's selectable options, static list or generated.
-
-#### ⏰ When Called
-Before rendering dropdown-type configs or validating submitted values.
-
-#### ⚙️ Parameters
-
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `key` | **string** | Config key to resolve options for. |
-
-#### ↩️ Returns
-* table
-Options array or key/value table; empty when unavailable.
-
-#### 🌐 Realm
-Shared
-
-#### 💡 Example Usage
-
-```lua
-    local opts = lia.config.getOptions("Theme")
-
-```
+    end, {category = "Lilia", type = "Int", min = 10, max = 200})
+</code></pre>
+</details>
 
 ---
 
-### lia.config.setDefault
+<details class="realm-shared">
+<summary><a id=lia.config.getOptions></a>lia.config.getOptions(key)</summary>
+<a id="liaconfiggetoptions"></a>
+<p>Resolve a config entry's selectable options, static list or generated.</p>
+<p>Before rendering dropdown-type configs or validating submitted values.</p>
+<p><h3>Parameters:</h3>
+<span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a></span> <span class="parameter">key</span> Config key to resolve options for.</p>
 
-#### 📋 Purpose
-Override the default value for an already registered config entry.
+<p><h3>Returns:</h3>
+<span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.5">table</a></span> Options array or key/value table; empty when unavailable.</p>
 
-#### ⏰ When Called
-During migrations, schema overrides, or backward-compatibility fixes.
-
-#### ⚙️ Parameters
-
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `key` | **string** | Config key to override. |
-| `value` | **any** | New default value. |
-
-#### ↩️ Returns
-* nil
-
-#### 🌐 Realm
-Shared
-
-#### 💡 Example Usage
-
-```lua
-    lia.config.setDefault("StartingMoney", 300)
-
-```
+<h3>Example Usage:</h3>
+<pre><code class="language-lua">    local opts = lia.config.getOptions("Theme")
+</code></pre>
+</details>
 
 ---
 
-### lia.config.forceSet
+<details class="realm-shared">
+<summary><a id=lia.config.setDefault></a>lia.config.setDefault(key, value)</summary>
+<a id="liaconfigsetdefault"></a>
+<p>Override the default value for an already registered config entry.</p>
+<p>During migrations, schema overrides, or backward-compatibility fixes.</p>
+<p><h3>Parameters:</h3>
+<span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a></span> <span class="parameter">key</span> Config key to override.</p>
+<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#2.2">any</a></span> <span class="parameter">value</span> New default value.</p>
 
-#### 📋 Purpose
-Force-set a config value and fire update hooks without networking.
-
-#### ⏰ When Called
-Runtime adjustments (admin tools/commands) or hot reload scenarios.
-
-#### ⚙️ Parameters
-
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `key` | **string** | Config key to change. |
-| `value` | **any** | Value to assign. |
-| `noSave` | **boolean|nil** | When true, skip persisting to disk. |
-
-#### ↩️ Returns
-* nil
-
-#### 🌐 Realm
-Shared
-
-#### 💡 Example Usage
-
-```lua
-    lia.config.forceSet("MaxCharacters", 10, false)
-
-```
+<h3>Example Usage:</h3>
+<pre><code class="language-lua">    lia.config.setDefault("StartingMoney", 300)
+</code></pre>
+</details>
 
 ---
 
-### lia.config.set
+<details class="realm-shared">
+<summary><a id=lia.config.forceSet></a>lia.config.forceSet(key, value, noSave)</summary>
+<a id="liaconfigforceset"></a>
+<p>Force-set a config value and fire update hooks without networking.</p>
+<p>Runtime adjustments (admin tools/commands) or hot reload scenarios.</p>
+<p><h3>Parameters:</h3>
+<span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a></span> <span class="parameter">key</span> Config key to change.</p>
+<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#2.2">any</a></span> <span class="parameter">value</span> Value to assign.</p>
+<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.2">boolean</a></span> <span class="parameter">noSave</span> <span class="optional">optional</span> When true, skip persisting to disk.</p>
 
-#### 📋 Purpose
-Set a config value, fire update hooks, run server callbacks, network to clients, and persist.
-
-#### ⏰ When Called
-Through admin tools/commands or internal code updating configuration.
-
-#### ⚙️ Parameters
-
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `key` | **string** | Config key to change. |
-| `value` | **any** | Value to assign and broadcast. |
-
-#### ↩️ Returns
-* nil
-
-#### 🌐 Realm
-Shared
-
-#### 💡 Example Usage
-
-```lua
-    lia.config.set("RunSpeed", 420)
-
-```
+<h3>Example Usage:</h3>
+<pre><code class="language-lua">    lia.config.forceSet("MaxCharacters", 10, false)
+</code></pre>
+</details>
 
 ---
 
-### lia.config.get
+<details class="realm-shared">
+<summary><a id=lia.config.set></a>lia.config.set(key, value)</summary>
+<a id="liaconfigset"></a>
+<p>Set a config value, fire update hooks, run server callbacks, network to clients, and persist.</p>
+<p>Through admin tools/commands or internal code updating configuration.</p>
+<p><h3>Parameters:</h3>
+<span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a></span> <span class="parameter">key</span> Config key to change.</p>
+<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#2.2">any</a></span> <span class="parameter">value</span> Value to assign and broadcast.</p>
 
-#### 📋 Purpose
-Retrieve a config value with fallback to its stored default or a provided default.
-
-#### ⏰ When Called
-Anywhere configuration influences gameplay or UI logic.
-
-#### ⚙️ Parameters
-
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `key` | **string** | Config key to read. |
-| `default` | **any** | Optional fallback when no stored value or default exists. |
-
-#### ↩️ Returns
-* any
-Stored value, default value, or supplied fallback.
-
-#### 🌐 Realm
-Shared
-
-#### 💡 Example Usage
-
-```lua
-    local walkSpeed = lia.config.get("WalkSpeed", 200)
-
-```
+<h3>Example Usage:</h3>
+<pre><code class="language-lua">    lia.config.set("RunSpeed", 420)
+</code></pre>
+</details>
 
 ---
 
-### lia.config.load
+<details class="realm-shared">
+<summary><a id=lia.config.get></a>lia.config.get(key, default)</summary>
+<a id="liaconfigget"></a>
+<p>Retrieve a config value with fallback to its stored default or a provided default.</p>
+<p>Anywhere configuration influences gameplay or UI logic.</p>
+<p><h3>Parameters:</h3>
+<span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a></span> <span class="parameter">key</span> Config key to read.</p>
+<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#2.2">any</a></span> <span class="parameter">default</span> Optional fallback when no stored value or default exists.</p>
 
-#### 📋 Purpose
-Load config values from the database (server) or request them from the server (client).
+<p><h3>Returns:</h3>
+<span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#2.2">any</a></span> Stored value, default value, or supplied fallback.</p>
 
-#### ⏰ When Called
-On initialization to hydrate lia.config.stored after database connectivity.
-
-#### ↩️ Returns
-* nil
-Server path is asynchronous; client path simply sends a request.
-
-#### 🌐 Realm
-Shared
-
-#### 💡 Example Usage
-
-```lua
-    hook.Add("DatabaseConnected", "LoadLiliaConfig", lia.config.load)
-
-```
+<h3>Example Usage:</h3>
+<pre><code class="language-lua">    local walkSpeed = lia.config.get("WalkSpeed", 200)
+</code></pre>
+</details>
 
 ---
 
-### lia.config.getChangedValues
+<details class="realm-shared">
+<summary><a id=lia.config.load></a>lia.config.load()</summary>
+<a id="liaconfigload"></a>
+<p>Load config values from the database (server) or request them from the server (client).</p>
+<p>On initialization to hydrate lia.config.stored after database connectivity.</p>
+<h3>Example Usage:</h3>
+<pre><code class="language-lua">    hook.Add("DatabaseConnected", "LoadLiliaConfig", lia.config.load)
+</code></pre>
+</details>
 
-#### 📋 Purpose
-Collect config entries whose values differ from last synced values or their defaults.
+---
 
-#### ⏰ When Called
-Prior to sending incremental config updates to clients.
+<details class="realm-server">
+<summary><a id=lia.config.getChangedValues></a>lia.config.getChangedValues(includeDefaults)</summary>
+<a id="liaconfiggetchangedvalues"></a>
+<p>Collect config entries whose values differ from last synced values or their defaults.</p>
+<p>Prior to sending incremental config updates to clients.</p>
+<p><h3>Parameters:</h3>
+<span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.2">boolean</a></span> <span class="parameter">includeDefaults</span> <span class="optional">optional</span> When true, compare against defaults instead of last synced values.</p>
 
-#### ⚙️ Parameters
+<p><h3>Returns:</h3>
+<span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.5">table</a></span> key → value for configs that changed.</p>
 
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `includeDefaults` | **boolean|nil** | When true, compare against defaults instead of last synced values. |
-
-#### ↩️ Returns
-* table
-key → value for configs that changed.
-
-#### 🌐 Realm
-Server
-
-#### 💡 Example Usage
-
-```lua
-    local changed = lia.config.getChangedValues()
+<h3>Example Usage:</h3>
+<pre><code class="language-lua">    local changed = lia.config.getChangedValues()
     if next(changed) then lia.config.send() end
-
-```
-
----
-
-### lia.config.hasChanges
-
-#### 📋 Purpose
-Check whether any config values differ from the last synced snapshot.
-
-#### ⏰ When Called
-To determine if a resync to clients is required.
-
-#### ↩️ Returns
-* boolean
-True when at least one config value has changed.
-
-#### 🌐 Realm
-Server
-
-#### 💡 Example Usage
-
-```lua
-    if lia.config.hasChanges() then lia.config.send() end
-
-```
+</code></pre>
+</details>
 
 ---
 
-### lia.config.send
+<details class="realm-server">
+<summary><a id=lia.config.hasChanges></a>lia.config.hasChanges()</summary>
+<a id="liaconfighaschanges"></a>
+<p>Check whether any config values differ from the last synced snapshot.</p>
+<p>To determine if a resync to clients is required.</p>
+<p><h3>Returns:</h3>
+<span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.2">boolean</a></span> True when at least one config value has changed.</p>
 
-#### 📋 Purpose
-Send config values to one player (full payload) or broadcast only changed values.
+<h3>Example Usage:</h3>
+<pre><code class="language-lua">    if lia.config.hasChanges() then lia.config.send() end
+</code></pre>
+</details>
 
-#### ⏰ When Called
-After config changes or when a player joins the server.
+---
 
-#### ⚙️ Parameters
+<details class="realm-server">
+<summary><a id=lia.config.send></a>lia.config.send(client)</summary>
+<a id="liaconfigsend"></a>
+<p>Send config values to one player (full payload) or broadcast only changed values.</p>
+<p>After config changes or when a player joins the server.</p>
+<p><h3>Parameters:</h3>
+<span class="types"><a class="type" href="https://wiki.facepunch.com/gmod/Player">Player</a></span> <span class="parameter">client</span> <span class="optional">optional</span> Target player for full sync; nil broadcasts only changed values.</p>
 
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `client` | **Player|nil** | Target player for full sync; nil broadcasts only changed values. |
-
-#### ↩️ Returns
-* nil
-
-#### 🌐 Realm
-Server
-
-#### 💡 Example Usage
-
-```lua
-    hook.Add("PlayerInitialSpawn", "SyncConfig", function(ply) lia.config.send(ply) end)
+<h3>Example Usage:</h3>
+<pre><code class="language-lua">    hook.Add("PlayerInitialSpawn", "SyncConfig", function(ply) lia.config.send(ply) end)
     lia.config.send() -- broadcast diffs
-
-```
-
----
-
-### lia.config.save
-
-#### 📋 Purpose
-Persist all config values to the database.
-
-#### ⏰ When Called
-After changes, on shutdown, or during scheduled saves.
-
-#### ↩️ Returns
-* nil
-
-#### 🌐 Realm
-Server
-
-#### 💡 Example Usage
-
-```lua
-    lia.config.save()
-
-```
+</code></pre>
+</details>
 
 ---
 
-### lia.config.reset
+<details class="realm-server">
+<summary><a id=lia.config.save></a>lia.config.save()</summary>
+<a id="liaconfigsave"></a>
+<p>Persist all config values to the database.</p>
+<p>After changes, on shutdown, or during scheduled saves.</p>
+<h3>Example Usage:</h3>
+<pre><code class="language-lua">    lia.config.save()
+</code></pre>
+</details>
 
-#### 📋 Purpose
-Reset all config values to defaults, then save and sync to clients.
+---
 
-#### ⏰ When Called
-During admin resets or troubleshooting.
-
-#### ↩️ Returns
-* nil
-
-#### 🌐 Realm
-Server
-
-#### 💡 Example Usage
-
-```lua
-    lia.config.reset()
-
-```
+<details class="realm-server">
+<summary><a id=lia.config.reset></a>lia.config.reset()</summary>
+<a id="liaconfigreset"></a>
+<p>Reset all config values to defaults, then save and sync to clients.</p>
+<p>During admin resets or troubleshooting.</p>
+<h3>Example Usage:</h3>
+<pre><code class="language-lua">    lia.config.reset()
+</code></pre>
+</details>
 
 ---
 

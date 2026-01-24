@@ -10,2261 +10,1303 @@ The player meta table provides comprehensive functionality for managing player d
 
 ---
 
-### getChar
-
-#### 📋 Purpose
-Returns the active character object associated with this player.
-
-#### ⏰ When Called
-Use whenever you need the player's character state.
-
-#### ↩️ Returns
-* table|nil
-Character instance or nil if none is selected.
-
-#### 🌐 Realm
-Shared
-
-#### 💡 Example Usage
-
-```lua
-    local char = ply:getChar()
-
-```
-
----
-
-### tostring
-
-#### 📋 Purpose
-Builds a readable name for the player preferring character name.
-
-#### ⏰ When Called
-Use for logging or UI when displaying player identity.
-
-#### ↩️ Returns
-* string
-Character name if available, otherwise Steam name.
-
-#### 🌐 Realm
-Shared
-
-#### 💡 Example Usage
-
-```lua
-    print(ply:tostring())
-
-```
-
----
-
-### Name
-
-#### 📋 Purpose
-Returns the display name, falling back to Steam name if no character.
-
-#### ⏰ When Called
-Use wherever Garry's Mod expects Name/Nick/GetName.
-
-#### ↩️ Returns
-* string
-Character or Steam name.
-
-#### 🌐 Realm
-Shared
-
-#### 💡 Example Usage
-
-```lua
-    local name = ply:Name()
-
-```
-
----
-
-### doGesture
-
-#### 📋 Purpose
-Restarts a gesture animation and replicates it.
-
-#### ⏰ When Called
-Use to play a gesture on the player and sync to others.
-
-#### ⚙️ Parameters
-
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `a` | **number** | Gesture activity. |
-| `b` | **number** | Layer or slot. |
-| `c` | **number** | Playback rate or weight. |
-
-#### ↩️ Returns
-* nil
-
-#### 🌐 Realm
-Shared
-
-#### 💡 Example Usage
-
-```lua
-    ply:doGesture(ACT_GMOD_GESTURE_WAVE, 0, 1)
-
-```
-
----
-
-### setAction
-
-#### 📋 Purpose
-Shows an action bar for the player and runs a callback when done.
-
-#### ⏰ When Called
-Use to gate actions behind a timed progress bar.
-
-#### ⚙️ Parameters
-
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `text` | **string|nil** | Message to display; nil cancels the bar. |
-| `time` | **number** | Duration in seconds. |
-| `callback` | **function|nil** | Invoked when the timer completes. |
-
-#### ↩️ Returns
-* nil
-
-#### 🌐 Realm
-Shared
-
-#### 💡 Example Usage
-
-```lua
-    ply:setAction("Lockpicking", 5, onFinish)
-
-```
-
----
-
-### doStaredAction
-
-#### 📋 Purpose
-Runs a callback after the player stares at an entity for a duration.
-
-#### ⏰ When Called
-Use for interactions requiring sustained aim on a target.
-
-#### ⚙️ Parameters
-
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `entity` | **Entity** | Target entity to watch. |
-| `callback` | **function** | Function called after staring completes. |
-| `time` | **number** | Duration in seconds required. |
-| `onCancel` | **function|nil** | Called if the stare is interrupted. |
-| `distance` | **number|nil** | Max distance trace length. |
-
-#### ↩️ Returns
-* nil
-
-#### 🌐 Realm
-Shared
-
-#### 💡 Example Usage
-
-```lua
-    ply:doStaredAction(door, onComplete, 3)
-
-```
-
----
-
-### stopAction
-
-#### 📋 Purpose
-Cancels any active action or stare timers and hides the bar.
-
-#### ⏰ When Called
-Use when an action is interrupted or completed early.
-
-#### ↩️ Returns
-* nil
-
-#### 🌐 Realm
-Shared
-
-#### 💡 Example Usage
-
-```lua
-    ply:stopAction()
-
-```
-
----
-
-### hasPrivilege
-
-#### 📋 Purpose
-Checks if the player has a specific admin privilege.
-
-#### ⏰ When Called
-Use before allowing privileged actions.
-
-#### ⚙️ Parameters
-
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `privilegeName` | **string** | Permission to query. |
-
-#### ↩️ Returns
-* boolean
-True if the player has access.
-
-#### 🌐 Realm
-Shared
-
-#### 💡 Example Usage
-
-```lua
-    if ply:hasPrivilege("canBan") then ...
-
-```
-
----
-
-### removeRagdoll
-
-#### 📋 Purpose
-Deletes the player's ragdoll entity and clears the net var.
-
-#### ⏰ When Called
-Use when respawning or cleaning up ragdolls.
-
-#### ↩️ Returns
-* nil
-
-#### 🌐 Realm
-Shared
-
-#### 💡 Example Usage
-
-```lua
-    ply:removeRagdoll()
-
-```
-
----
-
-### getItemWeapon
-
-#### 📋 Purpose
-Returns the active weapon and matching inventory item if equipped.
-
-#### ⏰ When Called
-Use when syncing weapon state with inventory data.
-
-#### ↩️ Returns
-* Weapon|nil, Item|nil
-Active weapon entity and corresponding item, if found.
-
-#### 🌐 Realm
-Shared
-
-#### 💡 Example Usage
-
-```lua
-    local wep, itm = ply:getItemWeapon()
-
-```
-
----
-
-### isFamilySharedAccount
-
-#### 📋 Purpose
-Detects whether the account is being used via Steam Family Sharing.
-
-#### ⏰ When Called
-Use for restrictions or messaging on shared accounts.
-
-#### ↩️ Returns
-* boolean
-True if OwnerSteamID64 differs from SteamID.
-
-#### 🌐 Realm
-Shared
-
-#### 💡 Example Usage
-
-```lua
-    if ply:isFamilySharedAccount() then warn() end
-
-```
-
----
-
-### getItemDropPos
-
-#### 📋 Purpose
-Calculates a suitable position in front of the player to drop items.
-
-#### ⏰ When Called
-Use before spawning a world item.
-
-#### ↩️ Returns
-* Vector
-Drop position.
-
-#### 🌐 Realm
-Shared
-
-#### 💡 Example Usage
-
-```lua
-    local pos = ply:getItemDropPos()
-
-```
-
----
-
-### getItems
-
-#### 📋 Purpose
-Retrieves the player's inventory items if a character exists.
-
-#### ⏰ When Called
-Use when accessing a player's item list directly.
-
-#### ↩️ Returns
-* table|nil
-Items table or nil if no inventory.
-
-#### 🌐 Realm
-Shared
-
-#### 💡 Example Usage
-
-```lua
-    local items = ply:getItems()
-
-```
-
----
-
-### getTracedEntity
-
-#### 📋 Purpose
-Returns the entity the player is aiming at within a distance.
-
-#### ⏰ When Called
-Use for interaction traces.
-
-#### ⚙️ Parameters
-
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `distance` | **number** | Max trace length; default 96. |
-
-#### ↩️ Returns
-* Entity|nil
-Hit entity or nil.
-
-#### 🌐 Realm
-Shared
-
-#### 💡 Example Usage
-
-```lua
-    local ent = ply:getTracedEntity(128)
-
-```
-
----
-
-### notify
-
-#### 📋 Purpose
-Sends a notification to this player (or locally on client).
-
-#### ⏰ When Called
-Use to display a generic notice.
-
-#### ⚙️ Parameters
-
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `message` | **string** | Text to show. |
-| `notifType` | **string** | Optional type key. |
-
-#### ↩️ Returns
-* nil
-
-#### 🌐 Realm
-Shared
-
-#### 💡 Example Usage
-
-```lua
-    ply:notify("Hello")
-
-```
-
----
-
-### notifyLocalized
-
-#### 📋 Purpose
-Sends a localized notification to this player or locally.
-
-#### ⏰ When Called
-Use when the message is a localization token.
-
-#### ⚙️ Parameters
-
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `message` | **string** | Localization key. |
-| `notifType` | **string** | Optional type key. |
-
-#### ↩️ Returns
-* nil
-
-#### 🌐 Realm
-Shared
-
-#### 💡 Example Usage
-
-```lua
-    ply:notifyLocalized("itemTaken", "apple")
-
-```
-
----
-
-### notifyError
-
-#### 📋 Purpose
-Sends an error notification to this player or locally.
-
-#### ⏰ When Called
-Use to display error messages in a consistent style.
-
-#### ⚙️ Parameters
-
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `message` | **string** | Error text. |
-
-#### ↩️ Returns
-* nil
-
-#### 🌐 Realm
-Shared
-
-#### 💡 Example Usage
-
-```lua
-    ply:notifyError("Invalid action")
-
-```
-
----
-
-### notifyWarning
-
-#### 📋 Purpose
-Sends a warning notification to this player or locally.
-
-#### ⏰ When Called
-Use for cautionary messages.
-
-#### ⚙️ Parameters
-
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `message` | **string** | Text to display. |
-
-#### ↩️ Returns
-* nil
-
-#### 🌐 Realm
-Shared
-
-#### 💡 Example Usage
-
-```lua
-    ply:notifyWarning("Low health")
-
-```
-
----
-
-### notifyInfo
-
-#### 📋 Purpose
-Sends an info notification to this player or locally.
-
-#### ⏰ When Called
-Use for neutral informational messages.
-
-#### ⚙️ Parameters
-
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `message` | **string** | Text to display. |
-
-#### ↩️ Returns
-* nil
-
-#### 🌐 Realm
-Shared
-
-#### 💡 Example Usage
-
-```lua
-    ply:notifyInfo("Quest updated")
-
-```
-
----
-
-### notifySuccess
-
-#### 📋 Purpose
-Sends a success notification to this player or locally.
-
-#### ⏰ When Called
-Use to indicate successful actions.
-
-#### ⚙️ Parameters
-
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `message` | **string** | Text to display. |
-
-#### ↩️ Returns
-* nil
-
-#### 🌐 Realm
-Shared
-
-#### 💡 Example Usage
-
-```lua
-    ply:notifySuccess("Saved")
-
-```
-
----
-
-### notifyMoney
-
-#### 📋 Purpose
-Sends a money-themed notification to this player or locally.
-
-#### ⏰ When Called
-Use for currency gain/spend messages.
-
-#### ⚙️ Parameters
-
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `message` | **string** | Text to display. |
-
-#### ↩️ Returns
-* nil
-
-#### 🌐 Realm
-Shared
-
-#### 💡 Example Usage
-
-```lua
-    ply:notifyMoney("+$50")
-
-```
-
----
-
-### notifyAdmin
-
-#### 📋 Purpose
-Sends an admin-level notification to this player or locally.
-
-#### ⏰ When Called
-Use for staff-oriented alerts.
-
-#### ⚙️ Parameters
-
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `message` | **string** | Text to display. |
-
-#### ↩️ Returns
-* nil
-
-#### 🌐 Realm
-Shared
-
-#### 💡 Example Usage
-
-```lua
-    ply:notifyAdmin("Ticket opened")
-
-```
-
----
-
-### notifyErrorLocalized
-
-#### 📋 Purpose
-Sends a localized error notification to the player or locally.
-
-#### ⏰ When Called
-Use for localized error tokens.
-
-#### ⚙️ Parameters
-
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `key` | **string** | Localization key. |
-
-#### ↩️ Returns
-* nil
-
-#### 🌐 Realm
-Shared
-
-#### 💡 Example Usage
-
-```lua
-    ply:notifyErrorLocalized("invalidArg")
-
-```
-
----
-
-### notifyWarningLocalized
-
-#### 📋 Purpose
-Sends a localized warning notification to the player or locally.
-
-#### ⏰ When Called
-Use for localized warnings.
-
-#### ⚙️ Parameters
-
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `key` | **string** | Localization key. |
-
-#### ↩️ Returns
-* nil
-
-#### 🌐 Realm
-Shared
-
-#### 💡 Example Usage
-
-```lua
-    ply:notifyWarningLocalized("lowHealth")
-
-```
-
----
-
-### notifyInfoLocalized
-
-#### 📋 Purpose
-Sends a localized info notification to the player or locally.
-
-#### ⏰ When Called
-Use for localized informational messages.
-
-#### ⚙️ Parameters
-
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `key` | **string** | Localization key. |
-
-#### ↩️ Returns
-* nil
-
-#### 🌐 Realm
-Shared
-
-#### 💡 Example Usage
-
-```lua
-    ply:notifyInfoLocalized("questUpdate")
-
-```
-
----
-
-### notifySuccessLocalized
-
-#### 📋 Purpose
-Sends a localized success notification to the player or locally.
-
-#### ⏰ When Called
-Use for localized success confirmations.
-
-#### ⚙️ Parameters
-
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `key` | **string** | Localization key. |
-
-#### ↩️ Returns
-* nil
-
-#### 🌐 Realm
-Shared
-
-#### 💡 Example Usage
-
-```lua
-    ply:notifySuccessLocalized("saved")
-
-```
-
----
-
-### notifyMoneyLocalized
-
-#### 📋 Purpose
-Sends a localized money notification to the player or locally.
-
-#### ⏰ When Called
-Use for localized currency messages.
-
-#### ⚙️ Parameters
-
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `key` | **string** | Localization key. |
-
-#### ↩️ Returns
-* nil
-
-#### 🌐 Realm
-Shared
-
-#### 💡 Example Usage
-
-```lua
-    ply:notifyMoneyLocalized("moneyGained", 50)
-
-```
-
----
-
-### notifyAdminLocalized
-
-#### 📋 Purpose
-Sends a localized admin notification to the player or locally.
-
-#### ⏰ When Called
-Use for staff messages with localization.
-
-#### ⚙️ Parameters
-
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `key` | **string** | Localization key. |
-
-#### ↩️ Returns
-* nil
-
-#### 🌐 Realm
-Shared
-
-#### 💡 Example Usage
-
-```lua
-    ply:notifyAdminLocalized("ticketOpened")
-
-```
-
----
-
-### canEditVendor
-
-#### 📋 Purpose
-Checks if the player can edit a vendor.
-
-#### ⏰ When Called
-Use before opening vendor edit interfaces.
-
-#### ⚙️ Parameters
-
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `vendor` | **Entity** | Vendor entity to check. |
-
-#### ↩️ Returns
-* boolean
-True if editing is permitted.
-
-#### 🌐 Realm
-Shared
-
-#### 💡 Example Usage
-
-```lua
-    if ply:canEditVendor(vendor) then ...
-
-```
-
----
-
-### isStaff
-
-#### 📋 Purpose
-Determines if the player's user group is marked as Staff.
-
-#### ⏰ When Called
-Use for gating staff-only features.
-
-#### ↩️ Returns
-* boolean
-True if their usergroup includes the Staff type.
-
-#### 🌐 Realm
-Shared
-
-#### 💡 Example Usage
-
-```lua
-    if ply:isStaff() then ...
-
-```
-
----
-
-### isStaffOnDuty
-
-#### 📋 Purpose
-Checks if the player is currently on the staff faction.
-
-#### ⏰ When Called
-Use when features apply only to on-duty staff.
-
-#### ↩️ Returns
-* boolean
-True if the player is in FACTION_STAFF.
-
-#### 🌐 Realm
-Shared
-
-#### 💡 Example Usage
-
-```lua
-    if ply:isStaffOnDuty() then ...
-
-```
-
----
-
-### hasWhitelist
-
-#### 📋 Purpose
-Checks if the player has whitelist access to a faction.
-
-#### ⏰ When Called
-Use before allowing faction selection.
-
-#### ⚙️ Parameters
-
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `faction` | **number** | Faction ID. |
-
-#### ↩️ Returns
-* boolean
-True if default or whitelisted.
-
-#### 🌐 Realm
-Shared
-
-#### 💡 Example Usage
-
-```lua
-    if ply:hasWhitelist(factionID) then ...
-
-```
-
+<details class="realm-shared">
+<summary><a id=getChar></a>getChar()</summary>
+<a id="getchar"></a>
+<p>Returns the active character object associated with this player.</p>
+<p>Use whenever you need the player's character state.</p>
+<p><h3>Returns:</h3>
+<span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.5">table|nil</a></span> Character instance or nil if none is selected.</p>
+
+<h3>Example Usage:</h3>
+<pre><code class="language-lua">    local char = ply:getChar()
+</code></pre>
+</details>
+
+---
+
+<details class="realm-shared">
+<summary><a id=tostring></a>tostring()</summary>
+<a id="tostring"></a>
+<p>Builds a readable name for the player preferring character name.</p>
+<p>Use for logging or UI when displaying player identity.</p>
+<p><h3>Returns:</h3>
+<span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a></span> Character name if available, otherwise Steam name.</p>
+
+<h3>Example Usage:</h3>
+<pre><code class="language-lua">    print(ply:tostring())
+</code></pre>
+</details>
+
 ---
-
-### getClassData
-
-#### 📋 Purpose
-Retrieves the class table for the player's current character.
-
-#### ⏰ When Called
-Use when needing class metadata like limits or permissions.
-
-#### ↩️ Returns
-* table|nil
-Class definition or nil if unavailable.
-
-#### 🌐 Realm
-Shared
-
-#### 💡 Example Usage
+
+<details class="realm-shared">
+<summary><a id=Name></a>Name()</summary>
+<a id="name"></a>
+<p>Returns the display name, falling back to Steam name if no character.</p>
+<p>Use wherever Garry's Mod expects Name/Nick/GetName.</p>
+<p><h3>Returns:</h3>
+<span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a></span> Character or Steam name.</p>
+
+<h3>Example Usage:</h3>
+<pre><code class="language-lua">    local name = ply:Name()
+</code></pre>
+</details>
+
+---
+
+<details class="realm-shared">
+<summary><a id=doGesture></a>doGesture(a, b, c)</summary>
+<a id="dogesture"></a>
+<p>Restarts a gesture animation and replicates it.</p>
+<p>Use to play a gesture on the player and sync to others.</p>
+<p><h3>Parameters:</h3>
+<span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.3">number</a></span> <span class="parameter">a</span> Gesture activity.</p>
+<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.3">number</a></span> <span class="parameter">b</span> Layer or slot.</p>
+<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.3">number</a></span> <span class="parameter">c</span> Playback rate or weight.</p>
+
+<h3>Example Usage:</h3>
+<pre><code class="language-lua">    ply:doGesture(ACT_GMOD_GESTURE_WAVE, 0, 1)
+</code></pre>
+</details>
+
+---
+
+<details class="realm-shared">
+<summary><a id=setAction></a>setAction(text, time, callback)</summary>
+<a id="setaction"></a>
+<p>Shows an action bar for the player and runs a callback when done.</p>
+<p>Use to gate actions behind a timed progress bar.</p>
+<p><h3>Parameters:</h3>
+<span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a></span> <span class="parameter">text</span> <span class="optional">optional</span> Message to display; nil cancels the bar.</p>
+<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.3">number</a></span> <span class="parameter">time</span> Duration in seconds.</p>
+<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.6">function</a></span> <span class="parameter">callback</span> <span class="optional">optional</span> Invoked when the timer completes.</p>
 
-```lua
-    local classData = ply:getClassData()
+<h3>Example Usage:</h3>
+<pre><code class="language-lua">    ply:setAction("Lockpicking", 5, onFinish)
+</code></pre>
+</details>
+
+---
+
+<details class="realm-shared">
+<summary><a id=doStaredAction></a>doStaredAction(entity, callback, time, onCancel, distance)</summary>
+<a id="dostaredaction"></a>
+<p>Runs a callback after the player stares at an entity for a duration.</p>
+<p>Use for interactions requiring sustained aim on a target.</p>
+<p><h3>Parameters:</h3>
+<span class="types"><a class="type" href="https://wiki.facepunch.com/gmod/Entity">Entity</a></span> <span class="parameter">entity</span> Target entity to watch.</p>
+<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.6">function</a></span> <span class="parameter">callback</span> Function called after staring completes.</p>
+<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.3">number</a></span> <span class="parameter">time</span> Duration in seconds required.</p>
+<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.6">function</a></span> <span class="parameter">onCancel</span> <span class="optional">optional</span> Called if the stare is interrupted.</p>
+<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.3">number</a></span> <span class="parameter">distance</span> <span class="optional">optional</span> Max distance trace length.</p>
+
+<h3>Example Usage:</h3>
+<pre><code class="language-lua">    ply:doStaredAction(door, onComplete, 3)
+</code></pre>
+</details>
+
+---
+
+<details class="realm-shared">
+<summary><a id=stopAction></a>stopAction()</summary>
+<a id="stopaction"></a>
+<p>Cancels any active action or stare timers and hides the bar.</p>
+<p>Use when an action is interrupted or completed early.</p>
+<h3>Example Usage:</h3>
+<pre><code class="language-lua">    ply:stopAction()
+</code></pre>
+</details>
 
-```
-
 ---
-
-### getDarkRPVar
-
-#### 📋 Purpose
-Provides DarkRP compatibility for money queries.
-
-#### ⏰ When Called
-Use when DarkRP expects getDarkRPVar("money").
-
-#### ⚙️ Parameters
-
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `var` | **string** | Variable name, only "money" supported. |
-
-#### ↩️ Returns
-* number|nil
-Character money or nil if unsupported var.
-
-#### 🌐 Realm
-Shared
 
-#### 💡 Example Usage
+<details class="realm-shared">
+<summary><a id=hasPrivilege></a>hasPrivilege(privilegeName)</summary>
+<a id="hasprivilege"></a>
+<p>Checks if the player has a specific admin privilege.</p>
+<p>Use before allowing privileged actions.</p>
+<p><h3>Parameters:</h3>
+<span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a></span> <span class="parameter">privilegeName</span> Permission to query.</p>
 
-```lua
-    local cash = ply:getDarkRPVar("money")
+<p><h3>Returns:</h3>
+<span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.2">boolean</a></span> True if the player has access.</p>
 
-```
+<h3>Example Usage:</h3>
+<pre><code class="language-lua">    if ply:hasPrivilege("canBan") then ...
+</code></pre>
+</details>
 
 ---
 
-### getMoney
+<details class="realm-shared">
+<summary><a id=removeRagdoll></a>removeRagdoll()</summary>
+<a id="removeragdoll"></a>
+<p>Deletes the player's ragdoll entity and clears the net var.</p>
+<p>Use when respawning or cleaning up ragdolls.</p>
+<h3>Example Usage:</h3>
+<pre><code class="language-lua">    ply:removeRagdoll()
+</code></pre>
+</details>
 
-#### 📋 Purpose
-Returns the character's money or zero if unavailable.
-
-#### ⏰ When Called
-Use whenever reading player currency.
-
-#### ↩️ Returns
-* number
-Current money amount.
-
-#### 🌐 Realm
-Shared
-
-#### 💡 Example Usage
-
-```lua
-    local cash = ply:getMoney()
-
-```
-
 ---
-
-### canAfford
 
-#### 📋 Purpose
-Returns whether the player can afford a cost.
+<details class="realm-shared">
+<summary><a id=getItemWeapon></a>getItemWeapon()</summary>
+<a id="getitemweapon"></a>
+<p>Returns the active weapon and matching inventory item if equipped.</p>
+<p>Use when syncing weapon state with inventory data.</p>
+<p><h3>Returns:</h3>
+Weapon|nil, Item|nil Active weapon entity and corresponding item, if found.</p>
 
-#### ⏰ When Called
-Use before charging the player.
+<h3>Example Usage:</h3>
+<pre><code class="language-lua">    local wep, itm = ply:getItemWeapon()
+</code></pre>
+</details>
 
-#### ⚙️ Parameters
-
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `amount` | **number** | Cost to check. |
-
-#### ↩️ Returns
-* boolean
-True if the player has enough money.
-
-#### 🌐 Realm
-Shared
-
-#### 💡 Example Usage
-
-```lua
-    if ply:canAfford(100) then ...
-
-```
-
 ---
-
-### hasSkillLevel
 
-#### 📋 Purpose
-Checks if the player meets a specific skill level requirement.
+<details class="realm-shared">
+<summary><a id=isFamilySharedAccount></a>isFamilySharedAccount()</summary>
+<a id="isfamilysharedaccount"></a>
+<p>Detects whether the account is being used via Steam Family Sharing.</p>
+<p>Use for restrictions or messaging on shared accounts.</p>
+<p><h3>Returns:</h3>
+<span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.2">boolean</a></span> True if OwnerSteamID64 differs from SteamID.</p>
 
-#### ⏰ When Called
-Use for gating actions behind skills.
+<h3>Example Usage:</h3>
+<pre><code class="language-lua">    if ply:isFamilySharedAccount() then warn() end
+</code></pre>
+</details>
 
-#### ⚙️ Parameters
-
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `skill` | **string** | Attribute key. |
-| `level` | **number** | Required level. |
-
-#### ↩️ Returns
-* boolean
-True if the player meets or exceeds the level.
-
-#### 🌐 Realm
-Shared
-
-#### 💡 Example Usage
-
-```lua
-    if ply:hasSkillLevel("lockpick", 3) then ...
-
-```
-
 ---
-
-### meetsRequiredSkills
 
-#### 📋 Purpose
-Verifies all required skills meet their target levels.
+<details class="realm-shared">
+<summary><a id=getItemDropPos></a>getItemDropPos()</summary>
+<a id="getitemdroppos"></a>
+<p>Calculates a suitable position in front of the player to drop items.</p>
+<p>Use before spawning a world item.</p>
+<p><h3>Returns:</h3>
+<span class="types"><a class="type" href="https://wiki.facepunch.com/gmod/Vector">Vector</a></span> Drop position.</p>
 
-#### ⏰ When Called
-Use when checking multiple skill prerequisites.
+<h3>Example Usage:</h3>
+<pre><code class="language-lua">    local pos = ply:getItemDropPos()
+</code></pre>
+</details>
 
-#### ⚙️ Parameters
-
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `requiredSkillLevels` | **table** | Map of skill keys to required levels. |
-
-#### ↩️ Returns
-* boolean
-True if all requirements pass.
-
-#### 🌐 Realm
-Shared
-
-#### 💡 Example Usage
-
-```lua
-    if ply:meetsRequiredSkills(reqs) then ...
-
-```
-
 ---
-
-### forceSequence
 
-#### 📋 Purpose
-Forces the player to play a sequence and freezes movement if needed.
+<details class="realm-shared">
+<summary><a id=getItems></a>getItems()</summary>
+<a id="getitems"></a>
+<p>Retrieves the player's inventory items if a character exists.</p>
+<p>Use when accessing a player's item list directly.</p>
+<p><h3>Returns:</h3>
+<span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.5">table|nil</a></span> Items table or nil if no inventory.</p>
 
-#### ⏰ When Called
-Use for scripted animations like sit or interact sequences.
+<h3>Example Usage:</h3>
+<pre><code class="language-lua">    local items = ply:getItems()
+</code></pre>
+</details>
 
-#### ⚙️ Parameters
-
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `sequenceName` | **string|nil** | Sequence to play; nil clears the current sequence. |
-| `callback` | **function|nil** | Called when the sequence ends. |
-| `time` | **number|nil** | Override duration. |
-| `noFreeze` | **boolean** | Prevent movement freeze when true. |
-
-#### ↩️ Returns
-* number|boolean|nil
-Duration when started, false on failure, or nil when clearing.
-
-#### 🌐 Realm
-Shared
-
-#### 💡 Example Usage
-
-```lua
-    ply:forceSequence("sit", nil, 5)
-
-```
-
 ---
-
-### leaveSequence
 
-#### 📋 Purpose
-Stops the forced sequence, unfreezes movement, and runs callbacks.
+<details class="realm-shared">
+<summary><a id=getTracedEntity></a>getTracedEntity(distance)</summary>
+<a id="gettracedentity"></a>
+<p>Returns the entity the player is aiming at within a distance.</p>
+<p>Use for interaction traces.</p>
+<p><h3>Parameters:</h3>
+<span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.3">number</a></span> <span class="parameter">distance</span> Max trace length; default 96.</p>
 
-#### ⏰ When Called
-Use when a sequence finishes or must be cancelled.
+<p><h3>Returns:</h3>
+<span class="types"><a class="type" href="https://wiki.facepunch.com/gmod/Entity">Entity|nil</a></span> Hit entity or nil.</p>
 
-#### ↩️ Returns
-* nil
+<h3>Example Usage:</h3>
+<pre><code class="language-lua">    local ent = ply:getTracedEntity(128)
+</code></pre>
+</details>
 
-#### 🌐 Realm
-Shared
-
-#### 💡 Example Usage
-
-```lua
-    ply:leaveSequence()
-
-```
-
 ---
-
-### getFlags
-
-#### 📋 Purpose
-Returns the flag string from the player's character.
-
-#### ⏰ When Called
-Use when checking player permissions.
-
-#### ↩️ Returns
-* string
-Concatenated flags or empty string.
 
-#### 🌐 Realm
-Shared
+<details class="realm-shared">
+<summary><a id=notify></a>notify(message, notifType)</summary>
+<a id="notify"></a>
+<p>Sends a notification to this player (or locally on client).</p>
+<p>Use to display a generic notice.</p>
+<p><h3>Parameters:</h3>
+<span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a></span> <span class="parameter">message</span> Text to show.</p>
+<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a></span> <span class="parameter">notifType</span> Optional type key.</p>
 
-#### 💡 Example Usage
+<h3>Example Usage:</h3>
+<pre><code class="language-lua">    ply:notify("Hello")
+</code></pre>
+</details>
 
-```lua
-    local flags = ply:getFlags()
-
-```
-
 ---
-
-### giveFlags
-
-#### 📋 Purpose
-Grants one or more flags to the player's character.
-
-#### ⏰ When Called
-Use when adding privileges.
-
-#### ⚙️ Parameters
-
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `flags` | **string** | Flags to give. |
-
-#### ↩️ Returns
-* nil
 
-#### 🌐 Realm
-Shared
+<details class="realm-shared">
+<summary><a id=notifyLocalized></a>notifyLocalized(message, notifType)</summary>
+<a id="notifylocalized"></a>
+<p>Sends a localized notification to this player or locally.</p>
+<p>Use when the message is a localization token.</p>
+<p><h3>Parameters:</h3>
+<span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a></span> <span class="parameter">message</span> Localization key.</p>
+<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a></span> <span class="parameter">notifType</span> Optional type key.</p>
 
-#### 💡 Example Usage
+<h3>Example Usage:</h3>
+<pre><code class="language-lua">    ply:notifyLocalized("itemTaken", "apple")
+</code></pre>
+</details>
 
-```lua
-    ply:giveFlags("z")
-
-```
-
 ---
-
-### takeFlags
-
-#### 📋 Purpose
-Removes flags from the player's character.
-
-#### ⏰ When Called
-Use when revoking privileges.
-
-#### ⚙️ Parameters
-
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `flags` | **string** | Flags to remove. |
-
-#### ↩️ Returns
-* nil
 
-#### 🌐 Realm
-Shared
+<details class="realm-shared">
+<summary><a id=notifyError></a>notifyError(message)</summary>
+<a id="notifyerror"></a>
+<p>Sends an error notification to this player or locally.</p>
+<p>Use to display error messages in a consistent style.</p>
+<p><h3>Parameters:</h3>
+<span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a></span> <span class="parameter">message</span> Error text.</p>
 
-#### 💡 Example Usage
+<h3>Example Usage:</h3>
+<pre><code class="language-lua">    ply:notifyError("Invalid action")
+</code></pre>
+</details>
 
-```lua
-    ply:takeFlags("z")
-
-```
-
 ---
-
-### networkAnimation
-
-#### 📋 Purpose
-Synchronizes or applies a bone animation state across server/client.
-
-#### ⏰ When Called
-Use when enabling or disabling custom bone angles.
-
-#### ⚙️ Parameters
-
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `active` | **boolean** | Whether the animation is active. |
-| `boneData` | **table** | Map of bone names to Angle values. |
-
-#### ↩️ Returns
-* nil
 
-#### 🌐 Realm
-Shared
+<details class="realm-shared">
+<summary><a id=notifyWarning></a>notifyWarning(message)</summary>
+<a id="notifywarning"></a>
+<p>Sends a warning notification to this player or locally.</p>
+<p>Use for cautionary messages.</p>
+<p><h3>Parameters:</h3>
+<span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a></span> <span class="parameter">message</span> Text to display.</p>
 
-#### 💡 Example Usage
+<h3>Example Usage:</h3>
+<pre><code class="language-lua">    ply:notifyWarning("Low health")
+</code></pre>
+</details>
 
-```lua
-    ply:networkAnimation(true, bones)
-
-```
-
 ---
-
-### getAllLiliaData
-
-#### 📋 Purpose
-Returns the table storing Lilia-specific player data.
-
-#### ⏰ When Called
-Use when reading or writing persistent player data.
-
-#### ↩️ Returns
-* table
-Data table per realm.
-
-#### 🌐 Realm
-Shared
-
-#### 💡 Example Usage
 
-```lua
-    local data = ply:getAllLiliaData()
+<details class="realm-shared">
+<summary><a id=notifyInfo></a>notifyInfo(message)</summary>
+<a id="notifyinfo"></a>
+<p>Sends an info notification to this player or locally.</p>
+<p>Use for neutral informational messages.</p>
+<p><h3>Parameters:</h3>
+<span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a></span> <span class="parameter">message</span> Text to display.</p>
 
-```
+<h3>Example Usage:</h3>
+<pre><code class="language-lua">    ply:notifyInfo("Quest updated")
+</code></pre>
+</details>
 
 ---
 
-### setWaypoint
+<details class="realm-shared">
+<summary><a id=notifySuccess></a>notifySuccess(message)</summary>
+<a id="notifysuccess"></a>
+<p>Sends a success notification to this player or locally.</p>
+<p>Use to indicate successful actions.</p>
+<p><h3>Parameters:</h3>
+<span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a></span> <span class="parameter">message</span> Text to display.</p>
 
-#### 📋 Purpose
-Sets a waypoint for the player and draws HUD guidance clientside.
+<h3>Example Usage:</h3>
+<pre><code class="language-lua">    ply:notifySuccess("Saved")
+</code></pre>
+</details>
 
-#### ⏰ When Called
-Use when directing a player to a position or objective.
-
-#### ⚙️ Parameters
-
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `name` | **string** | Label shown on the HUD. |
-| `vector` | **Vector** | Target world position. |
-| `logo` | **string|nil** | Optional material path for the icon. |
-| `onReach` | **function|nil** | Callback fired when the waypoint is reached. |
-
-#### ↩️ Returns
-* nil
-
-#### 🌐 Realm
-Shared
-
-#### 💡 Example Usage
-
-```lua
-    ply:setWaypoint("Stash", pos)
-
-```
-
 ---
-
-### getLiliaData
-
-#### 📋 Purpose
-Reads stored Lilia player data, returning a default when missing.
-
-#### ⏰ When Called
-Use for persistent per-player data such as settings or cooldowns.
-
-#### ⚙️ Parameters
-
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `key` | **string** | Data key to fetch. |
-| `default` | **any** | Value to return when unset. |
-
-#### ↩️ Returns
-* any
-Stored value or default.
-
-#### 🌐 Realm
-Shared
-
-#### 💡 Example Usage
 
-```lua
-    local last = ply:getLiliaData("lastIP", "")
+<details class="realm-shared">
+<summary><a id=notifyMoney></a>notifyMoney(message)</summary>
+<a id="notifymoney"></a>
+<p>Sends a money-themed notification to this player or locally.</p>
+<p>Use for currency gain/spend messages.</p>
+<p><h3>Parameters:</h3>
+<span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a></span> <span class="parameter">message</span> Text to display.</p>
 
-```
+<h3>Example Usage:</h3>
+<pre><code class="language-lua">    ply:notifyMoney("+$50")
+</code></pre>
+</details>
 
 ---
 
-### getMainCharacter
+<details class="realm-shared">
+<summary><a id=notifyAdmin></a>notifyAdmin(message)</summary>
+<a id="notifyadmin"></a>
+<p>Sends an admin-level notification to this player or locally.</p>
+<p>Use for staff-oriented alerts.</p>
+<p><h3>Parameters:</h3>
+<span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a></span> <span class="parameter">message</span> Text to display.</p>
 
-#### 📋 Purpose
-Returns the player's recorded main character ID, if set.
+<h3>Example Usage:</h3>
+<pre><code class="language-lua">    ply:notifyAdmin("Ticket opened")
+</code></pre>
+</details>
 
-#### ⏰ When Called
-Use to highlight or auto-select the main character.
-
-#### ↩️ Returns
-* number|nil
-Character ID or nil when unset.
-
-#### 🌐 Realm
-Shared
-
-#### 💡 Example Usage
-
-```lua
-    local main = ply:getMainCharacter()
-
-```
-
 ---
-
-### setMainCharacter
-
-#### 📋 Purpose
-Sets the player's main character, applying cooldown rules server-side.
 
-#### ⏰ When Called
-Use when a player picks or clears their main character.
+<details class="realm-shared">
+<summary><a id=notifyErrorLocalized></a>notifyErrorLocalized(key)</summary>
+<a id="notifyerrorlocalized"></a>
+<p>Sends a localized error notification to the player or locally.</p>
+<p>Use for localized error tokens.</p>
+<p><h3>Parameters:</h3>
+<span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a></span> <span class="parameter">key</span> Localization key.</p>
 
-#### ⚙️ Parameters
+<h3>Example Usage:</h3>
+<pre><code class="language-lua">    ply:notifyErrorLocalized("invalidArg")
+</code></pre>
+</details>
 
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `charID` | **number|nil** | Character ID to set, or nil/0 to clear. |
-
-#### ↩️ Returns
-* boolean, string|nil
-True on success, or false with a reason.
-
-#### 🌐 Realm
-Shared
-
-#### 💡 Example Usage
-
-```lua
-    ply:setMainCharacter(charID)
-
-```
-
 ---
-
-### hasFlags
-
-#### 📋 Purpose
-Checks if the player (via their character) has any of the given flags.
 
-#### ⏰ When Called
-Use when gating actions behind flag permissions.
+<details class="realm-shared">
+<summary><a id=notifyWarningLocalized></a>notifyWarningLocalized(key)</summary>
+<a id="notifywarninglocalized"></a>
+<p>Sends a localized warning notification to the player or locally.</p>
+<p>Use for localized warnings.</p>
+<p><h3>Parameters:</h3>
+<span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a></span> <span class="parameter">key</span> Localization key.</p>
 
-#### ⚙️ Parameters
+<h3>Example Usage:</h3>
+<pre><code class="language-lua">    ply:notifyWarningLocalized("lowHealth")
+</code></pre>
+</details>
 
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `flags` | **string** | One or more flag characters to test. |
-
-#### ↩️ Returns
-* boolean
-True if at least one flag is present.
-
-#### 🌐 Realm
-Shared
-
-#### 💡 Example Usage
-
-```lua
-    if ply:hasFlags("z") then ...
-
-```
-
 ---
-
-### playTimeGreaterThan
-
-#### 📋 Purpose
-Returns true if the player's recorded playtime exceeds a value.
 
-#### ⏰ When Called
-Use for requirements based on time played.
+<details class="realm-shared">
+<summary><a id=notifyInfoLocalized></a>notifyInfoLocalized(key)</summary>
+<a id="notifyinfolocalized"></a>
+<p>Sends a localized info notification to the player or locally.</p>
+<p>Use for localized informational messages.</p>
+<p><h3>Parameters:</h3>
+<span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a></span> <span class="parameter">key</span> Localization key.</p>
 
-#### ⚙️ Parameters
+<h3>Example Usage:</h3>
+<pre><code class="language-lua">    ply:notifyInfoLocalized("questUpdate")
+</code></pre>
+</details>
 
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `time` | **number** | Threshold in seconds. |
-
-#### ↩️ Returns
-* boolean
-True if playtime is greater than the threshold.
-
-#### 🌐 Realm
-Shared
-
-#### 💡 Example Usage
-
-```lua
-    if ply:playTimeGreaterThan(3600) then ...
-
-```
-
 ---
-
-### requestOptions
-
-#### 📋 Purpose
-Presents a list of options to the player and returns selected values.
 
-#### ⏰ When Called
-Use for multi-choice prompts that may return multiple selections.
+<details class="realm-shared">
+<summary><a id=notifySuccessLocalized></a>notifySuccessLocalized(key)</summary>
+<a id="notifysuccesslocalized"></a>
+<p>Sends a localized success notification to the player or locally.</p>
+<p>Use for localized success confirmations.</p>
+<p><h3>Parameters:</h3>
+<span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a></span> <span class="parameter">key</span> Localization key.</p>
 
-#### ⚙️ Parameters
+<h3>Example Usage:</h3>
+<pre><code class="language-lua">    ply:notifySuccessLocalized("saved")
+</code></pre>
+</details>
 
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `title` | **string** | Dialog title. |
-| `subTitle` | **string** | Subtitle/description. |
-| `options` | **table** | Array of option labels. |
-| `limit` | **number** | Max selections allowed. |
-| `callback` | **function** | Called with selections when chosen. |
-
-#### ↩️ Returns
-* deferred|nil
-Promise when callback omitted, otherwise nil.
-
-#### 🌐 Realm
-Shared
-
-#### 💡 Example Usage
-
-```lua
-    ply:requestOptions("Pick", "Choose one", {"A","B"}, 1, cb)
-
-```
-
 ---
-
-### requestString
-
-#### 📋 Purpose
-Prompts the player for a string value and returns it.
 
-#### ⏰ When Called
-Use when collecting free-form text input.
+<details class="realm-shared">
+<summary><a id=notifyMoneyLocalized></a>notifyMoneyLocalized(key)</summary>
+<a id="notifymoneylocalized"></a>
+<p>Sends a localized money notification to the player or locally.</p>
+<p>Use for localized currency messages.</p>
+<p><h3>Parameters:</h3>
+<span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a></span> <span class="parameter">key</span> Localization key.</p>
 
-#### ⚙️ Parameters
+<h3>Example Usage:</h3>
+<pre><code class="language-lua">    ply:notifyMoneyLocalized("moneyGained", 50)
+</code></pre>
+</details>
 
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `title` | **string** |  |
-| `subTitle` | **string** |  |
-| `callback` | **function|nil** | Receives the string result; optional if using deferred. |
-| `default` | **string|nil** | Prefilled value. |
-
-#### ↩️ Returns
-* deferred|nil
-Promise when callback omitted, otherwise nil.
-
-#### 🌐 Realm
-Shared
-
-#### 💡 Example Usage
-
-```lua
-    ply:requestString("Name", "Enter name", onDone)
-
-```
-
 ---
-
-### requestArguments
-
-#### 📋 Purpose
-Requests typed arguments from the player based on a specification.
 
-#### ⏰ When Called
-Use for admin commands requiring typed input.
+<details class="realm-shared">
+<summary><a id=notifyAdminLocalized></a>notifyAdminLocalized(key)</summary>
+<a id="notifyadminlocalized"></a>
+<p>Sends a localized admin notification to the player or locally.</p>
+<p>Use for staff messages with localization.</p>
+<p><h3>Parameters:</h3>
+<span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a></span> <span class="parameter">key</span> Localization key.</p>
 
-#### ⚙️ Parameters
+<h3>Example Usage:</h3>
+<pre><code class="language-lua">    ply:notifyAdminLocalized("ticketOpened")
+</code></pre>
+</details>
 
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `title` | **string** | Dialog title. |
-| `argTypes` | **table** | Schema describing required arguments. |
-| `callback` | **function|nil** | Receives parsed values; optional if using deferred. |
-
-#### ↩️ Returns
-* deferred|nil
-Promise when callback omitted.
-
-#### 🌐 Realm
-Shared
-
-#### 💡 Example Usage
-
-```lua
-    ply:requestArguments("Teleport", spec, cb)
-
-```
-
 ---
-
-### requestBinaryQuestion
-
-#### 📋 Purpose
-Shows a binary (two-button) question to the player and returns choice.
 
-#### ⏰ When Called
-Use for yes/no confirmations.
+<details class="realm-shared">
+<summary><a id=canEditVendor></a>canEditVendor(vendor)</summary>
+<a id="caneditvendor"></a>
+<p>Checks if the player can edit a vendor.</p>
+<p>Use before opening vendor edit interfaces.</p>
+<p><h3>Parameters:</h3>
+<span class="types"><a class="type" href="https://wiki.facepunch.com/gmod/Entity">Entity</a></span> <span class="parameter">vendor</span> Vendor entity to check.</p>
 
-#### ⚙️ Parameters
+<p><h3>Returns:</h3>
+<span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.2">boolean</a></span> True if editing is permitted.</p>
 
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `question` | **string** | Prompt text. |
-| `option1` | **string** | Label for first option. |
-| `option2` | **string** | Label for second option. |
-| `manualDismiss` | **boolean** | Require manual close; optional. |
-| `callback` | **function** | Receives 0/1 result. |
+<h3>Example Usage:</h3>
+<pre><code class="language-lua">    if ply:canEditVendor(vendor) then ...
+</code></pre>
+</details>
 
-#### ↩️ Returns
-* nil
-
-#### 🌐 Realm
-Shared
-
-#### 💡 Example Usage
-
-```lua
-    ply:requestBinaryQuestion("Proceed?", "Yes", "No", false, cb)
-
-```
-
 ---
-
-### requestPopupQuestion
-
-#### 📋 Purpose
-Displays a popup question with arbitrary buttons and handles responses.
-
-#### ⏰ When Called
-Use for multi-button confirmations or admin prompts.
 
-#### ⚙️ Parameters
+<details class="realm-shared">
+<summary><a id=isStaff></a>isStaff()</summary>
+<a id="isstaff"></a>
+<p>Determines if the player's user group is marked as Staff.</p>
+<p>Use for gating staff-only features.</p>
+<p><h3>Returns:</h3>
+<span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.2">boolean</a></span> True if their usergroup includes the Staff type.</p>
 
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `question` | **string** | Prompt text. |
-| `buttons` | **table** | Array of strings or {label, callback} pairs. |
+<h3>Example Usage:</h3>
+<pre><code class="language-lua">    if ply:isStaff() then ...
+</code></pre>
+</details>
 
-#### ↩️ Returns
-* nil
-
-#### 🌐 Realm
-Shared
-
-#### 💡 Example Usage
-
-```lua
-    ply:requestPopupQuestion("Choose", {{"A", cbA}, {"B", cbB}})
-
-```
-
 ---
-
-### requestButtons
-
-#### 📋 Purpose
-Sends a button list prompt to the player and routes callbacks.
-
-#### ⏰ When Called
-Use when a simple list of actions is needed.
 
-#### ⚙️ Parameters
+<details class="realm-shared">
+<summary><a id=isStaffOnDuty></a>isStaffOnDuty()</summary>
+<a id="isstaffonduty"></a>
+<p>Checks if the player is currently on the staff faction.</p>
+<p>Use when features apply only to on-duty staff.</p>
+<p><h3>Returns:</h3>
+<span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.2">boolean</a></span> True if the player is in FACTION_STAFF.</p>
 
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `title` | **string** | Dialog title. |
-| `buttons` | **table** | Array of {text=, callback=} entries. |
+<h3>Example Usage:</h3>
+<pre><code class="language-lua">    if ply:isStaffOnDuty() then ...
+</code></pre>
+</details>
 
-#### ↩️ Returns
-* nil
-
-#### 🌐 Realm
-Shared
-
-#### 💡 Example Usage
-
-```lua
-    ply:requestButtons("Actions", {{text="A", callback=cb}})
-
-```
-
 ---
-
-### requestDropdown
-
-#### 📋 Purpose
-Presents a dropdown selection dialog to the player.
-
-#### ⏰ When Called
-Use for single-choice option selection.
 
-#### ⚙️ Parameters
+<details class="realm-shared">
+<summary><a id=hasWhitelist></a>hasWhitelist(faction)</summary>
+<a id="haswhitelist"></a>
+<p>Checks if the player has whitelist access to a faction.</p>
+<p>Use before allowing faction selection.</p>
+<p><h3>Parameters:</h3>
+<span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.3">number</a></span> <span class="parameter">faction</span> Faction ID.</p>
 
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `title` | **string** |  |
-| `subTitle` | **string** |  |
-| `options` | **table** | Available options. |
-| `callback` | **function** | Invoked with chosen option. |
+<p><h3>Returns:</h3>
+<span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.2">boolean</a></span> True if default or whitelisted.</p>
 
-#### ↩️ Returns
-* nil
+<h3>Example Usage:</h3>
+<pre><code class="language-lua">    if ply:hasWhitelist(factionID) then ...
+</code></pre>
+</details>
 
-#### 🌐 Realm
-Shared
-
-#### 💡 Example Usage
-
-```lua
-    ply:requestDropdown("Pick class", "Choose", opts, cb)
-
-```
-
 ---
-
-### restoreStamina
-
-#### 📋 Purpose
-Restores stamina by an amount, clamping to the character's maximum.
-
-#### ⏰ When Called
-Use when giving the player stamina back (e.g., resting or items).
-
-#### ⚙️ Parameters
 
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `amount` | **number** | Stamina to add. |
+<details class="realm-shared">
+<summary><a id=getClassData></a>getClassData()</summary>
+<a id="getclassdata"></a>
+<p>Retrieves the class table for the player's current character.</p>
+<p>Use when needing class metadata like limits or permissions.</p>
+<p><h3>Returns:</h3>
+<span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.5">table|nil</a></span> Class definition or nil if unavailable.</p>
 
-#### ↩️ Returns
-* nil
+<h3>Example Usage:</h3>
+<pre><code class="language-lua">    local classData = ply:getClassData()
+</code></pre>
+</details>
 
-#### 🌐 Realm
-Server
-
-#### 💡 Example Usage
-
-```lua
-    ply:restoreStamina(10)
-
-```
-
 ---
-
-### consumeStamina
-
-#### 📋 Purpose
-Reduces stamina by an amount and handles exhaustion state.
-
-#### ⏰ When Called
-Use when sprinting or performing actions that consume stamina.
-
-#### ⚙️ Parameters
 
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `amount` | **number** | Stamina to subtract. |
+<details class="realm-shared">
+<summary><a id=getDarkRPVar></a>getDarkRPVar(var)</summary>
+<a id="getdarkrpvar"></a>
+<p>Provides DarkRP compatibility for money queries.</p>
+<p>Use when DarkRP expects getDarkRPVar("money").</p>
+<p><h3>Parameters:</h3>
+<span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a></span> <span class="parameter">var</span> Variable name, only "money" supported.</p>
 
-#### ↩️ Returns
-* nil
+<p><h3>Returns:</h3>
+<span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.3">number|nil</a></span> Character money or nil if unsupported var.</p>
 
-#### 🌐 Realm
-Server
+<h3>Example Usage:</h3>
+<pre><code class="language-lua">    local cash = ply:getDarkRPVar("money")
+</code></pre>
+</details>
 
-#### 💡 Example Usage
-
-```lua
-    ply:consumeStamina(5)
-
-```
-
 ---
-
-### addMoney
 
-#### 📋 Purpose
-Adds money to the player's character and logs the change.
+<details class="realm-shared">
+<summary><a id=getMoney></a>getMoney()</summary>
+<a id="getmoney"></a>
+<p>Returns the character's money or zero if unavailable.</p>
+<p>Use whenever reading player currency.</p>
+<p><h3>Returns:</h3>
+<span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.3">number</a></span> Current money amount.</p>
 
-#### ⏰ When Called
-Use when rewarding currency server-side.
+<h3>Example Usage:</h3>
+<pre><code class="language-lua">    local cash = ply:getMoney()
+</code></pre>
+</details>
 
-#### ⚙️ Parameters
-
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `amount` | **number** | Amount to add (can be negative via takeMoney). |
-
-#### ↩️ Returns
-* boolean
-False if no character exists.
-
-#### 🌐 Realm
-Server
+---
 
-#### 💡 Example Usage
+<details class="realm-shared">
+<summary><a id=canAfford></a>canAfford(amount)</summary>
+<a id="canafford"></a>
+<p>Returns whether the player can afford a cost.</p>
+<p>Use before charging the player.</p>
+<p><h3>Parameters:</h3>
+<span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.3">number</a></span> <span class="parameter">amount</span> Cost to check.</p>
 
-```lua
-    ply:addMoney(50)
+<p><h3>Returns:</h3>
+<span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.2">boolean</a></span> True if the player has enough money.</p>
 
-```
+<h3>Example Usage:</h3>
+<pre><code class="language-lua">    if ply:canAfford(100) then ...
+</code></pre>
+</details>
 
 ---
 
-### takeMoney
+<details class="realm-shared">
+<summary><a id=hasSkillLevel></a>hasSkillLevel(skill, level)</summary>
+<a id="hasskilllevel"></a>
+<p>Checks if the player meets a specific skill level requirement.</p>
+<p>Use for gating actions behind skills.</p>
+<p><h3>Parameters:</h3>
+<span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a></span> <span class="parameter">skill</span> Attribute key.</p>
+<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.3">number</a></span> <span class="parameter">level</span> Required level.</p>
 
-#### 📋 Purpose
-Removes money from the player's character by delegating to giveMoney.
+<p><h3>Returns:</h3>
+<span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.2">boolean</a></span> True if the player meets or exceeds the level.</p>
 
-#### ⏰ When Called
-Use when charging the player server-side.
+<h3>Example Usage:</h3>
+<pre><code class="language-lua">    if ply:hasSkillLevel("lockpick", 3) then ...
+</code></pre>
+</details>
 
-#### ⚙️ Parameters
-
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `amount` | **number** | Amount to deduct. |
-
-#### ↩️ Returns
-* nil
-
-#### 🌐 Realm
-Server
+---
 
-#### 💡 Example Usage
+<details class="realm-shared">
+<summary><a id=meetsRequiredSkills></a>meetsRequiredSkills(requiredSkillLevels)</summary>
+<a id="meetsrequiredskills"></a>
+<p>Verifies all required skills meet their target levels.</p>
+<p>Use when checking multiple skill prerequisites.</p>
+<p><h3>Parameters:</h3>
+<span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.5">table</a></span> <span class="parameter">requiredSkillLevels</span> Map of skill keys to required levels.</p>
 
-```lua
-    ply:takeMoney(20)
+<p><h3>Returns:</h3>
+<span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.2">boolean</a></span> True if all requirements pass.</p>
 
-```
+<h3>Example Usage:</h3>
+<pre><code class="language-lua">    if ply:meetsRequiredSkills(reqs) then ...
+</code></pre>
+</details>
 
 ---
 
-### loadLiliaData
+<details class="realm-shared">
+<summary><a id=forceSequence></a>forceSequence(sequenceName, callback, time, noFreeze)</summary>
+<a id="forcesequence"></a>
+<p>Forces the player to play a sequence and freezes movement if needed.</p>
+<p>Use for scripted animations like sit or interact sequences.</p>
+<p><h3>Parameters:</h3>
+<span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a></span> <span class="parameter">sequenceName</span> <span class="optional">optional</span> Sequence to play; nil clears the current sequence.</p>
+<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.6">function</a></span> <span class="parameter">callback</span> <span class="optional">optional</span> Called when the sequence ends.</p>
+<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.3">number</a></span> <span class="parameter">time</span> <span class="optional">optional</span> Override duration.</p>
+<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.2">boolean</a></span> <span class="parameter">noFreeze</span> Prevent movement freeze when true.</p>
 
-#### 📋 Purpose
-Loads persistent Lilia player data from the database.
+<p><h3>Returns:</h3>
+<span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.3">number|boolean|nil</a></span> Duration when started, false on failure, or nil when clearing.</p>
 
-#### ⏰ When Called
-Use during player initial spawn to hydrate data.
+<h3>Example Usage:</h3>
+<pre><code class="language-lua">    ply:forceSequence("sit", nil, 5)
+</code></pre>
+</details>
 
-#### ⚙️ Parameters
-
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `callback` | **function|nil** | Invoked with loaded data table. |
-
-#### ↩️ Returns
-* nil
+---
 
-#### 🌐 Realm
-Server
+<details class="realm-shared">
+<summary><a id=leaveSequence></a>leaveSequence()</summary>
+<a id="leavesequence"></a>
+<p>Stops the forced sequence, unfreezes movement, and runs callbacks.</p>
+<p>Use when a sequence finishes or must be cancelled.</p>
+<h3>Example Usage:</h3>
+<pre><code class="language-lua">    ply:leaveSequence()
+</code></pre>
+</details>
 
-#### 💡 Example Usage
+---
 
-```lua
-    ply:loadLiliaData()
+<details class="realm-shared">
+<summary><a id=getFlags></a>getFlags()</summary>
+<a id="getflags"></a>
+<p>Returns the flag string from the player's character.</p>
+<p>Use when checking player permissions.</p>
+<p><h3>Returns:</h3>
+<span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a></span> Concatenated flags or empty string.</p>
 
-```
+<h3>Example Usage:</h3>
+<pre><code class="language-lua">    local flags = ply:getFlags()
+</code></pre>
+</details>
 
 ---
 
-### saveLiliaData
+<details class="realm-shared">
+<summary><a id=giveFlags></a>giveFlags(flags)</summary>
+<a id="giveflags"></a>
+<p>Grants one or more flags to the player's character.</p>
+<p>Use when adding privileges.</p>
+<p><h3>Parameters:</h3>
+<span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a></span> <span class="parameter">flags</span> Flags to give.</p>
 
-#### 📋 Purpose
-Persists the player's Lilia data back to the database.
+<h3>Example Usage:</h3>
+<pre><code class="language-lua">    ply:giveFlags("z")
+</code></pre>
+</details>
 
-#### ⏰ When Called
-Use on disconnect or after updating persistent data.
+---
 
-#### ↩️ Returns
-* nil
+<details class="realm-shared">
+<summary><a id=takeFlags></a>takeFlags(flags)</summary>
+<a id="takeflags"></a>
+<p>Removes flags from the player's character.</p>
+<p>Use when revoking privileges.</p>
+<p><h3>Parameters:</h3>
+<span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a></span> <span class="parameter">flags</span> Flags to remove.</p>
 
-#### 🌐 Realm
-Server
+<h3>Example Usage:</h3>
+<pre><code class="language-lua">    ply:takeFlags("z")
+</code></pre>
+</details>
 
-#### 💡 Example Usage
+---
 
-```lua
-    ply:saveLiliaData()
+<details class="realm-shared">
+<summary><a id=networkAnimation></a>networkAnimation(active, boneData)</summary>
+<a id="networkanimation"></a>
+<p>Synchronizes or applies a bone animation state across server/client.</p>
+<p>Use when enabling or disabling custom bone angles.</p>
+<p><h3>Parameters:</h3>
+<span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.2">boolean</a></span> <span class="parameter">active</span> Whether the animation is active.</p>
+<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.5">table</a></span> <span class="parameter">boneData</span> Map of bone names to Angle values.</p>
 
-```
+<h3>Example Usage:</h3>
+<pre><code class="language-lua">    ply:networkAnimation(true, bones)
+</code></pre>
+</details>
 
 ---
 
-### setLiliaData
+<details class="realm-shared">
+<summary><a id=getAllLiliaData></a>getAllLiliaData()</summary>
+<a id="getallliliadata"></a>
+<p>Returns the table storing Lilia-specific player data.</p>
+<p>Use when reading or writing persistent player data.</p>
+<p><h3>Returns:</h3>
+<span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.5">table</a></span> Data table per realm.</p>
 
-#### 📋 Purpose
-Sets a key in the player's Lilia data, optionally syncing and saving.
+<h3>Example Usage:</h3>
+<pre><code class="language-lua">    local data = ply:getAllLiliaData()
+</code></pre>
+</details>
 
-#### ⏰ When Called
-Use when updating persistent player-specific values.
-
-#### ⚙️ Parameters
+---
 
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `key` | **string** | Data key. |
-| `value` | **any** | Value to store. |
-| `noNetworking` | **boolean** | Skip net sync when true. |
-| `noSave` | **boolean** | Skip immediate DB save when true. |
+<details class="realm-shared">
+<summary><a id=setWaypoint></a>setWaypoint(name, vector, logo, onReach)</summary>
+<a id="setwaypoint"></a>
+<p>Sets a waypoint for the player and draws HUD guidance clientside.</p>
+<p>Use when directing a player to a position or objective.</p>
+<p><h3>Parameters:</h3>
+<span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a></span> <span class="parameter">name</span> Label shown on the HUD.</p>
+<p><span class="types"><a class="type" href="https://wiki.facepunch.com/gmod/Vector">Vector</a></span> <span class="parameter">vector</span> Target world position.</p>
+<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a></span> <span class="parameter">logo</span> <span class="optional">optional</span> Optional material path for the icon.</p>
+<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.6">function</a></span> <span class="parameter">onReach</span> <span class="optional">optional</span> Callback fired when the waypoint is reached.</p>
 
-#### ↩️ Returns
-* nil
+<h3>Example Usage:</h3>
+<pre><code class="language-lua">    ply:setWaypoint("Stash", pos)
+</code></pre>
+</details>
 
-#### 🌐 Realm
-Server
+---
 
-#### 💡 Example Usage
+<details class="realm-shared">
+<summary><a id=getLiliaData></a>getLiliaData(key, default)</summary>
+<a id="getliliadata"></a>
+<p>Reads stored Lilia player data, returning a default when missing.</p>
+<p>Use for persistent per-player data such as settings or cooldowns.</p>
+<p><h3>Parameters:</h3>
+<span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a></span> <span class="parameter">key</span> Data key to fetch.</p>
+<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#2.2">any</a></span> <span class="parameter">default</span> Value to return when unset.</p>
 
-```lua
-    ply:setLiliaData("lastIP", ip)
+<p><h3>Returns:</h3>
+<span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#2.2">any</a></span> Stored value or default.</p>
 
-```
+<h3>Example Usage:</h3>
+<pre><code class="language-lua">    local last = ply:getLiliaData("lastIP", "")
+</code></pre>
+</details>
 
 ---
 
-### banPlayer
+<details class="realm-shared">
+<summary><a id=getMainCharacter></a>getMainCharacter()</summary>
+<a id="getmaincharacter"></a>
+<p>Returns the player's recorded main character ID, if set.</p>
+<p>Use to highlight or auto-select the main character.</p>
+<p><h3>Returns:</h3>
+<span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.3">number|nil</a></span> Character ID or nil when unset.</p>
 
-#### 📋 Purpose
-Records a ban entry and kicks the player with a ban message.
+<h3>Example Usage:</h3>
+<pre><code class="language-lua">    local main = ply:getMainCharacter()
+</code></pre>
+</details>
 
-#### ⏰ When Called
-Use when banning a player via scripts.
+---
 
-#### ⚙️ Parameters
+<details class="realm-shared">
+<summary><a id=setMainCharacter></a>setMainCharacter(charID)</summary>
+<a id="setmaincharacter"></a>
+<p>Sets the player's main character, applying cooldown rules server-side.</p>
+<p>Use when a player picks or clears their main character.</p>
+<p><h3>Parameters:</h3>
+<span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.3">number</a></span> <span class="parameter">charID</span> <span class="optional">optional</span> Character ID to set, or nil/0 to clear.</p>
 
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `reason` | **string** | Ban reason. |
-| `duration` | **number** | Duration in minutes; 0 or nil for perm. |
-| `banner` | **Player|nil** | Staff issuing the ban. |
+<p><h3>Returns:</h3>
+boolean, string|nil True on success, or false with a reason.</p>
 
-#### ↩️ Returns
-* nil
+<h3>Example Usage:</h3>
+<pre><code class="language-lua">    ply:setMainCharacter(charID)
+</code></pre>
+</details>
 
-#### 🌐 Realm
-Server
+---
 
-#### 💡 Example Usage
+<details class="realm-shared">
+<summary><a id=hasFlags></a>hasFlags(flags)</summary>
+<a id="hasflags"></a>
+<p>Checks if the player (via their character) has any of the given flags.</p>
+<p>Use when gating actions behind flag permissions.</p>
+<p><h3>Parameters:</h3>
+<span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a></span> <span class="parameter">flags</span> One or more flag characters to test.</p>
 
-```lua
-    ply:banPlayer("RDM", 60, admin)
+<p><h3>Returns:</h3>
+<span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.2">boolean</a></span> True if at least one flag is present.</p>
 
-```
+<h3>Example Usage:</h3>
+<pre><code class="language-lua">    if ply:hasFlags("z") then ...
+</code></pre>
+</details>
 
 ---
-
-### getPlayTime
 
-#### 📋 Purpose
-Returns the player's total playtime in seconds (server calculation).
+<details class="realm-shared">
+<summary><a id=playTimeGreaterThan></a>playTimeGreaterThan(time)</summary>
+<a id="playtimegreaterthan"></a>
+<p>Returns true if the player's recorded playtime exceeds a value.</p>
+<p>Use for requirements based on time played.</p>
+<p><h3>Parameters:</h3>
+<span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.3">number</a></span> <span class="parameter">time</span> Threshold in seconds.</p>
 
-#### ⏰ When Called
-Use for server-side playtime checks.
+<p><h3>Returns:</h3>
+<span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.2">boolean</a></span> True if playtime is greater than the threshold.</p>
 
-#### ↩️ Returns
-* number
-Playtime in seconds.
+<h3>Example Usage:</h3>
+<pre><code class="language-lua">    if ply:playTimeGreaterThan(3600) then ...
+</code></pre>
+</details>
 
-#### 🌐 Realm
-Server
+---
 
-#### 💡 Example Usage
+<details class="realm-shared">
+<summary><a id=requestOptions></a>requestOptions(title, subTitle, options, limit, callback)</summary>
+<a id="requestoptions"></a>
+<p>Presents a list of options to the player and returns selected values.</p>
+<p>Use for multi-choice prompts that may return multiple selections.</p>
+<p><h3>Parameters:</h3>
+<span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a></span> <span class="parameter">title</span> Dialog title.</p>
+<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a></span> <span class="parameter">subTitle</span> Subtitle/description.</p>
+<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.5">table</a></span> <span class="parameter">options</span> Array of option labels.</p>
+<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.3">number</a></span> <span class="parameter">limit</span> Max selections allowed.</p>
+<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.6">function</a></span> <span class="parameter">callback</span> Called with selections when chosen.</p>
 
-```lua
-    local t = ply:getPlayTime()
+<p><h3>Returns:</h3>
+<span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#2.2">deferred|nil</a></span> Promise when callback omitted, otherwise nil.</p>
 
-```
+<h3>Example Usage:</h3>
+<pre><code class="language-lua">    ply:requestOptions("Pick", "Choose one", {"A","B"}, 1, cb)
+</code></pre>
+</details>
 
 ---
-
-### setRagdolled
-
-#### 📋 Purpose
-Toggles ragdoll state for the player, handling weapons, timers, and get-up.
-
-#### ⏰ When Called
-Use when knocking out or reviving a player.
 
-#### ⚙️ Parameters
+<details class="realm-shared">
+<summary><a id=requestString></a>requestString(title, subTitle, callback, default)</summary>
+<a id="requeststring"></a>
+<p>Prompts the player for a string value and returns it.</p>
+<p>Use when collecting free-form text input.</p>
+<p><h3>Parameters:</h3>
+<span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a></span> <span class="parameter">title</span></p>
+<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a></span> <span class="parameter">subTitle</span></p>
+<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.6">function</a></span> <span class="parameter">callback</span> <span class="optional">optional</span> Receives the string result; optional if using deferred.</p>
+<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a></span> <span class="parameter">default</span> <span class="optional">optional</span> Prefilled value.</p>
 
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `state` | **boolean** | True to ragdoll, false to restore. |
-| `baseTime` | **number|nil** | Duration to stay ragdolled. |
-| `getUpGrace` | **number|nil** | Additional grace time before getting up. |
-| `getUpMessage` | **string|nil** | Action bar text while ragdolled. |
+<p><h3>Returns:</h3>
+<span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#2.2">deferred|nil</a></span> Promise when callback omitted, otherwise nil.</p>
 
-#### ↩️ Returns
-* nil
+<h3>Example Usage:</h3>
+<pre><code class="language-lua">    ply:requestString("Name", "Enter name", onDone)
+</code></pre>
+</details>
 
-#### 🌐 Realm
-Server
+---
 
-#### 💡 Example Usage
+<details class="realm-shared">
+<summary><a id=requestArguments></a>requestArguments(title, argTypes, callback)</summary>
+<a id="requestarguments"></a>
+<p>Requests typed arguments from the player based on a specification.</p>
+<p>Use for admin commands requiring typed input.</p>
+<p><h3>Parameters:</h3>
+<span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a></span> <span class="parameter">title</span> Dialog title.</p>
+<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.5">table</a></span> <span class="parameter">argTypes</span> Schema describing required arguments.</p>
+<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.6">function</a></span> <span class="parameter">callback</span> <span class="optional">optional</span> Receives parsed values; optional if using deferred.</p>
 
-```lua
-    ply:setRagdolled(true, 10)
+<p><h3>Returns:</h3>
+<span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#2.2">deferred|nil</a></span> Promise when callback omitted.</p>
 
-```
+<h3>Example Usage:</h3>
+<pre><code class="language-lua">    ply:requestArguments("Teleport", spec, cb)
+</code></pre>
+</details>
 
 ---
 
-### syncVars
+<details class="realm-shared">
+<summary><a id=requestBinaryQuestion></a>requestBinaryQuestion(question, option1, option2, manualDismiss, callback)</summary>
+<a id="requestbinaryquestion"></a>
+<p>Shows a binary (two-button) question to the player and returns choice.</p>
+<p>Use for yes/no confirmations.</p>
+<p><h3>Parameters:</h3>
+<span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a></span> <span class="parameter">question</span> Prompt text.</p>
+<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a></span> <span class="parameter">option1</span> Label for first option.</p>
+<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a></span> <span class="parameter">option2</span> Label for second option.</p>
+<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.2">boolean</a></span> <span class="parameter">manualDismiss</span> Require manual close; optional.</p>
+<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.6">function</a></span> <span class="parameter">callback</span> Receives 0/1 result.</p>
 
-#### 📋 Purpose
-Sends all known net variables to this player.
+<h3>Example Usage:</h3>
+<pre><code class="language-lua">    ply:requestBinaryQuestion("Proceed?", "Yes", "No", false, cb)
+</code></pre>
+</details>
 
-#### ⏰ When Called
-Use when a player joins or needs a full resync.
+---
 
-#### ↩️ Returns
-* nil
+<details class="realm-shared">
+<summary><a id=requestPopupQuestion></a>requestPopupQuestion(question, buttons)</summary>
+<a id="requestpopupquestion"></a>
+<p>Displays a popup question with arbitrary buttons and handles responses.</p>
+<p>Use for multi-button confirmations or admin prompts.</p>
+<p><h3>Parameters:</h3>
+<span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a></span> <span class="parameter">question</span> Prompt text.</p>
+<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.5">table</a></span> <span class="parameter">buttons</span> Array of strings or {label, callback} pairs.</p>
 
-#### 🌐 Realm
-Server
+<h3>Example Usage:</h3>
+<pre><code class="language-lua">    ply:requestPopupQuestion("Choose", {{"A", cbA}, {"B", cbB}})
+</code></pre>
+</details>
 
-#### 💡 Example Usage
+---
 
-```lua
-    ply:syncVars()
+<details class="realm-shared">
+<summary><a id=requestButtons></a>requestButtons(title, buttons)</summary>
+<a id="requestbuttons"></a>
+<p>Sends a button list prompt to the player and routes callbacks.</p>
+<p>Use when a simple list of actions is needed.</p>
+<p><h3>Parameters:</h3>
+<span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a></span> <span class="parameter">title</span> Dialog title.</p>
+<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.5">table</a></span> <span class="parameter">buttons</span> Array of {text=, callback=} entries.</p>
 
-```
+<h3>Example Usage:</h3>
+<pre><code class="language-lua">    ply:requestButtons("Actions", {{text="A", callback=cb}})
+</code></pre>
+</details>
 
 ---
-
-### setNetVar
 
-#### 📋 Purpose
-Sets a networked variable for this player and broadcasts it.
+<details class="realm-shared">
+<summary><a id=requestDropdown></a>requestDropdown(title, subTitle, options, callback)</summary>
+<a id="requestdropdown"></a>
+<p>Presents a dropdown selection dialog to the player.</p>
+<p>Use for single-choice option selection.</p>
+<p><h3>Parameters:</h3>
+<span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a></span> <span class="parameter">title</span></p>
+<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a></span> <span class="parameter">subTitle</span></p>
+<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.5">table</a></span> <span class="parameter">options</span> Available options.</p>
+<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.6">function</a></span> <span class="parameter">callback</span> Invoked with chosen option.</p>
 
-#### ⏰ When Called
-Use when updating shared player state.
+<h3>Example Usage:</h3>
+<pre><code class="language-lua">    ply:requestDropdown("Pick class", "Choose", opts, cb)
+</code></pre>
+</details>
 
-#### ⚙️ Parameters
-
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `key` | **string** | Variable name. |
-| `value` | **any** | Value to store. |
+---
 
-#### ↩️ Returns
-* nil
+<details class="realm-server">
+<summary><a id=restoreStamina></a>restoreStamina(amount)</summary>
+<a id="restorestamina"></a>
+<p>Restores stamina by an amount, clamping to the character's maximum.</p>
+<p>Use when giving the player stamina back (e.g., resting or items).</p>
+<p><h3>Parameters:</h3>
+<span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.3">number</a></span> <span class="parameter">amount</span> Stamina to add.</p>
 
-#### 🌐 Realm
-Server
+<h3>Example Usage:</h3>
+<pre><code class="language-lua">    ply:restoreStamina(10)
+</code></pre>
+</details>
 
-#### 💡 Example Usage
+---
 
-```lua
-    ply:setNetVar("hasKey", true)
+<details class="realm-server">
+<summary><a id=consumeStamina></a>consumeStamina(amount)</summary>
+<a id="consumestamina"></a>
+<p>Reduces stamina by an amount and handles exhaustion state.</p>
+<p>Use when sprinting or performing actions that consume stamina.</p>
+<p><h3>Parameters:</h3>
+<span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.3">number</a></span> <span class="parameter">amount</span> Stamina to subtract.</p>
 
-```
+<h3>Example Usage:</h3>
+<pre><code class="language-lua">    ply:consumeStamina(5)
+</code></pre>
+</details>
 
 ---
-
-### setLocalVar
 
-#### 📋 Purpose
-Sets a server-local variable for this player and sends it only to them.
+<details class="realm-server">
+<summary><a id=addMoney></a>addMoney(amount)</summary>
+<a id="addmoney"></a>
+<p>Adds money to the player's character and logs the change.</p>
+<p>Use when rewarding currency server-side.</p>
+<p><h3>Parameters:</h3>
+<span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.3">number</a></span> <span class="parameter">amount</span> Amount to add (can be negative via takeMoney).</p>
 
-#### ⏰ When Called
-Use for per-player state that should not broadcast.
+<p><h3>Returns:</h3>
+<span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.2">boolean</a></span> False if no character exists.</p>
 
-#### ⚙️ Parameters
+<h3>Example Usage:</h3>
+<pre><code class="language-lua">    ply:addMoney(50)
+</code></pre>
+</details>
 
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `key` | **string** | Variable name. |
-| `value` | **any** | Value to store. |
+---
 
-#### ↩️ Returns
-* nil
+<details class="realm-server">
+<summary><a id=takeMoney></a>takeMoney(amount)</summary>
+<a id="takemoney"></a>
+<p>Removes money from the player's character by delegating to giveMoney.</p>
+<p>Use when charging the player server-side.</p>
+<p><h3>Parameters:</h3>
+<span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.3">number</a></span> <span class="parameter">amount</span> Amount to deduct.</p>
 
-#### 🌐 Realm
-Server
+<h3>Example Usage:</h3>
+<pre><code class="language-lua">    ply:takeMoney(20)
+</code></pre>
+</details>
 
-#### 💡 Example Usage
+---
 
-```lua
-    ply:setLocalVar("stamina", 80)
+<details class="realm-server">
+<summary><a id=loadLiliaData></a>loadLiliaData(callback)</summary>
+<a id="loadliliadata"></a>
+<p>Loads persistent Lilia player data from the database.</p>
+<p>Use during player initial spawn to hydrate data.</p>
+<p><h3>Parameters:</h3>
+<span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.6">function</a></span> <span class="parameter">callback</span> <span class="optional">optional</span> Invoked with loaded data table.</p>
 
-```
+<h3>Example Usage:</h3>
+<pre><code class="language-lua">    ply:loadLiliaData()
+</code></pre>
+</details>
 
 ---
 
-### getLocalVar
+<details class="realm-server">
+<summary><a id=saveLiliaData></a>saveLiliaData()</summary>
+<a id="saveliliadata"></a>
+<p>Persists the player's Lilia data back to the database.</p>
+<p>Use on disconnect or after updating persistent data.</p>
+<h3>Example Usage:</h3>
+<pre><code class="language-lua">    ply:saveLiliaData()
+</code></pre>
+</details>
 
-#### 📋 Purpose
-Reads a server-local variable for this player.
+---
 
-#### ⏰ When Called
-Use when accessing non-networked state.
+<details class="realm-server">
+<summary><a id=setLiliaData></a>setLiliaData(key, value, noNetworking, noSave)</summary>
+<a id="setliliadata"></a>
+<p>Sets a key in the player's Lilia data, optionally syncing and saving.</p>
+<p>Use when updating persistent player-specific values.</p>
+<p><h3>Parameters:</h3>
+<span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a></span> <span class="parameter">key</span> Data key.</p>
+<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#2.2">any</a></span> <span class="parameter">value</span> Value to store.</p>
+<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.2">boolean</a></span> <span class="parameter">noNetworking</span> Skip net sync when true.</p>
+<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.2">boolean</a></span> <span class="parameter">noSave</span> Skip immediate DB save when true.</p>
 
-#### ⚙️ Parameters
+<h3>Example Usage:</h3>
+<pre><code class="language-lua">    ply:setLiliaData("lastIP", ip)
+</code></pre>
+</details>
 
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `key` | **string** | Variable name. |
-| `default` | **any** | Fallback when unset. |
+---
 
-#### ↩️ Returns
-* any
-Stored value or default.
+<details class="realm-server">
+<summary><a id=banPlayer></a>banPlayer(reason, duration, banner)</summary>
+<a id="banplayer"></a>
+<p>Records a ban entry and kicks the player with a ban message.</p>
+<p>Use when banning a player via scripts.</p>
+<p><h3>Parameters:</h3>
+<span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a></span> <span class="parameter">reason</span> Ban reason.</p>
+<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.3">number</a></span> <span class="parameter">duration</span> Duration in minutes; 0 or nil for perm.</p>
+<p><span class="types"><a class="type" href="https://wiki.facepunch.com/gmod/Player">Player</a></span> <span class="parameter">banner</span> <span class="optional">optional</span> Staff issuing the ban.</p>
 
-#### 🌐 Realm
-Server
+<h3>Example Usage:</h3>
+<pre><code class="language-lua">    ply:banPlayer("RDM", 60, admin)
+</code></pre>
+</details>
 
-#### 💡 Example Usage
+---
 
-```lua
-    local stamina = ply:getLocalVar("stamina", 100)
+<details class="realm-server">
+<summary><a id=getPlayTime></a>getPlayTime()</summary>
+<a id="getplaytime"></a>
+<p>Returns the player's total playtime in seconds (server calculation).</p>
+<p>Use for server-side playtime checks.</p>
+<p><h3>Returns:</h3>
+<span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.3">number</a></span> Playtime in seconds.</p>
 
-```
+<h3>Example Usage:</h3>
+<pre><code class="language-lua">    local t = ply:getPlayTime()
+</code></pre>
+</details>
 
 ---
 
-### getLocalVar
+<details class="realm-server">
+<summary><a id=setRagdolled></a>setRagdolled(state, baseTime, getUpGrace, getUpMessage)</summary>
+<a id="setragdolled"></a>
+<p>Toggles ragdoll state for the player, handling weapons, timers, and get-up.</p>
+<p>Use when knocking out or reviving a player.</p>
+<p><h3>Parameters:</h3>
+<span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.2">boolean</a></span> <span class="parameter">state</span> True to ragdoll, false to restore.</p>
+<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.3">number</a></span> <span class="parameter">baseTime</span> <span class="optional">optional</span> Duration to stay ragdolled.</p>
+<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.3">number</a></span> <span class="parameter">getUpGrace</span> <span class="optional">optional</span> Additional grace time before getting up.</p>
+<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a></span> <span class="parameter">getUpMessage</span> <span class="optional">optional</span> Action bar text while ragdolled.</p>
 
-#### 📋 Purpose
-Reads a networked variable for this player on the client.
+<h3>Example Usage:</h3>
+<pre><code class="language-lua">    ply:setRagdolled(true, 10)
+</code></pre>
+</details>
 
-#### ⏰ When Called
-Use clientside when accessing shared netvars.
+---
 
-#### ⚙️ Parameters
+<details class="realm-server">
+<summary><a id=syncVars></a>syncVars()</summary>
+<a id="syncvars"></a>
+<p>Sends all known net variables to this player.</p>
+<p>Use when a player joins or needs a full resync.</p>
+<h3>Example Usage:</h3>
+<pre><code class="language-lua">    ply:syncVars()
+</code></pre>
+</details>
 
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `key` | **string** | Variable name. |
-| `default` | **any** | Fallback when unset. |
+---
 
-#### ↩️ Returns
-* any
-Stored value or default.
+<details class="realm-server">
+<summary><a id=setNetVar></a>setNetVar(key, value)</summary>
+<a id="setnetvar"></a>
+<p>Sets a networked variable for this player and broadcasts it.</p>
+<p>Use when updating shared player state.</p>
+<p><h3>Parameters:</h3>
+<span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a></span> <span class="parameter">key</span> Variable name.</p>
+<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#2.2">any</a></span> <span class="parameter">value</span> Value to store.</p>
 
-#### 🌐 Realm
-Client
+<h3>Example Usage:</h3>
+<pre><code class="language-lua">    ply:setNetVar("hasKey", true)
+</code></pre>
+</details>
 
-#### 💡 Example Usage
+---
 
-```lua
-    local val = ply:getLocalVar("stamina", 0)
+<details class="realm-server">
+<summary><a id=setLocalVar></a>setLocalVar(key, value)</summary>
+<a id="setlocalvar"></a>
+<p>Sets a server-local variable for this player and sends it only to them.</p>
+<p>Use for per-player state that should not broadcast.</p>
+<p><h3>Parameters:</h3>
+<span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a></span> <span class="parameter">key</span> Variable name.</p>
+<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#2.2">any</a></span> <span class="parameter">value</span> Value to store.</p>
 
-```
+<h3>Example Usage:</h3>
+<pre><code class="language-lua">    ply:setLocalVar("stamina", 80)
+</code></pre>
+</details>
 
 ---
 
-### getPlayTime
+<details class="realm-server">
+<summary><a id=getLocalVar></a>getLocalVar(key, default)</summary>
+<a id="getlocalvar"></a>
+<p>Reads a server-local variable for this player.</p>
+<p>Use when accessing non-networked state.</p>
+<p><h3>Parameters:</h3>
+<span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a></span> <span class="parameter">key</span> Variable name.</p>
+<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#2.2">any</a></span> <span class="parameter">default</span> Fallback when unset.</p>
 
-#### 📋 Purpose
-Returns the player's playtime (client-calculated fallback).
+<p><h3>Returns:</h3>
+<span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#2.2">any</a></span> Stored value or default.</p>
 
-#### ⏰ When Called
-Use on the client when server data is unavailable.
+<h3>Example Usage:</h3>
+<pre><code class="language-lua">    local stamina = ply:getLocalVar("stamina", 100)
+</code></pre>
+</details>
 
-#### ↩️ Returns
-* number
-Playtime in seconds.
-
-#### 🌐 Realm
-Client
+---
 
-#### 💡 Example Usage
+<details class="realm-client">
+<summary><a id=getLocalVar></a>getLocalVar(key, default)</summary>
+<a id="getlocalvar"></a>
+<p>Reads a networked variable for this player on the client.</p>
+<p>Use clientside when accessing shared netvars.</p>
+<p><h3>Parameters:</h3>
+<span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a></span> <span class="parameter">key</span> Variable name.</p>
+<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#2.2">any</a></span> <span class="parameter">default</span> Fallback when unset.</p>
 
-```lua
-    local t = ply:getPlayTime()
+<p><h3>Returns:</h3>
+<span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#2.2">any</a></span> Stored value or default.</p>
 
-```
+<h3>Example Usage:</h3>
+<pre><code class="language-lua">    local val = ply:getLocalVar("stamina", 0)
+</code></pre>
+</details>
 
 ---
 
-### getParts
+<details class="realm-client">
+<summary><a id=getPlayTime></a>getPlayTime()</summary>
+<a id="getplaytime"></a>
+<p>Returns the player's playtime (client-calculated fallback).</p>
+<p>Use on the client when server data is unavailable.</p>
+<p><h3>Returns:</h3>
+<span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.3">number</a></span> Playtime in seconds.</p>
 
-#### 📋 Purpose
-Returns the player's active PAC parts.
+<h3>Example Usage:</h3>
+<pre><code class="language-lua">    local t = ply:getPlayTime()
+</code></pre>
+</details>
 
-#### ⏰ When Called
-Use to check which PAC parts are currently equipped on the player.
-
-#### ↩️ Returns
-* table
-Table of active PAC part IDs.
-
-#### 🌐 Realm
-Shared
+---
 
-#### 💡 Example Usage
+<details class="realm-shared">
+<summary><a id=getParts></a>getParts()</summary>
+<a id="getparts"></a>
+<p>Returns the player's active PAC parts.</p>
+<p>Use to check which PAC parts are currently equipped on the player.</p>
+<p><h3>Returns:</h3>
+<span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.5">table</a></span> Table of active PAC part IDs.</p>
 
-```lua
-    local parts = ply:getParts()
+<h3>Example Usage:</h3>
+<pre><code class="language-lua">    local parts = ply:getParts()
     if parts["helmet"] then
         print("Player has helmet equipped")
     end
-
-```
-
----
-
-### syncParts
-
-#### 📋 Purpose
-Synchronizes the player's PAC parts with the client.
-
-#### ⏰ When Called
-Use to ensure the client has the correct PAC parts data.
-
-#### ↩️ Returns
-* None.
-
-#### 🌐 Realm
-Server
-
-#### 💡 Example Usage
-
-```lua
-    ply:syncParts()
-
-```
+</code></pre>
+</details>
 
 ---
 
-### addPart
+<details class="realm-server">
+<summary><a id=syncParts></a>syncParts()</summary>
+<a id="syncparts"></a>
+<p>Synchronizes the player's PAC parts with the client.</p>
+<p>Use to ensure the client has the correct PAC parts data.</p>
+<p><h3>Returns:</h3>
+<span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#2.2">None.</a></span></p>
 
-#### 📋 Purpose
-Adds a PAC part to the player.
-
-#### ⏰ When Called
-Use when equipping PAC parts on a player.
-
-#### ⚙️ Parameters
-
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `partID` | **string** | The unique ID of the PAC part to add. |
-
-#### ↩️ Returns
-* None.
-
-#### 🌐 Realm
-Server
-
-#### 💡 Example Usage
-
-```lua
-    ply:addPart("helmet_model")
-
-```
+<h3>Example Usage:</h3>
+<pre><code class="language-lua">    ply:syncParts()
+</code></pre>
+</details>
 
 ---
 
-### removePart
+<details class="realm-server">
+<summary><a id=addPart></a>addPart(partID)</summary>
+<a id="addpart"></a>
+<p>Adds a PAC part to the player.</p>
+<p>Use when equipping PAC parts on a player.</p>
+<p><h3>Parameters:</h3>
+<span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a></span> <span class="parameter">partID</span> The unique ID of the PAC part to add.</p>
 
-#### 📋 Purpose
-Removes a PAC part from the player.
+<p><h3>Returns:</h3>
+<span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#2.2">None.</a></span></p>
 
-#### ⏰ When Called
-Use when unequipping PAC parts from a player.
-
-#### ⚙️ Parameters
-
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `partID` | **string** | The unique ID of the PAC part to remove. |
-
-#### ↩️ Returns
-* None.
-
-#### 🌐 Realm
-Server
-
-#### 💡 Example Usage
-
-```lua
-    ply:removePart("helmet_model")
-
-```
+<h3>Example Usage:</h3>
+<pre><code class="language-lua">    ply:addPart("helmet_model")
+</code></pre>
+</details>
 
 ---
 
-### resetParts
+<details class="realm-server">
+<summary><a id=removePart></a>removePart(partID)</summary>
+<a id="removepart"></a>
+<p>Removes a PAC part from the player.</p>
+<p>Use when unequipping PAC parts from a player.</p>
+<p><h3>Parameters:</h3>
+<span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a></span> <span class="parameter">partID</span> The unique ID of the PAC part to remove.</p>
 
-#### 📋 Purpose
-Removes all PAC parts from the player.
+<p><h3>Returns:</h3>
+<span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#2.2">None.</a></span></p>
 
-#### ⏰ When Called
-Use to clear all equipped PAC parts from a player.
-
-#### ↩️ Returns
-* None.
-
-#### 🌐 Realm
-Server
-
-#### 💡 Example Usage
-
-```lua
-    ply:resetParts()
-
-```
+<h3>Example Usage:</h3>
+<pre><code class="language-lua">    ply:removePart("helmet_model")
+</code></pre>
+</details>
 
 ---
 
-### IsAvailable
+<details class="realm-server">
+<summary><a id=resetParts></a>resetParts()</summary>
+<a id="resetparts"></a>
+<p>Removes all PAC parts from the player.</p>
+<p>Use to clear all equipped PAC parts from a player.</p>
+<p><h3>Returns:</h3>
+<span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#2.2">None.</a></span></p>
 
-#### 📋 Purpose
-Removes all PAC parts from the player.
+<h3>Example Usage:</h3>
+<pre><code class="language-lua">    ply:resetParts()
+</code></pre>
+</details>
 
-#### ⏰ When Called
-Use to clear all equipped PAC parts from a player.
+---
 
-#### ↩️ Returns
-* None.
+<details class="realm-server">
+<summary><a id=IsAvailable></a>IsAvailable()</summary>
+<a id="isavailable"></a>
+<p>Removes all PAC parts from the player.</p>
+<p>Use to clear all equipped PAC parts from a player.</p>
+<p><h3>Returns:</h3>
+<span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#2.2">None.</a></span></p>
 
-#### 🌐 Realm
-Server
-
-#### 💡 Example Usage
-
-```lua
-    ply:resetParts()
-
-```
+<h3>Example Usage:</h3>
+<pre><code class="language-lua">    ply:resetParts()
+</code></pre>
+</details>
 
 ---
 

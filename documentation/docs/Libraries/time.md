@@ -10,32 +10,20 @@ The time library provides comprehensive functionality for time manipulation, for
 
 ---
 
-### lia.time.timeSince
+<details class="realm-shared">
+<summary><a id=lia.time.timeSince></a>lia.time.timeSince(strTime, "YYYY)</summary>
+<a id="liatimetimesince"></a>
+<p>Produce a localized "time since" string from a date stamp or Unix time.</p>
+<p>Anywhere UI or logs need relative time (e.g., last seen, ban info).</p>
+<p><h3>Parameters:</h3>
+<span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string|number</a></span> <span class="parameter">strTime</span> "YYYY-MM-DD" style date or Unix timestamp (seconds).</p>
+<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#2.2">unknown</a></span> <span class="parameter">"YYYY</span> MM-DD" style date or Unix timestamp (seconds).</p>
 
-#### 📋 Purpose
-Produce a localized "time since" string from a date stamp or Unix time.
+<p><h3>Returns:</h3>
+<span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a></span> Localized human-friendly delta (seconds/minutes/hours/days ago).</p>
 
-#### ⏰ When Called
-Anywhere UI or logs need relative time (e.g., last seen, ban info).
-
-#### ⚙️ Parameters
-
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `strTime` | **string|number** | "YYYY-MM-DD" style date or Unix timestamp (seconds). |
-| `"YYYY` | **unknown** | MM-DD" style date or Unix timestamp (seconds). |
-
-#### ↩️ Returns
-* string
-Localized human-friendly delta (seconds/minutes/hours/days ago).
-
-#### 🌐 Realm
-Shared
-
-#### 💡 Example Usage
-
-```lua
-    -- Build a rich status string for a ban record and a last-seen stamp.
+<h3>Example Usage:</h3>
+<pre><code class="language-lua">    -- Build a rich status string for a ban record and a last-seen stamp.
     local function formatBanStatus(ply)
         local lastSeen = lia.time.timeSince(ply:getNetVar("lastSeenAt"))
         local banStarted = lia.time.timeSince(ply:getNetVar("banStart"))
@@ -48,36 +36,24 @@ Shared
             chat.AddText(Color(200, 200, 50), ply:Name(), Color(180, 180, 180), " - ", status)
         end
     end)
-
-```
+</code></pre>
+</details>
 
 ---
 
-### lia.time.toNumber
+<details class="realm-shared">
+<summary><a id=lia.time.toNumber></a>lia.time.toNumber(str)</summary>
+<a id="liatimetonumber"></a>
+<p>Parse a date/time string in "YYYY-MM-DD HH:MM:SS" format into a numeric date table.</p>
+<p>When converting date strings to components for calculations or storage.</p>
+<p><h3>Parameters:</h3>
+<span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a></span> <span class="parameter">str</span> Date/time string in "YYYY-MM-DD HH:MM:SS" format. Defaults to current date/time if omitted.</p>
 
-#### 📋 Purpose
-Parse a date/time string in "YYYY-MM-DD HH:MM:SS" format into a numeric date table.
+<p><h3>Returns:</h3>
+<span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.5">table</a></span> Table containing numeric date components: {year, month, day, hour, min, sec}.</p>
 
-#### ⏰ When Called
-When converting date strings to components for calculations or storage.
-
-#### ⚙️ Parameters
-
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `str` | **string** | Date/time string in "YYYY-MM-DD HH:MM:SS" format. Defaults to current date/time if omitted. |
-
-#### ↩️ Returns
-* table
-Table containing numeric date components: {year, month, day, hour, min, sec}.
-
-#### 🌐 Realm
-Shared
-
-#### 💡 Example Usage
-
-```lua
-    -- Normalize a date string into a timestamp for storage.
+<h3>Example Usage:</h3>
+<pre><code class="language-lua">    -- Normalize a date string into a timestamp for storage.
     local function normalizeDate(inputStr)
         local parts = lia.time.toNumber(inputStr)
         if not parts.year then return nil end
@@ -92,30 +68,21 @@ Shared
         end
         lia.log.add(ply, "eventScheduled", os.date("%c", ts))
     end)
-
-```
+</code></pre>
+</details>
 
 ---
 
-### lia.time.getDate
+<details class="realm-shared">
+<summary><a id=lia.time.getDate></a>lia.time.getDate()</summary>
+<a id="liatimegetdate"></a>
+<p>Return the current date/time as a localized formatted string.</p>
+<p>For HUD clocks, chat timestamps, or admin panels showing server time.</p>
+<p><h3>Returns:</h3>
+<span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a></span> Localized date/time in 24h or American 12h format based on config.</p>
 
-#### 📋 Purpose
-Return the current date/time as a localized formatted string.
-
-#### ⏰ When Called
-For HUD clocks, chat timestamps, or admin panels showing server time.
-
-#### ↩️ Returns
-* string
-Localized date/time in 24h or American 12h format based on config.
-
-#### 🌐 Realm
-Shared
-
-#### 💡 Example Usage
-
-```lua
-    -- Display server time in a HUD corner, honoring American/24h format.
+<h3>Example Usage:</h3>
+<pre><code class="language-lua">    -- Display server time in a HUD corner, honoring American/24h format.
     hook.Add("HUDPaint", "DrawServerClock", function()
         local text = lia.time.getDate()
         surface.SetFont("liaSmallFont")
@@ -123,36 +90,24 @@ Shared
         draw.RoundedBox(4, ScrW() - w - 20, 16, w + 12, h + 8, Color(0, 0, 0, 170))
         draw.SimpleText(text, "liaSmallFont", ScrW() - 14, 20, color_white, TEXT_ALIGN_RIGHT)
     end)
-
-```
+</code></pre>
+</details>
 
 ---
 
-### lia.time.formatDHM
+<details class="realm-shared">
+<summary><a id=lia.time.formatDHM></a>lia.time.formatDHM(seconds)</summary>
+<a id="liatimeformatdhm"></a>
+<p>Format a duration into days, hours, and minutes.</p>
+<p>Cooldowns, jail timers, rental durations, or any long-running countdown.</p>
+<p><h3>Parameters:</h3>
+<span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.3">number</a></span> <span class="parameter">seconds</span> Duration in seconds.</p>
 
-#### 📋 Purpose
-Format a duration into days, hours, and minutes.
+<p><h3>Returns:</h3>
+<span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a></span> Localized `X days Y hours Z minutes`.</p>
 
-#### ⏰ When Called
-Cooldowns, jail timers, rental durations, or any long-running countdown.
-
-#### ⚙️ Parameters
-
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `seconds` | **number** | Duration in seconds. |
-
-#### ↩️ Returns
-* string
-Localized `X days Y hours Z minutes`.
-
-#### 🌐 Realm
-Shared
-
-#### 💡 Example Usage
-
-```lua
-    -- Show detention duration and remaining parole time in an admin panel.
+<h3>Example Usage:</h3>
+<pre><code class="language-lua">    -- Show detention duration and remaining parole time in an admin panel.
     local function buildDetentionRow(char)
         local remainingSeconds = math.max(char:getDetainTime() - os.time(), 0)
         local formatted = lia.time.formatDHM(remainingSeconds)
@@ -165,34 +120,25 @@ Shared
             end
         end
     end)
-
-```
+</code></pre>
+</details>
 
 ---
 
-### lia.time.getHour
+<details class="realm-shared">
+<summary><a id=lia.time.getHour></a>lia.time.getHour()</summary>
+<a id="liatimegethour"></a>
+<p>Get the current hour string honoring 12h/24h configuration.</p>
+<p>HUD clocks or schedule checks that need the current hour formatted.</p>
+<p><h3>Returns:</h3>
+<span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string|number</a></span> "12am/pm" string in American mode; numeric 0-23 otherwise.</p>
 
-#### 📋 Purpose
-Get the current hour string honoring 12h/24h configuration.
-
-#### ⏰ When Called
-HUD clocks or schedule checks that need the current hour formatted.
-
-#### ↩️ Returns
-* string|number
-"12am/pm" string in American mode; numeric 0-23 otherwise.
-
-#### 🌐 Realm
-Shared
-
-#### 💡 Example Usage
-
-```lua
-    -- Trigger different ambiance based on configured hour format and time.
+<h3>Example Usage:</h3>
+<pre><code class="language-lua">    -- Trigger different ambiance based on configured hour format and time.
     local function applyAmbientByHour()
         local hour = lia.time.getHour()
         local numericHour = tonumber(hour) or (tostring(hour):find("pm") and (tonumber(hour:match("%d+")) % 12) + 12 or tonumber(hour:match("%d+")) % 12)
-        if numericHour >= 20 or numericHour < 6 then
+        if numericHour &gt;= 20 or numericHour &lt; 6 then
             RunConsoleCommand("stopsound")
             surface.PlaySound("ambient/atmosphere/city_silent.wav")
         else
@@ -200,8 +146,8 @@ Shared
         end
     end
     hook.Add("InitPostEntity", "ApplyAmbientHourly", applyAmbientByHour)
-
-```
+</code></pre>
+</details>
 
 ---
 

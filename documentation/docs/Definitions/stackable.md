@@ -22,6 +22,7 @@ USAGE:
 
 ---
 
+<a id="name"></a>
 ### name
 
 #### 📋 Purpose
@@ -37,6 +38,7 @@ Sets the display name shown to players
 
 ---
 
+<a id="model"></a>
 ### model
 
 #### 📋 Purpose
@@ -52,6 +54,7 @@ Sets the 3D model used for the item
 
 ---
 
+<a id="width"></a>
 ### width
 
 #### 📋 Purpose
@@ -67,6 +70,7 @@ Sets the inventory width in slots
 
 ---
 
+<a id="height"></a>
 ### height
 
 #### 📋 Purpose
@@ -82,6 +86,7 @@ Sets the inventory height in slots
 
 ---
 
+<a id="isstackable"></a>
 ### isStackable
 
 #### 📋 Purpose
@@ -97,6 +102,7 @@ Enables stacking functionality for this item
 
 ---
 
+<a id="maxquantity"></a>
 ### maxQuantity
 
 #### 📋 Purpose
@@ -112,6 +118,7 @@ Sets the maximum quantity that can be stacked together
 
 ---
 
+<a id="cansplit"></a>
 ### canSplit
 
 #### 📋 Purpose

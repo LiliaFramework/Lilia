@@ -22,6 +22,7 @@ USAGE:
 
 ---
 
+<a id="name"></a>
 ### name
 
 #### 📋 Purpose
@@ -37,6 +38,7 @@ Sets the display name shown to players
 
 ---
 
+<a id="desc"></a>
 ### desc
 
 #### 📋 Purpose
@@ -52,6 +54,7 @@ Sets the description text shown to players
 
 ---
 
+<a id="category"></a>
 ### category
 
 #### 📋 Purpose
@@ -67,6 +70,7 @@ Sets the category for inventory sorting
 
 ---
 
+<a id="model"></a>
 ### model
 
 #### 📋 Purpose
@@ -82,6 +86,7 @@ Sets the 3D model used for the item
 
 ---
 
+<a id="width"></a>
 ### width
 
 #### 📋 Purpose
@@ -97,6 +102,7 @@ Sets the inventory width in slots
 
 ---
 
+<a id="height"></a>
 ### height
 
 #### 📋 Purpose
@@ -112,6 +118,7 @@ Sets the inventory height in slots
 
 ---
 
+<a id="outfitcategory"></a>
 ### outfitCategory
 
 #### 📋 Purpose
@@ -127,6 +134,7 @@ Sets the category to prevent conflicting outfits
 
 ---
 
+<a id="pacdata"></a>
 ### pacData
 
 #### 📋 Purpose
@@ -142,6 +150,7 @@ Defines PAC3 outfit data for visual effects
 
 ---
 
+<a id="isoutfit"></a>
 ### isOutfit
 
 #### 📋 Purpose
@@ -157,6 +166,7 @@ Marks this item as an outfit
 
 ---
 
+<a id="paintover"></a>
 ### paintOver
 
 #### 📋 Purpose
@@ -168,16 +178,10 @@ Called in function ITEM:paintOver
 #### 🌐 Realm
 Client
 
-#### ⚙️ Parameters
-
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `item` | **unknown** | The item instance being drawn |
-| `w` | **unknown** | Width of the item slot |
-| `h` | **unknown** | Height of the item slot |
-
-#### ↩️ Returns
-* nil
+<p><h3>Parameters:</h3>
+<span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#2.2">unknown</a></span> <span class="parameter">item</span> The item instance being drawn</p>
+<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#2.2">unknown</a></span> <span class="parameter">w</span> Width of the item slot</p>
+<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#2.2">unknown</a></span> <span class="parameter">h</span> Height of the item slot</p>
 
 #### 💡 Example Usage
 

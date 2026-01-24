@@ -6,6 +6,12 @@
     <div class="generator-section">
         <h3>Basic Information</h3>
         <div class="input-group">
+            <label for="item-id">Unique ID:</label>
+            <input type="text" id="item-id" placeholder="e.g., metal_scrap">
+            <small>Unique identifier for this item (no spaces, lowercase)</small>
+        </div>
+
+        <div class="input-group">
             <label for="item-name">Item Name:</label>
             <input type="text" id="item-name" placeholder="e.g., Metal Scrap">
         </div>
@@ -281,6 +287,7 @@ code {
 
 <script>
 function generateStackableItem() {
+    const uniqueId = (document.getElementById('item-id').value || '').trim() || 'stackable_example';
     const name = (document.getElementById('item-name').value || '').trim() || 'Stackable Item';
     const desc = (document.getElementById('item-desc').value || '').trim() || 'A stackable item description';
     const category = (document.getElementById('item-category').value || '').trim() || 'stackable';
@@ -290,21 +297,25 @@ function generateStackableItem() {
     const maxQuantity = document.getElementById('max-quantity').value || '10';
     const canSplit = document.getElementById('can-split').checked;
 
+    const properties = [
+        `    name = ${JSON.stringify(name)}`,
+        `    desc = ${JSON.stringify(desc)}`,
+        `    category = ${JSON.stringify(category)}`,
+        `    model = ${JSON.stringify(model)}`,
+        `    width = ${width}`,
+        `    height = ${height}`,
+        `    isStackable = true`,
+        `    maxQuantity = ${maxQuantity}`,
+        `    canSplit = ${canSplit ? 'true' : 'false'}`
+    ];
+
     const lines = [
-        '-- Copy and paste this code into your stackable item file',
-        '-- Example: gamemode/items/stackable/metal_scrap.lua',
+        '-- Copy and paste this code into any Lua file that loads during initialization',
+        '-- Example: gamemode/items/stackable.lua or gamemode/sh_items.lua',
         '',
-        `ITEM.name = ${JSON.stringify(name)}`,
-        `ITEM.desc = ${JSON.stringify(desc)}`,
-        `ITEM.category = ${JSON.stringify(category)}`,
-        '',
-        `ITEM.model = ${JSON.stringify(model)}`,
-        `ITEM.width = ${width}`,
-        `ITEM.height = ${height}`,
-        '',
-        'ITEM.isStackable = true',
-        `ITEM.maxQuantity = ${maxQuantity}`,
-        `ITEM.canSplit = ${canSplit ? 'true' : 'false'}`
+        `lia.item.registerItem(${JSON.stringify(uniqueId)}, "base_stackable", {`,
+        ...properties,
+        '})'
     ];
 
     const code = `${lines.join('\n')}\n`;

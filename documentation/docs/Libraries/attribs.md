@@ -10,102 +10,62 @@ The attributes library provides functionality for managing character attributes 
 
 ---
 
-### lia.attribs.loadFromDir
+<details class="realm-shared">
+<summary><a id=lia.attribs.loadFromDir></a>lia.attribs.loadFromDir(directory)</summary>
+<a id="liaattribsloadfromdir"></a>
+<p>Discover and include attribute definitions from a directory.</p>
+<p>During schema/gamemode startup to load all attribute files.</p>
+<p><h3>Parameters:</h3>
+<span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a></span> <span class="parameter">directory</span> Path containing attribute Lua files.</p>
 
-#### 📋 Purpose
-Discover and include attribute definitions from a directory.
-
-#### ⏰ When Called
-During schema/gamemode startup to load all attribute files.
-
-#### ⚙️ Parameters
-
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `directory` | **string** | Path containing attribute Lua files. |
-
-#### ↩️ Returns
-* nil
-
-#### 🌐 Realm
-Shared
-
-#### 💡 Example Usage
-
-```lua
-    -- Load default and custom attributes.
+<h3>Example Usage:</h3>
+<pre><code class="language-lua">    -- Load default and custom attributes.
     lia.attribs.loadFromDir(lia.plugin.getDir() .. "/attribs")
     lia.attribs.loadFromDir("schema/attribs")
-
-```
+</code></pre>
+</details>
 
 ---
 
-### lia.attribs.register
+<details class="realm-shared">
+<summary><a id=lia.attribs.register></a>lia.attribs.register(uniqueID, data)</summary>
+<a id="liaattribsregister"></a>
+<p>Register or update an attribute definition in the global list.</p>
+<p>After loading an attribute file or when hot-reloading attributes.</p>
+<p><h3>Parameters:</h3>
+<span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a></span> <span class="parameter">uniqueID</span> Attribute key.</p>
+<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.5">table</a></span> <span class="parameter">data</span> Fields like name, desc, OnSetup, setup, etc.</p>
 
-#### 📋 Purpose
-Register or update an attribute definition in the global list.
+<p><h3>Returns:</h3>
+<span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.5">table</a></span> The stored attribute table.</p>
 
-#### ⏰ When Called
-After loading an attribute file or when hot-reloading attributes.
-
-#### ⚙️ Parameters
-
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `uniqueID` | **string** | Attribute key. |
-| `data` | **table** | Fields like name, desc, OnSetup, setup, etc. |
-
-#### ↩️ Returns
-* table
-The stored attribute table.
-
-#### 🌐 Realm
-Shared
-
-#### 💡 Example Usage
-
-```lua
-    lia.attribs.register("strength", {
+<h3>Example Usage:</h3>
+<pre><code class="language-lua">    lia.attribs.register("strength", {
         name = "Strength",
         desc = "Improves melee damage and carry weight.",
         OnSetup = function(client, value)
             client:SetJumpPower(160 + value * 0.5)
         end
     })
-
-```
+</code></pre>
+</details>
 
 ---
 
-### lia.attribs.setup
+<details class="realm-server">
+<summary><a id=lia.attribs.setup></a>lia.attribs.setup(client)</summary>
+<a id="liaattribssetup"></a>
+<p>Run attribute setup logic for a character on the server.</p>
+<p>On player spawn/character load to reapply attribute effects.</p>
+<p><h3>Parameters:</h3>
+<span class="types"><a class="type" href="https://wiki.facepunch.com/gmod/Player">Player</a></span> <span class="parameter">client</span> Player whose character attributes are being applied.</p>
 
-#### 📋 Purpose
-Run attribute setup logic for a character on the server.
-
-#### ⏰ When Called
-On player spawn/character load to reapply attribute effects.
-
-#### ⚙️ Parameters
-
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `client` | **Player** | Player whose character attributes are being applied. |
-
-#### ↩️ Returns
-* nil
-
-#### 🌐 Realm
-Server
-
-#### 💡 Example Usage
-
-```lua
-    hook.Add("PlayerLoadedChar", "ApplyAttributeBonuses", function(ply)
+<h3>Example Usage:</h3>
+<pre><code class="language-lua">    hook.Add("PlayerLoadedChar", "ApplyAttributeBonuses", function(ply)
         lia.attribs.setup(ply)
     end)
-
-```
+</code></pre>
+</details>
 
 ---
 

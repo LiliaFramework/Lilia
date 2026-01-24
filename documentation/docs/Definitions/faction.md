@@ -54,6 +54,7 @@ classwhitelists to control which classes a character has access to within the fa
 
 ---
 
+<a id="name"></a>
 ### name
 
 #### 📋 Purpose
@@ -71,6 +72,7 @@ During faction definition
 
 ---
 
+<a id="desc"></a>
 ### desc
 
 #### 📋 Purpose
@@ -88,6 +90,7 @@ During faction definition
 
 ---
 
+<a id="color"></a>
 ### color
 
 #### 📋 Purpose
@@ -105,6 +108,7 @@ During faction definition
 
 ---
 
+<a id="models"></a>
 ### models
 
 #### 📋 Purpose
@@ -133,6 +137,7 @@ During faction definition
 
 ---
 
+<a id="weapons"></a>
 ### weapons
 
 #### 📋 Purpose
@@ -151,6 +156,7 @@ During faction definition (applied when player spawns)
 
 ---
 
+<a id="isdefault"></a>
 ### isDefault
 
 #### 📋 Purpose
@@ -169,6 +175,7 @@ During faction definition
 
 ---
 
+<a id="uniqueid"></a>
 ### uniqueID
 
 #### 📋 Purpose
@@ -196,6 +203,7 @@ Auto-Assignment: If not explicitly defined, the uniqueID is automatically set to
 
 ---
 
+<a id="index"></a>
 ### index
 
 #### 📋 Purpose
@@ -219,6 +227,7 @@ Set automatically during faction registration, or manually specified
 
 ---
 
+<a id="health"></a>
 ### health
 
 #### 📋 Purpose
@@ -236,6 +245,7 @@ During faction definition (applied when player joins faction)
 
 ---
 
+<a id="armor"></a>
 ### armor
 
 #### 📋 Purpose
@@ -253,6 +263,7 @@ During faction definition (applied when player joins faction)
 
 ---
 
+<a id="scale"></a>
 ### scale
 
 #### 📋 Purpose
@@ -270,6 +281,7 @@ During faction definition (applied when player joins faction)
 
 ---
 
+<a id="runspeed"></a>
 ### runSpeed
 
 #### 📋 Purpose
@@ -289,6 +301,7 @@ During faction definition (applied when player joins faction)
 
 ---
 
+<a id="walkspeed"></a>
 ### walkSpeed
 
 #### 📋 Purpose
@@ -308,6 +321,7 @@ During faction definition (applied when player joins faction)
 
 ---
 
+<a id="jumppower"></a>
 ### jumpPower
 
 #### 📋 Purpose
@@ -327,6 +341,7 @@ During faction definition (applied when player joins faction)
 
 ---
 
+<a id="npcrelations"></a>
 ### NPCRelations
 
 #### 📋 Purpose
@@ -347,6 +362,7 @@ During faction definition (applied when player joins faction)
 
 ---
 
+<a id="bloodcolor"></a>
 ### bloodcolor
 
 #### 📋 Purpose
@@ -365,6 +381,7 @@ During faction definition (applied when player joins faction)
 
 ---
 
+<a id="runspeedmultiplier"></a>
 ### runSpeedMultiplier
 
 #### 📋 Purpose
@@ -383,6 +400,7 @@ During faction definition (used with runSpeed property)
 
 ---
 
+<a id="walkspeedmultiplier"></a>
 ### walkSpeedMultiplier
 
 #### 📋 Purpose
@@ -401,6 +419,7 @@ During faction definition (used with walkSpeed property)
 
 ---
 
+<a id="jumppowermultiplier"></a>
 ### jumpPowerMultiplier
 
 #### 📋 Purpose
@@ -419,6 +438,7 @@ During faction definition (used with jumpPower property)
 
 ---
 
+<a id="items"></a>
 ### items
 
 #### 📋 Purpose
@@ -436,6 +456,7 @@ During faction definition (applied when character is created)
 
 ---
 
+<a id="onecharonly"></a>
 ### oneCharOnly
 
 #### 📋 Purpose
@@ -454,6 +475,7 @@ During faction definition
 
 ---
 
+<a id="limit"></a>
 ### limit
 
 #### 📋 Purpose
@@ -473,6 +495,7 @@ During faction definition
 
 ---
 
+<a id="pay"></a>
 ### pay
 
 #### 📋 Purpose
@@ -491,6 +514,27 @@ During faction definition
 
 ---
 
+<a id="paytimer"></a>
+### payTimer
+
+#### 📋 Purpose
+Sets the interval in seconds between paychecks for this faction
+
+#### ⏰ When Called
+During faction definition (used by salary timer system)
+
+#### 💡 Example Usage
+
+```lua
+    FACTION.payTimer = 600  -- Paychecks every 10 minutes (600 seconds)
+    FACTION.payTimer = 300  -- Paychecks every 5 minutes (300 seconds)
+    -- If not set, defaults to the global salary interval from config
+
+```
+
+---
+
+<a id="scoreboardhidden"></a>
 ### scoreboardHidden
 
 #### 📋 Purpose
@@ -509,6 +553,7 @@ During faction definition
 
 ---
 
+<a id="mainmenuposition"></a>
 ### mainMenuPosition
 
 #### 📋 Purpose
@@ -532,6 +577,7 @@ During faction definition (used by GM:GetMainMenuPosition)
 
 ---
 
+<a id="commands"></a>
 ### commands
 
 #### 📋 Purpose
@@ -551,6 +597,7 @@ During faction definition (evaluated by lia.command.hasAccess)
 
 ---
 
+<a id="recognizesglobally"></a>
 ### RecognizesGlobally
 
 #### 📋 Purpose
@@ -568,6 +615,7 @@ During faction definition (read by the recognition module)
 
 ---
 
+<a id="isgloballyrecognized"></a>
 ### isGloballyRecognized
 
 #### 📋 Purpose
@@ -585,6 +633,7 @@ During faction definition (evaluated in the recognition module)
 
 ---
 
+<a id="membertomemberautorecognition"></a>
 ### MemberToMemberAutoRecognition
 
 #### 📋 Purpose
@@ -602,6 +651,7 @@ During faction definition (part of the recognition checks)
 
 ---
 
+<a id="nametemplate"></a>
 ### NameTemplate
 
 #### 📋 Purpose
@@ -622,6 +672,7 @@ During faction definition
 
 ---
 
+<a id="getdefaultname"></a>
 ### GetDefaultName
 
 #### 📋 Purpose
@@ -641,6 +692,7 @@ During faction definition
 
 ---
 
+<a id="getdefaultdesc"></a>
 ### GetDefaultDesc
 
 #### 📋 Purpose
@@ -660,6 +712,7 @@ During faction definition
 
 ---
 
+<a id="onchecklimitreached"></a>
 ### OnCheckLimitReached
 
 #### 📋 Purpose
@@ -668,15 +721,12 @@ Custom callback to check if faction player limit is reached
 #### ⏰ When Called
 When a player tries to join a faction that might be at capacity
 
-#### ⚙️ Parameters
+<p><h3>Parameters:</h3>
+<span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#2.2">Character</a></span> <span class="parameter">character</span> The character trying to join</p>
+<p><span class="types"><a class="type" href="https://wiki.facepunch.com/gmod/Player">Player</a></span> <span class="parameter">client</span> The player whose character is joining</p>
 
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `character` | **Character** | The character trying to join |
-| `client` | **Player** | The player whose character is joining |
-
-#### ↩️ Returns
-* true if limit reached, false if not
+<p><h3>Returns:</h3>
+true if limit reached, false if not</p>
 
 #### 💡 Example Usage
 
@@ -696,6 +746,7 @@ When a player tries to join a faction that might be at capacity
 
 ---
 
+<a id="ontransferred"></a>
 ### OnTransferred
 
 #### 📋 Purpose
@@ -707,11 +758,8 @@ When a player changes factions and this becomes their new faction
 #### 🌐 Realm
 Server
 
-#### ⚙️ Parameters
-
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `client` | **Player** | The player transferring to this faction |
+<p><h3>Parameters:</h3>
+<span class="types"><a class="type" href="https://wiki.facepunch.com/gmod/Player">Player</a></span> <span class="parameter">client</span> The player transferring to this faction</p>
 
 #### 💡 Example Usage
 
@@ -726,6 +774,7 @@ Server
 
 ---
 
+<a id="onspawn"></a>
 ### OnSpawn
 
 #### 📋 Purpose
@@ -737,11 +786,8 @@ When a player spawns with this faction
 #### 🌐 Realm
 Server
 
-#### ⚙️ Parameters
-
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `client` | **Player** | The player spawning |
+<p><h3>Parameters:</h3>
+<span class="types"><a class="type" href="https://wiki.facepunch.com/gmod/Player">Player</a></span> <span class="parameter">client</span> The player spawning</p>
 
 #### 💡 Example Usage
 

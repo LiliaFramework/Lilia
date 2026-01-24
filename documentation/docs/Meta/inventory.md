@@ -10,1184 +10,683 @@ The inventory meta table provides comprehensive functionality for managing inven
 
 ---
 
-### getData
+<details class="realm-shared">
+<summary><a id=getData></a>getData(key, default)</summary>
+<a id="getdata"></a>
+<p>Retrieves a stored data value on the inventory.</p>
+<p>Use whenever reading custom inventory metadata.</p>
+<p><h3>Parameters:</h3>
+<span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a></span> <span class="parameter">key</span> Data key to read.</p>
+<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#2.2">any</a></span> <span class="parameter">default</span> Value returned when the key is missing.</p>
 
-#### 📋 Purpose
-Retrieves a stored data value on the inventory.
+<p><h3>Returns:</h3>
+<span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#2.2">any</a></span> Stored value or the provided default.</p>
 
-#### ⏰ When Called
-Use whenever reading custom inventory metadata.
-
-#### ⚙️ Parameters
-
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `key` | **string** | Data key to read. |
-| `default` | **any** | Value returned when the key is missing. |
-
-#### ↩️ Returns
-* any
-Stored value or the provided default.
-
-#### 🌐 Realm
-Shared
-
-#### 💡 Example Usage
-
-```lua
-    local owner = inv:getData("char")
-
-```
+<h3>Example Usage:</h3>
+<pre><code class="language-lua">    local owner = inv:getData("char")
+</code></pre>
+</details>
 
 ---
 
-### extend
+<details class="realm-shared">
+<summary><a id=extend></a>extend(className)</summary>
+<a id="extend"></a>
+<p>Creates a subclass of Inventory with its own metatable.</p>
+<p>Use when defining a new inventory type.</p>
+<p><h3>Parameters:</h3>
+<span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a></span> <span class="parameter">className</span> Registry name for the new subclass.</p>
 
-#### 📋 Purpose
-Creates a subclass of Inventory with its own metatable.
+<p><h3>Returns:</h3>
+<span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.5">table</a></span> Newly created subclass table.</p>
 
-#### ⏰ When Called
-Use when defining a new inventory type.
-
-#### ⚙️ Parameters
-
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `className` | **string** | Registry name for the new subclass. |
-
-#### ↩️ Returns
-* table
-Newly created subclass table.
-
-#### 🌐 Realm
-Shared
-
-#### 💡 Example Usage
-
-```lua
-    local Backpack = Inventory:extend("liaBackpack")
-
-```
+<h3>Example Usage:</h3>
+<pre><code class="language-lua">    local Backpack = Inventory:extend("liaBackpack")
+</code></pre>
+</details>
 
 ---
 
-### configure
-
-#### 📋 Purpose
-Sets up inventory defaults; meant to be overridden.
-
-#### ⏰ When Called
-Invoked during type registration to configure behavior.
-
-#### ↩️ Returns
-* nil
-
-#### 🌐 Realm
-Shared
-
-#### 💡 Example Usage
-
-```lua
-    function Inventory:configure() self.config.size = {4,4} end
-
-```
+<details class="realm-shared">
+<summary><a id=configure></a>configure()</summary>
+<a id="configure"></a>
+<p>Sets up inventory defaults; meant to be overridden.</p>
+<p>Invoked during type registration to configure behavior.</p>
+<h3>Example Usage:</h3>
+<pre><code class="language-lua">    function Inventory:configure() self.config.size = {4,4} end
+</code></pre>
+</details>
 
 ---
 
-### configure
-
-#### 📋 Purpose
-Sets up inventory defaults; meant to be overridden.
-
-#### ⏰ When Called
-Invoked during type registration to configure behavior.
-
-#### ↩️ Returns
-* nil
-
-#### 🌐 Realm
-Shared
-
-#### 💡 Example Usage
-
-```lua
-    function Inventory:configure() self.config.size = {4,4} end
-
-```
+<details class="realm-shared">
+<summary><a id=configure></a>configure()</summary>
+<a id="configure"></a>
+<p>Sets up inventory defaults; meant to be overridden.</p>
+<p>Invoked during type registration to configure behavior.</p>
+<h3>Example Usage:</h3>
+<pre><code class="language-lua">    function Inventory:configure() self.config.size = {4,4} end
+</code></pre>
+</details>
 
 ---
 
-### addDataProxy
+<details class="realm-shared">
+<summary><a id=addDataProxy></a>addDataProxy(key, onChange)</summary>
+<a id="adddataproxy"></a>
+<p>Registers a proxy callback for a specific data key.</p>
+<p>Use when you need to react to data changes.</p>
+<p><h3>Parameters:</h3>
+<span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a></span> <span class="parameter">key</span> Data key to watch.</p>
+<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.6">function</a></span> <span class="parameter">onChange</span> Callback receiving old and new values.</p>
 
-#### 📋 Purpose
-Registers a proxy callback for a specific data key.
-
-#### ⏰ When Called
-Use when you need to react to data changes.
-
-#### ⚙️ Parameters
-
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `key` | **string** | Data key to watch. |
-| `onChange` | **function** | Callback receiving old and new values. |
-
-#### ↩️ Returns
-* nil
-
-#### 🌐 Realm
-Shared
-
-#### 💡 Example Usage
-
-```lua
-    inv:addDataProxy("locked", function(o,n) end)
-
-```
+<h3>Example Usage:</h3>
+<pre><code class="language-lua">    inv:addDataProxy("locked", function(o,n) end)
+</code></pre>
+</details>
 
 ---
 
-### getItemsByUniqueID
+<details class="realm-shared">
+<summary><a id=getItemsByUniqueID></a>getItemsByUniqueID(uniqueID, onlyMain)</summary>
+<a id="getitemsbyuniqueid"></a>
+<p>Returns all items in the inventory matching a uniqueID.</p>
+<p>Use when finding all copies of a specific item type.</p>
+<p><h3>Parameters:</h3>
+<span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a></span> <span class="parameter">uniqueID</span> Item unique identifier.</p>
+<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.2">boolean</a></span> <span class="parameter">onlyMain</span> Restrict search to main inventory when true.</p>
 
-#### 📋 Purpose
-Returns all items in the inventory matching a uniqueID.
+<p><h3>Returns:</h3>
+<span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.5">table</a></span> Array of matching item instances.</p>
 
-#### ⏰ When Called
-Use when finding all copies of a specific item type.
-
-#### ⚙️ Parameters
-
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `uniqueID` | **string** | Item unique identifier. |
-| `onlyMain` | **boolean** | Restrict search to main inventory when true. |
-
-#### ↩️ Returns
-* table
-Array of matching item instances.
-
-#### 🌐 Realm
-Shared
-
-#### 💡 Example Usage
-
-```lua
-    local meds = inv:getItemsByUniqueID("medkit")
-
-```
+<h3>Example Usage:</h3>
+<pre><code class="language-lua">    local meds = inv:getItemsByUniqueID("medkit")
+</code></pre>
+</details>
 
 ---
 
-### register
+<details class="realm-shared">
+<summary><a id=register></a>register(typeID)</summary>
+<a id="register"></a>
+<p>Registers this inventory type with the system.</p>
+<p>Invoke once per subclass to set type ID and defaults.</p>
+<p><h3>Parameters:</h3>
+<span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a></span> <span class="parameter">typeID</span> Unique identifier for this inventory type.</p>
 
-#### 📋 Purpose
-Registers this inventory type with the system.
-
-#### ⏰ When Called
-Invoke once per subclass to set type ID and defaults.
-
-#### ⚙️ Parameters
-
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `typeID` | **string** | Unique identifier for this inventory type. |
-
-#### ↩️ Returns
-* nil
-
-#### 🌐 Realm
-Shared
-
-#### 💡 Example Usage
-
-```lua
-    Inventory:register("bag")
-
-```
+<h3>Example Usage:</h3>
+<pre><code class="language-lua">    Inventory:register("bag")
+</code></pre>
+</details>
 
 ---
 
-### new
+<details class="realm-shared">
+<summary><a id=new></a>new()</summary>
+<a id="new"></a>
+<p>Creates a new instance of this inventory type.</p>
+<p>Use when a character or container needs a fresh inventory.</p>
+<p><h3>Returns:</h3>
+<span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.5">table</a></span> Deferred inventory instance creation.</p>
 
-#### 📋 Purpose
-Creates a new instance of this inventory type.
-
-#### ⏰ When Called
-Use when a character or container needs a fresh inventory.
-
-#### ↩️ Returns
-* table
-Deferred inventory instance creation.
-
-#### 🌐 Realm
-Shared
-
-#### 💡 Example Usage
-
-```lua
-    local inv = Inventory:new()
-
-```
+<h3>Example Usage:</h3>
+<pre><code class="language-lua">    local inv = Inventory:new()
+</code></pre>
+</details>
 
 ---
 
-### tostring
+<details class="realm-shared">
+<summary><a id=tostring></a>tostring()</summary>
+<a id="tostring"></a>
+<p>Formats the inventory as a readable string with its ID.</p>
+<p>Use for logging or debugging output.</p>
+<p><h3>Returns:</h3>
+<span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a></span> Localized class name and ID.</p>
 
-#### 📋 Purpose
-Formats the inventory as a readable string with its ID.
-
-#### ⏰ When Called
-Use for logging or debugging output.
-
-#### ↩️ Returns
-* string
-Localized class name and ID.
-
-#### 🌐 Realm
-Shared
-
-#### 💡 Example Usage
-
-```lua
-    print(inv:tostring())
-
-```
+<h3>Example Usage:</h3>
+<pre><code class="language-lua">    print(inv:tostring())
+</code></pre>
+</details>
 
 ---
 
-### getType
+<details class="realm-shared">
+<summary><a id=getType></a>getType()</summary>
+<a id="gettype"></a>
+<p>Returns the inventory type definition table.</p>
+<p>Use when accessing type-level configuration.</p>
+<p><h3>Returns:</h3>
+<span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.5">table</a></span> Registered inventory type data.</p>
 
-#### 📋 Purpose
-Returns the inventory type definition table.
-
-#### ⏰ When Called
-Use when accessing type-level configuration.
-
-#### ↩️ Returns
-* table
-Registered inventory type data.
-
-#### 🌐 Realm
-Shared
-
-#### 💡 Example Usage
-
-```lua
-    local typeData = inv:getType()
-
-```
+<h3>Example Usage:</h3>
+<pre><code class="language-lua">    local typeData = inv:getType()
+</code></pre>
+</details>
 
 ---
 
-### onDataChanged
+<details class="realm-shared">
+<summary><a id=onDataChanged></a>onDataChanged(key, oldValue, newValue)</summary>
+<a id="ondatachanged"></a>
+<p>Fires proxy callbacks when a tracked data value changes.</p>
+<p>Internally after setData updates.</p>
+<p><h3>Parameters:</h3>
+<span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a></span> <span class="parameter">key</span> Data key that changed.</p>
+<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#2.2">any</a></span> <span class="parameter">oldValue</span> Previous value.</p>
+<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#2.2">any</a></span> <span class="parameter">newValue</span> New value.</p>
 
-#### 📋 Purpose
-Fires proxy callbacks when a tracked data value changes.
-
-#### ⏰ When Called
-Internally after setData updates.
-
-#### ⚙️ Parameters
-
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `key` | **string** | Data key that changed. |
-| `oldValue` | **any** | Previous value. |
-| `newValue` | **any** | New value. |
-
-#### ↩️ Returns
-* nil
-
-#### 🌐 Realm
-Shared
-
-#### 💡 Example Usage
-
-```lua
-    inv:onDataChanged("locked", false, true)
-
-```
+<h3>Example Usage:</h3>
+<pre><code class="language-lua">    inv:onDataChanged("locked", false, true)
+</code></pre>
+</details>
 
 ---
 
-### getItems
+<details class="realm-shared">
+<summary><a id=getItems></a>getItems()</summary>
+<a id="getitems"></a>
+<p>Returns the table of item instances in this inventory.</p>
+<p>Use when iterating all items.</p>
+<p><h3>Returns:</h3>
+<span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.5">table</a></span> Item instances keyed by item ID.</p>
 
-#### 📋 Purpose
-Returns the table of item instances in this inventory.
-
-#### ⏰ When Called
-Use when iterating all items.
-
-#### ↩️ Returns
-* table
-Item instances keyed by item ID.
-
-#### 🌐 Realm
-Shared
-
-#### 💡 Example Usage
-
-```lua
-    for id, itm in pairs(inv:getItems()) do end
-
-```
+<h3>Example Usage:</h3>
+<pre><code class="language-lua">    for id, itm in pairs(inv:getItems()) do end
+</code></pre>
+</details>
 
 ---
 
-### getItemsOfType
+<details class="realm-shared">
+<summary><a id=getItemsOfType></a>getItemsOfType(itemType)</summary>
+<a id="getitemsoftype"></a>
+<p>Collects items of a given type from the inventory.</p>
+<p>Use when filtering for a specific item uniqueID.</p>
+<p><h3>Parameters:</h3>
+<span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a></span> <span class="parameter">itemType</span> Unique item identifier to match.</p>
 
-#### 📋 Purpose
-Collects items of a given type from the inventory.
+<p><h3>Returns:</h3>
+<span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.5">table</a></span> Array of matching items.</p>
 
-#### ⏰ When Called
-Use when filtering for a specific item uniqueID.
-
-#### ⚙️ Parameters
-
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `itemType` | **string** | Unique item identifier to match. |
-
-#### ↩️ Returns
-* table
-Array of matching items.
-
-#### 🌐 Realm
-Shared
-
-#### 💡 Example Usage
-
-```lua
-    local foods = inv:getItemsOfType("food")
-
-```
+<h3>Example Usage:</h3>
+<pre><code class="language-lua">    local foods = inv:getItemsOfType("food")
+</code></pre>
+</details>
 
 ---
 
-### getFirstItemOfType
+<details class="realm-shared">
+<summary><a id=getFirstItemOfType></a>getFirstItemOfType(itemType)</summary>
+<a id="getfirstitemoftype"></a>
+<p>Returns the first item matching a uniqueID.</p>
+<p>Use when only one instance of a type is needed.</p>
+<p><h3>Parameters:</h3>
+<span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a></span> <span class="parameter">itemType</span> Unique item identifier to find.</p>
 
-#### 📋 Purpose
-Returns the first item matching a uniqueID.
+<p><h3>Returns:</h3>
+<span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.5">table|nil</a></span> Item instance or nil if none found.</p>
 
-#### ⏰ When Called
-Use when only one instance of a type is needed.
-
-#### ⚙️ Parameters
-
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `itemType` | **string** | Unique item identifier to find. |
-
-#### ↩️ Returns
-* table|nil
-Item instance or nil if none found.
-
-#### 🌐 Realm
-Shared
-
-#### 💡 Example Usage
-
-```lua
-    local gun = inv:getFirstItemOfType("pistol")
-
-```
+<h3>Example Usage:</h3>
+<pre><code class="language-lua">    local gun = inv:getFirstItemOfType("pistol")
+</code></pre>
+</details>
 
 ---
 
-### hasItem
+<details class="realm-shared">
+<summary><a id=hasItem></a>hasItem(itemType)</summary>
+<a id="hasitem"></a>
+<p>Checks whether the inventory contains an item type.</p>
+<p>Use before consuming or requiring an item.</p>
+<p><h3>Parameters:</h3>
+<span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a></span> <span class="parameter">itemType</span> Unique item identifier to check.</p>
 
-#### 📋 Purpose
-Checks whether the inventory contains an item type.
+<p><h3>Returns:</h3>
+<span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.2">boolean</a></span> True if at least one matching item exists.</p>
 
-#### ⏰ When Called
-Use before consuming or requiring an item.
-
-#### ⚙️ Parameters
-
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `itemType` | **string** | Unique item identifier to check. |
-
-#### ↩️ Returns
-* boolean
-True if at least one matching item exists.
-
-#### 🌐 Realm
-Shared
-
-#### 💡 Example Usage
-
-```lua
-    if inv:hasItem("keycard") then unlock() end
-
-```
+<h3>Example Usage:</h3>
+<pre><code class="language-lua">    if inv:hasItem("keycard") then unlock() end
+</code></pre>
+</details>
 
 ---
 
-### getItemCount
+<details class="realm-shared">
+<summary><a id=getItemCount></a>getItemCount(itemType)</summary>
+<a id="getitemcount"></a>
+<p>Counts items, optionally filtering by uniqueID.</p>
+<p>Use for capacity checks or UI badge counts.</p>
+<p><h3>Parameters:</h3>
+<span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a></span> <span class="parameter">itemType</span> <span class="optional">optional</span> Unique ID to filter by; nil counts all.</p>
 
-#### 📋 Purpose
-Counts items, optionally filtering by uniqueID.
+<p><h3>Returns:</h3>
+<span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.3">number</a></span> Total quantity of matching items.</p>
 
-#### ⏰ When Called
-Use for capacity checks or UI badge counts.
-
-#### ⚙️ Parameters
-
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `itemType` | **string|nil** | Unique ID to filter by; nil counts all. |
-
-#### ↩️ Returns
-* number
-Total quantity of matching items.
-
-#### 🌐 Realm
-Shared
-
-#### 💡 Example Usage
-
-```lua
-    local ammoCount = inv:getItemCount("ammo")
-
-```
+<h3>Example Usage:</h3>
+<pre><code class="language-lua">    local ammoCount = inv:getItemCount("ammo")
+</code></pre>
+</details>
 
 ---
 
-### getID
+<details class="realm-shared">
+<summary><a id=getID></a>getID()</summary>
+<a id="getid"></a>
+<p>Returns the numeric identifier for this inventory.</p>
+<p>Use when networking, saving, or comparing inventories.</p>
+<p><h3>Returns:</h3>
+<span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.3">number</a></span> Inventory ID.</p>
 
-#### 📋 Purpose
-Returns the numeric identifier for this inventory.
-
-#### ⏰ When Called
-Use when networking, saving, or comparing inventories.
-
-#### ↩️ Returns
-* number
-Inventory ID.
-
-#### 🌐 Realm
-Shared
-
-#### 💡 Example Usage
-
-```lua
-    local id = inv:getID()
-
-```
+<h3>Example Usage:</h3>
+<pre><code class="language-lua">    local id = inv:getID()
+</code></pre>
+</details>
 
 ---
 
-### addItem
+<details class="realm-server">
+<summary><a id=addItem></a>addItem(item, noReplicate)</summary>
+<a id="additem"></a>
+<p>Inserts an item into this inventory and persists its invID.</p>
+<p>Use when adding an item to the inventory on the server.</p>
+<p><h3>Parameters:</h3>
+<span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#2.2">Item</a></span> <span class="parameter">item</span> Item instance to add.</p>
+<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.2">boolean</a></span> <span class="parameter">noReplicate</span> Skip replication hooks when true.</p>
 
-#### 📋 Purpose
-Inserts an item into this inventory and persists its invID.
+<p><h3>Returns:</h3>
+<span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#2.2">Inventory</a></span> The inventory for chaining.</p>
 
-#### ⏰ When Called
-Use when adding an item to the inventory on the server.
-
-#### ⚙️ Parameters
-
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `item` | **Item** | Item instance to add. |
-| `noReplicate` | **boolean** | Skip replication hooks when true. |
-
-#### ↩️ Returns
-* Inventory
-The inventory for chaining.
-
-#### 🌐 Realm
-Server
-
-#### 💡 Example Usage
-
-```lua
-    inv:addItem(item)
-
-```
+<h3>Example Usage:</h3>
+<pre><code class="language-lua">    inv:addItem(item)
+</code></pre>
+</details>
 
 ---
 
-### add
+<details class="realm-server">
+<summary><a id=add></a>add(item)</summary>
+<a id="add"></a>
+<p>Alias to addItem for convenience.</p>
+<p>Use wherever you would call addItem.</p>
+<p><h3>Parameters:</h3>
+<span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#2.2">Item</a></span> <span class="parameter">item</span> Item instance to add.</p>
 
-#### 📋 Purpose
-Alias to addItem for convenience.
+<p><h3>Returns:</h3>
+<span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#2.2">Inventory</a></span> The inventory for chaining.</p>
 
-#### ⏰ When Called
-Use wherever you would call addItem.
-
-#### ⚙️ Parameters
-
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `item` | **Item** | Item instance to add. |
-
-#### ↩️ Returns
-* Inventory
-The inventory for chaining.
-
-#### 🌐 Realm
-Server
-
-#### 💡 Example Usage
-
-```lua
-    inv:add(item)
-
-```
+<h3>Example Usage:</h3>
+<pre><code class="language-lua">    inv:add(item)
+</code></pre>
+</details>
 
 ---
 
-### syncItemAdded
+<details class="realm-server">
+<summary><a id=syncItemAdded></a>syncItemAdded(item)</summary>
+<a id="syncitemadded"></a>
+<p>Notifies clients about an item newly added to this inventory.</p>
+<p>Invoked after addItem to replicate state.</p>
+<p><h3>Parameters:</h3>
+<span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#2.2">Item</a></span> <span class="parameter">item</span> Item instance already inserted.</p>
 
-#### 📋 Purpose
-Notifies clients about an item newly added to this inventory.
-
-#### ⏰ When Called
-Invoked after addItem to replicate state.
-
-#### ⚙️ Parameters
-
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `item` | **Item** | Item instance already inserted. |
-
-#### ↩️ Returns
-* nil
-
-#### 🌐 Realm
-Server
-
-#### 💡 Example Usage
-
-```lua
-    inv:syncItemAdded(item)
-
-```
+<h3>Example Usage:</h3>
+<pre><code class="language-lua">    inv:syncItemAdded(item)
+</code></pre>
+</details>
 
 ---
 
-### initializeStorage
+<details class="realm-server">
+<summary><a id=initializeStorage></a>initializeStorage(initialData)</summary>
+<a id="initializestorage"></a>
+<p>Creates a database record for a new inventory and its data.</p>
+<p>Use during initial inventory creation.</p>
+<p><h3>Parameters:</h3>
+<span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.5">table</a></span> <span class="parameter">initialData</span> Key/value pairs to seed invdata rows; may include char.</p>
 
-#### 📋 Purpose
-Creates a database record for a new inventory and its data.
+<p><h3>Returns:</h3>
+<span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#2.2">Promise</a></span> Resolves with new inventory ID.</p>
 
-#### ⏰ When Called
-Use during initial inventory creation.
-
-#### ⚙️ Parameters
-
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `initialData` | **table** | Key/value pairs to seed invdata rows; may include char. |
-
-#### ↩️ Returns
-* Promise
-Resolves with new inventory ID.
-
-#### 🌐 Realm
-Server
-
-#### 💡 Example Usage
-
-```lua
-    inv:initializeStorage({char = charID})
-
-```
+<h3>Example Usage:</h3>
+<pre><code class="language-lua">    inv:initializeStorage({char = charID})
+</code></pre>
+</details>
 
 ---
 
-### restoreFromStorage
-
-#### 📋 Purpose
-Hook for restoring inventory data from storage.
-
-#### ⏰ When Called
-Override to load custom data during restoration.
-
-#### ↩️ Returns
-* nil
-
-#### 🌐 Realm
-Server
-
-#### 💡 Example Usage
-
-```lua
-    function Inventory:restoreFromStorage() end
-
-```
+<details class="realm-server">
+<summary><a id=restoreFromStorage></a>restoreFromStorage()</summary>
+<a id="restorefromstorage"></a>
+<p>Hook for restoring inventory data from storage.</p>
+<p>Override to load custom data during restoration.</p>
+<h3>Example Usage:</h3>
+<pre><code class="language-lua">    function Inventory:restoreFromStorage() end
+</code></pre>
+</details>
 
 ---
 
-### restoreFromStorage
-
-#### 📋 Purpose
-Hook for restoring inventory data from storage.
-
-#### ⏰ When Called
-Override to load custom data during restoration.
-
-#### ↩️ Returns
-* nil
-
-#### 🌐 Realm
-Server
-
-#### 💡 Example Usage
-
-```lua
-    function Inventory:restoreFromStorage() end
-
-```
+<details class="realm-server">
+<summary><a id=restoreFromStorage></a>restoreFromStorage()</summary>
+<a id="restorefromstorage"></a>
+<p>Hook for restoring inventory data from storage.</p>
+<p>Override to load custom data during restoration.</p>
+<h3>Example Usage:</h3>
+<pre><code class="language-lua">    function Inventory:restoreFromStorage() end
+</code></pre>
+</details>
 
 ---
 
-### removeItem
+<details class="realm-server">
+<summary><a id=removeItem></a>removeItem(itemID, preserveItem)</summary>
+<a id="removeitem"></a>
+<p>Removes an item from this inventory and updates clients/DB.</p>
+<p>Use when deleting or moving items out of the inventory.</p>
+<p><h3>Parameters:</h3>
+<span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.3">number</a></span> <span class="parameter">itemID</span> ID of the item to remove.</p>
+<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.2">boolean</a></span> <span class="parameter">preserveItem</span> Keep the instance and DB row when true.</p>
 
-#### 📋 Purpose
-Removes an item from this inventory and updates clients/DB.
+<p><h3>Returns:</h3>
+<span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#2.2">Promise</a></span> Resolves after removal finishes.</p>
 
-#### ⏰ When Called
-Use when deleting or moving items out of the inventory.
-
-#### ⚙️ Parameters
-
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `itemID` | **number** | ID of the item to remove. |
-| `preserveItem` | **boolean** | Keep the instance and DB row when true. |
-
-#### ↩️ Returns
-* Promise
-Resolves after removal finishes.
-
-#### 🌐 Realm
-Server
-
-#### 💡 Example Usage
-
-```lua
-    inv:removeItem(itemID)
-
-```
+<h3>Example Usage:</h3>
+<pre><code class="language-lua">    inv:removeItem(itemID)
+</code></pre>
+</details>
 
 ---
 
-### remove
+<details class="realm-server">
+<summary><a id=remove></a>remove(itemID)</summary>
+<a id="remove"></a>
+<p>Alias for removeItem.</p>
+<p>Use interchangeably with removeItem.</p>
+<p><h3>Parameters:</h3>
+<span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.3">number</a></span> <span class="parameter">itemID</span> ID of the item to remove.</p>
 
-#### 📋 Purpose
-Alias for removeItem.
+<p><h3>Returns:</h3>
+<span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#2.2">Promise</a></span> Resolves after removal.</p>
 
-#### ⏰ When Called
-Use interchangeably with removeItem.
-
-#### ⚙️ Parameters
-
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `itemID` | **number** | ID of the item to remove. |
-
-#### ↩️ Returns
-* Promise
-Resolves after removal.
-
-#### 🌐 Realm
-Server
-
-#### 💡 Example Usage
-
-```lua
-    inv:remove(id)
-
-```
+<h3>Example Usage:</h3>
+<pre><code class="language-lua">    inv:remove(id)
+</code></pre>
+</details>
 
 ---
 
-### setData
+<details class="realm-server">
+<summary><a id=setData></a>setData(key, value)</summary>
+<a id="setdata"></a>
+<p>Updates inventory data, persists it, and notifies listeners.</p>
+<p>Use to change stored metadata such as character assignment.</p>
+<p><h3>Parameters:</h3>
+<span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a></span> <span class="parameter">key</span> Data key to set.</p>
+<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#2.2">any</a></span> <span class="parameter">value</span> New value or nil to delete.</p>
 
-#### 📋 Purpose
-Updates inventory data, persists it, and notifies listeners.
+<p><h3>Returns:</h3>
+<span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#2.2">Inventory</a></span> The inventory for chaining.</p>
 
-#### ⏰ When Called
-Use to change stored metadata such as character assignment.
-
-#### ⚙️ Parameters
-
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `key` | **string** | Data key to set. |
-| `value` | **any** | New value or nil to delete. |
-
-#### ↩️ Returns
-* Inventory
-The inventory for chaining.
-
-#### 🌐 Realm
-Server
-
-#### 💡 Example Usage
-
-```lua
-    inv:setData("locked", true)
-
-```
+<h3>Example Usage:</h3>
+<pre><code class="language-lua">    inv:setData("locked", true)
+</code></pre>
+</details>
 
 ---
 
-### canAccess
+<details class="realm-server">
+<summary><a id=canAccess></a>canAccess(action, context)</summary>
+<a id="canaccess"></a>
+<p>Evaluates access rules for a given action context.</p>
+<p>Use before allowing inventory interactions.</p>
+<p><h3>Parameters:</h3>
+<span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a></span> <span class="parameter">action</span> Action name (e.g., "repl", "transfer").</p>
+<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.5">table</a></span> <span class="parameter">context</span> Additional data such as client.</p>
 
-#### 📋 Purpose
-Evaluates access rules for a given action context.
+<p><h3>Returns:</h3>
+boolean|nil, string|nil Decision and optional reason if a rule handled it.</p>
 
-#### ⏰ When Called
-Use before allowing inventory interactions.
-
-#### ⚙️ Parameters
-
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `action` | **string** | Action name (e.g., "repl", "transfer"). |
-| `context` | **table** | Additional data such as client. |
-
-#### ↩️ Returns
-* boolean|nil, string|nil
-Decision and optional reason if a rule handled it.
-
-#### 🌐 Realm
-Server
-
-#### 💡 Example Usage
-
-```lua
-    local ok = inv:canAccess("repl", {client = ply})
-
-```
+<h3>Example Usage:</h3>
+<pre><code class="language-lua">    local ok = inv:canAccess("repl", {client = ply})
+</code></pre>
+</details>
 
 ---
 
-### addAccessRule
+<details class="realm-server">
+<summary><a id=addAccessRule></a>addAccessRule(rule, priority)</summary>
+<a id="addaccessrule"></a>
+<p>Inserts an access rule into the rule list.</p>
+<p>Use when configuring permissions for this inventory type.</p>
+<p><h3>Parameters:</h3>
+<span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.6">function</a></span> <span class="parameter">rule</span> Function returning decision and reason.</p>
+<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.3">number</a></span> <span class="parameter">priority</span> <span class="optional">optional</span> Optional insert position.</p>
 
-#### 📋 Purpose
-Inserts an access rule into the rule list.
+<p><h3>Returns:</h3>
+<span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#2.2">Inventory</a></span> The inventory for chaining.</p>
 
-#### ⏰ When Called
-Use when configuring permissions for this inventory type.
-
-#### ⚙️ Parameters
-
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `rule` | **function** | Function returning decision and reason. |
-| `priority` | **number|nil** | Optional insert position. |
-
-#### ↩️ Returns
-* Inventory
-The inventory for chaining.
-
-#### 🌐 Realm
-Server
-
-#### 💡 Example Usage
-
-```lua
-    inv:addAccessRule(myRule, 1)
-
-```
+<h3>Example Usage:</h3>
+<pre><code class="language-lua">    inv:addAccessRule(myRule, 1)
+</code></pre>
+</details>
 
 ---
 
-### removeAccessRule
+<details class="realm-server">
+<summary><a id=removeAccessRule></a>removeAccessRule(rule)</summary>
+<a id="removeaccessrule"></a>
+<p>Removes a previously added access rule.</p>
+<p>Use when unregistering dynamic permission logic.</p>
+<p><h3>Parameters:</h3>
+<span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.6">function</a></span> <span class="parameter">rule</span> The rule function to remove.</p>
 
-#### 📋 Purpose
-Removes a previously added access rule.
+<p><h3>Returns:</h3>
+<span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#2.2">Inventory</a></span> The inventory for chaining.</p>
 
-#### ⏰ When Called
-Use when unregistering dynamic permission logic.
-
-#### ⚙️ Parameters
-
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `rule` | **function** | The rule function to remove. |
-
-#### ↩️ Returns
-* Inventory
-The inventory for chaining.
-
-#### 🌐 Realm
-Server
-
-#### 💡 Example Usage
-
-```lua
-    inv:removeAccessRule(myRule)
-
-```
+<h3>Example Usage:</h3>
+<pre><code class="language-lua">    inv:removeAccessRule(myRule)
+</code></pre>
+</details>
 
 ---
 
-### getRecipients
+<details class="realm-server">
+<summary><a id=getRecipients></a>getRecipients()</summary>
+<a id="getrecipients"></a>
+<p>Determines which players should receive inventory replication.</p>
+<p>Use before sending inventory data to clients.</p>
+<p><h3>Returns:</h3>
+<span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.5">table</a></span> List of player recipients allowed by access rules.</p>
 
-#### 📋 Purpose
-Determines which players should receive inventory replication.
-
-#### ⏰ When Called
-Use before sending inventory data to clients.
-
-#### ↩️ Returns
-* table
-List of player recipients allowed by access rules.
-
-#### 🌐 Realm
-Server
-
-#### 💡 Example Usage
-
-```lua
-    local recips = inv:getRecipients()
-
-```
+<h3>Example Usage:</h3>
+<pre><code class="language-lua">    local recips = inv:getRecipients()
+</code></pre>
+</details>
 
 ---
 
-### onInstanced
-
-#### 📋 Purpose
-Hook called when an inventory instance is created.
-
-#### ⏰ When Called
-Override to perform custom initialization.
-
-#### ↩️ Returns
-* nil
-
-#### 🌐 Realm
-Server
-
-#### 💡 Example Usage
-
-```lua
-    function Inventory:onInstanced() end
-
-```
+<details class="realm-server">
+<summary><a id=onInstanced></a>onInstanced()</summary>
+<a id="oninstanced"></a>
+<p>Hook called when an inventory instance is created.</p>
+<p>Override to perform custom initialization.</p>
+<h3>Example Usage:</h3>
+<pre><code class="language-lua">    function Inventory:onInstanced() end
+</code></pre>
+</details>
 
 ---
 
-### onInstanced
-
-#### 📋 Purpose
-Hook called when an inventory instance is created.
-
-#### ⏰ When Called
-Override to perform custom initialization.
-
-#### ↩️ Returns
-* nil
-
-#### 🌐 Realm
-Server
-
-#### 💡 Example Usage
-
-```lua
-    function Inventory:onInstanced() end
-
-```
+<details class="realm-server">
+<summary><a id=onInstanced></a>onInstanced()</summary>
+<a id="oninstanced"></a>
+<p>Hook called when an inventory instance is created.</p>
+<p>Override to perform custom initialization.</p>
+<h3>Example Usage:</h3>
+<pre><code class="language-lua">    function Inventory:onInstanced() end
+</code></pre>
+</details>
 
 ---
 
-### onLoaded
-
-#### 📋 Purpose
-Hook called after inventory data is loaded.
-
-#### ⏰ When Called
-Override to react once storage data is retrieved.
-
-#### ↩️ Returns
-* nil
-
-#### 🌐 Realm
-Server
-
-#### 💡 Example Usage
-
-```lua
-    function Inventory:onLoaded() end
-
-```
+<details class="realm-server">
+<summary><a id=onLoaded></a>onLoaded()</summary>
+<a id="onloaded"></a>
+<p>Hook called after inventory data is loaded.</p>
+<p>Override to react once storage data is retrieved.</p>
+<h3>Example Usage:</h3>
+<pre><code class="language-lua">    function Inventory:onLoaded() end
+</code></pre>
+</details>
 
 ---
 
-### onLoaded
-
-#### 📋 Purpose
-Hook called after inventory data is loaded.
-
-#### ⏰ When Called
-Override to react once storage data is retrieved.
-
-#### ↩️ Returns
-* nil
-
-#### 🌐 Realm
-Server
-
-#### 💡 Example Usage
-
-```lua
-    function Inventory:onLoaded() end
-
-```
+<details class="realm-server">
+<summary><a id=onLoaded></a>onLoaded()</summary>
+<a id="onloaded"></a>
+<p>Hook called after inventory data is loaded.</p>
+<p>Override to react once storage data is retrieved.</p>
+<h3>Example Usage:</h3>
+<pre><code class="language-lua">    function Inventory:onLoaded() end
+</code></pre>
+</details>
 
 ---
 
-### loadItems
+<details class="realm-server">
+<summary><a id=loadItems></a>loadItems()</summary>
+<a id="loaditems"></a>
+<p>Loads item instances from the database into this inventory.</p>
+<p>Use during inventory initialization to restore contents.</p>
+<p><h3>Returns:</h3>
+<span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#2.2">Promise</a></span> Resolves with the loaded items table.</p>
 
-#### 📋 Purpose
-Loads item instances from the database into this inventory.
-
-#### ⏰ When Called
-Use during inventory initialization to restore contents.
-
-#### ↩️ Returns
-* Promise
-Resolves with the loaded items table.
-
-#### 🌐 Realm
-Server
-
-#### 💡 Example Usage
-
-```lua
-    inv:loadItems():next(function(items) end)
-
-```
+<h3>Example Usage:</h3>
+<pre><code class="language-lua">    inv:loadItems():next(function(items) end)
+</code></pre>
+</details>
 
 ---
 
-### onItemsLoaded
+<details class="realm-server">
+<summary><a id=onItemsLoaded></a>onItemsLoaded(items)</summary>
+<a id="onitemsloaded"></a>
+<p>Hook called after items are loaded into the inventory.</p>
+<p>Override to run logic after contents are ready.</p>
+<p><h3>Parameters:</h3>
+<span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.5">table</a></span> <span class="parameter">items</span> Loaded items table.</p>
 
-#### 📋 Purpose
-Hook called after items are loaded into the inventory.
-
-#### ⏰ When Called
-Override to run logic after contents are ready.
-
-#### ⚙️ Parameters
-
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `items` | **table** | Loaded items table. |
-
-#### ↩️ Returns
-* nil
-
-#### 🌐 Realm
-Server
-
-#### 💡 Example Usage
-
-```lua
-    function Inventory:onItemsLoaded(items) end
-
-```
+<h3>Example Usage:</h3>
+<pre><code class="language-lua">    function Inventory:onItemsLoaded(items) end
+</code></pre>
+</details>
 
 ---
 
-### onItemsLoaded
+<details class="realm-server">
+<summary><a id=onItemsLoaded></a>onItemsLoaded(items)</summary>
+<a id="onitemsloaded"></a>
+<p>Hook called after items are loaded into the inventory.</p>
+<p>Override to run logic after contents are ready.</p>
+<p><h3>Parameters:</h3>
+<span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.5">table</a></span> <span class="parameter">items</span> Loaded items table.</p>
 
-#### 📋 Purpose
-Hook called after items are loaded into the inventory.
-
-#### ⏰ When Called
-Override to run logic after contents are ready.
-
-#### ⚙️ Parameters
-
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `items` | **table** | Loaded items table. |
-
-#### ↩️ Returns
-* nil
-
-#### 🌐 Realm
-Server
-
-#### 💡 Example Usage
-
-```lua
-    function Inventory:onItemsLoaded(items) end
-
-```
+<h3>Example Usage:</h3>
+<pre><code class="language-lua">    function Inventory:onItemsLoaded(items) end
+</code></pre>
+</details>
 
 ---
 
-### instance
+<details class="realm-server">
+<summary><a id=instance></a>instance(initialData)</summary>
+<a id="instance"></a>
+<p>Creates and registers an inventory instance with initial data.</p>
+<p>Use to instantiate a server-side inventory of this type.</p>
+<p><h3>Parameters:</h3>
+<span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.5">table</a></span> <span class="parameter">initialData</span> Data used during creation (e.g., char assignment).</p>
 
-#### 📋 Purpose
-Creates and registers an inventory instance with initial data.
+<p><h3>Returns:</h3>
+<span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#2.2">Promise</a></span> Resolves with the new inventory instance.</p>
 
-#### ⏰ When Called
-Use to instantiate a server-side inventory of this type.
-
-#### ⚙️ Parameters
-
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `initialData` | **table** | Data used during creation (e.g., char assignment). |
-
-#### ↩️ Returns
-* Promise
-Resolves with the new inventory instance.
-
-#### 🌐 Realm
-Server
-
-#### 💡 Example Usage
-
-```lua
-    Inventory:instance({char = charID})
-
-```
+<h3>Example Usage:</h3>
+<pre><code class="language-lua">    Inventory:instance({char = charID})
+</code></pre>
+</details>
 
 ---
 
-### syncData
+<details class="realm-server">
+<summary><a id=syncData></a>syncData(key, recipients)</summary>
+<a id="syncdata"></a>
+<p>Sends a single inventory data key to recipients.</p>
+<p>Use after setData to replicate a specific field.</p>
+<p><h3>Parameters:</h3>
+<span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a></span> <span class="parameter">key</span> Data key to send.</p>
+<p><span class="types"><a class="type" href="https://wiki.facepunch.com/gmod/Player">Player|table</a></span> <span class="parameter">recipients</span> <span class="optional">optional</span> Targets to notify; defaults to recipients with access.</p>
 
-#### 📋 Purpose
-Sends a single inventory data key to recipients.
-
-#### ⏰ When Called
-Use after setData to replicate a specific field.
-
-#### ⚙️ Parameters
-
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `key` | **string** | Data key to send. |
-| `recipients` | **Player|table|nil** | Targets to notify; defaults to recipients with access. |
-
-#### ↩️ Returns
-* nil
-
-#### 🌐 Realm
-Server
-
-#### 💡 Example Usage
-
-```lua
-    inv:syncData("locked")
-
-```
+<h3>Example Usage:</h3>
+<pre><code class="language-lua">    inv:syncData("locked")
+</code></pre>
+</details>
 
 ---
 
-### sync
+<details class="realm-server">
+<summary><a id=sync></a>sync(recipients)</summary>
+<a id="sync"></a>
+<p>Sends full inventory state and contained items to recipients.</p>
+<p>Use when initializing or resyncing an inventory for clients.</p>
+<p><h3>Parameters:</h3>
+<span class="types"><a class="type" href="https://wiki.facepunch.com/gmod/Player">Player|table</a></span> <span class="parameter">recipients</span> <span class="optional">optional</span> Targets to receive the update; defaults to access list.</p>
 
-#### 📋 Purpose
-Sends full inventory state and contained items to recipients.
-
-#### ⏰ When Called
-Use when initializing or resyncing an inventory for clients.
-
-#### ⚙️ Parameters
-
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `recipients` | **Player|table|nil** | Targets to receive the update; defaults to access list. |
-
-#### ↩️ Returns
-* nil
-
-#### 🌐 Realm
-Server
-
-#### 💡 Example Usage
-
-```lua
-    inv:sync(ply)
-
-```
+<h3>Example Usage:</h3>
+<pre><code class="language-lua">    inv:sync(ply)
+</code></pre>
+</details>
 
 ---
 
-### delete
-
-#### 📋 Purpose
-Deletes this inventory via the inventory manager.
-
-#### ⏰ When Called
-Use when permanently removing an inventory record.
-
-#### ↩️ Returns
-* nil
-
-#### 🌐 Realm
-Server
-
-#### 💡 Example Usage
-
-```lua
-    inv:delete()
-
-```
+<details class="realm-server">
+<summary><a id=delete></a>delete()</summary>
+<a id="delete"></a>
+<p>Deletes this inventory via the inventory manager.</p>
+<p>Use when permanently removing an inventory record.</p>
+<h3>Example Usage:</h3>
+<pre><code class="language-lua">    inv:delete()
+</code></pre>
+</details>
 
 ---
 
-### destroy
-
-#### 📋 Purpose
-Clears inventory items, removes it from cache, and notifies clients.
-
-#### ⏰ When Called
-Use when unloading or destroying an inventory instance.
-
-#### ↩️ Returns
-* nil
-
-#### 🌐 Realm
-Server
-
-#### 💡 Example Usage
-
-```lua
-    inv:destroy()
-
-```
+<details class="realm-server">
+<summary><a id=destroy></a>destroy()</summary>
+<a id="destroy"></a>
+<p>Clears inventory items, removes it from cache, and notifies clients.</p>
+<p>Use when unloading or destroying an inventory instance.</p>
+<h3>Example Usage:</h3>
+<pre><code class="language-lua">    inv:destroy()
+</code></pre>
+</details>
 
 ---
 
-### show
+<details class="realm-client">
+<summary><a id=show></a>show(parent)</summary>
+<a id="show"></a>
+<p>Opens the inventory UI on the client.</p>
+<p>Use to display this inventory to the player.</p>
+<p><h3>Parameters:</h3>
+<span class="types"><a class="type" href="https://wiki.facepunch.com/gmod/Panel">Panel</a></span> <span class="parameter">parent</span> Optional parent panel.</p>
 
-#### 📋 Purpose
-Opens the inventory UI on the client.
+<p><h3>Returns:</h3>
+<span class="types"><a class="type" href="https://wiki.facepunch.com/gmod/Panel">Panel</a></span> The created inventory panel.</p>
 
-#### ⏰ When Called
-Use to display this inventory to the player.
-
-#### ⚙️ Parameters
-
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `parent` | **Panel** | Optional parent panel. |
-
-#### ↩️ Returns
-* Panel
-The created inventory panel.
-
-#### 🌐 Realm
-Client
-
-#### 💡 Example Usage
-
-```lua
-    inv:show()
-
-```
+<h3>Example Usage:</h3>
+<pre><code class="language-lua">    inv:show()
+</code></pre>
+</details>
 
 ---
 

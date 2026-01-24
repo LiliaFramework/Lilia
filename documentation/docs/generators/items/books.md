@@ -6,6 +6,12 @@
     <div class="generator-section">
         <h3>Basic Information</h3>
         <div class="input-group">
+            <label for="item-id">Unique ID:</label>
+            <input type="text" id="item-id" placeholder="e.g., skill_book_guns">
+            <small>Unique identifier for this item (no spaces, lowercase)</small>
+        </div>
+
+        <div class="input-group">
             <label for="item-name">Item Name:</label>
             <input type="text" id="item-name" placeholder="e.g., Skill Book: Guns">
         </div>
@@ -299,6 +305,7 @@ code {
 
 <script>
 function generateBooksItem() {
+    const uniqueId = (document.getElementById('item-id').value || '').trim() || 'book_example';
     const name = (document.getElementById('item-name').value || '').trim() || 'Book Item';
     const desc = (document.getElementById('item-desc').value || '').trim() || 'A readable book item';
     const category = (document.getElementById('item-category').value || '').trim() || 'books';
@@ -312,31 +319,33 @@ function generateBooksItem() {
     const contentsRaw = document.getElementById('book-contents').value;
     const contents = contentsRaw && contentsRaw.trim() ? contentsRaw.trim() : '<p>Add book contents here.</p>';
 
-    const lines = [
-        '-- Copy and paste this code into your books item file',
-        '-- Example: gamemode/items/books/skill_book_guns.lua',
-        '',
-        `ITEM.name = ${JSON.stringify(name)}`,
-        `ITEM.desc = ${JSON.stringify(desc)}`,
-        `ITEM.category = ${JSON.stringify(category)}`,
-        '',
-        `ITEM.model = ${JSON.stringify(model)}`,
-        `ITEM.width = ${width}`,
-        `ITEM.height = ${height}`,
-        '',
-        `ITEM.contents = ${JSON.stringify(contents)}`,
-        `ITEM.readTime = ${readTime}`
+    let properties = [
+        `    name = ${JSON.stringify(name)}`,
+        `    desc = ${JSON.stringify(desc)}`,
+        `    category = ${JSON.stringify(category)}`,
+        `    model = ${JSON.stringify(model)}`,
+        `    width = ${width}`,
+        `    height = ${height}`,
+        `    contents = ${JSON.stringify(contents)}`,
+        `    readTime = ${readTime}`,
+        `    singleUse = ${singleUse ? 'true' : 'false'}`
     ];
 
     if (skillRequired && skillValue) {
-        lines.push(
-            '',
-            `ITEM.skillRequired = ${JSON.stringify(skillRequired)}`,
-            `ITEM.skillValue = ${skillValue}`
+        properties.push(
+            `    skillRequired = ${JSON.stringify(skillRequired)}`,
+            `    skillValue = ${skillValue}`
         );
     }
 
-    lines.push('', `ITEM.singleUse = ${singleUse ? 'true' : 'false'}`);
+    const lines = [
+        '-- Copy and paste this code into any Lua file that loads during initialization',
+        '-- Example: gamemode/items/books.lua or gamemode/sh_items.lua',
+        '',
+        `lia.item.registerItem(${JSON.stringify(uniqueId)}, "base_books", {`,
+        ...properties,
+        '})'
+    ];
 
     const code = `${lines.join('\n')}\n`;
 

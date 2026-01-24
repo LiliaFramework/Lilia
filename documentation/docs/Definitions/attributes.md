@@ -10,6 +10,7 @@ The attribute system provides functionality for defining character attributes wi
 
 ---
 
+<a id="name"></a>
 ### name
 
 #### 📋 Purpose
@@ -27,6 +28,7 @@ During attribute definition
 
 ---
 
+<a id="desc"></a>
 ### desc
 
 #### 📋 Purpose
@@ -44,6 +46,7 @@ During attribute definition
 
 ---
 
+<a id="maxvalue"></a>
 ### maxValue
 
 #### 📋 Purpose
@@ -61,6 +64,7 @@ During attribute definition (used by GetAttributeMax hook)
 
 ---
 
+<a id="startingmax"></a>
 ### startingMax
 
 #### 📋 Purpose
@@ -78,6 +82,7 @@ During attribute definition (used by GetAttributeStartingMax hook)
 
 ---
 
+<a id="nostartbonus"></a>
 ### noStartBonus
 
 #### 📋 Purpose
@@ -95,6 +100,7 @@ During attribute definition (checked in character creation UI)
 
 ---
 
+<a id="onsetup"></a>
 ### OnSetup
 
 #### 📋 Purpose
@@ -106,15 +112,12 @@ When a character spawns or when their attributes are initialized
 #### 🌐 Realm
 Server
 
-#### ⚙️ Parameters
+<p><h3>Parameters:</h3>
+<span class="types"><a class="type" href="https://wiki.facepunch.com/gmod/Player">Player</a></span> <span class="parameter">client</span> The client whose character is being set up</p>
+<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.3">number</a></span> <span class="parameter">value</span> The current attribute value</p>
 
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `client` | **Player** | The client whose character is being set up |
-| `value` | **number** | The current attribute value |
-
-#### ↩️ Returns
-* None
+<p><h3>Returns:</h3>
+<span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#2.2">None</a></span></p>
 
 #### 💡 Example Usage
 

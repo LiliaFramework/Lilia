@@ -6,6 +6,12 @@
     <div class="generator-section">
         <h3>Basic Information</h3>
         <div class="input-group">
+            <label for="item-id">Unique ID:</label>
+            <input type="text" id="item-id" placeholder="e.g., frag_grenade">
+            <small>Unique identifier for this item (no spaces, lowercase)</small>
+        </div>
+
+        <div class="input-group">
             <label for="item-name">Item Name:</label>
             <input type="text" id="item-name" placeholder="e.g., Frag Grenade">
         </div>
@@ -293,6 +299,7 @@ code {
 
 <script>
 function generateGrenadeItem() {
+    const uniqueId = (document.getElementById('item-id').value || '').trim() || 'grenade_example';
     const name = (document.getElementById('item-name').value || '').trim() || 'Grenade Item';
     const desc = (document.getElementById('item-desc').value || '').trim() || 'An explosive grenade item';
     const category = (document.getElementById('item-category').value || '').trim() || 'explosives';
@@ -304,26 +311,30 @@ function generateGrenadeItem() {
     const throwSound = document.getElementById('throw-sound').value.trim();
     const dropOnDeath = document.getElementById('drop-on-death').checked;
 
-    const lines = [
-        '-- Copy and paste this code into your grenade item file',
-        '-- Example: gamemode/items/grenade/frag_grenade.lua',
-        '',
-        `ITEM.name = ${JSON.stringify(name)}`,
-        `ITEM.desc = ${JSON.stringify(desc)}`,
-        `ITEM.category = ${JSON.stringify(category)}`,
-        '',
-        `ITEM.model = ${JSON.stringify(model)}`,
-        `ITEM.width = ${width}`,
-        `ITEM.height = ${height}`,
-        '',
-        `ITEM.class = ${JSON.stringify(weaponClass)}`,
-        `ITEM.DropOnDeath = ${dropOnDeath ? 'true' : 'false'}`,
-        `ITEM.throwForce = ${throwForce}`
+    let properties = [
+        `    name = ${JSON.stringify(name)}`,
+        `    desc = ${JSON.stringify(desc)}`,
+        `    category = ${JSON.stringify(category)}`,
+        `    model = ${JSON.stringify(model)}`,
+        `    width = ${width}`,
+        `    height = ${height}`,
+        `    class = ${JSON.stringify(weaponClass)}`,
+        `    DropOnDeath = ${dropOnDeath ? 'true' : 'false'}`,
+        `    throwForce = ${throwForce}`
     ];
 
     if (throwSound) {
-        lines.push('', `ITEM.throwSound = ${JSON.stringify(throwSound)}`);
+        properties.push(`    throwSound = ${JSON.stringify(throwSound)}`);
     }
+
+    const lines = [
+        '-- Copy and paste this code into any Lua file that loads during initialization',
+        '-- Example: gamemode/items/grenade.lua or gamemode/sh_items.lua',
+        '',
+        `lia.item.registerItem(${JSON.stringify(uniqueId)}, "base_grenade", {`,
+        ...properties,
+        '})'
+    ];
 
     const code = `${lines.join('\n')}\n`;
 

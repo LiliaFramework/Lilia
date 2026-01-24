@@ -1,6 +1,6 @@
 # Item Generators
 
-Interactive tools to help you quickly generate Lilia item definitions for different item types.
+Interactive tools to help you quickly generate Lilia item definitions for different item types using `lia.item.registerItem()` for programmatic item registration.
 
 ---
 
@@ -34,25 +34,32 @@ Generate readable book item definitions with skill requirements and reading mech
 1. **Choose an item type** from the list above based on what you want to create
 2. **Fill out the form fields** with your desired item properties
 3. **Click the generate button** to create the Lua code
-4. **Copy the generated code** and paste it into the appropriate file in your gamemode
+4. **Copy the generated code** and paste it into any Lua file that loads during gamemode initialization
 5. **Save and restart** your server for the changes to take effect
 
 ## Directory Structure
 
-After generating your code, place the files in these directories:
+After generating your code, place the code in any Lua file that loads during initialization:
 
-- **Weapons**: `gamemode/items/weapons/item_name.lua`
-- **Stackable**: `gamemode/items/stackable/item_name.lua`
-- **Ammo**: `gamemode/items/ammo/item_name.lua`
-- **Aid**: `gamemode/items/aid/item_name.lua`
-- **Outfit**: `gamemode/items/outfit/item_name.lua`
+- **Recommended locations**:
+  - `gamemode/sh_items.lua` (shared items file)
+  - `gamemode/items/init.lua` (items initialization file)
+  - Any existing items file in your gamemode
+
+- **Alternative approach**: You can organize items by type in separate files:
+  - `gamemode/items/weapons.lua`
+  - `gamemode/items/stackable.lua`
+  - `gamemode/items/ammo.lua`
+  - `gamemode/items/aid.lua`
+  - `gamemode/items/outfit.lua`
 
 ## Tips
 
 - **Start with basics** - Weapons and aid items are great for new servers
-- **Use consistent naming** - Keep file names descriptive and lowercase with underscores
+- **Use consistent naming** - Keep unique IDs descriptive and lowercase with underscores
 - **Test inventory space** - Different item sizes affect how they fit in player inventories
 - **Balance values** - Consider your server's economy and gameplay balance
+- **Organize your code** - Group related items together in logical files for easier maintenance
 
 ---
 

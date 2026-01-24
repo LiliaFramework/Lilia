@@ -10,65 +10,39 @@ The commands library provides comprehensive functionality for managing and execu
 
 ---
 
-### lia.command.buildSyntaxFromArguments
+<details class="realm-shared">
+<summary><a id=lia.command.buildSyntaxFromArguments></a>lia.command.buildSyntaxFromArguments(args)</summary>
+<a id="liacommandbuildsyntaxfromarguments"></a>
+<p>Generate a human-readable syntax string from a list of argument definitions.</p>
+<p>During command registration to populate data.syntax for menus and help text.</p>
+<p><h3>Parameters:</h3>
+<span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.5">table</a></span> <span class="parameter">args</span> Array of argument tables {name=, type=, optional=}.</p>
 
-#### 📋 Purpose
-Generate a human-readable syntax string from a list of argument definitions.
+<p><h3>Returns:</h3>
+<span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a></span> Concatenated syntax tokens describing the command arguments.</p>
 
-#### ⏰ When Called
-During command registration to populate data.syntax for menus and help text.
-
-#### ⚙️ Parameters
-
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `args` | **table** | Array of argument tables {name=, type=, optional=}. |
-
-#### ↩️ Returns
-* string
-Concatenated syntax tokens describing the command arguments.
-
-#### 🌐 Realm
-Shared
-
-#### 💡 Example Usage
-
-```lua
-    local syntax = lia.command.buildSyntaxFromArguments({
+<h3>Example Usage:</h3>
+<pre><code class="language-lua">    local syntax = lia.command.buildSyntaxFromArguments({
         {name = "target", type = "player"},
         {name = "amount", type = "number", optional = true}
     })
     -- "[player target] [string amount optional]"
-
-```
+</code></pre>
+</details>
 
 ---
 
-### lia.command.add
+<details class="realm-shared">
+<summary><a id=lia.command.add></a>lia.command.add(command, data)</summary>
+<a id="liacommandadd"></a>
+<p>Register a command and normalize its metadata, syntax, privileges, aliases, and callbacks.</p>
+<p>During schema or module initialization to expose new chat/console commands.</p>
+<p><h3>Parameters:</h3>
+<span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a></span> <span class="parameter">command</span> Unique command key.</p>
+<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.5">table</a></span> <span class="parameter">data</span> Command definition (arguments, desc, privilege, superAdminOnly, adminOnly, alias, onRun, onCheckAccess, etc.).</p>
 
-#### 📋 Purpose
-Register a command and normalize its metadata, syntax, privileges, aliases, and callbacks.
-
-#### ⏰ When Called
-During schema or module initialization to expose new chat/console commands.
-
-#### ⚙️ Parameters
-
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `command` | **string** | Unique command key. |
-| `data` | **table** | Command definition (arguments, desc, privilege, superAdminOnly, adminOnly, alias, onRun, onCheckAccess, etc.). |
-
-#### ↩️ Returns
-* nil
-
-#### 🌐 Realm
-Shared
-
-#### 💡 Example Usage
-
-```lua
-    lia.command.add("bring", {
+<h3>Example Usage:</h3>
+<pre><code class="language-lua">    lia.command.add("bring", {
         desc = "Bring a player to you.",
         adminOnly = true,
         arguments = {
@@ -79,200 +53,122 @@ Shared
             if IsValid(target) then target:SetPos(client:GetPos() + client:GetForward() * 50) end
         end
     })
-
-```
+</code></pre>
+</details>
 
 ---
 
-### lia.command.hasAccess
+<details class="realm-shared">
+<summary><a id=lia.command.hasAccess></a>lia.command.hasAccess(client, command, data)</summary>
+<a id="liacommandhasaccess"></a>
+<p>Determine whether a client may run a command based on privileges, hooks, faction/class access, and custom checks.</p>
+<p>Before executing a command or showing it in help menus.</p>
+<p><h3>Parameters:</h3>
+<span class="types"><a class="type" href="https://wiki.facepunch.com/gmod/Player">Player</a></span> <span class="parameter">client</span> Player requesting access.</p>
+<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a></span> <span class="parameter">command</span> Command name to check.</p>
+<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.5">table</a></span> <span class="parameter">data</span> <span class="optional">optional</span> Command definition; looked up from lia.command.list when nil.</p>
 
-#### 📋 Purpose
-Determine whether a client may run a command based on privileges, hooks, faction/class access, and custom checks.
+<p><h3>Returns:</h3>
+boolean, string allowed result and privilege name for UI/feedback.</p>
 
-#### ⏰ When Called
-Before executing a command or showing it in help menus.
-
-#### ⚙️ Parameters
-
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `client` | **Player** | Player requesting access. |
-| `command` | **string** | Command name to check. |
-| `data` | **table|nil** | Command definition; looked up from lia.command.list when nil. |
-
-#### ↩️ Returns
-* boolean, string
-allowed result and privilege name for UI/feedback.
-
-#### 🌐 Realm
-Shared
-
-#### 💡 Example Usage
-
-```lua
-    local canUse, priv = lia.command.hasAccess(ply, "bring")
+<h3>Example Usage:</h3>
+<pre><code class="language-lua">    local canUse, priv = lia.command.hasAccess(ply, "bring")
     if not canUse then ply:notifyErrorLocalized("noPerm") end
-
-```
+</code></pre>
+</details>
 
 ---
 
-### lia.command.extractArgs
+<details class="realm-shared">
+<summary><a id=lia.command.extractArgs></a>lia.command.extractArgs(text)</summary>
+<a id="liacommandextractargs"></a>
+<p>Split a raw command string into arguments while preserving quoted segments.</p>
+<p>When parsing chat-entered commands before validation or prompting.</p>
+<p><h3>Parameters:</h3>
+<span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a></span> <span class="parameter">text</span> Raw command text excluding the leading slash.</p>
 
-#### 📋 Purpose
-Split a raw command string into arguments while preserving quoted segments.
+<p><h3>Returns:</h3>
+<span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.5">table</a></span> Array of parsed arguments.</p>
 
-#### ⏰ When Called
-When parsing chat-entered commands before validation or prompting.
-
-#### ⚙️ Parameters
-
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `text` | **string** | Raw command text excluding the leading slash. |
-
-#### ↩️ Returns
-* table
-Array of parsed arguments.
-
-#### 🌐 Realm
-Shared
-
-#### 💡 Example Usage
-
-```lua
-    local args = lia.command.extractArgs("'John Doe' 250")
+<h3>Example Usage:</h3>
+<pre><code class="language-lua">    local args = lia.command.extractArgs("'John Doe' 250")
     -- {"John Doe", "250"}
-
-```
-
----
-
-### lia.command.run
-
-#### 📋 Purpose
-Execute a registered command for a given client with arguments and emit post-run hooks.
-
-#### ⏰ When Called
-After parsing chat input or console invocation server-side.
-
-#### ⚙️ Parameters
-
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `client` | **Player|nil** | Player that issued the command (nil when run from server console). |
-| `command` | **string** | Command key to execute. |
-| `arguments` | **table|nil** | Parsed command arguments. |
-
-#### ↩️ Returns
-* nil
-
-#### 🌐 Realm
-Server
-
-#### 💡 Example Usage
-
-```lua
-    lia.command.run(ply, "bring", {targetSteamID})
-
-```
+</code></pre>
+</details>
 
 ---
 
-### lia.command.parse
+<details class="realm-server">
+<summary><a id=lia.command.run></a>lia.command.run(client, command, arguments)</summary>
+<a id="liacommandrun"></a>
+<p>Execute a registered command for a given client with arguments and emit post-run hooks.</p>
+<p>After parsing chat input or console invocation server-side.</p>
+<p><h3>Parameters:</h3>
+<span class="types"><a class="type" href="https://wiki.facepunch.com/gmod/Player">Player</a></span> <span class="parameter">client</span> <span class="optional">optional</span> Player that issued the command (nil when run from server console).</p>
+<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a></span> <span class="parameter">command</span> Command key to execute.</p>
+<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.5">table</a></span> <span class="parameter">arguments</span> <span class="optional">optional</span> Parsed command arguments.</p>
 
-#### 📋 Purpose
-Parse chat text into a command invocation, prompt for missing args, and dispatch authorized commands.
+<h3>Example Usage:</h3>
+<pre><code class="language-lua">    lia.command.run(ply, "bring", {targetSteamID})
+</code></pre>
+</details>
 
-#### ⏰ When Called
-On the server when a player sends chat starting with '/' or when manually dispatching a command.
+---
 
-#### ⚙️ Parameters
+<details class="realm-server">
+<summary><a id=lia.command.parse></a>lia.command.parse(client, text, realCommand, arguments, Pre, Pre)</summary>
+<a id="liacommandparse"></a>
+<p>Parse chat text into a command invocation, prompt for missing args, and dispatch authorized commands.</p>
+<p>On the server when a player sends chat starting with '/' or when manually dispatching a command.</p>
+<p><h3>Parameters:</h3>
+<span class="types"><a class="type" href="https://wiki.facepunch.com/gmod/Player">Player</a></span> <span class="parameter">client</span> Player whose chat is being parsed.</p>
+<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a></span> <span class="parameter">text</span> Full chat text.</p>
+<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a></span> <span class="parameter">realCommand</span> <span class="optional">optional</span> Command key when bypassing parsing (used by net/message dispatch).</p>
+<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.5">table</a></span> <span class="parameter">arguments</span> <span class="optional">optional</span> Pre-parsed arguments; when nil they are derived from text.</p>
+<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#2.2">unknown</a></span> <span class="parameter">Pre</span> parsed arguments; when nil they are derived from text.</p>
+<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#2.2">unknown</a></span> <span class="parameter">Pre</span> parsed arguments; when nil they are derived from text.</p>
 
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `client` | **Player** | Player whose chat is being parsed. |
-| `text` | **string** | Full chat text. |
-| `realCommand` | **string|nil** | Command key when bypassing parsing (used by net/message dispatch). |
-| `arguments` | **table|nil** | Pre-parsed arguments; when nil they are derived from text. |
-| `Pre` | **unknown** | parsed arguments; when nil they are derived from text. |
-| `Pre` | **unknown** | parsed arguments; when nil they are derived from text. |
+<p><h3>Returns:</h3>
+<span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.2">boolean</a></span> true if the text was handled as a command.</p>
 
-#### ↩️ Returns
-* boolean
-true if the text was handled as a command.
-
-#### 🌐 Realm
-Server
-
-#### 💡 Example Usage
-
-```lua
-    hook.Add("PlayerSay", "liaChatCommands", function(ply, text)
+<h3>Example Usage:</h3>
+<pre><code class="language-lua">    hook.Add("PlayerSay", "liaChatCommands", function(ply, text)
         if lia.command.parse(ply, text) then return "" end
     end)
-
-```
-
----
-
-### lia.command.openArgumentPrompt
-
-#### 📋 Purpose
-Display a clientside UI prompt for missing command arguments and send the completed command back through chat.
-
-#### ⏰ When Called
-After the server requests argument completion via the liaCmdArgPrompt net message.
-
-#### ⚙️ Parameters
-
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `cmdKey` | **string** | Command key being completed. |
-| `missing` | **table** | Names of missing arguments. |
-| `prefix` | **table|nil** | Prefilled argument values. |
-
-#### ↩️ Returns
-* nil
-
-#### 🌐 Realm
-Client
-
-#### 💡 Example Usage
-
-```lua
-    lia.command.openArgumentPrompt("pm", {"target", "message"}, {"steamid"})
-
-```
+</code></pre>
+</details>
 
 ---
 
-### lia.command.send
+<details class="realm-client">
+<summary><a id=lia.command.openArgumentPrompt></a>lia.command.openArgumentPrompt(cmdKey, missing, prefix)</summary>
+<a id="liacommandopenargumentprompt"></a>
+<p>Display a clientside UI prompt for missing command arguments and send the completed command back through chat.</p>
+<p>After the server requests argument completion via the liaCmdArgPrompt net message.</p>
+<p><h3>Parameters:</h3>
+<span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a></span> <span class="parameter">cmdKey</span> Command key being completed.</p>
+<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.5">table</a></span> <span class="parameter">missing</span> Names of missing arguments.</p>
+<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.5">table</a></span> <span class="parameter">prefix</span> <span class="optional">optional</span> Prefilled argument values.</p>
 
-#### 📋 Purpose
-Send a command invocation to the server via net as a clientside helper.
+<h3>Example Usage:</h3>
+<pre><code class="language-lua">    lia.command.openArgumentPrompt("pm", {"target", "message"}, {"steamid"})
+</code></pre>
+</details>
 
-#### ⏰ When Called
-From UI elements or client logic instead of issuing chat/console commands directly.
+---
 
-#### ⚙️ Parameters
+<details class="realm-client">
+<summary><a id=lia.command.send></a>lia.command.send(command)</summary>
+<a id="liacommandsend"></a>
+<p>Send a command invocation to the server via net as a clientside helper.</p>
+<p>From UI elements or client logic instead of issuing chat/console commands directly.</p>
+<p><h3>Parameters:</h3>
+<span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a></span> <span class="parameter">command</span> Command key to invoke.</p>
 
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `command` | **string** | Command key to invoke. |
-
-#### ↩️ Returns
-* nil
-
-#### 🌐 Realm
-Client
-
-#### 💡 Example Usage
-
-```lua
-    lia.command.send("respawn", LocalPlayer():SteamID())
-
-```
+<h3>Example Usage:</h3>
+<pre><code class="language-lua">    lia.command.send("respawn", LocalPlayer():SteamID())
+</code></pre>
+</details>
 
 ---
 

@@ -95,6 +95,12 @@
             <input type="number" id="pay" placeholder="0" min="0">
             <small>Currency amount per paycheck</small>
         </div>
+
+        <div class="input-group">
+            <label for="pay-timer">Pay Timer (seconds):</label>
+            <input type="number" id="pay-timer" placeholder="300" min="1">
+            <small>Interval in seconds between paychecks (defaults to global salary interval if not set)</small>
+        </div>
     </div>
 
     <div class="generator-section">
@@ -387,6 +393,7 @@ function generateFaction() {
     const jumpPower = document.getElementById('jump-power').value || '200';
     const jumpPowerMultiplier = document.getElementById('jump-power-multiplier').checked;
     const pay = document.getElementById('pay').value || '0';
+    const payTimer = document.getElementById('pay-timer').value || '';
 
     const weapons = document.getElementById('weapons').value.split('\n').filter(w => w.trim());
     const startingItems = document.getElementById('starting-items').value.split('\n').filter(i => i.trim());
@@ -433,6 +440,9 @@ function generateFaction() {
     if (jumpPowerMultiplier) lines.push('FACTION.jumpPowerMultiplier = true');
 
     lines.push(`FACTION.pay = ${pay}`);
+    if (payTimer) {
+        lines.push(`FACTION.payTimer = ${payTimer}`);
+    }
 
     if (weapons.length > 0) {
         lines.push('', '-- Weapons', 'FACTION.weapons = {');
