@@ -1,4 +1,4 @@
-﻿--[[
+--[[
     Folder: Definitions
     File:  faction.md
 ]]
@@ -455,6 +455,56 @@ FACTION.payTimer = nil
 FACTION.scoreboardHidden = false
 --[[
     Purpose:
+        Sets the logo material path for this faction displayed in the scoreboard
+
+    When Called:
+        During faction definition (used by scoreboard UI)
+
+    Example Usage:
+        ```lua
+        FACTION.logo = "materials/ui/faction/police_logo.png"
+        FACTION.logo = ""  -- No logo (default)
+        ```
+]]
+FACTION.logo = ""
+--[[
+    Purpose:
+        Sets the priority order for this faction in the scoreboard display (lower numbers appear first)
+
+    When Called:
+        During faction definition (used by scoreboard sorting)
+
+    Example Usage:
+        ```lua
+        FACTION.scoreboardPriority = 1  -- Appears first in scoreboard
+        FACTION.scoreboardPriority = 10  -- Appears later
+        FACTION.scoreboardPriority = 999  -- Default priority if not set
+        ```
+]]
+FACTION.scoreboardPriority = 999
+--[[
+    Purpose:
+        Defines custom spawn points for this faction, organized by map name
+
+    When Called:
+        During faction definition (used by spawn system)
+
+    Example Usage:
+        ```lua
+        FACTION.spawns = {
+            gm_construct = {
+                {position = Vector(100, 200, 0), angle = Angle(0, 90, 0)},
+                {position = Vector(200, 300, 0), angle = Angle(0, 180, 0)}
+            },
+            gm_flatgrass = {
+                {position = Vector(0, 0, 0), angle = Angle(0, 0, 0)}
+            }
+        }
+        ```
+]]
+FACTION.spawns = nil
+--[[
+    Purpose:
         Overrides the main menu position for characters in this faction
 
     When Called:
@@ -627,20 +677,28 @@ end
     Parameters:
         client (Player)
             The player transferring to this faction
+        oldFaction (number, optional)
+            The faction index the player is transferring from
 
     Realm:
         Server
 
     Example Usage:
         ```lua
-        function FACTION:OnTransferred(client)
+        function FACTION:OnTransferred(client, oldFaction)
             client:notify("Welcome to the " .. self.name)
             -- Set up faction-specific data
             -- Could trigger department assignment or training
+            if oldFaction then
+                local oldFactionData = lia.faction.indices[oldFaction]
+                if oldFactionData then
+                    client:notify("You left " .. oldFactionData.name)
+                end
+            end
         end
         ```
 ]]
-function FACTION:OnTransferred(client)
+function FACTION:OnTransferred(client, oldFaction)
 end
 
 --[[
@@ -701,6 +759,17 @@ end
         }
         FACTION.scale = 1.0         -- Normal model scale
         FACTION.bloodcolor = BLOOD_COLOR_RED
+        FACTION.logo = "materials/ui/faction/police_logo.png"  -- Faction logo for scoreboard
+        FACTION.scoreboardPriority = 1  -- Appears first in scoreboard
+        FACTION.scoreboardHidden = false  -- Show in scoreboard
+
+        -- Custom Spawn Points (optional)
+        FACTION.spawns = {
+            gm_construct = {
+                {position = Vector(100, 200, 0), angle = Angle(0, 90, 0)},
+                {position = Vector(200, 300, 0), angle = Angle(0, 180, 0)}
+            }
+        }
 
         -- Gameplay Properties
         FACTION.health = 120    -- Higher health than default citizens
@@ -769,7 +838,7 @@ end
             return team.NumPlayers(self.index) >= maxPlayers
         end
 
-        function FACTION:OnTransferred(client)
+        function FACTION:OnTransferred(client, oldFaction)
             client:notify("Welcome to the City Police Department!")
 
             -- Set up police-specific data
@@ -781,7 +850,7 @@ end
 
             -- Log the transfer for administrative purposes
             lia.log.add(client, "faction_transfer", {
-                old_faction = client:getChar():getFaction(),
+                old_faction = oldFaction or client:getChar():getFaction(),
                 new_faction = self.uniqueID
             })
         end

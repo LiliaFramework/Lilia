@@ -26,6 +26,12 @@
             <input type="text" id="faction-color" placeholder="e.g., 0, 100, 255" pattern="\d{1,3},\s*\d{1,3},\s*\d{1,3}">
             <small>Comma-separated RGB values (0-255)</small>
         </div>
+
+        <div class="input-group">
+            <label for="faction-logo">Logo:</label>
+            <input type="text" id="faction-logo" placeholder="materials/ui/faction/police_logo.png">
+            <small>Logo material path for scoreboard (leave empty for no logo)</small>
+        </div>
     </div>
 
     <div class="generator-section">
@@ -146,6 +152,36 @@
                 <input type="checkbox" id="scoreboard-hidden"> Hidden from Scoreboard
             </label>
             <small>Faction won't appear in scoreboard categories</small>
+        </div>
+
+        <div class="input-group">
+            <label for="scoreboard-priority">Scoreboard Priority:</label>
+            <input type="number" id="scoreboard-priority" placeholder="999" min="1">
+            <small>Lower numbers appear first in scoreboard (default: 999)</small>
+        </div>
+    </div>
+
+    <div class="generator-section">
+        <h3>Spawns & Position</h3>
+        <div class="input-group">
+            <label for="spawns">Custom Spawns (JSON):</label>
+            <textarea id="spawns" placeholder='{"gm_construct": [{"position": "Vector(100, 200, 0)", "angle": "Angle(0, 90, 0)"}]}' rows="4"></textarea>
+            <small>JSON format with map names as keys and spawn arrays as values</small>
+        </div>
+
+        <div class="input-group">
+            <label for="main-menu-position">Main Menu Position (JSON):</label>
+            <textarea id="main-menu-position" placeholder='{"gm_construct": {"position": "Vector(0, 0, 64)", "angles": "Angle(0, 0, 0)"}}' rows="3"></textarea>
+            <small>JSON format with map names as keys, or simple Vector for all maps</small>
+        </div>
+    </div>
+
+    <div class="generator-section">
+        <h3>Commands</h3>
+        <div class="input-group">
+            <label for="faction-commands">Commands (JSON):</label>
+            <textarea id="faction-commands" placeholder='{"lia_faction_chat": true}' rows="2"></textarea>
+            <small>JSON format: e.g., {"lia_faction_chat": true}</small>
         </div>
     </div>
 
@@ -402,6 +438,11 @@ function generateFaction() {
     const globallyRecognized = document.getElementById('globally-recognized').checked;
     const memberAutoRecognition = document.getElementById('member-auto-recognition').checked;
     const scoreboardHidden = document.getElementById('scoreboard-hidden').checked;
+    const scoreboardPriority = document.getElementById('scoreboard-priority').value.trim();
+    const logo = document.getElementById('faction-logo').value.trim();
+    const spawns = document.getElementById('spawns').value.trim();
+    const mainMenuPosition = document.getElementById('main-menu-position').value.trim();
+    const commands = document.getElementById('faction-commands').value.trim();
 
     const lines = [
         '-- Copy and paste this code into your faction file',
@@ -460,12 +501,47 @@ function generateFaction() {
         lines.push('}');
     }
 
-    if (recognizesGlobally || globallyRecognized || memberAutoRecognition || scoreboardHidden) {
+    if (logo) {
+        lines.push('', '-- Visual', `FACTION.logo = ${JSON.stringify(logo)}`);
+    }
+
+    if (recognizesGlobally || globallyRecognized || memberAutoRecognition || scoreboardHidden || (scoreboardPriority && scoreboardPriority !== '999')) {
         lines.push('', '-- Special Features');
         if (recognizesGlobally) lines.push('FACTION.RecognizesGlobally = true');
         if (globallyRecognized) lines.push('FACTION.isGloballyRecognized = true');
         if (memberAutoRecognition) lines.push('FACTION.MemberToMemberAutoRecognition = true');
         if (scoreboardHidden) lines.push('FACTION.scoreboardHidden = true');
+        if (scoreboardPriority && scoreboardPriority !== '999') lines.push(`FACTION.scoreboardPriority = ${scoreboardPriority}`);
+    }
+
+    if (spawns) {
+        lines.push('', '-- Custom Spawns');
+        try {
+            JSON.parse(spawns);
+            lines.push(`FACTION.spawns = ${spawns}`);
+        } catch (e) {
+            lines.push(`-- FACTION.spawns = ${spawns} -- Invalid JSON format`);
+        }
+    }
+
+    if (mainMenuPosition) {
+        lines.push('', '-- Main Menu Position');
+        try {
+            JSON.parse(mainMenuPosition);
+            lines.push(`FACTION.mainMenuPosition = ${mainMenuPosition}`);
+        } catch (e) {
+            lines.push(`-- FACTION.mainMenuPosition = ${mainMenuPosition} -- Invalid JSON format`);
+        }
+    }
+
+    if (commands) {
+        lines.push('', '-- Commands');
+        try {
+            JSON.parse(commands);
+            lines.push(`FACTION.commands = ${commands}`);
+        } catch (e) {
+            lines.push(`-- FACTION.commands = ${commands} -- Invalid JSON format`);
+        }
     }
 
     lines.push('', `${index} = FACTION.index`);

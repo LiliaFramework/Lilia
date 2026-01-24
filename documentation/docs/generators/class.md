@@ -76,6 +76,18 @@
             <input type="number" id="class-skin" placeholder="0" min="0">
             <small>Model skin index (leave empty to inherit from faction)</small>
         </div>
+
+        <div class="input-group">
+            <label for="class-logo">Logo:</label>
+            <input type="text" id="class-logo" placeholder="materials/ui/class/police_logo.png">
+            <small>Logo material path for scoreboard (leave empty for no logo)</small>
+        </div>
+
+        <div class="input-group">
+            <label for="class-scale">Model Scale:</label>
+            <input type="number" id="class-scale" placeholder="1.0" step="0.1" min="0.1">
+            <small>Model scale multiplier (1.0 = normal size)</small>
+        </div>
     </div>
 
     <div class="generator-section">
@@ -97,6 +109,27 @@
             <input type="number" id="class-pay" placeholder="" min="0">
             <small>Currency amount per paycheck (leave empty to inherit from faction)</small>
         </div>
+
+        <div class="input-group">
+            <label for="class-run-speed">Run Speed:</label>
+            <input type="number" id="class-run-speed" placeholder="" min="1">
+            <label><input type="checkbox" id="class-run-speed-multiplier"> Use as multiplier</label>
+            <small>Leave empty to inherit from faction</small>
+        </div>
+
+        <div class="input-group">
+            <label for="class-walk-speed">Walk Speed:</label>
+            <input type="number" id="class-walk-speed" placeholder="" min="1">
+            <label><input type="checkbox" id="class-walk-speed-multiplier"> Use as multiplier</label>
+            <small>Leave empty to inherit from faction</small>
+        </div>
+
+        <div class="input-group">
+            <label for="class-jump-power">Jump Power:</label>
+            <input type="number" id="class-jump-power" placeholder="" min="1">
+            <label><input type="checkbox" id="class-jump-power-multiplier"> Use as multiplier</label>
+            <small>Leave empty to inherit from faction</small>
+        </div>
     </div>
 
     <div class="generator-section">
@@ -105,6 +138,51 @@
             <label for="class-weapons">Weapons:</label>
             <textarea id="class-weapons" placeholder="weapon_stunstick" rows="2"></textarea>
             <small>One weapon class per line (leave empty to inherit from faction)</small>
+        </div>
+    </div>
+
+    <div class="generator-section">
+        <h3>UI & Display</h3>
+        <div class="input-group">
+            <label>
+                <input type="checkbox" id="class-scoreboard-hidden"> Hidden from Scoreboard
+            </label>
+            <small>Class won't appear in scoreboard categories</small>
+        </div>
+
+        <div class="input-group">
+            <label for="class-scoreboard-priority">Scoreboard Priority:</label>
+            <input type="number" id="class-scoreboard-priority" placeholder="999" min="1">
+            <small>Lower numbers appear first in scoreboard (default: 999)</small>
+        </div>
+
+        <div class="input-group">
+            <label>
+                <input type="checkbox" id="class-can-invite-faction"> Can Invite to Faction
+            </label>
+            <small>Allows this class to invite players into the faction</small>
+        </div>
+
+        <div class="input-group">
+            <label>
+                <input type="checkbox" id="class-can-invite-class"> Can Invite to Class
+            </label>
+            <small>Allows this class to invite players into the same class</small>
+        </div>
+    </div>
+
+    <div class="generator-section">
+        <h3>Advanced</h3>
+        <div class="input-group">
+            <label for="class-team">Team:</label>
+            <input type="text" id="class-team" placeholder="e.g., law, medical">
+            <small>Groups related classes for door access (leave empty for no team)</small>
+        </div>
+
+        <div class="input-group">
+            <label for="class-commands">Commands (JSON):</label>
+            <textarea id="class-commands" placeholder='{"kick": true, "give": true}' rows="2"></textarea>
+            <small>JSON format: e.g., {"kick": true, "give": true}</small>
         </div>
     </div>
 
@@ -346,6 +424,20 @@ function generateClass() {
     const health = document.getElementById('class-health').value.trim();
     const armor = document.getElementById('class-armor').value.trim();
     const pay = document.getElementById('class-pay').value.trim();
+    const runSpeed = document.getElementById('class-run-speed').value.trim();
+    const runSpeedMultiplier = document.getElementById('class-run-speed-multiplier').checked;
+    const walkSpeed = document.getElementById('class-walk-speed').value.trim();
+    const walkSpeedMultiplier = document.getElementById('class-walk-speed-multiplier').checked;
+    const jumpPower = document.getElementById('class-jump-power').value.trim();
+    const jumpPowerMultiplier = document.getElementById('class-jump-power-multiplier').checked;
+    const scale = document.getElementById('class-scale').value.trim();
+    const logo = document.getElementById('class-logo').value.trim();
+    const scoreboardHidden = document.getElementById('class-scoreboard-hidden').checked;
+    const scoreboardPriority = document.getElementById('class-scoreboard-priority').value.trim();
+    const canInviteFaction = document.getElementById('class-can-invite-faction').checked;
+    const canInviteClass = document.getElementById('class-can-invite-class').checked;
+    const team = document.getElementById('class-team').value.trim();
+    const commands = document.getElementById('class-commands').value.trim();
 
     const weapons = document.getElementById('class-weapons').value.split('\n').filter(w => w.trim());
 
@@ -373,21 +465,36 @@ function generateClass() {
         }
     }
 
-    if (model || colorInput || skin) {
+    if (model || colorInput || skin || logo || scale) {
         lines.push('', '-- Visual Properties');
         if (model) lines.push(`CLASS.model = ${JSON.stringify(model)}`);
         if (colorInput) {
             const color = colorInput ? `Color(${colorInput})` : null;
             if (color) lines.push(`CLASS.color = ${color}`);
+            if (color) lines.push(`CLASS.Color = ${color}`);
         }
         if (skin) lines.push(`CLASS.skin = ${skin}`);
+        if (logo) lines.push(`CLASS.logo = ${JSON.stringify(logo)}`);
+        if (scale) lines.push(`CLASS.scale = ${scale}`);
     }
 
-    if (health || armor || pay) {
+    if (health || armor || pay || runSpeed || walkSpeed || jumpPower) {
         lines.push('', '-- Gameplay Properties');
         if (health) lines.push(`CLASS.health = ${health}`);
         if (armor) lines.push(`CLASS.armor = ${armor}`);
         if (pay) lines.push(`CLASS.pay = ${pay}`);
+        if (runSpeed) {
+            lines.push(`CLASS.runSpeed = ${runSpeed}`);
+            if (runSpeedMultiplier) lines.push('CLASS.runSpeedMultiplier = true');
+        }
+        if (walkSpeed) {
+            lines.push(`CLASS.walkSpeed = ${walkSpeed}`);
+            if (walkSpeedMultiplier) lines.push('CLASS.walkSpeedMultiplier = true');
+        }
+        if (jumpPower) {
+            lines.push(`CLASS.jumpPower = ${jumpPower}`);
+            if (jumpPowerMultiplier) lines.push('CLASS.jumpPowerMultiplier = true');
+        }
     }
 
     if (weapons.length > 0) {
@@ -396,6 +503,23 @@ function generateClass() {
             lines.push(`    ${JSON.stringify(weapon.trim())},`);
         });
         lines.push('}');
+    }
+
+    if (scoreboardHidden || scoreboardPriority !== '999' || canInviteFaction || canInviteClass || team || commands) {
+        lines.push('', '-- UI & Advanced');
+        if (scoreboardHidden) lines.push('CLASS.scoreboardHidden = true');
+        if (scoreboardPriority && scoreboardPriority !== '999') lines.push(`CLASS.scoreboardPriority = ${scoreboardPriority}`);
+        if (canInviteFaction) lines.push('CLASS.canInviteToFaction = true');
+        if (canInviteClass) lines.push('CLASS.canInviteToClass = true');
+        if (team) lines.push(`CLASS.team = ${JSON.stringify(team)}`);
+        if (commands) {
+            try {
+                JSON.parse(commands);
+                lines.push(`CLASS.commands = ${commands}`);
+            } catch (e) {
+                lines.push(`-- CLASS.commands = ${commands} -- Invalid JSON format`);
+            }
+        }
     }
 
     lines.push('', `${index} = CLASS.index`);
