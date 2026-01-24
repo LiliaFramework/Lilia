@@ -23,10 +23,6 @@ lia.attribs.list = lia.attribs.list or {}
     Parameters:
         directory (string)
             Path containing attribute Lua files.
-
-    Returns:
-        nil
-
     Realm:
         Shared
 
@@ -104,10 +100,6 @@ if SERVER then
     Parameters:
         client (Player)
             Player whose character attributes are being applied.
-
-    Returns:
-        nil
-
     Realm:
         Server
 

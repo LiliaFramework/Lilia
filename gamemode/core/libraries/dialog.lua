@@ -351,10 +351,6 @@ if SERVER then
     Parameters:
         client (Player|nil)
             Specific player to sync to, or nil to broadcast to all players.
-
-    Returns:
-        nil
-
     Realm:
         Server
 
@@ -399,10 +395,6 @@ if SERVER then
 
     Parameters:
         None
-
-    Returns:
-        nil
-
     Realm:
         Server
 
@@ -610,10 +602,6 @@ if SERVER then
             The NPC entity being interacted with.
         npcID (string)
             The unique identifier of the NPC dialog type.
-
-    Returns:
-        nil
-
     Realm:
         Server
 
@@ -760,10 +748,6 @@ else
             The NPC entity being customized.
         payload (table)
             The customization data payload.
-
-    Returns:
-        nil
-
     Realm:
         Client
 
@@ -794,10 +778,6 @@ else
             The NPC entity to customize.
         configID (string|nil)
             Configuration identifier, defaults to "appearance".
-
-    Returns:
-        nil
-
     Realm:
         Client
 
@@ -1240,10 +1220,6 @@ end
             The NPC entity to configure.
         npcID (string|nil)
             The NPC's unique identifier.
-
-    Returns:
-        nil
-
     Realm:
         Shared
 

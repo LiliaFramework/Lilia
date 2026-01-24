@@ -168,10 +168,6 @@ end
             Unique preset name.
         items (table)
             Map of item uniqueIDs to tables with pricing/stock metadata.
-
-    Returns:
-        nil
-
     Realm:
         Shared
 
@@ -294,10 +290,6 @@ end
             Key to update.
         value (any)
             New value to store; default-equivalent values clear the entry.
-
-    Returns:
-        nil
-
     Realm:
         Shared
 
@@ -351,10 +343,6 @@ end
             New value for the property.
         isDefault (boolean)
             Whether the property should be cleared (uses defaults clientside).
-
-    Returns:
-        nil
-
     Realm:
         Server
 

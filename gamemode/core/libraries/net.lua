@@ -104,10 +104,6 @@ end
             Cache identifier.
         args (table)
             Arguments that define cache identity.
-
-    Returns:
-        nil
-
     Realm:
         Shared
 
@@ -138,10 +134,6 @@ end
             Net message name carrying the chunks.
         callback (function)
             Function called when table is fully received. Client: function(tbl), Server: function(ply, tbl).
-
-    Returns:
-        nil
-
     Realm:
         Shared
 
@@ -261,10 +253,6 @@ if SERVER then
             Data to serialize.
         chunkSize (number|nil)
             Optional override for chunk size.
-
-    Returns:
-        nil
-
     Realm:
         Server
 
@@ -372,10 +360,6 @@ if SERVER then
             Value to set.
         receiver (Player|table|nil)
             Optional target(s); broadcasts when nil.
-
-    Returns:
-        nil
-
     Realm:
         Server
 

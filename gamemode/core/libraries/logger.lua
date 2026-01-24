@@ -267,10 +267,6 @@ end
             Formatter function (client, ... ) -> string.
         category (string)
             Category label used in console output and DB.
-
-    Returns:
-        nil
-
     Realm:
         Shared
 
@@ -335,10 +331,6 @@ end
         logType (string)
         ... (vararg)
             Formatter args for the log type.
-
-    Returns:
-        nil
-
     Realm:
         Shared
 

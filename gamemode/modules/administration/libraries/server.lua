@@ -1,4 +1,4 @@
-﻿local ActiveTickets = {}
+local ActiveTickets = {}
 local function fixupProp(client, ent, mins, maxs)
     local pos = ent:GetPos()
     local down, up = ent:LocalToWorld(mins), ent:LocalToWorld(maxs)
@@ -1007,14 +1007,19 @@ function MODULE:GetAllCaseClaims()
 end
 
 function MODULE:OnReloaded()
+    local hasTickets = false
     for steamID, _ in pairs(ActiveTickets) do
+        hasTickets = true
         ActiveTickets[steamID] = nil
     end
 
-    timer.Simple(0.05, function()
-        net.Start("liaClearAllTicketFrames")
-        net.Broadcast()
-    end)
+    if hasTickets then
+        if timer.Exists("liaClearAllTicketFrames") then timer.Remove("liaClearAllTicketFrames") end
+        timer.Create("liaClearAllTicketFrames", 0.05, 1, function()
+            net.Start("liaClearAllTicketFrames")
+            net.Broadcast()
+        end)
+    end
 end
 
 function MODULE:PlayerDisconnected(client)

@@ -1,4 +1,4 @@
-﻿--[[
+--[[
     Folder: Libraries
     File: module.md
 ]]
@@ -119,10 +119,6 @@ end
         skipSubmodules (boolean, optional)
             Whether to skip loading submodules for this module.
 
-    Returns:
-        nil
-            This function does not return a value.
-
     Realm:
         Shared
 
@@ -231,10 +227,6 @@ end
     Parameters:
         None
 
-    Returns:
-        nil
-            This function does not return a value.
-
     Realm:
         Shared
 
@@ -294,10 +286,6 @@ end
             The type of modules being loaded ("schema" or "module").
         skip (table, optional)
             A table of module IDs to skip loading.
-
-    Returns:
-        nil
-            This function does not return a value.
 
     Realm:
         Shared

@@ -89,10 +89,6 @@ end
 
     Parameters:
         None.
-
-    Returns:
-        nil
-
     Realm:
         Shared
 
@@ -116,10 +112,6 @@ end
             Data key to watch.
         onChange (function)
             Callback receiving old and new values.
-
-    Returns:
-        nil
-
     Realm:
         Shared
 
@@ -177,10 +169,6 @@ end
     Parameters:
         typeID (string)
             Unique identifier for this inventory type.
-
-    Returns:
-        nil
-
     Realm:
         Shared
 
@@ -300,10 +288,6 @@ end
             Previous value.
         newValue (any)
             New value.
-
-    Returns:
-        nil
-
     Realm:
         Shared
 
@@ -571,10 +555,6 @@ if SERVER then
     Parameters:
         item (Item)
             Item instance already inserted.
-
-    Returns:
-        nil
-
     Realm:
         Server
 
@@ -652,10 +632,6 @@ if SERVER then
 
     Parameters:
         None.
-
-    Returns:
-        nil
-
     Realm:
         Server
 
@@ -933,10 +909,6 @@ if SERVER then
 
     Parameters:
         None.
-
-    Returns:
-        nil
-
     Realm:
         Server
 
@@ -957,10 +929,6 @@ if SERVER then
 
     Parameters:
         None.
-
-    Returns:
-        nil
-
     Realm:
         Server
 
@@ -1044,10 +1012,6 @@ if SERVER then
     Parameters:
         items (table)
             Loaded items table.
-
-    Returns:
-        nil
-
     Realm:
         Server
 
@@ -1098,10 +1062,6 @@ if SERVER then
             Data key to send.
         recipients (Player|table|nil)
             Targets to notify; defaults to recipients with access.
-
-    Returns:
-        nil
-
     Realm:
         Server
 
@@ -1129,10 +1089,6 @@ if SERVER then
     Parameters:
         recipients (Player|table|nil)
             Targets to receive the update; defaults to access list.
-
-    Returns:
-        nil
-
     Realm:
         Server
 
@@ -1178,10 +1134,6 @@ if SERVER then
 
     Parameters:
         None.
-
-    Returns:
-        nil
-
     Realm:
         Server
 
@@ -1203,10 +1155,6 @@ if SERVER then
 
     Parameters:
         None.
-
-    Returns:
-        nil
-
     Realm:
         Server
 

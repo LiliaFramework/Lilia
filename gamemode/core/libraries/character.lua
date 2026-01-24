@@ -145,10 +145,6 @@ end
             Character database ID.
         character (table)
             Character object to store.
-
-    Returns:
-        nil
-
     Realm:
         Shared
 
@@ -175,10 +171,6 @@ end
     Parameters:
         id (number)
             Character database ID to remove.
-
-    Returns:
-        nil
-
     Realm:
         Shared
 
@@ -261,10 +253,6 @@ end
             Unique identifier for the hook.
         func (function)
             Callback invoked with (character, oldValue, newValue).
-
-    Returns:
-        nil
-
     Realm:
         Shared
 
@@ -292,10 +280,6 @@ end
             Variable identifier.
         data (table)
             Configuration table defining defaults, validation, networking, and callbacks.
-
-    Returns:
-        nil
-
     Realm:
         Shared
 
@@ -920,10 +904,6 @@ if SERVER then
             Prepared character data including steamID, faction, and name.
         callback (function|nil)
             Invoked with the new character ID once creation finishes.
-
-    Returns:
-        nil
-
     Realm:
         Server
 
@@ -987,10 +967,6 @@ if SERVER then
             Invoked with a list of loaded character IDs once complete.
         id (number|nil)
             Optional single character ID to restrict the load.
-
-    Returns:
-        nil
-
     Realm:
         Server
 
@@ -1109,10 +1085,6 @@ if SERVER then
     Parameters:
         client (Player)
             Player whose cached characters should be unloaded.
-
-    Returns:
-        nil
-
     Realm:
         Server
 
@@ -1151,10 +1123,6 @@ if SERVER then
             Character database ID to delete.
         client (Player|nil)
             Player requesting deletion, if any.
-
-    Returns:
-        nil
-
     Realm:
         Server
 
@@ -1469,10 +1437,6 @@ if SERVER then
             Owning player, used for permission checks and inventory linking.
         callback (function|nil)
             Invoked with the loaded character or nil on failure.
-
-    Returns:
-        nil
-
     Realm:
         Server
 

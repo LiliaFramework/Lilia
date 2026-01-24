@@ -1,9 +1,9 @@
-﻿--[[
+--[[
     Folder: Libraries
     File: darkrp.md
 ]]
 --[[
-    DarkRP Compatibility Library
+    DarkRP Library
 
     The DarkRP compatibility library provides essential functions for maintaining compatibility
     with DarkRP-based gamemodes and addons. It includes utility functions for position
@@ -123,9 +123,6 @@ if SERVER then
             Unused legacy parameter kept for API parity.
         message (string)
             Localization key or message to pass to Lilia's notifier.
-
-    Returns:
-        nil
 
     Realm:
         Server
@@ -251,9 +248,6 @@ end
         data (table)
             Supported fields: cmd, ent, model, desc, price, category.
 
-    Returns:
-        nil
-
     Realm:
         Shared
 
@@ -289,9 +283,6 @@ end
     Parameters:
         None
 
-    Returns:
-        nil
-
     Realm:
         Shared
 
@@ -313,9 +304,6 @@ end
 
     Parameters:
         None
-
-    Returns:
-        nil
 
     Realm:
         Shared
@@ -341,9 +329,6 @@ end
             Chat command name without the leading slash.
         callback (function)
             Function invoked as callback(client, ...args); may return a string for error text.
-
-    Returns:
-        nil
 
     Realm:
         Shared
@@ -381,9 +366,6 @@ end
             Lilia privilege string required to run the command.
         callback (function)
             Function invoked as callback(client, ...args); may return a string for error text.
-
-    Returns:
-        nil
 
     Realm:
         Shared

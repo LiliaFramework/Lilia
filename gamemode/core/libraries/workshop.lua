@@ -1,4 +1,4 @@
-﻿--[[
+--[[
     Folder: Libraries
     File: workshop.md
 ]]
@@ -26,10 +26,6 @@ if SERVER then
     Parameters:
         id (string|number)
             Workshop addon ID to download (will be converted to string).
-
-    Returns:
-        nil
-            Nothing.
 
     Realm:
         Server
@@ -116,10 +112,6 @@ if SERVER then
     Parameters:
         ply (Player)
             The player entity to notify.
-
-    Returns:
-        nil
-            Nothing.
 
     Realm:
         Server
@@ -229,10 +221,6 @@ else
 
     Parameters:
         None
-
-    Returns:
-        nil
-            Nothing.
 
     Realm:
         Client

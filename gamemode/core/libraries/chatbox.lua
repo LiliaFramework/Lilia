@@ -51,10 +51,6 @@ end
         chatType (string)
         data (table)
             Fields: prefix, radius/onCanHear, onCanSay, format, color, arguments, etc.
-
-    Returns:
-        nil
-
     Realm:
         Shared (prefix commands created clientside)
 
@@ -230,10 +226,6 @@ if SERVER then
         anonymous (boolean)
         receivers (table|nil)
             Optional explicit receiver list.
-
-    Returns:
-        nil
-
     Realm:
         Server
 

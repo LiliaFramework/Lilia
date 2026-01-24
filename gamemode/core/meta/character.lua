@@ -287,10 +287,6 @@ end
             Skip networking when true.
         receiver (Player|nil)
             Specific client to receive the update instead of owner.
-
-    Returns:
-        nil
-
     Realm:
         Shared
 
@@ -537,10 +533,6 @@ if SERVER then
 
     Parameters:
         None.
-
-    Returns:
-        nil
-
     Realm:
         Server
 
@@ -580,10 +572,6 @@ if SERVER then
             Attribute identifier.
         value (number)
             Amount to add.
-
-    Returns:
-        nil
-
     Realm:
         Server
 
@@ -622,10 +610,6 @@ if SERVER then
             Attribute identifier.
         value (number)
             New attribute level.
-
-    Returns:
-        nil
-
     Realm:
         Server
 
@@ -762,10 +746,6 @@ if SERVER then
     Parameters:
         flags (string)
             Complete set of flags to apply.
-
-    Returns:
-        nil
-
     Realm:
         Server
 
@@ -812,10 +792,6 @@ if SERVER then
     Parameters:
         flags (string)
             Concatenated flag characters to grant.
-
-    Returns:
-        nil
-
     Realm:
         Server
 
@@ -852,10 +828,6 @@ if SERVER then
     Parameters:
         flags (string)
             Concatenated flag characters to remove.
-
-    Returns:
-        nil
-
     Realm:
         Server
 
@@ -893,10 +865,6 @@ if SERVER then
     Parameters:
         callback (function|nil)
             Invoked after the save completes.
-
-    Returns:
-        nil
-
     Realm:
         Server
 
@@ -931,10 +899,6 @@ if SERVER then
     Parameters:
         receiver (Player|nil)
             Target player to sync to; nil broadcasts to everyone.
-
-    Returns:
-        nil
-
     Realm:
         Server
 
@@ -1004,10 +968,6 @@ if SERVER then
     Parameters:
         noNetworking (boolean)
             Skip inventory and char networking when true.
-
-    Returns:
-        nil
-
     Realm:
         Server
 
@@ -1058,10 +1018,6 @@ if SERVER then
 
     Parameters:
         None.
-
-    Returns:
-        nil
-
     Realm:
         Server
 
@@ -1104,10 +1060,6 @@ if SERVER then
     Parameters:
         time (number|nil)
             Ban duration in seconds; nil makes it permanent.
-
-    Returns:
-        nil
-
     Realm:
         Server
 
@@ -1140,10 +1092,6 @@ if SERVER then
 
     Parameters:
         None.
-
-    Returns:
-        nil
-
     Realm:
         Server
 
@@ -1165,10 +1113,6 @@ if SERVER then
 
     Parameters:
         None.
-
-    Returns:
-        nil
-
     Realm:
         Server
 

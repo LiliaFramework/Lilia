@@ -93,9 +93,6 @@ end
     Parameters:
         models (table)
             A table of model data, where each entry can be a string path or a table with model information.
-
-    Returns:
-        nil
             This function does not return a value.
 
     Realm:
@@ -127,9 +124,6 @@ end
     Parameters:
         directory (string)
             The path to the directory containing faction definition files.
-
-    Returns:
-        nil
             This function does not return a value.
 
     Realm:
@@ -490,9 +484,6 @@ end
 
     Parameters:
         None
-
-    Returns:
-        nil
             This function does not return a value.
 
     Realm:

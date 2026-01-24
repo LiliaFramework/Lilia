@@ -27,10 +27,6 @@ lia.flag.list = lia.flag.list or {}
             Localization key or plain description.
         callback (function|nil)
             function(client, isGiven) for grant/remove side effects.
-
-    Returns:
-        nil
-
     Realm:
         Shared
 
@@ -64,10 +60,6 @@ if SERVER then
     Parameters:
         client (Player)
             Player whose flags should be processed.
-
-    Returns:
-        nil
-
     Realm:
         Server
 
@@ -127,10 +119,6 @@ end)
     Parameters:
         pages (table)
             Array of information panel configurations to add the flags panel to.
-
-    Returns:
-        nil
-
     Realm:
         Client
 

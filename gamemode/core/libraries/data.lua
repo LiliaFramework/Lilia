@@ -1,4 +1,4 @@
-﻿--[[
+--[[
     Folder: Libraries
     File: data.md
 ]]
@@ -498,9 +498,6 @@ if SERVER then
     Parameters:
         None
 
-    Returns:
-        nil (async via promises)
-
     Realm:
         Server
 
@@ -773,26 +770,23 @@ if SERVER then
 end
 
 --[[
-Purpose:
-    Register an equivalency between two map names (bidirectional).
+    Purpose:
+        Register an equivalency between two map names (bidirectional).
 
-When Called:
-    To share data/persistence across multiple map aliases.
+    When Called:
+        To share data/persistence across multiple map aliases.
 
-Parameters:
-    map1 (string)
-    map2 (string)
+    Parameters:
+        map1 (string)
+        map2 (string)
 
-Returns:
-    nil
+    Realm:
+        Shared
 
-Realm:
-    Shared
-
-Example Usage:
-    ```lua
-    lia.data.addEquivalencyMap("rp_downtown_v1", "rp_downtown_v2")
-    ```
+    Example Usage:
+        ```lua
+        lia.data.addEquivalencyMap("rp_downtown_v1", "rp_downtown_v2")
+        ```
 ]]
 function lia.data.addEquivalencyMap(map1, map2)
     lia.data.equivalencyMaps[map1] = map2
@@ -800,24 +794,24 @@ function lia.data.addEquivalencyMap(map1, map2)
 end
 
 --[[
-Purpose:
-    Resolve a map name to its equivalency (if registered).
+    Purpose:
+        Resolve a map name to its equivalency (if registered).
 
-When Called:
-    Before saving/loading data keyed by map name.
+    When Called:
+        Before saving/loading data keyed by map name.
 
-Parameters:
-    map (string)
+    Parameters:
+        map (string)
 
-Returns:
-    string
+    Returns:
+        string
 
-Realm:
-    Shared
+    Realm:
+        Shared
 
-Example Usage:
-    ```lua
-    local canonical = lia.data.getEquivalencyMap(game.GetMap())
+    Example Usage:
+        ```lua
+        local canonical = lia.data.getEquivalencyMap(game.GetMap())
     ```
 ]]
 function lia.data.getEquivalencyMap(map)

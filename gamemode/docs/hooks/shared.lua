@@ -1,4 +1,4 @@
-﻿--[[
+--[[
     Folder: Hooks
     File:  shared.md
 ]]
@@ -28,10 +28,6 @@
             Table you can populate with overrides that will be merged into `data`.
         originalData (table)
             Copy of the raw client payload prior to sanitation.
-
-    Returns:
-        nil
-            Mutate `data` or `newData`; return value is ignored.
 
     Realm:
         Shared
@@ -119,10 +115,6 @@ end
         tbl (table)
             Paste context provided by AdvDupe2 (first entry is the player).
 
-    Returns:
-        nil
-            Perform cleanup; return value is ignored.
-
     Realm:
         Shared
 
@@ -150,10 +142,6 @@ end
         id (string)
             Identifier of the part or outfit.
 
-    Returns:
-        nil
-            Use for side effects such as bookkeeping.
-
     Realm:
         Shared
 
@@ -180,10 +168,6 @@ end
         inventory (Inventory)
             Child inventory created for the bag.
 
-    Returns:
-        nil
-            Use for setup such as adding access rules or syncing UI.
-
     Realm:
         Shared
 
@@ -209,10 +193,6 @@ end
             Bag being removed.
         inventory (Inventory)
             Child inventory scheduled for deletion.
-
-    Returns:
-        nil
-            Perform cleanup such as unloading items.
 
     Realm:
         Shared
@@ -729,10 +709,6 @@ end
         range (string|number)
             Range preset ("whisper", "normal", "yell") or numeric distance.
 
-    Returns:
-        nil
-            Perform side effects such as marking characters recognized.
-
     Realm:
         Shared
 
@@ -823,10 +799,6 @@ end
         data (table)
             Command definition table.
 
-    Returns:
-        nil
-            Use for bookkeeping or adding aliases.
-
     Realm:
         Shared
 
@@ -857,10 +829,6 @@ end
         client (Player|nil)
             Player who made the change, if any.
 
-    Returns:
-        nil
-            Use for reacting to config updates.
-
     Realm:
         Shared
 
@@ -886,10 +854,6 @@ end
             Path of the file being included.
         MODULE (table)
             Module table receiving the include.
-
-    Returns:
-        nil
-            Perform side effects; return value is ignored.
 
     Realm:
         Shared
@@ -919,10 +883,6 @@ end
             Range preset ("whisper", "normal", "yell") or numeric distance.
         fakeName (string|nil)
             Optional fake name to record for recognition.
-
-    Returns:
-        nil
-            Perform side effects such as logging or extra notifications.
 
     Realm:
         Shared
@@ -1549,10 +1509,6 @@ end
         entity (Entity)
             Storage entity being prepared.
 
-    Returns:
-        nil
-            Perform setup such as assigning inventory IDs or access rules.
-
     Realm:
         Shared
 
@@ -1575,10 +1531,6 @@ end
 
     Parameters:
         None
-
-    Returns:
-        nil
-            Use to populate UI or cache config data.
 
     Realm:
         Shared
@@ -1603,10 +1555,6 @@ end
     Parameters:
         None
 
-    Returns:
-        nil
-            Use to add global item behaviors or cache lookups.
-
     Realm:
         Shared
 
@@ -1629,10 +1577,6 @@ end
 
     Parameters:
         None
-
-    Returns:
-        nil
-            Useful for binding post-load UI actions.
 
     Realm:
         Shared
@@ -1657,10 +1601,6 @@ end
     Parameters:
         None
 
-    Returns:
-        nil
-            Use to initialize systems that depend on all modules being present.
-
     Realm:
         Shared
 
@@ -1684,10 +1624,6 @@ end
     Parameters:
         None
 
-    Returns:
-        nil
-            Use to refresh UI or apply option-driven settings.
-
     Realm:
         Shared
 
@@ -1710,10 +1646,6 @@ end
 
     Parameters:
         None
-
-    Returns:
-        nil
-            Use to perform final initialization dependent on the full schema.
 
     Realm:
         Shared
@@ -1745,10 +1677,6 @@ end
         value (any)
             New value.
 
-    Returns:
-        nil
-            Use for UI updates or logic tied to inventory metadata.
-
     Realm:
         Shared
 
@@ -1772,10 +1700,6 @@ end
     Parameters:
         instance (Inventory)
             Inventory that is ready.
-
-    Returns:
-        nil
-            Use to hook UI creation or caching.
 
     Realm:
         Shared
@@ -1802,10 +1726,6 @@ end
             Inventory receiving the item.
         item (Item)
             Item instance added.
-
-    Returns:
-        nil
-            Use for logging, UI refresh, or triggers.
 
     Realm:
         Shared
@@ -1835,10 +1755,6 @@ end
             Item removed.
         preserveItem (boolean)
             True if the item instance is kept alive (e.g., dropped) instead of deleted.
-
-    Returns:
-        nil
-            Use for cleanup, UI refresh, or logging.
 
     Realm:
         Shared
@@ -1987,10 +1903,6 @@ end
         newValue (any)
             Updated value.
 
-    Returns:
-        nil
-            Use to update UI or dependent state.
-
     Realm:
         Shared
 
@@ -2014,10 +1926,6 @@ end
     Parameters:
         arg1 (table)
             Functions table for the item being registered.
-
-    Returns:
-        nil
-            Mutate the functions table directly.
 
     Realm:
         Shared
@@ -2045,10 +1953,6 @@ end
     Parameters:
         item (Item)
             Newly initialized item instance.
-
-    Returns:
-        nil
-            Use for client-side setup such as caching icons.
 
     Realm:
         Shared
@@ -2078,10 +1982,6 @@ end
         quantity (number)
             New quantity.
 
-    Returns:
-        nil
-            Use for UI refresh or logic tied to stack counts.
-
     Realm:
         Shared
 
@@ -2104,10 +2004,6 @@ end
 
     Parameters:
         None
-
-    Returns:
-        nil
-            Use to kick off client-only systems.
 
     Realm:
         Shared
@@ -2139,10 +2035,6 @@ end
         value (any)
             New value.
 
-    Returns:
-        nil
-            Use for side effects or client updates.
-
     Realm:
         Shared
 
@@ -2169,10 +2061,6 @@ end
         arg2 (table|nil)
             Additional metadata from the admin system.
 
-    Returns:
-        nil
-            Use to register custom permissions or UI once admin hooks exist.
-
     Realm:
         Shared
 
@@ -2198,10 +2086,6 @@ end
             Player whose character stood up.
         entity (Entity)
             Ragdoll entity that was removed.
-
-    Returns:
-        nil
-            Use to restore state or apply effects after getting up.
 
     Realm:
         Shared
@@ -2233,10 +2117,6 @@ end
         newVar (any)
             New value.
 
-    Returns:
-        nil
-            Use for syncing dependent systems or logging.
-
     Realm:
         Shared
 
@@ -2265,10 +2145,6 @@ end
         value (any)
             New value.
 
-    Returns:
-        nil
-            Use to refresh cached data or UI.
-
     Realm:
         Shared
 
@@ -2294,10 +2170,6 @@ end
             Owner player of the inventory, if applicable.
         item (Item)
             Item instance that was added.
-
-    Returns:
-        nil
-            Use for logging, analytics, or triggers.
 
     Realm:
         Shared
@@ -2325,10 +2197,6 @@ end
         itemEntity (Entity)
             Spawned entity representing the item.
 
-    Returns:
-        nil
-            Use for modifying the entity (physics, model, etc.).
-
     Realm:
         Shared
 
@@ -2355,10 +2223,6 @@ end
         overrides (table)
             Table of override values.
 
-    Returns:
-        nil
-            Adjust fields directly in `item` or `overrides`.
-
     Realm:
         Shared
 
@@ -2383,10 +2247,6 @@ end
         ITEM (table)
             Registered item definition.
 
-    Returns:
-        nil
-            Use for post-registration setup such as caching or localization.
-
     Realm:
         Shared
 
@@ -2409,10 +2269,6 @@ end
 
     Parameters:
         None
-
-    Returns:
-        nil
-            Use to refresh UI text or reload cached translations.
 
     Realm:
         Shared
@@ -2437,10 +2293,6 @@ end
     Parameters:
         part (Entity|table)
             PAC3 part being transferred.
-
-    Returns:
-        nil
-            Use for cleanup or tracking.
 
     Realm:
         Shared
@@ -2470,10 +2322,6 @@ end
         arg3 (boolean)
             True if selling/refunding, false if buying.
 
-    Returns:
-        nil
-            Use for logging or custom ownership logic.
-
     Realm:
         Shared
 
@@ -2499,10 +2347,6 @@ end
             The player who dropped the item.
         spawnedItem (Entity)
             The spawned item entity that was created.
-
-    Returns:
-        nil
-
     Realm:
         Shared
 
@@ -2530,10 +2374,6 @@ end
             The item that was rotated.
         newRot (number)
             The new rotation value.
-
-    Returns:
-        nil
-
     Realm:
         Shared
 
@@ -2559,10 +2399,6 @@ end
             The player who took the item.
         item (Item)
             The item that was taken.
-
-    Returns:
-        nil
-
     Realm:
         Shared
 
@@ -2593,10 +2429,6 @@ end
         arg4 (any)
             Optional extra data from the source integration.
 
-    Returns:
-        nil
-            Use to mirror privileges into other systems.
-
     Realm:
         Shared
 
@@ -2622,10 +2454,6 @@ end
             Privilege data being removed.
         arg2 (any)
             Optional extra data.
-
-    Returns:
-        nil
-            Use for cleanup or UI updates.
 
     Realm:
         Shared
@@ -2653,10 +2481,6 @@ end
         useTransition (boolean)
             True if the theme is transitioning over time.
 
-    Returns:
-        nil
-            Update UI elements to match the new theme.
-
     Realm:
         Shared
 
@@ -2680,10 +2504,6 @@ end
     Parameters:
         target (Player)
             Player whose character was transferred.
-
-    Returns:
-        nil
-            Use for notifications or cleanup.
 
     Realm:
         Shared
@@ -2711,10 +2531,6 @@ end
         arg2 (any)
             Optional extra data (e.g., privilege list).
 
-    Returns:
-        nil
-            Use to sync UI or caches.
-
     Realm:
         Shared
 
@@ -2738,10 +2554,6 @@ end
     Parameters:
         groupName (string)
             Name of the removed group.
-
-    Returns:
-        nil
-            Use to clear caches or revoke permissions.
 
     Realm:
         Shared
@@ -2768,10 +2580,6 @@ end
             Previous group name.
         newName (string)
             Updated group name.
-
-    Returns:
-        nil
-            Use to migrate references or update UI.
 
     Realm:
         Shared
@@ -2802,10 +2610,6 @@ end
         option (table)
             Option metadata table.
 
-    Returns:
-        nil
-            Use for UI updates or caching quick options.
-
     Realm:
         Shared
 
@@ -2833,10 +2637,6 @@ end
             Previous value.
         value (any)
             New value.
-
-    Returns:
-        nil
-            Use for reacting to option changes.
 
     Realm:
         Shared
@@ -2982,10 +2782,6 @@ end
         client (Player)
             Player who just punched.
 
-    Returns:
-        nil
-            Use for additional effects like cooldowns or logging.
-
     Realm:
         Shared
 
@@ -3008,10 +2804,6 @@ end
 
     Parameters:
         None
-
-    Returns:
-        nil
-            Use to prepare resources needed immediately after load.
 
     Realm:
         Shared
@@ -3039,10 +2831,6 @@ end
         id (string)
             Identifier of the part to remove.
 
-    Returns:
-        nil
-            Use for cleanup or bookkeeping.
-
     Realm:
         Shared
 
@@ -3067,10 +2855,6 @@ end
         inventory (Inventory)
             Bag inventory being configured.
 
-    Returns:
-        nil
-            Mutate the inventory by adding access rules.
-
     Realm:
         Shared
 
@@ -3093,10 +2877,6 @@ end
 
     Parameters:
         None
-
-    Returns:
-        nil
-            Use to extend or replace the default PAC data build pipeline.
 
     Realm:
         Shared

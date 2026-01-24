@@ -1,4 +1,4 @@
-﻿--[[
+--[[
     Folder: Libraries
     File: color.md
 ]]
@@ -26,17 +26,19 @@ else
     --[[
     Purpose:
         Register a named color so string-based Color() calls can resolve it.
+
     When Called:
         During client initialization or when adding palette entries at runtime.
+
     Parameters:
         name (string)
             Identifier stored in lowercase.
         color (table|Color)
             Table or Color with r, g, b, a fields.
-    Returns:
-        nil
+
     Realm:
         Client
+
     Example Usage:
         ```lua
         lia.color.register("warning", Color(255, 140, 0))
@@ -50,8 +52,10 @@ else
     --[[
     Purpose:
         Apply additive offsets to a color to quickly tint or shade it.
+
     When Called:
         While building UI states (hover/pressed) or computing theme variants.
+
     Parameters:
         color (Color)
             Base color.
@@ -59,11 +63,14 @@ else
             Additive offsets clamped between 0-255.
         aOffset (number|nil)
             Optional alpha offset; defaults to 0.
+
     Returns:
         Color
             Adjusted color.
+
     Realm:
         Client
+
     Example Usage:
         ```lua
         local base = lia.color.getMainColor()
@@ -77,18 +84,23 @@ else
     --[[
     Purpose:
         Darken a color by a fractional factor.
+
     When Called:
         Deriving hover/pressed backgrounds from a base accent color.
+
     Parameters:
         color (Color)
             Base color to darken.
         factor (number|nil)
             Amount between 0-1; defaults to 0.1 and is clamped.
+
     Returns:
         Color
             Darkened color.
+
     Realm:
         Client
+
     Example Usage:
         ```lua
         local accent = lia.color.getMainColor()
@@ -104,15 +116,20 @@ else
     --[[
     Purpose:
         Get the active theme id from config in lowercase.
+
     When Called:
         Before looking up theme tables or theme-specific assets.
+
     Parameters:
         None
+
     Returns:
         string
             Lowercased theme id (default "teal").
+
     Realm:
         Client
+
     Example Usage:
         ```lua
         if lia.color.getCurrentTheme() == "dark" then
@@ -127,15 +144,20 @@ else
     --[[
     Purpose:
         Get the display name of the currently selected theme.
+
     When Called:
         Showing UI labels or logs about the active theme.
+
     Parameters:
         None
+
     Returns:
         string
             Theme name from config with original casing.
+
     Realm:
         Client
+
     Example Usage:
         ```lua
         chat.AddText(Color(180, 220, 255), "Theme: ", lia.color.getCurrentThemeName())
@@ -148,15 +170,20 @@ else
     --[[
     Purpose:
         Fetch the main color from the current theme with sensible fallbacks.
+
     When Called:
         Setting accent colors for buttons, bars, and highlights.
+
     Parameters:
         None
+
     Returns:
         Color
             Main theme color, falling back to the default theme or teal.
+
     Realm:
         Client
+
     Example Usage:
         ```lua
         local accent = lia.color.getMainColor()
@@ -174,17 +201,19 @@ else
     --[[
     Purpose:
         Apply a theme immediately or begin a smooth transition toward it, falling back to Teal/default palettes and firing OnThemeChanged after updates.
+
     When Called:
         On config changes, theme selection menus, or client startup.
+
     Parameters:
         themeName (string|nil)
             Target theme id; defaults to the current config value.
         useTransition (boolean|nil)
             If true, blends colors over time instead of swapping instantly.
-    Returns:
-        nil
+
     Realm:
         Client
+
     Example Usage:
         ```lua
         concommand.Add("lia_theme_preview", function(_, _, args)
@@ -226,15 +255,20 @@ else
     --[[
     Purpose:
         Check whether a theme transition is currently blending.
+
     When Called:
         To avoid overlapping transitions or to gate UI animations.
+
     Parameters:
         None
+
     Returns:
         boolean
             True if a transition is active, otherwise false.
+
     Realm:
         Client
+
     Example Usage:
         ```lua
         if lia.color.isTransitionActive() then return end
@@ -248,15 +282,17 @@ else
     --[[
     Purpose:
         Convenience wrapper to start a theme transition immediately.
+
     When Called:
         From theme preview buttons to animate a swap.
+
     Parameters:
         themeName (string)
             Target theme id.
-    Returns:
-        nil
+
     Realm:
         Client
+
     Example Usage:
         ```lua
         vgui.Create("DButton").DoClick = function()
@@ -279,15 +315,17 @@ else
     --[[
     Purpose:
         Begin blending from the current palette toward a target theme, falling back to Teal when missing and finishing by firing OnThemeChanged once applied.
+
     When Called:
         Inside applyTheme when transitions are enabled or via previews.
+
     Parameters:
         name (string)
             Theme id to blend toward.
-    Returns:
-        nil
+
     Realm:
         Client
+
     Example Usage:
         ```lua
         lia.color.transition.speed = 1.5
@@ -361,16 +399,21 @@ else
     --[[
     Purpose:
         Determine whether a value resembles a Color table.
+
     When Called:
         While blending themes to decide how to lerp entries.
+
     Parameters:
         v (any)
             Value to test.
+
     Returns:
         boolean
             True when v has numeric r, g, b, a fields.
+
     Realm:
         Client
+
     Example Usage:
         ```lua
         if lia.color.isColor(entry) then
@@ -385,16 +428,21 @@ else
     --[[
     Purpose:
         Build a readable contrasting color (alpha 255) based on a main color.
+
     When Called:
         Choosing text or negative colors for overlays and highlights.
+
     Parameters:
         mainColor (Color|nil)
             Defaults to the current theme main color when nil.
+
     Returns:
         Color
             Contrasting color tuned for readability.
+
     Realm:
         Client
+
     Example Usage:
         ```lua
         local negative = lia.color.calculateNegativeColor()
@@ -425,15 +473,20 @@ else
     --[[
     Purpose:
         Derive a suite of adjusted colors from the main theme color, including brightness-aware text and a calculated negative color.
+
     When Called:
         Building consistent palettes for backgrounds, accents, and text.
+
     Parameters:
         None
+
     Returns:
         table
             Contains background, sidebar, accent, text, hover, border, highlight, negative.
+
     Realm:
         Client
+
     Example Usage:
         ```lua
         local palette = lia.color.returnMainAdjustedColors()
@@ -462,8 +515,10 @@ else
     --[[
     Purpose:
         FrameTime-scaled color lerp helper.
+
     When Called:
         Theme transitions or animated highlights needing smooth color changes.
+
     Parameters:
         frac (number)
             Multiplier applied to FrameTime for lerp speed.
@@ -471,11 +526,14 @@ else
             Source color; defaults to white when nil.
         col2 (Color)
             Target color; defaults to white when nil.
+
     Returns:
         Color
             Interpolated color.
+
     Realm:
         Client
+
     Example Usage:
         ```lua
         local blink = lia.color.lerp(6, Color(255, 0, 0), Color(255, 255, 255))
@@ -531,27 +589,29 @@ else
 end
 
 --[[
-Purpose:
-    Register a theme table by name for later selection.
-When Called:
-    During initialization to expose custom palettes.
-Parameters:
-    name (string)
-        Theme name/id; stored in lowercase.
-    themeData (table)
-        Map of color keys to Color values or arrays.
-Returns:
-    nil
-Realm:
-    Shared
-Example Usage:
-    ```lua
-    lia.color.registerTheme("MyStudio", {
-        maincolor = Color(120, 200, 255),
-        background = Color(20, 24, 32),
-        text = Color(230, 240, 255)
-    })
-    ```
+    Purpose:
+        Register a theme table by name for later selection.
+
+    When Called:
+        During initialization to expose custom palettes.
+
+    Parameters:
+        name (string)
+            Theme name/id; stored in lowercase.
+        themeData (table)
+            Map of color keys to Color values or arrays.
+
+    Realm:
+        Shared
+
+    Example Usage:
+        ```lua
+        lia.color.registerTheme("MyStudio", {
+            maincolor = Color(120, 200, 255),
+            background = Color(20, 24, 32),
+            text = Color(230, 240, 255)
+        })
+        ```
 ]]
 function lia.color.registerTheme(name, themeData)
     local id = name:lower()
@@ -559,24 +619,29 @@ function lia.color.registerTheme(name, themeData)
 end
 
 --[[
-Purpose:
-    Return a sorted list of available theme ids.
-When Called:
-    To populate config dropdowns or theme selection menus.
-Parameters:
-    None
-Returns:
-    table
-        Sorted array of theme ids.
-Realm:
-    Shared
-Example Usage:
-    ```lua
-    local options = {}
-    for _, id in ipairs(lia.color.getAllThemes()) do
-        options[#options + 1] = id
-    end
-    ```
+    Purpose:
+        Return a sorted list of available theme ids.
+
+    When Called:
+        To populate config dropdowns or theme selection menus.
+
+    Parameters:
+        None
+
+    Returns:
+        table
+            Sorted array of theme ids.
+
+    Realm:
+        Shared
+
+    Example Usage:
+        ```lua
+        local options = {}
+        for _, id in ipairs(lia.color.getAllThemes()) do
+            options[#options + 1] = id
+        end
+        ```
 ]]
 function lia.color.getAllThemes()
     local themes = {}
@@ -922,7 +987,7 @@ lia.config.add("Theme", "theme", "Teal", function(_, newValue)
     end
 end, {
     desc = "themeDesc",
-    category = "categoryGameplay",
+    category = "Core",
     type = "Table",
     options = function()
         local themes = {}

@@ -137,10 +137,6 @@ end
 
     Parameters:
         None
-
-    Returns:
-        nil
-
     Realm:
         Client
 

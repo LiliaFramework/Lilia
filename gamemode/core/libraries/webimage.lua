@@ -85,10 +85,6 @@ end
             Callback receiving `(material, fromCache, errStr)`.
         flags (string|nil)
             Optional material flags for creation (e.g., `"noclamp smooth"`).
-
-    Returns:
-        nil
-
     Realm:
         Client
 
@@ -214,10 +210,6 @@ end
             Optional callback forwarded to `download`.
         flags (string|nil)
             Material creation flags stored for future lookups.
-
-    Returns:
-        nil
-
     Realm:
         Client
 
@@ -420,10 +412,6 @@ end
     Parameters:
         skipReRegister (boolean)
             When true, previously registered URLs are not re-downloaded.
-
-    Returns:
-        nil
-
     Realm:
         Client
 

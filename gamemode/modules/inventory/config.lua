@@ -19,7 +19,7 @@
     lia.db.query("UPDATE lia_invdata SET value = '" .. lia.db.escape(json) .. "' WHERE key = 'w' AND invID IN (SELECT invID FROM lia_inventories WHERE charID IS NOT NULL)")
 end, {
     desc = "invWidthDesc",
-    category = "categoryCharacter",
+    category = "Core",
     type = "Number",
     min = 1,
     max = 20
@@ -46,7 +46,7 @@ lia.config.add("invH", "invHeight", 4, function(_, newH)
     lia.db.query("UPDATE lia_invdata SET value = '" .. lia.db.escape(json) .. "' WHERE key = 'h' AND invID IN (SELECT invID FROM lia_inventories WHERE charID IS NOT NULL)")
 end, {
     desc = "invHeightDesc",
-    category = "categoryCharacter",
+    category = "Core",
     type = "Number",
     min = 1,
     max = 20
@@ -54,7 +54,7 @@ end, {
 
 lia.config.add("trunkInvW", "trunkInvWidth", 10, nil, {
     desc = "trunkInvWidthDesc",
-    category = "categoryGeneral",
+    category = "Core",
     type = "Number",
     min = 1,
     max = 20
@@ -62,7 +62,7 @@ lia.config.add("trunkInvW", "trunkInvWidth", 10, nil, {
 
 lia.config.add("trunkInvH", "trunkInvHeight", 2, nil, {
     desc = "trunkInvHeightDesc",
-    category = "categoryGeneral",
+    category = "Core",
     type = "Number",
     min = 1,
     max = 20

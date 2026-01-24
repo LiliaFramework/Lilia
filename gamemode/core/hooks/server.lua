@@ -79,7 +79,7 @@ function GM:CharPreSave(character)
     end
 end
 
-local function UpdateVoiceHearing()
+local function CacheVoiceHearing()
     if not lia.config.get("IsVoiceEnabled", true) then return end
     local speakerGaggedCache = {}
     for _, speaker in player.Iterator() do
@@ -103,13 +103,10 @@ local function UpdateVoiceHearing()
             local baseRange = voiceType == VOICE_WHISPERING and lia.config.get("WhisperRange", 70) or voiceType == VOICE_TALKING and lia.config.get("TalkRange", 280) or voiceType == VOICE_YELLING and lia.config.get("YellRange", 840) or lia.config.get("TalkRange", 280)
             local distance = listener:GetPos():Distance(speaker:GetPos())
             listener.liaVoiceHear[speaker] = distance <= baseRange
+            local hookResult = hook.Run("OverrideVoiceHearingStatus", listener, speaker, listener.liaVoiceHear[speaker])
+            if hookResult ~= nil then listener.liaVoiceHear[speaker] = hookResult end
         end
     end
-end
-
-local function CreateVoiceUpdateTimer()
-    if timer.Exists("liaVoiceUpdate") then return end
-    timer.Create("liaVoiceUpdate", 0.5, 0, function() UpdateVoiceHearing() end)
 end
 
 function GM:PlayerDeath(client, inflictor, attacker)
@@ -157,7 +154,7 @@ function GM:PlayerLoadedChar(client, character)
     character:setLoginTime(os.time())
     hook.Run("PlayerLoadout", client)
     if not timer.Exists("liaSalaryGlobal") then hook.Run("CreateSalaryTimers") end
-    if not timer.Exists("liaVoiceUpdate") then CreateVoiceUpdateTimer() end
+    if not timer.Exists("liaVoiceUpdate") then timer.Create("liaVoiceUpdate", 0.5, 0, function() CacheVoiceHearing() end) end
     local ammoTable = character:getData("ammo")
     if character:getFaction() == FACTION_STAFF then
         local storedDiscord = client:getLiliaData("staffDiscord")
@@ -1115,41 +1112,47 @@ end
 
 function GM:OnVoiceTypeChanged(client)
     if not IsValid(client) or not client:getChar() then return end
-    UpdateVoiceHearing()
+    CacheVoiceHearing()
 end
 
 function GM:CreateSalaryTimers()
-    local salaryInterval = lia.config.get("SalaryInterval", 300)
+    local defaultSalaryInterval = lia.config.get("SalaryInterval", 300)
     if hook.Run("ShouldOverrideSalaryTimers") == true then return end
-    local salaryTimer = function()
-        for _, client in player.Iterator() do
-            if IsValid(client) and client:getChar() and hook.Run("CanPlayerEarnSalary", client) ~= false then
-                local char = client:getChar()
-                local faction = lia.faction.indices[char:getFaction()]
-                local class = lia.class.list[char:getClass()]
-                local pay = hook.Run("GetSalaryAmount", client, faction, class)
-                pay = isnumber(pay) and pay or class and class.pay or faction and faction.pay or 0
-                local adjustedPay = hook.Run("OnSalaryAdjust", client)
-                if isnumber(adjustedPay) then pay = adjustedPay end
-                local prestigeBonus = hook.Run("GetPrestigePayBonus", client, char, pay, faction, class)
-                if isnumber(prestigeBonus) then pay = pay + prestigeBonus end
-                if pay > 0 then
-                    local handled = hook.Run("PreSalaryGive", client, char, pay, faction, class)
-                    if handled ~= true then
-                        local finalPay = hook.Run("OnSalaryGiven", client, char, pay, faction, class)
-                        if isnumber(finalPay) then pay = finalPay end
-                        char:giveMoney(pay)
-                        client:notifyMoneyLocalized("salary", lia.currency.get(pay), L("salaryWord"))
+    if timer.Exists("liaSalaryGlobal") then timer.Remove("liaSalaryGlobal") end
+    for uniqueID, faction in pairs(lia.faction.teams) do
+        local timerName = "liaSalaryFaction_" .. uniqueID
+        if timer.Exists(timerName) then timer.Remove(timerName) end
+        local factionInterval = faction.payTimer or defaultSalaryInterval
+        if isnumber(factionInterval) and factionInterval > 0 then
+            local factionTimer = function()
+                for _, client in player.Iterator() do
+                    if IsValid(client) and client:getChar() and hook.Run("CanPlayerEarnSalary", client) ~= false then
+                        local char = client:getChar()
+                        local charFaction = lia.faction.indices[char:getFaction()]
+                        if charFaction and charFaction.uniqueID == uniqueID then
+                            local class = lia.class.list[char:getClass()]
+                            local pay = hook.Run("GetSalaryAmount", client, charFaction, class)
+                            pay = isnumber(pay) and pay or class and class.pay or charFaction and charFaction.pay or 0
+                            local adjustedPay = hook.Run("OnSalaryAdjust", client)
+                            if isnumber(adjustedPay) then pay = adjustedPay end
+                            local prestigeBonus = hook.Run("GetPrestigePayBonus", client, char, pay, charFaction, class)
+                            if isnumber(prestigeBonus) then pay = pay + prestigeBonus end
+                            if pay > 0 then
+                                local handled = hook.Run("PreSalaryGive", client, char, pay, charFaction, class)
+                                if handled ~= true then
+                                    local finalPay = hook.Run("OnSalaryGiven", client, char, pay, charFaction, class)
+                                    if isnumber(finalPay) then pay = finalPay end
+                                    char:giveMoney(pay)
+                                    client:notifyMoneyLocalized("salary", lia.currency.get(pay), L("salaryWord"))
+                                end
+                            end
+                        end
                     end
                 end
             end
-        end
-    end
 
-    if timer.Exists("liaSalaryGlobal") then
-        timer.Adjust("liaSalaryGlobal", salaryInterval, 0, salaryTimer)
-    else
-        timer.Create("liaSalaryGlobal", salaryInterval, 0, salaryTimer)
+            timer.Create(timerName, factionInterval, 0, factionTimer)
+        end
     end
 end
 

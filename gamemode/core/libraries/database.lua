@@ -77,10 +77,6 @@ lia.db.query = lia.db.query or function(...) lia.db.queryQueue[#lia.db.queryQueu
             Optional callback function to execute when the connection is established.
         reconnect (boolean)
             Optional flag to force reconnection even if already connected.
-
-    Returns:
-        nil
-
     Realm:
         Shared
 
@@ -123,10 +119,6 @@ end
     Parameters:
         callback (function)
             Optional callback function to execute when all tables have been wiped.
-
-    Returns:
-        nil
-
     Realm:
         Shared
 
@@ -173,10 +165,6 @@ end
 
     Parameters:
         None
-
-    Returns:
-        nil
-
     Realm:
         Shared
 
@@ -809,10 +797,6 @@ end
 
     Parameters:
         None
-
-    Returns:
-        nil
-
     Realm:
         Shared
 
@@ -1663,10 +1647,6 @@ end
     Parameters:
         callback (function)
             Function to call with the array of column names.
-
-    Returns:
-        nil
-
     Realm:
         Shared
 

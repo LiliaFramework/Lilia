@@ -22,10 +22,6 @@ if CLIENT then
 
     Parameters:
         None
-
-    Returns:
-        nil
-
     Realm:
         Client
 
@@ -59,10 +55,6 @@ if CLIENT then
 
     Parameters:
         None
-
-    Returns:
-        nil
-
     Realm:
         Client
 
@@ -108,10 +100,6 @@ if CLIENT then
             The localization key for the message.
         ... (varargs)
             Additional parameters to substitute into the localized message.
-
-    Returns:
-        nil
-
     Realm:
         Client
 
@@ -142,10 +130,6 @@ if CLIENT then
             The localization key for the message.
         ... (varargs)
             Additional parameters to substitute into the localized message.
-
-    Returns:
-        nil
-
     Realm:
         Client
 
@@ -176,10 +160,6 @@ if CLIENT then
             The localization key for the message.
         ... (varargs)
             Additional parameters to substitute into the localized message.
-
-    Returns:
-        nil
-
     Realm:
         Client
 
@@ -210,10 +190,6 @@ if CLIENT then
             The localization key for the message.
         ... (varargs)
             Additional parameters to substitute into the localized message.
-
-    Returns:
-        nil
-
     Realm:
         Client
 
@@ -244,10 +220,6 @@ if CLIENT then
             The localization key for the message.
         ... (varargs)
             Additional parameters to substitute into the localized message.
-
-    Returns:
-        nil
-
     Realm:
         Client
 
@@ -278,10 +250,6 @@ if CLIENT then
             The localization key for the message.
         ... (varargs)
             Additional parameters to substitute into the localized message.
-
-    Returns:
-        nil
-
     Realm:
         Client
 
@@ -310,10 +278,6 @@ if CLIENT then
             The notification text to display.
         typeId (number)
             The legacy notification type ID (0 = info, 1 = error, 2 = success).
-
-    Returns:
-        nil
-
     Realm:
         Client
 
@@ -347,10 +311,6 @@ if CLIENT then
 
     Parameters:
         None
-
-    Returns:
-        nil
-
     Realm:
         Client
 
@@ -400,10 +360,6 @@ end
             The type of notification (e.g., "info", "warning", "error", "success").
         ... (varargs)
             Additional parameters to substitute into the localized message.
-
-    Returns:
-        nil
-
     Realm:
         Shared
 
@@ -459,10 +415,6 @@ end
             The notification message text to display.
         notifType (string)
             The type of notification (e.g., "default", "info", "warning", "error", "success", "money", "admin").
-
-    Returns:
-        nil
-
     Realm:
         Shared
 

@@ -118,9 +118,6 @@ end
         identifier (string)
             Unique id passed during add.
 
-    Returns:
-        nil
-
     Realm:
         Client
 
@@ -155,9 +152,6 @@ end
         color (Color)
             Fill color.
 
-    Returns:
-        nil
-
     Realm:
         Client
 
@@ -189,9 +183,6 @@ end
             Label to display.
         duration (number)
             Seconds to run before auto-removal.
-
-    Returns:
-        nil
 
     Realm:
         Client
@@ -242,9 +233,6 @@ end
 
     Parameters:
         None
-
-    Returns:
-        nil
 
     Realm:
         Client

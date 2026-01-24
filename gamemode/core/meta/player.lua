@@ -117,10 +117,6 @@ end
             Layer or slot.
         c (number)
             Playback rate or weight.
-
-    Returns:
-        nil
-
     Realm:
         Shared
 
@@ -149,10 +145,6 @@ end
             Duration in seconds.
         callback (function|nil)
             Invoked when the timer completes.
-
-    Returns:
-        nil
-
     Realm:
         Shared
 
@@ -215,10 +207,6 @@ end
             Called if the stare is interrupted.
         distance (number|nil)
             Max distance trace length.
-
-    Returns:
-        nil
-
     Realm:
         Shared
 
@@ -267,10 +255,6 @@ end
 
     Parameters:
         None.
-
-    Returns:
-        nil
-
     Realm:
         Shared
 
@@ -327,10 +311,6 @@ end
 
     Parameters:
         None.
-
-    Returns:
-        nil
-
     Realm:
         Shared
 
@@ -522,10 +502,6 @@ end
             Text to show.
         notifType (string)
             Optional type key.
-
-    Returns:
-        nil
-
     Realm:
         Shared
 
@@ -556,10 +532,6 @@ end
             Optional type key.
         ... (any)
             Format arguments.
-
-    Returns:
-        nil
-
     Realm:
         Shared
 
@@ -586,10 +558,6 @@ end
     Parameters:
         message (string)
             Error text.
-
-    Returns:
-        nil
-
     Realm:
         Shared
 
@@ -616,10 +584,6 @@ end
     Parameters:
         message (string)
             Text to display.
-
-    Returns:
-        nil
-
     Realm:
         Shared
 
@@ -646,10 +610,6 @@ end
     Parameters:
         message (string)
             Text to display.
-
-    Returns:
-        nil
-
     Realm:
         Shared
 
@@ -676,10 +636,6 @@ end
     Parameters:
         message (string)
             Text to display.
-
-    Returns:
-        nil
-
     Realm:
         Shared
 
@@ -706,10 +662,6 @@ end
     Parameters:
         message (string)
             Text to display.
-
-    Returns:
-        nil
-
     Realm:
         Shared
 
@@ -736,10 +688,6 @@ end
     Parameters:
         message (string)
             Text to display.
-
-    Returns:
-        nil
-
     Realm:
         Shared
 
@@ -768,10 +716,6 @@ end
             Localization key.
         ... (any)
             Format args.
-
-    Returns:
-        nil
-
     Realm:
         Shared
 
@@ -800,10 +744,6 @@ end
             Localization key.
         ... (any)
             Format args.
-
-    Returns:
-        nil
-
     Realm:
         Shared
 
@@ -832,10 +772,6 @@ end
             Localization key.
         ... (any)
             Format args.
-
-    Returns:
-        nil
-
     Realm:
         Shared
 
@@ -864,10 +800,6 @@ end
             Localization key.
         ... (any)
             Format args.
-
-    Returns:
-        nil
-
     Realm:
         Shared
 
@@ -896,10 +828,6 @@ end
             Localization key.
         ... (any)
             Format args.
-
-    Returns:
-        nil
-
     Realm:
         Shared
 
@@ -928,10 +856,6 @@ end
             Localization key.
         ... (any)
             Format args.
-
-    Returns:
-        nil
-
     Realm:
         Shared
 
@@ -1329,10 +1253,6 @@ end
 
     Parameters:
         None.
-
-    Returns:
-        nil
-
     Realm:
         Shared
 
@@ -1390,10 +1310,6 @@ end
     Parameters:
         flags (string)
             Flags to give.
-
-    Returns:
-        nil
-
     Realm:
         Shared
 
@@ -1417,10 +1333,6 @@ end
     Parameters:
         flags (string)
             Flags to remove.
-
-    Returns:
-        nil
-
     Realm:
         Shared
 
@@ -1446,10 +1358,6 @@ end
             Whether the animation is active.
         boneData (table)
             Map of bone names to Angle values.
-
-    Returns:
-        nil
-
     Realm:
         Shared
 
@@ -1535,10 +1443,6 @@ end
             Optional material path for the icon.
         onReach (function|nil)
             Callback fired when the waypoint is reached.
-
-    Returns:
-        nil
-
     Realm:
         Shared
 
@@ -2006,10 +1910,6 @@ end
             Require manual close; optional.
         callback (function)
             Receives 0/1 result.
-
-    Returns:
-        nil
-
     Realm:
         Shared
 
@@ -2057,10 +1957,6 @@ end
             Prompt text.
         buttons (table)
             Array of strings or {label, callback} pairs.
-
-    Returns:
-        nil
-
     Realm:
         Shared
 
@@ -2105,10 +2001,6 @@ end
             Dialog title.
         buttons (table)
             Array of {text=, callback=} entries.
-
-    Returns:
-        nil
-
     Realm:
         Shared
 
@@ -2156,10 +2048,6 @@ end
             Available options.
         callback (function)
             Invoked with chosen option.
-
-    Returns:
-        nil
-
     Realm:
         Shared
 
@@ -2198,10 +2086,6 @@ if SERVER then
     Parameters:
         amount (number)
             Stamina to add.
-
-    Returns:
-        nil
-
     Realm:
         Server
 
@@ -2232,10 +2116,6 @@ if SERVER then
     Parameters:
         amount (number)
             Stamina to subtract.
-
-    Returns:
-        nil
-
     Realm:
         Server
 
@@ -2301,10 +2181,6 @@ if SERVER then
     Parameters:
         amount (number)
             Amount to deduct.
-
-    Returns:
-        nil
-
     Realm:
         Server
 
@@ -2328,10 +2204,6 @@ if SERVER then
     Parameters:
         callback (function|nil)
             Invoked with loaded data table.
-
-    Returns:
-        nil
-
     Realm:
         Server
 
@@ -2386,10 +2258,6 @@ if SERVER then
 
     Parameters:
         None.
-
-    Returns:
-        nil
-
     Realm:
         Server
 
@@ -2434,10 +2302,6 @@ if SERVER then
             Skip net sync when true.
         noSave (boolean)
             Skip immediate DB save when true.
-
-    Returns:
-        nil
-
     Realm:
         Server
 
@@ -2473,10 +2337,6 @@ if SERVER then
             Duration in minutes; 0 or nil for perm.
         banner (Player|nil)
             Staff issuing the ban.
-
-    Returns:
-        nil
-
     Realm:
         Server
 
@@ -2559,10 +2419,6 @@ if SERVER then
             Additional grace time before getting up.
         getUpMessage (string|nil)
             Action bar text while ragdolled.
-
-    Returns:
-        nil
-
     Realm:
         Server
 
@@ -2729,10 +2585,6 @@ if SERVER then
 
     Parameters:
         None.
-
-    Returns:
-        nil
-
     Realm:
         Server
 
@@ -2783,10 +2635,6 @@ if SERVER then
             Variable name.
         value (any)
             Value to store.
-
-    Returns:
-        nil
-
     Realm:
         Server
 
@@ -2828,10 +2676,6 @@ if SERVER then
             Variable name.
         value (any)
             Value to store.
-
-    Returns:
-        nil
-
     Realm:
         Server
 

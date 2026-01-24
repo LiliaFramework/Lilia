@@ -1,4 +1,4 @@
-﻿--[[
+--[[
     Folder: Meta
     File:  panel.md
 ]]
@@ -24,10 +24,6 @@ local originalSetPos = panelMeta.SetPos
     Parameters:
         inventory (Inventory)
             Inventory instance whose events should be listened to.
-
-    Returns:
-        nil
-            Only installs hooks.
 
     Realm:
         Client
@@ -86,10 +82,6 @@ end
         id (number|nil)
             Optional inventory ID to target; nil clears all known hooks.
 
-    Returns:
-        nil
-            Cleans up and exits.
-
     Realm:
         Client
 
@@ -132,10 +124,6 @@ end
         y (number)
             Vertical position before scaling.
 
-    Returns:
-        nil
-            Updates the panel position.
-
     Realm:
         Client
 
@@ -166,10 +154,6 @@ end
             Width before scaling.
         h (number)
             Height before scaling.
-
-    Returns:
-        nil
-            Updates the panel size.
 
     Realm:
         Client
@@ -218,10 +202,6 @@ end
         fn (function)
             Function to run after the original callback.
 
-    Returns:
-        nil
-            Rebinds the panel function.
-
     Realm:
         Client
 
@@ -254,10 +234,6 @@ end
         fn (function)
             Predicate returning true when the property should approach 1.
 
-    Returns:
-        nil
-            Adds Think hook to update the property.
-
     Realm:
         Client
 
@@ -286,10 +262,6 @@ end
             Transition speed toward hover state.
         rad (number|nil)
             Optional corner radius for rounded boxes.
-
-    Returns:
-        nil
-            Paint hook handles drawing.
 
     Realm:
         Client
@@ -329,10 +301,6 @@ end
         speed (number)
             Transition speed toward hover state.
 
-    Returns:
-        nil
-            Drawing occurs in PaintOver.
-
     Realm:
         Client
 
@@ -369,10 +337,6 @@ end
             Transition speed toward hover state.
         mat (IMaterial|nil)
             Optional material to draw instead of a solid color.
-
-    Returns:
-        nil
-            PaintOver handles the drawing.
 
     Realm:
         Client
@@ -426,10 +390,6 @@ end
         rtl/rtr/rbl/rbr (boolean|nil)
             Optional flags for which corners are rounded when using RoundedBoxEx.
 
-    Returns:
-        nil
-            Assigns a Paint handler.
-
     Realm:
         Client
 
@@ -466,10 +426,6 @@ end
         col (Color)
             Color tint applied to the material.
 
-    Returns:
-        nil
-            Paint hook renders the material.
-
     Realm:
         Client
 
@@ -504,10 +460,6 @@ end
         col (Color)
             Color tint for the material.
 
-    Returns:
-        nil
-            Paint hook renders the tiled material.
-
     Realm:
         Client
 
@@ -537,10 +489,6 @@ end
             Outline color.
         width (number)
             Border thickness in pixels.
-
-    Returns:
-        nil
-            Paint hook handles drawing.
 
     Realm:
         Client
@@ -573,10 +521,6 @@ end
             Corner line color.
         cornerLen (number)
             Length of each corner arm in pixels.
-
-    Returns:
-        nil
-            Paint hook handles the drawing.
 
     Realm:
         Client
@@ -612,10 +556,6 @@ end
             Strip thickness in pixels.
         side (number)
             Side constant (LEFT, RIGHT, TOP, BOTTOM).
-
-    Returns:
-        nil
-            Paint hook draws the strip.
 
     Realm:
         Client
@@ -663,10 +603,6 @@ end
             Optional offsets applied to the draw position.
         paint (boolean)
             Force paint-based rendering even if label setters exist.
-
-    Returns:
-        nil
-            Sets label fields or installs a Paint hook.
 
     Realm:
         Client
@@ -719,10 +655,6 @@ end
         centerSpacing (number)
             Offset to spread the two lines from the center point.
 
-    Returns:
-        nil
-            Paint hook handles drawing.
-
     Realm:
         Client
 
@@ -769,10 +701,6 @@ end
         amount (number)
             Blur intensity multiplier.
 
-    Returns:
-        nil
-            Paint hook handles the blur passes.
-
     Realm:
         Client
 
@@ -810,10 +738,6 @@ end
             Lerp speed for expansion and fade.
         trad (number|nil)
             Target radius override; defaults to panel width.
-
-    Returns:
-        nil
-            Paint and DoClick hooks manage the effect.
 
     Realm:
         Client
@@ -859,10 +783,6 @@ end
         trad (number|nil)
             Target radius; defaults to panel width.
 
-    Returns:
-        nil
-            Think and PaintOver hooks animate the effect.
-
     Realm:
         Client
 
@@ -898,10 +818,6 @@ end
             Color of the outline/background.
         speed (number)
             Transition speed for filling.
-
-    Returns:
-        nil
-            Paint hook handles the drawing.
 
     Realm:
         Client
@@ -942,10 +858,6 @@ end
         speed (number)
             Transition speed for filling.
 
-    Returns:
-        nil
-            Paint hook handles the drawing.
-
     Realm:
         Client
 
@@ -978,10 +890,6 @@ end
     Parameters:
         mask (function)
             Draw callback that defines the stencil shape.
-
-    Returns:
-        nil
-            Sets up avatar child and overrides paint functions.
 
     Realm:
         Client
@@ -1035,10 +943,6 @@ end
         None
             Uses a built-in circular mask.
 
-    Returns:
-        nil
-            Delegates to AvatarMask.
-
     Realm:
         Client
 
@@ -1061,10 +965,6 @@ end
     Parameters:
         col (Color)
             Circle color.
-
-    Returns:
-        nil
-            Paint hook renders the circle.
 
     Realm:
         Client
@@ -1095,10 +995,6 @@ end
             Overlay color and base alpha.
         speed (number)
             Transition speed toward hover state.
-
-    Returns:
-        nil
-            Paint hook manages the effect.
 
     Realm:
         Client
@@ -1131,10 +1027,6 @@ end
             Circle color and alpha.
         speed (number)
             Transition speed toward hover state.
-
-    Returns:
-        nil
-            Paint hook manages the drawing.
 
     Realm:
         Client
@@ -1172,10 +1064,6 @@ end
             Fraction of the panel to cover with the gradient.
         op (boolean)
             When true, flips the gradient material for the given direction.
-
-    Returns:
-        nil
-            Paint hook renders the gradient.
 
     Realm:
         Client
@@ -1224,10 +1112,6 @@ end
         url (string)
             URL to open.
 
-    Returns:
-        nil
-            Registers a DoClick handler.
-
     Realm:
         Client
 
@@ -1252,10 +1136,6 @@ end
             Net message name.
         data (function)
             Optional writer that populates the net message payload.
-
-    Returns:
-        nil
-            Registers the click handler and sends the message.
 
     Realm:
         Client
@@ -1289,10 +1169,6 @@ end
         dontInvalidate (boolean)
             Skip invalidating the parent when true.
 
-    Returns:
-        nil
-            Adjusts docking and layout.
-
     Realm:
         Client
 
@@ -1322,10 +1198,6 @@ end
         target (Panel)
             Panel to reference; defaults to the parent.
 
-    Returns:
-        nil
-            Adjusts panel height.
-
     Realm:
         Client
 
@@ -1353,10 +1225,6 @@ end
         target (Panel)
             Panel to reference; defaults to the parent.
 
-    Returns:
-        nil
-            Adjusts panel width.
-
     Realm:
         Client
 
@@ -1382,10 +1250,6 @@ end
         None
             Uses the panel's current height.
 
-    Returns:
-        nil
-            Updates the width.
-
     Realm:
         Client
 
@@ -1409,10 +1273,6 @@ end
         None
             Uses the panel's current width.
 
-    Returns:
-        nil
-            Updates the height.
-
     Realm:
         Client
 
@@ -1435,10 +1295,6 @@ end
     Parameters:
         target (Panel|nil)
             Panel to remove; defaults to the panel itself.
-
-    Returns:
-        nil
-            Registers the click handler.
 
     Realm:
         Client
@@ -1466,10 +1322,6 @@ end
         alpha (number)
             Target opacity after fading.
 
-    Returns:
-        nil
-            Starts the alpha animation.
-
     Realm:
         Client
 
@@ -1496,10 +1348,6 @@ end
         None
             Operates on the panel's VBar.
 
-    Returns:
-        nil
-            Adjusts VBar visibility and size.
-
     Realm:
         Client
 
@@ -1525,10 +1373,6 @@ end
         fn (function)
             Predicate returning true when the transition should be active.
 
-    Returns:
-        nil
-            Stores the predicate.
-
     Realm:
         Client
 
@@ -1551,10 +1395,6 @@ end
     Parameters:
         None
             Resets the stored predicate.
-
-    Returns:
-        nil
-            Removes the predicate.
 
     Realm:
         Client
@@ -1579,10 +1419,6 @@ end
         fn (string)
             Function name to force On to wrap.
 
-    Returns:
-        nil
-            Stores the override name.
-
     Realm:
         Client
 
@@ -1605,10 +1441,6 @@ end
     Parameters:
         None
             Clears the override.
-
-    Returns:
-        nil
-            Deletes the override field.
 
     Realm:
         Client
@@ -1633,10 +1465,6 @@ end
         None
             Simply clears the Paint reference.
 
-    Returns:
-        nil
-            Paint is set to nil.
-
     Realm:
         Client
 
@@ -1659,10 +1487,6 @@ end
     Parameters:
         None
             Applies standard styling hooks.
-
-    Returns:
-        nil
-            Configures paint behaviors and transition state.
 
     Realm:
         Client

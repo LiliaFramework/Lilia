@@ -1,4 +1,4 @@
-﻿--[[
+--[[
     Folder: Definitions
     File:  outfit.md
 ]]
@@ -133,9 +133,6 @@ if CLIENT then
             item - The item instance being drawn
             w - Width of the item slot
             h - Height of the item slot
-
-        Returns:
-            nil
 
         Realm:
             Client

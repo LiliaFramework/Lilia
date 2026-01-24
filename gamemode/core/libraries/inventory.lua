@@ -1,4 +1,4 @@
-﻿--[[
+--[[
     Folder: Libraries
     File: inventory.md
 ]]
@@ -52,10 +52,6 @@ end
             Unique identifier for the inventory type.
         invTypeStruct (table)
             Table containing the inventory type definition with required fields like className, config, and methods.
-
-    Returns:
-        nil
-            No return value.
 
     Realm:
         Shared
@@ -312,10 +308,6 @@ if SERVER then
         id (number)
             The inventory ID to delete.
 
-    Returns:
-        nil
-            No return value.
-
     Realm:
         Server
 
@@ -343,10 +335,6 @@ if SERVER then
     Parameters:
         character (table)
             The character object whose inventories should be destroyed.
-
-    Returns:
-        nil
-            No return value.
 
     Realm:
         Server

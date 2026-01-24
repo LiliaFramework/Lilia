@@ -1,4 +1,4 @@
-﻿--[[
+--[[
     Folder: Libraries
     File: util.md
 ]]
@@ -732,10 +732,6 @@ if SERVER then
         characterID (number|nil)
             Optional character identifier to send with the payload.
 
-    Returns:
-        nil
-            Communicates with the client via net message only.
-
     Realm:
         Server
 
@@ -859,10 +855,6 @@ else
         scaleFactor (number|nil)
             Initial size scale relative to target; defaults to 0.8.
 
-    Returns:
-        nil
-            Mutates the panel over time via its Think hook.
-
     Realm:
         Client
 
@@ -926,10 +918,6 @@ else
         panel (Panel)
             Menu panel to clamp.
 
-    Returns:
-        nil
-            Adjusts the panel position in place.
-
     Realm:
         Client
 
@@ -992,10 +980,6 @@ else
             Corner radius for drawing helper; defaults to 0.
         flags (number|nil)
             Optional draw flags passed to `drawMaterial`.
-
-    Returns:
-        nil
-            Performs immediate drawing operations.
 
     Realm:
         Client
@@ -1083,10 +1067,6 @@ else
         alpha (number|nil)
             Draw color alpha; defaults to 255.
 
-    Returns:
-        nil
-            Renders blur to the screen.
-
     Realm:
         Client
 
@@ -1130,10 +1110,6 @@ else
             Blur draw alpha; defaults to 255.
         darkAlpha (number|nil)
             Alpha for the black overlay; defaults to 220.
-
-    Returns:
-        nil
-            Renders blur and overlay.
 
     Realm:
         Client
@@ -1191,10 +1167,6 @@ else
         alpha (number|nil)
             Draw alpha; defaults to 255.
 
-    Returns:
-        nil
-            Renders blur to the specified area.
-
     Realm:
         Client
 
@@ -1233,10 +1205,6 @@ else
             Argument descriptors passed to `requestArguments`.
         callback (function|nil)
             Invoked with the collected information on success.
-
-    Returns:
-        nil
-            Handles UI flow and optional callback invocation.
 
     Realm:
         Client
@@ -1595,10 +1563,6 @@ else
         alphaOverride (number|nil)
             Optional alpha multiplier (0-1 or 0-255).
 
-    Returns:
-        nil
-            Performs drawing only; caches fade state per-entity.
-
     Realm:
         Client
 
@@ -1680,10 +1644,6 @@ else
             Optional alpha multiplier (0-1 or 0-255).
         maxDist (number|nil)
             Maximum trace distance; defaults to 380 units.
-
-    Returns:
-        nil
-            Draws text when a trace hits within range.
 
     Realm:
         Client

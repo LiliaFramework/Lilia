@@ -23,9 +23,6 @@ lia.font.stored = lia.font.stored or {}
     Parameters:
         None
 
-    Returns:
-        nil
-
     Realm:
         Client
 
@@ -64,9 +61,6 @@ end
             Unique font identifier.
         fontData (table)
             surface.CreateFont data table.
-
-    Returns:
-        nil
 
     Realm:
         Shared
@@ -166,9 +160,6 @@ end
     Parameters:
         fontName (string|nil)
             Base font name; defaults to config Font.
-
-    Returns:
-        nil
 
     Realm:
         Shared
@@ -401,7 +392,7 @@ lia.config.add("Font", "font", "Montserrat Medium", function()
     hook.Run("RefreshFonts")
 end, {
     desc = "fontDesc",
-    category = "categoryInterface",
+    category = "Core",
     type = "Table",
     options = lia.font.getAvailableFonts()
 })

@@ -1,4 +1,4 @@
-﻿--[[
+--[[
     Folder: Libraries
     File: class.md
 ]]
@@ -89,10 +89,6 @@ end
     Parameters:
         directory (string)
             Path to the directory containing class Lua files.
-
-    Returns:
-        nil
-            Operates for side effects of registering classes.
 
     Realm:
         Shared

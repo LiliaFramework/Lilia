@@ -73,10 +73,6 @@ end
             Unique command key.
         data (table)
             Command definition (arguments, desc, privilege, superAdminOnly, adminOnly, alias, onRun, onCheckAccess, etc.).
-
-    Returns:
-        nil
-
     Realm:
         Shared
 
@@ -356,10 +352,6 @@ if SERVER then
             Command key to execute.
         arguments (table|nil)
             Parsed command arguments.
-
-    Returns:
-        nil
-
     Realm:
         Server
 
@@ -491,10 +483,6 @@ else
             Names of missing arguments.
         prefix (table|nil)
             Prefilled argument values.
-
-    Returns:
-        nil
-
     Realm:
         Client
 
@@ -746,10 +734,6 @@ else
             Command key to invoke.
         ... (vararg)
             Arguments to pass to the command.
-
-    Returns:
-        nil
-
     Realm:
         Client
 

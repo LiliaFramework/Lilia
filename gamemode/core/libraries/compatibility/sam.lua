@@ -146,13 +146,13 @@ lia.command.add("cleardecals", {
 
 lia.config.add("AdminOnlyNotification", "adminOnlyNotifications", true, nil, {
     desc = "adminOnlyNotificationsDesc",
-    category = "categorySAM",
+    category = "Core",
     type = "Boolean"
 })
 
 lia.config.add("SAMEnforceStaff", "samEnforceStaff", true, nil, {
     desc = "samEnforceStaffDesc",
-    category = "categorySAM",
+    category = "Core",
     type = "Boolean"
 })
 

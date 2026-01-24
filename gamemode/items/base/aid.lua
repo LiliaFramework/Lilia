@@ -99,6 +99,17 @@ ITEM.health = 0
         ```
 ]]
 ITEM.armor = 0
+--[[
+    Purpose:
+        Sets the amount of stamina restored when used
+
+    Example Usage:
+        ```lua
+        -- Set stamina restoration amount
+        ITEM.stamina = 50
+        ```
+]]
+ITEM.stamina = 0
 ITEM.functions.use = {
     name = "use",
     sound = "items/medshot4.wav",
@@ -111,6 +122,8 @@ ITEM.functions.use = {
                 local newArmor = math.min(client:Armor() + item.armor, client:GetMaxArmor())
                 client:SetArmor(newArmor)
             end
+
+            if item.stamina > 0 then client:restoreStamina(item.stamina) end
         end
     end
 }
@@ -129,8 +142,12 @@ ITEM.functions.target = {
                     local newArmor = math.min(target:Armor() + item.armor, target:GetMaxArmor())
                     target:SetArmor(newArmor)
                 end
+
+                if item.stamina > 0 then client:restoreStamina(item.stamina) end
+                return true
             else
                 client:notifyErrorLocalized("invalidTargetNeedLiving")
+                return false
             end
         end
     end,

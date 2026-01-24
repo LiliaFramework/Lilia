@@ -311,9 +311,6 @@ end
         banKey (string)
             Localization key for ban message (defaults to "bannedForInfraction").
 
-    Returns:
-        nil
-
     Realm:
         Shared
 
@@ -451,9 +448,6 @@ end
         noNetwork (boolean)
             If true, skips network synchronization with clients after saving.
 
-    Returns:
-        nil
-
     Realm:
         Shared
 
@@ -516,9 +510,6 @@ end
             - Name (string): Display name for the privilege (optional, defaults to ID)
             - MinAccess (string): Minimum usergroup required ("user", "admin", "superadmin")
             - Category (string): Category for organizing privileges in menus
-
-    Returns:
-        nil
 
     Realm:
         Shared
@@ -588,9 +579,6 @@ end
         id (string)
             The privilege ID to unregister.
 
-    Returns:
-        nil
-
     Realm:
         Shared
 
@@ -633,9 +621,6 @@ end
     Parameters:
         groupName (string)
             The name of the usergroup to apply inheritance to.
-
-    Returns:
-        nil
 
     Realm:
         Shared
@@ -690,9 +675,6 @@ end
 
     Parameters:
         None
-
-    Returns:
-        nil
 
     Realm:
         Shared
@@ -767,9 +749,6 @@ end
         info (table)
             Optional configuration table for the group (privileges, inheritance, etc.).
 
-    Returns:
-        nil
-
     Realm:
         Shared
 
@@ -821,9 +800,6 @@ end
         groupName (string)
             The name of the usergroup to remove.
 
-    Returns:
-        nil
-
     Realm:
         Shared
 
@@ -866,9 +842,6 @@ end
             The current name of the usergroup to rename.
         newName (string)
             The new name for the usergroup.
-
-    Returns:
-        nil
 
     Realm:
         Shared
@@ -923,9 +896,6 @@ if SERVER then
         notification (string)
             The notification message key to send.
 
-    Returns:
-        nil
-
     Realm:
         Server
 
@@ -958,9 +928,6 @@ if SERVER then
             The permission ID to grant.
         silent (boolean)
             If true, skips network synchronization.
-
-    Returns:
-        nil
 
     Realm:
         Server
@@ -1005,9 +972,6 @@ if SERVER then
         silent (boolean)
             If true, skips network synchronization.
 
-    Returns:
-        nil
-
     Realm:
         Server
 
@@ -1046,9 +1010,6 @@ if SERVER then
     Parameters:
         c (Player)
             Optional specific client to sync with. If not provided, syncs with all clients in batches.
-
-    Returns:
-        nil
 
     Realm:
         Server
@@ -1150,9 +1111,6 @@ if SERVER then
         source (string)
             Optional source identifier for logging.
 
-    Returns:
-        nil
-
     Realm:
         Server
 
@@ -1184,9 +1142,6 @@ if SERVER then
             The new usergroup name to assign.
         source (string)
             Optional source identifier for logging.
-
-    Returns:
-        nil
 
     Realm:
         Server

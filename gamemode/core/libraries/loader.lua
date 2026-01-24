@@ -1,4 +1,4 @@
-﻿--[[
+--[[
     Folder: Libraries
     File: loader.md
 ]]
@@ -305,10 +305,6 @@ local ConditionalFiles = {
             File path.
         realm (string|nil)
             "server" | "client" | "shared". Auto-detected from filename if nil.
-
-    Returns:
-        nil
-
     Realm:
         Shared
 
@@ -371,10 +367,6 @@ end
             If true, recurse into subfolders.
         realm (string|nil)
             Force realm for all files; auto-detect when nil.
-
-    Returns:
-        nil
-
     Realm:
         Shared
 
@@ -417,10 +409,6 @@ end
             Recurse into subfolders when true.
         forceRealm (string|nil)
             Override realm detection for all files.
-
-    Returns:
-        nil
-
     Realm:
         Shared
 
@@ -513,10 +501,6 @@ local versionURL = "https://liliaframework.github.io/versioning/lilia.json"
 
     Parameters:
         None
-
-    Returns:
-        nil
-
     Realm:
         Shared
 
@@ -662,10 +646,6 @@ lia.loader.include("lilia/gamemode/core/libraries/data.lua", "shared")
         msg (string)
             The error message to display in the console.
 
-    Returns:
-        nil
-            This function does not return any value.
-
     Realm:
         Shared
 
@@ -691,10 +671,6 @@ end
         msg (string)
             The warning message to display in the console.
 
-    Returns:
-        nil
-            This function does not return any value.
-
     Realm:
         Shared
 
@@ -719,10 +695,6 @@ end
     Parameters:
         msg (string)
             The informational message to display in the console.
-
-    Returns:
-        nil
-            This function does not return any value.
 
     Realm:
         Shared
@@ -752,10 +724,6 @@ end
         msg (string)
             The message describing what is being initialized or loaded.
 
-    Returns:
-        nil
-            This function does not return any value.
-
     Realm:
         Shared
 
@@ -783,10 +751,6 @@ end
     Parameters:
         embed (table)
             A Discord embed object containing message details. Supports fields like title, description, color, timestamp, footer, etc.
-
-    Returns:
-        nil
-            This function does not return any value.
 
     Realm:
         Shared
@@ -852,10 +816,6 @@ end
     Parameters:
         path (string)
             Base path containing entities/weapons/effects subfolders.
-
-    Returns:
-        nil
-
     Realm:
         Shared
 
@@ -990,10 +950,6 @@ local hasInitializedModules = false
     Parameters:
         isReload (boolean)
             true when called from OnReloaded.
-
-    Returns:
-        nil
-
     Realm:
         Shared
 

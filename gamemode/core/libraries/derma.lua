@@ -1,4 +1,4 @@
-﻿--[[
+--[[
     Folder: Libraries
     File: derma.md
 ]]
@@ -734,10 +734,6 @@ end
         colorStandard (Color)
             Optional starting color; defaults to white.
 
-    Returns:
-        nil
-            Operates through UI side effects and the supplied callback.
-
     Realm:
         Client
 
@@ -1281,10 +1277,6 @@ end
         flags (number|nil)
             Optional bitmask using `lia.derma` flag constants (shape, blur, corner suppression).
 
-    Returns:
-        nil
-            Draws directly to the screen.
-
     Realm:
         Client
 
@@ -1322,10 +1314,6 @@ end
         flags (number|nil)
             Optional bitmask using `lia.derma` flags.
 
-    Returns:
-        nil
-            Draws directly to the screen.
-
     Realm:
         Client
 
@@ -1362,10 +1350,6 @@ end
             Texture handle to apply to the rectangle.
         flags (number|nil)
             Optional bitmask using `lia.derma` flags.
-
-    Returns:
-        nil
-            Draws directly to the screen.
 
     Realm:
         Client
@@ -1405,10 +1389,6 @@ end
         flags (number|nil)
             Optional bitmask using `lia.derma` flags.
 
-    Returns:
-        nil
-            Draws directly to the screen.
-
     Realm:
         Client
 
@@ -1440,10 +1420,6 @@ end
             Fill color; defaults to white.
         flags (number|nil)
             Optional bitmask using `lia.derma` flags.
-
-    Returns:
-        nil
-            Draws directly to the screen.
 
     Realm:
         Client
@@ -1478,10 +1454,6 @@ end
         flags (number|nil)
             Optional bitmask using `lia.derma` flags.
 
-    Returns:
-        nil
-            Draws directly to the screen.
-
     Realm:
         Client
 
@@ -1515,10 +1487,6 @@ end
         flags (number|nil)
             Optional bitmask using `lia.derma` flags.
 
-    Returns:
-        nil
-            Draws directly to the screen.
-
     Realm:
         Client
 
@@ -1551,10 +1519,6 @@ end
             Material whose base texture will be drawn.
         flags (number|nil)
             Optional bitmask using `lia.derma` flags.
-
-    Returns:
-        nil
-            Draws directly to the screen.
 
     Realm:
         Client
@@ -1614,10 +1578,6 @@ end
             Bottom-right radius override.
         thickness (number|nil)
             Optional outline thickness for partial arcs.
-
-    Returns:
-        nil
-            Draws directly to the screen.
 
     Realm:
         Client
@@ -1702,10 +1662,6 @@ end
         thickness (number|nil)
             Optional outline thickness when rendering arcs.
 
-    Returns:
-        nil
-            Draws directly to the screen.
-
     Realm:
         Client
 
@@ -1759,10 +1715,6 @@ end
         flags (number|nil)
             Optional bitmask using `lia.derma` flags.
 
-    Returns:
-        nil
-            Draws directly to the screen.
-
     Realm:
         Client
 
@@ -1803,10 +1755,6 @@ end
             Shadow alpha scaling.
         flags (number|nil)
             Optional bitmask using `lia.derma` flags.
-
-    Returns:
-        nil
-            Draws directly to the screen.
 
     Realm:
         Client
@@ -2115,10 +2063,6 @@ end
         shape (number)
             Shape flag constant such as `lia.derma.SHAPE_FIGMA`; defaults to `SHAPE_FIGMA` when nil.
 
-    Returns:
-        nil
-            Updates internal default state.
-
     Realm:
         Client
 
@@ -2158,10 +2102,6 @@ end
             Horizontal alignment (`TEXT_ALIGN_*`).
         yalign (number)
             Vertical alignment (`TEXT_ALIGN_*`).
-
-    Returns:
-        nil
-            Draws directly to the screen.
 
     Realm:
         Client
@@ -2256,10 +2196,6 @@ end
             Color of the label text.
         outlineCol (Color)
             Color used to draw the bubble outline/fill.
-
-    Returns:
-        nil
-            Draws directly to the screen.
 
     Realm:
         Client
@@ -2549,10 +2485,6 @@ end
         h (number)
             Height.
 
-    Returns:
-        nil
-            Draws directly to the screen.
-
     Realm:
         Client
 
@@ -2722,10 +2654,6 @@ end
         scaleFactor (number|nil)
             Starting scale factor relative to the final size; defaults to 0.8.
 
-    Returns:
-        nil
-            Mutates the panel in-place and assigns a Think hook.
-
     Realm:
         Client
 
@@ -2791,10 +2719,6 @@ end
         panel (Panel)
             Panel to clamp.
 
-    Returns:
-        nil
-            Mutates the panel position in-place.
-
     Realm:
         Client
 
@@ -2847,10 +2771,6 @@ end
             Corner radius; defaults to 0.
         flags (number|nil)
             Optional bitmask using `lia.derma` flags.
-
-    Returns:
-        nil
-            Draws directly to the screen.
 
     Realm:
         Client
@@ -2938,10 +2858,6 @@ end
         alpha (number|nil)
             Alpha applied to the blur draw; defaults to 255.
 
-    Returns:
-        nil
-            Draws directly to the screen.
-
     Realm:
         Client
 
@@ -2982,10 +2898,6 @@ end
             Alpha applied to the blur draw; defaults to 255.
         darkAlpha (number|nil)
             Alpha of the dark overlay; defaults to 220.
-
-    Returns:
-        nil
-            Draws directly to the screen.
 
     Realm:
         Client
@@ -3043,10 +2955,6 @@ end
         alpha (number|nil)
             Alpha applied to the blur draw; defaults to 255.
 
-    Returns:
-        nil
-            Draws directly to the screen.
-
     Realm:
         Client
 
@@ -3086,10 +2994,6 @@ end
             Callback receiving `(true, resultsTable)` on submit or `(false)` on cancel.
         defaults (table|nil)
             Default values keyed by field name.
-
-    Returns:
-        nil
-            Operates through UI side effects and the provided callback.
 
     Realm:
         Client
@@ -3688,10 +3592,6 @@ lia.derma.entsScales = lia.derma.entsScales or {}
             Vertical offset for the text; defaults to 0.
         alphaOverride (number|nil)
             Optional alpha multiplier or raw alpha value.
-
-    Returns:
-        nil
-            Draws directly to the screen and tracks internal fade state.
 
     Realm:
         Client

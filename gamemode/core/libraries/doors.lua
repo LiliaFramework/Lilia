@@ -87,10 +87,6 @@ if SERVER then
             Door entity.
         data (table)
             Door data overrides.
-
-    Returns:
-        nil
-
     Realm:
         Server
 
@@ -185,10 +181,6 @@ if SERVER then
 
     Parameters:
         door (Entity)
-
-    Returns:
-        nil
-
     Realm:
         Server
 
@@ -222,10 +214,6 @@ if SERVER then
 
     Parameters:
         client (Player)
-
-    Returns:
-        nil
-
     Realm:
         Server
 
@@ -258,10 +246,6 @@ if SERVER then
     Parameters:
         door (Entity)
         data (table)
-
-    Returns:
-        nil
-
     Realm:
         Server
     Example Usage:
@@ -283,10 +267,6 @@ if SERVER then
     Parameters:
         mapName (string)
         presetData (table)
-
-    Returns:
-        nil
-
     Realm:
         Server
 
@@ -343,10 +323,6 @@ if SERVER then
 
     Parameters:
         None
-
-    Returns:
-        nil
-
     Realm:
         Server
 
@@ -414,10 +390,6 @@ if SERVER then
 
     Parameters:
         None
-
-    Returns:
-        nil
-
     Realm:
         Server
 
@@ -555,10 +527,6 @@ if CLIENT then
         doorID (number)
         data (table|nil)
             nil clears the cache entry.
-
-    Returns:
-        nil
-
     Realm:
         Client
 

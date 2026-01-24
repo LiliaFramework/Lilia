@@ -33,10 +33,6 @@
         valueFunc (function)
             Callback returning the current numeric value to display.
 
-    Returns:
-        nil
-            Add the bar when valid; return nil to continue other hooks.
-
     Realm:
         Client
 
@@ -66,10 +62,6 @@ end
             Sort order; lower numbers appear first.
         location (number)
             Column index in the character info layout.
-
-    Returns:
-        nil
-            Modify or create the section in-place.
 
     Realm:
         Client
@@ -101,10 +93,6 @@ end
         valueFunc (function)
             Callback that returns the string to render.
 
-    Returns:
-        nil
-            Appends the text field if the section exists.
-
     Realm:
         Client
 
@@ -133,10 +121,6 @@ end
         information (table)
             Table of strings; insert new lines to show additional info.
 
-    Returns:
-        nil
-            Mutate the information table in place.
-
     Realm:
         Client
 
@@ -159,10 +143,6 @@ end
 
     Parameters:
         None
-
-    Returns:
-        nil
-            Perform any client-side refresh logic.
 
     Realm:
         Client
@@ -189,10 +169,6 @@ end
             Table of model entries to be displayed; append or modify entries here.
         tgt (Entity)
             Entity currently targeted by the admin stick.
-
-    Returns:
-        nil
-            Modify allModList in place.
 
     Realm:
         Client
@@ -392,10 +368,6 @@ end
         columns (table)
             Table of column definitions; modify in place to add/remove columns.
 
-    Returns:
-        nil
-            Mutate the provided columns table.
-
     Realm:
         Client
 
@@ -422,10 +394,6 @@ end
         row (Panel)
             The row panel being built.
 
-    Returns:
-        nil
-            Customize the row directly.
-
     Realm:
         Client
 
@@ -449,10 +417,6 @@ end
     Parameters:
         newCharList (table)
             Array of character summaries.
-
-    Returns:
-        nil
-            Perform setup; return false to stop default population.
 
     Realm:
         Client
@@ -480,10 +444,6 @@ end
         newCharList (table)
             Updated list snapshot.
 
-    Returns:
-        nil
-            Handle syncing UI/state.
-
     Realm:
         Client
 
@@ -508,10 +468,6 @@ end
         character (Character|number)
             Character object or id that was loaded.
 
-    Returns:
-        nil
-            Perform client-side setup.
-
     Realm:
         Client
 
@@ -534,10 +490,6 @@ end
 
     Parameters:
         None
-
-    Returns:
-        nil
-            Execute any shutdown logic.
 
     Realm:
         Client
@@ -563,10 +515,6 @@ end
         charMenu (Panel)
             The created menu panel.
 
-    Returns:
-        nil
-            Adjust the panel or block with false.
-
     Realm:
         Client
 
@@ -590,10 +538,6 @@ end
     Parameters:
         character (Character|number)
             The restored character object or id.
-
-    Returns:
-        nil
-            Update UI or caches.
 
     Realm:
         Client
@@ -621,10 +565,6 @@ end
         ... (any)
             Remaining arguments for chat.AddText.
 
-    Returns:
-        nil
-            Return false to suppress default printing.
-
     Realm:
         Client
 
@@ -648,10 +588,6 @@ end
     Parameters:
         arg1 (Panel)
             The chatbox panel instance.
-
-    Returns:
-        nil
-            Modify the panel as needed.
 
     Realm:
         Client
@@ -677,10 +613,6 @@ end
         arg1 (Panel)
             Chat panel or message object being added.
 
-    Returns:
-        nil
-            Modify or cancel rendering by returning false.
-
     Realm:
         Client
 
@@ -704,10 +636,6 @@ end
     Parameters:
         id (number)
             The selected character’s id.
-
-    Returns:
-        nil
-            Proceed with default selection unless false is returned.
 
     Realm:
         Client
@@ -739,10 +667,6 @@ end
         results (any)
             Return data from the command handler, if any.
 
-    Returns:
-        nil
-            Use to display extra feedback or analytics.
-
     Realm:
         Client
 
@@ -766,10 +690,6 @@ end
     Parameters:
         creationPanel (Panel)
             The root creation panel containing step definitions.
-
-    Returns:
-        nil
-            Modify the panel or return false to replace defaults.
 
     Realm:
         Client
@@ -822,10 +742,6 @@ end
     Parameters:
         nil
 
-    Returns:
-        nil
-            The hook doesn't expect a return value but allows for custom chatbox panel setup.
-
     Realm:
         Client
 
@@ -877,10 +793,6 @@ end
     Parameters:
         pages (table)
             Table of page descriptors; insert entries with name/icon/build function.
-
-    Returns:
-        nil
-            Fill the pages table.
 
     Realm:
         Client
@@ -936,10 +848,6 @@ end
         tabs (table)
             Table of tab constructors keyed by tab id; add new entries to inject tabs.
 
-    Returns:
-        nil
-            Mutate the tabs table.
-
     Realm:
         Client
 
@@ -964,10 +872,6 @@ end
         id (number)
             ID of the character that was removed.
 
-    Returns:
-        nil
-            Update UI accordingly.
-
     Realm:
         Client
 
@@ -991,10 +895,6 @@ end
     Parameters:
         newSkin (string)
             Name of the newly applied skin.
-
-    Returns:
-        nil
-            Rebuild or refresh UI if needed.
 
     Realm:
         Client
@@ -1022,10 +922,6 @@ end
         hudInfos (table)
             Array to be filled with info tables (text, position, styling).
 
-    Returns:
-        nil
-            Append to hudInfos; return false to suppress defaults.
-
     Realm:
         Client
 
@@ -1051,10 +947,6 @@ end
             Door entity being updated.
         syncData (table)
             Data payload containing door state/owners.
-
-    Returns:
-        nil
-            Update local state; return false to block default apply.
 
     Realm:
         Client
@@ -1084,10 +976,6 @@ end
         info (table)
             Array of `{text, color}` rows; append to extend display.
 
-    Returns:
-        nil
-            Modify info in place.
-
     Realm:
         Client
 
@@ -1115,10 +1003,6 @@ end
             Alpha value (0-255) for fade in/out.
         pos (table|Vector)
             Screen position for the info panel (optional).
-
-    Returns:
-        nil
-            Draw your own panel; return true to suppress default.
 
     Realm:
         Client
@@ -1150,10 +1034,6 @@ end
         alpha (number)
             Current alpha used for drawing.
 
-    Returns:
-        nil
-            Change infoTable contents.
-
     Realm:
         Client
 
@@ -1180,10 +1060,6 @@ end
         entity (Entity)
             The model panel entity.
 
-    Returns:
-        nil
-            Add custom draws; return false to skip default.
-
     Realm:
         Client
 
@@ -1208,10 +1084,6 @@ end
         entity (Entity)
             The ragdoll entity being drawn.
 
-    Returns:
-        nil
-            Perform custom drawing; return false to skip.
-
     Realm:
         Client
 
@@ -1234,10 +1106,6 @@ end
 
     Parameters:
         None
-
-    Returns:
-        nil
-            Run custom cleanup logic.
 
     Realm:
         Client
@@ -1263,10 +1131,6 @@ end
         f1MenuPanel (Panel)
             The opened menu panel.
 
-    Returns:
-        nil
-            Initialize controls or return false to stop defaults.
-
     Realm:
         Client
 
@@ -1290,10 +1154,6 @@ end
     Parameters:
         arg1 (table)
             Table of available model paths; mutate to filter.
-
-    Returns:
-        nil
-            Modify the table; return false to block default filtering.
 
     Realm:
         Client
@@ -1322,10 +1182,6 @@ end
             Raw door data (owners, title, etc.).
         doorInfo (table)
             Table of display lines; mutate to change output.
-
-    Returns:
-        nil
-            Modify doorInfo in place.
 
     Realm:
         Client
@@ -1675,10 +1531,6 @@ end
         lists (table)
             Table of list definitions; append your own entries.
 
-    Returns:
-        nil
-            Modify lists in place.
-
     Realm:
         Client
 
@@ -1737,10 +1589,6 @@ end
         doorInfo (table)
             Display lines; modify to add/remove fields.
 
-    Returns:
-        nil
-            Update doorInfo; return false to block defaults.
-
     Realm:
         Client
 
@@ -1766,10 +1614,6 @@ end
             Door or entity being inspected.
         extraInfo (table)
             Table of strings to display; append data here.
-
-    Returns:
-        nil
-            Modify extraInfo.
 
     Realm:
         Client
@@ -1877,10 +1721,6 @@ end
     Parameters:
         None
 
-    Returns:
-        nil
-            Run cleanup logic.
-
     Realm:
         Client
 
@@ -1904,10 +1744,6 @@ end
     Parameters:
         frame (Panel)
             The interaction menu frame.
-
-    Returns:
-        nil
-            Customize the frame as needed.
 
     Realm:
         Client
@@ -1967,10 +1803,6 @@ end
         inventory (Inventory)
             Inventory instance tied to the panel.
 
-    Returns:
-        nil
-            Cleanup or save state.
-
     Realm:
         Client
 
@@ -2003,10 +1835,6 @@ end
         inventory (Inventory)
             Inventory containing the item.
 
-    Returns:
-        nil
-            Refresh UI or derived state.
-
     Realm:
         Client
 
@@ -2035,10 +1863,6 @@ end
         inventoryPanel (Panel)
             Parent inventory panel.
 
-    Returns:
-        nil
-            Apply visual tweaks.
-
     Realm:
         Client
 
@@ -2064,10 +1888,6 @@ end
             Inventory panel.
         inventory (Inventory)
             Inventory instance.
-
-    Returns:
-        nil
-            Perform additional setup.
 
     Realm:
         Client
@@ -2097,10 +1917,6 @@ end
         parent (Panel)
             Parent container.
 
-    Returns:
-        nil
-            Adjust layout or styling.
-
     Realm:
         Client
 
@@ -2126,10 +1942,6 @@ end
             Local player performing the drag.
         item (Item)
             Item being dragged.
-
-    Returns:
-        nil
-            Decide what to do (drop, cancel, etc.).
 
     Realm:
         Client
@@ -2161,10 +1973,6 @@ end
         h (number)
             Icon height.
 
-    Returns:
-        nil
-            Perform custom painting.
-
     Realm:
         Client
 
@@ -2189,10 +1997,6 @@ end
         entity (Entity)
             Item entity in the world.
 
-    Returns:
-        nil
-            Build and display the menu; return false to block default.
-
     Realm:
         Client
 
@@ -2216,10 +2020,6 @@ end
     Parameters:
         None
 
-    Returns:
-        nil
-            Add sections/fields via AddSection/AddTextField hooks.
-
     Realm:
         Client
 
@@ -2242,10 +2042,6 @@ end
 
     Parameters:
         None
-
-    Returns:
-        nil
-            Trigger loading routines.
 
     Realm:
         Client
@@ -2273,10 +2069,6 @@ end
         character (Character)
             Character being previewed.
 
-    Returns:
-        nil
-            Mutate the info table.
-
     Realm:
         Client
 
@@ -2302,10 +2094,6 @@ end
             Model panel or data table for the slot.
         ply (Player)
             Player represented by the slot.
-
-    Returns:
-        nil
-            Apply modifications directly.
 
     Realm:
         Client
@@ -2389,10 +2177,6 @@ end
     Parameters:
         None
 
-    Returns:
-        nil
-            Clear cached targets or flags.
-
     Realm:
         Client
 
@@ -2422,10 +2206,6 @@ end
             Message content.
         anonymous (boolean)
             Whether the message should hide the sender.
-
-    Returns:
-        nil
-            Return false to suppress default handling.
 
     Realm:
         Client
@@ -2457,10 +2237,6 @@ end
         inventory2 (Inventory)
             Inventory bound to panel2.
 
-    Returns:
-        nil
-            Adjust layout or behavior.
-
     Realm:
         Client
 
@@ -2488,10 +2264,6 @@ end
             The context menu object.
         itemTable (Item)
             Item associated with the icon.
-
-    Returns:
-        nil
-            Add menu options or return false to cancel.
 
     Realm:
         Client
@@ -2521,10 +2293,6 @@ end
         storage (Entity|table)
             Storage object or entity.
 
-    Returns:
-        nil
-            Adjust panels; return false to block defaults.
-
     Realm:
         Client
 
@@ -2550,10 +2318,6 @@ end
             Variable name.
         value (any)
             New value.
-
-    Returns:
-        nil
-            Update client state or UI.
 
     Realm:
         Client
@@ -2581,10 +2345,6 @@ end
         vendor (Entity)
             Vendor entity interacted with.
 
-    Returns:
-        nil
-            Modify the panel contents.
-
     Realm:
         Client
 
@@ -2608,10 +2368,6 @@ end
     Parameters:
         staffData (table)
             Array of staff entries (name, steamID, duty status).
-
-    Returns:
-        nil
-            Update displays such as admin stick lists.
 
     Realm:
         Client
@@ -2637,10 +2393,6 @@ end
         tgt (Entity)
             Target entity/player selected by the admin stick.
 
-    Returns:
-        nil
-            Create the UI; return false to cancel.
-
     Realm:
         Client
 
@@ -2664,10 +2416,6 @@ end
     Parameters:
         item (Item)
             Item being drawn.
-
-    Returns:
-        nil
-            Perform custom painting.
 
     Realm:
         Client
@@ -2697,10 +2445,6 @@ end
         currentStores (table)
             Cached admin stick data (lists, categories).
 
-    Returns:
-        nil
-            Populate menu sections.
-
     Realm:
         Client
 
@@ -2725,10 +2469,6 @@ end
         pages (table)
             Table to append tab definitions `{name, icon, build=function}`.
 
-    Returns:
-        nil
-            Add or reorder tabs.
-
     Realm:
         Client
 
@@ -2752,10 +2492,6 @@ end
     Parameters:
         pages (table)
             Collection of page descriptors to populate.
-
-    Returns:
-        nil
-            Insert new pages/buttons.
 
     Realm:
         Client
@@ -2783,10 +2519,6 @@ end
         tree (Panel)
             Tree/list control to populate.
 
-    Returns:
-        nil
-            Add nodes representing items.
-
     Realm:
         Client
 
@@ -2813,10 +2545,6 @@ end
         parentPanel (Panel)
             Parent container.
 
-    Returns:
-        nil
-            Overlay custom elements.
-
     Realm:
         Client
 
@@ -2842,10 +2570,6 @@ end
             Primary font name (duplicate parameter kept for API compatibility).
         mainFont (string)
             Alias of the same font name.
-
-    Returns:
-        nil
-            Rebuild derived fonts or sizes.
 
     Realm:
         Client
@@ -2897,10 +2621,6 @@ end
     Parameters:
         None
 
-    Returns:
-        nil
-            Rebuild font definitions.
-
     Realm:
         Client
 
@@ -2925,10 +2645,6 @@ end
         categories (table)
             Table of category -> subcategory mappings; modify in place.
 
-    Returns:
-        nil
-            Add or change subcategories.
-
     Realm:
         Client
 
@@ -2951,10 +2667,6 @@ end
 
     Parameters:
         None
-
-    Returns:
-        nil
-            Perform reset logic.
 
     Realm:
         Client
@@ -2988,10 +2700,6 @@ end
         reason (string)
             Optional reason text.
 
-    Returns:
-        nil
-            Allow custom handling; return false to cancel default.
-
     Realm:
         Client
 
@@ -3016,10 +2724,6 @@ end
         scoreboardPanel (Panel)
             The scoreboard instance that was closed.
 
-    Returns:
-        nil
-            Clean up references or timers.
-
     Realm:
         Client
 
@@ -3043,10 +2747,6 @@ end
     Parameters:
         scoreboardPanel (Panel)
             The scoreboard instance that opened.
-
-    Returns:
-        nil
-            Add extra columns or styling.
 
     Realm:
         Client
@@ -3074,10 +2774,6 @@ end
         ply (Player)
             Player represented by the row.
 
-    Returns:
-        nil
-            Modify the row content.
-
     Realm:
         Client
 
@@ -3104,10 +2800,6 @@ end
         ply (Player)
             Player whose row was removed.
 
-    Returns:
-        nil
-            Update any caches or counts.
-
     Realm:
         Client
 
@@ -3132,10 +2824,6 @@ end
         charID (number)
             Chosen character ID.
 
-    Returns:
-        nil
-            Persist the selection.
-
     Realm:
         Client
 
@@ -3159,10 +2847,6 @@ end
     Parameters:
         quickMenuPanel (Panel)
             Panel that holds quick actions.
-
-    Returns:
-        nil
-            Populate with buttons or pages.
 
     Realm:
         Client
@@ -3609,10 +3293,6 @@ end
         options (table)
             Table of options to display; modify in place.
 
-    Returns:
-        nil
-            Add or remove entries.
-
     Realm:
         Client
 
@@ -3639,10 +3319,6 @@ end
         isCar (boolean)
             True if the storage is a vehicle trunk.
 
-    Returns:
-        nil
-            Build storage panels.
-
     Realm:
         Client
 
@@ -3667,10 +3343,6 @@ end
         entity (Entity)
             Storage entity requiring an unlock prompt.
 
-    Returns:
-        nil
-            Show prompt UI; return false to suppress.
-
     Realm:
         Client
 
@@ -3694,10 +3366,6 @@ end
     Parameters:
         arg1 (boolean)
             New third-person enabled state.
-
-    Returns:
-        nil
-            Apply additional camera logic.
 
     Realm:
         Client
@@ -3724,10 +3392,6 @@ end
             Tooltip panel.
         panel (Panel)
             Source panel that spawned the tooltip.
-
-    Returns:
-        nil
-            Configure markup, padding, and size.
 
     Realm:
         Client
@@ -3812,10 +3476,6 @@ end
     Parameters:
         None
 
-    Returns:
-        nil
-            Run cleanup tasks.
-
     Realm:
         Client
 
@@ -3840,10 +3500,6 @@ end
         vendor (Entity|table)
             Vendor being accessed.
 
-    Returns:
-        nil
-            Populate panels or return false to abort.
-
     Realm:
         Client
 
@@ -3867,10 +3523,6 @@ end
     Parameters:
         enabled (boolean)
             New voice toggle state.
-
-    Returns:
-        nil
-            Update voice panels or clean up.
 
     Realm:
         Client
@@ -3952,10 +3604,6 @@ end
         arg2 (string)
             Local path or URL of the image.
 
-    Returns:
-        nil
-            Use the image or cache it.
-
     Realm:
         Client
 
@@ -3981,10 +3629,6 @@ end
             Sound identifier.
         path (string)
             Local file path where the sound was saved.
-
-    Returns:
-        nil
-            Cache or play the sound as needed.
 
     Realm:
         Client

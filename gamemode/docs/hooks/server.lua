@@ -1,4 +1,4 @@
-﻿--[[
+--[[
     Folder: Hooks
     File:  server.md
 ]]
@@ -64,10 +64,6 @@ end
     Parameters:
         extras (table)
             Table to populate with additional field definitions in the format {fieldName = {default = value, ...}}.
-
-    Returns:
-        nil
-            Modify the extras table directly.
 
     Realm:
         Server
@@ -708,10 +704,6 @@ end
     Parameters:
         nil
 
-    Returns:
-        nil
-            The hook doesn't expect a return value but allows for custom salary timer setup.
-
     Realm:
         Server
 
@@ -735,10 +727,6 @@ end
     Parameters:
         character (Character)
             Character object being cleaned up.
-
-    Returns:
-        nil
-            Use side effects only.
 
     Realm:
         Server
@@ -765,10 +753,6 @@ end
             Player who owned the character (may be nil if offline).
         character (Character)
             The character that was deleted.
-
-    Returns:
-        nil
-            Use for cleanup and logging.
 
     Realm:
         Server
@@ -827,10 +811,6 @@ end
         character (Character)
             Character that was saved.
 
-    Returns:
-        nil
-            Use for follow-up actions or logging.
-
     Realm:
         Server
 
@@ -854,10 +834,6 @@ end
     Parameters:
         character (Character)
             Character about to be saved.
-
-    Returns:
-        nil
-            Use to modify character data or run side effects.
 
     Realm:
         Server
@@ -915,10 +891,6 @@ end
     Parameters:
         None.
 
-    Returns:
-        nil
-            Perform setup tasks here.
-
     Realm:
         Server
 
@@ -971,10 +943,6 @@ end
     Parameters:
         None.
 
-    Returns:
-        nil
-            Use for fallbacks or alerts.
-
     Realm:
         Server
 
@@ -998,10 +966,6 @@ end
     Parameters:
         embed (table)
             Embed table that was sent.
-
-    Returns:
-        nil
-            Use to log or chain notifications.
 
     Realm:
         Server
@@ -1031,10 +995,6 @@ end
         newState (boolean)
             True when enabled, false when disabled.
 
-    Returns:
-        nil
-            Use for syncing or logging.
-
     Realm:
         Server
 
@@ -1062,10 +1022,6 @@ end
             Door entity affected.
         newState (boolean)
             True when hidden, false when shown.
-
-    Returns:
-        nil
-            Use for syncing or side effects.
 
     Realm:
         Server
@@ -1095,10 +1051,6 @@ end
         state (boolean)
             True if now locked.
 
-    Returns:
-        nil
-            Use for logging or notifications.
-
     Realm:
         Server
 
@@ -1126,10 +1078,6 @@ end
             Door entity affected.
         newState (boolean)
             True when ownable.
-
-    Returns:
-        nil
-
     Realm:
         Server
 
@@ -1157,10 +1105,6 @@ end
             Door entity.
         price (number)
             New purchase price.
-
-    Returns:
-        nil
-
     Realm:
         Server
 
@@ -1188,10 +1132,6 @@ end
             Door entity.
         name (string)
             New door title.
-
-    Returns:
-        nil
-
     Realm:
         Server
 
@@ -1726,10 +1666,6 @@ end
         invID (number|string)
             Destination inventory ID.
 
-    Returns:
-        nil
-            Perform transfer handling inside the hook.
-
     Realm:
         Server
 
@@ -1753,10 +1689,6 @@ end
     Parameters:
         instance (Inventory)
             Inventory object that was removed.
-
-    Returns:
-        nil
-
     Realm:
         Server
 
@@ -1812,10 +1744,6 @@ end
     Parameters:
         instance (Item)
             Item instance that was deleted.
-
-    Returns:
-        nil
-
     Realm:
         Server
 
@@ -1847,10 +1775,6 @@ end
             Entity representation if applicable.
         results (table)
             Return values from the method.
-
-    Returns:
-        nil
-
     Realm:
         Server
 
@@ -1874,10 +1798,6 @@ end
     Parameters:
         context (table)
             Transfer context containing client, item, from, and to inventories.
-
-    Returns:
-        nil
-
     Realm:
         Server
 
@@ -1905,10 +1825,6 @@ end
             Door entity.
         time (number)
             Duration of the lock action.
-
-    Returns:
-        nil
-            Return false to stop the lock sequence.
 
     Realm:
         Server
@@ -1939,10 +1855,6 @@ end
         time (number)
             Duration for unlock action.
 
-    Returns:
-        nil
-            Return false to stop the unlock sequence.
-
     Realm:
         Server
 
@@ -1969,10 +1881,6 @@ end
             ID of the character kicked.
         isCurrentChar (boolean)
             True if it was the active character at time of kick.
-
-    Returns:
-        nil
-
     Realm:
         Server
 
@@ -1995,10 +1903,6 @@ end
 
     Parameters:
         None.
-
-    Returns:
-        nil
-
     Realm:
         Server
 
@@ -2021,10 +1925,6 @@ end
 
     Parameters:
         None.
-
-    Returns:
-        nil
-
     Realm:
         Server
 
@@ -2086,10 +1986,6 @@ end
             Boost source identifier.
         arg5 (any)
             Additional data supplied by the boost.
-
-    Returns:
-        nil
-
     Realm:
         Server
 
@@ -2119,10 +2015,6 @@ end
             Attribute identifier.
         arg4 (any)
             Old value.
-
-    Returns:
-        nil
-
     Realm:
         Server
 
@@ -2150,10 +2042,6 @@ end
             New character object.
         originalData (table)
             Raw creation data submitted.
-
-    Returns:
-        nil
-
     Realm:
         Server
 
@@ -2179,10 +2067,6 @@ end
             Player requesting deletion.
         id (number)
             Character ID to delete.
-
-    Returns:
-        nil
-
     Realm:
         Server
 
@@ -2208,10 +2092,6 @@ end
             Player who disconnected.
         character (Character)
             Character they had active.
-
-    Returns:
-        nil
-
     Realm:
         Server
 
@@ -2239,10 +2119,6 @@ end
             Character instance.
         addedFlags (string)
             Flags added.
-
-    Returns:
-        nil
-
     Realm:
         Server
 
@@ -2270,10 +2146,6 @@ end
             Character affected.
         removedFlags (string)
             Flags removed.
-
-    Returns:
-        nil
-
     Realm:
         Server
 
@@ -2299,10 +2171,6 @@ end
             Character that was kicked.
         client (Player)
             Player owning the character (may be nil).
-
-    Returns:
-        nil
-
     Realm:
         Server
 
@@ -2332,10 +2200,6 @@ end
             Previous value.
         value (any)
             New value.
-
-    Returns:
-        nil
-
     Realm:
         Server
 
@@ -2361,10 +2225,6 @@ end
             Character that was permakilled.
         time (number)
             Timestamp of the perma-kill.
-
-    Returns:
-        nil
-
     Realm:
         Server
 
@@ -2430,10 +2290,6 @@ end
             Item uniqueID.
         isFailed (boolean)
             True if the trade failed.
-
-    Returns:
-        nil
-
     Realm:
         Server
 
@@ -2457,10 +2313,6 @@ end
     Parameters:
         client (Player)
             Player detected.
-
-    Returns:
-        nil
-
     Realm:
         Server
 
@@ -2490,10 +2342,6 @@ end
             Gamemode identifier (namespace).
         map (string)
             Map name associated with the data.
-
-    Returns:
-        nil
-
     Realm:
         Server
 
@@ -2516,10 +2364,6 @@ end
 
     Parameters:
         None.
-
-    Returns:
-        nil
-
     Realm:
         Server
 
@@ -2545,10 +2389,6 @@ end
             Player who died.
         deathSound (string)
             Sound path played.
-
-    Returns:
-        nil
-
     Realm:
         Server
 
@@ -2574,10 +2414,6 @@ end
             Entity loaded.
         data (table)
             Saved data applied.
-
-    Returns:
-        nil
-
     Realm:
         Server
 
@@ -2603,10 +2439,6 @@ end
             Entity whose data changed.
         data (table)
             New persistence data.
-
-    Returns:
-        nil
-
     Realm:
         Server
 
@@ -2632,10 +2464,6 @@ end
             Entity being persisted.
         entData (table)
             Data collected for saving.
-
-    Returns:
-        nil
-
     Realm:
         Server
 
@@ -2659,10 +2487,6 @@ end
     Parameters:
         itemEntity (Entity)
             Item entity instance.
-
-    Returns:
-        nil
-
     Realm:
         Server
 
@@ -2685,10 +2509,6 @@ end
 
     Parameters:
         None.
-
-    Returns:
-        nil
-
     Realm:
         Server
 
@@ -2718,10 +2538,6 @@ end
             Target NPC type ID.
         filteredData (table)
             Data prepared for the NPC.
-
-    Returns:
-        nil
-
     Realm:
         Server
 
@@ -2747,10 +2563,6 @@ end
             Speaker.
         message (string)
             Message text.
-
-    Returns:
-        nil
-
     Realm:
         Server
 
@@ -2776,10 +2588,6 @@ end
             Entity that made the sound.
         painSound (string)
             Sound path.
-
-    Returns:
-        nil
-
     Realm:
         Server
 
@@ -2805,10 +2613,6 @@ end
             Player who picked up the money.
         moneyEntity (Entity)
             Money entity removed.
-
-    Returns:
-        nil
-
     Realm:
         Server
 
@@ -2840,10 +2644,6 @@ end
             Duration of the sequence.
         noFreeze (boolean)
             Whether player movement is frozen.
-
-    Returns:
-        nil
-
     Realm:
         Server
 
@@ -2875,10 +2675,6 @@ end
             Result of the action.
         data (table)
             Additional action data.
-
-    Returns:
-        nil
-
     Realm:
         Server
 
@@ -2906,10 +2702,6 @@ end
             New class data/index.
         oldClass (any)
             Previous class data/index.
-
-    Returns:
-        nil
-
     Realm:
         Server
 
@@ -2933,10 +2725,6 @@ end
     Parameters:
         client (Player)
             Player leaving the sequence.
-
-    Returns:
-        nil
-
     Realm:
         Server
 
@@ -2960,10 +2748,6 @@ end
     Parameters:
         itemTypeOrItem (string|Item)
             Item uniqueID or item instance removed.
-
-    Returns:
-        nil
-
     Realm:
         Server
 
@@ -2989,10 +2773,6 @@ end
             Player entering or exiting observe.
         state (boolean)
             True when entering observe mode.
-
-    Returns:
-        nil
-
     Realm:
         Server
 
@@ -3018,10 +2798,6 @@ end
             Player ragdolled.
         ragdoll (Entity)
             Ragdoll entity created.
-
-    Returns:
-        nil
-
     Realm:
         Server
 
@@ -3049,10 +2825,6 @@ end
             New class identifier or data.
         oldClass (table|number)
             Previous class identifier or data.
-
-    Returns:
-        nil
-
     Realm:
         Server
 
@@ -3084,10 +2856,6 @@ end
             X slot.
         y (number)
             Y slot.
-
-    Returns:
-        nil
-            Return false to block.
 
     Realm:
         Server
@@ -3148,10 +2916,6 @@ end
             Faction data.
         class (table)
             Class data (if any).
-
-    Returns:
-        nil
-
     Realm:
         Server
 
@@ -3181,10 +2945,6 @@ end
             Source of the change (e.g., "Lilia").
         ply (Player)
             Player entity whose usergroup changed.
-
-    Returns:
-        nil
-
     Realm:
         Server
 
@@ -3208,10 +2968,6 @@ end
     Parameters:
         loadedItems (table)
             Table of item instances.
-
-    Returns:
-        nil
-
     Realm:
         Server
 
@@ -3241,10 +2997,6 @@ end
             Formatted log message.
         category (string)
             Log category.
-
-    Returns:
-        nil
-
     Realm:
         Server
 
@@ -3272,10 +3024,6 @@ end
             SteamID of the requester.
         ticketMessage (string)
             Ticket text.
-
-    Returns:
-        nil
-
     Realm:
         Server
 
@@ -3303,10 +3051,6 @@ end
             SteamID of the requester.
         ticketMessage (string)
             Original ticket text.
-
-    Returns:
-        nil
-
     Realm:
         Server
 
@@ -3332,10 +3076,6 @@ end
             Player submitting the ticket.
         message (string)
             Ticket text.
-
-    Returns:
-        nil
-
     Realm:
         Server
 
@@ -3361,10 +3101,6 @@ end
             Usergroup name.
         arg2 (table)
             New permission data.
-
-    Returns:
-        nil
-
     Realm:
         Server
 
@@ -3392,10 +3128,6 @@ end
             Vendor entity.
         key (string)
             Property key edited.
-
-    Returns:
-        nil
-
     Realm:
         Server
 
@@ -3419,10 +3151,6 @@ end
     Parameters:
         client (Player)
             Player whose voice type changed.
-
-    Returns:
-        nil
-
     Realm:
         Server
 
@@ -3450,10 +3178,6 @@ end
             Option key.
         value (any)
             New value.
-
-    Returns:
-        nil
-
     Realm:
         Server
 
@@ -3507,10 +3231,6 @@ end
     Parameters:
         client (Player)
             Player detected.
-
-    Returns:
-        nil
-
     Realm:
         Server
 
@@ -3536,10 +3256,6 @@ end
             Player gagged.
         admin (Player)
             Admin who issued the gag.
-
-    Returns:
-        nil
-
     Realm:
         Server
 
@@ -3563,10 +3279,6 @@ end
     Parameters:
         client (Player)
             Player whose data is loaded.
-
-    Returns:
-        nil
-
     Realm:
         Server
 
@@ -3594,10 +3306,6 @@ end
             Active character.
         currentChar (number)
             Character ID index.
-
-    Returns:
-        nil
-
     Realm:
         Server
 
@@ -3659,10 +3367,6 @@ end
             Player whose model changed.
         value (string)
             New model path.
-
-    Returns:
-        nil
-
     Realm:
         Server
 
@@ -3688,10 +3392,6 @@ end
             Player muted.
         admin (Player)
             Admin who muted.
-
-    Returns:
-        nil
-
     Realm:
         Server
 
@@ -3779,10 +3479,6 @@ end
     Parameters:
         client (Player)
             Player gaining stamina.
-
-    Returns:
-        nil
-
     Realm:
         Server
 
@@ -3806,10 +3502,6 @@ end
     Parameters:
         client (Player)
             Player losing stamina.
-
-    Returns:
-        nil
-
     Realm:
         Server
 
@@ -3835,10 +3527,6 @@ end
             Player ungagged.
         admin (Player)
             Admin lifting the gag.
-
-    Returns:
-        nil
-
     Realm:
         Server
 
@@ -3864,10 +3552,6 @@ end
             Player unmuted.
         admin (Player)
             Admin lifting the mute.
-
-    Returns:
-        nil
-
     Realm:
         Server
 
@@ -3923,10 +3607,6 @@ end
             Door entity.
         doorData (table)
             Data restored for the door.
-
-    Returns:
-        nil
-
     Realm:
         Server
 
@@ -3949,10 +3629,6 @@ end
 
     Parameters:
         None.
-
-    Returns:
-        nil
-
     Realm:
         Server
 
@@ -3976,10 +3652,6 @@ end
     Parameters:
         client (Player)
             Newly spawned player.
-
-    Returns:
-        nil
-
     Realm:
         Server
 
@@ -4007,10 +3679,6 @@ end
             Loaded character.
         currentChar (number)
             Character index.
-
-    Returns:
-        nil
-
     Realm:
         Server
 
@@ -4034,10 +3702,6 @@ end
     Parameters:
         client (Player)
             Player who spawned.
-
-    Returns:
-        nil
-
     Realm:
         Server
 
@@ -4099,10 +3763,6 @@ end
             Damage info object.
         damageScale (number)
             Scale that was applied.
-
-    Returns:
-        nil
-
     Realm:
         Server
 
@@ -4126,10 +3786,6 @@ end
     Parameters:
         id (number)
             Character ID to delete.
-
-    Returns:
-        nil
-
     Realm:
         Server
 
@@ -4155,10 +3811,6 @@ end
             Door entity.
         doorData (table)
             Data about to be saved.
-
-    Returns:
-        nil
-
     Realm:
         Server
 
@@ -4218,10 +3870,6 @@ end
             Character object.
         currentChar (number)
             Character index.
-
-    Returns:
-        nil
-
     Realm:
         Server
 
@@ -4285,10 +3933,6 @@ end
             Damage info object.
         damageScale (number)
             Starting scale value.
-
-    Returns:
-        nil
-
     Realm:
         Server
 
@@ -4341,10 +3985,6 @@ end
 
     Parameters:
         None.
-
-    Returns:
-        nil
-
     Realm:
         Server
 
@@ -4370,10 +4010,6 @@ end
             Player receiving the popup.
         message (string)
             Text to show.
-
-    Returns:
-        nil
-
     Realm:
         Server
 
@@ -4397,10 +4033,6 @@ end
     Parameters:
         client (Player)
             Bot player entity.
-
-    Returns:
-        nil
-
     Realm:
         Server
 
@@ -4423,10 +4055,6 @@ end
 
     Parameters:
         None.
-
-    Returns:
-        nil
-
     Realm:
         Server
 
@@ -4452,10 +4080,6 @@ end
             The spawned model entity.
         character (Character)
             Character data used for appearance.
-
-    Returns:
-        nil
-
     Realm:
         Server
 
@@ -4682,10 +4306,6 @@ end
             Storage entity removed.
         inventory (Inventory)
             Inventory associated.
-
-    Returns:
-        nil
-
     Realm:
         Server
 
@@ -4713,10 +4333,6 @@ end
             Inventory assigned.
         isCar (boolean)
             True if the storage is a vehicle trunk.
-
-    Returns:
-        nil
-
     Realm:
         Server
 
@@ -4739,10 +4355,6 @@ end
 
     Parameters:
         None explicitly (context provided via global variables).
-
-    Returns:
-        nil
-
     Realm:
         Server
 
@@ -4768,10 +4380,6 @@ end
             Storage entity.
         inventory (Inventory)
             Inventory object restored.
-
-    Returns:
-        nil
-
     Realm:
         Server
 
@@ -4795,10 +4403,6 @@ end
     Parameters:
         spawns (table)
             Spawn data to store.
-
-    Returns:
-        nil
-
     Realm:
         Server
 
@@ -4822,10 +4426,6 @@ end
     Parameters:
         client (Player)
             Player receiving the list.
-
-    Returns:
-        nil
-
     Realm:
         Server
 
@@ -4917,10 +4517,6 @@ end
             Door entity.
         state (boolean)
             True if locked after toggle.
-
-    Returns:
-        nil
-
     Realm:
         Server
 
@@ -4944,10 +4540,6 @@ end
     Parameters:
         vendor (Entity)
             Entity whose persistence should be updated.
-
-    Returns:
-        nil
-
     Realm:
         Server
 
@@ -4975,10 +4567,6 @@ end
             Class identifier.
         allowed (boolean)
             Whether the class is allowed.
-
-    Returns:
-        nil
-
     Realm:
         Server
 
@@ -5004,10 +4592,6 @@ end
             Vendor entity.
         key (string)
             Property key changed.
-
-    Returns:
-        nil
-
     Realm:
         Server
 
@@ -5035,10 +4619,6 @@ end
             Faction identifier.
         scale (number)
             New buy scale.
-
-    Returns:
-        nil
-
     Realm:
         Server
 
@@ -5066,10 +4646,6 @@ end
             Faction identifier.
         scale (number)
             New sell scale.
-
-    Returns:
-        nil
-
     Realm:
         Server
 
@@ -5097,10 +4673,6 @@ end
             Faction identifier.
         allowed (boolean)
             Whether the faction is allowed.
-
-    Returns:
-        nil
-
     Realm:
         Server
 
@@ -5128,10 +4700,6 @@ end
             Item uniqueID.
         value (number)
             New max stock.
-
-    Returns:
-        nil
-
     Realm:
         Server
 
@@ -5159,10 +4727,6 @@ end
             Item uniqueID.
         value (number)
             Mode constant.
-
-    Returns:
-        nil
-
     Realm:
         Server
 
@@ -5190,10 +4754,6 @@ end
             Item uniqueID.
         value (number)
             New price.
-
-    Returns:
-        nil
-
     Realm:
         Server
 
@@ -5221,10 +4781,6 @@ end
             Item uniqueID.
         value (number)
             New stock.
-
-    Returns:
-        nil
-
     Realm:
         Server
 
@@ -5248,10 +4804,6 @@ end
     Parameters:
         vendor (Entity)
             Vendor entity.
-
-    Returns:
-        nil
-
     Realm:
         Server
 
@@ -5275,10 +4827,6 @@ end
     Parameters:
         vendor (Entity)
             Vendor entity.
-
-    Returns:
-        nil
-
     Realm:
         Server
 
@@ -5308,10 +4856,6 @@ end
             Item uniqueID.
         isSellingToVendor (boolean)
             True if player sold to vendor.
-
-    Returns:
-        nil
-
     Realm:
         Server
 
@@ -5347,10 +4891,6 @@ end
             Issuer SteamID.
         targetSteamID (string)
             Target SteamID.
-
-    Returns:
-        nil
-
     Realm:
         Server
 
@@ -5384,10 +4924,6 @@ end
             Additional context.
         arg6 (any)
             Additional context.
-
-    Returns:
-        nil
-
     Realm:
         Server
 
@@ -5399,4 +4935,38 @@ end
         ```
 ]]
 function WarningRemoved(client, targetClient, arg3, arg4, arg5, arg6)
+end
+
+--[[
+    Purpose:
+        Allows overriding whether a listener can hear a speaker's voice, overriding the default distance-based calculation.
+
+    When Called:
+        During voice hearing calculations, after the base distance check is performed.
+
+    Parameters:
+        listener (Player)
+            Player who would be listening to the voice.
+        speaker (Player)
+            Player who is speaking.
+        baseCanHear (boolean)
+            The default hearing status based on distance and voice type (whisper/talk/yell ranges).
+
+    Returns:
+        boolean|nil
+            Return true to force the listener to hear the speaker, false to block hearing, or nil to use the default baseCanHear value.
+
+    Realm:
+        Server
+
+    Example Usage:
+        ```lua
+            hook.Add("OverrideVoiceHearingStatus", "BlockDTVoice", function(listener, speaker, baseCanHear)
+                if speaker:getNetVar("dtScramblerEnabled", false) and listener:Team() ~= FACTION_DT then
+                    return false
+                end
+            end)
+        ```
+]]
+function OverrideVoiceHearingStatus(listener, speaker, baseCanHear)
 end

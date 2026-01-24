@@ -27,10 +27,6 @@ lia.lang.cache.currentSize = 0
     Parameters:
         directory (string)
             Path containing language Lua files.
-
-    Returns:
-        nil
-
     Realm:
         Shared
 
@@ -80,10 +76,6 @@ end
             Language id (e.g., "english").
         tbl (table)
             Key/value pairs to merge.
-
-    Returns:
-        nil
-
     Realm:
         Shared
 
@@ -184,10 +176,6 @@ end
 
     Parameters:
         None
-
-    Returns:
-        nil
-
     Realm:
         Shared
 
@@ -223,10 +211,6 @@ end
 
     Parameters:
         None
-
-    Returns:
-        nil
-
     Realm:
         Shared
 

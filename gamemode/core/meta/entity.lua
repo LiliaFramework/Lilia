@@ -1,4 +1,4 @@
-﻿--[[
+--[[
     Folder: Meta
     File:  entity.md
 ]]
@@ -22,7 +22,8 @@ local validClasses = {
 
 --[[
     Purpose:
-        Plays a sound from this entity, handling web sound URLs and fallbacks.
+        Detour of Entity:EmitSound that plays a sound from this entity, handling web sound URLs and fallbacks.
+        This function overrides the base game's EmitSound method to add support for web-sourced audio streams.
 
     When Called:
         Use whenever an entity needs to emit a sound that may be streamed.
@@ -248,10 +249,6 @@ end
     Parameters:
         client (Player)
             Player to set as owner.
-
-    Returns:
-        nil
-
     Realm:
         Shared
 
@@ -279,10 +276,6 @@ end
 
     Parameters:
         None.
-
-    Returns:
-        nil
-
     Realm:
         Shared
 
@@ -305,10 +298,6 @@ end
 
     Parameters:
         None.
-
-    Returns:
-        nil
-
     Realm:
         Shared
 
@@ -481,10 +470,6 @@ if SERVER then
             Net variable name to send.
         receiver (Player|nil)
             Optional player to send to; broadcasts when nil.
-
-    Returns:
-        nil
-
     Realm:
         Server
 
@@ -516,10 +501,6 @@ if SERVER then
     Parameters:
         receiver (Player|nil)
             Optional target to notify; broadcasts when nil.
-
-    Returns:
-        nil
-
     Realm:
         Server
 
@@ -551,10 +532,6 @@ if SERVER then
 
     Parameters:
         None.
-
-    Returns:
-        nil
-
     Realm:
         Server
 
@@ -585,10 +562,6 @@ if SERVER then
     Parameters:
         state (boolean)
             Whether the entity should be considered locked.
-
-    Returns:
-        nil
-
     Realm:
         Server
 
@@ -612,10 +585,6 @@ if SERVER then
     Parameters:
         state (boolean)
             True to make the entity non-ownable.
-
-    Returns:
-        nil
-
     Realm:
         Server
 
@@ -649,10 +618,6 @@ if SERVER then
             Value to store and broadcast.
         receiver (Player|nil)
             Optional player to send to; broadcasts when nil.
-
-    Returns:
-        nil
-
     Realm:
         Server
 
@@ -683,10 +648,6 @@ if SERVER then
             Local variable name.
         value (any)
             Value to store.
-
-    Returns:
-        nil
-
     Realm:
         Server
 
@@ -758,10 +719,6 @@ else
             Optional sound level for attenuation.
         dsp (number)
             Optional DSP effect index.
-
-    Returns:
-        nil
-
     Realm:
         Client
 

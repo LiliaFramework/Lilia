@@ -221,10 +221,6 @@ if SERVER then
         data (table)
             Fields: `onRun`, `shouldShow`, `range`, `target`, `category`,
             `timeToComplete`, `actionText`, `targetActionText`, etc.
-
-    Returns:
-        nil
-
     Realm:
         Server
 
@@ -285,10 +281,6 @@ if SERVER then
             Unique action key.
         data (table)
             Fields similar to interactions but no target differentiation.
-
-    Returns:
-        nil
-
     Realm:
         Server
 
@@ -340,10 +332,6 @@ if SERVER then
     Parameters:
         client (Player|nil)
             Send to one player if provided; otherwise broadcast in batches.
-
-    Returns:
-        nil
-
     Realm:
         Server
 
@@ -606,7 +594,7 @@ end
 lia.keybind.add("interactionMenu", {
     keyBind = KEY_TAB,
     desc = L("interactionMenuDesc"),
-    category = "Lilia",
+    category = "Core",
     onPress = function()
         net.Start("liaRequestInteractOptions")
         net.WriteString("interaction")
@@ -617,7 +605,7 @@ lia.keybind.add("interactionMenu", {
 lia.keybind.add("personalActions", {
     keyBind = KEY_G,
     desc = L("personalActionsDesc"),
-    category = "Lilia",
+    category = "Core",
     onPress = function()
         net.Start("liaRequestInteractOptions")
         net.WriteString("action")

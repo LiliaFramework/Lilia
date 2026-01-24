@@ -447,10 +447,6 @@ end
             Hook name to bind.
         func (function)
             Callback to execute.
-
-    Returns:
-        nil
-
     Realm:
         Shared
 
@@ -475,10 +471,6 @@ end
             Hook name to bind.
         func (function)
             Callback to execute with results.
-
-    Returns:
-        nil
-
     Realm:
         Shared
 
@@ -500,10 +492,6 @@ end
 
     Parameters:
         None.
-
-    Returns:
-        nil
-
     Realm:
         Shared
 
@@ -526,10 +514,6 @@ end
     Parameters:
         detail (boolean)
             Include owner and grid info when true.
-
-    Returns:
-        nil
-
     Realm:
         Shared
 
@@ -555,10 +539,6 @@ end
 
     Parameters:
         None.
-
-    Returns:
-        nil
-
     Realm:
         Shared
 
@@ -728,10 +708,6 @@ if SERVER then
 
     Parameters:
         None.
-
-    Returns:
-        nil
-
     Realm:
         Server
 
@@ -757,10 +733,6 @@ if SERVER then
 
     Parameters:
         None.
-
-    Returns:
-        nil
-
     Realm:
         Server
 
@@ -924,10 +896,6 @@ if SERVER then
 
     Parameters:
         None.
-
-    Returns:
-        nil
-
     Realm:
         Server
 
@@ -949,10 +917,6 @@ if SERVER then
     Parameters:
         recipient (Player|nil)
             The player who received the sync, or nil for broadcast.
-
-    Returns:
-        nil
-
     Realm:
         Server
 
@@ -973,10 +937,6 @@ if SERVER then
 
     Parameters:
         None.
-
-    Returns:
-        nil
-
     Realm:
         Server
 
@@ -997,10 +957,6 @@ if SERVER then
 
     Parameters:
         None.
-
-    Returns:
-        nil
-
     Realm:
         Server
 
@@ -1022,10 +978,6 @@ if SERVER then
     Parameters:
         recipient (Player|nil)
             Specific player to sync; broadcasts when nil.
-
-    Returns:
-        nil
-
     Realm:
         Server
 
@@ -1068,10 +1020,6 @@ if SERVER then
             Skip database write when true.
         noCheckEntity (boolean)
             Skip updating the world entity netvar when true.
-
-    Returns:
-        nil
-
     Realm:
         Server
 
@@ -1132,10 +1080,6 @@ if SERVER then
             Targets to notify; defaults to owner.
         noCheckEntity (boolean)
             Skip updating the entity netvar when true.
-
-    Returns:
-        nil
-
     Realm:
         Server
 
@@ -1162,10 +1106,6 @@ if SERVER then
             Targets to notify; defaults to owner.
         noCheckEntity (boolean)
             Skip updating the world entity netvar when true.
-
-    Returns:
-        nil
-
     Realm:
         Server
 

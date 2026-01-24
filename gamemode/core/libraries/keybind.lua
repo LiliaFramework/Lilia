@@ -141,10 +141,6 @@ local KeybindKeys = {
             Description when using legacy signature.
         cb (table|nil)
             Callback table {onPress, onRelease, shouldRun, serverOnly}.
-
-    Returns:
-        nil
-
     Realm:
         Shared
 
@@ -429,10 +425,6 @@ if CLIENT then
 
     Parameters:
         None
-
-    Returns:
-        nil
-
     Realm:
         Client
 
@@ -461,10 +453,6 @@ if CLIENT then
 
     Parameters:
         None
-
-    Returns:
-        nil
-
     Realm:
         Client
 

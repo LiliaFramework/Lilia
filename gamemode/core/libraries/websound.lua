@@ -1,4 +1,4 @@
-﻿--[[
+--[[
     Folder: Libraries
     File: websound.md
 ]]
@@ -99,10 +99,6 @@ end
     Parameters:
         p (string)
             The file path whose parent directories should be created.
-
-    Returns:
-        nil
-            Nothing.
 
     Realm:
         Client
@@ -264,10 +260,6 @@ end
             Optional override URL; falls back to previously registered URLs.
         cb (function|nil)
             Completion callback that receives (path, fromCache, error).
-
-    Returns:
-        nil
-            Nothing.
 
     Realm:
         Client
@@ -487,10 +479,6 @@ local origPlayFile = sound.PlayFile
         cb (function|nil)
             Optional callback function called when playback starts, receiving (channel, errorCode, errorString).
 
-    Returns:
-        nil
-            Nothing. Playback is asynchronous.
-
     Realm:
         Client
 
@@ -625,10 +613,6 @@ local origPlayURL = sound.PlayURL
         cb (function|nil)
             Optional callback function called when playback starts.
 
-    Returns:
-        nil
-            Nothing. Playback is asynchronous.
-
     Realm:
         Client
 
@@ -699,10 +683,6 @@ local origSurfacePlaySound = surface.PlaySound
             Unused parameter (for compatibility with potential future extensions).
         cb (function|nil)
             Optional callback function receiving (success) boolean indicating if playback was successful.
-
-    Returns:
-        nil
-            Nothing. Playback is asynchronous.
 
     Realm:
         Client
@@ -835,9 +815,6 @@ end
         skipReRegister (boolean)
             If true, registered entries are not re-downloaded automatically.
 
-    Returns:
-        nil
-
     Realm:
         Client
 
@@ -891,9 +868,6 @@ end
             Optional override path or URL.
         callback (function|nil)
             Receives `(success, errStr)` once playback is attempted.
-
-    Returns:
-        nil
 
     Realm:
         Client
