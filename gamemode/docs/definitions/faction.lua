@@ -426,6 +426,21 @@ FACTION.limit = 0
 FACTION.pay = 0
 --[[
     Purpose:
+        Sets the interval in seconds between paychecks for this faction
+
+    When Called:
+        During faction definition (used by salary timer system)
+
+    Example Usage:
+        ```lua
+        FACTION.payTimer = 600  -- Paychecks every 10 minutes (600 seconds)
+        FACTION.payTimer = 300  -- Paychecks every 5 minutes (300 seconds)
+        -- If not set, defaults to the global salary interval from config
+        ```
+]]
+FACTION.payTimer = nil
+--[[
+    Purpose:
         Controls whether this faction appears in scoreboard categories
 
     When Called:
