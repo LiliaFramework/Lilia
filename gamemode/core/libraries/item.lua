@@ -21,6 +21,7 @@ lia.item.inventories = lia.inventory.instances or {}
 lia.item.inventoryTypes = lia.item.inventoryTypes or {}
 lia.item.WeaponOverrides = lia.item.WeaponOverrides or {}
 lia.item.pendingOverrides = lia.item.pendingOverrides or {}
+lia.item.pendingRegistrations = lia.item.pendingRegistrations or {}
 lia.item.WeaponsBlackList = lia.item.WeaponsBlackList or {
     weapon_fists = true,
     weapon_medkit = true,
@@ -332,10 +333,6 @@ end
             The base item ID to inherit from.
         isBaseItem (boolean, optional)
             Whether this is a base item definition.
-
-    Returns:
-        nil
-
     Realm:
         Shared
 
@@ -434,10 +431,6 @@ end
             The name of the rarity tier (e.g., "Common", "Rare", "Legendary").
         color (Color)
             The color associated with this rarity tier.
-
-    Returns:
-        nil
-
     Realm:
         Shared
 
@@ -557,6 +550,66 @@ end
 
 --[[
     Purpose:
+        Queues an item for deferred registration and returns a placeholder that can access the item once registered.
+
+    When Called:
+        Called during item system initialization to register items that will be created later, such as auto-generated weapons or ammunition items.
+
+    Parameters:
+        id (string)
+            The unique identifier for the item to register.
+        base (string, optional)
+            The base item ID to inherit from.
+        properties (table, optional)
+            A table of properties to apply to the item when it is registered.
+
+    Returns:
+        table
+            A placeholder object that can access the actual item properties once registration is complete.
+
+    Realm:
+        Shared
+
+    Example Usage:
+        ```lua
+            -- Queue a weapon item for registration
+            local weaponPlaceholder = lia.item.registerItem("weapon_pistol", "base_weapons", {
+                name = "Custom Pistol",
+                width = 2,
+                height = 1
+            })
+            -- The actual item will be registered when InitializedModules hook runs
+        ```
+]]
+function lia.item.registerItem(id, base, properties)
+    assert(isstring(id), L("itemUniqueIDString"))
+    assert(istable(properties) or properties == nil, "properties must be a table or nil")
+    table.insert(lia.item.pendingRegistrations, {
+        id = id,
+        base = base,
+        properties = properties
+    })
+
+    local placeholder = {
+        uniqueID = id,
+        base = base,
+        _isPlaceholder = true
+    }
+
+    setmetatable(placeholder, {
+        __index = function(self, key)
+            if self._isPlaceholder then
+                local actualItem = lia.item.get(id)
+                if actualItem then return actualItem[key] end
+            end
+            return nil
+        end
+    })
+    return placeholder
+end
+
+--[[
+    Purpose:
         Queues property overrides for an item that will be applied when the item is initialized.
 
     When Called:
@@ -567,10 +620,6 @@ end
             The unique ID of the item to override.
         overrides (table)
             A table of properties to override on the item.
-
-    Returns:
-        nil
-
     Realm:
         Shared
 
@@ -603,10 +652,6 @@ end
     Parameters:
         directory (string)
             The directory path containing the item files to load.
-
-    Returns:
-        nil
-
     Realm:
         Shared
 
@@ -702,10 +747,6 @@ end
             The width of the inventory in grid units.
         h (number)
             The height of the inventory in grid units.
-
-    Returns:
-        nil
-
     Realm:
         Shared
 
@@ -747,10 +788,6 @@ end
             The type of inventory to create.
         callback (function, optional)
             Function called when the inventory is created and ready.
-
-    Returns:
-        nil
-
     Realm:
         Shared
 
@@ -898,10 +935,6 @@ lia.item.holdTypeSizeMapping = {
             The weapon class name to override.
         data (table)
             The override data containing weapon properties.
-
-    Returns:
-        nil
-
     Realm:
         Shared
 
@@ -930,10 +963,6 @@ end
     Parameters:
         className (string)
             The weapon class name to blacklist.
-
-    Returns:
-        nil
-
     Realm:
         Shared
 
@@ -946,121 +975,6 @@ end
 ]]
 function lia.item.addWeaponToBlacklist(className)
     lia.item.WeaponsBlackList[className] = true
-end
-
---[[
-    Purpose:
-        Auto-generates item definitions for all weapons in the game's weapons list.
-
-    When Called:
-        Called during gamemode initialization if auto-weapon generation is enabled.
-
-    Parameters:
-        None
-
-    Returns:
-        nil
-
-    Realm:
-        Shared
-
-    Example Usage:
-        ```lua
-            -- Generate weapon items (usually called automatically)
-            if lia.config.get("AutoWeaponItemGeneration", true) then
-                lia.item.generateWeapons()
-            end
-        ```
-]]
-function lia.item.generateWeapons()
-    for _, wep in ipairs(weapons.GetList()) do
-        local className = wep.ClassName
-        if not className or className:find("_base") or lia.item.WeaponsBlackList[className] then continue end
-        local override = lia.item.WeaponOverrides[className] or {}
-        local holdType = wep.HoldType or "normal"
-        local isGrenade = holdType == "grenade"
-        local baseType = isGrenade and "base_grenade" or "base_weapons"
-        local ITEM = lia.item.register(className, baseType, nil, nil, true)
-        ITEM.name = hook.Run("GetWeaponName", weapon) or override.name or className
-        ITEM.desc = override.desc or L("weaponsDesc")
-        ITEM.category = override.category or isGrenade and L("itemCatGrenades") or L("weapons")
-        ITEM.model = override.model or wep.WorldModel or wep.WM or "models/props_c17/suitcase_passenger_physics.mdl"
-        ITEM.class = override.class or className
-        local size = lia.item.holdTypeSizeMapping[holdType] or {
-            width = 2,
-            height = 1
-        }
-
-        ITEM.width = override.width or size.width
-        ITEM.height = override.height or size.height
-        if override.weaponCategory then ITEM.weaponCategory = override.weaponCategory end
-    end
-end
-
---[[
-    Purpose:
-        Auto-generates item definitions for ammunition entities from compatible weapon mods.
-
-    When Called:
-        Called during gamemode initialization if auto-ammo generation is enabled.
-
-    Parameters:
-        None
-
-    Returns:
-        nil
-
-    Realm:
-        Shared
-
-    Example Usage:
-        ```lua
-            -- Generate ammo items (usually called automatically)
-            if lia.config.get("AutoAmmoItemGeneration", true) then
-                lia.item.generateAmmo()
-            end
-        ```
-]]
-function lia.item.generateAmmo()
-    local entityList = {}
-    local scriptedEntities = scripted_ents.GetList()
-    for className, _ in pairs(scriptedEntities) do
-        if isstring(className) and className then entityList[className] = true end
-    end
-
-    for className, _ in pairs(entityList) do
-        if not className or not isstring(className) then continue end
-        local isArc9Ammo = className:find("^arc9_ammo_")
-        local isArccwAmmo = className:find("^arccw_ammo_")
-        local isTfaAmmo = className:find("^tfa_ammo_")
-        if not (isArc9Ammo or isArccwAmmo or isTfaAmmo) then continue end
-        if className:find("_base") or lia.item.WeaponsBlackList[className] then continue end
-        local override = lia.item.WeaponOverrides[className] or {}
-        local baseType = "base_entities"
-        local entityID = className
-        local ITEM = lia.item.register(className, baseType, nil, nil, true)
-        local ammoType
-        if isArc9Ammo then
-            ammoType = className:gsub("^arc9_ammo_", ""):gsub("_", " "):lower():gsub("(%a)([%w_']*)", function(first, rest) return first:upper() .. rest end)
-            ITEM.name = override.name or "[ARC9] " .. ammoType .. " Ammunition"
-        elseif isArccwAmmo then
-            ammoType = className:gsub("^arccw_ammo_", ""):gsub("_", " "):lower():gsub("(%a)([%w_']*)", function(first, rest) return first:upper() .. rest end)
-            ITEM.name = override.name or "[ARCCW] " .. ammoType .. " Ammunition"
-        elseif isTfaAmmo then
-            ammoType = className:gsub("^tfa_ammo_", ""):gsub("_", " "):lower():gsub("(%a)([%w_']*)", function(first, rest) return first:upper() .. rest end)
-            ITEM.name = override.name or "[TFA] " .. ammoType .. " Ammunition"
-        else
-            ITEM.name = override.name or className
-            ammoType = className
-        end
-
-        ITEM.desc = override.desc or "A Box of " .. ammoType .. " Ammunition"
-        ITEM.category = override.category or L("itemCatAmmunition")
-        ITEM.model = override.model or "models/items/boxsrounds.mdl"
-        ITEM.entityid = override.entityid or entityID
-        ITEM.width = override.width or 1
-        ITEM.height = override.height or 1
-    end
 end
 
 if SERVER then
@@ -1207,10 +1121,6 @@ if SERVER then
     Parameters:
         id (number)
             The unique ID of the item to delete.
-
-    Returns:
-        nil
-
     Realm:
         Server
 
@@ -1238,10 +1148,6 @@ if SERVER then
     Parameters:
         itemIndex (number|table)
             Single item ID or array of item IDs to load.
-
-    Returns:
-        nil
-
     Realm:
         Server
 
@@ -1361,10 +1267,6 @@ if SERVER then
             The height of the inventory.
         callback (function, optional)
             Function called when inventory is restored.
-
-    Returns:
-        nil
-
     Realm:
         Server
 
@@ -1388,8 +1290,91 @@ end
 
 lia.item.loadFromDir("lilia/gamemode/items")
 hook.Add("InitializedModules", "liaItems", function()
-    if lia.config.get("AutoWeaponItemGeneration", true) then lia.item.generateWeapons() end
-    if lia.config.get("AutoAmmoItemGeneration", true) then lia.item.generateAmmo() end
+    for _, registration in ipairs(lia.item.pendingRegistrations) do
+        local item = lia.item.register(registration.id, registration.base, false, nil, true)
+        if registration.properties then
+            for key, value in pairs(registration.properties) do
+                item[key] = value
+            end
+        end
+    end
+
+    lia.item.pendingRegistrations = {}
+    if lia.config.get("AutoWeaponItemGeneration", true) then
+        for _, wep in ipairs(weapons.GetList()) do
+            local className = wep.ClassName
+            if not className or className:find("_base") or lia.item.WeaponsBlackList[className] then continue end
+            local override = lia.item.WeaponOverrides[className] or {}
+            local holdType = wep.HoldType or "normal"
+            local isGrenade = holdType == "grenade"
+            local baseType = isGrenade and "base_grenade" or "base_weapons"
+            local size = lia.item.holdTypeSizeMapping[holdType] or {
+                width = 2,
+                height = 1
+            }
+
+            local properties = {
+                name = hook.Run("GetWeaponName", wep) or override.name or className,
+                desc = override.desc or L("weaponsDesc"),
+                category = override.category or isGrenade and L("itemCatGrenades") or L("weapons"),
+                model = override.model or wep.WorldModel or wep.WM or "models/props_c17/suitcase_passenger_physics.mdl",
+                class = override.class or className,
+                width = override.width or size.width,
+                height = override.height or size.height
+            }
+
+            if override.weaponCategory then properties.weaponCategory = override.weaponCategory end
+            lia.item.registerItem(className, baseType, properties)
+        end
+    end
+
+    if lia.config.get("AutoAmmoItemGeneration", true) then
+        local entityList = {}
+        local scriptedEntities = scripted_ents.GetList()
+        for className, _ in pairs(scriptedEntities) do
+            if isstring(className) and className then entityList[className] = true end
+        end
+
+        for className, _ in pairs(entityList) do
+            if not className or not isstring(className) then continue end
+            local isArc9Ammo = className:find("^arc9_ammo_")
+            local isArccwAmmo = className:find("^arccw_ammo_")
+            local isTfaAmmo = className:find("^tfa_ammo_")
+            if not (isArc9Ammo or isArccwAmmo or isTfaAmmo) then continue end
+            if className:find("_base") or lia.item.WeaponsBlackList[className] then continue end
+            local override = lia.item.WeaponOverrides[className] or {}
+            local baseType = "base_entities"
+            local entityID = className
+            local ammoType
+            local itemName
+            if isArc9Ammo then
+                ammoType = className:gsub("^arc9_ammo_", ""):gsub("_", " "):lower():gsub("(%a)([%w_']*)", function(first, rest) return first:upper() .. rest end)
+                itemName = override.name or "[ARC9] " .. ammoType .. " Ammunition"
+            elseif isArccwAmmo then
+                ammoType = className:gsub("^arccw_ammo_", ""):gsub("_", " "):lower():gsub("(%a)([%w_']*)", function(first, rest) return first:upper() .. rest end)
+                itemName = override.name or "[ARCCW] " .. ammoType .. " Ammunition"
+            elseif isTfaAmmo then
+                ammoType = className:gsub("^tfa_ammo_", ""):gsub("_", " "):lower():gsub("(%a)([%w_']*)", function(first, rest) return first:upper() .. rest end)
+                itemName = override.name or "[TFA] " .. ammoType .. " Ammunition"
+            else
+                itemName = override.name or className
+                ammoType = className
+            end
+
+            local properties = {
+                name = itemName,
+                desc = override.desc or "A Box of " .. ammoType .. " Ammunition",
+                category = override.category or L("itemCatAmmunition"),
+                model = override.model or "models/items/boxsrounds.mdl",
+                entityid = override.entityid or entityID,
+                width = override.width or 1,
+                height = override.height or 1
+            }
+
+            lia.item.registerItem(className, baseType, properties)
+        end
+    end
+
     lia.item.itemEntities = {}
     for _, item in pairs(lia.item.list) do
         if item.base == "base_entities" then lia.item.itemEntities[item.uniqueID] = {item.entityid, item.data} end
