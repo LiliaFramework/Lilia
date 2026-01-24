@@ -379,6 +379,26 @@ During class definition
 
 ---
 
+<a id="scoreboardpriority"></a>
+### scoreboardPriority
+
+#### 📋 Purpose
+Sets the priority order for this class in the scoreboard display within its faction (lower numbers appear first)
+
+#### ⏰ When Called
+During class definition (used by scoreboard sorting)
+
+#### 💡 Example Usage
+
+```lua
+    CLASS.scoreboardPriority = 1  -- Appears first within faction
+    CLASS.scoreboardPriority = 10  -- Appears later
+    CLASS.scoreboardPriority = 999  -- Default priority if not set
+
+```
+
+---
+
 <a id="pay"></a>
 ### pay
 

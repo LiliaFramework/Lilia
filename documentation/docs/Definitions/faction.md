@@ -553,6 +553,71 @@ During faction definition
 
 ---
 
+<a id="logo"></a>
+### logo
+
+#### 📋 Purpose
+Sets the logo material path for this faction displayed in the scoreboard
+
+#### ⏰ When Called
+During faction definition (used by scoreboard UI)
+
+#### 💡 Example Usage
+
+```lua
+    FACTION.logo = "materials/ui/faction/police_logo.png"
+    FACTION.logo = ""  -- No logo (default)
+
+```
+
+---
+
+<a id="scoreboardpriority"></a>
+### scoreboardPriority
+
+#### 📋 Purpose
+Sets the priority order for this faction in the scoreboard display (lower numbers appear first)
+
+#### ⏰ When Called
+During faction definition (used by scoreboard sorting)
+
+#### 💡 Example Usage
+
+```lua
+    FACTION.scoreboardPriority = 1  -- Appears first in scoreboard
+    FACTION.scoreboardPriority = 10  -- Appears later
+    FACTION.scoreboardPriority = 999  -- Default priority if not set
+
+```
+
+---
+
+<a id="spawns"></a>
+### spawns
+
+#### 📋 Purpose
+Defines custom spawn points for this faction, organized by map name
+
+#### ⏰ When Called
+During faction definition (used by spawn system)
+
+#### 💡 Example Usage
+
+```lua
+    FACTION.spawns = {
+        gm_construct = {
+            {position = Vector(100, 200, 0), angle = Angle(0, 90, 0)},
+            {position = Vector(200, 300, 0), angle = Angle(0, 180, 0)}
+        },
+        gm_flatgrass = {
+            {position = Vector(0, 0, 0), angle = Angle(0, 0, 0)}
+        }
+    }
+
+```
+
+---
+
 <a id="mainmenuposition"></a>
 ### mainMenuPosition
 
@@ -760,14 +825,21 @@ Server
 
 <p><h3>Parameters:</h3>
 <span class="types"><a class="type" href="https://wiki.facepunch.com/gmod/Player">Player</a></span> <span class="parameter">client</span> The player transferring to this faction</p>
+<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#2.2">number, optional</a></span> <span class="parameter">oldFaction</span> The faction index the player is transferring from</p>
 
 #### 💡 Example Usage
 
 ```lua
-    function FACTION:OnTransferred(client)
+    function FACTION:OnTransferred(client, oldFaction)
         client:notify("Welcome to the " .. self.name)
         -- Set up faction-specific data
         -- Could trigger department assignment or training
+        if oldFaction then
+            local oldFactionData = lia.faction.indices[oldFaction]
+            if oldFactionData then
+                client:notify("You left " .. oldFactionData.name)
+            end
+        end
     end
 
 ```
