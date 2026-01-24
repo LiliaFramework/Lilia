@@ -1,4 +1,4 @@
---[[
+﻿--[[
     Folder: Hooks
     File:  shared.md
 ]]

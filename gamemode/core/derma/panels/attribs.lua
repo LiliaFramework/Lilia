@@ -1,4 +1,4 @@
-local mathApproach = math.Approach
+﻿local mathApproach = math.Approach
 local PANEL = {}
 function PANEL:Init()
     self:SetTall(20)
@@ -246,7 +246,6 @@ function PANEL:addButton(symbol, delta)
     button:SetText(symbol)
     button:SetContentAlignment(5)
     button:SetMouseInputEnabled(true)
-    
     local parent = self
     local oldOnMousePressed = button.OnMousePressed
     button.OnMousePressed = function(btn, mousecode)
@@ -261,11 +260,9 @@ function PANEL:addButton(symbol, delta)
     local oldOnMouseReleased = button.OnMouseReleased
     button.OnMouseReleased = function(btn, mousecode)
         if oldOnMouseReleased then oldOnMouseReleased(btn, mousecode) end
-        if mousecode == MOUSE_LEFT then
-            parent.autoDelta = nil
-        end
+        if mousecode == MOUSE_LEFT then parent.autoDelta = nil end
     end
-    
+
     button:SetPaintBackground(false)
     return button
 end

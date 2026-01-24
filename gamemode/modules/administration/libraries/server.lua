@@ -1,4 +1,4 @@
-local ActiveTickets = {}
+﻿local ActiveTickets = {}
 local function fixupProp(client, ent, mins, maxs)
     local pos = ent:GetPos()
     local down, up = ent:LocalToWorld(mins), ent:LocalToWorld(maxs)
