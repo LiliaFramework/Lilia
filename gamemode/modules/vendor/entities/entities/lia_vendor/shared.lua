@@ -172,7 +172,7 @@ end
 function ENT:getPrice(uniqueID, isSellingToVendor, client)
     if not self.items then self:setupVars() end
     local price = lia.item.list[uniqueID] and self.items[uniqueID] and self.items[uniqueID][VENDOR_PRICE] or (lia.item.list[uniqueID] and lia.item.list[uniqueID]:getPrice() or 0)
-    local overridePrice = hook.Run("GetPriceOverride", self, uniqueID, price, isSellingToVendor)
+    local overridePrice = hook.Run("GetPriceOverride", client, self, uniqueID, price, isSellingToVendor)
     if overridePrice then
         price = overridePrice
     else
