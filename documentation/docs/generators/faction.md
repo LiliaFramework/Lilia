@@ -30,7 +30,7 @@
         <div class="input-group">
             <label for="faction-logo">Logo:</label>
             <input type="text" id="faction-logo" placeholder="materials/ui/faction/police_logo.png">
-            <small>Logo material path for scoreboard (leave empty for no logo)</small>
+            <small>Logo material path or URL for scoreboard (leave empty for no logo)</small>
         </div>
     </div>
 

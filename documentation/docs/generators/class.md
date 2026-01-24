@@ -80,7 +80,7 @@
         <div class="input-group">
             <label for="class-logo">Logo:</label>
             <input type="text" id="class-logo" placeholder="materials/ui/class/police_logo.png">
-            <small>Logo material path for scoreboard (leave empty for no logo)</small>
+            <small>Logo material path or URL for scoreboard (leave empty for no logo)</small>
         </div>
 
         <div class="input-group">
