@@ -220,7 +220,9 @@ During class definition
 #### 💡 Example Usage
 
 ```lua
-    CLASS.logo = "materials/ui/class/police_logo.png"
+    CLASS.logo = "materials/ui/class/police_logo.png"  -- Material path
+    CLASS.logo = "https://example.com/logo.png"  -- URL
+    CLASS.logo = ""  -- No logo (default)
 
 ```
 

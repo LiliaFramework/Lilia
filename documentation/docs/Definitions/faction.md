@@ -557,7 +557,7 @@ During faction definition
 ### logo
 
 #### 📋 Purpose
-Sets the logo material path for this faction displayed in the scoreboard
+Sets the logo material path or URL for this faction displayed in the scoreboard
 
 #### ⏰ When Called
 During faction definition (used by scoreboard UI)
@@ -565,7 +565,8 @@ During faction definition (used by scoreboard UI)
 #### 💡 Example Usage
 
 ```lua
-    FACTION.logo = "materials/ui/faction/police_logo.png"
+    FACTION.logo = "materials/ui/faction/police_logo.png"  -- Material path
+    FACTION.logo = "https://example.com/logo.png"  -- URL
     FACTION.logo = ""  -- No logo (default)
 
 ```
