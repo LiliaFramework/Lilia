@@ -1,25 +1,60 @@
 ﻿local PANEL = {}
 function PANEL:Init()
     self:Dock(FILL)
+    local function getTheme()
+        local theme = lia.color.theme or {}
+        return {
+            shadow = theme.window_shadow or Color(0, 0, 0, 170),
+            panel = theme.panel and theme.panel[1] or theme.background_alpha or theme.background or Color(30, 30, 30, 210)
+        }
+    end
+
     local function makeLabel(key)
-        local lbl = self:Add("DPanel")
-        lbl:Dock(TOP)
-        lbl:DockMargin(0, 0, 0, 8)
-        lbl:SetTall(32)
-        lbl.Paint = function(_, _, h) draw.SimpleText(L(key):upper(), "LiliaFont.25", 0, h * 0.5, lia.color.theme.text, TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER) end
-        return lbl
+        local container = self:Add("DPanel")
+        container:Dock(TOP)
+        container:DockMargin(0, 0, 0, 6)
+        container:SetTall(32)
+        container:SetPaintBackground(false)
+        local bgPanel = container:Add("DPanel")
+        bgPanel:Dock(FILL)
+        bgPanel:SetPaintBackground(false)
+        bgPanel.Paint = function(_, w, h)
+            local colors = getTheme()
+            lia.derma.rect(0, 0, w, h):Rad(6):Color(colors.shadow):Shadow(6, 14):Shape(lia.derma.SHAPE_IOS):Draw()
+            lia.derma.rect(0, 0, w, h):Rad(6):Color(colors.panel):Shape(lia.derma.SHAPE_IOS):Draw()
+            local accent = lia.color.theme.accent or lia.color.theme.header or lia.color.theme.theme
+            if accent then
+                surface.SetDrawColor(accent)
+                surface.DrawRect(0, 0, w, 2)
+            end
+        end
+
+        local lblContainer = bgPanel:Add("DPanel")
+        lblContainer:Dock(FILL)
+        lblContainer:DockPadding(0, 2, 0, 0)
+        lblContainer:SetPaintBackground(false)
+        local lbl = lblContainer:Add("DLabel")
+        lbl:SetFont("LiliaFont.18")
+        lbl:SetText(L(key):upper())
+        lbl:SizeToContents()
+        lbl:Dock(FILL)
+        lbl:DockMargin(0, 0, 0, 0)
+        local textColor = lia.color.theme.text or Color(220, 220, 220)
+        lbl:SetTextColor(textColor)
+        lbl:SetContentAlignment(5)
+        return container
     end
 
     self.factionLabel = makeLabel("faction")
     self.factionCombo = self:makeFactionComboBox()
-    self.factionCombo:DockMargin(0, 8, 0, 12)
+    self.factionCombo:DockMargin(0, 6, 0, 16)
     self.nameLabel = makeLabel("name")
     self.nameEntry = self:makeTextEntry("name")
-    self.nameEntry:DockMargin(0, 8, 0, 12)
+    self.nameEntry:DockMargin(0, 6, 0, 16)
     if hook.Run("ShouldShowCharVarInCreation", "desc") ~= false then
         self.descLabel = makeLabel("desc")
         self.descEntry = self:makeTextEntry("desc")
-        self.descEntry:DockMargin(0, 8, 0, 12)
+        self.descEntry:DockMargin(0, 6, 0, 16)
     end
 
     self:addAttributes()
@@ -68,15 +103,23 @@ function PANEL:makeFactionComboBox()
         end
     end
 
+    local firstFactionID = nil
     for id, fac in SortedPairsByMemberValue(lia.faction.teams, "name") do
         if lia.faction.hasWhitelist(fac.index) then
             if fac.uniqueID == "staff" then continue end
             local desc = L(fac.desc or "noDesc")
             combo:AddChoice(L(fac.name), id, desc ~= "" and desc or nil)
+            if not firstFactionID then firstFactionID = id end
         end
     end
 
     combo:FinishAddingOptions()
+    if firstFactionID then
+        combo:ChooseOptionData(firstFactionID)
+        local fac = lia.faction.teams[firstFactionID]
+        if fac then self:onFactionSelected(fac) end
+    end
+
     combo.userSetHeight = true
     local panelTable = vgui.GetControlTable("Panel")
     if panelTable and panelTable.SetTall then
@@ -94,30 +137,160 @@ function PANEL:makeFactionComboBox()
 end
 
 function PANEL:addAttributes()
+    if IsValid(self.attribsPanel) then return end
+    if not self._attemptedAttribLoad and lia.attribs and isfunction(lia.attribs.loadFromDir) then
+        self._attemptedAttribLoad = true
+        local base = (SCHEMA and SCHEMA.folder) and SCHEMA.folder or engine.ActiveGamemode():gsub("\\", "/")
+        lia.attribs.loadFromDir(base .. "/schema/attributes")
+    end
+
+    local function getTheme()
+        local theme = lia.color.theme or {}
+        return {
+            shadow = theme.window_shadow or Color(0, 0, 0, 170),
+            panel = theme.panel and theme.panel[1] or theme.background_alpha or theme.background or Color(30, 30, 30, 210)
+        }
+    end
+
     local function makeLabel(key)
-        local lbl = self:Add("DPanel")
-        lbl:Dock(TOP)
-        lbl:DockMargin(0, 0, 0, 8)
-        lbl:SetTall(32)
-        lbl.Paint = function(_, _, h) draw.SimpleText(L(key):upper(), "LiliaFont.25", 0, h * 0.5, lia.color.theme.text, TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER) end
-        return lbl
+        local container = self:Add("DPanel")
+        container:Dock(TOP)
+        container:DockMargin(0, 0, 0, 6)
+        container:SetTall(32)
+        container:SetPaintBackground(false)
+        local bgPanel = container:Add("DPanel")
+        bgPanel:Dock(FILL)
+        bgPanel:SetPaintBackground(false)
+        bgPanel.Paint = function(_, w, h)
+            local colors = getTheme()
+            lia.derma.rect(0, 0, w, h):Rad(6):Color(colors.shadow):Shadow(6, 14):Shape(lia.derma.SHAPE_IOS):Draw()
+            lia.derma.rect(0, 0, w, h):Rad(6):Color(colors.panel):Shape(lia.derma.SHAPE_IOS):Draw()
+            local accent = lia.color.theme.accent or lia.color.theme.header or lia.color.theme.theme
+            if accent then
+                surface.SetDrawColor(accent)
+                surface.DrawRect(0, 0, w, 2)
+            end
+        end
+
+        local lblContainer = bgPanel:Add("DPanel")
+        lblContainer:Dock(FILL)
+        lblContainer:DockPadding(0, 2, 0, 0)
+        lblContainer:SetPaintBackground(false)
+        local lbl = lblContainer:Add("DLabel")
+        lbl:SetFont("LiliaFont.18")
+        lbl:SetText(L(key):upper())
+        lbl:SizeToContents()
+        lbl:Dock(FILL)
+        lbl:DockMargin(0, 0, 0, 0)
+        local textColor = lia.color.theme.text or Color(220, 220, 220)
+        lbl:SetTextColor(textColor)
+        lbl:SetContentAlignment(5)
+        return container
     end
 
     local hasAttributes = false
-    for _, attrib in pairs(lia.attribs.list) do
-        if not attrib.noStartBonus then
-            hasAttributes = true
-            break
+    if lia.attribs and lia.attribs.list then
+        for _, attrib in pairs(lia.attribs.list) do
+            if not attrib.noStartBonus then
+                hasAttributes = true
+                break
+            end
         end
     end
 
-    if not hasAttributes then return end
+    if not hasAttributes then
+        if not self._attribRetry then
+            self._attribRetry = true
+            timer.Simple(0.25, function()
+                if IsValid(self) then
+                    self._attribRetry = nil
+                    self:addAttributes()
+                    if IsValid(self.attribsPanel) then
+                        self.attribsPanel:onDisplay()
+                        self:updateAttributesLabel()
+                    end
+                end
+            end)
+        end
+        return
+    end
+
     local attrLabel = makeLabel("attributes")
     self.attrLabel = attrLabel
+    local bgPanel = attrLabel:GetChildren()[1]
+    if IsValid(bgPanel) then
+        local lblContainer = bgPanel:GetChildren()[1]
+        if IsValid(lblContainer) then
+            local lbl = lblContainer:GetChildren()[1]
+            if IsValid(lbl) and lbl.SetText then
+                self.attrLabelText = lbl
+                self:updateAttributesLabel()
+            end
+        end
+    end
+
     self.attribsPanel = self:Add("liaCharacterAttribs")
     self.attribsPanel:Dock(TOP)
-    self.attribsPanel:DockMargin(0, 8, 0, 12)
+    self.attribsPanel:DockMargin(0, 6, 0, 16)
+    local rows = 0
+    for _, attrib in pairs(lia.attribs.list or {}) do
+        if not attrib.noStartBonus then rows = rows + 1 end
+    end
+
+    self.attribsPanel:SetTall(math.max(120, 80 + rows * 40))
+    self.attribsPanel:SetVisible(true)
     self.attribsPanel.parentBio = self
+    if isfunction(self.attribsPanel.onDisplay) then self.attribsPanel:onDisplay() end
+    if IsValid(self.attribsPanel.title) then self.attribsPanel.title:SetVisible(false) end
+    if IsValid(self.attribsPanel.leftLabel) then self.attribsPanel.leftLabel:SetVisible(false) end
+    self:styleAttribsPanel()
+end
+
+function PANEL:styleAttribsPanel()
+    if not IsValid(self.attribsPanel) then return end
+    local canvas = self.attribsPanel.GetCanvas and self.attribsPanel:GetCanvas()
+    if IsValid(canvas) then canvas:DockPadding(0, 0, 0, 0) end
+    if self.attribsPanel.SetPaintBackground then self.attribsPanel:SetPaintBackground(false) end
+    self.attribsPanel.Paint = function() end
+    if not istable(self.attribsPanel.attribs) then return end
+    for _, row in pairs(self.attribsPanel.attribs) do
+        if not IsValid(row) then continue end
+        row:SetTall(40)
+        row.Paint = function(s, w, h)
+            local hover = s:IsHovered() and 1 or 0
+            s._hoverFrac = Lerp(FrameTime() * 10, s._hoverFrac or 0, hover)
+            lia.derma.rect(0, 0, w, h):Rad(16):Color(lia.color.theme.window_shadow):Shape(lia.derma.SHAPE_IOS):Shadow(4, 12):Draw()
+            lia.derma.rect(0, 0, w, h):Rad(16):Color(lia.color.theme.focus_panel):Shape(lia.derma.SHAPE_IOS):Draw()
+            if s._hoverFrac > 0 then
+                local hov = lia.color.theme.button_hovered or Color(255, 255, 255)
+                lia.derma.rect(0, 0, w, h):Rad(16):Color(Color(hov.r, hov.g, hov.b, math.floor(s._hoverFrac * 60))):Shape(lia.derma.SHAPE_IOS):Draw()
+            end
+        end
+
+        if IsValid(row.name) then
+            row.name:SetFont("LiliaFont.18")
+            row.name:SetTextColor(lia.color.theme.text)
+        end
+
+        if IsValid(row.quantity) then
+            row.quantity:SetFont("LiliaFont.18")
+            row.quantity:SetTextColor(lia.color.theme.text)
+        end
+
+        if IsValid(row.add) then
+            if row.add.SetRadius then row.add:SetRadius(16) end
+            if row.add.SetGradient then row.add:SetGradient(false) end
+            if row.add.PaintButton then row.add:PaintButton(lia.color.theme.focus_panel, lia.color.theme.hover or lia.color.theme.button_hovered) end
+        end
+
+        if IsValid(row.sub) then
+            if row.sub.SetRadius then row.sub:SetRadius(16) end
+            if row.sub.SetGradient then row.sub:SetGradient(false) end
+            if row.sub.PaintButton then row.sub:PaintButton(lia.color.theme.focus_panel, lia.color.theme.hover or lia.color.theme.button_hovered) end
+        end
+
+        if IsValid(row.buttons) then row.buttons:SetPaintBackground(false) end
+    end
 end
 
 function PANEL:shouldSkip()
@@ -125,10 +298,20 @@ function PANEL:shouldSkip()
 end
 
 function PANEL:updateAttributesLabel()
-    if IsValid(self.attrLabel) and IsValid(self.attribsPanel) then
-        local points = self.attribsPanel.left or 0
-        self.attrLabel:SetText(L("attributes"):upper() .. " - " .. points .. " " .. L("pointsLeft"):lower())
+    if IsValid(self.attrLabelText) then
+        local total = hook.Run("GetStartAttribPoints", LocalPlayer(), self:getContext()) or lia.config.get("MaxAttributePoints", 30)
+        local attribs = self:getContext("attribs", {})
+        local sum = 0
+        for _, quantity in pairs(attribs) do
+            sum = sum + quantity
+        end
+
+        local left = math.max((total or 0) - sum, 0)
+        self.attrLabelText:SetText(L("attributes"):upper() .. " - " .. left .. " " .. L("pointsLeft"):lower())
+        self.attrLabelText:SizeToContents()
     end
+
+    if IsValid(self.attrLabel) then self.attrLabel:InvalidateLayout(true) end
 end
 
 function PANEL:validate()
@@ -224,7 +407,16 @@ function PANEL:onDisplay()
 
     if IsValid(self.attribsPanel) then
         self.attribsPanel:onDisplay()
+        self:styleAttribsPanel()
         timer.Simple(0.01, function() if IsValid(self) then self:updateAttributesLabel() end end)
+    else
+        timer.Simple(0.1, function()
+            if IsValid(self) and IsValid(self.attribsPanel) then
+                self.attribsPanel:onDisplay()
+                self:styleAttribsPanel()
+                self:updateAttributesLabel()
+            end
+        end)
     end
 end
 

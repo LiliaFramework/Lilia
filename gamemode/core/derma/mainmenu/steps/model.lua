@@ -17,20 +17,55 @@ function PANEL:Init()
     self.title = self:addLabel(L("selectModel"))
     self.models = self:Add("DIconLayout")
     self.models:Dock(FILL)
-    self.models:DockMargin(0, 8, 0, 12)
+    self.models:DockMargin(0, 4, 0, 12)
     self.models:SetSpaceX(4)
     self.models:SetSpaceY(4)
     self.models:SetPaintBackground(false)
 end
 
 function PANEL:addLabel(text)
-    local lbl = self:Add("DLabel")
-    lbl:SetFont("LiliaFont.25")
+    local function getTheme()
+        local theme = lia.color.theme or {}
+        return {
+            shadow = theme.window_shadow or Color(0, 0, 0, 170),
+            panel = theme.panel and theme.panel[1] or theme.background_alpha or theme.background or Color(30, 30, 30, 210)
+        }
+    end
+
+    local container = self:Add("DPanel")
+    container:Dock(TOP)
+    container:DockMargin(0, 0, 0, 4)
+    container:SetTall(32)
+    container:SetPaintBackground(false)
+    local bgPanel = container:Add("DPanel")
+    bgPanel:Dock(FILL)
+    bgPanel:SetPaintBackground(false)
+    bgPanel.Paint = function(_, w, h)
+        local colors = getTheme()
+        lia.derma.rect(0, 0, w, h):Rad(6):Color(colors.shadow):Shadow(6, 14):Shape(lia.derma.SHAPE_IOS):Draw()
+        lia.derma.rect(0, 0, w, h):Rad(6):Color(colors.panel):Shape(lia.derma.SHAPE_IOS):Draw()
+        local accent = lia.color.theme.accent or lia.color.theme.header or lia.color.theme.theme
+        if accent then
+            surface.SetDrawColor(accent)
+            surface.DrawRect(0, 0, w, 2)
+        end
+    end
+
+    local lblContainer = bgPanel:Add("DPanel")
+    lblContainer:Dock(FILL)
+    lblContainer:DockPadding(0, 2, 0, 0)
+    lblContainer:SetPaintBackground(false)
+    local lbl = lblContainer:Add("DLabel")
+    lbl:SetFont("LiliaFont.18")
     lbl:SetText(L(text):upper())
     lbl:SizeToContents()
-    lbl:Dock(TOP)
-    lbl:DockMargin(0, 0, 0, 8)
-    return lbl
+    lbl:Dock(FILL)
+    lbl:DockMargin(0, 0, 0, 0)
+    local textColor = lia.color.theme.text or Color(220, 220, 220)
+    lbl:SetTextColor(textColor)
+    lbl:SetContentAlignment(5)
+    container.label = lbl
+    return container
 end
 
 function PANEL:onDisplay()
