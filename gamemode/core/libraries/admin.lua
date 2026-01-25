@@ -1753,15 +1753,18 @@ else
     local function buildPrivilegeList(container, g, groups, editable)
         local current = table.Copy(groups[g] or {})
         current._info = nil
-        local tabs = container:Add("liaTabs")
-        tabs:Dock(FILL)
+        local scrollPanel = container:Add("liaScrollPanel")
+        scrollPanel:Dock(FILL)
+        local list = scrollPanel:Add("DListLayout")
+        list:Dock(TOP)
+        list:DockMargin(12, 12, 12, 12)
         lia.gui.usergroups.checks = lia.gui.usergroups.checks or {}
         lia.gui.usergroups.checks[g] = lia.gui.usergroups.checks[g] or {}
-        local function addRow(list, name)
+        local function addRow(name)
             local row = list:Add("liaPrivilegeRow")
             row:Dock(TOP)
-            row:SetTall(50)
-            row:DockMargin(0, 0, 0, 8)
+            row:SetTall(28)
+            row:DockMargin(4, 0, 4, 4)
             row:SetPrivilege(name, current[name] and true or false, editable)
             if editable then
                 row.OnChange = function(_, value)
@@ -1777,6 +1780,15 @@ else
                     net.WriteBool(value)
                     net.SendToServer()
                 end
+            else
+                local function showBaseRankNotification()
+                    local message = L("baseUsergroupCannotBeEditedDesc") or "Base usergroups (user, admin, superadmin) cannot be edited. Please create a new usergroup instead using the 'Create Group' button."
+                    LocalPlayer():notifyErrorLocalized("baseUsergroupCannotBeEdited", message)
+                end
+
+                row.OnChange = showBaseRankNotification
+                row.DoClick = showBaseRankNotification
+                if IsValid(row.checkbox) then row.checkbox.DoClick = showBaseRankNotification end
             end
 
             lia.gui.usergroups.checks[g][name] = row
@@ -1784,21 +1796,35 @@ else
 
         local ordered = computeCategoryMap(groups)
         for _, cat in ipairs(ordered) do
-            local wrap = vgui.Create("DPanel")
-            wrap.Paint = function(_, w, h) lia.derma.rect(0, 0, w, h):Rad(8):Color(lia.color.theme.panel[1]):Shape(lia.derma.SHAPE_IOS):Draw() end
-            local list = vgui.Create("DListLayout", wrap)
-            list:Dock(TOP)
-            list:DockMargin(8, 8, 8, 8)
-            for _, priv in ipairs(cat.items) do
-                addRow(list, priv)
+            local categoryLabel = list:Add("DPanel")
+            categoryLabel:Dock(TOP)
+            categoryLabel:SetTall(32)
+            categoryLabel:DockMargin(4, 12, 4, 6)
+            categoryLabel:SetPaintBackground(false)
+            categoryLabel.Paint = function(_, w, h)
+                local theme = lia.color.theme
+                local bgColor = theme and theme.category_header or Color(50, 60, 70, 120)
+                local accentColor = theme and theme.category_accent or Color(100, 150, 200, 255)
+                local textColor = theme and theme.category_text or theme and theme.text or color_white
+                local lineColor = theme and theme.category_line or Color(255, 255, 255, 30)
+                lia.derma.rect(0, 0, w, h):Rad(8):Color(bgColor):Shape(lia.derma.SHAPE_IOS):Draw()
+                surface.SetDrawColor(accentColor)
+                surface.DrawRect(0, 0, 4, h)
+                local displayText = cat.label
+                local localized = L(displayText)
+                if localized and localized ~= "" then displayText = localized end
+                draw.SimpleText(displayText, "LiliaFont.18", w / 2, h / 2, textColor, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
+                surface.SetDrawColor(lineColor)
+                surface.DrawRect(0, h - 1, w, 1)
             end
 
-            wrap:InvalidateLayout(true)
-            wrap:SizeToChildren(true, true)
-            tabs:AddTab(cat.label, wrap)
+            for _, priv in ipairs(cat.items) do
+                addRow(priv)
+            end
         end
 
-        tabs:InvalidateLayout(true)
+        list:InvalidateLayout(true)
+        scrollPanel:InvalidateLayout(true)
     end
 
     lia.net.readBigTable("liaUpdateAdminGroups", function(tbl)

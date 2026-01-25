@@ -21,8 +21,8 @@ function PANEL:SetupUI()
 
     self.label = self:Add("DLabel")
     self.label:Dock(FILL)
-    self.label:DockMargin(15, 0, 60, 0)
-    self.label:SetFont("LiliaFont.25")
+    self.label:DockMargin(18, 0, 60, 0)
+    self.label:SetFont("LiliaFont.20")
     self.label:SetTextColor(lia.color.theme.text)
     self.label:SetContentAlignment(4)
 end
@@ -35,7 +35,16 @@ function PANEL:SetPrivilege(privilegeName, checked, editable)
     self.label:SetText(L(displayKey))
     self.checkbox:SetChecked(self.checked)
     self.checkbox:SetMouseInputEnabled(self.editable)
-    if not self.editable then self.checkbox:SetCursor("arrow") end
+    if not self.editable then
+        self.checkbox:SetCursor("arrow")
+        self:SetCursor("arrow")
+        self.checkbox:SetAlpha(150)
+        local textColor = lia.color.theme.text or color_white
+        self.label:SetTextColor(Color(textColor.r * 0.6, textColor.g * 0.6, textColor.b * 0.6, textColor.a))
+    else
+        self.checkbox:SetAlpha(255)
+        self.label:SetTextColor(lia.color.theme.text or color_white)
+    end
 end
 
 function PANEL:GetChecked()
@@ -60,10 +69,38 @@ function PANEL:PerformLayout(w, h)
 end
 
 function PANEL:Paint(w, h)
-    local bgColor = self.panelColor
-    if self.hovered then bgColor = ColorAlpha(lia.config.get("Color"), 10) end
+    local theme = lia.color.theme
+    local bgColor = theme and theme.panel[1] or Color(40, 45, 50, 80)
+    if not self.editable then
+        bgColor = ColorAlpha(bgColor, 0.5)
+    elseif self.hovered then
+        bgColor = ColorAlpha(lia.config.get("Color") or Color(100, 150, 200), 15)
+    end
+
     lia.derma.rect(0, 0, w, h):Rad(6):Color(bgColor):Shape(lia.derma.SHAPE_IOS):Draw()
-    surface.SetDrawColor(self.borderColor)
+    if self.checked then
+        local accentColor = theme and theme.category_accent or Color(100, 150, 200, 180)
+        if not self.editable then accentColor = ColorAlpha(accentColor, 0.5) end
+        surface.SetDrawColor(accentColor)
+        surface.DrawRect(0, 0, 2, h)
+    end
+
+    if not self.editable then
+        surface.SetDrawColor(100, 100, 100, 30)
+        surface.DrawRect(0, 0, w, h)
+        local lockIcon = Material("icon16/lock.png", "smooth")
+        if lockIcon and not lockIcon:IsError() then
+            surface.SetDrawColor(150, 150, 150, 200)
+            surface.SetMaterial(lockIcon)
+            surface.DrawTexturedRect(w - 90, (h - 16) / 2, 16, 16)
+        else
+            draw.SimpleText("LOCK", "LiliaFont.12", w - 90, h / 2, Color(150, 150, 150, 200), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
+        end
+    end
+
+    local borderColor = theme and theme.panel[1] or Color(60, 65, 70, 100)
+    if not self.editable then borderColor = ColorAlpha(borderColor, 0.5) end
+    surface.SetDrawColor(borderColor)
     surface.DrawRect(0, h - 1, w, 1)
 end
 
