@@ -1,5 +1,30 @@
 # Changelog
 
+## Version 7.295 (January 25, 2026)
+
+### Changes
+
+- Better Looking Privileges Tab
+- Fixed Weird Coloring of the Logo
+- Delayed SAM Compatibility just to be sure
+- Successfully updated workshop Lilia to 7.291
+- More Class and Faction Fields
+- Successfully updated workshop Lilia to 7.289
+- Fixed Missing Entries From Generator
+- Successfully updated workshop Lilia to 7.287
+- Pretty Print
+- Removed Redudant Returns Nil From Docs
+- Added lia.item.registerItem
+- Added FACTION.payTimer
+- ChatBox Command Finder now  supports high case
+- Better Looking Character Creation
+- Improved GetPriceOverride
+- Huge Documentation Changes
+- Successfully updated workshop Lilia to 7.278
+- Fixed Slowdown not happening
+- Argument Mistmatch
+- Successfully updated workshop Lilia to 7.275
+
 ## Version 7.291 (January 24, 2026)
 
 ### Changes
