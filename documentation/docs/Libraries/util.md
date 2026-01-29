@@ -619,3 +619,19 @@ Panel, Panel The created frame and table list view.</p>
 
 ---
 
+<details class="realm-client">
+<summary><a id=lia.util.setFeaturePosition></a>lia.util.setFeaturePosition(pos, typeId)</summary>
+<a id="liautilsetfeatureposition"></a>
+<p>Sets a feature position using the position tool callback system.</p>
+<p>Called by the position tool when a player sets a position (left-click or Shift+R).</p>
+<p><h3>Parameters:</h3>
+<span class="types"><a class="type" href="https://wiki.facepunch.com/gmod/Vector">Vector</a></span> <span class="parameter">pos</span> The world position to set.</p>
+<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a></span> <span class="parameter">typeId</span> The type ID of the position callback (e.g., "faction_spawn_adder", "sit_room").</p>
+
+<h3>Example Usage:</h3>
+<pre><code class="language-lua">    lia.util.setFeaturePosition(Vector(0, 0, 0), "faction_spawn_adder")
+</code></pre>
+</details>
+
+---
+

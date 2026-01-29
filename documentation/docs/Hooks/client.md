@@ -1722,6 +1722,28 @@ Vector, Angle Position and angle to use; return nils to use defaults.</p>
 ---
 
 <details class="realm-client">
+<summary><a id=PopulateFactionRosterOptions></a>PopulateFactionRosterOptions(list, members)</summary>
+<a id="populatefactionrosteroptions"></a>
+<p>Add custom menu options to the faction roster table.</p>
+<p>When the faction roster UI is being populated with member data.</p>
+<p><h3>Parameters:</h3>
+<span class="types"><a class="type" href="https://wiki.facepunch.com/gmod/Panel">Panel</a></span> <span class="parameter">list</span> The liaTable panel that displays the roster. Use list:AddMenuOption() to add right-click menu options.</p>
+<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.5">table</a></span> <span class="parameter">members</span> Array of member data tables containing name, charID, steamID, and lastOnline fields.</p>
+
+<h3>Example Usage:</h3>
+<pre><code class="language-lua">    hook.Add("PopulateFactionRosterOptions", "MyCustomRosterOptions", function(list, members)
+        list:AddMenuOption("View Profile", function(rowData)
+            if rowData and rowData.charID then
+                print("Viewing profile for character ID:", rowData.charID)
+            end
+        end, "icon16/user.png")
+    end)
+</code></pre>
+</details>
+
+---
+
+<details class="realm-client">
 <summary><a id=PopulateInventoryItems></a>PopulateInventoryItems(pnlContent, tree)</summary>
 <a id="populateinventoryitems"></a>
 <p>Populate the inventory items tree used in the admin menu.</p>

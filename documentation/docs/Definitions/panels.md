@@ -490,18 +490,6 @@ For character model previews, item model displays, weapon showcases, or any 3D c
 
 ---
 
-<a id="liafacingmodelpanel"></a>
-### liaFacingModelPanel
-
-#### 📋 Purpose
-Portrait-style facing model display
-A specialized model panel that automatically rotates models to face the camera for consistent portrait views
-
-#### ⏰ When Called
-For character selection screens, profile displays, or any interface requiring standardized model presentation
-
----
-
 <a id="lianotice"></a>
 ### liaNotice
 

@@ -148,3 +148,24 @@ The network library provides comprehensive functionality for managing network co
 
 ---
 
+<details class="realm-shared">
+<summary><a id=lia.net.profiler.log></a>lia.net.profiler.log(key, default)</summary>
+<a id="lianetprofilerlog"></a>
+<p>Retrieve a global netvar with a fallback default.</p>
+<p>Client/server code reading synchronized state.</p>
+<p><h3>Parameters:</h3>
+<span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a></span> <span class="parameter">key</span> Netvar identifier.</p>
+<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#2.2">any</a></span> <span class="parameter">default</span> Fallback value if netvar is not set.</p>
+
+<p><h3>Returns:</h3>
+<span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#2.2">any</a></span></p>
+
+<h3>Example Usage:</h3>
+<pre><code class="language-lua">    if lia.net.getNetVar("eventActive", false) then
+        DrawEventHUD()
+    end
+</code></pre>
+</details>
+
+---
+
