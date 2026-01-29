@@ -253,6 +253,7 @@ function lia.module.initialize()
     end
 
     lia.module.loadFromDir("lilia/gamemode/modules", "module", preloadIDs)
+    if lia.module.stopModulesFromLoading then return end
     lia.module.loadFromDir(schemaPath .. "/modules", "module")
     lia.module.loadFromDir(schemaPath .. "/overrides", "module")
     hook.Run("InitializedModules")
