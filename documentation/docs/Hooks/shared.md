@@ -2045,3 +2045,44 @@ number, number|nil Inventory width and height; nil values fall back to config de
 
 ---
 
+<details class="realm-shared">
+<summary><a id=RegisterFeaturePositionTypes></a>RegisterFeaturePositionTypes(arg1)</summary>
+<a id="registerfeaturepositiontypes"></a>
+<p>Allows modules to react to or modify the list of registered feature position types.</p>
+<p>Every time MODULE:SetPositionCallback is called to register a new position feature.</p>
+<p><h3>Parameters:</h3>
+<span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.5">table</a></span> <span class="parameter">arg1</span> The list of current feature position types (lia.featurePositionTypes).</p>
+
+<h3>Example Usage:</h3>
+<pre><code class="language-lua">    hook.Add("RegisterFeaturePositionTypes", "MonitorPositions", function(types)
+        PrintTable(types)
+    end)
+</code></pre>
+</details>
+
+---
+
+<details class="realm-shared">
+<summary><a id=SetPositionCallback></a>SetPositionCallback(name, data, onRun, onSelect, color, HUDPaint, serverOnly)</summary>
+<a id="setpositioncallback"></a>
+<p>Registers a callback for setting and managing world positions via the admin position tool.</p>
+<p>Typically during module initialization to define new selectable position types in the admin tool.</p>
+<p><h3>Parameters:</h3>
+<span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a></span> <span class="parameter">name</span> The display name of the position type (e.g., “Faction Spawn Adder”).</p>
+<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.5">table</a></span> <span class="parameter">data</span> A table containing configuration:</p>
+<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.6">function</a></span> <span class="parameter">onRun</span> Called when a position is set. Arguments: (pos, client, typeId).</p>
+<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.6">function</a></span> <span class="parameter">onSelect</span> Called when the type is selected. Arguments: (client, callback).</p>
+<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#2.2">Color, optional</a></span> <span class="parameter">color</span> UI accent color.</p>
+<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#2.2">function, optional</a></span> <span class="parameter">HUDPaint</span> Extra HUD rendering.</p>
+<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#2.2">boolean, optional</a></span> <span class="parameter">serverOnly</span> If true, logic runs server-side.</p>
+
+<h3>Example Usage:</h3>
+<pre><code class="language-lua">    MODULE:SetPositionCallback("My Custom Point", {
+        onRun = function(pos, client) -- ... end,
+        onSelect = function(client, callback) -- ... end
+    })
+</code></pre>
+</details>
+
+---
+

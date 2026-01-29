@@ -2524,3 +2524,45 @@ Vector, Angle Position and angle to use; return nils to use defaults.</p>
 
 ---
 
+<details class="realm-client">
+<summary><a id=DrawESPStyledText></a>DrawESPStyledText(text, x, y, espColor, font, fadeAlpha)</summary>
+<a id="drawespstyledtext"></a>
+<p>Draws a styled text box with a background and a colored accent bar at the bottom, typically used for ESP displays.</p>
+<p>Whenever an ESP element or specialized screen text needs to be rendered with the Lilia signature style.</p>
+<p><h3>Parameters:</h3>
+<span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a></span> <span class="parameter">text</span> The text to display.</p>
+<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.3">number</a></span> <span class="parameter">x</span> The X-coordinate on the screen center.</p>
+<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.3">number</a></span> <span class="parameter">y</span> The Y-coordinate on the screen top.</p>
+<p><span class="types"><a class="type" href="https://wiki.facepunch.com/gmod/Color">Color</a></span> <span class="parameter">espColor</span> The color of the accent bar at the bottom.</p>
+<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a></span> <span class="parameter">font</span> The font to use for the text.</p>
+<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.3">number</a></span> <span class="parameter">fadeAlpha</span> The opacity scale (0 to 1) for the entire element.</p>
+
+<p><h3>Returns:</h3>
+<span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.3">number</a></span> The total height (bh) of the drawn box, including padding.</p>
+
+<h3>Example Usage:</h3>
+<pre><code class="language-lua">    hook.Add("DrawESPStyledText", "ExampleESP", function(text, x, y, color, font, alpha)
+        -- custom ESP drawing logic
+    end)
+</code></pre>
+</details>
+
+---
+
+<details class="realm-client">
+<summary><a id=OnModelPanelSetup></a>OnModelPanelSetup(self)</summary>
+<a id="onmodelpanelsetup"></a>
+<p>Called after a liaModelPanel has been initialized and its model has been set.</p>
+<p>During the SetModel process of a liaModelPanel, after the entity is created and sequences are initialized.</p>
+<p><h3>Parameters:</h3>
+<span class="types"><a class="type" href="https://wiki.facepunch.com/gmod/Panel">Panel</a></span> <span class="parameter">self</span> The liaModelPanel instance that was set up.</p>
+
+<h3>Example Usage:</h3>
+<pre><code class="language-lua">    hook.Add("OnModelPanelSetup", "CustomizeModelPanel", function(panel)
+        panel:SetFOV(45)
+    end)
+</code></pre>
+</details>
+
+---
+
