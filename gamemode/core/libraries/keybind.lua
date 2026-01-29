@@ -225,23 +225,36 @@ lia.keybind.add("adminMode", {
         if client:isStaffOnDuty() then
             local oldCharID = client.oldCharID or 0
             if oldCharID > 0 then
-                local originalPos = client.OriginalPosition
-                if originalPos then
-                    client:SetPos(originalPos)
-                    client.OriginalPosition = nil
-                end
-
+                local returnPos = client.ReturnPosition
                 net.Start("liaAdminModeSwapCharacter")
                 net.WriteInt(oldCharID, 32)
                 net.Send(client)
                 client.oldCharID = nil
+                if returnPos then
+                    local hookName = "liaAdminModeReturnPos_" .. client:SteamID64()
+                    hook.Add("PostPlayerLoadedChar", hookName, function(ply, character)
+                        if ply == client and IsValid(client) and client.ReturnPosition then
+                            timer.Simple(0.2, function()
+                                if IsValid(client) and client.ReturnPosition then
+                                    client:SetPos(client.ReturnPosition)
+                                    client.ReturnPosition = nil
+                                end
+                            end)
+
+                            hook.Remove("PostPlayerLoadedChar", hookName)
+                        end
+                    end)
+
+                    timer.Simple(5, function() if IsValid(client) then hook.Remove("PostPlayerLoadedChar", hookName) end end)
+                end
+
                 lia.log.add(client, "adminMode", oldCharID, L("adminModeLogBack"))
             else
                 client:notifyErrorLocalized("noPrevChar")
             end
         else
             local currentChar = client:getChar()
-            if currentChar and currentChar:getFaction() ~= "staff" then client.OriginalPosition = client:GetPos() end
+            if currentChar and currentChar:getFaction() ~= "staff" then client.ReturnPosition = client:GetPos() end
             lia.db.query(string.format("SELECT * FROM lia_characters WHERE steamID = \"%s\"", lia.db.escape(steamID)), function(data)
                 for _, row in ipairs(data) do
                     local id = tonumber(row.id)
@@ -508,11 +521,25 @@ if CLIENT then
                 container:SetTall(220)
                 container:Dock(TOP)
                 container:DockMargin(0, 60, 0, 10)
-                container.Paint = function(_, w, h) lia.derma.rect(0, 0, w, h):Rad(16):Color(Color(40, 40, 50, 100)):Shape(lia.derma.SHAPE_IOS):Draw() end
+                container.Paint = function(s, w, h)
+                    local radius = 8
+                    local accent = lia.color.theme.accent or lia.color.theme.header or lia.color.theme.theme or Color(100, 150, 200)
+                    local background = lia.color.theme.background_alpha or lia.color.theme.background or Color(40, 40, 40, 240)
+                    local x, y = s:LocalToScreen(0, 0)
+                    lia.derma.rect(0, 0, w, h):Rad(radius):Color(lia.color.theme.window_shadow or Color(0, 0, 0, 50)):Shadow(8, 12):Shape(lia.derma.SHAPE_IOS):Draw()
+                    lia.util.drawBlurAt(x, y, w, h)
+                    lia.derma.rect(0, 0, w, h):Rad(radius):Color(background):Shape(lia.derma.SHAPE_IOS):Draw()
+                    surface.SetDrawColor(accent.r, accent.g, accent.b, accent.a or 255)
+                    surface.DrawRect(0, 0, w, 3)
+                    surface.DrawRect(0, 0, 3, h)
+                    surface.DrawRect(w - 3, 0, 3, h)
+                    surface.DrawRect(0, h - 3, w, 3)
+                end
+
                 local panel = container:Add("DPanel")
                 panel:Dock(FILL)
                 panel:DockMargin(300, 5, 300, 5)
-                panel.Paint = function(_, w, h) lia.derma.rect(0, 0, w, h):Rad(16):Color(Color(60, 60, 70, 80)):Shape(lia.derma.SHAPE_IOS):Draw() end
+                panel.Paint = function(_, w, h) end
                 local label = vgui.Create("DLabel", panel)
                 label:Dock(TOP)
                 label:SetTall(45)
@@ -676,7 +703,20 @@ if CLIENT then
                     local keybindPanel = KeybindFormatting.Keybind(action, data, canvas, allowEdit, taken, buildKeybinds)
                     keybindPanel:Dock(TOP)
                     keybindPanel:DockMargin(10, 10, 10, 0)
-                    keybindPanel.Paint = function(_, w, h) lia.derma.rect(0, 0, w, h):Rad(16):Color(Color(50, 50, 60, 80)):Shape(lia.derma.SHAPE_IOS):Draw() end
+                    keybindPanel.Paint = function(s, w, h)
+                        local radius = 8
+                        local accent = lia.color.theme.accent or lia.color.theme.header or lia.color.theme.theme or Color(100, 150, 200)
+                        local background = lia.color.theme.background_alpha or lia.color.theme.background or Color(40, 40, 40, 240)
+                        local x, y = s:LocalToScreen(0, 0)
+                        lia.derma.rect(0, 0, w, h):Rad(radius):Color(lia.color.theme.window_shadow or Color(0, 0, 0, 50)):Shadow(8, 12):Shape(lia.derma.SHAPE_IOS):Draw()
+                        lia.util.drawBlurAt(x, y, w, h)
+                        lia.derma.rect(0, 0, w, h):Rad(radius):Color(background):Shape(lia.derma.SHAPE_IOS):Draw()
+                        surface.SetDrawColor(accent.r, accent.g, accent.b, accent.a or 255)
+                        surface.DrawRect(0, 0, w, 3)
+                        surface.DrawRect(0, 0, 3, h)
+                        surface.DrawRect(w - 3, 0, 3, h)
+                        surface.DrawRect(0, h - 3, w, 3)
+                    end
                 end
 
                 if allowEdit then
