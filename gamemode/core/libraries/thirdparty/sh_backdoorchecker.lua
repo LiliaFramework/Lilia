@@ -17,7 +17,7 @@ local function ScanAddon(addon)
     LogBuffer = LogBuffer .. "\n"
     local luafiles = 0
     local found = 0
-    Files = {}
+    local Files = {}
     local function Recurs(f, a)
         local files, folders = file.Find(f .. "*", a)
         if not files then return end
@@ -32,6 +32,7 @@ local function ScanAddon(addon)
 
             if s[#s] == "lua" then
                 table.insert(Files, f .. v)
+                luafiles = luafiles + 1
                 local luafile = file.Read(f .. v, "GAME")
                 if not luafile then
                     line = "Unable to read Lua file: " .. f .. v
@@ -95,7 +96,7 @@ local function ScanAddon(addon)
         end
     end
 
-    Recurs("", addon.title)
+    Recurs(addon.baseDir or "", addon.path or addon.title)
     line = "⌐ Lua files:          " .. luafiles
     MsgC(Color(200, 200, 128), line .. "\n")
     LogBuffer = LogBuffer .. line .. "\n"
@@ -110,6 +111,7 @@ concommand.Add("lia_backdoorcheck", function(ply, com, arg)
     if IsValid(ply) then return end
     if not arg[1] then
         print("\n---------- Lilia Backdoor Checker ----------\n")
+        print("Scans schema and addons for suspicious code (ignores).")
         print("To search all addons: lia_backdoorcheck all 1")
         print("To search a specific addon: lia_backdoorcheck *ID* 1")
         print("Last argument is whether to save log or not.")
@@ -127,26 +129,44 @@ concommand.Add("lia_backdoorcheck", function(ply, com, arg)
         return
     end
 
+    LogBuffer = ""
+    -- Always scan Schema
+    local schema = engine.ActiveGamemode()
+    ScanAddon({
+        title = "Schema (" .. schema .. ")",
+        file = "gamemodes/" .. schema .. "/",
+        wsid = "N/A",
+        path = "GAME",
+        baseDir = "gamemodes/" .. schema .. "/"
+    })
+
     if arg[1] == "all" then
-        LogBuffer = ""
         for anum, addon in pairs(addons) do
+            if addon.title:lower() == "lilia" then continue end
+            addon.path = addon.title
             ScanAddon(addon)
         end
 
-        if savelog and SERVER and lia.data and lia.data.set then lia.data.set("backdoorchecker.scan_" .. os.date("%y-%m-%d_%H-%M-%S"), LogBuffer, true, true) end
+        if savelog and SERVER and lia.data and lia.data.set then lia.data.set("backdoorchecker.scan_all_" .. os.date("%y-%m-%d_%H-%M-%S"), LogBuffer, true, true) end
     else
-        LogBuffer = ""
         print("Specific search for ID " .. arg[1] .. "...")
         local found = false
         for anum, addon in pairs(addons) do
             if addon.wsid == arg[1] then
+                if addon.title:lower() == "lilia" then
+                    MsgC(Color(255, 255, 0), "Skipping Lilia core as requested.\n")
+                    found = true
+                    break
+                end
+
+                addon.path = addon.title
                 ScanAddon(addon)
                 found = true
                 break
             end
         end
 
-        if savelog and SERVER and lia.data and lia.data.set then lia.data.set("backdoorchecker.scan_" .. os.date("%y-%m-%d_%H-%M-%S"), LogBuffer, true, true) end
+        if savelog and SERVER and lia.data and lia.data.set then lia.data.set("backdoorchecker.scan_" .. (found and arg[1] or "notfound") .. "_" .. os.date("%y-%m-%d_%H-%M-%S"), LogBuffer, true, true) end
         if not found then MsgC(Color(255, 0, 0), "No addon with that ID installed.\n\n") end
     end
 
