@@ -18,6 +18,23 @@ function PANEL:Init()
     end
 
     hook.Add("DrawPhysgunBeam", "liaMainMenuPreDrawPhysgunBeam", function() return IsValid(lia.gui.character) end)
+    hook.Add("RenderScreenspaceEffects", "liaCharMenuDarken", function()
+        if not IsValid(lia.gui.character) then return end
+        local inFull = lia.gui.character.inCharacterCreation or lia.gui.character.inWelcomeScreen
+        if not inFull then return end
+        DrawColorModify({
+            ["$pp_colour_addr"] = 0,
+            ["$pp_colour_addg"] = 0,
+            ["$pp_colour_addb"] = 0,
+            ["$pp_colour_brightness"] = -0.3,
+            ["$pp_colour_contrast"] = 0.6,
+            ["$pp_colour_colour"] = 0.6,
+            ["$pp_colour_mulr"] = 0,
+            ["$pp_colour_mulg"] = 0,
+            ["$pp_colour_mulb"] = 0
+        })
+    end)
+
     self:Dock(FILL)
     self:MakePopup()
     self:SetAlpha(0)
@@ -58,7 +75,146 @@ function PANEL:Init()
         self.currentIndex = self.currentIndex or 1
     end
 
-    self:createStartButton()
+    if clientChar then
+        self:createStartButton()
+    else
+        self.tabs:SetVisible(false)
+        self.content:SetVisible(false)
+        self:createWelcomeScreen()
+    end
+end
+
+function PANEL:createWelcomeScreen()
+    local client = LocalPlayer()
+    if not IsValid(client) then
+        timer.Simple(0.1, function() if IsValid(self) then self:createWelcomeScreen() end end)
+        return
+    end
+
+    local isFirstJoin = not lia.characters or #lia.characters == 0
+    self.inWelcomeScreen = true
+    self.welcomeScreen = self:Add("DPanel")
+    self.welcomeScreen:SetPos(0, 0)
+    self.welcomeScreen:SetSize(ScrW(), ScrH())
+    self.welcomeScreen:SetZPos(100)
+    self.welcomeScreen.Paint = function(_, w, h)
+        surface.SetDrawColor(0, 0, 0, 150)
+        surface.DrawRect(0, 0, w, h)
+    end
+
+    local logoPath = lia.config.get("ServerLogo") or ""
+    local mainMenuLogoEnabled = lia.config.get("MainMenuLogoEnabled", true)
+    local welcomeLogo = nil
+    if mainMenuLogoEnabled and logoPath ~= "" then
+        welcomeLogo = self.welcomeScreen:Add("DImage")
+        welcomeLogo:SetImage(logoPath)
+        welcomeLogo:SetZPos(101)
+    end
+
+    local steamName = client.steamName and client:steamName() or client:SteamName() or client:Nick() or "Player"
+    local welcomeLabel = self.welcomeScreen:Add("DLabel")
+    welcomeLabel:SetFont("LiliaFont.48")
+    welcomeLabel:SetTextColor(Color(255, 255, 255))
+    welcomeLabel:SizeToContents()
+    welcomeLabel:SetContentAlignment(5)
+    local pressEnterLabel = self.welcomeScreen:Add("DLabel")
+    pressEnterLabel:SetFont("LiliaFont.24")
+    pressEnterLabel:SetTextColor(Color(255, 255, 255))
+    pressEnterLabel:SetText("Press [SPACE] to play")
+    pressEnterLabel:SizeToContents()
+    pressEnterLabel:SetContentAlignment(5)
+    pressEnterLabel.Think = function()
+        local alpha = math.abs(math.sin(CurTime() * 2)) * 155 + 100
+        pressEnterLabel:SetAlpha(alpha)
+    end
+
+    local playtimeLabel = nil
+    if not isFirstJoin then
+        local playtime = client:getPlayTime() or 0
+        local days = math.floor(playtime / 86400)
+        local hours = math.floor((playtime % 86400) / 3600)
+        local minutes = math.floor((playtime % 3600) / 60)
+        local playtimeStr
+        if days > 0 then
+            playtimeStr = days .. "d " .. hours .. "h " .. minutes .. "m"
+        elseif hours > 0 then
+            playtimeStr = hours .. "h " .. minutes .. "m"
+        else
+            playtimeStr = minutes .. "m"
+        end
+
+        playtimeLabel = self.welcomeScreen:Add("DLabel")
+        playtimeLabel:SetFont("LiliaFont.20")
+        playtimeLabel:SetText("Playtime: " .. playtimeStr)
+        playtimeLabel:SetTextColor(Color(64, 224, 208))
+        playtimeLabel:SizeToContents()
+        playtimeLabel:SetContentAlignment(5)
+    end
+
+    local function positionLabels()
+        local w, h = self.welcomeScreen:GetSize()
+        local logoW, logoH
+        if welcomeLogo then
+            logoW = ScrW() * 0.12
+            logoH = ScrW() * 0.08
+            welcomeLogo:SetSize(logoW, logoH)
+            welcomeLogo:SetPos(w / 2 - logoW / 2, h * 0.30)
+        end
+
+        local baseY = welcomeLogo and (h * 0.30 + logoH + ScrH() * 0.05) or (h * 0.45)
+        welcomeLabel:SetPos(w / 2 - welcomeLabel:GetWide() / 2, baseY)
+        pressEnterLabel:SetPos(w / 2 - pressEnterLabel:GetWide() / 2, baseY + ScrH() * 0.07)
+        if playtimeLabel then playtimeLabel:SetPos(w / 2 - playtimeLabel:GetWide() / 2, baseY + ScrH() * 0.12) end
+    end
+
+    local function updateWelcomeText()
+        local currentSteamName = client.steamName and client:steamName() or client:SteamName() or client:Nick() or "Player"
+        if isFirstJoin then
+            welcomeLabel:SetText("Welcome, " .. currentSteamName .. "!")
+        else
+            welcomeLabel:SetText("Welcome back, " .. currentSteamName .. "!")
+        end
+
+        welcomeLabel:SizeToContents()
+        positionLabels()
+    end
+
+    updateWelcomeText()
+    positionLabels()
+    self.welcomeScreen.PerformLayout = function() positionLabels() end
+    local lastSteamName = steamName
+    self.welcomeScreen.Think = function(pnl)
+        if IsValid(client) then
+            local currentSteamName = client.steamName and client:steamName() or client:SteamName() or client:Nick() or "Player"
+            if currentSteamName ~= lastSteamName and currentSteamName ~= "Player" then
+                lastSteamName = currentSteamName
+                updateWelcomeText()
+            end
+        end
+
+        if input.IsKeyDown(KEY_SPACE) and not self.welcomeKeyPressed then
+            self.welcomeKeyPressed = true
+            self:dismissWelcomeScreen()
+        elseif not input.IsKeyDown(KEY_SPACE) then
+            self.welcomeKeyPressed = false
+        end
+    end
+end
+
+function PANEL:dismissWelcomeScreen()
+    if not IsValid(self.welcomeScreen) then return end
+    self:clickSound()
+    self.inWelcomeScreen = false
+    self.welcomeScreen:AlphaTo(0, 0.3, 0, function()
+        if IsValid(self.welcomeScreen) then
+            self.welcomeScreen:Remove()
+            self.welcomeScreen = nil
+        end
+
+        if IsValid(self.tabs) then self.tabs:SetVisible(true) end
+        if IsValid(self.content) then self.content:SetVisible(true) end
+        self:createStartButton()
+    end)
 end
 
 function PANEL:createTitle()
@@ -165,6 +321,7 @@ function PANEL:createStartButton()
         return
     end
 
+    self.inMainMenu = true
     local clientChar = client.getChar and client:getChar()
     local w, h, s = ScrW() * 0.2, ScrH() * 0.04, ScrH() * 0.01
     local logoPath = lia.config.get("ServerLogo") or ""
@@ -438,6 +595,7 @@ function PANEL:backToMainMenu()
     self.buttons = {}
     self.isLoadMode = false
     self.disableClientModel = false
+    self.inCharacterCreation = false
     self.content:Clear()
     self.tabs:Clear()
     self:createStartButton()
@@ -446,6 +604,7 @@ end
 
 function PANEL:createCharacterSelection()
     self.isLoadMode = true
+    self.inMainMenu = false
     for _, name in ipairs{"background", "logo"} do
         if IsValid(self[name]) then
             self[name]:Remove()
@@ -491,6 +650,7 @@ function PANEL:createCharacterCreation()
     self.content:Clear()
     self.content:InvalidateLayout(true)
     self.content:Add("liaCharacterCreation")
+    self.inCharacterCreation = true
 end
 
 function PANEL:createStaffCharacter()
@@ -962,6 +1122,7 @@ function PANEL:OnRemove()
     hook.Remove("CalcView", "liaMainMenuCalcView")
     hook.Remove("PostDrawOpaqueRenderables", "liaMainMenuPostDrawOpaqueRenderables")
     hook.Remove("DrawPhysgunBeam", "liaMainMenuPreDrawPhysgunBeam")
+    hook.Remove("RenderScreenspaceEffects", "liaCharMenuDarken")
     if self.charListUpdateHook then hook.Remove("CharListUpdated", self.charListUpdateHook) end
     if self.adminPrivilegesUpdateHook then hook.Remove("AdminPrivilegesUpdated", self.adminPrivilegesUpdateHook) end
     if render.oldDrawBeam then
