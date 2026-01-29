@@ -2921,3 +2921,59 @@ end
 ]]
 function TryViewModel(entity)
 end
+
+--[[
+    Purpose:
+        Allows modules to react to or modify the list of registered feature position types.
+
+    When Called:
+        Every time MODULE:SetPositionCallback is called to register a new position feature.
+
+    Parameters:
+        arg1 (table)
+            The list of current feature position types (lia.featurePositionTypes).
+
+    Realm:
+        Shared
+
+    Example Usage:
+        ```lua
+            hook.Add("RegisterFeaturePositionTypes", "MonitorPositions", function(types)
+                PrintTable(types)
+            end)
+        ```
+]]
+function RegisterFeaturePositionTypes(arg1)
+end
+
+--[[
+    Purpose:
+        Registers a callback for setting and managing world positions via the admin position tool.
+
+    When Called:
+        Typically during module initialization to define new selectable position types in the admin tool.
+
+    Parameters:
+        name (string)
+            The display name of the position type (e.g., “Faction Spawn Adder”).
+        data (table)
+            A table containing configuration:
+            - onRun (function): Called when a position is set. Arguments: (pos, client, typeId).
+            - onSelect (function): Called when the type is selected. Arguments: (client, callback).
+            - color (Color, optional): UI accent color.
+            - HUDPaint (function, optional): Extra HUD rendering.
+            - serverOnly (boolean, optional): If true, logic runs server-side.
+
+    Realm:
+        Shared
+
+    Example Usage:
+        ```lua
+            MODULE:SetPositionCallback("My Custom Point", {
+                onRun = function(pos, client) -- ... end,
+                onSelect = function(client, callback) -- ... end
+            })
+        ```
+]]
+function SetPositionCallback(name, data)
+end

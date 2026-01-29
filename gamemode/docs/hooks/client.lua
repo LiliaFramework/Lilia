@@ -3672,3 +3672,65 @@ end
 ]]
 function WebSoundDownloaded(name, path)
 end
+
+--[[
+    Purpose:
+        Draws a styled text box with a background and a colored accent bar at the bottom, typically used for ESP displays.
+
+    When Called:
+        Whenever an ESP element or specialized screen text needs to be rendered with the Lilia signature style.
+
+    Parameters:
+        text (string)
+            The text to display.
+        x (number)
+            The X-coordinate on the screen center.
+        y (number)
+            The Y-coordinate on the screen top.
+        espColor (Color)
+            The color of the accent bar at the bottom.
+        font (string)
+            The font to use for the text.
+        fadeAlpha (number)
+            The opacity scale (0 to 1) for the entire element.
+
+    Returns:
+        number
+            The total height (bh) of the drawn box, including padding.
+
+    Realm:
+        Client
+
+    Example Usage:
+        ```lua
+            hook.Add("DrawESPStyledText", "ExampleESP", function(text, x, y, color, font, alpha)
+                -- custom ESP drawing logic
+            end)
+        ```
+]]
+function DrawESPStyledText(text, x, y, espColor, font, fadeAlpha)
+end
+
+--[[
+    Purpose:
+        Called after a liaModelPanel has been initialized and its model has been set.
+
+    When Called:
+        During the SetModel process of a liaModelPanel, after the entity is created and sequences are initialized.
+
+    Parameters:
+        self (Panel)
+            The liaModelPanel instance that was set up.
+
+    Realm:
+        Client
+
+    Example Usage:
+        ```lua
+            hook.Add("OnModelPanelSetup", "CustomizeModelPanel", function(panel)
+                panel:SetFOV(45)
+            end)
+        ```
+]]
+function OnModelPanelSetup(self)
+end
