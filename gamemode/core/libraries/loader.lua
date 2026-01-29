@@ -966,6 +966,9 @@ function lia.loader.initializeGamemode(isReload)
         timer.Remove("liaReloadAdminSync")
         timer.Remove("liaReloadPlayerInteractSync")
         timer.Remove("liaReloadComplete")
+        lia.net.buffers = {}
+        lia.net.sendq = {}
+        lia.net.cache = {}
         lia.reloadInProgress = true
         lia.isReloading = true
     end
@@ -983,7 +986,10 @@ function lia.loader.initializeGamemode(isReload)
         timer.Create("liaReloadConfigSync", 0.5, 1, function() if configHasChanges then lia.config.send() end end)
         timer.Create("liaReloadAdminSync", 2.0, 1, function() if adminHasChanges then lia.admin.sync() end end)
         timer.Create("liaReloadPlayerInteractSync", 3.5, 1, function() if playerInteractHasChanges then lia.playerinteract.sync() end end)
-        timer.Create("liaReloadComplete", 5.0, 1, function() lia.reloadInProgress = false end)
+        timer.Create("liaReloadComplete", 5.0, 1, function()
+            lia.reloadInProgress = false
+            timer.Simple(1.0, function() collectgarbage("collect") end)
+        end)
     end
 
     if isReload then
