@@ -262,8 +262,7 @@ function lia.font.registerFonts(fontName)
         weight = 500
     })
 
-    for size = 10, 100 do
-        print("LiliaFont." .. size)
+    for size = 1, 100 do
         lia.font.register("LiliaFont." .. size, {
             font = mainFont,
             size = size,
