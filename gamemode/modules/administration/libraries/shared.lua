@@ -99,3 +99,256 @@ properties.Add("copytoclipboard", {
         self:MsgEnd()
     end,
 })
+
+MODULE.positionCallbacks = MODULE.positionCallbacks or {}
+lia.featurePositionTypes = lia.featurePositionTypes or {}
+function MODULE:SetPositionCallback(name, data)
+    if not isstring(name) or not istable(data) then return end
+    if not isfunction(data.onRun) or not isfunction(data.onSelect) then return end
+    local id = string.lower(name):gsub("%s+", "_")
+    local serverOnly = data.serverOnly == true
+    local color = data.color or Color(255, 255, 255)
+    MODULE.positionCallbacks[id] = {
+        id = id,
+        name = name,
+        color = color,
+        onRun = data.onRun,
+        onSelect = data.onSelect,
+        HUDPaint = data.HUDPaint,
+        serverOnly = serverOnly
+    }
+
+    local found = false
+    for i = 1, #lia.featurePositionTypes do
+        if lia.featurePositionTypes[i].id == id then
+            lia.featurePositionTypes[i].name = name
+            lia.featurePositionTypes[i].color = color
+            found = true
+            break
+        end
+    end
+
+    if not found then
+        table.insert(lia.featurePositionTypes, {
+            id = id,
+            name = name,
+            color = color
+        })
+    end
+
+    hook.Run("RegisterFeaturePositionTypes", lia.featurePositionTypes)
+end
+
+MODULE:SetPositionCallback("Faction Spawn Adder", {
+    onRun = function(pos, client, typeId)
+        if SERVER then
+            local factionID = net.ReadString()
+            if not factionID or factionID == "" then return end
+            local factionInfo = lia.faction.teams[factionID] or lia.util.findFaction(client, factionID)
+            if not factionInfo then return end
+            lia.module.get("spawns"):FetchSpawns():next(function(spawns)
+                spawns[factionInfo.uniqueID] = spawns[factionInfo.uniqueID] or {}
+                table.insert(spawns[factionInfo.uniqueID], {
+                    pos = pos,
+                    ang = angle_zero,
+                    map = lia.data.getEquivalencyMap(game.GetMap())
+                })
+
+                lia.module.get("spawns"):StoreSpawns(spawns):next(function()
+                    lia.log.add(client, "spawnAdd", factionInfo.name)
+                    client:notifySuccessLocalized("spawnAdded", L(factionInfo.name))
+                end)
+            end)
+        else
+            local names, idByDisplay = {}, {}
+            for k, v in pairs(lia.faction.teams or {}) do
+                local display = L(v.name) or v.name or k
+                names[#names + 1] = display
+                idByDisplay[display] = k
+            end
+
+            if #names == 0 then
+                client:notifyErrorLocalized("invalidFaction")
+                return
+            end
+
+            lia.derma.requestDropdown("Faction Spawn Adder", names, function(selection)
+                if not selection or selection == false then return end
+                local factionID = idByDisplay[selection]
+                if not factionID then return end
+                net.Start("liaSetFeaturePosition")
+                net.WriteString("faction_spawn_adder")
+                net.WriteVector(pos)
+                net.WriteString(factionID)
+                net.SendToServer()
+            end)
+        end
+    end,
+    onSelect = function(client, callback)
+        if SERVER then
+            lia.module.get("spawns"):FetchSpawns():next(function(spawns)
+                local list = {}
+                local curMap = lia.data.getEquivalencyMap(game.GetMap()):lower()
+                for factionID, factionSpawns in pairs(spawns or {}) do
+                    local factionInfo = lia.faction.get(factionID)
+                    local label = factionInfo and (factionInfo.name and L(factionInfo.name) or factionID) or factionID
+                    for i = 1, #(factionSpawns or {}) do
+                        local data = factionSpawns[i]
+                        local pos = data.pos or data.position
+                        if isvector(pos) then
+                            local map = data.map and (isstring(data.map) and data.map:lower() or tostring(data.map):lower()) or nil
+                            if not map or map == curMap then
+                                list[#list + 1] = {
+                                    pos = pos,
+                                    label = label
+                                }
+                            end
+                        end
+                    end
+                end
+
+                callback(list, #list)
+            end)
+        else
+            net.Start("liaFeaturePositionsRequest")
+            net.WriteString("faction_spawn_adder")
+            net.SendToServer()
+        end
+    end,
+    color = Color(100, 200, 100),
+    serverOnly = true
+})
+
+MODULE:SetPositionCallback("Class Spawn Adder", {
+    onRun = function(pos, client, typeId)
+        if SERVER then
+            local classID = net.ReadString()
+            if not classID or classID == "" then return end
+            local classIDNum = tonumber(classID) or lia.class.retrieveClass(classID)
+            local classData = lia.class.get(classIDNum)
+            if not classData then return end
+            local stored = lia.data.get("spawns", {})
+            local data = istable(stored) and stored or {}
+            data.classes = data.classes or {}
+            data.classes[classIDNum] = data.classes[classIDNum] or {}
+            table.insert(data.classes[classIDNum], {
+                pos = pos,
+                ang = angle_zero,
+                map = lia.data.getEquivalencyMap(game.GetMap())
+            })
+
+            lia.data.set("spawns", data)
+            lia.log.add(client, "classSpawnAdd", classData.name)
+            client:notifySuccessLocalized("spawnAdded", L(classData.name))
+        else
+            local names, idByDisplay = {}, {}
+            for k, v in pairs(lia.class.list or {}) do
+                if isnumber(k) and istable(v) and v.name then
+                    local display = L(v.name) or v.name or tostring(k)
+                    names[#names + 1] = display
+                    idByDisplay[display] = tostring(k)
+                end
+            end
+
+            if #names == 0 then
+                client:notifyErrorLocalized("invalidClass")
+                return
+            end
+
+            lia.derma.requestDropdown("Class Spawn Adder", names, function(selection)
+                if not selection or selection == false then return end
+                local classID = idByDisplay[selection]
+                if not classID then return end
+                net.Start("liaSetFeaturePosition")
+                net.WriteString("class_spawn_adder")
+                net.WriteVector(pos)
+                net.WriteString(classID)
+                net.SendToServer()
+            end)
+        end
+    end,
+    onSelect = function(client, callback)
+        if SERVER then
+            local stored = lia.data.get("spawns", {})
+            local data = istable(stored) and stored or {}
+            local classes = data.classes or {}
+            local list = {}
+            local curMap = lia.data.getEquivalencyMap(game.GetMap()):lower()
+            for classID, classSpawns in pairs(classes) do
+                local classData = lia.class.get(tonumber(classID))
+                local label = classData and (classData.name and L(classData.name) or tostring(classID)) or tostring(classID)
+                for i = 1, #(classSpawns or {}) do
+                    local spawnData = classSpawns[i]
+                    local pos = spawnData.pos or spawnData.position
+                    if isvector(pos) then
+                        local map = spawnData.map and (isstring(spawnData.map) and spawnData.map:lower() or tostring(spawnData.map):lower()) or nil
+                        if not map or map == curMap then
+                            list[#list + 1] = {
+                                pos = pos,
+                                label = label
+                            }
+                        end
+                    end
+                end
+            end
+
+            callback(list, #list)
+        else
+            net.Start("liaFeaturePositionsRequest")
+            net.WriteString("class_spawn_adder")
+            net.SendToServer()
+        end
+    end,
+    color = Color(200, 150, 100),
+    serverOnly = true
+})
+
+MODULE:SetPositionCallback("Sit Room", {
+    onRun = function(pos, client, typeId)
+        if SERVER then
+            local name = net.ReadString()
+            if not name or name == "" then return end
+            local rooms = lia.data.get("sitrooms", {})
+            rooms[name] = pos
+            lia.data.set("sitrooms", rooms)
+            client:notifySuccessLocalized("sitroomSet")
+            lia.log.add(client, "sitRoomSet", L("sitroomSetDetail", name, tostring(pos)), L("logSetSitroom"))
+        elseif CLIENT then
+            client:requestString(L("enterNamePrompt"), L("enterSitroomPrompt") .. ":", function(name)
+                if name == false then return end
+                if not name or name == "" then
+                    client:notifyErrorLocalized("invalidName")
+                    return
+                end
+
+                net.Start("liaSetFeaturePosition")
+                net.WriteString("sit_room")
+                net.WriteVector(pos)
+                net.WriteString(name)
+                net.SendToServer()
+            end)
+        end
+    end,
+    onSelect = function(client, callback)
+        if SERVER then
+            local rooms = lia.data.get("sitrooms", {})
+            local list = {}
+            for name, pos in pairs(rooms) do
+                if isvector(pos) then
+                    list[#list + 1] = {
+                        pos = pos,
+                        label = name
+                    }
+                end
+            end
+
+            callback(list, #list)
+        elseif CLIENT then
+            net.Start("liaFeaturePositionsRequest")
+            net.WriteString("sit_room")
+            net.SendToServer()
+        end
+    end,
+    color = Color(123, 104, 238),
+    serverOnly = true
+})

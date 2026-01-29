@@ -1,4 +1,5 @@
-﻿local ActiveTickets = {}
+﻿local MODULE = MODULE
+local ActiveTickets = {}
 local function fixupProp(client, ent, mins, maxs)
     local pos = ent:GetPos()
     local down, up = ent:LocalToWorld(mins), ent:LocalToWorld(maxs)
@@ -73,6 +74,7 @@ end
 
 function MODULE:PostPlayerLoadout(client)
     if client:hasPrivilege("alwaysSpawnAdminStick") or client:isStaffOnDuty() then client:Give("lia_adminstick") end
+    if client:hasPrivilege("usePositionTool") or client:hasPrivilege("alwaysSpawnAdminStick") or client:isStaffOnDuty() then client:Give("lia_positiontool") end
 end
 
 local spawnCooldowns = {}
@@ -425,6 +427,57 @@ net.Receive("liaManagesitroomsAction", function(_, client)
             client:notifySuccessLocalized("sitroomRepositioned")
             lia.log.add(client, "sitRoomRepositioned", L("sitroomRepositionedDetail", name, tostring(client:GetPos())), L("logRepositionedSitroom"))
         end
+    end
+end)
+
+net.Receive("liaFeaturePositionsRequest", function(_, client)
+    if not client:hasPrivilege("alwaysSpawnAdminStick") and not client:isStaffOnDuty() then return end
+    local typeId = net.ReadString()
+    local callback = MODULE.positionCallbacks and MODULE.positionCallbacks[typeId]
+    if callback and callback.serverOnly and callback.onSelect then
+        callback.onSelect(client, function(positions, count)
+            net.Start("liaFeaturePositions")
+            net.WriteString(typeId)
+            net.WriteUInt(count or #positions, 16)
+            for j = 1, #positions do
+                net.WriteVector(positions[j].pos)
+                net.WriteString(positions[j].label or "")
+            end
+
+            net.Send(client)
+        end)
+    else
+        net.Start("liaFeaturePositions")
+        net.WriteString(typeId)
+        net.WriteUInt(0, 16)
+        net.Send(client)
+    end
+end)
+
+net.Receive("liaSetFeaturePosition", function(_, client)
+    if not client:hasPrivilege("alwaysSpawnAdminStick") and not client:isStaffOnDuty() then return end
+    local typeId = net.ReadString()
+    local pos = net.ReadVector()
+    local callback = MODULE.positionCallbacks and MODULE.positionCallbacks[typeId]
+    if callback and callback.serverOnly and callback.onRun then
+        callback.onRun(pos, client, typeId)
+        timer.Simple(1, function()
+            if not IsValid(client) then return end
+            local innerCallback = MODULE.positionCallbacks and MODULE.positionCallbacks[typeId]
+            if innerCallback and innerCallback.onSelect then
+                innerCallback.onSelect(client, function(positions, count)
+                    net.Start("liaFeaturePositions")
+                    net.WriteString(typeId)
+                    net.WriteUInt(count or #positions, 16)
+                    for j = 1, #positions do
+                        net.WriteVector(positions[j].pos)
+                        net.WriteString(positions[j].label or "")
+                    end
+
+                    net.Send(client)
+                end)
+            end
+        end)
     end
 end)
 
@@ -1212,6 +1265,18 @@ net.Receive("liaRequestWarningsCount", function(_, client)
     lia.db.count("warnings"):next(function(count)
         net.Start("liaWarningsCount")
         net.WriteInt(count or 0, 32)
+        net.Send(client)
+    end)
+end)
+
+net.Receive("liaRequestPlayerWarnings", function(_, client)
+    if not client:hasPrivilege("viewPlayerWarnings") then return end
+    local charID = net.ReadString()
+    if not charID or charID == "" then return end
+    MODULE:GetWarnings(charID):next(function(warnings)
+        net.Start("liaPlayerWarnings")
+        net.WriteString(charID)
+        net.WriteTable(warnings or {})
         net.Send(client)
     end)
 end)

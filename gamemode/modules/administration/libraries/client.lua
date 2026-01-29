@@ -1,7 +1,11 @@
 ﻿local MODULE = MODULE
 AdminStickIsOpen = false
 AdminStickMenu = nil
-local pksCount, ticketsCount, warningsCount = 0, 0, 0
+AdminStickWarnings = {}
+AdminStickMenuPositionCache = nil
+AdminStickMenuOpenTime = 0
+MODULE.adminStickCategories = MODULE.adminStickCategories or {}
+MODULE.adminStickCategoryOrder = MODULE.adminStickCategoryOrder or {}
 local playerInfoLabel = L("player") .. " " .. L("information")
 local subMenuIcons = {
     moderationTools = "icon16/wrench.png",
@@ -37,7 +41,7 @@ local subMenuIcons = {
     permissions = "icon16/key.png",
 }
 
-function GetIdentifier(ent)
+local function GetIdentifier(ent)
     if not IsValid(ent) or not ent:IsPlayer() then return "" end
     if ent:IsBot() then return ent:Name() end
     return ent:SteamID64()
@@ -283,6 +287,7 @@ local function OpenFlagsPanel(panel, data)
         local steamID = rowData[2] or ""
         local currentFlags = rowData[3] or ""
         LocalPlayer():requestString(L("modifyCharFlags"), L("modifyFlagsDesc"), function(text)
+            if text == false then return end
             text = string.gsub(text or "", "%s", "")
             net.Start("liaModifyFlags")
             net.WriteString(steamID)
@@ -622,11 +627,6 @@ function MODULE:PopulateAdminTabs(pages)
     end
 
     if client:hasPrivilege("manageCharacters") then
-        net.Start("liaRequestPksCount")
-        net.SendToServer()
-    end
-
-    if client:hasPrivilege("manageCharacters") and pksCount and pksCount > 0 then
         table.insert(pages, {
             name = "pkManager",
             icon = "icon16/lightning.png",
@@ -638,7 +638,7 @@ function MODULE:PopulateAdminTabs(pages)
         })
     end
 
-    if (client:hasPrivilege("alwaysSeeTickets") or client:isStaffOnDuty()) and ticketsCount and ticketsCount > 0 then
+    if client:hasPrivilege("alwaysSeeTickets") or client:isStaffOnDuty() then
         table.insert(pages, {
             name = "tickets",
             icon = "icon16/report.png",
@@ -650,7 +650,7 @@ function MODULE:PopulateAdminTabs(pages)
         })
     end
 
-    if client:hasPrivilege("viewPlayerWarnings") and warningsCount and warningsCount > 0 then
+    if client:hasPrivilege("viewPlayerWarnings") then
         table.insert(pages, {
             name = "warnings",
             icon = "icon16/error.png",
@@ -662,11 +662,6 @@ function MODULE:PopulateAdminTabs(pages)
         })
     end
 end
-
-net.Receive("liaPksCount", function()
-    local count = net.ReadInt(32)
-    pksCount = count
-end)
 
 spawnmenu.AddContentType("inventoryitem", function(container, data)
     local client = LocalPlayer()
@@ -1037,7 +1032,19 @@ local function GenerateDynamicCategories()
                 subCategory.name = localizedSubName
             else
                 local formattedSubName = subCategory.name
-                if formattedSubName:lower() == "adminsticksubcategorybans" then
+                if formattedSubName:lower() == "moderationtools" then
+                    formattedSubName = "Moderation Tools"
+                elseif formattedSubName:lower() == "information" then
+                    formattedSubName = "Information"
+                elseif formattedSubName:lower() == "properties" then
+                    formattedSubName = "Properties"
+                elseif formattedSubName:lower() == "actions" then
+                    formattedSubName = "Actions"
+                elseif formattedSubName:lower() == "settings" then
+                    formattedSubName = "Settings"
+                elseif formattedSubName:lower() == "access" then
+                    formattedSubName = "Access"
+                elseif formattedSubName:lower() == "adminsticksubcategorybans" then
                     formattedSubName = "Bans"
                 elseif formattedSubName:lower() == "adminsticksubcategorysetinfos" then
                     formattedSubName = "Set Information"
@@ -1045,8 +1052,6 @@ local function GenerateDynamicCategories()
                     formattedSubName = "Get Information"
                 elseif formattedSubName:lower() == "adminsticksubcategorycharacterflags" then
                     formattedSubName = "Flags"
-                elseif formattedSubName:lower() == "moderationtools" then
-                    formattedSubName = "Moderation Tools"
                 elseif formattedSubName:lower() == "doorinformation" then
                     formattedSubName = "Door Information"
                 else
@@ -1059,7 +1064,7 @@ local function GenerateDynamicCategories()
         end
     end
 
-    local preferredOrder = {"moderation", "characterManagement", "doorManagement", "storageManagement", "teleportation", "utility"}
+    local preferredOrder = {"moderation", "characterManagement", "doorManagement", "storageManagement"}
     local orderedCategories = {}
     for _, preferredCategory in ipairs(preferredOrder) do
         if mergedCategories[preferredCategory] then table.insert(orderedCategories, preferredCategory) end
@@ -1073,12 +1078,25 @@ local function GenerateDynamicCategories()
         moderation = {
             name = L("adminStickCategoryModeration") or "Moderation",
             icon = "icon16/shield.png",
-            subcategories = {}
+            subcategories = {
+                moderationTools = {
+                    name = "Moderation Tools",
+                    icon = "icon16/shield.png"
+                },
+                teleportation = {
+                    name = L("adminStickCategoryTeleportation") or "Teleportation",
+                    icon = "icon16/world.png"
+                }
+            }
         },
         characterManagement = {
             name = L("adminStickCategoryCharacterManagement") or "Character Management",
             icon = "icon16/user_gray.png",
             subcategories = {
+                information = {
+                    name = "Information",
+                    icon = "icon16/information.png"
+                },
                 factions = {
                     name = L("adminStickSubCategoryFactions") or "Factions",
                     icon = "icon16/group.png"
@@ -1090,6 +1108,14 @@ local function GenerateDynamicCategories()
                 whitelists = {
                     name = L("adminStickSubCategoryWhitelists") or "Whitelists",
                     icon = "icon16/group_add.png"
+                },
+                properties = {
+                    name = "Properties",
+                    icon = "icon16/application_view_tile.png"
+                },
+                items = {
+                    name = "Items",
+                    icon = "icon16/box.png"
                 }
             }
         },
@@ -1097,71 +1123,23 @@ local function GenerateDynamicCategories()
             name = L("adminStickCategoryDoorManagement"),
             icon = "icon16/door.png",
             subcategories = {
-                doorActions = {
-                    name = L("adminStickSubCategoryDoorActions") or L("adminStickSubCategoryActions"),
+                actions = {
+                    name = "Actions",
                     icon = "icon16/lightning.png"
                 },
-                doorSettings = {
-                    name = L("adminStickSubCategoryDoorSettings") or L("adminStickSubCategorySettings"),
+                settings = {
+                    name = "Settings",
                     icon = "icon16/cog.png"
                 },
-                factions = {
-                    name = L("adminStickSubCategoryFactions") or "Factions",
-                    icon = "icon16/group.png",
-                    subcategories = {
-                        addFactions = {
-                            name = L("addFactions"),
-                            icon = "icon16/group_add.png"
-                        },
-                        removeFactions = {
-                            name = L("removeFactions"),
-                            icon = "icon16/group_delete.png"
-                        }
-                    }
-                },
-                classes = {
-                    name = L("adminStickSubCategoryClasses") or "Classes",
-                    icon = "icon16/user.png",
-                    subcategories = {
-                        addClasses = {
-                            name = L("addClasses"),
-                            icon = "icon16/user_add.png"
-                        },
-                        removeClasses = {
-                            name = L("removeClasses"),
-                            icon = "icon16/user_delete.png"
-                        }
-                    }
-                },
-                doorMaintenance = {
-                    name = L("adminStickSubCategoryDoorMaintenance") or L("adminStickSubCategoryMaintenance"),
-                    icon = "icon16/wrench.png"
-                },
-                doorInformation = {
-                    name = L("adminStickSubCategoryDoorInformation") or L("adminStickSubCategoryInformation"),
-                    icon = "icon16/information.png"
+                access = {
+                    name = "Access",
+                    icon = "icon16/group.png"
                 }
             }
         },
         storageManagement = {
             name = L("storageManagement") or "Storage Management",
-            icon = "icon16/package.png",
-            subcategories = {
-                storageActions = {
-                    name = L("adminStickSubCategoryStorageActions"),
-                    icon = "icon16/lightning.png"
-                }
-            }
-        },
-        teleportation = {
-            name = L("adminStickCategoryTeleportation"),
-            icon = "icon16/world.png",
-            subcategories = {}
-        },
-        utility = {
-            name = L("adminStickCategoryUtility") or "Utility",
-            icon = "icon16/application_view_tile.png",
-            subcategories = {}
+            icon = "icon16/package.png"
         }
     }
 
@@ -1185,8 +1163,6 @@ local function GenerateDynamicCategories()
     return mergedCategories, orderedCategories
 end
 
-MODULE.adminStickCategories = MODULE.adminStickCategories or {}
-MODULE.adminStickCategoryOrder = MODULE.adminStickCategoryOrder or {}
 function MODULE:InitializedModules()
     local categories, categoryOrder = GenerateDynamicCategories()
     self.adminStickCategories = categories
@@ -1306,8 +1282,6 @@ local function CreateOrganizedAdminStickMenu(tgt, stores, existingMenu)
             elseif categoryKey == "doorManagement" and tgt:isDoor() then
                 hasContent = true
             elseif categoryKey == "storageManagement" and tgt.isStorageEntity then
-                hasContent = true
-            elseif categoryKey == "teleportation" and tgt:IsPlayer() and (cl:hasPrivilege("alwaysSpawnAdminStick") or cl:isStaffOnDuty()) then
                 hasContent = true
             elseif categoryKey == "utility" and tgt:IsPlayer() then
                 hasContent = true
@@ -1709,13 +1683,43 @@ local function IncludeAdminMenu(tgt, menu, stores)
         end
     end
 
+    local utilityCommands = {
+        {
+            name = L("noclip"),
+            cmd = "noclip",
+            icon = "icon16/shape_square.png"
+        },
+        {
+            name = L("godmode"),
+            cmd = "godmode",
+            icon = "icon16/shield.png"
+        },
+        {
+            name = L("spectate"),
+            cmd = "spectate",
+            icon = "icon16/eye.png"
+        }
+    }
+
+    for _, cmd in ipairs(utilityCommands) do
+        modSubCategory:AddOption(L(cmd.name), function()
+            RunAdminCommand(cmd.cmd, tgt)
+            timer.Simple(0.1, function()
+                LocalPlayer().AdminStickTarget = nil
+                AdminStickIsOpen = false
+            end)
+        end):SetIcon(cmd.icon)
+    end
+
     if modSubCategory.UpdateSize then modSubCategory:UpdateSize() end
 end
 
 local function IncludeTeleportation(tgt, menu, stores)
     local cl = LocalPlayer()
     if not (cl:hasPrivilege("alwaysSpawnAdminStick") or cl:isStaffOnDuty()) then return end
-    local tpCategory = GetOrCreateCategoryMenu(menu, "teleportation", stores)
+    local moderationCategory = GetOrCreateCategoryMenu(menu, "moderation", stores)
+    if not moderationCategory then return end
+    local tpCategory = GetOrCreateSubCategoryMenu(moderationCategory, "moderation", "teleportation", stores)
     local tp = {
         {
             name = L("bring"),
@@ -1751,42 +1755,6 @@ local function IncludeTeleportation(tgt, menu, stores)
     end
 
     if tpCategory.UpdateSize then tpCategory:UpdateSize() end
-end
-
-local function IncludeUtility(tgt, menu, stores)
-    local utilityCategory = GetOrCreateCategoryMenu(menu, "utility", stores)
-    if not utilityCategory then return end
-    local commandsSubCategory = GetOrCreateSubCategoryMenu(utilityCategory, "utility", "commands", stores)
-    if not commandsSubCategory then return end
-    local utilityCommands = {
-        {
-            name = L("noclip"),
-            cmd = "noclip",
-            icon = "icon16/shape_square.png"
-        },
-        {
-            name = L("godmode"),
-            cmd = "godmode",
-            icon = "icon16/shield.png"
-        },
-        {
-            name = L("spectate"),
-            cmd = "spectate",
-            icon = "icon16/eye.png"
-        }
-    }
-
-    for _, cmd in ipairs(utilityCommands) do
-        commandsSubCategory:AddOption(L(cmd.name), function()
-            RunAdminCommand(cmd.cmd, tgt)
-            timer.Simple(0.1, function()
-                LocalPlayer().AdminStickTarget = nil
-                AdminStickIsOpen = false
-            end)
-        end):SetIcon(cmd.icon)
-    end
-
-    if commandsSubCategory.UpdateSize then commandsSubCategory:UpdateSize() end
 end
 
 local function IncludeCharacterManagement(tgt, menu, stores)
@@ -1850,6 +1818,7 @@ local function IncludeFlagManagement(tgt, menu, stores)
         cf:AddOption(L("modifyCharFlags"), function()
             local currentFlags = charObj and charObj:getFlags() or ""
             tgt:requestString(L("modifyCharFlags"), L("modifyFlagsDesc"), function(text)
+                if text == false then return end
                 text = string.gsub(text or "", "%s", "")
                 net.Start("liaModifyFlags")
                 net.WriteString(tgt:SteamID())
@@ -1919,48 +1888,36 @@ local function AddCommandToMenu(menu, data, key, tgt, name, stores)
         if sub and MODULE.adminStickCategories[cat].subcategories and MODULE.adminStickCategories[cat].subcategories[sub] then subcategoryKey = sub end
     elseif cat == "characterManagement" then
         categoryKey = "characterManagement"
-        if sub == "attributes" then
-            subcategoryKey = "attributes"
+        if sub == "information" or sub == "adminStickSubCategorySetInfos" or sub == "adminStickSubCategoryGetInfos" then
+            subcategoryKey = "information"
         elseif sub == "factions" then
             subcategoryKey = "factions"
         elseif sub == "classes" then
             subcategoryKey = "classes"
         elseif sub == "whitelists" then
             subcategoryKey = "whitelists"
+        elseif sub == "properties" or sub == "flags" or sub == "attributes" or sub == "miscellaneous" then
+            subcategoryKey = "properties"
         elseif sub == "items" then
             subcategoryKey = "items"
-        elseif sub == "adminStickSubCategoryBans" then
-            subcategoryKey = "adminStickSubCategoryBans"
-        elseif sub == "adminStickSubCategorySetInfos" then
-            subcategoryKey = "adminStickSubCategorySetInfos"
-        elseif sub == "adminStickSubCategoryGetInfos" then
-            subcategoryKey = "adminStickSubCategoryGetInfos"
         end
-    elseif cat == "characterManagement" then
-        categoryKey = "characterManagement"
-        if sub == "flags" then subcategoryKey = "flags" end
     elseif cat == "doorManagement" then
         categoryKey = "doorManagement"
-        if sub == "doorActions" then
-            subcategoryKey = "doorActions"
-        elseif sub == "doorSettings" then
-            subcategoryKey = "doorSettings"
-        elseif sub == "doorMaintenance" then
-            subcategoryKey = "doorMaintenance"
-        elseif sub == "doorInformation" then
-            subcategoryKey = "doorInformation"
+        if sub == "actions" or sub == "doorActions" or sub == "doorMaintenance" then
+            subcategoryKey = "actions"
+        elseif sub == "settings" or sub == "doorSettings" or sub == "doorInformation" then
+            subcategoryKey = "settings"
+        elseif sub == "access" or sub == "factions" or sub == "classes" then
+            subcategoryKey = "access"
         end
     elseif cat == "storageManagement" then
         categoryKey = "storageManagement"
-        if sub == "storageActions" then subcategoryKey = "storageActions" end
     elseif cat == "moderation" then
         categoryKey = "moderation"
-        if sub == "moderationTools" then
+        if sub == "moderationTools" or sub == "adminStickSubCategoryBans" or sub == "warnings" or sub == "misc" then
             subcategoryKey = "moderationTools"
-        elseif sub == "warnings" then
-            subcategoryKey = "warnings"
-        elseif sub == "misc" then
-            subcategoryKey = "misc"
+        elseif sub == "teleportation" then
+            subcategoryKey = "teleportation"
         end
     elseif cat == "utility" then
         categoryKey = "utility"
@@ -1977,17 +1934,6 @@ local function AddCommandToMenu(menu, data, key, tgt, name, stores)
             subcategoryKey = "server"
         elseif sub == "permissions" then
             subcategoryKey = "permissions"
-        end
-    elseif cat == "doorManagement" then
-        categoryKey = "doorManagement"
-        if sub == "doorActions" then
-            subcategoryKey = "doorActions"
-        elseif sub == "doorSettings" then
-            subcategoryKey = "doorSettings"
-        elseif sub == "doorMaintenance" then
-            subcategoryKey = "doorMaintenance"
-        elseif sub == "doorInformation" then
-            subcategoryKey = "doorInformation"
         end
     end
 
@@ -2165,9 +2111,29 @@ function MODULE:OpenAdminStickUI(tgt)
     end
 
     AdminStickIsOpen = true
+    AdminStickMenuPositionCache = nil
+    AdminStickMenuOpenTime = CurTime()
     local menu = lia.derma.dermaMenu()
     if not IsValid(menu) then return end
     AdminStickMenu = menu
+    local baseThink = menu.Think
+    menu.Think = function(panel)
+        if baseThink then baseThink(panel) end
+        if IsValid(panel) then
+            local mx, my = panel:GetPos()
+            local mw, mh = panel:GetWide(), panel:GetTall()
+            if mw > 0 and mh > 0 then
+                AdminStickMenuPositionCache = {
+                    x = mx,
+                    y = my,
+                    w = mw,
+                    h = mh,
+                    updateTime = CurTime()
+                }
+            end
+        end
+    end
+
     if tgt:IsPlayer() then
         local charID = tgt:getChar() and tgt:getChar():getID() or L("na")
         local charName = tgt:getChar() and tgt:getChar():getName() or tgt:Name()
@@ -2307,7 +2273,6 @@ function MODULE:OpenAdminStickUI(tgt)
         IncludeCharacterManagement(tgt, menu, stores)
         IncludeFlagManagement(tgt, menu, stores)
         IncludeTeleportation(tgt, menu, stores)
-        IncludeUtility(tgt, menu, stores)
     end
 
     table.sort(cmds, function(a, b) return a.name < b.name end)
@@ -2350,8 +2315,26 @@ function MODULE:OpenAdminStickUI(tgt)
     end
 
     hook.Add("RegisterAdminStickSubcategories", "liaDefaultSubcategories", function(categories)
+        if categories.moderation then
+            categories.moderation.subcategories = categories.moderation.subcategories or {}
+            categories.moderation.subcategories.moderationTools = {
+                name = "Moderation Tools",
+                icon = "icon16/shield.png"
+            }
+
+            categories.moderation.subcategories.teleportation = {
+                name = L("adminStickCategoryTeleportation") or "Teleportation",
+                icon = "icon16/world.png"
+            }
+        end
+
         if categories.characterManagement then
             categories.characterManagement.subcategories = categories.characterManagement.subcategories or {}
+            categories.characterManagement.subcategories.information = {
+                name = "Information",
+                icon = "icon16/information.png"
+            }
+
             categories.characterManagement.subcategories.factions = {
                 name = L("adminStickSubCategoryFactions") or "Factions",
                 icon = "icon16/group.png"
@@ -2367,22 +2350,14 @@ function MODULE:OpenAdminStickUI(tgt)
                 icon = "icon16/group_key.png"
             }
 
-            categories.characterManagement.subcategories.flags = {
-                name = L("adminStickSubCategoryFlags") or "Flags",
-                icon = "icon16/flag_red.png"
+            categories.characterManagement.subcategories.properties = {
+                name = "Properties",
+                icon = "icon16/application_view_tile.png"
             }
 
-            categories.characterManagement.subcategories.attributes = {
-                name = L("adminStickSubCategoryAttributes") or "Attributes",
-                icon = "icon16/chart_line.png"
-            }
-        end
-
-        if categories.utility then
-            categories.utility.subcategories = categories.utility.subcategories or {}
-            categories.utility.subcategories.commands = {
-                name = L("adminStickSubCategoryCommands") or "Commands",
-                icon = "icon16/script.png"
+            categories.characterManagement.subcategories.items = {
+                name = "Items",
+                icon = "icon16/box.png"
             }
         end
     end)
@@ -2433,8 +2408,8 @@ function MODULE:OpenAdminStickUI(tgt)
 
         table.insert(lists, {
             name = "Copy",
-            category = "utility",
-            subcategory = "commands",
+            category = "moderation",
+            subcategory = "moderationTools",
             items = copyItems
         })
 
@@ -2448,7 +2423,12 @@ function MODULE:OpenAdminStickUI(tgt)
                 {
                     name = L("changePassword"),
                     icon = "icon16/key.png",
-                    callback = function() lia.derma.requestString(L("enterNewPassword"), L("enterNewPassword"), function(password) if password and password ~= "" then RunConsoleCommand("say", "/storagepasswordchange \"" .. password .. "\"") end end, "") end
+                    callback = function()
+                        lia.derma.requestString(L("enterNewPassword"), L("enterNewPassword"), function(password)
+                            if password == false then return end
+                            if password and password ~= "" then RunConsoleCommand("say", "/storagepasswordchange \"" .. password .. "\"") end
+                        end, "")
+                    end
                 }
             }
 
@@ -2658,20 +2638,44 @@ function MODULE:OpenAdminStickUI(tgt)
 
     hook.Run("PopulateAdminStick", menu, tgt, stores)
     function menu:OnRemove()
-        cl.AdminStickTarget = nil
-        AdminStickIsOpen = false
-        AdminStickMenu = nil
-        hook.Run("OnAdminStickMenuClosed")
+        if AdminStickMenu == self then
+            print("[AdminStickHUD] Menu OnRemove (current)")
+            cl.AdminStickTarget = nil
+            AdminStickIsOpen = false
+            AdminStickMenu = nil
+            AdminStickMenuPositionCache = nil
+            hook.Run("OnAdminStickMenuClosed")
+        end
     end
 
     function menu:OnClose()
-        cl.AdminStickTarget = nil
-        AdminStickIsOpen = false
-        AdminStickMenu = nil
-        hook.Run("OnAdminStickMenuClosed")
+        if AdminStickMenu == self then
+            print("[AdminStickHUD] Menu OnClose (current)")
+            cl.AdminStickTarget = nil
+            AdminStickIsOpen = false
+            AdminStickMenu = nil
+            AdminStickMenuPositionCache = nil
+            hook.Run("OnAdminStickMenuClosed")
+        end
     end
 
     menu:Open()
+    for _, delay in ipairs({0, 0.03, 0.06, 0.1}) do
+        timer.Simple(delay, function()
+            if AdminStickIsOpen and IsValid(menu) then
+                local mx, my = menu:GetPos()
+                local mw, mh = menu:GetWide(), menu:GetTall()
+                if mw > 0 and mh > 0 then
+                    AdminStickMenuPositionCache = {
+                        x = mx,
+                        y = my,
+                        w = mw,
+                        h = mh
+                    }
+                end
+            end
+        end)
+    end
 end
 
 local currentCategoryData = {}
@@ -3527,9 +3531,98 @@ net.Receive("liaOnlineStaffData", function()
     hook.Run("OnlineStaffDataReceived", staffData)
 end)
 
+function MODULE:DrawESPStyledText(text, x, y, espColor, font, fadeAlpha)
+    fadeAlpha = fadeAlpha or 1
+    surface.SetFont(font)
+    local tw, th = surface.GetTextSize(text)
+    local bx, by = math.Round(x - tw * 0.5 - 8), math.Round(y - 8)
+    local bw, bh = tw + 16, th + 16
+    local defaultTheme = {
+        background_alpha = Color(34, 34, 34, 210),
+        header = Color(34, 34, 34, 210),
+        accent = Color(255, 255, 255, 180),
+        text = Color(255, 255, 255)
+    }
+
+    local theme = lia.color.theme or defaultTheme
+    local function scaleColorAlpha(col, scale)
+        col = col or defaultTheme.background_alpha
+        local a = col.a or 255
+        return Color(col.r, col.g, col.b, math.Clamp(a * scale, 0, 255))
+    end
+
+    local headerColor = scaleColorAlpha(theme.background_panelpopup or theme.header or defaultTheme.header, fadeAlpha)
+    local accentColor = scaleColorAlpha(espColor or theme.theme or theme.text or defaultTheme.accent, fadeAlpha)
+    local textColor = scaleColorAlpha(theme.text or defaultTheme.text, fadeAlpha)
+    lia.util.drawBlurAt(bx, by, bw, bh - 6, 6, 0.2, math.floor(fadeAlpha * 255))
+    lia.derma.rect(bx, by, bw, bh - 6):Radii(8, 8, 0, 0):Color(headerColor):Shape(lia.derma.SHAPE_IOS):Draw()
+    lia.derma.rect(bx, by + bh - 6, bw, 6):Radii(0, 0, 8, 8):Color(accentColor):Draw()
+    draw.SimpleText(text, font, math.Round(x), math.Round(y - 2), textColor, TEXT_ALIGN_CENTER, TEXT_ALIGN_TOP)
+    return bh
+end
+
+function MODULE:PostDrawTranslucentRenderables()
+    local client = LocalPlayer()
+    if not IsValid(client) then return end
+    local wep = client:GetActiveWeapon()
+    if not IsValid(wep) or wep:GetClass() ~= "lia_positiontool" then return end
+    if not wep.CanUseTool or not wep:CanUseTool() then return end
+    local typeInfo = wep.GetPositionToolMode and wep:GetPositionToolMode()
+    local cacheType = wep.GetCacheType and wep:GetCacheType()
+    local cachedPositions = wep.GetCachedPositions and wep:GetCachedPositions() or {}
+    if not typeInfo or cacheType ~= typeInfo.id or #cachedPositions == 0 then return end
+    local col = typeInfo.color or Color(255, 255, 255)
+    local eyePos = client:EyePos()
+    cam.Start3D()
+    for i = 1, #cachedPositions do
+        local entry = cachedPositions[i]
+        local pos = entry.pos
+        if not isvector(pos) then continue end
+        local trace = util.TraceLine({
+            start = eyePos,
+            endpos = pos,
+            mask = MASK_SOLID_BRUSHONLY
+        })
+
+        if trace.Fraction < 1 then
+            render.DrawLine(eyePos, trace.HitPos, Color(col.r, col.g, col.b, 80))
+            render.DrawLine(trace.HitPos, pos, Color(col.r, col.g, col.b, 160))
+        else
+            render.DrawLine(eyePos, pos, Color(col.r, col.g, col.b, 120))
+        end
+    end
+
+    cam.End3D()
+end
+
 function MODULE:HUDPaint()
     local client = LocalPlayer()
-    if not client:IsValid() or not client:IsPlayer() or not client:getChar() then return end
+    if not IsValid(client) then return end
+    local wep = client:GetActiveWeapon()
+    if IsValid(wep) and wep:GetClass() == "lia_positiontool" and wep.CanUseTool and wep:CanUseTool() then
+        local typeInfo = wep.GetPositionToolMode and wep:GetPositionToolMode()
+        local cacheType = wep.GetCacheType and wep:GetCacheType()
+        local cachedPositions = wep.GetCachedPositions and wep:GetCachedPositions() or {}
+        if typeInfo and cacheType == typeInfo.id and #cachedPositions > 0 then
+            local adminMod = lia.module.get("administration")
+            if adminMod and adminMod.DrawESPStyledText then
+                local col = typeInfo.color or Color(255, 255, 255)
+                for i = 1, #cachedPositions do
+                    local entry = cachedPositions[i]
+                    local pos = entry.pos
+                    if isvector(pos) then
+                        local screenPos = (pos + Vector(0, 0, 16)):ToScreen()
+                        if screenPos.visible then
+                            local label = entry.label ~= "" and entry.label or "Position"
+                            adminMod:DrawESPStyledText(label, screenPos.x, screenPos.y, col, "LiliaFont.24", 1)
+                        end
+                    end
+                end
+            end
+        end
+    end
+
+    if not client:IsPlayer() or not client:getChar() then return end
     if client:GetMoveType() ~= MOVETYPE_NOCLIP then return end
     if not (client:hasPrivilege("noClipESPOffsetStaff") or client:isStaffOnDuty()) then return end
     if not lia.option.get("espEnabled", false) then return end
@@ -3537,10 +3630,9 @@ function MODULE:HUDPaint()
         if not IsValid(ent) or ent == client or ent:IsWeapon() then continue end
         local pos = ent:GetPos()
         if not pos then continue end
-        local kind, label, subLabel, baseColor
+        local kind, label, subLabel, baseColor, customRender
         local hookResult = hook.Run("GetAdminESPTarget", ent, client)
-        local customRender = nil
-        if hookResult and istable(hookResult) then
+        if istable(hookResult) then
             kind = hookResult.kind
             label = hookResult.label
             subLabel = hookResult.subLabel
@@ -3553,20 +3645,15 @@ function MODULE:HUDPaint()
             baseColor = lia.option.get("espPlayersColor")
         elseif ent.isItem and ent:isItem() and lia.option.get("espItems", false) then
             kind = L("items")
-            local item = ent.getItemTable and ent:getItemTable()
-            label = item and item.getName and item:getName() or L("unknown")
+            local item = ent:getItemTable()
+            label = item and item:getName() or L("unknown")
             baseColor = lia.option.get("espItemsColor")
         elseif lia.option.get("espEntities", false) and ent:GetClass():StartWith("lia_") then
             if ent:GetClass() == "lia_npc" then
                 local uniqueID = ent:getNetVar("uniqueID", "")
-                local npcName = ent:getNetVar("NPCName", "Unconfigured NPC")
                 if uniqueID ~= "" then
                     kind = "npcs"
-                    label = npcName
-                    baseColor = lia.option.get("espEntitiesColor")
-                else
-                    kind = L("entities")
-                    label = ent.PrintName or ent:GetClass()
+                    label = ent:getNetVar("NPCName", "Unconfigured NPC")
                     baseColor = lia.option.get("espEntitiesColor")
                 end
             else
@@ -3576,23 +3663,14 @@ function MODULE:HUDPaint()
             end
         elseif ent:isDoor() then
             local doorData = lia.doors.getData(ent)
-            local factions = doorData.factions or {}
-            local classes = doorData.classes or {}
-            local name = doorData.name
-            local title = doorData.title
-            local price = doorData.price or 0
-            local locked = doorData.locked
-            local disabled = doorData.disabled
-            local hidden = doorData.hidden
-            local noSell = doorData.noSell
-            local isConfigured = (factions and #factions > 0) or (classes and #classes > 0) or (name and name ~= "") or (title and title ~= "") or price > 0 or locked or disabled or hidden or noSell
+            local isConfigured = doorData and ((doorData.factions and #doorData.factions > 0) or (doorData.classes and #doorData.classes > 0) or (doorData.name and doorData.name ~= "") or (doorData.title and doorData.title ~= "") or (doorData.price or 0) > 0 or doorData.locked or doorData.disabled or doorData.hidden or doorData.noSell)
             if lia.option.get("espUnconfiguredDoors", false) and not isConfigured then
                 kind = L("doorUnconfigured")
-                label = L("doorUnconfigured")
+                label = kind
                 baseColor = lia.option.get("espUnconfiguredDoorsColor")
             elseif lia.option.get("espConfiguredDoors", false) and isConfigured then
                 kind = L("doorConfigured")
-                label = L("doorConfigured")
+                label = kind
                 baseColor = lia.option.get("espConfiguredDoorsColor")
             end
         end
@@ -3600,51 +3678,20 @@ function MODULE:HUDPaint()
         if not kind then continue end
         local screenPos = pos:ToScreen()
         if not screenPos.visible then continue end
-        local textHeight = nil
-        if customRender and isfunction(customRender) then
+        if customRender then
             customRender(ent, screenPos, kind, label, subLabel, baseColor)
         else
-            surface.SetFont("LiliaFont.18")
-            local _, th = surface.GetTextSize("W")
-            textHeight = th
-            draw.SimpleTextOutlined(label, "LiliaFont.18", screenPos.x, screenPos.y, Color(baseColor.r, baseColor.g, baseColor.b, 255), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER, 1, Color(0, 0, 0, 200))
+            surface.SetFont("LiliaFont.24")
+            local _, th = surface.GetTextSize(label)
+            local bh = th + 16
+            self:DrawESPStyledText(label, screenPos.x, screenPos.y, baseColor, "LiliaFont.24")
             if subLabel and subLabel ~= label then
-                local subLabelFont = (kind == "npcs") and "LiliaFont.14" or "LiliaFont.18"
-                draw.SimpleTextOutlined(subLabel, subLabelFont, screenPos.x, screenPos.y + textHeight, Color(baseColor.r, baseColor.g, baseColor.b, 255), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER, 1, Color(0, 0, 0, 200))
-            end
-        end
-
-        if kind == L("players") and not (customRender and isfunction(customRender)) then
-            local barW, barH = 100, 22
-            local barX = screenPos.x - barW / 2
-            local barY = screenPos.y + textHeight + 5
-            surface.SetDrawColor(0, 0, 0, 255)
-            surface.DrawRect(barX, barY, barW, barH)
-            local hpFrac = math.Clamp(ent:Health() / ent:GetMaxHealth(), 0, 1)
-            surface.SetDrawColor(183, 8, 0, 255)
-            surface.DrawRect(barX + 2, barY + 2, (barW - 4) * hpFrac, barH - 4)
-            surface.SetFont("LiliaFont.14")
-            local healthX = barX + barW / 2
-            local healthY = barY + barH / 2
-            draw.SimpleTextOutlined(ent:Health(), "LiliaFont.14", healthX, healthY, Color(255, 255, 255, 255), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER, 1, Color(0, 0, 0, 255))
-            if ent:Armor() > 0 then
-                barY = barY + barH + 5
-                surface.SetDrawColor(0, 0, 0, 255)
-                surface.DrawRect(barX, barY, barW, barH)
-                local armorFrac = math.Clamp(ent:Armor() / 100, 0, 1)
-                surface.SetDrawColor(0, 0, 255, 255)
-                surface.DrawRect(barX + 2, barY + 2, (barW - 4) * armorFrac, barH - 4)
-                local armorX = barX + barW / 2
-                local armorY = barY + barH / 2
-                draw.SimpleTextOutlined(ent:Armor(), "LiliaFont.14", armorX, armorY, Color(255, 255, 255, 255), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER, 1, Color(0, 0, 0, 255))
-            end
-
-            local wep = ent:GetActiveWeapon()
-            if IsValid(wep) then
-                local ammo, reserve = wep:Clip1(), ent:GetAmmoCount(wep:GetPrimaryAmmoType())
-                local wepName = language.GetPhrase(wep:GetPrintName())
-                if ammo >= 0 and reserve >= 0 then wepName = wepName .. " [" .. ammo .. "/" .. reserve .. "]" end
-                draw.SimpleTextOutlined(wepName, "LiliaFont.14", screenPos.x, barY + barH + 5, Color(255, 255, 255, 255), TEXT_ALIGN_CENTER, TEXT_ALIGN_TOP, 1, Color(0, 0, 0, 255))
+                local font = (kind == "npcs") and "LiliaFont.16" or "LiliaFont.24"
+                surface.SetFont(font)
+                surface.GetTextSize(subLabel)
+                local spacing = 8
+                local subY = screenPos.y + bh / 2 + spacing
+                self:DrawESPStyledText(subLabel, screenPos.x, subY, baseColor, font)
             end
         end
     end
@@ -3979,11 +4026,6 @@ net.Receive("liaActiveTickets", function()
     populate("")
 end)
 
-net.Receive("liaTicketsCount", function()
-    local count = net.ReadInt(32)
-    ticketsCount = count
-end)
-
 net.Receive("liaViewClaims", function()
     local tbl = net.ReadTable()
     local steamid = net.ReadString()
@@ -4130,14 +4172,17 @@ net.Receive("liaAllWarnings", function()
     populate("")
 end)
 
-net.Receive("liaWarningsCount", function()
-    local count = net.ReadInt(32)
-    warningsCount = count
+net.Receive("liaPlayerWarnings", function()
+    local charID = net.ReadString()
+    if not charID or charID == "" then return end
+    local warnings = net.ReadTable() or {}
+    AdminStickWarnings[charID] = warnings
 end)
 
 function MODULE:OnAdminStickMenuClosed()
     local client = LocalPlayer()
     if IsValid(client) and client.AdminStickTarget == client then client.AdminStickTarget = nil end
+    AdminStickWarnings = {}
 end
 
 function MODULE:AdminStickAddModels(modList)
@@ -4204,6 +4249,7 @@ function MODULE:AdminStickAddModels(modList)
 end
 
 local function DisplayAdminStickHUD(client, hudInfos, weapon)
+    if not IsValid(weapon) or not weapon.GetTarget then return end
     local target = weapon:GetTarget()
     if IsValid(target) then
         local infoLines = {}
@@ -4236,17 +4282,90 @@ local function DisplayAdminStickHUD(client, hudInfos, weapon)
         end
 
         hook.Run("AddToAdminStickHUD", client, target, infoLines)
-        table.insert(hudInfos, {
+        if IsValid(AdminStickMenu) and target:IsPlayer() then
+            local char = target:getChar()
+            if char then
+                local charID = tostring(char:getID())
+                if AdminStickWarnings[charID] == nil then
+                    AdminStickWarnings[charID] = {}
+                    net.Start("liaRequestPlayerWarnings")
+                    net.WriteString(charID)
+                    net.SendToServer()
+                end
+
+                local warnings = AdminStickWarnings[charID]
+                if istable(warnings) and #warnings > 0 then
+                    table.insert(infoLines, "")
+                    table.insert(infoLines, "Warnings (" .. #warnings .. "):")
+                    for i, warn in ipairs(warnings) do
+                        if i <= 5 then
+                            if istable(warn) then
+                                local severity = warn.severity or "Medium"
+                                local message = warn.message or ""
+                                if #message > 30 then message = string.sub(message, 1, 27) .. "..." end
+                                table.insert(infoLines, string.format("%d. [%s] %s", i, severity, message))
+                            end
+                        end
+                    end
+
+                    if #warnings > 5 then table.insert(infoLines, "... and " .. (#warnings - 5) .. " more") end
+                end
+            end
+        end
+
+        surface.SetFont("LiliaFont.20")
+        local minTextWidth = 0
+        for _, line in ipairs(infoLines) do
+            local w = select(1, surface.GetTextSize(line))
+            minTextWidth = math.max(minTextWidth, w)
+        end
+
+        minTextWidth = minTextWidth + 24
+        local hudX, hudY, hudAlignX, hudAlignY, hudWidth, hudAutoSize
+        local useSidePosition = AdminStickIsOpen
+        local cacheValid = AdminStickMenuPositionCache and (AdminStickMenuPositionCache.updateTime or 0) >= (AdminStickMenuOpenTime or 0) - 0.05
+        if useSidePosition and cacheValid then
+            local menuX = AdminStickMenuPositionCache.x
+            local menuY = AdminStickMenuPositionCache.y
+            local menuW = AdminStickMenuPositionCache.w
+            local menuH = AdminStickMenuPositionCache.h
+            hudWidth = math.max(target:IsPlayer() and (menuW * 0.65) or (menuW * 1.2), minTextWidth)
+            hudX = menuX - 20 - (hudWidth / 2)
+            hudY = menuY + (menuH / 2)
+            hudAlignX = TEXT_ALIGN_CENTER
+            hudAlignY = TEXT_ALIGN_CENTER
+            hudAutoSize = false
+        elseif useSidePosition then
+            hudWidth = math.max(target:IsPlayer() and (ScrW() * 0.2) or (ScrW() * 0.28), minTextWidth)
+            hudX = ScrW() * 0.25 - (hudWidth / 2)
+            hudY = ScrH() * 0.5
+            hudAlignX = TEXT_ALIGN_CENTER
+            hudAlignY = TEXT_ALIGN_CENTER
+            hudAutoSize = false
+        else
+            AdminStickMenuPositionCache = nil
+            hudX = ScrW() * 0.5
+            hudY = IsValid(lia.gui and lia.gui.actionCircle) and (ScrH() - 170) or (ScrH() - 30)
+            hudAlignX = TEXT_ALIGN_CENTER
+            hudAlignY = TEXT_ALIGN_BOTTOM
+            hudWidth = nil
+            hudAutoSize = true
+        end
+
+        local bgColor = lia.color.theme.background_alpha or lia.color.theme.background or Color(40, 40, 40, 240)
+        if bgColor.a == 0 or not bgColor.a then bgColor = Color(40, 40, 40, 240) end
+        local hudInfo = {
             text = infoLines,
             font = "LiliaFont.20",
             color = Color(180, 180, 180),
             position = {
-                x = ScrW() * 0.5,
-                y = IsValid(lia.gui and lia.gui.actionCircle) and (ScrH() - 170) or (ScrH() - 30)
+                x = hudX,
+                y = hudY
             },
-            textAlignX = TEXT_ALIGN_CENTER,
-            textAlignY = TEXT_ALIGN_BOTTOM,
-            backgroundColor = lia.color.theme.background_alpha or lia.color.theme.background or Color(40, 40, 40, 240),
+            textAlignX = hudAlignX,
+            textAlignY = hudAlignY,
+            autoSize = hudAutoSize,
+            backgroundColor = bgColor,
             borderRadius = 6,
             borderThickness = 0,
             padding = 12,
@@ -4267,10 +4386,51 @@ local function DisplayAdminStickHUD(client, hudInfos, weapon)
                 height = 2,
                 color = lia.color.theme.accent or lia.color.theme.header or lia.color.theme.theme
             }
-        })
+        }
+
+        if hudWidth and hudWidth > 0 then hudInfo.width = hudWidth end
+        table.insert(hudInfos, hudInfo)
     end
 
     local instructions = {"Left Click: Selects target", "Right Click: Freezes player", "Shift + R: Selects yourself", "R: Clears the selection"}
+    table.insert(hudInfos, {
+        text = instructions,
+        font = "LiliaFont.18",
+        color = Color(180, 180, 180),
+        position = {
+            x = ScrW() - 20,
+            y = 20
+        },
+        textAlignX = TEXT_ALIGN_RIGHT,
+        textAlignY = TEXT_ALIGN_TOP,
+        backgroundColor = lia.color.theme.background_alpha or lia.color.theme.background or Color(40, 40, 40, 240),
+        borderRadius = 6,
+        borderThickness = 0,
+        padding = 12,
+        blur = {
+            enabled = true,
+            amount = 1,
+            passes = 1,
+            alpha = 1.0
+        },
+        shadow = {
+            enabled = true,
+            offsetX = 8,
+            offsetY = 12,
+            color = lia.color.theme.window_shadow or Color(0, 0, 0, 50)
+        },
+        accentBorder = {
+            enabled = true,
+            height = 2,
+            color = lia.color.theme.accent or lia.color.theme.header or lia.color.theme.theme
+        }
+    })
+end
+
+local function DisplayPositionToolHUD(client, hudInfos, weapon)
+    local instructions = {"Left Click: Set position at aim", "Reload: Cycle mode", "Shift + R: Use current position"}
+    local typeInfo = weapon.GetPositionToolMode and weapon:GetPositionToolMode()
+    if typeInfo and typeInfo.name then table.insert(instructions, 1, "Mode: " .. typeInfo.name) end
     table.insert(hudInfos, {
         text = instructions,
         font = "LiliaFont.18",
@@ -4429,6 +4589,8 @@ function MODULE:DisplayPlayerHUDInformation(client, hudInfos)
     if not IsValid(weapon) then return end
     if weapon:GetClass() == "lia_adminstick" then
         DisplayAdminStickHUD(client, hudInfos, weapon)
+    elseif weapon:GetClass() == "lia_positiontool" then
+        DisplayPositionToolHUD(client, hudInfos, weapon)
     elseif weapon:GetClass() == "lia_distance" then
         DisplayDistanceToolHUD(client, hudInfos, weapon)
     end
