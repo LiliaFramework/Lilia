@@ -13,11 +13,15 @@
 ]]
 lia.net = lia.net or {}
 lia.net.sendq = lia.net.sendq or {}
-lia.net.globals = lia.net.globals or {}
-lia.net.locals = lia.net.locals or {}
-lia.net.buffers = lia.net.buffers or {}
-lia.net.registry = lia.net.registry or {}
 lia.net.cache = lia.net.cache or {}
+lia.net.locals = lia.net.locals or {}
+lia.net.globals = lia.net.globals or {}
+lia.net.buffers = lia.net.buffers or {}
+lia.net.profiler = lia.net.profiler or {}
+lia.net.registry = lia.net.registry or {}
+lia.net.profiler.active = lia.net.profiler.active or false
+lia.net.profiler.loggedMessages = lia.net.profiler.loggedMessages or {}
+lia.net.profiler.currentMessage = lia.net.profiler.currentMessage or nil
 local chunkTime = 0.05
 local CACHE_TTL = 30
 local MAX_CACHE_SIZE = 1000
@@ -155,6 +159,7 @@ function lia.net.readBigTable(netStr, callback)
         local idx = net.ReadUInt(16)
         local clen = net.ReadUInt(16)
         local chunk = net.ReadData(clen)
+        if not lia.net.buffers[netStr] then lia.net.buffers[netStr] = {} end
         local buffers = lia.net.buffers[netStr]
         local state = buffers[sid]
         if not state then
@@ -422,3 +427,123 @@ function lia.net.getNetVar(key, default)
     local value = lia.net.globals[key]
     return value ~= nil and value or default
 end
+
+if not lia.net.profiler.originalNetStart then
+    lia.net.profiler.originalNetStart = net.Start
+    lia.net.profiler.originalNetSend = net.Send
+    lia.net.profiler.originalNetBroadcast = net.Broadcast
+    lia.net.profiler.originalNetSendToServer = net.SendToServer
+    lia.net.profiler.originalNetReceive = net.Receive
+end
+
+function lia.net.profiler.log(direction, messageName, size, sender, receiver)
+    if not lia.net.profiler.active then return end
+    local senderStr = "Unknown"
+    local receiverStr = "Unknown"
+    if SERVER then
+        if sender == "SERVER" then
+            senderStr = "SERVER"
+        elseif IsValid(sender) then
+            senderStr = sender:Nick() .. " (" .. sender:SteamID() .. ")"
+        end
+
+        if receiver == "ALL" then
+            receiverStr = "ALL"
+        elseif IsValid(receiver) then
+            receiverStr = receiver:Nick() .. " (" .. receiver:SteamID() .. ")"
+        end
+    else
+        if sender == "CLIENT" then
+            senderStr = "CLIENT"
+        elseif IsValid(sender) then
+            senderStr = sender:Nick() .. " (" .. sender:SteamID() .. ")"
+        end
+
+        if receiver == "SERVER" then receiverStr = "SERVER" end
+    end
+
+    local timeStr = string.format("%.3f", CurTime())
+    local sizeStr = tostring(size) .. " bytes"
+    local senderID = IsValid(sender) and sender:SteamID() or (sender == "SERVER" and "SERVER" or (sender == "CLIENT" and "CLIENT" or "Unknown"))
+    local receiverID = IsValid(receiver) and receiver:SteamID() or (receiver == "SERVER" and "SERVER" or (receiver == "ALL" and "ALL" or (receiver == "CLIENT" and "CLIENT" or "Unknown")))
+    local logKey = string.format("%.2f|%s|%s|%s|%s|%d", math.floor(CurTime() * 100) / 100, direction, messageName, senderID, receiverID, size)
+    if lia.net.profiler.loggedMessages[logKey] then return end
+    lia.net.profiler.loggedMessages[logKey] = true
+    timer.Simple(0.05, function() lia.net.profiler.loggedMessages[logKey] = nil end)
+    print(string.format("[Net Profiler] [%s] %s | %s | Size: %s | From: %s | To: %s", timeStr, direction, messageName, sizeStr, senderStr, receiverStr))
+end
+
+function net.Start(messageName)
+    lia.net.profiler.currentMessage = messageName
+    return lia.net.profiler.originalNetStart(messageName)
+end
+
+if SERVER then
+    function net.Send(receiver)
+        if lia.net.profiler.active and lia.net.profiler.currentMessage then
+            local size = net.BytesWritten() or 0
+            if IsValid(receiver) then
+                lia.net.profiler.log("S->C", lia.net.profiler.currentMessage, size, "SERVER", receiver)
+            elseif istable(receiver) then
+                for _, ply in ipairs(receiver) do
+                    if IsValid(ply) then lia.net.profiler.log("S->C", lia.net.profiler.currentMessage, size, "SERVER", ply) end
+                end
+            end
+        end
+
+        lia.net.profiler.currentMessage = nil
+        return lia.net.profiler.originalNetSend(receiver)
+    end
+
+    function net.Broadcast()
+        if lia.net.profiler.active and lia.net.profiler.currentMessage then
+            local size = net.BytesWritten() or 0
+            lia.net.profiler.log("S->C", lia.net.profiler.currentMessage, size, "SERVER", "ALL")
+        end
+
+        lia.net.profiler.currentMessage = nil
+        return lia.net.profiler.originalNetBroadcast()
+    end
+else
+    function net.SendToServer()
+        if lia.net.profiler.active and lia.net.profiler.currentMessage then
+            local size = net.BytesWritten() or 0
+            local sender = LocalPlayer()
+            lia.net.profiler.log("C->S", lia.net.profiler.currentMessage, size, sender, "SERVER")
+        end
+
+        lia.net.profiler.currentMessage = nil
+        return lia.net.profiler.originalNetSendToServer()
+    end
+end
+
+function net.Receive(messageName, callback)
+    if SERVER then
+        return lia.net.profiler.originalNetReceive(messageName, function(len, ply)
+            if lia.net.profiler.active and IsValid(ply) then
+                local size = len or 0
+                lia.net.profiler.log("C->S", messageName, size, ply, "SERVER")
+            end
+
+            if callback then callback(len, ply) end
+        end)
+    else
+        return lia.net.profiler.originalNetReceive(messageName, function(len, ply)
+            if lia.net.profiler.active then
+                local size = len or 0
+                lia.net.profiler.log("S->C", messageName, size, "SERVER", "CLIENT")
+            end
+
+            if callback then callback(len, ply) end
+        end)
+    end
+end
+
+concommand.Add("lia_net_profiler", function(ply, cmd, args)
+    lia.net.profiler.active = not lia.net.profiler.active
+    if lia.net.profiler.active then
+        print("[Net Profiler] Enabled - All network messages will be logged")
+    else
+        print("[Net Profiler] Disabled")
+    end
+end)
