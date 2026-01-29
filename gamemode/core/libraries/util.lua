@@ -1699,4 +1699,40 @@ else
         if screenPos.visible == false then return end
         EntText(text, screenPos.x, screenPos.y + posY, fade)
     end
+
+    --[[
+    Purpose:
+        Sets a feature position using the position tool callback system.
+
+    When Called:
+        Called by the position tool when a player sets a position (left-click or Shift+R).
+
+    Parameters:
+        pos (Vector)
+            The world position to set.
+        typeId (string)
+            The type ID of the position callback (e.g., "faction_spawn_adder", "sit_room").
+
+    Realm:
+        Client
+
+    Example Usage:
+        ```lua
+            lia.util.setFeaturePosition(Vector(0, 0, 0), "faction_spawn_adder")
+        ```
+]]
+    function lia.util.setFeaturePosition(pos, typeId)
+        if not isvector(pos) or not isstring(typeId) then return end
+        local MODULE = lia.module.get("administration")
+        if not MODULE or not MODULE.positionCallbacks then return end
+        local callback = MODULE.positionCallbacks[typeId]
+        if not callback or not callback.onRun then return end
+        local client = LocalPlayer()
+        if not IsValid(client) then return end
+        if callback.serverOnly then
+            callback.onRun(pos, client, typeId)
+        else
+            callback.onRun(pos, client, typeId)
+        end
+    end
 end

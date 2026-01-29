@@ -30,6 +30,7 @@ function PANEL:SetModel(model)
     end
 
     ent:ResetSequence(4)
+    hook.Run("OnModelPanelSetup", self)
 end
 
 local mX, mY = gui.MouseX, gui.MouseY
@@ -68,6 +69,14 @@ function PANEL:PreDrawModel(ent)
     return true
 end
 
+function PANEL:PostDrawModel(ent)
+    if ent.Bonemerge then
+        for _, v in ipairs(ent.Bonemerge) do
+            if IsValid(v) then v:DrawModel() end
+        end
+    end
+end
+
 function PANEL:OnMousePressed()
 end
 
@@ -81,22 +90,3 @@ function PANEL:fitFOV()
 end
 
 vgui.Register("liaModelPanel", PANEL, "DModelPanel")
-PANEL = {}
-local HEAD_BONE = "ValveBiped.Bip01_Head1"
-local DEFAULT_ANGLE = Angle(0, 45, 0)
-function PANEL:Init()
-    self:SetFOV(15)
-end
-
-function PANEL:SetWT(s)
-    self:SetSize(s, s)
-end
-
-function PANEL:LayoutEntity(ent)
-    if not IsValid(ent) then return end
-    self.BoneIndex = self.BoneIndex or ent:LookupBone(HEAD_BONE)
-    if self.BoneIndex > 0 then self:SetLookAt(ent:GetBonePosition(self.BoneIndex)) end
-    ent:SetAngles(DEFAULT_ANGLE)
-end
-
-vgui.Register("liaFacingModelPanel", PANEL, "DModelPanel")

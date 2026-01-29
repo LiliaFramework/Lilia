@@ -270,11 +270,25 @@ hook.Add("PopulateConfigurationButtons", "liaOptionsPopulate", function(pages)
             container:SetTall(220)
             container:Dock(TOP)
             container:DockMargin(0, 60, 0, 10)
-            container.Paint = function(_, w, h) lia.derma.rect(0, 0, w, h):Rad(16):Color(Color(40, 40, 50, 100)):Shape(lia.derma.SHAPE_IOS):Draw() end
+            container.Paint = function(s, w, h)
+                local radius = 8
+                local accent = lia.color.theme.accent or lia.color.theme.header or lia.color.theme.theme or Color(100, 150, 200)
+                local background = lia.color.theme.background_alpha or lia.color.theme.background or Color(40, 40, 40, 240)
+                local x, y = s:LocalToScreen(0, 0)
+                lia.derma.rect(0, 0, w, h):Rad(radius):Color(lia.color.theme.window_shadow or Color(0, 0, 0, 50)):Shadow(8, 12):Shape(lia.derma.SHAPE_IOS):Draw()
+                lia.util.drawBlurAt(x, y, w, h)
+                lia.derma.rect(0, 0, w, h):Rad(radius):Color(background):Shape(lia.derma.SHAPE_IOS):Draw()
+                surface.SetDrawColor(accent.r, accent.g, accent.b, accent.a or 255)
+                surface.DrawRect(0, 0, w, 3)
+                surface.DrawRect(0, 0, 3, h)
+                surface.DrawRect(w - 3, 0, 3, h)
+                surface.DrawRect(0, h - 3, w, 3)
+            end
+
             local panel = container:Add("DPanel")
             panel:Dock(FILL)
             panel:DockMargin(300, 5, 300, 5)
-            panel.Paint = function(_, w, h) lia.derma.rect(0, 0, w, h):Rad(16):Color(Color(60, 60, 70, 80)):Shape(lia.derma.SHAPE_IOS):Draw() end
+            panel.Paint = function(_, w, h) end
             local label = vgui.Create("DLabel", panel)
             label:Dock(TOP)
             label:SetTall(45)
@@ -333,11 +347,25 @@ hook.Add("PopulateConfigurationButtons", "liaOptionsPopulate", function(pages)
             container:SetTall(220)
             container:Dock(TOP)
             container:DockMargin(0, 60, 0, 10)
-            container.Paint = function(_, w, h) lia.derma.rect(0, 0, w, h):Rad(16):Color(Color(40, 40, 50, 100)):Shape(lia.derma.SHAPE_IOS):Draw() end
+            container.Paint = function(s, w, h)
+                local radius = 8
+                local accent = lia.color.theme.accent or lia.color.theme.header or lia.color.theme.theme or Color(100, 150, 200)
+                local background = lia.color.theme.background_alpha or lia.color.theme.background or Color(40, 40, 40, 240)
+                local x, y = s:LocalToScreen(0, 0)
+                lia.derma.rect(0, 0, w, h):Rad(radius):Color(lia.color.theme.window_shadow or Color(0, 0, 0, 50)):Shadow(8, 12):Shape(lia.derma.SHAPE_IOS):Draw()
+                lia.util.drawBlurAt(x, y, w, h)
+                lia.derma.rect(0, 0, w, h):Rad(radius):Color(background):Shape(lia.derma.SHAPE_IOS):Draw()
+                surface.SetDrawColor(accent.r, accent.g, accent.b, accent.a or 255)
+                surface.DrawRect(0, 0, w, 3)
+                surface.DrawRect(0, 0, 3, h)
+                surface.DrawRect(w - 3, 0, 3, h)
+                surface.DrawRect(0, h - 3, w, 3)
+            end
+
             local panel = container:Add("DPanel")
             panel:Dock(FILL)
             panel:DockMargin(300, 5, 300, 5)
-            panel.Paint = function(_, w, h) lia.derma.rect(0, 0, w, h):Rad(16):Color(Color(60, 60, 70, 80)):Shape(lia.derma.SHAPE_IOS):Draw() end
+            panel.Paint = function(_, w, h) end
             local label = vgui.Create("DLabel", panel)
             label:Dock(TOP)
             label:SetTall(45)
@@ -396,11 +424,25 @@ hook.Add("PopulateConfigurationButtons", "liaOptionsPopulate", function(pages)
             container:SetTall(220)
             container:Dock(TOP)
             container:DockMargin(0, 60, 0, 10)
-            container.Paint = function(_, w, h) lia.derma.rect(0, 0, w, h):Rad(16):Color(Color(40, 40, 50, 100)):Shape(lia.derma.SHAPE_IOS):Draw() end
+            container.Paint = function(s, w, h)
+                local radius = 8
+                local accent = lia.color.theme.accent or lia.color.theme.header or lia.color.theme.theme or Color(100, 150, 200)
+                local background = lia.color.theme.background_alpha or lia.color.theme.background or Color(40, 40, 40, 240)
+                local x, y = s:LocalToScreen(0, 0)
+                lia.derma.rect(0, 0, w, h):Rad(radius):Color(lia.color.theme.window_shadow or Color(0, 0, 0, 50)):Shadow(8, 12):Shape(lia.derma.SHAPE_IOS):Draw()
+                lia.util.drawBlurAt(x, y, w, h)
+                lia.derma.rect(0, 0, w, h):Rad(radius):Color(background):Shape(lia.derma.SHAPE_IOS):Draw()
+                surface.SetDrawColor(accent.r, accent.g, accent.b, accent.a or 255)
+                surface.DrawRect(0, 0, w, 3)
+                surface.DrawRect(0, 0, 3, h)
+                surface.DrawRect(w - 3, 0, 3, h)
+                surface.DrawRect(0, h - 3, w, 3)
+            end
+
             local panel = container:Add("DPanel")
             panel:Dock(FILL)
             panel:DockMargin(300, 5, 300, 5)
-            panel.Paint = function(_, w, h) lia.derma.rect(0, 0, w, h):Rad(16):Color(Color(60, 60, 70, 80)):Shape(lia.derma.SHAPE_IOS):Draw() end
+            panel.Paint = function(_, w, h) end
             local label = vgui.Create("DLabel", panel)
             label:Dock(TOP)
             label:SetTall(45)
@@ -432,11 +474,25 @@ hook.Add("PopulateConfigurationButtons", "liaOptionsPopulate", function(pages)
             container:SetTall(220)
             container:Dock(TOP)
             container:DockMargin(0, 60, 0, 10)
-            container.Paint = function(_, w, h) lia.derma.rect(0, 0, w, h):Rad(16):Color(Color(40, 40, 50, 100)):Shape(lia.derma.SHAPE_IOS):Draw() end
+            container.Paint = function(s, w, h)
+                local radius = 8
+                local accent = lia.color.theme.accent or lia.color.theme.header or lia.color.theme.theme or Color(100, 150, 200)
+                local background = lia.color.theme.background_alpha or lia.color.theme.background or Color(40, 40, 40, 240)
+                local x, y = s:LocalToScreen(0, 0)
+                lia.derma.rect(0, 0, w, h):Rad(radius):Color(lia.color.theme.window_shadow or Color(0, 0, 0, 50)):Shadow(8, 12):Shape(lia.derma.SHAPE_IOS):Draw()
+                lia.util.drawBlurAt(x, y, w, h)
+                lia.derma.rect(0, 0, w, h):Rad(radius):Color(background):Shape(lia.derma.SHAPE_IOS):Draw()
+                surface.SetDrawColor(accent.r, accent.g, accent.b, accent.a or 255)
+                surface.DrawRect(0, 0, w, 3)
+                surface.DrawRect(0, 0, 3, h)
+                surface.DrawRect(w - 3, 0, 3, h)
+                surface.DrawRect(0, h - 3, w, 3)
+            end
+
             local panel = container:Add("DPanel")
             panel:Dock(FILL)
             panel:DockMargin(300, 5, 300, 5)
-            panel.Paint = function(_, w, h) lia.derma.rect(0, 0, w, h):Rad(16):Color(Color(60, 60, 70, 80)):Shape(lia.derma.SHAPE_IOS):Draw() end
+            panel.Paint = function(_, w, h) end
             local label = vgui.Create("DLabel", panel)
             label:Dock(TOP)
             label:SetTall(45)
@@ -464,11 +520,25 @@ hook.Add("PopulateConfigurationButtons", "liaOptionsPopulate", function(pages)
             container:SetTall(220)
             container:Dock(TOP)
             container:DockMargin(0, 60, 0, 10)
-            container.Paint = function(_, w, h) lia.derma.rect(0, 0, w, h):Rad(16):Color(Color(40, 40, 50, 100)):Shape(lia.derma.SHAPE_IOS):Draw() end
+            container.Paint = function(s, w, h)
+                local radius = 8
+                local accent = lia.color.theme.accent or lia.color.theme.header or lia.color.theme.theme or Color(100, 150, 200)
+                local background = lia.color.theme.background_alpha or lia.color.theme.background or Color(40, 40, 40, 240)
+                local x, y = s:LocalToScreen(0, 0)
+                lia.derma.rect(0, 0, w, h):Rad(radius):Color(lia.color.theme.window_shadow or Color(0, 0, 0, 50)):Shadow(8, 12):Shape(lia.derma.SHAPE_IOS):Draw()
+                lia.util.drawBlurAt(x, y, w, h)
+                lia.derma.rect(0, 0, w, h):Rad(radius):Color(background):Shape(lia.derma.SHAPE_IOS):Draw()
+                surface.SetDrawColor(accent.r, accent.g, accent.b, accent.a or 255)
+                surface.DrawRect(0, 0, w, 3)
+                surface.DrawRect(0, 0, 3, h)
+                surface.DrawRect(w - 3, 0, 3, h)
+                surface.DrawRect(0, h - 3, w, 3)
+            end
+
             local panel = container:Add("DPanel")
             panel:Dock(FILL)
             panel:DockMargin(300, 5, 300, 5)
-            panel.Paint = function(_, w, h) lia.derma.rect(0, 0, w, h):Rad(16):Color(Color(60, 60, 70, 80)):Shape(lia.derma.SHAPE_IOS):Draw() end
+            panel.Paint = function(_, w, h) end
             local label = vgui.Create("DLabel", panel)
             label:Dock(TOP)
             label:SetTall(45)
@@ -503,11 +573,25 @@ hook.Add("PopulateConfigurationButtons", "liaOptionsPopulate", function(pages)
             container:SetTall(220)
             container:Dock(TOP)
             container:DockMargin(0, 60, 0, 10)
-            container.Paint = function(_, w, h) lia.derma.rect(0, 0, w, h):Rad(16):Color(Color(40, 40, 50, 100)):Shape(lia.derma.SHAPE_IOS):Draw() end
+            container.Paint = function(s, w, h)
+                local radius = 8
+                local accent = lia.color.theme.accent or lia.color.theme.header or lia.color.theme.theme or Color(100, 150, 200)
+                local background = lia.color.theme.background_alpha or lia.color.theme.background or Color(40, 40, 40, 240)
+                local x, y = s:LocalToScreen(0, 0)
+                lia.derma.rect(0, 0, w, h):Rad(radius):Color(lia.color.theme.window_shadow or Color(0, 0, 0, 50)):Shadow(8, 12):Shape(lia.derma.SHAPE_IOS):Draw()
+                lia.util.drawBlurAt(x, y, w, h)
+                lia.derma.rect(0, 0, w, h):Rad(radius):Color(background):Shape(lia.derma.SHAPE_IOS):Draw()
+                surface.SetDrawColor(accent.r, accent.g, accent.b, accent.a or 255)
+                surface.DrawRect(0, 0, w, 3)
+                surface.DrawRect(0, 0, 3, h)
+                surface.DrawRect(w - 3, 0, 3, h)
+                surface.DrawRect(0, h - 3, w, 3)
+            end
+
             local panel = container:Add("DPanel")
             panel:Dock(FILL)
             panel:DockMargin(300, 5, 300, 5)
-            panel.Paint = function(_, w, h) lia.derma.rect(0, 0, w, h):Rad(16):Color(Color(60, 60, 70, 80)):Shape(lia.derma.SHAPE_IOS):Draw() end
+            panel.Paint = function(_, w, h) end
             local label = vgui.Create("DLabel", panel)
             label:Dock(TOP)
             label:SetTall(45)
@@ -607,7 +691,20 @@ hook.Add("PopulateConfigurationButtons", "liaOptionsPopulate", function(pages)
                         local panel = OptionFormatting[v.elemType](v.key, v.name, v.config, canvas)
                         panel:Dock(TOP)
                         panel:DockMargin(10, 10, 10, 0)
-                        panel.Paint = function(_, w, h) lia.derma.rect(0, 0, w, h):Rad(16):Color(Color(50, 50, 60, 80)):Shape(lia.derma.SHAPE_IOS):Draw() end
+                        panel.Paint = function(s, w, h)
+                            local radius = 8
+                            local accent = lia.color.theme.accent or lia.color.theme.header or lia.color.theme.theme or Color(100, 150, 200)
+                            local background = lia.color.theme.background_alpha or lia.color.theme.background or Color(40, 40, 40, 240)
+                            local x, y = s:LocalToScreen(0, 0)
+                            lia.derma.rect(0, 0, w, h):Rad(radius):Color(lia.color.theme.window_shadow or Color(0, 0, 0, 50)):Shadow(8, 12):Shape(lia.derma.SHAPE_IOS):Draw()
+                            lia.util.drawBlurAt(x, y, w, h)
+                            lia.derma.rect(0, 0, w, h):Rad(radius):Color(background):Shape(lia.derma.SHAPE_IOS):Draw()
+                            surface.SetDrawColor(accent.r, accent.g, accent.b, accent.a or 255)
+                            surface.DrawRect(0, 0, w, 3)
+                            surface.DrawRect(0, 0, 3, h)
+                            surface.DrawRect(w - 3, 0, 3, h)
+                            surface.DrawRect(0, h - 3, w, 3)
+                        end
                     end
 
                     scrollPanel:InvalidateLayout(true)
@@ -655,7 +752,7 @@ lia.option.add("invertWeaponScroll", "invertWeaponScroll", "invertWeaponScrollDe
 })
 
 lia.option.add("espEnabled", "espEnabled", "espEnabledDesc", false, nil, {
-    category = "Core",
+    category = "ESP",
     isQuick = true,
     visible = function()
         local ply = LocalPlayer()
@@ -665,7 +762,7 @@ lia.option.add("espEnabled", "espEnabled", "espEnabledDesc", false, nil, {
 })
 
 lia.option.add("espPlayers", "espPlayers", "espPlayersDesc", false, nil, {
-    category = "Core",
+    category = "ESP",
     isQuick = true,
     visible = function()
         local ply = LocalPlayer()
@@ -675,7 +772,7 @@ lia.option.add("espPlayers", "espPlayers", "espPlayersDesc", false, nil, {
 })
 
 lia.option.add("espItems", "espItems", "espItemsDesc", false, nil, {
-    category = "Core",
+    category = "ESP",
     isQuick = true,
     visible = function()
         local ply = LocalPlayer()
@@ -685,7 +782,7 @@ lia.option.add("espItems", "espItems", "espItemsDesc", false, nil, {
 })
 
 lia.option.add("espEntities", "espEntities", "espEntitiesDesc", false, nil, {
-    category = "Core",
+    category = "ESP",
     isQuick = true,
     visible = function()
         local ply = LocalPlayer()
@@ -695,7 +792,7 @@ lia.option.add("espEntities", "espEntities", "espEntitiesDesc", false, nil, {
 })
 
 lia.option.add("espUnconfiguredDoors", "espUnconfiguredDoors", "espUnconfiguredDoorsDesc", false, nil, {
-    category = "Core",
+    category = "ESP",
     isQuick = true,
     visible = function()
         local ply = LocalPlayer()
@@ -710,7 +807,7 @@ lia.option.add("espItemsColor", "espItemsColor", "espItemsColorDesc", {
     b = 0,
     a = 255
 }, nil, {
-    category = "Core",
+    category = "ESP",
     visible = function()
         local ply = LocalPlayer()
         if not IsValid(ply) then return false end
@@ -724,7 +821,7 @@ lia.option.add("espEntitiesColor", "espEntitiesColor", "espEntitiesColorDesc", {
     b = 0,
     a = 255
 }, nil, {
-    category = "Core",
+    category = "ESP",
     visible = function()
         local ply = LocalPlayer()
         if not IsValid(ply) then return false end
@@ -738,7 +835,7 @@ lia.option.add("espUnconfiguredDoorsColor", "espUnconfiguredDoorsColor", "espUnc
     b = 255,
     a = 255
 }, nil, {
-    category = "Core",
+    category = "ESP",
     visible = function()
         local ply = LocalPlayer()
         if not IsValid(ply) then return false end
@@ -747,7 +844,7 @@ lia.option.add("espUnconfiguredDoorsColor", "espUnconfiguredDoorsColor", "espUnc
 })
 
 lia.option.add("espConfiguredDoors", "espConfiguredDoors", "espConfiguredDoorsDesc", false, nil, {
-    category = "Core",
+    category = "ESP",
     isQuick = true,
     visible = function()
         local ply = LocalPlayer()
@@ -762,7 +859,7 @@ lia.option.add("espConfiguredDoorsColor", "espConfiguredDoorsColor", "espConfigu
     b = 0,
     a = 255
 }, nil, {
-    category = "Core",
+    category = "ESP",
     visible = function()
         local ply = LocalPlayer()
         if not IsValid(ply) then return false end
@@ -776,7 +873,7 @@ lia.option.add("espPlayersColor", "espPlayersColor", "espPlayersColorDesc", {
     b = 255,
     a = 255
 }, nil, {
-    category = "Core",
+    category = "ESP",
     visible = function()
         local ply = LocalPlayer()
         if not IsValid(ply) then return false end
@@ -790,31 +887,31 @@ lia.option.add("BarsAlwaysVisible", "barsAlwaysVisible", "barsAlwaysVisibleDesc"
 })
 
 lia.option.add("thirdPersonEnabled", "thirdPersonEnabled", "thirdPersonEnabledDesc", false, function(_, newValue) hook.Run("ThirdPersonToggled", newValue) end, {
-    category = "Core",
+    category = "categoryThirdPerson",
     isQuick = true,
 })
 
 lia.option.add("thirdPersonClassicMode", "thirdPersonClassicMode", "thirdPersonClassicModeDesc", false, nil, {
-    category = "Core",
+    category = "categoryThirdPerson",
     isQuick = true,
 })
 
 lia.option.add("thirdPersonHeight", "thirdPersonHeight", "thirdPersonHeightDesc", 10, nil, {
-    category = "Core",
+    category = "categoryThirdPerson",
     min = 0,
     isQuick = true,
-    max = lia.config.get("MaxThirdPersonHeight", 90),
+    max = lia.config.get("MaxThirdPersonHeight", 30),
 })
 
-lia.option.add("thirdPersonHorizontal", "thirdPersonHorizontal", "thirdPersonHorizontalDesc", 10, nil, {
-    category = "Core",
-    min = 0,
+lia.option.add("thirdPersonHorizontal", "thirdPersonHorizontal", "thirdPersonHorizontalDesc", 0, nil, {
+    category = "categoryThirdPerson",
+    min = -lia.config.get("MaxThirdPersonHorizontal", 30),
     isQuick = true,
-    max = lia.config.get("MaxThirdPersonHorizontal", 90),
+    max = lia.config.get("MaxThirdPersonHorizontal", 30),
 })
 
 lia.option.add("thirdPersonDistance", "thirdPersonDistance", "thirdPersonDistanceDesc", 50, nil, {
-    category = "Core",
+    category = "categoryThirdPerson",
     min = 0,
     isQuick = true,
     max = lia.config.get("MaxThirdPersonDistance", 100),

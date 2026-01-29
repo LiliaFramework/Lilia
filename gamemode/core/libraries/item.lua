@@ -1324,7 +1324,10 @@ hook.Add("InitializedModules", "liaItems", function()
             }
 
             if override.weaponCategory then properties.weaponCategory = override.weaponCategory end
-            lia.item.registerItem(className, baseType, properties)
+            local item = lia.item.register(className, baseType, false, nil, true)
+            for key, value in pairs(properties) do
+                item[key] = value
+            end
         end
     end
 

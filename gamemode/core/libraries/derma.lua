@@ -2417,6 +2417,8 @@ function lia.derma.drawBoxWithText(text, x, y, options)
         enabled = false
     }
 
+    boxWidth = math.max(boxWidth, 1)
+    boxHeight = math.max(boxHeight, 1)
     if shadow.enabled then lia.derma.rect(boxX, boxY, boxWidth, boxHeight):Rad(borderRadius):Color(shadow.color or Color(0, 0, 0, 50)):Shadow(shadow.offsetX or 8, shadow.offsetY or 12):Shape(lia.derma.SHAPE_IOS):Draw() end
     if blur.enabled then lia.util.drawBlurAt(boxX, boxY, boxWidth, boxHeight, blur.amount, blur.passes, blur.alpha) end
     lia.derma.rect(boxX, boxY, boxWidth, boxHeight):Color(backgroundColor):Rad(borderRadius):Draw()
@@ -3692,13 +3694,9 @@ end
 ]]
 function lia.derma.requestDropdown(title, options, callback, defaultValue)
     if IsValid(lia.gui.menuRequestDropdown) then lia.gui.menuRequestDropdown:Remove() end
-    local numOptions = istable(options) and #options or 0
-    local itemHeight = 26
-    local itemMargin = 2
-    local dropdownHeight = math.min(numOptions * (itemHeight + itemMargin) + 12, 400)
-    local frameHeight = 140 + dropdownHeight
+    local frameHeight = 200
     local frame = vgui.Create("liaFrame")
-    frame:SetSize(300, frameHeight)
+    frame:SetSize(340, frameHeight)
     frame:Center()
     frame:MakePopup()
     frame:SetTitle("")
@@ -3707,8 +3705,8 @@ function lia.derma.requestDropdown(title, options, callback, defaultValue)
     frame:SetZPos(1000)
     local dropdown = vgui.Create("liaComboBox", frame)
     dropdown:Dock(TOP)
-    dropdown:DockMargin(20, 20, 20, 20)
-    dropdown:SetTall(30)
+    dropdown:DockMargin(24, 28, 24, 16)
+    dropdown:SetTall(36)
     dropdown:SetMouseInputEnabled(true)
     dropdown:SetKeyboardInputEnabled(true)
     if istable(options) then
@@ -3750,8 +3748,8 @@ function lia.derma.requestDropdown(title, options, callback, defaultValue)
 
     local buttonPanel = vgui.Create("Panel", frame)
     buttonPanel:Dock(BOTTOM)
-    buttonPanel:DockMargin(20, 10, 20, 20)
-    buttonPanel:SetTall(40)
+    buttonPanel:DockMargin(24, 16, 24, 24)
+    buttonPanel:SetTall(44)
     local submitBtn = vgui.Create("liaButton", buttonPanel)
     submitBtn:Dock(RIGHT)
     submitBtn:SetWide(100)

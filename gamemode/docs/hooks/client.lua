@@ -2508,6 +2508,36 @@ end
 
 --[[
     Purpose:
+        Add custom menu options to the faction roster table.
+
+    When Called:
+        When the faction roster UI is being populated with member data.
+
+    Parameters:
+        list (Panel)
+            The liaTable panel that displays the roster. Use list:AddMenuOption() to add right-click menu options.
+        members (table)
+            Array of member data tables containing name, charID, steamID, and lastOnline fields.
+
+    Realm:
+        Client
+
+    Example Usage:
+        ```lua
+            hook.Add("PopulateFactionRosterOptions", "MyCustomRosterOptions", function(list, members)
+                list:AddMenuOption("View Profile", function(rowData)
+                    if rowData and rowData.charID then
+                        print("Viewing profile for character ID:", rowData.charID)
+                    end
+                end, "icon16/user.png")
+            end)
+        ```
+]]
+function PopulateFactionRosterOptions(list, members)
+end
+
+--[[
+    Purpose:
         Populate the inventory items tree used in the admin menu.
 
     When Called:

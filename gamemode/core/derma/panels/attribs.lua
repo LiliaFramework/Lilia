@@ -130,7 +130,7 @@ function PANEL:Init()
     self.leftLabel:SetFont("LiliaFont.32")
     self.leftLabel:SetTextColor(color_white)
     self.title:SetTextColor(color_white)
-    self.total = hook.Run("GetStartAttribPoints", client, self:getContext()) or lia.config.MaxAttributePoints or 0
+    self.total = hook.Run("GetStartAttribPoints", client, self:getContext()) or lia.config.get("MaxAttributePoints", 30)
     self.attribs = {}
     for k, v in SortedPairsByMemberValue(lia.attribs.list, "name") do
         if v.noStartBonus then continue end
@@ -143,11 +143,8 @@ function PANEL:updatePointsLeft()
 end
 
 function PANEL:onDisplay()
-    if not self.total then
-        local client = LocalPlayer()
-        self.total = hook.Run("GetStartAttribPoints", client, self:getContext()) or lia.config.MaxAttributePoints or 0
-    end
-
+    local client = LocalPlayer()
+    self.total = hook.Run("GetStartAttribPoints", client, self:getContext()) or lia.config.get("MaxAttributePoints", 30)
     if not self.attribs then self.attribs = {} end
     for k, v in SortedPairsByMemberValue(lia.attribs.list, "name") do
         if v.noStartBonus then continue end
@@ -160,7 +157,6 @@ function PANEL:onDisplay()
         sum = sum + quantity
     end
 
-    self.total = self.total or 0
     self.left = math.max(self.total - sum, 0)
     self:updatePointsLeft()
     for key, row in pairs(self.attribs) do
@@ -178,17 +174,25 @@ end
 
 function PANEL:onPointChange(key, delta)
     if not key then return 0 end
+    local client = LocalPlayer()
+    if not self.total or self.total == 0 then self.total = hook.Run("GetStartAttribPoints", client, self:getContext()) or lia.config.get("MaxAttributePoints", 30) end
     local attribs = self:getContext("attribs", {})
+    local sum = 0
+    for _, quantity in pairs(attribs) do
+        sum = sum + quantity
+    end
+
+    self.left = math.max(self.total - sum, 0)
     local startingMax = lia.attribs.list[key].startingMax or nil
     local quantity = attribs[key] or 0
     local newQuantity = quantity + delta
     local newPointsLeft = self.left - delta
-    self.total = self.total or 0
-    if newPointsLeft < 0 or newPointsLeft > self.total or newQuantity < 0 or newQuantity > self.total or (startingMax and startingMax < newQuantity) then return quantity end
+    if newPointsLeft < 0 or newPointsLeft > self.total or newQuantity < 0 or (startingMax and startingMax < newQuantity) then return quantity end
     self.left = newPointsLeft
     self:updatePointsLeft()
     attribs[key] = newQuantity
     self:setContext("attribs", attribs)
+    if IsValid(self.parentBio) and isfunction(self.parentBio.updateAttributesLabel) then self.parentBio:updateAttributesLabel() end
     return newQuantity
 end
 
@@ -204,8 +208,7 @@ function PANEL:Init()
     self.buttons:Dock(RIGHT)
     self.buttons:SetWide(96)
     self.buttons:SetPaintBackground(false)
-    self.add = self:addButton("⯈", 1)
-    self.add:Dock(RIGHT)
+    self.buttons:SetMouseInputEnabled(true)
     self.sub = self:addButton("⯇", -1)
     self.sub:Dock(LEFT)
     self.quantity = self.buttons:Add("DLabel")
@@ -214,6 +217,9 @@ function PANEL:Init()
     self.quantity:Dock(FILL)
     self.quantity:SetText("0")
     self.quantity:SetContentAlignment(5)
+    self.quantity:SetMouseInputEnabled(false)
+    self.add = self:addButton("⯈", 1)
+    self.add:Dock(RIGHT)
     self.name = self:Add("DLabel")
     self.name:SetFont("LiliaFont.32")
     self.name:SetContentAlignment(4)
@@ -231,25 +237,41 @@ end
 
 function PANEL:delta(delta)
     local client = LocalPlayer()
-    if IsValid(self.parent) then
-        local oldPoints = self.points
-        self.points = self.parent:onPointChange(self.key, delta)
-        self:updateQuantity()
-        if oldPoints ~= self.points and IsValid(client) then client:EmitSound("buttons/button15.wav", 30, 250) end
-    end
+    if not IsValid(self.parent) then return end
+    if not self.key then return end
+    local oldPoints = self.points
+    self.points = self.parent:onPointChange(self.key, delta)
+    self:updateQuantity()
+    if oldPoints ~= self.points and IsValid(client) then client:EmitSound("buttons/button15.wav", 30, 250) end
 end
 
 function PANEL:addButton(symbol, delta)
-    local button = self.buttons:Add("liaButton")
+    local button = self.buttons:Add("DButton")
     button:SetFont("LiliaFont.24")
-    button:SetWide(24)
+    button:SetSize(28, 28)
     button:SetText(symbol)
-    button:SetContentAlignment(5)
+    button:SetTextColor(color_white)
     button:SetMouseInputEnabled(true)
+    button:SetZPos(100)
     local parent = self
-    local oldOnMousePressed = button.OnMousePressed
+    button.Paint = function(btn, w, h)
+        if btn:IsHovered() or btn:IsDown() then
+            surface.SetDrawColor(100, 100, 100, 200)
+        else
+            surface.SetDrawColor(50, 50, 50, 150)
+        end
+
+        surface.DrawRect(0, 0, w, h)
+        draw.SimpleText(symbol, "LiliaFont.24", w / 2, h / 2, color_white, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
+    end
+
+    button.DoClick = function(btn)
+        parent.autoDelta = delta
+        parent.nextAuto = CurTime() + 0.4
+        parent:delta(delta)
+    end
+
     button.OnMousePressed = function(btn, mousecode)
-        if oldOnMousePressed then oldOnMousePressed(btn, mousecode) end
         if mousecode == MOUSE_LEFT then
             parent.autoDelta = delta
             parent.nextAuto = CurTime() + 0.4
@@ -257,13 +279,7 @@ function PANEL:addButton(symbol, delta)
         end
     end
 
-    local oldOnMouseReleased = button.OnMouseReleased
-    button.OnMouseReleased = function(btn, mousecode)
-        if oldOnMouseReleased then oldOnMouseReleased(btn, mousecode) end
-        if mousecode == MOUSE_LEFT then parent.autoDelta = nil end
-    end
-
-    button:SetPaintBackground(false)
+    button.OnMouseReleased = function(btn, mousecode) if mousecode == MOUSE_LEFT then parent.autoDelta = nil end end
     return button
 end
 

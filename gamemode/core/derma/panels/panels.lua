@@ -220,21 +220,26 @@ function QuickPanel:addCategoryHeader(categoryName, categoryColor)
     header:Dock(TOP)
     header:DockMargin(2, 4, 2, 2)
     header:SetPaintBackground(false)
-    header.Paint = function(_, w, h)
+    header.Paint = function(panel, w, h)
+        local radius = 6
+        local shadowIntensity = 8
+        local shadowBlur = 12
         local theme = lia.color.theme
-        local bgColor = theme and theme.category_header or Color(45, 55, 65, 100)
-        local accentColor = categoryColor or (theme and theme.category_accent or Color(100, 150, 200, 255))
-        local textColor = theme and theme.category_text or theme and theme.text or color_white
-        local lineColor = theme and theme.category_line or Color(255, 255, 255, 20)
-        lia.derma.rect(0, 0, w, h):Rad(8):Color(bgColor):Shape(lia.derma.SHAPE_IOS):Draw()
-        surface.SetDrawColor(accentColor)
-        surface.DrawRect(0, 0, 3, h)
+        local accent = theme and theme.accent or theme.header or theme.theme or Color(100, 150, 200, 255)
+        local background = theme and theme.background_alpha or theme.background or Color(40, 40, 40, 240)
+        local textColor = theme and theme.category_text or theme.text or color_white
+        lia.derma.rect(0, 0, w, h):Rad(radius):Color(theme.window_shadow or Color(0, 0, 0, 50)):Shadow(shadowIntensity, shadowBlur):Shape(lia.derma.SHAPE_IOS):Draw()
+        lia.util.drawBlur(panel, 4, 2)
+        lia.derma.rect(0, 0, w, h):Rad(radius):Color(background):Draw()
+        surface.SetDrawColor(accent)
+        surface.DrawRect(0, 0, w, 2)
+        surface.DrawRect(0, h - 2, w, 2)
+        surface.DrawRect(0, 0, 2, h)
+        surface.DrawRect(w - 2, 0, 2, h)
         local displayText = categoryName
         local localized = L(displayText)
         if localized and localized ~= "" then displayText = localized end
         draw.SimpleText(displayText, "LiliaFont.17", w / 2, h / 2, textColor, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
-        surface.SetDrawColor(lineColor)
-        surface.DrawRect(0, h - 1, w, 1)
     end
 
     self.items[#self.items + 1] = header

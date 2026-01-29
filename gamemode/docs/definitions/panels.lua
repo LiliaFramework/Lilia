@@ -356,14 +356,6 @@ liaTabButton
 liaModelPanel
 --[[
     Purpose:
-        Portrait-style facing model display
-        A specialized model panel that automatically rotates models to face the camera for consistent portrait views
-    When Used:
-        For character selection screens, profile displays, or any interface requiring standardized model presentation
-]]
-liaFacingModelPanel
---[[
-    Purpose:
         Notification display
         A panel for displaying notifications or alerts
     When Used:

@@ -436,7 +436,12 @@ function GM:HUDPaint()
                         }
                     }
 
-                    if info.backgroundColor then drawOptions.backgroundColor = info.backgroundColor end
+                    if info.backgroundColor then
+                        drawOptions.backgroundColor = info.backgroundColor
+                    else
+                        drawOptions.backgroundColor = lia.color.theme.background_alpha or lia.color.theme.background or Color(40, 40, 40, 240)
+                    end
+
                     if info.borderColor then drawOptions.borderColor = info.borderColor end
                     if info.borderRadius then drawOptions.borderRadius = info.borderRadius end
                     if info.borderThickness then drawOptions.borderThickness = info.borderThickness end
@@ -444,8 +449,12 @@ function GM:HUDPaint()
                     if info.textAlignX then drawOptions.textAlignX = info.textAlignX end
                     if info.textAlignY then drawOptions.textAlignY = info.textAlignY end
                     if info.lineSpacing then drawOptions.lineSpacing = info.lineSpacing end
-                    if info.autoSize then drawOptions.autoSize = info.autoSize end
+                    if info.autoSize ~= nil then drawOptions.autoSize = info.autoSize end
+                    if info.width then drawOptions.width = info.width end
+                    if info.height then drawOptions.height = info.height end
                     if info.blur then drawOptions.blur = info.blur end
+                    if info.shadow then drawOptions.shadow = info.shadow end
+                    if info.accentBorder then drawOptions.accentBorder = info.accentBorder end
                     lia.derma.drawBoxWithText(info.text, info.position.x, info.position.y, drawOptions)
                 end
             end
@@ -822,4 +831,83 @@ function GM:GetMainMenuPosition(character)
         end
     end
     return nil, nil
+end
+
+function GM:CharLoaded(character)
+    if not character then return end
+    timer.Simple(0.5, function()
+        if lia.webimage and lia.webimage.stored then
+            local baseDir = "lilia/webimages/"
+            local missingImages = {}
+            for name, data in pairs(lia.webimage.stored) do
+                if data and data.url then
+                    local cached = lia.webimage.get(name)
+                    if not cached then
+                        local cleanName = name:gsub("%.%w+$", "")
+                        local found = false
+                        for _, ext in ipairs({"png", "jpg", "jpeg"}) do
+                            local testPath = baseDir .. cleanName .. "." .. ext
+                            if file.Exists(testPath, "DATA") then
+                                found = true
+                                break
+                            end
+                        end
+
+                        if not found then
+                            table.insert(missingImages, {
+                                name = name,
+                                url = data.url,
+                                flags = data.flags
+                            })
+                        end
+                    end
+                end
+            end
+
+            if #missingImages > 0 then
+                local function downloadNext(index)
+                    if index > #missingImages then return end
+                    local entry = missingImages[index]
+                    lia.webimage.download(entry.name, entry.url, function(mat, fromCache, errorMsg)
+                        if not mat and not fromCache then lia.log.add(nil, "webimageDownloadFailed", entry.name, errorMsg or "unknown error") end
+                        timer.Simple(0.1, function() downloadNext(index + 1) end)
+                    end, entry.flags)
+                end
+
+                downloadNext(1)
+            end
+        end
+
+        if lia.websound and lia.websound.stored then
+            local baseDir = "lilia/websounds/"
+            local missingSounds = {}
+            for name, url in pairs(lia.websound.stored) do
+                if url and isstring(url) then
+                    local cached = lia.websound.get(name)
+                    if not cached then
+                        local savePath = baseDir .. name
+                        if not file.Exists(savePath, "DATA") then
+                            table.insert(missingSounds, {
+                                name = name,
+                                url = url
+                            })
+                        end
+                    end
+                end
+            end
+
+            if #missingSounds > 0 then
+                local function downloadNext(index)
+                    if index > #missingSounds then return end
+                    local entry = missingSounds[index]
+                    lia.websound.download(entry.name, entry.url, function(path, fromCache, errorMsg)
+                        if not path and not fromCache then lia.log.add(nil, "websoundDownloadFailed", entry.name, errorMsg or "unknown error") end
+                        timer.Simple(0.1, function() downloadNext(index + 1) end)
+                    end)
+                end
+
+                downloadNext(1)
+            end
+        end
+    end)
 end
