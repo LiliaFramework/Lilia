@@ -77,6 +77,8 @@ end
 ]]
 function lia.font.register(fontName, fontData)
     if not (isstring(fontName) and istable(fontData)) then return lia.error(L("invalidFont")) end
+    if #fontName > 63 then return end
+    if fontData.font and #fontData.font > 63 then return end
     lia.font.stored[fontName] = SERVER and {
         font = true
     } or fontData
@@ -295,7 +297,7 @@ end
 if CLIENT then
     local oldSurfaceSetFont = surface.SetFont
     function surface.SetFont(font)
-        if isstring(font) and not lia.font.stored[font] then
+        if isstring(font) and not lia.font.stored[font] and #font <= 63 then
             local mainFont = lia.config and lia.config.get("Font", "Montserrat Medium") or "Montserrat Medium"
             local fontData = {
                 font = font,
