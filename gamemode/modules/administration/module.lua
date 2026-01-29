@@ -334,6 +334,12 @@ MODULE.Privileges = {
         Category = "adminStick",
     },
     {
+        Name = "usePositionTool",
+        ID = "usePositionTool",
+        MinAccess = "superadmin",
+        Category = "categoryStaffTools",
+    },
+    {
         Name = "commandBan",
         ID = "command_ban",
         MinAccess = "admin",
