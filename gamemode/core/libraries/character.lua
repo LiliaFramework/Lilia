@@ -661,7 +661,7 @@ lia.char.registerVar("attribs", {
                     count = count + v
                 end
 
-                local points = hook.Run("GetMaxStartingAttributePoints", client, count)
+                local points = hook.Run("GetMaxStartingAttributePoints", client, lia.config.get("StartingAttributePoints", 30))
                 if count > points then return false, "unknownError" end
             else
                 return false, "unknownError"

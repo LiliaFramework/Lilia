@@ -44,6 +44,6 @@ function GM:GetAttributeStartingMax(client, attribute)
     return lia.config.get("MaxStartingAttributes")
 end
 
-function GM:GetMaxStartingAttributePoints()
-    return lia.config.get("StartingAttributePoints")
+function GM:GetMaxStartingAttributePoints(client, default)
+    return default or lia.config.get("StartingAttributePoints", 30)
 end

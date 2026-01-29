@@ -299,7 +299,7 @@ end
 
 function PANEL:updateAttributesLabel()
     if IsValid(self.attrLabelText) then
-        local total = hook.Run("GetStartAttribPoints", LocalPlayer(), self:getContext()) or lia.config.get("MaxAttributePoints", 30)
+        local total = hook.Run("GetMaxStartingAttributePoints", LocalPlayer(), lia.config.get("StartingAttributePoints", 30))
         local attribs = self:getContext("attribs", {})
         local sum = 0
         for _, quantity in pairs(attribs) do
