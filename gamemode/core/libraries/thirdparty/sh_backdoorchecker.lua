@@ -130,7 +130,6 @@ concommand.Add("lia_backdoorcheck", function(ply, com, arg)
     end
 
     LogBuffer = ""
-    -- Always scan Schema
     local schema = engine.ActiveGamemode()
     ScanAddon({
         title = "Schema (" .. schema .. ")",
