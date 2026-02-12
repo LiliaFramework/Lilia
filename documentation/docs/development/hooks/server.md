@@ -5107,43 +5107,6 @@ Server-side hooks in the Lilia framework handle server-side logic, data persiste
 
 ---
 
-<details class="realm-server" id="function-shouldsaveitem">
-<summary><a id="ShouldSaveItem"></a>ShouldSaveItem(itemTable, entity)</summary>
-<div class="details-content">
-<h3 style="margin-bottom: 5px; font-weight: 700;"><a id="shouldsaveitem"></a>Purpose</h3>
-<div style="margin-left: 20px; margin-bottom: 20px;">
-  <p>Decide if an item should be saved to the database when dropped on the map.</p>
-</div>
-
-<h3 style="margin-bottom: 5px; font-weight: 700;">When Called</h3>
-<div style="margin-left: 20px; margin-bottom: 20px;">
-  <p>When an item entity is created and would normally be saved to the lia_saveditems table.</p>
-</div>
-
-<h3 style="margin-bottom: 5px; font-weight: 700;">Parameters</h3>
-<div style="margin-left: 20px; margin-bottom: 20px;">
-<p><span class="types"><a class="type" href="/development/libraries/item/">Item</a></span> <span class="parameter">itemTable</span> Item instance being saved.</p>
-<p><span class="types"><a class="type" href="/development/meta/entity/">Entity</a></span> <span class="parameter">entity</span> Item entity being saved.</p>
-</div>
-
-<h3 style="margin-bottom: 5px; font-weight: 700;">Returns</h3>
-<div style="margin-left: 20px; margin-bottom: 20px;">
-<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#2.1">boolean</a></span> False to prevent saving; true/nil to allow saving.</p>
-</div>
-
-<h3 style="margin-bottom: 5px; font-weight: 700;">Example Usage</h3>
-<div style="margin-left: 20px; margin-bottom: 20px;">
-<pre><code class="language-lua">  hook.Add("ShouldSaveItem", "NoSaveExplosives", function(itemTable, entity)
-      if itemTable.category == "Explosives" then return false end
-  end)
-</code></pre>
-</div>
-
-</div>
-</details>
-
----
-
 <details class="realm-server" id="function-shouldplaydeathsound">
 <summary><a id="ShouldPlayDeathSound"></a>ShouldPlayDeathSound(client, deathSound)</summary>
 <div class="details-content">

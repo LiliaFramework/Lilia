@@ -172,8 +172,8 @@ jobs:
           rm -rf documentation/docs/development/meta
           rm -rf documentation/docs/development/libraries
           rm -rf documentation/docs/development/hooks
-          rm -rf documentation/docs/server_owner/modules
-          rm -rf documentation/docs/server_owner/compatibility
+          rm -rf documentation/docs/modules
+          rm -rf documentation/docs/compatibility
       - run: |
           python3 generate_docs.py meta --force
           python3 generate_docs.py library --force
@@ -185,7 +185,7 @@ jobs:
       - run: |
           echo "=== Fetching Modules Documentation ==="
           # Create modules directory if it doesn't exist
-          mkdir -p documentation/docs/server_owner/modules
+          mkdir -p documentation/docs/modules
           
           # Fetch modules documentation from LiliaFramework/Modules repository
           echo "Fetching modules documentation from LiliaFramework/Modules..."
@@ -195,7 +195,7 @@ jobs:
           unzip -q modules_docs.zip
           
           # Copy the modules documentation to the correct location
-          cp -r Modules-module-markdown/documentation/modules/* documentation/docs/server_owner/modules/
+          cp -r Modules-module-markdown/documentation/modules/* documentation/docs/modules/
           
           # Copy versioning files from Modules repository if they exist
           # Ensure the target directory exists (lilia.json was already created here)
@@ -217,7 +217,7 @@ jobs:
           # Clean up temporary files
           rm -rf modules_docs.zip Modules-module-markdown
           
-          echo "Modules documentation successfully placed in documentation/docs/server_owner/modules/"
+          echo "Modules documentation successfully placed in documentation/docs/modules/"
       - run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
@@ -363,8 +363,8 @@ jobs:
           rm -rf documentation/docs/development/meta
           rm -rf documentation/docs/development/libraries
           rm -rf documentation/docs/development/hooks
-          rm -rf documentation/docs/server_owner/modules
-          rm -rf documentation/docs/server_owner/compatibility
+          rm -rf documentation/docs/modules
+          rm -rf documentation/docs/compatibility
       - run: |
           python3 generate_docs.py meta --force
           python3 generate_docs.py library --force
@@ -376,7 +376,7 @@ jobs:
       - run: |
           echo "=== Fetching Modules Documentation ==="
           # Create modules directory if it doesn't exist
-          mkdir -p documentation/docs/server_owner/modules
+          mkdir -p documentation/docs/modules
           
           # Fetch modules documentation from LiliaFramework/Modules repository
           echo "Fetching modules documentation from LiliaFramework/Modules..."
@@ -386,7 +386,7 @@ jobs:
           unzip -q modules_docs.zip
           
           # Copy the modules documentation to the correct location
-          cp -r Modules-module-markdown/documentation/modules/* documentation/docs/server_owner/modules/
+          cp -r Modules-module-markdown/documentation/modules/* documentation/docs/modules/
           
           # Copy versioning files from Modules repository if they exist
           # Ensure the target directory exists (lilia.json was already created here)
@@ -408,7 +408,7 @@ jobs:
           # Clean up temporary files
           rm -rf modules_docs.zip Modules-module-markdown
           
-          echo "Modules documentation successfully placed in documentation/docs/server_owner/modules/"
+          echo "Modules documentation successfully placed in documentation/docs/modules/"
       - uses: actions/checkout@v3
         with:
           repository: LiliaFramework/LiliaFramework.github.io

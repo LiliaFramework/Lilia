@@ -3596,3 +3596,72 @@ Shared hooks in the Lilia framework handle functionality available on both clien
 
 ---
 
+<details class="realm-shared" id="function-registerfeaturepositiontypes">
+<summary><a id="RegisterFeaturePositionTypes"></a>RegisterFeaturePositionTypes(arg1)</summary>
+<div class="details-content">
+<h3 style="margin-bottom: 5px; font-weight: 700;"><a id="registerfeaturepositiontypes"></a>Purpose</h3>
+<div style="margin-left: 20px; margin-bottom: 20px;">
+  <p>Allows modules to react to or modify the list of registered feature position types.</p>
+</div>
+
+<h3 style="margin-bottom: 5px; font-weight: 700;">When Called</h3>
+<div style="margin-left: 20px; margin-bottom: 20px;">
+  <p>Every time MODULE:SetPositionCallback is called to register a new position feature.</p>
+</div>
+
+<h3 style="margin-bottom: 5px; font-weight: 700;">Parameters</h3>
+<div style="margin-left: 20px; margin-bottom: 20px;">
+<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#2.1">table</a></span> <span class="parameter">arg1</span> The list of current feature position types (lia.featurePositionTypes).</p>
+</div>
+
+<h3 style="margin-bottom: 5px; font-weight: 700;">Example Usage</h3>
+<div style="margin-left: 20px; margin-bottom: 20px;">
+<pre><code class="language-lua">  hook.Add("RegisterFeaturePositionTypes", "MonitorPositions", function(types)
+      PrintTable(types)
+  end)
+</code></pre>
+</div>
+
+</div>
+</details>
+
+---
+
+<details class="realm-shared" id="function-setpositioncallback">
+<summary><a id="SetPositionCallback"></a>SetPositionCallback(name, data, onRun, onSelect, color, HUDPaint, serverOnly)</summary>
+<div class="details-content">
+<h3 style="margin-bottom: 5px; font-weight: 700;"><a id="setpositioncallback"></a>Purpose</h3>
+<div style="margin-left: 20px; margin-bottom: 20px;">
+  <p>Registers a callback for setting and managing world positions via the admin position tool.</p>
+</div>
+
+<h3 style="margin-bottom: 5px; font-weight: 700;">When Called</h3>
+<div style="margin-left: 20px; margin-bottom: 20px;">
+  <p>Typically during module initialization to define new selectable position types in the admin tool.</p>
+</div>
+
+<h3 style="margin-bottom: 5px; font-weight: 700;">Parameters</h3>
+<div style="margin-left: 20px; margin-bottom: 20px;">
+<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#2.1">string</a></span> <span class="parameter">name</span> The display name of the position type (e.g., “Faction Spawn Adder”).</p>
+<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#2.1">table</a></span> <span class="parameter">data</span> A table containing configuration:</p>
+<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#2.1">function</a></span> <span class="parameter">onRun</span> Called when a position is set. Arguments: (pos, client, typeId).</p>
+<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#2.1">function</a></span> <span class="parameter">onSelect</span> Called when the type is selected. Arguments: (client, callback).</p>
+<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#2.2">Color, optional</a></span> <span class="parameter">color</span> UI accent color.</p>
+<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#2.2">function, optional</a></span> <span class="parameter">HUDPaint</span> Extra HUD rendering.</p>
+<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#2.2">boolean, optional</a></span> <span class="parameter">serverOnly</span> If true, logic runs server-side.</p>
+</div>
+
+<h3 style="margin-bottom: 5px; font-weight: 700;">Example Usage</h3>
+<div style="margin-left: 20px; margin-bottom: 20px;">
+<pre><code class="language-lua">  MODULE:SetPositionCallback("My Custom Point", {
+      onRun = function(pos, client) -- ... end,
+      onSelect = function(client, callback) -- ... end
+  })
+</code></pre>
+</div>
+
+</div>
+</details>
+
+---
+

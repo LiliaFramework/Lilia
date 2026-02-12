@@ -46,38 +46,6 @@ The utility library provides comprehensive functionality for common operations a
 
 ---
 
-<details class="realm-server" id="function-liautilrequestentityinformation">
-<summary><a id="lia.util.requestEntityInformation"></a>lia.util.requestEntityInformation(client, entity, argTypes, callback)</summary>
-<div class="details-content">
-<h3 style="margin-bottom: 5px; font-weight: 700;"><a id="liautilrequestentityinformation"></a>Purpose</h3>
-<div style="margin-left: 20px; margin-bottom: 20px;">
-  <p>Prompts the user for entity information and forwards the result.</p>
-</div>
-
-<h3 style="margin-bottom: 5px; font-weight: 700;">When Called</h3>
-<div style="margin-left: 20px; margin-bottom: 20px;">
-  <p>Use when a client must supply additional data for an entity action.</p>
-</div>
-
-<h3 style="margin-bottom: 5px; font-weight: 700;">Parameters</h3>
-<div style="margin-left: 20px; margin-bottom: 20px;">
-<p><span class="types"><a class="type" href="/development/meta/player/">Player</a></span> <span class="parameter">client</span> Player who will be prompted for the information.</p>
-<p><span class="types"><a class="type" href="/development/meta/entity/">Entity</a></span> <span class="parameter">entity</span> Entity that the information pertains to; removed if the request fails.</p>
-<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#2.1">table</a></span> <span class="parameter">argTypes</span> Argument descriptors passed to `requestArguments`.</p>
-<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#2.1">function</a></span> <span class="parameter">callback</span> <span class="optional">optional</span> Invoked with the collected information on success.</p>
-</div>
-
-<h3 style="margin-bottom: 5px; font-weight: 700;">Example Usage</h3>
-<div style="margin-left: 20px; margin-bottom: 20px;">
-<pre><code class="language-lua">  lia.util.requestEntityInformation(client, ent, argTypes, function(info) print(info) end)
-</code></pre>
-</div>
-
-</div>
-</details>
-
----
-
 <details class="realm-shared" id="function-liautilgetbysteamid">
 <summary><a id="lia.util.getBySteamID"></a>lia.util.getBySteamID(steamID)</summary>
 <div class="details-content">
@@ -644,41 +612,6 @@ The utility library provides comprehensive functionality for common operations a
 
 ---
 
-<details class="realm-shared" id="function-liautilsetpositioncallback">
-<summary><a id="lia.util.setPositionCallback"></a>lia.util.setPositionCallback(firstNames, lastNames)</summary>
-<div class="details-content">
-<h3 style="margin-bottom: 5px; font-weight: 700;"><a id="liautilsetpositioncallback"></a>Purpose</h3>
-<div style="margin-left: 20px; margin-bottom: 20px;">
-  <p>Generates a random full name from provided or default name lists.</p>
-</div>
-
-<h3 style="margin-bottom: 5px; font-weight: 700;">When Called</h3>
-<div style="margin-left: 20px; margin-bottom: 20px;">
-  <p>Use when creating placeholder or randomized character names.</p>
-</div>
-
-<h3 style="margin-bottom: 5px; font-weight: 700;">Parameters</h3>
-<div style="margin-left: 20px; margin-bottom: 20px;">
-<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#2.1">table</a></span> <span class="parameter">firstNames</span> <span class="optional">optional</span> Optional list of first names to draw from; defaults to built-in list when nil/empty.</p>
-<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#2.1">table</a></span> <span class="parameter">lastNames</span> <span class="optional">optional</span> Optional list of last names to draw from; defaults to built-in list when nil/empty.</p>
-</div>
-
-<h3 style="margin-bottom: 5px; font-weight: 700;">Returns</h3>
-<div style="margin-left: 20px; margin-bottom: 20px;">
-<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#2.1">string</a></span> Concatenated first and last name.</p>
-</div>
-
-<h3 style="margin-bottom: 5px; font-weight: 700;">Example Usage</h3>
-<div style="margin-left: 20px; margin-bottom: 20px;">
-<pre><code class="language-lua">  local name = lia.util.generateRandomName()
-</code></pre>
-</div>
-
-</div>
-</details>
-
----
-
 <details class="realm-server" id="function-liautilsendtableui">
 <summary><a id="lia.util.sendTableUI"></a>lia.util.sendTableUI(client, title, columns, data, options, characterID)</summary>
 <div class="details-content">
@@ -989,6 +922,37 @@ The utility library provides comprehensive functionality for common operations a
 
 ---
 
+<details class="realm-client" id="function-liautilrequestentityinformation">
+<summary><a id="lia.util.requestEntityInformation"></a>lia.util.requestEntityInformation(entity, argTypes, callback)</summary>
+<div class="details-content">
+<h3 style="margin-bottom: 5px; font-weight: 700;"><a id="liautilrequestentityinformation"></a>Purpose</h3>
+<div style="margin-left: 20px; margin-bottom: 20px;">
+  <p>Prompts the user for entity information and forwards the result.</p>
+</div>
+
+<h3 style="margin-bottom: 5px; font-weight: 700;">When Called</h3>
+<div style="margin-left: 20px; margin-bottom: 20px;">
+  <p>Use when a client must supply additional data for an entity action.</p>
+</div>
+
+<h3 style="margin-bottom: 5px; font-weight: 700;">Parameters</h3>
+<div style="margin-left: 20px; margin-bottom: 20px;">
+<p><span class="types"><a class="type" href="/development/meta/entity/">Entity</a></span> <span class="parameter">entity</span> Entity that the information pertains to; removed if the request fails.</p>
+<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#2.1">table</a></span> <span class="parameter">argTypes</span> Argument descriptors passed to `requestArguments`.</p>
+<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#2.1">function</a></span> <span class="parameter">callback</span> <span class="optional">optional</span> Invoked with the collected information on success.</p>
+</div>
+
+<h3 style="margin-bottom: 5px; font-weight: 700;">Example Usage</h3>
+<div style="margin-left: 20px; margin-bottom: 20px;">
+<pre><code class="language-lua">  lia.util.requestEntityInformation(ent, argTypes, function(info) print(info) end)
+</code></pre>
+</div>
+
+</div>
+</details>
+
+---
+
 <details class="realm-client" id="function-liautilcreatetableui">
 <summary><a id="lia.util.createTableUI"></a>lia.util.createTableUI(title, columns, data, options, charID)</summary>
 <div class="details-content">
@@ -1152,139 +1116,6 @@ The utility library provides comprehensive functionality for common operations a
 <h3 style="margin-bottom: 5px; font-weight: 700;">Example Usage</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
 <pre><code class="language-lua">  lia.util.setFeaturePosition(Vector(0, 0, 0), "faction_spawn_adder")
-</code></pre>
-</div>
-
-</div>
-</details>
-
----
-
-<details class="realm-client" id="function-liautildrawlooktext">
-<summary><a id="lia.util.drawLookText"></a>lia.util.drawLookText(text, posY, Screen, Screen, alphaOverride, maxDist)</summary>
-<div class="details-content">
-<h3 style="margin-bottom: 5px; font-weight: 700;"><a id="liautildrawlooktext"></a>Purpose</h3>
-<div style="margin-left: 20px; margin-bottom: 20px;">
-  <p>Draws text at the player's look position with distance-based easing.</p>
-</div>
-
-<h3 style="margin-bottom: 5px; font-weight: 700;">When Called</h3>
-<div style="margin-left: 20px; margin-bottom: 20px;">
-  <p>Use to display contextual prompts or hints where the player is aiming.</p>
-</div>
-
-<h3 style="margin-bottom: 5px; font-weight: 700;">Parameters</h3>
-<div style="margin-left: 20px; margin-bottom: 20px;">
-<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#2.1">string</a></span> <span class="parameter">text</span> Text to render at the hit position.</p>
-<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#2.1">number</a></span> <span class="parameter">posY</span> <span class="optional">optional</span> Screen-space vertical offset; defaults to 0.</p>
-<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#2.2">unknown</a></span> <span class="parameter">Screen</span> space vertical offset; defaults to 0.</p>
-<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#2.2">unknown</a></span> <span class="parameter">Screen</span> space vertical offset; defaults to 0.</p>
-<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#2.1">number</a></span> <span class="parameter">alphaOverride</span> <span class="optional">optional</span> Optional alpha multiplier (0-1 or 0-255).</p>
-<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#2.1">number</a></span> <span class="parameter">maxDist</span> <span class="optional">optional</span> Maximum trace distance; defaults to 380 units.</p>
-</div>
-
-<h3 style="margin-bottom: 5px; font-weight: 700;">Example Usage</h3>
-<div style="margin-left: 20px; margin-bottom: 20px;">
-<pre><code class="language-lua">  lia.util.drawLookText("Press E to interact")
-</code></pre>
-</div>
-
-</div>
-</details>
-
----
-
-<details class="realm-client" id="function-liautilsetfeatureposition">
-<summary><a id="lia.util.setFeaturePosition"></a>lia.util.setFeaturePosition(pos, typeId)</summary>
-<div class="details-content">
-<h3 style="margin-bottom: 5px; font-weight: 700;"><a id="liautilsetfeatureposition"></a>Purpose</h3>
-<div style="margin-left: 20px; margin-bottom: 20px;">
-  <p>Sets a feature position using the position tool callback system.</p>
-</div>
-
-<h3 style="margin-bottom: 5px; font-weight: 700;">When Called</h3>
-<div style="margin-left: 20px; margin-bottom: 20px;">
-  <p>Called by the position tool when a player sets a position (left-click or Shift+R).</p>
-</div>
-
-<h3 style="margin-bottom: 5px; font-weight: 700;">Parameters</h3>
-<div style="margin-left: 20px; margin-bottom: 20px;">
-<p><span class="types"><a class="type" href="https://wiki.facepunch.com/gmod/Vector">Vector</a></span> <span class="parameter">pos</span> The world position to set.</p>
-<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#2.1">string</a></span> <span class="parameter">typeId</span> The type ID of the position callback (e.g., "faction_spawn_adder", "sit_room").</p>
-</div>
-
-<h3 style="margin-bottom: 5px; font-weight: 700;">Example Usage</h3>
-<div style="margin-left: 20px; margin-bottom: 20px;">
-<pre><code class="language-lua">  lia.util.setFeaturePosition(Vector(0, 0, 0), "faction_spawn_adder")
-</code></pre>
-</div>
-
-</div>
-</details>
-
----
-
-<details class="realm-client" id="function-liautilremovefeatureposition">
-<summary><a id="lia.util.removeFeaturePosition"></a>lia.util.removeFeaturePosition(pos, typeId)</summary>
-<div class="details-content">
-<h3 style="margin-bottom: 5px; font-weight: 700;"><a id="liautilremovefeatureposition"></a>Purpose</h3>
-<div style="margin-left: 20px; margin-bottom: 20px;">
-  <p>Removes a feature position using the position tool callback system.</p>
-</div>
-
-<h3 style="margin-bottom: 5px; font-weight: 700;">When Called</h3>
-<div style="margin-left: 20px; margin-bottom: 20px;">
-  <p>Called by the position tool when a player removes a position (right-click).</p>
-</div>
-
-<h3 style="margin-bottom: 5px; font-weight: 700;">Parameters</h3>
-<div style="margin-left: 20px; margin-bottom: 20px;">
-<p><span class="types"><a class="type" href="https://wiki.facepunch.com/gmod/Vector">Vector</a></span> <span class="parameter">pos</span> The world position to remove.</p>
-<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#2.1">string</a></span> <span class="parameter">typeId</span> The type ID of the position callback (e.g., "faction_spawn_adder", "sit_room").</p>
-</div>
-
-<h3 style="margin-bottom: 5px; font-weight: 700;">Example Usage</h3>
-<div style="margin-left: 20px; margin-bottom: 20px;">
-<pre><code class="language-lua">  lia.util.removeFeaturePosition(Vector(0, 0, 0), "faction_spawn_adder")
-</code></pre>
-</div>
-
-</div>
-</details>
-
----
-
-<details class="realm-client" id="function-liautildrawespstyledtext">
-<summary><a id="lia.util.drawESPStyledText"></a>lia.util.drawESPStyledText(text, x, y, espColor, font, fadeAlpha)</summary>
-<div class="details-content">
-<h3 style="margin-bottom: 5px; font-weight: 700;"><a id="liautildrawespstyledtext"></a>Purpose</h3>
-<div style="margin-left: 20px; margin-bottom: 20px;">
-  <p>Draws styled ESP text with background, blur, and theme support.</p>
-</div>
-
-<h3 style="margin-bottom: 5px; font-weight: 700;">When Called</h3>
-<div style="margin-left: 20px; margin-bottom: 20px;">
-  <p>Use when you need to draw text with ESP styling, including background panels and blur effects.</p>
-</div>
-
-<h3 style="margin-bottom: 5px; font-weight: 700;">Parameters</h3>
-<div style="margin-left: 20px; margin-bottom: 20px;">
-<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#2.1">string</a></span> <span class="parameter">text</span> The text to display.</p>
-<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#2.1">number</a></span> <span class="parameter">x</span> X position on screen.</p>
-<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#2.1">number</a></span> <span class="parameter">y</span> Y position on screen.</p>
-<p><span class="types"><a class="type" href="https://wiki.facepunch.com/gmod/Color">Color</a></span> <span class="parameter">espColor</span> Color for the accent/bottom bar.</p>
-<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#2.1">string</a></span> <span class="parameter">font</span> Font to use for the text.</p>
-<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#2.2">number, optional</a></span> <span class="parameter">fadeAlpha</span> Alpha multiplier for fading (default: 1).</p>
-</div>
-
-<h3 style="margin-bottom: 5px; font-weight: 700;">Returns</h3>
-<div style="margin-left: 20px; margin-bottom: 20px;">
-<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#2.1">number</a></span> Height of the drawn element.</p>
-</div>
-
-<h3 style="margin-bottom: 5px; font-weight: 700;">Example Usage</h3>
-<div style="margin-left: 20px; margin-bottom: 20px;">
-<pre><code class="language-lua">  local height = lia.util.drawESPStyledText("Player Name", 200, 100, Color(255, 0, 0), "liaMediumFont", 0.8)
 </code></pre>
 </div>
 

@@ -4497,6 +4497,47 @@ Client-side hooks in the Lilia framework handle UI, rendering, input, and other 
 
 ---
 
+<details class="realm-client" id="function-drawespstyledtext">
+<summary><a id="DrawESPStyledText"></a>DrawESPStyledText(text, x, y, espColor, font, fadeAlpha)</summary>
+<div class="details-content">
+<h3 style="margin-bottom: 5px; font-weight: 700;"><a id="drawespstyledtext"></a>Purpose</h3>
+<div style="margin-left: 20px; margin-bottom: 20px;">
+  <p>Draws a styled text box with a background and a colored accent bar at the bottom, typically used for ESP displays.</p>
+</div>
+
+<h3 style="margin-bottom: 5px; font-weight: 700;">When Called</h3>
+<div style="margin-left: 20px; margin-bottom: 20px;">
+  <p>Whenever an ESP element or specialized screen text needs to be rendered with the Lilia signature style.</p>
+</div>
+
+<h3 style="margin-bottom: 5px; font-weight: 700;">Parameters</h3>
+<div style="margin-left: 20px; margin-bottom: 20px;">
+<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#2.1">string</a></span> <span class="parameter">text</span> The text to display.</p>
+<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#2.1">number</a></span> <span class="parameter">x</span> The X-coordinate on the screen center.</p>
+<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#2.1">number</a></span> <span class="parameter">y</span> The Y-coordinate on the screen top.</p>
+<p><span class="types"><a class="type" href="https://wiki.facepunch.com/gmod/Color">Color</a></span> <span class="parameter">espColor</span> The color of the accent bar at the bottom.</p>
+<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#2.1">string</a></span> <span class="parameter">font</span> The font to use for the text.</p>
+<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#2.1">number</a></span> <span class="parameter">fadeAlpha</span> The opacity scale (0 to 1) for the entire element.</p>
+</div>
+
+<h3 style="margin-bottom: 5px; font-weight: 700;">Returns</h3>
+<div style="margin-left: 20px; margin-bottom: 20px;">
+<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#2.1">number</a></span> The total height (bh) of the drawn box, including padding.</p>
+</div>
+
+<h3 style="margin-bottom: 5px; font-weight: 700;">Example Usage</h3>
+<div style="margin-left: 20px; margin-bottom: 20px;">
+<pre><code class="language-lua">  hook.Add("DrawESPStyledText", "ExampleESP", function(text, x, y, color, font, alpha)
+      -- custom ESP drawing logic
+  end)
+</code></pre>
+</div>
+
+</div>
+</details>
+
+---
+
 <details class="realm-client" id="function-onmodelpanelsetup">
 <summary><a id="OnModelPanelSetup"></a>OnModelPanelSetup(self)</summary>
 <div class="details-content">

@@ -738,9 +738,6 @@ def generate_documentation_for_file(file_path, output_dir, is_library=False, bas
              custom_folder = 'development/meta'
         elif custom_folder.lower() in ['libraries', 'library', 'core libraries']:
              custom_folder = 'development/libraries'
-        elif custom_folder.lower() == 'server_owner':
-             custom_folder = 'development'
-    
     comment_blocks, file_header, overview_section = find_comment_blocks_in_file(file_path)
 
     if file_header and ('Folder:' in file_header or 'File:' in file_header):
