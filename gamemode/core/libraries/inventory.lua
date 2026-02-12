@@ -3,7 +3,7 @@
     File: inventory.md
 ]]
 --[[
-    Inventory Library
+    Inventory
 
     Comprehensive inventory system management with multiple storage types for the Lilia framework.
 ]]

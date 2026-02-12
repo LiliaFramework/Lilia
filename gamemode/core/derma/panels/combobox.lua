@@ -20,9 +20,18 @@ function PANEL:Init()
             self.hoverAnim = math.Clamp(self.hoverAnim - FrameTime() * 8, 0, 1)
         end
 
-        lia.derma.rect(0, 0, w, h):Rad(16):Color(lia.color.theme.window_shadow):Shape(lia.derma.SHAPE_IOS):Shadow(5, 20):Draw()
-        lia.derma.rect(0, 0, w, h):Rad(16):Color(lia.color.theme.focus_panel):Shape(lia.derma.SHAPE_IOS):Draw()
-        if self.hoverAnim > 0 then lia.derma.rect(0, 0, w, h):Rad(16):Color(Color(lia.color.theme.button_hovered.r, lia.color.theme.button_hovered.g, lia.color.theme.button_hovered.b, self.hoverAnim * 255)):Shape(lia.derma.SHAPE_IOS):Draw() end
+        local bgColor = Color(25, 28, 35, 250)
+        local accentColor = lia.color.theme and lia.color.theme.theme or Color(116, 185, 255)
+        local base = ColorAlpha(bgColor, 200)
+        if self.btn.Depressed then
+            base = ColorAlpha(accentColor, 220)
+        elseif self.btn.Hovered then
+            base = ColorAlpha(accentColor, 180)
+        end
+
+        lia.derma.rect(0, 0, w, h):Rad(6):Color(base):Shape(lia.derma.SHAPE_IOS):Draw()
+        local outline = accentColor or ColorAlpha(Color(255, 255, 255), 30)
+        lia.derma.rect(0, 0, w, h):Rad(6):Color(outline):Outline(1):Draw()
         draw.SimpleText(self.selected or self.placeholder or "", self.font, 12, h * 0.5, self:GetTextColor(), TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)
         local arrowSize = 6
         local arrowX = w - 16
@@ -198,7 +207,8 @@ function PANEL:OpenMenu()
                     local isSelected = self.selected == choice.text
                     local isHovered = s:IsHovered()
                     if isSelected then
-                        lia.derma.rect(0, 0, w, h):Rad(16):Color(lia.color.theme.theme):Shape(lia.derma.SHAPE_IOS):Draw()
+                        lia.derma.rect(0, 0, w, h):Rad(16):Color(Color(25, 28, 35, 220)):Shape(lia.derma.SHAPE_IOS):Draw()
+                        lia.derma.rect(0, 0, w, h):Rad(16):Color(ColorAlpha(lia.color.theme.theme or Color(116, 185, 255), 50)):Shape(lia.derma.SHAPE_IOS):Draw()
                     elseif isHovered then
                         lia.derma.rect(0, 0, w, h):Rad(16):Color(lia.color.theme.hover):Shape(lia.derma.SHAPE_IOS):Draw()
                     end
@@ -256,7 +266,8 @@ function PANEL:OpenMenu()
                     local isSelected = self.selected == choice.text
                     local isHovered = s:IsHovered()
                     if isSelected then
-                        lia.derma.rect(0, 0, w, h):Rad(16):Color(lia.color.theme.theme):Shape(lia.derma.SHAPE_IOS):Draw()
+                        lia.derma.rect(0, 0, w, h):Rad(16):Color(Color(25, 28, 35, 220)):Shape(lia.derma.SHAPE_IOS):Draw()
+                        lia.derma.rect(0, 0, w, h):Rad(16):Color(ColorAlpha(lia.color.theme.theme or Color(116, 185, 255), 50)):Shape(lia.derma.SHAPE_IOS):Draw()
                     elseif isHovered then
                         lia.derma.rect(0, 0, w, h):Rad(16):Color(lia.color.theme.hover):Shape(lia.derma.SHAPE_IOS):Draw()
                     end

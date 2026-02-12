@@ -100,46 +100,7 @@ properties.Add("copytoclipboard", {
     end,
 })
 
-MODULE.positionCallbacks = MODULE.positionCallbacks or {}
-lia.featurePositionTypes = lia.featurePositionTypes or {}
-function MODULE:SetPositionCallback(name, data)
-    if not isstring(name) or not istable(data) then return end
-    if not isfunction(data.onRun) or not isfunction(data.onSelect) then return end
-    local id = string.lower(name):gsub("%s+", "_")
-    local serverOnly = data.serverOnly == true
-    local color = data.color or Color(255, 255, 255)
-    MODULE.positionCallbacks[id] = {
-        id = id,
-        name = name,
-        color = color,
-        onRun = data.onRun,
-        onSelect = data.onSelect,
-        HUDPaint = data.HUDPaint,
-        serverOnly = serverOnly
-    }
-
-    local found = false
-    for i = 1, #lia.featurePositionTypes do
-        if lia.featurePositionTypes[i].id == id then
-            lia.featurePositionTypes[i].name = name
-            lia.featurePositionTypes[i].color = color
-            found = true
-            break
-        end
-    end
-
-    if not found then
-        table.insert(lia.featurePositionTypes, {
-            id = id,
-            name = name,
-            color = color
-        })
-    end
-
-    hook.Run("RegisterFeaturePositionTypes", lia.featurePositionTypes)
-end
-
-MODULE:SetPositionCallback("Faction Spawn Adder", {
+lia.util.setPositionCallback("Faction Spawn Adder", {
     onRun = function(pos, client, typeId)
         if SERVER then
             local factionID = net.ReadString()
@@ -219,7 +180,7 @@ MODULE:SetPositionCallback("Faction Spawn Adder", {
     serverOnly = true
 })
 
-MODULE:SetPositionCallback("Class Spawn Adder", {
+lia.util.setPositionCallback("Class Spawn Adder", {
     onRun = function(pos, client, typeId)
         if SERVER then
             local classID = net.ReadString()
@@ -303,7 +264,7 @@ MODULE:SetPositionCallback("Class Spawn Adder", {
     serverOnly = true
 })
 
-MODULE:SetPositionCallback("Sit Room", {
+lia.util.setPositionCallback("Sit Room", {
     onRun = function(pos, client, typeId)
         if SERVER then
             local name = net.ReadString()

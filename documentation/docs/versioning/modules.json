@@ -7,8 +7,8 @@
     "description": "Implements a paid /advert command for server-wide announcements. Messages are colored, logged, and throttled by a cooldown to curb spam.",
     "version": "1",
     "download": "https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/advert.zip",
-    "source": "https://liliaframework.github.io/modules/advert/about/",
-    "features": [],
+    "source": "../modules/index.md#advertisements",
+    "folder": "advert",
     "workshop": []
   },
   {
@@ -19,8 +19,8 @@
     "description": "Comprehensive AFK protection system that automatically detects inactive players, prevents exploitation of AFK players, and integrates with restraint systems. Features configurable AFK detection, admin commands, multi-language support, and protection against various player actions.",
     "version": "1",
     "download": "https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/afk.zip",
-    "source": "https://liliaframework.github.io/modules/afk/about/",
-    "features": [],
+    "source": "../modules/index.md#afk-protection",
+    "folder": "afk",
     "workshop": []
   },
   {
@@ -31,8 +31,8 @@
     "description": "Adds drinkable alcohol that increases a player's intoxication level. High BAC blurs vision and slows movement until the effect wears off.",
     "version": "1",
     "download": "https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/alcoholism.zip",
-    "source": "https://liliaframework.github.io/modules/alcoholism/about/",
-    "features": [],
+    "source": "../modules/index.md#alcoholism",
+    "folder": "alcoholism",
     "workshop": []
   },
   {
@@ -43,20 +43,20 @@
     "description": "Schedules automatic server restarts at set intervals. Players see a countdown so they can prepare before the map changes.",
     "version": "1",
     "download": "https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/autorestarter.zip",
-    "source": "https://liliaframework.github.io/modules/autorestarter/about/",
-    "features": [],
+    "source": "../modules/index.md#auto-restarter",
+    "folder": "autorestarter",
     "workshop": []
   },
   {
-    "name": "Body Group Editor",
+    "name": "BodyGroup Closet",
     "versionID": "public_bodygrouper",
     "author": "Samael",
     "discord": "@liliaplayer",
     "description": "Spawns a bodygroup closet where players can edit their model's bodygroups. Admins may inspect others and configure the closet's model.",
     "version": "2",
     "download": "https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/bodygrouper.zip",
-    "source": "https://liliaframework.github.io/modules/bodygrouper/about/",
-    "features": [],
+    "source": "../modules/index.md#bodygroup-closet",
+    "folder": "bodygrouper",
     "workshop": []
   },
   {
@@ -67,8 +67,8 @@
     "description": "Allows staff to broadcast messages to chosen factions or classes. Every broadcast is logged and controlled through CAMI privileges.",
     "version": "1",
     "download": "https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/broadcasts.zip",
-    "source": "https://liliaframework.github.io/modules/broadcasts/about/",
-    "features": [],
+    "source": "../modules/index.md#broadcasts",
+    "folder": "broadcasts",
     "workshop": []
   },
   {
@@ -79,8 +79,8 @@
     "description": "Offers an API for timed on-screen captions suited for tutorials or story events. Captions can be triggered from the server or client and last for a chosen duration.",
     "version": "1",
     "download": "https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/captions.zip",
-    "source": "https://liliaframework.github.io/modules/captions/about/",
-    "features": [],
+    "source": "../modules/index.md#captions",
+    "folder": "captions",
     "workshop": []
   },
   {
@@ -91,8 +91,8 @@
     "description": "Adds a full deck of playing cards that can be shuffled and drawn. Card draws sync to all players for simple in-game minigames.",
     "version": "1",
     "download": "https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/cards.zip",
-    "source": "https://liliaframework.github.io/modules/cards/about/",
-    "features": [],
+    "source": "../modules/index.md#cards",
+    "folder": "cards",
     "workshop": []
   },
   {
@@ -103,8 +103,8 @@
     "description": "Periodically posts automated advert messages in chat on a timer. Keeps players informed with rotating tips even when staff are offline.",
     "version": "1",
     "download": "https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/chatmessages.zip",
-    "source": "https://liliaframework.github.io/modules/chatmessages/about/",
-    "features": [],
+    "source": "../modules/index.md#chat-messages",
+    "folder": "chatmessages",
     "workshop": []
   },
   {
@@ -115,8 +115,8 @@
     "description": "Adds displays of cinematic splash text overlays, screen darkening with letterbox bars, support for scripted scenes, timed fades for dramatic effect, and customizable text fonts.",
     "version": "1",
     "download": "https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/cinematictext.zip",
-    "source": "https://liliaframework.github.io/modules/cinematictext/about/",
-    "features": [],
+    "source": "../modules/index.md#cinematic-text",
+    "folder": "cinematictext",
     "workshop": []
   },
   {
@@ -127,8 +127,8 @@
     "description": "Adds the ability to climb ledges using movement keys, custom climbing animations, and hooks for climb attempts.",
     "version": "1",
     "download": "https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/climb.zip",
-    "source": "https://liliaframework.github.io/modules/climb/about/",
-    "features": [],
+    "source": "../modules/index.md#climbing",
+    "folder": "climb",
     "workshop": []
   },
   {
@@ -139,8 +139,8 @@
     "description": "Adds chat commands to open community links, easy sharing of workshop and docs, configurable commands via settings, localization for command names, and the ability to add custom URLs.",
     "version": "1",
     "download": "https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/communitycommands.zip",
-    "source": "https://liliaframework.github.io/modules/communitycommands/about/",
-    "features": [],
+    "source": "../modules/index.md#community-commands",
+    "folder": "communitycommands",
     "workshop": []
   },
   {
@@ -151,8 +151,8 @@
     "description": "Adds a toggleable custom cursor for the UI, a purely client-side implementation, improved menu navigation, a hotkey to quickly show or hide the cursor, and compatibility with other menu modules.",
     "version": "1",
     "download": "https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/cursor.zip",
-    "source": "https://liliaframework.github.io/modules/cursor/about/",
-    "features": [],
+    "source": "../modules/index.md#cursor",
+    "folder": "cursor",
     "workshop": []
   },
   {
@@ -163,8 +163,8 @@
     "description": "Adds a framework for simple cutscene playback, scenes defined through tables, syncing of camera movement across clients, commands to trigger cutscenes, and the ability for players to skip.",
     "version": "1",
     "download": "https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/cutscenes.zip",
-    "source": "https://liliaframework.github.io/modules/cutscenes/about/",
-    "features": [],
+    "source": "../modules/index.md#cutscenes",
+    "folder": "cutscenes",
     "workshop": []
   },
   {
@@ -175,8 +175,8 @@
     "description": "Adds floating combat text when hitting targets, different colors for damage types, display of damage dealt and received, scaling text based on damage amount, and client option to disable numbers.",
     "version": "1",
     "download": "https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/damagenumbers.zip",
-    "source": "https://liliaframework.github.io/modules/damagenumbers/about/",
-    "features": [],
+    "source": "../modules/index.md#damage-numbers",
+    "folder": "damagenumbers",
     "workshop": []
   },
   {
@@ -187,8 +187,8 @@
     "description": "Adds a staff-only development HUD, font customization via DevHudFont, a requirement for the CAMI privilege, real-time server performance metrics, and a toggle command to show or hide the HUD.",
     "version": "1",
     "download": "https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/developmenthud.zip",
-    "source": "https://liliaframework.github.io/modules/developmenthud/about/",
-    "features": [],
+    "source": "../modules/index.md#development-hud",
+    "folder": "developmenthud",
     "workshop": []
   },
   {
@@ -199,8 +199,8 @@
     "description": "Adds a development server mode for testing, the ability to run special development functions, a toggle via configuration, an environment flag for dev commands, and logging of executed dev actions.",
     "version": "1",
     "download": "https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/developmentserver.zip",
-    "source": "https://liliaframework.github.io/modules/developmentserver/about/",
-    "features": [],
+    "source": "../modules/index.md#development-server",
+    "folder": "developmentserver",
     "workshop": []
   },
   {
@@ -211,8 +211,8 @@
     "description": "Adds libraries to manage donor perks, tracking for donor ranks and perks, configurable perks by tier, and commands to adjust character slots.",
     "version": "1",
     "download": "https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/donator.zip",
-    "source": "https://liliaframework.github.io/modules/donator/about/",
-    "features": [],
+    "source": "../modules/index.md#donator",
+    "folder": "donator",
     "workshop": []
   },
   {
@@ -223,8 +223,8 @@
     "description": "Adds the ability to kick doors open with an animation, logging of door kick events, and a fun breach mechanic with physics force to fling doors open.",
     "version": "1",
     "download": "https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/doorkick.zip",
-    "source": "https://liliaframework.github.io/modules/doorkick/about/",
-    "features": [],
+    "source": "../modules/index.md#door-kick",
+    "folder": "doorkick",
     "workshop": []
   },
   {
@@ -235,8 +235,8 @@
     "description": "Adds support for long item descriptions, localization for multiple languages, better RP text display, automatic line wrapping, and fallback to short descriptions.",
     "version": "1",
     "download": "https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/extendeddescriptions.zip",
-    "source": "https://liliaframework.github.io/modules/extendeddescriptions/about/",
-    "features": [],
+    "source": "../modules/index.md#extended-descriptions",
+    "folder": "extendeddescriptions",
     "workshop": []
   },
   {
@@ -247,8 +247,8 @@
     "description": "Adds head bob and view sway, camera motion synced to actions, a realistic first-person feel, and adjustable intensity via config.",
     "version": "1",
     "download": "https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/firstpersoneffects.zip",
-    "source": "https://liliaframework.github.io/modules/firstpersoneffects/about/",
-    "features": [],
+    "source": "../modules/index.md#first-person-effects",
+    "folder": "firstpersoneffects",
     "workshop": []
   },
   {
@@ -259,8 +259,8 @@
     "description": "Adds a serious flashlight with dynamic light, darkening of surroundings when turned off, adjustable brightness, and keybind toggle support.",
     "version": "1",
     "download": "https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/flashlight.zip",
-    "source": "https://liliaframework.github.io/modules/flashlight/about/",
-    "features": [],
+    "source": "../modules/index.md#flashlight",
+    "folder": "flashlight",
     "workshop": []
   },
   {
@@ -271,8 +271,8 @@
     "description": "Adds the ability to look around without turning the body, a toggle key similar to EFT, movement direction preservation, and adjustable sensitivity while freelooking.",
     "version": "1",
     "download": "https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/freelook.zip",
-    "source": "https://liliaframework.github.io/modules/freelook/about/",
-    "features": [],
+    "source": "../modules/index.md#free-look",
+    "folder": "freelook",
     "workshop": []
   },
   {
@@ -283,8 +283,8 @@
     "description": "Adds teleport points for game masters, quick navigation across large maps, saving of locations for reuse, a command to list saved points, and sharing of points with other staff.",
     "version": "1",
     "download": "https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/gamemasterpoints.zip",
-    "source": "https://liliaframework.github.io/modules/gamemasterpoints/about/",
-    "features": [],
+    "source": "../modules/index.md#gamemaster-points",
+    "folder": "gamemasterpoints",
     "workshop": []
   },
   {
@@ -295,8 +295,8 @@
     "description": "Adds respawning of players at hospitals with support for multiple hospital spawn locations on different maps.",
     "version": "1",
     "download": "https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/hospitals.zip",
-    "source": "https://liliaframework.github.io/modules/hospitals/about/",
-    "features": [],
+    "source": "../modules/index.md#hospitals",
+    "folder": "hospitals",
     "workshop": []
   },
   {
@@ -307,8 +307,8 @@
     "description": "Adds extra HUD elements like an FPS counter, fonts configurable with FPSHudFont, hooks so other modules can extend, performance stats display, and toggles for individual HUD elements.",
     "version": "1",
     "download": "https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/hud_extras.zip",
-    "source": "https://liliaframework.github.io/modules/hud_extras/about/",
-    "features": [],
+    "source": "../modules/index.md#hud-extras",
+    "folder": "hud_extras",
     "workshop": []
   },
   {
@@ -319,8 +319,8 @@
     "description": "Adds instant kill on headshots, lethality configurable per weapon, extra tension to combat, and integration with damage numbers.",
     "version": "1",
     "download": "https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/instakill.zip",
-    "source": "https://liliaframework.github.io/modules/instakill/about/",
-    "features": [],
+    "source": "../modules/index.md#instakill",
+    "folder": "instakill",
     "workshop": []
   },
   {
@@ -331,8 +331,8 @@
     "description": "Adds announcements when players join, notifications on disconnect, improved community awareness, relay of messages to Discord, and per-player toggle to hide messages.",
     "version": "1",
     "download": "https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/joinleavemessages.zip",
-    "source": "https://liliaframework.github.io/modules/joinleavemessages/about/",
-    "features": [],
+    "source": "../modules/index.md#join-leave-messages",
+    "folder": "joinleavemessages",
     "workshop": []
   },
   {
@@ -343,8 +343,8 @@
     "description": "Adds faction-based load messages, execution when players first load a character, customizable message text, color-coded formatting options, and per-faction enable toggles.",
     "version": "1",
     "download": "https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/loadmessages.zip",
-    "source": "https://liliaframework.github.io/modules/loadmessages/about/",
-    "features": [],
+    "source": "../modules/index.md#load-messages",
+    "folder": "loadmessages",
     "workshop": []
   },
   {
@@ -355,8 +355,8 @@
     "description": "Adds a loyalty tier system for players, the /partytier command access, permission control through flags, automatic tier progression, and customizable rewards per tier.",
     "version": "1",
     "download": "https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/loyalism.zip",
-    "source": "https://liliaframework.github.io/modules/loyalism/about/",
-    "features": [],
+    "source": "../modules/index.md#loyalism",
+    "folder": "loyalism",
     "workshop": []
   },
   {
@@ -367,8 +367,8 @@
     "description": "Adds periodic cleaning of map debris, a configurable interval, reduced server lag, a whitelist for protected entities, and manual cleanup commands.",
     "version": "1",
     "download": "https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/mapcleaner.zip",
-    "source": "https://liliaframework.github.io/modules/mapcleaner/about/",
-    "features": [],
+    "source": "../modules/index.md#map-cleaner",
+    "folder": "mapcleaner",
     "workshop": []
   },
   {
@@ -379,8 +379,8 @@
     "description": "Adds payment to characters based on model, custom wage definitions, integration into the economy, config to exclude certain models, and logs of wages issued.",
     "version": "1",
     "download": "https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/modelpay.zip",
-    "source": "https://liliaframework.github.io/modules/modelpay/about/",
-    "features": [],
+    "source": "../modules/index.md#model-pay",
+    "folder": "modelpay",
     "workshop": []
   },
   {
@@ -391,8 +391,8 @@
     "description": "Adds an entity to tweak prop models, adjustments for scale and rotation, easy UI controls, saving of tweaked props between restarts, and undo support for recent tweaks.",
     "version": "1",
     "download": "https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/modeltweaker.zip",
-    "source": "https://liliaframework.github.io/modules/modeltweaker/about/",
-    "features": [],
+    "source": "../modules/index.md#model-tweaker",
+    "folder": "modeltweaker",
     "workshop": []
   },
   {
@@ -403,8 +403,8 @@
     "description": "Adds NPCs that drop items on death, DropTable to define probabilities, encouragement for looting, editable drop tables per NPC type, and weighted chances for rare items.",
     "version": "1",
     "download": "https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/npcdrop.zip",
-    "source": "https://liliaframework.github.io/modules/npcdrop/about/",
-    "features": [],
+    "source": "../modules/index.md#npc-drop",
+    "folder": "npcdrop",
     "workshop": []
   },
   {
@@ -415,8 +415,8 @@
     "description": "Adds NPCs that give money to players on death, MoneyTable to define rewards, editable money amounts per NPC type, and configurable default values.",
     "version": "1",
     "download": "https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/npcmoney.zip",
-    "source": "https://liliaframework.github.io/modules/npcmoney/about/",
-    "features": [],
+    "source": "../modules/index.md#npc-money",
+    "folder": "npcmoney",
     "workshop": []
   },
   {
@@ -427,8 +427,8 @@
     "description": "Adds automatic NPC spawns at points, the ability for admins to force spawns, logging of spawn actions, and configuration for spawn intervals.",
     "version": "1",
     "download": "https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/npcspawner.zip",
-    "source": "https://liliaframework.github.io/modules/npcspawner/about/",
-    "features": [],
+    "source": "../modules/index.md#npc-spawner",
+    "folder": "npcspawner",
     "workshop": []
   },
   {
@@ -439,8 +439,8 @@
     "description": "Adds ability to permanently delete map entities, logging for each removed entity, an admin-only command, confirmation prompts before removal, and restore list to undo mistakes.",
     "version": "1",
     "download": "https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/permaremove.zip",
-    "source": "https://liliaframework.github.io/modules/permaremove/about/",
-    "features": [],
+    "source": "../modules/index.md#perma-remove",
+    "folder": "permaremove",
     "workshop": []
   },
   {
@@ -451,8 +451,8 @@
     "description": "Adds a radio chat channel for players, font configuration via RadioFont, workshop models for radios, frequency channels for groups, and handheld radio items.",
     "version": "1",
     "download": "https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/radio.zip",
-    "source": "https://liliaframework.github.io/modules/radio/about/",
-    "features": [],
+    "source": "../modules/index.md#radio",
+    "folder": "radio",
     "workshop": [
       "3527548881"
     ]
@@ -465,8 +465,8 @@
     "description": "Adds auto-lowering of weapons when running, a raise delay set by WeaponRaiseSpeed, prevention of accidental fire, a toggle to keep weapons lowered, and compatibility with melee weapons.",
     "version": "1",
     "download": "https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/raisedweapons.zip",
-    "source": "https://liliaframework.github.io/modules/raisedweapons/about/",
-    "features": [],
+    "source": "../modules/index.md#raised-weapons",
+    "folder": "raisedweapons",
     "workshop": []
   },
   {
@@ -477,8 +477,8 @@
     "description": "Adds a first-person view that shows the full body, immersive camera transitions, compatibility with animations, smooth leaning animations, and optional third-person override.",
     "version": "1",
     "download": "https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/realisticview.zip",
-    "source": "https://liliaframework.github.io/modules/realisticview/about/",
-    "features": [],
+    "source": "../modules/index.md#realistic-view",
+    "folder": "realisticview",
     "workshop": []
   },
   {
@@ -489,8 +489,8 @@
     "description": "Adds an anonymous rumour chat command, hiding of the sender's identity, encouragement for roleplay intrigue, a cooldown to prevent spam, and admin logging of rumour messages.",
     "version": "1",
     "download": "https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/rumour.zip",
-    "source": "https://liliaframework.github.io/modules/rumour/about/",
-    "features": [],
+    "source": "../modules/index.md#anonymous-rumors",
+    "folder": "rumour",
     "workshop": []
   },
   {
@@ -501,8 +501,8 @@
     "description": "Adds the ability to shoot door locks to open them, a quick breach alternative, a loud action that may alert others, and chance-based lock destruction.",
     "version": "1",
     "download": "https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/shootlock.zip",
-    "source": "https://liliaframework.github.io/modules/shootlock/about/",
-    "features": [],
+    "source": "../modules/index.md#shoot-lock",
+    "folder": "shootlock",
     "workshop": []
   },
   {
@@ -513,8 +513,8 @@
     "description": "Adds a simple lockpick tool for doors, logging of successful picks, brute-force style gameplay, configurable pick time, and chance for tools to break.",
     "version": "1",
     "download": "https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/simple_lockpicking.zip",
-    "source": "https://liliaframework.github.io/modules/simple_lockpicking/about/",
-    "features": [],
+    "source": "../modules/index.md#simple-lockpicking",
+    "folder": "simple_lockpicking",
     "workshop": []
   },
   {
@@ -525,8 +525,8 @@
     "description": "Adds a slot machine minigame, a workshop model for the machine, handling of payouts to winners, customizable payout odds, and sound and animation effects.",
     "version": "1",
     "download": "https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/slots.zip",
-    "source": "https://liliaframework.github.io/modules/slots/about/",
-    "features": [],
+    "source": "../modules/index.md#slot-machine",
+    "folder": "slots",
     "workshop": [
       "3527541056"
     ]
@@ -539,8 +539,8 @@
     "description": "Adds slower movement while holding heavy weapons, speed penalties defined per weapon, encouragement for strategic choices, customizable weapon speed table, and automatic speed restore when switching.",
     "version": "1",
     "download": "https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/slowweapons.zip",
-    "source": "https://liliaframework.github.io/modules/slowweapons/about/",
-    "features": [],
+    "source": "../modules/index.md#slow-weapons",
+    "folder": "slowweapons",
     "workshop": []
   },
   {
@@ -551,8 +551,8 @@
     "description": "Provides Steam group membership rewards system that automatically checks group membership and gives money rewards to players who join your Steam group.",
     "version": "1",
     "download": "https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/steamgrouprewards.zip",
-    "source": "https://liliaframework.github.io/modules/steamgrouprewards/about/",
-    "features": [],
+    "source": "../modules/index.md#steam-group-rewards",
+    "folder": "steamgrouprewards",
     "workshop": []
   },
   {
@@ -563,8 +563,8 @@
     "description": "Adds extra helper functions in lia.util, simplified utilities for common scripting tasks, a central library used by other modules, utilities for networking data, and shared constants for modules.",
     "version": "1",
     "download": "https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/utilities.zip",
-    "source": "https://liliaframework.github.io/modules/utilities/about/",
-    "features": [],
+    "source": "../modules/index.md#code-utilities",
+    "folder": "utilities",
     "workshop": []
   },
   {
@@ -575,8 +575,8 @@
     "description": "Adds VManip animation support, hand gestures for items, functionality within Lilia, API for custom gesture triggers, and fallback animations when VManip is missing.",
     "version": "1",
     "download": "https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/vmanip.zip",
-    "source": "https://liliaframework.github.io/modules/vmanip/about/",
-    "features": [],
+    "source": "../modules/index.md#view-manipulation",
+    "folder": "vmanip",
     "workshop": []
   },
   {
@@ -587,8 +587,8 @@
     "description": "Adds an interactive 3D war table, the ability to plan operations on a map, a workshop model, marker placement for strategies, and support for multiple map layouts.",
     "version": "1",
     "download": "https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/wartable.zip",
-    "source": "https://liliaframework.github.io/modules/wartable/about/",
-    "features": [],
+    "source": "../modules/index.md#war-table",
+    "folder": "wartable",
     "workshop": [
       "3527544696"
     ]
@@ -601,8 +601,8 @@
     "description": "Adds chat word filtering, blocking of banned phrases, an easy-to-extend list, and admin commands to modify the list.",
     "version": "1",
     "download": "https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/wordfilter.zip",
-    "source": "https://liliaframework.github.io/modules/wordfilter/about/",
-    "features": [],
+    "source": "../modules/index.md#word-filter",
+    "folder": "wordfilter",
     "workshop": []
   }
 ]

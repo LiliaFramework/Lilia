@@ -56,7 +56,7 @@ function PANEL:Paint(w, h)
         local frameH = framePadding + actualTextHeight + textPadding * 2 + textBarSpacing + barHeight + framePadding
         local frameX = 2
         local frameY = h - frameH
-        lia.derma.rect(frameX, frameY, frameW, frameH):Rad(6):Color(lia.color.theme.background_alpha):Draw()
+        lia.derma.rect(frameX, frameY, frameW, frameH):Rad(6):Color(Color(25, 28, 35, 240)):Draw()
         local bottomOffset = framePadding - 8
         local actionBarY = frameY + frameH - bottomOffset - barHeight
         local actionBarX = frameX + 8

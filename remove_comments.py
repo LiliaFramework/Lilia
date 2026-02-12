@@ -228,9 +228,10 @@ def main():
     else:
         # Default targets when no arguments provided
         targets = [
-            r"E:\Server\garrysmod\gamemodes\Lilia\gamemode",
-            r"E:\Server\garrysmod\gamemodes\metrorp\modules",
-            r"E:\Server\garrysmod\gamemodes\metrorp\gitmodules"
+            r"D:\GMOD\Server\garrysmod\gamemodes\Lilia\gamemode",
+            r"D:\GMOD\Server\garrysmod\gamemodes\metrorp\modules",
+            r"D:\GMOD\Server\garrysmod\gamemodes\metrorp\gitmodules"
+            r"D:\GMOD\Server\garrysmod\gamemodes\lilia_rp\modules"
         ]
 
     total_count = 0

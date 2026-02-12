@@ -3,7 +3,7 @@
     File: font.md
 ]]
 --[[
-    Font Library
+    Font
 
     Comprehensive font management system for the Lilia framework.
 ]]

@@ -37,7 +37,7 @@ theme:
     - content.tooltips
     - content.footnote.tooltips
   font:
-    text: Noto Sans
+    text: Inter
     code: Roboto Mono
   palette:
     - scheme: slate

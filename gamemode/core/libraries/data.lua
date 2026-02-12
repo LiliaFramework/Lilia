@@ -3,7 +3,7 @@
     File: data.md
 ]]
 --[[
-    Data Library
+    Data
 
     Data persistence, serialization, and management system for the Lilia framework.
 ]]
@@ -43,11 +43,31 @@ if SERVER then
     ]]
     function lia.data.encodetable(value)
         if isvector(value) then
-            return {value.x, value.y, value.z}
+            return {
+                x = value.x,
+                y = value.y,
+                z = value.z
+            }
         elseif isangle(value) then
-            return {value.p, value.y, value.r}
-        elseif istable(value) and value.r ~= nil and value.g ~= nil and value.b ~= nil then
-            return {value.r, value.g, value.b, value.a or 255}
+            return {
+                p = value.p,
+                y = value.y,
+                r = value.r
+            }
+        elseif IsColor(value) then
+            return {
+                r = value.r,
+                g = value.g,
+                b = value.b,
+                a = value.a
+            }
+        elseif istable(value) and value.r and value.g and value.b then
+            return {
+                r = value.r,
+                g = value.g,
+                b = value.b,
+                a = value.a or 255
+            }
         elseif istable(value) then
             local t = {}
             for k, v in pairs(value) do
@@ -59,24 +79,32 @@ if SERVER then
     end
 
     local function _decodeVector(data)
-        if isvector(data) then return data end
+        if isvector(data) or isangle(data) then return data end
         if isstring(data) and data:lower():match("^models/") then return data end
         if istable(data) then
-            if data.x then
+            if data.x and data.y and data.z then
                 local x, y, z = tonumber(data.x), tonumber(data.y), tonumber(data.z)
                 if x and y and z then return Vector(x, y, z) end
             end
 
-            if data.p and data.y and data.r then
-                local x, y, z = tonumber(data.p), tonumber(data.y), tonumber(data.r)
-                if x and y and z then return Vector(x, y, z) end
-            end
-
-            if data[1] and data[2] and data[3] then
+            if data[1] and data[2] and data[3] and not data.r and not data.g then
                 local x, y, z = tonumber(data[1]), tonumber(data[2]), tonumber(data[3])
                 if x and y and z then return Vector(x, y, z) end
             end
         elseif isstring(data) then
+            local tbl = util.JSONToTable(data)
+            if istable(tbl) then
+                if tbl.x and tbl.y and tbl.z then
+                    local x, y, z = tonumber(tbl.x), tonumber(tbl.y), tonumber(tbl.z)
+                    if x and y and z then return Vector(x, y, z) end
+                end
+
+                if tbl[1] and tbl[2] and tbl[3] then
+                    local x, y, z = tonumber(tbl[1]), tonumber(tbl[2]), tonumber(tbl[3])
+                    if x and y and z then return Vector(x, y, z) end
+                end
+            end
+
             local x, y, z = data:match("%[([-%d%.]+)%s+([-%d%.]+)%s+([-%d%.]+)%]")
             if not x then x, y, z = data:match("%[([-%d%.]+),%s*([-%d%.]+),%s*([-%d%.]+)%]") end
             if not x then x, y, z = data:match("Vector%(([-%d%.]+),%s*([-%d%.]+),%s*([-%d%.]+)%)") end
@@ -92,11 +120,6 @@ if SERVER then
             end
 
             if x then return Vector(tonumber(x), tonumber(y), tonumber(z)) end
-            local tbl = util.JSONToTable(data)
-            if istable(tbl) and tbl[1] and tbl[2] and tbl[3] then
-                local tx, ty, tz = tonumber(tbl[1]), tonumber(tbl[2]), tonumber(tbl[3])
-                if tx and ty and tz then return Vector(tx, ty, tz) end
-            end
         else
             local s = tostring(data)
             if s and s ~= "" then
@@ -121,10 +144,10 @@ if SERVER then
     end
 
     local function _decodeAngle(data)
-        if isangle(data) then return data end
+        if isangle(data) or isvector(data) then return data end
         if isstring(data) and data:lower():match("^models/") then return data end
         if istable(data) then
-            if data.p or data.y or data.r then
+            if data.p and data.y and data.r then
                 local p, y, r = tonumber(data.p or 0), tonumber(data.y or 0), tonumber(data.r or 0)
                 if p and y and r then return Angle(p, y, r) end
             end
@@ -134,6 +157,19 @@ if SERVER then
                 if p and y and r then return Angle(p, y, r) end
             end
         elseif isstring(data) then
+            local tbl = util.JSONToTable(data)
+            if istable(tbl) then
+                if tbl.p and tbl.y and tbl.r then
+                    local p, y, r = tonumber(tbl.p or 0), tonumber(tbl.y or 0), tonumber(tbl.r or 0)
+                    if p and y and r then return Angle(p, y, r) end
+                end
+
+                if tbl[1] and tbl[2] and tbl[3] then
+                    local p, y, r = tonumber(tbl[1]), tonumber(tbl[2]), tonumber(tbl[3])
+                    if p and y and r then return Angle(p, y, r) end
+                end
+            end
+
             local p, y, r = data:match("%{([-%d%.]+)%s+([-%d%.]+)%s+([-%d%.]+)%}")
             if not p then p, y, r = data:match("%{([-%d%.]+),%s*([-%d%.]+),%s*([-%d%.]+)%}") end
             if not p then p, y, r = data:match("Angle%(([-%d%.]+),%s*([-%d%.]+),%s*([-%d%.]+)%)") end
@@ -149,9 +185,9 @@ if SERVER then
             end
 
             if not p then
-                local tbl = util.JSONToTable(data)
-                if istable(tbl) and tbl[1] and tbl[2] and tbl[3] then
-                    local p_num, y_num, r_num = tonumber(tbl[1]), tonumber(tbl[2]), tonumber(tbl[3])
+                local jsonTbl = util.JSONToTable(data)
+                if istable(jsonTbl) and jsonTbl[1] and jsonTbl[2] and jsonTbl[3] then
+                    local p_num, y_num, r_num = tonumber(jsonTbl[1]), tonumber(jsonTbl[2]), tonumber(jsonTbl[3])
                     if p_num and y_num and r_num then p, y, r = p_num, y_num, r_num end
                 end
             end
@@ -180,8 +216,24 @@ if SERVER then
         return data
     end
 
+    local function _decodeColor(data)
+        if IsColor(data) then return data end
+        if istable(data) and data.r and data.g and data.b then return Color(tonumber(data.r) or 255, tonumber(data.g) or 255, tonumber(data.b) or 255, tonumber(data.a) or 255) end
+        return data
+    end
+
     local function deepDecode(value)
         if istable(value) then
+            if value.x and value.y and value.z and not value.r and not value.g and not value.b then
+                local x, y, z = tonumber(value.x), tonumber(value.y), tonumber(value.z)
+                if x and y and z then return Vector(x, y, z) end
+            elseif value.p and value.y and value.r and not value.x then
+                local p, y, r = tonumber(value.p or 0), tonumber(value.y or 0), tonumber(value.r or 0)
+                if p and y and r then return Angle(p, y, r) end
+            elseif value.r and value.g and value.b then
+                return Color(tonumber(value.r) or 255, tonumber(value.g) or 255, tonumber(value.b) or 255, tonumber(value.a) or 255)
+            end
+
             local t = {}
             for k, v in pairs(value) do
                 t[k] = deepDecode(v)
@@ -190,8 +242,12 @@ if SERVER then
             value = t
         end
 
-        value = _decodeAngle(value)
-        value = _decodeVector(value)
+        local col = _decodeColor(value)
+        if IsColor(col) then return col end
+        local vec = _decodeVector(value)
+        if isvector(vec) then return vec end
+        local ang = _decodeAngle(value)
+        if isangle(ang) then return ang end
         return value
     end
 
@@ -246,7 +302,8 @@ if SERVER then
         ```
     ]]
     function lia.data.serialize(value)
-        local encoded = lia.data.encodetable(value) or {}
+        local encoded = lia.data.encodetable(value)
+        if encoded == nil and value ~= nil then encoded = value end
         if not istable(encoded) then
             encoded = {
                 value = encoded
@@ -385,6 +442,57 @@ if SERVER then
         return cond
     end
 
+    local function sanitizeKeyToFilename(key)
+        key = tostring(key or "")
+        key = key:gsub("[\\/]", "_")
+        key = key:gsub("[^%w%-%._]", "_")
+        key = key:gsub("_+", "_")
+        key = key:gsub("^_+", "")
+        key = key:gsub("_+$", "")
+        if key == "" then key = "unnamed" end
+        return key
+    end
+
+    local function ensureDataDirs(gamemode, map)
+        file.CreateDir("lilia")
+    end
+
+    local function getDataScope(gamemode, map, global, ignoreMap)
+        local gm = gamemode or (SCHEMA and SCHEMA.folder) or engine.ActiveGamemode()
+        local m = ignoreMap and "global" or (map or game.GetMap())
+        if global then
+            gm = "global"
+            m = "global"
+        else
+            if m ~= "global" then m = lia.data.getEquivalencyMap(m) end
+        end
+
+        gm = tostring(gm or "global")
+        m = tostring(m or "global")
+        return gm, m
+    end
+
+    local function getScopeMapFilePath(gamemode, map)
+        ensureDataDirs(gamemode, map)
+        local gmSafe = sanitizeKeyToFilename(gamemode)
+        local mapSafe = sanitizeKeyToFilename(map)
+        return "lilia/" .. gmSafe .. "_" .. mapSafe .. "_map.json"
+    end
+
+    local function readScopeMap(gamemode, map)
+        local path = getScopeMapFilePath(gamemode, map)
+        if not file.Exists(path, "DATA") then return {}, path end
+        local raw = file.Read(path, "DATA")
+        local decoded = raw and util.JSONToTable(raw) or nil
+        if not istable(decoded) then return {}, path end
+        return decoded, path
+    end
+
+    local function writeScopeMap(path, data)
+        if not istable(data) then data = {} end
+        file.Write(path, util.TableToJSON(data, true) or "{}")
+    end
+
     --[[
     Purpose:
         Persist a key/value pair scoped to gamemode/map (or global).
@@ -411,31 +519,13 @@ if SERVER then
         ```
     ]]
     function lia.data.set(key, value, global, ignoreMap)
-        local gamemode = SCHEMA and SCHEMA.folder or engine.ActiveGamemode()
-        local map = ignoreMap and NULL or game.GetMap()
-        if global then
-            gamemode = NULL
-            map = NULL
-        else
-            if gamemode == nil then gamemode = NULL end
-            if map == nil then map = NULL end
-            if map ~= NULL then map = lia.data.getEquivalencyMap(map) end
-        end
-
         lia.data.stored[key] = value
-        lia.db.waitForTablesToLoad():next(function()
-            local row = {
-                gamemode = gamemode,
-                map = map,
-                data = lia.data.serialize(lia.data.stored)
-            }
-            return lia.db.upsert(row, "data")
-        end):next(function() hook.Run("OnDataSet", key, value, gamemode, map) end)
-
-        local path = "lilia/"
-        if gamemode and gamemode ~= NULL then path = path .. gamemode .. "/" end
-        if map and map ~= NULL then path = path .. map .. "/" end
-        return path
+        local gamemode, map = getDataScope(nil, nil, global, ignoreMap)
+        local mapData, mapPath = readScopeMap(gamemode, map)
+        mapData[tostring(key)] = lia.data.encodetable(value)
+        writeScopeMap(mapPath, mapData)
+        hook.Run("OnDataSet", key, value, gamemode, map)
+        return gamemode .. "/" .. map .. "/"
     end
 
     --[[
@@ -462,29 +552,11 @@ if SERVER then
         ```
     ]]
     function lia.data.delete(key, global, ignoreMap)
-        local gamemode = SCHEMA and SCHEMA.folder or engine.ActiveGamemode()
-        local map = ignoreMap and nil or game.GetMap()
-        if global then
-            gamemode = nil
-            map = nil
-        else
-            if map then map = lia.data.getEquivalencyMap(map) end
-        end
-
         lia.data.stored[key] = nil
-        local condition = buildCondition(gamemode, map)
-        lia.db.waitForTablesToLoad():next(function()
-            if table.IsEmpty(lia.data.stored) then
-                return lia.db.delete("data", condition)
-            else
-                local row = {
-                    gamemode = gamemode,
-                    map = map,
-                    data = lia.data.serialize(lia.data.stored)
-                }
-                return lia.db.upsert(row, "data")
-            end
-        end)
+        local gamemode, map = getDataScope(nil, nil, global, ignoreMap)
+        local mapData, mapPath = readScopeMap(gamemode, map)
+        mapData[tostring(key)] = nil
+        writeScopeMap(mapPath, mapData)
         return true
     end
 
@@ -507,23 +579,39 @@ if SERVER then
         ```
     ]]
     function lia.data.loadTables()
-        local gamemode = SCHEMA and SCHEMA.folder or engine.ActiveGamemode()
-        local map = game.GetMap()
-        local equivalencyMap = lia.data.getEquivalencyMap(map)
-        local function loadData(gm, m)
-            local cond = buildCondition(gm, m)
-            return lia.db.select("data", "data", cond):next(function(res)
-                local row = res.results and res.results[1]
-                if row then
-                    local data = lia.data.deserialize(row.data) or {}
-                    for k, v in pairs(data) do
-                        lia.data.stored[k] = v
+        local gamemode = (SCHEMA and SCHEMA.folder) or engine.ActiveGamemode()
+        local map = lia.data.getEquivalencyMap(game.GetMap())
+        local function loadScope(gm, m)
+            local mapPath = getScopeMapFilePath(gm, m)
+            if file.Exists(mapPath, "DATA") then
+                local raw = file.Read(mapPath, "DATA")
+                local decoded = raw and util.JSONToTable(raw) or nil
+                if istable(decoded) then
+                    for keyName, storedValue in pairs(decoded) do
+                        if isstring(storedValue) then
+                            lia.data.stored[tostring(keyName)] = lia.data.deserialize(storedValue)
+                        else
+                            lia.data.stored[tostring(keyName)] = lia.data.decode(storedValue)
+                        end
                     end
                 end
-            end)
+            end
+
+            ensureDataDirs(gm, m)
+            local filesFound = file.Find(gm .. "/" .. m .. "/*.json", "DATA")
+            for _, fileName in ipairs(filesFound or {}) do
+                local keyName = fileName:sub(1, -6)
+                if lia.data.stored[keyName] == nil then
+                    local raw = file.Read(gm .. "/" .. m .. "/" .. fileName, "DATA")
+                    local value = lia.data.deserialize(raw)
+                    lia.data.stored[keyName] = value
+                end
+            end
         end
 
-        lia.db.waitForTablesToLoad():next(function() return loadData(nil, nil) end):next(function() return loadData(gamemode, nil) end):next(function() return loadData(gamemode, equivalencyMap) end)
+        loadScope("global", "global")
+        loadScope(tostring(gamemode), "global")
+        loadScope(tostring(gamemode), tostring(map))
     end
 
     local defaultCols = {

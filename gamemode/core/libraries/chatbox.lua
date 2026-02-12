@@ -3,7 +3,7 @@
     File: chat.md
 ]]
 --[[
-    Chatbox Library
+    Chatbox
 
     Comprehensive chat system management with message routing and formatting for the Lilia framework.
 ]]

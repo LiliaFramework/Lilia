@@ -3,7 +3,7 @@
     File: attribs.md
 ]]
 --[[
-    Attributes Library
+    Attributes
 
     Character attribute management system for the Lilia framework.
 ]]

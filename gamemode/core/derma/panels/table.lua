@@ -36,7 +36,8 @@ function PANEL:AddColumn(name, width, align, sortable)
         align = align or TEXT_ALIGN_LEFT,
         sortable = sortable ~= false,
         autoSize = true,
-        minWidth = 0
+        minWidth = 0,
+        baseWidth = width or 100
     }
 
     column.Header = {
@@ -97,7 +98,12 @@ end
 
 function PANEL:CreateHeader()
     self.header:Clear()
-    self.header.Paint = function(_, w, h) lia.derma.rect(0, 0, w, h):Radii(16, 16, 0, 0):Color(lia.color.theme.focus_panel):Shape(lia.derma.SHAPE_IOS):Draw() end
+    self.header.Paint = function(_, w, h)
+        local accent = lia.color.theme.accent or lia.color.theme.theme or Color(116, 185, 255)
+        lia.derma.rect(0, 0, w, h):Radii(16, 16, 0, 0):Color(Color(255, 255, 255, 4)):Shape(lia.derma.SHAPE_IOS):Draw()
+        lia.derma.rect(0, h - 2, w, 2):Color(ColorAlpha(accent, 150)):Draw()
+    end
+
     local xPos = 0
     for i, column in ipairs(self.columns) do
         local label = vgui.Create("DButton", self.header)
@@ -105,10 +111,24 @@ function PANEL:CreateHeader()
         label:SetSize(column.width, self.headerHeight)
         label:SetPos(xPos, 0)
         label.Paint = function(s, w, h)
-            local isHovered = s:IsHovered() and column.sortable
-            if isHovered then lia.derma.rect(0, 0, w, h):Radii(16, 16, 0, 0):Color(lia.color.theme.hover):Shape(lia.derma.SHAPE_IOS):Draw() end
             local textColor = lia.color.theme.text
-            draw.SimpleText(column.name, self.font, w / 2, h / 2, textColor, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
+            local align = column.align or 0
+            local x = w / 2
+            local xAlign = 1
+            if align == 0 then
+                x = self.padding
+                xAlign = 0
+            elseif align == 2 then
+                x = w - self.padding
+                xAlign = 2
+            end
+
+            draw.SimpleText(column.name, self.font, x, h / 2, textColor, xAlign, 1)
+            if i < #self.columns then
+                local accent = lia.color.theme.accent or lia.color.theme.theme or Color(116, 185, 255)
+                local dividerColor = ColorAlpha(accent, 60)
+                lia.derma.rect(w - 2, 8, 2, h - 16):Color(dividerColor):Draw()
+            end
         end
 
         if column.sortable then
@@ -123,63 +143,11 @@ function PANEL:CreateHeader()
     end
 end
 
-function PANEL:CreateRow(rowIndex, rowData)
-    local row = vgui.Create("DButton", self.content)
-    row:Dock(TOP)
-    row:DockMargin(0, 0, 0, 1)
-    row:SetTall(self.rowHeight)
-    row:SetText("")
-    row.Paint = function(s, w, h)
-        local bgColor = self.selectedRow == rowIndex and lia.color.theme.theme or (s:IsHovered() and lia.color.theme.hover or lia.color.theme.panel[1])
-        lia.derma.rect(0, 0, w, h):Color(bgColor):Shape(lia.derma.SHAPE_IOS):Draw()
-    end
-
-    row.DoClick = function()
-        self.selectedRow = rowIndex
-        self.OnAction(rowData)
-        lia.websound.playButtonSound()
-    end
-
-    row.DoRightClick = function()
-        self.selectedRow = rowIndex
-        print("[liaTable] DoRightClick row", rowIndex, "invoking OnRightClick")
-        local handled = self.OnRightClick(rowData)
-        if handled then
-            print("[liaTable] OnRightClick handled custom menu")
-            return
-        end
-
-        local menu = lia.derma.dermaMenu()
-        for _, option in ipairs(self.customMenuOptions) do
-            menu:AddOption(option.text, function() option.callback(rowData, rowIndex) end, option.icon)
-        end
-
-        if #self.customMenuOptions == 0 then menu:AddOption(L("adminStickNoOptions"), function() end) end
-        menu:Open()
-    end
-
-    local xPos = 0
-    for i, column in ipairs(self.columns) do
-        local label = vgui.Create("DLabel", row)
-        label:SetText(tostring(rowData[i]))
-        label:SetFont(self.rowFont)
-        label:SetTextColor(lia.color.theme.text)
-        label:SetContentAlignment(column.align)
-        label:SetSize(column.width, self.rowHeight)
-        label:SetPos(xPos, 0)
-        if column.align == TEXT_ALIGN_LEFT then
-            label:SetTextInset(self.padding, 0)
-        elseif column.align == TEXT_ALIGN_RIGHT then
-            label:SetTextInset(0, 0, self.padding, 0)
-        end
-
-        label:SetContentAlignment(column.align + 4)
-        xPos = xPos + column.width
-    end
-end
-
 function PANEL:CalculateColumnWidths()
-    if not self.font or not self.rowFont then return end
+    for _, column in ipairs(self.columns) do
+        column.width = column.baseWidth or column.width
+    end
+
     local autoSizeColumns = {}
     for colIndex, column in ipairs(self.columns) do
         if column.autoSize then
@@ -209,6 +177,7 @@ function PANEL:CalculateColumnWidths()
         end
 
         local availableWidth = self:GetWide()
+        if IsValid(self.scrollPanel) and IsValid(self.scrollPanel.VBar) and self.scrollPanel.VBar:IsVisible() then availableWidth = availableWidth - self.scrollPanel.VBar:GetWide() end
         local remainingWidth = availableWidth - totalUsedWidth
         if remainingWidth > 0 then
             local extraWidthPerColumn = math.floor(remainingWidth / #autoSizeColumns)
@@ -223,6 +192,7 @@ function PANEL:CalculateColumnWidths()
 end
 
 function PANEL:RebuildRows()
+    self:InvalidateLayout(true)
     self:CalculateColumnWidths()
     self.content:Clear()
     self:CreateHeader()
@@ -281,11 +251,12 @@ function PANEL:SetRightClickAction(func)
     self.OnRightClick = func
 end
 
-function PANEL:AddMenuOption(text, callback, icon)
+function PANEL:AddMenuOption(text, callback, icon, shouldShow)
     table.insert(self.customMenuOptions, {
         text = text,
         callback = callback,
-        icon = icon
+        icon = icon,
+        shouldShow = shouldShow
     })
 end
 
@@ -350,54 +321,6 @@ end
 function PANEL:SetMultiSelect()
 end
 
-function PANEL:IsLineSelected(id)
-    return self.selectedRow == id
-end
-
-function PANEL:SelectItem(id)
-    self:EnsureCommitted()
-    if id < 1 or id > #self.rows then return end
-    self.selectedRow = id
-    if self.OnAction then self.OnAction(self.rows[id]) end
-end
-
-function PANEL:SelectFirstItem()
-    if #self.rows > 0 then self:SelectItem(1) end
-end
-
-function PANEL:SelectItemByID(id)
-    self:SelectItem(id)
-end
-
-function PANEL:SelectItemByLine(line)
-    for idx, data in ipairs(self.rows) do
-        if data == line then
-            self:SelectItem(idx)
-            break
-        end
-    end
-end
-
-function PANEL:GetSelectedLine()
-    return self.selectedRow
-end
-
-function PANEL:GetSelectedLines()
-    if self.selectedRow then return {self.selectedRow} end
-    return {}
-end
-
-function PANEL:GetSelected()
-    self:EnsureCommitted()
-    if not self.selectedRow then return nil end
-    return self.rows[self.selectedRow]
-end
-
-function PANEL:GetLines()
-    self:EnsureCommitted()
-    return self.rows
-end
-
 function PANEL:OnSizeChanged()
     self:EnsureCommitted()
     if #self.columns > 0 then
@@ -416,7 +339,9 @@ function PANEL:SetMinHeight(height)
 end
 
 function PANEL:Paint(w, h)
-    lia.derma.rect(0, 0, w, h):Rad(16):Color(lia.color.theme.panel[1]):Shape(lia.derma.SHAPE_IOS):Draw()
+    local bgColor = Color(25, 28, 35, 250)
+    lia.derma.rect(0, 0, w, h):Rad(16):Color(Color(0, 0, 0, 180)):Shadow(15, 20):Shape(lia.derma.SHAPE_IOS):Draw()
+    lia.derma.rect(0, 0, w, h):Rad(16):Color(bgColor):Shape(lia.derma.SHAPE_IOS):Draw()
 end
 
 function PANEL:DoDoubleClick(lineID, line)
@@ -509,54 +434,6 @@ function PANEL:RemoveLine(lineID)
     end
 end
 
-function PANEL:SelectItem(lineID)
-    if lineID < 1 or lineID > #self.rows then return end
-    local oldSelected = self.selectedRow
-    self.selectedRow = lineID
-    if self.OnRowSelected and oldSelected ~= lineID then self:OnRowSelected(lineID, self.rows[lineID]) end
-    if self.OnClickLine then self:OnClickLine(self.rows[lineID], true) end
-end
-
-function PANEL:SelectItemByID(id)
-    self:SelectItem(id)
-end
-
-function PANEL:SelectItemByLine(line)
-    for idx, data in ipairs(self.rows) do
-        if data == line then
-            self:SelectItem(idx)
-            break
-        end
-    end
-end
-
-function PANEL:SelectFirstItem()
-    if #self.rows > 0 then self:SelectItem(1) end
-end
-
-function PANEL:GetSelected()
-    if not self.selectedRow then return nil end
-    return self.rows[self.selectedRow]
-end
-
-function PANEL:GetSelectedLine()
-    return self.selectedRow
-end
-
-function PANEL:GetSelectedLines()
-    if self.selectedRow then return {self.selectedRow} end
-    return {}
-end
-
-function PANEL:GetLine(id)
-    if id and id > 0 and id <= #self.rows then return self.rows[id] end
-    return nil
-end
-
-function PANEL:GetLines()
-    return self.rows
-end
-
 function PANEL:SortByColumn(columnIndex, desc)
     self:EnsureCommitted()
     local column = self.columns[columnIndex]
@@ -643,9 +520,16 @@ function PANEL:CreateRow(rowIndex, rowData)
     row:DockMargin(0, 0, 0, 1)
     row:SetTall(self.rowHeight)
     row:SetText("")
+    row:SetMouseInputEnabled(true)
+    row:SetKeyboardInputEnabled(false)
+    row:SetZPos(100)
     row.Paint = function(s, w, h)
-        local bgColor = self.selectedRow == rowIndex and lia.color.theme.theme or (s:IsHovered() and lia.color.theme.hover or lia.color.theme.panel[1])
+        local colors = lia.color.theme
+        local accent = colors.accent or colors.theme or Color(116, 185, 255)
+        local bgColor = Color(255, 255, 255, 4)
+        if self.selectedRow == rowIndex then bgColor = ColorAlpha(accent, 80) end
         lia.derma.rect(0, 0, w, h):Color(bgColor):Shape(lia.derma.SHAPE_IOS):Draw()
+        if self.selectedRow == rowIndex then lia.derma.rect(0, 0, 2, h):Color(accent):Draw() end
     end
 
     row.DoClick = function()
@@ -668,30 +552,43 @@ function PANEL:CreateRow(rowIndex, rowData)
         self:OnRowRightClick(rowIndex, rowData)
         if self.OnRightClick then self:OnRightClick(rowData) end
         local menu = lia.derma.dermaMenu()
+        local addedAny = false
         for _, option in ipairs(self.customMenuOptions) do
-            menu:AddOption(option.text, function() option.callback(rowData, rowIndex) end, option.icon)
+            local canShow = true
+            if option.shouldShow then canShow = option.shouldShow(rowData, rowIndex) ~= false end
+            if canShow then
+                menu:AddOption(option.text, function() option.callback(rowData, rowIndex) end, option.icon)
+                addedAny = true
+            end
         end
 
-        if #self.customMenuOptions == 0 then menu:AddOption(L("adminStickNoOptions"), function() end) end
+        if not addedAny then menu:AddOption(L("adminStickNoOptions"), function() end) end
         menu:Open()
     end
 
     local xPos = 0
     for i, column in ipairs(self.columns) do
-        local label = vgui.Create("DLabel", row)
-        label:SetText(tostring(rowData[i]))
-        label:SetFont(self.rowFont)
-        label:SetTextColor(lia.color.theme.text)
-        label:SetContentAlignment(column.align)
-        label:SetSize(column.width, self.rowHeight)
-        label:SetPos(xPos, 0)
-        if column.align == TEXT_ALIGN_LEFT then
-            label:SetTextInset(self.padding, 0)
-        elseif column.align == TEXT_ALIGN_RIGHT then
-            label:SetTextInset(0, 0, self.padding, 0)
+        local cellPanel = vgui.Create("DPanel", row)
+        cellPanel:SetSize(column.width, self.rowHeight)
+        cellPanel:SetPos(xPos, 0)
+        cellPanel:SetMouseInputEnabled(false)
+        cellPanel.Paint = function(s, w, h)
+            local textColor = lia.color.theme.text
+            local text = tostring(rowData[i] or "")
+            local align = column.align or 0
+            local x = w / 2
+            local xAlign = 1
+            if align == 0 then
+                x = self.padding
+                xAlign = 0
+            elseif align == 2 then
+                x = w - self.padding
+                xAlign = 2
+            end
+
+            draw.SimpleText(text, self.rowFont, x, h / 2, textColor, xAlign, 1)
         end
 
-        label:SetContentAlignment(column.align + 4)
         xPos = xPos + column.width
     end
 end

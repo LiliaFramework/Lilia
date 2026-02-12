@@ -146,7 +146,7 @@ concommand.Add("lia_backdoorcheck", function(ply, com, arg)
             ScanAddon(addon)
         end
 
-        if savelog and SERVER and lia.data and lia.data.set then lia.data.set("backdoorchecker.scan_all_" .. os.date("%y-%m-%d_%H-%M-%S"), LogBuffer, true, true) end
+        if savelog and SERVER then lia.data.set("backdoorchecker.scan_all_" .. os.date("%y-%m-%d_%H-%M-%S"), LogBuffer, true, true) end
     else
         print("Specific search for ID " .. arg[1] .. "...")
         local found = false

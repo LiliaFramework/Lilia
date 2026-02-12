@@ -3,7 +3,7 @@
     File: log.md
 ]]
 --[[
-    Logger Library
+    Logger
 
     Comprehensive logging and audit trail system for the Lilia framework.
 ]]

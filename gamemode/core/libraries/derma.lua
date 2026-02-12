@@ -3,7 +3,7 @@
     File: derma.md
 ]]
 --[[
-    Derma Library
+    Derma
 
     Advanced UI rendering and interaction system for the Lilia framework.
 ]]
@@ -228,11 +228,14 @@ function lia.derma.optionsMenu(rawOptions, config)
     frame:AlphaTo(255, fadeSpeed)
     function frame:Paint(w, h)
         local theme = lia.color.theme
-        local bgColor = theme and theme.background_alpha or Color(34, 34, 34, 210)
-        local headerColor = theme and theme.header or Color(34, 34, 34, 210)
-        draw.RoundedBox(6, 0, 0, w, h, bgColor)
-        draw.RoundedBox(6, 0, 0, w, 24, headerColor)
-        if titleText and titleText ~= "" then draw.SimpleText(titleText, "LiliaFont.16", 6, 4, theme and theme.header_text or Color(255, 255, 255)) end
+        local bgColor = Color(25, 28, 35, 250)
+        lia.derma.rect(0, 0, w, h):Rad(12):Color(bgColor):Shape(lia.derma.SHAPE_IOS):Draw()
+        if titleText and titleText ~= "" then
+            draw.SimpleText(titleText, "LiliaFont.18", w * 0.5, 12, theme.header_text or color_white, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
+            local accent = theme.theme or color_white
+            surface.SetDrawColor(accent.r, accent.g, accent.b, 20)
+            surface.DrawRect(10, 24, w - 20, 1)
+        end
     end
 
     if emitHooks then hook.Run("InteractionMenuOpened", frame) end
@@ -261,12 +264,7 @@ function lia.derma.optionsMenu(rawOptions, config)
     local scroll = frame:Add("liaScrollPanel")
     scroll:SetPos(0, 24)
     scroll:SetSize(frameW, frameH - 24)
-    scroll.Paint = function(_, w, h)
-        local theme = lia.color.theme
-        local panelColor = theme and theme.panel and theme.panel[1] or Color(50, 50, 50)
-        draw.RoundedBox(8, 0, 0, w, h, panelColor)
-    end
-
+    scroll.Paint = function() end
     local layout = vgui.Create("DListLayout", scroll)
     layout:Dock(FILL)
     local buttonFont = config.buttonFont or "LiliaFont.17"
@@ -282,18 +280,17 @@ function lia.derma.optionsMenu(rawOptions, config)
             categoryPanel:SetPaintBackground(false)
             function categoryPanel:Paint(w, h)
                 local theme = lia.color.theme
-                local bgColor = theme and theme.category_header or Color(35, 45, 55, 180)
                 local accentColor = entry.color or (theme and theme.category_accent or Color(100, 150, 200, 255))
+                local bgColor = Color(accentColor.r, accentColor.g, accentColor.b, 20)
                 local textColor = theme and theme.text or color_white
-                lia.derma.rect(0, 0, w, h):Rad(10):Color(bgColor):Shape(lia.derma.SHAPE_IOS):Draw()
-                surface.SetDrawColor(accentColor)
-                surface.DrawRect(0, 0, 4, h)
-                surface.SetDrawColor(Color(255, 255, 255, 20))
-                surface.DrawOutlinedRect(0, 0, w, h, 1)
+                lia.derma.rect(0, 0, w, h):Rad(6):Color(bgColor):Shape(lia.derma.SHAPE_IOS):Draw()
+                local accent = theme.theme or color_white
+                surface.SetDrawColor(accent.r, accent.g, accent.b, 60)
+                surface.DrawRect(0, 0, 3, h)
                 local displayText = entry.name or ""
                 local localized = L(displayText)
                 if localized and localized ~= "" then displayText = localized end
-                draw.SimpleText(displayText, "LiliaFont.17", w / 2, h / 2, textColor, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
+                draw.SimpleText(displayText, "LiliaFont.18", 12, h / 2, textColor, TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)
             end
 
             layout:Add(categoryPanel)
@@ -533,14 +530,9 @@ function lia.derma.interactionTooltip(rawOptions, config)
     tooltip:SetAlpha(0)
     tooltip:AlphaTo(255, 0.1)
     function tooltip:Paint(w, h)
-        local radius = 8
-        local accent = lia.color.theme.accent or lia.color.theme.header or lia.color.theme.theme or Color(100, 150, 200)
-        local background = lia.color.theme.background_alpha or lia.color.theme.background or Color(40, 40, 40, 240)
-        lia.derma.rect(0, 0, w, h):Rad(radius):Color(lia.color.theme.window_shadow or Color(0, 0, 0, 50)):Shadow(8, 12):Shape(lia.derma.SHAPE_IOS):Draw()
-        lia.util.drawBlurAt(tooltipX, tooltipY, w, h)
-        lia.derma.rect(0, 0, w, h):Rad(radius):Color(background):Draw()
-        surface.SetDrawColor(accent.r, accent.g, accent.b, accent.a or 255)
-        surface.DrawRect(0, 0, w, 3)
+        local theme = lia.color.theme
+        local bgColor = Color(25, 28, 35, 250)
+        lia.derma.rect(0, 0, w, h):Rad(12):Color(bgColor):Shape(lia.derma.SHAPE_IOS):Draw()
         local titleText = config.title
         if not titleText then
             if mode == "interaction" then
@@ -552,10 +544,10 @@ function lia.derma.interactionTooltip(rawOptions, config)
             end
         end
 
-        surface.SetFont("LiliaFont.18")
-        surface.SetTextColor(255, 255, 255, 255)
-        surface.SetTextPos(padding, padding - 2)
-        surface.DrawText(titleText)
+        draw.SimpleText(titleText, "LiliaFont.20", w * 0.5, (titleHeight + padding) * 0.5, theme.header_text or color_white, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
+        local accent = theme.theme or color_white
+        surface.SetDrawColor(accent.r, accent.g, accent.b, 20)
+        surface.DrawRect(padding, titleHeight + padding - 2, w - padding * 2, 1)
     end
 
     if emitHooks then hook.Run("InteractionMenuOpened", tooltip) end
@@ -604,22 +596,19 @@ function lia.derma.interactionTooltip(rawOptions, config)
             function categoryPanel:Paint(w, h)
                 local theme = lia.color.theme
                 local categoryColor = entry.color or (theme and theme.category_accent or Color(100, 150, 200, 255))
-                local textColor = theme and theme.category_text or theme and theme.text or color_white
-                local lineColor = theme and theme.category_line or Color(255, 255, 255, 20)
-                surface.SetDrawColor(categoryColor.r, categoryColor.g, categoryColor.b, 100)
-                surface.DrawRect(0, h - 1, w, 1)
+                local bgColor = Color(categoryColor.r, categoryColor.g, categoryColor.b, 15)
+                local textColor = theme and theme.text or color_white
+                lia.derma.rect(0, 0, w, h):Rad(4):Color(bgColor):Shape(lia.derma.SHAPE_IOS):Draw()
+                local accent = theme.theme or color_white
+                surface.SetDrawColor(accent.r, accent.g, accent.b, 60)
+                surface.DrawRect(0, 0, 3, h)
                 local displayText = entry.name or ""
                 if L then
                     local localized = L(displayText)
                     if localized and localized ~= "" then displayText = localized end
                 end
 
-                surface.SetFont("LiliaFont.16")
-                surface.SetTextColor(textColor.r, textColor.g, textColor.b, textColor.a or 255)
-                surface.SetTextPos(0, 0)
-                surface.DrawText(displayText)
-                surface.SetDrawColor(lineColor.r, lineColor.g, lineColor.b, lineColor.a or 255)
-                surface.DrawRect(0, h - 2, w, 1)
+                draw.SimpleText(displayText, "LiliaFont.17", 8, h / 2, textColor, TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)
             end
 
             layout:Add(categoryPanel)
@@ -639,18 +628,17 @@ function lia.derma.interactionTooltip(rawOptions, config)
             end
 
             function btn:Paint(w, h)
+                local theme = lia.color.theme
+                local accent = theme.accent or theme.header or theme.theme or Color(100, 150, 200)
                 local isHovered = self:IsHovered()
                 if isHovered then
-                    surface.SetDrawColor(255, 255, 255, 20)
-                    surface.DrawRect(0, 0, w, h)
+                    local hoverColor = Color(accent.r, accent.g, accent.b, 20)
+                    lia.derma.rect(0, 0, w, h):Rad(4):Color(hoverColor):Shape(lia.derma.SHAPE_IOS):Draw()
                 end
 
-                surface.SetFont("LiliaFont.16")
-                local textColor = entry.opt and entry.opt.textColor or color_white
-                if isHovered then textColor = Color(200, 220, 255, 255) end
-                surface.SetTextColor(textColor.r, textColor.g, textColor.b, textColor.a or 255)
-                surface.SetTextPos(0, 2)
-                surface.DrawText(displayText)
+                local textColor = entry.opt and entry.opt.textColor or theme.text or color_white
+                if isHovered then textColor = Color(255, 255, 255) end
+                draw.SimpleText(displayText, "LiliaFont.17", 4, h / 2, textColor, TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)
             end
 
             local iconMat = entry.opt and entry.opt.icon
@@ -880,6 +868,7 @@ function lia.derma.requestColorPicker(func, colorStandard)
     btnClose:SetColorHover(color_close)
     btnClose.DoClick = function()
         btnClose.BaseClass.DoClick(btnClose)
+        if func then func(false) end
         lia.gui.menuColorPicker:Remove()
     end
 
@@ -2329,10 +2318,10 @@ function lia.derma.drawBoxWithText(text, x, y, options)
     options = options or {}
     local font = options.font or "LiliaFont.16"
     local textColor = options.textColor or Color(255, 255, 255)
-    local backgroundColor = options.backgroundColor or Color(0, 0, 0, 150)
+    local backgroundColor = options.backgroundColor or Color(25, 28, 35, 250)
     local borderColor = options.borderColor or lia.color.theme.theme
-    local borderRadius = options.borderRadius or 8
-    local borderThickness = options.borderThickness or 2
+    local borderRadius = options.borderRadius or 12
+    local borderThickness = options.borderThickness or 0
     local padding = options.padding or 20
     local blur = options.blur or {
         enabled = true,
@@ -2414,15 +2403,18 @@ function lia.derma.drawBoxWithText(text, x, y, options)
     end
 
     local shadow = options.shadow or {
-        enabled = false
+        enabled = true,
+        color = Color(0, 0, 0, 180),
+        offsetX = 15,
+        offsetY = 20
     }
 
     boxWidth = math.max(boxWidth, 1)
     boxHeight = math.max(boxHeight, 1)
-    if shadow.enabled then lia.derma.rect(boxX, boxY, boxWidth, boxHeight):Rad(borderRadius):Color(shadow.color or Color(0, 0, 0, 50)):Shadow(shadow.offsetX or 8, shadow.offsetY or 12):Shape(lia.derma.SHAPE_IOS):Draw() end
+    if shadow.enabled then lia.derma.rect(boxX, boxY, boxWidth, boxHeight):Rad(borderRadius):Color(shadow.color or Color(0, 0, 0, 180)):Shadow(shadow.offsetX or 15, shadow.offsetY or 20):Shape(lia.derma.SHAPE_IOS):Draw() end
     if blur.enabled then lia.util.drawBlurAt(boxX, boxY, boxWidth, boxHeight, blur.amount, blur.passes, blur.alpha) end
-    lia.derma.rect(boxX, boxY, boxWidth, boxHeight):Color(backgroundColor):Rad(borderRadius):Draw()
-    if borderThickness > 0 then lia.derma.rect(boxX, boxY, boxWidth, boxHeight):Color(borderColor):Rad(borderRadius):Outline(borderThickness):Draw() end
+    lia.derma.rect(boxX, boxY, boxWidth, boxHeight):Color(backgroundColor):Rad(borderRadius):Shape(lia.derma.SHAPE_IOS):Draw()
+    if borderThickness > 0 then lia.derma.rect(boxX, boxY, boxWidth, boxHeight):Color(borderColor):Rad(borderRadius):Shape(lia.derma.SHAPE_IOS):Outline(borderThickness):Draw() end
     local accentBorder = options.accentBorder or {
         enabled = false
     }
@@ -3092,6 +3084,7 @@ function lia.derma.requestArguments(title, argTypes, onSubmit, defaults)
 
     for _, info in ipairs(ordered) do
         local name, fieldType, dataTbl, defaultVal = info.name, info.fieldType, info.dataTbl, info.defaultVal
+        if not name or name == "" then continue end
         local panel = vgui.Create("DPanel", scroll)
         panel:Dock(TOP)
         panel:DockMargin(0, 0, 0, 15)
@@ -3911,10 +3904,9 @@ end
             lia.derma.requestOptions("Permissions", {{"Rank", {"User", "Admin"}}, "CanKick"}, function(result) PrintTable(result) end)
         ```
 ]]
-function lia.derma.requestOptions(title, options, callback, defaults)
-    defaults = defaults or {}
+function lia.derma.requestOptions(title, subTitle, options, callback, onCancel)
     if IsValid(lia.gui.menuRequestOptions) then lia.gui.menuRequestOptions:Remove() end
-    local count = table.Count(options)
+    local count = #options
     local frameW, frameH = 600, math.min(350 + count * 100, ScrH() * 0.5)
     local frame = vgui.Create("liaFrame")
     frame:SetSize(frameW, frameH)
@@ -3922,6 +3914,15 @@ function lia.derma.requestOptions(title, options, callback, defaults)
     frame:MakePopup()
     frame:SetTitle("")
     frame:SetCenterTitle(title or L("selectOptions"))
+    if subTitle then
+        local subTitleLabel = vgui.Create("DLabel", frame)
+        subTitleLabel:SetText(subTitle)
+        subTitleLabel:SetFont("LiliaFont.18")
+        subTitleLabel:SizeToContents()
+        subTitleLabel:SetPos(10, 35)
+        subTitleLabel:SetColor(Color(200, 200, 200))
+    end
+
     frame:ShowAnimation()
     frame:SetZPos(1000)
     local scrollPanel = vgui.Create("liaScrollPanel", frame)
@@ -4027,7 +4028,7 @@ function lia.derma.requestOptions(title, options, callback, defaults)
     cancelBtn:SetWide(270)
     cancelBtn:SetTxt(L("cancel"))
     cancelBtn.DoClick = function()
-        if callback then callback(false) end
+        if onCancel then onCancel() end
         frame:Remove()
     end
 

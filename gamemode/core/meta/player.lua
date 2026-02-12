@@ -3,7 +3,7 @@
     File:  player.md
 ]]
 --[[
-    Player Meta
+    Player
 
     Player management system for the Lilia framework.
 ]]
@@ -1767,7 +1767,7 @@ end
             ply:requestOptions("Pick", "Choose one", {"A","B"}, 1, cb)
         ```
 ]]
-function playerMeta:requestOptions(title, subTitle, options, limit, callback)
+function playerMeta:requestOptions(title, subTitle, options, limit, callback, onCancel)
     if SERVER then
         self.liaOptionsReqs = self.liaOptionsReqs or {}
         local id = table.insert(self.liaOptionsReqs, {
@@ -1784,7 +1784,7 @@ function playerMeta:requestOptions(title, subTitle, options, limit, callback)
         net.WriteUInt(tonumber(limit) or 1, 32)
         net.Send(self)
     else
-        lia.derma.requestOptions(title, subTitle, options, tonumber(limit) or 1, callback)
+        lia.derma.requestOptions(title, subTitle, options, tonumber(limit) or 1, callback, onCancel)
     end
 end
 

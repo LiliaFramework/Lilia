@@ -145,10 +145,10 @@ function PANEL:Paint(w, h)
     local typeColor = self._cachedTypeColor
     local icon = self._cachedIcon
     local alpha = self.alpha / 255
-    lia.derma.rect(0, 0, w, h):Rad(8):Color(Color(40, 40, 40, math.floor(200 * alpha))):Draw()
-    lia.derma.rect(0, 0, 4, h):Rad(8):Color(Color(typeColor.r, typeColor.g, typeColor.b, math.floor(255 * alpha))):Draw()
-    lia.derma.rect(4, 0, w - 4, h):Rad(8):Color(Color(typeColor.r * 0.2, typeColor.g * 0.2, typeColor.b * 0.2, math.floor(150 * alpha))):Draw()
-    lia.derma.rect(0, 0, w, h):Rad(8):Outline(1):Color(Color(0, 0, 0, math.floor(100 * alpha))):Draw()
+    local bgColor = Color(25, 28, 35, math.floor(220 * alpha))
+    lia.derma.rect(0, 0, w, h):Rad(12):Color(bgColor):Shape(lia.derma.SHAPE_IOS):Draw()
+    lia.derma.rect(0, 0, 6, h):Radii(12, 0, 12, 0):Color(Color(typeColor.r, typeColor.g, typeColor.b, math.floor(255 * alpha))):Draw()
+    lia.derma.rect(6, 0, w - 6, h):Radii(0, 12, 0, 12):Color(Color(typeColor.r, typeColor.g, typeColor.b, math.floor(30 * alpha))):Draw()
     if icon then
         surface.SetMaterial(icon)
         surface.SetDrawColor(255, 255, 255, self.alpha)
@@ -197,12 +197,12 @@ function PANEL:Paint(w, h)
     derma.SkinHook("Paint", "Panel", self, w, h)
     if self.start then
         local w2 = TimeFraction(self.start, self.endTime, CurTime()) * w
-        surfaceSetDrawColor(lia.config.get("Color"))
-        surfaceDrawRect(w2, 0, w - w2, h)
+        surface.SetDrawColor(lia.config.get("Color"))
+        surface.DrawRect(w2, 0, w - w2, h)
     end
 
-    surfaceSetDrawColor(lia.config.get("Color"))
-    surfaceDrawOutlinedRect(0, 0, w, h)
+    surface.SetDrawColor(lia.config.get("Color"))
+    surface.DrawOutlinedRect(0, 0, w, h)
 end
 
 vgui.Register("liaNoticePanel", PANEL, "DPanel")

@@ -110,7 +110,8 @@ function PANEL:Paint(w)
     lia.derma.rect(barStart, barY, barW, barH):Rad(barR):Color(lia.color.theme.window_shadow):Shadow(5, 20):Draw()
     lia.derma.rect(barStart, barY, barW, barH):Rad(barR):Color(lia.color.theme.focus_panel):Draw()
     lia.derma.rect(barStart, barY, barW, barH):Rad(barR):Color(lia.color.theme.button_shadow):Draw()
-    lia.derma.rect(barStart, barY, self.smoothPos, barH):Rad(barR):Color(lia.color.theme.theme):Draw()
+    lia.derma.rect(barStart, barY, self.smoothPos, barH):Rad(barR):Color(Color(25, 28, 35, 220)):Draw()
+    lia.derma.rect(barStart, barY, self.smoothPos, barH):Rad(barR):Color(ColorAlpha(lia.color.theme.theme or Color(116, 185, 255), 60)):Draw()
     self.smoothPos = Lerp(FrameTime() * 12, self.smoothPos or 0, activeW)
     local handleX = barStart + self.smoothPos
     local handleY = barY + barH / 2

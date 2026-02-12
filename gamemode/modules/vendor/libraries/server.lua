@@ -441,18 +441,13 @@ net.Receive("liaVendorDeletePreset", function(_, client)
         return
     end
 
-    local presetData = lia.vendor.presets[presetName]
     lia.vendor.presets[presetName] = nil
-    lia.db.delete("vendor_presets", "name = " .. lia.db.convertDataType(presetName)):next(function()
-        client:notifySuccessLocalized("vendorPresetDeleted", presetName)
-        lia.log.add(client, "vendorPresetDelete", presetName)
-        net.Start("liaVendorSyncPresets")
-        net.WriteTable(lia.vendor.presets)
-        net.Broadcast()
-    end):catch(function()
-        lia.vendor.presets[presetName] = presetData
-        client:notifyErrorLocalized("vendorPresetDeleteFailed", presetName)
-    end)
+    lia.data.set("vendor_presets", lia.vendor.presets)
+    client:notifySuccessLocalized("vendorPresetDeleted", presetName)
+    lia.log.add(client, "vendorPresetDelete", presetName)
+    net.Start("liaVendorSyncPresets")
+    net.WriteTable(lia.vendor.presets)
+    net.Broadcast()
 end)
 
 net.Receive("liaVendorSavePreset", function(_, client)
@@ -475,17 +470,12 @@ net.Receive("liaVendorSavePreset", function(_, client)
     end
 
     lia.vendor.presets[presetName] = validItems
-    local jsonData = util.TableToJSON(validItems)
-    lia.db.upsert({
-        name = presetName,
-        data = jsonData
-    }, "vendor_presets"):next(function()
-        client:notifyInfoLocalized("vendorPresetSaved", presetName)
-        lia.log.add(client, "vendorPresetSave", presetName)
-        net.Start("liaVendorSyncPresets")
-        net.WriteTable(lia.vendor.presets)
-        net.Broadcast()
-    end):catch(function() client:notifyErrorLocalized("vendorPresetSaveFailed") end)
+    lia.data.set("vendor_presets", lia.vendor.presets)
+    client:notifyInfoLocalized("vendorPresetSaved", presetName)
+    lia.log.add(client, "vendorPresetSave", presetName)
+    net.Start("liaVendorSyncPresets")
+    net.WriteTable(lia.vendor.presets)
+    net.Broadcast()
 end)
 
 net.Receive("liaVendorRequestData", function(_, client)
@@ -513,16 +503,7 @@ net.Receive("liaVendorRequestData", function(_, client)
 end)
 
 function MODULE:DatabaseConnected()
-    lia.db.query("SELECT name, data FROM lia_vendor_presets"):next(function(result)
-        local data = result.results
-        if data then
-            for _, row in ipairs(data) do
-                local presetName = row.name
-                local itemsData = util.JSONToTable(row.data)
-                if presetName and itemsData then lia.vendor.presets[presetName] = itemsData end
-            end
-        end
-    end):catch(function() end)
+    lia.vendor.presets = lia.data.get("vendor_presets") or {}
 end
 
 function MODULE:InitPostEntity()

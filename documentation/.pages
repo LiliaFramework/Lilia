@@ -1,16 +1,5 @@
 arrange:
-  - index.md
-  - gettingstarted.md
-  - guides
-  - generators
-  - libraries
-  - hooks
-  - meta
-  - definitions
-  - compatibility.md
-  - changelog.md
-  - Definitions
-  - Hooks
-  - Libraries
-  - Meta
-  - stylesheets
+ - index.md
+ - server_owner
+ - development
+ - about.md

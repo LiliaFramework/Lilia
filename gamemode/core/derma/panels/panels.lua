@@ -4,7 +4,7 @@ local function PaintPanel(_, w, h)
     local shadowIntensity = 8
     local shadowBlur = 12
     lia.derma.rect(0, 0, w, h):Rad(radius):Color(lia.color.theme.window_shadow):Shadow(shadowIntensity, shadowBlur):Shape(lia.derma.SHAPE_IOS):Draw()
-    lia.derma.rect(0, 0, w, h):Rad(radius):Color(lia.color.theme.background_alpha):Draw()
+    lia.derma.rect(0, 0, w, h):Rad(radius):Color(Color(25, 28, 35, 250)):Draw()
 end
 
 local function PaintFrame(pnl, w, h)
@@ -27,7 +27,7 @@ local function PaintFrame(pnl, w, h)
     local shadowIntensity = 8
     local shadowBlur = 12
     lia.derma.rect(0, 0, w, h):Rad(radius):Color(lia.color.theme.window_shadow):Shadow(shadowIntensity, shadowBlur):Shape(lia.derma.SHAPE_IOS):Draw()
-    lia.derma.rect(0, 0, w, h):Rad(radius):Color(lia.color.theme.background_alpha):Draw()
+    lia.derma.rect(0, 0, w, h):Rad(radius):Color(Color(25, 28, 35, 250)):Draw()
 end
 
 local BlurredDFrame = {}
@@ -167,21 +167,11 @@ end
 function QuickPanel:Paint(w, h)
     local theme = lia.color.theme or {}
     local accent = theme.accent or theme.header or theme.theme or Color(100, 150, 200, 255)
-    local background = theme.background_alpha or theme.background or Color(40, 40, 40, 220)
-    local headerColor = theme.header or Color(34, 34, 34, 210)
-    local headerText = theme.header_text or color_white
-    local shadow = theme.window_shadow or Color(0, 0, 0, 60)
-    local radius = 10
-    local screenX, screenY = self:LocalToScreen(0, 0)
-    lia.derma.rect(0, 0, w, h):Rad(radius):Color(shadow):Shape(lia.derma.SHAPE_IOS):Shadow(12, 18):Draw()
-    lia.util.drawBlurAt(screenX, screenY, w, h)
-    lia.derma.rect(0, 0, w, h):Rad(radius):Color(background):Draw()
-    surface.SetDrawColor(accent.r, accent.g, accent.b, accent.a or 255)
-    surface.DrawRect(0, 0, w, 4)
-    lia.derma.rect(0, 0, w, 24):Radii(radius, radius, 0, 0):Color(headerColor):Draw()
-    if self.title and self.title ~= "" then draw.SimpleText(self.title, "LiliaFont.16", 12, 12, headerText, TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER) end
-    surface.SetDrawColor(accent.r, accent.g, accent.b, 40)
-    surface.DrawOutlinedRect(1, 1, w - 2, h - 2)
+    local bgColor = Color(25, 28, 35, 250)
+    lia.derma.rect(0, 0, w, h):Rad(12):Color(bgColor):Shape(lia.derma.SHAPE_IOS):Draw()
+    lia.derma.rect(0, 0, w, 4):Radii(12, 12, 0, 0):Color(accent):Draw()
+    local glowColor = Color(accent.r, accent.g, accent.b, 8)
+    lia.derma.rect(1, 1, w - 2, h - 2):Rad(11):Color(glowColor):Outline(1):Draw()
 end
 
 function QuickPanel:PerformLayout(w)

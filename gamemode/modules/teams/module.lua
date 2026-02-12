@@ -3,15 +3,13 @@ MODULE.author = "Samael"
 MODULE.discord = "@liliaplayer"
 MODULE.desc = "teamsSystemDescription"
 MODULE.Privileges = {
-    {
+    ["canManageFactions"] = {
         Name = "canManageFactions",
-        ID = "canManageFactions",
         MinAccess = "admin",
         Category = "categoryFactionManagement",
     },
-    {
+    ["manageWhitelists"] = {
         Name = "manageWhitelists",
-        ID = "manageWhitelists",
         MinAccess = "admin",
         Category = "categoryFactionManagement",
     },

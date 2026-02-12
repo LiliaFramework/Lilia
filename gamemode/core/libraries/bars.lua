@@ -3,7 +3,7 @@
     File: bar.md
 ]]
 --[[
-    Bars Library
+    Bars
 
     Dynamic progress bar creation and management system for the Lilia framework.
 ]]

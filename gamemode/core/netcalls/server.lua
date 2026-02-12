@@ -558,6 +558,8 @@ end)
 
 net.Receive("liaArgumentsRequestCancel", function(_, client)
     local id = net.ReadUInt(32)
+    local req = client.liaArgReqs and client.liaArgReqs[id]
+    if req and isfunction(req.callback) then req.callback(false) end
     if client.liaArgReqs and client.liaArgReqs[id] then client.liaArgReqs[id] = nil end
 end)
 
@@ -1080,10 +1082,11 @@ local function buildResponsePayload(response)
     return {tostring(response)}
 end
 
-local function setupNPCType(npc, npcType)
-    if not IsValid(npc) or not npcType then return end
+local function setupNPCType(client, npc)
+    if not IsValid(npc) then return end
+    local npcType = npc.uniqueID
+    if not npcType then return end
     local existingCustomData = npc.customData
-    npc.uniqueID = npcType
     local npcData = lia.dialog.getNPCData(npcType)
     if npcData then
         local currentPos = npc:GetPos()
@@ -1136,6 +1139,7 @@ local function setupNPCType(npc, npcType)
 
         npc:setNetVar("NPCName", npc.NPCName)
         hook.Run("UpdateEntityPersistence", npc)
+        hook.Run("OnDialogNPCTypeSet", client, npc)
     end
 end
 
@@ -1227,7 +1231,10 @@ net.Receive("liaRequestNPCSelection", function(_, client)
     local uniqueID = net.ReadString()
     if IsValid(npcEntity) and IsValid(client) then
         local character = client:getChar()
-        if character then setupNPCType(npcEntity, uniqueID) end
+        if character then
+            npcEntity.uniqueID = uniqueID
+            setupNPCType(client, npcEntity)
+        end
     end
 end)
 

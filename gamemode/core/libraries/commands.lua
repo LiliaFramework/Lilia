@@ -3,7 +3,7 @@
     File: command.md
 ]]
 --[[
-    Commands Library
+    Commands
 
     Comprehensive command registration, parsing, and execution system for the Lilia framework.
 ]]
@@ -248,9 +248,9 @@ function lia.command.hasAccess(client, command, data)
     local char = IsValid(client) and client.getChar and client:getChar()
     if char then
         local faction = lia.faction.indices[char:getFaction()]
-        if faction and faction.commands and faction.commands[command] then return true, privilegeName end
+        if faction and faction.commands and table.HasValue(faction.commands, command) then return true, privilegeName end
         local classData = lia.class.list[char:getClass()]
-        if classData and classData.commands and classData.commands[command] then return true, privilegeName end
+        if classData and classData.commands and table.HasValue(classData.commands, command) then return true, privilegeName end
     end
     return hasAccess, privilegeName
 end
@@ -1329,6 +1329,139 @@ else
         else
             performPanelCheck()
         end
+    end)
+
+    concommand.Add("lia_panel_browser", function()
+        local allPanels = {}
+        local liaPanels = {}
+        local gmodPanels = {}
+        for panelName, _ in pairs(vgui.GetTypes()) do
+            table.insert(allPanels, panelName)
+            if string.StartWith(panelName, "lia") or string.StartWith(panelName, "Lia") then
+                table.insert(liaPanels, panelName)
+            else
+                table.insert(gmodPanels, panelName)
+            end
+        end
+
+        table.sort(allPanels)
+        table.sort(liaPanels)
+        table.sort(gmodPanels)
+        local frame = vgui.Create("liaFrame")
+        frame:SetTitle("VGUI Panel Browser")
+        frame:SetSize(900, 700)
+        frame:Center()
+        frame:MakePopup()
+        frame:SetSizable(true)
+        frame:SetMinWidth(600)
+        frame:SetMinHeight(400)
+        local infoPanel = vgui.Create("DPanel", frame)
+        infoPanel:Dock(TOP)
+        infoPanel:SetTall(60)
+        infoPanel:DockMargin(0, 0, 0, 5)
+        infoPanel.Paint = function(_, w, h)
+            lia.derma.rect(0, 0, w, h):Rad(4):Color(lia.color.theme.panel[1]):Draw()
+            draw.SimpleText("Total Panels: " .. #allPanels, "LiliaFont.18", 10, 10, lia.color.theme.text)
+            draw.SimpleText("Lilia Panels: " .. #liaPanels, "LiliaFont.16", 10, 35, lia.color.theme.accent)
+            draw.SimpleText("GMod Panels: " .. #gmodPanels, "LiliaFont.16", 200, 35, lia.color.theme.text)
+        end
+
+        local searchBox = vgui.Create("liaEntry", frame)
+        searchBox:Dock(TOP)
+        searchBox:DockMargin(0, 0, 0, 5)
+        searchBox:SetPlaceholderText("Search panels...")
+        searchBox:SetTall(35)
+        local categorySheet = vgui.Create("DPropertySheet", frame)
+        categorySheet:Dock(FILL)
+        categorySheet:DockMargin(0, 0, 0, 0)
+        local function createPanelList(parent, panelList)
+            local scroll = vgui.Create("liaScrollPanel", parent)
+            scroll:Dock(FILL)
+            local panelItems = {}
+            local function populateList(filter)
+                for _, item in ipairs(panelItems) do
+                    if IsValid(item) then item:Remove() end
+                end
+
+                panelItems = {}
+                for _, panelName in ipairs(panelList) do
+                    if not filter or filter == "" or string.find(string.lower(panelName), string.lower(filter)) then
+                        local panelItem = vgui.Create("DPanel", scroll)
+                        panelItem:Dock(TOP)
+                        panelItem:SetTall(50)
+                        panelItem:DockMargin(2, 2, 2, 2)
+                        panelItem.Paint = function(_, w, h)
+                            local col = lia.color.theme.panel[2]
+                            if panelItem:IsHovered() then col = ColorAlpha(lia.color.theme.accent, 30) end
+                            lia.derma.rect(0, 0, w, h):Rad(4):Color(col):Draw()
+                            draw.SimpleText(panelName, "LiliaFont.17", 10, h * 0.5, lia.color.theme.text, TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)
+                        end
+
+                        local spawnBtn = vgui.Create("liaButton", panelItem)
+                        spawnBtn:SetText("Test")
+                        spawnBtn:SetWide(80)
+                        spawnBtn:Dock(RIGHT)
+                        spawnBtn:DockMargin(5, 5, 5, 5)
+                        spawnBtn.DoClick = function()
+                            local success, err = pcall(function()
+                                local testPanel = vgui.Create(panelName)
+                                if IsValid(testPanel) then
+                                    if testPanel.SetSize then testPanel:SetSize(400, 300) end
+                                    if testPanel.Center then
+                                        testPanel:Center()
+                                    else
+                                        testPanel:SetPos(ScrW() * 0.5 - 200, ScrH() * 0.5 - 150)
+                                    end
+
+                                    if testPanel.MakePopup then testPanel:MakePopup() end
+                                    if testPanel.SetVisible then testPanel:SetVisible(true) end
+                                    LocalPlayer():ChatPrint("Created test instance of: " .. panelName)
+                                else
+                                    LocalPlayer():ChatPrint("Failed to create: " .. panelName)
+                                end
+                            end)
+
+                            if not success then LocalPlayer():ChatPrint("Error creating " .. panelName .. ": " .. tostring(err)) end
+                        end
+
+                        local copyBtn = vgui.Create("liaButton", panelItem)
+                        copyBtn:SetText("Copy")
+                        copyBtn:SetWide(80)
+                        copyBtn:Dock(RIGHT)
+                        copyBtn:DockMargin(5, 5, 5, 5)
+                        copyBtn.DoClick = function()
+                            SetClipboardText(panelName)
+                            LocalPlayer():ChatPrint("Copied to clipboard: " .. panelName)
+                        end
+
+                        table.insert(panelItems, panelItem)
+                    end
+                end
+            end
+
+            populateList()
+            return populateList
+        end
+
+        local allTab = vgui.Create("DPanel")
+        allTab.Paint = function(_, w, h) lia.derma.rect(0, 0, w, h):Rad(4):Color(Color(25, 28, 35, 250)):Draw() end
+        local allPopulate = createPanelList(allTab, allPanels)
+        categorySheet:AddSheet("All Panels (" .. #allPanels .. ")", allTab, "icon16/application_view_list.png")
+        local liaTab = vgui.Create("DPanel")
+        liaTab.Paint = function(_, w, h) lia.derma.rect(0, 0, w, h):Rad(4):Color(Color(25, 28, 35, 250)):Draw() end
+        local liaPopulate = createPanelList(liaTab, liaPanels)
+        categorySheet:AddSheet("Lilia Panels (" .. #liaPanels .. ")", liaTab, "icon16/star.png")
+        local gmodTab = vgui.Create("DPanel")
+        gmodTab.Paint = function(_, w, h) lia.derma.rect(0, 0, w, h):Rad(4):Color(Color(25, 28, 35, 250)):Draw() end
+        local gmodPopulate = createPanelList(gmodTab, gmodPanels)
+        categorySheet:AddSheet("GMod Panels (" .. #gmodPanels .. ")", gmodTab, "icon16/wrench.png")
+        searchBox.OnValueChange = function(_, value)
+            allPopulate(value)
+            liaPopulate(value)
+            gmodPopulate(value)
+        end
+
+        LocalPlayer():ChatPrint("Panel Browser opened! Found " .. #allPanels .. " registered panels.")
     end)
 
     concommand.Add("lia_saved_sounds", function()
@@ -8094,87 +8227,4 @@ concommand.Add("lia_give_money_steamid", function(client, _, args)
             end
         end
     end):catch(function(err) MsgC(Color(255, 0, 0), "[Lilia] ", Color(255, 255, 255), "Database error: " .. tostring(err) .. "\n") end)
-end)
-
-concommand.Add("lia_run_test_commands", function(client, _, args)
-    if IsValid(client) then
-        client:notifyErrorLocalized("commandConsoleOnly")
-        return
-    end
-
-    local steamID
-    MsgC(Color(255, 255, 255), "[Lilia] ", "Debug: Received " .. #args .. " arguments:\n")
-    for i, arg in ipairs(args) do
-        MsgC(Color(255, 255, 255), "[Lilia] ", "  args[" .. i .. "] = '" .. tostring(arg) .. "'\n")
-    end
-
-    for i, arg in ipairs(args) do
-        if string.match(arg, "STEAM_%d:%d:%d+") then
-            steamID = arg
-            MsgC(Color(255, 255, 255), "[Lilia] ", "Found complete SteamID in args[" .. i .. "]: " .. steamID .. "\n")
-            break
-        end
-    end
-
-    if not steamID and #args >= 3 then
-        local possibleSteamID = args[1] .. ":" .. args[2] .. ":" .. args[3]
-        if string.match(possibleSteamID, "STEAM_%d:%d:%d+") then
-            steamID = possibleSteamID
-            MsgC(Color(255, 255, 255), "[Lilia] ", "Reconstructed SteamID from args[1]+args[2]+args[3]: " .. steamID .. "\n")
-        end
-    end
-
-    if not steamID and #args > 0 then
-        local combined = table.concat(args, ":")
-        if string.match(combined, "STEAM_%d:%d:%d+") then
-            steamID = combined
-            MsgC(Color(255, 255, 255), "[Lilia] ", "Combined all arguments with colons: " .. steamID .. "\n")
-        end
-    end
-
-    if not steamID or not string.match(steamID, "STEAM_%d:%d:%d+") then
-        MsgC(Color(255, 0, 0), "[Lilia] ", Color(255, 255, 255), "Usage: lia_run_test_commands <steamID>\n")
-        MsgC(Color(255, 255, 0), "[Lilia] ", Color(255, 255, 255), "Supported formats:\n")
-        MsgC(Color(255, 255, 0), "[Lilia] ", Color(255, 255, 255), "  lia_run_test_commands STEAM_0:1:12345678\n")
-        MsgC(Color(255, 255, 0), "[Lilia] ", Color(255, 255, 255), "  lia_run_test_commands \"STEAM_0:1:12345678\"\n")
-        MsgC(Color(255, 255, 0), "[Lilia] ", Color(255, 255, 255), "  lia_run_test_commands STEAM_0 1 12345678\n")
-        return
-    end
-
-    MsgC(Color(255, 255, 255), "[Lilia] ", "Using SteamID: '" .. steamID .. "' (length: " .. string.len(steamID) .. ")\n")
-    MsgC(Color(83, 143, 239), "[Lilia] ", Color(255, 255, 255), "========================================\n")
-    MsgC(Color(83, 143, 239), "[Lilia] ", Color(255, 255, 255), "STARTING TEST COMMANDS FOR STEAMID: " .. steamID .. "\n")
-    MsgC(Color(83, 143, 239), "[Lilia] ", Color(255, 255, 255), "========================================\n")
-    MsgC(Color(255, 255, 255), "[Lilia] ", "This will execute 5 test commands with default values.\n")
-    MsgC(Color(255, 255, 255), "[Lilia] ", "Commands will be run for SteamID: " .. steamID .. "\n\n")
-    MsgC(Color(0, 255, 0), "[Lilia] ", Color(255, 255, 255), "[1/5] Setting extra characters to 5...\n")
-    MsgC(Color(255, 255, 255), "[Lilia] ", "Command: lia_setextrachars \"" .. steamID .. "\" 5\n")
-    MsgC(Color(255, 255, 255), "[Lilia] ", "Purpose: Allows player to have 5 additional characters beyond the default limit.\n")
-    game.ConsoleCommand("lia_setextrachars \"" .. steamID .. "\" 5\n")
-    MsgC(Color(0, 255, 0), "[Lilia] ", Color(255, 255, 255), "✓ Command 1 completed\n\n")
-    MsgC(Color(0, 255, 0), "[Lilia] ", Color(255, 255, 255), "[2/5] Granting permanent 'petr' flag...\n")
-    MsgC(Color(255, 255, 255), "[Lilia] ", "Command: lia_givepermaflags \"" .. steamID .. "\" petr\n")
-    MsgC(Color(255, 255, 255), "[Lilia] ", "Purpose: Gives permanent 'petr' permission flag to the player.\n")
-    game.ConsoleCommand("lia_givepermaflags \"" .. steamID .. "\" petr\n")
-    MsgC(Color(0, 255, 0), "[Lilia] ", Color(255, 255, 255), "✓ Command 2 completed\n\n")
-    MsgC(Color(0, 255, 0), "[Lilia] ", Color(255, 255, 255), "[3/5] Setting inventory size to 10x10 for all characters...\n")
-    MsgC(Color(255, 255, 255), "[Lilia] ", "Command: lia_set_inventory_size_all_chars \"" .. steamID .. "\" 10 10\n")
-    MsgC(Color(255, 255, 255), "[Lilia] ", "Purpose: Resizes all character inventories to 10 width x 10 height.\n")
-    game.ConsoleCommand("lia_set_inventory_size_all_chars \"" .. steamID .. "\" 10 10\n")
-    MsgC(Color(0, 255, 0), "[Lilia] ", Color(255, 255, 255), "✓ Command 3 completed\n\n")
-    MsgC(Color(0, 255, 0), "[Lilia] ", Color(255, 255, 255), "[4/5] Setting user group to superadmin...\n")
-    MsgC(Color(255, 255, 255), "[Lilia] ", "Command: plysetgroup \"" .. steamID .. "\" superadmin\n")
-    MsgC(Color(255, 255, 255), "[Lilia] ", "Purpose: Sets the player's usergroup to superadmin level.\n")
-    game.ConsoleCommand("plysetgroup \"" .. steamID .. "\" superadmin\n")
-    MsgC(Color(0, 255, 0), "[Lilia] ", Color(255, 255, 255), "✓ Command 4 completed\n\n")
-    MsgC(Color(0, 255, 0), "[Lilia] ", Color(255, 255, 255), "[5/5] Giving 1000 currency to all characters...\n")
-    MsgC(Color(255, 255, 255), "[Lilia] ", "Command: lia_give_money_steamid \"" .. steamID .. "\" 1000\n")
-    MsgC(Color(255, 255, 255), "[Lilia] ", "Purpose: Adds 1000 currency to all characters owned by this SteamID.\n")
-    game.ConsoleCommand("lia_give_money_steamid \"" .. steamID .. "\" 1000\n")
-    MsgC(Color(0, 255, 0), "[Lilia] ", Color(255, 255, 255), "✓ Command 5 completed\n\n")
-    MsgC(Color(83, 143, 239), "[Lilia] ", Color(255, 255, 255), "========================================\n")
-    MsgC(Color(0, 255, 0), "[Lilia] ", Color(255, 255, 255), "✓ ALL TEST COMMANDS COMPLETED SUCCESSFULLY!\n")
-    MsgC(Color(83, 143, 239), "[Lilia] ", Color(255, 255, 255), "Target SteamID: " .. steamID .. "\n")
-    MsgC(Color(255, 255, 255), "[Lilia] ", "Note: Check individual command outputs above for any database errors or issues.\n")
-    MsgC(Color(83, 143, 239), "[Lilia] ", Color(255, 255, 255), "========================================\n")
 end)

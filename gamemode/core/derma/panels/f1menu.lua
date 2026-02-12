@@ -44,7 +44,11 @@ function PANEL:CreateTextEntryWithBackgroundAndLabel(parent, name, labelText, ma
     entry:Dock(TOP)
     entry:DockMargin(0, 0, 0, marginBot or 0)
     entry:SetTall(35)
-    entry.Paint = function(_, w, h) lia.derma.rect(0, 0, w, h):Rad(8):Color(lia.color.theme.panel_alpha[1]):Shape(lia.derma.SHAPE_IOS):Draw() end
+    entry.Paint = function(_, w, h)
+        local bgColor = Color(35, 38, 45, 180)
+        lia.derma.rect(0, 0, w, h):Rad(6):Color(bgColor):Shape(lia.derma.SHAPE_IOS):Draw()
+    end
+
     local lbl = entry:Add("DLabel")
     lbl:Dock(LEFT)
     lbl:SetFont("LiliaFont.17")
@@ -97,7 +101,11 @@ function PANEL:CreateFillableBarWithBackgroundAndLabel(parent, name, labelText, 
     entry:Dock(TOP)
     entry:DockMargin(0, margin or 0, 0, margin or 0)
     entry:SetTall(40)
-    entry.Paint = function(_, w, h) lia.derma.rect(0, 0, w, h):Rad(8):Color(lia.color.theme.panel_alpha[1]):Shape(lia.derma.SHAPE_IOS):Draw() end
+    entry.Paint = function(_, w, h)
+        local bgColor = Color(35, 38, 45, 180)
+        lia.derma.rect(0, 0, w, h):Rad(6):Color(bgColor):Shape(lia.derma.SHAPE_IOS):Draw()
+    end
+
     local lbl = entry:Add("DLabel")
     lbl:Dock(LEFT)
     lbl:SetFont("LiliaFont.17")
@@ -171,10 +179,10 @@ function PANEL:CreateSection(parent, title)
     frame:Dock(TOP)
     frame:DockMargin(0, 10, 0, 10)
     frame:SetTall(200)
-    frame.Paint = function(_, w)
-        draw.SimpleText(L(title), "LiliaFont.17", w / 2, 8, lia.color.theme.text or Color(210, 235, 235), TEXT_ALIGN_CENTER, TEXT_ALIGN_TOP)
-        surface.SetDrawColor(lia.color.theme.theme.r, lia.color.theme.theme.g, lia.color.theme.theme.b, 100)
-        surface.DrawLine(12, 28, w - 12, 28)
+    frame.Paint = function(_, w, h)
+        local bgColor = Color(25, 28, 35, 250)
+        lia.derma.rect(0, 0, w, h):Rad(12):Color(bgColor):Shape(lia.derma.SHAPE_IOS):Draw()
+        draw.SimpleText(L(title), "LiliaFont.18", w / 2, 10, lia.color.theme.text or color_white, TEXT_ALIGN_CENTER, TEXT_ALIGN_TOP)
     end
 
     local header = vgui.Create("DPanel", frame)
@@ -258,13 +266,12 @@ function PANEL:Init()
     local schemaIconMat = SCHEMA and SCHEMA.icon and Material(SCHEMA.icon, "smooth") or nil
     local schemaName = SCHEMA and SCHEMA.name or nil
     topBar.Paint = function(pnl, w, h)
-        lia.util.drawBlur(pnl)
-        local headerColor = lia.color.theme.header or Color(34, 34, 34, 220)
-        surface.SetDrawColor(headerColor.r, headerColor.g, headerColor.b, 220)
-        surface.DrawRect(0, 0, w, h)
         local accentColor = lia.color.theme.accent or lia.color.theme.theme or lia.config.get("Color")
-        surface.SetDrawColor(accentColor.r, accentColor.g, accentColor.b, 255)
-        surface.DrawRect(0, h - 4, w, 4)
+        local bgColor = Color(25, 28, 35, 250)
+        lia.derma.rect(0, 0, w, h):Rad(0):Color(bgColor):Draw()
+        lia.derma.rect(0, h - 4, w, 4):Color(accentColor):Draw()
+        local glowColor = Color(accentColor.r, accentColor.g, accentColor.b, 8)
+        lia.derma.rect(1, 1, w - 2, h - 2):Color(glowColor):Outline(1):Draw()
         if schemaIconMat and schemaName then
             local iconSize = h * 0.5
             surface.SetMaterial(schemaIconMat)
@@ -653,27 +660,12 @@ function PANEL:addClassDetails(parent, cl)
     }
 
     add(L("bloodColor") .. ": " .. (bloodMap[cl.bloodcolor] or L("bloodRed")))
-    if cl.requirements then
-        local req
-        if istable(cl.requirements) then
-            local reqs = {}
-            for _, v in ipairs(cl.requirements) do
-                reqs[#reqs + 1] = L(v)
-            end
-
-            req = table.concat(reqs, ", ")
-        else
-            req = L(tostring(cl.requirements))
-        end
-
-        add(L("requirements") .. ": " .. req)
-    end
 end
 
 function PANEL:addJoinButton(parent, cl, canBe)
     local isCurrent = LocalPlayer():getChar() and LocalPlayer():getChar():getClass() == cl.index
     local btn = parent:Add("liaMediumButton")
-    btn:SetText(isCurrent and L("alreadyInClass") or canBe and L("joinClass") or L("classRequirementsNotMet"))
+    btn:SetText(isCurrent and L("alreadyInClass") or L("joinClass"))
     btn:SetTall(45)
     btn:Dock(BOTTOM)
     btn:DockMargin(10, 10, 10, 10)
@@ -840,9 +832,8 @@ hook.Add("CreateMenuButtons", "liaF1MenuCreateMenuButtons", function(tabs)
     tabs["information"] = function(infoTabPanel)
         local frame = infoTabPanel:Add("liaFrame")
         frame:Dock(FILL)
-        frame:DockMargin(10, 10, 10, 10)
-        frame:SetTitle(L("information"))
-        frame:LiteMode()
+        frame:DockPadding(10, 10, 10, 10)
+        frame:SetTitle("")
         frame:DisableCloseBtn()
         local pages = {}
         hook.Run("CreateInformationButtons", pages)
@@ -1275,13 +1266,17 @@ hook.Add("CreateMenuButtons", "liaF1MenuCreateMenuButtons", function(tabs)
         end
     end
 
-    local hasPrivilege = IsValid(LocalPlayer()) and LocalPlayer():hasPrivilege("accessEditConfigurationMenu") or false
-    if hasPrivilege then
+    local hasThemesPrivilege = IsValid(LocalPlayer()) and LocalPlayer():hasPrivilege("accessEditConfigurationMenu") or false
+    if hasThemesPrivilege then
         tabs["themes"] = function(themesPanel)
-            local sheet = themesPanel:Add("liaTabs")
+            local frame = themesPanel:Add("liaFrame")
+            frame:Dock(FILL)
+            frame:DockMargin(10, 10, 10, 10)
+            frame:SetTitle(L("themes"))
+            frame:LiteMode()
+            frame:DisableCloseBtn()
+            local sheet = frame:Add("liaTabs")
             sheet:Dock(FILL)
-            sheet:DockMargin(10, 10, 10, 10)
-            sheet.Paint = function(_, w, h) lia.derma.rect(0, 0, w, h):Rad(8):Color(lia.color.theme.background):Draw() end
             local function getLocalizedThemeName(themeID)
                 local properCaseName = themeID:gsub("(%a)([%w]*)", function(first, rest) return first:upper() .. rest:lower() end)
                 local localizationKey = "theme" .. properCaseName:gsub(" ", ""):gsub("-", "")
@@ -1356,9 +1351,11 @@ hook.Add("CreateMenuButtons", "liaF1MenuCreateMenuButtons", function(tabs)
                             local swatchY = (h - swatchSize) * 0.5
                             for idx, col in ipairs(entry.colors) do
                                 local x = startX + (idx - 1) * (swatchSize + gap)
+                                draw.RoundedBox(6, x - 2, swatchY - 2, swatchSize + 4, swatchSize + 4, Color(200, 200, 200, 255))
                                 draw.RoundedBox(6, x, swatchY, swatchSize, swatchSize, col)
-                                surface.SetDrawColor(255, 255, 255, 60)
+                                surface.SetDrawColor(255, 255, 255, 255)
                                 surface.DrawOutlinedRect(x, swatchY, swatchSize, swatchSize)
+                                surface.DrawOutlinedRect(x + 1, swatchY + 1, swatchSize - 2, swatchSize - 2)
                             end
                         end
                     end

@@ -593,25 +593,23 @@ net.Receive("liaOptionsRequest", function()
     local options = net.ReadTable()
     local limit = net.ReadUInt(32)
     lia.derma.requestOptions(L(titleKey), options, function(selectedOptions)
-        if selectedOptions == false then
-            net.Start("liaOptionsRequestCancel")
-            net.WriteUInt(id, 32)
-            net.SendToServer()
-        else
-            if limit > 0 and #selectedOptions > limit then
-                local limited = {}
-                for i = 1, limit do
-                    if selectedOptions[i] then table.insert(limited, selectedOptions[i]) end
-                end
-
-                selectedOptions = limited
+        if limit > 0 and #selectedOptions > limit then
+            local limited = {}
+            for i = 1, limit do
+                if selectedOptions[i] then table.insert(limited, selectedOptions[i]) end
             end
 
-            net.Start("liaOptionsRequest")
-            net.WriteUInt(id, 32)
-            net.WriteTable(selectedOptions)
-            net.SendToServer()
+            selectedOptions = limited
         end
+
+        net.Start("liaOptionsRequest")
+        net.WriteUInt(id, 32)
+        net.WriteTable(selectedOptions)
+        net.SendToServer()
+    end, function()
+        net.Start("liaOptionsRequestCancel")
+        net.WriteUInt(id, 32)
+        net.SendToServer()
     end)
 end)
 
@@ -1030,7 +1028,7 @@ net.Receive("liaOpenNpcDialog", function()
         npcName = npcData.PrintName
     end
 
-    lia.dialog.vgui = vgui.Create("DialogMenu")
+    lia.dialog.vgui = vgui.Create("liaDialogMenu")
     lia.dialog.vgui:SetDialogTitle(npcName)
     if npcData then
         local enhancedConversation = table.Copy(npcData.Conversation or {})

@@ -1,0 +1,6 @@
+title: About
+arrange:
+ - index.md
+ - installation.md
+ - compatibility.md
+ - features.md

@@ -3,7 +3,7 @@
     File: webimage.md
 ]]
 --[[
-    Web Image Library
+    Web Image
 
     Web-based image downloading, caching, and management system for the Lilia framework.
 ]]

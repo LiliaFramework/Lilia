@@ -95,7 +95,7 @@ function PANEL:Init()
                 local blurAlpha = 255
                 lia.util.drawBlur(_, blurAmount, blurPasses, blurAlpha)
                 local radius = 8
-                local baseColor = lia.color.theme.background_alpha
+                local baseColor = Color(25, 28, 35, 250)
                 local tintedColor = Color(math.Clamp((baseColor.r + facColor.r) * 0.5, 0, 255), math.Clamp((baseColor.g + facColor.g) * 0.5, 0, 255), math.Clamp((baseColor.b + facColor.b) * 0.5, 0, 255), baseColor.a)
                 lia.derma.rect(0, 0, ww, hh):Rad(radius):Color(tintedColor):Shape(lia.derma.SHAPE_IOS):Draw()
             end
@@ -156,7 +156,7 @@ function PANEL:Init()
                         lia.util.drawBlur(_, blurAmount, blurPasses, blurAlpha)
                         local radius = 6
                         local c = clsData.color or facColor
-                        local baseColor = lia.color.theme.background_alpha
+                        local baseColor = Color(25, 28, 35, 250)
                         local tintedColor = Color(math.Clamp((baseColor.r + c.r) * 0.5, 0, 255), math.Clamp((baseColor.g + c.g) * 0.5, 0, 255), math.Clamp((baseColor.b + c.b) * 0.5, 0, 255), baseColor.a)
                         lia.derma.rect(0, 0, ww, hh):Rad(radius):Color(tintedColor):Shape(lia.derma.SHAPE_IOS):Draw()
                     end

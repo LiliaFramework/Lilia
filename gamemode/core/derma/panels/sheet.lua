@@ -128,19 +128,8 @@ function PANEL:AddTextRow(data)
         end
 
         p.Paint = function(panel, w, h)
-            local radius = 6
-            local shadowIntensity = 8
-            local shadowBlur = 12
-            local accent = lia.color.theme.accent or lia.color.theme.header or lia.color.theme.theme
-            local background = lia.color.theme.background_alpha or lia.color.theme.background
-            lia.derma.rect(0, 0, w, h):Rad(radius):Color(lia.color.theme.window_shadow):Shadow(shadowIntensity, shadowBlur):Shape(lia.derma.SHAPE_IOS):Draw()
-            lia.util.drawBlur(panel, 4, 2)
-            lia.derma.rect(0, 0, w, h):Rad(radius):Color(background):Draw()
-            surface.SetDrawColor(accent)
-            surface.DrawRect(0, 0, w, 2)
-            surface.DrawRect(0, h - 2, w, 2)
-            surface.DrawRect(0, 0, 2, h)
-            surface.DrawRect(w - 2, 0, 2, h)
+            local bgColor = Color(25, 28, 35, 250)
+            lia.derma.rect(0, 0, w, h):Rad(8):Color(bgColor):Shape(lia.derma.SHAPE_IOS):Draw()
         end
 
         p.PerformLayout = function(panel)
@@ -176,19 +165,8 @@ function PANEL:AddSubsheetRow(cfg)
     local build = cfg.build
     return self:AddRow(function(p, row)
         p.Paint = function(panel, w, h)
-            local radius = 6
-            local shadowIntensity = 8
-            local shadowBlur = 12
-            local accent = lia.color.theme.accent or lia.color.theme.header or lia.color.theme.theme
-            local background = lia.color.theme.background_alpha or lia.color.theme.background
-            lia.derma.rect(0, 0, w, h):Rad(radius):Color(lia.color.theme.window_shadow):Shadow(shadowIntensity, shadowBlur):Shape(lia.derma.SHAPE_IOS):Draw()
-            lia.util.drawBlur(panel, 4, 2)
-            lia.derma.rect(0, 0, w, h):Rad(radius):Color(background):Draw()
-            surface.SetDrawColor(accent)
-            surface.DrawRect(0, 0, w, 2)
-            surface.DrawRect(0, h - 2, w, 2)
-            surface.DrawRect(0, 0, 2, h)
-            surface.DrawRect(w - 2, 0, 2, h)
+            local bgColor = Color(25, 28, 35, 250)
+            lia.derma.rect(0, 0, w, h):Rad(8):Color(bgColor):Shape(lia.derma.SHAPE_IOS):Draw()
         end
 
         local cat = vgui.Create("DCollapsibleCategory", p)
@@ -294,19 +272,8 @@ function PANEL:AddPreviewRow(data)
         end
 
         p.Paint = function(panel, w, h)
-            local radius = 6
-            local shadowIntensity = 8
-            local shadowBlur = 12
-            local accent = lia.color.theme.accent or lia.color.theme.header or lia.color.theme.theme
-            local background = lia.color.theme.background_alpha or lia.color.theme.background
-            lia.derma.rect(0, 0, w, h):Rad(radius):Color(lia.color.theme.window_shadow):Shadow(shadowIntensity, shadowBlur):Shape(lia.derma.SHAPE_IOS):Draw()
-            lia.util.drawBlur(panel, 4, 2)
-            lia.derma.rect(0, 0, w, h):Rad(radius):Color(background):Draw()
-            surface.SetDrawColor(accent)
-            surface.DrawRect(0, 0, w, 2)
-            surface.DrawRect(0, h - 2, w, 2)
-            surface.DrawRect(0, 0, 2, h)
-            surface.DrawRect(w - 2, 0, 2, h)
+            local bgColor = Color(25, 28, 35, 250)
+            lia.derma.rect(0, 0, w, h):Rad(8):Color(bgColor):Shape(lia.derma.SHAPE_IOS):Draw()
         end
 
         p.PerformLayout = function()

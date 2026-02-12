@@ -3,7 +3,7 @@
     File: vendor.md
 ]]
 --[[
-    Vendor Library
+    Vendor
 
     NPC vendor management system with editing and rarity support for the Lilia framework.
 ]]

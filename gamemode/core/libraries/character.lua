@@ -3,7 +3,7 @@
     File: char.md
 ]]
 --[[
-    Character Library
+    Character
 
     Comprehensive character creation, management, and persistence system for the Lilia framework.
 ]]

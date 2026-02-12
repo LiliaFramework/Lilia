@@ -3,7 +3,7 @@
     File: faction.md
 ]]
 --[[
-    Faction Library
+    Faction
 
     Comprehensive faction (team) management and registration system for the Lilia framework.
 ]]
@@ -183,6 +183,39 @@ function lia.faction.loadFromDir(directory)
         lia.faction.teams[niceName] = FACTION
         FACTION = nil
     end
+end
+
+--[[
+    Purpose:
+        Retrieves all registered factions as a table.
+
+    When Called:
+        Called whenever all faction information needs to be accessed by other systems or scripts.
+
+    Parameters:
+        None
+
+    Returns:
+        table
+            A table containing all faction data tables.
+
+    Realm:
+        Shared
+
+    Example Usage:
+        ```lua
+        local allFactions = lia.faction.getAll()
+        for _, faction in ipairs(allFactions) do
+            print("Faction: " .. faction.name)
+        end
+        ```
+]]
+function lia.faction.getAll()
+    local allFactions = {}
+    for _, faction in pairs(lia.faction.teams) do
+        table.insert(allFactions, faction)
+    end
+    return allFactions
 end
 
 --[[

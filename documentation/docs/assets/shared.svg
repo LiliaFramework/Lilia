@@ -1,4 +1,0 @@
-<?xml version="1.0" standalone="no"?>
-<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 20010904//EN"
- "http://www.w3.org/TR/2001/REC-SVG-20010904/DTD/svg10.dtd">
-<svg width="150" height="150" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="grad1" x1="0%" x2="100%" y1="100%" y2="0%"> <stop offset="0%" stop-color="#ff8800" /> <stop offset="50%" stop-color="#ff8800" /><stop offset="51%" stop-color="#0088ff" /> <stop offset="100%" stop-color="#0088ff" /> </linearGradient></defs><rect width="130" height="130" x="10" y="10" rx="20" ry="20" fill="url(#grad1)" /></svg>

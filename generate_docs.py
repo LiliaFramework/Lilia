@@ -4,7 +4,10 @@ import os
 import re
 import sys
 import argparse
+import urllib.request
+import json
 from pathlib import Path
+from io import StringIO
 from typing import List, Dict, Tuple, Optional
 
 CORE_HOOKS = {
@@ -46,7 +49,7 @@ def parse_comment_block(comment_text):
     current_example = None
     example_complexity = None
     section_content = []
-    pending_parameter = None  # Track pending parameter for new format (name, type)
+    pending_parameter = None# Track pending parameter for new format (name, type)
 
     def finalize_current_section():
         if current_section and section_content:
@@ -212,8 +215,8 @@ def parse_comment_block(comment_text):
             inline_content = line[8:].strip()
             if inline_content:
                 section_content.append(inline_content)
-            # Check if next line might have the return type (new format)
-            # This will be handled in the returns section processing
+        # Check if next line might have the return type (new format)
+        # This will be handled in the returns section processing
         elif line.startswith('Realm:'):
             finalize_current_section()
             current_section = 'realm'
@@ -354,7 +357,7 @@ def format_lua_code(code_lines):
         final_lines = []
         for line in code_lines:
             if line.strip():
-                final_lines.append('    ' + line)
+                final_lines.append('  ' + line)
             else:
                 final_lines.append('')
         return final_lines
@@ -373,7 +376,7 @@ def format_lua_code(code_lines):
     final_lines = []
     for line in formatted_lines:
         if line.strip():
-            final_lines.append('    ' + line)
+            final_lines.append('  ' + line)
         else:
             final_lines.append('')
 
@@ -464,14 +467,14 @@ def generate_anchor_from_name(name):
 
 def get_type_link(type_name):
     type_links = {
-        'string': 'https://www.lua.org/manual/5.1/manual.html#5.4',
-        'number': 'https://www.lua.org/manual/5.1/manual.html#5.3',
-        'boolean': 'https://www.lua.org/manual/5.1/manual.html#5.2',
-        'table': 'https://www.lua.org/manual/5.1/manual.html#5.5',
-        'function': 'https://www.lua.org/manual/5.1/manual.html#5.6',
-        'nil': 'https://www.lua.org/manual/5.1/manual.html#5.1',
-        'thread': 'https://www.lua.org/manual/5.1/manual.html#5.7',
-        'userdata': 'https://www.lua.org/manual/5.1/manual.html#5.8',
+        'string': 'https://www.lua.org/manual/5.1/manual.html#2.1',
+        'number': 'https://www.lua.org/manual/5.1/manual.html#2.1',
+        'boolean': 'https://www.lua.org/manual/5.1/manual.html#2.1',
+        'table': 'https://www.lua.org/manual/5.1/manual.html#2.1',
+        'function': 'https://www.lua.org/manual/5.1/manual.html#2.1',
+        'nil': 'https://www.lua.org/manual/5.1/manual.html#2.1',
+        'thread': 'https://www.lua.org/manual/5.1/manual.html#2.1',
+        'userdata': 'https://www.lua.org/manual/5.1/manual.html#2.1',
         'Player': 'https://wiki.facepunch.com/gmod/Player',
         'Entity': 'https://wiki.facepunch.com/gmod/Entity',
         'Vector': 'https://wiki.facepunch.com/gmod/Vector',
@@ -508,18 +511,52 @@ def get_type_link(type_name):
         'SurfaceInfo': 'https://wiki.facepunch.com/gmod/SurfaceInfo',
         'TraceResult': 'https://wiki.facepunch.com/gmod/TraceResult',
         'Trace': 'https://wiki.facepunch.com/gmod/Trace',
-        'any': 'https://www.lua.org/manual/5.1/manual.html#2.2',
+        'any': 'https://www.lua.org/manual/5.1/manual.html#2.1',
         'vararg': 'https://www.lua.org/manual/5.1/manual.html#5.2.4',
     }
 
     if not type_name:
         return 'https://www.lua.org/manual/5.1/manual.html#2.2'
+
     key = type_name.strip()
     lower = key.lower()
+
+    # Lilia-specific type mappings
+    lilia_mappings = {
+        'inventory': '/development/libraries/inventory/',
+        'item': '/development/libraries/item/',
+        'character': '/development/libraries/char/',
+        'faction': '/development/libraries/faction/',
+        'factions': '/development/libraries/faction/',
+        'class': '/development/libraries/class/',
+        'classes': '/development/libraries/class/',
+        'attribute': '/development/libraries/attribs/',
+        'attributes': '/development/libraries/attribs/',
+        'player': '/development/meta/player/',
+        'entity': '/development/meta/entity/',
+        'panel': '/development/meta/panel/',
+        'Character': '/development/meta/character/',
+        'ItemDefinition': '/development/meta/item/',
+        'InventoryType': '/development/libraries/inventory/',
+    }
+
+    # Check for lia. prefix
+    if lower.startswith('lia.'):
+        lib_name = lower[4:]
+        if lib_name in lilia_mappings:
+            return lilia_mappings[lib_name]
+        return f'/development/libraries/{lib_name}/'
+
+    if lower in lilia_mappings:
+        return lilia_mappings[lower]
+    if key in lilia_mappings:
+        return lilia_mappings[key]
+
     if lower in type_links:
         return type_links[lower]
     if key in type_links:
         return type_links[key]
+
     return 'https://www.lua.org/manual/5.1/manual.html#2.2'
 
 
@@ -563,7 +600,7 @@ def _split_returns_text(returns_text: str) -> Tuple[Optional[str], str]:
         return lines[0], ' '.join(lines[1:]).strip()
     return None, ' '.join(lines).strip()
 
-def generate_markdown_for_function(function_name, parsed_comment, is_library=False):
+def generate_markdown_for_function(function_name, parsed_comment, is_library=False, no_realm=False, no_icon=False):
     display_name = function_name
     if is_library and not function_name.startswith('lia.'):
         display_name = f'lia.{function_name}'
@@ -583,30 +620,37 @@ def generate_markdown_for_function(function_name, parsed_comment, is_library=Fal
 
     signature_params = ', '.join([p.get('name', '').strip() for p in parsed_comment.get('parameters', []) if p.get('name')])
     signature = f'({signature_params})' if signature_params else '()'
-    anchor = generate_anchor_from_name(display_name)
-    md = f'<details class="{realm_class}">\n'
-    md += f'<summary><a id={display_name}></a>{display_name}{signature}</summary>\n'
-    md += f'<a id="{anchor}"></a>\n'
-
+    slug = generate_anchor_from_name(display_name)
+    classes = []
+    if realm_class:
+        classes.append(realm_class)
+    if no_icon:
+        classes.append('no-icon')
+    
+    realm_attr = f' class="{" ".join(classes)}"' if classes else ''
+    md = f'<details{realm_attr} id="function-{slug}">\n'
+    md += f'<summary><a id="{display_name}"></a>{display_name}{signature}</summary>\n'
+    md += f'<div class="details-content">\n'
     if parsed_comment['purpose']:
-        md += f'<p>{parsed_comment["purpose"]}</p>\n'
+        md += f'<h3 style="margin-bottom: 5px; font-weight: 700;"><a id="{slug}"></a>Purpose</h3>\n'
+        md += f'<div style="margin-left: 20px; margin-bottom: 20px;">\n  <p>{parsed_comment["purpose"]}</p>\n</div>\n\n'
 
     if parsed_comment['when_called']:
-        md += f'<p>{parsed_comment["when_called"]}</p>\n'
+        md += f'<h3 style="margin-bottom: 5px; font-weight: 700;">When Called</h3>\n'
+        md += f'<div style="margin-left: 20px; margin-bottom: 20px;">\n  <p>{parsed_comment["when_called"]}</p>\n</div>\n\n'
     elif parsed_comment.get('when_used'):
-        md += f'<p>{parsed_comment["when_used"]}</p>\n'
+        md += f'<h3 style="margin-bottom: 5px; font-weight: 700;">When Called</h3>\n'
+        md += f'<div style="margin-left: 20px; margin-bottom: 20px;">\n  <p>{parsed_comment["when_used"]}</p>\n</div>\n\n'
+
 
     if parsed_comment['parameters']:
-        first_param = True
+        md += '<h3 style="margin-bottom: 5px; font-weight: 700;">Parameters</h3>\n'
+        md += '<div style="margin-left: 20px; margin-bottom: 20px;">\n'
         for param in parsed_comment['parameters']:
             display_type, link_type, is_optional = _split_optional_type(param["type"])
             type_link = get_type_link(link_type)
             desc = (param.get("description") or "").strip()
-            if first_param:
-                md += '<p><h3>Parameters:</h3>\n'
-                first_param = False
-            else:
-                md += '<p>'
+            md += '<p>'
             md += f'<span class="types"><a class="type" href="{type_link}">{display_type}</a></span> '
             md += f'<span class="parameter">{param["name"]}</span>'
             if is_optional:
@@ -614,33 +658,39 @@ def generate_markdown_for_function(function_name, parsed_comment, is_library=Fal
             if desc:
                 md += f' {desc}'
             md += '</p>\n'
-        md += '\n'
+        md += '</div>\n\n'
 
     if parsed_comment['returns']:
+        md += '<h3 style="margin-bottom: 5px; font-weight: 700;">Returns</h3>\n'
+        md += '<div style="margin-left: 20px; margin-bottom: 20px;">\n'
         ret_type, ret_desc = _split_returns_text(parsed_comment["returns"])
         if ret_type:
             display_type, link_type = _split_type_display_link(ret_type)
             type_link = get_type_link(link_type)
             ret_desc = (ret_desc or '').strip()
-            md += '<p><h3>Returns:</h3>\n'
-            md += f'<span class="types"><a class="type" href="{type_link}">{display_type}</a></span>'
+            md += f'<p><span class="types"><a class="type" href="{type_link}">{display_type}</a></span>'
             if ret_desc:
                 md += f' {ret_desc}'
-            md += '</p>\n\n'
+            md += '</p>\n'
         else:
-            md += f'<p><h3>Returns:</h3>\n{ret_desc}</p>\n\n'
+            md += f'<p>{ret_desc}</p>\n'
+        md += '</div>\n\n'
 
     if parsed_comment.get('explanation'):
-        md += f'<p>{parsed_comment["explanation"]}</p>\n'
+        md += f'<h3 style="margin-bottom: 5px; font-weight: 700;">Explanation</h3>\n'
+        md += f'<div style="margin-left: 20px; margin-bottom: 20px;">\n  <p>{parsed_comment["explanation"]}</p>\n</div>\n\n'
 
     if parsed_comment['examples']:
-        md += '<h3>Example Usage:</h3>\n'
+        md += '<h3 style="margin-bottom: 5px; font-weight: 700;">Example Usage</h3>\n'
+        md += '<div style="margin-left: 20px; margin-bottom: 20px;">\n'
         for example in parsed_comment['examples']:
             md += '<pre><code class="language-lua">'
             formatted_code = format_lua_code(example['code'])
             md += '\n'.join(formatted_code).replace('&', '&amp;').replace('<', '&lt;').replace('>', '&gt;')
             md += '</code></pre>\n'
+        md += '</div>\n\n'
 
+    md += '</div>\n'
     md += '</details>\n\n'
     return md
 
@@ -670,7 +720,7 @@ def find_comment_blocks_in_file(file_path):
     return all_comment_blocks, file_header, overview_section
 
 
-def generate_documentation_for_file(file_path, output_dir, is_library=False, base_docs_dir=None, force=False):
+def generate_documentation_for_file(file_path, output_dir, is_library=False, base_docs_dir=None, force=False, no_realm=False, no_icon=False):
     print(f"Processing {file_path}")
 
     try:
@@ -681,6 +731,16 @@ def generate_documentation_for_file(file_path, output_dir, is_library=False, bas
         return
 
     custom_folder, custom_filename, append = parse_folder_directives(file_content)
+    
+    # Remap legacy folder directives to new development structure
+    if custom_folder:
+        if custom_folder.lower() == 'meta':
+             custom_folder = 'development/meta'
+        elif custom_folder.lower() in ['libraries', 'library', 'core libraries']:
+             custom_folder = 'development/libraries'
+        elif custom_folder.lower() == 'server_owner':
+             custom_folder = 'development'
+    
     comment_blocks, file_header, overview_section = find_comment_blocks_in_file(file_path)
 
     if file_header and ('Folder:' in file_header or 'File:' in file_header):
@@ -692,12 +752,12 @@ def generate_documentation_for_file(file_path, output_dir, is_library=False, bas
     functions = find_functions_in_file(file_path, is_library)
 
     if not functions and not file_header and not overview_section:
-        print(f"  No structured functions or documentation content found in {file_path}")
+        print(f" No structured functions or documentation content found in {file_path}")
         return
 
     if custom_folder and custom_filename and base_docs_dir:
         output_path = base_docs_dir / custom_folder / custom_filename
-        print(f"  Using custom output: {custom_folder}/{custom_filename}")
+        print(f" Using custom output: {custom_folder}/{custom_filename}")
     else:
         filename = Path(file_path).stem
 
@@ -720,7 +780,7 @@ def generate_documentation_for_file(file_path, output_dir, is_library=False, bas
         output_path = Path(output_dir) / output_filename
 
     if output_path.exists() and output_path.stat().st_size > 0 and not force and not append:
-        print(f"  {output_path.name} already exists, skipping")
+        print(f" {output_path.name} already exists, skipping")
         return
 
     sections = []
@@ -734,7 +794,7 @@ def generate_documentation_for_file(file_path, output_dir, is_library=False, bas
                 if ':' in func_name:
                     hook_name = func_name.split(':', 1)[1]
                     if hook_name in CORE_HOOKS:
-                        print(f"  Skipping hook implementation: {func_name} (documented centrally)")
+                        print(f" Skipping hook implementation: {func_name} (documented centrally)")
                         continue
 
             display_name = func['name']
@@ -746,11 +806,11 @@ def generate_documentation_for_file(file_path, output_dir, is_library=False, bas
                 display_name = func['name']
             
             function_names.append(display_name)
-            section = generate_markdown_for_function(func['name'], parsed, is_library)
+            section = generate_markdown_for_function(func['name'], parsed, is_library, no_realm=no_realm, no_icon=no_icon)
             sections.append(section)
 
     if not sections and not file_header and not overview_section:
-        print(f"  No valid function documentation or content found in {file_path}")
+        print(f" No valid function documentation or content found in {file_path}")
         return
 
     output_path.parent.mkdir(parents=True, exist_ok=True)
@@ -780,17 +840,18 @@ def generate_documentation_for_file(file_path, output_dir, is_library=False, bas
             f.write('---\n\n')
 
             if overview_section:
-                f.write('Overview\n\n')
+                f.write('<h3 style="margin-bottom: 5px;">Overview</h3>\n')
+                f.write('<div style="margin-left: 20px; margin-bottom: 20px;">\n')
                 overview_content = parse_overview_section(overview_section)
                 f.write(overview_content)
-                f.write('\n\n')
+                f.write('\n</div>\n\n')
                 f.write('---\n\n')
 
         for section in sections:
             f.write(section)
             f.write('---\n\n')
 
-    print(f"  Generated {output_path.name}")
+    print(f" Generated {output_path.name}")
 
 
 def _read_file_text(file_path: Path) -> str:
@@ -800,261 +861,6 @@ def _read_file_text(file_path: Path) -> str:
     except UnicodeDecodeError:
         print(f"Warning: Could not read {file_path} due to encoding issues")
         return ''
-
-
-def parse_definition_property_blocks(file_path: Path, entity_prefixes: Tuple[str, ...]) -> List[Dict[str, object]]:
-    text = _read_file_text(file_path)
-    if not text:
-        return []
-
-    entries: List[Dict[str, object]] = []
-
-    for match in re.finditer(r'--\[\[.*?\]\]', text, re.DOTALL):
-        block_text = match.group(0)
-        if any(header in block_text for header in ['Example Item:', 'Example Class:', 'Example Faction:']):
-            continue
-        if not any(header in block_text for header in ['Purpose:', 'When Called:', 'When Used:', 'Parameters:', 'Returns:', 'Realm:', 'Explanation of Panel:', 'Example Usage:']):
-            continue
-
-        tail = text[match.end():]
-        prop_name = None
-        for ln in tail.splitlines():
-            s = ln.strip()
-            if not s:
-                continue
-            if s.startswith('--'):
-                continue
-            for prefix in entity_prefixes:
-                m = re.match(rf'{prefix}\.([A-Za-z_][\w]*)', s)
-                if m:
-                    prop_name = m.group(1)
-                    break
-                m = re.match(rf'function\s+{prefix}:([A-Za-z_][\w]*)', s)
-                if m:
-                    prop_name = m.group(1)
-                    break
-            if prop_name:
-                break
-
-        if prop_name:
-            parsed = parse_comment_block(block_text)
-            entries.append({'name': prop_name, 'parsed': parsed})
-
-    return entries
-
-
-def generate_markdown_for_definition_entries(title: str, subtitle: str, overview_section: Optional[str], entries: List[Dict[str, object]], append: bool = False) -> str:
-    md_parts: List[str] = []
-    if not append:
-        md_parts.append(f'# {title}\n\n')
-        if subtitle:
-            md_parts.append(subtitle + '\n\n')
-        md_parts.append('---\n\n')
-
-        if overview_section:
-            md_parts.append('Overview\n\n')
-            md_parts.append(parse_overview_section(overview_section) + '\n\n')
-            md_parts.append('---\n\n')
-
-    for entry in entries:
-        name = entry['name']
-        parsed = entry['parsed']
-        anchor = generate_anchor_from_name(name)
-        md_parts.append(f'<a id="{anchor}"></a>\n### {name}\n\n')
-        if parsed.get('purpose'):
-            md_parts.append(f'#### 📋 Purpose\n{parsed["purpose"]}\n\n')
-        if parsed.get('when_called'):
-            md_parts.append(f'#### ⏰ When Called\n{parsed["when_called"]}\n\n')
-        elif parsed.get('when_used'):
-            md_parts.append(f'#### ⏰ When Called\n{parsed["when_used"]}\n\n')
-        if parsed.get('realm'):
-            md_parts.append(f'#### 🌐 Realm\n{parsed["realm"]}\n\n')
-        if parsed.get('explanation'):
-            md_parts.append(f'#### 📋 Purpose\n{parsed["explanation"]}\n\n')
-        if parsed.get('parameters'):
-            first_param = True
-            for p in parsed['parameters']:
-                display_type, link_type, is_optional = _split_optional_type(p["type"])
-                type_link = get_type_link(link_type)
-                desc = (p.get("description") or "").strip()
-                if first_param:
-                    md_parts.append('<p><h3>Parameters:</h3>\n')
-                    first_param = False
-                else:
-                    md_parts.append('<p>')
-                md_parts.append(f'<span class="types"><a class="type" href="{type_link}">{display_type}</a></span> ')
-                md_parts.append(f'<span class="parameter">{p["name"]}</span>')
-                if is_optional:
-                    md_parts.append(' <span class="optional">optional</span>')
-                if desc:
-                    md_parts.append(f' {desc}')
-                md_parts.append('</p>\n')
-            md_parts.append('\n')
-        if parsed.get('returns'):
-            ret_type, ret_desc = _split_returns_text(parsed["returns"])
-            if ret_type:
-                display_type, link_type = _split_type_display_link(ret_type)
-                type_link = get_type_link(link_type)
-                ret_desc = (ret_desc or '').strip()
-                md_parts.append('<p><h3>Returns:</h3>\n')
-                md_parts.append(f'<span class="types"><a class="type" href="{type_link}">{display_type}</a></span>')
-                if ret_desc:
-                    md_parts.append(f' {ret_desc}')
-                md_parts.append('</p>\n\n')
-            else:
-                md_parts.append(f'<p><h3>Returns:</h3>\n{ret_desc}</p>\n\n')
-        if parsed.get('examples'):
-            md_parts.append('#### 💡 Example Usage\n\n')
-            for example in parsed['examples']:
-                md_parts.append('```lua\n')
-                formatted_code = format_lua_code(example.get('code', []))
-                md_parts.append('\n'.join(formatted_code))
-                md_parts.append('\n```\n\n')
-        md_parts.append('---\n\n')
-
-    return ''.join(md_parts)
-
-
-def generate_documentation_for_panels(file_path: Path, output_path: Path) -> None:
-    print(f"Processing {file_path}")
-    text = _read_file_text(file_path)
-    if not text:
-        return
-
-    custom_folder, custom_filename, append = parse_folder_directives(text)
-    comment_blocks, file_header, overview_section = find_comment_blocks_in_file(file_path)
-
-    lines = text.splitlines()
-    block_positions: List[Tuple[int, int, str]] = []
-    for match in re.finditer(r'--\[\[.*?\]\]', text, re.DOTALL):
-        block_positions.append((match.start(), match.end(), match.group(0)))
-
-    entries: List[Dict[str, object]] = []
-    for start, end, block_text in block_positions:
-        if not any(k in block_text for k in ['Purpose:', 'Explanation of Panel:', 'When Used:']):
-            continue
-
-        tail = text[end:]
-        panel_name = None
-        for ln in tail.splitlines():
-            s = ln.strip()
-            if not s:
-                continue
-            if s.startswith('--'):
-                continue
-            panel_name = s
-            break
-
-        parsed = parse_comment_block(block_text)
-        if panel_name:
-            entries.append({'name': panel_name, 'parsed': parsed})
-
-    filename = file_path.stem
-    title = filename.title()
-    subtitle = 'This page documents available VGUI panels.'
-    if file_header:
-        parsed_header = parse_file_header(file_header)
-        if '\n\n' in parsed_header:
-            parts = parsed_header.split('\n\n', 1)
-            title = parts[0].replace('**', '').replace('*', '').strip()
-            if len(parts) > 1 and parts[1].strip():
-                subtitle = parts[1].strip()
-
-    md = generate_markdown_for_definition_entries(title, subtitle, overview_section, entries, append)
-    output_path.parent.mkdir(parents=True, exist_ok=True)
-    file_mode = 'a' if append else 'w'
-    with open(output_path, file_mode, encoding='utf-8') as f:
-        f.write(md)
-    print(f"  Generated {output_path.name}")
-
-
-def generate_documentation_for_definitions_file(file_path: Path, output_dir: Path, base_docs_dir: Path) -> None:
-    try:
-        with open(file_path, 'r', encoding='utf-8-sig') as f:
-            file_content = f.read()
-    except UnicodeDecodeError:
-        print(f"Warning: Could not read {file_path} due to encoding issues")
-        return
-
-    is_item_file = 'items' in str(file_path)
-    custom_folder, custom_filename, append = parse_folder_directives(file_content)
-
-    if custom_folder and custom_filename:
-        output_path = base_docs_dir / custom_folder / custom_filename
-        print(f"  Using custom output: {custom_folder}/{custom_filename}")
-    else:
-        name = file_path.stem.lower()
-        output_filename = f'{name}.md'
-
-        if is_item_file:
-            output_path = output_dir / 'items' / output_filename
-        else:
-            output_path = output_dir / output_filename
-
-    if file_path.stem.lower() == 'panels':
-        generate_documentation_for_panels(file_path, output_path)
-        return
-
-    if is_item_file:
-        entity_prefixes: Tuple[str, ...] = ('ITEM',)
-    elif file_path.stem.lower() == 'attributes':
-        entity_prefixes: Tuple[str, ...] = ('ATTRIBUTE',)
-    else:
-        entity_prefixes: Tuple[str, ...] = ('CLASS', 'FACTION', 'MODULE')
-
-    comment_blocks, file_header, overview_section = find_comment_blocks_in_file(file_path)
-
-    if is_item_file:
-        content_blocks = []
-        for block in comment_blocks:
-            if not ('Folder:' in block or 'File:' in block):
-                content_blocks.append(block)
-
-        if len(content_blocks) >= 2:
-            file_header = content_blocks[0]
-            overview_section = content_blocks[1]
-        elif len(content_blocks) == 1:
-            file_header = content_blocks[0]
-    else:
-        if file_header and ('Folder:' in file_header or 'File:' in file_header):
-            for block in comment_blocks:
-                if block != file_header and not ('Folder:' in block or 'File:' in block):
-                    file_header = block
-                    break
-
-    entries = parse_definition_property_blocks(file_path, entity_prefixes)
-
-    if custom_filename:
-        display_name = custom_filename.replace('.md', '').title()
-    else:
-        display_name = file_path.stem.lower().title()
-
-    title = display_name
-    subtitle = f'This page documents the {display_name.lower()} definitions.'
-
-    if file_header:
-        if is_item_file:
-            parsed_header = parse_file_header(file_header)
-            if '\n\n' in parsed_header:
-                parts = parsed_header.split('\n\n', 1)
-                title = parts[0].replace('**', '').replace('*', '').strip()
-                if len(parts) > 1 and parts[1].strip():
-                    subtitle = parts[1].strip()
-        else:
-            parsed_header = parse_file_header(file_header)
-            if '\n\n' in parsed_header:
-                parts = parsed_header.split('\n\n', 1)
-                title = parts[0].replace('**', '').replace('*', '').strip()
-                if len(parts) > 1 and parts[1].strip():
-                    subtitle = parts[1].strip()
-
-    final_overview = overview_section
-    md = generate_markdown_for_definition_entries(title, subtitle, final_overview, entries, append)
-    output_path.parent.mkdir(parents=True, exist_ok=True)
-    file_mode = 'a' if append else 'w'
-    with open(output_path, file_mode, encoding='utf-8') as f:
-        f.write(md)
-    print(f"  Generated {output_path.name}")
 
 
 def generate_documentation_for_hooks_file(file_path: Path, output_dir: Path, base_docs_dir: Path) -> None:
@@ -1071,7 +877,7 @@ def generate_documentation_for_hooks_file(file_path: Path, output_dir: Path, bas
 
     if custom_folder and custom_filename:
         output_path = base_docs_dir / custom_folder / custom_filename
-        print(f"  Using custom output: {custom_folder}/{custom_filename}")
+        print(f" Using custom output: {custom_folder}/{custom_filename}")
     else:
         filename = file_path.stem
         output_filename = f'{filename}.md'
@@ -1082,7 +888,7 @@ def generate_documentation_for_hooks_file(file_path: Path, output_dir: Path, bas
     functions = find_functions_in_file(file_path, is_library=False)
 
     if not functions and not file_header and not overview_section:
-        print(f"  No hooks or documentation content found in {file_path}")
+        print(f" No hooks or documentation content found in {file_path}")
         return
 
     sections: List[str] = []
@@ -1114,171 +920,183 @@ def generate_documentation_for_hooks_file(file_path: Path, output_dir: Path, bas
 
     output_path.parent.mkdir(parents=True, exist_ok=True)
     file_mode = 'a' if append else 'w'
+
     with open(output_path, file_mode, encoding='utf-8') as f:
         if not append:
             f.write(f'# {title}\n\n')
             f.write(subtitle + '\n\n')
             f.write('---\n\n')
             if overview_section:
-                f.write('Overview\n\n')
-                f.write(parse_overview_section(overview_section) + '\n\n')
+                f.write('<h3 style="margin-bottom: 5px;">Overview</h3>\n')
+                f.write('<div style="margin-left: 20px; margin-bottom: 20px;">\n')
+                f.write(parse_overview_section(overview_section) + '\n')
+                f.write('</div>\n\n')
                 f.write('---\n\n')
         for section in sections:
             f.write(section)
             f.write('---\n\n')
-    print(f"  Generated {output_path.name}")
+    print(f" Generated {output_path.name}")
+
+
+def generate_about_page(output_path, force=False):
+    print(f"Generating About page at {output_path}")
+
+    # 1. Fetch modules list
+    modules_url = "https://raw.githubusercontent.com/LiliaFramework/Modules/gh-pages/modules.json"
+    try:
+        print(f" Fetching modules from {modules_url}...")
+        with urllib.request.urlopen(modules_url) as response:
+            data = json.loads(response.read().decode())
+    except Exception as e:
+        print(f" Failed to fetch modules list: {e}")
+        return
+
+    # Sort by name
+    modules = sorted(data, key=lambda x: x.get('name', ''))
+
+    table_lines = []
+    table_lines.append("| Name | Description | Author |")
+    table_lines.append("| :--- | :--- | :--- |")
+
+    for mod in modules:
+        name = mod.get('name', 'Unknown')
+        desc = mod.get('description', '').replace('|', '\\|').replace('\n', ' ')
+        author = mod.get('author', 'Unknown')
+        url = mod.get('url', '')
+        # Construct local path instead of using external URL
+        module_id = url.rstrip('/').split('/')[-2] if '/' in url else name.lower().replace(' ', '')
+        name_link = f"[{name}](./modules/{module_id}/about.md)"
+
+        table_lines.append(f"| {name_link} | {desc} | {author} |")
+
+    modules_content = "\n".join(table_lines)
+
+    # 3. Read template (existing about.md)
+    if not output_path.exists():
+        print(f" Warning: {output_path} does not exist. Cannot inject module list.")
+        return
+
+    try:
+        with open(output_path, 'r', encoding='utf-8') as f:
+            content = f.read()
+    except Exception as e:
+        print(f" Error reading {output_path}: {e}")
+        return
+
+    # 4. Inject
+    start_marker = "<!-- MODULES_LIST_START -->"
+    end_marker = "<!-- MODULES_LIST_END -->"
+
+    pattern = re.compile(f"{re.escape(start_marker)}.*?{re.escape(end_marker)}", re.DOTALL)
+    
+    if not pattern.search(content):
+        print(f" Markers {start_marker}...{end_marker} not found in {output_path}")
+        return
+
+    replacement = f"{start_marker}\n{modules_content}\n{end_marker}"
+    new_content = pattern.sub(replacement, content)
+
+    if new_content == content:
+        print(f" {output_path.name} is already up to date.")
+        if not force:
+            return
+
+    # 5. Write back
+    try:
+        with open(output_path, 'w', encoding='utf-8') as f:
+            f.write(new_content)
+        print(f" Successfully updated {output_path} with {len(modules)} modules.")
+    except Exception as e:
+        print(f" Error writing {output_path}: {e}")
 
 
 def main():
-    parser = argparse.ArgumentParser(description='Generate documentation from Lua comment blocks')
-    parser.add_argument('type', choices=['meta', 'library', 'compatibility', 'definitions', 'hooks', 'guides', 'generators'], help='Type of files to process')
-    parser.add_argument('files', nargs='*', help='Specific files to process (if empty, processes defaults per type)')
-    parser.add_argument('--force', action='store_true', help='Overwrite existing documentation files')
+    parser = argparse.ArgumentParser(description='Lilia Documentation Generator')
+    subparsers = parser.add_subparsers(dest='command', help='Command to run')
+
+    # Meta command
+    meta_parser = subparsers.add_parser('meta', help='Generate meta documentation')
+    meta_parser.add_argument('--force', action='store_true', help='Force regeneration of existing files')
+
+    # Library command
+    library_parser = subparsers.add_parser('library', help='Generate library documentation')
+    library_parser.add_argument('--force', action='store_true', help='Force regeneration of existing files')
+
+    # Hooks command
+    hooks_parser = subparsers.add_parser('hooks', help='Generate hooks documentation')
+    hooks_parser.add_argument('--force', action='store_true', help='Force regeneration of existing files')
+
+    # Compatibility command
+    compatibility_parser = subparsers.add_parser('compatibility', help='Generate compatibility documentation')
+    compatibility_parser.add_argument('--force', action='store_true', help='Force regeneration of existing files')
+
+    # Generators command
+    generators_parser = subparsers.add_parser('generators', help='Generate generators index')
+    generators_parser.add_argument('--force', action='store_true', help='Force regeneration')
+
+    # About command
+    about_parser = subparsers.add_parser('about', help='Generate about page with dynamic content')
+    about_parser.add_argument('--force', action='store_true', help='Force regeneration (checking for updates)')
 
     args = parser.parse_args()
 
-    script_dir = Path(__file__).parent
-    base_docs_dir = script_dir / 'documentation' / 'docs'
-    base_dir = script_dir / 'gamemode' / 'core'
-    modules_dir = script_dir / 'gamemode' / 'modules'
-    docs_definitions_dir = script_dir / 'gamemode' / 'docs' / 'definitions'
-    docs_hooks_dir = script_dir / 'gamemode' / 'docs' / 'hooks'
+    base_dir = Path(__file__).parent
+    docs_dir = base_dir / 'documentation' / 'docs'
 
-    if args.type == 'meta':
-        input_dir = base_dir / 'meta'
-        output_dir = script_dir / 'documentation' / 'docs' / 'meta'
-    elif args.type == 'library':
-        input_dir = base_dir / 'libraries'
-        output_dir = script_dir / 'documentation' / 'docs' / 'libraries'
-    elif args.type == 'compatibility':
-        input_dir = base_dir / 'libraries' / 'compatibility'
-        output_dir = script_dir / 'documentation' / 'docs' / 'compatibility'
-    elif args.type == 'definitions':
-        input_dir = docs_definitions_dir
-        output_dir = script_dir / 'documentation' / 'docs' / 'definitions'
-    elif args.type == 'hooks':
-        input_dir = docs_hooks_dir
-        output_dir = script_dir / 'documentation' / 'docs' / 'hooks'
-    elif args.type == 'guides':
-        input_dir = None  # Guides are manually created, no input processing needed
-        output_dir = script_dir / 'documentation' / 'docs' / 'guides'
-    elif args.type == 'generators':
-        input_dir = None  # Generators are manually created, no input processing needed
-        output_dir = script_dir / 'documentation' / 'docs' / 'generators'
+    if args.command == 'meta':
+        meta_dir = base_dir / 'gamemode' / 'core' / 'meta'
+        output_dir = docs_dir / 'development' / 'meta'
+        if meta_dir.exists():
+            for file_path in meta_dir.rglob('*.lua'):
+                generate_documentation_for_file(file_path, output_dir, is_library=False, base_docs_dir=docs_dir, force=args.force, no_realm=False, no_icon=False)
+        generate_index_file(output_dir, 'meta')
 
-    output_dir.mkdir(parents=True, exist_ok=True)
+    elif args.command == 'library':
+        lib_dirs = [
+             base_dir / 'gamemode' / 'core' / 'libraries',
+             base_dir / 'gamemode' / 'modules'
+        ]
+        output_dir = docs_dir / 'development' / 'libraries'
+        for lib_dir in lib_dirs:
+            if lib_dir.exists():
+                for file_path in lib_dir.rglob('*.lua'):
+                    generate_documentation_for_file(file_path, output_dir, is_library=True, base_docs_dir=docs_dir, force=args.force, no_realm=False, no_icon=False)
+        generate_index_file(output_dir, 'library')
 
-    files_to_process = []
+    elif args.command == 'hooks':
+        hooks_dir = base_dir / 'gamemode' / 'core' / 'hooks' / 'docs'
+        output_dir = docs_dir / 'development' / 'hooks'
+        if hooks_dir.exists():
+            for file_path in hooks_dir.rglob('*.lua'):
+                generate_documentation_for_file(file_path, output_dir, is_library=False, base_docs_dir=docs_dir, force=args.force, no_realm=False, no_icon=False)
+        generate_index_file(output_dir, 'hooks')
 
-    if args.files:
-        if input_dir is not None:
-            for file_pattern in args.files:
-                import glob
-                matches = glob.glob(str(input_dir / file_pattern))
-                files_to_process.extend(matches)
+    elif args.command == 'compatibility':
+        comp_dir = base_dir / 'gamemode' / 'core' / 'libraries' / 'compatibility'
+        output_dir = docs_dir / 'development' / 'compatibility'
+        if comp_dir.exists():
+            for file_path in comp_dir.rglob('*.lua'):
+                generate_documentation_for_file(file_path, output_dir, is_library=False, base_docs_dir=docs_dir, force=args.force, no_realm=False, no_icon=True)
+        generate_index_file(output_dir, 'compatibility')
 
-                if not matches:
-                    matches = glob.glob(file_pattern)
-                    files_to_process.extend(matches)
+    elif args.command == 'generators':
+        output_dir = docs_dir / 'generators'
+        generate_index_file(output_dir, 'generators')
+
+    elif args.command == 'about':
+        output_path = docs_dir / 'about.md'
+        generate_about_page(output_path, force=args.force)
+        # Generate index for About directory
+        generate_index_file(docs_dir / 'About', 'about')
+
     else:
-        if input_dir is not None:
-            if args.type in ('meta', 'library', 'compatibility'):
-                files_to_process.extend(list(input_dir.glob('*.lua')))
-
-                if args.type == 'library':
-                    for module_dir in modules_dir.iterdir():
-                        if module_dir.is_dir():
-                            module_lib_dir = module_dir / 'libraries'
-                            if module_lib_dir.exists():
-                                files_to_process.extend(list(module_lib_dir.glob('*.lua')))
-            elif args.type == 'definitions':
-                for name in ('panels.lua', 'faction.lua', 'module.lua', 'items.lua', 'class.lua', 'attributes.lua'):
-                    p = input_dir / name
-                    if p.exists():
-                        files_to_process.append(str(p))
-
-                items_dir = input_dir / 'items'
-                if items_dir.exists():
-                    for item_file in items_dir.glob('*.lua'):
-                        files_to_process.append(str(item_file))
-
-                items_base_dir = script_dir / 'gamemode' / 'items' / 'base'
-                if items_base_dir.exists():
-                    for item_file in items_base_dir.glob('*.lua'):
-                        files_to_process.append(str(item_file))
-            elif args.type == 'hooks':
-                for name in ('client.lua', 'server.lua', 'shared.lua'):
-                    p = input_dir / name
-                    if p.exists():
-                        files_to_process.append(str(p))
-        # For guides and generators, no file processing needed
-        elif args.type in ('meta', 'library', 'compatibility'):
-            files_to_process.extend(list(input_dir.glob('*.lua')))
-
-            if args.type == 'library':
-                for module_dir in modules_dir.iterdir():
-                    if module_dir.is_dir():
-                        module_lib_dir = module_dir / 'libraries'
-                        if module_lib_dir.exists():
-                            files_to_process.extend(list(module_lib_dir.glob('*.lua')))
-        elif args.type == 'definitions':
-            for name in ('panels.lua', 'faction.lua', 'module.lua', 'items.lua', 'class.lua', 'attributes.lua'):
-                p = input_dir / name
-                if p.exists():
-                    files_to_process.append(str(p))
-
-            items_dir = input_dir / 'items'
-            if items_dir.exists():
-                for item_file in items_dir.glob('*.lua'):
-                    files_to_process.append(str(item_file))
-
-            items_base_dir = script_dir / 'gamemode' / 'items' / 'base'
-            if items_base_dir.exists():
-                for item_file in items_base_dir.glob('*.lua'):
-                    files_to_process.append(str(item_file))
-        elif args.type == 'hooks':
-            for name in ('client.lua', 'server.lua', 'shared.lua'):
-                p = input_dir / name
-                if p.exists():
-                    files_to_process.append(str(p))
-
-    if input_dir is not None and not files_to_process:
-        print(f"No files found in {input_dir}")
+        parser.print_help()
         return
 
-    if input_dir is not None:
-        print(f"Processing {len(files_to_process)} {args.type} files...")
-
-    for file_path in files_to_process:
-        if args.type == 'meta' and str(file_path).endswith('.lua'):
-            generate_documentation_for_file(file_path, output_dir, False, base_docs_dir, args.force)
-        elif args.type == 'library' and str(file_path).endswith('.lua'):
-            generate_documentation_for_file(file_path, output_dir, True, base_docs_dir, args.force)
-        elif args.type == 'compatibility' and str(file_path).endswith('.lua'):
-            # Check if this is a meta file with custom directives
-            try:
-                with open(file_path, 'r', encoding='utf-8-sig') as f:
-                    content = f.read()
-                custom_folder, custom_filename, _ = parse_folder_directives(content)
-                is_meta_file = custom_folder and custom_folder.lower() == 'meta'
-                generate_documentation_for_file(file_path, output_dir, not is_meta_file, base_docs_dir, args.force)
-            except:
-                generate_documentation_for_file(file_path, output_dir, True, base_docs_dir, args.force)
-        elif args.type == 'definitions' and str(file_path).endswith('.lua'):
-            generate_documentation_for_definitions_file(Path(file_path), output_dir, base_docs_dir)
-        elif args.type == 'hooks' and str(file_path).endswith('.lua'):
-            generate_documentation_for_hooks_file(Path(file_path), output_dir, base_docs_dir)
-
-    # Generate index for this specific type
-    generate_index_file(output_dir, args.type)
-
-    # Generate comprehensive index at the root docs directory
-    generate_comprehensive_index(base_docs_dir)
-
-    # Generate .pages file for navigation
-    generate_pages_file(base_docs_dir)
-
-    print("Documentation generation complete!")
+    # Generate pages file for all commands
+    # generate_comprehensive_index(docs_dir)  # Disabled to preserve manual index.md
+    generate_development_index(docs_dir / 'development')
+    generate_pages_file(docs_dir)
 
 
 def extract_title_and_summary(md_file: Path) -> Tuple[str, str]:
@@ -1298,40 +1116,39 @@ def extract_title_and_summary(md_file: Path) -> Tuple[str, str]:
     for i, line in enumerate(lines):
         stripped = line.strip()
         
-        if stripped.startswith('# ') and not title:
-            title = stripped[2:].strip()
-            if i + 1 < len(lines):
-                next_line = lines[i + 1].strip()
-                if next_line and not next_line.startswith('#') and not next_line.startswith('---'):
+        if (stripped.startswith('# ') or stripped.startswith('## ')) and not title:
+            title = stripped.lstrip('#').strip()
+            # Look ahead for the first non-empty line that isn't a header or separator
+            for j in range(i + 1, min(i + 5, len(lines))):
+                next_line = lines[j].strip()
+                if next_line and not next_line.startswith('#') and not next_line.startswith('---') and not next_line.startswith('<'):
                     summary = next_line
                     break
-        elif stripped.startswith('## ') and not title:
-            title = stripped[3:].strip()
-            if i + 1 < len(lines):
-                next_line = lines[i + 1].strip()
-                if next_line and not next_line.startswith('#') and not next_line.startswith('---'):
-                    summary = next_line
-                    break
+            if summary:
+                break
     
     if not title:
         name = md_file.stem
         title = name.replace('lia.', '').replace('_', ' ').title()
     
     if not summary:
-        overview_match = re.search(r'Overview\s*\n\s*\n(.+?)(?:\n\n---|\n\n###|$)', content, re.DOTALL)
+        # Try to find content after Overview header (with or without strong tags)
+        overview_match = re.search(r'(?:<strong>)?Overview(?:</strong>)?\s*\n\s*\n(.+?)(?:\n\n---|\n\n###|$)', content, re.DOTALL)
         if overview_match:
             overview_text = overview_match.group(1).strip()
             overview_text = re.sub(r'\n+', ' ', overview_text)
+            # Try to get the first sentence
             first_sentence = re.split(r'[.!?]\s+', overview_text)[0]
             if first_sentence:
                 summary = first_sentence.strip()
-                if len(summary) > 200:
-                    summary = summary[:197] + '...'
                 if not summary.endswith(('.', '!', '?')):
                     summary += '.'
     
     if not summary:
         summary = f'Documentation for {title.lower()}.'
+    
+    if len(summary) > 200:
+        summary = summary[:197] + '...'
     
     summary = summary.replace('|', '\\|')
     
@@ -1340,21 +1157,25 @@ def extract_title_and_summary(md_file: Path) -> Tuple[str, str]:
 
 # Custom summaries for guides and generators
 GUIDE_SUMMARIES = {
-    'installation.md': 'Step-by-step guide to set up Lilia Framework on your Garry\'s Mod server.',
+    'getting_started.md': 'Step-by-step guide to set up Lilia Framework on your Garry\'s Mod server.',
     'factions.md': 'Complete guide to creating and managing factions in your roleplay server.',
     'classes.md': 'Guide to creating specialized roles and classes within factions.',
     'items.md': 'Comprehensive guide to creating weapons, consumables, outfits, and other items.',
     'modules.md': 'How to install and create custom modules to extend Lilia\'s functionality.',
-    'compatibility.md': 'Integration guides for popular Garry\'s Mod addons and frameworks.'
+    'compatibility.md': 'Integration guides for popular Garry\'s Mod addons and frameworks.',
+    'features.md': 'Essential features for server owners including permissions, sit rooms, and configuration.',
+    'tools.md': 'Overview of tools available in the Lilia framework.'
 }
 
 GUIDE_TITLES = {
-    'installation.md': 'Installation',
+    'getting_started.md': 'Getting Started',
     'factions.md': 'Factions',
     'classes.md': 'Classes',
     'items.md': 'Items',
     'modules.md': 'Modules',
-    'compatibility.md': 'Compatibility'
+    'compatibility.md': 'Compatibility',
+    'features.md': 'Features',
+    'tools.md': 'Tools'
 }
 
 GENERATOR_SUMMARIES = {
@@ -1368,7 +1189,7 @@ GENERATOR_SUMMARIES = {
     'items/outfit.md': 'Templates for creating clothing and appearance items.',
     'items/stackable.md': 'Templates for creating items that can stack in inventory.',
     'items/weapons.md': 'Templates for creating weapons and firearms.',
-    # Full paths for comprehensive index
+ # Full paths for comprehensive index
     'generators/attribute.md': 'Code templates and examples for creating character attributes.',
     'generators/class.md': 'Code templates and examples for creating character classes.',
     'generators/faction.md': 'Code templates and examples for creating factions.',
@@ -1398,42 +1219,79 @@ TITLE_MAP = {
     'meta': 'Meta Tables',
     'library': 'Libraries',
     'compatibility': 'Compatibility',
-    'definitions': 'Definitions',
     'hooks': 'Hooks',
     'guides': 'Guides',
     'generators': 'Generators',
-    'items': 'Item Definitions'
+    'about': 'About Lilia'
 }
 
 def get_custom_summary(section_name, file_path, docs_dir):
     """Get custom summary for guides and generators."""
-    if section_name == 'Guides':
+    if section_name == 'Guides' or section_name == 'About':
         filename = file_path.name
         return GUIDE_SUMMARIES.get(filename, '')
     elif section_name == 'Generators':
-        rel_path = file_path.relative_to(docs_dir).as_posix()
-        # Try the full path first, then just the filename
+        try:
+             # Try relative to generators directory
+             gen_dir = docs_dir / 'generators'
+             rel_path = file_path.relative_to(gen_dir).as_posix()
+        except ValueError:
+             # Fallback
+             rel_path = file_path.relative_to(docs_dir).as_posix()
+             
         return GENERATOR_SUMMARIES.get(rel_path, GENERATOR_SUMMARIES.get(file_path.name, ''))
     return ''
 
 def get_custom_title(section_name, file_path):
     """Get custom title for guides and generators."""
-    if section_name == 'Guides':
+    if section_name == 'Guides' or section_name == 'About':
         filename = file_path.name
         return GUIDE_TITLES.get(filename, file_path.stem.title())
     elif section_name == 'Generators':
         # Check if file is directly in generators dir or in a subdir
-        parent_dir = file_path.parent  # docs/generators or docs/generators/items
-        grandparent_dir = parent_dir.parent  # docs/generators or docs
+        parent_dir = file_path.parent
+        grandparent_dir = parent_dir.parent
 
-        if grandparent_dir.name == 'docs':  # File is in docs/generators/
-            rel_path_str = file_path.name  # Just the filename like 'attribute.md'
-        else:  # File is in docs/generators/items/
-            rel_path = file_path.relative_to(grandparent_dir)  # generators/items/aid.md
+        if parent_dir.name == 'generators':
+            rel_path_str = file_path.name
+        elif grandparent_dir.name == 'generators':
+            # e.g. items/aid.md
+            rel_path = file_path.relative_to(grandparent_dir)
             rel_path_str = str(rel_path).replace('\\', '/')
+        else:
+             rel_path_str = file_path.name
 
         return GENERATOR_TITLES.get(rel_path_str, file_path.stem.title())
     return file_path.stem.title()
+
+
+def write_cards(f, items):
+    """Write a grid of reactive cards for documentation indexes."""
+    f.write('<div class="card-grid">\n')
+    for item in items:
+        # Support both (title, link, summary) and (title, link, summary, realm)
+        if len(item) == 4:
+            title, link, summary, realm = item
+        else:
+            title, link, summary = item
+            realm = None
+
+        # Clean up links to work with MkDocs directory URLs
+        clean_link = link
+        if clean_link.endswith('.md'):
+            clean_link = clean_link[:-3]
+            if not clean_link.endswith('/'):
+                clean_link += '/'
+
+        realm_class = f' realm-{realm.lower()}' if realm else ''
+        # Escape any potential HTML in summary but keep it readable
+        safe_summary = summary.replace('<', '&lt;').replace('>', '&gt;')
+        f.write(f'  <a href="{clean_link}" class="card{realm_class}">\n')
+        f.write(f'    <h3>{title}</h3>\n')
+        f.write(f'    <p>{safe_summary}</p>\n')
+        f.write(f'  </a>\n')
+    f.write('</div>\n\n')
+
 
 def generate_index_file(output_dir: Path, doc_type: str) -> None:
     """Generate an index.md file listing all documentation files in the directory with summaries."""
@@ -1445,12 +1303,12 @@ def generate_index_file(output_dir: Path, doc_type: str) -> None:
     md_files = sorted([f for f in output_dir.glob('*.md') if f.name != 'index.md'])
 
     subdirs = []
-    if doc_type == 'definitions' or doc_type == 'generators':
+    if doc_type == 'generators':
         items_dir = output_dir / 'items'
         if items_dir.exists():
             items_files = sorted([f for f in items_dir.glob('*.md') if f.name != 'index.md'])
             if items_files:
-                subdirs.append(('Item Generators' if doc_type == 'generators' else 'items', items_files))
+                subdirs.append(('Item Generators', items_files))
 
     if not md_files and not subdirs:
         return
@@ -1466,52 +1324,59 @@ def generate_index_file(output_dir: Path, doc_type: str) -> None:
             f.write('This section contains comprehensive guides for setting up and customizing your Lilia roleplay server.\n\n')
         elif doc_type == 'generators':
             f.write('This section contains generators and templates for creating Lilia framework components.\n\n')
+        elif doc_type == 'about':
+            f.write('General information about the Lilia framework, its features, and compatibility.\n\n')
 
         if md_files:
-            f.write('| Name | Summary |\n')
-            f.write('|------|---------|\n')
+            items = []
             for md_file in md_files:
                 # Use custom title for guides and generators
                 if doc_type == 'guides':
                     file_title = get_custom_title('Guides', md_file)
+                elif doc_type == 'about':
+                    file_title = get_custom_title('About', md_file)
                 elif doc_type == 'generators':
                     file_title = get_custom_title('Generators', md_file)
                 else:
                     file_title, _ = extract_title_and_summary(md_file)
 
-
                 link_name = md_file.name
-
-                # Use custom summary for guides and generators
-                if doc_type == 'guides' and link_name in GUIDE_SUMMARIES:
-                    summary = GUIDE_SUMMARIES[link_name]
-                elif doc_type == 'generators' and link_name in GENERATOR_SUMMARIES:
-                    summary = GENERATOR_SUMMARIES[link_name]
+                
+                # Custom summary logic
+                if doc_type == 'guides':
+                    summary = get_custom_summary('Guides', md_file, output_dir.parent.parent)
+                elif doc_type == 'about':
+                    summary = get_custom_summary('About', md_file, output_dir.parent.parent)
+                elif doc_type == 'generators':
+                    summary = get_custom_summary('Generators', md_file, output_dir.parent.parent)
                 else:
                     _, summary = extract_title_and_summary(md_file)
-
-                f.write(f'| [{file_title}](./{link_name}) | {summary} |\n')
-            f.write('\n')
+                
+                items.append((file_title, f'./{link_name}', summary))
+            
+            write_cards(f, items)
         
         for subdir_name, subdir_files in subdirs:
             f.write(f'## {subdir_name.title()}\n\n')
-            f.write('| Name | Summary |\n')
-            f.write('|------|---------|\n')
+            items = []
             for md_file in subdir_files:
                 if doc_type == 'generators':
-                    file_title = get_custom_title('Generators', md_file)
+                     file_title = get_custom_title('Generators', md_file)
+                     summary = get_custom_summary('Generators', md_file, output_dir.parent.parent)
                 else:
-                    file_title, _ = extract_title_and_summary(md_file)
+                     file_title, _ = extract_title_and_summary(md_file)
+                     _, summary = extract_title_and_summary(md_file)
+                
+                # Make link relative
+                try:
+                     rel_link = md_file.relative_to(output_dir).as_posix()
+                except ValueError:
+                     rel_link = md_file.name
 
-                rel_path = md_file.relative_to(output_dir).as_posix()
-                if doc_type == 'generators' and rel_path in GENERATOR_SUMMARIES:
-                    summary = GENERATOR_SUMMARIES[rel_path]
-                else:
-                    _, summary = extract_title_and_summary(md_file)
-                f.write(f'| [{file_title}](./{rel_path}) | {summary} |\n')
-            f.write('\n')
+                items.append((file_title, rel_link, summary))
+            write_cards(f, items)
     
-    print(f"  Generated index.md for {doc_type}")
+    print(f" Generated index.md for {doc_type}")
 
 
 def generate_comprehensive_index(docs_dir: Path) -> None:
@@ -1519,70 +1384,50 @@ def generate_comprehensive_index(docs_dir: Path) -> None:
     docs_dir.mkdir(parents=True, exist_ok=True)
     index_path = docs_dir / 'index.md'
 
+    # Update sections based on new structure
     sections = []
 
-    # Guides
-    guides_dir = docs_dir / 'guides'
-    if guides_dir.exists():
-        guide_files = sorted([f for f in guides_dir.glob('*.md') if f.name != 'index.md'])
-        if guide_files:
-            sections.append(('Guides', guides_dir, guide_files))
+    # Development Section
+    dev_dir = docs_dir / 'development'
+    if dev_dir.exists():
+        # Subdirectories in development
+        libraries_dir = dev_dir / 'libraries'
+        meta_dir = dev_dir / 'meta'
+        generators_dir = dev_dir / 'generators'
+        hooks_dir = dev_dir / 'hooks'
 
-    # Generators
-    generators_dir = docs_dir / 'generators'
-    if generators_dir.exists():
-        gen_files = sorted([f for f in generators_dir.glob('*.md') if f.name != 'index.md'])
-        gen_subdirs = []
-        items_dir = generators_dir / 'items'
-        if items_dir.exists():
-            items_files = sorted([f for f in items_dir.glob('*.md') if f.name != 'index.md'])
-            if items_files:
-                gen_subdirs.append(('Item Generators', items_dir, items_files))
+        dev_subdirs = []
+        
+        if libraries_dir.exists():
+            lib_files = sorted([f for f in libraries_dir.glob('*.md') if f.name != 'index.md'])
+            if lib_files:
+                dev_subdirs.append(('Libraries', libraries_dir, lib_files))
+        
+        if meta_dir.exists():
+            meta_files = sorted([f for f in meta_dir.glob('*.md') if f.name != 'index.md'])
+            if meta_files:
+                dev_subdirs.append(('Meta', meta_dir, meta_files))
+        
+        if hooks_dir.exists():
+            hook_files = sorted([f for f in hooks_dir.glob('*.md') if f.name != 'index.md'])
+            if hook_files:
+                dev_subdirs.append(('Hooks', hooks_dir, hook_files))
 
-        if gen_files or gen_subdirs:
-            sections.append(('Generators', generators_dir, gen_files, gen_subdirs))
+        if generators_dir.exists():
+            gen_files = sorted([f for f in generators_dir.glob('*.md') if f.name != 'index.md'])
+            gen_items_dir = generators_dir / 'items'
+            gen_items_files = []
+            if gen_items_dir.exists():
+                gen_items_files = sorted([f for f in gen_items_dir.glob('*.md') if f.name != 'index.md'])
+            
+            # Combine generic generators and item generators
+            all_gen_files = gen_files + gen_items_files
+            if all_gen_files:
+                dev_subdirs.append(('Generators', generators_dir, all_gen_files))
 
-    # Meta Tables
-    meta_dir = docs_dir / 'meta'
-    if meta_dir.exists():
-        meta_files = sorted([f for f in meta_dir.glob('*.md') if f.name != 'index.md'])
-        if meta_files:
-            sections.append(('Meta Tables', meta_dir, meta_files))
+        if dev_subdirs:
+             sections.append(('Development', dev_dir, [], dev_subdirs))
 
-    # Libraries
-    libraries_dir = docs_dir / 'libraries'
-    if libraries_dir.exists():
-        lib_files = sorted([f for f in libraries_dir.glob('*.md') if f.name != 'index.md'])
-        if lib_files:
-            sections.append(('Libraries', libraries_dir, lib_files))
-
-    # Compatibility
-    compatibility_dir = docs_dir / 'compatibility'
-    if compatibility_dir.exists():
-        compat_files = sorted([f for f in compatibility_dir.glob('*.md') if f.name != 'index.md'])
-        if compat_files:
-            sections.append(('Compatibility', compatibility_dir, compat_files))
-
-    # Hooks
-    hooks_dir = docs_dir / 'hooks'
-    if hooks_dir.exists():
-        hook_files = sorted([f for f in hooks_dir.glob('*.md') if f.name != 'index.md'])
-        if hook_files:
-            sections.append(('Hooks', hooks_dir, hook_files))
-
-    # Definitions
-    definitions_dir = docs_dir / 'definitions'
-    if definitions_dir.exists():
-        def_files = sorted([f for f in definitions_dir.glob('*.md') if f.name != 'index.md'])
-        items_dir = definitions_dir / 'items'
-        subdirs = []
-        if items_dir.exists():
-            items_files = sorted([f for f in items_dir.glob('*.md') if f.name != 'index.md'])
-            if items_files:
-                subdirs.append(('Item Definitions', items_dir, items_files))
-
-        if def_files or subdirs:
-            sections.append(('Definitions', definitions_dir, def_files, subdirs))
 
     if not sections:
         return
@@ -1598,9 +1443,8 @@ def generate_comprehensive_index(docs_dir: Path) -> None:
             subdirs = section_info[3] if len(section_info) > 3 else []
 
             f.write(f'## {section_name}\n\n')
-            f.write('| Name | Summary |\n')
-            f.write('|------|---------|\n')
-
+            
+            items = []
             for md_file in files:
                 custom_title = get_custom_title(section_name, md_file)
                 if custom_title:
@@ -1611,87 +1455,109 @@ def generate_comprehensive_index(docs_dir: Path) -> None:
                 rel_path = md_file.relative_to(docs_dir).as_posix()
                 custom_summary = get_custom_summary(section_name, md_file, docs_dir)
                 summary = custom_summary or extract_title_and_summary(md_file)[1]
-                f.write(f'| [{file_title}](./{rel_path}) | {summary} |\n')
+                items.append((file_title, f'./{rel_path}', summary))
+            
+            write_cards(f, items)
 
-            # Handle subdirectories (like items under definitions)
+            # Handle subdirectories
             for subdir_info in subdirs:
                 subdir_name = subdir_info[0]
                 subdir_dir = subdir_info[1]
                 subdir_files = subdir_info[2]
 
-                f.write(f'\n### {subdir_name}\n\n')
-                f.write('| Name | Summary |\n')
-                f.write('|------|---------|\n')
-
+                f.write(f'### {subdir_name}\n\n')
+                items = []
                 for md_file in subdir_files:
-                    custom_title = get_custom_title(section_name, md_file)
-                    if custom_title:
-                        file_title = custom_title
+                    # Logic for titles/summaries might need refinement based on subdir types
+                    # For now generic extract
+                    # Hacky hint (reusing guides logic for server owner files if needed, but 'Guides' logic is minimal)
+                    
+                    if subdir_name == 'Generators':
+                         file_title = get_custom_title('Generators', md_file)
+                    elif subdir_name == 'Compatibility':
+                         file_title = get_custom_title('Guides', md_file) # Compatibility uses Guide titles map
                     else:
-                        file_title, _ = extract_title_and_summary(md_file)
+                         file_title, _ = extract_title_and_summary(md_file)
+
+                    if not file_title:
+                        file_title = md_file.stem.title()
 
                     rel_path = md_file.relative_to(docs_dir).as_posix()
-                    custom_summary = get_custom_summary(section_name, md_file, docs_dir)
+                    
+                    if subdir_name == 'Generators':
+                        custom_summary = get_custom_summary('Generators', md_file, docs_dir)
+                    elif subdir_name == 'Compatibility':
+                        custom_summary = get_custom_summary('Guides', md_file, docs_dir)
+                    else:
+                        custom_summary = ''
+                        
                     summary = custom_summary or extract_title_and_summary(md_file)[1]
-                    f.write(f'| [{file_title}](./{rel_path}) | {summary} |\n')
+                    items.append((file_title, f'./{rel_path}', summary))
+                
+                write_cards(f, items)
 
             f.write('\n')
 
-    print("  Generated comprehensive index.md")
+    print(" Generated comprehensive index.md")
+
+
+def generate_development_index(dev_dir: Path) -> None:
+    """Generate an index.md for the development directory listing its subdirectories."""
+    if not dev_dir.exists():
+        return
+
+    index_path = dev_dir / 'index.md'
+    
+    sections = [
+        ('Libraries', 'libraries', 'Documentation for Lilia libraries.'),
+        ('Meta', 'meta', 'Documentation for Lilia meta tables.'),
+        ('Hooks', 'hooks', 'Documentation for Lilia hooks.')
+    ]
+
+    with open(index_path, 'w', encoding='utf-8') as f:
+        f.write('# Development\n\n')
+        f.write('Welcome to the development documentation associated with Lilia.\n\n')
+        
+        cards = []
+        for title, dirname, summary in sections:
+            subdir = dev_dir / dirname
+            if subdir.exists() and any(subdir.iterdir()):
+                cards.append((title, f'./{dirname}/', summary))
+        
+        write_cards(f, cards)
+
+    print(f" Generated development/index.md")
 
 def generate_pages_file(docs_dir: Path) -> None:
     """Generate .pages file for MkDocs navigation."""
-    pages_path = docs_dir.parent / '.pages'
+    pages_path = docs_dir / '.pages'
 
-    # Define the preferred order of navigation items
+ # Define the preferred order of navigation items
     nav_order = [
-        'index.md',
-        'gettingstarted.md',
-        # Directory sections (documentation)
-        'guides',
-        'generators',
-        'libraries',
-        'hooks',
-        'meta',
-        'definitions',
-        'modules',
-        # Standalone files
-        'compatibility.md',
-        'changelog.md'
+        'About',
+        'Getting Started.md',
+        'development',
+        'generators'
     ]
+    
+    # We should also generate .pages for subdirectories to ensure order there
+    
+    # Development Pages
+    dev_pages_path = docs_dir / 'development' / '.pages'
+    if dev_pages_path.parent.exists():
+        with open(dev_pages_path, 'w', encoding='utf-8') as f:
+            f.write('title: Development\narrange:\n')
+            f.write(' - libraries\n')
+            f.write(' - meta\n')
+            f.write(' - hooks\n')
 
-    # Directories to exclude from navigation
-    exclude_dirs = {'assets', 'compatibility', 'tools', 'versioning'}
-
-    # Get all directories and files in docs, excluding certain directories
-    existing_items = set()
-    if docs_dir.exists():
-        for item in docs_dir.iterdir():
-            if item.is_dir() and item.name not in exclude_dirs:
-                existing_items.add(item.name)
-            elif item.is_file() and item.name.endswith('.md') and item.name != '_index.md':
-                existing_items.add(item.name)
-
-    # Build navigation list in preferred order
-    nav_items = []
-    for item in nav_order:
-        if item in existing_items:
-            nav_items.append(f'  - {item}')
-
-    # Add any remaining items not in the preferred order (excluding excluded dirs)
-    remaining_items = existing_items - set(nav_order) - exclude_dirs
-    if remaining_items:
-        # Sort remaining items
-        sorted_remaining = sorted(remaining_items)
-        nav_items.extend(f'  - {item}' for item in sorted_remaining)
-
-    # Write .pages file
+ # Write root .pages file
     with open(pages_path, 'w', encoding='utf-8') as f:
         f.write('arrange:\n')
-        for item in nav_items:
-            f.write(f'{item}\n')
-
-    print(f"Generated .pages file with {len(nav_items)} navigation items")
+        for item in nav_order:
+            f.write(f' - {item}\n')
+            
+    print(f"Generated .pages files for navigation")
 
 
 if __name__ == '__main__':

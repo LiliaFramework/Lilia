@@ -3,7 +3,7 @@
     File:  inventory.md
 ]]
 --[[
-    Inventory Meta
+    Inventory
 
     Inventory management system for the Lilia framework.
 ]]

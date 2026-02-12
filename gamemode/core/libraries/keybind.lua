@@ -3,7 +3,7 @@
     File: keybind.md
 ]]
 --[[
-    Keybind Library
+    Keybind
 
     Keyboard binding registration, storage, and execution system for the Lilia framework.
 ]]
@@ -515,240 +515,210 @@ if CLIENT then
     end
 
     hook.Add("PopulateConfigurationButtons", "PopulateKeybinds", function(pages)
-        local KeybindFormatting = {
-            Keybind = function(action, data, parent, allowEdit, taken)
-                local container = vgui.Create("DPanel", parent)
-                container:SetTall(220)
-                container:Dock(TOP)
-                container:DockMargin(0, 60, 0, 10)
-                container.Paint = function(s, w, h)
-                    local radius = 8
-                    local accent = lia.color.theme.accent or lia.color.theme.header or lia.color.theme.theme or Color(100, 150, 200)
-                    local background = lia.color.theme.background_alpha or lia.color.theme.background or Color(40, 40, 40, 240)
-                    local x, y = s:LocalToScreen(0, 0)
-                    lia.derma.rect(0, 0, w, h):Rad(radius):Color(lia.color.theme.window_shadow or Color(0, 0, 0, 50)):Shadow(8, 12):Shape(lia.derma.SHAPE_IOS):Draw()
-                    lia.util.drawBlurAt(x, y, w, h)
-                    lia.derma.rect(0, 0, w, h):Rad(radius):Color(background):Shape(lia.derma.SHAPE_IOS):Draw()
-                    surface.SetDrawColor(accent.r, accent.g, accent.b, accent.a or 255)
-                    surface.DrawRect(0, 0, w, 3)
-                    surface.DrawRect(0, 0, 3, h)
-                    surface.DrawRect(w - 3, 0, 3, h)
-                    surface.DrawRect(0, h - 3, w, 3)
-                end
-
-                local panel = container:Add("DPanel")
-                panel:Dock(FILL)
-                panel:DockMargin(300, 5, 300, 5)
-                panel.Paint = function(_, w, h) end
-                local label = vgui.Create("DLabel", panel)
-                label:Dock(TOP)
-                label:SetTall(45)
-                label:DockMargin(0, 20, 0, 0)
-                label:SetText("")
-                label.Paint = function(_, w, h) draw.SimpleText(L(action), "LiliaFont.36", w / 2, h / 2, lia.color.theme.text, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER) end
-                local description = vgui.Create("DLabel", panel)
-                description:Dock(TOP)
-                description:SetTall(35)
-                description:DockMargin(0, 10, 0, 0)
-                description:SetText("")
-                description.Paint = function(_, w, h) draw.SimpleText(data.description or "", "LiliaFont.24", w / 2, h / 2, lia.color.theme.gray, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER) end
-                local currentKey = lia.keybind.get(action, KEY_NONE)
-                if allowEdit then
-                    local combo = panel:Add("liaComboBox")
-                    combo:Dock(TOP)
-                    combo:DockMargin(300, 25, 300, 15)
-                    combo:SetTall(60)
-                    combo:SetFont("LiliaFont.18")
-                    local currentKeyName = isnumber(currentKey) and (currentKey == KEY_NONE and "NONE" or input.GetKeyName(currentKey)) or "NONE"
-                    combo:SetValue(currentKeyName)
-                    local choices = {}
-                    local noneAdded = false
-                    for name, code in pairs(KeybindKeys) do
-                        if not taken[code] or code == currentKey or code == KEY_NONE then
-                            local displayName = input.GetKeyName(code) or name
-                            if code == KEY_NONE then
-                                displayName = "NONE"
-                                if not noneAdded then
-                                    noneAdded = true
-                                    choices[#choices + 1] = {
-                                        txt = displayName,
-                                        keycode = code
-                                    }
-                                end
-                            else
-                                choices[#choices + 1] = {
-                                    txt = displayName,
-                                    keycode = code
-                                }
-                            end
-                        end
-                    end
-
-                    table.sort(choices, function(a, b)
-                        if a.txt == "NONE" then return true end
-                        if b.txt == "NONE" then return false end
-                        return a.txt < b.txt
-                    end)
-
-                    for _, c in ipairs(choices) do
-                        combo:AddChoice(c.txt, c.keycode)
-                    end
-
-                    combo.OnSelect = function(_, _, newKey)
-                        if newKey == nil then return end
-                        if isstring(newKey) then
-                            local keyCode = KeybindKeys[string.lower(newKey)]
-                            if keyCode then
-                                newKey = keyCode
-                            else
-                                newKey = KEY_NONE
-                            end
-                        end
-
-                        if newKey ~= KEY_NONE then
-                            for tk, tv in pairs(taken) do
-                                if tk == newKey and tv ~= action then
-                                    local keybindData = lia.keybind.stored[action]
-                                    local currentKeyValue = keybindData.value
-                                    local currentKeyDisplayName = isnumber(currentKeyValue) and (currentKeyValue == KEY_NONE and "NONE" or input.GetKeyName(currentKeyValue)) or "NONE"
-                                    combo:SetValue(currentKeyDisplayName)
-                                    return
-                                end
-                            end
-                        end
-
-                        local keybindData = lia.keybind.stored[action]
-                        local oldKey = keybindData.value
-                        if oldKey then
-                            taken[oldKey] = nil
-                            if lia.keybind.stored[oldKey] == action then lia.keybind.stored[oldKey] = nil end
-                        end
-
-                        keybindData.value = newKey
-                        lia.keybind.stored[newKey] = action
-                        taken[newKey] = action
-                        local newKeyName = (newKey == KEY_NONE and "NONE" or input.GetKeyName(newKey)) or "NONE"
-                        combo:SetValue(newKeyName)
-                        lia.keybind.save()
-                        local client = LocalPlayer()
-                        if IsValid(client) then client:notifySuccess(L("keybindChanged", action, newKeyName)) end
-                    end
-
-                    combo:PostInit()
-                else
-                    local keyLabel = vgui.Create("DLabel", panel)
-                    keyLabel:Dock(TOP)
-                    keyLabel:DockMargin(10, 25, 10, 15)
-                    keyLabel:SetTall(60)
-                    keyLabel:SetText("")
-                    keyLabel.Paint = function(_, w, h) draw.SimpleText(isnumber(currentKey) and (currentKey == KEY_NONE and "NONE" or input.GetKeyName(currentKey)) or "NONE", "LiliaFont.18", w / 2, h / 2, lia.color.theme.text, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER) end
-                end
-                return container
+        local function AddHeader(scroll, text)
+            local header = scroll:Add("DPanel")
+            header:Dock(TOP)
+            header:SetTall(35)
+            header:DockMargin(0, 5, 0, 5)
+            header.Paint = function(me, w, h)
+                local accent = lia.color.theme.accent or lia.config.get("Color") or Color(0, 150, 255)
+                surface.SetDrawColor(accent)
+                surface.DrawRect(0, h - 2, w, 2)
             end
-        }
 
-        local function buildKeybinds(parent)
-            parent:Clear()
-            local allowEdit = lia.config.get("AllowKeybindEditing", true)
-            local searchBar = vgui.Create("liaEntry", parent)
-            searchBar:Dock(TOP)
-            searchBar:DockMargin(10, 10, 10, 10)
-            searchBar:SetTall(40)
-            searchBar:SetFont("LiliaFont.18")
-            searchBar:SetPlaceholderText(L("searchKeybinds") or "Search keybinds...")
-            searchBar:SetTextColor(Color(200, 200, 200))
-            local scrollPanel = parent:Add("liaScrollPanel")
-            scrollPanel:Dock(FILL)
-            scrollPanel:InvalidateLayout(true)
-            if not IsValid(scrollPanel.VBar) then scrollPanel:PerformLayout() end
-            local function populateKeybinds(searchFilter)
-                local canvas = scrollPanel:GetCanvas()
-                canvas:Clear()
-                canvas:DockPadding(10, 10, 10, 10)
-                local taken = {}
-                for action, data in pairs(lia.keybind.stored) do
-                    if istable(data) and data.value then taken[data.value] = action end
+            local label = header:Add("DLabel")
+            label:Dock(LEFT)
+            label:SetText(L(text))
+            label:SetFont("LiliaFont.22")
+            label:SetTextColor(lia.color.theme.text or color_white)
+            label:SizeToContents()
+            label:DockMargin(5, 0, 0, 0)
+        end
+
+        local function AddKeybindField(scroll, action, data, allowEdit, taken, refreshFunc)
+            local p = scroll:Add("DPanel")
+            p:Dock(TOP)
+            p:SetTall(45)
+            p:DockMargin(0, 0, 0, 5)
+            p.Paint = function(s, w, h) lia.derma.rect(0, 0, w, h):Rad(6):Color(Color(35, 38, 45, 180)):Shape(lia.derma.SHAPE_IOS):Draw() end
+            local l = p:Add("DLabel")
+            l:Dock(LEFT)
+            l:DockMargin(15, 0, 0, 0)
+            l:SetWidth(250)
+            l:SetText(L(action))
+            l:SetFont("LiliaFont.18")
+            l:SetTextColor(lia.color.theme.text or color_white)
+            l:SetContentAlignment(4)
+            l:SetTooltip(data.description or "")
+            local currentKey = lia.keybind.get(action, KEY_NONE)
+            if allowEdit then
+                local combo = p:Add("liaComboBox")
+                combo:Dock(RIGHT)
+                combo:SetWidth(200)
+                combo:DockMargin(0, 8, 15, 8)
+                combo:SetFont("LiliaFont.18")
+                local currentKeyName = isnumber(currentKey) and (currentKey == KEY_NONE and "NONE" or input.GetKeyName(currentKey)) or "NONE"
+                combo:SetValue(currentKeyName)
+                local choices = {}
+                for name, code in pairs(KeybindKeys) do
+                    if not taken[code] or code == currentKey or code == KEY_NONE then
+                        local displayName = input.GetKeyName(code) or name
+                        if code == KEY_NONE then displayName = "NONE" end
+                        table.insert(choices, {
+                            txt = displayName,
+                            keycode = code
+                        })
+                    end
                 end
 
-                local actions = {}
-                for action, data in pairs(lia.keybind.stored) do
-                    if istable(data) then table.insert(actions, action) end
-                end
-
-                table.sort(actions, function(a, b)
-                    local la, lb = #tostring(a), #tostring(b)
-                    if la == lb then return tostring(a) < tostring(b) end
-                    return la < lb
+                table.sort(choices, function(a, b)
+                    if a.txt == "NONE" then return true end
+                    if b.txt == "NONE" then return false end
+                    return tostring(a.txt or ""):lower() < tostring(b.txt or ""):lower()
                 end)
 
-                local filteredActions = {}
-                searchFilter = tostring(searchFilter or "")
-                if searchFilter ~= "" then
-                    local filterLower = searchFilter:lower()
-                    for _, action in ipairs(actions) do
-                        local data = lia.keybind.stored[action]
-                        local actionName = L(action) or tostring(action)
-                        local actionDesc = data.description or ""
-                        local actionNameLower = actionName:lower()
-                        local actionDescLower = actionDesc:lower()
-                        local actionKeyLower = tostring(action):lower()
-                        if actionNameLower:find(filterLower, 1, true) or actionDescLower:find(filterLower, 1, true) or actionKeyLower:find(filterLower, 1, true) then filteredActions[#filteredActions + 1] = action end
-                    end
-                else
-                    filteredActions = actions
-                end
-
-                for _, action in ipairs(filteredActions) do
-                    local data = lia.keybind.stored[action]
-                    local keybindPanel = KeybindFormatting.Keybind(action, data, canvas, allowEdit, taken, buildKeybinds)
-                    keybindPanel:Dock(TOP)
-                    keybindPanel:DockMargin(10, 10, 10, 0)
-                    keybindPanel.Paint = function(s, w, h)
-                        local radius = 8
-                        local accent = lia.color.theme.accent or lia.color.theme.header or lia.color.theme.theme or Color(100, 150, 200)
-                        local background = lia.color.theme.background_alpha or lia.color.theme.background or Color(40, 40, 40, 240)
-                        local x, y = s:LocalToScreen(0, 0)
-                        lia.derma.rect(0, 0, w, h):Rad(radius):Color(lia.color.theme.window_shadow or Color(0, 0, 0, 50)):Shadow(8, 12):Shape(lia.derma.SHAPE_IOS):Draw()
-                        lia.util.drawBlurAt(x, y, w, h)
-                        lia.derma.rect(0, 0, w, h):Rad(radius):Color(background):Shape(lia.derma.SHAPE_IOS):Draw()
-                        surface.SetDrawColor(accent.r, accent.g, accent.b, accent.a or 255)
-                        surface.DrawRect(0, 0, w, 3)
-                        surface.DrawRect(0, 0, 3, h)
-                        surface.DrawRect(w - 3, 0, 3, h)
-                        surface.DrawRect(0, h - 3, w, 3)
+                local hasNone = false
+                for _, c in ipairs(choices) do
+                    if c.keycode == KEY_NONE then
+                        hasNone = true
+                        break
                     end
                 end
 
-                if allowEdit then
-                    local resetAllBtn = vgui.Create("liaMediumButton", canvas)
-                    resetAllBtn:Dock(TOP)
-                    resetAllBtn:DockMargin(10, 20, 10, 0)
-                    resetAllBtn:SetTall(60)
-                    resetAllBtn:SetText(L("resetAllKeybinds"))
-                    resetAllBtn.DoClick = function()
-                        for action, data in pairs(lia.keybind.stored) do
-                            if istable(data) and data.default then
-                                if data.value and lia.keybind.stored[data.value] == action then lia.keybind.stored[data.value] = nil end
-                                data.value = data.default
-                                lia.keybind.stored[data.default] = action
+                if not hasNone then
+                    table.insert(choices, 1, {
+                        txt = "NONE",
+                        keycode = KEY_NONE
+                    })
+                end
+
+                for _, c in ipairs(choices) do
+                    combo:AddChoice(c.txt, c.keycode)
+                end
+
+                combo.OnSelect = function(_, _, newKey)
+                    if newKey == nil then return end
+                    if isstring(newKey) then
+                        local code = KeybindKeys[string.lower(newKey)]
+                        newKey = code or KEY_NONE
+                    end
+
+                    if newKey ~= KEY_NONE then
+                        for tk, tv in pairs(taken) do
+                            if tk == newKey and tv ~= action then
+                                combo:SetValue(currentKeyName)
+                                return
                             end
                         end
-
-                        lia.keybind.save()
-                        buildKeybinds(parent)
                     end
+
+                    local keybindData = lia.keybind.stored[action]
+                    local oldKey = keybindData.value
+                    if oldKey then if lia.keybind.stored[oldKey] == action then lia.keybind.stored[oldKey] = nil end end
+                    keybindData.value = newKey
+                    lia.keybind.save()
+                    if refreshFunc then refreshFunc() end
+                    local client = LocalPlayer()
+                    if IsValid(client) then client:notifySuccess(L("keybindChanged", action, input.GetKeyName(newKey) or "NONE")) end
                 end
-
-                scrollPanel:InvalidateLayout(true)
+            else
+                local lKey = p:Add("DLabel")
+                lKey:Dock(RIGHT)
+                lKey:DockMargin(0, 0, 15, 0)
+                lKey:SetWidth(200)
+                lKey:SetText(isnumber(currentKey) and (currentKey == KEY_NONE and "NONE" or input.GetKeyName(currentKey)) or "NONE")
+                lKey:SetFont("LiliaFont.18")
+                lKey:SetTextColor(lia.color.theme.text)
+                lKey:SetContentAlignment(6)
             end
-
-            searchBar.OnTextChanged = function(_, value) populateKeybinds(value or "") end
-            populateKeybinds("")
         end
 
         pages[#pages + 1] = {
             name = "keybinds",
-            drawFunc = buildKeybinds
+            drawFunc = function(parent)
+                parent:Clear()
+                local allowEdit = lia.config.get("AllowKeybindEditing", true)
+                local searchEntry = parent:Add("liaEntry")
+                searchEntry:Dock(TOP)
+                searchEntry:SetTall(35)
+                searchEntry:DockMargin(10, 10, 10, 10)
+                searchEntry:SetPlaceholderText(L("searchKeybinds") or "Search keybinds...")
+                searchEntry:SetFont("LiliaFont.18")
+                local scroll = parent:Add("liaScrollPanel")
+                scroll:Dock(FILL)
+                scroll:GetCanvas():DockPadding(10, 10, 10, 10)
+                local function populate(filter)
+                    local taken = {}
+                    for action, data in pairs(lia.keybind.stored) do
+                        if istable(data) and data.value then taken[data.value] = action end
+                    end
+
+                    scroll:Clear()
+                    filter = filter and filter:len() > 0 and filter:lower() or nil
+                    local categories = {}
+                    local keys = {}
+                    for k in pairs(lia.keybind.stored) do
+                        keys[#keys + 1] = k
+                    end
+
+                    table.sort(keys, function(a, b) return tostring(a) < tostring(b) end)
+                    for _, k in ipairs(keys) do
+                        local data = lia.keybind.stored[k]
+                        if istable(data) then
+                            local cat = data.category or "Misc"
+                            categories[cat] = categories[cat] or {}
+                            table.insert(categories[cat], {
+                                key = k,
+                                data = data
+                            })
+                        end
+                    end
+
+                    local sortedCategories = {}
+                    for cat in pairs(categories) do
+                        table.insert(sortedCategories, cat)
+                    end
+
+                    table.sort(sortedCategories)
+                    for _, cat in ipairs(sortedCategories) do
+                        local items = categories[cat]
+                        table.sort(items, function(a, b) return tostring(a.key) < tostring(b.key) end)
+                        local visibleItems = {}
+                        for _, item in ipairs(items) do
+                            local name = L(item.key) or item.key
+                            local desc = item.data.description or ""
+                            if not filter or name:lower():find(filter, 1, true) or desc:lower():find(filter, 1, true) or cat:lower():find(filter, 1, true) then table.insert(visibleItems, item) end
+                        end
+
+                        if #visibleItems > 0 then
+                            AddHeader(scroll, cat)
+                            for _, item in ipairs(visibleItems) do
+                                AddKeybindField(scroll, item.key, item.data, allowEdit, taken, function() populate(filter) end)
+                            end
+                        end
+                    end
+
+                    if allowEdit then
+                        local resetBtn = scroll:Add("liaButton")
+                        resetBtn:Dock(TOP)
+                        resetBtn:DockMargin(10, 20, 10, 10)
+                        resetBtn:SetTall(40)
+                        resetBtn:SetText(L("resetAllKeybinds"))
+                        resetBtn.DoClick = function()
+                            for action, data in pairs(lia.keybind.stored) do
+                                if istable(data) and data.default then data.value = data.default end
+                            end
+
+                            lia.keybind.save()
+                            populate(filter)
+                        end
+                    end
+                end
+
+                searchEntry:SetUpdateOnType(true)
+                searchEntry.OnTextChanged = function(me, text) populate(text) end
+                populate(nil)
+            end
         }
     end)
 end

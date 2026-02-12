@@ -3,39 +3,33 @@ MODULE.author = "Samael"
 MODULE.discord = "@liliaplayer"
 MODULE.desc = "chatSystemDescription"
 MODULE.Privileges = {
-    {
+    ["noOOCCooldown"] = {
         Name = "noOOCCooldown",
-        ID = "noOOCCooldown",
         MinAccess = "admin",
         Category = "categoryChat",
     },
-    {
+    ["adminChat"] = {
         Name = "adminChat",
-        ID = "adminChat",
         MinAccess = "superadmin",
         Category = "categoryChat",
     },
-    {
+    ["localEventChat"] = {
         Name = "localEventChat",
-        ID = "localEventChat",
         MinAccess = "admin",
         Category = "categoryChat",
     },
-    {
+    ["eventChat"] = {
         Name = "eventChat",
-        ID = "eventChat",
         MinAccess = "admin",
         Category = "categoryChat",
     },
-    {
+    ["accessHelpChat"] = {
         Name = "accessHelpChat",
-        ID = "accessHelpChat",
         MinAccess = "superadmin",
         Category = "categoryChat",
     },
-    {
+    ["bypassOOCBlock"] = {
         Name = "bypassOOCBlockPrivilege",
-        ID = "bypassOOCBlock",
         MinAccess = "superadmin",
         Category = "categoryChat",
     },

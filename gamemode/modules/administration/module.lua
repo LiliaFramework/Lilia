@@ -3,507 +3,423 @@ MODULE.author = "Samael"
 MODULE.discord = "@liliaplayer"
 MODULE.desc = "administrationToolsDescription"
 MODULE.Privileges = {
-    {
+    ["canUseItemSpawner"] = {
         Name = "canUseItemSpawner",
-        ID = "canUseItemSpawner",
         MinAccess = "admin",
         Category = "categoryStaffItems",
     },
-    {
+    ["managePropBlacklist"] = {
         Name = "managePropBlacklist",
-        ID = "managePropBlacklist",
         MinAccess = "superadmin",
         Category = "categoryBlacklisting",
     },
-    {
+    ["manageVehicleBlacklist"] = {
         Name = "manageVehicleBlacklist",
-        ID = "manageVehicleBlacklist",
         MinAccess = "superadmin",
         Category = "categoryBlacklisting",
     },
-    {
+    ["accessEditConfigurationMenu"] = {
         Name = "accessEditConfigurationMenu",
-        ID = "accessEditConfigurationMenu",
         MinAccess = "superadmin",
         Category = "userInterface",
     },
-    {
+    ["manageUsergroups"] = {
         Name = "manageUsergroups",
-        ID = "manageUsergroups",
         MinAccess = "superadmin",
         Category = "categoryUsergroups",
     },
-    {
+    ["viewStaffManagement"] = {
         Name = "viewStaffManagement",
-        ID = "viewStaffManagement",
         MinAccess = "superadmin",
         Category = "categoryStaffManagement",
     },
-    {
+    ["canAccessPlayerList"] = {
         Name = "canAccessPlayerList",
-        ID = "canAccessPlayerList",
         MinAccess = "admin",
         Category = "players",
     },
-    {
+    ["listCharacters"] = {
         Name = "listCharacters",
-        ID = "listCharacters",
         MinAccess = "admin",
         Category = "character",
     },
-    {
+    ["canAccessFlagManagement"] = {
         Name = "canAccessFlagManagement",
-        ID = "canAccessFlagManagement",
         MinAccess = "superadmin",
         Category = "flags",
     },
-    {
-        ID = "createStaffCharacter",
+    ["createStaffCharacter"] = {
         Name = "createStaffCharacter",
         MinAccess = "admin",
         Category = "categoryStaffManagement",
     },
-    {
-        ID = "canBypassSAMFactionWhitelist",
+    ["canBypassSAMFactionWhitelist"] = {
         Name = "canBypassSAMFactionWhitelist",
         MinAccess = "superadmin",
         Category = "categorySAM",
     },
-    {
-        ID = "canEditSimfphysCars",
+    ["canEditSimfphysCars"] = {
         Name = "canEditSimfphysCars",
         MinAccess = "superadmin",
         Category = "simfphysVehicles",
     },
-    {
-        ID = "canSeeSAMNotificationsOutsideStaff",
+    ["canSeeSAMNotificationsOutsideStaff"] = {
         Name = "canSeeSAMNotificationsOutsideStaff",
         MinAccess = "superadmin",
         Category = "categorySAM",
     },
-    {
-        ID = "checkInventories",
+    ["checkInventories"] = {
         Name = "checkInventories",
         MinAccess = "admin",
         Category = "categoryStaffManagement",
     },
-    {
-        ID = "manageAttributes",
+    ["manageAttributes"] = {
         Name = "manageAttributes",
         MinAccess = "admin",
         Category = "categoryStaffManagement",
     },
-    {
-        ID = "manageCharacterInformation",
+    ["manageCharacterInformation"] = {
         Name = "manageCharacterInformation",
         MinAccess = "admin",
         Category = "categoryStaffManagement",
     },
-    {
-        ID = "manageCharacters",
+    ["manageCharacters"] = {
         Name = "manageCharacters",
         MinAccess = "admin",
         Category = "categoryStaffManagement",
     },
-    {
-        ID = "manageClasses",
+    ["manageClasses"] = {
         Name = "manageClasses",
         MinAccess = "admin",
         Category = "categoryStaffManagement",
     },
-    {
-        ID = "manageDoors",
+    ["manageDoors"] = {
         Name = "manageDoors",
         MinAccess = "admin",
         Category = "categoryStaffManagement",
     },
-    {
-        ID = "manageFlags",
+    ["manageFlags"] = {
         Name = "manageFlags",
         MinAccess = "admin",
         Category = "categoryStaffManagement",
     },
-    {
-        ID = "manageSitRooms",
+    ["manageSitRooms"] = {
         Name = "manageSitRooms",
         MinAccess = "admin",
         Category = "categoryStaffManagement",
     },
-    {
-        ID = "manageTransfers",
+    ["manageTransfers"] = {
         Name = "manageTransfers",
         MinAccess = "admin",
         Category = "categoryStaffManagement",
     },
-    {
-        ID = "receiveCheaterNotifications",
+    ["receiveCheaterNotifications"] = {
         Name = "receiveCheaterNotifications",
         MinAccess = "admin",
         Category = "exploiting",
     },
-    {
-        ID = "stopSoundForEveryone",
+    ["stopSoundForEveryone"] = {
         Name = "stopSoundForEveryone",
         MinAccess = "superadmin",
         Category = "categoryServer",
     },
-    {
-        ID = "useDisallowedTools",
+    ["useDisallowedTools"] = {
         Name = "useDisallowedTools",
         MinAccess = "superadmin",
         Category = "categoryStaffTools",
     },
-    {
-        ID = "viewPlayerWarnings",
+    ["viewPlayerWarnings"] = {
         Name = "viewPlayerWarnings",
         MinAccess = "admin",
         Category = "warning",
     },
-    {
+    ["canRemoveWarns"] = {
         Name = "canRemoveWarns",
-        ID = "canRemoveWarns",
         MinAccess = "superadmin",
         Category = "warning",
     },
-    {
+    ["alwaysSeeTickets"] = {
         Name = "alwaysSeeTickets",
-        ID = "alwaysSeeTickets",
         MinAccess = "superadmin",
         Category = "tickets",
     },
-    {
+    ["canBypassCharacterLock"] = {
         Name = "canBypassCharacterLock",
-        ID = "canBypassCharacterLock",
         MinAccess = "superadmin",
         Category = "categoryStaffManagement",
     },
-    {
+    ["canGrabWorldProps"] = {
         Name = "canGrabWorldProps",
-        ID = "canGrabWorldProps",
         MinAccess = "superadmin",
         Category = "categoryStaffPhysgun",
     },
-    {
+    ["canGrabPlayers"] = {
         Name = "canGrabPlayers",
-        ID = "canGrabPlayers",
         MinAccess = "superadmin",
         Category = "categoryStaffPhysgun",
     },
-    {
+    ["physgunPickup"] = {
         Name = "physgunPickup",
-        ID = "physgunPickup",
         MinAccess = "admin",
         Category = "categoryStaffPhysgun",
     },
-    {
+    ["canAccessItemInformations"] = {
         Name = "canAccessItemInformations",
-        ID = "canAccessItemInformations",
         MinAccess = "superadmin",
         Category = "categoryStaffItems",
     },
-    {
+    ["physgunPickupRestrictedEntities"] = {
         Name = "physgunPickupRestrictedEntities",
-        ID = "physgunPickupRestrictedEntities",
         MinAccess = "superadmin",
         Category = "categoryStaffPhysgun",
     },
-    {
+    ["physgunPickupVehicles"] = {
         Name = "physgunPickupVehicles",
-        ID = "physgunPickupVehicles",
         MinAccess = "admin",
         Category = "categoryStaffPhysgun",
     },
-    {
+    ["cantBeGrabbedPhysgun"] = {
         Name = "cantBeGrabbedPhysgun",
-        ID = "cantBeGrabbedPhysgun",
         MinAccess = "superadmin",
         Category = "categoryStaffProtection",
     },
-    {
+    ["canPhysgunReload"] = {
         Name = "canPhysgunReload",
-        ID = "canPhysgunReload",
         MinAccess = "superadmin",
         Category = "categoryStaffPhysgun",
     },
-    {
+    ["noClipOutsideStaff"] = {
         Name = "noClipOutsideStaff",
-        ID = "noClipOutsideStaff",
         MinAccess = "superadmin",
         Category = "categoryStaffMovement",
     },
-    {
+    ["noClipESPOffsetStaff"] = {
         Name = "noClipESPOffsetStaff",
-        ID = "noClipESPOffsetStaff",
         MinAccess = "superadmin",
         Category = "userInterface",
     },
-    {
+    ["canPropertyWorldEntities"] = {
         Name = "canPropertyWorldEntities",
-        ID = "canPropertyWorldEntities",
         MinAccess = "superadmin",
         Category = "categoryStaffManagement",
     },
-    {
+    ["canSpawnRagdolls"] = {
         Name = "canSpawnRagdolls",
-        ID = "canSpawnRagdolls",
         MinAccess = "admin",
         Category = "spawnPermissions",
     },
-    {
+    ["canSpawnSWEPs"] = {
         Name = "canSpawnSWEPs",
-        ID = "canSpawnSWEPs",
         MinAccess = "superadmin",
         Category = "spawnPermissions",
     },
-    {
+    ["canEditWeapons"] = {
         Name = "canEditWeapons",
-        ID = "canEditWeapons",
         MinAccess = "superadmin",
         Category = "spawnPermissions",
     },
-    {
+    ["canSpawnEffects"] = {
         Name = "canSpawnEffects",
-        ID = "canSpawnEffects",
         MinAccess = "admin",
         Category = "spawnPermissions",
     },
-    {
+    ["canSpawnProps"] = {
         Name = "canSpawnProps",
-        ID = "canSpawnProps",
         MinAccess = "admin",
         Category = "spawnPermissions",
     },
-    {
+    ["canSpawnBlacklistedProps"] = {
         Name = "canSpawnBlacklistedProps",
-        ID = "canSpawnBlacklistedProps",
         MinAccess = "superadmin",
         Category = "spawnPermissions",
     },
-    {
+    ["canSpawnNPCs"] = {
         Name = "canSpawnNPCs",
-        ID = "canSpawnNPCs",
         MinAccess = "superadmin",
         Category = "spawnPermissions",
     },
-    {
+    ["noCarSpawnDelay"] = {
         Name = "noCarSpawnDelay",
-        ID = "noCarSpawnDelay",
         MinAccess = "superadmin",
         Category = "spawnPermissions",
     },
-    {
+    ["canSpawnCars"] = {
         Name = "canSpawnCars",
-        ID = "canSpawnCars",
         MinAccess = "admin",
         Category = "spawnPermissions",
     },
-    {
+    ["canSpawnBlacklistedCars"] = {
         Name = "canSpawnBlacklistedCars",
-        ID = "canSpawnBlacklistedCars",
         MinAccess = "superadmin",
         Category = "spawnPermissions",
     },
-    {
+    ["canSpawnSENTs"] = {
         Name = "canSpawnSENTs",
-        ID = "canSpawnSENTs",
         MinAccess = "admin",
         Category = "spawnPermissions",
     },
-    {
+    ["canRemoveBlockedEntities"] = {
         Name = "canRemoveBlockedEntities",
-        ID = "canRemoveBlockedEntities",
         MinAccess = "admin",
         Category = "categoryStaffBlacklisting",
     },
-    {
+    ["canRemoveWorldEntities"] = {
         Name = "canRemoveWorldEntities",
-        ID = "canRemoveWorldEntities",
         MinAccess = "superadmin",
         Category = "categoryStaffManagement",
     },
-    {
+    ["canSeeLogs"] = {
         Name = "canSeeLogs",
-        ID = "canSeeLogs",
         MinAccess = "superadmin",
         Category = "categoryLogging",
     },
-    {
+    ["alwaysSpawnAdminStick"] = {
         Name = "alwaysSpawnAdminStick",
-        ID = "alwaysSpawnAdminStick",
         MinAccess = "superadmin",
         Category = "adminStick",
     },
-    {
+    ["usePositionTool"] = {
         Name = "usePositionTool",
-        ID = "usePositionTool",
         MinAccess = "superadmin",
         Category = "categoryStaffTools",
     },
-    {
+    ["command_ban"] = {
         Name = "commandBan",
-        ID = "command_ban",
         MinAccess = "admin",
         Category = "commands",
     },
-    {
+    ["command_kick"] = {
         Name = "commandKick",
-        ID = "command_kick",
         MinAccess = "admin",
         Category = "commands",
     },
-    {
+    ["command_kill"] = {
         Name = "commandKill",
-        ID = "command_kill",
         MinAccess = "admin",
         Category = "commands",
     },
-    {
+    ["command_freeze"] = {
         Name = "commandFreeze",
-        ID = "command_freeze",
         MinAccess = "admin",
         Category = "commands",
     },
-    {
+    ["command_unfreeze"] = {
         Name = "commandUnfreeze",
-        ID = "command_unfreeze",
         MinAccess = "admin",
         Category = "commands",
     },
-    {
+    ["command_slay"] = {
         Name = "commandSlay",
-        ID = "command_slay",
         MinAccess = "admin",
         Category = "commands",
     },
-    {
+    ["command_respawn"] = {
         Name = "commandRespawn",
-        ID = "command_respawn",
         MinAccess = "admin",
         Category = "commands",
     },
-    {
+    ["command_blind"] = {
         Name = "commandBlind",
-        ID = "command_blind",
         MinAccess = "admin",
         Category = "commands",
     },
-    {
+    ["command_unblind"] = {
         Name = "commandUnblind",
-        ID = "command_unblind",
         MinAccess = "admin",
         Category = "commands",
     },
-    {
+    ["command_gag"] = {
         Name = "commandGag",
-        ID = "command_gag",
         MinAccess = "admin",
         Category = "commands",
     },
-    {
+    ["command_ungag"] = {
         Name = "commandUngag",
-        ID = "command_ungag",
         MinAccess = "admin",
         Category = "commands",
     },
-    {
+    ["command_mute"] = {
         Name = "commandMute",
-        ID = "command_mute",
         MinAccess = "admin",
         Category = "commands",
     },
-    {
+    ["command_unmute"] = {
         Name = "commandUnmute",
-        ID = "command_unmute",
         MinAccess = "admin",
         Category = "commands",
     },
-    {
+    ["command_bring"] = {
         Name = "commandBring",
-        ID = "command_bring",
         MinAccess = "admin",
         Category = "commands",
     },
-    {
+    ["command_goto"] = {
         Name = "commandGoto",
-        ID = "command_goto",
         MinAccess = "admin",
         Category = "commands",
     },
-    {
+    ["command_return"] = {
         Name = "commandReturn",
-        ID = "command_return",
         MinAccess = "admin",
         Category = "commands",
     },
-    {
+    ["command_jail"] = {
         Name = "commandJail",
-        ID = "command_jail",
         MinAccess = "admin",
         Category = "commands",
     },
-    {
+    ["command_unjail"] = {
         Name = "commandUnjail",
-        ID = "command_unjail",
         MinAccess = "admin",
         Category = "commands",
     },
-    {
+    ["command_cloak"] = {
         Name = "commandCloak",
-        ID = "command_cloak",
         MinAccess = "admin",
         Category = "commands",
     },
-    {
+    ["command_uncloak"] = {
         Name = "commandUncloak",
-        ID = "command_uncloak",
         MinAccess = "admin",
         Category = "commands",
     },
-    {
+    ["command_god"] = {
         Name = "commandGod",
-        ID = "command_god",
         MinAccess = "admin",
         Category = "commands",
     },
-    {
+    ["command_ungod"] = {
         Name = "commandUngod",
-        ID = "command_ungod",
         MinAccess = "admin",
         Category = "commands",
     },
-    {
+    ["command_ignite"] = {
         Name = "commandIgnite",
-        ID = "command_ignite",
         MinAccess = "admin",
         Category = "commands",
     },
-    {
+    ["command_extinguish"] = {
         Name = "commandExtinguish",
-        ID = "command_extinguish",
         MinAccess = "admin",
         Category = "commands",
     },
-    {
+    ["command_strip"] = {
         Name = "commandStrip",
-        ID = "command_strip",
         MinAccess = "admin",
         Category = "commands",
     },
-    {
+    ["canManageNPCs"] = {
         Name = "canManageNPCs",
-        ID = "canManageNPCs",
         MinAccess = "admin",
         Category = "NPCs",
     },
-    {
+    ["canManageProperties"] = {
         Name = "canManageProperties",
-        ID = "canManageProperties",
         MinAccess = "superadmin",
         Category = "categoryStaffManagement",
     },
-    {
+    ["seeInsertNotifications"] = {
         Name = "seeInsertNotifications",
-        ID = "seeInsertNotifications",
         MinAccess = "superadmin",
         Category = "categoryStaffManagement",
     },

@@ -3,7 +3,7 @@
     File: doors.md
 ]]
 --[[
-    Doors Library
+    Doors
 
     Door management system for the Lilia framework providing preset configuration,
     database schema verification, data cleanup, and door access control functionality.

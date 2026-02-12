@@ -24,48 +24,24 @@ function PANEL:Init()
 end
 
 function PANEL:addLabel(text)
-    local function getTheme()
-        local theme = lia.color.theme or {}
-        return {
-            shadow = theme.window_shadow or Color(0, 0, 0, 170),
-            panel = theme.panel and theme.panel[1] or theme.background_alpha or theme.background or Color(30, 30, 30, 210)
-        }
-    end
-
-    local container = self:Add("DPanel")
-    container:Dock(TOP)
-    container:DockMargin(0, 0, 0, 4)
-    container:SetTall(32)
-    container:SetPaintBackground(false)
-    local bgPanel = container:Add("DPanel")
-    bgPanel:Dock(FILL)
-    bgPanel:SetPaintBackground(false)
-    bgPanel.Paint = function(_, w, h)
-        local colors = getTheme()
-        lia.derma.rect(0, 0, w, h):Rad(6):Color(colors.shadow):Shadow(6, 14):Shape(lia.derma.SHAPE_IOS):Draw()
-        lia.derma.rect(0, 0, w, h):Rad(6):Color(colors.panel):Shape(lia.derma.SHAPE_IOS):Draw()
-        local accent = lia.color.theme.accent or lia.color.theme.header or lia.color.theme.theme
-        if accent then
-            surface.SetDrawColor(accent)
-            surface.DrawRect(0, 0, w, 2)
-        end
-    end
-
-    local lblContainer = bgPanel:Add("DPanel")
-    lblContainer:Dock(FILL)
-    lblContainer:DockPadding(0, 2, 0, 0)
-    lblContainer:SetPaintBackground(false)
-    local lbl = lblContainer:Add("DLabel")
+    local header = self:Add("liaHeaderPanel")
+    header:Dock(TOP)
+    header:DockMargin(0, 0, 0, 4)
+    header:SetTall(32)
+    local accentColor = lia.color.theme and lia.color.theme.theme or Color(116, 185, 255)
+    header:SetLineColor(accentColor)
+    header:SetLineWidth(2)
+    local lbl = header:Add("DLabel")
     lbl:SetFont("LiliaFont.18")
     lbl:SetText(L(text):upper())
     lbl:SizeToContents()
     lbl:Dock(FILL)
-    lbl:DockMargin(0, 0, 0, 0)
+    lbl:DockMargin(8, 0, 8, 0)
     local textColor = lia.color.theme.text or Color(220, 220, 220)
     lbl:SetTextColor(textColor)
     lbl:SetContentAlignment(5)
-    container.label = lbl
-    return container
+    header.label = lbl
+    return header
 end
 
 function PANEL:onDisplay()

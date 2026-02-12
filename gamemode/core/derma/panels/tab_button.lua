@@ -75,11 +75,12 @@ end
 
 function PANEL:Paint(w, h)
     if not self.text then return end
-    local colorText = self.isActive and lia.color.theme.theme or lia.color.theme.text
-    local colorIcon = self.isActive and lia.color.theme.theme or color_white
+    local theme = lia.color.theme
+    local colorText = self.isActive and color_white or theme.text or Color(200, 200, 200)
+    local colorIcon = self.isActive and color_white or Color(180, 180, 180)
     if self.isActive then
-        surface.SetDrawColor(lia.color.theme.theme.r, lia.color.theme.theme.g, lia.color.theme.theme.b, 255)
-        surface.DrawRect(0, h - self.indicatorHeight, w, self.indicatorHeight)
+        local highlight = Color(255, 255, 255, 10)
+        lia.derma.rect(0, 0, w, h):Rad(8):Color(highlight):Shape(lia.derma.SHAPE_IOS):Draw()
     end
 
     local iconW = self.icon and 16 or 0

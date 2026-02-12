@@ -3,7 +3,7 @@
     File:  character.md
 ]]
 --[[
-    Character Meta
+    Character
 
     Character management system for the Lilia framework.
 ]]

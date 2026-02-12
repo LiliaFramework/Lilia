@@ -3,7 +3,7 @@
     File: workshop.md
 ]]
 --[[
-    Workshop Library
+    Workshop
 
     Steam Workshop addon downloading, mounting, and management system for the Lilia framework.
 ]]

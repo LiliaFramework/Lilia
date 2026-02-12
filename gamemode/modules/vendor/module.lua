@@ -3,15 +3,13 @@ MODULE.author = "Samael"
 MODULE.discord = "@liliaplayer"
 MODULE.desc = "npcVendorDescription"
 MODULE.Privileges = {
-    {
+    ["canEditVendors"] = {
         Name = "canEditVendors",
-        ID = "canEditVendors",
         MinAccess = "superadmin",
         Category = "vendors",
     },
-    {
+    ["canCreateVendorPresets"] = {
         Name = "canCreateVendorPresets",
-        ID = "canCreateVendorPresets",
         MinAccess = "admin",
         Category = "vendors",
     },

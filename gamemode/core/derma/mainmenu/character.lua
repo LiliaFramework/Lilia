@@ -20,7 +20,7 @@ function PANEL:Init()
     hook.Add("DrawPhysgunBeam", "liaMainMenuPreDrawPhysgunBeam", function() return IsValid(lia.gui.character) end)
     hook.Add("RenderScreenspaceEffects", "liaCharMenuDarken", function()
         if not IsValid(lia.gui.character) then return end
-        local inFull = lia.gui.character.inCharacterCreation or lia.gui.character.inWelcomeScreen
+        local inFull = lia.gui.character.inCharacterCreation
         if not inFull then return end
         DrawColorModify({
             ["$pp_colour_addr"] = 0,
@@ -63,6 +63,7 @@ function PANEL:Init()
     self.music = self:Add("liaCharBGMusic")
     self:createTitle()
     self:loadBackground()
+    self:createChangelogDisplay()
     if clientChar and lia.characters and #lia.characters > 0 then
         for i, charID in ipairs(lia.characters) do
             local charObj = isnumber(charID) and lia.char.getCharacter(charID) or charID
@@ -97,91 +98,120 @@ function PANEL:createWelcomeScreen()
     self.welcomeScreen:SetPos(0, 0)
     self.welcomeScreen:SetSize(ScrW(), ScrH())
     self.welcomeScreen:SetZPos(100)
-    self.welcomeScreen.Paint = function(_, w, h)
-        surface.SetDrawColor(0, 0, 0, 150)
-        surface.DrawRect(0, 0, w, h)
+    self.welcomeScreen.Paint = function(_, w, h) end
+    local container = self.welcomeScreen:Add("DPanel")
+    local containerW = ScrW() * 0.3
+    local containerH = ScrH() * 0.3
+    container:SetSize(containerW, containerH)
+    local finalX, finalY = (ScrW() - containerW) / 2, (ScrH() - containerH) / 2
+    container:SetPos(finalX, finalY + 30)
+    container:SetAlpha(0)
+    local accentColor = lia.color.theme and lia.color.theme.theme or Color(116, 185, 255)
+    container.Paint = function(s, w, h)
+        local bgColor = Color(25, 28, 35, 250)
+        lia.derma.rect(0, 0, w, h):Rad(12):Color(Color(0, 0, 0, 180)):Shadow(15, 20):Shape(lia.derma.SHAPE_IOS):Draw()
+        lia.derma.rect(0, 0, w, h):Rad(12):Color(bgColor):Shape(lia.derma.SHAPE_IOS):Draw()
     end
 
+    container:AlphaTo(255, 0.4, 0)
+    container:AlphaTo(255, 0.4, 0)
+    local padding = 30
+    local contentY = padding + 15
     local logoPath = lia.config.get("ServerLogo") or ""
     local mainMenuLogoEnabled = lia.config.get("MainMenuLogoEnabled", true)
-    local welcomeLogo = nil
     if mainMenuLogoEnabled and logoPath ~= "" then
-        welcomeLogo = self.welcomeScreen:Add("DImage")
-        welcomeLogo:SetImage(logoPath)
-        welcomeLogo:SetZPos(101)
+        local logo = container:Add("DImage")
+        logo:SetImage(logoPath)
+        local logoSize = math.min(containerW * 0.25, 120)
+        logo:SetSize(logoSize, logoSize)
+        logo:SetPos((containerW - logoSize) / 2, contentY)
+        logo:SetKeepAspect(true)
+        contentY = contentY + logoSize + 25
     end
 
     local steamName = client.steamName and client:steamName() or client:SteamName() or client:Nick() or "Player"
-    local welcomeLabel = self.welcomeScreen:Add("DLabel")
-    welcomeLabel:SetFont("LiliaFont.48")
+    local welcomeLabel = container:Add("DLabel")
+    welcomeLabel:SetFont("LiliaFont.40")
     welcomeLabel:SetTextColor(Color(255, 255, 255))
-    welcomeLabel:SizeToContents()
     welcomeLabel:SetContentAlignment(5)
-    local pressEnterLabel = self.welcomeScreen:Add("DLabel")
-    pressEnterLabel:SetFont("LiliaFont.24")
-    pressEnterLabel:SetTextColor(Color(255, 255, 255))
-    pressEnterLabel:SetText("Press [SPACE] to play")
-    pressEnterLabel:SizeToContents()
-    pressEnterLabel:SetContentAlignment(5)
-    pressEnterLabel.Think = function()
-        local alpha = math.abs(math.sin(CurTime() * 2)) * 155 + 100
-        pressEnterLabel:SetAlpha(alpha)
-    end
-
-    local playtimeLabel = nil
+    welcomeLabel:SetWide(containerW - padding * 2)
+    welcomeLabel:SetPos(padding, contentY)
+    welcomeLabel:SetTall(50)
+    welcomeLabel:SetExpensiveShadow(1, Color(0, 0, 0, 150))
+    contentY = contentY + 65
     if not isFirstJoin then
         local playtime = client:getPlayTime() or 0
         local days = math.floor(playtime / 86400)
         local hours = math.floor((playtime % 86400) / 3600)
         local minutes = math.floor((playtime % 3600) / 60)
-        local playtimeStr
+        local playtimeStr = "You have played for "
         if days > 0 then
-            playtimeStr = days .. "d " .. hours .. "h " .. minutes .. "m"
+            playtimeStr = playtimeStr .. days .. "d " .. hours .. "h " .. minutes .. "m"
         elseif hours > 0 then
-            playtimeStr = hours .. "h " .. minutes .. "m"
+            playtimeStr = playtimeStr .. hours .. "h " .. minutes .. "m"
         else
-            playtimeStr = minutes .. "m"
+            playtimeStr = playtimeStr .. minutes .. "m"
         end
 
-        playtimeLabel = self.welcomeScreen:Add("DLabel")
-        playtimeLabel:SetFont("LiliaFont.20")
-        playtimeLabel:SetText("Playtime: " .. playtimeStr)
-        playtimeLabel:SetTextColor(Color(64, 224, 208))
-        playtimeLabel:SizeToContents()
+        local playtimeContainer = container:Add("DPanel")
+        playtimeContainer:SetSize(containerW - padding * 2, 50)
+        playtimeContainer:SetPos(padding, contentY)
+        playtimeContainer.Paint = function(_, w, h)
+            local pillBg = Color(35, 40, 50, 200)
+            lia.derma.rect(0, 0, w, h):Rad(8):Color(pillBg):Shape(lia.derma.SHAPE_IOS):Draw()
+            lia.derma.rect(0, 0, 4, h):Radii(8, 0, 0, 8):Color(accentColor):Draw()
+        end
+
+        local playtimeLabel = playtimeContainer:Add("DLabel")
+        playtimeLabel:SetFont("LiliaFont.22")
+        playtimeLabel:SetText(playtimeStr)
+        playtimeLabel:SetTextColor(Color(255, 255, 255))
+        playtimeLabel:SetSize(containerW - padding * 2, 50)
         playtimeLabel:SetContentAlignment(5)
+        contentY = contentY + 70
+    else
+        contentY = contentY + 20
     end
 
-    local function positionLabels()
-        local w, h = self.welcomeScreen:GetSize()
-        local logoW, logoH
-        if welcomeLogo then
-            logoW = ScrW() * 0.12
-            logoH = ScrW() * 0.08
-            welcomeLogo:SetSize(logoW, logoH)
-            welcomeLogo:SetPos(w / 2 - logoW / 2, h * 0.30)
-        end
-
-        local baseY = welcomeLogo and (h * 0.30 + logoH + ScrH() * 0.05) or (h * 0.45)
-        welcomeLabel:SetPos(w / 2 - welcomeLabel:GetWide() / 2, baseY)
-        pressEnterLabel:SetPos(w / 2 - pressEnterLabel:GetWide() / 2, baseY + ScrH() * 0.07)
-        if playtimeLabel then playtimeLabel:SetPos(w / 2 - playtimeLabel:GetWide() / 2, baseY + ScrH() * 0.12) end
+    local divider = container:Add("DPanel")
+    divider:SetSize(containerW - padding * 2, 1)
+    divider:SetPos(padding, contentY)
+    divider.Paint = function(_, w, h)
+        surface.SetDrawColor(255, 255, 255, 15)
+        surface.DrawRect(0, 0, w, h)
     end
 
+    contentY = contentY + 25
+    local pressEnterLabel = container:Add("DLabel")
+    pressEnterLabel:SetFont("LiliaFont.22")
+    pressEnterLabel:SetTextColor(Color(200, 200, 200))
+    pressEnterLabel:SetText("Press [SPACE] to continue")
+    pressEnterLabel:SetContentAlignment(5)
+    pressEnterLabel:SetWide(containerW - padding * 2)
+    pressEnterLabel:SetTall(40)
+    pressEnterLabel:SetPos(padding, contentY)
+    pressEnterLabel.Think = function()
+        local pulse = math.abs(math.sin(CurTime() * 1.5))
+        local col = Color(200 + pulse * 55, 200 + pulse * 55, 200 + pulse * 55)
+        pressEnterLabel:SetTextColor(col)
+    end
+
+    local finalHeight = contentY + 40 + padding
+    container:SetTall(finalHeight)
+    local newFinalY = (ScrH() - finalHeight) / 2
+    container:SetPos(finalX, newFinalY + 50)
+    container:MoveTo(finalX, newFinalY, 0.4, 0, 0.3)
     local function updateWelcomeText()
+        if not IsValid(welcomeLabel) then return end
         local currentSteamName = client.steamName and client:steamName() or client:SteamName() or client:Nick() or "Player"
         if isFirstJoin then
             welcomeLabel:SetText("Welcome, " .. currentSteamName .. "!")
         else
             welcomeLabel:SetText("Welcome back, " .. currentSteamName .. "!")
         end
-
-        welcomeLabel:SizeToContents()
-        positionLabels()
     end
 
     updateWelcomeText()
-    positionLabels()
-    self.welcomeScreen.PerformLayout = function() positionLabels() end
     local lastSteamName = steamName
     self.welcomeScreen.Think = function(pnl)
         if IsValid(client) then
@@ -219,6 +249,162 @@ end
 
 function PANEL:createTitle()
     if self.tabs then self.tabs:DockMargin(64, 32, 64, 0) end
+end
+
+function PANEL:createChangelogDisplay()
+    if not SCHEMA or not SCHEMA.Changelog then return end
+    self.changelogPanel = self:Add("DPanel")
+    self.changelogPanel:SetPos(32, 32)
+    self.changelogPanel:SetSize(ScrW() * 0.25, ScrH() * 0.4)
+    self.changelogPanel:SetAlpha(0)
+    self.changelogPanel:AlphaTo(255, 0.4, 0)
+    local accentColor = lia.color.theme and lia.color.theme.theme or Color(116, 185, 255)
+    self.changelogPanel.Paint = function(s, w, h)
+        local bgColor = Color(25, 28, 35, 250)
+        lia.derma.rect(0, 0, w, h):Rad(12):Color(Color(0, 0, 0, 180)):Shadow(15, 20):Shape(lia.derma.SHAPE_IOS):Draw()
+        lia.derma.rect(0, 0, w, h):Rad(12):Color(bgColor):Shape(lia.derma.SHAPE_IOS):Draw()
+        lia.derma.rect(0, 0, w, 5):Radii(12, 12, 0, 0):Color(accentColor):Draw()
+    end
+
+    local padding = 20
+    local contentY = padding + 10
+    local titleLabel = self.changelogPanel:Add("DLabel")
+    titleLabel:SetFont("LiliaFont.30")
+    titleLabel:SetTextColor(Color(255, 255, 255))
+    titleLabel:SetText("Changelog")
+    titleLabel:SetContentAlignment(5)
+    titleLabel:SetWide(self.changelogPanel:GetWide() - padding * 2)
+    titleLabel:SetPos(padding, contentY)
+    titleLabel:SetTall(40)
+    titleLabel:SetExpensiveShadow(1, Color(0, 0, 0, 150))
+    contentY = contentY + 50
+    local scroll = self.changelogPanel:Add("liaScrollPanel")
+    scroll:SetPos(padding, contentY)
+    scroll:SetSize(self.changelogPanel:GetWide() - padding * 2, self.changelogPanel:GetTall() - contentY - padding)
+    scroll:InvalidateLayout(true)
+    local changelogContent = SCHEMA.Changelog or SCHEMA.Changelog
+    if istable(changelogContent) then
+        local isKeyedFormat = false
+        for k, v in pairs(changelogContent) do
+            if isstring(k) and istable(v) then
+                isKeyedFormat = true
+                break
+            end
+        end
+
+        if isKeyedFormat then
+            local sortedVersions = {}
+            for version in pairs(changelogContent) do
+                table.insert(sortedVersions, version)
+            end
+
+            table.sort(sortedVersions, function(a, b)
+                local aMajor, aMinor = a:match("^(%d+)%.(%d+)")
+                local bMajor, bMinor = b:match("^(%d+)%.(%d+)")
+                aMajor, aMinor = tonumber(aMajor) or 0, tonumber(aMinor) or 0
+                bMajor, bMinor = tonumber(bMajor) or 0, tonumber(bMinor) or 0
+                if aMajor ~= bMajor then
+                    return aMajor > bMajor
+                else
+                    return aMinor > bMinor
+                end
+            end)
+
+            for _, version in ipairs(sortedVersions) do
+                local changes = changelogContent[version]
+                if istable(changes) then
+                    local versionLabel = scroll:Add("DLabel")
+                    versionLabel:SetFont("LiliaFont.22")
+                    versionLabel:SetTextColor(accentColor)
+                    versionLabel:SetText("Version " .. version)
+                    versionLabel:SetContentAlignment(5)
+                    versionLabel:SetWide(scroll:GetWide() - padding * 2)
+                    versionLabel:SetTall(30)
+                    versionLabel:Dock(TOP)
+                    versionLabel:DockMargin(0, 0, 0, 5)
+                    versionLabel:SetExpensiveShadow(1, Color(0, 0, 0, 150))
+                    for _, change in ipairs(changes) do
+                        local changeLabel = scroll:Add("DLabel")
+                        changeLabel:SetFont("LiliaFont.18")
+                        changeLabel:SetTextColor(Color(220, 220, 220))
+                        changeLabel:SetText("• " .. (tostring(change) or ""))
+                        changeLabel:SetWrap(true)
+                        changeLabel:SetAutoStretchVertical(true)
+                        changeLabel:SetWide(scroll:GetWide() - padding * 2)
+                        changeLabel:Dock(TOP)
+                        changeLabel:DockMargin(10, 0, 0, 8)
+                    end
+
+                    local spacer = scroll:Add("DPanel")
+                    spacer:SetTall(15)
+                    spacer:Dock(TOP)
+                    spacer.Paint = function() end
+                end
+            end
+        else
+            for i, entry in ipairs(changelogContent) do
+                local versionLabel = scroll:Add("DLabel")
+                versionLabel:SetFont("LiliaFont.22")
+                versionLabel:SetTextColor(accentColor)
+                versionLabel:SetText(entry.version or ("Version " .. i))
+                versionLabel:SetContentAlignment(5)
+                versionLabel:SetWide(scroll:GetWide() - padding * 2)
+                versionLabel:SetTall(30)
+                versionLabel:Dock(TOP)
+                versionLabel:DockMargin(0, 0, 0, 5)
+                versionLabel:SetExpensiveShadow(1, Color(0, 0, 0, 150))
+                if entry.date then
+                    local dateLabel = scroll:Add("DLabel")
+                    dateLabel:SetFont("LiliaFont.16")
+                    dateLabel:SetTextColor(Color(180, 180, 180))
+                    dateLabel:SetText(entry.date)
+                    dateLabel:SetContentAlignment(5)
+                    dateLabel:SetWide(scroll:GetWide() - padding * 2)
+                    dateLabel:SetTall(20)
+                    dateLabel:Dock(TOP)
+                    dateLabel:DockMargin(0, 0, 0, 10)
+                end
+
+                if entry.changes and istable(entry.changes) then
+                    for _, change in ipairs(entry.changes) do
+                        local changeLabel = scroll:Add("DLabel")
+                        changeLabel:SetFont("LiliaFont.18")
+                        changeLabel:SetTextColor(Color(220, 220, 220))
+                        changeLabel:SetText("• " .. (tostring(change) or ""))
+                        changeLabel:SetWrap(true)
+                        changeLabel:SetAutoStretchVertical(true)
+                        changeLabel:SetWide(scroll:GetWide() - padding * 2)
+                        changeLabel:Dock(TOP)
+                        changeLabel:DockMargin(10, 0, 0, 8)
+                    end
+                elseif isstring(entry.changes) then
+                    local changeLabel = scroll:Add("DLabel")
+                    changeLabel:SetFont("LiliaFont.18")
+                    changeLabel:SetTextColor(Color(220, 220, 220))
+                    changeLabel:SetText(entry.changes)
+                    changeLabel:SetWrap(true)
+                    changeLabel:SetAutoStretchVertical(true)
+                    changeLabel:SetWide(scroll:GetWide() - padding * 2)
+                    changeLabel:Dock(TOP)
+                    changeLabel:DockMargin(0, 0, 0, 8)
+                end
+
+                local spacer = scroll:Add("DPanel")
+                spacer:SetTall(15)
+                spacer:Dock(TOP)
+                spacer.Paint = function() end
+            end
+        end
+    elseif isstring(changelogContent) then
+        local contentLabel = scroll:Add("DLabel")
+        contentLabel:SetFont("LiliaFont.18")
+        contentLabel:SetTextColor(Color(220, 220, 220))
+        contentLabel:SetText(changelogContent)
+        contentLabel:SetWrap(true)
+        contentLabel:SetAutoStretchVertical(true)
+        contentLabel:SetWide(scroll:GetWide() - padding * 2)
+        contentLabel:Dock(TOP)
+    end
 end
 
 function PANEL:hideExternalEntities()
@@ -520,6 +706,7 @@ function PANEL:createStartButton()
         btn:SetSize(w, h)
         btn:SetPos(x, y)
         btn:SetText(string.upper(data.text))
+        btn:SetShowLine(true)
         btn.DoClick = data.doClick
         if data.tooltip and data.tooltip ~= "" then
             btn.liaToolTip = true
@@ -555,6 +742,7 @@ function PANEL:addTab(name, callback, justClick, height)
     local textW, textH = surface.GetTextSize(L(name):upper())
     btn:SetWide(textW + 40)
     btn:SetText(L(name):upper())
+    btn:SetShowLine(true)
     btn:SetTall(height or textH + 20)
     if justClick then
         if isfunction(callback) then btn.DoClick = function() callback(self) end end
@@ -575,6 +763,7 @@ function PANEL:backToMainMenu()
     self:clickSound()
     if IsValid(lia.gui.charConfirm) then lia.gui.charConfirm:Remove() end
     if IsValid(self.infoFrame) then self.infoFrame:Remove() end
+    if IsValid(self.changelogPanel) then self.changelogPanel:Remove() end
     if IsValid(self.leftArrow) then
         self.leftArrow:Remove()
         self.leftArrow = nil
@@ -600,12 +789,13 @@ function PANEL:backToMainMenu()
     self.tabs:Clear()
     self:createStartButton()
     self:loadBackground()
+    self:createChangelogDisplay()
 end
 
 function PANEL:createCharacterSelection()
     self.isLoadMode = true
     self.inMainMenu = false
-    for _, name in ipairs{"background", "logo"} do
+    for _, name in ipairs{"background", "logo", "changelogPanel"} do
         if IsValid(self[name]) then
             self[name]:Remove()
             self[name] = nil
@@ -634,7 +824,7 @@ function PANEL:createCharacterSelection()
 end
 
 function PANEL:createCharacterCreation()
-    for _, name in ipairs{"background", "logo"} do
+    for _, name in ipairs{"background", "logo", "changelogPanel"} do
         if IsValid(self[name]) then
             self[name]:Remove()
             self[name] = nil
@@ -731,6 +921,13 @@ function PANEL:createSelectedCharacterInfoPanel(character)
     self.infoFrame:SetTitle("")
     self.infoFrame:SetDraggable(false)
     self.infoFrame:ShowCloseButton(false)
+    self.infoFrame.Paint = function(s, w, h)
+        local bgColor = Color(25, 28, 35, 250)
+        lia.derma.rect(0, 0, w, h):Rad(12):Color(Color(0, 0, 0, 180)):Shadow(15, 20):Shape(lia.derma.SHAPE_IOS):Draw()
+        lia.derma.rect(0, 0, w, h):Rad(12):Color(bgColor):Shape(lia.derma.SHAPE_IOS):Draw()
+        lia.derma.rect(0, 0, w, 5):Radii(12, 12, 0, 0):Color(lia.config.get("Color") or Color(255, 255, 255)):Draw()
+    end
+
     local scroll = vgui.Create("liaScrollPanel", self.infoFrame)
     scroll:Dock(FILL)
     scroll:InvalidateLayout(true)
@@ -814,6 +1011,7 @@ function PANEL:createSelectedCharacterInfoPanel(character)
     self.selectBtn = self:Add("liaSmallButton")
     self.selectBtn:SetSize(bw, bh)
     self.selectBtn:SetPos(cx, fy + fh + pad)
+    self.selectBtn:SetShowLine(true)
     self.selectBtn:SetText(selectText)
     self.selectBtn.DoClick = function()
         if character:isBanned() then
@@ -828,6 +1026,7 @@ function PANEL:createSelectedCharacterInfoPanel(character)
     self.deleteBtn = self:Add("liaSmallButton")
     self.deleteBtn:SetSize(bw, bh)
     self.deleteBtn:SetPos(cx, fy + fh + pad + bh + pad)
+    self.deleteBtn:SetShowLine(true)
     self.deleteBtn:SetText(L("delete") .. " " .. L("character"))
     self.deleteBtn.DoClick = function()
         local charID = character:getID()
@@ -845,6 +1044,7 @@ function PANEL:createSelectedCharacterInfoPanel(character)
         self.setMainBtn = self:Add("liaSmallButton")
         self.setMainBtn:SetSize(bw, bh)
         self.setMainBtn:SetPos(cx, fy + fh + pad + bh + pad + bh + pad)
+        self.setMainBtn:SetShowLine(true)
         self.setMainBtn:SetText(L("setAsMainCharacter"))
         self.setMainBtn.DoClick = function()
             if IsValid(localClient) then localClient:setMainCharacter(character:getID()) end
@@ -947,6 +1147,7 @@ function PANEL:createArrows()
         btn:SetSize(size, size)
         btn:SetPos(ScrW() * 0.5 + xOffset, ScrH() * 0.5 - size * 0.5)
         btn:SetFont("LiliaFont.72")
+        btn:SetShowLine(true)
         btn:SetText(sign)
         btn.DoClick = function()
             local chars = self.availableCharacters or {}
@@ -967,7 +1168,8 @@ end
 function PANEL:UpdateLogoPosition()
     if not IsValid(self.logo) then return end
     local pad = ScrH() * 0.03
-    local logoW, logoH = ScrW() * 0.20 * 0.95, ScrW() * 0.13 * 0.95
+    local baseSize = math.max(ScrW() * 0.15, 300)
+    local logoW, logoH = baseSize * 0.95, baseSize * 0.6 * 0.95
     local left, right, top = math.huge, -math.huge, math.huge
     for _, v in pairs(self.buttons) do
         if IsValid(v) then
@@ -980,8 +1182,15 @@ function PANEL:UpdateLogoPosition()
 
     top = top == math.huge and ScrH() * 0.5 or top
     local center = (left + right) * 0.5
-    self.logo:SetPos(center - logoW * 0.5, top - logoH - pad)
+    local maxLogoW = math.min(logoW, ScrW() * 0.8)
+    local maxLogoH = math.min(logoH, ScrH() * 0.3)
+    logoW = maxLogoW
+    logoH = maxLogoH
+    local logoX = math.max(pad, math.min(center - logoW * 0.5, ScrW() - logoW - pad))
+    local logoY = math.max(pad, top - logoH - pad)
+    self.logo:SetPos(logoX, logoY)
     self.logo:SetSize(logoW, logoH)
+    self.logo:SetKeepAspect(true)
 end
 
 function PANEL:showContent(disableBg)

@@ -795,7 +795,7 @@ function GM:SaveData()
     local seen = {}
     local data = {}
     for _, ent in ents.Iterator() do
-        if ent.IsPersistent then
+        if ent.IsPersistent and hook.Run("ShouldEntitySave", ent) ~= false then
             local key = makeKey(ent)
             if key ~= "" and not seen[key] then
                 seen[key] = true
@@ -845,6 +845,7 @@ end
 function GM:LoadData()
     lia.data.loadPersistenceData(function(entities)
         for _, ent in ipairs(entities) do
+            if hook.Run("ShouldEntityLoad", ent) == false then continue end
             repeat
                 local cls = ent.class
                 if not isstring(cls) or cls == "" then
@@ -996,7 +997,7 @@ function GM:LoadData()
 end
 
 function GM:OnEntityCreated(ent)
-    if not IsValid(ent) or not ent.IsPersistent then return end
+    if not IsValid(ent) or not ent.IsPersistent or hook.Run("ShouldEntitySave", ent) == false then return end
     timer.Simple(0, function()
         if not IsValid(ent) then return end
         local saved = lia.data.getPersistence()
@@ -1006,7 +1007,7 @@ function GM:OnEntityCreated(ent)
         end
 
         local key = makeKey(ent)
-        if seen[key] then return end
+        if seen[key] or hook.Run("ShouldEntitySave", ent) == false then return end
         local entData = {
             pos = ent:GetPos(),
             class = ent:GetClass(),
@@ -1023,7 +1024,7 @@ function GM:OnEntityCreated(ent)
 end
 
 function GM:UpdateEntityPersistence(ent)
-    if not IsValid(ent) or not ent.IsPersistent then return end
+    if not IsValid(ent) or not ent.IsPersistent or hook.Run("ShouldEntitySave", ent) == false then return end
     local saved = lia.data.getPersistence()
     local key = makeKey(ent)
     for _, data in ipairs(saved) do

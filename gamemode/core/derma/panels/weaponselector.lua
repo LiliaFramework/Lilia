@@ -54,7 +54,6 @@ local function HUDPaint()
     local cardW = math.min(screenW * 0.35, 360)
     local baseH = 80
     local accent = lia.color.theme.accent or lia.color.theme.header or lia.color.theme.theme or color_white
-    local background = lia.color.theme.background_alpha or lia.color.theme.background or Color(40, 40, 40, 230)
     local detailColor = Color(200, 200, 200)
     local function wrapText(text, font, maxWidth, lineHeight)
         surface.SetFont(font)
@@ -129,10 +128,10 @@ local function HUDPaint()
         local h = (baseH + infoHeight) * scale
         local x = centerX - w / 2
         local y = centerY + offset * spacing - h / 2
-        lia.derma.rect(x, y, w, h):Rad(6):Color(Color(background.r, background.g, background.b, entryAlpha)):Shadow(8, 12):Shape(lia.derma.SHAPE_IOS):Draw()
-        lia.util.drawBlurAt(x, y, w, h)
-        surface.SetDrawColor(accent.r, accent.g, accent.b, math.min(entryAlpha, accent.a or entryAlpha))
-        surface.DrawRect(x, y, w, 2)
+        local bgColor = Color(25, 28, 35, 250)
+        lia.derma.rect(x, y, w, h):Rad(12):Color(Color(0, 0, 0, 180 * fraction)):Shadow(15, 20):Shape(lia.derma.SHAPE_IOS):Draw()
+        lia.derma.rect(x, y, w, h):Rad(12):Color(Color(bgColor.r, bgColor.g, bgColor.b, entryAlpha)):Shape(lia.derma.SHAPE_IOS):Draw()
+        lia.derma.rect(x, y, w, 4 * scale):Radii(12, 12, 0, 0):Color(Color(accent.r, accent.g, accent.b, entryAlpha)):Shape(lia.derma.SHAPE_IOS):Draw()
         local isActive = i == index
         surface.SetFont("LiliaFont.28")
         surface.SetTextColor(255, 255, 255, entryAlpha)

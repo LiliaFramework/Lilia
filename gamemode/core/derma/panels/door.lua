@@ -4,44 +4,14 @@ function PANEL:Init()
     self:SetTitle(L("door") .. " " .. L("settings"))
     self:Center()
     self:MakePopup()
-    self.access = self:Add("DListView")
+    self.access = self:Add("liaTable")
     self.access:Dock(FILL)
-    local headerColor = lia.color.theme.header_text or Color(255, 255, 255)
-    local headerBgColor = lia.color.theme.header or Color(45, 45, 45)
-    self.access:AddColumn(L("name")).Header:SetTextColor(headerColor)
-    self.access:AddColumn(L("doorAccess")).Header:SetTextColor(headerColor)
-    for _, column in pairs(self.access.Columns) do
-        if column.Header then
-            column.Header.Paint = function(_, w, h)
-                surface.SetDrawColor(headerBgColor)
-                surface.DrawRect(0, 0, w, h)
-            end
-        end
-    end
-
-    self.access.Paint = function(_, w, h)
-        surface.SetDrawColor(lia.color.theme.panel[1] or Color(35, 35, 35))
-        surface.DrawRect(0, 0, w, h)
-    end
-
-    local rowIndex = 0
-    self.access.PaintOver = function()
-        for _, line in pairs(self.access:GetLines()) do
-            if line:IsVisible() then
-                local color = rowIndex % 2 == 0 and Color(0, 0, 0, 50) or Color(0, 0, 0, 25)
-                surface.SetDrawColor(color)
-                surface.DrawRect(0, line:GetY(), self.access:GetWide(), line:GetTall())
-                rowIndex = rowIndex + 1
-            end
-        end
-
-        rowIndex = 0
-    end
-
-    self.access.OnClickLine = function(_, line)
-        if not IsValid(line.player) then return end
+    self.access:AddColumn(L("name"), 400)
+    self.access:AddColumn(L("doorAccess"), 250, TEXT_ALIGN_RIGHT)
+    self.access.OnAction = function(rowData)
+        local ply = rowData._player
+        if not IsValid(ply) then return end
         local menu = lia.derma.dermaMenu()
-        local ply = line.player
         local accessData = self.accessData
         local door = self.door
         local function sendPerm(level)
@@ -64,19 +34,23 @@ function PANEL:setDoor(door, accessData, fallback)
     self.accessData = accessData
     self.door = door
     local client = LocalPlayer()
+    self.access:Clear()
     for _, ply in player.Iterator() do
         if ply ~= client and ply:getChar() then
-            local line = self.access:AddLine(ply:Name():gsub("#", "\226\128\139#"), L(lia.doors.AccessLabels[accessData[ply] or 0]))
-            line.player = ply
+            local row = self.access:AddRow(ply:Name():gsub("#", "\226\128\139#"), L(lia.doors.AccessLabels[accessData[ply] or 0]))
+            row._player = ply
         end
     end
 
     if self:CheckAccess(DOOR_OWNER) then
-        local btn = self:Add("DButton")
-        btn:Dock(BOTTOM)
-        btn:DockMargin(0, 5, 0, 0)
+        local btnPanel = self:Add("DPanel")
+        btnPanel:Dock(BOTTOM)
+        btnPanel:SetTall(45)
+        btnPanel:DockMargin(0, 10, 0, 0)
+        btnPanel.Paint = nil
+        local btn = btnPanel:Add("liaButton")
+        btn:Dock(FILL)
         btn:SetText(L("doorSell"))
-        btn:SetTextColor(color_white)
         btn.DoClick = function()
             self:Remove()
             lia.command.send("doorsell")
@@ -86,18 +60,20 @@ function PANEL:setDoor(door, accessData, fallback)
     end
 
     if self:CheckAccess(DOOR_TENANT) then
-        local entry = self:Add("DTextEntry")
+        local entry = self:Add("liaEntry")
         entry:Dock(TOP)
-        entry:DockMargin(0, 0, 0, 5)
-        entry.Think = function()
-            if not entry:IsEditing() then
+        entry:DockMargin(0, 0, 0, 10)
+        entry:SetPlaceholder(L("doorTitleOwned"))
+        entry.Think = function(s)
+            if not s.textEntry:IsEditing() then
                 local ent = IsValid(fallback) and fallback or door
                 local doorData = lia.doors.getData(ent)
-                entry:SetText(doorData.name or L("doorTitleOwned"))
+                local doorName = doorData.name or L("doorTitleOwned")
+                if s:GetValue() ~= doorName then s:SetText(doorName) end
             end
         end
 
-        entry.OnEnter = function() lia.command.send("doorsettitle", entry:GetText()) end
+        entry.OnEnter = function(s) lia.command.send("doorsettitle", s:GetValue()) end
         self.name = entry
     end
 end

@@ -3,7 +3,7 @@
     File: item.md
 ]]
 --[[
-    Item Library
+    Item
 
     Comprehensive item registration, instantiation, and management system for the Lilia framework.
 ]]
@@ -341,7 +341,7 @@ end
             -- Load a regular item
             lia.item.load("lilia/gamemode/items/food_apple.lua")
             -- Load a base item
-            lia.item.load("lilia/gamemode/items/base/sh_food.lua", nil, true)
+            lia.item.load("lilia/gamemode/items/base/food.lua", nil, true)
         ```
 ]]
 function lia.item.load(path, baseID, isBaseItem)
@@ -1427,3 +1427,198 @@ hook.Add("InitializedModules", "liaItems", function()
 
     lia.item.pendingOverrides = {}
 end)
+
+if SERVER then
+    util.AddNetworkString("liaWeaponOverrideUpdate")
+    util.AddNetworkString("liaWeaponOverrideSync")
+    function lia.item.saveWeaponOverrides()
+        local data = util.TableToJSON(lia.item.WeaponOverrides, true)
+        file.Write("lilia/weapon_overrides.json", data)
+    end
+
+    function lia.item.loadWeaponOverrides()
+        if file.Exists("lilia/weapon_overrides.json", "DATA") then
+            local data = file.Read("lilia/weapon_overrides.json", "DATA")
+            local overrides = util.JSONToTable(data)
+            if overrides then
+                for k, v in pairs(overrides) do
+                    lia.item.WeaponOverrides[k] = v
+                end
+            end
+        end
+    end
+
+    lia.item.loadWeaponOverrides()
+    hook.Add("PlayerInitialSpawn", "liaSyncWeaponOverrides", function(ply)
+        timer.Simple(1, function()
+            if IsValid(ply) then
+                for className, data in pairs(lia.item.WeaponOverrides) do
+                    for key, value in pairs(data) do
+                        net.Start("liaWeaponOverrideSync")
+                        net.WriteString(className)
+                        net.WriteString(key)
+                        net.WriteType(value)
+                        net.Send(ply)
+                    end
+                end
+            end
+        end)
+    end)
+
+    net.Receive("liaWeaponOverrideUpdate", function(len, ply)
+        if not ply:IsSuperAdmin() then return end
+        local className = net.ReadString()
+        local key = net.ReadString()
+        local value = net.ReadType()
+        lia.item.WeaponOverrides[className] = lia.item.WeaponOverrides[className] or {}
+        lia.item.WeaponOverrides[className][key] = value
+        lia.item.saveWeaponOverrides()
+        local itemDef = lia.item.list[className]
+        if itemDef then itemDef[key] = value end
+        ply:notify("Successfully updated " .. key .. " for " .. className)
+        net.Start("liaWeaponOverrideSync")
+        net.WriteString(className)
+        net.WriteString(key)
+        net.WriteType(value)
+        net.Broadcast()
+    end)
+end
+
+if CLIENT then
+    net.Receive("liaWeaponOverrideSync", function()
+        local className = net.ReadString()
+        local key = net.ReadString()
+        local value = net.ReadType()
+        lia.item.WeaponOverrides[className] = lia.item.WeaponOverrides[className] or {}
+        lia.item.WeaponOverrides[className][key] = value
+        local itemDef = lia.item.list[className]
+        if itemDef then itemDef[key] = value end
+    end)
+
+    local function CreateEntry(scroll, className, weaponTable, overrideData)
+        local container = scroll:Add("DPanel")
+        container:SetTall(50)
+        container:Dock(TOP)
+        container:DockMargin(5, 0, 0, 3)
+        local expanded = false
+        local expandedHeight = 320
+        container.Paint = function(s, w, h)
+            local theme = lia.color.theme
+            local base = (theme and theme.panel and theme.panel[1]) or (theme and theme.button) or Color(45, 50, 60)
+            local bgColor = ColorAlpha(base, 235)
+            lia.derma.rect(0, 0, w, h):Rad(6):Color(bgColor):Shape(lia.derma.SHAPE_IOS):Draw()
+        end
+
+        local header = container:Add("DPanel")
+        header:Dock(TOP)
+        header:SetTall(50)
+        header.Paint = function(s, w, h)
+            local theme = lia.color.theme
+            local accent = theme.accent or theme.theme or Color(116, 185, 255)
+            local headerBase = (theme and theme.button_hovered) or (theme and theme.button) or Color(60, 70, 85)
+            lia.derma.rect(0, 0, w, h):Rad(6):Color(ColorAlpha(headerBase, 170)):Shape(lia.derma.SHAPE_IOS):Draw()
+            lia.derma.rect(0, h - 2, w, 2):Color(ColorAlpha(accent, 150)):Draw()
+            if s:IsHovered() then lia.derma.rect(0, 0, w, h):Rad(6):Color(Color(255, 255, 255, 10)):Draw() end
+        end
+
+        header:SetCursor("hand")
+        local nameLabel = header:Add("DLabel")
+        nameLabel:Dock(LEFT)
+        nameLabel:DockMargin(15, 0, 0, 0)
+        nameLabel:SetFont("LiliaFont.25")
+        nameLabel:SetText(L(weaponTable.PrintName or className))
+        nameLabel:SizeToContents()
+        nameLabel:SetTextColor(lia.color.theme.text)
+        local expandBtn = header:Add("DLabel")
+        expandBtn:Dock(RIGHT)
+        expandBtn:DockMargin(0, 0, 15, 0)
+        expandBtn:SetFont("LiliaFont.25")
+        expandBtn:SetText("+")
+        expandBtn:SizeToContents()
+        expandBtn:SetTextColor(lia.color.theme.text)
+        local content = container:Add("DPanel")
+        content:Dock(FILL)
+        content:DockMargin(10, 5, 10, 5)
+        content:SetVisible(false)
+        content.Paint = function() end
+        header.OnMousePressed = function()
+            expanded = not expanded
+            container:SetTall(expanded and expandedHeight or 50)
+            content:SetVisible(expanded)
+            expandBtn:SetText(expanded and "-" or "+")
+            scroll:InvalidateLayout(true)
+        end
+
+        local function AddField(label, key, default, isNum)
+            local p = content:Add("DPanel")
+            p:Dock(TOP)
+            p:SetTall(35)
+            p:DockMargin(0, 3, 0, 0)
+            p.Paint = function() end
+            local l = p:Add("DLabel")
+            l:Dock(LEFT)
+            l:SetWidth(100)
+            l:SetText(label)
+            l:SetFont("LiliaFont.18")
+            l:SetTextColor(lia.color.theme.text)
+            local entry = p:Add("liaEntry")
+            entry:Dock(FILL)
+            local val = overrideData[key] or default
+            if val then entry:SetValue(tostring(val)) end
+            entry.textEntry.OnEnter = function(s)
+                local newValue = s:GetValue()
+                if isNum then newValue = tonumber(newValue) end
+                net.Start("liaWeaponOverrideUpdate")
+                net.WriteString(className)
+                net.WriteString(key)
+                net.WriteType(newValue)
+                net.SendToServer()
+                overrideData[key] = newValue
+            end
+        end
+
+        local defWidth = 2
+        local defHeight = 1
+        AddField("Name", "name", weaponTable.PrintName or className, false)
+        AddField("Description", "desc", "A weapon", false)
+        AddField("Model", "model", weaponTable.WorldModel or "models/props_c17/suitcase_passenger_physics.mdl", false)
+        AddField("Width", "width", defWidth, true)
+        AddField("Height", "height", defHeight, true)
+        AddField("Price", "price", 500, true)
+        AddField("Category", "category", "Weapons", false)
+    end
+
+    hook.Add("PopulateConfigurationButtons", "liaWeaponItemsConfig", function(pages)
+        if hook.Run("CanPlayerModifyConfig", LocalPlayer()) == false then return end
+        pages[#pages + 1] = {
+            name = "Weapon Items Config",
+            drawFunc = function(parent)
+                parent:Clear()
+                local searchBar = parent:Add("liaEntry")
+                searchBar:Dock(TOP)
+                searchBar:DockMargin(10, 10, 10, 10)
+                searchBar:SetTall(35)
+                searchBar:SetPlaceholderText(L("searchWeapons") or "Search Weapons...")
+                local scroll = parent:Add("liaScrollPanel")
+                scroll:Dock(FILL)
+                local function Populate(filter)
+                    scroll:Clear()
+                    filter = filter and filter:lower() or ""
+                    local weaponsList = weapons.GetList()
+                    table.sort(weaponsList, function(a, b) return (a.PrintName or a.ClassName) < (b.PrintName or b.ClassName) end)
+                    for _, wep in ipairs(weaponsList) do
+                        local className = wep.ClassName
+                        if not className or className:find("_base") or (lia.item.WeaponsBlackList and lia.item.WeaponsBlackList[className]) then continue end
+                        local name = wep.PrintName or className
+                        if filter ~= "" and not name:lower():find(filter, 1, true) and not className:lower():find(filter, 1, true) then continue end
+                        local overrides = lia.item.WeaponOverrides[className] or {}
+                        CreateEntry(scroll, className, wep, overrides)
+                    end
+                end
+
+                searchBar.OnTextChanged = function(s) Populate(s:GetValue()) end
+                Populate()
+            end
+        }
+    end)
+end

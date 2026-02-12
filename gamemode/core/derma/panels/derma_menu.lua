@@ -477,14 +477,6 @@ function PANEL:Open(x, y, skipanimation, ownerpanel)
     if IsValid(ownerpanel) then self.ownerPanel = ownerpanel end
 end
 
-function PANEL:Open()
-    self:SetVisible(true)
-    self:SetMouseInputEnabled(true)
-    self:SetKeyboardInputEnabled(false)
-    self._openTime = CurTime()
-    if not self:GetParent() or not self:GetParent():IsModal() then self:MakePopup() end
-end
-
 function PANEL:CloseMenu()
     self:Close()
 end

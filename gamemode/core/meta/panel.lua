@@ -3,7 +3,7 @@
     File:  panel.md
 ]]
 --[[
-    Panel Meta
+    Panel
 
     Panel management system for the Lilia framework.
 ]]

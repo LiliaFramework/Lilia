@@ -506,4 +506,4 @@ function PANEL:LoadNPCDialog(convoSettings, npc)
     if convoSettings.Conversation then self:AddDialogOptions(convoSettings.Conversation, npc, false) end
 end
 
-vgui.Register("DialogMenu", PANEL, "liaFrame")
+vgui.Register("liaDialogMenu", PANEL, "liaFrame")

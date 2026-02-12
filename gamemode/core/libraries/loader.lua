@@ -3,7 +3,7 @@
     File: loader.md
 ]]
 --[[
-    Loader Library
+    Loader
     Core initialization and module loading system for the Lilia framework.
 ]]
 --[[
@@ -281,9 +281,9 @@ local ConditionalFiles = {
     },
     {
         path = "lilia/gamemode/core/libraries/compatibility/arccw.lua",
-        global = "ArcCW",
+        global = "ArcCWInstalled",
         name = "ArcCW",
-        realm = "server"
+        realm = "shared"
     },
     {
         path = "lilia/gamemode/core/libraries/compatibility/wiremod.lua",
@@ -314,7 +314,7 @@ local ConditionalFiles = {
             lia.loader.include("lilia/gamemode/core/ui/cl_helper.lua", "client")
 
             -- Auto-detect realm from prefix (sv_/cl_/sh_).
-            lia.loader.include("schema/plugins/sv_custom.lua")
+            lia.loader.include("modules/sv_custom.lua")
         ```
 ]]
 function lia.loader.include(path, realm)
@@ -415,7 +415,7 @@ end
     Example Usage:
         ```lua
             -- Load all plugin folders, respecting sv_/cl_/sh_ prefixes.
-            lia.loader.includeGroupedDir("schema/plugins", false, true)
+            lia.loader.includeGroupedDir("modules", false, true)
         ```
 ]]
 function lia.loader.includeGroupedDir(dir, raw, recursive, forceRealm)
@@ -842,8 +842,8 @@ function lia.loader.includeEntities(path)
         default = default or {}
         for _, v in ipairs(folders) do
             local path2 = path .. "/" .. folder .. "/" .. v .. "/"
-            if not file.Exists(path2 .. "init.lua", "LUA") and not file.Exists(path2 .. "shared.lua", "LUA") and not file.Exists(path2 .. "cl_init.lua", "LUA") then
-                lia.error("Warning: No init.lua, shared.lua, or cl_init.lua found in entity folder: " .. path2)
+            if v ~= "gmod_tool" and not file.Exists(path2 .. "init.lua", "LUA") and not file.Exists(path2 .. "shared.lua", "LUA") and not file.Exists(path2 .. "cl_init.lua", "LUA") then
+                lia.error("Warning: No init.lua, shared.lua, or cl_init.lua found in entity folder: " .. path2 .. ". This may make the entity not load properly.")
                 continue
             end
 

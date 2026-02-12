@@ -289,7 +289,8 @@ function SKIN:PaintTreeNodeButton(p, w, h)
         surface.SetDrawColor(0, 0, 0, 200)
         surface.DrawOutlinedRect(38, 0, w + 6, h)
     elseif p.Hovered then
-        surface.SetDrawColor(255, 255, 255, 10)
+        local theme = lia.color.theme.theme or color_white
+        surface.SetDrawColor(theme.r, theme.g, theme.b, 20)
         surface.DrawRect(38, 0, w + 6, h)
     end
 

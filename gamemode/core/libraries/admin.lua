@@ -3,7 +3,7 @@
     File: administrator.md
 ]]
 --[[
-    Administrator Library
+    Administrator
 
     Comprehensive user group and privilege management system for the Lilia framework.
 ]]
@@ -131,8 +131,8 @@ function getPrivilegeCategory(privilegeName)
     else
         for _, module in pairs(lia.module.list) do
             if module.Privileges and istable(module.Privileges) then
-                for _, priv in ipairs(module.Privileges) do
-                    if priv.ID == privilegeName then
+                for privID, priv in pairs(module.Privileges) do
+                    if privID == privilegeName then
                         category = L(priv.Category or module.name or "unassigned")
                         break
                     end
@@ -1763,7 +1763,7 @@ else
         local function addRow(name)
             local row = list:Add("liaPrivilegeRow")
             row:Dock(TOP)
-            row:SetTall(28)
+            row:SetTall(20)
             row:DockMargin(4, 0, 4, 4)
             row:SetPrivilege(name, current[name] and true or false, editable)
             if editable then
@@ -1798,25 +1798,18 @@ else
         for _, cat in ipairs(ordered) do
             local categoryLabel = list:Add("DPanel")
             categoryLabel:Dock(TOP)
-            categoryLabel:SetTall(32)
-            categoryLabel:DockMargin(4, 12, 4, 6)
+            categoryLabel:SetTall(28)
+            categoryLabel:DockMargin(4, 8, 4, 8)
             categoryLabel:SetPaintBackground(false)
             categoryLabel.Paint = function(panel, w, h)
-                local radius = 6
-                local shadowIntensity = 8
-                local shadowBlur = 12
                 local theme = lia.color.theme
                 local accent = theme and theme.accent or theme.header or theme.theme or Color(100, 150, 200, 255)
-                local background = theme and theme.background_alpha or theme.background or Color(40, 40, 40, 240)
+                local bgColor = Color(30, 33, 40, 255)
+                lia.derma.rect(0, 0, w, h):Rad(6):Color(bgColor):Shape(lia.derma.SHAPE_IOS):Draw()
+                lia.derma.rect(0, 0, w, 3):Radii(6, 6, 0, 0):Color(accent):Draw()
+                local glowColor = Color(accent.r, accent.g, accent.b, 12)
+                lia.derma.rect(1, 1, w - 2, h - 2):Rad(5):Color(glowColor):Outline(1):Draw()
                 local textColor = theme and theme.category_text or theme.text or color_white
-                lia.derma.rect(0, 0, w, h):Rad(radius):Color(theme.window_shadow or Color(0, 0, 0, 50)):Shadow(shadowIntensity, shadowBlur):Shape(lia.derma.SHAPE_IOS):Draw()
-                lia.util.drawBlur(panel, 4, 2)
-                lia.derma.rect(0, 0, w, h):Rad(radius):Color(background):Draw()
-                surface.SetDrawColor(accent)
-                surface.DrawRect(0, 0, w, 2)
-                surface.DrawRect(0, h - 2, w, 2)
-                surface.DrawRect(0, 0, 2, h)
-                surface.DrawRect(w - 2, 0, 2, h)
                 local displayText = cat.label
                 local localized = L(displayText)
                 if localized and localized ~= "" then displayText = localized end
@@ -1851,7 +1844,7 @@ else
     local function SetupUserGroupInterface(parent)
         local container = parent:Add("DPanel")
         container:Dock(FILL)
-        container.Paint = function(_, w, h) lia.derma.rect(0, 0, w, h):Rad(16):Color(lia.color.theme.panel[1]):Shape(lia.derma.SHAPE_IOS):Draw() end
+        container.Paint = function() end
         local tabs = container:Add("liaTabs")
         tabs:Dock(FILL)
         tabs:DockMargin(10, 10, 10, 10)
@@ -1916,7 +1909,7 @@ else
             if not groups[groupName] then return end
             local tabPanel = vgui.Create("DPanel")
             tabPanel:Dock(FILL)
-            tabPanel.Paint = function(_, w, h) lia.derma.rect(0, 0, w, h):Rad(12):Color(lia.color.theme.panel[1]):Shape(lia.derma.SHAPE_IOS):Draw() end
+            tabPanel.Paint = function() end
             local isDefault = lia.admin.DefaultGroups and lia.admin.DefaultGroups[groupName] ~= nil
             local editable = not isDefault
             local privContainer = tabPanel:Add("DPanel")
@@ -1955,7 +1948,7 @@ else
                 lia.gui.usergroups = parent
                 parent:Clear()
                 parent:DockPadding(10, 10, 10, 10)
-                parent.Paint = function(p, w, h) derma.SkinHook("Paint", "Frame", p, w, h) end
+                parent.Paint = function() end
                 SetupUserGroupInterface(parent)
                 timer.Simple(0.1, function() if IsValid(parent) and parent.refreshTabs then parent.refreshTabs() end end)
                 net.Start("liaGroupsRequest")

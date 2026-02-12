@@ -3,7 +3,7 @@
     File: db.md
 ]]
 --[[
-    Database Library
+    Database
 
     Comprehensive database management system with SQLite support for the Lilia framework.
 ]]
@@ -342,16 +342,6 @@ CREATE TABLE IF NOT EXISTS lia_admin (
     privileges text,
     inheritance text,
     types text
-);
-CREATE TABLE IF NOT EXISTS lia_vendor_presets (
-    name text PRIMARY KEY,
-    data text
-);
-CREATE TABLE IF NOT EXISTS lia_data (
-    gamemode text,
-    map text,
-    data text,
-    PRIMARY KEY (gamemode, map)
 );
 ]], done)
     hook.Run("OnLoadTables")

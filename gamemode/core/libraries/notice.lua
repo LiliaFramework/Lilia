@@ -3,7 +3,7 @@
     File: notices.md
 ]]
 --[[
-    Notice Library
+    Notice
 
     Player notification and messaging system for the Lilia framework.
 ]]

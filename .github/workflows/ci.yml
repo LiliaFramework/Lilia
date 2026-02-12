@@ -139,56 +139,6 @@ jobs:
         with:
           node-version: '18'
       - run: |
-          cd "${{ github.workspace }}"
-          echo "=== Generating Changelog ==="
-          echo "Current working directory: $(pwd)"
-          echo "Version: $VERSION"
-          
-          # Create changelog directory if it doesn't exist
-          mkdir -p documentation/docs
-          
-          # Generate changelog content
-          CURRENT_DATE=$(date '+%B %d, %Y')
-          
-          # Get recent commits and format them
-          echo "Fetching recent commits..."
-          COMMITS=$(git log --no-merges --pretty=format:'- %s' -n 20 | grep -v '^Successfully updated')
-          
-          # Build new entry with a here-doc (safer for YAML and quoting)
-          cat > new_entry.md <<EOF
-          ## Version $VERSION ($CURRENT_DATE)
-          
-          ### Changes
-          
-          $COMMITS
-          
-          EOF
-          
-          # Check if changelog exists and has content, then prepend
-          if [ -f "documentation/docs/changelog.md" ] && [ -s "documentation/docs/changelog.md" ]; then
-            {
-              echo "# Changelog";
-              echo;
-              cat new_entry.md;
-              # Remove the existing header (first two lines) from current file and append the rest
-              sed '1,2d' "documentation/docs/changelog.md";
-            } > temp_changelog.md
-            mv temp_changelog.md documentation/docs/changelog.md
-          else
-            {
-              echo "# Changelog";
-              echo;
-              cat new_entry.md;
-            } > documentation/docs/changelog.md
-          fi
-          rm -f new_entry.md
-          
-          echo "Changelog generated successfully at: documentation/docs/changelog.md"
-          echo "Changelog preview:"
-          head -10 documentation/docs/changelog.md
-        env:
-          VERSION: ${{ env.VERSION }}
-      - run: |
           wget -O glualint.zip https://github.com/FPtje/GLuaFixer/releases/download/1.29.0/glualint-1.29.0-x86_64-linux.zip
           unzip glualint.zip
           chmod +x glualint
@@ -219,24 +169,23 @@ jobs:
           echo "{\"version\":\"${VERSION}\"}" > documentation/docs/versioning/lilia.json
       - run: |
           # Clean existing documentation before regenerating
-          rm -rf documentation/docs/meta
-          rm -rf documentation/docs/libraries
-          rm -rf documentation/docs/definitions
-          rm -rf documentation/docs/hooks
-          rm -rf documentation/docs/modules
-          rm -rf documentation/docs/compatibility
+          rm -rf documentation/docs/development/meta
+          rm -rf documentation/docs/development/libraries
+          rm -rf documentation/docs/development/hooks
+          rm -rf documentation/docs/server_owner/modules
+          rm -rf documentation/docs/server_owner/compatibility
       - run: |
           python3 generate_docs.py meta --force
           python3 generate_docs.py library --force
-          python3 generate_docs.py definitions --force
           python3 generate_docs.py hooks --force
           python3 generate_docs.py compatibility --force
+          python3 generate_docs.py about --force
       - run: |
           python3 remove_comments.py gamemode
       - run: |
           echo "=== Fetching Modules Documentation ==="
           # Create modules directory if it doesn't exist
-          mkdir -p documentation/docs/modules
+          mkdir -p documentation/docs/server_owner/modules
           
           # Fetch modules documentation from LiliaFramework/Modules repository
           echo "Fetching modules documentation from LiliaFramework/Modules..."
@@ -246,7 +195,7 @@ jobs:
           unzip -q modules_docs.zip
           
           # Copy the modules documentation to the correct location
-          cp -r Modules-module-markdown/documentation/modules/* documentation/docs/modules/
+          cp -r Modules-module-markdown/documentation/modules/* documentation/docs/server_owner/modules/
           
           # Copy versioning files from Modules repository if they exist
           # Ensure the target directory exists (lilia.json was already created here)
@@ -268,7 +217,7 @@ jobs:
           # Clean up temporary files
           rm -rf modules_docs.zip Modules-module-markdown
           
-          echo "Modules documentation successfully placed in documentation/docs/modules/"
+          echo "Modules documentation successfully placed in documentation/docs/server_owner/modules/"
       - run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
@@ -280,7 +229,7 @@ jobs:
 
   release:
     if: github.repository == 'LiliaFramework/Lilia' && github.ref == 'refs/heads/main'
-    needs: update-shared-version
+    needs: [compute-version, update-shared-version]
     runs-on: ubuntu-latest
     env:
       VERSION: ${{ needs.compute-version.outputs.version }}
@@ -366,72 +315,7 @@ jobs:
       - run: |
           echo "Created workshop addon 3527535922.gma"
       - run: |
-          echo "=== Extracting Changelog for Workshop ==="
-          if [ -f "documentation/docs/changelog.md" ]; then
-            python3 << EOF
-          import sys
-          import re
-          import os
-          
-          version = os.environ["VERSION"]
-          changelog_path = "documentation/docs/changelog.md"
-          
-          try:
-              with open(changelog_path, 'r', encoding='utf-8') as f:
-                  content = f.read()
-              
-              version_header = f"## Version {version}"
-              if version_header not in content:
-                  sys.stderr.write(f"Could not find changelog entry for version {version}\n")
-                  sys.exit(1)
-              
-              start_idx = content.find(version_header)
-              if start_idx == -1:
-                  sys.stderr.write(f"Could not find changelog entry for version {version}\n")
-                  sys.exit(1)
-              
-              next_version_idx = content.find("\n## Version ", start_idx + len(version_header))
-              if next_version_idx == -1:
-                  section = content[start_idx:]
-              else:
-                  section = content[start_idx:next_version_idx]
-              
-              lines = section.split('\n')
-              output = []
-              in_changes = False
-              
-              for line in lines:
-                  if line.startswith("## Version "):
-                      version_part = line.replace("## Version ", "Version ").split(" (")[0]
-                      output.append(f"{version_part}\n")
-                  elif line.startswith("### Changes"):
-                      in_changes = True
-                  elif in_changes and line.startswith('- '):
-                      output.append(f"• {line[2:]}\n")
-              
-              if not output:
-                  sys.stderr.write(f"Could not extract changes for version {version}\n")
-                  sys.exit(1)
-              
-              sys.stdout.write(''.join(output))
-              sys.exit(0)
-          except Exception as e:
-              sys.stderr.write(f"Error extracting changelog: {e}\n")
-              sys.exit(1)
-          EOF
-          > changelog.txt || {
-              echo "Warning: Could not extract changelog for version ${VERSION}, using fallback"
-              echo "Lilia ${VERSION}" > changelog.txt
-          }
-          else
-            echo "Warning: changelog.md not found, using fallback"
-            echo "Lilia ${VERSION}" > changelog.txt
-          fi
-          
-          echo "Workshop changelog content:"
-          cat changelog.txt
-        env:
-          VERSION: ${{ env.VERSION }}
+          echo "Lilia ${VERSION}" > changelog.txt
       - run: |
           CHANGELOG_CONTENT=$(cat changelog.txt | sed 's/"/\\"/g' | sed ':a;N;$!ba;s/\n/\\n/g')
           cat > workshop.vdf <<EOF
@@ -460,7 +344,7 @@ jobs:
 
   deploy-pages:
     if: github.repository == 'LiliaFramework/Lilia' && github.ref == 'refs/heads/main'
-    needs: release
+    needs: [compute-version, release]
     runs-on: ubuntu-latest
     env:
       VERSION: ${{ needs.compute-version.outputs.version }}
@@ -476,24 +360,23 @@ jobs:
           sudo apt-get install -y rsync wget
       - run: |
           # Clean existing documentation before regenerating
-          rm -rf documentation/docs/meta
-          rm -rf documentation/docs/libraries
-          rm -rf documentation/docs/definitions
-          rm -rf documentation/docs/hooks
-          rm -rf documentation/docs/modules
-          rm -rf documentation/docs/compatibility
+          rm -rf documentation/docs/development/meta
+          rm -rf documentation/docs/development/libraries
+          rm -rf documentation/docs/development/hooks
+          rm -rf documentation/docs/server_owner/modules
+          rm -rf documentation/docs/server_owner/compatibility
       - run: |
           python3 generate_docs.py meta --force
           python3 generate_docs.py library --force
-          python3 generate_docs.py definitions --force
           python3 generate_docs.py hooks --force
           python3 generate_docs.py compatibility --force
+          python3 generate_docs.py about --force
       - run: |
           python3 remove_comments.py gamemode
       - run: |
           echo "=== Fetching Modules Documentation ==="
           # Create modules directory if it doesn't exist
-          mkdir -p documentation/docs/modules
+          mkdir -p documentation/docs/server_owner/modules
           
           # Fetch modules documentation from LiliaFramework/Modules repository
           echo "Fetching modules documentation from LiliaFramework/Modules..."
@@ -503,7 +386,7 @@ jobs:
           unzip -q modules_docs.zip
           
           # Copy the modules documentation to the correct location
-          cp -r Modules-module-markdown/documentation/modules/* documentation/docs/modules/
+          cp -r Modules-module-markdown/documentation/modules/* documentation/docs/server_owner/modules/
           
           # Copy versioning files from Modules repository if they exist
           # Ensure the target directory exists (lilia.json was already created here)
@@ -525,7 +408,7 @@ jobs:
           # Clean up temporary files
           rm -rf modules_docs.zip Modules-module-markdown
           
-          echo "Modules documentation successfully placed in documentation/docs/modules/"
+          echo "Modules documentation successfully placed in documentation/docs/server_owner/modules/"
       - uses: actions/checkout@v3
         with:
           repository: LiliaFramework/LiliaFramework.github.io

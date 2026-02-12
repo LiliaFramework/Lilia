@@ -3,7 +3,7 @@
     File: flag.md
 ]]
 --[[
-    Flags Library
+    Flags
 
     Character permission and access control system for the Lilia framework.
 ]]

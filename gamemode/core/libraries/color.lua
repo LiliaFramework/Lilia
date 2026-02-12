@@ -3,7 +3,7 @@
     File: color.md
 ]]
 --[[
-    Color Library
+    Color
 
     Comprehensive color and theme management system for the Lilia framework.
 ]]

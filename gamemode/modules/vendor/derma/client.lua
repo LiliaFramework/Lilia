@@ -29,14 +29,14 @@ function PANEL:Init()
     self.vendorPanel.items = self.vendorPanel:Add("liaScrollPanel")
     self.vendorPanel.items:Dock(FILL)
     self.vendorPanel.items:DockPadding(8, 8, 8, 8)
-    self.vendorPanel.Paint = function(_, w, h) lia.derma.rect(0, 0, w, h):Rad(8):Color(lia.color.theme.background_alpha or Color(34, 34, 34, 240)):Draw() end
+    self.vendorPanel.Paint = function(_, w, h) lia.derma.rect(0, 0, w, h):Rad(8):Color(Color(25, 28, 35, 240)):Draw() end
     self.mePanel = self:Add("liaSemiTransparentDPanel")
     self.mePanel:SetSize(self.panelW, panelH)
     self.mePanel:SetPos(sw * 0.5 + 16, self.y0)
     self.mePanel.items = self.mePanel:Add("liaScrollPanel")
     self.mePanel.items:Dock(FILL)
     self.mePanel.items:DockPadding(8, 8, 8, 8)
-    self.mePanel.Paint = function(_, w, h) lia.derma.rect(0, 0, w, h):Rad(8):Color(lia.color.theme.background_alpha or Color(34, 34, 34, 240)):Draw() end
+    self.mePanel.Paint = function(_, w, h) lia.derma.rect(0, 0, w, h):Rad(8):Color(Color(25, 28, 35, 240)):Draw() end
     self:listenForChanges()
     self:liaListenForInventoryChanges(ply:getChar():getInv())
     self.items = {
@@ -120,7 +120,7 @@ function PANEL:createCategoryDropdown()
         menu = vgui.Create("liaSemiTransparentDPanel", self)
         menu:SetSize(btn:GetWide(), math.min(#sorted * 32 + 8, sh * 0.4))
         menu:SetPos(btn.x, btn.y + btn:GetTall() + 4)
-        menu.Paint = function(_, w, h) lia.derma.rect(0, 0, w, h):Rad(6):Color(lia.color.theme.background_alpha or Color(34, 34, 34, 250)):Draw() end
+        menu.Paint = function(_, w, h) lia.derma.rect(0, 0, w, h):Rad(6):Color(Color(25, 28, 35, 250)):Draw() end
         local scroll = menu:Add("liaScrollPanel")
         scroll:Dock(FILL)
         scroll:DockPadding(4, 4, 4, 4)
@@ -493,7 +493,7 @@ function PANEL:Init()
     self.background:Dock(FILL)
     self.background.Paint = function(_, w, h)
         local theme = lia.color.theme
-        local bgColor = theme and theme.panel and theme.panel[1] or Color(50, 50, 50, 240)
+        local bgColor = Color(25, 28, 35, 240)
         local hoverColor = theme and theme.button_hovered or Color(70, 140, 140, 30)
         lia.derma.rect(0, 0, w, h):Rad(8):Color(bgColor):Draw()
         if self:IsHovered() then
@@ -1474,7 +1474,7 @@ function PANEL:populateFactionPanel()
         panel.hoverAlpha = 0
         panel.Paint = function(_, w, h)
             local theme = lia.color.theme
-            local bgColor = theme and theme.panel and theme.panel[1] or Color(50, 50, 50, 240)
+            local bgColor = Color(25, 28, 35, 240)
             local hoverColor = theme and theme.button_hovered or Color(70, 140, 140, 30)
             lia.derma.rect(0, 0, w, h):Rad(8):Color(bgColor):Draw()
             if panel:IsHovered() then
@@ -2233,7 +2233,7 @@ function PANEL:Init()
         panel.hoverAlpha = 0
         panel.Paint = function(_, w, h)
             local theme = lia.color.theme
-            local bgColor = theme and theme.panel and theme.panel[1] or Color(50, 50, 50, 240)
+            local bgColor = Color(25, 28, 35, 240)
             local hoverColor = theme and theme.button_hovered or Color(70, 140, 140, 30)
             lia.derma.rect(0, 0, w, h):Rad(8):Color(bgColor):Draw()
             if panel:IsHovered() then

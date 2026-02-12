@@ -3,9 +3,8 @@ MODULE.author = "Samael"
 MODULE.discord = "@liliaplayer"
 MODULE.desc = "inventorySystemDescription"
 MODULE.Privileges = {
-    {
+    ["noItemCooldown"] = {
         Name = "noItemCooldown",
-        ID = "noItemCooldown",
         MinAccess = "admin",
         Category = "categoryStaffManagement"
     }

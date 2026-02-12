@@ -3,7 +3,7 @@
     File:  item.md
 ]]
 --[[
-    Item Meta
+    Item
 
     Item management system for the Lilia framework.
 ]]

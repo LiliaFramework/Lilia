@@ -28,14 +28,16 @@ function PANEL:Init()
         local trackW = math.min(w, 120)
         local trackX = (w - trackW) / 2
         lia.derma.rect(trackX, trackY, trackW, trackH):Rad(16):Color(lia.color.theme.button):Shape(lia.derma.SHAPE_IOS):Draw()
+        lia.derma.rect(trackX, trackY, trackW, trackH):Rad(16):Color(Color(255, 255, 255, 30)):Shape(lia.derma.SHAPE_IOS):Draw()
         if self.hoverAnim > 0 then lia.derma.rect(trackX, trackY, trackW, trackH):Rad(16):Color(Color(lia.color.theme.button_hovered.r, lia.color.theme.button_hovered.g, lia.color.theme.button_hovered.b, self.hoverAnim * 80)):Shape(lia.derma.SHAPE_IOS):Draw() end
         local circleSize = math.min(16, trackH - 4)
         local pad = trackY + (trackH - circleSize) / 2
         local x0 = trackX + pad
         local x1 = trackX + trackW - circleSize - pad
         local circleX = Lerp(self.circleAnim, x0, x1)
-        local circleCol = self.value and Color(lia.color.theme.theme.r + 50, lia.color.theme.theme.g + 50, lia.color.theme.theme.b + 50) or lia.color.theme.gray
+        local circleCol = self.value and Color(lia.color.theme.theme.r + 50, lia.color.theme.theme.g + 50, lia.color.theme.theme.b + 50) or Color(200, 200, 200)
         lia.derma.circle(circleX + circleSize / 2, h / 2, circleSize):Color(circleCol):Draw()
+        lia.derma.circle(circleX + circleSize / 2, h / 2, circleSize):Color(Color(255, 255, 255, 50)):Draw()
     end
 
     self.toggle.DoClick = function()
@@ -117,12 +119,6 @@ PANEL.__newindex = function(self, key, value)
             rawset(self, key, value)
         end
     end
-end
-
-function PANEL:PerformLayout()
-end
-
-function PANEL:SetSize()
 end
 
 vgui.Register("liaCheckbox", PANEL, "Panel")

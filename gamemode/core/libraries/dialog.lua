@@ -3,7 +3,7 @@
     File: dialog.md
 ]]
 --[[
-    Dialog Library
+    Dialog
 
     Comprehensive NPC dialog management system for the Lilia framework.
 ]]

@@ -22,34 +22,29 @@ function PANEL:Init()
     self.textEntry.Paint = function(s, w, h) if self._centerText then return end end
     self.textEntry._originalPaintOver = nil
     self.textEntry.PaintOver = function(s, w, h)
-        if not s._shadowLerp then s._shadowLerp = 5 end
-        local target = s:IsEditing() and 10 or 5
-        s._shadowLerp = Lerp(FrameTime() * 10, s._shadowLerp, target)
-        lia.derma.rect(0, 0, w, h):Rad(16):Color(lia.color.theme.window_shadow):Shape(lia.derma.SHAPE_IOS):Shadow(s._shadowLerp, 20):Draw()
-        lia.derma.rect(0, 0, w, h):Rad(16):Color(self.panelColor):Shape(lia.derma.SHAPE_IOS):Draw()
-        s._hoverFrac = Lerp(FrameTime() * 10, s._hoverFrac or 0, s:IsHovered() and 1 or 0)
+        local theme = lia.color.theme
+        local accent = theme.accent or theme.header or theme.theme or Color(100, 150, 200)
+        local bgColor = Color(30, 33, 40, 255)
+        lia.derma.rect(0, 0, w, h):Rad(8):Color(bgColor):Shape(lia.derma.SHAPE_IOS):Draw()
         s._focusFrac = Lerp(FrameTime() * 10, s._focusFrac or 0, (s:IsEditing() or s:HasFocus()) and 1 or 0)
-        if s._hoverFrac > 0 then
-            local hov = lia.color.theme.button_hovered or Color(255, 255, 255)
-            lia.derma.rect(0, 0, w, h):Rad(16):Color(Color(hov.r, hov.g, hov.b, math.floor(s._hoverFrac * 90))):Shape(lia.derma.SHAPE_IOS):Draw()
-        end
-
         if s._focusFrac > 0 then
-            local ac = lia.color.theme.theme or lia.color.theme.accent or color_white
-            lia.derma.rect(0, 0, w, h):Rad(16):Color(Color(ac.r, ac.g, ac.b, math.floor(s._focusFrac * 255))):Shape(lia.derma.SHAPE_IOS):Outline(2):Draw()
+            local ac = Color(accent.r, accent.g, accent.b, math.floor(s._focusFrac * 255))
+            lia.derma.rect(0, 0, w, h):Rad(8):Color(ac):Outline(1):Draw()
+        else
+            lia.derma.rect(0, 0, w, h):Rad(8):Color(Color(255, 255, 255, 10)):Outline(1):Draw()
         end
 
         local value = self:GetValue()
-        local padding = 6
+        local padding = 8
         local font = self.font or "LiliaFont.18"
-        local textCol = lia.color.theme.text_entry or lia.color.theme.text or color_white
-        local selBase = lia.color.theme.theme or lia.color.theme.accent or Color(100, 100, 255)
+        local textCol = theme.text or color_white
+        local selBase = accent
         local selCol = Color(selBase.r, selBase.g, selBase.b, 60)
-        local caretCol = lia.color.theme.theme or lia.color.theme.accent or textCol
+        local caretCol = accent
         if self._centerText then
             if value == "" then
                 surface.SetFont(font)
-                local phColor = lia.color.theme.gray
+                local phColor = Color(200, 200, 200, 50)
                 draw.SimpleText(self.placeholder or "", font, w * 0.5, h * 0.5, phColor, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
             else
                 surface.SetFont(font)
@@ -58,7 +53,7 @@ function PANEL:Init()
         else
             if value == "" then
                 surface.SetFont(font)
-                local phColor = lia.color.theme.gray
+                local phColor = Color(200, 200, 200, 50)
                 draw.SimpleText(self.placeholder or "", font, padding, h * 0.5, phColor, TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)
             end
 

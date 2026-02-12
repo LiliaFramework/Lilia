@@ -3,7 +3,7 @@
     File: class.md
 ]]
 --[[
-    Classes Library
+    Classes
 
     Character class management and validation system for the Lilia framework.
 ]]

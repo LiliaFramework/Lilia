@@ -3,7 +3,7 @@
     File: net.md
 ]]
 --[[
-    Network Library
+    Network
 
     Network communication and data streaming system for the Lilia framework.
 ]]

@@ -177,7 +177,16 @@ function PANEL:setActive(state)
                 self.commandList:MakePopup()
                 self.commandList:SetKeyboardInputEnabled(false)
                 self.commandListCreateTime = CurTime()
-                self.commandList.Paint = function(s, w, h) lia.derma.rect(0, 0, w, h):Rad(6):Color(lia.color.theme.background_alpha or Color(34, 34, 34, 240)):Draw() end
+                self.commandList.Paint = function(s, w, h)
+                    local theme = lia.color.theme
+                    local accent = theme.accent or theme.header or theme.theme or Color(100, 150, 200)
+                    local bgColor = Color(25, 28, 35, 250)
+                    lia.derma.rect(0, 0, w, h):Rad(8):Color(bgColor):Shape(lia.derma.SHAPE_IOS):Draw()
+                    lia.derma.rect(0, 0, w, 3):Radii(8, 8, 0, 0):Color(accent):Draw()
+                    local glowColor = Color(accent.r, accent.g, accent.b, 8)
+                    lia.derma.rect(1, 1, w - 2, h - 2):Rad(7):Color(glowColor):Outline(1):Draw()
+                end
+
                 for cmdName, cmdInfo in SortedPairs(self.commands) do
                     if not tobool(string.find(cmdName:lower(), "^" .. input:sub(2):lower())) then continue end
                     local btn = self.commandList:Add("liaButton")
@@ -196,16 +205,17 @@ function PANEL:setActive(state)
                     end
 
                     btn:SetTextColor(lia.color.theme.text or Color(255, 255, 255))
-                    local originalPaint = btn.Paint
                     btn.Paint = function(s, w, h)
-                        if s.isSelected then
-                            draw.RoundedBox(4, 0, 0, w, h, lia.color.theme.hover or Color(50, 150, 255, 100))
-                            s:SetTextColor(Color(255, 255, 255))
-                        else
-                            s:SetTextColor(lia.color.theme.text or Color(255, 255, 255))
+                        local theme = lia.color.theme
+                        local accent = theme.accent or theme.header or theme.theme or Color(100, 150, 200)
+                        local isSelected = s.isSelected
+                        if isSelected then
+                            local hoverColor = Color(accent.r, accent.g, accent.b, 40)
+                            lia.derma.rect(0, 0, w, h):Rad(4):Color(hoverColor):Shape(lia.derma.SHAPE_IOS):Draw()
                         end
 
-                        if originalPaint then originalPaint(s, w, h) end
+                        local textColor = isSelected and color_white or theme.text or Color(200, 200, 200)
+                        draw.SimpleText(s:GetText(), "LiliaFont.17", 8, h * 0.5, textColor, TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)
                     end
                 end
 
@@ -231,16 +241,17 @@ function PANEL:setActive(state)
                                 end
 
                                 btn:SetTextColor(lia.color.theme.text or Color(255, 255, 255))
-                                local originalPaint = btn.Paint
                                 btn.Paint = function(s, w, h)
-                                    if s.isSelected then
-                                        draw.RoundedBox(4, 0, 0, w, h, lia.color.theme.hover or Color(50, 150, 255, 100))
-                                        s:SetTextColor(Color(255, 255, 255))
-                                    else
-                                        s:SetTextColor(lia.color.theme.text or Color(255, 255, 255))
+                                    local theme = lia.color.theme
+                                    local accent = theme.accent or theme.header or theme.theme or Color(100, 150, 200)
+                                    local isSelected = s.isSelected
+                                    if isSelected then
+                                        local hoverColor = Color(accent.r, accent.g, accent.b, 40)
+                                        lia.derma.rect(0, 0, w, h):Rad(4):Color(hoverColor):Shape(lia.derma.SHAPE_IOS):Draw()
                                     end
 
-                                    if originalPaint then originalPaint(s, w, h) end
+                                    local textColor = isSelected and color_white or theme.text or Color(200, 200, 200)
+                                    draw.SimpleText(s:GetText(), "LiliaFont.17", 8, h * 0.5, textColor, TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)
                                 end
                             end
                         end

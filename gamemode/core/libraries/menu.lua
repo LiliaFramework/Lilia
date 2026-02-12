@@ -3,7 +3,7 @@
     File: menu.md
 ]]
 --[[
-    Menu Library
+    Menu
 
     Interactive 3D context menu system for world and entity interactions in the Lilia framework.
 ]]

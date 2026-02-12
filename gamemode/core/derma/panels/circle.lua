@@ -20,7 +20,7 @@ function PANEL:Start(text, duration, options)
         endTime = now + duration,
         holdTime = options.holdTime or 0,
         color = options.color or getAccentColor(),
-        background = options.background or lia.color.theme.background or Color(205, 205, 205, 255),
+        background = options.background or Color(25, 28, 35, 180),
         textColor = options.textColor or color_white,
         percentFont = options.percentFont or "LiliaFont.24b",
         labelFont = options.labelFont or "LiliaFont.18b",
@@ -64,7 +64,7 @@ function PANEL:Paint()
     local borderThickness = thickness + 3
     local cx = data.position and data.position.x or sw * 0.5
     local cy = data.position and data.position.y or (sh - (radius + thickness * 1.6 + 24))
-    lia.derma.circle(cx, cy, radius * 2):Color(color_black):Outline(borderThickness):Draw()
+    lia.derma.circle(cx, cy, radius * 2):Color(Color(0, 0, 0, 150)):Outline(borderThickness):Draw()
     lia.derma.circle(cx, cy, radius * 2):Color(data.background):Outline(thickness):Draw()
     if progress > 0 then
         local startAngle = data.startAngle or -90

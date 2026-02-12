@@ -87,7 +87,7 @@ local function drawAmmo(wpn)
         local shadowIntensity = 8
         local shadowBlur = 12
         lia.derma.rect(x, y, 64, 64):Rad(6):Color(lia.color.theme.window_shadow):Shadow(shadowIntensity, shadowBlur):Shape(lia.derma.SHAPE_IOS):Draw()
-        lia.derma.rect(x, y, 64, 64):Radii(6, 6, 6, 6):Color(lia.color.theme.background_alpha):Draw()
+        lia.derma.rect(x, y, 64, 64):Radii(6, 6, 6, 6):Color(Color(25, 28, 35, 250)):Draw()
         lia.util.drawText(sec, x + 32, y + 32, lia.color.theme.text, 1, 1, "LiliaFont.36")
     end
 
@@ -97,7 +97,7 @@ local function drawAmmo(wpn)
         local shadowIntensity = 8
         local shadowBlur = 12
         lia.derma.rect(x, y, 128, 64):Rad(6):Color(lia.color.theme.window_shadow):Shadow(shadowIntensity, shadowBlur):Shape(lia.derma.SHAPE_IOS):Draw()
-        lia.derma.rect(x, y, 128, 64):Radii(6, 6, 6, 6):Color(lia.color.theme.background_alpha):Draw()
+        lia.derma.rect(x, y, 128, 64):Radii(6, 6, 6, 6):Color(Color(25, 28, 35, 250)):Draw()
         lia.util.drawText(ammoText, x + 64, y + 32, lia.color.theme.text, 1, 1, "LiliaFont.36")
     end
 end
@@ -306,7 +306,7 @@ function GM:DrawEntityInfo(e, a, pos)
         local panelY = y - panelHeight / 2
         if hook.Run("DrawPlayerInfoBackground", e, panelX, panelY, panelWidth, panelHeight, a) ~= false then
             lia.util.drawBlurAt(panelX, panelY, panelWidth, panelHeight, 4, 2, 0.3 * (a / 255))
-            lia.derma.rect(panelX, panelY, panelWidth, panelHeight):Color(ColorAlpha(lia.color.theme.background_alpha or Color(0, 0, 0, 150), a)):Rad(8):Draw()
+            lia.derma.rect(panelX, panelY, panelWidth, panelHeight):Color(ColorAlpha(Color(25, 28, 35, 250), a)):Rad(8):Draw()
             lia.derma.rect(panelX, panelY, panelWidth, panelHeight):Color(ColorAlpha(lia.color.theme.theme or lia.color.theme.accent, a)):Rad(8):Outline(2):Draw()
         end
 
@@ -413,10 +413,10 @@ function GM:HUDPaint()
                     local drawOptions = {
                         textColor = info.color or Color(180, 180, 180),
                         font = info.font or "LiliaFont.16",
-                        backgroundColor = lia.color.theme.background_alpha or lia.color.theme.background or Color(40, 40, 40, 240),
-                        borderRadius = 6,
+                        backgroundColor = Color(25, 28, 35, 250),
+                        borderRadius = 12,
                         borderThickness = 0,
-                        padding = 12,
+                        padding = 20,
                         blur = {
                             enabled = true,
                             amount = 1,
@@ -425,9 +425,9 @@ function GM:HUDPaint()
                         },
                         shadow = {
                             enabled = true,
-                            offsetX = 8,
-                            offsetY = 12,
-                            color = lia.color.theme.window_shadow or Color(0, 0, 0, 50)
+                            offsetX = 15,
+                            offsetY = 20,
+                            color = Color(0, 0, 0, 180)
                         },
                         accentBorder = {
                             enabled = true,
@@ -439,7 +439,7 @@ function GM:HUDPaint()
                     if info.backgroundColor then
                         drawOptions.backgroundColor = info.backgroundColor
                     else
-                        drawOptions.backgroundColor = lia.color.theme.background_alpha or lia.color.theme.background or Color(40, 40, 40, 240)
+                        drawOptions.backgroundColor = Color(25, 28, 35, 250)
                     end
 
                     if info.borderColor then drawOptions.borderColor = info.borderColor end
@@ -487,7 +487,7 @@ function GM:TooltipPaint(var, w, h)
         local shadowIntensity = 8
         local shadowBlur = 12
         local accent = lia.color.theme.accent or lia.color.theme.header or lia.color.theme.theme
-        local background = lia.color.theme.background_alpha or lia.color.theme.background
+        local background = Color(25, 28, 35, 250)
         lia.derma.rect(0, 0, w, h):Rad(radius):Color(lia.color.theme.window_shadow):Shadow(shadowIntensity, shadowBlur):Shape(lia.derma.SHAPE_IOS):Draw()
         lia.util.drawBlur(var, 4, 2)
         lia.derma.rect(0, 0, w, h):Rad(radius):Color(background):Draw()
@@ -868,10 +868,7 @@ function GM:CharLoaded(character)
                 local function downloadNext(index)
                     if index > #missingImages then return end
                     local entry = missingImages[index]
-                    lia.webimage.download(entry.name, entry.url, function(mat, fromCache, errorMsg)
-                        if not mat and not fromCache then lia.log.add(nil, "webimageDownloadFailed", entry.name, errorMsg or "unknown error") end
-                        timer.Simple(0.1, function() downloadNext(index + 1) end)
-                    end, entry.flags)
+                    lia.webimage.download(entry.name, entry.url, function(mat, fromCache, errorMsg) timer.Simple(0.1, function() downloadNext(index + 1) end) end, entry.flags)
                 end
 
                 downloadNext(1)
@@ -900,10 +897,7 @@ function GM:CharLoaded(character)
                 local function downloadNext(index)
                     if index > #missingSounds then return end
                     local entry = missingSounds[index]
-                    lia.websound.download(entry.name, entry.url, function(path, fromCache, errorMsg)
-                        if not path and not fromCache then lia.log.add(nil, "websoundDownloadFailed", entry.name, errorMsg or "unknown error") end
-                        timer.Simple(0.1, function() downloadNext(index + 1) end)
-                    end)
+                    lia.websound.download(entry.name, entry.url, function(path, fromCache, errorMsg) timer.Simple(0.1, function() downloadNext(index + 1) end) end)
                 end
 
                 downloadNext(1)

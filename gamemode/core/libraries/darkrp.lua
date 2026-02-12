@@ -3,7 +3,7 @@
     File: darkrp.md
 ]]
 --[[
-    DarkRP Library
+    DarkRP
 
     The DarkRP compatibility library provides essential functions for maintaining compatibility
     with DarkRP-based gamemodes and addons. It includes utility functions for position

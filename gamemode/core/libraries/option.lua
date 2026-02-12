@@ -3,7 +3,7 @@
     File: option.md
 ]]
 --[[
-    Option Library
+    Option
 
     User-configurable settings management system for the Lilia framework.
 ]]
@@ -264,380 +264,123 @@ function lia.option.load()
 end
 
 hook.Add("PopulateConfigurationButtons", "liaOptionsPopulate", function(pages)
-    local OptionFormatting = {
-        Int = function(key, name, cfg, parent)
-            local container = vgui.Create("DPanel", parent)
-            container:SetTall(220)
-            container:Dock(TOP)
-            container:DockMargin(0, 60, 0, 10)
-            container.Paint = function(s, w, h)
-                local radius = 8
-                local accent = lia.color.theme.accent or lia.color.theme.header or lia.color.theme.theme or Color(100, 150, 200)
-                local background = lia.color.theme.background_alpha or lia.color.theme.background or Color(40, 40, 40, 240)
-                local x, y = s:LocalToScreen(0, 0)
-                lia.derma.rect(0, 0, w, h):Rad(radius):Color(lia.color.theme.window_shadow or Color(0, 0, 0, 50)):Shadow(8, 12):Shape(lia.derma.SHAPE_IOS):Draw()
-                lia.util.drawBlurAt(x, y, w, h)
-                lia.derma.rect(0, 0, w, h):Rad(radius):Color(background):Shape(lia.derma.SHAPE_IOS):Draw()
-                surface.SetDrawColor(accent.r, accent.g, accent.b, accent.a or 255)
-                surface.DrawRect(0, 0, w, 3)
-                surface.DrawRect(0, 0, 3, h)
-                surface.DrawRect(w - 3, 0, 3, h)
-                surface.DrawRect(0, h - 3, w, 3)
-            end
-
-            local panel = container:Add("DPanel")
-            panel:Dock(FILL)
-            panel:DockMargin(300, 5, 300, 5)
-            panel.Paint = function(_, w, h) end
-            local label = vgui.Create("DLabel", panel)
-            label:Dock(TOP)
-            label:SetTall(45)
-            label:DockMargin(0, 20, 0, 0)
-            label:SetText("")
-            label.Paint = function(_, w, h) draw.SimpleText(name, "LiliaFont.36", w / 2, h / 2, lia.color.theme.text, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER) end
-            local description = vgui.Create("DLabel", panel)
-            description:Dock(TOP)
-            description:SetTall(35)
-            description:DockMargin(0, 10, 0, 0)
-            description:SetText("")
-            description.Paint = function(_, w, h) draw.SimpleText(cfg.desc or "", "LiliaFont.24", w / 2, h / 2, lia.color.theme.gray, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER) end
-            local slider = panel:Add("liaSlideBox")
-            slider:Dock(TOP)
-            slider:DockMargin(20, 10, 50, 0)
-            slider:SetTall(60)
-            slider:SetRange(lia.config.get(key .. "_min", cfg.data and cfg.data.min or 0), lia.config.get(key .. "_max", cfg.data and cfg.data.max or 1), 0)
-            slider:SetValue(lia.option.get(key, cfg.value))
-            slider:SetText("")
-            slider.Paint = function(s, w)
-                local padX = 16
-                local padTop = 2
-                local barY = 32
-                local barH = 6
-                local barR = barH / 2
-                local handleW, handleH = 14, 14
-                local handleR = handleH / 2
-                local textFont = "LiliaFont.18"
-                local valueFont = "LiliaFont.16"
-                if s.text and s.text ~= "" then draw.SimpleText(s.text, textFont, padX, padTop, lia.color.theme.text) end
-                local barStart = padX + handleW / 2
-                local barEnd = w - padX - handleW / 2
-                local barW = barEnd - barStart
-                local progress = (s.value - s.min_value) / (s.max_value - s.min_value)
-                local activeW = math.Clamp(barW * progress, 0, barW)
-                lia.derma.rect(barStart, barY, barW, barH):Rad(barR):Color(lia.color.theme.window_shadow):Shadow(5, 20):Draw()
-                lia.derma.rect(barStart, barY, barW, barH):Rad(barR):Color(lia.color.theme.focus_panel):Draw()
-                lia.derma.rect(barStart, barY, barW, barH):Rad(barR):Color(lia.color.theme.button_shadow):Draw()
-                lia.derma.rect(barStart, barY, s.smoothPos, barH):Rad(barR):Color(lia.color.theme.theme):Draw()
-                s.smoothPos = Lerp(FrameTime() * 12, s.smoothPos or 0, activeW)
-                local handleX = barStart + s.smoothPos
-                local handleY = barY + barH / 2
-                lia.derma.drawShadows(handleR, handleX - handleW / 2, handleY - handleH / 2, handleW, handleH, lia.color.theme.window_shadow, 3, 10)
-                local targetAlpha = s.dragging and 100 or 255
-                s._dragAlpha = Lerp(FrameTime() * 10, s._dragAlpha, targetAlpha)
-                local colorText = Color(lia.color.theme.theme.r, lia.color.theme.theme.g, lia.color.theme.theme.b, s._dragAlpha)
-                lia.derma.rect(handleX - handleW / 2, handleY - handleH / 2, handleW, handleH):Rad(handleR):Color(colorText):Draw()
-                draw.SimpleText(s.value, valueFont, w / 2, barY - 20, colorText, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
-            end
-
-            slider.OnValueChanged = function(_, v) timer.Create("ConfigChange" .. name, 1, 1, function() lia.option.set(key, math.floor(v)) end) end
-            return container
-        end,
-        Float = function(key, name, cfg, parent)
-            local container = vgui.Create("DPanel", parent)
-            container:SetTall(220)
-            container:Dock(TOP)
-            container:DockMargin(0, 60, 0, 10)
-            container.Paint = function(s, w, h)
-                local radius = 8
-                local accent = lia.color.theme.accent or lia.color.theme.header or lia.color.theme.theme or Color(100, 150, 200)
-                local background = lia.color.theme.background_alpha or lia.color.theme.background or Color(40, 40, 40, 240)
-                local x, y = s:LocalToScreen(0, 0)
-                lia.derma.rect(0, 0, w, h):Rad(radius):Color(lia.color.theme.window_shadow or Color(0, 0, 0, 50)):Shadow(8, 12):Shape(lia.derma.SHAPE_IOS):Draw()
-                lia.util.drawBlurAt(x, y, w, h)
-                lia.derma.rect(0, 0, w, h):Rad(radius):Color(background):Shape(lia.derma.SHAPE_IOS):Draw()
-                surface.SetDrawColor(accent.r, accent.g, accent.b, accent.a or 255)
-                surface.DrawRect(0, 0, w, 3)
-                surface.DrawRect(0, 0, 3, h)
-                surface.DrawRect(w - 3, 0, 3, h)
-                surface.DrawRect(0, h - 3, w, 3)
-            end
-
-            local panel = container:Add("DPanel")
-            panel:Dock(FILL)
-            panel:DockMargin(300, 5, 300, 5)
-            panel.Paint = function(_, w, h) end
-            local label = vgui.Create("DLabel", panel)
-            label:Dock(TOP)
-            label:SetTall(45)
-            label:DockMargin(0, 20, 0, 0)
-            label:SetText("")
-            label.Paint = function(_, w, h) draw.SimpleText(name, "LiliaFont.36", w / 2, h / 2, lia.color.theme.text, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER) end
-            local description = vgui.Create("DLabel", panel)
-            description:Dock(TOP)
-            description:SetTall(35)
-            description:DockMargin(0, 10, 0, 0)
-            description:SetText("")
-            description.Paint = function(_, w, h) draw.SimpleText(cfg.desc or "", "LiliaFont.24", w / 2, h / 2, lia.color.theme.gray, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER) end
-            local slider = panel:Add("liaSlideBox")
-            slider:Dock(TOP)
-            slider:DockMargin(20, 10, 50, 0)
-            slider:SetTall(60)
-            slider:SetRange(lia.config.get(key .. "_min", cfg.data and cfg.data.min or 0), lia.config.get(key .. "_max", cfg.data and cfg.data.max or 1), cfg.data and cfg.data.decimals or 2)
-            slider:SetValue(lia.option.get(key, cfg.value))
-            slider:SetText("")
-            slider.Paint = function(s, w)
-                local padX = 16
-                local padTop = 2
-                local barY = 32
-                local barH = 6
-                local barR = barH / 2
-                local handleW, handleH = 14, 14
-                local handleR = handleH / 2
-                local textFont = "LiliaFont.18"
-                local valueFont = "LiliaFont.16"
-                if s.text and s.text ~= "" then draw.SimpleText(s.text, textFont, padX, padTop, lia.color.theme.text) end
-                local barStart = padX + handleW / 2
-                local barEnd = w - padX - handleW / 2
-                local barW = barEnd - barStart
-                local progress = (s.value - s.min_value) / (s.max_value - s.min_value)
-                local activeW = math.Clamp(barW * progress, 0, barW)
-                lia.derma.rect(barStart, barY, barW, barH):Rad(barR):Color(lia.color.theme.window_shadow):Shadow(5, 20):Draw()
-                lia.derma.rect(barStart, barY, barW, barH):Rad(barR):Color(lia.color.theme.focus_panel):Draw()
-                lia.derma.rect(barStart, barY, barW, barH):Rad(barR):Color(lia.color.theme.button_shadow):Draw()
-                lia.derma.rect(barStart, barY, s.smoothPos, barH):Rad(barR):Color(lia.color.theme.theme):Draw()
-                s.smoothPos = Lerp(FrameTime() * 12, s.smoothPos or 0, activeW)
-                local handleX = barStart + s.smoothPos
-                local handleY = barY + barH / 2
-                lia.derma.drawShadows(handleR, handleX - handleW / 2, handleY - handleH / 2, handleW, handleH, lia.color.theme.window_shadow, 3, 10)
-                local targetAlpha = s.dragging and 100 or 255
-                s._dragAlpha = Lerp(FrameTime() * 10, s._dragAlpha, targetAlpha)
-                local colorText = Color(lia.color.theme.theme.r, lia.color.theme.theme.g, lia.color.theme.theme.b, s._dragAlpha)
-                lia.derma.rect(handleX - handleW / 2, handleY - handleH / 2, handleW, handleH):Rad(handleR):Color(colorText):Draw()
-                draw.SimpleText(s.value, valueFont, w / 2, barY - 20, colorText, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
-            end
-
-            slider.OnValueChanged = function(_, v) timer.Create("ConfigChange" .. name, 1, 1, function() lia.option.set(key, math.Round(v, 2)) end) end
-            return container
-        end,
-        Generic = function(key, name, cfg, parent)
-            local container = vgui.Create("DPanel", parent)
-            container:SetTall(220)
-            container:Dock(TOP)
-            container:DockMargin(0, 60, 0, 10)
-            container.Paint = function(s, w, h)
-                local radius = 8
-                local accent = lia.color.theme.accent or lia.color.theme.header or lia.color.theme.theme or Color(100, 150, 200)
-                local background = lia.color.theme.background_alpha or lia.color.theme.background or Color(40, 40, 40, 240)
-                local x, y = s:LocalToScreen(0, 0)
-                lia.derma.rect(0, 0, w, h):Rad(radius):Color(lia.color.theme.window_shadow or Color(0, 0, 0, 50)):Shadow(8, 12):Shape(lia.derma.SHAPE_IOS):Draw()
-                lia.util.drawBlurAt(x, y, w, h)
-                lia.derma.rect(0, 0, w, h):Rad(radius):Color(background):Shape(lia.derma.SHAPE_IOS):Draw()
-                surface.SetDrawColor(accent.r, accent.g, accent.b, accent.a or 255)
-                surface.DrawRect(0, 0, w, 3)
-                surface.DrawRect(0, 0, 3, h)
-                surface.DrawRect(w - 3, 0, 3, h)
-                surface.DrawRect(0, h - 3, w, 3)
-            end
-
-            local panel = container:Add("DPanel")
-            panel:Dock(FILL)
-            panel:DockMargin(300, 5, 300, 5)
-            panel.Paint = function(_, w, h) end
-            local label = vgui.Create("DLabel", panel)
-            label:Dock(TOP)
-            label:SetTall(45)
-            label:DockMargin(0, 20, 0, 0)
-            label:SetText("")
-            label.Paint = function(_, w, h) draw.SimpleText(name, "LiliaFont.36", w / 2, h / 2, lia.color.theme.text, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER) end
-            local description = vgui.Create("DLabel", panel)
-            description:Dock(TOP)
-            description:SetTall(35)
-            description:DockMargin(0, 10, 0, 0)
-            description:SetText("")
-            description.Paint = function(_, w, h) draw.SimpleText(cfg.desc or "", "LiliaFont.24", w / 2, h / 2, lia.color.theme.gray, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER) end
-            local entry = vgui.Create("liaEntry", panel)
-            if IsValid(entry) then
-                entry:Dock(TOP)
-                entry:SetTall(60)
-                entry:DockMargin(300, 10, 300, 0)
-                entry:SetValue(tostring(lia.option.get(key, cfg.value)))
-                entry:SetFont("LiliaFont.36")
-                entry.textEntry.OnEnter = function()
-                    local value = entry:GetValue()
-                    if value ~= "" then lia.option.set(key, value) end
-                end
-            end
-            return container
-        end,
-        Boolean = function(key, name, cfg, parent)
-            local container = vgui.Create("DPanel", parent)
-            container:SetTall(220)
-            container:Dock(TOP)
-            container:DockMargin(0, 60, 0, 10)
-            container.Paint = function(s, w, h)
-                local radius = 8
-                local accent = lia.color.theme.accent or lia.color.theme.header or lia.color.theme.theme or Color(100, 150, 200)
-                local background = lia.color.theme.background_alpha or lia.color.theme.background or Color(40, 40, 40, 240)
-                local x, y = s:LocalToScreen(0, 0)
-                lia.derma.rect(0, 0, w, h):Rad(radius):Color(lia.color.theme.window_shadow or Color(0, 0, 0, 50)):Shadow(8, 12):Shape(lia.derma.SHAPE_IOS):Draw()
-                lia.util.drawBlurAt(x, y, w, h)
-                lia.derma.rect(0, 0, w, h):Rad(radius):Color(background):Shape(lia.derma.SHAPE_IOS):Draw()
-                surface.SetDrawColor(accent.r, accent.g, accent.b, accent.a or 255)
-                surface.DrawRect(0, 0, w, 3)
-                surface.DrawRect(0, 0, 3, h)
-                surface.DrawRect(w - 3, 0, 3, h)
-                surface.DrawRect(0, h - 3, w, 3)
-            end
-
-            local panel = container:Add("DPanel")
-            panel:Dock(FILL)
-            panel:DockMargin(300, 5, 300, 5)
-            panel.Paint = function(_, w, h) end
-            local label = vgui.Create("DLabel", panel)
-            label:Dock(TOP)
-            label:SetTall(45)
-            label:DockMargin(0, 20, 0, 0)
-            label:SetText("")
-            label.Paint = function(_, w, h) draw.SimpleText(name, "LiliaFont.36", w / 2, h / 2, lia.color.theme.text, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER) end
-            local description = vgui.Create("DLabel", panel)
-            description:Dock(TOP)
-            description:SetTall(35)
-            description:DockMargin(0, 10, 0, 0)
-            description:SetText("")
-            description.Paint = function(_, w, h) draw.SimpleText(cfg.desc or "", "LiliaFont.24", w / 2, h / 2, lia.color.theme.gray, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER) end
-            local checkbox = vgui.Create("liaCheckbox", panel)
-            if IsValid(checkbox) then
-                checkbox:Dock(TOP)
-                checkbox:SetTall(160)
-                checkbox:DockMargin(10, 25, 10, 15)
-                checkbox:SetChecked(lia.option.get(key, cfg.value))
-                checkbox.OnChange = function(_, state) timer.Create("ConfigChange" .. name, 1, 1, function() lia.option.set(key, state) end) end
-            end
-            return container
-        end,
-        Color = function(key, name, cfg, parent)
-            local container = vgui.Create("DPanel", parent)
-            container:SetTall(220)
-            container:Dock(TOP)
-            container:DockMargin(0, 60, 0, 10)
-            container.Paint = function(s, w, h)
-                local radius = 8
-                local accent = lia.color.theme.accent or lia.color.theme.header or lia.color.theme.theme or Color(100, 150, 200)
-                local background = lia.color.theme.background_alpha or lia.color.theme.background or Color(40, 40, 40, 240)
-                local x, y = s:LocalToScreen(0, 0)
-                lia.derma.rect(0, 0, w, h):Rad(radius):Color(lia.color.theme.window_shadow or Color(0, 0, 0, 50)):Shadow(8, 12):Shape(lia.derma.SHAPE_IOS):Draw()
-                lia.util.drawBlurAt(x, y, w, h)
-                lia.derma.rect(0, 0, w, h):Rad(radius):Color(background):Shape(lia.derma.SHAPE_IOS):Draw()
-                surface.SetDrawColor(accent.r, accent.g, accent.b, accent.a or 255)
-                surface.DrawRect(0, 0, w, 3)
-                surface.DrawRect(0, 0, 3, h)
-                surface.DrawRect(w - 3, 0, 3, h)
-                surface.DrawRect(0, h - 3, w, 3)
-            end
-
-            local panel = container:Add("DPanel")
-            panel:Dock(FILL)
-            panel:DockMargin(300, 5, 300, 5)
-            panel.Paint = function(_, w, h) end
-            local label = vgui.Create("DLabel", panel)
-            label:Dock(TOP)
-            label:SetTall(45)
-            label:DockMargin(0, 20, 0, 0)
-            label:SetText("")
-            label.Paint = function(_, w, h) draw.SimpleText(name, "LiliaFont.36", w / 2, h / 2, lia.color.theme.text, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER) end
-            local description = vgui.Create("DLabel", panel)
-            description:Dock(TOP)
-            description:SetTall(35)
-            description:DockMargin(0, 10, 0, 0)
-            description:SetText("")
-            description.Paint = function(_, w, h) draw.SimpleText(cfg.desc or "", "LiliaFont.24", w / 2, h / 2, lia.color.theme.gray, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER) end
-            local button = vgui.Create("liaButton", panel)
-            if IsValid(button) then
-                button:Dock(TOP)
-                button:DockMargin(300, 10, 300, 0)
-                button:SetTall(60)
-                button:SetTxt("")
-                button.Paint = function(_, w, h)
-                    local c = lia.option.get(key, cfg.value)
-                    lia.derma.rect(0, 0, w, h):Rad(16):Color(lia.color.theme.window_shadow):Shape(lia.derma.SHAPE_IOS):Shadow(5, 20):Draw()
-                    lia.derma.rect(0, 0, w, h):Rad(16):Color(c):Shape(lia.derma.SHAPE_IOS):Draw()
-                    draw.RoundedBox(2, 0, 0, w, h, Color(255, 255, 255, 50))
-                end
-
-                button.DoClick = function() lia.derma.requestColorPicker(function(color) timer.Create("ConfigChange" .. name, 1, 1, function() lia.option.set(key, color) end) end, lia.option.get(key, cfg.value)) end
-            end
-            return container
-        end,
-        Table = function(key, name, cfg, parent)
-            local container = vgui.Create("DPanel", parent)
-            container:SetTall(220)
-            container:Dock(TOP)
-            container:DockMargin(0, 60, 0, 10)
-            container.Paint = function(s, w, h)
-                local radius = 8
-                local accent = lia.color.theme.accent or lia.color.theme.header or lia.color.theme.theme or Color(100, 150, 200)
-                local background = lia.color.theme.background_alpha or lia.color.theme.background or Color(40, 40, 40, 240)
-                local x, y = s:LocalToScreen(0, 0)
-                lia.derma.rect(0, 0, w, h):Rad(radius):Color(lia.color.theme.window_shadow or Color(0, 0, 0, 50)):Shadow(8, 12):Shape(lia.derma.SHAPE_IOS):Draw()
-                lia.util.drawBlurAt(x, y, w, h)
-                lia.derma.rect(0, 0, w, h):Rad(radius):Color(background):Shape(lia.derma.SHAPE_IOS):Draw()
-                surface.SetDrawColor(accent.r, accent.g, accent.b, accent.a or 255)
-                surface.DrawRect(0, 0, w, 3)
-                surface.DrawRect(0, 0, 3, h)
-                surface.DrawRect(w - 3, 0, 3, h)
-                surface.DrawRect(0, h - 3, w, 3)
-            end
-
-            local panel = container:Add("DPanel")
-            panel:Dock(FILL)
-            panel:DockMargin(300, 5, 300, 5)
-            panel.Paint = function(_, w, h) end
-            local label = vgui.Create("DLabel", panel)
-            label:Dock(TOP)
-            label:SetTall(45)
-            label:DockMargin(0, 20, 0, 0)
-            label:SetText("")
-            label.Paint = function(_, w, h) draw.SimpleText(name, "LiliaFont.36", w / 2, h / 2, lia.color.theme.text, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER) end
-            local description = vgui.Create("DLabel", panel)
-            description:Dock(TOP)
-            description:SetTall(35)
-            description:DockMargin(0, 10, 0, 0)
-            description:SetText("")
-            description.Paint = function(_, w, h) draw.SimpleText(cfg.desc or "", "LiliaFont.24", w / 2, h / 2, lia.color.theme.gray, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER) end
-            local combo = vgui.Create("liaComboBox", panel)
-            if IsValid(combo) then
-                combo:Dock(TOP)
-                combo:SetTall(60)
-                combo:DockMargin(300, 20, 300, 0)
-                combo:SetValue(tostring(lia.option.get(key, cfg.value)))
-                combo:SetFont("LiliaFont.18")
-                local options = lia.option.getOptions(key)
-                for _, text in pairs(options) do
-                    combo:AddChoice(text, text)
-                end
-
-                combo:FinishAddingOptions()
-                combo:PostInit()
-                combo.OnSelect = function(_, _, v) lia.option.set(key, v) end
-            end
-            return container
+    local function AddHeader(scroll, text)
+        local header = scroll:Add("DPanel")
+        header:Dock(TOP)
+        header:SetTall(35)
+        header:DockMargin(0, 5, 0, 5)
+        header.Paint = function(me, w, h)
+            local accent = lia.color.theme.accent or lia.config.get("Color") or Color(0, 150, 255)
+            surface.SetDrawColor(accent)
+            surface.DrawRect(0, h - 2, w, 2)
         end
-    }
+
+        local label = header:Add("DLabel")
+        label:Dock(LEFT)
+        label:SetText(L(text))
+        label:SetFont("LiliaFont.22")
+        label:SetTextColor(lia.color.theme.text or color_white)
+        label:SizeToContents()
+        label:DockMargin(5, 0, 0, 0)
+    end
+
+    local function AddField(scroll, key, name, option)
+        local p = scroll:Add("DPanel")
+        p:Dock(TOP)
+        p:SetTall(45)
+        p:DockMargin(0, 0, 0, 5)
+        p.Paint = function(s, w, h) lia.derma.rect(0, 0, w, h):Rad(6):Color(Color(35, 38, 45, 180)):Shape(lia.derma.SHAPE_IOS):Draw() end
+        local l = p:Add("DLabel")
+        l:Dock(LEFT)
+        l:DockMargin(15, 0, 0, 0)
+        l:SetWidth(250)
+        l:SetText(name)
+        l:SetFont("LiliaFont.18")
+        l:SetTextColor(lia.color.theme.text or color_white)
+        l:SetContentAlignment(4)
+        l:SetTooltip(option.desc or "")
+        local optionType = option.type or "Generic"
+        if optionType == "Boolean" then
+            local checkbox = p:Add("liaCheckbox")
+            checkbox:Dock(RIGHT)
+            checkbox:DockMargin(0, 10, 15, 10)
+            checkbox:SetWidth(25)
+            checkbox:SetChecked(lia.option.get(key, option.value))
+            checkbox.OnChange = function(s, val) lia.option.set(key, val) end
+        elseif optionType == "Int" or optionType == "Float" or optionType == "Number" or optionType == "Generic" then
+            local entry = p:Add("liaEntry")
+            entry:Dock(RIGHT)
+            entry:SetWidth(200)
+            entry:DockMargin(0, 8, 15, 8)
+            entry:SetValue(tostring(lia.option.get(key, option.value)))
+            entry:SetFont("LiliaFont.18")
+            entry.textEntry.OnEnter = function(s)
+                local value = entry:GetValue()
+                local numValue = tonumber(value)
+                if (optionType == "Int" or optionType == "Float" or optionType == "Number") and numValue ~= nil then
+                    if optionType == "Int" then numValue = math.Round(numValue) end
+                    lia.option.set(key, numValue)
+                elseif optionType == "Generic" then
+                    lia.option.set(key, value)
+                else
+                    entry:SetValue(tostring(lia.option.get(key, option.value)))
+                end
+            end
+        elseif optionType == "Color" then
+            local button = p:Add("liaButton")
+            button:Dock(RIGHT)
+            button:SetWidth(200)
+            button:DockMargin(0, 8, 15, 8)
+            button:SetText("")
+            button.Paint = function(s, w, h)
+                local c = lia.option.get(key, option.value)
+                if istable(c) and c.r and c.g and c.b then
+                    c = Color(c.r, c.g, c.b, c.a)
+                elseif not IsColor(c) then
+                    c = color_white
+                end
+
+                lia.derma.rect(0, 0, w, h):Rad(6):Color(c):Shape(lia.derma.SHAPE_IOS):Draw()
+                draw.RoundedBox(0, 0, 0, w, h, Color(0, 0, 0, 50))
+            end
+
+            button.DoClick = function()
+                local c = lia.option.get(key, option.value)
+                if not IsColor(c) and istable(c) then c = Color(c.r, c.g, c.b, c.a) end
+                lia.derma.requestColorPicker(function(color) lia.option.set(key, color) end, c)
+            end
+        elseif optionType == "Table" then
+            local combo = p:Add("liaComboBox")
+            combo:Dock(RIGHT)
+            combo:SetWidth(200)
+            combo:DockMargin(0, 8, 15, 8)
+            combo:SetValue(tostring(lia.option.get(key, option.value)))
+            combo:SetFont("LiliaFont.18")
+            local options = lia.option.getOptions(key)
+            for _, text in pairs(options) do
+                combo:AddChoice(text, text)
+            end
+
+            combo.OnSelect = function(_, _, v) lia.option.set(key, v) end
+        end
+    end
 
     pages[#pages + 1] = {
         name = "options",
         drawFunc = function(parent)
             parent:Clear()
-            local tabs = parent:Add("liaTabs")
-            tabs:Dock(FILL)
-            local allCategoryItems = {}
-            local function populate()
-                if tabs.tabs then
-                    for i = #tabs.tabs, 1, -1 do
-                        tabs:CloseTab(i)
-                    end
-                end
-
+            local searchEntry = parent:Add("liaEntry")
+            searchEntry:Dock(TOP)
+            searchEntry:SetTall(35)
+            searchEntry:DockMargin(10, 10, 10, 10)
+            searchEntry:SetPlaceholderText(L("searchOptions") or "Search Options...")
+            searchEntry:SetFont("LiliaFont.18")
+            local scroll = parent:Add("liaScrollPanel")
+            scroll:Dock(FILL)
+            scroll:GetCanvas():DockPadding(10, 10, 10, 10)
+            local function populate(filter)
+                scroll:Clear()
+                filter = filter and filter:len() > 0 and filter:lower() or nil
                 local categories = {}
                 local keys = {}
                 for k in pairs(lia.option.stored) do
@@ -645,96 +388,45 @@ hook.Add("PopulateConfigurationButtons", "liaOptionsPopulate", function(pages)
                 end
 
                 table.sort(keys, function(a, b) return lia.option.stored[a].name < lia.option.stored[b].name end)
-                for _, key in ipairs(keys) do
-                    local opt = lia.option.stored[key]
+                for _, k in ipairs(keys) do
+                    local opt = lia.option.stored[k]
                     if not opt.visible or isfunction(opt.visible) and opt.visible() then
-                        local name = opt.name
-                        local catName = opt.data and opt.data.category or L("misc")
-                        categories[catName] = categories[catName] or {}
-                        categories[catName][#categories[catName] + 1] = {
-                            key = key,
-                            name = name,
-                            config = opt,
-                            elemType = opt.type or "Generic"
-                        }
+                        local cat = opt.data and opt.data.category or L("misc")
+                        categories[cat] = categories[cat] or {}
+                        table.insert(categories[cat], {
+                            key = k,
+                            name = opt.name,
+                            option = opt
+                        })
                     end
                 end
 
-                local catNames = {}
-                for name in pairs(categories) do
-                    catNames[#catNames + 1] = name
+                local sortedCategories = {}
+                for cat in pairs(categories) do
+                    table.insert(sortedCategories, cat)
                 end
 
-                table.sort(catNames)
-                allCategoryItems = categories
-                local function populateCategoryTab(categoryName, scrollPanel, searchFilter)
-                    local canvas = scrollPanel:GetCanvas()
-                    canvas:Clear()
-                    canvas:DockPadding(10, 10, 10, 10)
-                    local items = allCategoryItems[categoryName] or {}
-                    local filteredItems = {}
-                    searchFilter = tostring(searchFilter or "")
-                    if searchFilter ~= "" then
-                        local filterLower = searchFilter:lower()
-                        for _, it in ipairs(items) do
-                            local n = tostring(it.name or "")
-                            local d = tostring(it.config.desc or "")
-                            local k = tostring(it.key or "")
-                            local ln, ld, lk = n:lower(), d:lower(), k:lower()
-                            if ln:find(filterLower, 1, true) or ld:find(filterLower, 1, true) or lk:find(filterLower, 1, true) then filteredItems[#filteredItems + 1] = it end
-                        end
-                    else
-                        filteredItems = items
+                table.sort(sortedCategories)
+                for _, cat in ipairs(sortedCategories) do
+                    local items = categories[cat]
+                    table.sort(items, function(a, b) return a.name < b.name end)
+                    local visibleItems = {}
+                    for _, item in ipairs(items) do
+                        if not filter or item.name:lower():find(filter, 1, true) or cat:lower():find(filter, 1, true) then table.insert(visibleItems, item) end
                     end
 
-                    for _, v in ipairs(filteredItems) do
-                        local panel = OptionFormatting[v.elemType](v.key, v.name, v.config, canvas)
-                        panel:Dock(TOP)
-                        panel:DockMargin(10, 10, 10, 0)
-                        panel.Paint = function(s, w, h)
-                            local radius = 8
-                            local accent = lia.color.theme.accent or lia.color.theme.header or lia.color.theme.theme or Color(100, 150, 200)
-                            local background = lia.color.theme.background_alpha or lia.color.theme.background or Color(40, 40, 40, 240)
-                            local x, y = s:LocalToScreen(0, 0)
-                            lia.derma.rect(0, 0, w, h):Rad(radius):Color(lia.color.theme.window_shadow or Color(0, 0, 0, 50)):Shadow(8, 12):Shape(lia.derma.SHAPE_IOS):Draw()
-                            lia.util.drawBlurAt(x, y, w, h)
-                            lia.derma.rect(0, 0, w, h):Rad(radius):Color(background):Shape(lia.derma.SHAPE_IOS):Draw()
-                            surface.SetDrawColor(accent.r, accent.g, accent.b, accent.a or 255)
-                            surface.DrawRect(0, 0, w, 3)
-                            surface.DrawRect(0, 0, 3, h)
-                            surface.DrawRect(w - 3, 0, 3, h)
-                            surface.DrawRect(0, h - 3, w, 3)
+                    if #visibleItems > 0 then
+                        AddHeader(scroll, cat)
+                        for _, item in ipairs(visibleItems) do
+                            AddField(scroll, item.key, item.name, item.option)
                         end
                     end
-
-                    scrollPanel:InvalidateLayout(true)
-                end
-
-                for _, catName in ipairs(catNames) do
-                    local categoryContainer = vgui.Create("DPanel")
-                    categoryContainer:Dock(FILL)
-                    categoryContainer.Paint = function() end
-                    local searchBar = vgui.Create("liaEntry", categoryContainer)
-                    searchBar:Dock(TOP)
-                    searchBar:DockMargin(10, 10, 10, 10)
-                    searchBar:SetTall(40)
-                    searchBar:SetFont("LiliaFont.18")
-                    searchBar:SetPlaceholderText(L("searchOptions") or "Search Options...")
-                    searchBar:SetTextColor(Color(200, 200, 200))
-                    local scrollPanel = vgui.Create("liaScrollPanel", categoryContainer)
-                    scrollPanel:Dock(FILL)
-                    scrollPanel:InvalidateLayout(true)
-                    if not IsValid(scrollPanel.VBar) then scrollPanel:PerformLayout() end
-                    categoryContainer.searchBar = searchBar
-                    categoryContainer.scrollPanel = scrollPanel
-                    categoryContainer.categoryName = catName
-                    searchBar.OnTextChanged = function(_, value) populateCategoryTab(catName, scrollPanel, value or "") end
-                    populateCategoryTab(catName, scrollPanel, "")
-                    tabs:AddTab(catName, categoryContainer)
                 end
             end
 
-            populate()
+            searchEntry:SetUpdateOnType(true)
+            searchEntry.OnTextChanged = function(me, text) populate(text) end
+            populate(nil)
         end
     }
 end)

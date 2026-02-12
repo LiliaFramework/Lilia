@@ -3,7 +3,7 @@
     File: playerinteract.md
 ]]
 --[[
-    Player Interaction Library
+    Player Interaction
 
     Player-to-player and entity interaction management system for the Lilia framework.
 ]]

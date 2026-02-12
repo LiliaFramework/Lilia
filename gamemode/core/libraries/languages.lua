@@ -3,7 +3,7 @@
     File: lang.md
 ]]
 --[[
-    Languages Library
+    Languages
 
     Internationalization (i18n) and localization system for the Lilia framework.
 ]]

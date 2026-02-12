@@ -77,18 +77,21 @@ function ENT:setItem(itemID)
     end
 
     if not itemTable.temp then
-        local gamemode = SCHEMA and SCHEMA.folder or engine.ActiveGamemode()
-        local map = lia.data.getEquivalencyMap(game.GetMap())
-        local condition = "schema = " .. lia.db.convertDataType(gamemode) .. " AND map = " .. lia.db.convertDataType(map) .. " AND itemID = " .. tonumber(itemID)
-        lia.db.delete("saveditems", condition):next(function()
-            lia.db.insertTable({
-                schema = gamemode,
-                map = map,
-                itemID = itemID,
-                pos = lia.data.encodetable(self:GetPos()),
-                angles = lia.data.encodetable(self:GetAngles())
-            }, nil, "saveditems")
-        end)
+        local shouldSave = hook.Run("ShouldSaveItem", itemTable, self)
+        if shouldSave ~= false then
+            local gamemode = SCHEMA and SCHEMA.folder or engine.ActiveGamemode()
+            local map = lia.data.getEquivalencyMap(game.GetMap())
+            local condition = "schema = " .. lia.db.convertDataType(gamemode) .. " AND map = " .. lia.db.convertDataType(map) .. " AND itemID = " .. tonumber(itemID)
+            lia.db.delete("saveditems", condition):next(function()
+                lia.db.insertTable({
+                    schema = gamemode,
+                    map = map,
+                    itemID = itemID,
+                    pos = lia.data.encodetable(self:GetPos()),
+                    angles = lia.data.encodetable(self:GetAngles())
+                }, nil, "saveditems")
+            end)
+        end
     end
 
     hook.Run("OnItemCreated", itemTable, self)
