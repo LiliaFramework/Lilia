@@ -110,6 +110,38 @@ The faction library provides comprehensive functionality for managing factions (
 
 ---
 
+<details class="realm-shared" id="function-liafactiongetall">
+<summary><a id="lia.faction.getAll"></a>lia.faction.getAll()</summary>
+<div class="details-content">
+<h3 style="margin-bottom: 5px; font-weight: 700;"><a id="liafactiongetall"></a>Purpose</h3>
+<div style="margin-left: 20px; margin-bottom: 20px;">
+  <p>Retrieves all registered factions as a table.</p>
+</div>
+
+<h3 style="margin-bottom: 5px; font-weight: 700;">When Called</h3>
+<div style="margin-left: 20px; margin-bottom: 20px;">
+  <p>Called whenever all faction information needs to be accessed by other systems or scripts.</p>
+</div>
+
+<h3 style="margin-bottom: 5px; font-weight: 700;">Returns</h3>
+<div style="margin-left: 20px; margin-bottom: 20px;">
+<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#2.1">table</a></span> A table containing all faction data tables.</p>
+</div>
+
+<h3 style="margin-bottom: 5px; font-weight: 700;">Example Usage</h3>
+<div style="margin-left: 20px; margin-bottom: 20px;">
+<pre><code class="language-lua">  local allFactions = lia.faction.getAll()
+  for _, faction in ipairs(allFactions) do
+      print("Faction: " .. faction.name)
+  end
+</code></pre>
+</div>
+
+</div>
+</details>
+
+---
+
 <details class="realm-shared" id="function-liafactionget">
 <summary><a id="lia.faction.get"></a>lia.faction.get(identifier)</summary>
 <div class="details-content">
