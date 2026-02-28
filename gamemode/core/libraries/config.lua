@@ -267,10 +267,10 @@ end
 
 --[[
     Purpose:
-        Load config values from the database (server) or request them from the server (client).
+        Load config values from JSON files (server) or request them from the server (client).
 
     When Called:
-        On initialization to hydrate lia.config.stored after database connectivity.
+        On initialization to hydrate lia.config.stored from JSON file storage.
 
     Parameters:
         None
@@ -280,64 +280,38 @@ end
 
     Example Usage:
         ```lua
-        hook.Add("DatabaseConnected", "LoadLiliaConfig", lia.config.load)
+        hook.Add("Initialize", "LoadLiliaConfig", lia.config.load)
         ```
 ]]
 function lia.config.load()
     if SERVER then
-        local gamemode = SCHEMA and SCHEMA.folder or engine.ActiveGamemode()
-        lia.db.select({"key", "value"}, "config", "schema = " .. lia.db.convertDataType(gamemode)):next(function(res)
-            local rows = res.results or {}
-            local existing = {}
-            for _, row in ipairs(rows) do
-                local decoded = util.JSONToTable(row.value)
-                lia.config.stored[row.key] = lia.config.stored[row.key] or {}
-                local value = decoded and decoded[1]
-                if value == nil or value == "" then
-                    lia.config.stored[row.key].value = lia.config.stored[row.key].default
-                else
-                    lia.config.stored[row.key].value = value
-                    existing[row.key] = true
-                end
-            end
-
-            local inserts = {}
-            for k, v in pairs(lia.config.stored) do
-                if not existing[k] then
-                    lia.config.stored[k].value = v.default
-                    inserts[#inserts + 1] = {
-                        schema = gamemode,
-                        key = k,
-                        value = {v.default}
-                    }
-                end
-            end
-
-            local finalize = function()
-                for key, config in pairs(lia.config.stored) do
-                    if config.value ~= nil then
-                        if istable(config.value) then
-                            lia.config._lastSyncedValues[key] = util.TableToJSON(config.value) and util.JSONToTable(util.TableToJSON(config.value)) or config.value
-                        else
-                            lia.config._lastSyncedValues[key] = config.value
-                        end
-                    end
-                end
-
-                hook.Run("InitializedConfig")
-            end
-
-            if #inserts > 0 then
-                local ops = {}
-                for _, row in ipairs(inserts) do
-                    ops[#ops + 1] = lia.db.upsert(row, "config")
-                end
-
-                deferred.all(ops):next(finalize, finalize)
+        local configData = lia.data.get("config", {})
+        local existing = {}
+        for key, value in pairs(configData) do
+            lia.config.stored[key] = lia.config.stored[key] or {}
+            if value == nil or value == "" then
+                lia.config.stored[key].value = lia.config.stored[key].default
             else
-                finalize()
+                lia.config.stored[key].value = value
+                existing[key] = true
             end
-        end)
+        end
+
+        for k, v in pairs(lia.config.stored) do
+            if not existing[k] then lia.config.stored[k].value = v.default end
+        end
+
+        for key, config in pairs(lia.config.stored) do
+            if config.value ~= nil then
+                if istable(config.value) then
+                    lia.config._lastSyncedValues[key] = util.TableToJSON(config.value) and util.JSONToTable(util.TableToJSON(config.value)) or config.value
+                else
+                    lia.config._lastSyncedValues[key] = config.value
+                end
+            end
+        end
+
+        hook.Run("InitializedConfig")
     else
         net.Start("liaCfgList")
         net.SendToServer()
@@ -527,7 +501,7 @@ if SERVER then
 
     --[[
     Purpose:
-        Persist all config values to the database.
+        Persist all config values to JSON files.
 
     When Called:
         After changes, on shutdown, or during scheduled saves.
@@ -543,24 +517,12 @@ if SERVER then
         ```
     ]]
     function lia.config.save()
-        local gamemode = SCHEMA and SCHEMA.folder or engine.ActiveGamemode()
-        local rows = {}
+        local configData = {}
         for k, v in pairs(lia.config.stored) do
-            if v.value ~= nil then
-                rows[#rows + 1] = {
-                    schema = gamemode,
-                    key = k,
-                    value = {v.value},
-                }
-            end
+            if v.value ~= nil then configData[k] = v.value end
         end
 
-        local ops = {}
-        for _, row in ipairs(rows) do
-            ops[#ops + 1] = lia.db.upsert(row, "config")
-        end
-
-        if #ops > 0 then deferred.all(ops) end
+        lia.data.set("config", configData, true, true)
     end
 
     --[[
@@ -1604,55 +1566,138 @@ hook.Add("PopulateConfigurationButtons", "liaConfigPopulate", function(pages)
                 net.Start("liaCfgList")
                 net.SendToServer()
                 parent:Clear()
-                local searchEntry = parent:Add("liaEntry")
-                searchEntry:Dock(TOP)
-                searchEntry:SetTall(35)
-                searchEntry:DockMargin(10, 10, 10, 10)
-                searchEntry:SetPlaceholderText(L("searchConfigs") or "Search configurations...")
-                searchEntry:SetFont("LiliaFont.18")
-                local scroll = parent:Add("liaScrollPanel")
-                scroll:Dock(FILL)
-                scroll:GetCanvas():DockPadding(10, 10, 10, 10)
-                local function populate(filter)
-                    scroll:Clear()
-                    filter = filter and filter:len() > 0 and filter:lower() or nil
-                    local categories = {}
-                    for k, v in pairs(lia.config.stored) do
-                        local cat = v.category or "Core"
-                        categories[cat] = categories[cat] or {}
-                        table.insert(categories[cat], {
-                            key = k,
-                            name = v.name,
-                            config = v
-                        })
-                    end
-
-                    local sortedCategories = {}
-                    for cat, items in pairs(categories) do
-                        table.insert(sortedCategories, cat)
-                    end
-
-                    table.sort(sortedCategories)
-                    for _, cat in ipairs(sortedCategories) do
-                        local items = categories[cat]
-                        table.sort(items, function(a, b) return a.name < b.name end)
-                        local visibleItems = {}
-                        for _, item in ipairs(items) do
-                            if not filter or item.name:lower():find(filter, 1, true) or cat:lower():find(filter, 1, true) then table.insert(visibleItems, item) end
-                        end
-
-                        if #visibleItems > 0 then
-                            AddHeader(scroll, cat)
-                            for _, item in ipairs(visibleItems) do
-                                AddField(scroll, item.key, item.name, item.config)
-                            end
-                        end
+                local hasUniqueTabs = false
+                local uniqueTabConfigs = {}
+                local regularConfigs = {}
+                for k, v in pairs(lia.config.stored) do
+                    if v.data and v.data.uniqueTab then
+                        hasUniqueTabs = true
+                        uniqueTabConfigs[k] = v
+                    else
+                        regularConfigs[k] = v
                     end
                 end
 
-                searchEntry:SetUpdateOnType(true)
-                searchEntry.OnTextChanged = function(me, text) populate(text) end
-                populate(nil)
+                if hasUniqueTabs then
+                    local tabs = parent:Add("liaTabs")
+                    tabs:Dock(FILL)
+                    if not table.IsEmpty(regularConfigs) then
+                        local regularPanel = vgui.Create("DPanel")
+                        regularPanel:SetPaintBackground(false)
+                        regularPanel:DockPadding(10, 10, 10, 10)
+                        local searchEntry = regularPanel:Add("liaEntry")
+                        searchEntry:Dock(TOP)
+                        searchEntry:SetTall(35)
+                        searchEntry:DockMargin(0, 0, 0, 10)
+                        searchEntry:SetPlaceholderText(L("searchConfigs") or "Search configurations...")
+                        searchEntry:SetFont("LiliaFont.18")
+                        local scroll = regularPanel:Add("liaScrollPanel")
+                        scroll:Dock(FILL)
+                        scroll:GetCanvas():DockPadding(0, 0, 0, 0)
+                        local function populateRegular(filter)
+                            scroll:Clear()
+                            filter = filter and filter:len() > 0 and filter:lower() or nil
+                            local categories = {}
+                            for k, v in pairs(regularConfigs) do
+                                local cat = v.category or "Core"
+                                categories[cat] = categories[cat] or {}
+                                table.insert(categories[cat], {
+                                    key = k,
+                                    name = v.name,
+                                    config = v
+                                })
+                            end
+
+                            local sortedCategories = {}
+                            for cat, items in pairs(categories) do
+                                table.insert(sortedCategories, cat)
+                            end
+
+                            table.sort(sortedCategories)
+                            for _, cat in ipairs(sortedCategories) do
+                                local items = categories[cat]
+                                table.sort(items, function(a, b) return a.name < b.name end)
+                                local visibleItems = {}
+                                for _, item in ipairs(items) do
+                                    if not filter or item.name:lower():find(filter, 1, true) or cat:lower():find(filter, 1, true) then table.insert(visibleItems, item) end
+                                end
+
+                                if #visibleItems > 0 then
+                                    AddHeader(scroll, cat)
+                                    for _, item in ipairs(visibleItems) do
+                                        AddField(scroll, item.key, item.name, item.config)
+                                    end
+                                end
+                            end
+                        end
+
+                        searchEntry:SetUpdateOnType(true)
+                        searchEntry.OnTextChanged = function(me, text) populateRegular(text) end
+                        populateRegular(nil)
+                        tabs:AddTab("General", regularPanel)
+                    end
+
+                    for key, config in pairs(uniqueTabConfigs) do
+                        local uniquePanel = vgui.Create("DPanel")
+                        uniquePanel:SetPaintBackground(false)
+                        uniquePanel:DockPadding(10, 10, 10, 10)
+                        local scroll = uniquePanel:Add("liaScrollPanel")
+                        scroll:Dock(FILL)
+                        scroll:GetCanvas():DockPadding(0, 0, 0, 0)
+                        AddField(scroll, key, config.name, config)
+                        tabs:AddTab(config.name or key, uniquePanel)
+                    end
+                else
+                    local searchEntry = parent:Add("liaEntry")
+                    searchEntry:Dock(TOP)
+                    searchEntry:SetTall(35)
+                    searchEntry:DockMargin(10, 10, 10, 10)
+                    searchEntry:SetPlaceholderText(L("searchConfigs") or "Search configurations...")
+                    searchEntry:SetFont("LiliaFont.18")
+                    local scroll = parent:Add("liaScrollPanel")
+                    scroll:Dock(FILL)
+                    scroll:GetCanvas():DockPadding(10, 10, 10, 10)
+                    local function populate(filter)
+                        scroll:Clear()
+                        filter = filter and filter:len() > 0 and filter:lower() or nil
+                        local categories = {}
+                        for k, v in pairs(lia.config.stored) do
+                            local cat = v.category or "Core"
+                            categories[cat] = categories[cat] or {}
+                            table.insert(categories[cat], {
+                                key = k,
+                                name = v.name,
+                                config = v
+                            })
+                        end
+
+                        local sortedCategories = {}
+                        for cat, items in pairs(categories) do
+                            table.insert(sortedCategories, cat)
+                        end
+
+                        table.sort(sortedCategories)
+                        for _, cat in ipairs(sortedCategories) do
+                            local items = categories[cat]
+                            table.sort(items, function(a, b) return a.name < b.name end)
+                            local visibleItems = {}
+                            for _, item in ipairs(items) do
+                                if not filter or item.name:lower():find(filter, 1, true) or cat:lower():find(filter, 1, true) then table.insert(visibleItems, item) end
+                            end
+
+                            if #visibleItems > 0 then
+                                AddHeader(scroll, cat)
+                                for _, item in ipairs(visibleItems) do
+                                    AddField(scroll, item.key, item.name, item.config)
+                                end
+                            end
+                        end
+                    end
+
+                    searchEntry:SetUpdateOnType(true)
+                    searchEntry.OnTextChanged = function(me, text) populate(text) end
+                    populate(nil)
+                end
             end
         }
     end

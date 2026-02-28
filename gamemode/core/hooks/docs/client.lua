@@ -1816,38 +1816,6 @@ end
 
 --[[
     Purpose:
-        Respond to item data changes that arrive on the client.
-
-    When Called:
-        After an item’s data table updates (networked from the server).
-
-    Parameters:
-        item (Item)
-            The item that changed.
-        key (string)
-            Data key that changed.
-        oldValue (any)
-            Previous value.
-        newValue (any)
-            New value.
-        inventory (Inventory)
-            Inventory containing the item.
-
-    Realm:
-        Client
-
-    Example Usage:
-        ```lua
-            hook.Add("InventoryItemDataChanged", "ExampleInventoryItemDataChanged", function(...)
-                -- add custom client-side behavior
-            end)
-        ```
-]]
-function InventoryItemDataChanged(item, key, oldValue, newValue, inventory)
-end
-
---[[
-    Purpose:
         Customize an inventory item icon immediately after it is created.
 
     When Called:

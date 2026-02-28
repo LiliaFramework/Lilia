@@ -1770,6 +1770,7 @@ LANGUAGE = {
     canSeeLogs = "Can See Logs",
     canRemoveWarns = "Can Remove Warns",
     canUseItemSpawner = "Can Use Item Spawner",
+    ManageWeaponOverrides = "Manage Weapon Overrides",
     canUsePAC3 = "Can Use PAC3",
     commandBan = "Access to Ban Command",
     commandKick = "Access to Kick Command",

@@ -3467,4 +3467,13 @@ LANGUAGE = {
     itemLocked = "Este item está bloqueado.",
     cannotWhileTied = "Você não pode fazer isso enquanto amarrado.",
     itemAdded = "%s foi adicionado ao seu inventário.",
+    ManageWeaponOverrides = "Gerenciar Substituições de Armas",
+    adminStickSubCategoryClassWhitelist = "Whitelist de Classe",
+    adminStickSubCategoryFactionWhitelist = "Whitelist de Facção",
+    adminStickSubCategoryMiscellaneous = "Diversos",
+    bankingConfiguration = "Configuração Bancária",
+    positionTool = "Configurador de Mapa",
+    positionToolPurpose = "\nClique esquerdo: Definir posição no alvo \nClique direito: Usar posição atual \nRecarregar: Ciclar modo \nShift + E: Abrir menu de remoção",
+    searchBanking = "Pesquisar Opções Bancárias...",
+    usePositionTool = "Usar Ferramenta de Posição"
 }

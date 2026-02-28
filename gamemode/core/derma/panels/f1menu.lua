@@ -303,8 +303,13 @@ function PANEL:Init()
     local mX, mY = ScrW() * 0.05, ScrH() * 0.05
     panel:DockMargin(mX, mY, mX, mY)
     panel:SetAlpha(0)
+    panel:AlphaTo(255, 0.25, 0)
     panel.Paint = function() end
-    self.panel = panel
+    self.panelWrapper = panel
+    local contentPanel = panel:Add("EditablePanel")
+    contentPanel:Dock(FILL)
+    contentPanel.Paint = function() end
+    self.panel = contentPanel
     local btnDefs = {}
     hook.Run("CreateMenuButtons", btnDefs)
     local tabKeys = {}
@@ -318,6 +323,8 @@ function PANEL:Init()
     end)
 
     self.tabList = {}
+    self._tabIndex = {}
+    local tabIndex = 0
     for _, key in ipairs(tabKeys) do
         local cb = btnDefs[key]
         if isstring(cb) then
@@ -337,6 +344,8 @@ function PANEL:Init()
             end
         end
 
+        tabIndex = tabIndex + 1
+        self._tabIndex[key] = tabIndex
         self.tabList[key] = self:addTab(key, cb)
     end
 
@@ -359,23 +368,56 @@ function PANEL:Init()
     timer.Simple(0.1, function() if IsValid(self) then self:UpdateTabColors() end end)
 end
 
+function PANEL:SwitchTabContent(name, callback)
+    if IsValid(lia.gui.info) then lia.gui.info:Remove() end
+    if not callback then return end
+    local wrapper = self.panelWrapper
+    if not IsValid(wrapper) then return end
+    local oldPanel = self.panel
+    wrapper:InvalidateLayout(true)
+    if wrapper.PerformLayout then wrapper:PerformLayout() end
+    local w, h = wrapper:GetSize()
+    local oldKey = self.activeTabKey
+    local oldIndex = oldKey and self._tabIndex and self._tabIndex[oldKey] or nil
+    local newIndex = self._tabIndex and self._tabIndex[name] or nil
+    local dir = 1
+    if oldIndex and newIndex then dir = (newIndex > oldIndex) and 1 or -1 end
+    if IsValid(oldPanel) then
+        for _, child in ipairs(oldPanel:GetChildren()) do
+            if IsValid(child) then child:SetVisible(false) end
+        end
+    end
+
+    local newPanel = wrapper:Add("EditablePanel")
+    newPanel:Dock(NODOCK)
+    newPanel:SetSize(w, h)
+    newPanel:SetPos(dir * w, 0)
+    newPanel:SetAlpha(0)
+    newPanel.Paint = function() end
+    self.panel = newPanel
+    self.activeTabKey = name
+    self:UpdateTabColors()
+    self:ApplyCurrentTheme()
+    callback(newPanel)
+    newPanel:InvalidateLayout(true)
+    if newPanel.PerformLayout then newPanel:PerformLayout() end
+    local time = 0.35
+    local ease = 0.15
+    if IsValid(oldPanel) then
+        oldPanel:Dock(NODOCK)
+        oldPanel:MoveTo(-dir * w, 0, time, 0, ease, function() if IsValid(oldPanel) then oldPanel:Remove() end end)
+        oldPanel:AlphaTo(0, time, 0)
+    end
+
+    newPanel:MoveTo(0, 0, time, 0, ease, function() if IsValid(newPanel) then newPanel:Dock(FILL) end end)
+    newPanel:AlphaTo(255, time, 0)
+end
+
 function PANEL:addTab(name, callback)
     local contentPanel = vgui.Create("EditablePanel")
     contentPanel:Dock(FILL)
     contentPanel.Paint = function() end
-    local wrappedCallback = function()
-        if IsValid(lia.gui.info) then lia.gui.info:Remove() end
-        if callback then
-            local mainPanel = self.panel
-            mainPanel:Clear()
-            mainPanel:AlphaTo(255, 0.3, 0)
-            self:UpdateTabColors()
-            self:ApplyCurrentTheme()
-            callback(mainPanel)
-            mainPanel:InvalidateLayout(true)
-        end
-    end
-
+    local wrappedCallback = function() self:SwitchTabContent(name, callback) end
     self.tabs:AddTab(L(name), contentPanel, nil, wrappedCallback)
     local tabData = {
         name = name,

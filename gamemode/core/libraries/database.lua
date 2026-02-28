@@ -14,6 +14,19 @@
 lia.db = lia.db or {}
 lia.db.queryQueue = lia.db.queue or {}
 lia.db.prepared = lia.db.prepared or {}
+if SERVER then lia.db._slowQueryMsCvar = lia.db._slowQueryMsCvar or CreateConVar("lia_db_slow_query_ms", "0", FCVAR_ARCHIVE) end
+function lia.db._bootstrapDebugEnabled()
+    return SERVER
+end
+
+function lia.db._getSlowQueryThresholdSeconds()
+    if not SERVER then return 0 end
+    if not lia.db._slowQueryMsCvar then return 0 end
+    local ms = lia.db._slowQueryMsCvar:GetFloat()
+    if not ms or ms <= 0 then return 0 end
+    return ms / 1000
+end
+
 lia.db.modules = {
     ["sqlite"] = {
         query = function(query, callback)
@@ -183,6 +196,7 @@ function lia.db.loadTables()
         timer.Simple(0.1, function()
             lia.config.send()
             lia.playerinteract.sync()
+            lia.item.loadWeaponOverrides()
         end)
     end
 
@@ -239,12 +253,6 @@ CREATE TABLE IF NOT EXISTS lia_invdata (
     value text,
     FOREIGN KEY(invID) REFERENCES lia_inventories(invID),
     PRIMARY KEY (invID, key)
-);
-CREATE TABLE IF NOT EXISTS lia_config (
-    schema text,
-    key text,
-    value text,
-    PRIMARY KEY (schema, key)
 );
 CREATE TABLE IF NOT EXISTS lia_logs (
     id integer primary key autoincrement,

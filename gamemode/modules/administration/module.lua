@@ -3,6 +3,11 @@ MODULE.author = "Samael"
 MODULE.discord = "@liliaplayer"
 MODULE.desc = "administrationToolsDescription"
 MODULE.Privileges = {
+    ["ManageWeaponOverrides"] = {
+        Name = "ManageWeaponOverrides",
+        MinAccess = "superadmin",
+        Category = "categoryStaffItems",
+    },
     ["canUseItemSpawner"] = {
         Name = "canUseItemSpawner",
         MinAccess = "admin",

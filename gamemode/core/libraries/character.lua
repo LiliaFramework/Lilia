@@ -417,7 +417,6 @@ lia.char.registerVar("model", {
         net.WriteType(character.vars.model)
         net.WriteType(character:getID())
         net.Broadcast()
-        hook.Run("PlayerModelChanged", client, value)
         hook.Run("OnCharVarChanged", character, "model", oldVar, value)
     end,
     onGet = function(character, default) return character.vars.model or default end,
@@ -501,6 +500,7 @@ lia.char.registerVar("bodygroups", {
         net.WriteType(character.vars.bodygroups)
         net.WriteType(character:getID())
         net.Broadcast()
+        hook.Run("PlayerBodyGroupChanged", client, oldVar, value)
         hook.Run("OnCharVarChanged", character, "bodygroups", oldVar, value)
     end,
     onGet = function(character, default) return character.vars.bodygroups or default or {} end,

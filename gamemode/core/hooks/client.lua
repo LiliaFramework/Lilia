@@ -905,3 +905,10 @@ function GM:CharLoaded(character)
         end
     end)
 end
+
+function GM:PrePlayerDraw(client)
+    if IsValid(client:GetRagdollEntity()) then
+        client:DrawShadow(false)
+        return true
+    end
+end

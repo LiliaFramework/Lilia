@@ -129,9 +129,49 @@ function PANEL:AddOption(text, func, icon, optData)
         return option:SetImage(newIcon)
     end
 
+    function option:SetRadio(isRadio)
+        option._isRadio = tobool(isRadio)
+    end
+
+    function option:GetRadio()
+        return option._isRadio
+    end
+
+    function option:SetChecked(checked)
+        local wasChecked = option._isChecked
+        option._isChecked = tobool(checked)
+        if option._isRadio and option._isChecked and not wasChecked then
+            local parent = option:GetParent()
+            if IsValid(parent) and parent.Items then
+                for _, item in ipairs(parent.Items) do
+                    if IsValid(item) and item ~= option and item._isRadio then item:SetChecked(false) end
+                end
+            end
+        end
+
+        if option.OnChecked and wasChecked ~= option._isChecked then option:OnChecked(option._isChecked) end
+    end
+
+    function option:GetChecked()
+        return option._isChecked
+    end
+
+    function option:SetIsCheckable(checkable)
+        option._isCheckable = tobool(checkable)
+    end
+
+    function option:GetIsCheckable()
+        return option._isCheckable
+    end
+
     option._submenu = nil
     option._submenu_open = false
+    option._isRadio = false
+    option._isChecked = false
+    option._isCheckable = false
+    option.OnChecked = nil
     option.DoClick = function()
+        if option._isCheckable then option:SetChecked(not option._isChecked) end
         if option._submenu then
             if option._submenu_open then
                 option:CloseSubMenu()
@@ -302,6 +342,22 @@ function PANEL:AddOption(text, func, icon, optData)
         if pnl.Icon and not iconMat then
             iconMat = type(pnl.Icon) == "IMaterial" and pnl.Icon or Material(pnl.Icon)
             pnl._cachedIconMat = iconMat
+        end
+
+        local checkboxSize = 16
+        local checkboxX = textPadding
+        local checkboxY = (h - checkboxSize) * 0.5
+        if pnl._isCheckable then
+            local accentColor = lia.color.theme and lia.color.theme.accent or Color(60, 140, 140)
+            if pnl._isRadio then
+                lia.derma.rect(checkboxX, checkboxY, checkboxSize, checkboxSize):Rad(checkboxSize * 0.5):Color(accentColor):Draw()
+                if pnl._isChecked then lia.derma.rect(checkboxX + 4, checkboxY + 4, checkboxSize - 8, checkboxSize - 8):Rad((checkboxSize - 8) * 0.5):Color(color_white):Draw() end
+            else
+                lia.derma.rect(checkboxX, checkboxY, checkboxSize, checkboxSize):Rad(4):Color(accentColor):Draw()
+                if pnl._isChecked then draw.SimpleText("✓", "LiliaFont.14", checkboxX + checkboxSize * 0.5, checkboxY + checkboxSize * 0.5, color_white, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER) end
+            end
+
+            textPadding = textPadding + checkboxSize + 8
         end
 
         if iconMat then

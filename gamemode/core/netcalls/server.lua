@@ -21,6 +21,63 @@
     end
 end)
 
+local function getWeaponItemDefaults(className)
+    local wep = weapons.Get(className)
+    if not wep then return nil end
+    local holdType = wep.HoldType or "normal"
+    local isGrenade = holdType == "grenade"
+    local size = lia.item.holdTypeSizeMapping[holdType] or {
+        width = 2,
+        height = 1
+    }
+    return {
+        name = hook.Run("GetWeaponName", wep) or className,
+        desc = L("weaponsDesc"),
+        category = isGrenade and L("itemCatGrenades") or L("weapons"),
+        model = wep.WorldModel or wep.WM or "models/props_c17/suitcase_passenger_physics.mdl",
+        class = className,
+        width = size.width,
+        height = size.height,
+        price = 500
+    }
+end
+
+net.Receive("liaWeaponOverrideUpdate", function(len, ply)
+    if not ply:hasPrivilege("ManageWeaponOverrides") then return end
+    local className = net.ReadString()
+    local key = net.ReadString()
+    local value = net.ReadType()
+    lia.item.WeaponOverrides[className] = lia.item.WeaponOverrides[className] or {}
+    lia.item.WeaponOverrides[className][key] = value
+    for classID, data in pairs(lia.item.WeaponOverrides) do
+        if not istable(data) then
+            lia.item.WeaponOverrides[classID] = nil
+            continue
+        end
+
+        local defaults = getWeaponItemDefaults(classID)
+        if defaults then
+            for k, v in pairs(data) do
+                if defaults[k] ~= nil and v == defaults[k] then data[k] = nil end
+            end
+        end
+
+        if table.IsEmpty(data) then lia.item.WeaponOverrides[classID] = nil end
+    end
+
+    lia.data.set("weaponOverrides", lia.item.WeaponOverrides, true, true)
+    local itemDef = lia.item.list[className]
+    if itemDef then itemDef[key] = value end
+    ply:notify("Successfully updated " .. key .. " for " .. className)
+    net.Start("liaWeaponOverrideSync")
+    net.WriteBool(false)
+    net.WriteString(className)
+    net.WriteString(key)
+    net.WriteType(value)
+    net.Broadcast()
+    hook.Run("OnWeaponOverrideUpdated", className, key, value)
+end)
+
 net.Receive("liaInsertKeyPressed", function(_, client)
     if not IsValid(client) then return end
     local char = client:getChar()

@@ -3467,4 +3467,13 @@ LANGUAGE = {
     itemLocked = "Dieser Gegenstand ist gesperrt.",
     cannotWhileTied = "Du kannst das nicht machen, während du gefesselt bist.",
     itemAdded = "%s wurde zu deinem Inventar hinzugefügt.",
+    ManageWeaponOverrides = "Waffen-Überschreibungen verwalten",
+    adminStickSubCategoryClassWhitelist = "Klassen-Whitelist",
+    adminStickSubCategoryFactionWhitelist = "Fraktions-Whitelist",
+    adminStickSubCategoryMiscellaneous = "Sonstiges",
+    bankingConfiguration = "Banken-Konfiguration",
+    positionTool = "Karten-Konfigurator",
+    positionToolPurpose = "\nLinksklick: Position am Ziel setzen \nRechtsklick: Aktuelle Position verwenden \nNachladen: Modus wechseln \nUmschalt + E: Entfernungsmenü öffnen",
+    searchBanking = "Bankenoptionen durchsuchen...",
+    usePositionTool = "Positions-Tool verwenden"
 }

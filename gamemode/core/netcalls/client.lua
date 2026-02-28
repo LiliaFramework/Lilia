@@ -15,6 +15,35 @@ net.Receive("liaSetWaypointWithLogo", function()
     LocalPlayer():setWaypoint(name, pos, logo, onReach)
 end)
 
+net.Receive("liaWeaponOverrideSync", function()
+    local isBulkSync = net.ReadBool()
+    if isBulkSync then
+        local overrides = net.ReadTable()
+        if istable(overrides) then
+            lia.item.WeaponOverrides = overrides
+            for className, data in pairs(overrides) do
+                local itemDef = lia.item.list[className]
+                if itemDef and istable(data) then
+                    for k, v in pairs(data) do
+                        itemDef[k] = v
+                    end
+                end
+            end
+
+            hook.Run("OnWeaponOverridesBulkSynced", overrides)
+        end
+    else
+        local className = net.ReadString()
+        local key = net.ReadString()
+        local value = net.ReadType()
+        lia.item.WeaponOverrides[className] = lia.item.WeaponOverrides[className] or {}
+        lia.item.WeaponOverrides[className][key] = value
+        local itemDef = lia.item.list[className]
+        if itemDef then itemDef[key] = value end
+        hook.Run("OnWeaponOverrideUpdated", className, key, value)
+    end
+end)
+
 net.Receive("liaClassUpdate", function()
     local joinedClient = net.ReadEntity()
     if lia.gui.classes and lia.gui.classes:IsVisible() then

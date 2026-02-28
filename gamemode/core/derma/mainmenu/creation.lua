@@ -33,7 +33,7 @@ function PANEL:updateModel()
         end
     end
 
-    hook.Run("ModifyCharacterModel", entity)
+    hook.Run("ModifyCharacterModel", entity, self.context)
 end
 
 function PANEL:canCreateCharacter()

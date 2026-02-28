@@ -205,6 +205,37 @@ end
 
 --[[
     Purpose:
+        Applies weapon override data to an existing item definition.
+
+    When Called:
+        Called during item registration to ensure weapon overrides are applied
+        after the base item properties are set but before final localization.
+
+    Parameters:
+        uniqueID (string)
+            The unique ID of the item to apply overrides to.
+
+    Realm:
+        Shared
+
+    Example Usage:
+        ```lua
+            -- This function is typically called internally during item registration
+            lia.item.applyWeaponOverride("weapon_pistol")
+        ```
+]]
+function lia.item.applyWeaponOverride(uniqueID)
+    local data = lia.item.WeaponOverrides and lia.item.WeaponOverrides[uniqueID]
+    if not istable(data) then return end
+    local itemDef = lia.item.list and lia.item.list[uniqueID]
+    if not itemDef then return end
+    for k, v in pairs(data) do
+        itemDef[k] = v
+    end
+end
+
+--[[
+    Purpose:
         Retrieves an instanced item by its ID and determines its current location.
 
     When Called:
@@ -543,6 +574,9 @@ function lia.item.register(uniqueID, baseID, isBaseItem, path, luaGenerated)
     ITEM:onRegistered()
     local itemType = ITEM.uniqueID
     targetTable[itemType] = ITEM
+    if not isBaseItem then lia.item.applyWeaponOverride(itemType) end
+    if isstring(ITEM.name) then ITEM.name = L(ITEM.name) end
+    if isstring(ITEM.desc) then ITEM.desc = L(ITEM.desc) end
     hook.Run("OnItemRegistered", ITEM)
     ITEM = nil
     return targetTable[itemType]
@@ -1429,72 +1463,19 @@ hook.Add("InitializedModules", "liaItems", function()
 end)
 
 if SERVER then
-    util.AddNetworkString("liaWeaponOverrideUpdate")
-    util.AddNetworkString("liaWeaponOverrideSync")
-    function lia.item.saveWeaponOverrides()
-        local data = util.TableToJSON(lia.item.WeaponOverrides, true)
-        file.Write("lilia/weapon_overrides.json", data)
-    end
-
     function lia.item.loadWeaponOverrides()
-        if file.Exists("lilia/weapon_overrides.json", "DATA") then
-            local data = file.Read("lilia/weapon_overrides.json", "DATA")
-            local overrides = util.JSONToTable(data)
-            if overrides then
-                for k, v in pairs(overrides) do
-                    lia.item.WeaponOverrides[k] = v
+        local stored = lia.data.get("weaponOverrides") or {}
+        lia.item.WeaponOverrides = stored
+        for className, data in pairs(lia.item.WeaponOverrides) do
+            local itemDef = lia.item.list[className]
+            if itemDef and istable(data) then
+                for k, v in pairs(data) do
+                    itemDef[k] = v
                 end
             end
         end
     end
-
-    lia.item.loadWeaponOverrides()
-    hook.Add("PlayerInitialSpawn", "liaSyncWeaponOverrides", function(ply)
-        timer.Simple(1, function()
-            if IsValid(ply) then
-                for className, data in pairs(lia.item.WeaponOverrides) do
-                    for key, value in pairs(data) do
-                        net.Start("liaWeaponOverrideSync")
-                        net.WriteString(className)
-                        net.WriteString(key)
-                        net.WriteType(value)
-                        net.Send(ply)
-                    end
-                end
-            end
-        end)
-    end)
-
-    net.Receive("liaWeaponOverrideUpdate", function(len, ply)
-        if not ply:IsSuperAdmin() then return end
-        local className = net.ReadString()
-        local key = net.ReadString()
-        local value = net.ReadType()
-        lia.item.WeaponOverrides[className] = lia.item.WeaponOverrides[className] or {}
-        lia.item.WeaponOverrides[className][key] = value
-        lia.item.saveWeaponOverrides()
-        local itemDef = lia.item.list[className]
-        if itemDef then itemDef[key] = value end
-        ply:notify("Successfully updated " .. key .. " for " .. className)
-        net.Start("liaWeaponOverrideSync")
-        net.WriteString(className)
-        net.WriteString(key)
-        net.WriteType(value)
-        net.Broadcast()
-    end)
-end
-
-if CLIENT then
-    net.Receive("liaWeaponOverrideSync", function()
-        local className = net.ReadString()
-        local key = net.ReadString()
-        local value = net.ReadType()
-        lia.item.WeaponOverrides[className] = lia.item.WeaponOverrides[className] or {}
-        lia.item.WeaponOverrides[className][key] = value
-        local itemDef = lia.item.list[className]
-        if itemDef then itemDef[key] = value end
-    end)
-
+else
     local function CreateEntry(scroll, className, weaponTable, overrideData)
         local container = scroll:Add("DPanel")
         container:SetTall(50)

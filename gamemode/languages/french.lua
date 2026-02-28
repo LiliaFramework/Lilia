@@ -3467,4 +3467,13 @@ LANGUAGE = {
     itemLocked = "Cet objet est verrouillé.",
     cannotWhileTied = "Vous ne pouvez pas faire cela en étant attaché.",
     itemAdded = "%s a été ajouté à votre inventaire.",
+    ManageWeaponOverrides = "Gérer les remplacements d'armes",
+    adminStickSubCategoryClassWhitelist = "Liste blanche de classe",
+    adminStickSubCategoryFactionWhitelist = "Liste blanche de faction",
+    adminStickSubCategoryMiscellaneous = "Divers",
+    bankingConfiguration = "Configuration bancaire",
+    positionTool = "Configurateur de carte",
+    positionToolPurpose = "\nClic gauche: Définir la position visée \nClic droit: Utiliser la position actuelle \nRecharger: Changer de mode \nMaj + E: Ouvrir le menu de suppression",
+    searchBanking = "Rechercher dans les options bancaires...",
+    usePositionTool = "Utiliser l'outil de position"
 }

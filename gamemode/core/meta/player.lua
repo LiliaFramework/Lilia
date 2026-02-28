@@ -1991,6 +1991,57 @@ end
 
 --[[
     Purpose:
+        Gets the player's ragdoll entity from either GMod's GetRagdollEntity or the custom setRagdolled system.
+
+    When Called:
+        Use when needing to access the player's current ragdoll entity.
+
+    Parameters:
+        None.
+
+    Returns:
+        entity|nil
+            The ragdoll entity if one exists, nil otherwise.
+
+    Realm:
+        Shared
+
+    Example Usage:
+        ```lua
+            local ragdoll = ply:getRagdoll()
+            if IsValid(ragdoll) then
+                -- Do something with ragdoll
+            end
+        ```
+]]
+function playerMeta:getRagdoll()
+    local ragdollValue = self:getNetVar("ragdoll")
+    if isnumber(ragdollValue) then
+        local ragdoll = Entity(ragdollValue)
+        if IsValid(ragdoll) then return ragdoll end
+    end
+
+    if isentity(ragdollValue) and IsValid(ragdollValue) then return ragdollValue end
+    local gmodRagdoll = self:GetRagdollEntity()
+    if IsValid(gmodRagdoll) then return gmodRagdoll end
+    if CLIENT then
+        if isentity(ragdollValue) and not IsValid(ragdollValue) then
+            self._liaNextRagdollDebug = self._liaNextRagdollDebug or 0
+            if self._liaNextRagdollDebug < CurTime() then
+                self._liaNextRagdollDebug = CurTime() + 1
+                print("[getRagdoll] unresolved ragdoll netvar for", self, "value:", ragdollValue)
+            end
+        end
+
+        for _, ent in ipairs(ents.FindByClass("prop_ragdoll")) do
+            if IsValid(ent) and ent:getNetVar("player") == self then return ent end
+        end
+    end
+    return nil
+end
+
+--[[
+    Purpose:
         Sends a button list prompt to the player and routes callbacks.
 
     When Called:
@@ -2032,6 +2083,38 @@ function playerMeta:requestButtons(title, buttons)
     else
         lia.derma.requestButtons(title, buttons)
     end
+end
+
+--[[
+    Purpose:
+        Checks if the player is currently stuck in geometry.
+
+    When Called:
+        Use when determining if a player needs to be repositioned.
+
+    Parameters:
+        None.
+
+    Returns:
+        boolean
+            True if stuck, false otherwise.
+
+    Realm:
+        Server
+
+    Example Usage:
+        ```lua
+            if ply:isStuck() then
+                ply:SetPos(newPosition)
+            end
+        ```
+]]
+function playerMeta:isStuck()
+    return util.TraceEntity({
+        start = self:GetPos(),
+        endpos = self:GetPos(),
+        filter = self
+    }, self).StartSolid
 end
 
 --[[
@@ -2334,7 +2417,7 @@ if SERVER then
         reason (string)
             Ban reason.
         duration (number)
-            Duration in minutes; 0 or nil for perm.
+            Duration in mies; 0 or nil for perm.
         banner (Player|nil)
             Staff issuing the ban.
     Realm:
@@ -2395,12 +2478,57 @@ if SERVER then
         return diff + RealTime() - (self.liaJoinTime or RealTime())
     end
 
-    local function isStuck(client)
-        return util.TraceEntity({
-            start = client:GetPos(),
-            endpos = client:GetPos(),
-            filter = client
-        }, client).StartSolid
+    --[[
+    Purpose:
+        Creates a ragdoll entity for the player with proper physics setup.
+
+    When Called:
+        Use when needing to create a physical ragdoll representation.
+
+    Parameters:
+        freeze (boolean|nil)
+            True to freeze physics, false for normal physics.
+
+    Returns:
+        entity
+            The created ragdoll entity.
+
+    Realm:
+        Server
+
+    Example Usage:
+        ```lua
+            local ragdoll = ply:createRagdoll(false)
+        ```
+]]
+    function playerMeta:createRagdoll(freeze)
+        local entity = ents.Create("prop_ragdoll")
+        entity:SetPos(self:GetPos())
+        entity:SetAngles(self:EyeAngles())
+        entity:SetModel(self:GetModel())
+        entity:SetSkin(self:GetSkin())
+        entity:Spawn()
+        entity:SetCollisionGroup(COLLISION_GROUP_WEAPON)
+        entity:Activate()
+        local velocity = self:GetVelocity()
+        for i = 0, entity:GetPhysicsObjectCount() - 1 do
+            local physObj = entity:GetPhysicsObjectNum(i)
+            if IsValid(physObj) then
+                local index = entity:TranslatePhysBoneToBone(i)
+                if index then
+                    local position, angles = self:GetBonePosition(index)
+                    physObj:SetPos(position)
+                    physObj:SetAngles(angles)
+                end
+
+                if freeze then
+                    physObj:EnableMotion(false)
+                else
+                    physObj:SetVelocity(velocity)
+                end
+            end
+        end
+        return entity
     end
 
     --[[
@@ -2424,167 +2552,144 @@ if SERVER then
 
     Example Usage:
         ```lua
-            ply:setRagdolled(true, 10)
-        ```
 ]]
-    function playerMeta:setRagdolled(state, baseTime, getUpGrace, getUpMessage)
-        getUpMessage = getUpMessage or L("wakingUp")
-        local ragdoll = self:GetRagdollEntity()
-        local time = hook.Run("GetRagdollTime", self, time) or baseTime or 10
+    function playerMeta:setRagdolled(state, time, getUpGrace)
+        getUpGrace = getUpGrace or time or 5
+        if state and time and time > 0 then time = hook.Run("GetRagdollTime", self, time) or time end
         if state then
-            local handsWeapon = self:GetActiveWeapon()
-            if IsValid(handsWeapon) and handsWeapon:GetClass() == "lia_hands" and handsWeapon:IsHoldingObject() then handsWeapon:DropObject() end
-            if not IsValid(ragdoll) then
-                self:CreateRagdoll()
-                ragdoll = self:GetRagdollEntity()
-                self:SetCreator(self)
+            if IsValid(self.Ragdoll) then self.Ragdoll:Remove() end
+            local existingGmodRagdoll = self:GetRagdollEntity()
+            if IsValid(existingGmodRagdoll) then
+                existingGmodRagdoll.liaIgnoreDelete = true
+                SafeRemoveEntity(existingGmodRagdoll)
             end
 
-            local entity = ragdoll
-            if IsValid(entity) then self:setNetVar("ragdoll", entity) end
-            hook.Run("OnPlayerRagdolled", self, entity)
-            entity.liaWeapons = {}
-            entity.liaAmmo = {}
-            entity.liaWeaponClips = {}
-            local processedAmmoTypes = {}
-            for _, w in ipairs(self:GetWeapons()) do
-                local weaponClass = w:GetClass()
-                entity.liaWeapons[#entity.liaWeapons + 1] = weaponClass
-                local ammoType = w:GetPrimaryAmmoType()
-                local clip = w:Clip1()
-                entity.liaWeaponClips[weaponClass] = clip
-                if ammoType and ammoType > 0 and not processedAmmoTypes[ammoType] then
-                    local reserve = self:GetAmmoCount(ammoType)
-                    entity.liaAmmo[ammoType] = reserve
-                    processedAmmoTypes[ammoType] = true
-                end
-            end
-
+            local entity = self:createRagdoll()
+            entity:SetNoDraw(false)
+            entity:DrawShadow(true)
+            entity:SetRenderMode(RENDERMODE_NORMAL)
+            entity:SetColor(Color(255, 255, 255, 255))
+            entity:setNetVar("player", self)
             entity:CallOnRemove("fixer", function()
                 if IsValid(self) then
+                    self:setLocalVar("blur", nil)
                     self:setNetVar("ragdoll", nil)
-                    if self.liaStoredHealth then self:SetHealth(math.max(self.liaStoredHealth, 1)) end
-                    if not entity.liaNoReset then self:SetPos(entity:GetPos()) end
+                    if not entity.NoReset then self:SetPos(entity:GetPos()) end
                     self:SetNoDraw(false)
                     self:SetNotSolid(false)
                     self:Freeze(false)
                     self:SetMoveType(MOVETYPE_WALK)
-                    self:SetLocalVelocity(IsValid(entity) and entity.liaLastVelocity or vector_origin)
-                    self.liaStoredHealth = nil
-                    self.liaStoredMaxHealth = nil
+                    self:SetLocalVelocity(IsValid(entity) and entity.LastVelocity or vector_origin)
                 end
 
-                if IsValid(self) and not entity.liaIgnoreDelete then
-                    if entity.liaWeapons then
-                        for _, weaponClass in ipairs(entity.liaWeapons) do
-                            self:Give(weaponClass, true)
-                        end
-
-                        if entity.liaWeaponClips then
-                            for _, weapon in ipairs(self:GetWeapons()) do
-                                local weaponClass = weapon:GetClass()
-                                local clip = entity.liaWeaponClips[weaponClass]
-                                if clip and clip > 0 then weapon:SetClip1(clip) end
+                if IsValid(self) and not entity.IgnoreDelete then
+                    if entity.Weapons then
+                        for k, v in ipairs(entity.Weapons) do
+                            self:Give(v)
+                            if entity.Ammo then
+                                for k2, v2 in ipairs(entity.Ammo) do
+                                    if v == v2[1] then self:SetAmmo(v2[2], tostring(k2)) end
+                                end
                             end
                         end
 
-                        if entity.liaAmmo then
-                            for ammoType, reserve in pairs(entity.liaAmmo) do
-                                if reserve and reserve > 0 then self:SetAmmo(reserve, ammoType) end
-                            end
+                        for k, v in ipairs(self:GetWeapons()) do
+                            v:SetClip1(0)
                         end
                     end
 
-                    if isStuck(self) then
+                    if self:isStuck() then
                         entity:DropToFloor()
                         self:SetPos(entity:GetPos() + Vector(0, 0, 16))
                         local positions = lia.util.findEmptySpace(self, {entity, self})
-                        for _, pos in ipairs(positions) do
-                            self:SetPos(pos)
-                            if not isStuck(self) then return end
+                        for k, v in ipairs(positions) do
+                            self:SetPos(v)
+                            if not self:isStuck() then return end
                         end
                     end
                 end
             end)
 
-            if getUpGrace then entity.liaGrace = CurTime() + getUpGrace end
+            self:setLocalVar("blur", 25)
+            self.Ragdoll = entity
+            self:setNetVar("ragdoll", entity:EntIndex())
+            entity.Weapons = {}
+            entity.Ammo = {}
+            entity.Player = self
+            if getUpGrace then entity.Grace = CurTime() + getUpGrace end
             if time and time > 0 then
-                entity.liaStart = CurTime()
-                entity.liaFinish = entity.liaStart + time
-                self:setAction(getUpMessage, time)
+                entity.Start = CurTime()
+                entity.Finish = entity.Start + time
+                self:setAction("@wakingUp", nil, nil, entity.Start, entity.Finish)
             end
 
-            self:GodEnable()
+            for k, v in ipairs(self:GetWeapons()) do
+                entity.Weapons[#entity.Weapons + 1] = v:GetClass()
+                local clip = v:Clip1()
+                local reserve = self:GetAmmoCount(v:GetPrimaryAmmoType())
+                local ammo = clip + reserve
+                entity.Ammo[v:GetPrimaryAmmoType()] = {v:GetClass(), ammo}
+            end
+
+            self:GodDisable()
             self:StripWeapons()
             self:Freeze(true)
             self:SetNoDraw(true)
             self:SetNotSolid(true)
             self:SetMoveType(MOVETYPE_NONE)
             if time then
-                local uniqueID = "liaUnRagdoll" .. self:SteamID64()
-                timer.Create(uniqueID, 1.0, 0, function()
-                    if not IsValid(entity) or not IsValid(self) then
-                        timer.Remove(uniqueID)
-                        return
-                    end
+                local uniqueID = "UnRagdoll" .. self:SteamID()
+                timer.Create(uniqueID, 0.33, 0, function()
+                    if IsValid(entity) and IsValid(self) then
+                        local velocity = entity:GetVelocity()
+                        entity.LastVelocity = velocity
+                        self:SetPos(entity:GetPos())
+                        if velocity:Length2D() >= 8 then
+                            if not entity.Pausing then
+                                self:setAction()
+                                entity.Pausing = true
+                            end
+                            return
+                        elseif entity.Pausing then
+                            self:setAction("@wakingUp", time)
+                            entity.Pausing = false
+                        end
 
-                    local velocity = entity:GetVelocity()
-                    entity.liaLastVelocity = velocity
-                    self:SetPos(entity:GetPos())
-                    time = time - 1.0
-                    if time <= 0 then
+                        time = time - 0.33
+                        if time <= 0 then entity:Remove() end
+                    else
                         timer.Remove(uniqueID)
-                        self:setRagdolled(false)
                     end
                 end)
             end
 
-            if IsValid(entity) then
-                entity:SetCollisionGroup(COLLISION_GROUP_NONE)
-                entity:SetCustomCollisionCheck(false)
-            end
+            hook.Run("OnCharFallover", self, entity, true)
         else
-            ragdoll = self:GetRagdollEntity()
-            if IsValid(ragdoll) then
-                if ragdoll.liaWeapons then
-                    for _, weaponClass in ipairs(ragdoll.liaWeapons) do
-                        self:Give(weaponClass, true)
-                    end
-
-                    if ragdoll.liaWeaponClips then
-                        for _, weapon in ipairs(self:GetWeapons()) do
-                            local weaponClass = weapon:GetClass()
-                            local clip = ragdoll.liaWeaponClips[weaponClass]
-                            if clip and clip > 0 then weapon:SetClip1(clip) end
-                        end
-                    end
-
-                    if ragdoll.liaAmmo then
-                        for ammoType, reserve in pairs(ragdoll.liaAmmo) do
-                            if reserve and reserve > 0 then self:SetAmmo(reserve, ammoType) end
-                        end
-                    end
-                end
-
-                self:removeRagdoll()
-                self:GodDisable()
-                self:Freeze(false)
-                self:SetNoDraw(false)
-                self:SetNotSolid(false)
-                self:SetMoveType(MOVETYPE_WALK)
-            end
+            local rag = self.Ragdoll
+            if IsValid(rag) then rag:Remove() end
+            self:setLocalVar("blur", nil)
+            self:setNetVar("ragdoll", nil)
+            self:SetNoDraw(false)
+            self:SetNotSolid(false)
+            self:Freeze(false)
+            self:SetMoveType(MOVETYPE_WALK)
+            hook.Run("OnCharFallover", self, rag, false)
         end
     end
 
     --[[
     Purpose:
-        Sends all known net variables to this player.
+        Synchronizes networked variables for this player.
 
     When Called:
         Use when a player joins or needs a full resync.
 
     Parameters:
         None.
+
+    Returns:
+        None.
+
     Realm:
         Server
 

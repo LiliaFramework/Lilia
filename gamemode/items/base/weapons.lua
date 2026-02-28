@@ -258,6 +258,8 @@ end
 
 if CLIENT then
     function ITEM:getName()
+        local override = lia.item.WeaponOverrides and lia.item.WeaponOverrides[self.class]
+        if override and override.name then return isstring(override.name) and L(override.name) or override.name end
         local weapon = weapons.GetStored(self.class)
         if weapon and weapon.PrintName then return language.GetPhrase(weapon.PrintName) end
         return self.name

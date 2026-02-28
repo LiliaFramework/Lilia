@@ -563,6 +563,10 @@ function GM:PlayerSpawn(client)
         client.diedInRagdoll = nil
     end
 
+    for _, ent in ipairs(ents.FindByClass("prop_ragdoll")) do
+        if IsValid(ent) and ent:getNetVar("player") == client then ent:Remove() end
+    end
+
     if not client:getChar() then client:SetNoDraw(true) end
     hook.Run("PlayerLoadout", client)
 end
@@ -667,8 +671,15 @@ function GM:PlayerInitialSpawn(client)
         end
 
         timer.Simple(1, function() lia.playerinteract.sync(client) end)
-        timer.Simple(1, function() lia.dialog.syncToClients(client) end)
-        timer.Simple(1, function() if IsValid(client) then lia.doors.syncAllDoorsToClient(client) end end)
+        timer.Simple(2, function() lia.dialog.syncToClients(client) end)
+        timer.Simple(3, function() if IsValid(client) then lia.doors.syncAllDoorsToClient(client) end end)
+        timer.Simple(4, function()
+            net.Start("liaWeaponOverrideSync")
+            net.WriteBool(true)
+            net.WriteTable(lia.item.WeaponOverrides)
+            net.Send(client)
+        end)
+
         hook.Run("PlayerLiliaDataLoaded", client)
         net.Start("liaAssureClientSideAssets")
         net.Send(client)
@@ -735,6 +746,8 @@ function GM:SetupBotPlayer(client)
     character.isBot = true
     character.vars.inv = {}
     inventory.id = "bot" .. character:getID()
+    inventory.data = inventory.data or {}
+    inventory.data.char = character:getID()
     character.vars.inv[1] = inventory
     lia.inventory.instances[inventory.id] = inventory
     lia.char.addCharacter(botID, character)
@@ -743,20 +756,9 @@ function GM:SetupBotPlayer(client)
     character:sync()
     local randomMoney = math.random(1000, 10000)
     character:setMoney(randomMoney)
-    local itemCount = math.random(1, 2)
-    local itemKeys = {}
-    for k, _ in pairs(lia.item.list) do
-        table.insert(itemKeys, k)
-    end
-
-    for _ = 1, math.min(itemCount, #itemKeys) do
-        local randomIndex = math.random(1, #itemKeys)
-        local randomItemID = itemKeys[randomIndex]
-        inventory:add(randomItemID)
-        table.remove(itemKeys, randomIndex)
-    end
-
     client:Spawn()
+    timer.Simple(0.1, function() if IsValid(client) and client:IsBot() and client:getChar() then hook.Run("PlayerLoadedChar", client, client:getChar(), nil) end end)
+    hook.Run("PostBotSetup", client, character, inventory)
 end
 
 function GM:PlayerShouldTakeDamage(client)

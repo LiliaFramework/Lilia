@@ -3394,38 +3394,6 @@ Server-side hooks in the Lilia framework handle server-side logic, data persiste
 
 ---
 
-<details class="realm-server" id="function-onplayerragdolled">
-<summary><a id="OnPlayerRagdolled"></a>OnPlayerRagdolled(client, ragdoll)</summary>
-<div class="details-content">
-<h3 style="margin-bottom: 5px; font-weight: 700;"><a id="onplayerragdolled"></a>Purpose</h3>
-<div style="margin-left: 20px; margin-bottom: 20px;">
-  <p>Fired when a player is ragdolled (knocked out, physics ragdoll).</p>
-</div>
-
-<h3 style="margin-bottom: 5px; font-weight: 700;">When Called</h3>
-<div style="margin-left: 20px; margin-bottom: 20px;">
-  <p>Immediately after the ragdoll is created.</p>
-</div>
-
-<h3 style="margin-bottom: 5px; font-weight: 700;">Parameters</h3>
-<div style="margin-left: 20px; margin-bottom: 20px;">
-<p><span class="types"><a class="type" href="/development/meta/player/">Player</a></span> <span class="parameter">client</span> Player ragdolled.</p>
-<p><span class="types"><a class="type" href="/development/meta/entity/">Entity</a></span> <span class="parameter">ragdoll</span> Ragdoll entity created.</p>
-</div>
-
-<h3 style="margin-bottom: 5px; font-weight: 700;">Example Usage</h3>
-<div style="margin-left: 20px; margin-bottom: 20px;">
-<pre><code class="language-lua">  hook.Add("OnPlayerRagdolled", "TrackRagdoll", function(client, ragdoll)
-      ragdoll:SetCollisionGroup(COLLISION_GROUP_DEBRIS_TRIGGER)
-  end)
-</code></pre>
-</div>
-
-</div>
-</details>
-
----
-
 <details class="realm-server" id="function-onplayerswitchclass">
 <summary><a id="OnPlayerSwitchClass"></a>OnPlayerSwitchClass(client, class, oldClass)</summary>
 <div class="details-content">
@@ -5107,43 +5075,6 @@ Server-side hooks in the Lilia framework handle server-side logic, data persiste
 
 ---
 
-<details class="realm-server" id="function-shouldsaveitem">
-<summary><a id="ShouldSaveItem"></a>ShouldSaveItem(itemTable, entity)</summary>
-<div class="details-content">
-<h3 style="margin-bottom: 5px; font-weight: 700;"><a id="shouldsaveitem"></a>Purpose</h3>
-<div style="margin-left: 20px; margin-bottom: 20px;">
-  <p>Decide if an item should be saved to the database when dropped on the map.</p>
-</div>
-
-<h3 style="margin-bottom: 5px; font-weight: 700;">When Called</h3>
-<div style="margin-left: 20px; margin-bottom: 20px;">
-  <p>When an item entity is created and would normally be saved to the lia_saveditems table.</p>
-</div>
-
-<h3 style="margin-bottom: 5px; font-weight: 700;">Parameters</h3>
-<div style="margin-left: 20px; margin-bottom: 20px;">
-<p><span class="types"><a class="type" href="/development/libraries/item/">Item</a></span> <span class="parameter">itemTable</span> Item instance being saved.</p>
-<p><span class="types"><a class="type" href="/development/meta/entity/">Entity</a></span> <span class="parameter">entity</span> Item entity being saved.</p>
-</div>
-
-<h3 style="margin-bottom: 5px; font-weight: 700;">Returns</h3>
-<div style="margin-left: 20px; margin-bottom: 20px;">
-<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#2.1">boolean</a></span> False to prevent saving; true/nil to allow saving.</p>
-</div>
-
-<h3 style="margin-bottom: 5px; font-weight: 700;">Example Usage</h3>
-<div style="margin-left: 20px; margin-bottom: 20px;">
-<pre><code class="language-lua">  hook.Add("ShouldSaveItem", "NoSaveExplosives", function(itemTable, entity)
-      if itemTable.category == "Explosives" then return false end
-  end)
-</code></pre>
-</div>
-
-</div>
-</details>
-
----
-
 <details class="realm-server" id="function-shouldplaydeathsound">
 <summary><a id="ShouldPlayDeathSound"></a>ShouldPlayDeathSound(client, deathSound)</summary>
 <div class="details-content">
@@ -6111,6 +6042,321 @@ Server-side hooks in the Lilia framework handle server-side logic, data persiste
 <div style="margin-left: 20px; margin-bottom: 20px;">
 <pre><code class="language-lua">  hook.Add("OverrideVoiceHearingStatus", "BlockDTVoice", function(listener, speaker, baseCanHear)
       if speaker:getNetVar("dtScramblerEnabled", false) and listener:Team() ~= FACTION_DT then
+          return false
+      end
+  end)
+</code></pre>
+</div>
+
+</div>
+</details>
+
+---
+
+<details class="realm-server" id="function-oncharfallover">
+<summary><a id="OnCharFallover"></a>OnCharFallover(client, entity, state)</summary>
+<div class="details-content">
+<h3 style="margin-bottom: 5px; font-weight: 700;"><a id="oncharfallover"></a>Purpose</h3>
+<div style="margin-left: 20px; margin-bottom: 20px;">
+  <p>Fired when a character falls over (gets ragdolled or gets up from ragdoll).</p>
+</div>
+
+<h3 style="margin-bottom: 5px; font-weight: 700;">When Called</h3>
+<div style="margin-left: 20px; margin-bottom: 20px;">
+  <p>Immediately after a player is ragdolled (state = true) or gets up from ragdoll (state = false).</p>
+</div>
+
+<h3 style="margin-bottom: 5px; font-weight: 700;">Parameters</h3>
+<div style="margin-left: 20px; margin-bottom: 20px;">
+<p><span class="types"><a class="type" href="/development/meta/player/">Player</a></span> <span class="parameter">client</span> Player who fell over.</p>
+<p><span class="types"><a class="type" href="/development/meta/entity/">Entity</a></span> <span class="parameter">entity</span> Ragdoll entity (when falling) or last ragdoll (when getting up).</p>
+<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#2.1">boolean</a></span> <span class="parameter">state</span> True if falling over, false if getting up.</p>
+</div>
+
+<h3 style="margin-bottom: 5px; font-weight: 700;">Example Usage</h3>
+<div style="margin-left: 20px; margin-bottom: 20px;">
+<pre><code class="language-lua">  hook.Add("OnCharFallover", "TrackRagdollState", function(client, entity, state)
+      if state then
+          client:setNetVar("fallenOver", true)
+      else
+          client:setNetVar("fallenOver", nil)
+      end
+  end)
+</code></pre>
+</div>
+
+</div>
+</details>
+
+---
+
+<details class="realm-server" id="function-ondialognpctypeset">
+<summary><a id="OnDialogNPCTypeSet"></a>OnDialogNPCTypeSet(client, npc)</summary>
+<div class="details-content">
+<h3 style="margin-bottom: 5px; font-weight: 700;"><a id="ondialognpctypeset"></a>Purpose</h3>
+<div style="margin-left: 20px; margin-bottom: 20px;">
+  <p>Fired when an NPC's dialog type is set by an admin.</p>
+</div>
+
+<h3 style="margin-bottom: 5px; font-weight: 700;">When Called</h3>
+<div style="margin-left: 20px; margin-bottom: 20px;">
+  <p>After an admin sets the NPC type through the admin menu or commands.</p>
+</div>
+
+<h3 style="margin-bottom: 5px; font-weight: 700;">Parameters</h3>
+<div style="margin-left: 20px; margin-bottom: 20px;">
+<p><span class="types"><a class="type" href="/development/meta/player/">Player</a></span> <span class="parameter">client</span> Admin who set the NPC type.</p>
+<p><span class="types"><a class="type" href="/development/meta/entity/">Entity</a></span> <span class="parameter">npc</span> NPC entity that had its type set.</p>
+</div>
+
+<h3 style="margin-bottom: 5px; font-weight: 700;">Example Usage</h3>
+<div style="margin-left: 20px; margin-bottom: 20px;">
+<pre><code class="language-lua">  hook.Add("OnDialogNPCTypeSet", "LogNPCChanges", function(client, npc)
+      lia.log.add(client, "npcTypeSet", npc.NPCName or "Unknown")
+  end)
+</code></pre>
+</div>
+
+</div>
+</details>
+
+---
+
+<details class="realm-server" id="function-onweaponoverrideupdated">
+<summary><a id="OnWeaponOverrideUpdated"></a>OnWeaponOverrideUpdated(className, key, value)</summary>
+<div class="details-content">
+<h3 style="margin-bottom: 5px; font-weight: 700;"><a id="onweaponoverrideupdated"></a>Purpose</h3>
+<div style="margin-left: 20px; margin-bottom: 20px;">
+  <p>Fired when a weapon override is updated.</p>
+</div>
+
+<h3 style="margin-bottom: 5px; font-weight: 700;">When Called</h3>
+<div style="margin-left: 20px; margin-bottom: 20px;">
+  <p>After a weapon property override is changed and synchronized.</p>
+</div>
+
+<h3 style="margin-bottom: 5px; font-weight: 700;">Parameters</h3>
+<div style="margin-left: 20px; margin-bottom: 20px;">
+<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#2.1">string</a></span> <span class="parameter">className</span> Weapon class name.</p>
+<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#2.1">string</a></span> <span class="parameter">key</span> Property name that was overridden.</p>
+<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#2.1">any</a></span> <span class="parameter">value</span> New value for the property.</p>
+</div>
+
+<h3 style="margin-bottom: 5px; font-weight: 700;">Example Usage</h3>
+<div style="margin-left: 20px; margin-bottom: 20px;">
+<pre><code class="language-lua">  hook.Add("OnWeaponOverrideUpdated", "LogWeaponChanges", function(className, key, value)
+      lia.log.add(nil, "weaponOverride", className, key, tostring(value))
+  end)
+</code></pre>
+</div>
+
+</div>
+</details>
+
+---
+
+<details class="realm-server" id="function-onweaponoverridesbulksynced">
+<summary><a id="OnWeaponOverridesBulkSynced"></a>OnWeaponOverridesBulkSynced(overrides)</summary>
+<div class="details-content">
+<h3 style="margin-bottom: 5px; font-weight: 700;"><a id="onweaponoverridesbulksynced"></a>Purpose</h3>
+<div style="margin-left: 20px; margin-bottom: 20px;">
+  <p>Fired when weapon overrides are bulk synchronized to clients.</p>
+</div>
+
+<h3 style="margin-bottom: 5px; font-weight: 700;">When Called</h3>
+<div style="margin-left: 20px; margin-bottom: 20px;">
+  <p>After all weapon overrides are sent to a client during initialization.</p>
+</div>
+
+<h3 style="margin-bottom: 5px; font-weight: 700;">Parameters</h3>
+<div style="margin-left: 20px; margin-bottom: 20px;">
+<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#2.1">table</a></span> <span class="parameter">overrides</span> Table of all weapon overrides.</p>
+</div>
+
+<h3 style="margin-bottom: 5px; font-weight: 700;">Example Usage</h3>
+<div style="margin-left: 20px; margin-bottom: 20px;">
+<pre><code class="language-lua">  hook.Add("OnWeaponOverridesBulkSynced", "ProcessOverrides", function(overrides)
+      PrintTable(overrides)
+  end)
+</code></pre>
+</div>
+
+</div>
+</details>
+
+---
+
+<details class="realm-server" id="function-playerbodygroupchanged">
+<summary><a id="PlayerBodyGroupChanged"></a>PlayerBodyGroupChanged(client, oldVar, value)</summary>
+<div class="details-content">
+<h3 style="margin-bottom: 5px; font-weight: 700;"><a id="playerbodygroupchanged"></a>Purpose</h3>
+<div style="margin-left: 20px; margin-bottom: 20px;">
+  <p>Fired when a character's bodygroups are changed.</p>
+</div>
+
+<h3 style="margin-bottom: 5px; font-weight: 700;">When Called</h3>
+<div style="margin-left: 20px; margin-bottom: 20px;">
+  <p>After a character's bodygroups are updated and synchronized.</p>
+</div>
+
+<h3 style="margin-bottom: 5px; font-weight: 700;">Parameters</h3>
+<div style="margin-left: 20px; margin-bottom: 20px;">
+<p><span class="types"><a class="type" href="/development/meta/player/">Player</a></span> <span class="parameter">client</span> Player whose bodygroups changed.</p>
+<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#2.1">table</a></span> <span class="parameter">oldVar</span> Previous bodygroups table.</p>
+<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#2.1">table</a></span> <span class="parameter">value</span> New bodygroups table.</p>
+</div>
+
+<h3 style="margin-bottom: 5px; font-weight: 700;">Example Usage</h3>
+<div style="margin-left: 20px; margin-bottom: 20px;">
+<pre><code class="language-lua">  hook.Add("PlayerBodyGroupChanged", "LogBodyGroupChanges", function(client, oldVar, value)
+      lia.log.add(client, "bodyGroupChanged", util.TableToJSON(oldVar), util.TableToJSON(value))
+  end)
+</code></pre>
+</div>
+
+</div>
+</details>
+
+---
+
+<details class="realm-server" id="function-postbotsetup">
+<summary><a id="PostBotSetup"></a>PostBotSetup(client, character, inventory)</summary>
+<div class="details-content">
+<h3 style="margin-bottom: 5px; font-weight: 700;"><a id="postbotsetup"></a>Purpose</h3>
+<div style="margin-left: 20px; margin-bottom: 20px;">
+  <p>Fired after a bot character is fully set up.</p>
+</div>
+
+<h3 style="margin-bottom: 5px; font-weight: 700;">When Called</h3>
+<div style="margin-left: 20px; margin-bottom: 20px;">
+  <p>After a bot is created, given a character, inventory, and spawned.</p>
+</div>
+
+<h3 style="margin-bottom: 5px; font-weight: 700;">Parameters</h3>
+<div style="margin-left: 20px; margin-bottom: 20px;">
+<p><span class="types"><a class="type" href="/development/meta/player/">Player</a></span> <span class="parameter">client</span> Bot player entity.</p>
+<p><span class="types"><a class="type" href="/development/libraries/character/">Character</a></span> <span class="parameter">character</span> Bot's character data.</p>
+<p><span class="types"><a class="type" href="/development/libraries/inventory/">Inventory</a></span> <span class="parameter">inventory</span> Bot's inventory.</p>
+</div>
+
+<h3 style="margin-bottom: 5px; font-weight: 700;">Example Usage</h3>
+<div style="margin-left: 20px; margin-bottom: 20px;">
+<pre><code class="language-lua">  hook.Add("PostBotSetup", "ConfigureBot", function(client, character, inventory)
+      client:SetHealth(100)
+      client:SetArmor(50)
+  end)
+</code></pre>
+</div>
+
+</div>
+</details>
+
+---
+
+<details class="realm-server" id="function-shouldentityload">
+<summary><a id="ShouldEntityLoad"></a>ShouldEntityLoad(ent)</summary>
+<div class="details-content">
+<h3 style="margin-bottom: 5px; font-weight: 700;"><a id="shouldentityload"></a>Purpose</h3>
+<div style="margin-left: 20px; margin-bottom: 20px;">
+  <p>Determine if a persistent entity should be loaded on server start.</p>
+</div>
+
+<h3 style="margin-bottom: 5px; font-weight: 700;">When Called</h3>
+<div style="margin-left: 20px; margin-bottom: 20px;">
+  <p>During server startup when loading persistent entities from saved data.</p>
+</div>
+
+<h3 style="margin-bottom: 5px; font-weight: 700;">Parameters</h3>
+<div style="margin-left: 20px; margin-bottom: 20px;">
+<p><span class="types"><a class="type" href="/development/meta/entity/">Entity</a></span> <span class="parameter">ent</span> Entity data being considered for loading.</p>
+</div>
+
+<h3 style="margin-bottom: 5px; font-weight: 700;">Returns</h3>
+<div style="margin-left: 20px; margin-bottom: 20px;">
+<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#2.1">boolean</a></span> Return false to prevent the entity from loading.</p>
+</div>
+
+<h3 style="margin-bottom: 5px; font-weight: 700;">Example Usage</h3>
+<div style="margin-left: 20px; margin-bottom: 20px;">
+<pre><code class="language-lua">  hook.Add("ShouldEntityLoad", "FilterEntities", function(ent)
+      if ent.class == "prop_physics" and ent.model == "models/error.mdl" then
+          return false
+      end
+  end)
+</code></pre>
+</div>
+
+</div>
+</details>
+
+---
+
+<details class="realm-server" id="function-shouldentitysave">
+<summary><a id="ShouldEntitySave"></a>ShouldEntitySave(ent)</summary>
+<div class="details-content">
+<h3 style="margin-bottom: 5px; font-weight: 700;"><a id="shouldentitysave"></a>Purpose</h3>
+<div style="margin-left: 20px; margin-bottom: 20px;">
+  <p>Determine if a persistent entity should be saved to data.</p>
+</div>
+
+<h3 style="margin-bottom: 5px; font-weight: 700;">When Called</h3>
+<div style="margin-left: 20px; margin-bottom: 20px;">
+  <p>During data save operations and when entities become persistent.</p>
+</div>
+
+<h3 style="margin-bottom: 5px; font-weight: 700;">Parameters</h3>
+<div style="margin-left: 20px; margin-bottom: 20px;">
+<p><span class="types"><a class="type" href="/development/meta/entity/">Entity</a></span> <span class="parameter">ent</span> Entity being considered for saving.</p>
+</div>
+
+<h3 style="margin-bottom: 5px; font-weight: 700;">Returns</h3>
+<div style="margin-left: 20px; margin-bottom: 20px;">
+<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#2.1">boolean</a></span> Return false to prevent the entity from being saved.</p>
+</div>
+
+<h3 style="margin-bottom: 5px; font-weight: 700;">Example Usage</h3>
+<div style="margin-left: 20px; margin-bottom: 20px;">
+<pre><code class="language-lua">  hook.Add("ShouldEntitySave", "ExcludeTempEntities", function(ent)
+      if ent:GetClass() == "prop_dynamic" and ent:GetNWBool("temporary") then
+          return false
+      end
+  end)
+</code></pre>
+</div>
+
+</div>
+</details>
+
+---
+
+<details class="realm-server" id="function-shouldsaveitem">
+<summary><a id="ShouldSaveItem"></a>ShouldSaveItem(itemTable, entity)</summary>
+<div class="details-content">
+<h3 style="margin-bottom: 5px; font-weight: 700;"><a id="shouldsaveitem"></a>Purpose</h3>
+<div style="margin-left: 20px; margin-bottom: 20px;">
+  <p>Determine if an item should be saved to the database.</p>
+</div>
+
+<h3 style="margin-bottom: 5px; font-weight: 700;">When Called</h3>
+<div style="margin-left: 20px; margin-bottom: 20px;">
+  <p>When an item entity is being saved to persistent storage.</p>
+</div>
+
+<h3 style="margin-bottom: 5px; font-weight: 700;">Parameters</h3>
+<div style="margin-left: 20px; margin-bottom: 20px;">
+<p><span class="types"><a class="type" href="/development/libraries/item/">Item</a></span> <span class="parameter">itemTable</span> Item table containing item data.</p>
+<p><span class="types"><a class="type" href="/development/meta/entity/">Entity</a></span> <span class="parameter">entity</span> Item entity being saved.</p>
+</div>
+
+<h3 style="margin-bottom: 5px; font-weight: 700;">Returns</h3>
+<div style="margin-left: 20px; margin-bottom: 20px;">
+<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#2.1">boolean</a></span> Return false to prevent the item from being saved.</p>
+</div>
+
+<h3 style="margin-bottom: 5px; font-weight: 700;">Example Usage</h3>
+<div style="margin-left: 20px; margin-bottom: 20px;">
+<pre><code class="language-lua">  hook.Add("ShouldSaveItem", "ExcludeTempItems", function(itemTable, entity)
+      if itemTable.temp or itemTable.uniqueID:find("temp_") then
           return false
       end
   end)

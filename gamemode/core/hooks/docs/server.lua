@@ -2786,31 +2786,6 @@ end
 
 --[[
     Purpose:
-        Fired when a player is ragdolled (knocked out, physics ragdoll).
-
-    When Called:
-        Immediately after the ragdoll is created.
-
-    Parameters:
-        client (Player)
-            Player ragdolled.
-        ragdoll (Entity)
-            Ragdoll entity created.
-    Realm:
-        Server
-
-    Example Usage:
-        ```lua
-            hook.Add("OnPlayerRagdolled", "TrackRagdoll", function(client, ragdoll)
-                ragdoll:SetCollisionGroup(COLLISION_GROUP_DEBRIS_TRIGGER)
-            end)
-        ```
-]]
-function OnPlayerRagdolled(client, ragdoll)
-end
-
---[[
-    Purpose:
         Notifies that a player switched to a different class.
 
     When Called:
@@ -4997,4 +4972,263 @@ end
         ```
 ]]
 function OverrideVoiceHearingStatus(listener, speaker, baseCanHear)
+end
+
+--[[
+    Purpose:
+        Fired when a character falls over (gets ragdolled or gets up from ragdoll).
+
+    When Called:
+        Immediately after a player is ragdolled (state = true) or gets up from ragdoll (state = false).
+
+    Parameters:
+        client (Player)
+            Player who fell over.
+        entity (Entity)
+            Ragdoll entity (when falling) or last ragdoll (when getting up).
+        state (boolean)
+            True if falling over, false if getting up.
+
+    Realm:
+        Server
+
+    Example Usage:
+        ```lua
+            hook.Add("OnCharFallover", "TrackRagdollState", function(client, entity, state)
+                if state then
+                    client:setNetVar("fallenOver", true)
+                else
+                    client:setNetVar("fallenOver", nil)
+                end
+            end)
+        ```
+]]
+function OnCharFallover(client, entity, state)
+end
+
+--[[
+    Purpose:
+        Fired when an NPC's dialog type is set by an admin.
+
+    When Called:
+        After an admin sets the NPC type through the admin menu or commands.
+
+    Parameters:
+        client (Player)
+            Admin who set the NPC type.
+        npc (Entity)
+            NPC entity that had its type set.
+
+    Realm:
+        Server
+
+    Example Usage:
+        ```lua
+            hook.Add("OnDialogNPCTypeSet", "LogNPCChanges", function(client, npc)
+                lia.log.add(client, "npcTypeSet", npc.NPCName or "Unknown")
+            end)
+        ```
+]]
+function OnDialogNPCTypeSet(client, npc)
+end
+
+--[[
+    Purpose:
+        Fired when a weapon override is updated.
+
+    When Called:
+        After a weapon property override is changed and synchronized.
+
+    Parameters:
+        className (string)
+            Weapon class name.
+        key (string)
+            Property name that was overridden.
+        value (any)
+            New value for the property.
+
+    Realm:
+        Server
+
+    Example Usage:
+        ```lua
+            hook.Add("OnWeaponOverrideUpdated", "LogWeaponChanges", function(className, key, value)
+                lia.log.add(nil, "weaponOverride", className, key, tostring(value))
+            end)
+        ```
+]]
+function OnWeaponOverrideUpdated(className, key, value)
+end
+
+--[[
+    Purpose:
+        Fired when weapon overrides are bulk synchronized to clients.
+
+    When Called:
+        After all weapon overrides are sent to a client during initialization.
+
+    Parameters:
+        overrides (table)
+            Table of all weapon overrides.
+
+    Realm:
+        Server
+
+    Example Usage:
+        ```lua
+            hook.Add("OnWeaponOverridesBulkSynced", "ProcessOverrides", function(overrides)
+                PrintTable(overrides)
+            end)
+        ```
+]]
+function OnWeaponOverridesBulkSynced(overrides)
+end
+
+--[[
+    Purpose:
+        Fired when a character's bodygroups are changed.
+
+    When Called:
+        After a character's bodygroups are updated and synchronized.
+
+    Parameters:
+        client (Player)
+            Player whose bodygroups changed.
+        oldVar (table)
+            Previous bodygroups table.
+        value (table)
+            New bodygroups table.
+
+    Realm:
+        Server
+
+    Example Usage:
+        ```lua
+            hook.Add("PlayerBodyGroupChanged", "LogBodyGroupChanges", function(client, oldVar, value)
+                lia.log.add(client, "bodyGroupChanged", util.TableToJSON(oldVar), util.TableToJSON(value))
+            end)
+        ```
+]]
+function PlayerBodyGroupChanged(client, oldVar, value)
+end
+
+--[[
+    Purpose:
+        Fired after a bot character is fully set up.
+
+    When Called:
+        After a bot is created, given a character, inventory, and spawned.
+
+    Parameters:
+        client (Player)
+            Bot player entity.
+        character (Character)
+            Bot's character data.
+        inventory (Inventory)
+            Bot's inventory.
+
+    Realm:
+        Server
+
+    Example Usage:
+        ```lua
+            hook.Add("PostBotSetup", "ConfigureBot", function(client, character, inventory)
+                client:SetHealth(100)
+                client:SetArmor(50)
+            end)
+        ```
+]]
+function PostBotSetup(client, character, inventory)
+end
+
+--[[
+    Purpose:
+        Determine if a persistent entity should be loaded on server start.
+
+    When Called:
+        During server startup when loading persistent entities from saved data.
+
+    Parameters:
+        ent (Entity)
+            Entity data being considered for loading.
+
+    Returns:
+        boolean
+            Return false to prevent the entity from loading.
+
+    Realm:
+        Server
+
+    Example Usage:
+        ```lua
+            hook.Add("ShouldEntityLoad", "FilterEntities", function(ent)
+                if ent.class == "prop_physics" and ent.model == "models/error.mdl" then
+                    return false
+                end
+            end)
+        ```
+]]
+function ShouldEntityLoad(ent)
+end
+
+--[[
+    Purpose:
+        Determine if a persistent entity should be saved to data.
+
+    When Called:
+        During data save operations and when entities become persistent.
+
+    Parameters:
+        ent (Entity)
+            Entity being considered for saving.
+
+    Returns:
+        boolean
+            Return false to prevent the entity from being saved.
+
+    Realm:
+        Server
+
+    Example Usage:
+        ```lua
+            hook.Add("ShouldEntitySave", "ExcludeTempEntities", function(ent)
+                if ent:GetClass() == "prop_dynamic" and ent:GetNWBool("temporary") then
+                    return false
+                end
+            end)
+        ```
+]]
+function ShouldEntitySave(ent)
+end
+
+--[[
+    Purpose:
+        Determine if an item should be saved to the database.
+
+    When Called:
+        When an item entity is being saved to persistent storage.
+
+    Parameters:
+        itemTable (Item)
+            Item table containing item data.
+        entity (Entity)
+            Item entity being saved.
+
+    Returns:
+        boolean
+            Return false to prevent the item from being saved.
+
+    Realm:
+        Server
+
+    Example Usage:
+        ```lua
+            hook.Add("ShouldSaveItem", "ExcludeTempItems", function(itemTable, entity)
+                if itemTable.temp or itemTable.uniqueID:find("temp_") then
+                    return false
+                end
+            end)
+        ```
+]]
+function ShouldSaveItem(itemTable, entity)
 end

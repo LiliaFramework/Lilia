@@ -94,6 +94,7 @@ function PANEL:onDisplay()
 
             icon:SetModel(model, skin, bodyGroups)
             icon.model, icon.skin, icon.bodyGroups = model, skin, bodyGroups
+            hook.Run("OnCharacterCreationModelIconSet", icon, model, skin, bodyGroups)
             if self:getContext("model") == idx then self:onModelSelected(icon, true) end
         end
     end

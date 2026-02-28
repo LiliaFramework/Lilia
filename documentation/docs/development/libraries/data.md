@@ -9,6 +9,27 @@ Data persistence, serialization, and management system for the Lilia framework.
 The data library provides comprehensive functionality for data persistence, serialization, and management within the Lilia framework. It handles encoding and decoding of complex data types including vectors, angles, colors, and nested tables for database storage. The library manages both general data storage with gamemode and map-specific scoping, as well as entity persistence for maintaining spawned entities across server restarts. It includes automatic serialization/deserialization, database integration, and caching mechanisms to ensure efficient data access and storage operations.
 </div>
 
+<h3 style="margin-bottom: 5px;">Standardized Data Storage</h3>
+<div style="margin-left: 20px; margin-bottom: 20px;">
+<strong>Important:</strong> All Lilia server-side data should use <code>lia.data</code> for persistence instead of direct file operations. This ensures consistent storage locations, proper data serialization, and unified scoping.
+
+<p><strong>Storage Location:</strong> Data is saved to <code>lilia/{gamemode}_{scope}_map.json</code> files, such as:</p>
+<ul>
+<li><code>lilia/global_global_map.json</code> - Global data</li>
+<li><code>lilia/lilia_rp_global_map.json</code> - Gamemode-specific data</li>
+<li><code>lilia/lilia_rp_rp_nycity_map.json</code> - Map-specific data</li>
+</ul>
+
+<p><strong>Systems Using lia.data:</strong></p>
+<ul>
+<li><code>lia.config</code> - Server configuration</li>
+<li><code>lia.item.WeaponOverrides</code> - Weapon override settings</li>
+<li>Entity persistence system</li>
+</ul>
+
+<p><strong>Client-Side Data:</strong> Client-specific data like keybinds and options should continue using direct file writes to <code>lilia/</code> directory, as <code>lia.data</code> is server-side only.</p>
+</div>
+
 ---
 
 <details class="realm-server" id="function-liadataencodetable">

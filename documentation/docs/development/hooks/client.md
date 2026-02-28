@@ -2229,41 +2229,6 @@ Client-side hooks in the Lilia framework handle UI, rendering, input, and other 
 
 ---
 
-<details class="realm-client" id="function-inventoryitemdatachanged">
-<summary><a id="InventoryItemDataChanged"></a>InventoryItemDataChanged(item, key, oldValue, newValue, inventory)</summary>
-<div class="details-content">
-<h3 style="margin-bottom: 5px; font-weight: 700;"><a id="inventoryitemdatachanged"></a>Purpose</h3>
-<div style="margin-left: 20px; margin-bottom: 20px;">
-  <p>Respond to item data changes that arrive on the client.</p>
-</div>
-
-<h3 style="margin-bottom: 5px; font-weight: 700;">When Called</h3>
-<div style="margin-left: 20px; margin-bottom: 20px;">
-  <p>After an item’s data table updates (networked from the server).</p>
-</div>
-
-<h3 style="margin-bottom: 5px; font-weight: 700;">Parameters</h3>
-<div style="margin-left: 20px; margin-bottom: 20px;">
-<p><span class="types"><a class="type" href="/development/libraries/item/">Item</a></span> <span class="parameter">item</span> The item that changed.</p>
-<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#2.1">string</a></span> <span class="parameter">key</span> Data key that changed.</p>
-<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#2.1">any</a></span> <span class="parameter">oldValue</span> Previous value.</p>
-<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#2.1">any</a></span> <span class="parameter">newValue</span> New value.</p>
-<p><span class="types"><a class="type" href="/development/libraries/inventory/">Inventory</a></span> <span class="parameter">inventory</span> Inventory containing the item.</p>
-</div>
-
-<h3 style="margin-bottom: 5px; font-weight: 700;">Example Usage</h3>
-<div style="margin-left: 20px; margin-bottom: 20px;">
-<pre><code class="language-lua">  hook.Add("InventoryItemDataChanged", "ExampleInventoryItemDataChanged", function(...)
-      -- add custom client-side behavior
-  end)
-</code></pre>
-</div>
-
-</div>
-</details>
-
----
-
 <details class="realm-client" id="function-inventoryitemiconcreated">
 <summary><a id="InventoryItemIconCreated"></a>InventoryItemIconCreated(icon, item, inventoryPanel)</summary>
 <div class="details-content">
@@ -4489,9 +4454,6 @@ Client-side hooks in the Lilia framework handle UI, rendering, input, and other 
 <pre><code class="language-lua">  hook.Add("WebSoundDownloaded", "ExampleWebSoundDownloaded", function(...)
       -- add custom client-side behavior
   end)
-</code></pre>
-</div>
-
 </div>
 </details>
 
