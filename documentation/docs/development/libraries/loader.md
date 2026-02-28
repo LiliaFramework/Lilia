@@ -34,7 +34,7 @@ The loader library is the core initialization system for the Lilia framework, re
 <div style="margin-left: 20px; margin-bottom: 20px;">
 <pre><code class="language-lua">  -- Force client-only include for a UI helper.
   lia.loader.include("lilia/gamemode/core/ui/cl_helper.lua", "client")
-  -- Auto-detect realm from prefix (sv_/cl_/).
+  -- Auto-detect realm from prefix (sv_/cl_/sh_).
   lia.loader.include("modules/sv_custom.lua")
 </code></pre>
 </div>
@@ -82,7 +82,7 @@ The loader library is the core initialization system for the Lilia framework, re
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="lialoaderincludegroupeddir"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
-  <p>Include a directory grouping files by realm (sv_/cl_/) with optional recursion.</p>
+  <p>Include a directory grouping files by realm (sv_/cl_/sh_) with optional recursion.</p>
 </div>
 
 <h3 style="margin-bottom: 5px; font-weight: 700;">When Called</h3>
@@ -100,7 +100,7 @@ The loader library is the core initialization system for the Lilia framework, re
 
 <h3 style="margin-bottom: 5px; font-weight: 700;">Example Usage</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
-<pre><code class="language-lua">  -- Load all plugin folders, respecting sv_/cl_/ prefixes.
+<pre><code class="language-lua">  -- Load all plugin folders, respecting sv_/cl_/sh_ prefixes.
   lia.loader.includeGroupedDir("modules", false, true)
 </code></pre>
 </div>
@@ -354,3 +354,4 @@ The loader library is the core initialization system for the Lilia framework, re
 </details>
 
 ---
+
