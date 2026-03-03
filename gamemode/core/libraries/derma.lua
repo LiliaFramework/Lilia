@@ -137,7 +137,7 @@ function lia.derma.optionsMenu(rawOptions, config)
     elseif mode == "interaction" then
         if not IsValid(ent) then return end
         for id, option in pairs(rawOptions or {}) do
-            if option.type == "interaction" and lia.playerinteract then
+            if option.type == "interaction" then
                 local maxRange = option.range and math.min(option.range, 100) or 100
                 if lia.playerinteract.isWithinRange(client, ent, maxRange) then
                     local targetType = option.target or "player"

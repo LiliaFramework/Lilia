@@ -15,6 +15,10 @@ This section contains generators and templates for creating Lilia framework comp
     <h3>Faction Generator</h3>
     <p>Code templates and examples for creating factions.</p>
   </a>
+  <a href="./gathering/" class="card">
+    <h3>Gathering Generator</h3>
+    <p>Code templates and examples for creating gatherable resource entities.</p>
+  </a>
 </div>
 
 ## Item Generators

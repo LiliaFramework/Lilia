@@ -1427,12 +1427,35 @@ lia.config.add("DoorLockTime", "doorLockTime", 0.5, nil, {
 lia.config.add("DoorSellRatio", "doorSellRatio", 0.5, nil, {
     desc = "doorSellRatioDesc",
     category = "Core",
-    type = "Number",
     min = 0.1,
     max = 1.0
 })
 
+lia.config.add("MainMenuUseLastPos", "mainMenuUseLastPos", true, nil, {
+    desc = "mainMenuUseLastPosDesc",
+})
+
 hook.Add("PopulateConfigurationButtons", "liaConfigPopulate", function(pages)
+    local function SetStyledTooltip(panel, text)
+        if not text or text == "" then return end
+        panel:SetTooltip(text)
+        local oldSetTooltip = panel.SetTooltip
+        function panel:SetTooltip(tooltipText)
+            oldSetTooltip(self, tooltipText)
+            timer.Simple(0, function()
+                if not IsValid(self) then return end
+                local tooltip = vgui.GetTooltipPanel()
+                if IsValid(tooltip) and not tooltip.LiliaStyled then
+                    tooltip.LiliaStyled = true
+                    function tooltip:Paint(w, h)
+                        local bgColor = Color(25, 28, 35, 250)
+                        lia.derma.rect(0, 0, w, h):Rad(8):Color(bgColor):Shape(lia.derma.SHAPE_IOS):Draw()
+                    end
+                end
+            end)
+        end
+    end
+
     local function AddHeader(scroll, text)
         local header = scroll:Add("DPanel")
         header:Dock(TOP)
@@ -1459,6 +1482,8 @@ hook.Add("PopulateConfigurationButtons", "liaConfigPopulate", function(pages)
         p:SetTall(45)
         p:DockMargin(0, 0, 0, 5)
         p.Paint = function(s, w, h) lia.derma.rect(0, 0, w, h):Rad(6):Color(Color(35, 38, 45, 180)):Shape(lia.derma.SHAPE_IOS):Draw() end
+        local description = (config.data and config.data.desc) or config.desc or ""
+        SetStyledTooltip(p, description)
         local l = p:Add("DLabel")
         l:Dock(LEFT)
         l:DockMargin(15, 0, 0, 0)
@@ -1467,14 +1492,15 @@ hook.Add("PopulateConfigurationButtons", "liaConfigPopulate", function(pages)
         l:SetFont("LiliaFont.18")
         l:SetTextColor(lia.color.theme.text or color_white)
         l:SetContentAlignment(4)
-        l:SetTooltip(config.desc or "")
-        local type = config.data and config.data.type or config.type or "Generic"
-        if type == "Boolean" then
+        SetStyledTooltip(l, description)
+        local configType = config.data and config.data.type or config.type or "Generic"
+        if configType == "Boolean" then
             local checkbox = p:Add("liaCheckbox")
             checkbox:Dock(RIGHT)
             checkbox:DockMargin(0, 10, 15, 10)
             checkbox:SetWidth(25)
             checkbox:SetChecked(lia.config.get(key, config.value))
+            SetStyledTooltip(checkbox, description)
             checkbox.OnChange = function(s, val)
                 net.Start("liaCfgSet")
                 net.WriteString(key)
@@ -1482,23 +1508,24 @@ hook.Add("PopulateConfigurationButtons", "liaConfigPopulate", function(pages)
                 net.WriteType(val)
                 net.SendToServer()
             end
-        elseif type == "Number" or type == "Int" or type == "Float" or type == "Generic" then
+        elseif configType == "Number" or configType == "Int" or configType == "Float" or configType == "Generic" then
             local entry = p:Add("liaEntry")
             entry:Dock(RIGHT)
             entry:SetWidth(200)
             entry:DockMargin(0, 8, 15, 8)
             entry:SetValue(tostring(lia.config.get(key, config.value)))
             entry:SetFont("LiliaFont.18")
+            SetStyledTooltip(entry, description)
             entry.textEntry.OnEnter = function(s)
                 local value = entry:GetValue()
                 local numValue = tonumber(value)
-                if (type == "Number" or type == "Int" or type == "Float") and numValue ~= nil then
+                if (configType == "Number" or configType == "Int" or configType == "Float") and numValue ~= nil then
                     net.Start("liaCfgSet")
                     net.WriteString(key)
                     net.WriteString(name)
                     net.WriteType(numValue)
                     net.SendToServer()
-                elseif type == "Generic" then
+                elseif configType == "Generic" then
                     net.Start("liaCfgSet")
                     net.WriteString(key)
                     net.WriteString(name)
@@ -1508,12 +1535,13 @@ hook.Add("PopulateConfigurationButtons", "liaConfigPopulate", function(pages)
                     entry:SetValue(tostring(lia.config.get(key, config.value)))
                 end
             end
-        elseif type == "Color" then
+        elseif configType == "Color" then
             local button = p:Add("liaButton")
             button:Dock(RIGHT)
             button:SetWidth(200)
             button:DockMargin(0, 8, 15, 8)
             button:SetText("")
+            SetStyledTooltip(button, description)
             button.Paint = function(s, w, h)
                 local c = lia.config.get(key, config.value)
                 if istable(c) and c.r and c.g and c.b then
@@ -1537,13 +1565,14 @@ hook.Add("PopulateConfigurationButtons", "liaConfigPopulate", function(pages)
                     net.SendToServer()
                 end, c)
             end
-        elseif type == "Table" then
+        elseif configType == "Table" then
             local combo = p:Add("liaComboBox")
             combo:Dock(RIGHT)
             combo:SetWidth(200)
             combo:DockMargin(0, 8, 15, 8)
             combo:SetValue(tostring(lia.config.get(key, config.value)))
             combo:SetFont("LiliaFont.18")
+            SetStyledTooltip(combo, description)
             local options = lia.config.getOptions(key)
             for _, text in pairs(options) do
                 combo:AddChoice(text, text)
@@ -1560,151 +1589,104 @@ hook.Add("PopulateConfigurationButtons", "liaConfigPopulate", function(pages)
     end
 
     if hook.Run("CanPlayerModifyConfig", LocalPlayer()) ~= false then
+        net.Start("liaCfgList")
+        net.SendToServer()
+        local uniqueTabConfigs = {}
+        local regularConfigs = {}
+        for k, v in pairs(lia.config.stored) do
+            if v.data and v.data.uniqueTab then
+                uniqueTabConfigs[k] = v
+            else
+                regularConfigs[k] = v
+            end
+        end
+
+        local categoryPages = {}
+        for key, config in pairs(uniqueTabConfigs) do
+            local category = config.category or "Core"
+            if not categoryPages[category] then
+                categoryPages[category] = {
+                    configs = {},
+                    name = L(category)
+                }
+            end
+
+            table.insert(categoryPages[category].configs, {
+                key = key,
+                config = config
+            })
+        end
+
+        for category, pageData in pairs(categoryPages) do
+            pages[#pages + 1] = {
+                name = pageData.name,
+                drawFunc = function(parent)
+                    parent:Clear()
+                    parent:DockPadding(10, 10, 10, 10)
+                    local scroll = parent:Add("liaScrollPanel")
+                    scroll:Dock(FILL)
+                    scroll:GetCanvas():DockPadding(0, 0, 0, 0)
+                    for _, configInfo in ipairs(pageData.configs) do
+                        AddField(scroll, configInfo.key, configInfo.config.name, configInfo.config)
+                    end
+                end
+            }
+        end
+
         pages[#pages + 1] = {
             name = "categoryConfiguration",
             drawFunc = function(parent)
-                net.Start("liaCfgList")
-                net.SendToServer()
                 parent:Clear()
-                local hasUniqueTabs = false
-                local uniqueTabConfigs = {}
-                local regularConfigs = {}
-                for k, v in pairs(lia.config.stored) do
-                    if v.data and v.data.uniqueTab then
-                        hasUniqueTabs = true
-                        uniqueTabConfigs[k] = v
-                    else
-                        regularConfigs[k] = v
+                local searchEntry = parent:Add("liaEntry")
+                searchEntry:Dock(TOP)
+                searchEntry:SetTall(35)
+                searchEntry:DockMargin(10, 10, 10, 10)
+                searchEntry:SetPlaceholderText(L("searchConfigs") or "Search configurations...")
+                searchEntry:SetFont("LiliaFont.18")
+                local scroll = parent:Add("liaScrollPanel")
+                scroll:Dock(FILL)
+                scroll:GetCanvas():DockPadding(10, 10, 10, 10)
+                local function populate(filter)
+                    scroll:Clear()
+                    filter = filter and filter:len() > 0 and filter:lower() or nil
+                    local categories = {}
+                    for k, v in pairs(regularConfigs) do
+                        local cat = v.category or "Core"
+                        categories[cat] = categories[cat] or {}
+                        table.insert(categories[cat], {
+                            key = k,
+                            name = v.name,
+                            config = v
+                        })
+                    end
+
+                    local sortedCategories = {}
+                    for cat, items in pairs(categories) do
+                        table.insert(sortedCategories, cat)
+                    end
+
+                    table.sort(sortedCategories)
+                    for _, cat in ipairs(sortedCategories) do
+                        local items = categories[cat]
+                        table.sort(items, function(a, b) return a.name < b.name end)
+                        local visibleItems = {}
+                        for _, item in ipairs(items) do
+                            if not filter or item.name:lower():find(filter, 1, true) or cat:lower():find(filter, 1, true) then table.insert(visibleItems, item) end
+                        end
+
+                        if #visibleItems > 0 then
+                            AddHeader(scroll, cat)
+                            for _, item in ipairs(visibleItems) do
+                                AddField(scroll, item.key, item.name, item.config)
+                            end
+                        end
                     end
                 end
 
-                if hasUniqueTabs then
-                    local tabs = parent:Add("liaTabs")
-                    tabs:Dock(FILL)
-                    if not table.IsEmpty(regularConfigs) then
-                        local regularPanel = vgui.Create("DPanel")
-                        regularPanel:SetPaintBackground(false)
-                        regularPanel:DockPadding(10, 10, 10, 10)
-                        local searchEntry = regularPanel:Add("liaEntry")
-                        searchEntry:Dock(TOP)
-                        searchEntry:SetTall(35)
-                        searchEntry:DockMargin(0, 0, 0, 10)
-                        searchEntry:SetPlaceholderText(L("searchConfigs") or "Search configurations...")
-                        searchEntry:SetFont("LiliaFont.18")
-                        local scroll = regularPanel:Add("liaScrollPanel")
-                        scroll:Dock(FILL)
-                        scroll:GetCanvas():DockPadding(0, 0, 0, 0)
-                        local function populateRegular(filter)
-                            scroll:Clear()
-                            filter = filter and filter:len() > 0 and filter:lower() or nil
-                            local categories = {}
-                            for k, v in pairs(regularConfigs) do
-                                local cat = v.category or "Core"
-                                categories[cat] = categories[cat] or {}
-                                table.insert(categories[cat], {
-                                    key = k,
-                                    name = v.name,
-                                    config = v
-                                })
-                            end
-
-                            local sortedCategories = {}
-                            for cat, items in pairs(categories) do
-                                table.insert(sortedCategories, cat)
-                            end
-
-                            table.sort(sortedCategories)
-                            for _, cat in ipairs(sortedCategories) do
-                                local items = categories[cat]
-                                table.sort(items, function(a, b) return a.name < b.name end)
-                                local visibleItems = {}
-                                for _, item in ipairs(items) do
-                                    if not filter or item.name:lower():find(filter, 1, true) or cat:lower():find(filter, 1, true) then table.insert(visibleItems, item) end
-                                end
-
-                                if #visibleItems > 0 then
-                                    AddHeader(scroll, cat)
-                                    for _, item in ipairs(visibleItems) do
-                                        AddField(scroll, item.key, item.name, item.config)
-                                    end
-                                end
-                            end
-                        end
-
-                        searchEntry:SetUpdateOnType(true)
-                        searchEntry.OnTextChanged = function(me, text) populateRegular(text) end
-                        populateRegular(nil)
-                        tabs:AddTab("General", regularPanel)
-                    end
-
-                    for key, config in pairs(uniqueTabConfigs) do
-                        local uniquePanel = vgui.Create("DPanel")
-                        uniquePanel:SetPaintBackground(false)
-                        uniquePanel:DockPadding(10, 10, 10, 10)
-                        local scroll = uniquePanel:Add("liaScrollPanel")
-                        scroll:Dock(FILL)
-                        scroll:GetCanvas():DockPadding(0, 0, 0, 0)
-                        AddField(scroll, key, config.name, config)
-                        tabs:AddTab(config.name or key, uniquePanel)
-                    end
-                else
-                    local searchEntry = parent:Add("liaEntry")
-                    searchEntry:Dock(TOP)
-                    searchEntry:SetTall(35)
-                    searchEntry:DockMargin(10, 10, 10, 10)
-                    searchEntry:SetPlaceholderText(L("searchConfigs") or "Search configurations...")
-                    searchEntry:SetFont("LiliaFont.18")
-                    local scroll = parent:Add("liaScrollPanel")
-                    scroll:Dock(FILL)
-                    scroll:GetCanvas():DockPadding(10, 10, 10, 10)
-                    local function populate(filter)
-                        scroll:Clear()
-                        filter = filter and filter:len() > 0 and filter:lower() or nil
-                        local categories = {}
-                        for k, v in pairs(lia.config.stored) do
-                            local cat = v.category or "Core"
-                            categories[cat] = categories[cat] or {}
-                            table.insert(categories[cat], {
-                                key = k,
-                                name = v.name,
-                                config = v
-                            })
-                        end
-
-                        local sortedCategories = {}
-                        for cat, items in pairs(categories) do
-                            table.insert(sortedCategories, cat)
-                        end
-
-                        table.sort(sortedCategories)
-                        for _, cat in ipairs(sortedCategories) do
-                            local items = categories[cat]
-                            table.sort(items, function(a, b) return a.name < b.name end)
-                            local visibleItems = {}
-                            for _, item in ipairs(items) do
-                                if not filter or item.name:lower():find(filter, 1, true) or cat:lower():find(filter, 1, true) then table.insert(visibleItems, item) end
-                            end
-
-                            if #visibleItems > 0 then
-                                AddHeader(scroll, cat)
-                                for _, item in ipairs(visibleItems) do
-                                    AddField(scroll, item.key, item.name, item.config)
-                                end
-                            end
-                        end
-                    end
-
-                    searchEntry:SetUpdateOnType(true)
-                    searchEntry.OnTextChanged = function(me, text) populate(text) end
-                    populate(nil)
-                end
+                searchEntry:SetUpdateOnType(true)
+                searchEntry.OnTextChanged = function(me, text) populate(text) end
+                populate(nil)
             end
         }
     end
 end)
-
-lia.config.add("MainMenuUseLastPos", "mainMenuUseLastPos", true, nil, {
-    desc = "mainMenuUseLastPosDesc",
-    category = "Core",
-    type = "Boolean"
-})

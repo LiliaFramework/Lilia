@@ -472,7 +472,7 @@ function PANEL:loadBackground()
         end
 
         local url = lia.config.get("BackgroundURL") or ""
-        if url and url:find("%S") then
+        if url and isstring(url) and url:find("%S") then
             self.background = self:Add("DHTML")
             self.background:SetSize(ScrW(), ScrH())
             if url:find("http") then

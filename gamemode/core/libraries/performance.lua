@@ -33,7 +33,6 @@
             r_drawdetailprops = 0,
             r_shadowrendertotexture = 0,
             r_shadowmaxrendered = 0,
-            r_drawmodeldecals = 0,
             cl_phys_props_enable = 0,
             cl_phys_props_max = 0,
             cl_threaded_bone_setup = 1,

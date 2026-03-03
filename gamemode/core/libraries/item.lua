@@ -1483,13 +1483,6 @@ else
         container:DockMargin(5, 0, 0, 3)
         local expanded = false
         local expandedHeight = 320
-        container.Paint = function(s, w, h)
-            local theme = lia.color.theme
-            local base = (theme and theme.panel and theme.panel[1]) or (theme and theme.button) or Color(45, 50, 60)
-            local bgColor = ColorAlpha(base, 235)
-            lia.derma.rect(0, 0, w, h):Rad(6):Color(bgColor):Shape(lia.derma.SHAPE_IOS):Draw()
-        end
-
         local header = container:Add("DPanel")
         header:Dock(TOP)
         header:SetTall(50)
@@ -1562,7 +1555,7 @@ else
         local defHeight = 1
         AddField("Name", "name", weaponTable.PrintName or className, false)
         AddField("Description", "desc", "A weapon", false)
-        AddField("Model", "model", weaponTable.WorldModel or "models/props_c17/suitcase_passenger_physics.mdl", false)
+        AddField("Model", "model", weaponTable.WorldModel or "models/props_c17/BriefCase001a.mdl", false)
         AddField("Width", "width", defWidth, true)
         AddField("Height", "height", defHeight, true)
         AddField("Price", "price", 500, true)

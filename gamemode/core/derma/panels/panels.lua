@@ -134,14 +134,11 @@ function QuickPanel:Init()
     self:SetSkin(lia.config.get("DermaSkin", L("liliaSkin")))
     self:SetTitle(L("quickSettings"))
     self:SetAlphaBackground(false)
+    self:DockPadding(6, 7, 6, 7)
+    self:SetDraggable(false)
+    self:ShowCloseButton(false)
     self.scroll = self:Add("liaScrollPanel")
-    self.scroll:Dock(FILL)
-    self.scroll.Paint = function(_, w, h)
-        local theme = lia.color.theme
-        local panelColor = theme and theme.panel and theme.panel[1] or Color(50, 50, 50)
-        draw.RoundedBox(8, 0, 0, w, h, panelColor)
-    end
-
+    self.scroll.Paint = function() end
     self.items = {}
     self.optionsCache = {}
     self.forceRepopulate = true
@@ -165,27 +162,39 @@ function QuickPanel:Init()
 end
 
 function QuickPanel:Paint(w, h)
-    local theme = lia.color.theme or {}
-    local accent = theme.accent or theme.header or theme.theme or Color(100, 150, 200, 255)
+    local theme = lia.color.theme
     local bgColor = Color(25, 28, 35, 250)
     lia.derma.rect(0, 0, w, h):Rad(12):Color(bgColor):Shape(lia.derma.SHAPE_IOS):Draw()
-    lia.derma.rect(0, 0, w, 4):Radii(12, 12, 0, 0):Color(accent):Draw()
-    local glowColor = Color(accent.r, accent.g, accent.b, 8)
-    lia.derma.rect(1, 1, w - 2, h - 2):Rad(11):Color(glowColor):Outline(1):Draw()
+    local titleText = self:GetTitle()
+    if titleText and titleText ~= "" then
+        draw.SimpleText(titleText, "LiliaFont.18", w * 0.5, 12, theme.header_text or color_white, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
+        local accent = theme.theme or color_white
+        surface.SetDrawColor(accent.r, accent.g, accent.b, 20)
+        surface.DrawRect(10, 24, w - 20, 1)
+    end
 end
 
 function QuickPanel:PerformLayout(w)
-    if IsValid(self.cls) then self.cls:SetPos(w - 22, 2) end
+    if IsValid(self.scroll) then
+        self.scroll:SetPos(0, 24)
+        self.scroll:SetSize(w, self:GetTall() - 24)
+    end
 end
 
-function QuickPanel:addButton(text, cb)
+function QuickPanel:addButton(text, cb, description)
     local btn = self.scroll:Add("liaButton")
     btn:SetText(text)
-    btn:SetTall(36)
+    btn:SetTall(26)
     btn:Dock(TOP)
-    btn:DockMargin(0, 1, 0, 0)
-    btn:SetFont("LiliaFont.20")
+    btn:DockMargin(8, 2, 8, 2)
+    btn:SetFont("LiliaFont.17")
     if cb then btn.DoClick = cb end
+    if description and description ~= "" then
+        local localized = L(description)
+        if localized and localized ~= "" then description = localized end
+        btn:SetTooltip(description)
+    end
+
     self.items[#self.items + 1] = btn
     return btn
 end
@@ -194,7 +203,7 @@ function QuickPanel:addSpacer()
     local pnl = self.scroll:Add("DPanel")
     pnl:SetTall(1)
     pnl:Dock(TOP)
-    pnl:DockMargin(0, 1, 0, 0)
+    pnl:DockMargin(8, 2, 8, 2)
     pnl.Paint = function(_, w, h)
         surface.SetDrawColor(lia.color.theme and lia.color.theme.panel[2] or Color(60, 60, 60))
         surface.DrawRect(0, 0, w, h)
@@ -206,42 +215,41 @@ end
 
 function QuickPanel:addCategoryHeader(categoryName, categoryColor)
     local header = self.scroll:Add("DPanel")
-    header:SetTall(26)
+    header:SetTall(30)
     header:Dock(TOP)
-    header:DockMargin(2, 4, 2, 2)
+    header:DockMargin(4, 8, 4, 6)
     header:SetPaintBackground(false)
     header.Paint = function(panel, w, h)
-        local radius = 6
-        local shadowIntensity = 8
-        local shadowBlur = 12
         local theme = lia.color.theme
-        local accent = theme and theme.accent or theme.header or theme.theme or Color(100, 150, 200, 255)
-        local background = theme and theme.background_alpha or theme.background or Color(40, 40, 40, 240)
-        local textColor = theme and theme.category_text or theme.text or color_white
-        lia.derma.rect(0, 0, w, h):Rad(radius):Color(theme.window_shadow or Color(0, 0, 0, 50)):Shadow(shadowIntensity, shadowBlur):Shape(lia.derma.SHAPE_IOS):Draw()
-        lia.util.drawBlur(panel, 4, 2)
-        lia.derma.rect(0, 0, w, h):Rad(radius):Color(background):Draw()
-        surface.SetDrawColor(accent)
-        surface.DrawRect(0, 0, w, 2)
-        surface.DrawRect(0, h - 2, w, 2)
-        surface.DrawRect(0, 0, 2, h)
-        surface.DrawRect(w - 2, 0, 2, h)
+        local accentColor = categoryColor or (theme and theme.category_accent or Color(100, 150, 200, 255))
+        local bgColor = Color(accentColor.r, accentColor.g, accentColor.b, 20)
+        local textColor = theme and theme.text or color_white
+        lia.derma.rect(0, 0, w, h):Rad(6):Color(bgColor):Shape(lia.derma.SHAPE_IOS):Draw()
+        local accent = theme.theme or color_white
+        surface.SetDrawColor(accent.r, accent.g, accent.b, 60)
+        surface.DrawRect(0, 0, 3, h)
         local displayText = categoryName
         local localized = L(displayText)
         if localized and localized ~= "" then displayText = localized end
-        draw.SimpleText(displayText, "LiliaFont.17", w / 2, h / 2, textColor, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
+        draw.SimpleText(displayText, "LiliaFont.18", 12, h / 2, textColor, TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)
     end
 
     self.items[#self.items + 1] = header
     return header
 end
 
-function QuickPanel:addSlider(text, cb, val, min, max, dec)
+function QuickPanel:addSlider(text, cb, val, min, max, dec, description)
     local container = self.scroll:Add("DPanel")
     container:SetTall(70)
     container:Dock(TOP)
-    container:DockMargin(0, 1, 0, 0)
-    container.Paint = function(_, w, h) lia.derma.rect(0, 0, w, h):Rad(16):Color(Color(40, 40, 50, 100)):Shape(lia.derma.SHAPE_IOS):Draw() end
+    container:DockMargin(8, 2, 8, 2)
+    container.Paint = function(_, w, h) lia.derma.rect(0, 0, w, h):Rad(12):Color(Color(40, 40, 50, 100)):Shape(lia.derma.SHAPE_IOS):Draw() end
+    if description and description ~= "" then
+        local localized = L(description)
+        if localized and localized ~= "" then description = localized end
+        container:SetTooltip(description)
+    end
+
     local label = vgui.Create("DLabel", container)
     label:Dock(TOP)
     label:SetTall(25)
@@ -287,15 +295,21 @@ function QuickPanel:addSlider(text, cb, val, min, max, dec)
     return container
 end
 
-function QuickPanel:addCheck(text, cb, checked)
+function QuickPanel:addCheck(text, cb, checked, description)
     local row = self.scroll:Add("DPanel")
     row:SetTall(36)
     row:Dock(TOP)
-    row:DockMargin(0, 1, 0, 0)
+    row:DockMargin(8, 2, 8, 2)
     row.Paint = function(_, _, h)
         local theme = lia.color.theme
         local textColor = theme and theme.text or Color(255, 255, 255)
-        draw.SimpleText(text, "LiliaFont.20", 8, h / 2, textColor, TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)
+        draw.SimpleText(text, "LiliaFont.17", 8, h / 2, textColor, TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)
+    end
+
+    if description and description ~= "" then
+        local localized = L(description)
+        if localized and localized ~= "" then description = localized end
+        row:SetTooltip(description)
     end
 
     local chk = vgui.Create("liaCheckbox", row)
@@ -313,14 +327,7 @@ end
 
 function QuickPanel:RefreshTheme()
     if not IsValid(self) then return end
-    if IsValid(self.scroll) then
-        self.scroll.Paint = function(_, w, h)
-            local theme = lia.color.theme
-            local panelColor = theme and theme.panel and theme.panel[1] or Color(50, 50, 50)
-            draw.RoundedBox(8, 0, 0, w, h, panelColor)
-        end
-    end
-
+    if IsValid(self.scroll) then self.scroll.Paint = function() end end
     local themeText = lia.color.theme.text or color_white
     for _, item in ipairs(self.items or {}) do
         if IsValid(item) and item.SetTextColor then item:SetTextColor(themeText) end
@@ -438,11 +445,12 @@ function QuickPanel:populateOptions()
                 local opt = info.opt
                 local data = opt.data or {}
                 local val = lia.option.get(key, opt.default)
+                local description = opt.description or opt.desc
                 local item
                 if opt.type == "Boolean" then
-                    item = self:addCheck(opt.name or key, function(_, state) lia.option.set(key, state) end, val)
+                    item = self:addCheck(opt.name or key, function(_, state) lia.option.set(key, state) end, val, description)
                 elseif opt.type == "Int" or opt.type == "Float" then
-                    item = self:addSlider(opt.name or key, function(_, v) lia.option.set(key, v) end, val, data.min or 0, data.max or 100, opt.type == "Float" and (data.decimals or 2) or 0)
+                    item = self:addSlider(opt.name or key, function(_, v) lia.option.set(key, v) end, val, data.min or 0, data.max or 100, opt.type == "Float" and (data.decimals or 2) or 0, description)
                 end
 
                 if item then self.optionsCache[#self.optionsCache + 1] = item end
