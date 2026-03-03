@@ -211,17 +211,17 @@ The configuration library provides comprehensive functionality for managing user
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="liaconfigload"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
-  <p>Load config values from the database (server) or request them from the server (client).</p>
+  <p>Load config values from JSON files (server) or request them from the server (client).</p>
 </div>
 
 <h3 style="margin-bottom: 5px; font-weight: 700;">When Called</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
-  <p>On initialization to hydrate lia.config.stored after database connectivity.</p>
+  <p>On initialization to hydrate lia.config.stored from JSON file storage.</p>
 </div>
 
 <h3 style="margin-bottom: 5px; font-weight: 700;">Example Usage</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
-<pre><code class="language-lua">  hook.Add("DatabaseConnected", "LoadLiliaConfig", lia.config.load)
+<pre><code class="language-lua">  hook.Add("Initialize", "LoadLiliaConfig", lia.config.load)
 </code></pre>
 </div>
 
@@ -329,7 +329,7 @@ The configuration library provides comprehensive functionality for managing user
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="liaconfigsave"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
-  <p>Persist all config values to the database.</p>
+  <p>Persist all config values to JSON files.</p>
 </div>
 
 <h3 style="margin-bottom: 5px; font-weight: 700;">When Called</h3>

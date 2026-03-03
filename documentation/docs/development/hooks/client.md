@@ -4454,6 +4454,9 @@ Client-side hooks in the Lilia framework handle UI, rendering, input, and other 
 <pre><code class="language-lua">  hook.Add("WebSoundDownloaded", "ExampleWebSoundDownloaded", function(...)
       -- add custom client-side behavior
   end)
+</code></pre>
+</div>
+
 </div>
 </details>
 
