@@ -207,7 +207,12 @@ function SKIN:PaintVScrollBar(_, w, h)
 end
 
 function SKIN:PaintMenu(panel, w, h)
-    drawAltBg(panel, w, h)
+    local accentColor = lia.color.theme and lia.color.theme.theme or Color(116, 185, 255)
+    lia.derma.rect(0, 0, w, h):Rad(14):Color(lia.color.theme.window_shadow):Shape(lia.derma.SHAPE_IOS):Shadow(10, 16):Draw()
+    lia.derma.rect(0, 0, w, h):Rad(14):Color(lia.color.theme.background_panelpopup):Shape(lia.derma.SHAPE_IOS):Draw()
+    lia.derma.rect(0, 0, w, h):Rad(14):Color(ColorAlpha(Color(255, 255, 255), 18)):Outline(1):Draw()
+    lia.derma.rect(0, 0, w, h):Rad(14):Color(ColorAlpha(accentColor, 65)):Outline(1):Draw()
+    lia.derma.rect(10, 8, w - 20, 2):Rad(2):Color(ColorAlpha(accentColor, 120)):Draw()
 end
 
 function SKIN:PaintMenuOption(panel, w, h)
@@ -216,7 +221,32 @@ function SKIN:PaintMenuOption(panel, w, h)
         panel:SetTextColor(Color(220, 220, 220))
     end
 
-    if panel.m_bBackground and (panel.Hovered or panel.Highlight) then lia.derma.rect(0, 0, w, h):Rad(4):Color(ColorAlpha(Color(255, 255, 255), 50)):Shape(lia.derma.SHAPE_IOS):Draw() end
+    if panel.m_bBackground then
+        local bgColor = getThemeBackgroundSolid()
+        local accentColor = lia.color.theme and lia.color.theme.theme or Color(116, 185, 255)
+        local isSelected = panel:GetChecked()
+        local hovered = panel.Hovered or panel.Highlight
+        local base = ColorAlpha(bgColor, 185)
+        if isSelected then
+            base = ColorAlpha(bgColor, 220)
+        elseif hovered then
+            base = ColorAlpha(bgColor, 205)
+        end
+
+        lia.derma.rect(0, 0, w, h):Rad(6):Color(base):Shape(lia.derma.SHAPE_IOS):Draw()
+        if isSelected then
+            lia.derma.rect(0, 0, w, h):Rad(6):Color(ColorAlpha(accentColor, 55)):Shape(lia.derma.SHAPE_IOS):Draw()
+            lia.derma.rect(0, 0, w, h):Rad(6):Color(ColorAlpha(accentColor, 220)):Outline(1):Draw()
+        elseif hovered then
+            lia.derma.rect(0, 0, w, h):Rad(6):Color(ColorAlpha(accentColor, 28)):Shape(lia.derma.SHAPE_IOS):Draw()
+            lia.derma.rect(0, 0, w, h):Rad(6):Color(ColorAlpha(accentColor, 170)):Outline(1):Draw()
+        else
+            lia.derma.rect(0, 0, w, h):Rad(6):Color(ColorAlpha(Color(255, 255, 255), 18)):Outline(1):Draw()
+        end
+
+        if isSelected or hovered then lia.derma.rect(2, 4, 3, h - 8):Rad(2):Color(ColorAlpha(accentColor, isSelected and 220 or 160)):Draw() end
+    end
+
     local skin = derma.GetDefaultSkin()
     skin.MenuOptionOdd = not skin.MenuOptionOdd
     if panel:GetChecked() then skin.tex.Menu_Check(5, h / 2 - 7, 15, 15) end
