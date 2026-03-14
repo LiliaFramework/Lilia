@@ -545,6 +545,7 @@ if CLIENT then
                 surface.SetDrawColor(accent)
                 surface.DrawRect(0, h - 2, w, 2)
             end
+
             local label = header:Add("DLabel")
             label:Dock(LEFT)
             label:SetText(L(text))

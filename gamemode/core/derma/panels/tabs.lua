@@ -134,7 +134,6 @@ function PANEL:OnMouseWheeled(delta)
     elseif delta < 0 then
         self:ScrollTabs(1)
     end
-
     return true
 end
 

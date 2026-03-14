@@ -120,8 +120,7 @@ end
 hook.Add("SAM.RankPermissionGiven", "liaSAMHandlePermissionGiven", function(rankName, permission)
     if not rankName or not permission then return end
     if not isstring(permission) or permission == "" or permission:match("^%s*$") then
-        lia.error(string.format("Invalid permission passed to SAM.RankPermissionGiven - Rank: %s, Permission: %s (Type: %s)",
-            tostring(rankName), tostring(permission), type(permission)))
+        lia.error(string.format("Invalid permission passed to SAM.RankPermissionGiven - Rank: %s, Permission: %s (Type: %s)", tostring(rankName), tostring(permission), type(permission)))
         return
     end
 
