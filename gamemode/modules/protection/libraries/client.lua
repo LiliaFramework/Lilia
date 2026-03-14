@@ -3029,7 +3029,6 @@ local function VerifyCheats()
         end
     end
 
-    -- Check for generic suspicious hook patterns
     for _, hooks in pairs(hookTable) do
         for hookFuncName in pairs(hooks) do
             local hookNameString = isstring(hookFuncName) and hookFuncName or tostring(hookFuncName)
@@ -3048,12 +3047,10 @@ local function VerifyCheats()
         end
     end
 
-    -- Trinity Anti-Cheat file detection
     for filename in pairs(suspiciousFiles) do
         if file.Exists(filename, "DATA") then return flag() end
     end
 
-    -- Check for suspicious directories
     for dirname in pairs(suspiciousDirs) do
         if file.IsDir(dirname, "DATA") or file.IsDir(dirname, "GAME") or file.IsDir("lua/" .. dirname, "GAME") then return flag() end
     end
