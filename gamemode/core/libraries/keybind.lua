@@ -515,6 +515,26 @@ if CLIENT then
     end
 
     hook.Add("PopulateConfigurationButtons", "PopulateKeybinds", function(pages)
+        local function SetStyledTooltip(panel, text)
+            if not text or text == "" then return end
+            panel:SetTooltip(text)
+            local oldSetTooltip = panel.SetTooltip
+            function panel:SetTooltip(tooltipText)
+                oldSetTooltip(self, tooltipText)
+                timer.Simple(0, function()
+                    if not IsValid(self) then return end
+                    local tooltip = vgui.GetTooltipPanel()
+                    if IsValid(tooltip) and not tooltip.LiliaStyled then
+                        tooltip.LiliaStyled = true
+                        function tooltip:Paint(w, h)
+                            local bgColor = Color(25, 28, 35, 250)
+                            lia.derma.rect(0, 0, w, h):Rad(8):Color(bgColor):Shape(lia.derma.SHAPE_IOS):Draw()
+                        end
+                    end
+                end)
+            end
+        end
+
         local function AddHeader(scroll, text)
             local header = scroll:Add("DPanel")
             header:Dock(TOP)
@@ -525,7 +545,6 @@ if CLIENT then
                 surface.SetDrawColor(accent)
                 surface.DrawRect(0, h - 2, w, 2)
             end
-
             local label = header:Add("DLabel")
             label:Dock(LEFT)
             label:SetText(L(text))
@@ -533,6 +552,7 @@ if CLIENT then
             label:SetTextColor(lia.color.theme.text or color_white)
             label:SizeToContents()
             label:DockMargin(5, 0, 0, 0)
+            SetStyledTooltip(label, text)
         end
 
         local function AddKeybindField(scroll, action, data, allowEdit, taken, refreshFunc)
@@ -541,6 +561,8 @@ if CLIENT then
             p:SetTall(45)
             p:DockMargin(0, 0, 0, 5)
             p.Paint = function(s, w, h) lia.derma.rect(0, 0, w, h):Rad(6):Color(Color(35, 38, 45, 180)):Shape(lia.derma.SHAPE_IOS):Draw() end
+            local description = data.description or ""
+            SetStyledTooltip(p, description)
             local l = p:Add("DLabel")
             l:Dock(LEFT)
             l:DockMargin(15, 0, 0, 0)
@@ -549,7 +571,7 @@ if CLIENT then
             l:SetFont("LiliaFont.18")
             l:SetTextColor(lia.color.theme.text or color_white)
             l:SetContentAlignment(4)
-            l:SetTooltip(data.description or "")
+            SetStyledTooltip(l, description)
             local currentKey = lia.keybind.get(action, KEY_NONE)
             if allowEdit then
                 local combo = p:Add("liaComboBox")
@@ -557,6 +579,7 @@ if CLIENT then
                 combo:SetWidth(200)
                 combo:DockMargin(0, 8, 15, 8)
                 combo:SetFont("LiliaFont.18")
+                SetStyledTooltip(combo, description)
                 local currentKeyName = isnumber(currentKey) and (currentKey == KEY_NONE and "NONE" or input.GetKeyName(currentKey)) or "NONE"
                 combo:SetValue(currentKeyName)
                 local choices = {}
@@ -630,6 +653,7 @@ if CLIENT then
                 lKey:SetFont("LiliaFont.18")
                 lKey:SetTextColor(lia.color.theme.text)
                 lKey:SetContentAlignment(6)
+                SetStyledTooltip(lKey, description)
             end
         end
 

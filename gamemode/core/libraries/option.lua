@@ -264,6 +264,26 @@ function lia.option.load()
 end
 
 hook.Add("PopulateConfigurationButtons", "liaOptionsPopulate", function(pages)
+    local function SetStyledTooltip(panel, text)
+        if not text or text == "" then return end
+        panel:SetTooltip(text)
+        local oldSetTooltip = panel.SetTooltip
+        function panel:SetTooltip(tooltipText)
+            oldSetTooltip(self, tooltipText)
+            timer.Simple(0, function()
+                if not IsValid(self) then return end
+                local tooltip = vgui.GetTooltipPanel()
+                if IsValid(tooltip) and not tooltip.LiliaStyled then
+                    tooltip.LiliaStyled = true
+                    function tooltip:Paint(w, h)
+                        local bgColor = Color(25, 28, 35, 250)
+                        lia.derma.rect(0, 0, w, h):Rad(8):Color(bgColor):Shape(lia.derma.SHAPE_IOS):Draw()
+                    end
+                end
+            end)
+        end
+    end
+
     local function AddHeader(scroll, text)
         local header = scroll:Add("DPanel")
         header:Dock(TOP)
@@ -274,7 +294,6 @@ hook.Add("PopulateConfigurationButtons", "liaOptionsPopulate", function(pages)
             surface.SetDrawColor(accent)
             surface.DrawRect(0, h - 2, w, 2)
         end
-
         local label = header:Add("DLabel")
         label:Dock(LEFT)
         label:SetText(L(text))
@@ -290,6 +309,8 @@ hook.Add("PopulateConfigurationButtons", "liaOptionsPopulate", function(pages)
         p:SetTall(45)
         p:DockMargin(0, 0, 0, 5)
         p.Paint = function(s, w, h) lia.derma.rect(0, 0, w, h):Rad(6):Color(Color(35, 38, 45, 180)):Shape(lia.derma.SHAPE_IOS):Draw() end
+        local description = option.desc or ""
+        SetStyledTooltip(p, description)
         local l = p:Add("DLabel")
         l:Dock(LEFT)
         l:DockMargin(15, 0, 0, 0)
@@ -298,7 +319,7 @@ hook.Add("PopulateConfigurationButtons", "liaOptionsPopulate", function(pages)
         l:SetFont("LiliaFont.18")
         l:SetTextColor(lia.color.theme.text or color_white)
         l:SetContentAlignment(4)
-        l:SetTooltip(option.desc or "")
+        SetStyledTooltip(l, description)
         local optionType = option.type or "Generic"
         if optionType == "Boolean" then
             local checkbox = p:Add("liaCheckbox")
@@ -306,6 +327,7 @@ hook.Add("PopulateConfigurationButtons", "liaOptionsPopulate", function(pages)
             checkbox:DockMargin(0, 10, 15, 10)
             checkbox:SetWidth(25)
             checkbox:SetChecked(lia.option.get(key, option.value))
+            SetStyledTooltip(checkbox, description)
             checkbox.OnChange = function(s, val) lia.option.set(key, val) end
         elseif optionType == "Int" or optionType == "Float" or optionType == "Number" or optionType == "Generic" then
             local entry = p:Add("liaEntry")
@@ -314,6 +336,7 @@ hook.Add("PopulateConfigurationButtons", "liaOptionsPopulate", function(pages)
             entry:DockMargin(0, 8, 15, 8)
             entry:SetValue(tostring(lia.option.get(key, option.value)))
             entry:SetFont("LiliaFont.18")
+            SetStyledTooltip(entry, description)
             entry.textEntry.OnEnter = function(s)
                 local value = entry:GetValue()
                 local numValue = tonumber(value)
@@ -332,6 +355,7 @@ hook.Add("PopulateConfigurationButtons", "liaOptionsPopulate", function(pages)
             button:SetWidth(200)
             button:DockMargin(0, 8, 15, 8)
             button:SetText("")
+            SetStyledTooltip(button, description)
             button.Paint = function(s, w, h)
                 local c = lia.option.get(key, option.value)
                 if istable(c) and c.r and c.g and c.b then
@@ -356,6 +380,7 @@ hook.Add("PopulateConfigurationButtons", "liaOptionsPopulate", function(pages)
             combo:DockMargin(0, 8, 15, 8)
             combo:SetValue(tostring(lia.option.get(key, option.value)))
             combo:SetFont("LiliaFont.18")
+            SetStyledTooltip(combo, description)
             local options = lia.option.getOptions(key)
             for _, text in pairs(options) do
                 combo:AddChoice(text, text)
@@ -612,6 +637,127 @@ lia.option.add("thirdPersonDistance", "thirdPersonDistance", "thirdPersonDistanc
 lia.option.add("ChatShowTime", "chatShowTime", "chatShowTimeDesc", false, nil, {
     category = "Core",
     type = "Boolean"
+})
+
+lia.option.add("shadows", "optionShadows", "optionShadowsDesc", false, function(_, value) RunConsoleCommand("r_shadows", value and "1" or "0") end, {
+    category = "categoryPerformance",
+    type = "Boolean"
+})
+
+lia.option.add("dynamicLighting", "optionDynamicLighting", "optionDynamicLightingDesc", false, function(_, value) RunConsoleCommand("r_dynamic", value and "1" or "0") end, {
+    category = "categoryPerformance",
+    type = "Boolean"
+})
+
+lia.option.add("eyeMovement", "optionEyeMovement", "optionEyeMovementDesc", false, function(_, value) RunConsoleCommand("r_eyemove", value and "1" or "0") end, {
+    category = "categoryPerformance",
+    type = "Boolean"
+})
+
+lia.option.add("facialExpressions", "optionFacialExpressions", "optionFacialExpressionsDesc", false, function(_, value) RunConsoleCommand("r_flex", value and "1" or "0") end, {
+    category = "categoryPerformance",
+    type = "Boolean"
+})
+
+lia.option.add("antiAliasing", "optionAntiAliasing", "optionAntiAliasingDesc", false, function(_, value) RunConsoleCommand("mat_antialias", value and "1" or "0") end, {
+    category = "categoryPerformance",
+    type = "Boolean"
+})
+
+lia.option.add("hdrLighting", "optionHDRLighting", "optionHDRLightingDesc", false, function(_, value) RunConsoleCommand("mat_hdr_level", value and "1" or "0") end, {
+    category = "categoryPerformance",
+    type = "Boolean"
+})
+
+lia.option.add("motionBlur", "optionMotionBlur", "optionMotionBlurDesc", false, function(_, value) RunConsoleCommand("mat_motion_blur_enabled", value and "1" or "0") end, {
+    category = "categoryPerformance",
+    type = "Boolean"
+})
+
+lia.option.add("waterReflections", "optionWaterReflections", "optionWaterReflectionsDesc", false, function(_, value) RunConsoleCommand("r_waterdrawreflection", value and "1" or "0") end, {
+    category = "categoryPerformance",
+    type = "Boolean"
+})
+
+lia.option.add("gameMonitors", "optionGameMonitors", "optionGameMonitorsDesc", false, function(_, value) RunConsoleCommand("cl_drawmonitors", value and "1" or "0") end, {
+    category = "categoryPerformance",
+    type = "Boolean"
+})
+
+lia.option.add("alienBlood", "optionAlienBlood", "optionAlienBloodDesc", false, function(_, value) RunConsoleCommand("violence_ablood", value and "1" or "0") end, {
+    category = "categoryPerformance",
+    type = "Boolean"
+})
+
+lia.option.add("humanBlood", "optionHumanBlood", "optionHumanBloodDesc", false, function(_, value) RunConsoleCommand("violence_hblood", value and "1" or "0") end, {
+    category = "categoryPerformance",
+    type = "Boolean"
+})
+
+lia.option.add("alienGibs", "optionAlienGibs", "optionAlienGibsDesc", false, function(_, value) RunConsoleCommand("violence_agibs", value and "1" or "0") end, {
+    category = "categoryPerformance",
+    type = "Boolean"
+})
+
+lia.option.add("humanGibs", "optionHumanGibs", "optionHumanGibsDesc", false, function(_, value) RunConsoleCommand("violence_hgibs", value and "1" or "0") end, {
+    category = "categoryPerformance",
+    type = "Boolean"
+})
+
+lia.option.add("waterSplashes", "optionWaterSplashes", "optionWaterSplashesDesc", false, function(_, value) RunConsoleCommand("cl_show_splashes", value and "1" or "0") end, {
+    category = "categoryPerformance",
+    type = "Boolean"
+})
+
+lia.option.add("shellEjection", "optionShellEjection", "optionShellEjectionDesc", false, function(_, value) RunConsoleCommand("cl_ejectbrass", value and "1" or "0") end, {
+    category = "categoryPerformance",
+    type = "Boolean"
+})
+
+lia.option.add("sprayLifetime", "optionSprayLifetime", "optionSprayLifetimeDesc", 1, function(_, value) RunConsoleCommand("r_spray_lifetime", tostring(value)) end, {
+    min = 0,
+    max = 300,
+    category = "categoryPerformance",
+    type = "Int"
+})
+
+lia.option.add("modelDecals", "optionModelDecals", "optionModelDecalsDesc", true, function(_, value) RunConsoleCommand("r_drawmodeldecals", value and "1" or "0") end, {
+    category = "categoryPerformance",
+    type = "Boolean"
+})
+
+lia.option.add("multiplayerDecals", "optionMultiplayerDecals", "optionMultiplayerDecalsDesc", 1, function(_, value) RunConsoleCommand("mp_decals", tostring(value)) end, {
+    min = 0,
+    max = 50,
+    category = "categoryPerformance",
+    type = "Int"
+})
+
+lia.option.add("detailFadeDistance", "optionDetailFadeDistance", "optionDetailFadeDistanceDesc", 800, function(_, value) RunConsoleCommand("cl_detailfade", tostring(value)) end, {
+    min = 400,
+    max = 2000,
+    category = "categoryPerformance",
+    type = "Int"
+})
+
+lia.option.add("detailDistance", "optionDetailDistance", "optionDetailDistanceDesc", 0, function(_, value) RunConsoleCommand("cl_detaildist", tostring(value)) end, {
+    min = 0,
+    max = 1200,
+    category = "categoryPerformance",
+    type = "Int"
+})
+
+lia.option.add("networkSmoothing", "optionNetworkSmoothing", "optionNetworkSmoothingDesc", false, function(_, value) RunConsoleCommand("cl_smooth", value and "1" or "0") end, {
+    category = "categoryPerformance",
+    type = "Boolean"
+})
+
+lia.option.add("smoothingTime", "optionSmoothingTime", "optionSmoothingTimeDesc", 0.05, function(_, value) RunConsoleCommand("cl_smoothtime", tostring(value)) end, {
+    min = 0.01,
+    max = 0.2,
+    decimals = 2,
+    category = "categoryPerformance",
+    type = "Float"
 })
 
 lia.option.add("voiceRange", "voiceRange", "voiceRangeDesc", false, nil, {

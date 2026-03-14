@@ -1222,6 +1222,36 @@ lia.config.add("ToolInterval", "toolInterval", 0, nil, {
     max = 60
 })
 
+lia.config.add("MouthMoveAnimation", "mouthMoveAnimation", true, function(_, newValue)
+    if newValue then
+        hook.Add("MouthMoveAnimation", "Optimization", function() return nil end)
+    else
+        hook.Remove("MouthMoveAnimation", "Optimization")
+    end
+end, {
+    desc = "mouthMoveAnimationDesc",
+    category = "Performance",
+    type = "Boolean"
+})
+
+lia.config.add("GrabEarAnimation", "grabEarAnimation", false, function(_, newValue)
+    if newValue then
+        hook.Add("GrabEarAnimation", "Optimization", function() return nil end)
+    else
+        hook.Remove("GrabEarAnimation", "Optimization")
+    end
+end, {
+    desc = "grabEarAnimationDesc",
+    category = "Performance",
+    type = "Boolean"
+})
+
+lia.config.add("VoiceIcons", "voiceIcons", false, function(_, newValue) if SERVER then RunConsoleCommand("mp_show_voice_icons", newValue and 1 or 0) end end, {
+    desc = "voiceIconsDesc",
+    category = "Performance",
+    type = "Boolean"
+})
+
 lia.config.add("DisableLuaRun", "disableLuaRun", false, nil, {
     desc = "disableLuaRunDesc",
     category = "Core",

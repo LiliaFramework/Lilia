@@ -376,6 +376,7 @@ LANGUAGE = {
     view = "Ver",
     returnText = "Voltar",
     returnToMainMenu = "Voltar ao Menu Principal",
+    returnToCharacter = "Voltar ao seu personagem",
     bagIntoBagError = "Um saco no pode ser colocado dentro de outro saco.",
     nestedItemTransferError = "Um item no saco no pode ser transferido.",
     oocDelay = "Tens de esperar mais %s segundo(s) para usar OOC novamente.",
