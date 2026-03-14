@@ -48,37 +48,6 @@ The item library provides comprehensive functionality for managing items in the 
 
 ---
 
-<details class="realm-shared" id="function-liaitemapplyweaponoverride">
-<summary><a id="lia.item.applyWeaponOverride"></a>lia.item.applyWeaponOverride(uniqueID)</summary>
-<div class="details-content">
-<h3 style="margin-bottom: 5px; font-weight: 700;"><a id="liaitemapplyweaponoverride"></a>Purpose</h3>
-<div style="margin-left: 20px; margin-bottom: 20px;">
-  <p>Applies weapon override data to an existing item definition.</p>
-</div>
-
-<h3 style="margin-bottom: 5px; font-weight: 700;">When Called</h3>
-<div style="margin-left: 20px; margin-bottom: 20px;">
-  <p>Called during item registration to ensure weapon overrides are applied
-after the base item properties are set but before final localization.</p>
-</div>
-
-<h3 style="margin-bottom: 5px; font-weight: 700;">Parameters</h3>
-<div style="margin-left: 20px; margin-bottom: 20px;">
-<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#2.1">string</a></span> <span class="parameter">uniqueID</span> The unique ID of the item to apply overrides to.</p>
-</div>
-
-<h3 style="margin-bottom: 5px; font-weight: 700;">Example Usage</h3>
-<div style="margin-left: 20px; margin-bottom: 20px;">
-<pre><code class="language-lua">  -- This function is typically called internally during item registration
-  lia.item.applyWeaponOverride("weapon_pistol")
-</code></pre>
-</div>
-
-</div>
-</details>
-
----
-
 <details class="realm-shared" id="function-liaitemgetitembyid">
 <summary><a id="lia.item.getItemByID"></a>lia.item.getItemByID(itemID)</summary>
 <div class="details-content">
@@ -919,39 +888,3 @@ after the base item properties are set but before final localization.</p>
 </details>
 
 ---
-
-<details class="realm-server" id="function-liaitemloadweaponoverrides">
-<summary><a id="lia.item.loadWeaponOverrides"></a>lia.item.loadWeaponOverrides(invID, w, h, callback)</summary>
-<div class="details-content">
-<h3 style="margin-bottom: 5px; font-weight: 700;"><a id="liaitemloadweaponoverrides"></a>Purpose</h3>
-<div style="margin-left: 20px; margin-bottom: 20px;">
-  <p>Restores an inventory from the database and sets its dimensions.</p>
-</div>
-
-<h3 style="margin-bottom: 5px; font-weight: 700;">When Called</h3>
-<div style="margin-left: 20px; margin-bottom: 20px;">
-  <p>Called when loading saved inventories from the database.</p>
-</div>
-
-<h3 style="margin-bottom: 5px; font-weight: 700;">Parameters</h3>
-<div style="margin-left: 20px; margin-bottom: 20px;">
-<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#2.1">number</a></span> <span class="parameter">invID</span> The unique ID of the inventory to restore.</p>
-<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#2.1">number</a></span> <span class="parameter">w</span> The width of the inventory.</p>
-<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#2.1">number</a></span> <span class="parameter">h</span> The height of the inventory.</p>
-<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#2.2">function, optional</a></span> <span class="parameter">callback</span> Function called when inventory is restored.</p>
-</div>
-
-<h3 style="margin-bottom: 5px; font-weight: 700;">Example Usage</h3>
-<div style="margin-left: 20px; margin-bottom: 20px;">
-<pre><code class="language-lua">  -- Restore a 4x6 inventory
-  lia.item.restoreInv(5, 4, 6, function(inventory)
-      print("Restored inventory with", inventory:getItemCount(), "items")
-  end)
-</code></pre>
-</div>
-
-</div>
-</details>
-
----
-
