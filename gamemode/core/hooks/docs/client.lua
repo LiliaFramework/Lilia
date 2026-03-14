@@ -3662,3 +3662,132 @@ end
 ]]
 function OnModelPanelSetup(self)
 end
+
+--[[
+    Purpose:
+        Called to get the character creation summary data, allowing complete replacement of the summary.
+
+    When Called:
+        During character creation summary generation, after the default summary is built.
+
+    Parameters:
+        client (Player)
+            The local player creating the character.
+        context (table)
+            Character creation context containing name, description, faction, attributes, etc.
+        summary (table)
+            The default summary table that was built.
+        panel (Panel)
+            The summary panel instance.
+
+    Returns:
+        table (optional)
+            A new summary table to replace the default one. Return nil to use the default.
+
+    Realm:
+        Client
+
+    Example Usage:
+        ```lua
+            hook.Add("GetCharacterCreationSummary", "CustomSummary", function(client, context, summary, panel)
+                -- Return a custom summary table
+                return {
+                    {title = "Custom Field", value = "Custom Value"}
+                }
+            end)
+        ```
+]]
+function GetCharacterCreationSummary(arg1)
+end
+
+--[[
+    Purpose:
+        Called after the liaModelPanel has drawn the model, allowing additional post-processing effects.
+
+    When Called:
+        After the model has been rendered in a liaModelPanel.
+
+    Parameters:
+        self (Panel)
+            The liaModelPanel instance.
+        ent (Entity)
+            The model entity that was drawn.
+
+    Realm:
+        Client
+
+    Example Usage:
+        ```lua
+            hook.Add("LiliaModelPanelPostDrawModel", "AddPostEffects", function(panel, entity)
+                -- Add custom post-drawing effects
+                render.SetColorModulation(1, 0.5, 0.5)
+            end)
+        ```
+]]
+function LiliaModelPanelPostDrawModel(self, ent)
+end
+
+--[[
+    Purpose:
+        Called to modify the character creation summary data in-place.
+
+    When Called:
+        During character creation summary generation, after GetCharacterCreationSummary but before display.
+
+    Parameters:
+        client (Player)
+            The local player creating the character.
+        context (table)
+            Character creation context containing name, description, faction, attributes, etc.
+        summary (table)
+            The summary table to modify (passed by reference).
+        panel (Panel)
+            The summary panel instance.
+
+    Realm:
+        Client
+
+    Example Usage:
+        ```lua
+            hook.Add("ModifyCharacterCreationSummary", "AddCustomFields", function(client, context, summary, panel)
+                -- Add custom fields to the summary
+                summary[#summary + 1] = {
+                    title = "Custom Field",
+                    value = "Custom Value"
+                }
+            end)
+        ```
+]]
+function ModifyCharacterCreationSummary(arg1)
+end
+
+--[[
+    Purpose:
+        Called when a character creation model icon is set up, allowing customization of the icon.
+
+    When Called:
+        After a model icon is created and its model is set during character creation.
+
+    Parameters:
+        icon (Panel)
+            The SpawnIcon panel instance.
+        model (string)
+            The model path that was set.
+        skin (number)
+            The skin index that was set.
+        bodyGroups (string)
+            The bodygroup string that was set.
+
+    Realm:
+        Client
+
+    Example Usage:
+        ```lua
+            hook.Add("OnCharacterCreationModelIconSet", "CustomizeIcon", function(icon, model, skin, bodyGroups)
+                -- Customize the model icon appearance
+                icon:SetTooltip("Custom model: " .. model)
+            end)
+        ```
+]]
+function OnCharacterCreationModelIconSet(icon, model, skin, bodyGroups)
+end
