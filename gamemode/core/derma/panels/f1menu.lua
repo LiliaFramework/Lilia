@@ -275,11 +275,10 @@ function PANEL:Init()
         if schemaIconMat and schemaName then
             local iconSize = h * 0.5
             surface.SetMaterial(schemaIconMat)
-            local headerTextColor = lia.color.theme.header_text or Color(255, 255, 255)
-            surface.SetDrawColor(headerTextColor.r, headerTextColor.g, headerTextColor.b)
+            surface.SetDrawColor(255, 255, 255)
             surface.DrawTexturedRect(30, (h - iconSize) * 0.5, iconSize, iconSize)
             surface.SetFont("LiliaFont.25")
-            surface.SetTextColor(headerTextColor.r, headerTextColor.g, headerTextColor.b)
+            surface.SetTextColor(255, 255, 255)
             local txt = L(schemaName)
             local _, th = surface.GetTextSize(txt)
             surface.SetTextPos(30 + iconSize + 10, (h - th) * 0.5)
@@ -296,7 +295,15 @@ function PANEL:Init()
 
     local tabsPanel = topBar:Add("liaTabs")
     tabsPanel:Dock(FILL)
-    tabsPanel:DockMargin(0, 5, 80, 5)
+    local leftMargin = 0
+    if schemaIconMat and schemaName then
+        local iconSize = topBar:GetTall() * 0.5
+        surface.SetFont("LiliaFont.25")
+        local textW = surface.GetTextSize(L(schemaName))
+        leftMargin = math.ceil(iconSize + 10 + textW + 20)
+    end
+
+    tabsPanel:DockMargin(leftMargin, 5, 80, 5)
     self.tabs = tabsPanel
     local panel = self:Add("EditablePanel")
     panel:Dock(FILL)
