@@ -815,7 +815,7 @@ function PANEL:createStartButton()
 
     if clientChar and not self.isKickedFromChar then
         local returnTooltip = hook.Run("GetCharacterReturnButtonTooltip", client)
-        if not returnTooltip or returnTooltip == "" then returnTooltip = "Return to your character" end
+        if not returnTooltip or returnTooltip == "" then returnTooltip = L("returnToCharacter") end
         table.insert(buttonsData, {
             id = "return",
             text = L("returnToMainMenu"),
