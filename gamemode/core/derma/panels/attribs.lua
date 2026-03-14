@@ -255,36 +255,47 @@ function PANEL:addButton(symbol, delta)
     button:SetZPos(100)
     local parent = self
     button.Paint = function(btn, w, h)
-        if btn:IsHovered() or btn:IsDown() then
-            surface.SetDrawColor(100, 100, 100, 200)
-        else
-            surface.SetDrawColor(50, 50, 50, 150)
+        local bgColor = Color(25, 28, 35, 250)
+        local accentColor = lia.color.theme and lia.color.theme.theme or Color(116, 185, 255)
+        local base = ColorAlpha(bgColor, 200)
+        if btn:IsDown() then
+            base = ColorAlpha(accentColor, 220)
+        elseif btn:IsHovered() then
+            base = ColorAlpha(accentColor, 180)
         end
 
-        surface.DrawRect(0, 0, w, h)
+        lia.derma.rect(0, 0, w, h):Rad(6):Color(base):Shape(lia.derma.SHAPE_IOS):Draw()
+        lia.derma.rect(0, 0, w, h):Rad(6):Color(ColorAlpha(accentColor, btn:IsHovered() and 180 or 90)):Outline(1):Draw()
         draw.SimpleText(symbol, "LiliaFont.24", w / 2, h / 2, color_white, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
     end
 
-    button.DoClick = function(btn)
+    button.DoClick = nil
+    button.OnMousePressed = function(btn, mousecode)
+        if mousecode ~= MOUSE_LEFT then return end
+        btn:MouseCapture(true)
         parent.autoDelta = delta
         parent.nextAuto = CurTime() + 0.4
         parent:delta(delta)
     end
 
-    button.OnMousePressed = function(btn, mousecode)
-        if mousecode == MOUSE_LEFT then
-            parent.autoDelta = delta
-            parent.nextAuto = CurTime() + 0.4
-            parent:delta(delta)
-        end
+    button.OnMouseReleased = function(btn, mousecode)
+        if mousecode ~= MOUSE_LEFT then return end
+        btn:MouseCapture(false)
+        parent.autoDelta = nil
     end
 
-    button.OnMouseReleased = function(btn, mousecode) if mousecode == MOUSE_LEFT then parent.autoDelta = nil end end
+    button.OnCursorExited = function(btn)
+        if not input.IsMouseDown(MOUSE_LEFT) then
+            btn:MouseCapture(false)
+            parent.autoDelta = nil
+        end
+    end
     return button
 end
 
 function PANEL:Think()
     local curTime = CurTime()
+    if self.autoDelta and not input.IsMouseDown(MOUSE_LEFT) then self.autoDelta = nil end
     if self.autoDelta and (self.nextAuto or 0) < curTime then
         self.nextAuto = CurTime() + 0.4
         self:delta(self.autoDelta)
@@ -296,9 +307,15 @@ function PANEL:updateQuantity()
 end
 
 function PANEL:Paint(w, h)
-    lia.util.drawBlur(self)
-    surface.SetDrawColor(0, 0, 0, 100)
-    surface.DrawRect(0, 0, w, h)
+    local bgColor = Color(25, 28, 35, 250)
+    local accentColor = lia.color.theme and lia.color.theme.theme or Color(116, 185, 255)
+    local base = ColorAlpha(bgColor, 240)
+    lia.derma.rect(0, 0, w, h):Rad(6):Color(base):Shape(lia.derma.SHAPE_IOS):Draw()
+    lia.derma.rect(0, 0, w, h):Rad(6):Color(ColorAlpha(Color(255, 255, 255), 18)):Outline(1):Draw()
+    if self:IsHovered() then
+        lia.derma.rect(0, 0, w, h):Rad(6):Color(ColorAlpha(accentColor, 28)):Shape(lia.derma.SHAPE_IOS):Draw()
+        lia.derma.rect(0, 0, w, h):Rad(6):Color(ColorAlpha(accentColor, 170)):Outline(1):Draw()
+    end
 end
 
 vgui.Register("liaCharacterAttribsRow", PANEL, "DPanel")

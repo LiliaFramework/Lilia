@@ -70,11 +70,7 @@ function PANEL:PreDrawModel(ent)
 end
 
 function PANEL:PostDrawModel(ent)
-    if ent.Bonemerge then
-        for _, v in ipairs(ent.Bonemerge) do
-            if IsValid(v) then v:DrawModel() end
-        end
-    end
+    hook.Run("LiliaModelPanelPostDrawModel", self, ent)
 end
 
 function PANEL:OnMousePressed()

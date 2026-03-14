@@ -89,8 +89,12 @@ end
 function PANEL:Paint(w, h)
     local windowShadow = lia.color.theme and lia.color.theme.window_shadow or Color(18, 32, 32, 90)
     local backgroundPanel = lia.color.theme and lia.color.theme.background_panelpopup or Color(20, 28, 28)
-    lia.derma.rect(0, 0, w, h):Rad(16):Color(windowShadow):Shape(lia.derma.SHAPE_IOS):Shadow(10, 16):Draw()
-    lia.derma.rect(0, 0, w, h):Rad(16):Color(backgroundPanel):Shape(lia.derma.SHAPE_IOS):Draw()
+    local accentColor = lia.color.theme and lia.color.theme.theme or Color(116, 185, 255)
+    lia.derma.rect(0, 0, w, h):Rad(14):Color(windowShadow):Shape(lia.derma.SHAPE_IOS):Shadow(10, 16):Draw()
+    lia.derma.rect(0, 0, w, h):Rad(14):Color(backgroundPanel):Shape(lia.derma.SHAPE_IOS):Draw()
+    lia.derma.rect(0, 0, w, h):Rad(14):Color(ColorAlpha(Color(255, 255, 255), 18)):Outline(1):Draw()
+    lia.derma.rect(0, 0, w, h):Rad(14):Color(ColorAlpha(accentColor, 65)):Outline(1):Draw()
+    lia.derma.rect(10, 8, w - 20, 2):Rad(2):Color(ColorAlpha(accentColor, 120)):Draw()
 end
 
 function PANEL:AddOption(text, func, icon, optData)
@@ -319,11 +323,30 @@ function PANEL:AddOption(text, func, icon, optData)
         w = w or pnl:GetWide()
         h = h or pnl:GetTall()
         local textColor = lia.color.theme and lia.color.theme.text or Color(210, 235, 235)
-        if pnl:IsHovered() then
-            local windowShadow = lia.color.theme and lia.color.theme.window_shadow or Color(18, 32, 32, 35)
-            local hoverColor = lia.color.theme and lia.color.theme.hover or Color(60, 140, 140, 90)
-            lia.derma.rect(0, 0, w, h):Rad(16):Color(windowShadow):Shape(lia.derma.SHAPE_IOS):Shadow(5, 20):Draw()
-            lia.derma.rect(0, 0, w, h):Rad(16):Color(hoverColor):Shape(lia.derma.SHAPE_IOS):Draw()
+        local bgColor = Color(25, 28, 35, 250)
+        local accentColor = (lia.color.theme and lia.color.theme.theme) or Color(116, 185, 255)
+        local hovered = pnl:IsHovered()
+        local selected = pnl._isChecked == true
+        local base = ColorAlpha(bgColor, 185)
+        if selected then
+            base = ColorAlpha(bgColor, 220)
+        elseif hovered then
+            base = ColorAlpha(bgColor, 205)
+        end
+
+        lia.derma.rect(0, 0, w, h):Rad(6):Color(base):Shape(lia.derma.SHAPE_IOS):Draw()
+        if selected then
+            lia.derma.rect(0, 0, w, h):Rad(6):Color(ColorAlpha(accentColor, 55)):Shape(lia.derma.SHAPE_IOS):Draw()
+            lia.derma.rect(0, 0, w, h):Rad(6):Color(ColorAlpha(accentColor, 220)):Outline(1):Draw()
+        elseif hovered then
+            lia.derma.rect(0, 0, w, h):Rad(6):Color(ColorAlpha(accentColor, 28)):Shape(lia.derma.SHAPE_IOS):Draw()
+            lia.derma.rect(0, 0, w, h):Rad(6):Color(ColorAlpha(accentColor, 170)):Outline(1):Draw()
+        else
+            lia.derma.rect(0, 0, w, h):Rad(6):Color(ColorAlpha(Color(255, 255, 255), 18)):Outline(1):Draw()
+        end
+
+        if selected or hovered then lia.derma.rect(2, 4, 3, h - 8):Rad(2):Color(ColorAlpha(accentColor, selected and 220 or 160)):Draw() end
+        if hovered then
             if pnl._submenu and not pnl._submenu_open and not pnl._hoverTimer then
                 pnl._hoverTimer = timer.Simple(0.1, function()
                     if IsValid(pnl) and pnl:IsHovered() and pnl._submenu and not pnl._submenu_open then pnl:OpenSubMenu() end
@@ -348,12 +371,12 @@ function PANEL:AddOption(text, func, icon, optData)
         local checkboxX = textPadding
         local checkboxY = (h - checkboxSize) * 0.5
         if pnl._isCheckable then
-            local accentColor = lia.color.theme and lia.color.theme.accent or Color(60, 140, 140)
+            local checkAccentColor = lia.color.theme and lia.color.theme.accent or Color(60, 140, 140)
             if pnl._isRadio then
-                lia.derma.rect(checkboxX, checkboxY, checkboxSize, checkboxSize):Rad(checkboxSize * 0.5):Color(accentColor):Draw()
+                lia.derma.rect(checkboxX, checkboxY, checkboxSize, checkboxSize):Rad(checkboxSize * 0.5):Color(checkAccentColor):Draw()
                 if pnl._isChecked then lia.derma.rect(checkboxX + 4, checkboxY + 4, checkboxSize - 8, checkboxSize - 8):Rad((checkboxSize - 8) * 0.5):Color(color_white):Draw() end
             else
-                lia.derma.rect(checkboxX, checkboxY, checkboxSize, checkboxSize):Rad(4):Color(accentColor):Draw()
+                lia.derma.rect(checkboxX, checkboxY, checkboxSize, checkboxSize):Rad(4):Color(checkAccentColor):Draw()
                 if pnl._isChecked then draw.SimpleText("✓", "LiliaFont.14", checkboxX + checkboxSize * 0.5, checkboxY + checkboxSize * 0.5, color_white, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER) end
             end
 

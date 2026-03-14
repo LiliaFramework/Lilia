@@ -18,23 +18,6 @@ function PANEL:Init()
     end
 
     hook.Add("DrawPhysgunBeam", "liaMainMenuPreDrawPhysgunBeam", function() return IsValid(lia.gui.character) end)
-    hook.Add("RenderScreenspaceEffects", "liaCharMenuDarken", function()
-        if not IsValid(lia.gui.character) then return end
-        local inFull = lia.gui.character.inCharacterCreation
-        if not inFull then return end
-        DrawColorModify({
-            ["$pp_colour_addr"] = 0,
-            ["$pp_colour_addg"] = 0,
-            ["$pp_colour_addb"] = 0,
-            ["$pp_colour_brightness"] = -0.3,
-            ["$pp_colour_contrast"] = 0.6,
-            ["$pp_colour_colour"] = 0.6,
-            ["$pp_colour_mulr"] = 0,
-            ["$pp_colour_mulg"] = 0,
-            ["$pp_colour_mulb"] = 0
-        })
-    end)
-
     self:Dock(FILL)
     self:MakePopup()
     self:SetAlpha(0)
@@ -60,7 +43,7 @@ function PANEL:Init()
     self.content:Dock(FILL)
     self.content:DockMargin(64, 0, 64, 64)
     self.content:SetPaintBackground(false)
-    self.music = self:Add("liaCharBGMusic")
+    self:StartBGMusic()
     self:createTitle()
     self:loadBackground()
     self:createChangelogDisplay()
@@ -83,6 +66,128 @@ function PANEL:Init()
         self.content:SetVisible(false)
         self:createWelcomeScreen()
     end
+end
+
+function PANEL:setInWorldPreviewEnabled(enabled)
+    enabled = enabled == true
+    if enabled == self.inWorldPreview then return end
+    self.inWorldPreview = enabled
+    if enabled then
+        self:hideExternalEntities()
+        hook.Add("PrePlayerDraw", "liaMainMenuPrePlayerDraw", function() return true end)
+        local calcViewHook = "liaMainMenuCalcView"
+        hook.Add("CalcView", calcViewHook, function(_, _, _, fov)
+            if not IsValid(self) or not self.inWorldPreview then return end
+            local ent = self.modelEntity
+            if not IsValid(ent) then return end
+            local center = ent:GetPos() + Vector(0, 0, 60)
+            local modelAngles = self.mainMenuModelAngles or ent:GetAngles()
+            local forward = modelAngles:Forward()
+            local desired = center + forward * 70
+            if not self.currentCamPos then
+                self.currentCamPos = desired
+            else
+                self.currentCamPos = LerpVector(FrameTime() * 5, self.currentCamPos, desired)
+            end
+
+            local target = center
+            if self.inWorldPreview and not self.isLoadMode then target = target - modelAngles:Right() * 40 end
+            return {
+                origin = self.currentCamPos,
+                angles = (target - self.currentCamPos):Angle(),
+                fov = fov,
+                drawviewer = true
+            }
+        end)
+    else
+        self:restoreExternalEntities()
+        self.currentCamPos = nil
+        if not self.isLoadMode then
+            hook.Remove("CalcView", "liaMainMenuCalcView")
+            hook.Remove("PrePlayerDraw", "liaMainMenuPrePlayerDraw")
+        end
+
+        if IsValid(self.modelEntity) then self.modelEntity:Remove() end
+    end
+end
+
+function PANEL:updateCreationModelEntity(context)
+    if not istable(context) then return end
+    local factionIndex = context.faction
+    local faction = factionIndex and lia.faction.indices[factionIndex] or nil
+    if not faction or not faction.models then return end
+    local info = faction.models[context.model or 1]
+    local mdl, skin, groups = info, 0, {}
+    if istable(info) then mdl, skin, groups = info[1], info[2], info[3] end
+    if IsValid(self.modelEntity) then self.modelEntity:Remove() end
+    self.modelEntity = ClientsideModel(mdl or "models/error.mdl", RENDERGROUP_OPAQUE)
+    if not IsValid(self.modelEntity) then return end
+    self.modelEntity:SetSkin(context.skin or skin or 0)
+    local finalGroups = istable(context.groups) and context.groups or istable(groups) and groups
+    if finalGroups then
+        for id, val in pairs(finalGroups) do
+            self.modelEntity:SetBodygroup(tonumber(id) or id, tonumber(val) or 0)
+        end
+    end
+
+    hook.Run("SetupPlayerModel", self.modelEntity)
+    local pos, ang
+    if faction.mainMenuPosition then
+        local menuPos = faction.mainMenuPosition
+        local currentMap = lia.data.getEquivalencyMap(game.GetMap())
+        if istable(menuPos) and menuPos[currentMap] then
+            local mapPos = menuPos[currentMap]
+            if istable(mapPos) then
+                pos, ang = mapPos.position, mapPos.angles
+            elseif isvector(mapPos) then
+                pos, ang = mapPos, Angle(0, 0, 0)
+            end
+        elseif istable(menuPos) then
+            pos, ang = menuPos.position, menuPos.angles
+        elseif isvector(menuPos) then
+            pos, ang = menuPos, Angle(0, 0, 0)
+        end
+    end
+
+    if not pos then
+        local hookResult = {hook.Run("GetMainMenuPosition")}
+        pos, ang = hookResult[1], hookResult[2]
+    end
+
+    if not pos or not ang then
+        local spawns = ents.FindByClass("info_player_start")
+        pos = #spawns > 0 and spawns[1]:GetPos() or Vector()
+        ang = #spawns > 0 and spawns[1]:GetAngles() or Angle()
+    end
+
+    self.mainMenuModelAngles = ang
+    local yawOffset = tonumber(context.previewYaw) or 0
+    if yawOffset ~= 0 then ang = Angle(ang.p, ang.y + yawOffset, ang.r) end
+    pos = self:getClosestGroundPosition(pos)
+    self.modelEntity:SetPos(pos)
+    self.modelEntity:SetAngles(ang)
+    self.currentCamPos = nil
+    local seqID = self.modelEntity:LookupSequence("idle_all_01")
+    if seqID > 0 then
+        self.modelEntity:ResetSequence(seqID)
+        self.modelEntity:SetCycle(0)
+    end
+
+    hook.Run("ModifyCharacterModel", self.modelEntity, context)
+    hook.Add("PostDrawOpaqueRenderables", "liaMainMenuPostDrawOpaqueRenderables", function()
+        if IsValid(self) and self.inWorldPreview and IsValid(self.modelEntity) then
+            self.modelEntity:FrameAdvance()
+            render.SuppressEngineLighting(true)
+            render.ResetModelLighting(1, 1, 1)
+            render.SetModelLighting(0, 1, 1, 1)
+            for i = 1, 6 do
+                render.SetModelLighting(i, 1, 1, 1)
+            end
+
+            self.modelEntity:DrawModel()
+            render.SuppressEngineLighting(false)
+        end
+    end)
 end
 
 function PANEL:createWelcomeScreen()
@@ -407,6 +512,25 @@ function PANEL:createChangelogDisplay()
     end
 end
 
+function PANEL:StartBGMusic()
+    if lia.menuMusic then
+        lia.menuMusic:Stop()
+        lia.menuMusic = nil
+    end
+
+    timer.Remove("liaMusicFader")
+    local src = lia.config.get("Music", "")
+    if not src:match("%S") then return end
+    local vol = lia.config.get("MusicVolume", 0.25)
+    local function play(music)
+        music:SetVolume(vol)
+        lia.menuMusic = music
+        music:Play()
+    end
+
+    sound.PlayFile(src, "noplay", function(m) if m then play(m) end end)
+end
+
 function PANEL:hideExternalEntities()
     self.hiddenEntities = {}
     for _, ent in ents.Iterator() do
@@ -471,11 +595,12 @@ function PANEL:loadBackground()
             self.rightArrow = nil
         end
 
-        local url = lia.config.get("BackgroundURL") or ""
-        if url and isstring(url) and url:find("%S") then
+        local url = lia.config.get("BackgroundURL")
+        if not isstring(url) then url = tostring(url or "") end
+        if string.find(url, "%S") then
             self.background = self:Add("DHTML")
             self.background:SetSize(ScrW(), ScrH())
-            if url:find("http") then
+            if string.find(url, "http", 1, true) then
                 self.background:OpenURL(url)
             else
                 self.background:SetHTML(url)
@@ -693,7 +818,7 @@ function PANEL:createStartButton()
         if not returnTooltip or returnTooltip == "" then returnTooltip = "Return to your character" end
         table.insert(buttonsData, {
             id = "return",
-            text = L("returnButton"),
+            text = L("returnToMainMenu"),
             tooltip = returnTooltip,
             doClick = function() self:Remove() end
         })
@@ -756,7 +881,7 @@ end
 
 function PANEL:createTabs()
     self.tabs:Clear()
-    if not self.isKickedFromChar then self:addTab(L("returnText"), function() self:backToMainMenu() end, true) end
+    if not self.isKickedFromChar then self:addTab(L("returnToMainMenu"), function() self:backToMainMenu() end, true) end
 end
 
 function PANEL:backToMainMenu()
@@ -774,6 +899,7 @@ function PANEL:backToMainMenu()
         self.rightArrow = nil
     end
 
+    if self.inWorldPreview then self:setInWorldPreviewEnabled(false) end
     if IsValid(self.selectBtn) then self.selectBtn:Remove() end
     if IsValid(self.deleteBtn) then self.deleteBtn:Remove() end
     if IsValid(self.setMainBtn) then self.setMainBtn:Remove() end
@@ -790,6 +916,24 @@ function PANEL:backToMainMenu()
     self:createStartButton()
     self:loadBackground()
     self:createChangelogDisplay()
+end
+
+function PANEL:getClosestGroundPosition(pos)
+    if not isvector(pos) then return pos end
+    local startPos = pos + Vector(0, 0, 4096)
+    local endPos = pos + Vector(0, 0, -16384)
+    local tr = util.TraceLine({
+        start = startPos,
+        endpos = endPos,
+        mask = MASK_SOLID,
+        filter = {self.modelEntity, LocalPlayer()}
+    })
+
+    if tr.Hit then
+        local hitPos = tr.HitPos
+        if isvector(hitPos) then return hitPos + Vector(0, 0, 2) end
+    end
+    return pos
 end
 
 function PANEL:createCharacterSelection()
@@ -1114,6 +1258,7 @@ function PANEL:updateModelEntity(character)
         ang = #spawns > 0 and spawns[1]:GetAngles() or Angle()
     end
 
+    pos = self:getClosestGroundPosition(pos)
     self.modelEntity:SetPos(pos)
     self.modelEntity:SetAngles(ang)
     self.currentCamPos = nil
@@ -1133,7 +1278,7 @@ function PANEL:updateModelEntity(character)
 
     hook.Run("ModifyCharacterModel", self.modelEntity, character)
     hook.Add("PostDrawOpaqueRenderables", "liaMainMenuPostDrawOpaqueRenderables", function()
-        if IsValid(self.modelEntity) then
+        if IsValid(self.modelEntity) and (self.isLoadMode or self.inWorldPreview) then
             self.modelEntity:FrameAdvance()
             self.modelEntity:DrawModel()
         end
@@ -1261,7 +1406,6 @@ function PANEL:fadeOut()
 end
 
 function PANEL:Paint(w, h)
-    if not self.noBlur then lia.util.drawBlur(self) end
     self:paintBackground(w, h)
 end
 
@@ -1337,6 +1481,28 @@ function PANEL:OnRemove()
     if render.oldDrawBeam then
         render.DrawBeam = render.oldDrawBeam
         render.oldDrawBeam = nil
+    end
+
+    local music = lia.menuMusic
+    if music then
+        lia.menuMusic = nil
+        timer.Remove("liaMusicFader")
+        local vol = lia.config.get("MusicVolume", 0.25)
+        local start = RealTime()
+        timer.Create("liaMusicFader", 0.1, 0, function()
+            if not music then return timer.Remove("liaMusicFader") end
+            local frac = math.max(0, 1 - (RealTime() - start) / 5)
+            if music.ChangeVolume then
+                music:ChangeVolume(frac * vol, 0.1)
+            else
+                music:SetVolume(frac * vol)
+            end
+
+            if frac <= 0 then
+                music:Stop()
+                timer.Remove("liaMusicFader")
+            end
+        end)
     end
 
     if IsValid(self.modelEntity) then self.modelEntity:Remove() end

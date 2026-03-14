@@ -11,9 +11,16 @@ function PANEL:configureSteps()
     end
 
     self.steps = ordered
+    self:addStep(vgui.Create("liaCharacterSummary"))
 end
 
 function PANEL:updateModel()
+    if not istable(self.context) then return end
+    if IsValid(lia.gui.character) and lia.gui.character.inWorldPreview then
+        lia.gui.character:updateCreationModelEntity(self.context)
+        return
+    end
+
     if not IsValid(self.model) then return end
     local faction = lia.faction.indices[self.context.faction]
     if not faction then return end
@@ -191,7 +198,49 @@ function PANEL:onStepChanged(oldStep, newStep)
     if IsValid(newStep) then
         local panelName = newStep:GetName()
         local shouldShowModel = panelName == "liaCharacterModel"
-        if IsValid(self.model) then self.model:SetVisible(shouldShowModel) end
+        if IsValid(self.model) then self.model:SetVisible(shouldShowModel and not (IsValid(lia.gui.character) and lia.gui.character.inWorldPreview)) end
+        if IsValid(lia.gui.character) then
+            lia.gui.character.inCharacterCreationModelStep = shouldShowModel or false
+            if shouldShowModel then
+                if IsValid(self.content) then
+                    self.content:Dock(RIGHT)
+                    self.content:SetWide(ScrW() * 0.5)
+                    self.content:DockMargin(0, 64, 64, 96)
+                end
+
+                lia.gui.character.noBlur = true
+                if IsValid(self.model) then
+                    self.model:SetVisible(false)
+                    self.model:SetWide(0)
+                end
+
+                if IsValid(self.buttons) and IsValid(self.content) then
+                    self.buttons:SetParent(self.content)
+                    self.buttons:Dock(BOTTOM)
+                    self.buttons:SetTall(48)
+                    self.buttons:MoveToFront()
+                end
+
+                lia.gui.character:setInWorldPreviewEnabled(true)
+                lia.gui.character:updateCreationModelEntity(self.context)
+            else
+                if lia.gui.character.inWorldPreview then lia.gui.character:setInWorldPreviewEnabled(false) end
+                lia.gui.character.noBlur = false
+                if IsValid(self.content) then
+                    local margin = ScrW() > 1280 and ScrW() * 0.15 or ScrW() > 720 and ScrW() * 0.075 or 0
+                    self.content:Dock(FILL)
+                    self.content:DockMargin(margin, 64, margin, 96)
+                    self.content:SetWide(0)
+                end
+
+                if IsValid(self.buttons) then
+                    self.buttons:SetParent(self)
+                    self.buttons:Dock(BOTTOM)
+                    self.buttons:SetTall(48)
+                    self.buttons:MoveToFront()
+                end
+            end
+        end
     end
 
     if IsValid(self:getPreviousStep()) then
@@ -239,14 +288,14 @@ function PANEL:Init()
     local ok, reason = self:canCreateCharacter()
     if not ok then return self:showMessage(reason) end
     lia.gui.charCreate = self
-    local margin = ScrW() > 1280 and ScrW() * 0.15 or ScrW() > 720 and ScrW() * 0.075 or 0
     self.content = self:Add("DPanel")
+    local margin = ScrW() > 1280 and ScrW() * 0.15 or ScrW() > 720 and ScrW() * 0.075 or 0
     self.content:Dock(FILL)
     self.content:DockMargin(margin, 64, margin, 0)
     self.content:SetPaintBackground(false)
     self.model = self.content:Add("liaModelPanel")
     if not IsValid(self.model) then return self:showError("Failed to create model panel") end
-    self.model:SetWide(ScrW() * 0.25)
+    self.model:SetWide(0)
     self.model:Dock(LEFT)
     self.model:SetModel("models/error.mdl")
     self.model:fitFOV()
@@ -280,6 +329,14 @@ function PANEL:Init()
     if #self.steps == 0 then return self:showError("noCharacterSteps") end
     self:nextStep()
     timer.Simple(0.5, function() if IsValid(self) and IsValid(self.model) then hook.Run("ModifyCharacterModel", self.model:GetEntity()) end end)
+end
+
+function PANEL:OnRemove()
+    if IsValid(lia.gui.character) and lia.gui.character.inWorldPreview then lia.gui.character:setInWorldPreviewEnabled(false) end
+    if IsValid(lia.gui.character) then
+        lia.gui.character.inCharacterCreationModelStep = false
+        lia.gui.character.noBlur = false
+    end
 end
 
 vgui.Register("liaCharacterCreation", PANEL, "EditablePanel")

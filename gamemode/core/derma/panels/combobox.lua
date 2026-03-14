@@ -151,6 +151,21 @@ function PANEL:OpenMenu()
     local itemHeight = 32
     local numChoices = #self.choices
     local calculatedHeight = numChoices * (itemHeight + 2) + (menuPadding * 2) + 2
+    local paintOptionLikeParent = function(parent, s, w, h, isSelected)
+        if not IsValid(parent) then return end
+        local bgColor = Color(25, 28, 35, 250)
+        local accentColor = lia.color.theme and lia.color.theme.theme or Color(116, 185, 255)
+        local base = ColorAlpha(bgColor, 200)
+        if isSelected then
+            base = ColorAlpha(accentColor, 220)
+        elseif s:IsHovered() then
+            base = ColorAlpha(accentColor, 180)
+        end
+
+        lia.derma.rect(0, 0, w, h):Rad(6):Color(base):Shape(lia.derma.SHAPE_IOS):Draw()
+        lia.derma.rect(0, 0, w, h):Rad(6):Color(accentColor):Outline(1):Draw()
+    end
+
     surface.SetFont(self.font)
     local maxTextWidth = 0
     for _, choice in ipairs(self.choices) do
@@ -176,8 +191,12 @@ function PANEL:OpenMenu()
         self.menu:MakePopup()
         self.menu:SetKeyboardInputEnabled(false)
         self.menu.Paint = function(_, w, h)
-            lia.derma.rect(0, 0, w, h):Rad(16):Color(lia.color.theme.window_shadow):Shape(lia.derma.SHAPE_IOS):Shadow(10, 16):Draw()
-            lia.derma.rect(0, 0, w, h):Rad(16):Color(lia.color.theme.background_panelpopup):Shape(lia.derma.SHAPE_IOS):Draw()
+            local accentColor = lia.color.theme and lia.color.theme.theme or Color(116, 185, 255)
+            lia.derma.rect(0, 0, w, h):Rad(14):Color(lia.color.theme.window_shadow):Shape(lia.derma.SHAPE_IOS):Shadow(10, 16):Draw()
+            lia.derma.rect(0, 0, w, h):Rad(14):Color(lia.color.theme.background_panelpopup):Shape(lia.derma.SHAPE_IOS):Draw()
+            lia.derma.rect(0, 0, w, h):Rad(14):Color(ColorAlpha(Color(255, 255, 255), 18)):Outline(1):Draw()
+            lia.derma.rect(0, 0, w, h):Rad(14):Color(ColorAlpha(accentColor, 65)):Outline(1):Draw()
+            lia.derma.rect(10, 8, w - 20, 2):Rad(2):Color(ColorAlpha(accentColor, 120)):Draw()
         end
 
         local canvas = self.menu:GetCanvas()
@@ -205,15 +224,8 @@ function PANEL:OpenMenu()
                 option.Paint = function(s, w, h)
                     if not IsValid(self) then return end
                     local isSelected = self.selected == choice.text
-                    local isHovered = s:IsHovered()
-                    if isSelected then
-                        lia.derma.rect(0, 0, w, h):Rad(16):Color(Color(25, 28, 35, 220)):Shape(lia.derma.SHAPE_IOS):Draw()
-                        lia.derma.rect(0, 0, w, h):Rad(16):Color(ColorAlpha(lia.color.theme.theme or Color(116, 185, 255), 50)):Shape(lia.derma.SHAPE_IOS):Draw()
-                    elseif isHovered then
-                        lia.derma.rect(0, 0, w, h):Rad(16):Color(lia.color.theme.hover):Shape(lia.derma.SHAPE_IOS):Draw()
-                    end
-
-                    local textColor = isSelected and lia.color.theme.text_entry or lia.color.theme.text
+                    paintOptionLikeParent(self, s, w, h, isSelected)
+                    local textColor = self:GetTextColor() or lia.color.theme.text
                     draw.SimpleText(choice.text, "LiliaFont.18", 14, h * 0.5, textColor, TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)
                 end
 
@@ -237,8 +249,12 @@ function PANEL:OpenMenu()
         self.menu:SetKeyboardInputEnabled(false)
         self.menu:DockPadding(menuPadding, menuPadding, menuPadding, menuPadding)
         self.menu.Paint = function(_, w, h)
-            lia.derma.rect(0, 0, w, h):Rad(16):Color(lia.color.theme.window_shadow):Shape(lia.derma.SHAPE_IOS):Shadow(10, 16):Draw()
-            lia.derma.rect(0, 0, w, h):Rad(16):Color(lia.color.theme.background_panelpopup):Shape(lia.derma.SHAPE_IOS):Draw()
+            local accentColor = lia.color.theme and lia.color.theme.theme or Color(116, 185, 255)
+            lia.derma.rect(0, 0, w, h):Rad(14):Color(lia.color.theme.window_shadow):Shape(lia.derma.SHAPE_IOS):Shadow(10, 16):Draw()
+            lia.derma.rect(0, 0, w, h):Rad(14):Color(lia.color.theme.background_panelpopup):Shape(lia.derma.SHAPE_IOS):Draw()
+            lia.derma.rect(0, 0, w, h):Rad(14):Color(ColorAlpha(Color(255, 255, 255), 18)):Outline(1):Draw()
+            lia.derma.rect(0, 0, w, h):Rad(14):Color(ColorAlpha(accentColor, 65)):Outline(1):Draw()
+            lia.derma.rect(10, 8, w - 20, 2):Rad(2):Color(ColorAlpha(accentColor, 120)):Draw()
         end
 
         surface.SetFont(self.font)
@@ -264,15 +280,8 @@ function PANEL:OpenMenu()
                 option.Paint = function(s, w, h)
                     if not IsValid(self) then return end
                     local isSelected = self.selected == choice.text
-                    local isHovered = s:IsHovered()
-                    if isSelected then
-                        lia.derma.rect(0, 0, w, h):Rad(16):Color(Color(25, 28, 35, 220)):Shape(lia.derma.SHAPE_IOS):Draw()
-                        lia.derma.rect(0, 0, w, h):Rad(16):Color(ColorAlpha(lia.color.theme.theme or Color(116, 185, 255), 50)):Shape(lia.derma.SHAPE_IOS):Draw()
-                    elseif isHovered then
-                        lia.derma.rect(0, 0, w, h):Rad(16):Color(lia.color.theme.hover):Shape(lia.derma.SHAPE_IOS):Draw()
-                    end
-
-                    local textColor = isSelected and lia.color.theme.text_entry or lia.color.theme.text
+                    paintOptionLikeParent(self, s, w, h, isSelected)
+                    local textColor = self:GetTextColor() or lia.color.theme.text
                     draw.SimpleText(choice.text, "LiliaFont.18", 14, h * 0.5, textColor, TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)
                 end
 
