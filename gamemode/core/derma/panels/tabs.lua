@@ -127,6 +127,17 @@ function PANEL:UpdateTabVisibility()
     self:InvalidateLayout()
 end
 
+function PANEL:OnMouseWheeled(delta)
+    if not self.needs_navigation then return end
+    if delta > 0 then
+        self:ScrollTabs(-1)
+    elseif delta < 0 then
+        self:ScrollTabs(1)
+    end
+
+    return true
+end
+
 function PANEL:OnSizeChanged()
     self:InvalidateLayout()
 end
