@@ -552,7 +552,9 @@ else
                     end
 
                     for _, plyObj in ipairs(players) do
-                        ctrl:AddChoice(plyObj:Name(), plyObj:SteamID())
+                        local identifier = plyObj:SteamID()
+                        if identifier == "BOT" then identifier = plyObj:Name() end
+                        ctrl:AddChoice(plyObj:Name(), identifier)
                     end
 
                     ctrl:FinishAddingOptions()
@@ -6442,8 +6444,6 @@ lia.command.add("listdoorids", {
                 field = "value"
             }
         }, doorList)
-
-        client:notifyInfoLocalized("doorFoundCount", #doorData)
     end
 })
 
@@ -6469,17 +6469,60 @@ lia.command.add("plytransfer", {
         }
     },
     onRun = function(client, arguments)
-        local targetPlayer = lia.util.findPlayer(client, arguments[1])
+        local targetPlayer
+        local factionArgIndex = 2
+        if istable(arguments) and #arguments >= 2 then
+            local lastArg = arguments[#arguments]
+            local assumedFaction = lia.faction.teams[lastArg]
+            if not assumedFaction then
+                local factionIndex = tonumber(lastArg)
+                if factionIndex then assumedFaction = lia.faction.indices[factionIndex] end
+            end
+
+            if assumedFaction then
+                local assumedName = table.concat(arguments, " ", 1, #arguments - 1)
+                local assumedTarget = lia.util.findPlayer(client, assumedName)
+                if assumedTarget and IsValid(assumedTarget) then
+                    targetPlayer = assumedTarget
+                    factionArgIndex = #arguments
+                end
+            end
+        end
+
+        targetPlayer = targetPlayer or lia.util.findPlayer(client, arguments[1])
+        if (not targetPlayer or not IsValid(targetPlayer)) and arguments[2] then
+            local combined = tostring(arguments[1]) .. " " .. tostring(arguments[2])
+            local combinedTarget = lia.util.findPlayer(client, combined)
+            if combinedTarget and IsValid(combinedTarget) then
+                targetPlayer = combinedTarget
+                factionArgIndex = 3
+            end
+        end
+
+        if (not targetPlayer or not IsValid(targetPlayer)) and arguments[3] then
+            local combined = tostring(arguments[1]) .. " " .. tostring(arguments[2]) .. " " .. tostring(arguments[3])
+            local combinedTarget = lia.util.findPlayer(client, combined)
+            if combinedTarget and IsValid(combinedTarget) then
+                targetPlayer = combinedTarget
+                factionArgIndex = 4
+            end
+        end
+
         if not targetPlayer or not IsValid(targetPlayer) then
             client:notifyErrorLocalized("targetNotFound")
             return
         end
 
-        local factionName = arguments[2]
-        local faction = lia.faction.teams[factionName] or lia.util.findFaction(client, factionName)
+        local factionName = arguments[factionArgIndex]
+        local faction = lia.faction.teams[factionName]
         if not faction then
-            client:notifyErrorLocalized("invalidFaction")
-            return
+            local factionIndex = tonumber(factionName)
+            if factionIndex then faction = lia.faction.indices[factionIndex] end
+        end
+
+        if not faction then
+            faction = lia.util.findFaction(client, tostring(factionName))
+            if not faction then return end
         end
 
         if faction.uniqueID == "staff" then
