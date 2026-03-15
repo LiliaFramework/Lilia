@@ -174,10 +174,15 @@ function lia.class.canBe(client, class)
     if client:Team() ~= info.faction then return false, L("classWrongTeam") end
     local character = client:getChar()
     if character and character:getClass() == class then return false, L("alreadyInClass") end
-    if info.limit > 0 and #lia.class.getPlayers(info.index) >= info.limit then return false, L("classFull") end
-    if hook.Run("CanPlayerJoinClass", client, class, info) == false then return false end
-    if info.OnCanBe and not info:OnCanBe(client) then return false end
-    return info.isDefault
+    local currentCount = #lia.class.getPlayers(info.index)
+    if info.limit > 0 and currentCount >= info.limit then return false, L("classFull") end
+    local hookResult = hook.Run("CanPlayerJoinClass", client, class, info)
+    if hookResult == false then return false end
+    if info.OnCanBe then
+        local onCanBeResult = info:OnCanBe(client)
+        if not onCanBeResult then return false end
+    end
+    return true
 end
 
 --[[
