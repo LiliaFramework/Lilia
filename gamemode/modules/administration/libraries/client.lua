@@ -940,16 +940,11 @@ local function GenerateDynamicCategories()
     local categories = {}
     local categoryNames = {}
     local adminStickCount = 0
-    for _, v in pairs(lia.command.list) do
-        if v.AdminStick and istable(v.AdminStick) then
+    for _, cmdData in pairs(lia.command.list) do
+        if cmdData and istable(cmdData) and cmdData.AdminStick and istable(cmdData.AdminStick) then
             adminStickCount = adminStickCount + 1
-            local category = v.AdminStick.Category
-            local subcategory = v.AdminStick.SubCategory
-            if category == "adminsticksubcategorycharacterflags" then
-                category = "characterManagement"
-                if not subcategory then subcategory = "adminsticksubcategorycharacterflags" end
-            end
-
+            local category = cmdData.AdminStick.Category
+            local subcategory = cmdData.AdminStick.SubCategory
             if category then
                 if not categories[category] then
                     categories[category] = {
@@ -977,89 +972,23 @@ local function GenerateDynamicCategories()
     local mergedCategoryNames = {}
     for _, categoryKey in ipairs(categoryNames) do
         local category = categories[categoryKey]
-        local displayName = L(category.name)
-        local existingKey = nil
-        for existingKeyCheck, existingCategory in pairs(mergedCategories) do
-            if L(existingCategory.name) == displayName then
-                existingKey = existingKeyCheck
-                break
-            end
-        end
-
-        if existingKey then
-            for subKey, subCategory in pairs(category.subcategories) do
-                if not mergedCategories[existingKey].subcategories[subKey] then mergedCategories[existingKey].subcategories[subKey] = subCategory end
-            end
-        else
-            mergedCategories[categoryKey] = category
-            table.insert(mergedCategoryNames, categoryKey)
-        end
-    end
-
-    for _, category in pairs(mergedCategories) do
-        local localizedName = L(category.name)
-        if localizedName ~= category.name then
-            category.name = localizedName
-        else
-            local formattedName = category.name
-            if formattedName:lower() == "flagmanagement" then
-                formattedName = "Flag Management"
-            elseif formattedName:lower() == "doormanagement" then
-                formattedName = "Door Management"
-            elseif formattedName:lower() == "charactermanagement" then
-                formattedName = "Character Management"
-            elseif formattedName:lower() == "playerinformation" then
-                formattedName = "Player Information"
-            elseif formattedName:lower() == "adminsticksubcategorybans" then
-                formattedName = "Bans"
-            elseif formattedName:lower() == "adminsticksubcategorysetinfos" then
-                formattedName = "Set Information"
-            elseif formattedName:lower() == "adminsticksubcategorygetinfos" then
-                formattedName = "Get Information"
-            elseif formattedName:lower() == "adminsticksubcategorycharacterflags" then
-                formattedName = "Character Flags"
-            else
-                formattedName = formattedName:gsub("(%l)(%w*)", function(a, b) return string.upper(a) .. b end)
-                formattedName = formattedName:gsub("_", " ")
-            end
-
-            category.name = formattedName
-        end
-
-        for _, subCategory in pairs(category.subcategories) do
-            local localizedSubName = L(subCategory.name)
-            if localizedSubName ~= subCategory.name then
-                subCategory.name = localizedSubName
-            else
-                local formattedSubName = subCategory.name
-                if formattedSubName:lower() == "moderationtools" then
-                    formattedSubName = "Moderation Tools"
-                elseif formattedSubName:lower() == "information" then
-                    formattedSubName = "Information"
-                elseif formattedSubName:lower() == "properties" then
-                    formattedSubName = "Properties"
-                elseif formattedSubName:lower() == "actions" then
-                    formattedSubName = "Actions"
-                elseif formattedSubName:lower() == "settings" then
-                    formattedSubName = "Settings"
-                elseif formattedSubName:lower() == "access" then
-                    formattedSubName = "Access"
-                elseif formattedSubName:lower() == "adminsticksubcategorybans" then
-                    formattedSubName = "Bans"
-                elseif formattedSubName:lower() == "adminsticksubcategorysetinfos" then
-                    formattedSubName = "Set Information"
-                elseif formattedSubName:lower() == "adminsticksubcategorygetinfos" then
-                    formattedSubName = "Get Information"
-                elseif formattedSubName:lower() == "adminsticksubcategorycharacterflags" then
-                    formattedSubName = "Flags"
-                elseif formattedSubName:lower() == "doorinformation" then
-                    formattedSubName = "Door Information"
-                else
-                    formattedSubName = formattedSubName:gsub("(%l)(%w*)", function(a, b) return string.upper(a) .. b end)
-                    formattedSubName = formattedSubName:gsub("_", " ")
+        if category then
+            local displayName = L(category.name)
+            local existingKey = nil
+            for existingKeyCheck, existingCategory in pairs(mergedCategories) do
+                if L(existingCategory.name) == displayName then
+                    existingKey = existingKeyCheck
+                    break
                 end
+            end
 
-                subCategory.name = formattedSubName
+            if existingKey then
+                for subKey, subCategory in pairs(category.subcategories) do
+                    if not mergedCategories[existingKey].subcategories[subKey] then mergedCategories[existingKey].subcategories[subKey] = subCategory end
+                end
+            else
+                mergedCategories[categoryKey] = category
+                table.insert(mergedCategoryNames, categoryKey)
             end
         end
     end
@@ -1097,17 +1026,33 @@ local function GenerateDynamicCategories()
                     name = "Information",
                     icon = "icon16/information.png"
                 },
-                factions = {
-                    name = L("adminStickSubCategoryFactions") or "Factions",
-                    icon = "icon16/group.png"
-                },
-                classes = {
-                    name = L("adminStickSubCategoryClasses") or "Classes",
-                    icon = "icon16/user.png"
+                transfers = {
+                    name = L("adminStickSubCategoryTransfers") or "Transfers",
+                    icon = "icon16/arrow_right.png",
+                    subcategories = {
+                        adminStickSubCategoryFactions = {
+                            name = L("adminStickSubCategoryFactions") or "Factions",
+                            icon = "icon16/group.png"
+                        },
+                        adminStickSubCategoryClasses = {
+                            name = L("adminStickSubCategoryClasses") or "Classes",
+                            icon = "icon16/user.png"
+                        }
+                    }
                 },
                 whitelists = {
                     name = L("adminStickSubCategoryWhitelists") or "Whitelists",
-                    icon = "icon16/group_add.png"
+                    icon = "icon16/group_key.png",
+                    subcategories = {
+                        adminStickSubCategoryFactions = {
+                            name = L("adminStickSubCategoryFactions") or "Factions",
+                            icon = "icon16/group.png"
+                        },
+                        adminStickSubCategoryClasses = {
+                            name = L("adminStickSubCategoryClasses") or "Classes",
+                            icon = "icon16/user.png"
+                        }
+                    }
                 },
                 properties = {
                     name = "Properties",
@@ -1891,9 +1836,9 @@ local function AddCommandToMenu(menu, data, key, tgt, name, stores)
         if sub == "information" or sub == "adminStickSubCategorySetInfos" or sub == "adminStickSubCategoryGetInfos" then
             subcategoryKey = "information"
         elseif sub == "factions" then
-            subcategoryKey = "factions"
+            subcategoryKey = "transfers"
         elseif sub == "classes" then
-            subcategoryKey = "classes"
+            subcategoryKey = "transfers"
         elseif sub == "whitelists" then
             subcategoryKey = "whitelists"
         elseif sub == "properties" or sub == "flags" or sub == "attributes" or sub == "miscellaneous" then
@@ -2335,19 +2280,54 @@ function MODULE:OpenAdminStickUI(tgt)
                 icon = "icon16/information.png"
             }
 
-            categories.characterManagement.subcategories.factions = {
-                name = L("adminStickSubCategoryFactions") or "Factions",
-                icon = "icon16/group.png"
-            }
-
-            categories.characterManagement.subcategories.classes = {
-                name = L("adminStickSubCategoryClasses") or "Classes",
-                icon = "icon16/group_edit.png"
+            categories.characterManagement.subcategories.transfers = {
+                name = L("adminStickSubCategoryTransfers") or "Transfers",
+                icon = "icon16/arrow_right.png",
+                subcategories = {
+                    adminStickSubCategoryFactions = {
+                        name = L("factions"),
+                        icon = "icon16/group.png"
+                    },
+                    adminStickSubCategoryClasses = {
+                        name = "Classes",
+                        icon = "icon16/user.png"
+                    }
+                }
             }
 
             categories.characterManagement.subcategories.whitelists = {
                 name = L("adminStickSubCategoryWhitelists") or "Whitelists",
-                icon = "icon16/group_key.png"
+                icon = "icon16/group_key.png",
+                subcategories = {
+                    adminStickSubCategoryClasses = {
+                        name = L("classes"),
+                        icon = "icon16/user.png",
+                        subcategories = {
+                            adminStickClassAddWhitelist = {
+                                name = L("addWhitelist"),
+                                icon = "icon16/user_add.png"
+                            },
+                            adminStickClassRemoveWhitelist = {
+                                name = L("removeWhitelist"),
+                                icon = "icon16/user_delete.png"
+                            }
+                        }
+                    },
+                    adminStickSubCategoryFactions = {
+                        name = L("faction"),
+                        icon = "icon16/group.png",
+                        subcategories = {
+                            adminStickFactionAddWhitelist = {
+                                name = L("addWhitelist"),
+                                icon = "icon16/group_add.png"
+                            },
+                            adminStickFactionRemoveWhitelist = {
+                                name = L("removeWhitelist"),
+                                icon = "icon16/group_delete.png"
+                            }
+                        }
+                    }
+                }
             }
 
             categories.characterManagement.subcategories.properties = {
@@ -2444,148 +2424,165 @@ function MODULE:OpenAdminStickUI(tgt)
         if target:IsPlayer() then
             local char = target:getChar()
             if not char then return end
-            if char then
+            if canFaction then
+                local facOptions = {}
+                for _, v in pairs(lia.faction.teams) do
+                    table.insert(facOptions, {
+                        name = v.name,
+                        icon = "icon16/group.png",
+                        callback = function(callbackTarget)
+                            local cmd = 'say /plytransfer ' .. QuoteArgs(GetIdentifier(callbackTarget), v.uniqueID)
+                            client:ConCommand(cmd)
+                        end
+                    })
+                end
+
+                if #facOptions > 0 then
+                    table.insert(lists, {
+                        name = L("factions"),
+                        category = "characterManagement",
+                        subcategory = "transfers",
+                        subSubcategory = "adminStickSubCategoryFactions",
+                        items = facOptions
+                    })
+                end
+            end
+
+            if canClass then
                 local facID = char:getFaction()
-                if facID then
-                    if canFaction then
-                        local facOptions = {}
-                        for _, f in pairs(lia.faction.teams) do
-                            if f.index == facID then
-                                for _, v in pairs(lia.faction.teams) do
-                                    table.insert(facOptions, {
-                                        name = v.name,
-                                        icon = "icon16/group.png",
-                                        callback = function(callbackTarget)
-                                            local cmd = 'say /plytransfer ' .. QuoteArgs(GetIdentifier(callbackTarget), v.uniqueID)
-                                            client:ConCommand(cmd)
-                                        end
-                                    })
-                                end
-
-                                break
+                local classes = facID and (lia.faction.getClasses(facID) or {}) or {}
+                if classes and #classes >= 1 then
+                    local cls = {}
+                    for _, c in ipairs(classes) do
+                        table.insert(cls, {
+                            name = c.name,
+                            icon = "icon16/user.png",
+                            callback = function(callbackTarget)
+                                local cmd = 'say /setclass ' .. QuoteArgs(GetIdentifier(callbackTarget), c.uniqueID)
+                                client:ConCommand(cmd)
                             end
-                        end
-
-                        if #facOptions > 0 then
-                            table.insert(lists, {
-                                name = "Factions",
-                                category = "characterManagement",
-                                subcategory = "factions",
-                                items = facOptions
-                            })
-                        end
+                        })
                     end
 
-                    local classes = lia.faction.getClasses(facID) or {}
-                    if classes and #classes >= 1 and canClass then
-                        local cls = {}
-                        for _, c in ipairs(classes) do
-                            table.insert(cls, {
-                                name = c.name,
-                                icon = "icon16/user.png",
+                    if #cls > 0 then
+                        table.insert(lists, {
+                            name = "Classes",
+                            category = "characterManagement",
+                            subcategory = "transfers",
+                            subSubcategory = "adminStickSubCategoryClasses",
+                            items = cls
+                        })
+                    end
+                end
+            end
+
+            if canWhitelist then
+                local facAdd, facRemove = {}, {}
+                for _, v in pairs(lia.faction.teams) do
+                    if not v.isDefault then
+                        if not target:hasWhitelist(v.index) then
+                            table.insert(facAdd, {
+                                name = v.name,
+                                icon = "icon16/group_add.png",
                                 callback = function(callbackTarget)
-                                    local cmd = 'say /setclass ' .. QuoteArgs(GetIdentifier(callbackTarget), c.uniqueID)
+                                    local cmd = 'say /plywhitelist ' .. QuoteArgs(GetIdentifier(callbackTarget), v.uniqueID)
+                                    client:ConCommand(cmd)
+                                end
+                            })
+                        else
+                            table.insert(facRemove, {
+                                name = v.name,
+                                icon = "icon16/group_delete.png",
+                                callback = function(callbackTarget)
+                                    local cmd = 'say /plyunwhitelist ' .. QuoteArgs(GetIdentifier(callbackTarget), v.uniqueID)
                                     client:ConCommand(cmd)
                                 end
                             })
                         end
-
-                        if #cls > 0 then
-                            table.insert(lists, {
-                                name = "Classes",
-                                category = "characterManagement",
-                                subcategory = "classes",
-                                items = cls
-                            })
-                        end
                     end
+                end
 
-                    if canWhitelist then
-                        local facAdd, facRemove = {}, {}
-                        for _, v in pairs(lia.faction.teams) do
-                            if not v.isDefault then
-                                if not target:hasWhitelist(v.index) then
-                                    table.insert(facAdd, {
-                                        name = v.name,
-                                        icon = "icon16/group_add.png",
-                                        callback = function(callbackTarget)
-                                            local cmd = 'say /plywhitelist ' .. QuoteArgs(GetIdentifier(callbackTarget), v.uniqueID)
-                                            client:ConCommand(cmd)
-                                        end
-                                    })
-                                else
-                                    table.insert(facRemove, {
-                                        name = v.name,
-                                        icon = "icon16/group_delete.png",
-                                        callback = function(callbackTarget)
-                                            local cmd = 'say /plyunwhitelist ' .. QuoteArgs(GetIdentifier(callbackTarget), v.uniqueID)
-                                            client:ConCommand(cmd)
-                                        end
-                                    })
-                                end
-                            end
-                        end
+                if #facAdd > 0 then
+                    table.insert(lists, {
+                        name = L("factions"),
+                        category = "characterManagement",
+                        subcategory = "whitelists",
+                        subSubcategory = "adminStickSubCategoryFactions",
+                        subSubSubcategory = "adminStickFactionAddWhitelist",
+                        items = facAdd
+                    })
+                end
 
-                        local whitelistItems = {}
-                        for _, item in ipairs(facAdd) do
-                            table.insert(whitelistItems, item)
-                        end
+                if #facRemove > 0 then
+                    table.insert(lists, {
+                        name = L("factions"),
+                        category = "characterManagement",
+                        subcategory = "whitelists",
+                        subSubcategory = "adminStickSubCategoryFactions",
+                        subSubSubcategory = "adminStickFactionRemoveWhitelist",
+                        items = facRemove
+                    })
+                end
 
-                        for _, item in ipairs(facRemove) do
-                            table.insert(whitelistItems, item)
-                        end
+                local classWhitelists = char:getClasswhitelists() or {}
+                local factionClassCategories = {}
+                for _, v in pairs(lia.faction.teams) do
+                    local classes = lia.faction.getClasses(v.index) or {}
+                    if classes and #classes > 0 then
+                        factionClassCategories[v.uniqueID] = {
+                            name = v.name,
+                            icon = "icon16/group.png",
+                            addItems = {},
+                            removeItems = {}
+                        }
 
-                        if #whitelistItems > 0 then
-                            table.insert(lists, {
-                                name = "Whitelists",
-                                category = "characterManagement",
-                                subcategory = "whitelists",
-                                items = whitelistItems
-                            })
-                        end
-
-                        if classes and #classes > 0 then
-                            local cw, cu = {}, {}
-                            for _, c in ipairs(classes) do
-                                if not target:getChar():getClasswhitelists()[c.index] then
-                                    table.insert(cw, {
-                                        name = c.name,
-                                        icon = "icon16/user_add.png",
-                                        callback = function(callbackTarget)
-                                            local cmd = 'say /classwhitelist ' .. QuoteArgs(GetIdentifier(callbackTarget), c.uniqueID)
-                                            client:ConCommand(cmd)
-                                        end
-                                    })
-                                else
-                                    table.insert(cu, {
-                                        name = c.name,
-                                        icon = "icon16/user_delete.png",
-                                        callback = function(callbackTarget)
-                                            local cmd = 'say /classunwhitelist ' .. QuoteArgs(GetIdentifier(callbackTarget), c.uniqueID)
-                                            client:ConCommand(cmd)
-                                        end
-                                    })
-                                end
-                            end
-
-                            local classWhitelistItems = {}
-                            for _, item in ipairs(cw) do
-                                table.insert(classWhitelistItems, item)
-                            end
-
-                            for _, item in ipairs(cu) do
-                                table.insert(classWhitelistItems, item)
-                            end
-
-                            if #classWhitelistItems > 0 then
-                                table.insert(lists, {
-                                    name = "Class Whitelists",
-                                    category = "characterManagement",
-                                    subcategory = "whitelists",
-                                    items = classWhitelistItems
+                        for _, c in ipairs(classes) do
+                            if not classWhitelists[c.index] then
+                                table.insert(factionClassCategories[v.uniqueID].addItems, {
+                                    name = c.name,
+                                    icon = "icon16/user_add.png",
+                                    callback = function(callbackTarget)
+                                        local cmd = 'say /classwhitelist ' .. QuoteArgs(GetIdentifier(callbackTarget), c.uniqueID)
+                                        client:ConCommand(cmd)
+                                    end
+                                })
+                            else
+                                table.insert(factionClassCategories[v.uniqueID].removeItems, {
+                                    name = c.name,
+                                    icon = "icon16/user_delete.png",
+                                    callback = function(callbackTarget)
+                                        local cmd = 'say /classunwhitelist ' .. QuoteArgs(GetIdentifier(callbackTarget), c.uniqueID)
+                                        client:ConCommand(cmd)
+                                    end
                                 })
                             end
                         end
+                    end
+                end
+
+                for factionID, factionData in pairs(factionClassCategories) do
+                    if #factionData.addItems > 0 then
+                        table.insert(lists, {
+                            name = factionData.name,
+                            category = "characterManagement",
+                            subcategory = "whitelists",
+                            subSubcategory = "adminStickSubCategoryClasses",
+                            subSubSubcategory = "adminStickClassAddWhitelist",
+                            subSubSubSubcategory = factionID,
+                            items = factionData.addItems
+                        })
+                    end
+
+                    if #factionData.removeItems > 0 then
+                        table.insert(lists, {
+                            name = factionData.name,
+                            category = "characterManagement",
+                            subcategory = "whitelists",
+                            subSubcategory = "adminStickSubCategoryClasses",
+                            subSubSubcategory = "adminStickClassRemoveWhitelist",
+                            subSubSubSubcategory = factionID,
+                            items = factionData.removeItems
+                        })
                     end
                 end
             end
@@ -2600,39 +2597,35 @@ function MODULE:OpenAdminStickUI(tgt)
             local categoryKey = listData.category
             local subcategoryKey = listData.subcategory
             local subSubcategoryKey = listData.subSubcategory
+            local subSubSubcategoryKey = listData.subSubSubcategory
+            local subSubSubSubcategoryKey = listData.subSubSubSubcategory
             local items = listData.items
-            if listName and categoryKey and subcategoryKey and items and #items > 0 then
-                local category = GetOrCreateCategoryMenu(currentMenu, categoryKey, currentStores)
-                if category and IsValid(category) then
-                    local subcategory = GetOrCreateSubCategoryMenu(category, categoryKey, subcategoryKey, currentStores)
-                    if subcategory and IsValid(subcategory) then
-                        local targetMenu = subcategory
-                        if subSubcategoryKey then
-                            targetMenu = GetOrCreateSubCategoryMenu(subcategory, categoryKey .. "_" .. subcategoryKey, subSubcategoryKey, currentStores)
-                            if not targetMenu or not IsValid(targetMenu) then targetMenu = subcategory end
-                        end
+            if not (listName and categoryKey and subcategoryKey and items and #items > 0) then continue end
+            local category = GetOrCreateCategoryMenu(currentMenu, categoryKey, currentStores)
+            if not category or not IsValid(category) then continue end
+            local subcategory = GetOrCreateSubCategoryMenu(category, categoryKey, subcategoryKey, currentStores)
+            if not subcategory or not IsValid(subcategory) then continue end
+            local targetMenu = subcategory
+            if subSubcategoryKey then targetMenu = GetOrCreateSubCategoryMenu(subcategory, categoryKey .. "_" .. subcategoryKey, subSubcategoryKey, currentStores) or subcategory end
+            if subSubSubcategoryKey then targetMenu = GetOrCreateSubCategoryMenu(targetMenu, categoryKey .. "_" .. subcategoryKey .. "_" .. (subSubcategoryKey or ""), subSubSubcategoryKey, currentStores) or subcategory end
+            if subSubSubSubcategoryKey then targetMenu = GetOrCreateSubCategoryMenu(targetMenu, categoryKey .. "_" .. subcategoryKey .. "_" .. (subSubcategoryKey or "") .. "_" .. (subSubSubcategoryKey or ""), subSubSubSubcategoryKey, currentStores) or subcategory end
+            if not targetMenu or not IsValid(targetMenu) then continue end
+            table.sort(items, function(a, b) return (a.name or "") < (b.name or "") end)
+            local icon = subMenuIcons[listName] or "icon16/page.png"
+            for _, item in ipairs(items) do
+                local option = targetMenu:AddOption(L(item.name), function()
+                    if item.callback then item.callback(currentTarget, item) end
+                    timer.Simple(0.1, function() AdminStickIsOpen = false end)
+                end)
 
-                        if targetMenu and IsValid(targetMenu) then
-                            table.sort(items, function(a, b) return (a.name or "") < (b.name or "") end)
-                            local icon = subMenuIcons[listName] or "icon16/page.png"
-                            for _, item in ipairs(items) do
-                                local option = targetMenu:AddOption(L(item.name), function()
-                                    if item.callback then item.callback(currentTarget, item) end
-                                    timer.Simple(0.1, function() AdminStickIsOpen = false end)
-                                end)
-
-                                if item.icon and IsValid(option) then
-                                    option:SetIcon(item.icon)
-                                elseif icon and icon ~= "icon16/page.png" and IsValid(option) then
-                                    option:SetIcon(icon)
-                                end
-                            end
-
-                            if targetMenu.UpdateSize then targetMenu:UpdateSize() end
-                        end
-                    end
+                if item.icon and IsValid(option) then
+                    option:SetIcon(item.icon)
+                elseif icon and icon ~= "icon16/page.png" and IsValid(option) then
+                    option:SetIcon(icon)
                 end
             end
+
+            if targetMenu.UpdateSize then targetMenu:UpdateSize() end
         end
     end)
 
