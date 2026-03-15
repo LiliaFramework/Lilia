@@ -521,25 +521,33 @@ function PANEL:Init()
     lia.gui.classes = self
     local w, h = self:GetParent():GetSize()
     self:SetSize(w, h)
-    self.sidebar = self:Add("liaScrollPanel")
+    local frame = self:Add("liaFrame")
+    frame:Dock(FILL)
+    frame:DockMargin(10, 10, 10, 10)
+    frame:DockPadding(10, 10, 10, 10)
+    frame:SetTitle("")
+    frame:LiteMode()
+    frame:DisableCloseBtn()
+    self.frame = frame
+    self.sidebar = frame:Add("liaScrollPanel")
     self.sidebar:Dock(LEFT)
-    self.sidebar:SetWide(220)
-    self.sidebar:DockMargin(20, 20, 0, 20)
-    self.sidebar.Paint = function(_, sidebarW, sidebarH)
-        local windowShadow = lia.color.theme and lia.color.theme.window_shadow or Color(18, 32, 32, 90)
-        local backgroundPanel = lia.color.theme and lia.color.theme.background_panelpopup or Color(20, 28, 28)
-        lia.derma.rect(0, 0, sidebarW, sidebarH):Rad(12):Color(windowShadow):Shape(lia.derma.SHAPE_IOS):Shadow(8, 16):Draw()
-        lia.derma.rect(0, 0, sidebarW, sidebarH):Rad(12):Color(backgroundPanel):Shape(lia.derma.SHAPE_IOS):Draw()
+    self.sidebar:SetWide(240)
+    self.sidebar:DockMargin(0, 0, 10, 0)
+    self.sidebar.Paint = function() end
+    local sidebarCanvas = self.sidebar:GetCanvas()
+    if IsValid(sidebarCanvas) then
+        sidebarCanvas:DockPadding(4, 4, 4, 4)
+        sidebarCanvas.Paint = function() end
     end
 
-    self.mainContent = self:Add("liaScrollPanel")
+    self.mainContent = frame:Add("liaScrollPanel")
     self.mainContent:Dock(FILL)
-    self.mainContent:DockMargin(10, 10, 10, 10)
-    self.mainContent.Paint = function(_, contentW, contentH)
-        local windowShadow = lia.color.theme and lia.color.theme.window_shadow or Color(18, 32, 32, 90)
-        local backgroundPanel = lia.color.theme and lia.color.theme.background_panelpopup or Color(20, 28, 28)
-        lia.derma.rect(0, 0, contentW, contentH):Rad(12):Color(windowShadow):Shape(lia.derma.SHAPE_IOS):Shadow(8, 16):Draw()
-        lia.derma.rect(0, 0, contentW, contentH):Rad(12):Color(backgroundPanel):Shape(lia.derma.SHAPE_IOS):Draw()
+    self.mainContent:DockMargin(0, 0, 0, 0)
+    self.mainContent.Paint = function() end
+    local mainCanvas = self.mainContent:GetCanvas()
+    if IsValid(mainCanvas) then
+        mainCanvas:DockPadding(6, 6, 6, 6)
+        mainCanvas.Paint = function() end
     end
 
     self.tabList = {}
@@ -556,72 +564,150 @@ function PANEL:loadClasses()
     table.sort(list, function(a, b) return L(a.name or "") < L(b.name or "") end)
     self.sidebar:Clear()
     self.tabList = {}
+    local firstBtn = nil
     for _, cl in ipairs(list) do
         local canBe = lia.class.canBe(LocalPlayer(), cl.index)
-        local btn = self.sidebar:Add("liaMediumButton")
-        btn:SetText(cl.name and L(cl.name) or L("unnamed"))
-        btn:SetTall(50)
+        local btn = self.sidebar:Add("liaTabButton")
         btn:Dock(TOP)
-        btn:DockMargin(5, 5, 5, 5)
-        local textColor = lia.color.returnMainAdjustedColors and lia.color.returnMainAdjustedColors().text or color_white
-        btn:SetTextColor(textColor)
-        btn:SetFont("LiliaFont.25")
-        btn:SetExpensiveShadow(1, Color(0, 0, 0, 100))
-        btn.DoClick = function()
-            lia.websound.playButtonSound()
+        btn:DockMargin(4, 4, 4, 4)
+        btn:SetTall(34)
+        btn:SetText(cl.name and L(cl.name) or L("unnamed"))
+        btn:SetActive(false)
+        btn:SetDoClick(function()
             for _, b in ipairs(self.tabList) do
-                b:SetSelected(b == btn)
+                if IsValid(b) then b:SetActive(b == btn) end
             end
 
             self:populateClassDetails(cl, canBe)
-        end
+        end)
 
         self.tabList[#self.tabList + 1] = btn
+        if not firstBtn then firstBtn = btn end
     end
+
+    if IsValid(firstBtn) then timer.Simple(0, function() if IsValid(firstBtn) then firstBtn:DoClick() end end) end
 end
 
 function PANEL:populateClassDetails(cl, canBe)
-    self.mainContent:Clear()
-    local container = self.mainContent:Add("DPanel")
+    local canvas = self.mainContent:GetCanvas()
+    if IsValid(canvas) then
+        canvas:Clear()
+    else
+        self.mainContent:Clear()
+    end
+
+    local parent = IsValid(canvas) and canvas or self.mainContent
+    local container = parent:Add("DPanel")
     container:Dock(TOP)
-    container:DockMargin(10, 10, 10, 10)
-    container:SetTall(800)
+    container:DockMargin(0, 0, 0, 0)
+    container:DockPadding(10, 10, 10, 10)
+    container:SetTall(math.max(self.mainContent:GetTall(), 200))
     container.Paint = function(_, w, h)
-        local windowShadow = lia.color.theme and lia.color.theme.window_shadow or Color(18, 32, 32, 90)
-        local backgroundPanel = lia.color.theme and lia.color.theme.background_panelpopup or Color(20, 28, 28)
-        lia.derma.rect(0, 0, w, h):Rad(8):Color(windowShadow):Shape(lia.derma.SHAPE_IOS):Shadow(5, 12):Draw()
-        lia.derma.rect(0, 0, w, h):Rad(8):Color(backgroundPanel):Shape(lia.derma.SHAPE_IOS):Draw()
+        local bgColor = Color(25, 28, 35, 250)
+        lia.derma.rect(0, 0, w, h):Rad(12):Color(bgColor):Shape(lia.derma.SHAPE_IOS):Draw()
     end
 
+    container.Think = function(s)
+        if not IsValid(self) or not IsValid(self.mainContent) then return end
+        local targetTall = math.max(self.mainContent:GetTall(), 200)
+        if s:GetTall() ~= targetTall then s:SetTall(targetTall) end
+    end
+
+    local header = container:Add("DPanel")
+    header:Dock(TOP)
+    header:DockMargin(0, 0, 0, 10)
+    header:SetTall(56)
+    header.Paint = function() end
+    local title = header:Add("DLabel")
+    title:Dock(FILL)
+    title:SetFont("LiliaFont.25")
+    title:SetText(cl.name and L(cl.name) or L("unnamed"))
+    title:SetTextColor(lia.color.returnMainAdjustedColors and lia.color.returnMainAdjustedColors().text or color_white)
+    title:SetContentAlignment(4)
+    local body = container:Add("DPanel")
+    body:Dock(FILL)
+    body.Paint = function() end
+    local right = body:Add("liaScrollPanel")
+    right:Dock(RIGHT)
+    right:SetWide(320)
+    right:DockMargin(10, 0, 0, 0)
+    right.Paint = function() end
+    local rightCanvas = right:GetCanvas()
+    if IsValid(rightCanvas) then
+        rightCanvas:DockPadding(0, 0, 0, 0)
+        rightCanvas.Paint = function() end
+    end
+
+    right.Think = function(s)
+        local cnv = s:GetCanvas()
+        if not IsValid(cnv) then return end
+        local vbarW = (IsValid(s.VBar) and s.VBar:GetWide()) or 0
+        local targetW = math.max(s:GetWide() - vbarW - 2, 1)
+        if cnv:GetWide() ~= targetW then cnv:SetWide(targetW) end
+        local totalH = 0
+        for _, child in ipairs(cnv:GetChildren()) do
+            if IsValid(child) then
+                totalH = totalH + child:GetTall()
+                if child.GetDockMargin then
+                    local _, top, _, bottom = child:GetDockMargin()
+                    if top then totalH = totalH + top end
+                    if bottom then totalH = totalH + bottom end
+                end
+            end
+        end
+
+        local minH = math.max(s:GetTall(), 1)
+        local targetH = math.max(totalH, minH)
+        if cnv:GetTall() ~= targetH then cnv:SetTall(targetH) end
+    end
+
+    local rightParent = IsValid(rightCanvas) and rightCanvas or right
     if cl.logo then
-        local img = container:Add("DImage")
+        local logoWrap = rightParent:Add("DPanel")
+        logoWrap:Dock(TOP)
+        logoWrap:DockMargin(0, 0, 0, 10)
+        logoWrap:SetTall(140)
+        logoWrap.Paint = function() end
+        local img = logoWrap:Add("DImage")
+        img:SetSize(128, 128)
         img:SetImage(cl.logo)
-        img:setScaledSize(128, 128)
-        img.Think = function() img:SetPos(container:GetWide() - img:GetWide() - 10, 10) end
+        img:SetKeepAspect(true)
+        logoWrap.PerformLayout = function(s, w, h) if IsValid(img) then img:SetPos(math.floor((w - img:GetWide()) * 0.5), math.floor((h - img:GetTall()) * 0.5)) end end
     end
 
-    self:createModelPanel(container, cl)
-    self:addClassDetails(container, cl)
-    self:addJoinButton(container, cl, canBe)
+    local left = body:Add("liaScrollPanel")
+    left:Dock(FILL)
+    left.Paint = function() end
+    local leftCanvas = left:GetCanvas()
+    if IsValid(leftCanvas) then
+        leftCanvas:DockPadding(0, 0, 0, 0)
+        leftCanvas.Paint = function() end
+    end
+
+    self:createModelPanel(rightParent, cl)
+    self:addJoinButton(rightParent, cl, canBe)
+    self:addClassDetails(left, cl)
+    container.PerformLayout = function(s)
+        s:SizeToChildren(false, true)
+        s:SetTall(math.max(s:GetTall(), body:GetTall() + header:GetTall() + 30))
+    end
 end
 
 function PANEL:createModelPanel(parent, cl)
-    local sizeX, sizeY = 300, 600
     local panel = parent:Add("liaModelPanel")
-    panel:Dock(RIGHT)
-    panel:DockMargin(10, 20, 20, 20)
-    panel:SetWide(sizeX)
-    panel:SetTall(sizeY)
+    panel:Dock(TOP)
+    panel:DockMargin(0, 0, 0, 10)
+    panel:SetTall(420)
     panel:SetFOV(35)
-    panel.Paint = function(_, modelW, modelH)
-        local windowShadow = lia.color.theme and lia.color.theme.window_shadow or Color(18, 32, 32, 90)
-        local backgroundPanel = lia.color.theme and lia.color.theme.background_panelpopup or Color(20, 28, 28)
-        lia.derma.rect(0, 0, modelW, modelH):Rad(8):Color(windowShadow):Shape(lia.derma.SHAPE_IOS):Shadow(5, 12):Draw()
-        lia.derma.rect(0, 0, modelW, modelH):Rad(8):Color(backgroundPanel):Shape(lia.derma.SHAPE_IOS):Draw()
+    local basePaint = panel.Paint
+    panel.Paint = function(s, modelW, modelH)
+        local bgColor = Color(35, 38, 45, 180)
+        lia.derma.rect(0, 0, modelW, modelH):Rad(10):Color(bgColor):Shape(lia.derma.SHAPE_IOS):Draw()
+        if basePaint then basePaint(s, modelW, modelH) end
     end
 
     local function getModel(mdl)
-        if isstring(mdl) then return mdl end
+        if isstring(mdl) and mdl ~= "" then return mdl end
         if istable(mdl) then
             local models = {}
             local function gather(tbl)
@@ -639,30 +725,38 @@ function PANEL:createModelPanel(parent, cl)
         end
     end
 
-    local model = getModel(cl.model) or LocalPlayer():GetModel()
+    local model = getModel(cl.model or cl.models) or LocalPlayer():GetModel()
+    if util and util.IsValidModel and not util.IsValidModel(model) then model = LocalPlayer():GetModel() end
     panel:SetModel(model)
+    panel:fitFOV()
     panel.rotationAngle = 45
-    local ent = panel.Entity
-    ent:SetSkin(cl.skin or 0)
-    for _, bg in ipairs(cl.bodyGroups or {}) do
-        ent:SetBodygroup(bg.id, bg.value or 0)
-    end
+    local function applyEntitySettings()
+        local ent = panel.Entity
+        if not IsValid(ent) then return end
+        ent:SetSkin(cl.skin or 0)
+        for _, bg in ipairs(cl.bodyGroups or {}) do
+            ent:SetBodygroup(bg.id, bg.value or 0)
+        end
 
-    for i, mat in ipairs(cl.subMaterials or {}) do
-        ent:SetSubMaterial(i - 1, mat)
-    end
-
-    panel.Think = function()
-        if IsValid(ent) then
-            if input.IsKeyDown(KEY_A) then
-                panel.rotationAngle = panel.rotationAngle - 0.5
-            elseif input.IsKeyDown(KEY_D) then
-                panel.rotationAngle = panel.rotationAngle + 0.5
-            end
-
-            ent:SetAngles(Angle(0, panel.rotationAngle, 0))
+        for i, mat in ipairs(cl.subMaterials or {}) do
+            ent:SetSubMaterial(i - 1, mat)
         end
     end
+
+    applyEntitySettings()
+    timer.Simple(0, function() if IsValid(panel) then applyEntitySettings() end end)
+    timer.Simple(0.1, function() if IsValid(panel) then applyEntitySettings() end end)
+    panel.LayoutEntity = function(_, ent)
+        if not IsValid(ent) then return end
+        if input.IsKeyDown(KEY_A) then
+            panel.rotationAngle = panel.rotationAngle - 0.5
+        elseif input.IsKeyDown(KEY_D) then
+            panel.rotationAngle = panel.rotationAngle + 0.5
+        end
+
+        ent:SetAngles(Angle(0, panel.rotationAngle, 0))
+    end
+    return model
 end
 
 function PANEL:addClassDetails(parent, cl)
@@ -670,15 +764,29 @@ function PANEL:addClassDetails(parent, cl)
     local maxH, maxA, maxJ = client:GetMaxHealth(), client:GetMaxArmor(), client:GetJumpPower()
     local run, walk = lia.config.get("RunSpeed"), lia.config.get("WalkSpeed")
     local function add(text)
-        local lbl = parent:Add("DLabel")
-        lbl:SetFont("LiliaFont.25")
+        local row = parent:Add("DPanel")
+        row:Dock(TOP)
+        row:DockMargin(0, 0, 0, 8)
+        row:DockPadding(10, 8, 10, 8)
+        row.Paint = function(_, w, h)
+            local rowBg = Color(35, 38, 45, 180)
+            lia.derma.rect(0, 0, w, h):Rad(10):Color(rowBg):Shape(lia.derma.SHAPE_IOS):Draw()
+        end
+
+        local lbl = row:Add("DLabel")
+        lbl:Dock(FILL)
+        lbl:SetFont("LiliaFont.18")
         lbl:SetText(text)
         local textColor = lia.color.returnMainAdjustedColors and lia.color.returnMainAdjustedColors().text or color_white
         lbl:SetTextColor(textColor)
         lbl:SetWrap(true)
-        lbl:Dock(TOP)
-        lbl:DockMargin(10, 5, 10, 0)
-        lbl.Paint = function(_, w, h) lia.derma.rect(0, 0, w, h):Rad(4):Color(Color(0, 0, 0, 30)):Shape(lia.derma.SHAPE_IOS):Draw() end
+        lbl:SetAutoStretchVertical(true)
+        row.PerformLayout = function(s)
+            if not IsValid(lbl) then return end
+            lbl:SetWide(s:GetWide() - 20)
+            lbl:SizeToContentsY()
+            s:SetTall(lbl:GetTall() + 16)
+        end
     end
 
     add(L("name") .. ": " .. (cl.name and L(cl.name) or L("unnamed")))
@@ -688,8 +796,41 @@ function PANEL:addClassDetails(parent, cl)
     add(L("isDefault") .. ": " .. (cl.isDefault and L("yes") or L("no")))
     add(L("baseHealth") .. ": " .. tostring(cl.health or maxH))
     add(L("baseArmor") .. ": " .. tostring(cl.armor or maxA))
-    local weps = cl.weapons or {}
-    add(L("weapons") .. ": " .. (#weps > 0 and table.concat(weps, ", ") or L("none")))
+    local function getWeaponClassList(weps)
+        if isstring(weps) then return {weps} end
+        if not istable(weps) then return {} end
+        local out = {}
+        if #weps > 0 then
+            for _, v in ipairs(weps) do
+                if isstring(v) then
+                    out[#out + 1] = v
+                elseif istable(v) then
+                    local cn = v.class or v.weapon or v.name
+                    if isstring(cn) then out[#out + 1] = cn end
+                end
+            end
+        else
+            for _, v in pairs(weps) do
+                if isstring(v) then
+                    out[#out + 1] = v
+                elseif istable(v) then
+                    local cn = v.class or v.weapon or v.name
+                    if isstring(cn) then out[#out + 1] = cn end
+                end
+            end
+        end
+        return out
+    end
+
+    local wepClasses = getWeaponClassList(cl.weapons)
+    local weaponNames = {}
+    for _, className in ipairs(wepClasses) do
+        local stored = weapons.GetStored and weapons.GetStored(className) or nil
+        local printName = stored and (stored.PrintName or stored.Name) or nil
+        weaponNames[#weaponNames + 1] = printName and tostring(printName) ~= "" and tostring(printName) or tostring(className)
+    end
+
+    add(L("weapons") .. ": " .. (#weaponNames > 0 and table.concat(weaponNames, ", ") or L("none")))
     add(L("modelScale") .. ": " .. tostring(cl.scale or 1))
     local rs = cl.runSpeedMultiplier and math.Round(run * cl.runSpeed) or cl.runSpeed or run
     add(L("runSpeed") .. ": " .. tostring(rs))
@@ -716,8 +857,8 @@ function PANEL:addJoinButton(parent, cl, canBe)
     local btn = parent:Add("liaMediumButton")
     btn:SetText(isCurrent and L("alreadyInClass") or L("joinClass"))
     btn:SetTall(45)
-    btn:Dock(BOTTOM)
-    btn:DockMargin(10, 10, 10, 10)
+    btn:Dock(TOP)
+    btn:DockMargin(0, 0, 0, 0)
     local textColor = lia.color.returnMainAdjustedColors and lia.color.returnMainAdjustedColors().text or color_white
     local accentColor = lia.color.returnMainAdjustedColors and lia.color.returnMainAdjustedColors().accent or Color(100, 150, 255)
     btn:SetTextColor(textColor)
