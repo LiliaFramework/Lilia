@@ -234,10 +234,16 @@ end
 
 function MODULE:PlayerInitialSpawn(client)
     lia.log.add(client, "playerInitialSpawn")
+    local steam64 = IsValid(client) and client:SteamID64() or ""
+    local message = "Player " .. client:Name() .. " (Steam64ID: " .. steam64 .. ") has joined the server."
+    StaffAddTextShadowed(Color(0, 200, 0), "JOIN", Color(255, 255, 255), message)
 end
 
 function MODULE:PlayerDisconnected(client)
     lia.log.add(client, "playerDisconnected")
+    local steam64 = IsValid(client) and client:SteamID64() or ""
+    local message = "Player " .. client:Name() .. " (Steam64ID: " .. steam64 .. ") has left the server."
+    StaffAddTextShadowed(Color(128, 128, 128), "LEAVE", Color(255, 255, 255), message)
 end
 
 function MODULE:PlayerHurt(client, attacker, health, damage)
@@ -370,31 +376,6 @@ end
 function MODULE:ItemDraggedOutOfInventory(client, item)
     lia.log.add(client, "itemDraggedOut", item:getName())
 end
-
-net.Receive("liaCfgSet", function(_, client)
-    local key = net.ReadString()
-    local name = net.ReadString()
-    local value = net.ReadType()
-    if type(lia.config.stored[key].default) == type(value) and hook.Run("CanPlayerModifyConfig", client, key) ~= false then
-        local oldValue = lia.config.stored[key].value
-        lia.config.set(key, value)
-        hook.Run("ConfigChanged", key, value, oldValue, client)
-        if istable(value) then
-            local value2 = "["
-            local count = table.Count(value)
-            local i = 1
-            for _, v in SortedPairs(value) do
-                value2 = value2 .. v .. (i == count and "]" or ", ")
-                i = i + 1
-            end
-
-            value = value2
-        end
-
-        client:notifySuccessLocalized("cfgSet", client:Name(), name, tostring(value))
-        lia.log.add(client, "configChange", name, tostring(oldValue), tostring(value))
-    end
-end)
 
 net.Receive("liaManagesitroomsAction", function(_, client)
     if not client:hasPrivilege("manageSitRooms") then return end

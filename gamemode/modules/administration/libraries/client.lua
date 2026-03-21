@@ -1159,7 +1159,7 @@ local function GetOrCreateCategoryMenu(parent, categoryKey, store)
     local category = MODULE.adminStickCategories[categoryKey]
     if not category then
         MODULE.adminStickCategories[categoryKey] = {
-            name = L(categoryKey) ~= categoryKey and L(categoryKey) or categoryKey:gsub("(%l)(%w*)", function(a, b) return string.upper(a) .. b end):gsub("_", " "),
+            name = categoryKey == "characterManagement" and L("adminStickCategoryCharacterManagement") or (L(categoryKey) ~= categoryKey and L(categoryKey) or categoryKey:gsub("(%l)(%w*)", function(a, b) return string.upper(a) .. b end):gsub("_", " ")),
             icon = GetIconForCategory(categoryKey),
             subcategories = {}
         }
@@ -2973,45 +2973,6 @@ lia.net.readBigTable("liaSendLogs", function(logsData)
     end
 end)
 
-net.Receive("liaCfgList", function()
-    local changed = net.ReadTable()
-    for key, value in pairs(changed) do
-        if lia.config.stored[key] then lia.config.stored[key].value = value end
-    end
-
-    hook.Run("InitializedConfig")
-end)
-
-net.Receive("liaCfgSet", function()
-    local key = net.ReadString()
-    local value = net.ReadType()
-    local config = lia.config.stored[key]
-    if config then
-        if key == "Theme" then
-            lia.color.applyTheme(value, true)
-            if IsValid(lia.gui.menu) and lia.gui.menu.currentTab == "themes" and lia.gui.menu:IsVisible() and lia.gui.menu:GetAlpha() > 0 then
-                lia.gui.menu:Remove()
-                vgui.Create("liaMenu")
-            end
-        elseif key == "Font" then
-            if IsValid(lia.gui.menu) then lia.gui.menu:Update() end
-        end
-
-        local oldValue = config.value
-        config.value = value
-        if config.callback then config.callback(oldValue, value) end
-        hook.Run("OnConfigUpdated", key, oldValue, value)
-        local properties = lia.gui.properties
-        if IsValid(properties) then
-            local row = properties:GetCategory(L(config.data and config.data.category or "misc")):GetRow(key)
-            if IsValid(row) then
-                if istable(value) and value.r and value.g and value.b then value = Vector(value.r / 255, value.g / 255, value.b / 255) end
-                row:SetValue(value)
-            end
-        end
-    end
-end)
-
 net.Receive("liaBlindTarget", function()
     local enabled = net.ReadBool()
     if enabled then
@@ -3070,19 +3031,6 @@ net.Receive("liaAdminModeSwapCharacter", function()
     end)
 
     d:catch(function(err) if err and err ~= "" then LocalPlayer():notifyErrorLocalized(err) end end)
-    net.Start("liaCharChoose")
-    net.WriteUInt(id, 32)
-    net.SendToServer()
-end)
-
-net.Receive("liaManageSitRooms", function()
-    local rooms = net.ReadTable()
-    local frame = vgui.Create("liaFrame")
-    frame:SetTitle(L("manageSitrooms"))
-    frame:SetSize(600, 400)
-    frame:Center()
-    frame:MakePopup()
-    local scroll = vgui.Create("liaScrollPanel", frame)
     scroll:Dock(FILL)
     scroll:DockMargin(10, 30, 10, 10)
     for name in pairs(rooms) do

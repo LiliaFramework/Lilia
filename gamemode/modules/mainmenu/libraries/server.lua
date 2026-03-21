@@ -55,7 +55,7 @@ function MODULE:PlayerLoadedChar(client, character)
         net.Send(client)
     end)
 
-    if client:Alive() then client:Spawn() end
+    client:Spawn()
 end
 
 net.Receive("liaSetMainCharacter", function(_, client)

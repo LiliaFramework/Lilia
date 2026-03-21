@@ -14,6 +14,72 @@
 lia.config = lia.config or {}
 lia.config.stored = lia.config.stored or {}
 lia.config._lastSyncedValues = lia.config._lastSyncedValues or {}
+lia.config._initialized = lia.config._initialized or false
+lia.config._trace = false
+--[[
+    Purpose:
+        Register a callback to be executed when the configuration system is initialized.
+
+    When Called:
+        During module initialization to ensure config is ready before accessing values.
+
+    Parameters:
+        callback (function)
+            Function to execute when config is initialized.
+
+    Realm:
+        Shared
+
+    Example Usage:
+        ```lua
+        lia.config.onInitialized(function()
+            print("Config is ready!")
+        end)
+        ```
+]]
+function lia.config.onInitialized(callback)
+    if not isfunction(callback) then return end
+    if lia.config._initialized == true then
+        callback()
+        return
+    end
+
+    hook.Add("InitializedConfig", tostring(callback), function() callback() end)
+end
+
+local function cfgNormalizeValue(v)
+    if IsColor(v) then
+        return {
+            r = v.r,
+            g = v.g,
+            b = v.b,
+            a = v.a
+        }
+    end
+    return v
+end
+
+local function cfgCoerceValue(key, value)
+    local config = lia.config and lia.config.stored and lia.config.stored[key]
+    if not config then return value end
+    local configType = (config.data and config.data.type) or config.type
+    if configType == "Generic" or isstring(config.default) then
+        if value == nil then return "" end
+        if isvector(value) or isangle(value) then return "" end
+        if not isstring(value) then return tostring(value) end
+    end
+
+    if configType == "Color" and istable(value) then return Color(value.r, value.g, value.b, value.a) end
+    return value
+end
+
+local function cfgValuesEqual(a, b)
+    a = cfgNormalizeValue(a)
+    b = cfgNormalizeValue(b)
+    if istable(a) and istable(b) then return util.TableToJSON(a) == util.TableToJSON(b) end
+    return a == b
+end
+
 --[[
     Purpose:
         Register a config entry with defaults, UI metadata, and optional callback.
@@ -206,6 +272,7 @@ end
 function lia.config.set(key, value)
     local config = lia.config.stored[key]
     if config then
+        value = cfgCoerceValue(key, value)
         local oldValue = config.value
         config.value = value
         hook.Run("OnConfigUpdated", key, oldValue, value)
@@ -213,6 +280,7 @@ function lia.config.set(key, value)
             if not config.noNetworking then
                 net.Start("liaCfgSet")
                 net.WriteString(key)
+                net.WriteString(config.name or key)
                 net.WriteType(value)
                 net.Broadcast()
             end
@@ -254,7 +322,7 @@ function lia.config.get(key, default)
     local config = lia.config.stored[key]
     if config then
         if config.value ~= nil then
-            if istable(config.value) and config.value.r and config.value.g and config.value.b then config.value = Color(config.value.r, config.value.g, config.value.b) end
+            if istable(config.value) and config.value.r and config.value.g and config.value.b then config.value = Color(config.value.r, config.value.g, config.value.b, config.value.a or 255) end
             return config.value
         elseif config.default ~= nil then
             return config.default
@@ -287,18 +355,23 @@ function lia.config.load()
     if SERVER then
         local configData = lia.data.get("config", {})
         local existing = {}
-        for key, value in pairs(configData) do
-            lia.config.stored[key] = lia.config.stored[key] or {}
-            if value == nil or value == "" then
-                lia.config.stored[key].value = lia.config.stored[key].default
+        for cfgKey, cfgValue in pairs(configData) do
+            lia.config.stored[cfgKey] = lia.config.stored[cfgKey] or {}
+            cfgValue = cfgCoerceValue(cfgKey, cfgValue)
+            if cfgValue == nil or cfgValue == "" then
+                lia.config.stored[cfgKey].value = lia.config.stored[cfgKey].default
             else
-                lia.config.stored[key].value = value
-                existing[key] = true
+                lia.config.stored[cfgKey].value = cfgValue
+                existing[cfgKey] = true
             end
         end
 
+        local defaultedCount = 0
         for k, v in pairs(lia.config.stored) do
-            if not existing[k] then lia.config.stored[k].value = v.default end
+            if not existing[k] then
+                lia.config.stored[k].value = v.default
+                defaultedCount = defaultedCount + 1
+            end
         end
 
         for key, config in pairs(lia.config.stored) do
@@ -311,6 +384,7 @@ function lia.config.load()
             end
         end
 
+        lia.config._initialized = true
         hook.Run("InitializedConfig")
     else
         net.Start("liaCfgList")
@@ -318,132 +392,160 @@ function lia.config.load()
     end
 end
 
+if CLIENT then
+    lia.config._uiBindings = lia.config._uiBindings or {}
+    function lia.config._bindUI(key, panel, updater)
+        if not isstring(key) or key == "" then return end
+        if not IsValid(panel) or not isfunction(updater) then return end
+        lia.config._uiBindings[key] = lia.config._uiBindings[key] or {}
+        lia.config._uiBindings[key][panel] = updater
+    end
+
+    function lia.config._refreshBoundUI(key, value)
+        local bindings = lia.config._uiBindings and lia.config._uiBindings[key]
+        if not bindings then return end
+        for pnl, updater in pairs(bindings) do
+            if IsValid(pnl) then
+                local ok = pcall(updater, value)
+                if not ok then bindings[pnl] = nil end
+            else
+                bindings[pnl] = nil
+            end
+        end
+    end
+
+    net.Receive("liaCfgList", function()
+        local data = net.ReadTable() or {}
+        for k, v in pairs(data) do
+            local stored = lia.config.stored[k]
+            if stored then
+                stored.value = cfgCoerceValue(k, v)
+            else
+                lia.config.stored[k] = lia.config.stored[k] or {}
+                lia.config.stored[k].value = cfgCoerceValue(k, v)
+            end
+        end
+
+        lia.config._initialized = true
+        hook.Run("InitializedConfig")
+    end)
+
+    net.Receive("liaCfgSet", function()
+        local key = net.ReadString()
+        local _ = net.ReadString()
+        local value = net.ReadType()
+        local stored = lia.config.stored[key]
+        local oldValue = stored and stored.value
+        lia.config.stored[key] = lia.config.stored[key] or {}
+        lia.config.stored[key].value = cfgCoerceValue(key, value)
+        hook.Run("OnConfigUpdated", key, oldValue, lia.config.stored[key].value)
+    end)
+
+    hook.Add("OnConfigUpdated", "liaConfigRefreshUIBindings", function(key, _, value) lia.config._refreshBoundUI(key, value) end)
+end
+
 if SERVER then
     --[[
     Purpose:
-        Collect config entries whose values differ from last synced values or their defaults.
+        Get all configuration values that have been changed from their defaults.
 
     When Called:
-        Prior to sending incremental config updates to clients.
+        During config synchronization to determine what needs to be sent to clients.
 
     Parameters:
-        includeDefaults (boolean|nil)
-            When true, compare against defaults instead of last synced values.
+        includeDefaults (boolean)
+            When true, includes all values even if they match defaults.
 
     Returns:
         table
-            key → value for configs that changed.
+            Key/value pairs of changed configuration entries.
 
     Realm:
         Server
 
     Example Usage:
         ```lua
-        local changed = lia.config.getChangedValues()
-        if next(changed) then lia.config.send() end
+        local changes = lia.config.getChangedValues()
         ```
-    ]]
+]]
     function lia.config.getChangedValues(includeDefaults)
         local data = {}
         for k, v in pairs(lia.config.stored) do
             local isDifferent
             if includeDefaults or lia.config._lastSyncedValues[k] == nil then
-                if istable(v.default) and istable(v.value) then
-                    isDifferent = util.TableToJSON(v.default) ~= util.TableToJSON(v.value)
-                else
-                    isDifferent = v.default ~= v.value
-                end
+                isDifferent = not cfgValuesEqual(v.default, v.value)
             else
                 local lastSynced = lia.config._lastSyncedValues[k]
-                if istable(lastSynced) and istable(v.value) then
-                    isDifferent = util.TableToJSON(lastSynced) ~= util.TableToJSON(v.value)
-                else
-                    isDifferent = lastSynced ~= v.value
-                end
+                isDifferent = not cfgValuesEqual(lastSynced, v.value)
             end
 
-            if isDifferent then data[k] = v.value end
+            if isDifferent then data[k] = cfgNormalizeValue(v.value) end
         end
         return data
     end
 
     --[[
     Purpose:
-        Check whether any config values differ from the last synced snapshot.
+        Check if any configuration values have been changed from their defaults.
 
     When Called:
-        To determine if a resync to clients is required.
-
-    Parameters:
-        None
+        Before sending config updates to avoid unnecessary network traffic.
 
     Returns:
         boolean
-            True when at least one config value has changed.
+            True if there are changes, false otherwise.
 
     Realm:
         Server
 
     Example Usage:
         ```lua
-        if lia.config.hasChanges() then lia.config.send() end
-        ```
-    ]]
-    function lia.config.hasChanges()
-        if table.Count(lia.config._lastSyncedValues) == 0 and table.Count(lia.config.stored) > 0 then
-            for key, config in pairs(lia.config.stored) do
-                if config.value ~= nil then
-                    if istable(config.value) then
-                        lia.config._lastSyncedValues[key] = util.TableToJSON(config.value) and util.JSONToTable(util.TableToJSON(config.value)) or config.value
-                    else
-                        lia.config._lastSyncedValues[key] = config.value
-                    end
-                end
-            end
+        if lia.config.hasChanges() then
+            lia.config.send()
         end
-
+        ```
+]]
+    function lia.config.hasChanges()
         local changed = lia.config.getChangedValues()
-        local count = table.Count(changed)
-        return count > 0
+        return table.Count(changed) > 0
     end
 
     --[[
     Purpose:
-        Send config values to one player (full payload) or broadcast only changed values.
+        Send configuration data to a specific client or all clients.
 
     When Called:
-        After config changes or when a player joins the server.
+        During initial connection or when config values change.
 
     Parameters:
         client (Player|nil)
-            Target player for full sync; nil broadcasts only changed values.
+            Specific client to send to, or nil for all clients.
+
     Realm:
         Server
 
     Example Usage:
         ```lua
-        hook.Add("PlayerInitialSpawn", "SyncConfig", function(ply) lia.config.send(ply) end)
-        lia.config.send() -- broadcast diffs
+        lia.config.send() -- Send to all clients
+        lia.config.send(client) -- Send to specific client
         ```
-    ]]
+]]
     function lia.config.send(client)
         local data
         if client then
-            data = {}
-            for k, v in pairs(lia.config.stored) do
-                if v.value ~= nil then data[k] = v.value end
-            end
+            data = lia.data.get("config", {})
         else
             data = lia.config.getChangedValues()
             if table.Count(data) == 0 then return end
         end
 
-        local function getTargets()
-            if IsValid(client) then return {client} end
-            return player.GetHumans()
+        local targets
+        if IsValid(client) then
+            targets = {client}
+        else
+            targets = player.GetHumans()
         end
 
-        local targets = getTargets()
         if not istable(targets) or #targets == 0 then return end
         for key, value in pairs(data) do
             if istable(value) then
@@ -453,61 +555,18 @@ if SERVER then
             end
         end
 
-        local batchSize = 5
-        local baseDelayPerBatch = 0.05
-        local function sendTableStaggered(tbl, startDelay)
-            local delay = startDelay or 0
-            for i = 1, #targets, batchSize do
-                local batch = {}
-                for j = i, math.min(i + batchSize - 1, #targets) do
-                    batch[#batch + 1] = targets[j]
-                end
-
-                timer.Simple(delay, function()
-                    for _, ply in ipairs(batch) do
-                        if IsValid(ply) then
-                            net.Start("liaCfgList")
-                            net.WriteTable(tbl)
-                            net.Send(ply)
-                        end
-                    end
-                end)
-
-                delay = delay + baseDelayPerBatch
-            end
-        end
-
-        if not client and table.Count(data) > 50 then
-            local chunks = {}
-            local chunkSize = 25
-            local currentChunk = {}
-            for key, value in pairs(data) do
-                currentChunk[key] = value
-                if table.Count(currentChunk) >= chunkSize then
-                    table.insert(chunks, currentChunk)
-                    currentChunk = {}
-                end
-            end
-
-            if table.Count(currentChunk) > 0 then table.insert(chunks, currentChunk) end
-            for i, chunk in ipairs(chunks) do
-                local startDelay = (i - 1) * 0.15
-                sendTableStaggered(chunk, startDelay)
-            end
-        else
-            sendTableStaggered(data, 0)
-        end
+        net.Start("liaCfgList")
+        net.WriteTable(data)
+        net.Send(targets)
     end
 
     --[[
     Purpose:
-        Persist all config values to JSON files.
+        Persist configuration values to JSON file storage.
 
     When Called:
-        After changes, on shutdown, or during scheduled saves.
+        After configuration changes to ensure values are saved between server restarts.
 
-    Parameters:
-        None
     Realm:
         Server
 
@@ -515,11 +574,11 @@ if SERVER then
         ```lua
         lia.config.save()
         ```
-    ]]
+]]
     function lia.config.save()
         local configData = {}
         for k, v in pairs(lia.config.stored) do
-            if v.value ~= nil then configData[k] = v.value end
+            if v.value ~= nil and not cfgValuesEqual(v.value, v.default) then configData[k] = cfgNormalizeValue(v.value) end
         end
 
         lia.data.set("config", configData, true, true)
@@ -527,13 +586,11 @@ if SERVER then
 
     --[[
     Purpose:
-        Reset all config values to defaults, then save and sync to clients.
+        Reset all configuration values to their defaults.
 
     When Called:
-        During admin resets or troubleshooting.
+        During administrative operations or troubleshooting.
 
-    Parameters:
-        None
     Realm:
         Server
 
@@ -541,7 +598,7 @@ if SERVER then
         ```lua
         lia.config.reset()
         ```
-    ]]
+]]
     function lia.config.reset()
         for _, cfg in pairs(lia.config.stored) do
             local oldValue = cfg.value
@@ -552,6 +609,27 @@ if SERVER then
         lia.config.save()
         lia.config.send()
     end
+
+    net.Receive("liaCfgList", function(_, client)
+        if not IsValid(client) then return end
+        lia.config.send(client)
+    end)
+
+    net.Receive("liaCfgSet", function(_, client)
+        if not IsValid(client) then return end
+        local key = net.ReadString()
+        local name = net.ReadString()
+        local value = net.ReadType()
+        local config = lia.config.stored[key]
+        if not config then return end
+        value = cfgCoerceValue(key, value)
+        if type(config.default) == type(value) and hook.Run("CanPlayerModifyConfig", client, key) ~= false then
+            local oldValue = config.value
+            lia.config.set(key, value)
+            hook.Run("ConfigChanged", key, value, oldValue, client)
+            client:notifySuccessLocalized("cfgSet", client:Name(), name or config.name or key, tostring(value))
+        end
+    end)
 end
 
 lia.config.add("MainCharacterCooldownDays", "mainCharacterCooldownDays", 0, nil, {
@@ -1463,6 +1541,8 @@ lia.config.add("DoorSellRatio", "doorSellRatio", 0.5, nil, {
 
 lia.config.add("MainMenuUseLastPos", "mainMenuUseLastPos", true, nil, {
     desc = "mainMenuUseLastPosDesc",
+    category = "Core",
+    type = "Boolean"
 })
 
 hook.Add("PopulateConfigurationButtons", "liaConfigPopulate", function(pages)
@@ -1538,6 +1618,8 @@ hook.Add("PopulateConfigurationButtons", "liaConfigPopulate", function(pages)
                 net.WriteType(val)
                 net.SendToServer()
             end
+
+            if CLIENT then lia.config._bindUI(key, checkbox, function(v) checkbox:SetChecked(tobool(v)) end) end
         elseif configType == "Number" or configType == "Int" or configType == "Float" or configType == "Generic" then
             local entry = p:Add("liaEntry")
             entry:Dock(RIGHT)
@@ -1565,6 +1647,8 @@ hook.Add("PopulateConfigurationButtons", "liaConfigPopulate", function(pages)
                     entry:SetValue(tostring(lia.config.get(key, config.value)))
                 end
             end
+
+            if CLIENT then lia.config._bindUI(key, entry, function(v) entry:SetValue(tostring(v)) end) end
         elseif configType == "Color" then
             local button = p:Add("liaButton")
             button:Dock(RIGHT)
@@ -1615,6 +1699,8 @@ hook.Add("PopulateConfigurationButtons", "liaConfigPopulate", function(pages)
                 net.WriteType(v)
                 net.SendToServer()
             end
+
+            if CLIENT then lia.config._bindUI(key, combo, function(v) combo:SetValue(tostring(v)) end) end
         end
     end
 
@@ -1624,10 +1710,12 @@ hook.Add("PopulateConfigurationButtons", "liaConfigPopulate", function(pages)
         local uniqueTabConfigs = {}
         local regularConfigs = {}
         for k, v in pairs(lia.config.stored) do
-            if v.data and v.data.uniqueTab then
-                uniqueTabConfigs[k] = v
-            else
-                regularConfigs[k] = v
+            if istable(v) and v.data ~= nil and v.default ~= nil and v.name ~= nil then
+                if v.data.uniqueTab then
+                    uniqueTabConfigs[k] = v
+                else
+                    regularConfigs[k] = v
+                end
             end
         end
 
@@ -1685,7 +1773,7 @@ hook.Add("PopulateConfigurationButtons", "liaConfigPopulate", function(pages)
                         categories[cat] = categories[cat] or {}
                         table.insert(categories[cat], {
                             key = k,
-                            name = v.name,
+                            name = tostring(v.name or k),
                             config = v
                         })
                     end
@@ -1698,7 +1786,7 @@ hook.Add("PopulateConfigurationButtons", "liaConfigPopulate", function(pages)
                     table.sort(sortedCategories)
                     for _, cat in ipairs(sortedCategories) do
                         local items = categories[cat]
-                        table.sort(items, function(a, b) return a.name < b.name end)
+                        table.sort(items, function(a, b) return (a.name or "") < (b.name or "") end)
                         local visibleItems = {}
                         for _, item in ipairs(items) do
                             if not filter or item.name:lower():find(filter, 1, true) or cat:lower():find(filter, 1, true) then table.insert(visibleItems, item) end
