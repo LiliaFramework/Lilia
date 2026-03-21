@@ -521,6 +521,7 @@ function PANEL:Init()
     lia.gui.classes = self
     local w, h = self:GetParent():GetSize()
     self:SetSize(w, h)
+    self.selectedClassModels = self.selectedClassModels or {}
     local frame = self:Add("liaFrame")
     frame:Dock(FILL)
     frame:DockMargin(10, 10, 10, 10)
@@ -573,6 +574,7 @@ function PANEL:loadClasses()
         btn:SetTall(34)
         btn:SetText(cl.name and L(cl.name) or L("unnamed"))
         btn:SetActive(false)
+        if cl.desc and cl.desc ~= L("noDesc") then btn:SetTooltip(L(cl.desc)) end
         btn:SetDoClick(function()
             for _, b in ipairs(self.tabList) do
                 if IsValid(b) then b:SetActive(b == btn) end
@@ -694,10 +696,13 @@ function PANEL:populateClassDetails(cl, canBe)
 end
 
 function PANEL:createModelPanel(parent, cl)
-    local panel = parent:Add("liaModelPanel")
-    panel:Dock(TOP)
-    panel:DockMargin(0, 0, 0, 10)
-    panel:SetTall(420)
+    local container = parent:Add("DPanel")
+    container:Dock(TOP)
+    container:DockMargin(0, 0, 0, 10)
+    container:SetTall(420)
+    container.Paint = function() end
+    local panel = container:Add("liaModelPanel")
+    panel:Dock(FILL)
     panel:SetFOV(35)
     local basePaint = panel.Paint
     panel.Paint = function(s, modelW, modelH)
@@ -706,10 +711,11 @@ function PANEL:createModelPanel(parent, cl)
         if basePaint then basePaint(s, modelW, modelH) end
     end
 
-    local function getModel(mdl)
-        if isstring(mdl) and mdl ~= "" then return mdl end
-        if istable(mdl) then
-            local models = {}
+    local function getModels(mdl)
+        local models = {}
+        if isstring(mdl) and mdl ~= "" then
+            models[#models + 1] = mdl
+        elseif istable(mdl) then
             local function gather(tbl)
                 for _, v in pairs(tbl) do
                     if isstring(v) then
@@ -721,31 +727,70 @@ function PANEL:createModelPanel(parent, cl)
             end
 
             gather(mdl)
-            if #models > 0 then return models[math.random(#models)] end
         end
+        return models
     end
 
-    local model = getModel(cl.model or cl.models) or LocalPlayer():GetModel()
-    if util and util.IsValidModel and not util.IsValidModel(model) then model = LocalPlayer():GetModel() end
-    panel:SetModel(model)
-    panel:fitFOV()
+    local availableModels = getModels(cl.model or cl.models)
+    if #availableModels == 0 then availableModels = {LocalPlayer():GetModel()} end
+    panel.currentModelIndex = 1
+    panel.availableModels = availableModels
+    panel.classData = cl
+    local function updateModel()
+        local model = panel.availableModels[panel.currentModelIndex]
+        if util and util.IsValidModel and not util.IsValidModel(model) then model = LocalPlayer():GetModel() end
+        panel:SetModel(model)
+        panel:fitFOV()
+        self.selectedClassModels = self.selectedClassModels or {}
+        self.selectedClassModels[cl.index] = model
+        local function applyEntitySettings()
+            local ent = panel.Entity
+            if not IsValid(ent) then return end
+            ent:SetSkin(panel.classData.skin or 0)
+            for _, bg in ipairs(panel.classData.bodyGroups or {}) do
+                ent:SetBodygroup(bg.id, bg.value or 0)
+            end
+
+            for i, mat in ipairs(panel.classData.subMaterials or {}) do
+                ent:SetSubMaterial(i - 1, mat)
+            end
+        end
+
+        applyEntitySettings()
+        timer.Simple(0, function() if IsValid(panel) then applyEntitySettings() end end)
+        timer.Simple(0.1, function() if IsValid(panel) then applyEntitySettings() end end)
+    end
+
+    updateModel()
     panel.rotationAngle = 45
-    local function applyEntitySettings()
-        local ent = panel.Entity
-        if not IsValid(ent) then return end
-        ent:SetSkin(cl.skin or 0)
-        for _, bg in ipairs(cl.bodyGroups or {}) do
-            ent:SetBodygroup(bg.id, bg.value or 0)
+    if #availableModels > 1 then
+        local arrowSize, arrowSpace = 32, 8
+        local function newArrow(sign, xOffset)
+            local btn = container:Add("liaBigButton")
+            btn:SetSize(arrowSize, arrowSize)
+            btn:SetPos(xOffset, (container:GetTall() - arrowSize) * 0.5)
+            btn:SetFont("LiliaFont.24")
+            btn:SetShowLine(false)
+            btn:SetText(sign)
+            btn.DoClick = function()
+                if #panel.availableModels <= 1 then return end
+                panel.currentModelIndex = panel.currentModelIndex + (sign == "<" and -1 or 1)
+                if panel.currentModelIndex < 1 then panel.currentModelIndex = #panel.availableModels end
+                if panel.currentModelIndex > #panel.availableModels then panel.currentModelIndex = 1 end
+                lia.websound.playButtonSound("buttons/button14.wav")
+                updateModel()
+            end
+            return btn
         end
 
-        for i, mat in ipairs(cl.subMaterials or {}) do
-            ent:SetSubMaterial(i - 1, mat)
+        panel.leftArrow = newArrow("<", arrowSpace)
+        panel.rightArrow = newArrow(">", container:GetWide() - arrowSize - arrowSpace)
+        container.PerformLayout = function(s)
+            if IsValid(panel.leftArrow) then panel.leftArrow:SetPos(arrowSpace, (s:GetTall() - arrowSize) * 0.5) end
+            if IsValid(panel.rightArrow) then panel.rightArrow:SetPos(s:GetWide() - arrowSize - arrowSpace, (s:GetTall() - arrowSize) * 0.5) end
         end
     end
 
-    applyEntitySettings()
-    timer.Simple(0, function() if IsValid(panel) then applyEntitySettings() end end)
-    timer.Simple(0.1, function() if IsValid(panel) then applyEntitySettings() end end)
     panel.LayoutEntity = function(_, ent)
         if not IsValid(ent) then return end
         if input.IsKeyDown(KEY_A) then
@@ -756,7 +801,7 @@ function PANEL:createModelPanel(parent, cl)
 
         ent:SetAngles(Angle(0, panel.rotationAngle, 0))
     end
-    return model
+    return panel.availableModels[panel.currentModelIndex]
 end
 
 function PANEL:addClassDetails(parent, cl)
@@ -855,7 +900,12 @@ end
 function PANEL:addJoinButton(parent, cl, canBe)
     local isCurrent = LocalPlayer():getChar() and LocalPlayer():getChar():getClass() == cl.index
     local btn = parent:Add("liaMediumButton")
-    btn:SetText(isCurrent and L("alreadyInClass") or L("joinClass"))
+    if isCurrent and istable(cl.model) then
+        btn:SetText(L("changeModel"))
+    else
+        btn:SetText(isCurrent and L("alreadyInClass") or L("joinClass"))
+    end
+
     btn:SetTall(45)
     btn:Dock(TOP)
     btn:DockMargin(0, 0, 0, 0)
@@ -877,18 +927,27 @@ function PANEL:addJoinButton(parent, cl, canBe)
         end
     end
 
-    btn:SetDisabled(isCurrent or not canBe)
+    btn:SetDisabled((not canBe and not isCurrent) or (isCurrent and not istable(cl.model)))
     btn.DoClick = function()
         lia.websound.playButtonSound()
-        if canBe and not isCurrent then
-            lia.command.send("beclass", cl.index)
-            timer.Simple(0.1, function()
-                if IsValid(self) then
-                    self:loadClasses()
-                    self.mainContent:Clear()
-                end
-            end)
+        if isCurrent then
+            if istable(cl.model) then lia.command.send("beclass", cl.index, self.selectedClassModels and self.selectedClassModels[cl.index] or nil) end
+            return
         end
+
+        if not canBe then return end
+        if istable(cl.model) then
+            lia.command.send("beclass", cl.index, self.selectedClassModels and self.selectedClassModels[cl.index] or nil)
+        else
+            lia.command.send("beclass", cl.index)
+        end
+
+        timer.Simple(0.1, function()
+            if IsValid(self) then
+                self:loadClasses()
+                self.mainContent:Clear()
+            end
+        end)
     end
 end
 

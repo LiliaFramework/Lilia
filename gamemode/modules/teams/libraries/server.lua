@@ -158,12 +158,14 @@ function MODULE:CanCharBeTransfered(character, faction)
 end
 
 function MODULE:OnEntityCreated(entity)
-    if entity:IsNPC() then
-        for _, client in player.Iterator() do
-            local character = client:getChar()
-            if not character then return end
-            local faction = lia.faction.indices[character:getFaction()]
-            if faction and faction.NPCRelations then entity:AddEntityRelationship(client, faction.NPCRelations[entity:GetClass()] or D_HT, 0) end
+    for _, client in player.Iterator() do
+        local character = client:getChar()
+        if not character then return end
+        local faction = lia.faction.indices[character:getFaction()]
+        if faction and faction.NPCRelations then
+            local npcClass = entity:GetClass()
+            local relation = faction.NPCRelations[npcClass]
+            if relation then entity:AddEntityRelationship(client, relation, 0) end
         end
     end
 end
@@ -187,7 +189,14 @@ function MODULE:PostPlayerLoadout(client)
                     mergedAttr[k] = v
                 end
 
-                if class.model and isstring(class.model) then client:SetModel(class.model) end
+                if class.model then
+                    if isstring(class.model) then
+                        client:SetModel(class.model)
+                    elseif istable(class.model) then
+                        local selected = character:getData("classModel")
+                        if isstring(selected) and selected ~= "" and (not util or not util.IsValidModel or util.IsValidModel(selected)) then client:SetModel(selected) end
+                    end
+                end
             end
 
             applyAttributes(client, mergedAttr)
