@@ -4002,7 +4002,7 @@ lia.command.add("charsetmodel", {
         local oldModel = target:getChar():getModel()
         target:getChar():setModel(arguments[2] or oldModel)
         target:SetupHands()
-        client:notifySuccessLocalized("changeModel", client:Name(), target:Name(), arguments[2] or oldModel)
+        client:notifySuccessLocalized("changeModelAdmin", client:Name(), target:Name(), arguments[2] or oldModel)
         lia.log.add(client, "charsetmodel", target:Name(), arguments[2], oldModel)
     end
 })
@@ -6672,10 +6672,16 @@ lia.command.add("beclass", {
                 end
                 return options
             end
+        },
+        {
+            name = "model",
+            type = "string",
+            optional = true
         }
     },
     onRun = function(client, arguments)
         local className = arguments[1]
+        local requestedModel = arguments[2]
         local character = client:getChar()
         if not IsValid(client) or not character then
             client:notifyErrorLocalized("illegalAccess")
@@ -6684,8 +6690,55 @@ lia.command.add("beclass", {
 
         local classID = tonumber(className) or lia.class.retrieveClass(className)
         local classData = lia.class.get(classID)
-        if classData and lia.class.canBe(client, classID) then
+        if not classData then
+            client:notifyErrorLocalized("invalidClass")
+            return
+        end
+
+        local currentClass = character:getClass()
+        local isSameClass = currentClass == classID
+        local function applyRequestedClassModel()
+            if not istable(classData.model) then
+                character:setData("classModel", nil)
+                return false
+            end
+
+            if not isstring(requestedModel) or requestedModel == "" then return false end
+            local function gatherModels(mdl, out)
+                if isstring(mdl) and mdl ~= "" then
+                    out[#out + 1] = mdl
+                elseif istable(mdl) then
+                    for _, v in pairs(mdl) do
+                        gatherModels(v, out)
+                    end
+                end
+            end
+
+            local validModels = {}
+            gatherModels(classData.model, validModels)
+            local ok = false
+            for _, v in ipairs(validModels) do
+                if v == requestedModel then
+                    ok = true
+                    break
+                end
+            end
+
+            if not ok then return false end
+            if util and util.IsValidModel and not util.IsValidModel(requestedModel) then return false end
+            character:setData("classModel", requestedModel)
+            return true
+        end
+
+        if isSameClass then
+            if applyRequestedClassModel() then client:notify("Model updated. Will apply on respawn.") end
+            return
+        end
+
+        if lia.class.canBe(client, classID) then
             if character:joinClass(classID) then
+                if not istable(classData.model) then character:setData("classModel", nil) end
+                applyRequestedClassModel()
                 client:notifySuccessLocalized("becomeClass", L(classData.name))
                 lia.log.add(client, "beClass", classData.name)
             else
