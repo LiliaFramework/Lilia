@@ -11,6 +11,37 @@ The configuration library provides comprehensive functionality for managing user
 
 ---
 
+<details class="realm-shared" id="function-liaconfigoninitialized">
+<summary><a id="lia.config.onInitialized"></a>lia.config.onInitialized(callback)</summary>
+<div class="details-content">
+<h3 style="margin-bottom: 5px; font-weight: 700;"><a id="liaconfigoninitialized"></a>Purpose</h3>
+<div style="margin-left: 20px; margin-bottom: 20px;">
+  <p>Register a callback to be executed when the configuration system is initialized.</p>
+</div>
+
+<h3 style="margin-bottom: 5px; font-weight: 700;">When Called</h3>
+<div style="margin-left: 20px; margin-bottom: 20px;">
+  <p>During module initialization to ensure config is ready before accessing values.</p>
+</div>
+
+<h3 style="margin-bottom: 5px; font-weight: 700;">Parameters</h3>
+<div style="margin-left: 20px; margin-bottom: 20px;">
+<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#2.1">function</a></span> <span class="parameter">callback</span> Function to execute when config is initialized.</p>
+</div>
+
+<h3 style="margin-bottom: 5px; font-weight: 700;">Example Usage</h3>
+<div style="margin-left: 20px; margin-bottom: 20px;">
+<pre><code class="language-lua">  lia.config.onInitialized(function()
+      print("Config is ready!")
+  end)
+</code></pre>
+</div>
+
+</div>
+</details>
+
+---
+
 <details class="realm-shared" id="function-liaconfigadd">
 <summary><a id="lia.config.add"></a>lia.config.add(key, name, value, callback, data)</summary>
 <div class="details-content">
@@ -230,33 +261,80 @@ The configuration library provides comprehensive functionality for managing user
 
 ---
 
+<details class="realm-shared" id="function-liaconfig_bindui">
+<summary><a id="lia.config._bindUI"></a>lia.config._bindUI()</summary>
+<div class="details-content">
+<h3 style="margin-bottom: 5px; font-weight: 700;"><a id="liaconfig_bindui"></a>Purpose</h3>
+<div style="margin-left: 20px; margin-bottom: 20px;">
+  <p>Load config values from JSON files (server) or request them from the server (client).</p>
+</div>
+
+<h3 style="margin-bottom: 5px; font-weight: 700;">When Called</h3>
+<div style="margin-left: 20px; margin-bottom: 20px;">
+  <p>On initialization to hydrate lia.config.stored from JSON file storage.</p>
+</div>
+
+<h3 style="margin-bottom: 5px; font-weight: 700;">Example Usage</h3>
+<div style="margin-left: 20px; margin-bottom: 20px;">
+<pre><code class="language-lua">  hook.Add("Initialize", "LoadLiliaConfig", lia.config.load)
+</code></pre>
+</div>
+
+</div>
+</details>
+
+---
+
+<details class="realm-shared" id="function-liaconfig_refreshboundui">
+<summary><a id="lia.config._refreshBoundUI"></a>lia.config._refreshBoundUI()</summary>
+<div class="details-content">
+<h3 style="margin-bottom: 5px; font-weight: 700;"><a id="liaconfig_refreshboundui"></a>Purpose</h3>
+<div style="margin-left: 20px; margin-bottom: 20px;">
+  <p>Load config values from JSON files (server) or request them from the server (client).</p>
+</div>
+
+<h3 style="margin-bottom: 5px; font-weight: 700;">When Called</h3>
+<div style="margin-left: 20px; margin-bottom: 20px;">
+  <p>On initialization to hydrate lia.config.stored from JSON file storage.</p>
+</div>
+
+<h3 style="margin-bottom: 5px; font-weight: 700;">Example Usage</h3>
+<div style="margin-left: 20px; margin-bottom: 20px;">
+<pre><code class="language-lua">  hook.Add("Initialize", "LoadLiliaConfig", lia.config.load)
+</code></pre>
+</div>
+
+</div>
+</details>
+
+---
+
 <details class="realm-server" id="function-liaconfiggetchangedvalues">
 <summary><a id="lia.config.getChangedValues"></a>lia.config.getChangedValues(includeDefaults)</summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="liaconfiggetchangedvalues"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
-  <p>Collect config entries whose values differ from last synced values or their defaults.</p>
+  <p>Get all configuration values that have been changed from their defaults.</p>
 </div>
 
 <h3 style="margin-bottom: 5px; font-weight: 700;">When Called</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
-  <p>Prior to sending incremental config updates to clients.</p>
+  <p>During config synchronization to determine what needs to be sent to clients.</p>
 </div>
 
 <h3 style="margin-bottom: 5px; font-weight: 700;">Parameters</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
-<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#2.1">boolean</a></span> <span class="parameter">includeDefaults</span> <span class="optional">optional</span> When true, compare against defaults instead of last synced values.</p>
+<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#2.1">boolean</a></span> <span class="parameter">includeDefaults</span> When true, includes all values even if they match defaults.</p>
 </div>
 
 <h3 style="margin-bottom: 5px; font-weight: 700;">Returns</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
-<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#2.1">table</a></span> key → value for configs that changed.</p>
+<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#2.1">table</a></span> Key/value pairs of changed configuration entries.</p>
 </div>
 
 <h3 style="margin-bottom: 5px; font-weight: 700;">Example Usage</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
-<pre><code class="language-lua">  local changed = lia.config.getChangedValues()
-  if next(changed) then lia.config.send() end
+<pre><code class="language-lua">  local changes = lia.config.getChangedValues()
 </code></pre>
 </div>
 
@@ -270,22 +348,24 @@ The configuration library provides comprehensive functionality for managing user
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="liaconfighaschanges"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
-  <p>Check whether any config values differ from the last synced snapshot.</p>
+  <p>Check if any configuration values have been changed from their defaults.</p>
 </div>
 
 <h3 style="margin-bottom: 5px; font-weight: 700;">When Called</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
-  <p>To determine if a resync to clients is required.</p>
+  <p>Before sending config updates to avoid unnecessary network traffic.</p>
 </div>
 
 <h3 style="margin-bottom: 5px; font-weight: 700;">Returns</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
-<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#2.1">boolean</a></span> True when at least one config value has changed.</p>
+<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#2.1">boolean</a></span> True if there are changes, false otherwise.</p>
 </div>
 
 <h3 style="margin-bottom: 5px; font-weight: 700;">Example Usage</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
-<pre><code class="language-lua">  if lia.config.hasChanges() then lia.config.send() end
+<pre><code class="language-lua">  if lia.config.hasChanges() then
+      lia.config.send()
+  end
 </code></pre>
 </div>
 
@@ -299,23 +379,23 @@ The configuration library provides comprehensive functionality for managing user
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="liaconfigsend"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
-  <p>Send config values to one player (full payload) or broadcast only changed values.</p>
+  <p>Send configuration data to a specific client or all clients.</p>
 </div>
 
 <h3 style="margin-bottom: 5px; font-weight: 700;">When Called</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
-  <p>After config changes or when a player joins the server.</p>
+  <p>During initial connection or when config values change.</p>
 </div>
 
 <h3 style="margin-bottom: 5px; font-weight: 700;">Parameters</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
-<p><span class="types"><a class="type" href="/development/meta/player/">Player</a></span> <span class="parameter">client</span> <span class="optional">optional</span> Target player for full sync; nil broadcasts only changed values.</p>
+<p><span class="types"><a class="type" href="/development/meta/player/">Player</a></span> <span class="parameter">client</span> <span class="optional">optional</span> Specific client to send to, or nil for all clients.</p>
 </div>
 
 <h3 style="margin-bottom: 5px; font-weight: 700;">Example Usage</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
-<pre><code class="language-lua">  hook.Add("PlayerInitialSpawn", "SyncConfig", function(ply) lia.config.send(ply) end)
-  lia.config.send() -- broadcast diffs
+<pre><code class="language-lua">  lia.config.send() -- Send to all clients
+  lia.config.send(client) -- Send to specific client
 </code></pre>
 </div>
 
@@ -329,12 +409,12 @@ The configuration library provides comprehensive functionality for managing user
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="liaconfigsave"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
-  <p>Persist all config values to JSON files.</p>
+  <p>Persist configuration values to JSON file storage.</p>
 </div>
 
 <h3 style="margin-bottom: 5px; font-weight: 700;">When Called</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
-  <p>After changes, on shutdown, or during scheduled saves.</p>
+  <p>After configuration changes to ensure values are saved between server restarts.</p>
 </div>
 
 <h3 style="margin-bottom: 5px; font-weight: 700;">Example Usage</h3>
@@ -353,12 +433,12 @@ The configuration library provides comprehensive functionality for managing user
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="liaconfigreset"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
-  <p>Reset all config values to defaults, then save and sync to clients.</p>
+  <p>Reset all configuration values to their defaults.</p>
 </div>
 
 <h3 style="margin-bottom: 5px; font-weight: 700;">When Called</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
-  <p>During admin resets or troubleshooting.</p>
+  <p>During administrative operations or troubleshooting.</p>
 </div>
 
 <h3 style="margin-bottom: 5px; font-weight: 700;">Example Usage</h3>
