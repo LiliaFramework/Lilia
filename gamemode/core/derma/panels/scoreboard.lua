@@ -59,6 +59,10 @@ function PANEL:Init()
     self:SetTitle("")
     self:SetCenterTitle(GetHostName())
     self.playerOptionFrames = {}
+    local viewer = LocalPlayer()
+    local viewerTeam = IsValid(viewer) and viewer:Team() or nil
+    local viewerFaction = viewerTeam and lia.faction and lia.faction.indices and lia.faction.indices[viewerTeam] or nil
+    local viewerCanSeeAllClasses = viewerFaction and viewerFaction.scoreboardSeeAllClasses or false
     local scroll = self:Add("liaScrollPanel")
     scroll:Dock(FILL)
     scroll:DockMargin(1, 0, 1, 0)
@@ -134,7 +138,8 @@ function PANEL:Init()
         facCont.noClass = facCont:Add("DListLayout")
         facCont.noClass:Dock(TOP)
         facCont.classLists = {}
-        if lia.config.get("ClassHeaders", true) and lia.config.get("ClassDisplay", true) and lia.class and lia.class.list then
+        local canSeeFactionClasses = viewerCanSeeAllClasses or viewerTeam == facID or facData.scoreboardClassesPublic
+        if canSeeFactionClasses and lia.config.get("ClassHeaders", true) and lia.config.get("ClassDisplay", true) and lia.class and lia.class.list then
             for clsID, clsData in pairs(lia.class.list) do
                 if clsData.faction ~= facID then continue end
                 if clsData.scoreboardHidden or hook.Run("ShouldShowClassOnScoreboard", clsData) == false then
