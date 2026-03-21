@@ -234,7 +234,7 @@ jobs:
     env:
       VERSION: ${{ needs.compute-version.outputs.version }}
       VALID_COUNT: ${{ needs.compute-version.outputs.valid_count }}
-      GITHUB_TOKEN: ${{ secrets.LiliaGitAccess }}
+      GITHUB_TOKEN: ${{ secrets.LiliaGitSecret }}
       STEAM_USERNAME: ${{ secrets.STEAM_USERNAME }}
       STEAM_PASSWORD: ${{ secrets.STEAM_PASSWORD }}
     steps:
@@ -283,7 +283,7 @@ jobs:
           draft: false
           prerelease: false
         env:
-          GITHUB_TOKEN: ${{ secrets.LiliaGitAccess }}
+          GITHUB_TOKEN: ${{ secrets.LiliaGitSecret }}
       - uses: actions/upload-release-asset@v1
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
@@ -291,7 +291,7 @@ jobs:
           asset_name: lilia.zip
           asset_content_type: application/zip
         env:
-          GITHUB_TOKEN: ${{ secrets.LiliaGitAccess }}
+          GITHUB_TOKEN: ${{ secrets.LiliaGitSecret }}
       - run: |
           cat > /tmp/addon.json <<EOF
           {
@@ -413,7 +413,7 @@ jobs:
         with:
           repository: LiliaFramework/LiliaFramework.github.io
           path: site
-          token: ${{ secrets.LiliaGitAccess }}
+          token: ${{ secrets.LiliaGitSecret }}
       - run: |
           rsync -a --delete --exclude '.git' documentation/ site/
       - run: |
@@ -429,3 +429,4 @@ jobs:
             git commit -m "Successfully updated workshop Lilia to ${VERSION}"
             git push origin HEAD:main
           fi
+          
