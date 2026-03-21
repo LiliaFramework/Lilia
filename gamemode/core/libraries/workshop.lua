@@ -8,40 +8,39 @@
     Steam Workshop addon downloading, mounting, and management system for the Lilia framework.
 ]]
 --[[
-    Overview:
-        The workshop library provides comprehensive functionality for managing Steam Workshop addons in the Lilia framework. It handles automatic downloading, mounting, and management of workshop content required by the gamemode and its modules. The library operates on both server and client sides, with the server gathering workshop IDs from modules and mounted addons, while the client handles downloading and mounting of required content. It includes user interface elements for download progress tracking and addon information display. The library ensures that all required workshop content is available before gameplay begins.
+    Purpose:
+        Workshop addon management system for Lilia framework.
+        Handles downloading, mounting, and managing Steam Workshop content.
+
+    Realm:
+        Shared (server/client split)
 ]]
 lia.workshop = lia.workshop or {}
+lia.workshop.ids = lia.workshop.ids or {}
+lia.workshop.known = lia.workshop.known or {}
 if SERVER then
-    lia.workshop.ids = lia.workshop.ids or {}
-    lia.workshop.known = lia.workshop.known or {}
-    lia.workshop.cache = lia.workshop.cache or {}
     --[[
     Purpose:
-        Queue a workshop addon for download and notify the admin UI.
-
-    When Called:
-        During module initialization or whenever a new workshop dependency is registered.
+        Add a workshop ID to the list of required addons.
 
     Parameters:
-        id (string|number)
-            Workshop addon ID to download (will be converted to string).
+        id (string)
+            Workshop addon ID to add.
 
     Realm:
         Server
 
     Example Usage:
         ```lua
-            -- Register a workshop addon dependency
-            lia.workshop.addWorkshop("3527535922")
-            lia.workshop.addWorkshop(1234567890) -- Also accepts numbers
+            lia.workshop.addWorkshop("123456789")
         ```
-]]
+    ]]
     function lia.workshop.addWorkshop(id)
         id = tostring(id)
-        if not lia.workshop.ids[id] then lia.bootstrap(L("workshopDownloader"), L("workshopAdded", id)) end
-        lia.bootstrap(L("workshopDownloader"), L("workshopDownloading", id))
-        lia.workshop.ids[id] = true
+        if not lia.workshop.ids[id] then
+            lia.bootstrap(L("workshopDownloader"), L("workshopDownloading", id))
+            lia.workshop.ids[id] = true
+        end
     end
 
     local function addKnown(id)
@@ -75,7 +74,7 @@ if SERVER then
             local workshopIds = lia.workshop.gather()
             lia.workshop.cache = workshopIds
         ```
-]]
+    ]]
     function lia.workshop.gather()
         local ids = table.Copy(lia.workshop.ids)
         for _, addon in pairs(engine.GetAddons() or {}) do
@@ -121,7 +120,7 @@ if SERVER then
             -- Send workshop cache to a specific player
             lia.workshop.send(player.GetByID(1))
         ```
-]]
+    ]]
     function lia.workshop.send(ply)
         net.Start("liaWorkshopDownloaderStart")
         net.WriteTable(lia.workshop.cache)
@@ -204,7 +203,7 @@ else
                 -- Show download prompt to player
             end
         ```
-]]
+    ]]
     function lia.workshop.hasContentToDownload()
         for id in pairs(lia.workshop.serverIds or {}) do
             if id ~= FORCE_ID and not mounted(id) and not mountLocal(id) then return true end
@@ -230,7 +229,7 @@ else
             -- Start downloading missing workshop content
             lia.workshop.mountContent()
         ```
-]]
+    ]]
     function lia.workshop.mountContent()
         local ids = lia.workshop.serverIds or {}
         local needed = {}
@@ -275,7 +274,15 @@ else
                 sheet:SetPlaceholderText(L("searchAddons"))
                 local info, totalSize = {}, 0
                 local pending = table.Count(ids)
-                if pending <= 0 then return end
+                if pending <= 0 then
+                    local noAddonsLabel = vgui.Create("DLabel", parent)
+                    noAddonsLabel:SetText("No workshop addons found. Make sure the server has configured workshop content.")
+                    noAddonsLabel:SetContentAlignment(5)
+                    noAddonsLabel:Dock(FILL)
+                    noAddonsLabel:SetTextColor(Color(200, 200, 200))
+                    return
+                end
+
                 local function populate()
                     for id, fi in pairs(info) do
                         if fi then
@@ -283,18 +290,122 @@ else
                             if totalSize > 0 then percent = string.format("%.2f%%", (fi.size or 0) / totalSize * 100) end
                             local url = fi.previewurl or ""
                             if sheet.AddPreviewRow then
-                                sheet:AddPreviewRow({
+                                local rowData = sheet:AddPreviewRow({
                                     title = fi.title or L("idPrefix", id),
                                     desc = fi.size and L("addonSize", formatSize(fi.size), percent) or "",
                                     url = url,
                                     size = 64
                                 })
+
+                                if rowData and rowData.panel then
+                                    local originalPerformLayout = rowData.panel.PerformLayout
+                                    rowData.panel.PerformLayout = function(panel)
+                                        if originalPerformLayout then originalPerformLayout(panel) end
+                                        if not rowData.buttonContainer then
+                                            local buttonContainer = vgui.Create("DPanel", panel)
+                                            buttonContainer:SetWide(120)
+                                            buttonContainer.Paint = function(self, w, h) draw.RoundedBox(0, 0, h - 1, w, 1, lia.config.Color and lia.config.Color.theme or Color(100, 100, 100)) end
+                                            local mountButton = vgui.Create("liaSmallButton", buttonContainer)
+                                            mountButton:SetText("Mount")
+                                            mountButton:SetTall(40)
+                                            mountButton:Dock(TOP)
+                                            mountButton:DockMargin(0, 0, 0, 20)
+                                            mountButton.DoClick = function()
+                                                lia.websound.playButtonSound()
+                                                steamworks.DownloadUGC(id, function(name, path)
+                                                    if name and path then
+                                                        LocalPlayer():notifyLocalized("workshopAddonDownloaded", fi.title or id)
+                                                    else
+                                                        LocalPlayer():notifyErrorLocalized("workshopAddonDownloadFailed", fi.title or id)
+                                                    end
+                                                end)
+                                            end
+
+                                            local linkButton = vgui.Create("liaSmallButton", buttonContainer)
+                                            linkButton:SetText("Workshop")
+                                            linkButton:SetTall(40)
+                                            linkButton:Dock(TOP)
+                                            linkButton.DoClick = function()
+                                                lia.websound.playButtonSound()
+                                                gui.OpenURL("https://steamcommunity.com/sharedfiles/filedetails/?id=" .. id)
+                                            end
+
+                                            local panelHeight = panel:GetTall()
+                                            local containerHeight = 100
+                                            local centerY = (panelHeight - containerHeight) / 2
+                                            buttonContainer:SetPos(panel:GetWide() - 130, math.max(5, centerY))
+                                            buttonContainer:SetTall(containerHeight)
+                                            rowData.buttonContainer = buttonContainer
+                                        else
+                                            local panelHeight = panel:GetTall()
+                                            local containerHeight = 100
+                                            local centerY = (panelHeight - containerHeight) / 2
+                                            rowData.buttonContainer:SetPos(panel:GetWide() - 130, math.max(5, centerY))
+                                        end
+
+                                        panel:SetTall(math.max(panel:GetTall(), 112))
+                                    end
+
+                                    rowData.panel:InvalidateLayout(true)
+                                end
                             elseif sheet.AddTextRow then
-                                sheet:AddTextRow({
+                                local rowData = sheet:AddTextRow({
                                     title = fi.title or L("idPrefix", id),
                                     desc = fi.size and L("addonSize", formatSize(fi.size), percent) or "",
                                     compact = true
                                 })
+
+                                if rowData and rowData.panel then
+                                    local originalPerformLayout = rowData.panel.PerformLayout
+                                    rowData.panel.PerformLayout = function(panel)
+                                        if originalPerformLayout then originalPerformLayout(panel) end
+                                        if not rowData.buttonContainer then
+                                            local buttonContainer = vgui.Create("DPanel", panel)
+                                            buttonContainer:SetWide(120)
+                                            buttonContainer.Paint = function(self, w, h) draw.RoundedBox(0, 0, h - 1, w, 1, lia.config.Color and lia.config.Color.theme or Color(100, 100, 100)) end
+                                            local mountButton = vgui.Create("liaSmallButton", buttonContainer)
+                                            mountButton:SetText("Mount")
+                                            mountButton:SetTall(40)
+                                            mountButton:Dock(TOP)
+                                            mountButton:DockMargin(0, 0, 0, 20)
+                                            mountButton.DoClick = function()
+                                                lia.websound.playButtonSound()
+                                                steamworks.DownloadUGC(id, function(name, path)
+                                                    if name and path then
+                                                        LocalPlayer():notifyLocalized("workshopAddonDownloaded", fi.title or id)
+                                                    else
+                                                        LocalPlayer():notifyErrorLocalized("workshopAddonDownloadFailed", fi.title or id)
+                                                    end
+                                                end)
+                                            end
+
+                                            local linkButton = vgui.Create("liaSmallButton", buttonContainer)
+                                            linkButton:SetText("Workshop")
+                                            linkButton:SetTall(40)
+                                            linkButton:Dock(TOP)
+                                            linkButton.DoClick = function()
+                                                lia.websound.playButtonSound()
+                                                gui.OpenURL("https://steamcommunity.com/sharedfiles/filedetails/?id=" .. id)
+                                            end
+
+                                            local panelHeight = panel:GetTall()
+                                            local containerHeight = 100
+                                            local centerY = (panelHeight - containerHeight) / 2
+                                            buttonContainer:SetPos(panel:GetWide() - 130, math.max(5, centerY))
+                                            buttonContainer:SetTall(containerHeight)
+                                            rowData.buttonContainer = buttonContainer
+                                        else
+                                            local panelHeight = panel:GetTall()
+                                            local containerHeight = 100
+                                            local centerY = (panelHeight - containerHeight) / 2
+                                            rowData.buttonContainer:SetPos(panel:GetWide() - 130, math.max(5, centerY))
+                                        end
+
+                                        panel:SetTall(math.max(panel:GetTall(), 102))
+                                    end
+
+                                    rowData.panel:InvalidateLayout(true)
+                                end
                             end
                         end
                     end
