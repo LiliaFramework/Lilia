@@ -479,13 +479,15 @@ if CLIENT then
         local d = file.Read(path, "DATA")
         if d then
             local s = util.JSONToTable(d)
-            for k, v in pairs(s) do
-                if lia.keybind.stored[k] then
-                    if isstring(v) then
-                        local keyCode = KeybindKeys[string.lower(v)]
-                        lia.keybind.stored[k].value = keyCode or KEY_NONE
-                    else
-                        lia.keybind.stored[k].value = v
+            if s then
+                for k, v in pairs(s) do
+                    if lia.keybind.stored[k] then
+                        if isstring(v) then
+                            local keyCode = KeybindKeys[string.lower(v)]
+                            lia.keybind.stored[k].value = keyCode or KEY_NONE
+                        else
+                            lia.keybind.stored[k].value = v
+                        end
                     end
                 end
             end

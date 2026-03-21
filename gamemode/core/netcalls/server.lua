@@ -82,10 +82,8 @@ net.Receive("liaInsertKeyPressed", function(_, client)
     if not IsValid(client) then return end
     local char = client:getChar()
     if not char then return end
-    local charID = char:getID()
-    local steamId = client:SteamID64()
-    local message = client:Name() .. " (Character " .. charID .. " | Steam64ID: " .. steamId .. ") pressed the Insert key."
-    StaffAddTextShadowed(Color(255, 165, 0), "INSERT", Color(255, 255, 255), message, function(staff) return staff:hasPrivilege("seeInsertNotifications") end)
+    local message = client:Name() .. " (" .. client:SteamID() .. ") pressed INSERT (common cheat-menu key)."
+    StaffAddTextShadowed(Color(255, 0, 0), "ALERT", Color(255, 255, 255), message, function(staff) return staff:hasPrivilege("seeInsertNotifications") end)
 end)
 
 net.Receive("liaStringRequest", function(_, client)
@@ -1047,7 +1045,7 @@ net.Receive("liaAdminSetCharProperty", function(_, client)
             if lia.char.setCharDatabase(charID, "model", modelValue) then
                 local target = lia.char.getCharacter(charID)
                 if IsValid(target) then
-                    client:notifySuccessLocalized("changeModel", client:Name(), target:Name(), modelValue)
+                    client:notifySuccessLocalized("changeModelAdmin", client:Name(), target:Name(), modelValue)
                 else
                     client:notifySuccessLocalized("offlineCharModelSet", charID, modelValue)
                 end

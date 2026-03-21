@@ -71,6 +71,8 @@ end
 
 function PANEL:PostDrawModel(ent)
     hook.Run("LiliaModelPanelPostDrawModel", self, ent)
+    render.SuppressEngineLighting(false)
+    render.ResetModelLighting(1, 1, 1)
 end
 
 function PANEL:OnMousePressed()

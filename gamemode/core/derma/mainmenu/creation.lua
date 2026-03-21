@@ -106,9 +106,11 @@ function PANEL:showError(msg, ...)
     err:DockMargin(0, 0, 0, 8)
     err:SetContentAlignment(5)
     err.Paint = function(box, w, h)
-        lia.util.drawBlur(box)
-        surface.SetDrawColor(255, 0, 0, 50)
-        surface.DrawRect(0, 0, w, h)
+        local bgColor = Color(25, 28, 35, 250)
+        local lineColor = Color(220, 70, 70)
+        lia.derma.rect(0, 0, w, h):Rad(12):Color(bgColor):Shape(lia.derma.SHAPE_IOS):Draw()
+        surface.SetDrawColor(lineColor)
+        surface.DrawRect(0, 0, w, 2)
     end
 
     err:SetAlpha(0)
@@ -154,6 +156,7 @@ function PANEL:nextStep()
     end
 
     self:showError()
+    self._transitionDir = 1
     self.curStep = prevIdx + 1
     local nxt = self.steps[self.curStep]
     while IsValid(nxt) and nxt:shouldSkip() do
@@ -180,6 +183,7 @@ function PANEL:previousStep()
     end
 
     if not IsValid(prev) then return end
+    self._transitionDir = -1
     self.curStep = idx
     self:onStepChanged(self.steps[idx + 1], prev)
 end
@@ -214,11 +218,21 @@ function PANEL:onStepChanged(oldStep, newStep)
                     self.model:SetWide(0)
                 end
 
-                if IsValid(self.buttons) and IsValid(self.content) then
-                    self.buttons:SetParent(self.content)
-                    self.buttons:Dock(BOTTOM)
+                if IsValid(self.buttons) then
+                    self.buttons:SetParent(self)
                     self.buttons:SetTall(48)
                     self.buttons:MoveToFront()
+                    self.buttons:Dock(NODOCK)
+                    self.buttons._liaFullWidthBottom = true
+                    if self.buttons._liaOldThink == nil then self.buttons._liaOldThink = self.buttons.Think end
+                    self.buttons.Think = function(pnl)
+                        if isfunction(pnl._liaOldThink) then pnl._liaOldThink(pnl) end
+                        if not pnl._liaFullWidthBottom then return end
+                        local h = pnl:GetTall()
+                        pnl:SetSize(self:GetWide(), h)
+                        pnl:SetPos(0, self:GetTall() - h)
+                        pnl:MoveToFront()
+                    end
                 end
 
                 lia.gui.character:setInWorldPreviewEnabled(true)
@@ -235,7 +249,16 @@ function PANEL:onStepChanged(oldStep, newStep)
 
                 if IsValid(self.buttons) then
                     self.buttons:SetParent(self)
+                    self.buttons._liaFullWidthBottom = nil
+                    if self.buttons._liaOldThink ~= nil then
+                        self.buttons.Think = self.buttons._liaOldThink
+                        self.buttons._liaOldThink = nil
+                    else
+                        self.buttons.Think = nil
+                    end
+
                     self.buttons:Dock(BOTTOM)
+                    self.buttons:DockMargin(0, 0, 0, 0)
                     self.buttons:SetTall(48)
                     self.buttons:MoveToFront()
                 end
@@ -258,26 +281,55 @@ function PANEL:onStepChanged(oldStep, newStep)
 
     if L(key):upper() ~= self.next:GetText() then self.next:AlphaTo(0, 0.5) end
     local function show()
+        if not IsValid(newStep) then return end
+        local parent = self.content
+        if not IsValid(parent) then return end
+        parent:InvalidateLayout(true)
+        parent:PerformLayout()
+        local pw, ph = parent:GetWide(), parent:GetTall()
+        if pw <= 0 then pw = ScrW() end
+        if ph <= 0 then ph = ScrH() end
+        local dir = self._transitionDir or 1
+        newStep:Stop()
+        newStep:Dock(NODOCK)
+        newStep:SetSize(pw, ph)
+        newStep:SetPos(dir * pw, 0)
+        newStep:SetAlpha(255)
         newStep:SetVisible(true)
-        newStep:SetAlpha(0)
         newStep:onDisplay()
         newStep:InvalidateChildren(true)
-        newStep:AlphaTo(255, 0.5)
         if L(key):upper() ~= self.next:GetText() then
             self.next:SetAlpha(0)
             sizeButton(self.next, L(key):upper())
         end
 
         self.next:AlphaTo(255, 0.5)
+        local duration = 0.35
+        newStep:MoveTo(0, 0, duration, 0, 0.2, function()
+            if not IsValid(newStep) then return end
+            newStep:Dock(FILL)
+            parent:InvalidateLayout(true)
+        end)
     end
 
     if IsValid(oldStep) then
-        oldStep:AlphaTo(0, 0.5, 0, function()
+        local parent = self.content
+        local pw = IsValid(parent) and parent:GetWide() or ScrW()
+        if pw <= 0 then pw = ScrW() end
+        local dir = self._transitionDir or 1
+        oldStep:Stop()
+        oldStep:Dock(NODOCK)
+        oldStep:SetSize(pw, IsValid(parent) and parent:GetTall() or ScrH())
+        oldStep:SetPos(0, 0)
+        oldStep:SetAlpha(255)
+        oldStep:MoveTo(-dir * pw, 0, 0.35, 0, 0.2, function()
+            if not IsValid(oldStep) then return end
             self:showError()
             oldStep:SetVisible(false)
             oldStep:onHide()
-            show()
         end)
+
+        show()
     else
         show()
     end

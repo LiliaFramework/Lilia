@@ -3,7 +3,7 @@ function PANEL:Init()
     local client = LocalPlayer()
     local clientChar = client.getChar and client:getChar()
     self.disableClientModel = false
-    self.noBlur = not clientChar
+    self.noBlur = true
     self.isLoadMode = false
     if IsValid(lia.gui.loading) then lia.gui.loading:Remove() end
     if IsValid(lia.gui.character) then lia.gui.character:Remove() end
@@ -18,10 +18,11 @@ function PANEL:Init()
     end
 
     hook.Add("DrawPhysgunBeam", "liaMainMenuPreDrawPhysgunBeam", function() return IsValid(lia.gui.character) end)
+    hook.Remove("RenderScreenspaceEffects", "liaCharMenuDarken")
     self:Dock(FILL)
     self:MakePopup()
-    self:SetAlpha(0)
-    self:AlphaTo(255, 0.2)
+    self:SetAlpha(255)
+    self:Stop()
     self.charListUpdateHook = "liaCharacterCharListUpdate" .. tostring(self)
     hook.Add("CharListUpdated", self.charListUpdateHook, function(oldCharList, newCharList)
         if not IsValid(self) then return end
@@ -107,6 +108,12 @@ function PANEL:setInWorldPreviewEnabled(enabled)
             hook.Remove("PrePlayerDraw", "liaMainMenuPrePlayerDraw")
         end
 
+        hook.Remove("PostDrawOpaqueRenderables", "liaMainMenuPostDrawOpaqueRenderables")
+        if self.mainMenuRenderHookID then
+            hook.Remove("PostDrawOpaqueRenderables", self.mainMenuRenderHookID)
+            self.mainMenuRenderHookID = nil
+        end
+
         if IsValid(self.modelEntity) then self.modelEntity:Remove() end
     end
 end
@@ -150,19 +157,30 @@ function PANEL:updateCreationModelEntity(context)
     end
 
     if not pos then
-        local hookResult = {hook.Run("GetMainMenuPosition")}
-        pos, ang = hookResult[1], hookResult[2]
+        local client = LocalPlayer()
+        local hookResult = hook.Run("GetMainMenuPosition", IsValid(client) and client.getChar and client:getChar() or nil)
+        if hookResult then
+            if istable(hookResult) then
+                pos, ang = hookResult.pos, hookResult.ang
+            elseif isvector(hookResult) then
+                pos = hookResult
+                ang = Angle(0, 0, 0)
+            end
+        end
     end
 
     if not pos or not ang then
         local spawns = ents.FindByClass("info_player_start")
-        pos = #spawns > 0 and spawns[1]:GetPos() or Vector()
-        ang = #spawns > 0 and spawns[1]:GetAngles() or Angle()
+        if #spawns > 0 then
+            pos = spawns[1]:GetPos()
+            ang = spawns[1]:GetAngles()
+        else
+            pos = Vector()
+            ang = Angle()
+        end
     end
 
     self.mainMenuModelAngles = ang
-    local yawOffset = tonumber(context.previewYaw) or 0
-    if yawOffset ~= 0 then ang = Angle(ang.p, ang.y + yawOffset, ang.r) end
     pos = self:getClosestGroundPosition(pos)
     self.modelEntity:SetPos(pos)
     self.modelEntity:SetAngles(ang)
@@ -174,19 +192,33 @@ function PANEL:updateCreationModelEntity(context)
     end
 
     hook.Run("ModifyCharacterModel", self.modelEntity, context)
-    hook.Add("PostDrawOpaqueRenderables", "liaMainMenuPostDrawOpaqueRenderables", function()
-        if IsValid(self) and self.inWorldPreview and IsValid(self.modelEntity) then
-            self.modelEntity:FrameAdvance()
-            render.SuppressEngineLighting(true)
+    hook.Remove("PostDrawOpaqueRenderables", "liaMainMenuPostDrawOpaqueRenderables")
+    if self.mainMenuRenderHookID then
+        hook.Remove("PostDrawOpaqueRenderables", self.mainMenuRenderHookID)
+        self.mainMenuRenderHookID = nil
+    end
+
+    self.mainMenuRenderHookID = "liaMainMenuPostDrawOpaqueRenderables" .. tostring(self)
+    hook.Add("PostDrawOpaqueRenderables", self.mainMenuRenderHookID, function()
+        if not IsValid(self) or not self.inWorldPreview or not IsValid(self.modelEntity) then return end
+        self.modelEntity:FrameAdvance()
+        render.SuppressEngineLighting(true)
+        local ok, err = pcall(function()
             render.ResetModelLighting(1, 1, 1)
-            render.SetModelLighting(0, 1, 1, 1)
-            for i = 1, 6 do
+            for i = 0, 6 do
                 render.SetModelLighting(i, 1, 1, 1)
             end
 
             self.modelEntity:DrawModel()
-            render.SuppressEngineLighting(false)
+        end)
+
+        render.SuppressEngineLighting(false)
+        render.ResetModelLighting(1, 1, 1)
+        for i = 0, 6 do
+            render.SetModelLighting(i, 0, 0, 0)
         end
+
+        if not ok then ErrorNoHalt(err .. "\n") end
     end)
 end
 
@@ -566,18 +598,44 @@ function PANEL:loadBackground()
         hook.Add("CalcView", "liaMainMenuCalcView", function(_, _, _, fov)
             local ent = self.modelEntity
             if not IsValid(ent) then return end
-            local center = ent:GetPos() + Vector(0, 0, 60)
-            local modelAngles = ent:GetAngles()
-            local forward = modelAngles:Forward()
-            local desired = center + forward * 70
-            if not self.currentCamPos then
-                self.currentCamPos = desired
+            local toCenter = ent:GetPos() + Vector(0, 0, 60)
+            local toForward = ent:GetAngles():Forward()
+            local origin, lookAt
+            if self._camTransitionStart and self._camTransitionDuration and self._camFromCenter and self._camToCenter and self._camFromForward and self._camToForward then
+                local t = math.Clamp((CurTime() - self._camTransitionStart) / self._camTransitionDuration, 0, 1)
+                local center = LerpVector(t, self._camFromCenter, self._camToCenter)
+                local forward = LerpVector(t, self._camFromForward, self._camToForward)
+                if forward:LengthSqr() < 0.0001 then forward = toForward end
+                forward:Normalize()
+                local baseDist = 70
+                local outDist = self._camPanOutDistance or 60
+                local dist = baseDist + outDist * math.sin(math.pi * t)
+                origin = center + forward * dist
+                lookAt = center
+                self.currentCamPos = origin
+                if t >= 1 then
+                    self._camTransitionStart = nil
+                    self._camTransitionDuration = nil
+                    self._camFromCenter = nil
+                    self._camToCenter = nil
+                    self._camFromForward = nil
+                    self._camToForward = nil
+                    self._camPanOutDistance = nil
+                end
             else
-                self.currentCamPos = LerpVector(FrameTime() * 5, self.currentCamPos, desired)
+                local desired = toCenter + toForward * 70
+                if not self.currentCamPos then
+                    self.currentCamPos = desired
+                else
+                    self.currentCamPos = LerpVector(FrameTime() * 5, self.currentCamPos, desired)
+                end
+
+                origin = self.currentCamPos
+                lookAt = toCenter
             end
             return {
-                origin = self.currentCamPos,
-                angles = (center - self.currentCamPos):Angle(),
+                origin = origin,
+                angles = ((lookAt or toCenter) - origin):Angle(),
                 fov = fov,
                 drawviewer = true
             }
@@ -600,13 +658,47 @@ function PANEL:loadBackground()
         if string.find(url, "%S") then
             self.background = self:Add("DHTML")
             self.background:SetSize(ScrW(), ScrH())
+            self.background.ConsoleMessage = function(_, msg) end
+            self.background.OnDocumentReady = function() if IsValid(self.bgLoader) then self.bgLoader:AlphaTo(0, 2, 1, function() self.bgLoader:Remove() end) end end
+            self.background.OnDocumentError = function(_, errCode, errText) end
             if string.find(url, "http", 1, true) then
-                self.background:OpenURL(url)
+                local isImageURL = url:find("%.png", 1, true) or url:find("%.jpg", 1, true) or url:find("%.jpeg", 1, true) or url:find("%.webp", 1, true) or url:find("%.gif", 1, true)
+                if isImageURL then
+                    local safeURL = url:gsub('"', "%%22")
+                    self.background:SetHTML([[<html><head><meta charset="utf-8"><style>
+html, body { width:100%; height:100%; margin:0; padding:0; overflow:hidden; background:#000; }
+body { background-position:center center; background-repeat:no-repeat; background-size:cover; }
+</style></head><body>
+<script>
+(function() {
+  try {
+    var url = "]] .. safeURL .. [[";
+    console.log("[Lilia MainMenu] Attempting to load image:", url);
+    var img = new Image();
+    img.onload = function() {
+      document.body.style.backgroundImage = 'url("' + url + '")';
+      console.log("[Lilia MainMenu] Image loaded OK:", img.width + "x" + img.height);
+      document.title = "LiliaBG:OK";
+    };
+    img.onerror = function(e) {
+      console.log("[Lilia MainMenu] Image failed to load", e);
+      document.title = "LiliaBG:ERR";
+    };
+    img.src = url;
+  } catch (e) {
+    console.log("[Lilia MainMenu] Exception:", e);
+    document.title = "LiliaBG:EX";
+  }
+})();
+</script>
+</body></html>]])
+                else
+                    self.background:OpenURL(url)
+                end
             else
                 self.background:SetHTML(url)
             end
 
-            self.background.OnDocumentReady = function() if IsValid(self.bgLoader) then self.bgLoader:AlphaTo(0, 2, 1, function() self.bgLoader:Remove() end) end end
             self.background:MoveToBack()
             self.background:SetZPos(-999)
             if lia.config.get("CharMenuBGInputDisabled", true) then
@@ -782,16 +874,26 @@ function PANEL:createStartButton()
         })
     end
 
-    if lia.workshop.hasContentToDownload and lia.workshop.hasContentToDownload() then
+    if lia.workshop and lia.workshop.hasContentToDownload then
+        local needsDownload = lia.workshop.hasContentToDownload()
         local tooltip = hook.Run("GetCharacterMountButtonTooltip", client)
-        if not tooltip or tooltip == "" then tooltip = "Mount required Workshop content" end
+        if not tooltip or tooltip == "" then
+            if needsDownload then
+                tooltip = "Mount required Workshop content"
+            else
+                tooltip = "Remount Workshop addons"
+            end
+        end
+
         table.insert(buttonsData, {
             id = "mount",
-            text = L("mountContent"),
+            text = needsDownload and L("mountContent") or "Remount Workshop Addons",
             tooltip = tooltip,
             doClick = function()
                 self:clickSound()
-                if lia.workshop and lia.workshop.mountContent then
+                if not needsDownload and lia.workshop and lia.workshop.remountContent then
+                    lia.workshop.remountContent()
+                elseif lia.workshop and lia.workshop.mountContent then
                     lia.workshop.mountContent()
                 else
                     net.Start("liaWorkshopDownloaderRequest")
@@ -818,7 +920,7 @@ function PANEL:createStartButton()
         if not returnTooltip or returnTooltip == "" then returnTooltip = L("returnToCharacter") end
         table.insert(buttonsData, {
             id = "return",
-            text = L("returnToMainMenu"),
+            text = L("returnToCharacter"),
             tooltip = returnTooltip,
             doClick = function() self:Remove() end
         })
@@ -920,7 +1022,7 @@ end
 
 function PANEL:getClosestGroundPosition(pos)
     if not isvector(pos) then return pos end
-    local startPos = pos + Vector(0, 0, 4096)
+    local startPos = pos + Vector(0, 0, 64)
     local endPos = pos + Vector(0, 0, -16384)
     local tr = util.TraceLine({
         start = startPos,
@@ -929,9 +1031,9 @@ function PANEL:getClosestGroundPosition(pos)
         filter = {self.modelEntity, LocalPlayer()}
     })
 
-    if tr.Hit then
+    if tr.Hit and tr.HitWorld and not tr.HitSky then
         local hitPos = tr.HitPos
-        if isvector(hitPos) then return hitPos + Vector(0, 0, 2) end
+        if isvector(hitPos) and hitPos.z <= startPos.z + 1 then return hitPos + Vector(0, 0, 2) end
     end
     return pos
 end
@@ -1004,15 +1106,37 @@ end
 
 function PANEL:updateSelectedCharacter()
     if not self.isLoadMode then return end
+    self:Stop()
+    self:SetAlpha(255)
     local chars = self.availableCharacters or {}
     if #chars == 0 then return end
     self.currentIndex = self.currentIndex or 1
     local sel = chars[self.currentIndex] or chars[1]
     local character = lia.char.getCharacter(sel)
-    if IsValid(self.infoFrame) then self.infoFrame:Remove() end
-    if IsValid(self.selectBtn) then self.selectBtn:Remove() end
-    if IsValid(self.deleteBtn) then self.deleteBtn:Remove() end
-    if IsValid(self.setMainBtn) then self.setMainBtn:Remove() end
+    if IsValid(self.infoFrame) then
+        self.infoFrame:Stop()
+        self.infoFrame:SetAlpha(255)
+        self.infoFrame:Remove()
+    end
+
+    if IsValid(self.selectBtn) then
+        self.selectBtn:Stop()
+        self.selectBtn:SetAlpha(255)
+        self.selectBtn:Remove()
+    end
+
+    if IsValid(self.deleteBtn) then
+        self.deleteBtn:Stop()
+        self.deleteBtn:SetAlpha(255)
+        self.deleteBtn:Remove()
+    end
+
+    if IsValid(self.setMainBtn) then
+        self.setMainBtn:Stop()
+        self.setMainBtn:SetAlpha(255)
+        self.setMainBtn:Remove()
+    end
+
     self:createSelectedCharacterInfoPanel(character)
     self:updateModelEntity(character)
 end
@@ -1031,9 +1155,24 @@ function PANEL:updateSelectedCharacterForID(charID)
 
     self.currentIndex = selectedIndex
     local character = lia.char.getCharacter(charID)
-    if IsValid(self.infoFrame) then self.infoFrame:Remove() end
-    if IsValid(self.selectBtn) then self.selectBtn:Remove() end
-    if IsValid(self.deleteBtn) then self.deleteBtn:Remove() end
+    if IsValid(self.infoFrame) then
+        self.infoFrame:Stop()
+        self.infoFrame:SetAlpha(255)
+        self.infoFrame:Remove()
+    end
+
+    if IsValid(self.selectBtn) then
+        self.selectBtn:Stop()
+        self.selectBtn:SetAlpha(255)
+        self.selectBtn:Remove()
+    end
+
+    if IsValid(self.deleteBtn) then
+        self.deleteBtn:Stop()
+        self.deleteBtn:SetAlpha(255)
+        self.deleteBtn:Remove()
+    end
+
     self:createSelectedCharacterInfoPanel(character)
     self:updateModelEntity(character)
 end
@@ -1061,10 +1200,19 @@ function PANEL:createSelectedCharacterInfoPanel(character)
     hook.Run("LoadMainMenuInformation", info, character)
     self.infoFrame = self:Add("liaSemiTransparentDFrame")
     self.infoFrame:SetSize(ScrW() * 0.25, ScrH() * 0.45)
-    self.infoFrame:SetPos(ScrW() * 0.75 - 50, ScrH() * 0.25)
+    local finalInfoX, finalInfoY = ScrW() * 0.75 - 50, ScrH() * 0.25
+    self.infoFrame:SetPos(finalInfoX, finalInfoY)
     self.infoFrame:SetTitle("")
     self.infoFrame:SetDraggable(false)
     self.infoFrame:ShowCloseButton(false)
+    self.infoFrame:Stop()
+    self.infoFrame:SetAlpha(255)
+    local slideDir = self._loadSwapDir or 1
+    do
+        self.infoFrame:SetPos(finalInfoX + slideDir * 80, finalInfoY)
+        self.infoFrame:MoveTo(finalInfoX, finalInfoY, 0.25, 0, 0.2)
+    end
+
     self.infoFrame.Paint = function(s, w, h)
         local bgColor = Color(25, 28, 35, 250)
         lia.derma.rect(0, 0, w, h):Rad(12):Color(Color(0, 0, 0, 180)):Shadow(15, 20):Shape(lia.derma.SHAPE_IOS):Draw()
@@ -1145,7 +1293,7 @@ function PANEL:createSelectedCharacterInfoPanel(character)
         progressBar:SetTall(48)
     end
 
-    local fx, fy = self.infoFrame:GetPos()
+    local fx, fy = finalInfoX, finalInfoY
     local fw, fh = self.infoFrame:GetWide(), self.infoFrame:GetTall()
     local bw, bh = fw * 0.85, 40
     local pad = 10
@@ -1157,6 +1305,14 @@ function PANEL:createSelectedCharacterInfoPanel(character)
     self.selectBtn:SetPos(cx, fy + fh + pad)
     self.selectBtn:SetShowLine(true)
     self.selectBtn:SetText(selectText)
+    self.selectBtn:Stop()
+    self.selectBtn:SetAlpha(255)
+    do
+        local tx, ty = self.selectBtn:GetPos()
+        self.selectBtn:SetPos(tx + slideDir * 80, ty)
+        self.selectBtn:MoveTo(tx, ty, 0.25, 0, 0.2)
+    end
+
     self.selectBtn.DoClick = function()
         if character:isBanned() then
             local characterName = character:getName()
@@ -1172,6 +1328,14 @@ function PANEL:createSelectedCharacterInfoPanel(character)
     self.deleteBtn:SetPos(cx, fy + fh + pad + bh + pad)
     self.deleteBtn:SetShowLine(true)
     self.deleteBtn:SetText(L("delete") .. " " .. L("character"))
+    self.deleteBtn:Stop()
+    self.deleteBtn:SetAlpha(255)
+    do
+        local tx, ty = self.deleteBtn:GetPos()
+        self.deleteBtn:SetPos(tx + slideDir * 80, ty)
+        self.deleteBtn:MoveTo(tx, ty, 0.25, 0, 0.2)
+    end
+
     self.deleteBtn.DoClick = function()
         local charID = character:getID()
         if hook.Run("CanDeleteChar", charID) == false then
@@ -1179,7 +1343,7 @@ function PANEL:createSelectedCharacterInfoPanel(character)
             return
         end
 
-        vgui.Create("liaCharacterConfirm", self):setMessage(L("charDeletionAreYouSure") .. "\n" .. L("charDeletionCannotUndone")):onConfirm(function() lia.module.get("mainmenu"):DeleteCharacter(charID) end)
+        self:showConfirmation(L("charDeletionAreYouSure") .. "\n" .. L("charDeletionCannotUndone"), function() lia.module.get("mainmenu"):DeleteCharacter(charID) end)
     end
 
     local localClient = LocalPlayer()
@@ -1190,6 +1354,14 @@ function PANEL:createSelectedCharacterInfoPanel(character)
         self.setMainBtn:SetPos(cx, fy + fh + pad + bh + pad + bh + pad)
         self.setMainBtn:SetShowLine(true)
         self.setMainBtn:SetText(L("setAsMainCharacter"))
+        self.setMainBtn:Stop()
+        self.setMainBtn:SetAlpha(255)
+        do
+            local tx, ty = self.setMainBtn:GetPos()
+            self.setMainBtn:SetPos(tx + slideDir * 80, ty)
+            self.setMainBtn:MoveTo(tx, ty, 0.25, 0, 0.2)
+        end
+
         self.setMainBtn.DoClick = function()
             if IsValid(localClient) then localClient:setMainCharacter(character:getID()) end
             self:clickSound()
@@ -1198,7 +1370,7 @@ function PANEL:createSelectedCharacterInfoPanel(character)
 end
 
 function PANEL:updateModelEntity(character)
-    if IsValid(self.modelEntity) then self.modelEntity:Remove() end
+    local prevEnt = self.modelEntity
     if not character then return end
     local model = character.getModel and character:getModel() or LocalPlayer():GetModel()
     self.modelEntity = ClientsideModel(model, RENDERGROUP_OPAQUE)
@@ -1213,55 +1385,42 @@ function PANEL:updateModelEntity(character)
 
     hook.Run("SetupPlayerModel", self.modelEntity, character)
     local pos, ang = nil, nil
-    if lia.config.get("MainMenuUseLastPos", true) then
-        local lastPos = character.getLastPos and character:getLastPos()
-        if lastPos then
-            local posValue = lastPos.pos or lastPos.position or lastPos.Pos or lastPos.Position
-            local angValue = lastPos.ang or lastPos.angles or lastPos.Ang or lastPos.Angles
-            if posValue and isvector(posValue) then
-                pos = posValue
-                ang = angValue and isangle(angValue) and angValue or Angle(0, 0, 0)
-            else
-                local client = LocalPlayer()
-                if IsValid(client) and client:getChar() then
-                    local currentChar = client:getChar()
-                    local currentCharID = currentChar.getID and currentChar:getID() or nil
-                    local viewingCharID = character.getID and character:getID() or nil
-                    if currentCharID == viewingCharID then
-                        pos = client:GetPos()
-                        ang = Angle(0, 0, 0)
-                    end
-                end
-            end
+    local hookResult = {hook.Run("GetMainMenuPosition", character)}
+    if isvector(hookResult[1]) then pos = hookResult[1] end
+    if isangle(hookResult[2]) then ang = hookResult[2] end
+    if not pos then
+        local spawns = ents.FindByClass("info_player_start")
+        if #spawns > 0 then
+            pos = spawns[1]:GetPos()
+            ang = spawns[1]:GetAngles()
         else
-            local client = LocalPlayer()
-            if IsValid(client) and client:getChar() then
-                local currentChar = client:getChar()
-                local currentCharID = currentChar.getID and currentChar:getID() or nil
-                local viewingCharID = character.getID and character:getID() or nil
-                if currentCharID == viewingCharID then
-                    pos = client:GetPos()
-                    ang = Angle(0, 0, 0)
-                end
-            end
+            pos = Vector()
+            ang = Angle()
         end
     end
 
-    if not pos then
-        local hookResult = {hook.Run("GetMainMenuPosition", character)}
-        pos, ang = hookResult[1], hookResult[2]
-    end
-
-    if not pos or not ang then
-        local spawns = ents.FindByClass("info_player_start")
-        pos = #spawns > 0 and spawns[1]:GetPos() or Vector()
-        ang = #spawns > 0 and spawns[1]:GetAngles() or Angle()
-    end
-
+    pos = pos or Vector()
+    ang = ang or Angle()
     pos = self:getClosestGroundPosition(pos)
     self.modelEntity:SetPos(pos)
     self.modelEntity:SetAngles(ang)
-    self.currentCamPos = nil
+    if IsValid(prevEnt) and self.isLoadMode then
+        local fromCenter = prevEnt:GetPos() + Vector(0, 0, 60)
+        local fromForward = prevEnt:GetAngles():Forward()
+        local toCenter = self.modelEntity:GetPos() + Vector(0, 0, 60)
+        local toForward = self.modelEntity:GetAngles():Forward()
+        self._camFromCenter = fromCenter
+        self._camFromForward = fromForward
+        self._camToCenter = toCenter
+        self._camToForward = toForward
+        self._camTransitionStart = CurTime()
+        self._camTransitionDuration = 0.6
+        self._camPanOutDistance = 80
+    else
+        self.currentCamPos = nil
+    end
+
+    if IsValid(prevEnt) then prevEnt:Remove() end
     local seqID = self.modelEntity:LookupSequence("idle_all_01")
     if seqID > 0 then
         self.modelEntity:ResetSequence(seqID)
@@ -1297,6 +1456,7 @@ function PANEL:createArrows()
         btn.DoClick = function()
             local chars = self.availableCharacters or {}
             if not self.isLoadMode or #chars == 0 then return end
+            self._loadSwapDir = sign == "<" and -1 or 1
             self.currentIndex = self.currentIndex + (sign == "<" and -1 or 1)
             if self.currentIndex < 1 then self.currentIndex = #chars end
             if self.currentIndex > #chars then self.currentIndex = 1 end
@@ -1340,6 +1500,8 @@ end
 
 function PANEL:showContent(disableBg)
     if IsValid(self.infoFrame) then self.infoFrame:Remove() end
+    if IsValid(self.bgLoader) then self.bgLoader:Remove() end
+    if IsValid(self.background) then self.background:Remove() end
     if IsValid(self.leftArrow) then
         self.leftArrow:Remove()
         self.leftArrow = nil
@@ -1374,6 +1536,10 @@ function PANEL:removeClientModelModifications()
     hook.Remove("PrePlayerDraw", "liaMainMenuPrePlayerDraw")
     if not self.isLoadMode then hook.Remove("CalcView", "liaMainMenuCalcView") end
     hook.Remove("PostDrawOpaqueRenderables", "liaMainMenuPostDrawOpaqueRenderables")
+    if self.mainMenuRenderHookID then
+        hook.Remove("PostDrawOpaqueRenderables", self.mainMenuRenderHookID)
+        self.mainMenuRenderHookID = nil
+    end
 end
 
 function PANEL:setFadeToBlack(fade)
@@ -1474,6 +1640,11 @@ function PANEL:OnRemove()
     hook.Remove("PrePlayerDraw", "liaMainMenuPrePlayerDraw")
     hook.Remove("CalcView", "liaMainMenuCalcView")
     hook.Remove("PostDrawOpaqueRenderables", "liaMainMenuPostDrawOpaqueRenderables")
+    if self.mainMenuRenderHookID then
+        hook.Remove("PostDrawOpaqueRenderables", self.mainMenuRenderHookID)
+        self.mainMenuRenderHookID = nil
+    end
+
     hook.Remove("DrawPhysgunBeam", "liaMainMenuPreDrawPhysgunBeam")
     hook.Remove("RenderScreenspaceEffects", "liaCharMenuDarken")
     if self.charListUpdateHook then hook.Remove("CharListUpdated", self.charListUpdateHook) end
@@ -1514,6 +1685,100 @@ function PANEL:Think()
         self.logo:MoveToFront()
         self:UpdateLogoPosition()
     end
+end
+
+function PANEL:showConfirmation(message, onConfirm, onCancel)
+    if IsValid(lia.gui.charConfirm) then lia.gui.charConfirm:Remove() end
+    local frame = vgui.Create("liaFrame", self)
+    lia.gui.charConfirm = frame
+    local pad, btnH = 10, 25
+    frame:SetSize(400, 200)
+    frame:MakePopup()
+    frame:SetTitle("")
+    frame:SetCenterTitle(L("areYouSure"):upper())
+    frame:ShowCloseButton(false)
+    frame:SetDraggable(false)
+    local accentColor = lia.color.theme and lia.color.theme.theme or Color(116, 185, 255)
+    local oldPaint = frame.Paint
+    frame.Paint = function(s, w, h)
+        if oldPaint then oldPaint(s, w, h) end
+        surface.SetDrawColor(accentColor)
+        surface.DrawRect(0, 0, w, 2)
+    end
+
+    local messageLabel = frame:Add("DLabel")
+    messageLabel:SetFont("LiliaFont.14")
+    messageLabel:SetTextColor(color_white)
+    messageLabel:SetWrap(true)
+    messageLabel:SetContentAlignment(5)
+    local confirmButton = frame:Add("liaButton")
+    confirmButton:SetFont("LiliaFont.17")
+    confirmButton:SetText(L("yes"):upper())
+    confirmButton:SetPaintBackground(false)
+    confirmButton:SetContentAlignment(5)
+    function confirmButton:OnCursorEntered()
+        self.BaseClass.OnCursorEntered(self)
+        if lia.gui.character and isfunction(lia.gui.character.hoverSound) then lia.gui.character:hoverSound() end
+    end
+
+    confirmButton.DoClick = function()
+        if lia.gui.character and isfunction(lia.gui.character.clickSound) then lia.gui.character:clickSound() end
+        if isfunction(onConfirm) then onConfirm() end
+        frame:Remove()
+    end
+
+    local cancelButton = frame:Add("liaButton")
+    cancelButton:SetFont("LiliaFont.17")
+    cancelButton:SetText(L("no"):upper())
+    cancelButton:SetPaintBackground(false)
+    cancelButton:SetContentAlignment(5)
+    function cancelButton:OnCursorEntered()
+        self.BaseClass.OnCursorEntered(self)
+        if lia.gui.character and isfunction(lia.gui.character.hoverSound) then lia.gui.character:hoverSound() end
+    end
+
+    cancelButton.DoClick = function()
+        if lia.gui.character and isfunction(lia.gui.character.clickSound) then lia.gui.character:clickSound() end
+        if isfunction(onCancel) then onCancel() end
+        frame:Remove()
+    end
+
+    timer.Simple(0.25, function() if lia.gui.character and isfunction(lia.gui.character.warningSound) then lia.gui.character:warningSound() end end)
+    timer.Simple(0, function()
+        if IsValid(frame) then
+            local w, h = frame:GetWide(), frame:GetTall()
+            frame:SetPos((ScrW() - w) * 0.5, (ScrH() - h) * 0.5)
+        end
+    end)
+
+    function frame:PerformLayout(w, h)
+        if IsValid(frame.top_panel) then frame.top_panel:SetSize(w, 24) end
+        if IsValid(frame.cls) then
+            frame.cls:SetSize(20, 20)
+            frame.cls:SetPos(w - 22, 2)
+        end
+
+        if IsValid(frame.resizer) then
+            frame.resizer:SetSize(14, 14)
+            frame.resizer:SetPos(w - 14, h - 14)
+            frame.resizer:SetVisible(frame.sizable or false)
+        end
+
+        local availH = h - 24 - pad * 2 - btnH
+        messageLabel:SetSize(w - pad * 2, availH)
+        messageLabel:InvalidateLayout(true)
+        messageLabel:SizeToContentsY()
+        messageLabel:SetPos((w - messageLabel:GetWide()) * 0.5, 24 + pad + (availH - messageLabel:GetTall()) * 0.5)
+        local btnW = (w - pad * 3) * 0.5
+        confirmButton:SetSize(btnW, btnH)
+        confirmButton:SetPos(pad, h - pad - btnH)
+        cancelButton:SetSize(btnW, btnH)
+        cancelButton:SetPos(pad * 2 + btnW, h - pad - btnH)
+    end
+
+    messageLabel:SetText(message:upper())
+    frame:InvalidateLayout()
+    return frame
 end
 
 vgui.Register("liaCharacter", PANEL, "EditablePanel")

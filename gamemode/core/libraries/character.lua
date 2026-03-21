@@ -432,7 +432,7 @@ lia.char.registerVar("model", {
             return false, "needModel"
         end
     end,
-    onAdjust = function(_, data, value, newData)
+    onAdjust = function(client, data, value, newData)
         local faction = lia.faction.indices[data.faction]
         if faction then
             local model = faction.models[value]
@@ -440,7 +440,7 @@ lia.char.registerVar("model", {
                 newData.model = model
             elseif istable(model) then
                 newData.model = model[1]
-                newData.skin = model[2] or 0
+                local defaultSkin = model[2] or 0
                 local groups = {}
                 if isstring(model[3]) then
                     local i = 0
@@ -454,7 +454,29 @@ lia.char.registerVar("model", {
                     end
                 end
 
-                newData.bodygroups = groups
+                local skinAllowed, bodygroupsAllowed = lia.faction.getModelCustomizationAllowed(client, faction, data)
+                if skinAllowed and data.skin ~= nil then
+                    local desiredSkin = tonumber(data.skin) or defaultSkin
+                    if istable(faction.allowedSkins) and not lia.faction.isSkinAllowedForFaction(faction, desiredSkin) then desiredSkin = lia.faction.getDefaultAllowedSkinForFaction(faction, defaultSkin) end
+                    newData.skin = desiredSkin
+                else
+                    newData.skin = defaultSkin
+                end
+
+                local chosenGroups = groups
+                if bodygroupsAllowed and istable(data.bodygroups) then
+                    chosenGroups = {}
+                    for k, v in pairs(data.bodygroups) do
+                        local idx = tonumber(k)
+                        if idx then
+                            local desiredValue = tonumber(v) or 0
+                            if istable(faction.allowedBodygroups) and not lia.faction.isBodygroupValueAllowed(faction, newData.model, idx, desiredValue) then desiredValue = tonumber(groups[idx]) or 0 end
+                            chosenGroups[idx] = desiredValue
+                        end
+                    end
+                end
+
+                newData.bodygroups = chosenGroups
             end
         end
     end
@@ -464,6 +486,11 @@ lia.char.registerVar("skin", {
     field = "skin",
     fieldType = "integer",
     default = 0,
+    onValidate = function(value)
+        if value == nil then return true end
+        if not isnumber(value) then return false, "invalid", "skin" end
+        return true
+    end,
     onSet = function(character, value)
         local oldVar = character:getSkin()
         character.vars.skin = value
@@ -484,6 +511,11 @@ lia.char.registerVar("bodygroups", {
     field = "bodygroups",
     fieldType = "text",
     default = {},
+    onValidate = function(value)
+        if value == nil then return true end
+        if not istable(value) then return false, "invalid", "bodygroups" end
+        return true
+    end,
     onSet = function(character, value)
         local oldVar = character:getBodygroups()
         character.vars.bodygroups = value
