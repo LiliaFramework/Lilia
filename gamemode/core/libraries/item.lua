@@ -617,7 +617,12 @@ end
 ]]
 function lia.item.registerItem(id, base, properties)
     assert(isstring(id), L("itemUniqueIDString"))
-    assert(istable(properties) or properties == nil, "properties must be a table or nil")
+    if properties ~= nil and not istable(properties) then
+        local errorMsg = string.format("properties must be a table or nil, got %s (type: %s)", tostring(properties), type(properties))
+        lia.error(string.format("[Lilia] registerItem called with invalid properties for item '%s': %s\n", id, errorMsg))
+        properties = {}
+    end
+
     table.insert(lia.item.pendingRegistrations, {
         id = id,
         base = base,
