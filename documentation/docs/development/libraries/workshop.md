@@ -4,36 +4,22 @@ Steam Workshop addon downloading, mounting, and management system for the Lilia 
 
 ---
 
-<h3 style="margin-bottom: 5px;">Overview</h3>
-<div style="margin-left: 20px; margin-bottom: 20px;">
-The workshop library provides comprehensive functionality for managing Steam Workshop addons in the Lilia framework. It handles automatic downloading, mounting, and management of workshop content required by the gamemode and its modules. The library operates on both server and client sides, with the server gathering workshop IDs from modules and mounted addons, while the client handles downloading and mounting of required content. It includes user interface elements for download progress tracking and addon information display. The library ensures that all required workshop content is available before gameplay begins.
-</div>
-
----
-
 <details class="realm-server" id="function-liaworkshopaddworkshop">
 <summary><a id="lia.workshop.addWorkshop"></a>lia.workshop.addWorkshop(id)</summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="liaworkshopaddworkshop"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
-  <p>Queue a workshop addon for download and notify the admin UI.</p>
-</div>
-
-<h3 style="margin-bottom: 5px; font-weight: 700;">When Called</h3>
-<div style="margin-left: 20px; margin-bottom: 20px;">
-  <p>During module initialization or whenever a new workshop dependency is registered.</p>
+  <p>Add a workshop ID to the list of required addons.</p>
 </div>
 
 <h3 style="margin-bottom: 5px; font-weight: 700;">Parameters</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
-<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#2.1">string|number</a></span> <span class="parameter">id</span> Workshop addon ID to download (will be converted to string).</p>
+<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#2.1">string</a></span> <span class="parameter">id</span> Workshop addon ID to add.</p>
 </div>
 
 <h3 style="margin-bottom: 5px; font-weight: 700;">Example Usage</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
-<pre><code class="language-lua">  -- Register a workshop addon dependency
-  lia.workshop.addWorkshop("3527535922")
-  lia.workshop.addWorkshop(1234567890) -- Also accepts numbers
+<pre><code class="language-lua">  lia.workshop.addWorkshop("123456789")
 </code></pre>
 </div>
 

@@ -178,6 +178,234 @@ The faction library provides comprehensive functionality for managing factions (
 
 ---
 
+<details class="realm-shared" id="function-liafactiongetmodelcustomizationallowed">
+<summary><a id="lia.faction.getModelCustomizationAllowed"></a>lia.faction.getModelCustomizationAllowed(client, faction, context)</summary>
+<div class="details-content">
+<h3 style="margin-bottom: 5px; font-weight: 700;"><a id="liafactiongetmodelcustomizationallowed"></a>Purpose</h3>
+<div style="margin-left: 20px; margin-bottom: 20px;">
+  <p>Determines whether a faction allows skin and bodygroup customization for a given client.</p>
+</div>
+
+<h3 style="margin-bottom: 5px; font-weight: 700;">When Called</h3>
+<div style="margin-left: 20px; margin-bottom: 20px;">
+  <p>Called when checking if a player can customize their character model with skins and bodygroups,
+typically during character creation or model selection.</p>
+</div>
+
+<h3 style="margin-bottom: 5px; font-weight: 700;">Parameters</h3>
+<div style="margin-left: 20px; margin-bottom: 20px;">
+<p><span class="types"><a class="type" href="/development/meta/player/">Player</a></span> <span class="parameter">client</span> The player whose customization permissions are being checked.</p>
+<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#2.2">number/string/table</a></span> <span class="parameter">faction</span> The faction identifier - can be a faction ID, unique ID, or faction table.</p>
+<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#2.1">any</a></span> <span class="parameter">context</span> Additional context data that might be used by hooks to determine permissions.</p>
+</div>
+
+<h3 style="margin-bottom: 5px; font-weight: 700;">Returns</h3>
+<div style="margin-left: 20px; margin-bottom: 20px;">
+<p>boolean, boolean First value: Whether skin customization is allowed. Second value: Whether bodygroup customization is allowed.</p>
+</div>
+
+<h3 style="margin-bottom: 5px; font-weight: 700;">Example Usage</h3>
+<div style="margin-left: 20px; margin-bottom: 20px;">
+<pre><code class="language-lua">  local skinAllowed, bodygroupsAllowed = lia.faction.getModelCustomizationAllowed(client, faction, "character_creation")
+</code></pre>
+</div>
+
+</div>
+</details>
+
+---
+
+<details class="realm-shared" id="function-liafactiongetbodygroupnametoindex">
+<summary><a id="lia.faction.getBodygroupNameToIndex"></a>lia.faction.getBodygroupNameToIndex(modelPath)</summary>
+<div class="details-content">
+<h3 style="margin-bottom: 5px; font-weight: 700;"><a id="liafactiongetbodygroupnametoindex"></a>Purpose</h3>
+<div style="margin-left: 20px; margin-bottom: 20px;">
+  <p>Builds a lookup table of bodygroup name -> bodygroup index for a specific model path.</p>
+</div>
+
+<h3 style="margin-bottom: 5px; font-weight: 700;">When Called</h3>
+<div style="margin-left: 20px; margin-bottom: 20px;">
+  <p>Called when bodygroup whitelist rules are defined by bodygroup name, and we need to resolve
+those names to numeric indices for a given model.</p>
+</div>
+
+<h3 style="margin-bottom: 5px; font-weight: 700;">Parameters</h3>
+<div style="margin-left: 20px; margin-bottom: 20px;">
+<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#2.1">string</a></span> <span class="parameter">modelPath</span> The model path to inspect.</p>
+</div>
+
+<h3 style="margin-bottom: 5px; font-weight: 700;">Returns</h3>
+<div style="margin-left: 20px; margin-bottom: 20px;">
+<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#2.1">table</a></span> A map where keys are lowercase bodygroup names and values are numeric bodygroup indices. Returns an empty table if the model is invalid or cannot be inspected.</p>
+</div>
+
+<h3 style="margin-bottom: 5px; font-weight: 700;">Example Usage</h3>
+<div style="margin-left: 20px; margin-bottom: 20px;">
+<pre><code class="language-lua">  local map = lia.faction.getBodygroupNameToIndex("models/player/group01/male_01.mdl")
+  local headgearIndex = map.headgear
+</code></pre>
+</div>
+
+</div>
+</details>
+
+---
+
+<details class="realm-shared" id="function-liafactionisskinallowedforfaction">
+<summary><a id="lia.faction.isSkinAllowedForFaction"></a>lia.faction.isSkinAllowedForFaction(faction, skin)</summary>
+<div class="details-content">
+<h3 style="margin-bottom: 5px; font-weight: 700;"><a id="liafactionisskinallowedforfaction"></a>Purpose</h3>
+<div style="margin-left: 20px; margin-bottom: 20px;">
+  <p>Checks if a skin ID is allowed for a faction when a skin whitelist is defined.
+If the whitelist is missing or empty, this function treats it as unrestricted.</p>
+</div>
+
+<h3 style="margin-bottom: 5px; font-weight: 700;">When Called</h3>
+<div style="margin-left: 20px; margin-bottom: 20px;">
+  <p>Called during character creation/adjustment when `skinAllowed` is enabled and the player
+attempts to pick a specific skin.</p>
+</div>
+
+<h3 style="margin-bottom: 5px; font-weight: 700;">Parameters</h3>
+<div style="margin-left: 20px; margin-bottom: 20px;">
+<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#2.1">table|string|number</a></span> <span class="parameter">faction</span> The faction table, uniqueID, or numeric index.</p>
+<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#2.1">number</a></span> <span class="parameter">skin</span> The desired skin ID.</p>
+</div>
+
+<h3 style="margin-bottom: 5px; font-weight: 700;">Returns</h3>
+<div style="margin-left: 20px; margin-bottom: 20px;">
+<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#2.1">boolean</a></span> True if allowed, false otherwise.</p>
+</div>
+
+<h3 style="margin-bottom: 5px; font-weight: 700;">Example Usage</h3>
+<div style="margin-left: 20px; margin-bottom: 20px;">
+<pre><code class="language-lua">  if lia.faction.isSkinAllowedForFaction("citizen", 0) then
+      print("Allowed")
+  end
+</code></pre>
+</div>
+
+</div>
+</details>
+
+---
+
+<details class="realm-shared" id="function-liafactiongetdefaultallowedskinforfaction">
+<summary><a id="lia.faction.getDefaultAllowedSkinForFaction"></a>lia.faction.getDefaultAllowedSkinForFaction(faction, fallback)</summary>
+<div class="details-content">
+<h3 style="margin-bottom: 5px; font-weight: 700;"><a id="liafactiongetdefaultallowedskinforfaction"></a>Purpose</h3>
+<div style="margin-left: 20px; margin-bottom: 20px;">
+  <p>Returns the first allowed skin from a faction whitelist to use as a fallback.</p>
+</div>
+
+<h3 style="margin-bottom: 5px; font-weight: 700;">When Called</h3>
+<div style="margin-left: 20px; margin-bottom: 20px;">
+  <p>Called when a player-selected skin is not allowed and we need to clamp it back to a valid
+value. If no whitelist exists (or it has no numeric entries), the provided fallback is used.</p>
+</div>
+
+<h3 style="margin-bottom: 5px; font-weight: 700;">Parameters</h3>
+<div style="margin-left: 20px; margin-bottom: 20px;">
+<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#2.1">table|string|number</a></span> <span class="parameter">faction</span> The faction table, uniqueID, or numeric index.</p>
+<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#2.1">number</a></span> <span class="parameter">fallback</span> The fallback skin to use if there is no usable whitelist value.</p>
+</div>
+
+<h3 style="margin-bottom: 5px; font-weight: 700;">Returns</h3>
+<div style="margin-left: 20px; margin-bottom: 20px;">
+<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#2.1">number</a></span> A valid skin ID.</p>
+</div>
+
+<h3 style="margin-bottom: 5px; font-weight: 700;">Example Usage</h3>
+<div style="margin-left: 20px; margin-bottom: 20px;">
+<pre><code class="language-lua">  local skin = lia.faction.getDefaultAllowedSkinForFaction("citizen", 0)
+</code></pre>
+</div>
+
+</div>
+</details>
+
+---
+
+<details class="realm-shared" id="function-liafactiongetbodygroupwhitelistrule">
+<summary><a id="lia.faction.getBodygroupWhitelistRule"></a>lia.faction.getBodygroupWhitelistRule(faction, modelPath, bodygroupIndex, bodygroupName)</summary>
+<div class="details-content">
+<h3 style="margin-bottom: 5px; font-weight: 700;"><a id="liafactiongetbodygroupwhitelistrule"></a>Purpose</h3>
+<div style="margin-left: 20px; margin-bottom: 20px;">
+  <p>Resolves the whitelist rule for a specific bodygroup for a faction.
+Supports looking up rules by numeric bodygroup index or by bodygroup name.</p>
+</div>
+
+<h3 style="margin-bottom: 5px; font-weight: 700;">When Called</h3>
+<div style="margin-left: 20px; margin-bottom: 20px;">
+  <p>Called when validating a requested bodygroup change during character creation/adjustment.</p>
+</div>
+
+<h3 style="margin-bottom: 5px; font-weight: 700;">Parameters</h3>
+<div style="margin-left: 20px; margin-bottom: 20px;">
+<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#2.1">table|string|number</a></span> <span class="parameter">faction</span> The faction table, uniqueID, or numeric index.</p>
+<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#2.1">string</a></span> <span class="parameter">modelPath</span> The model used to resolve bodygroup name to index when needed.</p>
+<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#2.1">number</a></span> <span class="parameter">bodygroupIndex</span> The numeric bodygroup index.</p>
+<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#2.1">string</a></span> <span class="parameter">bodygroupName</span> <span class="optional">optional</span> Optional bodygroup name override.</p>
+</div>
+
+<h3 style="margin-bottom: 5px; font-weight: 700;">Returns</h3>
+<div style="margin-left: 20px; margin-bottom: 20px;">
+<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#2.1">any</a></span> The rule value stored in `FACTION.allowedBodygroups` for this bodygroup. - nil means no restriction. - table means a whitelist of allowed numeric values. - true/false explicitly allows/denies.</p>
+</div>
+
+<h3 style="margin-bottom: 5px; font-weight: 700;">Example Usage</h3>
+<div style="margin-left: 20px; margin-bottom: 20px;">
+<pre><code class="language-lua">  local rule = lia.faction.getBodygroupWhitelistRule("citizen", mdl, 1)
+</code></pre>
+</div>
+
+</div>
+</details>
+
+---
+
+<details class="realm-shared" id="function-liafactionisbodygroupvalueallowed">
+<summary><a id="lia.faction.isBodygroupValueAllowed"></a>lia.faction.isBodygroupValueAllowed(faction, modelPath, bodygroupIndex, value, bodygroupName)</summary>
+<div class="details-content">
+<h3 style="margin-bottom: 5px; font-weight: 700;"><a id="liafactionisbodygroupvalueallowed"></a>Purpose</h3>
+<div style="margin-left: 20px; margin-bottom: 20px;">
+  <p>Checks if a specific bodygroup value is allowed for a faction.
+If there is no rule (or the allowedBodygroups table is missing/empty), this is unrestricted.</p>
+</div>
+
+<h3 style="margin-bottom: 5px; font-weight: 700;">When Called</h3>
+<div style="margin-left: 20px; margin-bottom: 20px;">
+  <p>Called during character creation/adjustment when `bodygroupsAllowed` is enabled and the
+player attempts to pick bodygroup values.</p>
+</div>
+
+<h3 style="margin-bottom: 5px; font-weight: 700;">Parameters</h3>
+<div style="margin-left: 20px; margin-bottom: 20px;">
+<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#2.1">table|string|number</a></span> <span class="parameter">faction</span> The faction table, uniqueID, or numeric index.</p>
+<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#2.1">string</a></span> <span class="parameter">modelPath</span> The model path used to resolve bodygroup names when needed.</p>
+<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#2.1">number</a></span> <span class="parameter">bodygroupIndex</span> The numeric bodygroup index.</p>
+<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#2.1">number</a></span> <span class="parameter">value</span> The requested bodygroup value.</p>
+<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#2.1">string</a></span> <span class="parameter">bodygroupName</span> <span class="optional">optional</span> Optional bodygroup name override.</p>
+</div>
+
+<h3 style="margin-bottom: 5px; font-weight: 700;">Returns</h3>
+<div style="margin-left: 20px; margin-bottom: 20px;">
+<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#2.1">boolean</a></span> True if allowed, false otherwise.</p>
+</div>
+
+<h3 style="margin-bottom: 5px; font-weight: 700;">Example Usage</h3>
+<div style="margin-left: 20px; margin-bottom: 20px;">
+<pre><code class="language-lua">  if lia.faction.isBodygroupValueAllowed("citizen", mdl, 0, 1) then
+      print("Allowed")
+  end
+</code></pre>
+</div>
+
+</div>
+</details>
+
+---
+
 <details class="realm-shared" id="function-liafactiongetindex">
 <summary><a id="lia.faction.getIndex"></a>lia.faction.getIndex(uniqueID)</summary>
 <div class="details-content">
