@@ -69,6 +69,8 @@ function lia.faction.register(uniqueID, data)
     faction.desc = L(faction.desc) or "noDesc"
     faction.color = faction.color or Color(150, 150, 150)
     faction.models = faction.models or DefaultModels
+    if faction.skinAllowed == nil then faction.skinAllowed = false end
+    if faction.bodygroupsAllowed == nil then faction.bodygroupsAllowed = false end
     local overrideName = hook.Run("OverrideFactionName", uniqueID, faction.name)
     if overrideName then faction.name = overrideName end
     local overrideDesc = hook.Run("OverrideFactionDesc", uniqueID, faction.desc)
@@ -171,6 +173,8 @@ function lia.faction.loadFromDir(directory)
         team.SetUp(FACTION.index, FACTION.name or L("unknown"), FACTION.color or Color(125, 125, 125))
         FACTION.models = FACTION.models or DefaultModels
         FACTION.uniqueID = FACTION.uniqueID or niceName
+        if FACTION.skinAllowed == nil then FACTION.skinAllowed = false end
+        if FACTION.bodygroupsAllowed == nil then FACTION.bodygroupsAllowed = false end
         for _, modelData in pairs(FACTION.models) do
             if isstring(modelData) then
                 util.PrecacheModel(modelData)
@@ -245,6 +249,311 @@ end
 ]]
 function lia.faction.get(identifier)
     return lia.faction.indices[identifier] or lia.faction.teams[identifier]
+end
+
+--[[
+    Purpose:
+        Determines whether a faction allows skin and bodygroup customization for a given client.
+
+    When Called:
+        Called when checking if a player can customize their character model with skins and bodygroups,
+        typically during character creation or model selection.
+
+    Parameters:
+        client (Player)
+            The player whose customization permissions are being checked.
+        faction (number/string/table)
+            The faction identifier - can be a faction ID, unique ID, or faction table.
+        context (any)
+            Additional context data that might be used by hooks to determine permissions.
+
+    Returns:
+        boolean, boolean
+            First value: Whether skin customization is allowed.
+            Second value: Whether bodygroup customization is allowed.
+
+    Realm:
+        Shared
+
+    Example Usage:
+        ```lua
+        local skinAllowed, bodygroupsAllowed = lia.faction.getModelCustomizationAllowed(client, faction, "character_creation")
+        ```
+]]
+function lia.faction.getModelCustomizationAllowed(client, faction, context)
+    if isnumber(faction) or isstring(faction) then faction = lia.faction.get(faction) end
+    if not faction then return false, false end
+    local skinAllowed = faction.skinAllowed == true
+    local bodygroupsAllowed = faction.bodygroupsAllowed == true
+    local a, b = hook.Run("OverrideFactionModelCustomization", client, faction, context, skinAllowed, bodygroupsAllowed)
+    if istable(a) then
+        if a.skinAllowed ~= nil then skinAllowed = a.skinAllowed == true end
+        if a.bodygroupsAllowed ~= nil then bodygroupsAllowed = a.bodygroupsAllowed == true end
+    else
+        if a ~= nil then skinAllowed = a == true end
+        if b ~= nil then bodygroupsAllowed = b == true end
+    end
+    return skinAllowed, bodygroupsAllowed
+end
+
+--[[
+    Purpose:
+        Builds a lookup table of bodygroup name -> bodygroup index for a specific model path.
+
+    When Called:
+        Called when bodygroup whitelist rules are defined by bodygroup name, and we need to resolve
+        those names to numeric indices for a given model.
+
+    Parameters:
+        modelPath (string)
+            The model path to inspect.
+
+    Returns:
+        table
+            A map where keys are lowercase bodygroup names and values are numeric bodygroup indices.
+            Returns an empty table if the model is invalid or cannot be inspected.
+
+    Realm:
+        Shared
+
+    Example Usage:
+        ```lua
+        local map = lia.faction.getBodygroupNameToIndex("models/player/group01/male_01.mdl")
+        local headgearIndex = map.headgear
+        ```
+]]
+function lia.faction.getBodygroupNameToIndex(modelPath)
+    if not isstring(modelPath) or modelPath == "" then return {} end
+    if lia.faction._bodygroupNameIndexCache[modelPath] then return lia.faction._bodygroupNameIndexCache[modelPath] end
+    local map = {}
+    if CLIENT then
+        local ent = ClientsideModel(modelPath, RENDERGROUP_OPAQUE)
+        if IsValid(ent) then
+            for i = 0, ent:GetNumBodyGroups() - 1 do
+                map[string.lower(ent:GetBodygroupName(i) or "")] = i
+            end
+
+            ent:Remove()
+        end
+    else
+        local ent = ents.Create("prop_dynamic")
+        if IsValid(ent) then
+            ent:SetModel(modelPath)
+            ent:SetPos(Vector(0, 0, 0))
+            ent:SetAngles(angle_zero)
+            ent:Spawn()
+            for i = 0, ent:GetNumBodyGroups() - 1 do
+                map[string.lower(ent:GetBodygroupName(i) or "")] = i
+            end
+
+            ent:Remove()
+        end
+    end
+
+    lia.faction._bodygroupNameIndexCache[modelPath] = map
+    return map
+end
+
+--[[
+    Purpose:
+        Checks if a skin ID is allowed for a faction when a skin whitelist is defined.
+        If the whitelist is missing or empty, this function treats it as unrestricted.
+
+    When Called:
+        Called during character creation/adjustment when `skinAllowed` is enabled and the player
+        attempts to pick a specific skin.
+
+    Parameters:
+        faction (table|string|number)
+            The faction table, uniqueID, or numeric index.
+        skin (number)
+            The desired skin ID.
+
+    Returns:
+        boolean
+            True if allowed, false otherwise.
+
+    Realm:
+        Shared
+
+    Example Usage:
+        ```lua
+        if lia.faction.isSkinAllowedForFaction("citizen", 0) then
+            print("Allowed")
+        end
+        ```
+]]
+function lia.faction.isSkinAllowedForFaction(faction, skin)
+    if isnumber(faction) or isstring(faction) then faction = lia.faction.get(faction) end
+    if not faction then return false end
+    local whitelist = faction.allowedSkins
+    if not istable(whitelist) then return true end
+    if next(whitelist) == nil then return true end
+    skin = tonumber(skin)
+    if skin == nil then return false end
+    for _, v in pairs(whitelist) do
+        if tonumber(v) == skin then return true end
+    end
+    return false
+end
+
+--[[
+    Purpose:
+        Returns the first allowed skin from a faction whitelist to use as a fallback.
+
+    When Called:
+        Called when a player-selected skin is not allowed and we need to clamp it back to a valid
+        value. If no whitelist exists (or it has no numeric entries), the provided fallback is used.
+
+    Parameters:
+        faction (table|string|number)
+            The faction table, uniqueID, or numeric index.
+        fallback (number)
+            The fallback skin to use if there is no usable whitelist value.
+
+    Returns:
+        number
+            A valid skin ID.
+
+    Realm:
+        Shared
+
+    Example Usage:
+        ```lua
+        local skin = lia.faction.getDefaultAllowedSkinForFaction("citizen", 0)
+        ```
+]]
+function lia.faction.getDefaultAllowedSkinForFaction(faction, fallback)
+    if isnumber(faction) or isstring(faction) then faction = lia.faction.get(faction) end
+    if not faction then return fallback end
+    if istable(faction.allowedSkins) then
+        for _, v in pairs(faction.allowedSkins) do
+            local n = tonumber(v)
+            if n ~= nil then return n end
+        end
+    end
+    return fallback
+end
+
+--[[
+    Purpose:
+        Resolves the whitelist rule for a specific bodygroup for a faction.
+        Supports looking up rules by numeric bodygroup index or by bodygroup name.
+
+    When Called:
+        Called when validating a requested bodygroup change during character creation/adjustment.
+
+    Parameters:
+        faction (table|string|number)
+            The faction table, uniqueID, or numeric index.
+        modelPath (string)
+            The model used to resolve bodygroup name to index when needed.
+        bodygroupIndex (number)
+            The numeric bodygroup index.
+        bodygroupName (string|nil)
+            Optional bodygroup name override.
+
+    Returns:
+        any
+            The rule value stored in `FACTION.allowedBodygroups` for this bodygroup.
+            - nil means no restriction.
+            - table means a whitelist of allowed numeric values.
+            - true/false explicitly allows/denies.
+
+    Realm:
+        Shared
+
+    Example Usage:
+        ```lua
+        local rule = lia.faction.getBodygroupWhitelistRule("citizen", mdl, 1)
+        ```
+]]
+function lia.faction.getBodygroupWhitelistRule(faction, modelPath, bodygroupIndex, bodygroupName)
+    if isnumber(faction) or isstring(faction) then faction = lia.faction.get(faction) end
+    if not faction then return nil end
+    local rules = faction.allowedBodygroups
+    if not istable(rules) then return nil end
+    if next(rules) == nil then return nil end
+    local idx = tonumber(bodygroupIndex)
+    if idx ~= nil then
+        local rule = rules[idx]
+        if rule ~= nil then return rule end
+        rule = rules[tostring(idx)]
+        if rule ~= nil then return rule end
+    end
+
+    local name = bodygroupName
+    if name == nil and isstring(modelPath) and modelPath ~= "" then
+        local map = lia.faction.getBodygroupNameToIndex(modelPath)
+        local i = idx ~= nil and idx or nil
+        if i ~= nil then
+            for n, mappedIndex in pairs(map) do
+                if mappedIndex == i then
+                    name = n
+                    break
+                end
+            end
+        end
+    end
+
+    if isstring(name) and name ~= "" then
+        local rule = rules[name]
+        if rule ~= nil then return rule end
+        rule = rules[string.lower(name)]
+        if rule ~= nil then return rule end
+    end
+    return nil
+end
+
+--[[
+    Purpose:
+        Checks if a specific bodygroup value is allowed for a faction.
+        If there is no rule (or the allowedBodygroups table is missing/empty), this is unrestricted.
+
+    When Called:
+        Called during character creation/adjustment when `bodygroupsAllowed` is enabled and the
+        player attempts to pick bodygroup values.
+
+    Parameters:
+        faction (table|string|number)
+            The faction table, uniqueID, or numeric index.
+        modelPath (string)
+            The model path used to resolve bodygroup names when needed.
+        bodygroupIndex (number)
+            The numeric bodygroup index.
+        value (number)
+            The requested bodygroup value.
+        bodygroupName (string|nil)
+            Optional bodygroup name override.
+
+    Returns:
+        boolean
+            True if allowed, false otherwise.
+
+    Realm:
+        Shared
+
+    Example Usage:
+        ```lua
+        if lia.faction.isBodygroupValueAllowed("citizen", mdl, 0, 1) then
+            print("Allowed")
+        end
+        ```
+]]
+function lia.faction.isBodygroupValueAllowed(faction, modelPath, bodygroupIndex, value, bodygroupName)
+    local rule = lia.faction.getBodygroupWhitelistRule(faction, modelPath, bodygroupIndex, bodygroupName)
+    if rule == nil then return true end
+    if rule == true then return true end
+    if rule == false then return false end
+    if istable(rule) then
+        local v = tonumber(value)
+        if v == nil then return false end
+        for _, allowed in pairs(rule) do
+            if tonumber(allowed) == v then return true end
+        end
+        return false
+    end
+    return false
 end
 
 --[[
