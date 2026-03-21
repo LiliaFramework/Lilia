@@ -429,4 +429,3 @@ jobs:
             git commit -m "Successfully updated workshop Lilia to ${VERSION}"
             git push origin HEAD:main
           fi
-          
