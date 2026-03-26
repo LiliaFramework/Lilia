@@ -16,8 +16,8 @@
 ]]
 lia.currency = lia.currency or {}
 lia.currency.symbol = lia.config.get("CurrencySymbol", "")
-lia.currency.singular = L(lia.config.get("CurrencySingularName", "currencySingular"))
-lia.currency.plural = L(lia.config.get("CurrencyPluralName", "currencyPlural"))
+lia.currency.singular = lia.lang.resolveToken(lia.config.get("CurrencySingularName", "@currencySingular"))
+lia.currency.plural = lia.lang.resolveToken(lia.config.get("CurrencyPluralName", "@currencyPlural"))
 --[[
     Purpose:
         Format a numeric amount into a localized currency string with the configured symbol and singular/plural name.

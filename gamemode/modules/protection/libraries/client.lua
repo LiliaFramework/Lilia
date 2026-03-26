@@ -3156,7 +3156,7 @@ function MODULE:PopulateAdminTabs(pages)
 
     if not table.IsEmpty(entitiesByCreator) and client:hasPrivilege("viewEntityTab") then
         pages[#pages + 1] = {
-            name = "playerEntities",
+            name = "@playerEntities",
             icon = "icon16/bricks.png",
             drawFunc = function(entPanel)
                 entPanel:Clear()

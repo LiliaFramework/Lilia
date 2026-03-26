@@ -63,7 +63,7 @@ function PANEL:makeFactionComboBox()
         local factionID = nil
         if data and isstring(data) then
             for id, fac in pairs(lia.faction.teams) do
-                if L(fac.name) == data then
+                if fac.name == data then
                     factionID = id
                     break
                 end
@@ -83,8 +83,8 @@ function PANEL:makeFactionComboBox()
     for id, fac in SortedPairsByMemberValue(lia.faction.teams, "name") do
         if lia.faction.hasWhitelist(fac.index) then
             if fac.uniqueID == "staff" then continue end
-            local desc = L(fac.desc or "noDesc")
-            combo:AddChoice(L(fac.name), id, desc ~= "" and desc or nil)
+            local desc = fac.desc or L("noDesc")
+            combo:AddChoice(fac.name, id, desc ~= "" and desc or nil)
             if not firstFactionID then firstFactionID = id end
         end
     end
@@ -259,7 +259,7 @@ function PANEL:updateAttributesLabel()
         end
 
         local left = math.max((total or 0) - sum, 0)
-        self.attrLabelText:SetText(L("attributes"):upper() .. " - " .. left .. " " .. L("pointsLeft"):lower())
+        self.attrLabelText:SetText(L("attributesModuleName"):upper() .. " - " .. left .. " " .. L("pointsLeft"):lower())
         self.attrLabelText:SizeToContents()
     end
 

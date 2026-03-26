@@ -1,17 +1,17 @@
-﻿MODULE.name = "vendorModuleName"
+﻿MODULE.name = "@vendor"
 MODULE.author = "Samael"
 MODULE.discord = "@liliaplayer"
-MODULE.desc = "npcVendorDescription"
+MODULE.desc = "@npcVendorDescription"
 MODULE.Privileges = {
     ["canEditVendors"] = {
-        Name = "canEditVendors",
+        Name = "@canEditVendors",
         MinAccess = "superadmin",
-        Category = "vendors",
+        Category = "@vendors",
     },
     ["canCreateVendorPresets"] = {
-        Name = "canCreateVendorPresets",
+        Name = "@canCreateVendorPresets",
         MinAccess = "admin",
-        Category = "vendors",
+        Category = "@vendors",
     },
 }
 
@@ -25,14 +25,14 @@ VENDOR_MAXSTOCK = 4
 VENDOR_SELLANDBUY = 1
 VENDOR_SELLONLY = 2
 VENDOR_BUYONLY = 3
-lia.config.add("vendorSaleScale", "vendorSaleScale", 0.5, function(value)
+lia.config.add("vendorSaleScale", "@vendorSellScale", 0.5, function(value)
     local num = tonumber(value)
     if not num then return false, L("configValueMustBeNumber") end
     if num < 0.1 or num > 2.0 then return false, L("configValueMustBeBetween", 0.1, 2.0) end
     return true
 end, {
-    desc = L("vendorSaleScaleDesc"),
-    category = "Core",
+    desc = "@vendorSaleScaleDesc",
+    category = "@Core",
     type = "Number",
     min = 0.1,
     max = 2.0,

@@ -16,7 +16,7 @@ lia.module.list = lia.module.list or {}
 local function loadPermissions(Privileges)
     if not Privileges or not istable(Privileges) then return end
     for privID, privilegeData in pairs(Privileges) do
-        local privilegeName = L(privilegeData.Name or privID)
+        local privilegeName = lia.lang.resolveToken(privilegeData.Name or privID)
         local privilegeCategory = privilegeData.Category or MODULE.name
         lia.admin.registerPrivilege({
             Name = privilegeName,
@@ -162,8 +162,8 @@ function lia.module.load(uniqueID, path, variable, skipSubmodules)
     MODULE.loading = true
     MODULE.path = path
     MODULE.variable = variable
-    MODULE.name = L(MODULE.name)
-    MODULE.desc = L(MODULE.desc)
+    MODULE.name = lia.lang.resolveToken(MODULE.name)
+    MODULE.desc = lia.lang.resolveToken(MODULE.desc)
     if not file.Exists(coreFile, "LUA") then
         lia.bootstrap(L("moduleSkipped"), L("moduleSkipMissing", uniqueID, lowerVar))
         _G[variable] = prev

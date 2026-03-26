@@ -291,6 +291,40 @@ function lia.lang.getLocalizedString(key, ...)
     return result
 end
 
+--[[
+    Purpose:
+        Resolve @-prefixed localization tokens into their translated value.
+
+    When Called:
+        When config, options, or other string fields may store localization tokens.
+
+    Parameters:
+        value (string|any)
+            Raw value to inspect and optionally localize.
+        ... (vararg)
+            Values forwarded to string.format substitution.
+
+    Returns:
+        string|any
+            Localized string for @tokens, or the original value when no token is present.
+
+    Realm:
+        Shared
+
+    Example Usage:
+        ```lua
+            local title = lia.lang.resolveToken("@currencyPlural")
+            local welcome = lia.lang.resolveToken("@welcomeUser", client:Name(), os.date())
+        ```
+]]
+function lia.lang.resolveToken(value, ...)
+    if not isstring(value) then return value end
+    if value:sub(1, 1) ~= "@" then return value end
+    local key = value:sub(2)
+    if key == "" then return "" end
+    return lia.lang.getLocalizedString(key, ...)
+end
+
 L = lia.lang.getLocalizedString
 lia.lang.loadFromDir("lilia/gamemode/languages")
 hook.Run("OnLocalizationLoaded")

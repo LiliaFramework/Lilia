@@ -25,6 +25,10 @@ lia.net.profiler.currentMessage = lia.net.profiler.currentMessage or nil
 local chunkTime = 0.05
 local CACHE_TTL = 30
 local MAX_CACHE_SIZE = 1000
+local function getChunkInterval()
+    return (lia.reloadInProgress and chunkTime * 2) or chunkTime
+end
+
 local function generateCacheKey(name, args)
     local key = name .. "|"
     for i, arg in ipairs(args) do
@@ -232,7 +236,7 @@ if SERVER then
         }
 
         lia.net.sendq[ply][sid] = s
-        timer.Simple(chunkTime, function()
+        timer.Simple(getChunkInterval(), function()
             if not IsValid(ply) then return end
             local q = lia.net.sendq[ply]
             if not q then return end
@@ -289,7 +293,7 @@ if SERVER then
         local function schedule(ply)
             if not IsValid(ply) then return end
             timer.Simple(delay, function() if IsValid(ply) then beginStream(ply, netStr, chunks, sid) end end)
-            delay = delay + (isReload and chunkTime * 2 or chunkTime)
+            delay = delay + getChunkInterval()
         end
 
         if istable(targets) then

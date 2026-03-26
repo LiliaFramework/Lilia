@@ -174,7 +174,7 @@ function ENT:OnRemove()
 end
 
 function ENT:setModel(model)
-    assert(isstring(model), L("vendorModelString"))
+    assert(isstring(model), L("modelMustBeString"))
     model = model:lower()
     self:SetModel(model)
     if self:isReadyForAnim() then self:setAnim() end

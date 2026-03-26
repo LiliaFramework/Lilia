@@ -38,13 +38,13 @@ ITEM:hook("transfer", unEquip)
 ITEM:hook("drop", unEquip)
 ITEM.functions.Unequip = {
     name = "unequip",
-    tip = "Unequip this item",
+    tip = "unequipThisItem",
     icon = "icon16/cross.png",
     onRun = function(item)
         if item:removeAttachment(item.player) then
-            item.player:notifySuccess("Attachment unequipped.")
+            item.player:notifySuccessLocalized("attachmentUnequipped")
         else
-            item.player:notifyError("Failed to unequip attachment.")
+            item.player:notifyErrorLocalized("attachmentUnequipFailed")
         end
         return false
     end,
@@ -53,12 +53,12 @@ ITEM.functions.Unequip = {
 
 ITEM.functions.Equip = {
     name = "equip",
-    tip = "Equip this item",
+    tip = "equipThisItem",
     icon = "icon16/tick.png",
     onRun = function(item)
         item:setData("equip", true)
         item:addAttachment(item.player)
-        item.player:notifySuccess("Attachment equipped.")
+        item.player:notifySuccessLocalized("attachmentEquipped")
         return false
     end,
     onCanRun = function(item) return not IsValid(item.entity) and item:getData("equip") ~= true end

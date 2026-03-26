@@ -78,7 +78,7 @@ lia.db.query = lia.db.query or function(...) lia.db.queryQueue[#lia.db.queryQueu
         reconnect (boolean)
             Optional flag to force reconnection even if already connected.
     Realm:
-        Shared
+        Server
 
     Example Usage:
         ```lua
@@ -120,7 +120,7 @@ end
         callback (function)
             Optional callback function to execute when all tables have been wiped.
     Realm:
-        Shared
+        Server
 
     Example Usage:
         ```lua
@@ -166,7 +166,7 @@ end
     Parameters:
         None
     Realm:
-        Shared
+        Server
 
     Example Usage:
         ```lua
@@ -177,7 +177,6 @@ function lia.db.loadTables()
     local function done()
         lia.db.addDatabaseFields()
         lia.db.tablesLoaded = true
-        hook.Run("LiliaTablesLoaded")
         hook.Run("OnDatabaseLoaded")
         timer.Simple(0, function() lia.config.load() end)
         timer.Simple(0.1, function()
@@ -357,7 +356,7 @@ end
             A promise that resolves when tables are loaded.
 
     Realm:
-        Shared
+        Server
 
     Example Usage:
         ```lua
@@ -375,7 +374,7 @@ function lia.db.waitForTablesToLoad()
     if lia.db.tablesLoaded then
         d:resolve()
     else
-        hook.Add("LiliaTablesLoaded", tostring(TABLE_WAIT_ID), function() d:resolve() end)
+        hook.Add("OnDatabaseLoaded", tostring(TABLE_WAIT_ID), function() d:resolve() end)
     end
 
     TABLE_WAIT_ID = TABLE_WAIT_ID + 1
@@ -444,7 +443,7 @@ end
             The converted value as a SQL-compatible string.
 
     Realm:
-        Shared
+        Server
 
     Example Usage:
         ```lua
@@ -498,7 +497,7 @@ end
             A promise that resolves with {results = results, lastID = lastID}.
 
     Realm:
-        Shared
+        Server
 
     Example Usage:
         ```lua
@@ -548,7 +547,7 @@ end
             A promise that resolves with {results = results, lastID = lastID}.
 
     Realm:
-        Shared
+        Server
 
     Example Usage:
         ```lua
@@ -600,7 +599,7 @@ end
             A promise that resolves with {results = results, lastID = lastID}.
 
     Realm:
-        Shared
+        Server
 
     Example Usage:
         ```lua
@@ -670,7 +669,7 @@ end
             A promise that resolves with {results = results, lastID = lastID}.
 
     Realm:
-        Shared
+        Server
 
     Example Usage:
         ```lua
@@ -744,7 +743,7 @@ end
             A promise that resolves with the count as a number.
 
     Realm:
-        Shared
+        Server
 
     Example Usage:
         ```lua
@@ -783,7 +782,7 @@ end
     Parameters:
         None
     Realm:
-        Shared
+        Server
 
     Example Usage:
         ```lua
@@ -835,7 +834,7 @@ end
             A promise that resolves to true if records exist, false otherwise.
 
     Realm:
-        Shared
+        Server
 
     Example Usage:
         ```lua
@@ -872,7 +871,7 @@ end
             A promise that resolves with the first matching row as a table, or nil if no rows found.
 
     Realm:
-        Shared
+        Server
 
     Example Usage:
         ```lua
@@ -933,7 +932,7 @@ end
             A promise that resolves when the bulk insert completes.
 
     Realm:
-        Shared
+        Server
 
     Example Usage:
         ```lua
@@ -991,7 +990,7 @@ end
             A promise that resolves when the bulk upsert completes.
 
     Realm:
-        Shared
+        Server
 
     Example Usage:
         ```lua
@@ -1048,7 +1047,7 @@ end
             A promise that resolves with {results = results, lastID = lastID}.
 
     Realm:
-        Shared
+        Server
 
     Example Usage:
         ```lua
@@ -1096,7 +1095,7 @@ end
             A promise that resolves to true if the table exists, false otherwise.
 
     Realm:
-        Shared
+        Server
 
     Example Usage:
         ```lua
@@ -1134,7 +1133,7 @@ end
             A promise that resolves to true if the field exists, false otherwise.
 
     Realm:
-        Shared
+        Server
 
     Example Usage:
         ```lua
@@ -1174,7 +1173,7 @@ end
             A promise that resolves with an array of table names.
 
     Realm:
-        Shared
+        Server
 
     Example Usage:
         ```lua
@@ -1215,7 +1214,7 @@ end
             A promise that resolves when the transaction completes successfully, or rejects if any query fails.
 
     Realm:
-        Shared
+        Server
 
     Example Usage:
         ```lua
@@ -1268,7 +1267,7 @@ end
             The escaped identifier wrapped in backticks.
 
     Realm:
-        Shared
+        Server
 
     Example Usage:
         ```lua
@@ -1301,7 +1300,7 @@ end
             A promise that resolves with {results = results, lastID = lastID}.
 
     Realm:
-        Shared
+        Server
 
     Example Usage:
         ```lua
@@ -1346,7 +1345,7 @@ end
             A promise that resolves with {results = results, lastID = lastID}.
 
     Realm:
-        Shared
+        Server
 
     Example Usage:
         ```lua
@@ -1394,7 +1393,7 @@ end
             A promise that resolves to true when the table is created.
 
     Realm:
-        Shared
+        Server
 
     Example Usage:
         ```lua
@@ -1458,7 +1457,7 @@ end
             A promise that resolves to true if column was added, false if it already exists.
 
     Realm:
-        Shared
+        Server
 
     Example Usage:
         ```lua
@@ -1514,7 +1513,7 @@ end
             A promise that resolves to true if table was removed, false if it doesn't exist.
 
     Realm:
-        Shared
+        Server
 
     Example Usage:
         ```lua
@@ -1560,7 +1559,7 @@ end
             A promise that resolves to true if column was removed, false if table/column doesn't exist.
 
     Realm:
-        Shared
+        Server
 
     Example Usage:
         ```lua
@@ -1633,7 +1632,7 @@ end
         callback (function)
             Function to call with the array of column names.
     Realm:
-        Shared
+        Server
 
     Example Usage:
         ```lua
@@ -1674,7 +1673,7 @@ end
             A promise that resolves with snapshot info {file = filename, path = filepath, records = count}.
 
     Realm:
-        Shared
+        Server
 
     Example Usage:
         ```lua
@@ -1735,7 +1734,7 @@ end
             A promise that resolves with restore info {table = tableName, records = count, timestamp = timestamp}.
 
     Realm:
-        Shared
+        Server
 
     Example Usage:
         ```lua

@@ -32,7 +32,7 @@ lia.flag.list = lia.flag.list or {}
 
     Example Usage:
         ```lua
-            lia.flag.add("B", "flagBuildMenu", function(client, isGiven)
+lia.flag.add("B", "@flagBuildMenu", function(client, isGiven)
                 if isGiven then
                     client:Give("weapon_physgun")
                 else
@@ -44,7 +44,7 @@ lia.flag.list = lia.flag.list or {}
 function lia.flag.add(flag, desc, callback)
     if lia.flag.list[flag] then return end
     lia.flag.list[flag] = {
-        desc = desc and L(desc) or desc,
+        desc = desc and lia.lang.resolveToken(desc) or desc,
         callback = callback
     }
 end
@@ -82,17 +82,17 @@ if SERVER then
     end
 end
 
-lia.flag.add("C", "flagSpawnVehicles")
-lia.flag.add("z", "flagSpawnSweps")
-lia.flag.add("E", "flagSpawnSents")
-lia.flag.add("L", "flagSpawnEffects")
-lia.flag.add("r", "flagSpawnRagdolls")
-lia.flag.add("e", "flagSpawnProps")
-lia.flag.add("n", "flagSpawnNpcs")
-lia.flag.add("Z", "flagInviteToYourFaction")
-lia.flag.add("X", "flagInviteToYourClass")
-lia.flag.add("F", "flagViewFactionRoster")
-lia.flag.add("p", "flagPhysgun", function(client, isGiven)
+lia.flag.add("C", "@flagSpawnVehicles")
+lia.flag.add("z", "@flagSpawnSweps")
+lia.flag.add("E", "@flagSpawnSents")
+lia.flag.add("L", "@flagSpawnEffects")
+lia.flag.add("r", "@flagSpawnRagdolls")
+lia.flag.add("e", "@flagSpawnProps")
+lia.flag.add("n", "@flagSpawnNpcs")
+lia.flag.add("Z", "@flagInviteToYourFaction")
+lia.flag.add("X", "@flagInviteToYourClass")
+lia.flag.add("F", "@flagViewFactionRoster")
+lia.flag.add("p", "@flagPhysgun", function(client, isGiven)
     if isGiven then
         client:Give("weapon_physgun")
         client:SelectWeapon("weapon_physgun")
@@ -101,7 +101,7 @@ lia.flag.add("p", "flagPhysgun", function(client, isGiven)
     end
 end)
 
-lia.flag.add("t", "flagToolgun", function(client, isGiven)
+lia.flag.add("t", "@flagToolgun", function(client, isGiven)
     if isGiven then
         client:Give("gmod_tool")
         client:SelectWeapon("gmod_tool")

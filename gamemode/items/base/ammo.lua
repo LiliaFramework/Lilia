@@ -93,7 +93,7 @@ ITEM.functions.use = {
     tip = "useTip",
     icon = "icon16/add.png",
     multiOptions = {
-        [L("ammoLoadAll")] = {
+        [L("loadThing", L("all"))] = {
             function(item)
                 item.player:GiveAmmo(item:getQuantity(), item.ammo)
                 item.player:EmitSound(item.useSound or "items/ammo_pickup.wav", 110)
@@ -101,7 +101,7 @@ ITEM.functions.use = {
             end,
             function() return true end
         },
-        [L("ammoLoadAmount", 5)] = {
+        [L("loadThing", 5)] = {
             function(item)
                 item:addQuantity(-5)
                 item.player:GiveAmmo(5, item.ammo)
@@ -110,7 +110,7 @@ ITEM.functions.use = {
             end,
             function(item) return item:getQuantity() >= 5 end
         },
-        [L("ammoLoadAmount", 10)] = {
+        [L("loadThing", 10)] = {
             function(item)
                 item:addQuantity(-10)
                 item.player:GiveAmmo(10, item.ammo)
@@ -119,7 +119,7 @@ ITEM.functions.use = {
             end,
             function(item) return item:getQuantity() >= 10 end
         },
-        [L("ammoLoadAmount", 30)] = {
+        [L("loadThing", 30)] = {
             function(item)
                 item:addQuantity(-30)
                 item.player:GiveAmmo(30, item.ammo)

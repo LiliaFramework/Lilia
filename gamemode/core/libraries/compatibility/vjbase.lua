@@ -30,10 +30,10 @@ timer.Simple(10, function()
 end)
 
 lia.admin.registerPrivilege({
-    Name = "vjNpcProperties",
+    Name = "@vjNpcProperties",
     ID = "property_vj_npc_properties",
     MinAccess = "superadmin",
-    Category = "compatibility"
+    Category = "@compatibility"
 })
 
 lia.log.addType("unprotectedVJNetCall", function(client, netMessage) return L("unprotectedVJNetCallLog", client:Name(), netMessage) end, L("categoryVJBase"))

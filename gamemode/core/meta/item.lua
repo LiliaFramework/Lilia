@@ -14,8 +14,8 @@
 local ITEM = lia.meta.item or {}
 debug.getregistry().Item = lia.meta.item
 ITEM.__index = ITEM
-ITEM.name = "invalidName"
-ITEM.desc = ITEM.desc or "invalidDescription"
+ITEM.name = "@invalidName"
+ITEM.desc = ITEM.desc or "@invalidDescription"
 ITEM.id = ITEM.id or 0
 ITEM.uniqueID = "undefined"
 ITEM.isItem = true
@@ -1261,7 +1261,7 @@ end
         ```
 ]]
 function ITEM:getCategory()
-    return self.category and L(self.category) or L("misc")
+    return self.category or lia.lang.resolveToken("@misc")
 end
 
 lia.meta.item = ITEM

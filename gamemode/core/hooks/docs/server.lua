@@ -895,7 +895,7 @@ end
     Example Usage:
         ```lua
             hook.Add("DatabaseConnected", "InitPlugins", function()
-                lia.plugin.loadAll()
+                lia.module.loadAll()
             end)
         ```
 ]]
@@ -1890,28 +1890,6 @@ end
         ```
 ]]
 function KickedFromChar(characterID, isCurrentChar)
-end
-
---[[
-    Purpose:
-        Indicates that all Lilia database tables have been created/loaded.
-
-    When Called:
-        After tables are created during startup.
-
-    Parameters:
-        None.
-    Realm:
-        Server
-
-    Example Usage:
-        ```lua
-            hook.Add("LiliaTablesLoaded", "SeedDefaults", function()
-                lia.seed.run()
-            end)
-        ```
-]]
-function LiliaTablesLoaded()
 end
 
 --[[

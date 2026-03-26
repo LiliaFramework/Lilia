@@ -1,7 +1,7 @@
-﻿lia.config.add("CurrencyNotificationImage", "Currency Notification Image", "icon16/money.png", nil, {
-    desc = "The material path for the currency icon used in money-type notifications",
-    category = "Core",
-    type = "String"
+﻿lia.config.add("CurrencyNotificationImage", "@currencyNotificationImage", "icon16/money.png", nil, {
+    desc = "@currencyNotificationImageDesc",
+    category = "core",
+    type = "string"
 })
 
 local NotificationHeight = 54

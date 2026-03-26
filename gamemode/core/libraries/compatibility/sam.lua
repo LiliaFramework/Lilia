@@ -141,7 +141,7 @@ end)
 
 lia.command.add("cleardecals", {
     adminOnly = true,
-    desc = "cleardecalsDesc",
+    desc = "@cleardecalsDesc",
     onRun = function()
         for _, v in player.Iterator() do
             v:ConCommand("r_cleardecals")
@@ -149,15 +149,15 @@ lia.command.add("cleardecals", {
     end
 })
 
-lia.config.add("AdminOnlyNotification", "adminOnlyNotifications", true, nil, {
-    desc = "adminOnlyNotificationsDesc",
-    category = "Core",
+lia.config.add("AdminOnlyNotification", "@adminOnlyNotifications", true, nil, {
+    desc = "@adminOnlyNotificationsDesc",
+    category = "@Core",
     type = "Boolean"
 })
 
-lia.config.add("SAMEnforceStaff", "samEnforceStaff", true, nil, {
-    desc = "samEnforceStaffDesc",
-    category = "Core",
+lia.config.add("SAMEnforceStaff", "@samEnforceStaff", true, nil, {
+    desc = "@samEnforceStaffDesc",
+    category = "@Core",
     type = "Boolean"
 })
 

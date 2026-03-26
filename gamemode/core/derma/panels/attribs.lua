@@ -126,7 +126,7 @@ PANEL = {}
 function PANEL:Init()
     local client = LocalPlayer()
     self.title = self:addLabel("attributes")
-    self.leftLabel = self:addLabel("points left")
+    self.leftLabel = self:addLabel("pointsLeft")
     self.leftLabel:SetFont("LiliaFont.32")
     self.leftLabel:SetTextColor(color_white)
     self.title:SetTextColor(color_white)
@@ -231,8 +231,8 @@ end
 function PANEL:setAttribute(key, attribute)
     self.key = key
     local startingMax = lia.attribs.list[key].startingMax or nil
-    self.name:SetText(L(attribute.name))
-    self:SetTooltip(L(attribute.desc or "noDesc") .. (startingMax and " Max: " .. startingMax or ""))
+    self.name:SetText(attribute.name)
+    self:SetTooltip((attribute.desc or L("noDesc")) .. (startingMax and " " .. L("max", startingMax) or ""))
 end
 
 function PANEL:delta(delta)

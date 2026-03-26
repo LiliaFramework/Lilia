@@ -1,7 +1,7 @@
 ﻿local function getGameList()
     local games = engine.GetGames()
     table.insert(games, {
-        title = L("spawnmenuAll"),
+        title = L("all"),
         folder = "GAME",
         icon = "all",
         mounted = true

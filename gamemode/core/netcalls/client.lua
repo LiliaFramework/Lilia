@@ -617,11 +617,11 @@ end)
 lia.net.readBigTable("liaSendTableUI", function(data) lia.util.createTableUI(data.title, data.columns, data.data, data.options, data.characterID) end)
 net.Receive("liaOptionsRequest", function()
     local id = net.ReadUInt(32)
-    local titleKey = net.ReadString()
-    local _ = net.ReadString()
+    local title = net.ReadString()
+    local subTitle = net.ReadString()
     local options = net.ReadTable()
     local limit = net.ReadUInt(32)
-    lia.derma.requestOptions(L(titleKey), options, function(selectedOptions)
+    lia.derma.requestOptions(title, subTitle, options, function(selectedOptions)
         if limit > 0 and #selectedOptions > limit then
             local limited = {}
             for i = 1, limit do
@@ -686,10 +686,10 @@ end)
 
 net.Receive("liaRequestDropdown", function()
     local id = net.ReadUInt(32)
-    local titleKey = net.ReadString()
+    local title = net.ReadString()
     net.ReadString()
     local options = net.ReadTable()
-    lia.derma.requestDropdown(L(titleKey), options, function(selectedText, selectedData)
+    lia.derma.requestDropdown(title, options, function(selectedText, selectedData)
         if selectedText == false then
             net.Start("liaRequestDropdownCancel")
             net.WriteUInt(id, 32)
@@ -732,8 +732,6 @@ net.Receive("liaStringRequest", function()
     local title = net.ReadString()
     local subTitle = net.ReadString()
     local default = net.ReadString()
-    if title:sub(1, 1) == "@" then title = L(title:sub(2)) end
-    if subTitle:sub(1, 1) == "@" then subTitle = L(subTitle:sub(2)) end
     lia.derma.requestString(title, subTitle, function(value)
         if value == false then
             net.Start("liaStringRequestCancel")
@@ -969,7 +967,7 @@ end)
 
 net.Receive("liaButtonRequest", function()
     local id = net.ReadUInt(32)
-    local titleKey = net.ReadString()
+    local title = net.ReadString()
     local count = net.ReadUInt(8)
     local options = {}
     for i = 1, count do
@@ -977,9 +975,9 @@ net.Receive("liaButtonRequest", function()
     end
 
     local buttons = {}
-    for i, key in ipairs(options) do
+    for i, buttonText in ipairs(options) do
         table.insert(buttons, {
-            text = L(key),
+            text = buttonText,
             callback = function()
                 net.Start("liaButtonRequest")
                 net.WriteUInt(id, 32)
@@ -989,7 +987,7 @@ net.Receive("liaButtonRequest", function()
         })
     end
 
-    lia.derma.requestButtons(L(titleKey), buttons, function(selectedIndex) if selectedIndex and selectedIndex > 0 and selectedIndex <= #buttons then buttons[selectedIndex].callback() end end)
+    lia.derma.requestButtons(title, buttons, function(selectedIndex) if selectedIndex and selectedIndex > 0 and selectedIndex <= #buttons then buttons[selectedIndex].callback() end end)
 end)
 
 net.Receive("liaAnimationStatus", function()
@@ -1045,7 +1043,7 @@ net.Receive("liaCharacterData", function()
     end
 end)
 
-net.Receive("liaDialogSync", function() lia.dialog.stored = net.ReadTable() end)
+lia.net.readBigTable("liaDialogSync", function(data) if istable(data) then lia.dialog.stored = data end end)
 net.Receive("liaOpenNpcDialog", function()
     local npc = net.ReadEntity()
     local canCustomize = net.ReadBool()
@@ -1087,7 +1085,7 @@ net.Receive("liaRequestNPCSelection", function()
     frame:SetSize(800, 600)
     frame:Center()
     frame:MakePopup()
-    frame:SetTitle("Select NPC Type")
+    frame:SetTitle(L("selectNPCType"))
     local scroll = vgui.Create("liaScrollPanel", frame)
     scroll:Dock(FILL)
     scroll:DockMargin(20, 20, 20, 20)
@@ -1112,7 +1110,7 @@ net.Receive("liaRequestNPCSelection", function()
     closeBtn:Dock(BOTTOM)
     closeBtn:SetTall(60)
     closeBtn:DockMargin(20, 10, 20, 20)
-    closeBtn:SetText("Cancel")
+    closeBtn:SetText(L("cancel"))
     closeBtn.DoClick = function() frame:Close() end
 end)
 
@@ -1251,7 +1249,7 @@ net.Receive("liaAssureClientSideAssets", function()
                 else
                     failedSounds = failedSounds + 1
                     local errorMessage = errorMsg or L("unknownError")
-                    chat.AddText(Color(255, 100, 100), "[Sound Download] ", Color(255, 255, 255), L("failedToDownloadSound", download.name, errorMessage))
+                    chat.AddText(Color(255, 100, 100), L("soundDownload"), Color(255, 255, 255), L("failedToDownloadSound", download.name, errorMessage))
                 end
 
                 processNextDownload()
@@ -1274,19 +1272,19 @@ net.Receive("liaAssureClientSideAssets", function()
                 lia.bootstrap("AssetDownload", "===========================================")
                 lia.bootstrap("AssetDownload", L("assetDownloadComplete"))
                 lia.bootstrap("AssetDownload", L("downloadSummary"))
-                lia.bootstrap("AssetDownload", string.format("Images: %d/%d completed (%d failed)", completedImages, totalImages, failedImages))
-                lia.bootstrap("AssetDownload", string.format("Sounds: %d/%d completed (%d failed)", completedSounds, totalSounds, failedSounds))
+                lia.bootstrap("AssetDownload", L("assetSummaryImagesCompleted", completedImages, totalImages, failedImages))
+                lia.bootstrap("AssetDownload", L("assetSummarySoundsCompleted", completedSounds, totalSounds, failedSounds))
                 lia.bootstrap("AssetDownload", L("currentStatistics"))
-                lia.bootstrap("AssetDownload", string.format("Images: %d downloaded | %d stored", imageStats.downloaded, imageStats.stored))
-                lia.bootstrap("AssetDownload", string.format("Sounds: %d downloaded | %d stored", soundStats.downloaded, soundStats.stored))
-                lia.bootstrap("AssetDownload", string.format("Combined: %d downloaded | %d stored", imageStats.downloaded + soundStats.downloaded, imageStats.stored + soundStats.stored))
+                lia.bootstrap("AssetDownload", L("imagesDownloaded", imageStats.downloaded, imageStats.stored))
+                lia.bootstrap("AssetDownload", L("soundsDownloaded", soundStats.downloaded, soundStats.stored))
+                lia.bootstrap("AssetDownload", L("combinedDownloaded", imageStats.downloaded + soundStats.downloaded, imageStats.stored + soundStats.stored))
                 lia.bootstrap("AssetDownload", "===========================================")
                 if failedImages > 0 or failedSounds > 0 then
                     lia.warning(L("warningAssetsFailedToDownload"))
-                    if failedImages > 0 then chat.AddText(Color(255, 150, 100), "[Asset Download] ", Color(255, 255, 255), L("assetsDownloadWarning", failedImages, "image(s)")) end
-                    if failedSounds > 0 then chat.AddText(Color(255, 150, 100), "[Asset Download] ", Color(255, 255, 255), L("assetsDownloadWarning", failedSounds, "sound(s)")) end
+                    if failedImages > 0 then chat.AddText(Color(255, 150, 100), L("assetDownloadLabel"), Color(255, 255, 255), L("assetsDownloadWarning", failedImages, L("assetTypeImages"))) end
+                    if failedSounds > 0 then chat.AddText(Color(255, 150, 100), L("assetDownloadLabel"), Color(255, 255, 255), L("assetsDownloadWarning", failedSounds, L("assetTypeSounds"))) end
                 else
-                    chat.AddText(Color(100, 255, 100), "[Asset Download] ", Color(255, 255, 255), L("allAssetsDownloadedSuccessfully"))
+                    chat.AddText(Color(100, 255, 100), L("assetDownloadLabel"), Color(255, 255, 255), L("allAssetsDownloadedSuccessfully"))
                 end
             end)
         end
@@ -1344,12 +1342,10 @@ net.Receive("liaDoorDataUpdate", function()
     lia.doors.updateCachedData(doorID, data)
 end)
 
-net.Receive("liaDoorDataBulk", function()
-    local count = net.ReadUInt(16)
-    for _ = 1, count do
-        local doorID = net.ReadUInt(16)
-        local data = net.ReadTable()
-        lia.doors.updateCachedData(doorID, data)
+lia.net.readBigTable("liaDoorDataBulk", function(data)
+    if not istable(data) then return end
+    for doorID, doorData in pairs(data) do
+        lia.doors.updateCachedData(tonumber(doorID) or doorID, doorData)
     end
 end)
 

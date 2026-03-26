@@ -1,36 +1,36 @@
-﻿MODULE.name = "chatboxModuleName"
+﻿MODULE.name = "@chatboxModuleName"
 MODULE.author = "Samael"
 MODULE.discord = "@liliaplayer"
-MODULE.desc = "chatSystemDescription"
+MODULE.desc = "@chatSystemDescription"
 MODULE.Privileges = {
     ["noOOCCooldown"] = {
-        Name = "noOOCCooldown",
+        Name = "@noOOCCooldown",
         MinAccess = "admin",
-        Category = "categoryChat",
+        Category = "@categoryChat",
     },
     ["adminChat"] = {
-        Name = "adminChat",
+        Name = "@adminChat",
         MinAccess = "superadmin",
-        Category = "categoryChat",
+        Category = "@categoryChat",
     },
     ["localEventChat"] = {
-        Name = "localEventChat",
+        Name = "@localEventChat",
         MinAccess = "admin",
-        Category = "categoryChat",
+        Category = "@categoryChat",
     },
     ["eventChat"] = {
-        Name = "eventChat",
+        Name = "@eventChat",
         MinAccess = "admin",
-        Category = "categoryChat",
+        Category = "@categoryChat",
     },
     ["accessHelpChat"] = {
-        Name = "accessHelpChat",
+        Name = "@accessHelpChat",
         MinAccess = "superadmin",
-        Category = "categoryChat",
+        Category = "@categoryChat",
     },
     ["bypassOOCBlock"] = {
-        Name = "bypassOOCBlockPrivilege",
+        Name = "@bypassOOCBlockPrivilege",
         MinAccess = "superadmin",
-        Category = "categoryChat",
+        Category = "@categoryChat",
     },
 }

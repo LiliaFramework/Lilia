@@ -76,7 +76,7 @@ function lia.util.requestEntityInformation(client, entity, argTypes, callback)
         return
     end
 
-    client:requestArguments("Entity Information", argTypes, function(success, information)
+    client:requestArguments(L("entityInformation"), argTypes, function(success, information)
         if not success then
             if IsValid(entity) then entity:Remove() end
         else

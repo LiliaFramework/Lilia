@@ -51,8 +51,6 @@
             violence_hgibs = 0,
             cl_show_splashes = 0,
             cl_ejectbrass = 0,
-            violence_ablood = 0,
-            violence_hblood = 0,
             cl_detailfade = 800,
             cl_smooth = 0,
             cl_detaildist = 0,
@@ -64,7 +62,6 @@
             mat_hdr_level = 0,
             mat_motion_blur_enabled = 0,
             mat_reduceparticles = 1,
-            mp_decals = 1,
             r_waterdrawreflection = 0,
             r_threaded_particles = 1,
             r_queued_ropes = 1,
@@ -88,7 +85,7 @@
             filesystem_unbuffered_io = 0
         },
         ["hooks"] = {
-            RenderScreenspaceEffects = {"RenderBloom", "RenderBokeh", "RenderMaterialOverlay", "RenderSharpen", "RenderSobel", "RenderStereoscopy", "RenderSunbeams", "RenderTexturize", "RenderToyTown"},
+            RenderScreenspaceEffects = {"RenderBloom", "RenderBokeh", "RenderSharpen", "RenderSobel", "RenderStereoscopy", "RenderSunbeams", "RenderTexturize", "RenderToyTown"},
             PreDrawHalos = {"PropertiesHover"},
             RenderScene = {"RenderSuperDoF", "RenderStereoscopy"},
             PreRender = {"PreRenderFlameBlend", "PreRenderFrameBlend"},
@@ -102,7 +99,6 @@
             PlayerBindPress = {"PlayerOptionInput"},
             NeedsDepthPass = {"NeedsDepthPassBokeh", "NeedsDepthPass_Bokeh"},
             OnGamemodeLoaded = {"CreateMenuBar"},
-            HUDPaint = {"DamageEffect"},
             StartChat = {"StartChatIndicator"},
             FinishChat = {"EndChatIndicator"},
             OnEntityCreated = {"WidgetInit"}
@@ -113,29 +109,26 @@
 if SERVER then
     hook.Add("PropBreak", "liaPerformancePropBreak", function(_, entity) if IsValid(entity) and IsValid(entity:GetPhysicsObject()) then constraint.RemoveAll(entity) end end)
 else
-    local memory = 768432
-    local printMemory = false
-    local function PrintMemory(message)
-        if not printMemory then return end
-        MsgC(Color(115, 148, 248), message .. "\n")
-    end
-
+    local col = Color(115, 148, 248)
     local function ClearLuaMemory()
-        local mem = collectgarbage("count")
-        PrintMemory("Active Lua Memory : " .. math.Round(mem / 1024) .. " MB.")
-        if mem >= math.Clamp(memory, 262144, 978944) then
-            collectgarbage("collect")
-            local nmem = collectgarbage("count")
-            PrintMemory("Removed " .. math.Round((mem - nmem) / 1024) .. " MB from active memory.")
-        end
+        local before = collectgarbage("count")
+        collectgarbage("collect")
+        local after = collectgarbage("count")
+        local freed = math.Round((before - after) / 1024)
+        local now = math.Round(after / 1024)
+        if freed > 0 then MsgC(col, "[LuaGC] Freed " .. freed .. " MB — now using " .. now .. " MB.\n") end
     end
 
     concommand.Add("luamemory", function()
-        local LuaMem = collectgarbage("count")
-        PrintMemory("Active Lua Memory : " .. math.Round(LuaMem / 1024) .. " MB.")
+        local before = collectgarbage("count")
+        collectgarbage("collect")
+        local after = collectgarbage("count")
+        local freed = math.Round((before - after) / 1024)
+        local now = math.Round(after / 1024)
+        MsgC(col, "[LuaGC] Freed " .. freed .. " MB — now using " .. now .. " MB.\n")
     end)
 
-    timer.Create("lua_gc", 60, 0, ClearLuaMemory)
+    timer.Create("lua_gc", 30, 0, ClearLuaMemory)
 end
 
 local function ApplyConvars()
@@ -166,8 +159,6 @@ hook.Add("InitializedModules", "liaPerformanceInitializedModules", function()
         motionBlur = "mat_motion_blur_enabled",
         waterReflections = "r_waterdrawreflection",
         gameMonitors = "cl_drawmonitors",
-        alienBlood = "violence_ablood",
-        humanBlood = "violence_hblood",
         alienGibs = "violence_agibs",
         humanGibs = "violence_hgibs",
         waterSplashes = "cl_show_splashes",
@@ -180,15 +171,15 @@ hook.Add("InitializedModules", "liaPerformanceInitializedModules", function()
         smoothingTime = "cl_smoothtime"
     }
 
-    local voiceIconsValue = lia.config.get("voiceIcons", false)
+    local voiceIconsValue = lia.config.get("VoiceIcons", false)
     RunConsoleCommand("mp_show_voice_icons", voiceIconsValue and 1 or 0)
-    if lia.config.get("mouthMoveAnimation", true) then
+    if lia.config.get("MouthMoveAnimation", true) then
         hook.Add("MouthMoveAnimation", "Optimization", function() return nil end)
     else
         hook.Remove("MouthMoveAnimation", "Optimization")
     end
 
-    if lia.config.get("grabEarAnimation", true) then
+    if lia.config.get("GrabEarAnimation", true) then
         hook.Add("GrabEarAnimation", "Optimization", function() return nil end)
     else
         hook.Remove("GrabEarAnimation", "Optimization")

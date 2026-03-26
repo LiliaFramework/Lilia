@@ -13,6 +13,51 @@
 ]]
 lia.option = lia.option or {}
 lia.option.stored = lia.option.stored or {}
+local function localizeMenuLabel(value, ...)
+    if not isstring(value) then return value end
+    local resolved = lia.lang.resolveToken(value, ...)
+    if resolved ~= value then return resolved end
+    return L(value, ...)
+end
+
+lia.option.localizeValue = localizeMenuLabel
+local function normalizeSelectableOption(optionEntry)
+    if istable(optionEntry) then
+        local rawLabel = optionEntry.rawLabel or optionEntry.label or optionEntry.name or optionEntry.text or optionEntry.value
+        return {
+            rawLabel = rawLabel,
+            label = rawLabel,
+            value = optionEntry.value ~= nil and optionEntry.value or rawLabel
+        }
+    elseif isstring(optionEntry) then
+        return {
+            rawLabel = optionEntry,
+            label = optionEntry,
+            value = optionEntry
+        }
+    end
+end
+
+local function localizeSelectableOption(optionEntry)
+    if not istable(optionEntry) then return optionEntry end
+    local rawLabel = optionEntry.rawLabel or optionEntry.label
+    return {
+        rawLabel = rawLabel,
+        label = isstring(rawLabel) and localizeMenuLabel(rawLabel) or rawLabel,
+        value = optionEntry.value
+    }
+end
+
+local function getSelectableOptionLabel(options, selectedValue)
+    for _, optionEntry in pairs(options or {}) do
+        if istable(optionEntry) then
+            if optionEntry.value == selectedValue then return optionEntry.label end
+            if isstring(optionEntry.value) and isstring(selectedValue) and optionEntry.value:lower() == selectedValue:lower() then return optionEntry.label end
+        end
+    end
+    return selectedValue
+end
+
 --[[
     Purpose:
         Register a configurable option with defaults, callbacks, and metadata.
@@ -41,7 +86,7 @@ lia.option.stored = lia.option.stored or {}
         lia.option.add("hudScale", "HUD Scale", "Scale HUD elements", 1.0, function(old, new)
             hook.Run("HUDScaleChanged", old, new)
         end, {
-            category = "Core",
+            category = "@Core",
             min = 0.5,
             max = 1.5,
             decimals = 2,
@@ -65,17 +110,21 @@ function lia.option.add(key, name, desc, default, callback, data)
     local value = old and old.value or default
     if istable(data.options) then
         for k, v in pairs(data.options) do
-            if isstring(v) then data.options[k] = L(v) end
+            local normalized = normalizeSelectableOption(v)
+            if normalized then data.options[k] = normalized end
         end
     elseif isfunction(data.options) then
         data.optionsFunc = data.options
         data.options = nil
     end
 
-    data.category = isstring(data.category) and L(data.category) or data.category
+    data.rawCategory = data.rawCategory or data.category
+    data.category = isstring(data.category) and localizeMenuLabel(data.category) or data.category
     lia.option.stored[key] = {
-        name = isstring(name) and L(name) or name,
-        desc = isstring(desc) and L(desc) or desc,
+        rawName = name,
+        name = isstring(name) and localizeMenuLabel(name) or name,
+        rawDesc = desc,
+        desc = isstring(desc) and localizeMenuLabel(desc) or desc,
         data = data,
         value = value,
         default = default,
@@ -87,6 +136,100 @@ function lia.option.add(key, name, desc, default, callback, data)
     }
 
     hook.Run("OptionAdded", key, lia.option.stored[key])
+end
+
+--[[
+    Purpose:
+        Retrieve the localized display name of an option entry.
+
+    When Called:
+        When rendering option entries in the config UI or sorting them by name.
+
+    Parameters:
+        key (string)
+            The option key to look up.
+
+    Returns:
+        string
+            Localized display name, or the raw key if the entry does not exist.
+
+    Realm:
+        Shared
+
+    Example Usage:
+        ```lua
+            local name = lia.option.getDisplayName("BarsAlwaysVisible")
+            print("Option name:", name)
+        ```
+]]
+function lia.option.getDisplayName(key)
+    local option = lia.option.stored[key]
+    if not option then return key end
+    local value = option.rawName or option.name or key
+    return isstring(value) and localizeMenuLabel(value) or value
+end
+
+--[[
+    Purpose:
+        Retrieve the localized description of an option entry.
+
+    When Called:
+        When populating tooltips or description labels in the options UI.
+
+    Parameters:
+        key (string)
+            The option key to look up.
+
+    Returns:
+        string
+            Localized description string, or an empty string if none exists.
+
+    Realm:
+        Shared
+
+    Example Usage:
+        ```lua
+            local desc = lia.option.getDisplayDesc("BarsAlwaysVisible")
+            print("Option description:", desc)
+        ```
+]]
+function lia.option.getDisplayDesc(key)
+    local option = lia.option.stored[key]
+    if not option then return "" end
+    local value = option.rawDesc or option.desc or ""
+    return isstring(value) and localizeMenuLabel(value) or value
+end
+
+--[[
+    Purpose:
+        Retrieve the localized category of an option entry for grouping in the UI.
+
+    When Called:
+        When building the options UI to sort entries into category sections.
+
+    Parameters:
+        key (string)
+            The option key to look up.
+
+    Returns:
+        string
+            Localized category name, or "misc" as the default fallback.
+
+    Realm:
+        Shared
+
+    Example Usage:
+        ```lua
+            local cat = lia.option.getDisplayCategory("BarsAlwaysVisible")
+            print("Option category:", cat)
+        ```
+]]
+function lia.option.getDisplayCategory(key)
+    local option = lia.option.stored[key]
+    if not option then return localizeMenuLabel("misc") end
+    local data = option.data or {}
+    local value = data.rawCategory or data.category or "misc"
+    return isstring(value) and localizeMenuLabel(value) or value
 end
 
 --[[
@@ -118,15 +261,22 @@ function lia.option.getOptions(key)
     if option.data.optionsFunc then
         local success, result = pcall(option.data.optionsFunc)
         if success and istable(result) then
+            local normalizedOptions = {}
             for k, v in pairs(result) do
-                if isstring(v) then result[k] = L(v) end
+                local normalized = normalizeSelectableOption(v)
+                if normalized then normalizedOptions[k] = localizeSelectableOption(normalized) end
             end
-            return result
+            return normalizedOptions
         else
             return {}
         end
     elseif istable(option.data.options) then
-        return option.data.options
+        local normalizedOptions = {}
+        for k, v in pairs(option.data.options) do
+            local normalized = normalizeSelectableOption(v)
+            if normalized then normalizedOptions[k] = localizeSelectableOption(normalized) end
+        end
+        return normalizedOptions
     end
     return {}
 end
@@ -297,7 +447,7 @@ hook.Add("PopulateConfigurationButtons", "liaOptionsPopulate", function(pages)
 
         local label = header:Add("DLabel")
         label:Dock(LEFT)
-        label:SetText(L(text))
+        label:SetText(localizeMenuLabel(text))
         label:SetFont("LiliaFont.22")
         label:SetTextColor(lia.color.theme.text or color_white)
         label:SizeToContents()
@@ -310,7 +460,7 @@ hook.Add("PopulateConfigurationButtons", "liaOptionsPopulate", function(pages)
         p:SetTall(45)
         p:DockMargin(0, 0, 0, 5)
         p.Paint = function(s, w, h) lia.derma.rect(0, 0, w, h):Rad(6):Color(Color(35, 38, 45, 180)):Shape(lia.derma.SHAPE_IOS):Draw() end
-        local description = option.desc or ""
+        local description = lia.option.getDisplayDesc(key)
         SetStyledTooltip(p, description)
         local l = p:Add("DLabel")
         l:Dock(LEFT)
@@ -379,12 +529,13 @@ hook.Add("PopulateConfigurationButtons", "liaOptionsPopulate", function(pages)
             combo:Dock(RIGHT)
             combo:SetWidth(200)
             combo:DockMargin(0, 8, 15, 8)
-            combo:SetValue(tostring(lia.option.get(key, option.value)))
             combo:SetFont("LiliaFont.18")
             SetStyledTooltip(combo, description)
             local options = lia.option.getOptions(key)
-            for _, text in pairs(options) do
-                combo:AddChoice(text, text)
+            local selectedValue = lia.option.get(key, option.value)
+            combo:SetValue(tostring(getSelectableOptionLabel(options, selectedValue)))
+            for _, optionEntry in pairs(options) do
+                combo:AddChoice(optionEntry.label, optionEntry.value)
             end
 
             combo.OnSelect = function(_, _, v) lia.option.set(key, v) end
@@ -399,7 +550,7 @@ hook.Add("PopulateConfigurationButtons", "liaOptionsPopulate", function(pages)
             searchEntry:Dock(TOP)
             searchEntry:SetTall(35)
             searchEntry:DockMargin(10, 10, 10, 10)
-            searchEntry:SetPlaceholderText(L("searchOptions") or "Search Options...")
+            searchEntry:SetPlaceholderText(L("searchOptions"))
             searchEntry:SetFont("LiliaFont.18")
             local scroll = parent:Add("liaScrollPanel")
             scroll:Dock(FILL)
@@ -413,15 +564,22 @@ hook.Add("PopulateConfigurationButtons", "liaOptionsPopulate", function(pages)
                     keys[#keys + 1] = k
                 end
 
-                table.sort(keys, function(a, b) return lia.option.stored[a].name < lia.option.stored[b].name end)
+                table.sort(keys, function(a, b)
+                    local aName = tostring(lia.option.getDisplayName(a) or a):lower()
+                    local bName = tostring(lia.option.getDisplayName(b) or b):lower()
+                    return aName < bName
+                end)
+
                 for _, k in ipairs(keys) do
                     local opt = lia.option.stored[k]
                     if not opt.visible or isfunction(opt.visible) and opt.visible() then
-                        local cat = opt.data and opt.data.category or L("misc")
+                        local data = opt.data or {}
+                        local cat = data.rawCategory or data.category or "misc"
                         categories[cat] = categories[cat] or {}
                         table.insert(categories[cat], {
                             key = k,
-                            name = opt.name,
+                            name = lia.option.getDisplayName(k),
+                            desc = lia.option.getDisplayDesc(k),
                             option = opt
                         })
                     end
@@ -432,17 +590,25 @@ hook.Add("PopulateConfigurationButtons", "liaOptionsPopulate", function(pages)
                     table.insert(sortedCategories, cat)
                 end
 
-                table.sort(sortedCategories)
+                table.sort(sortedCategories, function(a, b)
+                    local aName = tostring(localizeMenuLabel(a)):lower()
+                    local bName = tostring(localizeMenuLabel(b)):lower()
+                    return aName < bName
+                end)
+
                 for _, cat in ipairs(sortedCategories) do
                     local items = categories[cat]
-                    table.sort(items, function(a, b) return a.name < b.name end)
+                    table.sort(items, function(a, b) return tostring(a.name or ""):lower() < tostring(b.name or ""):lower() end)
                     local visibleItems = {}
+                    local localizedCategory = tostring(localizeMenuLabel(cat))
                     for _, item in ipairs(items) do
-                        if not filter or item.name:lower():find(filter, 1, true) or cat:lower():find(filter, 1, true) then table.insert(visibleItems, item) end
+                        local localizedName = tostring(item.name or ""):lower()
+                        local localizedDesc = tostring(item.desc or ""):lower()
+                        if not filter or localizedName:find(filter, 1, true) or localizedDesc:find(filter, 1, true) or localizedCategory:lower():find(filter, 1, true) then table.insert(visibleItems, item) end
                     end
 
                     if #visibleItems > 0 then
-                        AddHeader(scroll, cat)
+                        AddHeader(scroll, localizedCategory)
                         for _, item in ipairs(visibleItems) do
                             AddField(scroll, item.key, item.name, item.option)
                         end
@@ -457,30 +623,20 @@ hook.Add("PopulateConfigurationButtons", "liaOptionsPopulate", function(pages)
     }
 end)
 
-lia.option.add("descriptionWidth", "descriptionWidth", "descriptionWidthDesc", 0.5, nil, {
-    category = "Core",
+lia.option.add("descriptionWidth", "@descriptionWidth", "@descriptionWidthDesc", 0.5, nil, {
+    category = "@Core",
     min = 0.1,
     max = 1,
     decimals = 2
 })
 
-lia.option.add("invertWeaponScroll", "invertWeaponScroll", "invertWeaponScrollDesc", false, nil, {
-    category = "Core",
+lia.option.add("invertWeaponScroll", "@invertWeaponScroll", "@invertWeaponScrollDesc", false, nil, {
+    category = "@Core",
     isQuick = true,
 })
 
-lia.option.add("espEnabled", "espEnabled", "espEnabledDesc", false, nil, {
-    category = "ESP",
-    isQuick = true,
-    visible = function()
-        local ply = LocalPlayer()
-        if not IsValid(ply) then return false end
-        return ply:isStaffOnDuty() or ply:hasPrivilege("noClipOutsideStaff")
-    end
-})
-
-lia.option.add("espPlayers", "espPlayers", "espPlayersDesc", false, nil, {
-    category = "ESP",
+lia.option.add("espEnabled", "@espEnabled", "@espEnabledDesc", false, nil, {
+    category = "@categoryESP",
     isQuick = true,
     visible = function()
         local ply = LocalPlayer()
@@ -489,8 +645,8 @@ lia.option.add("espPlayers", "espPlayers", "espPlayersDesc", false, nil, {
     end
 })
 
-lia.option.add("espItems", "espItems", "espItemsDesc", false, nil, {
-    category = "ESP",
+lia.option.add("espPlayers", "@espPlayers", "@espPlayersDesc", false, nil, {
+    category = "@categoryESP",
     isQuick = true,
     visible = function()
         local ply = LocalPlayer()
@@ -499,8 +655,8 @@ lia.option.add("espItems", "espItems", "espItemsDesc", false, nil, {
     end
 })
 
-lia.option.add("espEntities", "espEntities", "espEntitiesDesc", false, nil, {
-    category = "ESP",
+lia.option.add("espItems", "@espItems", "@espItemsDesc", false, nil, {
+    category = "@categoryESP",
     isQuick = true,
     visible = function()
         local ply = LocalPlayer()
@@ -509,8 +665,8 @@ lia.option.add("espEntities", "espEntities", "espEntitiesDesc", false, nil, {
     end
 })
 
-lia.option.add("espUnconfiguredDoors", "espUnconfiguredDoors", "espUnconfiguredDoorsDesc", false, nil, {
-    category = "ESP",
+lia.option.add("espEntities", "@espEntities", "@espEntitiesDesc", false, nil, {
+    category = "@categoryESP",
     isQuick = true,
     visible = function()
         local ply = LocalPlayer()
@@ -519,13 +675,23 @@ lia.option.add("espUnconfiguredDoors", "espUnconfiguredDoors", "espUnconfiguredD
     end
 })
 
-lia.option.add("espItemsColor", "espItemsColor", "espItemsColorDesc", {
+lia.option.add("espUnconfiguredDoors", "@espUnconfiguredDoors", "@espUnconfiguredDoorsDesc", false, nil, {
+    category = "@categoryESP",
+    isQuick = true,
+    visible = function()
+        local ply = LocalPlayer()
+        if not IsValid(ply) then return false end
+        return ply:isStaffOnDuty() or ply:hasPrivilege("noClipOutsideStaff")
+    end
+})
+
+lia.option.add("espItemsColor", "@espItemsColor", "@espItemsColorDesc", {
     r = 0,
     g = 255,
     b = 0,
     a = 255
 }, nil, {
-    category = "ESP",
+    category = "@categoryESP",
     visible = function()
         local ply = LocalPlayer()
         if not IsValid(ply) then return false end
@@ -533,13 +699,13 @@ lia.option.add("espItemsColor", "espItemsColor", "espItemsColorDesc", {
     end
 })
 
-lia.option.add("espEntitiesColor", "espEntitiesColor", "espEntitiesColorDesc", {
+lia.option.add("espEntitiesColor", "@espEntitiesColor", "@espEntitiesColorDesc", {
     r = 255,
     g = 255,
     b = 0,
     a = 255
 }, nil, {
-    category = "ESP",
+    category = "@categoryESP",
     visible = function()
         local ply = LocalPlayer()
         if not IsValid(ply) then return false end
@@ -547,13 +713,13 @@ lia.option.add("espEntitiesColor", "espEntitiesColor", "espEntitiesColorDesc", {
     end
 })
 
-lia.option.add("espUnconfiguredDoorsColor", "espUnconfiguredDoorsColor", "espUnconfiguredDoorsColorDesc", {
+lia.option.add("espUnconfiguredDoorsColor", "@espUnconfiguredDoorsColor", "@espUnconfiguredDoorsColorDesc", {
     r = 255,
     g = 0,
     b = 255,
     a = 255
 }, nil, {
-    category = "ESP",
+    category = "@categoryESP",
     visible = function()
         local ply = LocalPlayer()
         if not IsValid(ply) then return false end
@@ -561,8 +727,8 @@ lia.option.add("espUnconfiguredDoorsColor", "espUnconfiguredDoorsColor", "espUnc
     end
 })
 
-lia.option.add("espConfiguredDoors", "espConfiguredDoors", "espConfiguredDoorsDesc", false, nil, {
-    category = "ESP",
+lia.option.add("espConfiguredDoors", "@espConfiguredDoors", "@espConfiguredDoorsDesc", false, nil, {
+    category = "@categoryESP",
     isQuick = true,
     visible = function()
         local ply = LocalPlayer()
@@ -571,13 +737,13 @@ lia.option.add("espConfiguredDoors", "espConfiguredDoors", "espConfiguredDoorsDe
     end
 })
 
-lia.option.add("espConfiguredDoorsColor", "espConfiguredDoorsColor", "espConfiguredDoorsColorDesc", {
+lia.option.add("espConfiguredDoorsColor", "@espConfiguredDoorsColor", "@espConfiguredDoorsColorDesc", {
     r = 0,
     g = 255,
     b = 0,
     a = 255
 }, nil, {
-    category = "ESP",
+    category = "@categoryESP",
     visible = function()
         local ply = LocalPlayer()
         if not IsValid(ply) then return false end
@@ -585,13 +751,13 @@ lia.option.add("espConfiguredDoorsColor", "espConfiguredDoorsColor", "espConfigu
     end
 })
 
-lia.option.add("espPlayersColor", "espPlayersColor", "espPlayersColorDesc", {
+lia.option.add("espPlayersColor", "@espPlayersColor", "@espPlayersColorDesc", {
     r = 0,
     g = 0,
     b = 255,
     a = 255
 }, nil, {
-    category = "ESP",
+    category = "@categoryESP",
     visible = function()
         local ply = LocalPlayer()
         if not IsValid(ply) then return false end
@@ -599,176 +765,179 @@ lia.option.add("espPlayersColor", "espPlayersColor", "espPlayersColorDesc", {
     end
 })
 
-lia.option.add("BarsAlwaysVisible", "barsAlwaysVisible", "barsAlwaysVisibleDesc", false, nil, {
-    category = "Core",
+lia.option.add("BarsAlwaysVisible", "@barsAlwaysVisible", "@barsAlwaysVisibleDesc", false, nil, {
+    category = "@Core",
     isQuick = true,
 })
 
-lia.option.add("thirdPersonEnabled", "thirdPersonEnabled", "thirdPersonEnabledDesc", false, function(_, newValue) hook.Run("ThirdPersonToggled", newValue) end, {
-    category = "categoryThirdPerson",
+lia.option.add("thirdPersonEnabled", "@thirdPersonEnabled", "@thirdPersonEnabledDesc", false, function(_, newValue) hook.Run("ThirdPersonToggled", newValue) end, {
+    category = "@categoryThirdPerson",
     isQuick = true,
 })
 
-lia.option.add("thirdPersonClassicMode", "thirdPersonClassicMode", "thirdPersonClassicModeDesc", false, nil, {
-    category = "categoryThirdPerson",
+lia.option.add("thirdPersonClassicMode", "@thirdPersonClassicMode", "@thirdPersonClassicModeDesc", false, nil, {
+    category = "@categoryThirdPerson",
     isQuick = true,
 })
 
-lia.option.add("thirdPersonHeight", "thirdPersonHeight", "thirdPersonHeightDesc", 10, nil, {
-    category = "categoryThirdPerson",
+lia.option.add("thirdPersonHeight", "@thirdPersonHeight", "@thirdPersonHeightDesc", 10, nil, {
+    category = "@categoryThirdPerson",
     min = 0,
     isQuick = true,
     max = lia.config.get("MaxThirdPersonHeight", 30),
 })
 
-lia.option.add("thirdPersonHorizontal", "thirdPersonHorizontal", "thirdPersonHorizontalDesc", 0, nil, {
-    category = "categoryThirdPerson",
+lia.option.add("thirdPersonHorizontal", "@thirdPersonHorizontal", "@thirdPersonHorizontalDesc", 0, nil, {
+    category = "@categoryThirdPerson",
     min = -lia.config.get("MaxThirdPersonHorizontal", 30),
     isQuick = true,
     max = lia.config.get("MaxThirdPersonHorizontal", 30),
 })
 
-lia.option.add("thirdPersonDistance", "thirdPersonDistance", "thirdPersonDistanceDesc", 50, nil, {
-    category = "categoryThirdPerson",
+lia.option.add("thirdPersonDistance", "@thirdPersonDistance", "@thirdPersonDistanceDesc", 50, nil, {
+    category = "@categoryThirdPerson",
     min = 0,
     isQuick = true,
     max = lia.config.get("MaxThirdPersonDistance", 100),
 })
 
-lia.option.add("ChatShowTime", "chatShowTime", "chatShowTimeDesc", false, nil, {
-    category = "Core",
+lia.option.add("ChatShowTime", "@chatShowTime", "@chatShowTimeDesc", false, nil, {
+    category = "@Core",
     type = "Boolean"
 })
 
-lia.option.add("shadows", "optionShadows", "optionShadowsDesc", false, function(_, value) RunConsoleCommand("r_shadows", value and "1" or "0") end, {
-    category = "categoryPerformance",
+lia.option.add("shadows", "@optionShadows", "@optionShadowsDesc", false, function(_, value) RunConsoleCommand("r_shadows", value and "1" or "0") end, {
+    category = "@categoryPerformance",
     type = "Boolean"
 })
 
-lia.option.add("dynamicLighting", "optionDynamicLighting", "optionDynamicLightingDesc", false, function(_, value) RunConsoleCommand("r_dynamic", value and "1" or "0") end, {
-    category = "categoryPerformance",
+lia.option.add("dynamicLighting", "@optionDynamicLighting", "@optionDynamicLightingDesc", false, function(_, value) RunConsoleCommand("r_dynamic", value and "1" or "0") end, {
+    category = "@categoryPerformance",
     type = "Boolean"
 })
 
-lia.option.add("eyeMovement", "optionEyeMovement", "optionEyeMovementDesc", false, function(_, value) RunConsoleCommand("r_eyemove", value and "1" or "0") end, {
-    category = "categoryPerformance",
+lia.option.add("eyeMovement", "@optionEyeMovement", "@optionEyeMovementDesc", false, function(_, value) RunConsoleCommand("r_eyemove", value and "1" or "0") end, {
+    category = "@categoryPerformance",
     type = "Boolean"
 })
 
-lia.option.add("facialExpressions", "optionFacialExpressions", "optionFacialExpressionsDesc", false, function(_, value) RunConsoleCommand("r_flex", value and "1" or "0") end, {
-    category = "categoryPerformance",
+lia.option.add("facialExpressions", "@optionFacialExpressions", "@optionFacialExpressionsDesc", false, function(_, value) RunConsoleCommand("r_flex", value and "1" or "0") end, {
+    category = "@categoryPerformance",
     type = "Boolean"
 })
 
-lia.option.add("antiAliasing", "optionAntiAliasing", "optionAntiAliasingDesc", false, function(_, value) RunConsoleCommand("mat_antialias", value and "1" or "0") end, {
-    category = "categoryPerformance",
+lia.option.add("antiAliasing", "@optionAntiAliasing", "@optionAntiAliasingDesc", false, function(_, value) RunConsoleCommand("mat_antialias", value and "1" or "0") end, {
+    category = "@categoryPerformance",
     type = "Boolean"
 })
 
-lia.option.add("hdrLighting", "optionHDRLighting", "optionHDRLightingDesc", false, function(_, value) RunConsoleCommand("mat_hdr_level", value and "1" or "0") end, {
-    category = "categoryPerformance",
+lia.option.add("hdrLighting", "@optionHDRLighting", "@optionHDRLightingDesc", false, function(_, value) RunConsoleCommand("mat_hdr_level", value and "1" or "0") end, {
+    category = "@categoryPerformance",
     type = "Boolean"
 })
 
-lia.option.add("motionBlur", "optionMotionBlur", "optionMotionBlurDesc", false, function(_, value) RunConsoleCommand("mat_motion_blur_enabled", value and "1" or "0") end, {
-    category = "categoryPerformance",
+lia.option.add("motionBlur", "@optionMotionBlur", "@optionMotionBlurDesc", false, function(_, value) RunConsoleCommand("mat_motion_blur_enabled", value and "1" or "0") end, {
+    category = "@categoryPerformance",
     type = "Boolean"
 })
 
-lia.option.add("waterReflections", "optionWaterReflections", "optionWaterReflectionsDesc", false, function(_, value) RunConsoleCommand("r_waterdrawreflection", value and "1" or "0") end, {
-    category = "categoryPerformance",
+lia.option.add("waterReflections", "@optionWaterReflections", "@optionWaterReflectionsDesc", false, function(_, value) RunConsoleCommand("r_waterdrawreflection", value and "1" or "0") end, {
+    category = "@categoryPerformance",
     type = "Boolean"
 })
 
-lia.option.add("gameMonitors", "optionGameMonitors", "optionGameMonitorsDesc", false, function(_, value) RunConsoleCommand("cl_drawmonitors", value and "1" or "0") end, {
-    category = "categoryPerformance",
+lia.option.add("gameMonitors", "@optionGameMonitors", "@optionGameMonitorsDesc", false, function(_, value) RunConsoleCommand("cl_drawmonitors", value and "1" or "0") end, {
+    category = "@categoryPerformance",
     type = "Boolean"
 })
 
-lia.option.add("alienBlood", "optionAlienBlood", "optionAlienBloodDesc", false, function(_, value) RunConsoleCommand("violence_ablood", value and "1" or "0") end, {
-    category = "categoryPerformance",
+lia.option.add("alienGibs", "@optionAlienGibs", "@optionAlienGibsDesc", false, function(_, value) RunConsoleCommand("violence_agibs", value and "1" or "0") end, {
+    category = "@categoryPerformance",
     type = "Boolean"
 })
 
-lia.option.add("humanBlood", "optionHumanBlood", "optionHumanBloodDesc", false, function(_, value) RunConsoleCommand("violence_hblood", value and "1" or "0") end, {
-    category = "categoryPerformance",
+lia.option.add("humanGibs", "@optionHumanGibs", "@optionHumanGibsDesc", false, function(_, value) RunConsoleCommand("violence_hgibs", value and "1" or "0") end, {
+    category = "@categoryPerformance",
     type = "Boolean"
 })
 
-lia.option.add("alienGibs", "optionAlienGibs", "optionAlienGibsDesc", false, function(_, value) RunConsoleCommand("violence_agibs", value and "1" or "0") end, {
-    category = "categoryPerformance",
+lia.option.add("waterSplashes", "@optionWaterSplashes", "@optionWaterSplashesDesc", false, function(_, value) RunConsoleCommand("cl_show_splashes", value and "1" or "0") end, {
+    category = "@categoryPerformance",
     type = "Boolean"
 })
 
-lia.option.add("humanGibs", "optionHumanGibs", "optionHumanGibsDesc", false, function(_, value) RunConsoleCommand("violence_hgibs", value and "1" or "0") end, {
-    category = "categoryPerformance",
+lia.option.add("shellEjection", "@optionShellEjection", "@optionShellEjectionDesc", false, function(_, value) RunConsoleCommand("cl_ejectbrass", value and "1" or "0") end, {
+    category = "@categoryPerformance",
     type = "Boolean"
 })
 
-lia.option.add("waterSplashes", "optionWaterSplashes", "optionWaterSplashesDesc", false, function(_, value) RunConsoleCommand("cl_show_splashes", value and "1" or "0") end, {
-    category = "categoryPerformance",
-    type = "Boolean"
-})
-
-lia.option.add("shellEjection", "optionShellEjection", "optionShellEjectionDesc", false, function(_, value) RunConsoleCommand("cl_ejectbrass", value and "1" or "0") end, {
-    category = "categoryPerformance",
-    type = "Boolean"
-})
-
-lia.option.add("sprayLifetime", "optionSprayLifetime", "optionSprayLifetimeDesc", 1, function(_, value) RunConsoleCommand("r_spray_lifetime", tostring(value)) end, {
+lia.option.add("sprayLifetime", "@optionSprayLifetime", "@optionSprayLifetimeDesc", 1, function(_, value) RunConsoleCommand("r_spray_lifetime", tostring(value)) end, {
     min = 0,
     max = 300,
-    category = "categoryPerformance",
+    category = "@categoryPerformance",
     type = "Int"
 })
 
-lia.option.add("modelDecals", "optionModelDecals", "optionModelDecalsDesc", true, function(_, value) RunConsoleCommand("r_drawmodeldecals", value and "1" or "0") end, {
-    category = "categoryPerformance",
+lia.option.add("modelDecals", "@optionModelDecals", "@optionModelDecalsDesc", true, function(_, value) RunConsoleCommand("r_drawmodeldecals", value and "1" or "0") end, {
+    category = "@categoryPerformance",
     type = "Boolean"
 })
 
-lia.option.add("multiplayerDecals", "optionMultiplayerDecals", "optionMultiplayerDecalsDesc", 1, function(_, value) RunConsoleCommand("mp_decals", tostring(value)) end, {
+lia.option.add("multiplayerDecals", "@optionMultiplayerDecals", "@optionMultiplayerDecalsDesc", 1, function(_, value) RunConsoleCommand("mp_decals", tostring(value)) end, {
     min = 0,
     max = 50,
-    category = "categoryPerformance",
+    category = "@categoryPerformance",
     type = "Int"
 })
 
-lia.option.add("detailFadeDistance", "optionDetailFadeDistance", "optionDetailFadeDistanceDesc", 800, function(_, value) RunConsoleCommand("cl_detailfade", tostring(value)) end, {
+lia.option.add("detailFadeDistance", "@optionDetailFadeDistance", "@optionDetailFadeDistanceDesc", 800, function(_, value) RunConsoleCommand("cl_detailfade", tostring(value)) end, {
     min = 400,
     max = 2000,
-    category = "categoryPerformance",
+    category = "@categoryPerformance",
     type = "Int"
 })
 
-lia.option.add("detailDistance", "optionDetailDistance", "optionDetailDistanceDesc", 0, function(_, value) RunConsoleCommand("cl_detaildist", tostring(value)) end, {
+lia.option.add("detailDistance", "@optionDetailDistance", "@optionDetailDistanceDesc", 0, function(_, value) RunConsoleCommand("cl_detaildist", tostring(value)) end, {
     min = 0,
     max = 1200,
-    category = "categoryPerformance",
+    category = "@categoryPerformance",
     type = "Int"
 })
 
-lia.option.add("networkSmoothing", "optionNetworkSmoothing", "optionNetworkSmoothingDesc", false, function(_, value) RunConsoleCommand("cl_smooth", value and "1" or "0") end, {
-    category = "categoryPerformance",
+lia.option.add("networkSmoothing", "@optionNetworkSmoothing", "@optionNetworkSmoothingDesc", false, function(_, value) RunConsoleCommand("cl_smooth", value and "1" or "0") end, {
+    category = "@categoryPerformance",
     type = "Boolean"
 })
 
-lia.option.add("smoothingTime", "optionSmoothingTime", "optionSmoothingTimeDesc", 0.05, function(_, value) RunConsoleCommand("cl_smoothtime", tostring(value)) end, {
+lia.option.add("smoothingTime", "@optionSmoothingTime", "@optionSmoothingTimeDesc", 0.05, function(_, value) RunConsoleCommand("cl_smoothtime", tostring(value)) end, {
     min = 0.01,
     max = 0.2,
     decimals = 2,
-    category = "categoryPerformance",
+    category = "@categoryPerformance",
     type = "Float"
 })
 
-lia.option.add("voiceRange", "voiceRange", "voiceRangeDesc", false, nil, {
-    category = "Core",
+lia.option.add("voiceRange", "@voiceRange", "@voiceRangeDesc", false, nil, {
+    category = "@Core",
     isQuick = true,
     type = "Boolean"
 })
 
-lia.option.add("weaponSelectorPosition", "weaponSelectorPosition", "weaponSelectorPositionDesc", "Left", nil, {
-    category = "Core",
+lia.option.add("weaponSelectorPosition", "@weaponSelectorPosition", "@weaponSelectorPositionDesc", "left", nil, {
+    category = "@Core",
     type = "Table",
-    options = {"Left", "Right", "Center"}
+    options = {
+        {
+            label = "@left",
+            value = "left"
+        },
+        {
+            label = "@right",
+            value = "right"
+        },
+        {
+            label = "@center",
+            value = "center"
+        }
+    }
 })

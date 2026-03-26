@@ -181,7 +181,7 @@ end
 
 function MODULE:PlayerSay(client, message)
     local hasIPAddress = string.match(message, "%d+%.%d+%.%d+%.%d+(:%d*)?")
-    local hasBadWords = string.find(string.upper(message), string.upper("clone")) and string.find(string.upper(message), string.upper("nutscript"))
+    local hasBadWords = string.find(string.upper(message), string.upper("clone")) and string.find(string.upper(message), string.upper("liascript"))
     if hasIPAddress then
         lia.adminstrator.applyPunishment(client, L("ipInChat"), true, false)
         return ""
@@ -325,7 +325,7 @@ function MODULE:PlayerInitialSpawn(client)
                     local timestamp = os.date("%Y-%m-%d %H:%M:%S")
                     local severity = "High"
                     hook.Run("AddWarning", client:getChar():getID(), client:Nick(), client:SteamID(), timestamp, L("cheaterWarningReason"), "System", "SYSTEM", severity)
-                    local message = client:Name() .. " (Character " .. client:getChar():getID() .. " | Steam64ID: " .. client:SteamID64() .. ") was flagged for cheating. Severity: " .. severity .. "."
+                    local message = L("staffLogCheaterFlagged", client:Name(), client:getChar():getID(), client:SteamID64(), severity)
                     StaffAddTextShadowed(Color(255, 0, 0), "CHEAT", Color(255, 255, 255), message, function(staff) return staff:hasPrivilege("receiveCheaterNotifications") end)
                 end
             end

@@ -44,7 +44,7 @@ lia.class.list = lia.class.list or {}
         ```
 ]]
 function lia.class.register(uniqueID, data)
-    assert(isstring(uniqueID), L("classUniqueIDString"))
+    assert(isstring(uniqueID), L("itemUniqueIDString"))
     assert(istable(data), L("classDataTable"))
     local index = #lia.class.list + 1
     local existing
@@ -65,8 +65,8 @@ function lia.class.register(uniqueID, data)
     end
 
     class.uniqueID = uniqueID
-    class.name = class.name or L("unknown")
-    class.desc = class.desc or L("noDesc")
+    class.name = lia.lang.resolveToken(class.name) or lia.lang.resolveToken("@unknown")
+    class.desc = lia.lang.resolveToken(class.desc) or lia.lang.resolveToken("@noDesc")
     class.limit = class.limit or 0
     if not class.faction or not team.Valid(class.faction) then
         lia.error(L("classNoValidFaction", uniqueID))
@@ -119,8 +119,8 @@ function lia.class.loadFromDir(directory)
             uniqueID = niceName
         }
 
-        CLASS.name = L("unknown")
-        CLASS.desc = L("noDesc")
+        CLASS.name = "@unknown"
+        CLASS.desc = "@noDesc"
         CLASS.limit = 0
         lia.loader.include(directory .. "/" .. v, "shared")
         if not CLASS.faction or not team.Valid(CLASS.faction) then
@@ -130,8 +130,8 @@ function lia.class.loadFromDir(directory)
         end
 
         if not CLASS.OnCanBe then CLASS.OnCanBe = function() return true end end
-        CLASS.name = L(CLASS.name)
-        CLASS.desc = L(CLASS.desc)
+        CLASS.name = lia.lang.resolveToken(CLASS.name)
+        CLASS.desc = lia.lang.resolveToken(CLASS.desc)
         lia.class.list[index] = CLASS
         CLASS = nil
     end

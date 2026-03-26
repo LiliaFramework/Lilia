@@ -1,16 +1,16 @@
-﻿MODULE.name = "teamsModuleName"
+﻿MODULE.name = "@teamsModuleName"
 MODULE.author = "Samael"
 MODULE.discord = "@liliaplayer"
-MODULE.desc = "teamsSystemDescription"
+MODULE.desc = "@teamsSystemDescription"
 MODULE.Privileges = {
     ["canManageFactions"] = {
-        Name = "canManageFactions",
+        Name = "@canManageFactions",
         MinAccess = "admin",
-        Category = "categoryFactionManagement",
+        Category = "@factionManagement",
     },
     ["manageWhitelists"] = {
-        Name = "manageWhitelists",
+        Name = "@manageWhitelists",
         MinAccess = "admin",
-        Category = "categoryFactionManagement",
+        Category = "@factionManagement",
     },
 }

@@ -388,7 +388,7 @@ function GM:CanPlayerHoldObject(client, entity)
 end
 
 function GM:EntityTakeDamage(entity, dmgInfo)
-    if lia.config.get("PainSoundEnabled") and entity:IsPlayer() and entity:Health() > 0 then
+    if lia.config.get("PainSoundEnabled", true) and entity:IsPlayer() and entity:Health() > 0 then
         local painSound = hook.Run("GetPlayerPainSound", entity, "hurt", entity:isFemale())
         if entity:WaterLevel() >= 3 then painSound = hook.Run("GetPlayerPainSound", entity, "drown", entity:isFemale()) end
         if painSound and hook.Run("ShouldPlayPainSound", entity, painSound) ~= false then
@@ -833,7 +833,7 @@ function GM:SaveData()
 
     if #data > 0 then
         lia.data.savePersistence(data)
-        lia.information(L("dataSaved"))
+        lia.information(L("saved"))
     end
 end
 
@@ -1062,12 +1062,11 @@ function GM:EntityRemoved(ent)
     end
 end
 
-function GM:LiliaTablesLoaded()
+function GM:OnDatabaseLoaded()
     lia.db.addDatabaseFields()
     lia.data.loadTables()
     lia.data.loadPersistence()
     lia.admin.load()
-    lia.config.load()
     hook.Run("LoadData")
     hook.Run("PostLoadData")
     lia.faction.formatModelData()
@@ -1266,7 +1265,7 @@ end
 gameevent.Listen("server_addban")
 gameevent.Listen("server_removeban")
 hook.Add("server_addban", "LiliaLogServerBan", function(data)
-    MsgC(Color(83, 143, 239), "[Lilia] ", "[" .. L("logAdmin") .. "] ")
+    MsgC(Color(83, 143, 239), "[Lilia] ", "[" .. L("admin") .. "] ")
     MsgC(Color(255, 153, 0), L("banLogFormat", data.name, data.networkid, data.ban_length, data.ban_reason), "\n")
     lia.db.insertTable({
         player = data.name or "",
@@ -1280,7 +1279,7 @@ hook.Add("server_addban", "LiliaLogServerBan", function(data)
 end)
 
 hook.Add("server_removeban", "LiliaLogServerUnban", function(data)
-    MsgC(Color(83, 143, 239), "[Lilia] ", "[" .. L("logAdmin") .. "] ")
+    MsgC(Color(83, 143, 239), "[Lilia] ", "[" .. L("admin") .. "] ")
     MsgC(Color(255, 153, 0), L("unbanLogFormat", data.networkid), "\n")
     lia.db.query("DELETE FROM lia_bans WHERE playerSteamID = " .. lia.db.convertDataType(data.networkid))
 end)

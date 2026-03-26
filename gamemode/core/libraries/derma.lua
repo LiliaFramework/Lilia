@@ -3685,6 +3685,32 @@ end
             lia.derma.requestDropdown("Choose color", {"Red", "Green", "Blue"}, function(choice) print("Picked", choice) end)
         ```
 ]]
+local function resolveRequestText(text, fallback)
+    if text == nil then return fallback end
+    if istable(text) then
+        local token = text[1]
+        if isstring(token) and token:sub(1, 1) == "@" then
+            return lia.lang.resolveToken(token, unpack(text, 2))
+        elseif token ~= nil then
+            return token
+        end
+        return fallback
+    end
+
+    if isstring(text) and text:sub(1, 1) == "@" then return L(text:sub(2)) end
+    return text
+end
+
+local function resolveRequestOptionText(option)
+    if istable(option) then
+        local localized = table.Copy(option)
+        if localized.text ~= nil then localized.text = resolveRequestText(localized.text, localized.text) end
+        if localized[1] ~= nil then localized[1] = resolveRequestText(localized[1], localized[1]) end
+        return localized
+    end
+    return resolveRequestText(option, option)
+end
+
 function lia.derma.requestDropdown(title, options, callback, defaultValue)
     if IsValid(lia.gui.menuRequestDropdown) then lia.gui.menuRequestDropdown:Remove() end
     local frameHeight = 200
@@ -3693,7 +3719,7 @@ function lia.derma.requestDropdown(title, options, callback, defaultValue)
     frame:Center()
     frame:MakePopup()
     frame:SetTitle("")
-    frame:SetCenterTitle(title or L("selectOption"))
+    frame:SetCenterTitle(resolveRequestText(title, L("selectOption")))
     frame:ShowAnimation()
     frame:SetZPos(1000)
     local dropdown = vgui.Create("liaComboBox", frame)
@@ -3704,10 +3730,11 @@ function lia.derma.requestDropdown(title, options, callback, defaultValue)
     dropdown:SetKeyboardInputEnabled(true)
     if istable(options) then
         for _, option in ipairs(options) do
-            if istable(option) then
-                dropdown:AddChoice(option[1], option[2])
+            local displayOption = resolveRequestOptionText(option)
+            if istable(displayOption) then
+                dropdown:AddChoice(displayOption[1], displayOption[2])
             else
-                dropdown:AddChoice(tostring(option))
+                dropdown:AddChoice(tostring(displayOption))
             end
         end
     end
@@ -3722,7 +3749,7 @@ function lia.derma.requestDropdown(title, options, callback, defaultValue)
 
     dropdown:PostInit()
     if #options > 0 then
-        local firstOption = options[1]
+        local firstOption = resolveRequestOptionText(options[1])
         if istable(firstOption) then
             dropdown:ChooseOption(firstOption[1])
             dropdown.selectedText = firstOption[1]
@@ -3751,7 +3778,7 @@ function lia.derma.requestDropdown(title, options, callback, defaultValue)
         local selectedText = dropdown.selectedText or dropdown:GetValue()
         local selectedData = dropdown.selectedData or dropdown:GetSelectedData()
         if not selectedText and #options > 0 then
-            local firstOption = options[1]
+            local firstOption = resolveRequestOptionText(options[1])
             if istable(firstOption) then
                 selectedText = firstOption[1]
                 selectedData = firstOption[2]
@@ -3826,7 +3853,7 @@ function lia.derma.requestString(title, description, callback, defaultValue, max
     frame:Center()
     frame:MakePopup()
     frame:SetTitle("")
-    frame:SetCenterTitle(title or L("enterText"))
+    frame:SetCenterTitle(resolveRequestText(title, L("enterText")))
     frame:ShowAnimation()
     frame.OnRemove = function()
         if IsValid(vendorPanel) then vendorPanel:SetVisible(true) end
@@ -3836,7 +3863,7 @@ function lia.derma.requestString(title, description, callback, defaultValue, max
     local descriptionLabel = vgui.Create("DLabel", frame)
     descriptionLabel:Dock(TOP)
     descriptionLabel:DockMargin(20, 40, 20, 10)
-    descriptionLabel:SetText(description or L("enterValue"))
+    descriptionLabel:SetText(resolveRequestText(description, L("enterValue")))
     descriptionLabel:SetFont("LiliaFont.17")
     descriptionLabel:SetTextColor(lia.color.theme.text or color_white)
     descriptionLabel:SetContentAlignment(5)
@@ -3884,7 +3911,7 @@ end
 
     Parameters:
         title (string|nil)
-            Title text key; defaults to `"selectOptions"`.
+            Title text key; defaults to the localized "Select Options" prompt.
         options (table)
             Array where each entry is either a value or `{display, data}` table; tables create dropdowns, values create checkboxes.
         callback (function|nil)
@@ -3913,10 +3940,10 @@ function lia.derma.requestOptions(title, subTitle, options, callback, onCancel)
     frame:Center()
     frame:MakePopup()
     frame:SetTitle("")
-    frame:SetCenterTitle(title or L("selectOptions"))
+    frame:SetCenterTitle(resolveRequestText(title, L("selectPrompt", L("options"))))
     if subTitle then
         local subTitleLabel = vgui.Create("DLabel", frame)
-        subTitleLabel:SetText(subTitle)
+        subTitleLabel:SetText(resolveRequestText(subTitle, subTitle))
         subTitleLabel:SetFont("LiliaFont.18")
         subTitleLabel:SizeToContents()
         subTitleLabel:SetPos(10, 35)
@@ -3940,6 +3967,7 @@ function lia.derma.requestOptions(title, subTitle, options, callback, onCancel)
                 optionData = option
             end
 
+            optionName = resolveRequestText(optionName, optionName)
             local panel = vgui.Create("DPanel", scrollPanel)
             panel:Dock(TOP)
             panel:DockMargin(0, 0, 0, 10)
@@ -3956,11 +3984,13 @@ function lia.derma.requestOptions(title, subTitle, options, callback, onCancel)
                 local defaultChoiceIndex
                 for idx, v in ipairs(optionData) do
                     if istable(v) then
-                        ctrl:AddChoice(v[1], v[2])
-                        if defaults[optionName] ~= nil and (v[2] == defaults[optionName] or v[1] == defaults[optionName]) then defaultChoiceIndex = idx end
+                        local displayValue = resolveRequestOptionText(v)
+                        ctrl:AddChoice(displayValue[1], displayValue[2])
+                        if defaults[optionName] ~= nil and (displayValue[2] == defaults[optionName] or displayValue[1] == defaults[optionName]) then defaultChoiceIndex = idx end
                     else
-                        ctrl:AddChoice(tostring(v))
-                        if defaults[optionName] ~= nil and v == defaults[optionName] then defaultChoiceIndex = idx end
+                        local displayValue = resolveRequestText(v, v)
+                        ctrl:AddChoice(tostring(displayValue))
+                        if defaults[optionName] ~= nil and displayValue == defaults[optionName] then defaultChoiceIndex = idx end
                     end
                 end
 
@@ -4074,13 +4104,13 @@ function lia.derma.requestBinaryQuestion(title, question, callback, yesText, noT
     frame:Center()
     frame:MakePopup()
     frame:SetTitle("")
-    frame:SetCenterTitle(title or L("question"))
+    frame:SetCenterTitle(resolveRequestText(title, L("question")))
     frame:ShowAnimation()
     frame:SetZPos(1000)
     local questionLabel = vgui.Create("DLabel", frame)
     questionLabel:Dock(TOP)
     questionLabel:DockMargin(20, 40, 20, 20)
-    questionLabel:SetText(question or L("areYouSure"))
+    questionLabel:SetText(resolveRequestText(question, L("areYouSure")))
     questionLabel:SetFont("LiliaFont.18")
     questionLabel:SetTextColor(lia.color.theme.text or color_white)
     questionLabel:SetContentAlignment(5)
@@ -4094,7 +4124,7 @@ function lia.derma.requestBinaryQuestion(title, question, callback, yesText, noT
     yesBtn:Dock(RIGHT)
     yesBtn:DockMargin(10, 0, 0, 0)
     yesBtn:SetWide(140)
-    yesBtn:SetTxt(yesText or L("yes"))
+    yesBtn:SetTxt(resolveRequestText(yesText, L("yes")))
     yesBtn.DoClick = function()
         if callback then callback(true) end
         frame:Remove()
@@ -4104,7 +4134,7 @@ function lia.derma.requestBinaryQuestion(title, question, callback, yesText, noT
     noBtn:Dock(LEFT)
     noBtn:DockMargin(0, 0, 10, 0)
     noBtn:SetWide(140)
-    noBtn:SetTxt(noText or L("no"))
+    noBtn:SetTxt(resolveRequestText(noText, L("no")))
     noBtn.DoClick = function()
         if callback then callback(false) end
         frame:Remove()
@@ -4152,13 +4182,13 @@ function lia.derma.requestButtons(title, buttons, callback, description)
     frame:Center()
     frame:MakePopup()
     frame:SetTitle("")
-    frame:SetCenterTitle(title or L("selectOption"))
+    frame:SetCenterTitle(resolveRequestText(title, L("selectOption")))
     frame:ShowAnimation()
     frame:SetZPos(1000)
     local descriptionLabel = vgui.Create("DLabel", frame)
     descriptionLabel:Dock(TOP)
     descriptionLabel:DockMargin(20, 40, 20, 20)
-    descriptionLabel:SetText(description or "")
+    descriptionLabel:SetText(resolveRequestText(description, ""))
     descriptionLabel:SetFont("LiliaFont.17")
     descriptionLabel:SetTextColor(lia.color.theme.text or color_white)
     descriptionLabel:SetContentAlignment(5)
@@ -4179,6 +4209,7 @@ function lia.derma.requestButtons(title, buttons, callback, description)
             buttonText = tostring(buttonInfo)
         end
 
+        buttonText = resolveRequestText(buttonText, buttonText)
         local buttonPanel = vgui.Create("Panel", buttonContainer)
         buttonPanel:Dock(TOP)
         buttonPanel:DockMargin(0, 5, 0, 5)
@@ -4259,7 +4290,7 @@ function lia.derma.requestPopupQuestion(question, buttons)
     local questionLabel = vgui.Create("DLabel", frame)
     questionLabel:Dock(TOP)
     questionLabel:DockMargin(20, 40, 20, 20)
-    questionLabel:SetText(question or L("areYouSure"))
+    questionLabel:SetText(resolveRequestText(question, L("areYouSure")))
     questionLabel:SetFont("LiliaFont.14")
     questionLabel:SetTextColor(lia.color.theme.text or color_white)
     questionLabel:SetContentAlignment(5)
@@ -4277,6 +4308,7 @@ function lia.derma.requestPopupQuestion(question, buttons)
             buttonText = tostring(buttonInfo)
         end
 
+        buttonText = resolveRequestText(buttonText, buttonText)
         local buttonPanel = vgui.Create("Panel", buttonContainer)
         buttonPanel:Dock(TOP)
         buttonPanel:DockMargin(0, 5, 0, 5)

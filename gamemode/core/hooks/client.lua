@@ -17,17 +17,13 @@ local VOICE_WHISPERING = "whispering"
 local VOICE_TALKING = "talking"
 local VOICE_YELLING = "yelling"
 local hidden = {
-    CHUDAutoAim = true,
-    CHudHealth = true,
-    CHudCrosshair = true,
-    CHudBattery = true,
-    CHudAmmo = true,
-    CHudSecondaryAmmo = true,
-    CHudHistoryResource = true,
-    CHudChat = true,
-    CHudDamageIndicator = true,
-    CHudVoiceStatus = true,
-    CHudHints = true
+    ["CHudHealth"] = true,
+    ["CHudBattery"] = true,
+    ["CHudAmmo"] = true,
+    ["CHudSecondaryAmmo"] = true,
+    ["CHudHistoryResource"] = true,
+    ["CHudCrosshair"] = true,
+    ["CHudChat"] = true
 }
 
 local VoiceRanges = {

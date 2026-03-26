@@ -1,6 +1,6 @@
 ﻿lia.playerinteract.addInteraction("inviteToFaction", {
     serverOnly = true,
-    category = "categoryFactionManagement",
+    category = "@factionManagement",
     shouldShow = function(client, target)
         local cChar = client:getChar()
         local tChar = target:getChar()
@@ -30,7 +30,7 @@
             return
         end
 
-        target:requestBinaryQuestion("Join Faction", L("joinFactionPrompt"), L("yes"), L("no"), function(choice)
+        target:requestBinaryQuestion("@joinFactionTitle", "@joinFactionPrompt", "@yes", "@no", function(choice)
             if choice ~= 0 then
                 client:notifyInfoLocalized("inviteDeclined")
                 return
@@ -52,7 +52,7 @@
 
 lia.playerinteract.addInteraction("inviteToClass", {
     serverOnly = true,
-    category = "categoryFactionManagement",
+    category = "@factionManagement",
     shouldShow = function(client, target)
         local cChar = client:getChar()
         local tChar = target:getChar()
@@ -74,7 +74,7 @@ lia.playerinteract.addInteraction("inviteToClass", {
             return
         end
 
-        target:requestBinaryQuestion("Join Class", L("joinClassPrompt"), L("yes"), L("no"), function(choice)
+        target:requestBinaryQuestion("@joinClass", "@joinClassPrompt", "@yes", "@no", function(choice)
             if choice ~= 0 then
                 client:notifyInfoLocalized("inviteDeclined")
                 return

@@ -35,7 +35,7 @@ if SERVER then
     end
 
     addEditor("name", function() return net.ReadString() end, function(vendor, client, name)
-        if not name or name == "" then name = lia.vendor.defaults.name or "Jane Doe" end
+        if not name or name == "" then name = lia.vendor.defaults.name or L("vendorDefaultName") end
         vendor:setName(name)
         client:notifyLocalized("vendorNameChanged")
     end)

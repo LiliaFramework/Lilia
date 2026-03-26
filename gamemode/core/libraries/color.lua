@@ -222,10 +222,10 @@ else
         ```
     ]]
     function lia.color.applyTheme(themeName, useTransition)
-        themeName = themeName or lia.color.getCurrentTheme()
+        themeName = (themeName or lia.color.getCurrentTheme()):lower()
         local themeData = lia.color.themes[themeName]
         if not themeData then
-            themeName = "Teal"
+            themeName = "teal"
             themeData = lia.color.themes[themeName]
             if not themeData then
                 lia.color.theme = {
@@ -977,7 +977,7 @@ lia.color.registerTheme("Coral", {
     chatListen = Color(168, 240, 170)
 })
 
-lia.config.add("Theme", "theme", "Teal", function(_, newValue)
+lia.config.add("Theme", "@theme", "Teal", function(_, newValue)
     if CLIENT then
         if not lia.color.themes[newValue] then
             newValue = "Teal"
@@ -987,8 +987,8 @@ lia.config.add("Theme", "theme", "Teal", function(_, newValue)
         lia.color.applyTheme(newValue, true)
     end
 end, {
-    desc = "themeDesc",
-    category = "Core",
+    desc = "@themeDesc",
+    category = "@Core",
     type = "Table",
     options = function()
         local themes = {}

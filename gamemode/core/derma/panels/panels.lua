@@ -387,7 +387,7 @@ function QuickPanel:populateOptions()
     for _, info in ipairs(allOptions) do
         local opt = info.opt
         if not opt.visible or (isfunction(opt.visible) and opt.visible()) then
-            local categoryName = (opt.data and opt.data.category) or L("categoryUnsorted")
+            local categoryName = (opt.data and (opt.data.rawCategory or opt.data.category)) or "unsorted"
             if not categories[categoryName] then categories[categoryName] = {} end
             table.insert(categories[categoryName], info)
         end
@@ -399,9 +399,13 @@ function QuickPanel:populateOptions()
     end
 
     table.sort(sortedCategories, function(a, b)
-        if a == L("categoryUnsorted") then return false end
-        if b == L("categoryUnsorted") then return true end
-        return a < b
+        local localize = lia.option and lia.option.localizeValue or L
+        local unsorted = localize("unsorted")
+        local aName = localize(a)
+        local bName = localize(b)
+        if aName == unsorted then return false end
+        if bName == unsorted then return true end
+        return tostring(aName):lower() < tostring(bName):lower()
     end)
 
     local hasAddedItems = false
@@ -422,9 +426,10 @@ function QuickPanel:populateOptions()
                 local typeA = getTypeOrder(a.opt.type)
                 local typeB = getTypeOrder(b.opt.type)
                 if typeA ~= typeB then return typeA < typeB end
-                local nameA = a.opt.name or a.key
-                local nameB = b.opt.name or b.key
-                return nameA < nameB
+                local getName = lia.option and lia.option.getDisplayName
+                local nameA = getName and getName(a.key) or a.opt.name or a.key
+                local nameB = getName and getName(b.key) or b.opt.name or b.key
+                return tostring(nameA):lower() < tostring(nameB):lower()
             end)
 
             if hasAddedItems then self:addSpacer() end
@@ -438,19 +443,23 @@ function QuickPanel:populateOptions()
                 end
             end
 
-            local categoryHeader = self:addCategoryHeader(categoryName, categoryColor)
+            local localize = lia.option and lia.option.localizeValue or L
+            local categoryHeader = self:addCategoryHeader(localize(categoryName), categoryColor)
             if categoryHeader then self.optionsCache[#self.optionsCache + 1] = categoryHeader end
             for j, info in ipairs(categoryOptions) do
                 local key = info.key
                 local opt = info.opt
                 local data = opt.data or {}
                 local val = lia.option.get(key, opt.default)
-                local description = opt.description or opt.desc
+                local getName = lia.option and lia.option.getDisplayName
+                local getDesc = lia.option and lia.option.getDisplayDesc
+                local displayName = getName and getName(key) or opt.name or key
+                local description = getDesc and getDesc(key) or opt.description or opt.desc
                 local item
                 if opt.type == "Boolean" then
-                    item = self:addCheck(opt.name or key, function(_, state) lia.option.set(key, state) end, val, description)
+                    item = self:addCheck(displayName, function(_, state) lia.option.set(key, state) end, val, description)
                 elseif opt.type == "Int" or opt.type == "Float" then
-                    item = self:addSlider(opt.name or key, function(_, v) lia.option.set(key, v) end, val, data.min or 0, data.max or 100, opt.type == "Float" and (data.decimals or 2) or 0, description)
+                    item = self:addSlider(displayName, function(_, v) lia.option.set(key, v) end, val, data.min or 0, data.max or 100, opt.type == "Float" and (data.decimals or 2) or 0, description)
                 end
 
                 if item then self.optionsCache[#self.optionsCache + 1] = item end

@@ -1,16 +1,16 @@
-﻿MODULE.name = "protectionModuleName"
+﻿MODULE.name = "@protection"
 MODULE.author = "Samael"
 MODULE.discord = "@liliaplayer"
-MODULE.desc = "anticheatDescription"
+MODULE.desc = "@anticheatDescription"
 MODULE.Privileges = {
     ["canSeeAltingNotifications"] = {
-        Name = "canSeeAltingNotifications",
+        Name = "@canSeeAltingNotifications",
         MinAccess = "admin",
-        Category = "exploiting",
+        Category = "@exploiting",
     },
     ["teleportToEntity"] = {
-        Name = "teleportToEntity",
+        Name = "@teleportToEntity",
         MinAccess = "admin",
-        Category = "exploiting",
+        Category = "@exploiting",
     },
 }

@@ -21,10 +21,6 @@ lia.reloadInProgress = false
 lia.isReloading = false
 local FilesToLoad = {
     {
-        path = "lilia/gamemode/core/libraries/net.lua",
-        realm = "shared"
-    },
-    {
         path = "lilia/gamemode/core/libraries/keybind.lua",
         realm = "shared"
     },
@@ -356,7 +352,7 @@ end
         Include every Lua file in a directory; optionally recurse subfolders.
 
     When Called:
-        To load plugin folders or schema-specific directories.
+        To load module folders or schema-specific directories.
 
     Parameters:
         dir (string)
@@ -628,12 +624,12 @@ function lia.loader.checkForUpdates()
 end
 
 lia.loader.includeDir("lilia/gamemode/core/libraries/thirdparty", true, true)
+lia.loader.include("lilia/gamemode/core/libraries/net.lua", "shared")
 lia.loader.include("lilia/gamemode/core/libraries/config.lua", "shared")
 lia.loader.include("lilia/gamemode/core/libraries/color.lua", "shared")
 lia.loader.include("lilia/gamemode/core/libraries/derma.lua", "client")
 lia.loader.includeDir("lilia/gamemode/core/derma", true, true, "client")
 lia.loader.include("lilia/gamemode/core/libraries/database.lua", "server")
-lia.loader.include("lilia/gamemode/core/libraries/config.lua", "shared")
 lia.loader.include("lilia/gamemode/core/libraries/data.lua", "shared")
 --[[
     Purpose:
@@ -681,7 +677,7 @@ end
         ```
 ]]
 function lia.warning(msg)
-    MsgC(Color(83, 143, 239), "[Lilia] ", "[" .. L("logWarning") .. "] ")
+    MsgC(Color(83, 143, 239), "[Lilia] ", "[" .. L("warning") .. "] ")
     MsgC(Color(255, 255, 0), tostring(msg), "\n")
 end
 
@@ -769,7 +765,7 @@ end
 function lia.relaydiscordMessage(embed)
     if not lia.discordWebhook or not istable(embed) then return end
     local ForceHTTPMode = not util.IsBinaryModuleInstalled("chttp")
-    embed.title = embed.title or L("discordRelayLilia")
+    embed.title = embed.title or L("Lilia")
     embed.color = tonumber(embed.color) or 7506394
     embed.timestamp = embed.timestamp or os.date("!%Y-%m-%dT%H:%M:%SZ")
     embed.footer = embed.footer or {
@@ -982,7 +978,7 @@ function lia.loader.initializeGamemode(isReload)
     if SERVER and isReload then
         local adminHasChanges = lia.admin.hasChanges()
         local playerInteractHasChanges = lia.playerinteract.hasChanges()
-        local configHasChanges = lia.config.hasChanges()
+        local configHasChanges = table.Count(lia.config.getChangedValues()) > 0
         timer.Create("liaReloadConfigSync", 0.5, 1, function() if configHasChanges then lia.config.send() end end)
         timer.Create("liaReloadAdminSync", 2.0, 1, function() if adminHasChanges then lia.admin.sync() end end)
         timer.Create("liaReloadPlayerInteractSync", 3.5, 1, function() if playerInteractHasChanges then lia.playerinteract.sync() end end)
@@ -1044,5 +1040,5 @@ for _, compatFile in ipairs(ConditionalFiles) do
     end
 end
 
-if #loadedCompatibility > 0 then lia.bootstrap(L("compatibility"), #loadedCompatibility == 1 and L("compatibilityLoadedSingle", loadedCompatibility[1]) or L("compatibilityLoadedMultiple", table.concat(loadedCompatibility, ", "))) end
+if #loadedCompatibility > 0 then lia.bootstrap(L("compatibility"), L("compatibilityLoadedSingle", table.concat(loadedCompatibility, ", "))) end
 if game.IsDedicated() then concommand.Remove("gm_save") end

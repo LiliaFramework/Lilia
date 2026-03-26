@@ -1,6 +1,6 @@
 ﻿LiliaVendors = LiliaVendors or {}
 ENT.Type = "anim"
-ENT.PrintName = L("entityVendorName")
+ENT.PrintName = L("vendor")
 ENT.Author = "Samael"
 ENT.Contact = "@liliaplayer"
 ENT.Category = "Lilia"

@@ -19,7 +19,7 @@ function MODULE:DrawCharInfo(client, character, info)
     local charClass = client:getClassData()
     if charClass then
         local classColor = charClass.color or Color(255, 255, 255)
-        info[#info + 1] = {L(charClass.name) or L("undefinedClass"), classColor}
+        info[#info + 1] = {charClass.name or L("undefinedClass"), classColor}
     end
 end
 
@@ -275,7 +275,7 @@ function MODULE:PopulateAdminTabs(pages)
     if not IsValid(client) then return end
     if client:hasPrivilege("listCharacters") then
         table.insert(pages, {
-            name = "factionManagement",
+            name = "@factionManagement",
             icon = "icon16/group.png",
             drawFunc = function(panel)
                 if not panel.factionManagementInitialized then

@@ -26,12 +26,7 @@ else
         local client = LocalPlayer()
         if IsValid(charPanel) and charPanel.isLoadMode and charPanel.availableCharacters and #charPanel.availableCharacters > 0 then return end
         if IsValid(charPanel) then charPanel:Remove() end
-        if IsValid(client) and not client:getChar() then
-            lia.config.onInitialized(function()
-                if not IsValid(client) or client:getChar() then return end
-                vgui.Create("liaCharacter")
-            end)
-        end
+        if IsValid(client) and not client:getChar() then vgui.Create("liaCharacter") end
     end
 
     function MODULE:ChooseCharacter(id)
@@ -133,7 +128,7 @@ else
     end
 
     function MODULE:LiliaLoaded()
-        lia.config.onInitialized(function() vgui.Create("liaCharacter") end)
+        vgui.Create("liaCharacter")
     end
 
     function MODULE:CharListLoaded()
@@ -143,21 +138,14 @@ else
     function MODULE:OnReloaded()
         timer.Simple(0.1, function()
             local client = LocalPlayer()
-            if IsValid(client) and not client:getChar() and not IsValid(lia.gui.character) then
-                lia.config.onInitialized(function()
-                    if not IsValid(client) or client:getChar() or IsValid(lia.gui.character) then return end
-                    vgui.Create("liaCharacter")
-                end)
-            end
+            if IsValid(client) and not client:getChar() and not IsValid(lia.gui.character) then vgui.Create("liaCharacter") end
         end)
     end
 
     function MODULE:KickedFromChar(characterID, isCurrentChar)
         if isCurrentChar then
-            lia.config.onInitialized(function()
-                local charPanel = vgui.Create("liaCharacter")
-                charPanel.isKickedFromChar = true
-            end)
+            local charPanel = vgui.Create("liaCharacter")
+            charPanel.isKickedFromChar = true
         end
     end
 
@@ -175,7 +163,7 @@ else
             end
 
             if IsValid(lia.gui.menu) then lia.gui.menu:Remove() end
-            lia.config.onInitialized(function() vgui.Create("liaCharacter") end)
+            vgui.Create("liaCharacter")
         end
     end
 

@@ -125,6 +125,14 @@ local KeybindKeys = {
     ["last"] = KEY_LAST
 }
 
+local function localizeKeybindLabel(value, ...)
+    if not isstring(value) then return value end
+    local resolved = lia.lang.resolveToken(value, ...)
+    if resolved ~= value then return resolved end
+    return L(value, ...)
+end
+
+lia.keybind.localizeValue = localizeKeybindLabel
 --[[
     Purpose:
         Register a keybind action with callbacks and optional metadata.
@@ -185,7 +193,6 @@ function lia.keybind.add(k, d, desc, cb)
     end
 
     local c = isstring(key) and KeybindKeys[string.lower(key)] or key
-    description = isstring(description) and L(description) or description
     if not c then return end
     if not istable(callbacks) or not callbacks.onPress then
         lia.error(L("keybindAddInvalidCallbackFormat") .. " '" .. tostring(actionName) .. "'. Must use table with 'onPress' function. (Function: lia.keybind.add)")
@@ -195,8 +202,10 @@ function lia.keybind.add(k, d, desc, cb)
     lia.keybind.stored[actionName] = lia.keybind.stored[actionName] or {}
     if not lia.keybind.stored[actionName].value then lia.keybind.stored[actionName].value = c end
     lia.keybind.stored[actionName].default = c
-    lia.keybind.stored[actionName].description = description
-    lia.keybind.stored[actionName].category = category
+    lia.keybind.stored[actionName].rawDescription = description
+    lia.keybind.stored[actionName].description = isstring(description) and localizeKeybindLabel(description) or description
+    lia.keybind.stored[actionName].rawCategory = category
+    lia.keybind.stored[actionName].category = isstring(category) and localizeKeybindLabel(category) or category
     lia.keybind.stored[actionName].callback = callbacks.onPress
     lia.keybind.stored[actionName].release = callbacks.onRelease
     lia.keybind.stored[actionName].shouldRun = callbacks.shouldRun
@@ -204,9 +213,71 @@ function lia.keybind.add(k, d, desc, cb)
     lia.keybind.stored[c] = actionName
 end
 
+--[[
+    Purpose:
+        Retrieve the localized description for a registered keybind action.
+
+    When Called:
+        When populating tooltips or description labels in the keybind configuration UI.
+
+    Parameters:
+        action (string)
+            The action name to look up.
+
+    Returns:
+        string
+            Localized description string, or an empty string if the action does not exist.
+
+    Realm:
+        Shared
+
+    Example Usage:
+        ```lua
+            local desc = lia.keybind.getDisplayDescription("openInventory")
+            print("Keybind description:", desc)
+        ```
+]]
+function lia.keybind.getDisplayDescription(action)
+    local data = lia.keybind.stored[action]
+    if not data then return "" end
+    local value = data.rawDescription or data.description or ""
+    return isstring(value) and localizeKeybindLabel(value) or value
+end
+
+--[[
+    Purpose:
+        Retrieve the localized category for a registered keybind action.
+
+    When Called:
+        When building the keybind UI to group actions under category headers.
+
+    Parameters:
+        action (string)
+            The action name to look up.
+
+    Returns:
+        string
+            Localized category name, or "misc" as the default fallback.
+
+    Realm:
+        Shared
+
+    Example Usage:
+        ```lua
+            local cat = lia.keybind.getDisplayCategory("openInventory")
+            print("Keybind category:", cat)
+        ```
+]]
+function lia.keybind.getDisplayCategory(action)
+    local data = lia.keybind.stored[action]
+    if not data then return localizeKeybindLabel("misc") end
+    local value = data.rawCategory or data.category or "misc"
+    return isstring(value) and localizeKeybindLabel(value) or value
+end
+
 lia.keybind.add("openInventory", {
     keyBind = KEY_NONE,
-    desc = "openInventoryDesc",
+    desc = "@openInventoryDesc",
     onPress = function()
         local f1Menu = vgui.Create("liaMenu")
         f1Menu:setActiveTab(L("inv"))
@@ -215,7 +286,7 @@ lia.keybind.add("openInventory", {
 
 lia.keybind.add("adminMode", {
     keyBind = KEY_NONE,
-    desc = "adminModeDesc",
+    desc = "@adminModeDesc",
     serverOnly = true,
     shouldRun = function(client) return client:isStaff() end,
     onPress = function(client)
@@ -297,7 +368,7 @@ lia.keybind.add("adminMode", {
 
 lia.keybind.add("quickTakeItem", {
     keyBind = KEY_NONE,
-    desc = "quickTakeItemDesc",
+    desc = "@quickTakeItemDesc",
     serverOnly = true,
     onPress = function(client)
         if not client:getChar() then return end
@@ -312,7 +383,7 @@ lia.keybind.add("quickTakeItem", {
 
 lia.keybind.add("convertEntity", {
     keyBind = KEY_NONE,
-    desc = "convertEntityDesc",
+    desc = "@convertEntityDesc",
     onPress = function(client)
         if not IsValid(client) or not client:getChar() then return end
         local trace = client:GetEyeTrace()
@@ -550,12 +621,12 @@ if CLIENT then
 
             local label = header:Add("DLabel")
             label:Dock(LEFT)
-            label:SetText(L(text))
+            label:SetText(localizeKeybindLabel(text))
             label:SetFont("LiliaFont.22")
             label:SetTextColor(lia.color.theme.text or color_white)
             label:SizeToContents()
             label:DockMargin(5, 0, 0, 0)
-            SetStyledTooltip(label, text)
+            SetStyledTooltip(label, localizeKeybindLabel(text))
         end
 
         local function AddKeybindField(scroll, action, data, allowEdit, taken, refreshFunc)
@@ -564,13 +635,13 @@ if CLIENT then
             p:SetTall(45)
             p:DockMargin(0, 0, 0, 5)
             p.Paint = function(s, w, h) lia.derma.rect(0, 0, w, h):Rad(6):Color(Color(35, 38, 45, 180)):Shape(lia.derma.SHAPE_IOS):Draw() end
-            local description = data.description or ""
+            local description = lia.keybind.getDisplayDescription(action)
             SetStyledTooltip(p, description)
             local l = p:Add("DLabel")
             l:Dock(LEFT)
             l:DockMargin(15, 0, 0, 0)
             l:SetWidth(250)
-            l:SetText(L(action))
+            l:SetText(localizeKeybindLabel(action))
             l:SetFont("LiliaFont.18")
             l:SetTextColor(lia.color.theme.text or color_white)
             l:SetContentAlignment(4)
@@ -645,7 +716,7 @@ if CLIENT then
                     lia.keybind.save()
                     if refreshFunc then refreshFunc() end
                     local client = LocalPlayer()
-                    if IsValid(client) then client:notifySuccess(L("keybindChanged", action, input.GetKeyName(newKey) or "NONE")) end
+                    if IsValid(client) then client:notifySuccess(L("keybindChanged", localizeKeybindLabel(action), input.GetKeyName(newKey) or "NONE")) end
                 end
             else
                 local lKey = p:Add("DLabel")
@@ -669,7 +740,7 @@ if CLIENT then
                 searchEntry:Dock(TOP)
                 searchEntry:SetTall(35)
                 searchEntry:DockMargin(10, 10, 10, 10)
-                searchEntry:SetPlaceholderText(L("searchKeybinds") or "Search keybinds...")
+                searchEntry:SetPlaceholderText(L("searchKeybinds"))
                 searchEntry:SetFont("LiliaFont.18")
                 local scroll = parent:Add("liaScrollPanel")
                 scroll:Dock(FILL)
@@ -692,7 +763,7 @@ if CLIENT then
                     for _, k in ipairs(keys) do
                         local data = lia.keybind.stored[k]
                         if istable(data) then
-                            local cat = data.category or "Misc"
+                            local cat = data.rawCategory or data.category or "Misc"
                             categories[cat] = categories[cat] or {}
                             table.insert(categories[cat], {
                                 key = k,
@@ -706,19 +777,25 @@ if CLIENT then
                         table.insert(sortedCategories, cat)
                     end
 
-                    table.sort(sortedCategories)
+                    table.sort(sortedCategories, function(a, b)
+                        local aName = tostring(localizeKeybindLabel(a)):lower()
+                        local bName = tostring(localizeKeybindLabel(b)):lower()
+                        return aName < bName
+                    end)
+
                     for _, cat in ipairs(sortedCategories) do
                         local items = categories[cat]
                         table.sort(items, function(a, b) return tostring(a.key) < tostring(b.key) end)
                         local visibleItems = {}
+                        local localizedCategory = tostring(localizeKeybindLabel(cat) or cat)
                         for _, item in ipairs(items) do
                             local name = L(item.key) or item.key
-                            local desc = item.data.description or ""
-                            if not filter or name:lower():find(filter, 1, true) or desc:lower():find(filter, 1, true) or cat:lower():find(filter, 1, true) then table.insert(visibleItems, item) end
+                            local desc = lia.keybind.getDisplayDescription(item.key)
+                            if not filter or name:lower():find(filter, 1, true) or desc:lower():find(filter, 1, true) or localizedCategory:lower():find(filter, 1, true) then table.insert(visibleItems, item) end
                         end
 
                         if #visibleItems > 0 then
-                            AddHeader(scroll, cat)
+                            AddHeader(scroll, localizedCategory)
                             for _, item in ipairs(visibleItems) do
                                 AddKeybindField(scroll, item.key, item.data, allowEdit, taken, function() populate(filter) end)
                             end

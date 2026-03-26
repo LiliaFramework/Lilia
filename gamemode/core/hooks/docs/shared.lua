@@ -1139,6 +1139,37 @@ end
 
 --[[
     Purpose:
+        Override the maximum carry weight of a weight-based inventory.
+
+    When Called:
+        Inside `SimpleInv:getMaxWeight()` after the base max weight is computed from config and negative-weight items.
+
+    Parameters:
+        inventory (Inventory)
+            The inventory whose max weight is being evaluated.
+        maxWeight (number)
+            Calculated max weight before this hook runs.
+
+    Returns:
+        number|nil
+            New maximum weight to use; nil keeps the computed value.
+
+    Realm:
+        Shared
+
+    Example Usage:
+        ```lua
+        hook.Add("GetInventoryMaxWeight", "VIPCarryBonus", function(inventory, maxWeight)
+            local char = lia.char.loaded[inventory:getData("char")]
+            if char and char:getPlayer():IsUserGroup("vip") then return maxWeight + 10 end
+        end)
+        ```
+]]
+function GetInventoryMaxWeight(inventory, maxWeight)
+end
+
+--[[
+    Purpose:
         Override the model used when an item spawns as a world entity.
 
     When Called:
@@ -2707,6 +2738,47 @@ end
         ```
 ]]
 function OverrideFactionModels(uniqueID, arg2)
+end
+
+--[[
+    Purpose:
+        Override whether a faction allows skin and bodygroup customization.
+
+    When Called:
+        When faction model customization permissions are resolved for a player, such as during character creation or model editing.
+
+    Parameters:
+        client (Player)
+            Player whose customization permissions are being checked.
+        faction (number|string|table)
+            Faction identifier or resolved faction table.
+        context (any)
+            Optional caller-specific context describing where the check originated.
+        skinAllowed (boolean)
+            Current skin customization permission after faction defaults are applied.
+        bodygroupsAllowed (boolean)
+            Current bodygroup customization permission after faction defaults are applied.
+
+    Returns:
+        table|boolean|nil, boolean|nil
+            Return a table with `skinAllowed` and/or `bodygroupsAllowed` keys, or return booleans directly as first/second values.
+
+    Realm:
+        Shared
+
+    Example Usage:
+        ```lua
+        hook.Add("OverrideFactionModelCustomization", "RestrictRecruitModels", function(client, faction, context, skinAllowed, bodygroupsAllowed)
+            if faction.uniqueID == "combine_recruit" then
+                return {
+                    skinAllowed = false,
+                    bodygroupsAllowed = context == "character_creation" and false or bodygroupsAllowed
+                }
+            end
+        end)
+        ```
+]]
+function OverrideFactionModelCustomization(client, faction, context, skinAllowed, bodygroupsAllowed)
 end
 
 --[[

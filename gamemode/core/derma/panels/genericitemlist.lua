@@ -63,7 +63,7 @@ end
 vgui.Register("liaItemList", PANEL, "DFrame")
 PANEL = {}
 function PANEL:Init()
-    self:SetTitle(self.Title or L("selectItems"))
+    self:SetTitle(self.Title or L("selectPrompt", L("items")))
     self:SetSize(self.Width or 600, self.Height or 500)
     self:Center()
     self:MakePopup()
@@ -85,7 +85,7 @@ function PANEL:Init()
     self.actionButton = self:Add("DButton")
     self.actionButton:Dock(BOTTOM)
     self.actionButton:SetTall(40)
-    self.actionButton:SetText(self.ActionText or L("selectItem"))
+    self.actionButton:SetText(self.ActionText or L("selectPrompt", L("item")))
     self.actionButton:SetDisabled(true)
     self.actionButton.DoClick = function()
         local selectedLine = self.listView:GetSelectedLine()
@@ -128,8 +128,8 @@ function PANEL:setData(data)
 end
 
 function PANEL:SetTitle(title)
-    self.Title = title and L(title) or L("selectItems")
-    if self:GetTitle() ~= (title and L(title) or L("selectItems")) then DFrame.SetTitle(self, title and L(title) or L("selectItems")) end
+    self.Title = title and L(title) or L("selectPrompt", L("items"))
+    if self:GetTitle() ~= (title and L(title) or L("selectPrompt", L("items"))) then DFrame.SetTitle(self, title and L(title) or L("selectPrompt", L("items"))) end
 end
 
 function PANEL:SetActionText(text)
@@ -144,7 +144,7 @@ end
 function PANEL:Paint(w, h)
     surface.SetDrawColor(lia.color.theme.background or Color(45, 45, 45, 250))
     surface.DrawRect(0, 0, w, h)
-    draw.SimpleText(self.Title or L("selectItems"), "LiliaFont.25", w / 2, 25, lia.color.theme.text or Color(255, 255, 255, 255), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
+    draw.SimpleText(self.Title or L("selectPrompt", L("items")), "LiliaFont.25", w / 2, 25, lia.color.theme.text or Color(255, 255, 255, 255), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
 end
 
 vgui.Register("liaItemSelector", PANEL, "DFrame")

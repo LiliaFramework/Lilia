@@ -1767,6 +1767,19 @@ end
             ply:requestOptions("Pick", "Choose one", {"A","B"}, 1, cb)
         ```
 ]]
+local function serializeRequestText(value)
+    if istable(value) then
+        local token = value[1]
+        if isstring(token) and token:sub(1, 1) == "@" then
+            return lia.lang.resolveToken(token, unpack(value, 2))
+        elseif token ~= nil then
+            return tostring(token)
+        end
+        return ""
+    end
+    return value or ""
+end
+
 function playerMeta:requestOptions(title, subTitle, options, limit, callback, onCancel)
     if SERVER then
         self.liaOptionsReqs = self.liaOptionsReqs or {}
@@ -1778,8 +1791,8 @@ function playerMeta:requestOptions(title, subTitle, options, limit, callback, on
 
         net.Start("liaOptionsRequest")
         net.WriteUInt(id, 32)
-        net.WriteString(title)
-        net.WriteString(subTitle)
+        net.WriteString(serializeRequestText(title))
+        net.WriteString(serializeRequestText(subTitle))
         net.WriteTable(options or {})
         net.WriteUInt(tonumber(limit) or 1, 32)
         net.Send(self)
@@ -1828,8 +1841,8 @@ function playerMeta:requestString(title, subTitle, callback, default)
         local id = table.insert(self.liaStrReqs, callback)
         net.Start("liaStringRequest")
         net.WriteUInt(id, 32)
-        net.WriteString(title)
-        net.WriteString(subTitle)
+        net.WriteString(serializeRequestText(title))
+        net.WriteString(serializeRequestText(subTitle))
         net.WriteString(default or "")
         net.Send(self)
         return d
@@ -1882,7 +1895,7 @@ function playerMeta:requestArguments(title, argTypes, callback)
 
         net.Start("liaArgumentsRequest")
         net.WriteUInt(id, 32)
-        net.WriteString(title or "")
+        net.WriteString(serializeRequestText(title))
         net.WriteTable(argTypes or {})
         net.Send(self)
         return d
@@ -1935,9 +1948,9 @@ function playerMeta:requestBinaryQuestion(question, option1, option2, manualDism
         local id = table.insert(self.liaBinaryReqs, callback)
         net.Start("liaBinaryQuestionRequest")
         net.WriteUInt(id, 32)
-        net.WriteString(question)
-        net.WriteString(option1)
-        net.WriteString(option2)
+        net.WriteString(serializeRequestText(question))
+        net.WriteString(serializeRequestText(option1))
+        net.WriteString(serializeRequestText(option2))
         net.WriteBool(manualDismiss)
         net.Send(self)
     else
@@ -1976,11 +1989,11 @@ function playerMeta:requestPopupQuestion(question, buttons)
         local id = table.insert(self.liaPopupReqs, callbacks)
         net.Start("liaPopupQuestionRequest")
         net.WriteUInt(id, 32)
-        net.WriteString(question)
+        net.WriteString(serializeRequestText(question))
         net.WriteUInt(#buttons, 8)
         for _, buttonInfo in ipairs(buttons) do
             local buttonText = istable(buttonInfo) and buttonInfo[1] or tostring(buttonInfo)
-            net.WriteString(buttonText)
+            net.WriteString(serializeRequestText(buttonText))
         end
 
         net.Send(self)
@@ -2073,10 +2086,10 @@ function playerMeta:requestButtons(title, buttons)
         local id = table.insert(self.buttonRequests, callbacks)
         net.Start("liaButtonRequest")
         net.WriteUInt(id, 32)
-        net.WriteString(title or "")
+        net.WriteString(serializeRequestText(title))
         net.WriteUInt(#labels, 8)
         for _, lbl in ipairs(labels) do
-            net.WriteString(lbl)
+            net.WriteString(serializeRequestText(lbl))
         end
 
         net.Send(self)
@@ -2149,8 +2162,8 @@ function playerMeta:requestDropdown(title, subTitle, options, callback)
 
         net.Start("liaRequestDropdown")
         net.WriteUInt(id, 32)
-        net.WriteString(title)
-        net.WriteString(subTitle)
+        net.WriteString(serializeRequestText(title))
+        net.WriteString(serializeRequestText(subTitle))
         net.WriteTable(options or {})
         net.Send(self)
     else

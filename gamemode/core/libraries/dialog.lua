@@ -259,6 +259,17 @@ if SERVER then
         return tostring(response)
     end
 
+    local function resolveDialogValue(value)
+        if istable(value) then
+            local resolved = {}
+            for k, v in pairs(value) do
+                resolved[k] = resolveDialogValue(v)
+            end
+            return resolved
+        end
+        return lia.lang.resolveToken(value)
+    end
+
     local function addResponseMetadata(entry, source)
         if not istable(entry) or not istable(source) then return end
         local response = source.Response
@@ -279,6 +290,7 @@ if SERVER then
         if not istable(tbl) then return tbl end
         local out = {}
         for label, info in pairs(tbl) do
+            local resolvedLabel = lia.lang.resolveToken(label)
             local entry = {}
             if istable(info) then
                 for k, v in pairs(info) do
@@ -292,14 +304,22 @@ if SERVER then
                 if entry.serverOnly then entry.Callback = nil end
                 entry.ShouldShow = nil
                 addResponseMetadata(entry, info)
+                entry.Response = resolveDialogValue(entry.Response)
                 if info.options and istable(info.options) and not entry.options then entry.options = sanitizeConversationTable(info.options) end
-                out[label] = entry
+                out[resolvedLabel] = entry
             elseif not isfunction(info) then
-                entry = info
-                out[label] = entry
+                out[resolvedLabel] = resolveDialogValue(info)
             end
         end
         return out
+    end
+
+    local function resolveDialogData(data)
+        if not istable(data) then return data end
+        data.PrintName = lia.lang.resolveToken(data.PrintName)
+        data.Greeting = resolveDialogValue(data.Greeting)
+        if istable(data.Conversation) then data.Conversation = sanitizeConversationTable(data.Conversation) end
+        return data
     end
 
     local function flattenGreetings(conversation)
@@ -371,7 +391,7 @@ if SERVER then
             for uniqueID, data in pairs(lia.dialog.stored) do
                 local filteredNPCData = table.Copy(data)
                 if filteredNPCData.Conversation then filteredNPCData.Conversation = filterConversationOptions(filteredNPCData.Conversation, ply, nil) end
-                filteredData[uniqueID] = sanitizeConversationTable(filteredNPCData)
+                filteredData[uniqueID] = resolveDialogData(filteredNPCData)
             end
 
             local dataHash = getDataHash(filteredData)
@@ -379,9 +399,7 @@ if SERVER then
             local lastHash = lia.dialog.clientHashes[clientID]
             if dataHash ~= lastHash then
                 lia.dialog.clientHashes[clientID] = dataHash
-                net.Start("liaDialogSync")
-                net.WriteTable(filteredData)
-                net.Send(ply)
+                lia.net.writeBigTable(ply, "liaDialogSync", filteredData)
             end
         end
     end
@@ -465,129 +483,6 @@ if SERVER then
         return true
     end
 
-    lia.dialog.registerNPC("tutorial_guide", {
-        PrintName = "Tutorial Guide",
-        Greeting = "Hello there! I'm here to help new players learn the ropes. What would you like to know?",
-        Conversation = {
-            ["I'm new here, can you help me?"] = {
-                options = {
-                    ["Tell me about factions"] = {
-                        ShouldShow = function() return true end,
-                        Response = "Factions are the main groups in this roleplay world. Every character belongs to one!",
-                        options = {
-                            ["What factions are available?"] = {
-                                ShouldShow = function() return true end,
-                                Response = "Citizens are usually the default - regular people living their lives. There might be police, medical, or other specialized factions.",
-                                options = {
-                                    ["How do I join a faction?"] = {
-                                        ShouldShow = function() return true end,
-                                        Response = "Open your character menu (usually F1) and select 'Create Character'. Choose your faction from the dropdown menu.",
-                                    },
-                                    ["Are there faction limits?"] = {
-                                        ShouldShow = function() return true end,
-                                        Response = "Some factions have player limits to maintain balance. Popular factions like police might be restricted.",
-                                    }
-                                }
-                            },
-                            ["What's the difference between factions and classes?"] = {
-                                ShouldShow = function() return true end,
-                                Response = "Factions are broad groups (like 'Police Department'), while classes are specialized roles within factions (like 'Detective' or 'SWAT').",
-                                options = {
-                                    ["Tell me more about classes"] = {
-                                        ShouldShow = function() return true end,
-                                        Response = "Classes give you special equipment, abilities, or restrictions. For example, a SWAT class might have better armor and weapons but move slower.",
-                                    },
-                                    ["Can I have multiple classes?"] = {
-                                        ShouldShow = function() return true end,
-                                        Response = "Usually one class per character, but you can have multiple characters with different classes!",
-                                    }
-                                }
-                            }
-                        }
-                    },
-                    ["How do I get started with items?"] = {
-                        ShouldShow = function() return true end,
-                        Response = "Items are crucial! They include weapons, tools, food, and more.",
-                        options = {
-                            ["How do I open my inventory?"] = {
-                                ShouldShow = function() return true end,
-                                Response = "Press F2 or the inventory key to open your inventory. You can drag items, equip them, or use them from there.",
-                            },
-                            ["Where can I buy items?"] = {
-                                ShouldShow = function() return true end,
-                                Response = "Look for vendors (NPCs with shopping carts above their heads) or business owners. Some factions give starting items.",
-                                options = {
-                                    ["How does money work?"] = {
-                                        ShouldShow = function() return true end,
-                                        Response = "You earn money through jobs, selling items, or roleplaying. Use /givemoney to give money to others, or drop it as an item.",
-                                    },
-                                    ["Can I trade items?"] = {
-                                        ShouldShow = function() return true end,
-                                        Response = "Yes! Drag items from your inventory to another player's inventory when they're nearby, or use the trade system if available.",
-                                    }
-                                }
-                            }
-                        }
-                    },
-                    ["What about roleplaying?"] = {
-                        ShouldShow = function() return true end,
-                        Response = "Roleplaying is the heart of this server! Stay in character, follow server rules, and have fun.",
-                        options = {
-                            ["How do I talk in character?"] = {
-                                ShouldShow = function() return true end,
-                                Response = "Use /say or just type normally for local chat. /yell for shouting, /whisper for quiet talking, /me for actions, /it for environmental descriptions.",
-                            },
-                            ["What are the basic rules?"] = {
-                                ShouldShow = function() return true end,
-                                Response = "No random deathmatching, respect other players' roleplay, follow faction rules, and don't metagame (using OOC info in IC situations).",
-                                options = {
-                                    ["What is metagaming?"] = {
-                                        ShouldShow = function() return true end,
-                                        Response = "Metagaming is using out-of-character knowledge in roleplay. For example, knowing someone's identity from their Steam name.",
-                                    },
-                                    ["How do I report rule breakers?"] = {
-                                        ShouldShow = function() return true end,
-                                        Response = "Contact admins using @ or the admin chat. For serious issues, use /report or find an admin in-game.",
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            },
-            ["I need help with something specific"] = {
-                options = {
-                    ["I'm stuck or bugged"] = {
-                        ShouldShow = function() return true end,
-                        Response = "Try relogging first. If that doesn't work, contact an admin with /admin or @. Include details about what happened.",
-                    },
-                    ["How do I change my character?"] = {
-                        ShouldShow = function() return true end,
-                        Response = "Press F1 to open the character menu, then select 'Load Character' to switch between your characters.",
-                    },
-                    ["I lost my items"] = {
-                        ShouldShow = function() return true end,
-                        Response = "Items save automatically. If you lost them due to a bug, contact an admin immediately with details about what you had.",
-                    },
-                    ["How do I get admin help?"] = {
-                        ShouldShow = function() return true end,
-                        Response = "Use @ message or /admin command to contact admins. Be patient - they help when available!",
-                    }
-                }
-            },
-            ["I'm ready to explore!"] = {
-                ShouldShow = function() return true end,
-                Response = "Great! Remember: stay in character, respect others, and have fun. The character menu (F1) and inventory (F2) are your best friends!",
-                serverOnly = false
-            },
-            ["Goodbye"] = {
-                Response = "Good luck out there! Feel free to come back if you have any more questions.",
-                Callback = function() if IsValid(lia.dialog.vgui) then lia.dialog.vgui:Remove() end end,
-                serverOnly = false
-            }
-        }
-    })
-
     --[[
     Purpose:
         Opens an NPC dialog for a player, filtering conversation options based on player permissions.
@@ -618,13 +513,13 @@ if SERVER then
     function lia.dialog.openDialog(client, npc, npcID)
         local npcData = lia.dialog.getOriginalNPCData(npcID)
         if not npcData then
-            client:notifyWarning("This NPC type is not registered. Please select a valid NPC type.")
+            client:notifyWarningLocalized("npcTypeNotRegistered")
             lia.dialog.syncToClients(client)
             timer.Simple(0.1, function()
                 if not IsValid(client) or not IsValid(npc) then return end
                 local npcOptions = {}
                 for uniqueID, data in pairs(lia.dialog.stored) do
-                    local displayName = data.PrintName or uniqueID
+                    local displayName = lia.lang.resolveToken(data.PrintName or uniqueID)
                     table.insert(npcOptions, {displayName, uniqueID})
                 end
 
@@ -635,7 +530,7 @@ if SERVER then
                     net.WriteTable(npcOptions)
                     net.Send(client)
                 else
-                    client:notifyError("No NPC types available! The server may still be loading modules. Please try again in a moment.")
+                    client:notifyErrorLocalized("noNPCTypesAvailable")
                 end
             end)
             return
@@ -675,7 +570,7 @@ if SERVER then
 
         filteredData.UniqueID = npcID
         hook.Run("OnNPCTypeSet", client, npc, npcID, filteredData)
-        if filteredData.Conversation then filteredData.Conversation = sanitizeConversationTable(filteredData.Conversation) end
+        filteredData = resolveDialogData(filteredData)
         local function safeRemoveFunctions(tbl, depth)
             depth = depth or 0
             if depth > 10 then return tbl end
@@ -793,7 +688,7 @@ else
         configID = configID or "appearance"
         if not IsValid(npc) then return end
         local frame = vgui.Create("liaFrame")
-        frame:SetTitle("Customize NPC")
+        frame:SetTitle(L("customizeNPC"))
         frame:SetSize(800, 700)
         frame:Center()
         frame:MakePopup()
@@ -869,7 +764,7 @@ else
 
         local nameLabel = vgui.Create("DLabel", scroll)
         nameLabel:Dock(TOP)
-        nameLabel:SetText("NPC Name:")
+        nameLabel:SetText(L("npcNameLabel"))
         nameLabel:SetTall(20)
         nameLabel:DockMargin(0, 5, 0, 5)
         local nameEntry = vgui.Create("liaEntry", scroll)
@@ -879,7 +774,7 @@ else
         nameEntry:DockMargin(0, 0, 0, 10)
         local modelLabel = vgui.Create("DLabel", scroll)
         modelLabel:Dock(TOP)
-        modelLabel:SetText("Model Path:")
+        modelLabel:SetText(L("modelPathLabel"))
         modelLabel:SetTall(20)
         modelLabel:DockMargin(0, 5, 0, 5)
         local modelEntry = vgui.Create("liaEntry", scroll)
@@ -904,7 +799,7 @@ else
                         skinSlider:SetValue(0)
                     end
 
-                    LocalPlayer():notifySuccess("NPC model updated to: " .. value .. ". Bodygroups and skin have been reset.")
+                    LocalPlayer():notifySuccessLocalized("npcModelUpdated", value)
                 end
             end
         end
@@ -912,7 +807,7 @@ else
         if hasBodygroups then
             local bodygroupLabel = vgui.Create("DLabel", scroll)
             bodygroupLabel:Dock(TOP)
-            bodygroupLabel:SetText("Bodygroups:")
+            bodygroupLabel:SetText(L("bodygroups") .. ":")
             bodygroupLabel:SetTall(20)
             bodygroupLabel:DockMargin(0, 5, 0, 5)
             local bodygroupPanel = vgui.Create("DPanel", scroll)
@@ -931,7 +826,7 @@ else
         if hasSkin then
             local skinLabel = vgui.Create("DLabel", scroll)
             skinLabel:Dock(TOP)
-            skinLabel:SetText("Skin:")
+            skinLabel:SetText(L("skin") .. ":")
             skinLabel:SetTall(20)
             skinLabel:DockMargin(0, 5, 0, 5)
             skinSlider = vgui.Create("DNumSlider", scroll)
@@ -978,14 +873,14 @@ else
         if hasAnimations then
             local animationLabel = vgui.Create("DLabel", scroll)
             animationLabel:Dock(TOP)
-            animationLabel:SetText("Animation:")
+            animationLabel:SetText(L("animation") .. ":")
             animationLabel:SetTall(20)
             animationLabel:DockMargin(0, 5, 0, 5)
             animationCombo = vgui.Create("liaComboBox", scroll)
             animationCombo:Dock(TOP)
             animationCombo:SetTall(25)
             animationCombo:DockMargin(0, 0, 0, 10)
-            animationCombo:SetValue(selectedAnimation == "auto" and "Auto (idle animation)" or selectedAnimation)
+            animationCombo:SetValue(selectedAnimation == "auto" and L("npcAnimationAuto") or selectedAnimation)
             local selectedIndex = 0
             if selectedAnimation == "auto" then
                 selectedIndex = 1
@@ -999,7 +894,7 @@ else
             end
 
             animationCombo:ChooseOption(selectedAnimation, selectedIndex)
-            animationCombo:AddChoice("Auto (idle animation)", "auto", selectedAnimation == "auto")
+            animationCombo:AddChoice(L("npcAnimationAuto"), "auto", selectedAnimation == "auto")
             for _, animName in ipairs(availableAnimations) do
                 animationCombo:AddChoice(animName, animName, animName == selectedAnimation)
             end
@@ -1018,27 +913,27 @@ else
             refreshBtn:Dock(TOP)
             refreshBtn:SetTall(25)
             refreshBtn:DockMargin(0, 5, 0, 10)
-            refreshBtn:SetText("Refresh Animation List")
+            refreshBtn:SetText(L("refreshAnimationList"))
             refreshBtn.DoClick = function()
                 if IsValid(npc) then
                     local sequences = npc:GetSequenceList()
                     if sequences and #sequences > 0 then
                         animationCombo:Clear()
-                        animationCombo:AddChoice("Auto (idle animation)", "auto", selectedAnimation == "auto")
+                        animationCombo:AddChoice(L("npcAnimationAuto"), "auto", selectedAnimation == "auto")
                         for _, animName in ipairs(sequences) do
                             animationCombo:AddChoice(animName, animName, animName == selectedAnimation)
                         end
 
-                        LocalPlayer():notifySuccess("Animation list refreshed! Found " .. #sequences .. " animations.")
+                        LocalPlayer():notifySuccessLocalized("animationListRefreshed", #sequences)
                     else
-                        LocalPlayer():notifyError("No animations found for this model.")
+                        LocalPlayer():notifyErrorLocalized("noAnimationsFoundForModel")
                     end
                 end
             end
         else
             local noAnimLabel = vgui.Create("DLabel", scroll)
             noAnimLabel:Dock(TOP)
-            noAnimLabel:SetText("No animations found for this model.")
+            noAnimLabel:SetText(L("noAnimationsFoundForModel"))
             noAnimLabel:SetTall(20)
             noAnimLabel:DockMargin(0, 5, 0, 5)
             noAnimLabel:SetTextColor(Color(255, 100, 100))
@@ -1046,14 +941,14 @@ else
             refreshAnimBtn:Dock(TOP)
             refreshAnimBtn:SetTall(25)
             refreshAnimBtn:DockMargin(0, 5, 0, 10)
-            refreshAnimBtn:SetText("Try Refresh Animations")
+            refreshAnimBtn:SetText(L("tryRefreshAnimations"))
             refreshAnimBtn.DoClick = function()
                 if IsValid(npc) then
                     local sequences = npc:GetSequenceList()
                     if sequences and #sequences > 0 then
-                        LocalPlayer():notifySuccess("Found " .. #sequences .. " animations! Please reopen the customization menu.")
+                        LocalPlayer():notifySuccessLocalized("animationsFoundReopenMenu", #sequences)
                     else
-                        LocalPlayer():notifyError("Still no animations found. The model might not have animations.")
+                        LocalPlayer():notifyErrorLocalized("stillNoAnimationsFound")
                     end
                 end
             end
@@ -1061,7 +956,7 @@ else
 
         local dialogTypeLabel = vgui.Create("DLabel", scroll)
         dialogTypeLabel:Dock(TOP)
-        dialogTypeLabel:SetText("Dialog Type:")
+        dialogTypeLabel:SetText(L("dialogTypeLabel"))
         dialogTypeLabel:SetTall(20)
         dialogTypeLabel:DockMargin(0, 15, 0, 5)
         local currentType = npc:getNetVar("uniqueID", npc.uniqueID) or "none"
@@ -1070,9 +965,9 @@ else
         dialogTypeCombo:Dock(TOP)
         dialogTypeCombo:SetTall(30)
         dialogTypeCombo:DockMargin(0, 0, 0, 10)
-        dialogTypeCombo:AddChoice("None (No Dialog)", "none", currentType == "none" or currentType == nil)
+        dialogTypeCombo:AddChoice(L("noneNoDialog"), "none", currentType == "none" or currentType == nil)
         for uniqueID, data in pairs(lia.dialog.stored) do
-            local displayName = data.PrintName or uniqueID
+            local displayName = lia.lang.resolveToken(data.PrintName or uniqueID)
             dialogTypeCombo:AddChoice(displayName, uniqueID, uniqueID == currentType)
         end
 
@@ -1082,7 +977,7 @@ else
         local applyBtn = vgui.Create("liaButton", scroll)
         applyBtn:Dock(TOP)
         applyBtn:SetTall(35)
-        applyBtn:SetText("Apply Customizations")
+        applyBtn:SetText(L("applyCustomizations"))
         applyBtn:DockMargin(0, 5, 0, 10)
         applyBtn.DoClick = function()
             local nameValue = nameEntry:GetValue() or ""
@@ -1125,7 +1020,7 @@ else
             separator.Paint = function(_, w, h) draw.RoundedBox(0, 0, 0, w, h, Color(100, 100, 100, 100)) end
             local otherLabel = vgui.Create("DLabel", scroll)
             otherLabel:Dock(TOP)
-            otherLabel:SetText("Other Configurations:")
+            otherLabel:SetText(L("otherConfigurations"))
             otherLabel:SetTall(20)
             otherLabel:SetTextColor(color_white)
             otherLabel:DockMargin(0, 5, 0, 5)
@@ -1134,7 +1029,7 @@ else
                     local configBtn = vgui.Create("liaButton", scroll)
                     configBtn:Dock(TOP)
                     configBtn:SetTall(30)
-                    configBtn:SetText(config.name or config.id or "Configuration")
+                    configBtn:SetText(lia.lang.resolveToken(config.name or config.id) or L("configuration"))
                     configBtn:DockMargin(0, 5, 0, 5)
                     configBtn.DoClick = function()
                         frame:Close()
@@ -1147,7 +1042,7 @@ else
         local cancelBtn = vgui.Create("liaButton", scroll)
         cancelBtn:Dock(TOP)
         cancelBtn:SetTall(30)
-        cancelBtn:SetText("Cancel")
+        cancelBtn:SetText(L("cancel"))
         cancelBtn:DockMargin(0, 5, 0, 10)
         cancelBtn.DoClick = function() frame:Close() end
     end
@@ -1233,7 +1128,7 @@ function lia.dialog.openConfigurationPicker(npc, npcID)
     local ply = LocalPlayer()
     local configurations = lia.dialog.getAvailableConfigurations(ply, npc, npcID)
     if #configurations == 0 then
-        LocalPlayer():notifyError("No NPC configurations are available.")
+        LocalPlayer():notifyErrorLocalized("noNPCConfigurationsAvailable")
         return
     end
 
@@ -1271,8 +1166,8 @@ local function canAccessNPCConfigurations(ply)
 end
 
 lia.dialog.registerConfiguration("appearance", {
-    name = "Appearance",
-    description = "Rename NPCs and adjust their models, skins, bodygroups, and animations.",
+    name = "@npcConfigAppearanceName",
+    description = "@npcConfigAppearanceDesc",
     order = 0,
     shouldShow = function(ply) return canAccessNPCConfigurations(ply) end
 })
@@ -1286,7 +1181,7 @@ if SERVER then
                 npc.uniqueID = customData.dialogType
                 hook.Run("UpdateEntityPersistence", npc)
                 hook.Run("SaveData")
-                ply:notifySuccess("NPC dialog type updated successfully!")
+                ply:notifySuccessLocalized("npcDialogTypeUpdated")
             end
         end
     })
@@ -1300,7 +1195,7 @@ if SERVER then
                 if trimmedName ~= "" then
                     npc.NPCName = trimmedName
                 else
-                    npc.NPCName = "NPC"
+                    npc.NPCName = L("npc")
                 end
             end
 
@@ -1354,11 +1249,11 @@ if SERVER then
 
             npc:setAnim()
             npc.customData = customData
-            if not npc.NPCName or npc.NPCName == "" then npc.NPCName = "NPC" end
+            if not npc.NPCName or npc.NPCName == "" then npc.NPCName = L("npc") end
             npc:setNetVar("NPCName", npc.NPCName)
             hook.Run("UpdateEntityPersistence", npc)
             hook.Run("SaveData")
-            ply:notifySuccess("NPC customized successfully!")
+            ply:notifySuccessLocalized("npcCustomizedSuccessfully")
         end
     })
 else

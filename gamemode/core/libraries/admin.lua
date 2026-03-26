@@ -82,7 +82,7 @@ end
 ensureDefaults(lia.admin.groups)
 local privilegeCategoryCache = {}
 function getPrivilegeCategory(privilegeName)
-    if not privilegeName then return L("unassigned") end
+    if not privilegeName then return lia.lang.resolveToken("@unassigned") end
     if privilegeCategoryCache[privilegeName] then return privilegeCategoryCache[privilegeName] end
     local categoryChecks = {
         {
@@ -125,15 +125,15 @@ function getPrivilegeCategory(privilegeName)
 
     local category
     if lia.admin and lia.admin.privilegeCategories and lia.admin.privilegeCategories[privilegeName] then
-        category = L(lia.admin.privilegeCategories[privilegeName])
+        category = lia.admin.privilegeCategories[privilegeName]
     elseif lia.command and lia.command.list and lia.command.list[privilegeName] then
-        category = L("staffPermissions")
+        category = lia.lang.resolveToken("@staffPermissions")
     else
         for _, module in pairs(lia.module.list) do
             if module.Privileges and istable(module.Privileges) then
                 for privID, priv in pairs(module.Privileges) do
                     if privID == privilegeName then
-                        category = L(priv.Category or module.name or "unassigned")
+                        category = lia.lang.resolveToken(priv.Category or module.name or "@unassigned")
                         break
                     end
                 end
@@ -145,19 +145,19 @@ function getPrivilegeCategory(privilegeName)
 
     if not category and CAMI then
         local camiPriv = CAMI.GetPrivilege(privilegeName)
-        if camiPriv and camiPriv.Category then category = L(camiPriv.Category) end
+        if camiPriv and camiPriv.Category then category = lia.lang.resolveToken(camiPriv.Category) end
     end
 
     if not category then
         for _, check in ipairs(categoryChecks) do
             if check.match(privilegeName) then
-                category = L(check.category)
+                category = lia.lang.resolveToken("@" .. check.category)
                 break
             end
         end
     end
 
-    if not category then category = L("unassigned") end
+    if not category then category = lia.lang.resolveToken("@unassigned") end
     privilegeCategoryCache[privilegeName] = category
     return category
 end
@@ -398,7 +398,7 @@ function lia.admin.hasAccess(ply, privilege)
                     Name = L("accessPropertyPrivilege", prop.MenuLabel or propName),
                     ID = privilege,
                     MinAccess = "admin",
-                    Category = "staffPermissions",
+                    Category = "@staffPermissions",
                 })
             end
         elseif privilege:find("^tool_") then
@@ -409,7 +409,7 @@ function lia.admin.hasAccess(ply, privilege)
                         Name = L("accessToolPrivilege", toolName:gsub("^%l", string.upper)),
                         ID = privilege,
                         MinAccess = defaultUserTools[string.lower(toolName)] and "user" or "admin",
-                        Category = "staffPermissions",
+                        Category = "@staffPermissions",
                     })
 
                     break
@@ -544,9 +544,9 @@ function lia.admin.registerPrivilege(priv)
     if lia.admin.privileges[id] ~= nil then return end
     local min = tostring(priv.MinAccess or "user"):lower()
     lia.admin.privileges[id] = min
-    lia.admin.privilegeNames[id] = priv.Name or priv.ID
+    lia.admin.privilegeNames[id] = lia.lang.resolveToken(priv.Name or priv.ID)
     clearPrivilegeCategoryCache()
-    if priv.Category then lia.admin.privilegeCategories[id] = priv.Category end
+    if priv.Category then lia.admin.privilegeCategories[id] = lia.lang.resolveToken(priv.Category) end
     local defaultGroups = lia.admin.DefaultGroups or {}
     local minLevel = defaultGroups[tostring(min):lower()] or 1
     for groupName, perms in pairs(lia.admin.groups) do
@@ -555,7 +555,7 @@ function lia.admin.registerPrivilege(priv)
         if getGroupLevel(groupName) >= minLevel then perms[id] = true end
     end
 
-    local name = L(priv.Name or priv.ID)
+    local name = lia.admin.privilegeNames[id]
     if CAMI then camiRegisterPrivilege(priv.ID, min) end
     local category = getPrivilegeCategory(id)
     hook.Run("OnPrivilegeRegistered", {
@@ -700,7 +700,7 @@ function lia.admin.load()
             camiBootstrapFromExisting()
         end
 
-        MsgC(Color(83, 143, 239), "[Lilia] ", "[" .. L("logAdmin") .. "] ")
+        MsgC(Color(83, 143, 239), "[Lilia] ", "[" .. L("admin") .. "] ")
         MsgC(Color(255, 153, 0), L("adminSystemLoaded"), "\n")
         clearGroupLevelCache()
         hook.Run("OnAdminSystemLoaded", lia.admin.groups or {}, lia.admin.privileges or {})
@@ -1233,12 +1233,12 @@ if SERVER then
             return false
         end
 
-        local targetInfo = target:Name() .. " (Steam64ID: " .. target:SteamID64() .. ")"
+        local targetInfo = L("staffLogPlayerSteam64", target:Name(), target:SteamID64())
         if cmd == "kick" then
             target:Kick(reason or L("genericReason"))
             admin:notifySuccessLocalized("plyKicked")
             lia.log.add(admin, "plyKick", target:Name())
-            staffAction("KICK", admin:Name() .. " kicked " .. target:Name() .. " (Steam64ID: " .. target:SteamID64() .. ")")
+            staffAction("KICK", L("staffActionKicked", admin:Name(), target:Name(), target:SteamID64()))
             lia.db.insertTable({
                 player = target:Name(),
                 playerSteamID = target:SteamID(),
@@ -1253,7 +1253,7 @@ if SERVER then
             target:banPlayer(reason, tonumber(dur) or 0, admin)
             admin:notifySuccessLocalized("plyBanned")
             lia.log.add(admin, "plyBan", target:Name())
-            staffAction("BAN", admin:Name() .. " banned " .. target:Name() .. " (Steam64ID: " .. target:SteamID64() .. ")")
+            staffAction("BAN", L("staffActionBanned", admin:Name(), target:Name(), target:SteamID64()))
             return true
         elseif cmd == "unban" then
             local steamid = IsValid(target) and target:SteamID() or tostring(victim)
@@ -1261,7 +1261,7 @@ if SERVER then
                 lia.db.query("DELETE FROM lia_bans WHERE playerSteamID = " .. lia.db.convertDataType(steamid))
                 admin:notifySuccessLocalized("playerUnbanned")
                 lia.log.add(admin, "plyUnban", steamid)
-                staffAction("UNBAN", admin:Name() .. " unbanned SteamID " .. steamid)
+                staffAction("UNBAN", L("staffActionUnbannedSteamID", admin:Name(), steamid))
                 return true
             end
         elseif cmd == "mute" then
@@ -1279,7 +1279,7 @@ if SERVER then
                     timestamp = os.time()
                 }, nil, "staffactions")
 
-                staffAction("MUTE", admin:Name() .. " muted " .. target:Name() .. " (Steam64ID: " .. target:SteamID64() .. ")")
+                staffAction("MUTE", L("staffActionMuted", admin:Name(), target:Name(), target:SteamID64()))
                 hook.Run("PlayerMuted", target, admin)
                 return true
             end
@@ -1288,7 +1288,7 @@ if SERVER then
                 target:setLiliaData("liaMuted", false)
                 admin:notifySuccessLocalized("plyUnmuted")
                 lia.log.add(admin, "plyUnmute", target:Name())
-                staffAction("UNMUTE", admin:Name() .. " unmuted " .. target:Name() .. " (Steam64ID: " .. target:SteamID64() .. ")")
+                staffAction("UNMUTE", L("staffActionUnmuted", admin:Name(), target:Name(), target:SteamID64()))
                 hook.Run("PlayerUnmuted", target, admin)
                 return true
             end
@@ -1603,7 +1603,7 @@ if properties and properties.List then
                 Name = L("accessPropertyPrivilege", prop.MenuLabel or name),
                 ID = id,
                 MinAccess = "admin",
-                Category = "staffPermissions"
+                Category = "@staffPermissions"
             })
         end
     end
@@ -1617,7 +1617,7 @@ for _, wep in ipairs(weapons.GetList()) do
                 Name = L("accessToolPrivilege", tool:gsub("^%l", string.upper)),
                 ID = id,
                 MinAccess = defaultUserTools[string.lower(tool)] and "user" or "admin",
-                Category = "staffPermissions"
+                Category = "@staffPermissions"
             })
         end
     end
@@ -1782,8 +1782,7 @@ else
                 end
             else
                 local function showBaseRankNotification()
-                    local message = L("baseUsergroupCannotBeEditedDesc") or "Base usergroups (user, admin, superadmin) cannot be edited. Please create a new usergroup instead using the 'Create Group' button."
-                    LocalPlayer():notifyErrorLocalized("baseUsergroupCannotBeEdited", message)
+                    LocalPlayer():notifyErrorLocalized("baseUsergroupCannotBeEdited")
                 end
 
                 row.OnChange = showBaseRankNotification
@@ -1896,8 +1895,10 @@ else
                 return
             end
 
-            LocalPlayer():requestString(L("confirm"), L("deleteGroupPrompt", activeTab.groupName), function(value)
-                if value and value:lower() == "yes" then
+            LocalPlayer():requestString("@confirm", L("deleteGroupPrompt", activeTab.groupName), function(value)
+                local normalizedValue = isstring(value) and value:Trim():lower() or ""
+                local localizedYes = string.lower(L("yes"))
+                if normalizedValue == localizedYes then
                     net.Start("liaGroupsRemove")
                     net.WriteString(activeTab.groupName)
                     net.SendToServer()

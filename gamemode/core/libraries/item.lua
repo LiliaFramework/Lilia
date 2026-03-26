@@ -140,12 +140,12 @@ local DefaultFunctions = {
                 return false
             end
 
-            target:requestBinaryQuestion(L("itemGiveRequest", client:Name(), L(item.name)), L("yes"), L("no"), function(choice)
+            target:requestBinaryQuestion(L("itemGiveRequest", client:Name(), item.name), "@yes", "@no", function(choice)
                 if choice == 0 then
                     inv:addAccessRule(canTransferItemsFromInventoryUsingGiveForward)
                     targetInv:addAccessRule(canTransferItemsFromInventoryUsingGiveForward)
-                    client:setAction(L("givingItemTo", L(item.name), target:Name()), lia.config.get("ItemGiveSpeed", 6))
-                    target:setAction(L("givingYouItem", client:Name(), L(item.name)), lia.config.get("ItemGiveSpeed", 6))
+                    client:setAction(L("givingItemTo", item.name, target:Name()), lia.config.get("ItemGiveSpeed", 6))
+                    target:setAction(L("givingYouItem", client:Name(), item.name), lia.config.get("ItemGiveSpeed", 6))
                     client:doStaredAction(target, function()
                         local res = hook.Run("HandleItemTransferRequest", client, item:getID(), nil, nil, targetInv:getID())
                         if not res then return end
@@ -529,11 +529,11 @@ function lia.item.register(uniqueID, baseID, isBaseItem, path, luaGenerated)
         })
 
         ITEM.__tostring = baseTable.__tostring
-        ITEM.desc = "noDesc"
+        ITEM.desc = "@noDesc"
         ITEM.uniqueID = uniqueID
         ITEM.base = baseID
         ITEM.isBase = isBaseItem
-        ITEM.category = ITEM.category or "misc"
+        ITEM.category = ITEM.category or "@misc"
         ITEM.functions = table.Copy(baseTable.functions or DefaultFunctions)
         hook.Run("ItemDefaultFunctions", ITEM.functions)
     else
@@ -549,11 +549,11 @@ function lia.item.register(uniqueID, baseID, isBaseItem, path, luaGenerated)
         })
 
         ITEM.__tostring = baseTable.__tostring
-        ITEM.desc = "noDesc"
+        ITEM.desc = "@noDesc"
         ITEM.uniqueID = uniqueID
         ITEM.base = baseID
         ITEM.isBase = isBaseItem
-        ITEM.category = ITEM.category or "misc"
+        ITEM.category = ITEM.category or "@misc"
         ITEM.functions = ITEM.functions or table.Copy(baseTable.functions or DefaultFunctions)
         hook.Run("ItemDefaultFunctions", ITEM.functions)
     end
@@ -561,22 +561,21 @@ function lia.item.register(uniqueID, baseID, isBaseItem, path, luaGenerated)
     if not luaGenerated and path then lia.loader.include(path, "shared") end
     for funcName, funcTable in pairs(ITEM.functions) do
         if isstring(funcTable.name) then
-            funcTable.name = L(funcTable.name)
+            funcTable.name = lia.lang.resolveToken(funcTable.name)
         else
-            funcTable.name = L(funcName)
+            funcTable.name = lia.lang.resolveToken("@" .. funcName)
         end
 
-        if isstring(funcTable.tip) then funcTable.tip = L(funcTable.tip) end
+        if isstring(funcTable.tip) then funcTable.tip = lia.lang.resolveToken(funcTable.tip) end
     end
 
-    if isstring(ITEM.name) then ITEM.name = L(ITEM.name) end
-    if isstring(ITEM.desc) then ITEM.desc = L(ITEM.desc) end
+    if isstring(ITEM.name) then ITEM.name = lia.lang.resolveToken(ITEM.name) end
+    if isstring(ITEM.desc) then ITEM.desc = lia.lang.resolveToken(ITEM.desc) end
+    if isstring(ITEM.category) then ITEM.category = lia.lang.resolveToken(ITEM.category) end
     ITEM:onRegistered()
     local itemType = ITEM.uniqueID
     targetTable[itemType] = ITEM
     if not isBaseItem then lia.item.applyWeaponOverride(itemType) end
-    if isstring(ITEM.name) then ITEM.name = L(ITEM.name) end
-    if isstring(ITEM.desc) then ITEM.desc = L(ITEM.desc) end
     hook.Run("OnItemRegistered", ITEM)
     ITEM = nil
     return targetTable[itemType]
@@ -1391,13 +1390,13 @@ hook.Add("InitializedModules", "liaItems", function()
             local itemName
             if isArc9Ammo then
                 ammoType = className:gsub("^arc9_ammo_", ""):gsub("_", " "):lower():gsub("(%a)([%w_']*)", function(first, rest) return first:upper() .. rest end)
-                itemName = override.name or "[ARC9] " .. ammoType .. " Ammunition"
+                itemName = override.name or L("generatedArc9AmmoName", ammoType)
             elseif isArccwAmmo then
                 ammoType = className:gsub("^arccw_ammo_", ""):gsub("_", " "):lower():gsub("(%a)([%w_']*)", function(first, rest) return first:upper() .. rest end)
-                itemName = override.name or "[ARCCW] " .. ammoType .. " Ammunition"
+                itemName = override.name or L("generatedArccwAmmoName", ammoType)
             elseif isTfaAmmo then
                 ammoType = className:gsub("^tfa_ammo_", ""):gsub("_", " "):lower():gsub("(%a)([%w_']*)", function(first, rest) return first:upper() .. rest end)
-                itemName = override.name or "[TFA] " .. ammoType .. " Ammunition"
+                itemName = override.name or L("generatedTfaAmmoName", ammoType)
             else
                 itemName = override.name or className
                 ammoType = className
@@ -1405,7 +1404,7 @@ hook.Add("InitializedModules", "liaItems", function()
 
             local properties = {
                 name = itemName,
-                desc = override.desc or "A Box of " .. ammoType .. " Ammunition",
+                desc = override.desc or L("generatedAmmoBoxDesc", ammoType),
                 category = override.category or L("itemCatAmmunition"),
                 model = override.model or "models/items/boxsrounds.mdl",
                 entityid = override.entityid or entityID,
@@ -1558,26 +1557,26 @@ else
 
         local defWidth = 2
         local defHeight = 1
-        AddField("Name", "name", weaponTable.PrintName or className, false)
-        AddField("Description", "desc", "A weapon", false)
-        AddField("Model", "model", weaponTable.WorldModel or "models/props_c17/BriefCase001a.mdl", false)
-        AddField("Width", "width", defWidth, true)
-        AddField("Height", "height", defHeight, true)
-        AddField("Price", "price", 500, true)
-        AddField("Category", "category", "Weapons", false)
+        AddField(L("name"), "name", weaponTable.PrintName or className, false)
+        AddField(L("desc"), "desc", L("weaponsDesc"), false)
+        AddField(L("model"), "model", weaponTable.WorldModel or "models/props_c17/BriefCase001a.mdl", false)
+        AddField(L("weaponItemWidth"), "width", defWidth, true)
+        AddField(L("weaponItemHeight"), "height", defHeight, true)
+        AddField(L("price"), "price", 500, true)
+        AddField(L("Category"), "category", L("weapons"), false)
     end
 
     hook.Add("PopulateConfigurationButtons", "liaWeaponItemsConfig", function(pages)
         if hook.Run("CanPlayerModifyConfig", LocalPlayer()) == false then return end
         pages[#pages + 1] = {
-            name = "Weapon Items Config",
+            name = L("weaponItemsConfig"),
             drawFunc = function(parent)
                 parent:Clear()
                 local searchBar = parent:Add("liaEntry")
                 searchBar:Dock(TOP)
                 searchBar:DockMargin(10, 10, 10, 10)
                 searchBar:SetTall(35)
-                searchBar:SetPlaceholderText(L("searchWeapons") or "Search Weapons...")
+                searchBar:SetPlaceholderText(L("searchWeapons"))
                 local scroll = parent:Add("liaScrollPanel")
                 scroll:Dock(FILL)
                 local function Populate(filter)

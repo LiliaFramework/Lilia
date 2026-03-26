@@ -67,8 +67,8 @@ end
 ]]
 function lia.chat.register(chatType, data)
     data.arguments = data.arguments or {}
-    data.syntax = L(lia.command.buildSyntaxFromArguments(data.arguments))
-    data.desc = data.desc or ""
+    data.syntax = lia.lang.resolveToken(lia.command.buildSyntaxFromArguments(data.arguments))
+    data.desc = isstring(data.desc) and lia.lang.resolveToken(data.desc) or data.desc or ""
     if data.prefix then
         local prefixes = istable(data.prefix) and data.prefix or {data.prefix}
         local processed, lookup = {}, {}

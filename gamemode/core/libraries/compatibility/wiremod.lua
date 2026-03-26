@@ -7,13 +7,13 @@ net.Receive("wire_expression2_upload", function(len, ply)
         if uploads[ply] then
             uploads[ply] = nil
             upload_ents[ply] = nil
-            WireLib.AddNotify(ply, "Invalid Expression chip specified. Upload aborted.", NOTIFY_ERROR, 7, NOTIFYSOUND_DRIP3)
+            WireLib.AddNotify(ply, L("wireInvalidExpressionChip"), NOTIFY_ERROR, 7, NOTIFYSOUND_DRIP3)
         end
         return
     end
 
     if not (ply:IsDonator() or ply:IsAdmin()) then
-        WireLib.AddNotify(ply, "You are not allowed to upload to the target Expression chip. Upload aborted.", NOTIFY_ERROR, 7, NOTIFYSOUND_DRIP3)
+        WireLib.AddNotify(ply, L("wireNotAllowedExpressionChipUpload"), NOTIFY_ERROR, 7, NOTIFYSOUND_DRIP3)
         return
     end
 
@@ -26,8 +26,8 @@ net.Receive("wire_expression2_upload", function(len, ply)
         uploads[ply] = nil
         local ok, ret = pcall(WireLib.von.deserialize, datastr)
         if not ok then
-            WireLib.AddNotify(ply, "Expression 2 upload failed! Error message:\n" .. ret, NOTIFY_ERROR, 7, NOTIFYSOUND_DRIP3)
-            print("Expression 2 upload failed! Error message:\n" .. ret)
+            WireLib.AddNotify(ply, L("wireExpressionUploadFailed", ret), NOTIFY_ERROR, 7, NOTIFYSOUND_DRIP3)
+            print(L("wireExpressionUploadFailed", ret))
             return
         end
 

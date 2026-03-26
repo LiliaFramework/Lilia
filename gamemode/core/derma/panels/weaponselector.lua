@@ -42,11 +42,11 @@ local function HUDPaint()
     if index < 1 then index = 1 end
     deltaIndex = Lerp(frameTime * 12, deltaIndex, index)
     local screenW, screenH = ScrW(), ScrH()
-    local position = lia.option.get("weaponSelectorPosition", "Left")
+    local position = tostring(lia.option.get("weaponSelectorPosition", "left")):lower()
     local centerX = screenW * 0.5
-    if position == "Left" then
+    if position == "left" then
         centerX = screenW * 0.35
-    elseif position == "Right" then
+    elseif position == "right" then
         centerX = screenW * 0.65
     end
 

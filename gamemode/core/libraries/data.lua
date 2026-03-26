@@ -119,7 +119,10 @@ if SERVER then
                 if #nums >= 3 then x, y, z = nums[1], nums[2], nums[3] end
             end
 
-            if x then return Vector(tonumber(x), tonumber(y), tonumber(z)) end
+            if x then
+                local nx, ny, nz = tonumber(x), tonumber(y), tonumber(z)
+                if nx and ny and nz then return Vector(nx, ny, nz) end
+            end
         else
             local s = tostring(data)
             if s and s ~= "" then
@@ -137,7 +140,10 @@ if SERVER then
                     if #nums >= 3 then x, y, z = nums[1], nums[2], nums[3] end
                 end
 
-                if x then return Vector(tonumber(x), tonumber(y), tonumber(z)) end
+                if x then
+                    local nx, ny, nz = tonumber(x), tonumber(y), tonumber(z)
+                    if nx and ny and nz then return Vector(nx, ny, nz) end
+                end
             end
         end
         return data
@@ -192,7 +198,10 @@ if SERVER then
                 end
             end
 
-            if p then return Angle(tonumber(p), tonumber(y), tonumber(r)) end
+            if p then
+                local np, ny, nr = tonumber(p), tonumber(y), tonumber(r)
+                if np and ny and nr then return Angle(np, ny, nr) end
+            end
         else
             local s = tostring(data)
             if s and s ~= "" then
@@ -210,7 +219,10 @@ if SERVER then
                     if #nums >= 3 then p, y, r = nums[1], nums[2], nums[3] end
                 end
 
-                if p then return Angle(tonumber(p), tonumber(y), tonumber(r)) end
+                if p then
+                    local np, ny, nr = tonumber(p), tonumber(y), tonumber(r)
+                    if np and ny and nr then return Angle(np, ny, nr) end
+                end
             end
         end
         return data

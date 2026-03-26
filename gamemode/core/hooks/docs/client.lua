@@ -2632,30 +2632,6 @@ end
 
 --[[
     Purpose:
-        Register admin stick subcategories used to group commands.
-
-    When Called:
-        When assembling the category tree for the admin stick.
-
-    Parameters:
-        categories (table)
-            Table of category -> subcategory mappings; modify in place.
-
-    Realm:
-        Client
-
-    Example Usage:
-        ```lua
-            hook.Add("RegisterAdminStickSubcategories", "ExampleRegisterAdminStickSubcategories", function(...)
-                -- add custom client-side behavior
-            end)
-        ```
-]]
-function RegisterAdminStickSubcategories(categories)
-end
-
---[[
-    Purpose:
         Reset the character panel to its initial state.
 
     When Called:

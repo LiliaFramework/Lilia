@@ -15,7 +15,7 @@ function PANEL:Init()
     self.minWidth = 120
     self.minHeight = 80
     self.iconMat = nil
-    self.panelColor = lia.color.theme.panel[1]
+    self.panelColor = lia.color.theme and lia.color.theme.panel and lia.color.theme.panel[1] or Color(34, 62, 62)
     self:DockPadding(6, 30, 6, 6)
     self.top_panel = vgui.Create("DButton", self)
     self.top_panel:SetText("")
@@ -385,3 +385,40 @@ function PANEL:IsActive()
 end
 
 vgui.Register("liaFrame", PANEL, "EditablePanel")
+PANEL = {}
+function PANEL:Init()
+    self:MakePopup()
+    self:Center()
+    self:SetDraggable(true)
+    self:SetTitle(L("inv"))
+end
+
+function PANEL:setInventory(inventory)
+    self.inventory = inventory
+    self:liaListenForInventoryChanges(inventory)
+end
+
+function PANEL:InventoryInitialized()
+end
+
+function PANEL:InventoryDataChanged()
+end
+
+function PANEL:InventoryDeleted(inventory)
+    if self.inventory == inventory then self:Remove() end
+end
+
+function PANEL:InventoryItemAdded()
+end
+
+function PANEL:InventoryItemRemoved()
+end
+
+function PANEL:InventoryItemDataChanged()
+end
+
+function PANEL:OnRemove()
+    self:liaDeleteInventoryHooks()
+end
+
+vgui.Register("liaInventory", PANEL, "liaFrame")

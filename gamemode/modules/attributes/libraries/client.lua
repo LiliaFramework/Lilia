@@ -5,7 +5,7 @@ function MODULE:LoadCharInformation()
     local char = client:getChar()
     if not char then return end
     if table.IsEmpty(lia.attribs.list) then return end
-    hook.Run("AddSection", L("attributes"), Color(0, 0, 0), 2, 1)
+    hook.Run("AddSection", L("attributesModuleName"), Color(0, 0, 0), 2, 1)
     local attrs = {}
     for id, attr in pairs(lia.attribs.list) do
         attrs[#attrs + 1] = {
@@ -19,7 +19,7 @@ function MODULE:LoadCharInformation()
         local id, attr = entry.id, entry.attr
         local minVal = attr.min or 0
         local maxVal = hook.Run("GetAttributeMax", client, id) or attr.max or 100
-        hook.Run("AddBarField", L("attributes"), id, attr.name, function() return minVal end, function() return maxVal end, function() return char:getAttrib(id) end)
+        hook.Run("AddBarField", L("attributesModuleName"), id, attr.name, function() return minVal end, function() return maxVal end, function() return char:getAttrib(id) end)
     end
 
     local max = hook.Run("GetCharMaxStamina", char) or lia.config.get("DefaultStamina", 100)

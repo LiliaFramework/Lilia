@@ -13,38 +13,30 @@
 ]]
 lia.config = lia.config or {}
 lia.config.stored = lia.config.stored or {}
-lia.config._lastSyncedValues = lia.config._lastSyncedValues or {}
-lia.config._initialized = lia.config._initialized or false
-lia.config._trace = false
---[[
-    Purpose:
-        Register a callback to be executed when the configuration system is initialized.
+lia.config.lastSyncedValues = lia.config.lastSyncedValues or {}
+local function cfgLocalizeLabel(value, ...)
+    if not isstring(value) then return value end
+    local resolved = lia.lang.resolveToken(value, ...)
+    if resolved ~= value then return resolved end
+    return L(value, ...)
+end
 
-    When Called:
-        During module initialization to ensure config is ready before accessing values.
-
-    Parameters:
-        callback (function)
-            Function to execute when config is initialized.
-
-    Realm:
-        Shared
-
-    Example Usage:
-        ```lua
-        lia.config.onInitialized(function()
-            print("Config is ready!")
-        end)
-        ```
-]]
-function lia.config.onInitialized(callback)
-    if not isfunction(callback) then return end
-    if lia.config._initialized == true then
-        callback()
-        return
+lia.config.localizeValue = cfgLocalizeLabel
+local function cfgNormalizeSelectableOption(optionEntry)
+    if istable(optionEntry) then
+        local rawLabel = optionEntry.rawLabel or optionEntry.label or optionEntry.name or optionEntry.text or optionEntry.value
+        return {
+            rawLabel = rawLabel,
+            label = isstring(rawLabel) and cfgLocalizeLabel(rawLabel) or rawLabel,
+            value = optionEntry.value ~= nil and optionEntry.value or rawLabel
+        }
+    elseif optionEntry ~= nil then
+        return {
+            rawLabel = optionEntry,
+            label = isstring(optionEntry) and cfgLocalizeLabel(optionEntry) or optionEntry,
+            value = optionEntry
+        }
     end
-
-    hook.Add("InitializedConfig", tostring(callback), function() callback() end)
 end
 
 local function cfgNormalizeValue(v)
@@ -126,27 +118,121 @@ function lia.config.add(key, name, value, callback, data)
     if not data.type or not validTypes[data.type] then data.type = configType end
     local oldConfig = lia.config.stored[key]
     local savedValue = oldConfig and oldConfig.value or value
-    if istable(data.options) then
-        for k, v in pairs(data.options) do
-            if isstring(v) then data.options[k] = L(v) end
-        end
-    elseif isfunction(data.options) then
+    if isfunction(data.options) then
         data.optionsFunc = data.options
         data.options = nil
     end
 
-    data.desc = isstring(data.desc) and L(data.desc) or data.desc
-    data.category = isstring(data.category) and L(data.category) or data.category
+    data.rawDesc = data.rawDesc or data.desc
+    data.rawCategory = data.rawCategory or data.category
+    data.desc = isstring(data.desc) and cfgLocalizeLabel(data.desc) or data.desc
+    data.category = isstring(data.category) and cfgLocalizeLabel(data.category) or data.category
     lia.config.stored[key] = {
-        name = isstring(name) and L(name) or name or key,
+        rawName = name,
+        name = isstring(name) and cfgLocalizeLabel(name) or name or key,
         data = data,
         value = savedValue,
         default = value,
+        rawDesc = data.rawDesc,
         desc = data.desc,
+        rawCategory = data.rawCategory,
         category = data.category or L("character"),
         noNetworking = data.noNetworking or false,
         callback = callback
     }
+end
+
+--[[
+    Purpose:
+        Retrieve the localized display name of a config entry.
+
+    When Called:
+        When rendering config entries in the UI or when a human-readable name is needed.
+
+    Parameters:
+        key (string)
+            The config key to look up.
+
+    Returns:
+        string
+            Localized display name, or the raw key if the entry does not exist.
+
+    Realm:
+        Shared
+
+    Example Usage:
+        ```lua
+            local name = lia.config.getDisplayName("MaxCarryWeight")
+            print("Config name:", name)
+        ```
+]]
+function lia.config.getDisplayName(key)
+    local config = lia.config.stored[key]
+    if not config then return key end
+    local value = config.rawName or config.name or key
+    return isstring(value) and cfgLocalizeLabel(value) or value
+end
+
+--[[
+    Purpose:
+        Retrieve the localized description of a config entry.
+
+    When Called:
+        When populating tooltips or description fields in the config UI.
+
+    Parameters:
+        key (string)
+            The config key to look up.
+
+    Returns:
+        string
+            Localized description string, or an empty string if none exists.
+
+    Realm:
+        Shared
+
+    Example Usage:
+        ```lua
+            local desc = lia.config.getDisplayDesc("MaxCarryWeight")
+            print("Config description:", desc)
+        ```
+]]
+function lia.config.getDisplayDesc(key)
+    local config = lia.config.stored[key]
+    if not config then return "" end
+    local value = config.rawDesc or (config.data and config.data.rawDesc) or config.desc or ""
+    return isstring(value) and cfgLocalizeLabel(value) or value
+end
+
+--[[
+    Purpose:
+        Retrieve the localized category of a config entry for grouping in the UI.
+
+    When Called:
+        When building the config UI to sort entries into category sections.
+
+    Parameters:
+        key (string)
+            The config key to look up.
+
+    Returns:
+        string
+            Localized category name, or "character" as the default fallback.
+
+    Realm:
+        Shared
+
+    Example Usage:
+        ```lua
+            local cat = lia.config.getDisplayCategory("MaxCarryWeight")
+            print("Config category:", cat)
+        ```
+]]
+function lia.config.getDisplayCategory(key)
+    local config = lia.config.stored[key]
+    if not config then return cfgLocalizeLabel("character") end
+    local value = config.rawCategory or (config.data and config.data.rawCategory) or config.category or "character"
+    return isstring(value) and cfgLocalizeLabel(value) or value
 end
 
 --[[
@@ -178,15 +264,22 @@ function lia.config.getOptions(key)
     if config.data.optionsFunc then
         local success, result = pcall(config.data.optionsFunc)
         if success and istable(result) then
+            local normalizedOptions = {}
             for k, v in pairs(result) do
-                if isstring(v) then result[k] = L(v) end
+                local normalized = cfgNormalizeSelectableOption(v)
+                if normalized then normalizedOptions[k] = normalized end
             end
-            return result
+            return normalizedOptions
         else
             return {}
         end
     elseif istable(config.data.options) then
-        return config.data.options
+        local normalizedOptions = {}
+        for k, v in pairs(config.data.options) do
+            local normalized = cfgNormalizeSelectableOption(v)
+            if normalized then normalizedOptions[k] = normalized end
+        end
+        return normalizedOptions
     end
     return {}
 end
@@ -280,7 +373,7 @@ function lia.config.set(key, value)
             if not config.noNetworking then
                 net.Start("liaCfgSet")
                 net.WriteString(key)
-                net.WriteString(config.name or key)
+                net.WriteString(tostring(lia.config.getDisplayName(key) or key))
                 net.WriteType(value)
                 net.Broadcast()
             end
@@ -289,7 +382,7 @@ function lia.config.set(key, value)
             lia.config.save()
         end
 
-        if CLIENT and oldValue ~= value then LocalPlayer():notifySuccess("Config '" .. (config.name or key) .. "' updated successfully") end
+        if CLIENT and oldValue ~= value and IsValid(LocalPlayer()) then LocalPlayer():notifySuccess("Config '" .. tostring(lia.config.getDisplayName(key) or key) .. "' updated successfully") end
     end
 end
 
@@ -333,7 +426,36 @@ function lia.config.get(key, default)
     return default
 end
 
---[[
+if CLIENT then
+    net.Receive("liaCfgList", function()
+        local data = net.ReadTable() or {}
+        for k, v in pairs(data) do
+            local stored = lia.config.stored[k]
+            if stored then
+                stored.value = cfgCoerceValue(k, v)
+            else
+                lia.config.stored[k] = lia.config.stored[k] or {}
+                lia.config.stored[k].value = cfgCoerceValue(k, v)
+            end
+        end
+
+        hook.Run("InitializedConfig")
+    end)
+
+    net.Receive("liaCfgSet", function()
+        local key = net.ReadString()
+        local _ = net.ReadString()
+        local value = net.ReadType()
+        local stored = lia.config.stored[key]
+        local oldValue = stored and stored.value
+        lia.config.stored[key] = lia.config.stored[key] or {}
+        lia.config.stored[key].value = cfgCoerceValue(key, value)
+        hook.Run("OnConfigUpdated", key, oldValue, lia.config.stored[key].value)
+    end)
+end
+
+if SERVER then
+    --[[
     Purpose:
         Load config values from JSON files (server) or request them from the server (client).
 
@@ -351,8 +473,7 @@ end
         hook.Add("Initialize", "LoadLiliaConfig", lia.config.load)
         ```
 ]]
-function lia.config.load()
-    if SERVER then
+    function lia.config.load()
         local configData = lia.data.get("config", {})
         local existing = {}
         for cfgKey, cfgValue in pairs(configData) do
@@ -377,74 +498,16 @@ function lia.config.load()
         for key, config in pairs(lia.config.stored) do
             if config.value ~= nil then
                 if istable(config.value) then
-                    lia.config._lastSyncedValues[key] = util.TableToJSON(config.value) and util.JSONToTable(util.TableToJSON(config.value)) or config.value
+                    lia.config.lastSyncedValues[key] = util.TableToJSON(config.value) and util.JSONToTable(util.TableToJSON(config.value)) or config.value
                 else
-                    lia.config._lastSyncedValues[key] = config.value
+                    lia.config.lastSyncedValues[key] = config.value
                 end
             end
         end
 
-        lia.config._initialized = true
         hook.Run("InitializedConfig")
-    else
-        net.Start("liaCfgList")
-        net.SendToServer()
-    end
-end
-
-if CLIENT then
-    lia.config._uiBindings = lia.config._uiBindings or {}
-    function lia.config._bindUI(key, panel, updater)
-        if not isstring(key) or key == "" then return end
-        if not IsValid(panel) or not isfunction(updater) then return end
-        lia.config._uiBindings[key] = lia.config._uiBindings[key] or {}
-        lia.config._uiBindings[key][panel] = updater
     end
 
-    function lia.config._refreshBoundUI(key, value)
-        local bindings = lia.config._uiBindings and lia.config._uiBindings[key]
-        if not bindings then return end
-        for pnl, updater in pairs(bindings) do
-            if IsValid(pnl) then
-                local ok = pcall(updater, value)
-                if not ok then bindings[pnl] = nil end
-            else
-                bindings[pnl] = nil
-            end
-        end
-    end
-
-    net.Receive("liaCfgList", function()
-        local data = net.ReadTable() or {}
-        for k, v in pairs(data) do
-            local stored = lia.config.stored[k]
-            if stored then
-                stored.value = cfgCoerceValue(k, v)
-            else
-                lia.config.stored[k] = lia.config.stored[k] or {}
-                lia.config.stored[k].value = cfgCoerceValue(k, v)
-            end
-        end
-
-        lia.config._initialized = true
-        hook.Run("InitializedConfig")
-    end)
-
-    net.Receive("liaCfgSet", function()
-        local key = net.ReadString()
-        local _ = net.ReadString()
-        local value = net.ReadType()
-        local stored = lia.config.stored[key]
-        local oldValue = stored and stored.value
-        lia.config.stored[key] = lia.config.stored[key] or {}
-        lia.config.stored[key].value = cfgCoerceValue(key, value)
-        hook.Run("OnConfigUpdated", key, oldValue, lia.config.stored[key].value)
-    end)
-
-    hook.Add("OnConfigUpdated", "liaConfigRefreshUIBindings", function(key, _, value) lia.config._refreshBoundUI(key, value) end)
-end
-
-if SERVER then
     --[[
     Purpose:
         Get all configuration values that have been changed from their defaults.
@@ -472,42 +535,16 @@ if SERVER then
         local data = {}
         for k, v in pairs(lia.config.stored) do
             local isDifferent
-            if includeDefaults or lia.config._lastSyncedValues[k] == nil then
+            if includeDefaults or lia.config.lastSyncedValues[k] == nil then
                 isDifferent = not cfgValuesEqual(v.default, v.value)
             else
-                local lastSynced = lia.config._lastSyncedValues[k]
+                local lastSynced = lia.config.lastSyncedValues[k]
                 isDifferent = not cfgValuesEqual(lastSynced, v.value)
             end
 
             if isDifferent then data[k] = cfgNormalizeValue(v.value) end
         end
         return data
-    end
-
-    --[[
-    Purpose:
-        Check if any configuration values have been changed from their defaults.
-
-    When Called:
-        Before sending config updates to avoid unnecessary network traffic.
-
-    Returns:
-        boolean
-            True if there are changes, false otherwise.
-
-    Realm:
-        Server
-
-    Example Usage:
-        ```lua
-        if lia.config.hasChanges() then
-            lia.config.send()
-        end
-        ```
-]]
-    function lia.config.hasChanges()
-        local changed = lia.config.getChangedValues()
-        return table.Count(changed) > 0
     end
 
     --[[
@@ -549,9 +586,9 @@ if SERVER then
         if not istable(targets) or #targets == 0 then return end
         for key, value in pairs(data) do
             if istable(value) then
-                lia.config._lastSyncedValues[key] = util.TableToJSON(value) and util.JSONToTable(util.TableToJSON(value)) or value
+                lia.config.lastSyncedValues[key] = util.TableToJSON(value) and util.JSONToTable(util.TableToJSON(value)) or value
             else
-                lia.config._lastSyncedValues[key] = value
+                lia.config.lastSyncedValues[key] = value
             end
         end
 
@@ -630,6 +667,278 @@ if SERVER then
             client:notifySuccessLocalized("cfgSet", client:Name(), name or config.name or key, tostring(value))
         end
     end)
+else
+    hook.Add("PopulateConfigurationButtons", "liaConfigPopulate", function(pages)
+        local function SetStyledTooltip(panel, text)
+            if not text or text == "" then return end
+            panel:SetTooltip(text)
+            local oldSetTooltip = panel.SetTooltip
+            function panel:SetTooltip(tooltipText)
+                oldSetTooltip(self, tooltipText)
+                timer.Simple(0, function()
+                    if not IsValid(self) then return end
+                    local tooltip = vgui.GetTooltipPanel()
+                    if IsValid(tooltip) and not tooltip.LiliaStyled then
+                        tooltip.LiliaStyled = true
+                        function tooltip:Paint(w, h)
+                            local bgColor = Color(25, 28, 35, 250)
+                            lia.derma.rect(0, 0, w, h):Rad(8):Color(bgColor):Shape(lia.derma.SHAPE_IOS):Draw()
+                        end
+                    end
+                end)
+            end
+        end
+
+        local function AddHeader(scroll, text)
+            local header = scroll:Add("DPanel")
+            header:Dock(TOP)
+            header:SetTall(35)
+            header:DockMargin(0, 5, 0, 5)
+            header.Paint = function(me, w, h)
+                local accent = lia.color.theme.accent or lia.config.get("Color") or Color(0, 150, 255)
+                surface.SetDrawColor(accent)
+                surface.DrawRect(0, h - 2, w, 2)
+            end
+
+            local label = header:Add("DLabel")
+            label:Dock(LEFT)
+            label:SetText(cfgLocalizeLabel(text))
+            label:SetFont("LiliaFont.22")
+            label:SetTextColor(lia.color.theme.text or color_white)
+            label:SizeToContents()
+            label:DockMargin(5, 0, 0, 0)
+        end
+
+        local function AddField(scroll, key, name, config)
+            local p = scroll:Add("DPanel")
+            p:Dock(TOP)
+            p:SetTall(45)
+            p:DockMargin(0, 0, 0, 5)
+            p.Paint = function(s, w, h) lia.derma.rect(0, 0, w, h):Rad(6):Color(Color(35, 38, 45, 180)):Shape(lia.derma.SHAPE_IOS):Draw() end
+            local description = lia.config.getDisplayDesc(key)
+            SetStyledTooltip(p, description)
+            local l = p:Add("DLabel")
+            l:Dock(LEFT)
+            l:DockMargin(15, 0, 0, 0)
+            l:SetWidth(250)
+            l:SetText(name)
+            l:SetFont("LiliaFont.18")
+            l:SetTextColor(lia.color.theme.text or color_white)
+            l:SetContentAlignment(4)
+            SetStyledTooltip(l, description)
+            local configType = config.data and config.data.type or config.type or "Generic"
+            if configType == "Boolean" then
+                local checkbox = p:Add("liaCheckbox")
+                checkbox:Dock(RIGHT)
+                checkbox:DockMargin(0, 10, 15, 10)
+                checkbox:SetWidth(25)
+                checkbox:SetChecked(lia.config.get(key, config.value))
+                SetStyledTooltip(checkbox, description)
+                checkbox.OnChange = function(s, val)
+                    net.Start("liaCfgSet")
+                    net.WriteString(key)
+                    net.WriteString(name)
+                    net.WriteType(val)
+                    net.SendToServer()
+                end
+            elseif configType == "Number" or configType == "Int" or configType == "Float" or configType == "Generic" then
+                local entry = p:Add("liaEntry")
+                entry:Dock(RIGHT)
+                entry:SetWidth(200)
+                entry:DockMargin(0, 8, 15, 8)
+                entry:SetValue(tostring(lia.config.get(key, config.value)))
+                entry:SetFont("LiliaFont.18")
+                SetStyledTooltip(entry, description)
+                local function submitEntry()
+                    local value = entry:GetValue()
+                    local numValue = tonumber(value)
+                    if (configType == "Number" or configType == "Int" or configType == "Float") and numValue ~= nil then
+                        net.Start("liaCfgSet")
+                        net.WriteString(key)
+                        net.WriteString(name)
+                        net.WriteType(numValue)
+                        net.SendToServer()
+                    elseif configType == "Generic" then
+                        net.Start("liaCfgSet")
+                        net.WriteString(key)
+                        net.WriteString(name)
+                        net.WriteType(value)
+                        net.SendToServer()
+                    else
+                        entry:SetValue(tostring(lia.config.get(key, config.value)))
+                    end
+                end
+
+                entry.textEntry.OnEnter = submitEntry
+                entry.textEntry.OnLoseFocus = submitEntry
+            elseif configType == "Color" then
+                local button = p:Add("liaButton")
+                button:Dock(RIGHT)
+                button:SetWidth(200)
+                button:DockMargin(0, 8, 15, 8)
+                button:SetText("")
+                SetStyledTooltip(button, description)
+                button.Paint = function(s, w, h)
+                    local c = lia.config.get(key, config.value)
+                    if istable(c) and c.r and c.g and c.b then
+                        c = Color(c.r, c.g, c.b, c.a)
+                    elseif not IsColor(c) then
+                        c = color_white
+                    end
+
+                    lia.derma.rect(0, 0, w, h):Rad(6):Color(c):Shape(lia.derma.SHAPE_IOS):Draw()
+                    draw.RoundedBox(0, 0, 0, w, h, Color(0, 0, 0, 50))
+                end
+
+                button.DoClick = function()
+                    local c = lia.config.get(key, config.value)
+                    if not IsColor(c) and istable(c) then c = Color(c.r, c.g, c.b, c.a) end
+                    lia.derma.requestColorPicker(function(color)
+                        net.Start("liaCfgSet")
+                        net.WriteString(key)
+                        net.WriteString(name)
+                        net.WriteType(color)
+                        net.SendToServer()
+                    end, c)
+                end
+            elseif configType == "Table" then
+                local combo = p:Add("liaComboBox")
+                combo:Dock(RIGHT)
+                combo:SetWidth(200)
+                combo:DockMargin(0, 8, 15, 8)
+                combo:SetFont("LiliaFont.18")
+                SetStyledTooltip(combo, description)
+                local options = lia.config.getOptions(key)
+                local selectedValue = lia.config.get(key, config.value)
+                local selectedLabel = selectedValue
+                for _, optionEntry in pairs(options) do
+                    combo:AddChoice(optionEntry.label, optionEntry.value)
+                    if optionEntry.value == selectedValue then selectedLabel = optionEntry.label end
+                end
+
+                combo:SetValue(tostring(selectedLabel))
+                combo.OnSelect = function(_, _, v)
+                    net.Start("liaCfgSet")
+                    net.WriteString(key)
+                    net.WriteString(name)
+                    net.WriteType(v)
+                    net.SendToServer()
+                end
+            end
+        end
+
+        if hook.Run("CanPlayerModifyConfig", LocalPlayer()) ~= false then
+            net.Start("liaCfgList")
+            net.SendToServer()
+            local uniqueTabConfigs = {}
+            local regularConfigs = {}
+            for k, v in pairs(lia.config.stored) do
+                if istable(v) and v.data ~= nil and v.default ~= nil and v.name ~= nil then
+                    if v.data.uniqueTab then
+                        uniqueTabConfigs[k] = v
+                    else
+                        regularConfigs[k] = v
+                    end
+                end
+            end
+
+            local categoryPages = {}
+            for key, config in pairs(uniqueTabConfigs) do
+                local category = config.rawCategory or (config.data and config.data.rawCategory) or config.category or "Core"
+                if not categoryPages[category] then
+                    categoryPages[category] = {
+                        configs = {}
+                    }
+                end
+
+                table.insert(categoryPages[category].configs, {
+                    key = key,
+                    config = config
+                })
+            end
+
+            for category, pageData in pairs(categoryPages) do
+                pages[#pages + 1] = {
+                    name = category,
+                    drawFunc = function(parent)
+                        parent:Clear()
+                        parent:DockPadding(10, 10, 10, 10)
+                        local scroll = parent:Add("liaScrollPanel")
+                        scroll:Dock(FILL)
+                        scroll:GetCanvas():DockPadding(0, 0, 0, 0)
+                        for _, configInfo in ipairs(pageData.configs) do
+                            AddField(scroll, configInfo.key, lia.config.getDisplayName(configInfo.key), configInfo.config)
+                        end
+                    end
+                }
+            end
+
+            pages[#pages + 1] = {
+                name = "configuration",
+                drawFunc = function(parent)
+                    parent:Clear()
+                    local searchEntry = parent:Add("liaEntry")
+                    searchEntry:Dock(TOP)
+                    searchEntry:SetTall(35)
+                    searchEntry:DockMargin(10, 10, 10, 10)
+                    searchEntry:SetPlaceholderText(L("searchConfigs") or "Search configurations...")
+                    searchEntry:SetFont("LiliaFont.18")
+                    local scroll = parent:Add("liaScrollPanel")
+                    scroll:Dock(FILL)
+                    scroll:GetCanvas():DockPadding(10, 10, 10, 10)
+                    local function populate(filter)
+                        scroll:Clear()
+                        filter = filter and filter:len() > 0 and filter:lower() or nil
+                        local categories = {}
+                        for k, v in pairs(regularConfigs) do
+                            local cat = v.rawCategory or (v.data and v.data.rawCategory) or v.category or "Core"
+                            categories[cat] = categories[cat] or {}
+                            table.insert(categories[cat], {
+                                key = k,
+                                name = tostring(lia.config.getDisplayName(k) or k),
+                                desc = tostring(lia.config.getDisplayDesc(k) or ""),
+                                config = v
+                            })
+                        end
+
+                        local sortedCategories = {}
+                        for cat, items in pairs(categories) do
+                            table.insert(sortedCategories, cat)
+                        end
+
+                        table.sort(sortedCategories, function(a, b)
+                            local aName = tostring(cfgLocalizeLabel(a)):lower()
+                            local bName = tostring(cfgLocalizeLabel(b)):lower()
+                            return aName < bName
+                        end)
+
+                        for _, cat in ipairs(sortedCategories) do
+                            local items = categories[cat]
+                            table.sort(items, function(a, b) return tostring(a.name or ""):lower() < tostring(b.name or ""):lower() end)
+                            local visibleItems = {}
+                            local localizedCategory = tostring(cfgLocalizeLabel(cat) or cat)
+                            for _, item in ipairs(items) do
+                                local localizedName = tostring(item.name or ""):lower()
+                                local localizedDesc = tostring(item.desc or ""):lower()
+                                if not filter or localizedName:find(filter, 1, true) or localizedDesc:find(filter, 1, true) or localizedCategory:lower():find(filter, 1, true) then table.insert(visibleItems, item) end
+                            end
+
+                            if #visibleItems > 0 then
+                                AddHeader(scroll, localizedCategory)
+                                for _, item in ipairs(visibleItems) do
+                                    AddField(scroll, item.key, item.name, item.config)
+                                end
+                            end
+                        end
+                    end
+
+                    searchEntry:SetUpdateOnType(true)
+                    searchEntry.OnTextChanged = function(me, text) populate(text) end
+                    populate(nil)
+                end
+            }
+        end
+    end)
 end
 
 lia.config.add("MainCharacterCooldownDays", "mainCharacterCooldownDays", 0, nil, {
@@ -686,6 +995,12 @@ end, {
 
 lia.config.add("DeathSoundEnabled", "enableDeathSound", true, nil, {
     desc = "enableDeathSoundDesc",
+    category = "Core",
+    type = "Boolean"
+})
+
+lia.config.add("PainSoundEnabled", "enablePainSound", true, nil, {
+    desc = "enablePainSoundDesc",
     category = "Core",
     type = "Boolean"
 })
@@ -1545,266 +1860,36 @@ lia.config.add("MainMenuUseLastPos", "mainMenuUseLastPos", true, nil, {
     type = "Boolean"
 })
 
-hook.Add("PopulateConfigurationButtons", "liaConfigPopulate", function(pages)
-    local function SetStyledTooltip(panel, text)
-        if not text or text == "" then return end
-        panel:SetTooltip(text)
-        local oldSetTooltip = panel.SetTooltip
-        function panel:SetTooltip(tooltipText)
-            oldSetTooltip(self, tooltipText)
-            timer.Simple(0, function()
-                if not IsValid(self) then return end
-                local tooltip = vgui.GetTooltipPanel()
-                if IsValid(tooltip) and not tooltip.LiliaStyled then
-                    tooltip.LiliaStyled = true
-                    function tooltip:Paint(w, h)
-                        local bgColor = Color(25, 28, 35, 250)
-                        lia.derma.rect(0, 0, w, h):Rad(8):Color(bgColor):Shape(lia.derma.SHAPE_IOS):Draw()
-                    end
-                end
-            end)
-        end
-    end
+lia.config.add("AmericanTimeStamps", "americanTimeStamps", false, nil, {
+    desc = "americanTimeStampsDesc",
+    category = "Core",
+    type = "Boolean"
+})
 
-    local function AddHeader(scroll, text)
-        local header = scroll:Add("DPanel")
-        header:Dock(TOP)
-        header:SetTall(35)
-        header:DockMargin(0, 5, 0, 5)
-        header.Paint = function(me, w, h)
-            local accent = lia.color.theme.accent or lia.config.get("Color") or Color(0, 150, 255)
-            surface.SetDrawColor(accent)
-            surface.DrawRect(0, h - 2, w, 2)
-        end
+lia.config.add("Color", "color", Color(0, 150, 255), nil, {
+    desc = "colorDesc",
+    category = "Core",
+    type = "Color"
+})
 
-        local label = header:Add("DLabel")
-        label:Dock(LEFT)
-        label:SetText(L(text))
-        label:SetFont("LiliaFont.22")
-        label:SetTextColor(lia.color.theme.text or color_white)
-        label:SizeToContents()
-        label:DockMargin(5, 0, 0, 0)
-    end
+lia.config.add("StaffHasGodMode", "staffHasGodMode", true, nil, {
+    desc = "staffHasGodModeDesc",
+    category = "Core",
+    type = "Boolean"
+})
 
-    local function AddField(scroll, key, name, config)
-        local p = scroll:Add("DPanel")
-        p:Dock(TOP)
-        p:SetTall(45)
-        p:DockMargin(0, 0, 0, 5)
-        p.Paint = function(s, w, h) lia.derma.rect(0, 0, w, h):Rad(6):Color(Color(35, 38, 45, 180)):Shape(lia.derma.SHAPE_IOS):Draw() end
-        local description = (config.data and config.data.desc) or config.desc or ""
-        SetStyledTooltip(p, description)
-        local l = p:Add("DLabel")
-        l:Dock(LEFT)
-        l:DockMargin(15, 0, 0, 0)
-        l:SetWidth(250)
-        l:SetText(name)
-        l:SetFont("LiliaFont.18")
-        l:SetTextColor(lia.color.theme.text or color_white)
-        l:SetContentAlignment(4)
-        SetStyledTooltip(l, description)
-        local configType = config.data and config.data.type or config.type or "Generic"
-        if configType == "Boolean" then
-            local checkbox = p:Add("liaCheckbox")
-            checkbox:Dock(RIGHT)
-            checkbox:DockMargin(0, 10, 15, 10)
-            checkbox:SetWidth(25)
-            checkbox:SetChecked(lia.config.get(key, config.value))
-            SetStyledTooltip(checkbox, description)
-            checkbox.OnChange = function(s, val)
-                net.Start("liaCfgSet")
-                net.WriteString(key)
-                net.WriteString(name)
-                net.WriteType(val)
-                net.SendToServer()
-            end
+lia.config.add("descriptionWidth", "descriptionWidth", 0.5, nil, {
+    desc = "descriptionWidthDesc",
+    category = "Core",
+    type = "Number",
+    min = 0.1,
+    max = 1.0
+})
 
-            if CLIENT then lia.config._bindUI(key, checkbox, function(v) checkbox:SetChecked(tobool(v)) end) end
-        elseif configType == "Number" or configType == "Int" or configType == "Float" or configType == "Generic" then
-            local entry = p:Add("liaEntry")
-            entry:Dock(RIGHT)
-            entry:SetWidth(200)
-            entry:DockMargin(0, 8, 15, 8)
-            entry:SetValue(tostring(lia.config.get(key, config.value)))
-            entry:SetFont("LiliaFont.18")
-            SetStyledTooltip(entry, description)
-            entry.textEntry.OnEnter = function(s)
-                local value = entry:GetValue()
-                local numValue = tonumber(value)
-                if (configType == "Number" or configType == "Int" or configType == "Float") and numValue ~= nil then
-                    net.Start("liaCfgSet")
-                    net.WriteString(key)
-                    net.WriteString(name)
-                    net.WriteType(numValue)
-                    net.SendToServer()
-                elseif configType == "Generic" then
-                    net.Start("liaCfgSet")
-                    net.WriteString(key)
-                    net.WriteString(name)
-                    net.WriteType(value)
-                    net.SendToServer()
-                else
-                    entry:SetValue(tostring(lia.config.get(key, config.value)))
-                end
-            end
-
-            if CLIENT then lia.config._bindUI(key, entry, function(v) entry:SetValue(tostring(v)) end) end
-        elseif configType == "Color" then
-            local button = p:Add("liaButton")
-            button:Dock(RIGHT)
-            button:SetWidth(200)
-            button:DockMargin(0, 8, 15, 8)
-            button:SetText("")
-            SetStyledTooltip(button, description)
-            button.Paint = function(s, w, h)
-                local c = lia.config.get(key, config.value)
-                if istable(c) and c.r and c.g and c.b then
-                    c = Color(c.r, c.g, c.b, c.a)
-                elseif not IsColor(c) then
-                    c = color_white
-                end
-
-                lia.derma.rect(0, 0, w, h):Rad(6):Color(c):Shape(lia.derma.SHAPE_IOS):Draw()
-                draw.RoundedBox(0, 0, 0, w, h, Color(0, 0, 0, 50))
-            end
-
-            button.DoClick = function()
-                local c = lia.config.get(key, config.value)
-                if not IsColor(c) and istable(c) then c = Color(c.r, c.g, c.b, c.a) end
-                lia.derma.requestColorPicker(function(color)
-                    net.Start("liaCfgSet")
-                    net.WriteString(key)
-                    net.WriteString(name)
-                    net.WriteType(color)
-                    net.SendToServer()
-                end, c)
-            end
-        elseif configType == "Table" then
-            local combo = p:Add("liaComboBox")
-            combo:Dock(RIGHT)
-            combo:SetWidth(200)
-            combo:DockMargin(0, 8, 15, 8)
-            combo:SetValue(tostring(lia.config.get(key, config.value)))
-            combo:SetFont("LiliaFont.18")
-            SetStyledTooltip(combo, description)
-            local options = lia.config.getOptions(key)
-            for _, text in pairs(options) do
-                combo:AddChoice(text, text)
-            end
-
-            combo.OnSelect = function(_, _, v)
-                net.Start("liaCfgSet")
-                net.WriteString(key)
-                net.WriteString(name)
-                net.WriteType(v)
-                net.SendToServer()
-            end
-
-            if CLIENT then lia.config._bindUI(key, combo, function(v) combo:SetValue(tostring(v)) end) end
-        end
-    end
-
-    if hook.Run("CanPlayerModifyConfig", LocalPlayer()) ~= false then
-        net.Start("liaCfgList")
-        net.SendToServer()
-        local uniqueTabConfigs = {}
-        local regularConfigs = {}
-        for k, v in pairs(lia.config.stored) do
-            if istable(v) and v.data ~= nil and v.default ~= nil and v.name ~= nil then
-                if v.data.uniqueTab then
-                    uniqueTabConfigs[k] = v
-                else
-                    regularConfigs[k] = v
-                end
-            end
-        end
-
-        local categoryPages = {}
-        for key, config in pairs(uniqueTabConfigs) do
-            local category = config.category or "Core"
-            if not categoryPages[category] then
-                categoryPages[category] = {
-                    configs = {},
-                    name = L(category)
-                }
-            end
-
-            table.insert(categoryPages[category].configs, {
-                key = key,
-                config = config
-            })
-        end
-
-        for category, pageData in pairs(categoryPages) do
-            pages[#pages + 1] = {
-                name = pageData.name,
-                drawFunc = function(parent)
-                    parent:Clear()
-                    parent:DockPadding(10, 10, 10, 10)
-                    local scroll = parent:Add("liaScrollPanel")
-                    scroll:Dock(FILL)
-                    scroll:GetCanvas():DockPadding(0, 0, 0, 0)
-                    for _, configInfo in ipairs(pageData.configs) do
-                        AddField(scroll, configInfo.key, configInfo.config.name, configInfo.config)
-                    end
-                end
-            }
-        end
-
-        pages[#pages + 1] = {
-            name = "categoryConfiguration",
-            drawFunc = function(parent)
-                parent:Clear()
-                local searchEntry = parent:Add("liaEntry")
-                searchEntry:Dock(TOP)
-                searchEntry:SetTall(35)
-                searchEntry:DockMargin(10, 10, 10, 10)
-                searchEntry:SetPlaceholderText(L("searchConfigs") or "Search configurations...")
-                searchEntry:SetFont("LiliaFont.18")
-                local scroll = parent:Add("liaScrollPanel")
-                scroll:Dock(FILL)
-                scroll:GetCanvas():DockPadding(10, 10, 10, 10)
-                local function populate(filter)
-                    scroll:Clear()
-                    filter = filter and filter:len() > 0 and filter:lower() or nil
-                    local categories = {}
-                    for k, v in pairs(regularConfigs) do
-                        local cat = v.category or "Core"
-                        categories[cat] = categories[cat] or {}
-                        table.insert(categories[cat], {
-                            key = k,
-                            name = tostring(v.name or k),
-                            config = v
-                        })
-                    end
-
-                    local sortedCategories = {}
-                    for cat, items in pairs(categories) do
-                        table.insert(sortedCategories, cat)
-                    end
-
-                    table.sort(sortedCategories)
-                    for _, cat in ipairs(sortedCategories) do
-                        local items = categories[cat]
-                        table.sort(items, function(a, b) return (a.name or "") < (b.name or "") end)
-                        local visibleItems = {}
-                        for _, item in ipairs(items) do
-                            if not filter or item.name:lower():find(filter, 1, true) or cat:lower():find(filter, 1, true) then table.insert(visibleItems, item) end
-                        end
-
-                        if #visibleItems > 0 then
-                            AddHeader(scroll, cat)
-                            for _, item in ipairs(visibleItems) do
-                                AddField(scroll, item.key, item.name, item.config)
-                            end
-                        end
-                    end
-                end
-
-                searchEntry:SetUpdateOnType(true)
-                searchEntry.OnTextChanged = function(me, text) populate(text) end
-                populate(nil)
-            end
-        }
-    end
-end)
+lia.config.add("maxAttributes", "maxAttributes", 100, nil, {
+    desc = "maxAttributesDesc",
+    category = "Core",
+    type = "Int",
+    min = 1,
+    max = 1000
+})

@@ -659,7 +659,7 @@ function PANEL:loadBackground()
             self.background = self:Add("DHTML")
             self.background:SetSize(ScrW(), ScrH())
             self.background.ConsoleMessage = function(_, msg) end
-            self.background.OnDocumentReady = function() if IsValid(self.bgLoader) then self.bgLoader:AlphaTo(0, 2, 1, function() self.bgLoader:Remove() end) end end
+            self.background.OnDocumentReady = function() if IsValid(self.bgLoader) then self.bgLoader:Remove() end end
             self.background.OnDocumentError = function(_, errCode, errText) end
             if string.find(url, "http", 1, true) then
                 local isImageURL = url:find("%.png", 1, true) or url:find("%.jpg", 1, true) or url:find("%.jpeg", 1, true) or url:find("%.webp", 1, true) or url:find("%.gif", 1, true)

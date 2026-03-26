@@ -29,7 +29,6 @@ lia.attribs.list = lia.attribs.list or {}
     Example Usage:
         ```lua
             -- Load default and custom attributes.
-            lia.attribs.loadFromDir(lia.plugin.getDir() .. "/attribs")
             lia.attribs.loadFromDir("schema/attribs")
         ```
 ]]
@@ -83,8 +82,8 @@ function lia.attribs.register(uniqueID, data)
     end
 
     attribute.uniqueID = uniqueID
-    attribute.name = attribute.name and L(attribute.name) or L("unknown")
-    attribute.desc = attribute.desc and L(attribute.desc) or L("noDesc")
+    attribute.name = attribute.name and lia.lang.resolveToken(attribute.name) or lia.lang.resolveToken("@unknown")
+    attribute.desc = attribute.desc and lia.lang.resolveToken(attribute.desc) or lia.lang.resolveToken("@noDesc")
     lia.attribs.list[uniqueID] = attribute
     return attribute
 end

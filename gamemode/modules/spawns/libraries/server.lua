@@ -205,34 +205,34 @@ function MODULE:PlayerDeath(client, _, attacker)
         local attackerChar = nil
         if IsValid(attacker) then
             if attacker == client or attacker:IsWorld() or attacker:GetClass() == "worldspawn" then
-                attackerName = "the environment"
+                attackerName = L("theEnvironment")
             elseif attacker:IsPlayer() then
                 attackerChar = attacker:getChar()
                 local charID = attackerChar and tostring(attackerChar:getID()) or L("na")
                 local steamID = attacker:SteamID64()
-                attackerName = "Character ID " .. charID .. " [STEAMID64 " .. steamID .. "]"
+                attackerName = L("characterIDSteamID64", charID, steamID)
             else
                 attackerName = attacker:GetClass() or L("na")
             end
         end
 
-        local killedByText = L("killedBy") .. " " .. attackerName .. " at " .. timeStr
+        local killedByText = L("killedByAt", attackerName, timeStr)
         ClientAddText(client, Color(255, 255, 255), dateStr .. " - ", Color(255, 255, 255), killedByText)
         local logTimestamp = os.date("%Y-%m-%d %H:%M:%S", os.time())
         local attackerDisplay = "unknown"
         if IsValid(attacker) then
             if attacker == client or attacker:IsWorld() or attacker:GetClass() == "worldspawn" then
-                attackerDisplay = "the environment"
+                attackerDisplay = L("theEnvironment")
             elseif attacker:IsPlayer() then
                 attackerChar = attackerChar or attacker:getChar()
                 local steamId = attacker:SteamID64()
-                attackerDisplay = attackerChar and ("Character " .. attackerChar:getID() .. " | Steam64ID " .. steamId) or L("na")
+                attackerDisplay = attackerChar and L("characterSteam64ID", attackerChar:getID(), steamId) or L("na")
             else
                 attackerDisplay = attacker:GetClass() or L("na")
             end
         end
 
-        local deathMessage = client:Name() .. " (Character " .. char:getID() .. "| Steam64ID: " .. client:SteamID64() .. ") was killed by " .. attackerDisplay
+        local deathMessage = L("staffLogDeathMessage", client:Name(), char:getID(), client:SteamID64(), attackerDisplay)
         local isStaff = client:isStaffOnDuty() or client:hasPrivilege("canSeeLogs")
         if not isStaff then ClientAddTextShadowed(client, Color(255, 0, 0), "DEATH", Color(255, 255, 255), " | " .. logTimestamp .. " | " .. deathMessage) end
         StaffAddTextShadowed(Color(255, 0, 0), "DEATH", Color(255, 255, 255), deathMessage)

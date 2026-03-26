@@ -276,7 +276,7 @@ else
                 local pending = table.Count(ids)
                 if pending <= 0 then
                     local noAddonsLabel = vgui.Create("DLabel", parent)
-                    noAddonsLabel:SetText("No workshop addons found. Make sure the server has configured workshop content.")
+                    noAddonsLabel:SetText(L("noWorkshopAddonsFound"))
                     noAddonsLabel:SetContentAlignment(5)
                     noAddonsLabel:Dock(FILL)
                     noAddonsLabel:SetTextColor(Color(200, 200, 200))
@@ -306,7 +306,7 @@ else
                                             buttonContainer:SetWide(120)
                                             buttonContainer.Paint = function(self, w, h) draw.RoundedBox(0, 0, h - 1, w, 1, lia.config.Color and lia.config.Color.theme or Color(100, 100, 100)) end
                                             local mountButton = vgui.Create("liaSmallButton", buttonContainer)
-                                            mountButton:SetText("Mount")
+                                            mountButton:SetText(L("mount"))
                                             mountButton:SetTall(40)
                                             mountButton:Dock(TOP)
                                             mountButton:DockMargin(0, 0, 0, 20)
@@ -322,7 +322,7 @@ else
                                             end
 
                                             local linkButton = vgui.Create("liaSmallButton", buttonContainer)
-                                            linkButton:SetText("Workshop")
+                                            linkButton:SetText(L("workshop"))
                                             linkButton:SetTall(40)
                                             linkButton:Dock(TOP)
                                             linkButton.DoClick = function()
@@ -364,7 +364,7 @@ else
                                             buttonContainer:SetWide(120)
                                             buttonContainer.Paint = function(self, w, h) draw.RoundedBox(0, 0, h - 1, w, 1, lia.config.Color and lia.config.Color.theme or Color(100, 100, 100)) end
                                             local mountButton = vgui.Create("liaSmallButton", buttonContainer)
-                                            mountButton:SetText("Mount")
+                                            mountButton:SetText(L("mount"))
                                             mountButton:SetTall(40)
                                             mountButton:Dock(TOP)
                                             mountButton:DockMargin(0, 0, 0, 20)
@@ -380,7 +380,7 @@ else
                                             end
 
                                             local linkButton = vgui.Create("liaSmallButton", buttonContainer)
-                                            linkButton:SetText("Workshop")
+                                            linkButton:SetText(L("workshop"))
                                             linkButton:SetTall(40)
                                             linkButton:Dock(TOP)
                                             linkButton.DoClick = function()

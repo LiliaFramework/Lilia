@@ -346,7 +346,7 @@ function PANEL:Init()
     self.content:DockMargin(margin, 64, margin, 0)
     self.content:SetPaintBackground(false)
     self.model = self.content:Add("liaModelPanel")
-    if not IsValid(self.model) then return self:showError("Failed to create model panel") end
+    if not IsValid(self.model) then return self:showError(L("failedToCreateModelPanel")) end
     self.model:SetWide(0)
     self.model:Dock(LEFT)
     self.model:SetModel("models/error.mdl")

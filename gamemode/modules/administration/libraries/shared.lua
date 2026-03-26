@@ -29,8 +29,8 @@ properties.Add("TogglePropBlacklist", {
 })
 
 lia.command.add("sayall", {
-    desc = "sendsPhraseToAllChatTypes",
-    privilege = "adminChat",
+    desc = "@sendsPhraseToAllChatTypes",
+    privilege = "@adminChat",
     adminOnly = true,
     arguments = {
         {
@@ -100,7 +100,7 @@ properties.Add("copytoclipboard", {
     end,
 })
 
-lia.util.setPositionCallback("Faction Spawn Adder", {
+lia.util.setPositionCallback(L("factionSpawnAdderTitle"), {
     onRun = function(pos, client, typeId)
         if SERVER then
             local factionID = net.ReadString()
@@ -133,7 +133,7 @@ lia.util.setPositionCallback("Faction Spawn Adder", {
                 return
             end
 
-            lia.derma.requestDropdown("Faction Spawn Adder", names, function(selection)
+            lia.derma.requestDropdown("@factionSpawnAdderTitle", names, function(selection)
                 if not selection or selection == false then return end
                 local factionID = idByDisplay[selection]
                 if not factionID then return end
@@ -180,7 +180,7 @@ lia.util.setPositionCallback("Faction Spawn Adder", {
     serverOnly = true
 })
 
-lia.util.setPositionCallback("Class Spawn Adder", {
+lia.util.setPositionCallback(L("classSpawnAdderTitle"), {
     onRun = function(pos, client, typeId)
         if SERVER then
             local classID = net.ReadString()
@@ -200,12 +200,12 @@ lia.util.setPositionCallback("Class Spawn Adder", {
 
             lia.data.set("spawns", data)
             lia.log.add(client, "classSpawnAdd", classData.name)
-            client:notifySuccessLocalized("spawnAdded", L(classData.name))
+            client:notifySuccessLocalized("spawnAdded", classData.name)
         else
             local names, idByDisplay = {}, {}
             for k, v in pairs(lia.class.list or {}) do
                 if isnumber(k) and istable(v) and v.name then
-                    local display = L(v.name) or v.name or tostring(k)
+                    local display = v.name or tostring(k)
                     names[#names + 1] = display
                     idByDisplay[display] = tostring(k)
                 end
@@ -216,7 +216,7 @@ lia.util.setPositionCallback("Class Spawn Adder", {
                 return
             end
 
-            lia.derma.requestDropdown("Class Spawn Adder", names, function(selection)
+            lia.derma.requestDropdown("@classSpawnAdderTitle", names, function(selection)
                 if not selection or selection == false then return end
                 local classID = idByDisplay[selection]
                 if not classID then return end
@@ -237,7 +237,7 @@ lia.util.setPositionCallback("Class Spawn Adder", {
             local curMap = lia.data.getEquivalencyMap(game.GetMap()):lower()
             for classID, classSpawns in pairs(classes) do
                 local classData = lia.class.get(tonumber(classID))
-                local label = classData and (classData.name and L(classData.name) or tostring(classID)) or tostring(classID)
+                local label = classData and (classData.name or tostring(classID)) or tostring(classID)
                 for i = 1, #(classSpawns or {}) do
                     local spawnData = classSpawns[i]
                     local pos = spawnData.pos or spawnData.position
@@ -264,7 +264,7 @@ lia.util.setPositionCallback("Class Spawn Adder", {
     serverOnly = true
 })
 
-lia.util.setPositionCallback("Sit Room", {
+lia.util.setPositionCallback(L("sitRoomTitle"), {
     onRun = function(pos, client, typeId)
         if SERVER then
             local name = net.ReadString()
@@ -275,7 +275,7 @@ lia.util.setPositionCallback("Sit Room", {
             client:notifySuccessLocalized("sitroomSet")
             lia.log.add(client, "sitRoomSet", L("sitroomSetDetail", name, tostring(pos)), L("logSetSitroom"))
         elseif CLIENT then
-            client:requestString(L("enterNamePrompt"), L("enterSitroomPrompt") .. ":", function(name)
+            client:requestString("@enterNamePrompt", L("enterSitroomPrompt") .. ":", function(name)
                 if name == false then return end
                 if not name or name == "" then
                     client:notifyErrorLocalized("invalidName")

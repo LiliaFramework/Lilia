@@ -62,7 +62,7 @@ function PANEL:buildDefaultSummary(context)
     }
 
     summary[#summary + 1] = {
-        title = L("description"),
+        title = L("desc"),
         value = tostring(desc or "")
     }
 
@@ -98,7 +98,7 @@ function PANEL:buildDefaultSummary(context)
 
     if #attribLines > 0 then
         summary[#summary + 1] = {
-            title = L("attributes"),
+            title = L("attributesModuleName"),
             value = table.concat(attribLines, "\n")
         }
     end

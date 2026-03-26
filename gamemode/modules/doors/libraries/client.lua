@@ -33,7 +33,7 @@
 
     if factions and #factions > 0 then
         table.insert(doorInfo, {
-            text = L("doorAllowedFactions") .. ":"
+            text = L("allowedFactions") .. ":"
         })
 
         for _, id in ipairs(factions) do
@@ -57,7 +57,7 @@
 
         if #classData > 0 then
             table.insert(doorInfo, {
-                text = L("doorAllowedClasses") .. ":"
+                text = L("allowedClasses") .. ":"
             })
 
             for _, data in ipairs(classData) do
@@ -206,7 +206,7 @@ function MODULE:GetAdminStickLists(tgt, lists)
 
     if #removeFactionItems > 0 then
         table.insert(lists, {
-            name = L("removeFactions"),
+            name = L("removeThing", L("factions")),
             category = "doorManagement",
             subcategory = "factions",
             subSubcategory = "removeFactions",
@@ -266,7 +266,7 @@ function MODULE:GetAdminStickLists(tgt, lists)
 
     if #removeClassItems > 0 then
         table.insert(lists, {
-            name = L("removeClasses"),
+            name = L("removeThing", L("classes")),
             category = "doorManagement",
             subcategory = "classes",
             subSubcategory = "removeClasses",
@@ -304,8 +304,8 @@ function MODULE:AddToAdminStickHUD(client, target, information)
             hidden = L("hidden"),
             noSell = L("doorCanBeSold"),
             ownable = L("doorCanBeOwned"),
-            factions = L("doorAllowedFactions"),
-            classes = L("doorAllowedClasses")
+            factions = L("allowedFactions"),
+            classes = L("allowedClasses")
         }
 
         for key, defaultValue in pairs(defaultDoorData) do
@@ -333,7 +333,7 @@ function MODULE:AddToAdminStickHUD(client, target, information)
                 elseif istable(displayValue) then
                     displayValue = util.TableToJSON(displayValue)
                 elseif isstring(displayValue) and displayValue == "" then
-                    displayValue = "(none)"
+                    displayValue = L("none")
                 end
 
                 table.insert(information, label .. ": " .. displayValue)
@@ -349,7 +349,7 @@ function MODULE:AddToAdminStickHUD(client, target, information)
             end
 
             if #factionNames > 0 then
-                table.insert(information, L("doorAllowedFactions") .. ":")
+                table.insert(information, L("allowedFactions") .. ":")
                 for _, factionName in ipairs(factionNames) do
                     table.insert(information, "- " .. factionName)
                 end
@@ -366,16 +366,16 @@ function MODULE:AddToAdminStickHUD(client, target, information)
             end
 
             if #classNames > 0 then
-                table.insert(information, L("doorAllowedClasses") .. ":")
+                table.insert(information, L("allowedClasses") .. ":")
                 for _, className in ipairs(classNames) do
                     table.insert(information, "- " .. className)
                 end
             end
         end
 
-        if target.liaAccess then table.insert(information, "Access Data: " .. util.TableToJSON(target.liaAccess)) end
-        if target.liaPartner and IsValid(target.liaPartner) then table.insert(information, "Partner Door: " .. tostring(target.liaPartner)) end
-        table.insert(information, "Is Locked: " .. (target:isLocked() and "Yes" or "No"))
-        table.insert(information, "ID: " .. tostring(target:MapCreationID()))
+        if target.liaAccess then table.insert(information, L("doorAccessDataLabel", util.TableToJSON(target.liaAccess))) end
+        if target.liaPartner and IsValid(target.liaPartner) then table.insert(information, L("doorPartnerDoorLabel", tostring(target.liaPartner))) end
+        table.insert(information, L("doorIsLockedLabel", target:isLocked() and L("yes") or L("no")))
+        table.insert(information, L("idPrefix", tostring(target:MapCreationID())))
     end
 end

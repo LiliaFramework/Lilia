@@ -899,7 +899,7 @@ end
 function PANEL:updateAction()
     if not self.action or not self.item then return end
     if not IsValid(liaVendorEnt) then
-        local errorText = self.isSelling and L("vendorSellAction", L("vendorNotAvailable")) or L("vendorBuyAction", L("vendorNotAvailable"))
+        local errorText = self.isSelling and L("vendorSellAction", L("na")) or L("vendorBuyAction", L("na"))
         self.action:SetText(errorText)
         self.action.text = errorText
         return
@@ -1183,16 +1183,16 @@ function PANEL:Init()
 
     self.items:Dock(FILL)
     self.items:DockMargin(8, 0, 8, 8)
-    local nameCol = self.items:AddColumn("Name")
+    local nameCol = self.items:AddColumn(L("name"))
     nameCol:SetMinWidth(150)
     nameCol:SetMaxWidth(200)
-    local modeCol = self.items:AddColumn("Mode")
+    local modeCol = self.items:AddColumn(L("mode"))
     modeCol:SetMinWidth(110)
-    local priceCol = self.items:AddColumn("Price")
+    local priceCol = self.items:AddColumn(L("price"))
     priceCol:SetMinWidth(90)
-    local stockCol = self.items:AddColumn("Stock")
+    local stockCol = self.items:AddColumn(L("stock"))
     stockCol:SetMinWidth(80)
-    local categoryCol = self.items:AddColumn("Category")
+    local categoryCol = self.items:AddColumn(L("Category"))
     categoryCol:SetMinWidth(90)
     self.lines = {}
     self.items:ClearMenuOptions()
@@ -1222,7 +1222,7 @@ function PANEL:Init()
         if not IsValid(vEnt) then return end
         local itemTable = lia.item.list[rowData.item]
         if not itemTable then return end
-        LocalPlayer():requestString(itemTable:getName(), L("vendorPriceReq"), function(text)
+        LocalPlayer():requestString(itemTable:getName(), "@vendorPriceReq", function(text)
             text = tonumber(text)
             lia.vendor.editor.price(rowData.item, text)
         end, vEnt:getPrice(rowData.item))
@@ -1240,7 +1240,7 @@ function PANEL:Init()
         local _, max = vEnt:getStock(rowData.item)
         local itemTable = lia.item.list[rowData.item]
         if not itemTable then return end
-        LocalPlayer():requestString(itemTable:getName(), L("vendorStockReq"), function(text)
+        LocalPlayer():requestString(itemTable:getName(), "@vendorStockReq", function(text)
             text = math.max(math.Round(tonumber(text) or 1), 1)
             lia.vendor.editor.stockMax(rowData.item, text)
         end, max or 1)
@@ -1252,7 +1252,7 @@ function PANEL:Init()
         if not IsValid(vEnt) then return end
         local itemTable = lia.item.list[rowData.item]
         if not itemTable then return end
-        LocalPlayer():requestString(itemTable:getName(), L("vendorStockCurReq"), function(text)
+        LocalPlayer():requestString(itemTable:getName(), "@vendorStockCurReq", function(text)
             text = math.Round(tonumber(text) or 0)
             lia.vendor.editor.stock(rowData.item, text)
         end, vEnt:getStock(rowData.item) or 0)
@@ -1269,7 +1269,7 @@ function PANEL:initializeGeneralInfoPanel(entity)
         self.nameLabel = self.generalScroll:Add("DLabel")
         self.nameLabel:Dock(TOP)
         self.nameLabel:DockMargin(0, 0, 0, 6)
-        self.nameLabel:SetText(L("vendorName"))
+        self.nameLabel:SetText(L("name"))
         self.nameLabel:SetFont("LiliaFont.20b")
         self.nameLabel:SetTextColor(lia.color.theme.text or color_white)
         self.nameLabel:SetContentAlignment(5)
@@ -1385,7 +1385,7 @@ function PANEL:initializeGeneralInfoPanel(entity)
         self.presetButton = self.generalScroll:Add("liaButton")
         self.presetButton:Dock(TOP)
         self.presetButton:DockMargin(0, 0, 0, 8)
-        self.presetButton:SetText(L("vendorLoadPreset"))
+        self.presetButton:SetText(L("loadThing", L("preset")))
         self.presetButton:SetTooltip(L("vendorLoadPresetTooltip"))
         self.presetButton.DoClick = function() self:openPresetSelector() end
     end
@@ -1397,7 +1397,7 @@ function PANEL:initializeGeneralInfoPanel(entity)
         self.savePresetButton:SetText(L("vendorSavePreset"))
         self.savePresetButton:SetFont("LiliaFont.16")
         self.savePresetButton.DoClick = function()
-            LocalPlayer():requestString(L("vendorSavePresetTitle"), L("vendorSavePresetPrompt"), function(text)
+            LocalPlayer():requestString("@vendorSavePresetTitle", "@vendorSavePresetPrompt", function(text)
                 if text and text ~= "" then
                     local items = liaVendorEnt.items or {}
                     net.Start("liaVendorSavePreset")
@@ -1710,7 +1710,7 @@ end
 
 function PANEL:refreshPresetButton()
     if not IsValid(self.presetButton) then return end
-    self.presetButton:SetText(L("vendorLoadPreset"))
+    self.presetButton:SetText(L("loadThing", L("preset")))
 end
 
 function PANEL:openPresetSelector()
@@ -1730,7 +1730,7 @@ function PANEL:openPresetSelector()
     end
 
     self.leftFrame = self.presetSelector:Add("liaFrame")
-    self.leftFrame:SetTitle(L("vendorLoadPreset"))
+    self.leftFrame:SetTitle(L("loadThing", L("preset")))
     self.leftFrame:SetSize(300, 500)
     self.leftFrame:SetPos(0, 0)
     self.leftFrame.OnRemove = function() if IsValid(self.presetSelector) then self.presetSelector:Remove() end end
@@ -2026,7 +2026,7 @@ function PANEL:showPresetDetails(presetName, presetData)
             priceContainer.Paint = function() end
             local priceLabel = priceContainer:Add("DLabel")
             priceLabel:Dock(LEFT)
-            priceLabel:SetText(L("priceLabel"))
+            priceLabel:SetText(L("price") .. ": ")
             priceLabel:SetFont("LiliaFont.14")
             priceLabel:SetTextColor(Color(180, 180, 180))
             priceLabel:SizeToContents()
@@ -2049,7 +2049,7 @@ function PANEL:showPresetDetails(presetName, presetData)
             modeContainer.Paint = function() end
             local modeLabel = modeContainer:Add("DLabel")
             modeLabel:Dock(LEFT)
-            modeLabel:SetText(L("modeLabel"))
+            modeLabel:SetText(L("attribMode") .. ": ")
             modeLabel:SetFont("LiliaFont.14")
             modeLabel:SetTextColor(Color(180, 180, 180))
             modeLabel:SizeToContents()
@@ -2059,16 +2059,16 @@ function PANEL:showPresetDetails(presetName, presetData)
             itemMode:Dock(LEFT)
             itemMode:DockMargin(5, 0, 0, 0)
             local mode = itemData[VENDOR_MODE]
-            local modeText = L("vendorUnknownMode")
+            local modeText = L("unknown")
             local modeColor = Color(255, 255, 0)
             if mode == VENDOR_SELLANDBUY then
-                modeText = L("vendorPresetBuySell")
+                modeText = L("buyOnlynSell")
                 modeColor = Color(100, 255, 100)
             elseif mode == VENDOR_SELLONLY then
-                modeText = L("vendorPresetSellOnly")
+                modeText = L("sellOnly")
                 modeColor = Color(255, 200, 100)
             elseif mode == VENDOR_BUYONLY then
-                modeText = L("vendorPresetBuyOnly")
+                modeText = L("buyOnly")
                 modeColor = Color(100, 200, 255)
             end
 
@@ -2152,7 +2152,7 @@ function PANEL:OnRowRightClick(_, rowData)
     mode:AddOption(L("buyOnly"), function() lia.vendor.editor.mode(uniqueID, VENDOR_BUYONLY) end):SetImage("icon16/cog_delete.png")
     mode:AddOption(L("sellOnly"), function() lia.vendor.editor.mode(uniqueID, VENDOR_SELLONLY) end):SetImage("icon16/cog_add.png")
     menu:AddOption(L("price"), function()
-        LocalPlayer():requestString(itemTable:getName(), L("vendorPriceReq"), function(text)
+        LocalPlayer():requestString(itemTable:getName(), "@vendorPriceReq", function(text)
             text = tonumber(text)
             lia.vendor.editor.price(uniqueID, text)
         end, entity:getPrice(uniqueID))
@@ -2163,14 +2163,14 @@ function PANEL:OnRowRightClick(_, rowData)
     stock:AddOption(L("disable"), function() lia.vendor.editor.stockDisable(uniqueID) end):SetImage("icon16/table_delete.png")
     stock:AddOption(L("edit"), function()
         local _, max = entity:getStock(uniqueID)
-        LocalPlayer():requestString(itemTable:getName(), L("vendorStockReq"), function(text)
+        LocalPlayer():requestString(itemTable:getName(), "@vendorStockReq", function(text)
             text = math.max(math.Round(tonumber(text) or 1), 1)
             lia.vendor.editor.stockMax(uniqueID, text)
         end, max or 1)
     end):SetImage("icon16/table_edit.png")
 
     stock:AddOption(L("vendorEditCurStock"), function()
-        LocalPlayer():requestString(itemTable:getName(), L("vendorStockCurReq"), function(text)
+        LocalPlayer():requestString(itemTable:getName(), "@vendorStockCurReq", function(text)
             text = math.Round(tonumber(text) or 0)
             lia.vendor.editor.stock(uniqueID, text)
         end, entity:getStock(uniqueID) or 0)

@@ -57,7 +57,7 @@ function MODULE:HUDPaint()
         local text
         local displayLeft = ceil(left)
         if displayLeft <= 0 then
-            text = L("pressAnyKeyToRespawn")
+            text = L("respawnKey", L("spaceKey"))
         else
             text = L("respawnIn", displayLeft)
         end

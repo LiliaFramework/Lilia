@@ -50,7 +50,7 @@ function PANEL:setDoor(door, accessData, fallback)
         btnPanel.Paint = nil
         local btn = btnPanel:Add("liaButton")
         btn:Dock(FILL)
-        btn:SetText(L("doorSell"))
+        btn:SetText(L("sell"))
         btn.DoClick = function()
             self:Remove()
             lia.command.send("doorsell")

@@ -289,7 +289,7 @@ end
 
 lia.command.add("fixpac", {
     adminOnly = false,
-    desc = "pacFixCommandDesc",
+    desc = "@pacFixCommandDesc",
     onRun = function(client)
         timer.Simple(0, function() if IsValid(client) then client:ConCommand("pac_clear_parts") end end)
         timer.Simple(0.5, function()
@@ -306,7 +306,7 @@ lia.command.add("fixpac", {
 
 lia.command.add("pacenable", {
     adminOnly = false,
-    desc = "pacEnableCommandDesc",
+    desc = "@pacEnableCommandDesc",
     onRun = function(client)
         client:ConCommand("pac_enable 1")
         client:notifySuccessLocalized("pacenable_success")
@@ -315,26 +315,26 @@ lia.command.add("pacenable", {
 
 lia.command.add("pacdisable", {
     adminOnly = false,
-    desc = "pacDisableCommandDesc",
+    desc = "@pacDisableCommandDesc",
     onRun = function(client)
         client:ConCommand("pac_enable 0")
         client:notifyInfoLocalized("pacdisable_message")
     end
 })
 
-lia.config.add("BlockPackURLoad", "blockPackUrlLoad", true, nil, {
-    desc = "blockPackUrlLoadDesc",
-    category = "Core",
+lia.config.add("BlockPackURLoad", "@blockPackUrlLoad", true, nil, {
+    desc = "@blockPackUrlLoadDesc",
+    category = "@Core",
     noNetworking = false,
     schemaOnly = false,
     type = "Boolean"
 })
 
 lia.admin.registerPrivilege({
-    Name = "canUsePAC3",
+    Name = "@canUsePAC3",
     ID = "canUsePAC3",
     MinAccess = "admin",
-    Category = "compatibility"
+    Category = "@compatibility"
 })
 
-lia.flag.add("P", "flagPac3")
+lia.flag.add("P", "@flagPac3")

@@ -235,14 +235,14 @@ end
 function MODULE:PlayerInitialSpawn(client)
     lia.log.add(client, "playerInitialSpawn")
     local steam64 = IsValid(client) and client:SteamID64() or ""
-    local message = "Player " .. client:Name() .. " (Steam64ID: " .. steam64 .. ") has joined the server."
+    local message = L("staffLogPlayerJoined", client:Name(), steam64)
     StaffAddTextShadowed(Color(0, 200, 0), "JOIN", Color(255, 255, 255), message)
 end
 
 function MODULE:PlayerDisconnected(client)
     lia.log.add(client, "playerDisconnected")
     local steam64 = IsValid(client) and client:SteamID64() or ""
-    local message = "Player " .. client:Name() .. " (Steam64ID: " .. steam64 .. ") has left the server."
+    local message = L("staffLogPlayerLeft", client:Name(), steam64)
     StaffAddTextShadowed(Color(128, 128, 128), "LEAVE", Color(255, 255, 255), message)
 end
 
@@ -336,9 +336,9 @@ function MODULE:TicketSystemClaim(admin, requester)
         message = ticket and ticket.message or ""
     }, nil, "ticketclaims")
 
-    local requesterInfo = requester:Name() .. " (Steam64ID: " .. requester:SteamID64() .. ")"
-    local adminInfo = admin:Name() .. " (Steam64ID: " .. admin:SteamID64() .. ")"
-    StaffAddTextShadowed(Color(0, 191, 255), "TICKET", Color(255, 255, 255), adminInfo .. " claimed a ticket from " .. requesterInfo)
+    local requesterInfo = L("staffLogPlayerSteam64", requester:Name(), requester:SteamID64())
+    local adminInfo = L("staffLogPlayerSteam64", admin:Name(), admin:SteamID64())
+    StaffAddTextShadowed(Color(0, 191, 255), "TICKET", Color(255, 255, 255), L("staffLogTicketClaimed", adminInfo, requesterInfo))
 end
 
 function MODULE:TicketSystemClose(admin, requester)
@@ -389,7 +389,7 @@ net.Receive("liaManagesitroomsAction", function(_, client)
             client:SetPos(targetPos)
             client:notifySuccessLocalized("sitroomTeleport", name)
             lia.log.add(client, "sendToSitRoom", client:Name(), name)
-            local message = client:Name() .. " (Steam64ID: " .. client:SteamID64() .. ") teleported to sit room \"" .. name .. "\"."
+            local message = L("staffLogTeleportedToSitRoom", client:Name(), client:SteamID64(), name)
             StaffAddTextShadowed(Color(123, 104, 238), "SIT", Color(255, 255, 255), message)
         end
     elseif action == 2 then

@@ -388,12 +388,12 @@ if CLIENT then
     end)
 end
 
-lia.config.add("Font", "font", "Montserrat Medium", function()
+lia.config.add("Font", "@font", "Montserrat Medium", function()
     if not CLIENT then return end
     hook.Run("RefreshFonts")
 end, {
-    desc = "fontDesc",
-    category = "Core",
+    desc = "@fontDesc",
+    category = "@Core",
     type = "Table",
     options = lia.font.getAvailableFonts()
 })

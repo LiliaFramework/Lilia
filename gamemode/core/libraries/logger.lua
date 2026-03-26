@@ -231,11 +231,11 @@ local logTypeCategories = {
     character = L("character"),
     combat = L("categoryCombat"),
     world = L("categoryWorld"),
-    tools = L("categoryTools"),
+    tools = L("tools"),
     chat = L("categoryChat"),
     money = L("money"),
     items = L("items"),
-    permissions = L("modulePermissionsName"),
+    permissions = L("userGroups"),
     admin = L("admin"),
     factions = L("factions"),
     inventory = L("inv"),
@@ -268,7 +268,7 @@ end
         category (string)
             Category label used in console output and DB.
     Realm:
-        Shared
+        Server
 
     Example Usage:
         ```lua
@@ -302,7 +302,7 @@ end
             logString, category
 
     Realm:
-        Shared
+        Server
 
     Example Usage:
         ```lua
@@ -332,7 +332,7 @@ end
         ... (vararg)
             Formatter args for the log type.
     Realm:
-        Shared
+        Server
 
     Example Usage:
         ```lua
@@ -346,7 +346,7 @@ function lia.log.add(client, logType, ...)
     if not isstring(logString) then return end
     hook.Run("OnServerLog", client, logType, logString, category)
     MsgC(Color(83, 143, 239), "[LOG] ")
-    MsgC(Color(0, 255, 0), "[" .. L("logCategory") .. ": " .. tostring(category) .. "] ")
+    MsgC(Color(0, 255, 0), "[" .. L("Category") .. ": " .. tostring(category) .. "] ")
     MsgC(Color(255, 255, 255), tostring(logString) .. "\n")
     local timestamp = os.date("%Y-%m-%d %H:%M:%S")
     local charID

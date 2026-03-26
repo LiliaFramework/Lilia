@@ -25,10 +25,10 @@ lia.doors.presets = lia.doors.presets or {}
 lia.doors.stored = lia.doors.stored or {}
 DOOR_OWNER, DOOR_TENANT, DOOR_GUEST, DOOR_NONE = 3, 2, 1, 0
 lia.doors.AccessLabels = {
-    [DOOR_NONE] = "doorAccessNone",
-    [DOOR_GUEST] = "doorAccessGuest",
-    [DOOR_TENANT] = "doorAccessTenant",
-    [DOOR_OWNER] = "doorAccessOwner"
+    [DOOR_NONE] = "none",
+    [DOOR_GUEST] = "guest",
+    [DOOR_TENANT] = "tenant",
+    [DOOR_OWNER] = "owner"
 }
 
 lia.doors.defaultValues = {
@@ -226,14 +226,7 @@ if SERVER then
 ]]
     function lia.doors.syncAllDoorsToClient(client)
         if not IsValid(client) then return end
-        net.Start("liaDoorDataBulk")
-        net.WriteUInt(table.Count(lia.doors.stored), 16)
-        for doorID, data in pairs(lia.doors.stored) do
-            net.WriteUInt(doorID, 16)
-            net.WriteTable(data)
-        end
-
-        net.Send(client)
+        lia.net.writeBigTable(client, "liaDoorDataBulk", lia.doors.stored, 2048)
     end
 
     --[[

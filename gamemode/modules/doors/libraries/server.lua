@@ -64,7 +64,7 @@ function MODULE:LoadData()
             if row.factions and row.factions ~= "NULL" and row.factions ~= "" then
                 if tostring(row.factions):match("^[%d%.%-%s]+$") and not tostring(row.factions):match("[{}%[%]]") then
                     lia.warning(L("doorHasCoordinateDataInFactionsColumn") .. " " .. id .. ": " .. tostring(row.factions))
-                    lia.warning(L("thisSuggestsDataCorruptionClearingFactionsData"))
+                    lia.warning(L("suggestsDataCorruptionClearingFactions"))
                     row.factions = ""
                 else
                     local success, result = pcall(lia.data.deserialize, row.factions)

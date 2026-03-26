@@ -68,7 +68,7 @@ net.Receive("liaWeaponOverrideUpdate", function(len, ply)
     lia.data.set("weaponOverrides", lia.item.WeaponOverrides, true, true)
     local itemDef = lia.item.list[className]
     if itemDef then itemDef[key] = value end
-    ply:notify("Successfully updated " .. key .. " for " .. className)
+    ply:notifyLocalized("weaponOverrideUpdated", key, className)
     net.Start("liaWeaponOverrideSync")
     net.WriteBool(false)
     net.WriteString(className)
@@ -194,7 +194,7 @@ net.Receive("liaCheckHack", function(_, client)
             local severity = "High"
             hook.Run("AddWarning", client:getChar():getID(), client:Nick(), client:SteamID(), timestamp, L("cheaterWarningReason"), "System", "SYSTEM", severity)
             local charID = client:getChar():getID()
-            local message = client:Name() .. " (Character " .. charID .. " | Steam64ID: " .. client:SteamID64() .. ") was flagged for cheating. Severity: " .. severity .. "."
+            local message = L("staffLogCheaterFlagged", client:Name(), charID, client:SteamID64(), severity)
             StaffAddTextShadowed(Color(255, 0, 0), "CHEAT", Color(255, 255, 255), message, function(staff) return staff:hasPrivilege("receiveCheaterNotifications") end)
         end
     end
@@ -651,6 +651,7 @@ net.Receive("liaRequestDropdown", function(_, client)
     for _, opt in ipairs(allowed) do
         local optionText = opt
         if istable(opt) then optionText = opt[1] end
+        if isstring(optionText) and optionText:sub(1, 1) == "@" then optionText = L(optionText:sub(2)) end
         if string.lower(tostring(optionText)) == string.lower(tostring(selectedOption)) then
             isValid = true
             break
@@ -694,6 +695,7 @@ net.Receive("liaOptionsRequest", function(_, client)
         for _, a in ipairs(allowed) do
             local allowedText = a
             if istable(a) then allowedText = a[1] end
+            if isstring(allowedText) and allowedText:sub(1, 1) == "@" then allowedText = L(allowedText:sub(2)) end
             if string.lower(tostring(allowedText)) == string.lower(tostring(opt)) then
                 ok = true
                 break
@@ -947,6 +949,10 @@ net.Receive("liaCommandData", function(_, client)
 end)
 
 local chunkTime = 0.05
+local function getChunkInterval()
+    return (lia.reloadInProgress and chunkTime * 2) or chunkTime
+end
+
 local function sendChunk(ply, s, sid, idx)
     if not IsValid(ply) then
         if lia.net.sendq[ply] then lia.net.sendq[ply][sid] = nil end
@@ -984,7 +990,7 @@ net.Receive("liaBigTableAck", function(_, ply)
         return
     end
 
-    timer.Simple(chunkTime, function()
+    timer.Simple(getChunkInterval(), function()
         if not IsValid(ply) then return end
         local qq = lia.net.sendq[ply]
         if not qq then return end
@@ -1102,7 +1108,7 @@ local function findOption(options, label, ply)
     if isfunction(options) then options = options(ply) end
     if not istable(options) then return nil end
     for k, v in pairs(options) do
-        if k == label then return v end
+        if k == label or lia.lang.resolveToken(k) == label then return v end
         if v.options then
             local found = findOption(v.options, label, ply)
             if found then return found end
@@ -1117,7 +1123,7 @@ local function buildResponsePayload(response)
         local payload = {}
         local function pushLine(line)
             if isstring(line) then
-                payload[#payload + 1] = line
+                payload[#payload + 1] = lia.lang.resolveToken(line)
             elseif line ~= nil then
                 payload[#payload + 1] = tostring(line)
             end
@@ -1134,7 +1140,7 @@ local function buildResponsePayload(response)
         end
         return #payload > 0 and payload or nil
     end
-    return {tostring(response)}
+    return {lia.lang.resolveToken(tostring(response))}
 end
 
 local function setupNPCType(client, npc)
@@ -1155,7 +1161,7 @@ local function setupNPCType(client, npc)
         end
 
         if npcData.Skin then npc:SetSkin(npcData.Skin) end
-        npc.NPCName = npcData.PrintName or "NPC"
+        npc.NPCName = npcData.PrintName or L("npc")
         npc:setNetVar("uniqueID", npcType)
         npc:setNetVar("NPCName", npc.NPCName)
         npc:SetMoveType(MOVETYPE_VPHYSICS)

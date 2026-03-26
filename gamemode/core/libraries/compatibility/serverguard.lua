@@ -33,7 +33,7 @@ function serverguard.permission:Add(identifier, priv)
                         Name = identifier,
                         ID = identifier,
                         MinAccess = "admin",
-                        Category = "compatibility"
+                        Category = "@compatibility"
                     })
                 end
             end
