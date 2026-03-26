@@ -1,12 +1,13 @@
-﻿ITEM.name = "bagName"
-ITEM.desc = "bagDesc"
+﻿ITEM.name = "@bagName"
+ITEM.desc = "@bagDesc"
 ITEM.model = "models/props_c17/suitcase001a.mdl"
-ITEM.category = "storage"
+ITEM.category = "@storage"
 ITEM.isBag = true
 ITEM.invWidth = 2
 ITEM.invHeight = 2
 ITEM.BagSound = {"physics/cardboard/cardboard_box_impact_soft2.wav", 50}
 ITEM.pacData = {}
+ITEM.weight = -5
 function ITEM:onInstanced()
     local data = {
         item = self:getID(),
@@ -57,7 +58,7 @@ function ITEM:onSync(recipient)
 end
 
 ITEM.functions.Open = {
-    tip = "openTip",
+    tip = "@openTip",
     icon = "icon16/briefcase.png",
     onRun = function(item)
         local client = item.player

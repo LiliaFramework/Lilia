@@ -1,41 +1,4 @@
 ﻿local PANEL = {}
-function PANEL:Init()
-    self:MakePopup()
-    self:Center()
-    self:SetDraggable(true)
-    self:SetTitle(L("inv"))
-end
-
-function PANEL:setInventory(inventory)
-    self.inventory = inventory
-    self:liaListenForInventoryChanges(inventory)
-end
-
-function PANEL:InventoryInitialized()
-end
-
-function PANEL:InventoryDataChanged()
-end
-
-function PANEL:InventoryDeleted(inventory)
-    if self.inventory == inventory then self:Remove() end
-end
-
-function PANEL:InventoryItemAdded()
-end
-
-function PANEL:InventoryItemRemoved()
-end
-
-function PANEL:InventoryItemDataChanged()
-end
-
-function PANEL:OnRemove()
-    self:liaDeleteInventoryHooks()
-end
-
-vgui.Register("liaInventory", PANEL, "liaFrame")
-PANEL = {}
 local function headerHeight(f)
     return IsValid(f.btnClose) and f.btnClose:GetTall() + 4 or 24
 end

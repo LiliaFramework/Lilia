@@ -1142,7 +1142,7 @@ end
         Override the maximum carry weight of a weight-based inventory.
 
     When Called:
-        Inside `SimpleInv:getMaxWeight()` after the base max weight is computed from config and negative-weight items.
+        Inside `WeightInv:getMaxWeight()` after the base max weight is computed from config and negative-weight items.
 
     Parameters:
         inventory (Inventory)

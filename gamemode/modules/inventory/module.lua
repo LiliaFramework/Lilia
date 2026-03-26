@@ -1,18 +1,14 @@
-﻿MODULE.name = "inventoryModuleName"
+﻿MODULE.name = "@inv"
 MODULE.author = "Samael"
 MODULE.discord = "@liliaplayer"
-MODULE.desc = "inventorySystemDescription"
+MODULE.desc = "@inventorySystemDescription"
 MODULE.Privileges = {
     ["noItemCooldown"] = {
-        Name = "noItemCooldown",
+        Name = "@noItemCooldown",
         MinAccess = "admin",
-        Category = "categoryStaffManagement"
+        Category = "@categoryStaffManagement"
     }
 }
 
-MODULE.Dependencies = {
-    {
-        File = "gridinv.lua",
-        Realm = "shared"
-    },
-}
+local invType = string.lower(hook.Run("GetDefaultInventoryType") or "gridinv")
+lia.module.load(invType, MODULE.folder .. "/types/" .. invType)

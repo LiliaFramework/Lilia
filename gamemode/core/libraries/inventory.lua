@@ -101,7 +101,7 @@ end
 ]]
 function lia.inventory.new(typeID)
     local class = lia.inventory.types[typeID]
-    assert(class ~= nil, L("badInventoryType", typeID))
+    assert(class ~= nil, L("invalidInventoryType", typeID))
     return setmetatable({
         items = {},
         config = table.Copy(class.config)
@@ -247,7 +247,18 @@ if SERVER then
 ]]
     function lia.inventory.instance(typeID, initialData)
         local invType = lia.inventory.types[typeID]
-        assert(istable(invType), L("invalidInventoryType", tostring(typeID)))
+        if not istable(invType) then
+            local available = {}
+            for k in pairs(lia.inventory.types) do
+                available[#available + 1] = k
+            end
+
+            ErrorNoHalt("[Lilia] Inventory type mismatch: '" .. tostring(typeID) .. "' does not match any registered type. This may be a leftover reference to an old inventory type. Available types: " .. table.concat(available, ", ") .. "\n")
+            local d = deferred.new()
+            d:reject(L("invalidInventoryType", tostring(typeID)))
+            return d
+        end
+
         assert(initialData == nil or istable(initialData), L("initialDataMustBeTable"))
         initialData = initialData or {}
         return invType:initializeStorage(initialData):next(function(id)
@@ -443,11 +454,13 @@ if SERVER then
         ```
 ]]
     function lia.inventory.registerStorage(model, data)
-        assert(isstring(model), L("storageModelMustBeString"))
-        assert(istable(data), L("storageDataMustBeTable"))
+        assert(isstring(model), L("modelMustBeString"))
+        assert(istable(data), L("dataMustBeTable"))
         assert(isstring(data.name), L("storageNameRequired"))
-        assert(isstring(data.invType), L("storageInvTypeRequired"))
-        assert(istable(data.invData), L("storageInvDataRequired"))
+        assert(isstring(data.invType), L("inventoryTypeRequired"))
+        assert(istable(data.invData), L("inventoryDataRequired"))
+        data.name = lia.lang.resolveToken(data.name)
+        if isstring(data.desc) then data.desc = lia.lang.resolveToken(data.desc) end
         lia.inventory.storage[model:lower()] = data
         return data
     end
@@ -516,8 +529,10 @@ if SERVER then
         assert(isstring(vehicleClass), L("vehicleClassMustBeString"))
         assert(istable(data), "Data must be a table")
         assert(isstring(data.name), L("trunkNameRequired"))
-        assert(isstring(data.invType), L("storageInvTypeRequired"))
-        assert(istable(data.invData), L("storageInvDataRequired"))
+        assert(isstring(data.invType), L("inventoryTypeRequired"))
+        assert(istable(data.invData), L("inventoryDataRequired"))
+        data.name = lia.lang.resolveToken(data.name)
+        if isstring(data.desc) then data.desc = lia.lang.resolveToken(data.desc) end
         if not data.invData.w then data.invData.w = lia.config.get("trunkInvW", 10) end
         if not data.invData.h then data.invData.h = lia.config.get("trunkInvH", 2) end
         data.isTrunk = true
