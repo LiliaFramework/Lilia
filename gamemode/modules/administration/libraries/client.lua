@@ -1025,8 +1025,6 @@ function MODULE:InitializedModules()
     self.adminStickCategoryOrder = categoryOrder
 end
 
-
-
 local function GetOrCreateCategoryMenu(parent, categoryKey, store)
     if not parent or not IsValid(parent) then return end
     MODULE.adminStickCategories = MODULE.adminStickCategories or {}
