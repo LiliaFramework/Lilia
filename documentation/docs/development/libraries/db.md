@@ -11,7 +11,7 @@ The database library provides comprehensive database management functionality fo
 
 ---
 
-<details class="realm-shared" id="function-liadbconnect">
+<details class="realm-server" id="function-liadbconnect">
 <summary><a id="lia.db.connect"></a>lia.db.connect(callback, reconnect)</summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="liadbconnect"></a>Purpose</h3>
@@ -43,7 +43,7 @@ The database library provides comprehensive database management functionality fo
 
 ---
 
-<details class="realm-shared" id="function-liadbwipetables">
+<details class="realm-server" id="function-liadbwipetables">
 <summary><a id="lia.db.wipeTables"></a>lia.db.wipeTables(callback)</summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="liadbwipetables"></a>Purpose</h3>
@@ -74,7 +74,7 @@ The database library provides comprehensive database management functionality fo
 
 ---
 
-<details class="realm-shared" id="function-liadbloadtables">
+<details class="realm-server" id="function-liadbloadtables">
 <summary><a id="lia.db.loadTables"></a>lia.db.loadTables()</summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="liadbloadtables"></a>Purpose</h3>
@@ -98,7 +98,7 @@ The database library provides comprehensive database management functionality fo
 
 ---
 
-<details class="realm-shared" id="function-liadbwaitfortablestoload">
+<details class="realm-server" id="function-liadbwaitfortablestoload">
 <summary><a id="lia.db.waitForTablesToLoad"></a>lia.db.waitForTablesToLoad()</summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="liadbwaitfortablestoload"></a>Purpose</h3>
@@ -132,7 +132,7 @@ The database library provides comprehensive database management functionality fo
 
 ---
 
-<details class="realm-shared" id="function-liadbconvertdatatype">
+<details class="realm-server" id="function-liadbconvertdatatype">
 <summary><a id="lia.db.convertDataType"></a>lia.db.convertDataType(value, noEscape)</summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="liadbconvertdatatype"></a>Purpose</h3>
@@ -170,7 +170,7 @@ The database library provides comprehensive database management functionality fo
 
 ---
 
-<details class="realm-shared" id="function-liadbinserttable">
+<details class="realm-server" id="function-liadbinserttable">
 <summary><a id="lia.db.insertTable"></a>lia.db.insertTable(value, callback, dbTable)</summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="liadbinserttable"></a>Purpose</h3>
@@ -214,7 +214,7 @@ The database library provides comprehensive database management functionality fo
 
 ---
 
-<details class="realm-shared" id="function-liadbupdatetable">
+<details class="realm-server" id="function-liadbupdatetable">
 <summary><a id="lia.db.updateTable"></a>lia.db.updateTable(value, callback, dbTable, condition)</summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="liadbupdatetable"></a>Purpose</h3>
@@ -260,7 +260,7 @@ The database library provides comprehensive database management functionality fo
 
 ---
 
-<details class="realm-shared" id="function-liadbselect">
+<details class="realm-server" id="function-liadbselect">
 <summary><a id="lia.db.select"></a>lia.db.select(fields, dbTable, condition, limit)</summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="liadbselect"></a>Purpose</h3>
@@ -313,7 +313,7 @@ The database library provides comprehensive database management functionality fo
 
 ---
 
-<details class="realm-shared" id="function-liadbselectwithcondition">
+<details class="realm-server" id="function-liadbselectwithcondition">
 <summary><a id="lia.db.selectWithCondition"></a>lia.db.selectWithCondition(fields, dbTable, conditions, limit, orderBy)</summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="liadbselectwithcondition"></a>Purpose</h3>
@@ -357,7 +357,7 @@ The database library provides comprehensive database management functionality fo
 
 ---
 
-<details class="realm-shared" id="function-liadbcount">
+<details class="realm-server" id="function-liadbcount">
 <summary><a id="lia.db.count"></a>lia.db.count(dbTable, condition)</summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="liadbcount"></a>Purpose</h3>
@@ -399,7 +399,7 @@ The database library provides comprehensive database management functionality fo
 
 ---
 
-<details class="realm-shared" id="function-liadbadddatabasefields">
+<details class="realm-server" id="function-liadbadddatabasefields">
 <summary><a id="lia.db.addDatabaseFields"></a>lia.db.addDatabaseFields()</summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="liadbadddatabasefields"></a>Purpose</h3>
@@ -423,7 +423,7 @@ The database library provides comprehensive database management functionality fo
 
 ---
 
-<details class="realm-shared" id="function-liadbexists">
+<details class="realm-server" id="function-liadbexists">
 <summary><a id="lia.db.exists"></a>lia.db.exists(dbTable, condition)</summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="liadbexists"></a>Purpose</h3>
@@ -464,7 +464,7 @@ The database library provides comprehensive database management functionality fo
 
 ---
 
-<details class="realm-shared" id="function-liadbselectone">
+<details class="realm-server" id="function-liadbselectone">
 <summary><a id="lia.db.selectOne"></a>lia.db.selectOne(fields, dbTable, condition)</summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="liadbselectone"></a>Purpose</h3>
@@ -513,7 +513,7 @@ The database library provides comprehensive database management functionality fo
 
 ---
 
-<details class="realm-shared" id="function-liadbbulkinsert">
+<details class="realm-server" id="function-liadbbulkinsert">
 <summary><a id="lia.db.bulkInsert"></a>lia.db.bulkInsert(dbTable, rows)</summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="liadbbulkinsert"></a>Purpose</h3>
@@ -555,7 +555,7 @@ The database library provides comprehensive database management functionality fo
 
 ---
 
-<details class="realm-shared" id="function-liadbbulkupsert">
+<details class="realm-server" id="function-liadbbulkupsert">
 <summary><a id="lia.db.bulkUpsert"></a>lia.db.bulkUpsert(dbTable, rows)</summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="liadbbulkupsert"></a>Purpose</h3>
@@ -596,7 +596,7 @@ The database library provides comprehensive database management functionality fo
 
 ---
 
-<details class="realm-shared" id="function-liadbinsertorignore">
+<details class="realm-server" id="function-liadbinsertorignore">
 <summary><a id="lia.db.insertOrIgnore"></a>lia.db.insertOrIgnore(value, dbTable)</summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="liadbinsertorignore"></a>Purpose</h3>
@@ -636,7 +636,7 @@ The database library provides comprehensive database management functionality fo
 
 ---
 
-<details class="realm-shared" id="function-liadbtableexists">
+<details class="realm-server" id="function-liadbtableexists">
 <summary><a id="lia.db.tableExists"></a>lia.db.tableExists(tbl)</summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="liadbtableexists"></a>Purpose</h3>
@@ -676,7 +676,7 @@ The database library provides comprehensive database management functionality fo
 
 ---
 
-<details class="realm-shared" id="function-liadbfieldexists">
+<details class="realm-server" id="function-liadbfieldexists">
 <summary><a id="lia.db.fieldExists"></a>lia.db.fieldExists(tbl, field)</summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="liadbfieldexists"></a>Purpose</h3>
@@ -717,7 +717,7 @@ The database library provides comprehensive database management functionality fo
 
 ---
 
-<details class="realm-shared" id="function-liadbgettables">
+<details class="realm-server" id="function-liadbgettables">
 <summary><a id="lia.db.getTables"></a>lia.db.getTables()</summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="liadbgettables"></a>Purpose</h3>
@@ -751,7 +751,7 @@ The database library provides comprehensive database management functionality fo
 
 ---
 
-<details class="realm-shared" id="function-liadbtransaction">
+<details class="realm-server" id="function-liadbtransaction">
 <summary><a id="lia.db.transaction"></a>lia.db.transaction(queries)</summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="liadbtransaction"></a>Purpose</h3>
@@ -794,7 +794,7 @@ The database library provides comprehensive database management functionality fo
 
 ---
 
-<details class="realm-shared" id="function-liadbescapeidentifier">
+<details class="realm-server" id="function-liadbescapeidentifier">
 <summary><a id="lia.db.escapeIdentifier"></a>lia.db.escapeIdentifier(id)</summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="liadbescapeidentifier"></a>Purpose</h3>
@@ -831,7 +831,7 @@ The database library provides comprehensive database management functionality fo
 
 ---
 
-<details class="realm-shared" id="function-liadbupsert">
+<details class="realm-server" id="function-liadbupsert">
 <summary><a id="lia.db.upsert"></a>lia.db.upsert(value, dbTable)</summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="liadbupsert"></a>Purpose</h3>
@@ -874,7 +874,7 @@ The database library provides comprehensive database management functionality fo
 
 ---
 
-<details class="realm-shared" id="function-liadbdelete">
+<details class="realm-server" id="function-liadbdelete">
 <summary><a id="lia.db.delete"></a>lia.db.delete(dbTable, condition)</summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="liadbdelete"></a>Purpose</h3>
@@ -916,7 +916,7 @@ The database library provides comprehensive database management functionality fo
 
 ---
 
-<details class="realm-shared" id="function-liadbcreatetable">
+<details class="realm-server" id="function-liadbcreatetable">
 <summary><a id="lia.db.createTable"></a>lia.db.createTable(dbName, primaryKey, schema)</summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="liadbcreatetable"></a>Purpose</h3>
@@ -959,7 +959,7 @@ The database library provides comprehensive database management functionality fo
 
 ---
 
-<details class="realm-shared" id="function-liadbcreatecolumn">
+<details class="realm-server" id="function-liadbcreatecolumn">
 <summary><a id="lia.db.createColumn"></a>lia.db.createColumn(tableName, columnName, columnType, defaultValue)</summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="liadbcreatecolumn"></a>Purpose</h3>
@@ -1002,7 +1002,7 @@ The database library provides comprehensive database management functionality fo
 
 ---
 
-<details class="realm-shared" id="function-liadbremovetable">
+<details class="realm-server" id="function-liadbremovetable">
 <summary><a id="lia.db.removeTable"></a>lia.db.removeTable(tableName)</summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="liadbremovetable"></a>Purpose</h3>
@@ -1042,7 +1042,7 @@ The database library provides comprehensive database management functionality fo
 
 ---
 
-<details class="realm-shared" id="function-liadbremovecolumn">
+<details class="realm-server" id="function-liadbremovecolumn">
 <summary><a id="lia.db.removeColumn"></a>lia.db.removeColumn(tableName, columnName)</summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="liadbremovecolumn"></a>Purpose</h3>
@@ -1083,7 +1083,7 @@ The database library provides comprehensive database management functionality fo
 
 ---
 
-<details class="realm-shared" id="function-liadbgetcharactertable">
+<details class="realm-server" id="function-liadbgetcharactertable">
 <summary><a id="lia.db.getCharacterTable"></a>lia.db.getCharacterTable(callback)</summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="liadbgetcharactertable"></a>Purpose</h3>
@@ -1117,7 +1117,7 @@ The database library provides comprehensive database management functionality fo
 
 ---
 
-<details class="realm-shared" id="function-liadbcreatesnapshot">
+<details class="realm-server" id="function-liadbcreatesnapshot">
 <summary><a id="lia.db.createSnapshot"></a>lia.db.createSnapshot(tableName)</summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="liadbcreatesnapshot"></a>Purpose</h3>
@@ -1153,7 +1153,7 @@ The database library provides comprehensive database management functionality fo
 
 ---
 
-<details class="realm-shared" id="function-liadbloadsnapshot">
+<details class="realm-server" id="function-liadbloadsnapshot">
 <summary><a id="lia.db.loadSnapshot"></a>lia.db.loadSnapshot(fileName)</summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="liadbloadsnapshot"></a>Purpose</h3>

@@ -3337,6 +3337,51 @@ Shared hooks in the Lilia framework handle functionality available on both clien
 
 ---
 
+<details class="realm-shared" id="function-overridefactionmodelcustomization">
+<summary><a id="OverrideFactionModelCustomization"></a>OverrideFactionModelCustomization(client, faction, context, skinAllowed, bodygroupsAllowed)</summary>
+<div class="details-content">
+<h3 style="margin-bottom: 5px; font-weight: 700;"><a id="overridefactionmodelcustomization"></a>Purpose</h3>
+<div style="margin-left: 20px; margin-bottom: 20px;">
+  <p>Override whether a faction allows skin and bodygroup customization.</p>
+</div>
+
+<h3 style="margin-bottom: 5px; font-weight: 700;">When Called</h3>
+<div style="margin-left: 20px; margin-bottom: 20px;">
+  <p>When faction model customization permissions are resolved for a player, such as during character creation or model editing.</p>
+</div>
+
+<h3 style="margin-bottom: 5px; font-weight: 700;">Parameters</h3>
+<div style="margin-left: 20px; margin-bottom: 20px;">
+<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#2.1">Player</a></span> <span class="parameter">client</span> Player whose customization permissions are being checked.</p>
+<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#2.1">number|string|table</a></span> <span class="parameter">faction</span> Faction identifier or resolved faction table.</p>
+<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#2.1">any</a></span> <span class="parameter">context</span> Optional caller-specific context describing where the check originated.</p>
+<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#2.1">boolean</a></span> <span class="parameter">skinAllowed</span> Current skin customization permission after faction defaults are applied.</p>
+<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#2.1">boolean</a></span> <span class="parameter">bodygroupsAllowed</span> Current bodygroup customization permission after faction defaults are applied.</p>
+</div>
+
+<h3 style="margin-bottom: 5px; font-weight: 700;">Returns</h3>
+<div style="margin-left: 20px; margin-bottom: 20px;">
+<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#2.1">table|boolean|nil</a>, <a class="type" href="https://www.lua.org/manual/5.1/manual.html#2.1">boolean|nil</a></span> Return a table with <code>skinAllowed</code> and/or <code>bodygroupsAllowed</code> keys, or return booleans directly as first/second values.</p>
+</div>
+
+<h3 style="margin-bottom: 5px; font-weight: 700;">Example Usage</h3>
+<div style="margin-left: 20px; margin-bottom: 20px;">
+<pre><code class="language-lua">  hook.Add("OverrideFactionModelCustomization", "RestrictRecruitModels", function(client, faction, context, skinAllowed, bodygroupsAllowed)
+      if faction.uniqueID == "combine_recruit" then
+          return {
+              skinAllowed = false,
+              bodygroupsAllowed = context == "character_creation" and false or bodygroupsAllowed
+          }
+      end
+  end)
+</code></pre>
+</div>
+
+</div>
+</details>
+
+---
+
 <details class="realm-shared" id="function-overridefactionname">
 <summary><a id="OverrideFactionName"></a>OverrideFactionName(uniqueID, arg2)</summary>
 <div class="details-content">

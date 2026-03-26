@@ -11,7 +11,7 @@ The logger library provides comprehensive logging functionality for the Lilia fr
 
 ---
 
-<details class="realm-shared" id="function-lialogaddtype">
+<details class="realm-server" id="function-lialogaddtype">
 <summary><a id="lia.log.addType"></a>lia.log.addType(logType, func, category)</summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="lialogaddtype"></a>Purpose</h3>
@@ -44,7 +44,7 @@ The logger library provides comprehensive logging functionality for the Lilia fr
 
 ---
 
-<details class="realm-shared" id="function-lialoggetstring">
+<details class="realm-server" id="function-lialoggetstring">
 <summary><a id="lia.log.getString"></a>lia.log.getString(client, logType)</summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="lialoggetstring"></a>Purpose</h3>
@@ -80,7 +80,7 @@ The logger library provides comprehensive logging functionality for the Lilia fr
 
 ---
 
-<details class="realm-shared" id="function-lialogadd">
+<details class="realm-server" id="function-lialogadd">
 <summary><a id="lia.log.add"></a>lia.log.add(client, logType)</summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="lialogadd"></a>Purpose</h3>

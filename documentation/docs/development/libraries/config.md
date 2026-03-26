@@ -261,54 +261,6 @@ The configuration library provides comprehensive functionality for managing user
 
 ---
 
-<details class="realm-shared" id="function-liaconfig_bindui">
-<summary><a id="lia.config._bindUI"></a>lia.config._bindUI()</summary>
-<div class="details-content">
-<h3 style="margin-bottom: 5px; font-weight: 700;"><a id="liaconfig_bindui"></a>Purpose</h3>
-<div style="margin-left: 20px; margin-bottom: 20px;">
-  <p>Load config values from JSON files (server) or request them from the server (client).</p>
-</div>
-
-<h3 style="margin-bottom: 5px; font-weight: 700;">When Called</h3>
-<div style="margin-left: 20px; margin-bottom: 20px;">
-  <p>On initialization to hydrate lia.config.stored from JSON file storage.</p>
-</div>
-
-<h3 style="margin-bottom: 5px; font-weight: 700;">Example Usage</h3>
-<div style="margin-left: 20px; margin-bottom: 20px;">
-<pre><code class="language-lua">  hook.Add("Initialize", "LoadLiliaConfig", lia.config.load)
-</code></pre>
-</div>
-
-</div>
-</details>
-
----
-
-<details class="realm-shared" id="function-liaconfig_refreshboundui">
-<summary><a id="lia.config._refreshBoundUI"></a>lia.config._refreshBoundUI()</summary>
-<div class="details-content">
-<h3 style="margin-bottom: 5px; font-weight: 700;"><a id="liaconfig_refreshboundui"></a>Purpose</h3>
-<div style="margin-left: 20px; margin-bottom: 20px;">
-  <p>Load config values from JSON files (server) or request them from the server (client).</p>
-</div>
-
-<h3 style="margin-bottom: 5px; font-weight: 700;">When Called</h3>
-<div style="margin-left: 20px; margin-bottom: 20px;">
-  <p>On initialization to hydrate lia.config.stored from JSON file storage.</p>
-</div>
-
-<h3 style="margin-bottom: 5px; font-weight: 700;">Example Usage</h3>
-<div style="margin-left: 20px; margin-bottom: 20px;">
-<pre><code class="language-lua">  hook.Add("Initialize", "LoadLiliaConfig", lia.config.load)
-</code></pre>
-</div>
-
-</div>
-</details>
-
----
-
 <details class="realm-server" id="function-liaconfiggetchangedvalues">
 <summary><a id="lia.config.getChangedValues"></a>lia.config.getChangedValues(includeDefaults)</summary>
 <div class="details-content">
