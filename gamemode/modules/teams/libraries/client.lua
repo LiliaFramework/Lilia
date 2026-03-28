@@ -27,35 +27,38 @@ local factionRosterPanel = nil
 function MODULE:CreateMenuButtons(tabs)
     if not lia.class or not lia.class.list then return end
     local joinable = lia.class.retrieveJoinable(LocalPlayer())
-    if #joinable >= 1 then tabs["classes"] = function(panel) panel:Add("liaClasses") end end
+    if #joinable >= 1 then tabs["classes"] = {name = "classes", func = function(panel) panel:Add("liaClasses") end} end
     local client = LocalPlayer()
     if not IsValid(client) then return end
     local character = client:getChar()
     if not character then return end
     if character:hasFlags("F") then
-        tabs["factionRoster"] = function(panel)
-            panel:Clear()
-            panel:DockPadding(6, 6, 6, 6)
-            panel.Paint = nil
-            local loadingLabel = panel:Add("DLabel")
-            loadingLabel:Dock(FILL)
-            loadingLabel:SetText(L("loading"))
-            loadingLabel:SetTextColor(Color(150, 150, 150))
-            loadingLabel:SetFont("LiliaFont.20")
-            loadingLabel:SetContentAlignment(5)
-            panel.loadingLabel = loadingLabel
-            panel.factionRosterPanel = true
-            factionRosterPanel = panel
-            local factionIndex = character:getFaction()
-            local faction = lia.faction.get(factionIndex)
-            if faction and faction.uniqueID then
-                net.Start("liaRequestFactionMembers")
-                net.WriteString(faction.uniqueID)
-                net.SendToServer()
-            else
-                loadingLabel:SetText(L("noFactionsFound"))
+        tabs["factionRoster"] = {
+            name = "factionRoster",
+            func = function(panel)
+                panel:Clear()
+                panel:DockPadding(6, 6, 6, 6)
+                panel.Paint = nil
+                local loadingLabel = panel:Add("DLabel")
+                loadingLabel:Dock(FILL)
+                loadingLabel:SetText(L("loading"))
+                loadingLabel:SetTextColor(Color(150, 150, 150))
+                loadingLabel:SetFont("LiliaFont.20")
+                loadingLabel:SetContentAlignment(5)
+                panel.loadingLabel = loadingLabel
+                panel.factionRosterPanel = true
+                factionRosterPanel = panel
+                local factionIndex = character:getFaction()
+                local faction = lia.faction.get(factionIndex)
+                if faction and faction.uniqueID then
+                    net.Start("liaRequestFactionMembers")
+                    net.WriteString(faction.uniqueID)
+                    net.SendToServer()
+                else
+                    loadingLabel:SetText(L("noFactionsFound"))
+                end
             end
-        end
+        }
     end
 end
 
