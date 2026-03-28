@@ -544,6 +544,7 @@ hook.Add("PopulateConfigurationButtons", "liaOptionsPopulate", function(pages)
 
     pages[#pages + 1] = {
         name = "options",
+        shouldShow = function() return true end,
         drawFunc = function(parent)
             parent:Clear()
             local searchEntry = parent:Add("liaEntry")

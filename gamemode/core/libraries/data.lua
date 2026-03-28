@@ -467,6 +467,10 @@ if SERVER then
 
     local function ensureDataDirs(gamemode, map)
         file.CreateDir("lilia")
+        local gmSafe = sanitizeKeyToFilename(gamemode)
+        file.CreateDir("lilia/" .. gmSafe)
+        local mapSafe = sanitizeKeyToFilename(map)
+        file.CreateDir("lilia/" .. gmSafe .. "/" .. mapSafe)
     end
 
     local function getDataScope(gamemode, map, global, ignoreMap)
@@ -484,25 +488,11 @@ if SERVER then
         return gm, m
     end
 
-    local function getScopeMapFilePath(gamemode, map)
-        ensureDataDirs(gamemode, map)
+    local function getKeyFilePath(gamemode, map, key)
         local gmSafe = sanitizeKeyToFilename(gamemode)
         local mapSafe = sanitizeKeyToFilename(map)
-        return "lilia/" .. gmSafe .. "_" .. mapSafe .. "_map.json"
-    end
-
-    local function readScopeMap(gamemode, map)
-        local path = getScopeMapFilePath(gamemode, map)
-        if not file.Exists(path, "DATA") then return {}, path end
-        local raw = file.Read(path, "DATA")
-        local decoded = raw and util.JSONToTable(raw) or nil
-        if not istable(decoded) then return {}, path end
-        return decoded, path
-    end
-
-    local function writeScopeMap(path, data)
-        if not istable(data) then data = {} end
-        file.Write(path, util.TableToJSON(data, true) or "{}")
+        local keySafe = sanitizeKeyToFilename(tostring(key))
+        return "lilia/" .. gmSafe .. "/" .. mapSafe .. "/" .. keySafe .. ".json"
     end
 
     --[[
@@ -533,9 +523,11 @@ if SERVER then
     function lia.data.set(key, value, global, ignoreMap)
         lia.data.stored[key] = value
         local gamemode, map = getDataScope(nil, nil, global, ignoreMap)
-        local mapData, mapPath = readScopeMap(gamemode, map)
-        mapData[tostring(key)] = lia.data.encodetable(value)
-        writeScopeMap(mapPath, mapData)
+        ensureDataDirs(gamemode, map)
+        local path = getKeyFilePath(gamemode, map, key)
+        local encoded = lia.data.encodetable(value)
+        if not istable(encoded) then encoded = {value = encoded} end
+        file.Write(path, util.TableToJSON(encoded, true) or "{}")
         hook.Run("OnDataSet", key, value, gamemode, map)
         return gamemode .. "/" .. map .. "/"
     end
@@ -566,9 +558,8 @@ if SERVER then
     function lia.data.delete(key, global, ignoreMap)
         lia.data.stored[key] = nil
         local gamemode, map = getDataScope(nil, nil, global, ignoreMap)
-        local mapData, mapPath = readScopeMap(gamemode, map)
-        mapData[tostring(key)] = nil
-        writeScopeMap(mapPath, mapData)
+        local path = getKeyFilePath(gamemode, map, key)
+        if file.Exists(path, "DATA") then file.Delete(path) end
         return true
     end
 
@@ -594,29 +585,16 @@ if SERVER then
         local gamemode = (SCHEMA and SCHEMA.folder) or engine.ActiveGamemode()
         local map = lia.data.getEquivalencyMap(game.GetMap())
         local function loadScope(gm, m)
-            local mapPath = getScopeMapFilePath(gm, m)
-            if file.Exists(mapPath, "DATA") then
-                local raw = file.Read(mapPath, "DATA")
-                local decoded = raw and util.JSONToTable(raw) or nil
-                if istable(decoded) then
-                    for keyName, storedValue in pairs(decoded) do
-                        if isstring(storedValue) then
-                            lia.data.stored[tostring(keyName)] = lia.data.deserialize(storedValue)
-                        else
-                            lia.data.stored[tostring(keyName)] = lia.data.decode(storedValue)
-                        end
-                    end
-                end
-            end
-
             ensureDataDirs(gm, m)
-            local filesFound = file.Find(gm .. "/" .. m .. "/*.json", "DATA")
+            local gmSafe = sanitizeKeyToFilename(gm)
+            local mapSafe = sanitizeKeyToFilename(m)
+            local dir = "lilia/" .. gmSafe .. "/" .. mapSafe
+            local filesFound = file.Find(dir .. "/*.json", "DATA")
             for _, fileName in ipairs(filesFound or {}) do
                 local keyName = fileName:sub(1, -6)
                 if lia.data.stored[keyName] == nil then
-                    local raw = file.Read(gm .. "/" .. m .. "/" .. fileName, "DATA")
-                    local value = lia.data.deserialize(raw)
-                    lia.data.stored[keyName] = value
+                    local raw = file.Read(dir .. "/" .. fileName, "DATA")
+                    lia.data.stored[keyName] = lia.data.deserialize(raw)
                 end
             end
         end

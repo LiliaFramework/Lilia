@@ -156,15 +156,18 @@ else
     end
 
     function MODULE:CreateMenuButtons(tabs)
-        tabs["characters"] = function()
-            if isInThirdPerson() then
-                lia.option.set("thirdPersonEnabled", false)
-                hook.Run("ThirdPersonToggled", false)
-            end
+        tabs["characters"] = {
+            name = "characters",
+            func = function()
+                if isInThirdPerson() then
+                    lia.option.set("thirdPersonEnabled", false)
+                    hook.Run("ThirdPersonToggled", false)
+                end
 
-            if IsValid(lia.gui.menu) then lia.gui.menu:Remove() end
-            vgui.Create("liaCharacter")
-        end
+                if IsValid(lia.gui.menu) then lia.gui.menu:Remove() end
+                vgui.Create("liaCharacter")
+            end
+        }
     end
 
     net.Receive("liaMainCharacterSet", function()

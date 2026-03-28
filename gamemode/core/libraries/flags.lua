@@ -131,6 +131,7 @@ hook.Add("CreateInformationButtons", "liaInformationFlagsUnified", function(page
     local client = LocalPlayer()
     table.insert(pages, {
         name = "charFlagsTitle",
+        shouldShow = function() return true end,
         drawFunc = function(parent)
             parent:Clear()
             local sheet = vgui.Create("liaSheet", parent)

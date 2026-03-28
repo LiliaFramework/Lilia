@@ -6,7 +6,7 @@ AdminStickMenuPositionCache = nil
 AdminStickMenuOpenTime = 0
 MODULE.adminStickCategories = MODULE.adminStickCategories or {}
 MODULE.adminStickCategoryOrder = MODULE.adminStickCategoryOrder or {}
-local playerInfoLabel = L("player") .. " " .. L("logInformation")
+local playerInfoLabel = L("player") .. " " .. L("information")
 local subMenuIcons = {
     moderationTools = "icon16/wrench.png",
     warnings = "icon16/error.png",
@@ -1024,6 +1024,8 @@ function MODULE:InitializedModules()
     self.adminStickCategories = categories
     self.adminStickCategoryOrder = categoryOrder
 end
+
+
 
 local function GetOrCreateCategoryMenu(parent, categoryKey, store)
     if not parent or not IsValid(parent) then return end

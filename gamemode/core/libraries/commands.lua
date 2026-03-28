@@ -770,6 +770,7 @@ hook.Add("CreateInformationButtons", "liaInformationCommandsUnified", function(p
     local client = LocalPlayer()
     table.insert(pages, {
         name = "commands",
+        shouldShow = function() return true end,
         drawFunc = function(parent)
             parent:Clear()
             local sheet = vgui.Create("liaSheet", parent)
@@ -5657,7 +5658,7 @@ lia.command.add("doorinfo", {
                 }
             }
 
-            lia.util.sendTableUI(client, L("door") .. " " .. L("logInformation"), {
+            lia.util.sendTableUI(client, L("door") .. " " .. L("information"), {
                 {
                     name = "doorInfoProperty",
                     field = "property"

@@ -733,6 +733,7 @@ if CLIENT then
 
         pages[#pages + 1] = {
             name = "keybinds",
+            shouldShow = function() return true end,
             drawFunc = function(parent)
                 parent:Clear()
                 local allowEdit = lia.config.get("AllowKeybindEditing", true)

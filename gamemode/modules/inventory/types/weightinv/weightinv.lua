@@ -6,7 +6,7 @@ end
 local function CanAccessInventoryIfCharacterIsOwner(inventory, action, context)
     local ownerID = inventory:getData("char")
     local client = context.client
-    if table.HasValue(client.liaCharList, ownerID) then return true end
+    if client and client.liaCharList and table.HasValue(client.liaCharList, ownerID) then return true end
 end
 
 local function CanAddItemIfNotWeightRestricted(inventory, action, context)

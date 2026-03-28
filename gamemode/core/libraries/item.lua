@@ -1567,9 +1567,9 @@ else
     end
 
     hook.Add("PopulateConfigurationButtons", "liaWeaponItemsConfig", function(pages)
-        if hook.Run("CanPlayerModifyConfig", LocalPlayer()) == false then return end
         pages[#pages + 1] = {
             name = L("weaponItemsConfig"),
+            shouldShow = function() return hook.Run("CanPlayerModifyConfig", LocalPlayer()) ~= false end,
             drawFunc = function(parent)
                 parent:Clear()
                 local searchBar = parent:Add("liaEntry")

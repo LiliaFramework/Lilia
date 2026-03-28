@@ -817,7 +817,7 @@ else
                 end
 
                 combo:SetValue(tostring(selectedLabel))
-                combo.OnSelect = function(_, _, v)
+                combo.OnSelect = function(_, _, _, v)
                     net.Start("liaCfgSet")
                     net.WriteString(key)
                     net.WriteString(name)
@@ -860,6 +860,7 @@ else
             for category, pageData in pairs(categoryPages) do
                 pages[#pages + 1] = {
                     name = category,
+                    shouldShow = function() return hook.Run("CanPlayerModifyConfig", LocalPlayer()) ~= false end,
                     drawFunc = function(parent)
                         parent:Clear()
                         parent:DockPadding(10, 10, 10, 10)
@@ -875,6 +876,7 @@ else
 
             pages[#pages + 1] = {
                 name = "configuration",
+                shouldShow = function() return hook.Run("CanPlayerModifyConfig", LocalPlayer()) ~= false end,
                 drawFunc = function(parent)
                     parent:Clear()
                     local searchEntry = parent:Add("liaEntry")
@@ -1825,13 +1827,13 @@ local function getMenuTabNames()
     return tabs
 end
 
-lia.config.add("DefaultMenuTab", "defaultMenuTab", "you", nil, {
+lia.config.add("DefaultMenuTab", "defaultMenuTab", "@you", nil, {
     desc = "defaultMenuTabDesc",
     category = "Core",
     type = "Table",
     options = function()
         local tabs = {}
-        local tabNames = CLIENT and getMenuTabNames() or {"you"}
+        local tabNames = CLIENT and getMenuTabNames() or {"@you"}
         for _, tabName in ipairs(tabNames) do
             tabs[L(tabName) or tabName] = tabName
         end

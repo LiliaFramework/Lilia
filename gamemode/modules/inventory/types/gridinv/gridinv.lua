@@ -3,8 +3,8 @@ local function CanAccessInventoryIfCharacterIsOwner(inventory, action, context)
     if inventory.virtual then return action == "transfer" end
     local ownerID = inventory:getData("char")
     local client = context.client
-    if table.HasValue(client.liaCharList or {}, ownerID) then return true end
-    if IsValid(client.liaSearchTarget) then
+    if client and table.HasValue(client.liaCharList or {}, ownerID) then return true end
+    if client and IsValid(client.liaSearchTarget) then
         local target = client.liaSearchTarget
         if IsValid(target) and target:getChar() then
             local targetCharID = target:getChar():getID()
