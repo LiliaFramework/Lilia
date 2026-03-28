@@ -369,13 +369,11 @@ function PANEL:Init()
 
     self:MakePopup()
     local defaultTab = lia.config.get("DefaultMenuTab", "@you")
-    print("[liaMenu] lia.config.get DefaultMenuTab =", defaultTab)
-    print("[liaMenu] tabList keys:")
     for k in pairs(self.tabList) do
         print("  ->", k)
     end
+
     if not self.tabList[defaultTab] then
-        print("[liaMenu] defaultTab not found in tabList, falling back")
         if self.tabList["@you"] then
             defaultTab = "@you"
         else
@@ -388,7 +386,6 @@ function PANEL:Init()
         end
     end
 
-    print("[liaMenu] final defaultTab =", defaultTab)
     if defaultTab then self:setActiveTab(defaultTab) end
     timer.Simple(0.1, function() if IsValid(self) then self:UpdateTabColors() end end)
 end
