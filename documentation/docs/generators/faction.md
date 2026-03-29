@@ -70,6 +70,14 @@ Define the core groups and teams that players can join on your server.
           <small>0 = unlimited, decimals = percentage of server (e.g., 0.1 = 10%)</small>
         </div>
       </div>
+
+      <div class="form-grid-2">
+        <div class="input-group">
+          <label for="member-limit">Member Limit:</label>
+          <input type="number" id="member-limit" placeholder="" min="1">
+          <small>Hard cap on total characters in this faction (online or offline). Leave empty for no cap.</small>
+        </div>
+      </div>
     </div>
 
     <div class="generator-section">
@@ -78,6 +86,22 @@ Define the core groups and teams that players can join on your server.
         <div id="models-list" class="dynamic-list"></div>
         <button onclick="addModelRow()" class="add-btn">+ Add Model</button>
         <small>Add player model paths</small>
+      </div>
+
+      <div class="form-grid-2">
+        <div class="input-group">
+          <label>
+            <input type="checkbox" id="skin-allowed"> Skin Customization Allowed
+          </label>
+          <small>Players can change their skin</small>
+        </div>
+
+        <div class="input-group">
+          <label>
+            <input type="checkbox" id="bodygroups-allowed"> Bodygroup Customization Allowed
+          </label>
+          <small>Players can change their bodygroups</small>
+        </div>
       </div>
     </div>
 
@@ -179,6 +203,20 @@ Define the core groups and teams that players can join on your server.
         <input type="number" id="scoreboard-priority" placeholder="999" min="1">
         <small>Lower numbers appear first in scoreboard (default: 999)</small>
       </div>
+
+      <div class="input-group">
+        <label>
+          <input type="checkbox" id="scoreboard-classes-public"> Scoreboard Classes Public
+        </label>
+        <small>All players can see this faction's classes on the scoreboard</small>
+      </div>
+
+      <div class="input-group">
+        <label>
+          <input type="checkbox" id="scoreboard-see-all-classes"> See All Classes on Scoreboard
+        </label>
+        <small>Members of this faction can see every faction's classes on the scoreboard</small>
+      </div>
     </div>
 
     <div class="generator-section">
@@ -199,10 +237,19 @@ Define the core groups and teams that players can join on your server.
 
     <div class="generator-section">
       <div class="input-group">
+        <label>NPC Relations:</label>
+        <div id="npc-relations-list" class="dynamic-list"></div>
+        <button onclick="addNPCRelationRow()" class="add-btn">+ Add NPC Relation</button>
+        <small>NPC class (e.g. npc_combine_s) and disposition (D_LI, D_HT, D_FR, D_NU)</small>
+      </div>
+    </div>
+
+    <div class="generator-section">
+      <div class="input-group">
         <label>Commands:</label>
         <div id="commands-list" class="dynamic-list"></div>
         <button onclick="addCommandRow()" class="add-btn">+ Add Command</button>
-        <small>Command Name, Enabled</small>
+        <small>Command names members of this faction can execute</small>
       </div>
     </div>
 
@@ -268,6 +315,34 @@ function addCommandRow(val='') { addTextRow('commands-list', 'lia_faction_chat',
 function addModelRow(val='') { addTextRow('models-list', 'models/player/...', val); }
 function addWeaponRow(val='') { addTextRow('weapons-list', 'weapon_class', val); }
 function addItemRow(val='') { addTextRow('items-list', 'item_unique_id', val); }
+
+function addNPCRelationRow(npc='', disposition='D_HT') {
+  const container = document.getElementById('npc-relations-list');
+  const div = document.createElement('div');
+  div.className = 'dynamic-row';
+  div.innerHTML = `
+  <input type="text" placeholder="npc_combine_s" value="${npc}" class="npc-class">
+  <select class="npc-disp">
+    <option value="D_HT"${disposition==='D_HT'?' selected':''}>D_HT (Hostile)</option>
+    <option value="D_LI"${disposition==='D_LI'?' selected':''}>D_LI (Like)</option>
+    <option value="D_FR"${disposition==='D_FR'?' selected':''}>D_FR (Fear)</option>
+    <option value="D_NU"${disposition==='D_NU'?' selected':''}>D_NU (Neutral)</option>
+  </select>
+  <button onclick="this.parentElement.remove()" class="remove-btn">×</button>
+  `;
+  container.appendChild(div);
+}
+
+function getNPCRelationValues() {
+  const rows = document.querySelectorAll('#npc-relations-list .dynamic-row');
+  const relations = [];
+  rows.forEach(row => {
+    const npc = row.querySelector('.npc-class').value.trim();
+    const disp = row.querySelector('.npc-disp').value;
+    if (npc) relations.push({ npc, disp });
+  });
+  return relations;
+}
 
 function getListValues(containerId) {
   return Array.from(document.querySelectorAll(`#${containerId} input[type="text"]`))
@@ -340,6 +415,7 @@ function generateFaction() {
   const isDefault = document.getElementById('is-default').checked;
   const oneCharOnly = document.getElementById('one-char-only').checked;
   const limit = document.getElementById('faction-limit').value || '0';
+  const memberLimit = document.getElementById('member-limit').value.trim();
 
   // Harvest dynamic lists
   const models = getListValues('models-list');
@@ -348,6 +424,10 @@ function generateFaction() {
   const spawns = getSpawnValues();
   const mainMenuPos = getMainMenuValues();
   const commands = getCommandValues();
+  const npcRelations = getNPCRelationValues();
+
+  const skinAllowed = document.getElementById('skin-allowed').checked;
+  const bodygroupsAllowed = document.getElementById('bodygroups-allowed').checked;
 
   const health = document.getElementById('health').value || '100';
   const armor = document.getElementById('armor').value || '0';
@@ -365,6 +445,8 @@ function generateFaction() {
   const memberAutoRecognition = document.getElementById('member-auto-recognition').checked;
   const scoreboardHidden = document.getElementById('scoreboard-hidden').checked;
   const scoreboardPriority = document.getElementById('scoreboard-priority').value.trim();
+  const scoreboardClassesPublic = document.getElementById('scoreboard-classes-public').checked;
+  const scoreboardSeeAllClasses = document.getElementById('scoreboard-see-all-classes').checked;
   const logo = document.getElementById('faction-logo').value.trim();
 
   const lines = [
@@ -381,12 +463,20 @@ function generateFaction() {
   `FACTION.limit = ${limit}`
   ];
 
+  if (memberLimit) lines.push(`FACTION.memberLimit = ${memberLimit}`);
+
   if (models.length > 0) {
   lines.push('', '-- Models', 'FACTION.models = {');
   models.forEach(model => {
   lines.push(` ${JSON.stringify(model)},`);
   });
   lines.push('}');
+  }
+
+  if (skinAllowed || bodygroupsAllowed) {
+  lines.push('', '-- Model Customization');
+  if (skinAllowed) lines.push('FACTION.skinAllowed = true');
+  if (bodygroupsAllowed) lines.push('FACTION.bodygroupsAllowed = true');
   }
 
   lines.push(
@@ -428,13 +518,15 @@ function generateFaction() {
   lines.push('', '-- Visual', `FACTION.logo = ${JSON.stringify(logo)}`);
   }
 
-  if (recognizesGlobally || globallyRecognized || memberAutoRecognition || scoreboardHidden || (scoreboardPriority && scoreboardPriority !== '999')) {
+  if (recognizesGlobally || globallyRecognized || memberAutoRecognition || scoreboardHidden || scoreboardClassesPublic || scoreboardSeeAllClasses || (scoreboardPriority && scoreboardPriority !== '999')) {
   lines.push('', '-- Special Features');
   if (recognizesGlobally) lines.push('FACTION.RecognizesGlobally = true');
   if (globallyRecognized) lines.push('FACTION.isGloballyRecognized = true');
   if (memberAutoRecognition) lines.push('FACTION.MemberToMemberAutoRecognition = true');
   if (scoreboardHidden) lines.push('FACTION.scoreboardHidden = true');
   if (scoreboardPriority && scoreboardPriority !== '999') lines.push(`FACTION.scoreboardPriority = ${scoreboardPriority}`);
+  if (scoreboardClassesPublic) lines.push('FACTION.scoreboardClassesPublic = true');
+  if (scoreboardSeeAllClasses) lines.push('FACTION.scoreboardSeeAllClasses = true');
   }
 
   // Spawns
@@ -477,6 +569,15 @@ function generateFaction() {
   }
   }
 
+  // NPC Relations
+  if (npcRelations.length > 0) {
+  lines.push('', '-- NPC Relations', 'FACTION.NPCRelations = {');
+  npcRelations.forEach(r => {
+  lines.push(` [${JSON.stringify(r.npc)}] = ${r.disp},`);
+  });
+  lines.push('}');
+  }
+
   // Commands
   if (commands.length > 0) {
   lines.push('', '-- Commands', 'FACTION.commands = {');
@@ -511,6 +612,7 @@ function fillExampleFaction() {
   document.getElementById('items-list').innerHTML = '';
   document.getElementById('spawns-list').innerHTML = '';
   document.getElementById('main-menu-list').innerHTML = '';
+  document.getElementById('npc-relations-list').innerHTML = '';
   document.getElementById('commands-list').innerHTML = '';
 
   addModelRow('models/player/group01/male_01.mdl');
@@ -534,11 +636,16 @@ function fillExampleFaction() {
   document.getElementById('pay').value = '20';
   document.getElementById('pay-timer').value = '300';
 
+  document.getElementById('member-limit').value = '';
+  document.getElementById('skin-allowed').checked = false;
+  document.getElementById('bodygroups-allowed').checked = false;
   document.getElementById('recognizes-globally').checked = false;
   document.getElementById('globally-recognized').checked = false;
   document.getElementById('member-auto-recognition').checked = false;
   document.getElementById('scoreboard-hidden').checked = false;
   document.getElementById('scoreboard-priority').value = '100';
+  document.getElementById('scoreboard-classes-public').checked = false;
+  document.getElementById('scoreboard-see-all-classes').checked = false;
   document.getElementById('faction-logo').value = 'materials/ui/faction/citizen_logo.png';
 
   generateFaction();
@@ -548,6 +655,7 @@ function fillExampleFaction() {
 document.addEventListener('DOMContentLoaded', () => {
   addModelRow('models/player/police.mdl');
   addWeaponRow('weapon_pistol');
+  addNPCRelationRow('npc_combine_s', 'D_HT');
   addCommandRow('kick');
 
   generateFaction();
