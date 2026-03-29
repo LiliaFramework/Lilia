@@ -327,8 +327,14 @@ function PANEL:Init()
     local btnDefs = {}
     hook.Run("CreateMenuButtons", btnDefs)
     for k, v in pairs(btnDefs) do
-        if isfunction(v) then btnDefs[k] = {name = k, func = v} end
+        if isfunction(v) then
+            btnDefs[k] = {
+                name = k,
+                func = v
+            }
+        end
     end
+
     local tabKeys = {}
     for k in pairs(btnDefs) do
         tabKeys[#tabKeys + 1] = k
