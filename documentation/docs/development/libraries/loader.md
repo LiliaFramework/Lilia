@@ -54,7 +54,7 @@ The loader library is the core initialization system for the Lilia framework, re
 
 <h3 style="margin-bottom: 5px; font-weight: 700;">When Called</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
-  <p>To load module folders or schema-specific directories.</p>
+  <p>To load plugin folders or schema-specific directories.</p>
 </div>
 
 <h3 style="margin-bottom: 5px; font-weight: 700;">Parameters</h3>

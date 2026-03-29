@@ -35,8 +35,11 @@ Define the core groups and teams that players can join on your server.
 
       <div class="form-grid-2">
         <div class="input-group">
-          <label for="faction-color">Color (R,G,B):</label>
-          <input type="text" id="faction-color" placeholder="e.g., 0, 100, 255" pattern="\d{1,3},\s*\d{1,3},\s*\d{1,3}">
+          <label for="faction-color-picker">Color (R,G,B):</label>
+          <div style="display:flex; align-items:center; gap:8px;">
+            <input type="color" id="faction-color-picker" value="#000000" style="width:40px; height:32px; padding:2px; cursor:pointer; border:1px solid var(--border-color,#ccc); border-radius:4px; background:none;">
+            <input type="text" id="faction-color" placeholder="e.g., 0, 100, 255" pattern="\d{1,3},\s*\d{1,3},\s*\d{1,3}" style="flex:1;">
+          </div>
           <small>Comma-separated RGB values (0-255)</small>
         </div>
 
@@ -91,17 +94,31 @@ Define the core groups and teams that players can join on your server.
       <div class="form-grid-2">
         <div class="input-group">
           <label>
-            <input type="checkbox" id="skin-allowed"> Skin Customization Allowed
+            <input type="checkbox" id="skin-allowed"> Allow Skin Selection
           </label>
-          <small>Players can change their skin</small>
+          <small>Players in this faction can pick a skin for their character during character creation.</small>
         </div>
 
         <div class="input-group">
           <label>
-            <input type="checkbox" id="bodygroups-allowed"> Bodygroup Customization Allowed
+            <input type="checkbox" id="bodygroups-allowed"> Allow Bodygroup Selection
           </label>
-          <small>Players can change their bodygroups</small>
+          <small>Players in this faction can customize bodygroups for their character during character creation.</small>
         </div>
+      </div>
+
+      <div class="input-group">
+        <label>Allowed Skins:</label>
+        <div id="allowed-skins-list" class="dynamic-list"></div>
+        <button onclick="addAllowedSkinRow()" class="add-btn">+ Add Skin</button>
+        <small>Whitelist of skin IDs players can select. Leave empty to allow all skins.</small>
+      </div>
+
+      <div class="input-group">
+        <label>Allowed Bodygroups:</label>
+        <div id="allowed-bodygroups-list" class="dynamic-list"></div>
+        <button onclick="addAllowedBodygroupRow()" class="add-btn">+ Add Bodygroup</button>
+        <small>Whitelist of bodygroup values players can select, by bodygroup index and allowed values. Leave empty to allow all.</small>
       </div>
     </div>
 
@@ -149,6 +166,28 @@ Define the core groups and teams that players can join on your server.
           <label for="pay-timer">Pay Timer (seconds):</label>
           <input type="number" id="pay-timer" placeholder="300" min="1">
           <small>Interval in seconds between paychecks (defaults to global salary interval if not set)</small>
+        </div>
+      </div>
+
+      <div class="form-grid-2">
+        <div class="input-group">
+          <label for="faction-scale">Model Scale:</label>
+          <input type="number" id="faction-scale" placeholder="1.0" step="0.1" min="0.1">
+          <small>Model scale multiplier. Also adjusts view offset proportionally. Leave empty for default (1).</small>
+        </div>
+
+        <div class="input-group">
+          <label for="faction-bloodcolor">Blood Color:</label>
+          <select id="faction-bloodcolor">
+            <option value="">Default (BLOOD_COLOR_RED)</option>
+            <option value="BLOOD_COLOR_RED">BLOOD_COLOR_RED</option>
+            <option value="BLOOD_COLOR_YELLOW">BLOOD_COLOR_YELLOW</option>
+            <option value="BLOOD_COLOR_GREEN">BLOOD_COLOR_GREEN</option>
+            <option value="BLOOD_COLOR_MECH">BLOOD_COLOR_MECH</option>
+            <option value="BLOOD_COLOR_ANTLION">BLOOD_COLOR_ANTLION</option>
+            <option value="BLOOD_COLOR_ZOMBIE">BLOOD_COLOR_ZOMBIE</option>
+          </select>
+          <small>Blood color constant applied on spawn. Leave default unless the faction is non-human.</small>
         </div>
       </div>
     </div>
@@ -315,14 +354,27 @@ function addCommandRow(val='') { addTextRow('commands-list', 'lia_faction_chat',
 function addModelRow(val='') { addTextRow('models-list', 'models/player/...', val); }
 function addWeaponRow(val='') { addTextRow('weapons-list', 'weapon_class', val); }
 function addItemRow(val='') { addTextRow('items-list', 'item_unique_id', val); }
+function addAllowedSkinRow(val='') { addTextRow('allowed-skins-list', '0', val); }
+
+function addAllowedBodygroupRow(index='', values='') {
+  const container = document.getElementById('allowed-bodygroups-list');
+  const div = document.createElement('div');
+  div.className = 'dynamic-row';
+  div.innerHTML = `
+  <input type="number" placeholder="Bodygroup index" value="${index}" min="0" class="abg-index small-input">
+  <input type="text" placeholder="Allowed values (e.g. 0,1,2)" value="${values}" class="abg-values">
+  <button onclick="this.parentElement.remove()" class="remove-btn">×</button>
+  `;
+  container.appendChild(div);
+}
 
 function addNPCRelationRow(npc='', disposition='D_HT') {
   const container = document.getElementById('npc-relations-list');
   const div = document.createElement('div');
   div.className = 'dynamic-row';
   div.innerHTML = `
-  <input type="text" placeholder="npc_combine_s" value="${npc}" class="npc-class">
-  <select class="npc-disp">
+  <input type="text" placeholder="npc_combine_s" value="${npc}" class="npc-class" style="flex:1; min-width:0;">
+  <select class="npc-disp" style="width:auto; flex-shrink:0;">
     <option value="D_HT"${disposition==='D_HT'?' selected':''}>D_HT (Hostile)</option>
     <option value="D_LI"${disposition==='D_LI'?' selected':''}>D_LI (Like)</option>
     <option value="D_FR"${disposition==='D_FR'?' selected':''}>D_FR (Fear)</option>
@@ -405,6 +457,25 @@ function getCommandValues() {
   .filter(val => val !== '');
 }
 
+function getAllowedSkinsValues() {
+  return Array.from(document.querySelectorAll('#allowed-skins-list input[type="text"]'))
+  .map(input => parseInt(input.value.trim(), 10))
+  .filter(v => !isNaN(v));
+}
+
+function getAllowedBodygroupsValues() {
+  const rows = document.querySelectorAll('#allowed-bodygroups-list .dynamic-row');
+  const result = {};
+  rows.forEach(row => {
+    const idx = row.querySelector('.abg-index').value.trim();
+    const vals = row.querySelector('.abg-values').value.trim();
+    if (idx !== '' && vals !== '') {
+      result[parseInt(idx, 10)] = vals.split(',').map(v => parseInt(v.trim(), 10)).filter(v => !isNaN(v));
+    }
+  });
+  return result;
+}
+
 function generateFaction() {
   const index = (document.getElementById('faction-index').value || '').trim() || 'FACTION_NAME';
   const name = (document.getElementById('faction-name').value || '').trim() || 'Faction Name';
@@ -428,6 +499,10 @@ function generateFaction() {
 
   const skinAllowed = document.getElementById('skin-allowed').checked;
   const bodygroupsAllowed = document.getElementById('bodygroups-allowed').checked;
+  const scale = document.getElementById('faction-scale').value.trim();
+  const bloodcolor = document.getElementById('faction-bloodcolor').value;
+  const allowedSkins = getAllowedSkinsValues();
+  const allowedBodygroups = getAllowedBodygroupsValues();
 
   const health = document.getElementById('health').value || '100';
   const armor = document.getElementById('armor').value || '0';
@@ -473,10 +548,22 @@ function generateFaction() {
   lines.push('}');
   }
 
-  if (skinAllowed || bodygroupsAllowed) {
+  if (skinAllowed || bodygroupsAllowed || allowedSkins.length > 0 || Object.keys(allowedBodygroups).length > 0) {
   lines.push('', '-- Model Customization');
   if (skinAllowed) lines.push('FACTION.skinAllowed = true');
   if (bodygroupsAllowed) lines.push('FACTION.bodygroupsAllowed = true');
+  if (allowedSkins.length > 0) {
+    lines.push('FACTION.allowedSkins = {');
+    allowedSkins.forEach(s => lines.push(`  ${s},`));
+    lines.push('}');
+  }
+  if (Object.keys(allowedBodygroups).length > 0) {
+    lines.push('FACTION.allowedBodygroups = {');
+    Object.entries(allowedBodygroups).forEach(([idx, vals]) => {
+      lines.push(`  [${idx}] = { ${vals.join(', ')} },`);
+    });
+    lines.push('}');
+  }
   }
 
   lines.push(
@@ -492,6 +579,8 @@ function generateFaction() {
   if (runSpeedMultiplier) lines.push('FACTION.runSpeedMultiplier = true');
   if (walkSpeedMultiplier) lines.push('FACTION.walkSpeedMultiplier = true');
   if (jumpPowerMultiplier) lines.push('FACTION.jumpPowerMultiplier = true');
+  if (scale) lines.push(`FACTION.scale = ${scale}`);
+  if (bloodcolor) lines.push(`FACTION.bloodcolor = ${bloodcolor}`);
 
   lines.push(`FACTION.pay = ${pay}`);
   if (payTimer) {
@@ -602,6 +691,7 @@ function fillExampleFaction() {
   document.getElementById('faction-name').value = 'Citizen';
   document.getElementById('faction-desc').value = 'A regular inhabitant of the city. Trying to make a living and avoid trouble.';
   document.getElementById('faction-color').value = '255, 200, 50';
+  document.getElementById('faction-color-picker').value = rgbTextToHex('255, 200, 50');
   document.getElementById('is-default').checked = true;
   document.getElementById('one-char-only').checked = false;
   document.getElementById('faction-limit').value = '0';
@@ -614,6 +704,10 @@ function fillExampleFaction() {
   document.getElementById('main-menu-list').innerHTML = '';
   document.getElementById('npc-relations-list').innerHTML = '';
   document.getElementById('commands-list').innerHTML = '';
+  document.getElementById('allowed-skins-list').innerHTML = '';
+  document.getElementById('allowed-bodygroups-list').innerHTML = '';
+  document.getElementById('faction-scale').value = '';
+  document.getElementById('faction-bloodcolor').value = '';
 
   addModelRow('models/player/group01/male_01.mdl');
   addModelRow('models/player/group01/female_01.mdl');
@@ -651,8 +745,35 @@ function fillExampleFaction() {
   generateFaction();
 }
 
+function rgbTextToHex(text) {
+  const parts = text.split(',').map(s => parseInt(s.trim(), 10));
+  if (parts.length !== 3 || parts.some(isNaN)) return null;
+  return '#' + parts.map(v => Math.max(0, Math.min(255, v)).toString(16).padStart(2, '0')).join('');
+}
+
+function hexToRgbText(hex) {
+  const r = parseInt(hex.slice(1, 3), 16);
+  const g = parseInt(hex.slice(3, 5), 16);
+  const b = parseInt(hex.slice(5, 7), 16);
+  return `${r}, ${g}, ${b}`;
+}
+
 // Prefill some defaults
 document.addEventListener('DOMContentLoaded', () => {
+  const picker = document.getElementById('faction-color-picker');
+  const text = document.getElementById('faction-color');
+
+  picker.addEventListener('input', () => {
+    text.value = hexToRgbText(picker.value);
+    generateFaction();
+  });
+
+  text.addEventListener('input', () => {
+    const hex = rgbTextToHex(text.value);
+    if (hex) picker.value = hex;
+    generateFaction();
+  });
+
   addModelRow('models/player/police.mdl');
   addWeaponRow('weapon_pistol');
   addNPCRelationRow('npc_combine_s', 'D_HT');

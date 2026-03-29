@@ -73,13 +73,16 @@ Create sub-roles and specialized classes for your factions, such as 'Medic' or '
         <label>Model:</label>
         <div id="models-list" class="dynamic-list"></div>
         <button onclick="addModelRow()" class="add-btn">+ Add Model</button>
-        <small>Model path(s). A single entry sets one model; multiple entries let players pick from the list.</small>
+        <small>Model path(s). A single entry defaults to that model automatically; multiple entries let players choose one in the classes menu.</small>
       </div>
 
       <div class="form-grid-2">
         <div class="input-group">
-          <label for="class-color">Color (R,G,B):</label>
-          <input type="text" id="class-color" placeholder="e.g., 0, 100, 255" pattern="\d{1,3},\s*\d{1,3},\s*\d{1,3}">
+          <label for="class-color-picker">Color (R,G,B):</label>
+          <div style="display:flex; align-items:center; gap:8px;">
+            <input type="color" id="class-color-picker" value="#000000" style="width:40px; height:32px; padding:2px; cursor:pointer; border:1px solid var(--border-color,#ccc); border-radius:4px; background:none;">
+            <input type="text" id="class-color" placeholder="e.g., 0, 100, 255" pattern="\d{1,3},\s*\d{1,3},\s*\d{1,3}" style="flex:1;">
+          </div>
           <small>Comma-separated RGB values (0-255). Leave empty to use faction color.</small>
         </div>
 
@@ -91,17 +94,17 @@ Create sub-roles and specialized classes for your factions, such as 'Medic' or '
       </div>
 
       <div class="input-group">
-        <label>Bodygroup Overrides:</label>
+        <label>Default Bodygroups:</label>
         <div id="bodygroups-list" class="dynamic-list"></div>
         <button onclick="addBodygroupRow()" class="add-btn">+ Add Bodygroup</button>
-        <small>Bodygroup overrides applied to the model preview. Each entry is an ID and value pair.</small>
+        <small>Bodygroup values forcibly applied to a character each time they spawn in this class. Each entry is a bodygroup ID and the value to set it to.</small>
       </div>
 
       <div class="input-group">
-        <label>Sub-Material Overrides:</label>
+        <label>Default Sub-Materials:</label>
         <div id="submaterials-list" class="dynamic-list"></div>
         <button onclick="addSubMaterialRow()" class="add-btn">+ Add Sub-Material</button>
-        <small>Material path per slot (1-indexed). Each entry calls SetSubMaterial(slot - 1, mat) on the preview entity.</small>
+        <small>Sub-material overrides forcibly applied to a character each time they spawn in this class. Each entry is a slot (1-indexed) and the material path to assign.</small>
       </div>
 
       <div class="form-grid-2">
@@ -137,6 +140,20 @@ Create sub-roles and specialized classes for your factions, such as 'Medic' or '
           <label for="class-pay">Pay/Salary:</label>
           <input type="number" id="class-pay" placeholder="" min="0">
           <small>Salary amount per paycheck. Overrides faction pay when set.</small>
+        </div>
+
+        <div class="input-group">
+          <label for="class-bloodcolor">Blood Color:</label>
+          <select id="class-bloodcolor">
+            <option value="">Default (BLOOD_COLOR_RED)</option>
+            <option value="BLOOD_COLOR_RED">BLOOD_COLOR_RED</option>
+            <option value="BLOOD_COLOR_YELLOW">BLOOD_COLOR_YELLOW</option>
+            <option value="BLOOD_COLOR_GREEN">BLOOD_COLOR_GREEN</option>
+            <option value="BLOOD_COLOR_MECH">BLOOD_COLOR_MECH</option>
+            <option value="BLOOD_COLOR_ANTLION">BLOOD_COLOR_ANTLION</option>
+            <option value="BLOOD_COLOR_ZOMBIE">BLOOD_COLOR_ZOMBIE</option>
+          </select>
+          <small>Blood color constant applied on spawn. Leave default unless the class is non-human.</small>
         </div>
       </div>
 
@@ -200,13 +217,6 @@ Create sub-roles and specialized classes for your factions, such as 'Medic' or '
 
     <div class="generator-section">
       <div class="input-group">
-        <label>Team Tag:</label>
-        <div id="team-list" class="dynamic-list"></div>
-        <button onclick="addTeamRow()" class="add-btn">+ Set Team Tag</button>
-        <small>Arbitrary group tag for door access. Classes sharing the same tag can open the same class-restricted doors.</small>
-      </div>
-
-      <div class="input-group">
         <label>NPC Relations:</label>
         <div id="npc-relations-list" class="dynamic-list"></div>
         <button onclick="addNPCRelationRow()" class="add-btn">+ Add NPC Relation</button>
@@ -250,7 +260,6 @@ function addTextRow(containerId, placeholder, value = '') {
 }
 
 function addCommandRow(val='') { addTextRow('commands-list', 'kick', val); }
-function addTeamRow(val='') { addTextRow('team-list', 'e.g., security', val); }
 
 function addWeaponRow(val='') { addTextRow('weapons-list', 'weapon_class', val); }
 function addModelRow(val='') { addTextRow('models-list', 'models/player/...', val); }
@@ -284,8 +293,8 @@ function addNPCRelationRow(npc='', disposition='D_HT') {
   const div = document.createElement('div');
   div.className = 'dynamic-row';
   div.innerHTML = `
-  <input type="text" placeholder="npc_combine_s" value="${npc}" class="npc-class">
-  <select class="npc-disp">
+  <input type="text" placeholder="npc_combine_s" value="${npc}" class="npc-class" style="flex:1; min-width:0;">
+  <select class="npc-disp" style="width:auto; flex-shrink:0;">
     <option value="D_HT"${disposition==='D_HT'?' selected':''}>D_HT (Hostile)</option>
     <option value="D_LI"${disposition==='D_LI'?' selected':''}>D_LI (Like)</option>
     <option value="D_FR"${disposition==='D_FR'?' selected':''}>D_FR (Fear)</option>
@@ -365,6 +374,7 @@ function generateClass() {
   const jumpPowerMultiplier = document.getElementById('class-jump-power-multiplier').checked;
   const scale = document.getElementById('class-scale').value.trim();
   const logo = document.getElementById('class-logo').value.trim();
+  const bloodcolor = document.getElementById('class-bloodcolor').value;
   const scoreboardHidden = document.getElementById('class-scoreboard-hidden').checked;
   const canInviteFaction = document.getElementById('class-can-invite-faction').checked;
   const canInviteClass = document.getElementById('class-can-invite-class').checked;
@@ -373,8 +383,6 @@ function generateClass() {
   const models = getListValues('models-list');
   const weapons = getListValues('weapons-list');
   const commands = getCommandValues();
-  const teamValues = getListValues('team-list');
-  const team = teamValues.length > 0 ? teamValues[0] : '';
   const bodyGroups = getBodygroupValues();
   const subMaterials = getSubMaterialValues();
   const npcRelations = getNPCRelationValues();
@@ -427,7 +435,7 @@ function generateClass() {
   }
   }
 
-  if (health || armor || pay || runSpeed || walkSpeed || jumpPower) {
+  if (health || armor || pay || runSpeed || walkSpeed || jumpPower || bloodcolor) {
   lines.push('', '-- Gameplay Properties');
   if (health) lines.push(`CLASS.health = ${health}`);
   if (armor) lines.push(`CLASS.armor = ${armor}`);
@@ -444,6 +452,7 @@ function generateClass() {
   lines.push(`CLASS.jumpPower = ${jumpPower}`);
   if (jumpPowerMultiplier) lines.push('CLASS.jumpPowerMultiplier = true');
   }
+  if (bloodcolor) lines.push(`CLASS.bloodcolor = ${bloodcolor}`);
   }
 
   if (weapons.length > 0) {
@@ -462,13 +471,11 @@ function generateClass() {
   lines.push('}');
   }
 
-  if (scoreboardHidden || canInviteFaction || canInviteClass || team || commands.length > 0) {
+  if (scoreboardHidden || canInviteFaction || canInviteClass || commands.length > 0) {
   lines.push('', '-- UI & Advanced');
   if (scoreboardHidden) lines.push('CLASS.scoreboardHidden = true');
   if (canInviteFaction) lines.push('CLASS.canInviteToFaction = true');
   if (canInviteClass) lines.push('CLASS.canInviteToClass = true');
-  if (team) lines.push(`CLASS.team = ${JSON.stringify(team)}`);
-
   if (commands.length > 0) {
   lines.push('CLASS.commands = {');
   commands.forEach(cmd => {
@@ -502,7 +509,6 @@ function fillExampleClass() {
   document.getElementById('weapons-list').innerHTML = '';
   document.getElementById('bodygroups-list').innerHTML = '';
   document.getElementById('submaterials-list').innerHTML = '';
-  document.getElementById('team-list').innerHTML = '';
   document.getElementById('npc-relations-list').innerHTML = '';
   document.getElementById('commands-list').innerHTML = '';
 
@@ -512,6 +518,7 @@ function fillExampleClass() {
   addCommandRow('kick');
 
   document.getElementById('class-color').value = '40, 100, 200';
+  document.getElementById('class-color-picker').value = rgbTextToHex('40, 100, 200');
   document.getElementById('class-skin').value = '1';
   document.getElementById('class-logo').value = 'materials/ui/class/mp_logo.png';
   document.getElementById('class-scale').value = '1.0';
@@ -527,13 +534,39 @@ function fillExampleClass() {
   document.getElementById('class-scoreboard-hidden').checked = false;
   document.getElementById('class-can-invite-faction').checked = true;
   document.getElementById('class-can-invite-class').checked = true;
-  addTeamRow('security');
 
   generateClass();
 }
 
+function rgbTextToHex(text) {
+  const parts = text.split(',').map(s => parseInt(s.trim(), 10));
+  if (parts.length !== 3 || parts.some(isNaN)) return null;
+  return '#' + parts.map(v => Math.max(0, Math.min(255, v)).toString(16).padStart(2, '0')).join('');
+}
+
+function hexToRgbText(hex) {
+  const r = parseInt(hex.slice(1, 3), 16);
+  const g = parseInt(hex.slice(3, 5), 16);
+  const b = parseInt(hex.slice(5, 7), 16);
+  return `${r}, ${g}, ${b}`;
+}
+
 // Initialize default rows
 document.addEventListener('DOMContentLoaded', () => {
+  const picker = document.getElementById('class-color-picker');
+  const text = document.getElementById('class-color');
+
+  picker.addEventListener('input', () => {
+    text.value = hexToRgbText(picker.value);
+    generateClass();
+  });
+
+  text.addEventListener('input', () => {
+    const hex = rgbTextToHex(text.value);
+    if (hex) picker.value = hex;
+    generateClass();
+  });
+
   addWeaponRow('weapon_pistol');
   addCommandRow('kick');
   generateClass();
