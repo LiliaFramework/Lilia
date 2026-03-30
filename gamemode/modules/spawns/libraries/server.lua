@@ -170,6 +170,48 @@ local function RemovedDropOnDeathItems(client)
     if lostCount > 0 then client:notifyWarningLocalized("itemsLostOnDeath", lostCount) end
 end
 
+local function resolveFromEntity(ent)
+    if not IsValid(ent) then return nil end
+    if ent:IsPlayer() then return ent end
+    if ent:IsVehicle() and ent.GetDriver then
+        local driver = ent:GetDriver()
+        if IsValid(driver) and driver:IsPlayer() then return driver end
+    end
+
+    if ent.GetOwner then
+        local owner = ent:GetOwner()
+        if IsValid(owner) and owner:IsPlayer() then return owner end
+    end
+
+    if ent.GetCreator then
+        local creator = ent:GetCreator()
+        if IsValid(creator) and creator:IsPlayer() then return creator end
+    end
+
+    if ent.CPPIGetOwner then
+        local owner = ent:CPPIGetOwner()
+        if IsValid(owner) and owner:IsPlayer() then return owner end
+    end
+    return nil
+end
+
+local function ResolveDeathAttacker(victim, inflictor, attacker)
+    if IsValid(attacker) then
+        if attacker == victim or attacker:IsWorld() or attacker:GetClass() == "worldspawn" then
+            local resolved = resolveFromEntity(inflictor) or resolveFromEntity(attacker)
+            if IsValid(resolved) then return resolved end
+        else
+            local resolved = resolveFromEntity(attacker) or resolveFromEntity(inflictor)
+            if IsValid(resolved) then return resolved end
+        end
+    end
+
+    local resolved = resolveFromEntity(inflictor)
+    if IsValid(resolved) then return resolved end
+    lia.log.add(client, "playerDeath", attackerName)
+    return attacker
+end
+
 function MODULE:PlayerSpawn(client)
     client.liaSpawnHandled = nil
 end
@@ -186,7 +228,7 @@ function MODULE:OnCharDisconnect(client, character)
     character:save()
 end
 
-function MODULE:PlayerDeath(client, _, attacker)
+function MODULE:PlayerDeath(client, inflictor, attacker)
     local char = client:getChar()
     if not char then return end
     if not client:IsBot() then
@@ -199,20 +241,31 @@ function MODULE:PlayerDeath(client, _, attacker)
     end
 
     if lia.config.get("DeathPopupEnabled", true) then
+        local resolvedAttacker = ResolveDeathAttacker(client, inflictor, attacker)
+        if lia.config.get("DeathDebug", false) then
+            local function entShort(ent)
+                if not IsValid(ent) then return "<invalid>" end
+                if ent:IsPlayer() then return ent:Name() end
+                return ent.GetClass and ent:GetClass() or tostring(ent)
+            end
+
+            MsgC(Color(255, 200, 0), "[Lilia DeathDebug] ", color_white, "PlayerDeath victim=", client:Name(), " attacker=", entShort(attacker), " inflictor=", entShort(inflictor), " resolved=", entShort(resolvedAttacker), "\n")
+        end
+
         local dateStr = os.date("%d/%m/%Y", os.time())
         local timeStr = os.date("%H:%M:%S", os.time())
         local attackerName = L("na")
         local attackerChar = nil
-        if IsValid(attacker) then
-            if attacker == client or attacker:IsWorld() or attacker:GetClass() == "worldspawn" then
+        if IsValid(resolvedAttacker) then
+            if resolvedAttacker == client or resolvedAttacker:IsWorld() or resolvedAttacker:GetClass() == "worldspawn" then
                 attackerName = L("theEnvironment")
-            elseif attacker:IsPlayer() then
-                attackerChar = attacker:getChar()
+            elseif resolvedAttacker:IsPlayer() then
+                attackerChar = resolvedAttacker:getChar()
                 local charID = attackerChar and tostring(attackerChar:getID()) or L("na")
-                local steamID = attacker:SteamID64()
+                local steamID = resolvedAttacker:SteamID64()
                 attackerName = L("characterIDSteamID64", charID, steamID)
             else
-                attackerName = attacker:GetClass() or L("na")
+                attackerName = resolvedAttacker:GetClass() or L("na")
             end
         end
 
@@ -220,15 +273,15 @@ function MODULE:PlayerDeath(client, _, attacker)
         ClientAddText(client, Color(255, 255, 255), dateStr .. " - ", Color(255, 255, 255), killedByText)
         local logTimestamp = os.date("%Y-%m-%d %H:%M:%S", os.time())
         local attackerDisplay = "unknown"
-        if IsValid(attacker) then
-            if attacker == client or attacker:IsWorld() or attacker:GetClass() == "worldspawn" then
+        if IsValid(resolvedAttacker) then
+            if resolvedAttacker == client or resolvedAttacker:IsWorld() or resolvedAttacker:GetClass() == "worldspawn" then
                 attackerDisplay = L("theEnvironment")
-            elseif attacker:IsPlayer() then
-                attackerChar = attackerChar or attacker:getChar()
-                local steamId = attacker:SteamID64()
+            elseif resolvedAttacker:IsPlayer() then
+                attackerChar = attackerChar or resolvedAttacker:getChar()
+                local steamId = resolvedAttacker:SteamID64()
                 attackerDisplay = attackerChar and L("characterSteam64ID", attackerChar:getID(), steamId) or L("na")
             else
-                attackerDisplay = attacker:GetClass() or L("na")
+                attackerDisplay = resolvedAttacker:GetClass() or L("na")
             end
         end
 
@@ -238,10 +291,11 @@ function MODULE:PlayerDeath(client, _, attacker)
         StaffAddTextShadowed(Color(255, 0, 0), "DEATH", Color(255, 255, 255), deathMessage)
     end
 
-    if attacker:IsPlayer() and lia.config.get("LoseItemsonDeathHuman", false) then RemovedDropOnDeathItems(client) end
+    local resolvedAttacker = ResolveDeathAttacker(client, inflictor, attacker)
+    if IsValid(resolvedAttacker) and resolvedAttacker:IsPlayer() and lia.config.get("LoseItemsonDeathHuman", false) then RemovedDropOnDeathItems(client) end
     client:SetDSP(30, false)
     char:setLastPos(nil)
-    if not attacker:IsPlayer() and lia.config.get("LoseItemsonDeathNPC", false) or attacker:IsWorld() and lia.config.get("LoseItemsonDeathWorld", false) then RemovedDropOnDeathItems(client) end
+    if (not IsValid(resolvedAttacker) or not resolvedAttacker:IsPlayer()) and lia.config.get("LoseItemsonDeathNPC", false) or (IsValid(resolvedAttacker) and resolvedAttacker:IsWorld() and lia.config.get("LoseItemsonDeathWorld", false)) then RemovedDropOnDeathItems(client) end
     char:setData("deathPos", client:GetPos())
 end
 

@@ -254,14 +254,6 @@ function MODULE:PlayerHurt(client, attacker, health, damage)
     end
 end
 
-function MODULE:PlayerDeath(client, _, attacker)
-    if IsValid(attacker) then
-        lia.log.add(client, "playerDeath", attacker:IsPlayer() and attacker:Name() or attacker:GetClass())
-    else
-        lia.log.add(client, "playerDeath", "unknown")
-    end
-end
-
 function MODULE:OnCharCreated(client, character)
     lia.log.add(client, "charCreate", character)
 end
