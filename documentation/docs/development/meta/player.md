@@ -60,7 +60,7 @@ The player meta table provides comprehensive functionality for managing player d
 
 <h3 style="margin-bottom: 5px; font-weight: 700;">Example Usage</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
-<pre><code class="language-lua">  print(ply:tostring())
+<pre><code class="language-lua">  lia.debug(ply:tostring())
 </code></pre>
 </div>
 
@@ -2399,7 +2399,7 @@ The player meta table provides comprehensive functionality for managing player d
 <div style="margin-left: 20px; margin-bottom: 20px;">
 <pre><code class="language-lua">  local parts = ply:getParts()
   if parts["helmet"] then
-      print("Player has helmet equipped")
+      lia.debug("Player has helmet equipped")
   end
 </code></pre>
 </div>

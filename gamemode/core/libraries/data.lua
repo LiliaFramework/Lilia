@@ -526,7 +526,12 @@ if SERVER then
         ensureDataDirs(gamemode, map)
         local path = getKeyFilePath(gamemode, map, key)
         local encoded = lia.data.encodetable(value)
-        if not istable(encoded) then encoded = {value = encoded} end
+        if not istable(encoded) then
+            encoded = {
+                value = encoded
+            }
+        end
+
         file.Write(path, util.TableToJSON(encoded, true) or "{}")
         hook.Run("OnDataSet", key, value, gamemode, map)
         return gamemode .. "/" .. map .. "/"
