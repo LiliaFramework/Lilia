@@ -418,9 +418,7 @@ function MODULE:CanPlayerAccessDoor(client, door)
         local unique = charClassData.uniqueID
         for _, id in ipairs(classes) do
             local classIndex = lia.class.retrieveClass(id)
-            if id == unique or classIndex == charClass then
-                return true
-            end
+            if id == unique or classIndex == charClass then return true end
         end
         return false
     end

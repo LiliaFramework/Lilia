@@ -132,7 +132,7 @@ The faction library provides comprehensive functionality for managing factions (
 <div style="margin-left: 20px; margin-bottom: 20px;">
 <pre><code class="language-lua">  local allFactions = lia.faction.getAll()
   for _, faction in ipairs(allFactions) do
-      print("Faction: " .. faction.name)
+      lia.debug("Faction: " .. faction.name)
   end
 </code></pre>
 </div>
@@ -280,7 +280,7 @@ attempts to pick a specific skin.</p>
 <h3 style="margin-bottom: 5px; font-weight: 700;">Example Usage</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
 <pre><code class="language-lua">  if lia.faction.isSkinAllowedForFaction("citizen", 0) then
-      print("Allowed")
+      lia.debug("Allowed")
   end
 </code></pre>
 </div>
@@ -396,7 +396,7 @@ player attempts to pick bodygroup values.</p>
 <h3 style="margin-bottom: 5px; font-weight: 700;">Example Usage</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
 <pre><code class="language-lua">  if lia.faction.isBodygroupValueAllowed("citizen", mdl, 0, 1) then
-      print("Allowed")
+      lia.debug("Allowed")
   end
 </code></pre>
 </div>
@@ -433,7 +433,7 @@ player attempts to pick bodygroup values.</p>
 <div style="margin-left: 20px; margin-bottom: 20px;">
 <pre><code class="language-lua">  local index = lia.faction.getIndex("citizen")
   if index then
-      print("Citizen faction index: " .. index)
+      lia.debug("Citizen faction index: " .. index)
   end
 </code></pre>
 </div>
@@ -470,7 +470,7 @@ player attempts to pick bodygroup values.</p>
 <div style="margin-left: 20px; margin-bottom: 20px;">
 <pre><code class="language-lua">  local classes = lia.faction.getClasses("citizen")
   for _, class in ipairs(classes) do
-      print("Class: " .. class.name)
+      lia.debug("Class: " .. class.name)
   end
 </code></pre>
 </div>
@@ -543,7 +543,7 @@ player attempts to pick bodygroup values.</p>
 <h3 style="margin-bottom: 5px; font-weight: 700;">Example Usage</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
 <pre><code class="language-lua">  local count = lia.faction.getPlayerCount("citizen")
-  print("There are " .. count .. " citizens online")
+  lia.debug("There are " .. count .. " citizens online")
 </code></pre>
 </div>
 
@@ -580,7 +580,7 @@ player attempts to pick bodygroup values.</p>
 <div style="margin-left: 20px; margin-bottom: 20px;">
 <pre><code class="language-lua">  local lawFactions = {"police", "sheriff"}
   if lia.faction.isFactionCategory("police", lawFactions) then
-      print("This is a law enforcement faction")
+      lia.debug("This is a law enforcement faction")
   end
 </code></pre>
 </div>
@@ -680,7 +680,7 @@ player attempts to pick bodygroup values.</p>
 <div style="margin-left: 20px; margin-bottom: 20px;">
 <pre><code class="language-lua">  local categories = lia.faction.getCategories("citizen")
   for _, category in ipairs(categories) do
-      print("Category: " .. category)
+      lia.debug("Category: " .. category)
   end
 </code></pre>
 </div>
@@ -718,7 +718,7 @@ player attempts to pick bodygroup values.</p>
 <div style="margin-left: 20px; margin-bottom: 20px;">
 <pre><code class="language-lua">  local models = lia.faction.getModelsFromCategory("citizen", "male")
   for index, model in pairs(models) do
-      print("Model " .. index .. ": " .. (istable(model) and model[1] or model))
+      lia.debug("Model " .. index .. ": " .. (istable(model) and model[1] or model))
   end
 </code></pre>
 </div>
@@ -755,7 +755,7 @@ player attempts to pick bodygroup values.</p>
 <div style="margin-left: 20px; margin-bottom: 20px;">
 <pre><code class="language-lua">  local defaultClass = lia.faction.getDefaultClass("citizen")
   if defaultClass then
-      print("Default class: " .. defaultClass.name)
+      lia.debug("Default class: " .. defaultClass.name)
   end
 </code></pre>
 </div>
