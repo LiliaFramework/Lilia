@@ -3058,6 +3058,7 @@ LANGUAGE = {
     mainCharacterCooldownActive = "You must wait %d more day(s) before you can change your main character.",
     localhostUrlsNotAllowed = "Localhost URLs Not Allowed",
     logBootstrap = "Bootstrap",
+    logDebug = "Debug",
     logError = "Error",
     logPlayerCreatedCharacter = "Player %s created character %s",
     logPlayerLoadedCharacter = "Player %s loaded character %s",
@@ -3745,4 +3746,5 @@ LANGUAGE = {
     staffHasGodModeDesc = "Grants god mode to staff members while they are on duty.",
     maxAttributes = "Max Attributes",
     maxAttributesDesc = "The maximum total number of attribute points a character can have.",
+    configChangedLog = "Config '%s' changed from '%s' to '%s'.",
 }

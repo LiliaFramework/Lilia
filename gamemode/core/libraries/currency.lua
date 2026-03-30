@@ -15,9 +15,6 @@
         The library integrates with the configuration system to allow customizable currency symbols and names.
 ]]
 lia.currency = lia.currency or {}
-lia.currency.symbol = lia.config.get("CurrencySymbol", "")
-lia.currency.singular = lia.lang.resolveToken(lia.config.get("CurrencySingularName", "@currencySingular"))
-lia.currency.plural = lia.lang.resolveToken(lia.config.get("CurrencyPluralName", "@currencyPlural"))
 --[[
     Purpose:
         Format a numeric amount into a localized currency string with the configured symbol and singular/plural name.
@@ -96,3 +93,19 @@ if SERVER then
         end
     end
 end
+
+hook.Add("InitializedModules", "CurrencyConfig", function()
+    lia.currency.singular = lia.lang.resolveToken(lia.config.get("CurrencySingularName", "@currencySingular"))
+    lia.currency.plural = lia.lang.resolveToken(lia.config.get("CurrencyPluralName", "@currencyPlural"))
+    lia.currency.symbol = lia.config.get("CurrencySymbol", "")
+end)
+
+hook.Add("OnConfigUpdated", "CurrencyConfigUpdate", function(key)
+    if key == "CurrencySingularName" then
+        lia.currency.singular = lia.lang.resolveToken(lia.config.get("CurrencySingularName", "@currencySingular"))
+    elseif key == "CurrencyPluralName" then
+        lia.currency.plural = lia.lang.resolveToken(lia.config.get("CurrencyPluralName", "@currencyPlural"))
+    elseif key == "CurrencySymbol" then
+        lia.currency.symbol = lia.config.get("CurrencySymbol", "")
+    end
+end)

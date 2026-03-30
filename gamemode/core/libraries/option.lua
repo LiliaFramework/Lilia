@@ -107,7 +107,7 @@ function lia.option.add(key, name, desc, default, callback, data)
 
     if data.type then optionType = data.type end
     local old = lia.option.stored[key]
-    local value = old and old.value or default
+    local value = (old and old.value ~= nil) and old.value or default
     if istable(data.options) then
         for k, v in pairs(data.options) do
             local normalized = normalizeSelectableOption(v)

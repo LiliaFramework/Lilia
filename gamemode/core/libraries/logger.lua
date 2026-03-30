@@ -17,7 +17,7 @@ local logTypeData = {
     character = {
         charRecognize = function(client, id, name) return L("logPlayerRecognizedCharacter", client:Name(), id, name) end,
         charCreate = function(client, character) return L("logPlayerCreatedCharacter", client:Name(), character:getName()) end,
-        charLoad = function(client, name) return L("logPlayerLoadedCharacter", client:Name(), name) end,
+        charLoad = function(client, name) return L("logPlayerLoadedCharacter", client:steamName(), name) end,
         charDelete = function(client, id)
             local name = IsValid(client) and client:Name() or L("console")
             return L("logPlayerDeletedCharacter", name, id)
@@ -107,7 +107,7 @@ local logTypeData = {
     },
     admin = {
         observeToggle = function(client, state) return L("logObserveToggle", client:Name(), state) end,
-        configChange = function(name, oldValue, value) return L("logConfigChange", name, tostring(oldValue), tostring(value)) end,
+        configChange = function(client, name, oldValue, value) return L("logConfigChange", name, tostring(oldValue), tostring(value)) end,
         warningIssued = function(client, target, reason, severity, count, index) return L("logWarningIssued", os.date("%Y-%m-%d %H:%M:%S"), client:Name(), IsValid(target) and target:Name() or L("na"), reason, severity or "Medium", count or 0, index or count or 0) end,
         warningRemoved = function(client, target, warning, count, index) return L("logWarningRemoved", os.date("%Y-%m-%d %H:%M:%S"), client:Name(), IsValid(target) and target:Name() or L("na"), warning.reason, count or 0, index or 0) end,
         viewWarns = function(client, target) return L("logViewWarns", client:Name(), IsValid(target) and target:Name() or tostring(target)) end,

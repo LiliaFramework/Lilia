@@ -758,7 +758,14 @@ end
         ```
 ]]
 function lia.debug(...)
-    if SCHEMA and SCHEMA.DevMode then lia.debug("[DEBUG]", ...) end
+    if not lia.DevMode then return end
+    MsgC(Color(83, 143, 239), "[Lilia] ", "[" .. L("logDebug") .. "] ")
+    local args = {...}
+    for i, v in ipairs(args) do
+        MsgC(Color(200, 200, 200), tostring(v))
+        if i < #args then MsgC(Color(200, 200, 200), "\t") end
+    end
+    MsgC(Color(200, 200, 200), "\n")
 end
 
 --[[
@@ -1000,10 +1007,14 @@ function lia.loader.initializeGamemode(isReload)
 
     lia.faction.formatModelData()
     if SERVER and isReload then
+        lia.config.load()
         local adminHasChanges = lia.admin.hasChanges()
         local playerInteractHasChanges = lia.playerinteract.hasChanges()
-        local configHasChanges = table.Count(lia.config.getChangedValues()) > 0
-        timer.Create("liaReloadConfigSync", 0.5, 1, function() if configHasChanges then lia.config.send() end end)
+        timer.Create("liaReloadConfigSync", 0.5, 1, function()
+            for _, client in player.Iterator() do
+                if IsValid(client) then lia.config.send(client) end
+            end
+        end)
         timer.Create("liaReloadAdminSync", 2.0, 1, function() if adminHasChanges then lia.admin.sync() end end)
         timer.Create("liaReloadPlayerInteractSync", 3.5, 1, function() if playerInteractHasChanges then lia.playerinteract.sync() end end)
         timer.Create("liaReloadComplete", 5.0, 1, function()
