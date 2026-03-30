@@ -480,8 +480,7 @@ function generateFaction() {
   const index = (document.getElementById('faction-index').value || '').trim() || 'FACTION_NAME';
   const name = (document.getElementById('faction-name').value || '').trim() || 'Faction Name';
   const desc = (document.getElementById('faction-desc').value || '').trim() || 'Faction description';
-  const colorInput = document.getElementById('faction-color').value;
-  const color = colorInput ? `Color(${colorInput})` : 'Color(100, 150, 200)';
+  const colorInput = document.getElementById('faction-color').value.trim();
 
   const isDefault = document.getElementById('is-default').checked;
   const oneCharOnly = document.getElementById('one-char-only').checked;
@@ -530,7 +529,7 @@ function generateFaction() {
   '',
   `FACTION.name = ${JSON.stringify(name)}`,
   `FACTION.desc = ${JSON.stringify(desc)}`,
-  `FACTION.color = ${color}`,
+  `FACTION.color = ${colorInput ? `Color(${colorInput})` : 'Color(150, 150, 150)'}`,
   '',
   '-- Access Control',
   `FACTION.isDefault = ${isDefault}`,

@@ -3210,6 +3210,37 @@ Client-side hooks in the Lilia framework handle UI, rendering, input, and other 
 
 ---
 
+<details class="realm-client" id="function-registeradminsticksubcategories">
+<summary><a id="RegisterAdminStickSubcategories"></a>RegisterAdminStickSubcategories(categories)</summary>
+<div class="details-content">
+<h3 style="margin-bottom: 5px; font-weight: 700;"><a id="registeradminsticksubcategories"></a>Purpose</h3>
+<div style="margin-left: 20px; margin-bottom: 20px;">
+  <p>Register admin stick subcategories used to group commands.</p>
+</div>
+
+<h3 style="margin-bottom: 5px; font-weight: 700;">When Called</h3>
+<div style="margin-left: 20px; margin-bottom: 20px;">
+  <p>When assembling the category tree for the admin stick.</p>
+</div>
+
+<h3 style="margin-bottom: 5px; font-weight: 700;">Parameters</h3>
+<div style="margin-left: 20px; margin-bottom: 20px;">
+<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#2.1">table</a></span> <span class="parameter">categories</span> Table of category -> subcategory mappings; modify in place.</p>
+</div>
+
+<h3 style="margin-bottom: 5px; font-weight: 700;">Example Usage</h3>
+<div style="margin-left: 20px; margin-bottom: 20px;">
+<pre><code class="language-lua">  hook.Add("RegisterAdminStickSubcategories", "ExampleRegisterAdminStickSubcategories", function(...)
+      -- add custom client-side behavior
+  end)
+</code></pre>
+</div>
+
+</div>
+</details>
+
+---
+
 <details class="realm-client" id="function-resetcharacterpanel">
 <summary><a id="ResetCharacterPanel"></a>ResetCharacterPanel()</summary>
 <div class="details-content">
