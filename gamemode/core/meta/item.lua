@@ -148,7 +148,7 @@ end
 
     Example Usage:
         ```lua
-            print(item:tostring())
+            lia.debug(item:tostring())
         ```
 ]]
 function ITEM:tostring()

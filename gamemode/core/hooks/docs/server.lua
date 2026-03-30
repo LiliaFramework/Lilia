@@ -2902,7 +2902,7 @@ end
     Example Usage:
         ```lua
             hook.Add("OnSetUsergroup", "LogUsergroupChange", function(sid, new, source, ply)
-                print(string.format("Usergroup changed for %s to %s by %s", sid, new, source))
+                lia.debug(string.format("Usergroup changed for %s to %s by %s", sid, new, source))
             end)
         ```
 ]]
@@ -3920,7 +3920,7 @@ end
     Example Usage:
         ```lua
             hook.Add("RemoveWarning", "MirrorWarningRemoval", function(charID, index)
-                print("Warning removed", charID, index)
+                lia.debug("Warning removed", charID, index)
             end)
         ```
 ]]
@@ -3990,7 +3990,7 @@ end
     Example Usage:
         ```lua
             hook.Add("SetupBotPlayer", "BotWelcome", function(client)
-                print("Bot setup complete", client)
+                lia.debug("Bot setup complete", client)
             end)
         ```
 ]]
@@ -4814,7 +4814,7 @@ end
     Example Usage:
         ```lua
             hook.Add("VendorSynchronized", "AfterVendorSync", function(vendor)
-                print("Vendor synced", vendor)
+                lia.debug("Vendor synced", vendor)
             end)
         ```
 ]]

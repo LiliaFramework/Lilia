@@ -210,7 +210,7 @@ end
         ```lua
         local allFactions = lia.faction.getAll()
         for _, faction in ipairs(allFactions) do
-            print("Faction: " .. faction.name)
+            lia.debug("Faction: " .. faction.name)
         end
         ```
 ]]
@@ -379,7 +379,7 @@ end
     Example Usage:
         ```lua
         if lia.faction.isSkinAllowedForFaction("citizen", 0) then
-            print("Allowed")
+            lia.debug("Allowed")
         end
         ```
 ]]
@@ -536,7 +536,7 @@ end
     Example Usage:
         ```lua
         if lia.faction.isBodygroupValueAllowed("citizen", mdl, 0, 1) then
-            print("Allowed")
+            lia.debug("Allowed")
         end
         ```
 ]]
@@ -578,7 +578,7 @@ end
         ```lua
         local index = lia.faction.getIndex("citizen")
         if index then
-            print("Citizen faction index: " .. index)
+            lia.debug("Citizen faction index: " .. index)
         end
         ```
 ]]
@@ -608,7 +608,7 @@ end
         ```lua
         local classes = lia.faction.getClasses("citizen")
         for _, class in ipairs(classes) do
-            print("Class: " .. class.name)
+            lia.debug("Class: " .. class.name)
         end
         ```
 ]]
@@ -676,7 +676,7 @@ end
     Example Usage:
         ```lua
         local count = lia.faction.getPlayerCount("citizen")
-        print("There are " .. count .. " citizens online")
+        lia.debug("There are " .. count .. " citizens online")
         ```
 ]]
 function lia.faction.getPlayerCount(faction)
@@ -712,7 +712,7 @@ end
         ```lua
         local lawFactions = {"police", "sheriff"}
         if lia.faction.isFactionCategory("police", lawFactions) then
-            print("This is a law enforcement faction")
+            lia.debug("This is a law enforcement faction")
         end
         ```
 ]]
@@ -879,7 +879,7 @@ end
         ```lua
         local categories = lia.faction.getCategories("citizen")
         for _, category in ipairs(categories) do
-            print("Category: " .. category)
+            lia.debug("Category: " .. category)
         end
         ```
 ]]
@@ -918,7 +918,7 @@ end
         ```lua
         local models = lia.faction.getModelsFromCategory("citizen", "male")
         for index, model in pairs(models) do
-            print("Model " .. index .. ": " .. (istable(model) and model[1] or model))
+            lia.debug("Model " .. index .. ": " .. (istable(model) and model[1] or model))
         end
         ```
 ]]
@@ -955,7 +955,7 @@ end
         ```lua
         local defaultClass = lia.faction.getDefaultClass("citizen")
         if defaultClass then
-            print("Default class: " .. defaultClass.name)
+            lia.debug("Default class: " .. defaultClass.name)
         end
         ```
 ]]

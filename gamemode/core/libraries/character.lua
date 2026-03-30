@@ -92,7 +92,7 @@ end
     Example Usage:
         ```lua
         for ply, char in pairs(lia.char.getAll()) do
-            print(ply:Name(), char:getName())
+            lia.debug(ply:Name(), char:getName())
         end
         ```
 ]]
@@ -941,7 +941,7 @@ if SERVER then
 
     Example Usage:
         ```lua
-        lia.char.create(payload, function(charID) print("created", charID) end)
+        lia.char.create(payload, function(charID) lia.debug("created", charID) end)
         ```
 ]]
     function lia.char.create(data, callback)
@@ -1004,7 +1004,7 @@ if SERVER then
 
     Example Usage:
         ```lua
-        lia.char.restore(ply, function(chars) print("loaded", #chars) end)
+        lia.char.restore(ply, function(chars) lia.debug("loaded", #chars) end)
         ```
 ]]
     function lia.char.restore(client, callback, id)

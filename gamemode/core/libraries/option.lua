@@ -159,7 +159,7 @@ end
     Example Usage:
         ```lua
             local name = lia.option.getDisplayName("BarsAlwaysVisible")
-            print("Option name:", name)
+            lia.debug("Option name:", name)
         ```
 ]]
 function lia.option.getDisplayName(key)
@@ -190,7 +190,7 @@ end
     Example Usage:
         ```lua
             local desc = lia.option.getDisplayDesc("BarsAlwaysVisible")
-            print("Option description:", desc)
+            lia.debug("Option description:", desc)
         ```
 ]]
 function lia.option.getDisplayDesc(key)
@@ -221,7 +221,7 @@ end
     Example Usage:
         ```lua
             local cat = lia.option.getDisplayCategory("BarsAlwaysVisible")
-            print("Option category:", cat)
+            lia.debug("Option category:", cat)
         ```
 ]]
 function lia.option.getDisplayCategory(key)
@@ -252,7 +252,7 @@ end
     Example Usage:
         ```lua
         local list = lia.option.getOptions("weaponSelectorPosition")
-        for _, opt in pairs(list) do print("Choice:", opt) end
+        for _, opt in pairs(list) do lia.debug("Choice:", opt) end
         ```
 ]]
 function lia.option.getOptions(key)

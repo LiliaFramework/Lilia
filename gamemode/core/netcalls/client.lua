@@ -1245,7 +1245,7 @@ net.Receive("liaAssureClientSideAssets", function()
                 activeDownloads = activeDownloads - 1
                 if path then
                     completedSounds = completedSounds + 1
-                    if not fromCache then print(L("soundDownloaded") .. ": " .. download.name) end
+                    if not fromCache then lia.debug(L("soundDownloaded") .. ": " .. download.name) end
                 else
                     failedSounds = failedSounds + 1
                     local errorMessage = errorMsg or L("unknownError")
@@ -1370,11 +1370,11 @@ net.Receive("liaDoorData", function()
     local syncData = net.ReadTable()
     if IsValid(door) and istable(syncData) then
         local mapID = door:MapCreationID() or 0
-        print("[TEST CLIENT] Received door data for door #" .. mapID .. " - keys: " .. table.concat(table.GetKeys(syncData), ", "))
-        print("[TEST CLIENT] Door #" .. mapID .. " data: " .. util.TableToJSON(syncData))
+        lia.debug("[TEST CLIENT] Received door data for door #" .. mapID .. " - keys: " .. table.concat(table.GetKeys(syncData), ", "))
+        lia.debug("[TEST CLIENT] Door #" .. mapID .. " data: " .. util.TableToJSON(syncData))
         lia.doors.stored[door] = syncData
         local verifyData = lia.doors.getData(door)
-        print("[TEST CLIENT] Door #" .. mapID .. " getData after receive - name: " .. tostring(verifyData.name) .. ", price: " .. tostring(verifyData.price))
+        lia.debug("[TEST CLIENT] Door #" .. mapID .. " getData after receive - name: " .. tostring(verifyData.name) .. ", price: " .. tostring(verifyData.price))
         hook.Run("DoorDataReceived", door, syncData)
     end
 end)

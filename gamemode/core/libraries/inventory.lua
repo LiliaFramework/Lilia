@@ -137,7 +137,7 @@ if SERVER then
     Example Usage:
         ```lua
         lia.inventory.loadByID(123):next(function(inventory)
-            print("Loaded inventory:", inventory.id)
+            lia.debug("Loaded inventory:", inventory.id)
         end)
         ```
 ]]
@@ -293,7 +293,7 @@ if SERVER then
         ```lua
         lia.inventory.loadAllFromCharID(42):next(function(inventories)
             for _, inv in ipairs(inventories) do
-                print("Loaded inventory:", inv.id)
+                lia.debug("Loaded inventory:", inv.id)
             end
         end)
         ```
@@ -487,7 +487,7 @@ if SERVER then
         ```lua
         local storage = lia.inventory.getStorage("models/props_c17/lockers001a.mdl")
         if storage then
-            print("Storage name:", storage.name)
+            lia.debug("Storage name:", storage.name)
         end
         ```
 ]]
@@ -563,7 +563,7 @@ if SERVER then
         ```lua
         local trunk = lia.inventory.getTrunk("vehicle_class")
         if trunk then
-            print("Trunk capacity:", trunk.invData.w, "x", trunk.invData.h)
+            lia.debug("Trunk capacity:", trunk.invData.w, "x", trunk.invData.h)
         end
         ```
 ]]
@@ -594,7 +594,7 @@ if SERVER then
         ```lua
         local trunks = lia.inventory.getAllTrunks()
         for class, config in pairs(trunks) do
-            print("Trunk for", class, ":", config.name)
+            lia.debug("Trunk for", class, ":", config.name)
         end
         ```
 ]]

@@ -621,7 +621,7 @@ else
     Example Usage:
         ```lua
         local data = lia.dialog.getNPCData("tutorial_guide")
-        if data then print("Greeting:", data.Greeting) end
+        if data then lia.debug("Greeting:", data.Greeting) end
         ```
 ]]
     function lia.dialog.getNPCData(npcID)
@@ -1083,7 +1083,7 @@ end
     Example Usage:
         ```lua
         local configs = lia.dialog.getAvailableConfigurations(LocalPlayer(), npc, npc.uniqueID)
-        for _, cfg in ipairs(configs) do print("Config:", cfg.id) end
+        for _, cfg in ipairs(configs) do lia.debug("Config:", cfg.id) end
         ```
 ]]
 function lia.dialog.getAvailableConfigurations(ply, npc, npcID)

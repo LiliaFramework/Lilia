@@ -25,7 +25,7 @@ local playerMeta = FindMetaTable("Player")
         ```lua
             local parts = ply:getParts()
             if parts["helmet"] then
-                print("Player has helmet equipped")
+                lia.debug("Player has helmet equipped")
             end
         ```
 ]]

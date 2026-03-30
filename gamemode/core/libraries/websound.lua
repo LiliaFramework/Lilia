@@ -173,7 +173,7 @@ end
             -- Internal usage only
             local isValid, errorMsg = validateSoundFile("track.mp3", downloadedData)
             if not isValid then
-                print("Invalid sound file: " .. errorMsg)
+                lia.debug("Invalid sound file: " .. errorMsg)
             end
         ```
 ]]
@@ -218,7 +218,7 @@ end
             -- Internal usage only
             local isValid, errorMsg = validateURL("https://example.com/audio.mp3")
             if not isValid then
-                print("Invalid URL: " .. errorMsg)
+                lia.debug("Invalid URL: " .. errorMsg)
             end
         ```
 ]]
@@ -487,7 +487,7 @@ local origPlayFile = sound.PlayFile
             -- Play a cached web sound
             sound.PlayFile("https://example.com/sound.mp3", "mono", function(channel)
                 if IsValid(channel) then
-                    print("Sound started playing")
+                    lia.debug("Sound started playing")
                 end
             end)
 
@@ -621,7 +621,7 @@ local origPlayURL = sound.PlayURL
             -- Stream with caching for repeated use
             sound.PlayURL("https://example.com/stream.mp3", "mono", function(channel)
                 if IsValid(channel) then
-                    print("Stream started")
+                    lia.debug("Stream started")
                 end
             end)
 
@@ -692,7 +692,7 @@ local origSurfacePlaySound = surface.PlaySound
             -- Play UI sound with web URL
             surface.PlaySound("https://example.com/ui_click.wav", nil, function(success)
                 if success then
-                    print("UI sound played")
+                    lia.debug("UI sound played")
                 end
             end)
 

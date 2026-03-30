@@ -735,7 +735,6 @@ LANGUAGE = {
     invalidTarget = "Invalid Target!",
     money = "Money",
     playtime = "Playtime",
-    noRagdoll = "You don't have a ragdoll to get up from!",
     invCheckSelf = "This isn't meant for checking your own inventory.",
     noBodygroups = "No bodygroups available for this model.",
     mustSpecifyItem = "You must specify an item to give.",

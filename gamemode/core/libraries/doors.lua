@@ -149,7 +149,7 @@ if SERVER then
     Example Usage:
         ```lua
         local data = lia.doors.getCachedData(door)
-        print("Door price:", data.price)
+        lia.debug("Door price:", data.price)
         ```
 ]]
     function lia.doors.getCachedData(door)

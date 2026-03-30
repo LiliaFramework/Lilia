@@ -421,8 +421,6 @@ function MODULE:CanPlayerAccessDoor(client, door)
             local classData = lia.class.list[classIndex]
             if id == unique or classIndex == charClass then
                 return true
-            elseif classData and classData.team and classData.team == charClassData.team then
-                return true
             end
         end
         return false

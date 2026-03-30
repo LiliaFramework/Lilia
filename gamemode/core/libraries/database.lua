@@ -83,7 +83,7 @@ lia.db.query = lia.db.query or function(...) lia.db.queryQueue[#lia.db.queryQueu
     Example Usage:
         ```lua
             lia.db.connect(function()
-                print("Database connected successfully!")
+                lia.debug("Database connected successfully!")
             end)
         ```
 ]]
@@ -125,7 +125,7 @@ end
     Example Usage:
         ```lua
             lia.db.wipeTables(function()
-                print("All Lilia tables have been wiped!")
+                lia.debug("All Lilia tables have been wiped!")
             end)
         ```
 ]]
@@ -363,7 +363,7 @@ end
             lia.db.waitForTablesToLoad():next(function()
                 -- Database tables are now ready
                 lia.db.select("*", "characters"):next(function(results)
-                    print("Characters loaded:", #results)
+                    lia.debug("Characters loaded:", #results)
                 end)
             end)
         ```
@@ -506,9 +506,9 @@ end
                 name = "John Doe",
                 money = "1000"
             }, function(results, lastID)
-                print("Character created with ID:", lastID)
+                lia.debug("Character created with ID:", lastID)
             end, "characters"):next(function(result)
-                print("Insert completed, last ID:", result.lastID)
+                lia.debug("Insert completed, last ID:", result.lastID)
             end)
         ```
 ]]
@@ -555,7 +555,7 @@ end
             lia.db.updateTable({
                 money = "500"
             }, nil, "characters", {id = 123}):next(function()
-                print("Character money updated")
+                lia.debug("Character money updated")
             end)
 
             -- Update with string condition
@@ -605,21 +605,21 @@ end
         ```lua
             -- Select all characters
             lia.db.select("*", "characters"):next(function(result)
-                print("Found", #result.results, "characters")
+                lia.debug("Found", #result.results, "characters")
             end)
 
             -- Select specific fields with condition
             lia.db.select({"name", "money"}, "characters", {steamID = "STEAM_0:1:12345678"}):next(function(result)
                 for _, char in ipairs(result.results) do
-                    print(char.name, "has", char.money, "money")
+                    lia.debug(char.name, "has", char.money, "money")
                 end
             end)
 
             -- Select with limit
             lia.db.select("name", "characters", nil, 5):next(function(result)
-                print("First 5 characters:")
+                lia.debug("First 5 characters:")
                 for _, char in ipairs(result.results) do
-                    print("-", char.name)
+                    lia.debug("-", char.name)
                 end
             end)
         ```
@@ -678,7 +678,7 @@ end
                 money = {operator = ">", value = 1000},
                 faction = "citizen"
             }, 10, "name ASC"):next(function(result)
-                print("Found", #result.results, "rich citizens")
+                lia.debug("Found", #result.results, "rich citizens")
             end)
         ```
 ]]
@@ -749,12 +749,12 @@ end
         ```lua
             -- Count all characters
             lia.db.count("characters"):next(function(count)
-                print("Total characters:", count)
+                lia.debug("Total characters:", count)
             end)
 
             -- Count characters for a specific player
             lia.db.count("characters", {steamID = "STEAM_0:1:12345678"}):next(function(count)
-                print("Player has", count, "characters")
+                lia.debug("Player has", count, "characters")
             end)
         ```
 ]]
@@ -840,9 +840,9 @@ end
         ```lua
             lia.db.exists("characters", {steamID = "STEAM_0:1:12345678"}):next(function(exists)
                 if exists then
-                    print("Player has characters")
+                    lia.debug("Player has characters")
                 else
-                    print("Player has no characters")
+                    lia.debug("Player has no characters")
                 end
             end)
         ```
@@ -878,16 +878,16 @@ end
             -- Get character by ID
             lia.db.selectOne("*", "characters", {id = 123}):next(function(character)
                 if character then
-                    print("Found character:", character.name)
+                    lia.debug("Found character:", character.name)
                 else
-                    print("Character not found")
+                    lia.debug("Character not found")
                 end
             end)
 
             -- Get player data by SteamID
             lia.db.selectOne({"name", "money"}, "players", {steamID = "STEAM_0:1:12345678"}):next(function(player)
                 if player then
-                    print(player.name, "has", player.money, "money")
+                    lia.debug(player.name, "has", player.money, "money")
                 end
             end)
         ```
@@ -943,7 +943,7 @@ end
             }
 
             lia.db.bulkInsert("items", items):next(function()
-                print("Bulk insert completed")
+                lia.debug("Bulk insert completed")
             end)
         ```
 ]]
@@ -1000,7 +1000,7 @@ end
             }
 
             lia.db.bulkUpsert("custom_items", data):next(function()
-                print("Bulk upsert completed")
+                lia.debug("Bulk upsert completed")
             end)
         ```
 ]]
@@ -1055,7 +1055,7 @@ end
                 steamID = "STEAM_0:1:12345678",
                 name = "Player Name"
             }, "players"):next(function(result)
-                print("Player record inserted or already exists")
+                lia.debug("Player record inserted or already exists")
             end)
         ```
 ]]
@@ -1101,9 +1101,9 @@ end
         ```lua
             lia.db.tableExists("lia_characters"):next(function(exists)
                 if exists then
-                    print("Characters table exists")
+                    lia.debug("Characters table exists")
                 else
-                    print("Characters table does not exist")
+                    lia.debug("Characters table does not exist")
                 end
             end)
         ```
@@ -1139,9 +1139,9 @@ end
         ```lua
             lia.db.fieldExists("lia_characters", "custom_field"):next(function(exists)
                 if exists then
-                    print("Custom field exists")
+                    lia.debug("Custom field exists")
                 else
-                    print("Custom field does not exist")
+                    lia.debug("Custom field does not exist")
                 end
             end)
         ```
@@ -1178,9 +1178,9 @@ end
     Example Usage:
         ```lua
             lia.db.getTables():next(function(tables)
-                print("Lilia tables:")
+                lia.debug("Lilia tables:")
                 for _, tableName in ipairs(tables) do
-                    print("-", tableName)
+                    lia.debug("-", tableName)
                 end
             end)
         ```
@@ -1225,9 +1225,9 @@ end
             }
 
             lia.db.transaction(queries):next(function()
-                print("Transaction completed successfully")
+                lia.debug("Transaction completed successfully")
             end):catch(function(err)
-                print("Transaction failed:", err)
+                lia.debug("Transaction failed:", err)
             end)
         ```
 ]]
@@ -1311,7 +1311,7 @@ end
                 name = "John Doe",
                 money = "1000"
             }, "characters"):next(function(result)
-                print("Character upserted, last ID:", result.lastID)
+                lia.debug("Character upserted, last ID:", result.lastID)
             end)
         ```
 ]]
@@ -1351,12 +1351,12 @@ end
         ```lua
             -- Delete a specific character
             lia.db.delete("characters", {id = 123}):next(function()
-                print("Character deleted")
+                lia.debug("Character deleted")
             end)
 
             -- Delete all characters for a player
             lia.db.delete("characters", {steamID = "STEAM_0:1:12345678"}):next(function()
-                print("All player characters deleted")
+                lia.debug("All player characters deleted")
             end)
         ```
 ]]
@@ -1404,7 +1404,7 @@ end
             }
 
             lia.db.createTable("custom_data", "id", schema):next(function()
-                print("Custom table created")
+                lia.debug("Custom table created")
             end)
         ```
 ]]
@@ -1463,9 +1463,9 @@ end
         ```lua
             lia.db.createColumn("characters", "custom_field", "VARCHAR(100)", "default_value"):next(function(success)
                 if success then
-                    print("Column added successfully")
+                    lia.debug("Column added successfully")
                 else
-                    print("Column already exists")
+                    lia.debug("Column already exists")
                 end
             end)
         ```
@@ -1519,9 +1519,9 @@ end
         ```lua
             lia.db.removeTable("custom_data"):next(function(success)
                 if success then
-                    print("Table removed successfully")
+                    lia.debug("Table removed successfully")
                 else
-                    print("Table does not exist")
+                    lia.debug("Table does not exist")
                 end
             end)
         ```
@@ -1565,9 +1565,9 @@ end
         ```lua
             lia.db.removeColumn("characters", "old_field"):next(function(success)
                 if success then
-                    print("Column removed successfully")
+                    lia.debug("Column removed successfully")
                 else
-                    print("Column or table does not exist")
+                    lia.debug("Column or table does not exist")
                 end
             end)
         ```
@@ -1637,9 +1637,9 @@ end
     Example Usage:
         ```lua
             lia.db.getCharacterTable(function(columns)
-                print("Character table columns:")
+                lia.debug("Character table columns:")
                 for _, column in ipairs(columns) do
-                    print("-", column)
+                    lia.debug("-", column)
                 end
             end)
         ```
@@ -1678,7 +1678,7 @@ end
     Example Usage:
         ```lua
             lia.db.createSnapshot("characters"):next(function(snapshot)
-                print("Snapshot created:", snapshot.file, "with", snapshot.records, "records")
+                lia.debug("Snapshot created:", snapshot.file, "with", snapshot.records, "records")
             end)
         ```
 ]]
@@ -1739,7 +1739,7 @@ end
     Example Usage:
         ```lua
             lia.db.loadSnapshot("snapshot_characters_1640995200.json"):next(function(result)
-                print("Restored", result.records, "records to", result.table)
+                lia.debug("Restored", result.records, "records to", result.table)
             end)
         ```
 ]]

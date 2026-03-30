@@ -44,7 +44,7 @@ end
         ```lua
             local staminaBar = lia.bar.get("stamina")
             if staminaBar then
-                print("Current priority:", staminaBar.priority)
+                lia.debug("Current priority:", staminaBar.priority)
             end
         ```
 ]]

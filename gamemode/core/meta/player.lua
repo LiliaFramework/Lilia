@@ -60,7 +60,7 @@ do
 
     Example Usage:
         ```lua
-            print(ply:tostring())
+            lia.debug(ply:tostring())
         ```
 ]]
     function playerMeta:tostring()
@@ -2039,11 +2039,8 @@ function playerMeta:getRagdoll()
     if IsValid(gmodRagdoll) then return gmodRagdoll end
     if CLIENT then
         if isentity(ragdollValue) and not IsValid(ragdollValue) then
-            self._liaNextRagdollDebug = self._liaNextRagdollDebug or 0
-            if self._liaNextRagdollDebug < CurTime() then
-                self._liaNextRagdollDebug = CurTime() + 1
-                print("[getRagdoll] unresolved ragdoll netvar for", self, "value:", ragdollValue)
-            end
+            self.liaNextRagdollDebug = self.liaNextRagdollDebug or 0
+            if self.liaNextRagdollDebug < CurTime() then self.liaNextRagdollDebug = CurTime() + 1 end
         end
 
         for _, ent in ipairs(ents.FindByClass("prop_ragdoll")) do

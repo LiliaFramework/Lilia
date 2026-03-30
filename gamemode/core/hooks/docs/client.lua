@@ -2493,7 +2493,7 @@ end
             hook.Add("PopulateFactionRosterOptions", "MyCustomRosterOptions", function(list, members)
                 list:AddMenuOption("View Profile", function(rowData)
                     if rowData and rowData.charID then
-                        print("Viewing profile for character ID:", rowData.charID)
+                        lia.debug("Viewing profile for character ID:", rowData.charID)
                     end
                 end, "icon16/user.png")
             end)

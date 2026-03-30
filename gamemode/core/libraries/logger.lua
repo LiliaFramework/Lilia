@@ -307,7 +307,7 @@ end
     Example Usage:
         ```lua
             local text, category = lia.log.getString(ply, "playerDeath", attackerName)
-            if text then print(category, text) end
+            if text then lia.debug(category, text) end
         ```
 ]]
 function lia.log.getString(client, logType, ...)

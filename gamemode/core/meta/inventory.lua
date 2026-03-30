@@ -241,7 +241,7 @@ end
 
     Example Usage:
         ```lua
-            print(inv:tostring())
+            lia.debug(inv:tostring())
         ```
 ]]
 function Inventory:tostring()

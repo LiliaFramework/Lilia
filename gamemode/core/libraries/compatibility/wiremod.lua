@@ -27,7 +27,7 @@ net.Receive("wire_expression2_upload", function(len, ply)
         local ok, ret = pcall(WireLib.von.deserialize, datastr)
         if not ok then
             WireLib.AddNotify(ply, L("wireExpressionUploadFailed", ret), NOTIFY_ERROR, 7, NOTIFYSOUND_DRIP3)
-            print(L("wireExpressionUploadFailed", ret))
+            lia.debug(L("wireExpressionUploadFailed", ret))
             return
         end
 

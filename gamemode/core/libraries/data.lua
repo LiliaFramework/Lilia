@@ -526,12 +526,7 @@ if SERVER then
         ensureDataDirs(gamemode, map)
         local path = getKeyFilePath(gamemode, map, key)
         local encoded = lia.data.encodetable(value)
-        if not istable(encoded) then
-            encoded = {
-                value = encoded
-            }
-        end
-
+        if not istable(encoded) then encoded = {value = encoded} end
         file.Write(path, util.TableToJSON(encoded, true) or "{}")
         hook.Run("OnDataSet", key, value, gamemode, map)
         return gamemode .. "/" .. map .. "/"
@@ -653,7 +648,7 @@ if SERVER then
 
     Example Usage:
         ```lua
-        lia.data.loadPersistence():next(function() print("Persistence columns ready") end)
+        lia.data.loadPersistence():next(function() lia.debug("Persistence columns ready") end)
         ```
     ]]
     function lia.data.loadPersistence()

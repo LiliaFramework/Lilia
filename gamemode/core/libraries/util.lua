@@ -67,7 +67,7 @@ end
 
     Example Usage:
         ```lua
-            lia.util.requestEntityInformation(client, ent, argTypes, function(info) print(info) end)
+            lia.util.requestEntityInformation(client, ent, argTypes, function(info) lia.debug(info) end)
         ```
 ]]
 function lia.util.requestEntityInformation(client, entity, argTypes, callback)
@@ -106,7 +106,7 @@ end
     Example Usage:
         ```lua
             local ply = lia.util.getBySteamID("76561198000000000")
-            if ply then print("Found", ply:Name()) end
+            if ply then lia.debug("Found", ply:Name()) end
         ```
 ]]
 function lia.util.getBySteamID(steamID)
@@ -344,7 +344,7 @@ end
 
     Example Usage:
         ```lua
-            if lia.util.stringMatches(ply:Name(), "john") then print("Matched player") end
+            if lia.util.stringMatches(ply:Name(), "john") then lia.debug("Matched player") end
         ```
 ]]
 function lia.util.stringMatches(a, b)
@@ -629,7 +629,7 @@ end
     Example Usage:
         ```lua
             local faction = lia.util.findFaction(ply, "combine")
-            if faction then print(faction.name) end
+            if faction then lia.debug(faction.name) end
         ```
 ]]
 function lia.util.findFaction(client, name)

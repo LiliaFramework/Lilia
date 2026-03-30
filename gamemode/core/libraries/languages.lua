@@ -117,7 +117,7 @@ end
     Example Usage:
         ```lua
             for _, langName in ipairs(lia.lang.getLanguages()) do
-                print("Language option:", langName)
+                lia.debug("Language option:", langName)
             end
         ```
 ]]

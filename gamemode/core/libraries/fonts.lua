@@ -106,7 +106,7 @@ end
     Example Usage:
         ```lua
             for _, name in ipairs(lia.font.getAvailableFonts()) do
-                print("Font:", name)
+                lia.debug("Font:", name)
             end
         ```
 ]]

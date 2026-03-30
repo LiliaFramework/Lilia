@@ -727,7 +727,7 @@ end
 
     Example Usage:
         ```lua
-            lia.derma.requestColorPicker(function(col) print("Picked", col) end, Color(0, 200, 255))
+            lia.derma.requestColorPicker(function(col) lia.debug("Picked", col) end, Color(0, 200, 255))
         ```
 ]]
 function lia.derma.requestColorPicker(func, colorStandard)
@@ -914,7 +914,7 @@ end
 
     Example Usage:
         ```lua
-            lia.derma.radialMenu({{label = "Yes", callback = function() print("yes") end}})
+            lia.derma.radialMenu({{label = "Yes", callback = function() lia.debug("yes") end}})
         ```
 ]]
 function lia.derma.radialMenu(options)
@@ -3682,7 +3682,7 @@ end
 
     Example Usage:
         ```lua
-            lia.derma.requestDropdown("Choose color", {"Red", "Green", "Blue"}, function(choice) print("Picked", choice) end)
+            lia.derma.requestDropdown("Choose color", {"Red", "Green", "Blue"}, function(choice) lia.debug("Picked", choice) end)
         ```
 ]]
 local function resolveRequestText(text, fallback)
@@ -3839,7 +3839,7 @@ end
 
     Example Usage:
         ```lua
-            lia.derma.requestString("Rename", "Enter a new name:", function(val) if val then print("New name", val) end end, "Default")
+            lia.derma.requestString("Rename", "Enter a new name:", function(val) if val then lia.debug("New name", val) end end, "Default")
         ```
 ]]
 function lia.derma.requestString(title, description, callback, defaultValue, maxLength)
@@ -4094,7 +4094,7 @@ end
 
     Example Usage:
         ```lua
-            lia.derma.requestBinaryQuestion("Confirm", "Delete item?", function(ok) if ok then print("Deleted") end end)
+            lia.derma.requestBinaryQuestion("Confirm", "Delete item?", function(ok) if ok then lia.debug("Deleted") end end)
         ```
 ]]
 function lia.derma.requestBinaryQuestion(title, question, callback, yesText, noText)
@@ -4170,7 +4170,7 @@ end
 
     Example Usage:
         ```lua
-            lia.derma.requestButtons("Choose action", {"Heal", "Damage"}, function(_, text) print("Pressed", text) end, "Pick an effect:")
+            lia.derma.requestButtons("Choose action", {"Heal", "Damage"}, function(_, text) lia.debug("Pressed", text) end, "Pick an effect:")
         ```
 ]]
 function lia.derma.requestButtons(title, buttons, callback, description)

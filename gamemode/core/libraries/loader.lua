@@ -739,6 +739,30 @@ end
 
 --[[
     Purpose:
+        Prints debug messages to the console when the schema is running in development mode.
+
+    When Called:
+        Called anywhere in the codebase to emit debug output that should only appear during development.
+
+    Parameters:
+        ... (any)
+            Any values to print, forwarded directly to lia.debug().
+
+    Realm:
+        Shared
+
+    Example Usage:
+        ```lua
+        lia.debug("Player spawned:", ply)
+        lia.debug("Config value:", lia.config.Get("SomeKey"))
+        ```
+]]
+function lia.debug(...)
+    if SCHEMA and SCHEMA.DevMode then lia.debug("[DEBUG]", ...) end
+end
+
+--[[
+    Purpose:
         Sends formatted messages to a Discord webhook for logging and notifications.
 
     When Called:

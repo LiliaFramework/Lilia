@@ -163,7 +163,7 @@ end
     Example Usage:
         ```lua
             local name = lia.config.getDisplayName("MaxCarryWeight")
-            print("Config name:", name)
+            lia.debug("Config name:", name)
         ```
 ]]
 function lia.config.getDisplayName(key)
@@ -194,7 +194,7 @@ end
     Example Usage:
         ```lua
             local desc = lia.config.getDisplayDesc("MaxCarryWeight")
-            print("Config description:", desc)
+            lia.debug("Config description:", desc)
         ```
 ]]
 function lia.config.getDisplayDesc(key)
@@ -225,7 +225,7 @@ end
     Example Usage:
         ```lua
             local cat = lia.config.getDisplayCategory("MaxCarryWeight")
-            print("Config category:", cat)
+            lia.debug("Config category:", cat)
         ```
 ]]
 function lia.config.getDisplayCategory(key)
@@ -429,16 +429,35 @@ end
 if CLIENT then
     net.Receive("liaCfgList", function()
         local data = net.ReadTable() or {}
+        local receivedCount = table.Count(data)
+        local registeredCount = table.Count(lia.config.stored)
+        lia.debug("[LIA CONFIG CLIENT] liaCfgList received. Keys in packet: " .. receivedCount .. " | Registered keys: " .. registeredCount)
+        local appliedCount = 0
+        local unknownCount = 0
         for k, v in pairs(data) do
             local stored = lia.config.stored[k]
             if stored then
-                stored.value = cfgCoerceValue(k, v)
+                local coerced = cfgCoerceValue(k, v)
+                lia.debug("[LIA CONFIG CLIENT]   Applied '" .. tostring(k) .. "': " .. tostring(istable(coerced) and util.TableToJSON(coerced) or coerced))
+                stored.value = coerced
+                appliedCount = appliedCount + 1
             else
+                lia.debug("[LIA CONFIG CLIENT]   WARNING: Key '" .. tostring(k) .. "' has no registered entry — storing raw value: " .. tostring(istable(v) and util.TableToJSON(v) or v))
                 lia.config.stored[k] = lia.config.stored[k] or {}
                 lia.config.stored[k].value = cfgCoerceValue(k, v)
+                unknownCount = unknownCount + 1
             end
         end
 
+        local notInPacket = 0
+        for k, _ in pairs(lia.config.stored) do
+            if data[k] == nil then
+                notInPacket = notInPacket + 1
+                lia.debug("[LIA CONFIG CLIENT]   MISSING from packet: '" .. tostring(k) .. "' (will use default: " .. tostring(lia.config.stored[k].default) .. ")")
+            end
+        end
+
+        lia.debug("[LIA CONFIG CLIENT] Done. Applied: " .. appliedCount .. " | Unknown keys: " .. unknownCount .. " | Registered keys missing from packet: " .. notInPacket)
         hook.Run("InitializedConfig")
     end)
 
@@ -448,8 +467,10 @@ if CLIENT then
         local value = net.ReadType()
         local stored = lia.config.stored[key]
         local oldValue = stored and stored.value
+        local coerced = cfgCoerceValue(key, value)
+        lia.debug("[LIA CONFIG CLIENT] liaCfgSet received. Key='" .. tostring(key) .. "' OldValue=" .. tostring(oldValue) .. " NewValue=" .. tostring(istable(coerced) and util.TableToJSON(coerced) or coerced))
         lia.config.stored[key] = lia.config.stored[key] or {}
-        lia.config.stored[key].value = cfgCoerceValue(key, value)
+        lia.config.stored[key].value = coerced
         hook.Run("OnConfigUpdated", key, oldValue, lia.config.stored[key].value)
     end)
 end
@@ -475,13 +496,19 @@ if SERVER then
 ]]
     function lia.config.load()
         local configData = lia.data.get("config", {})
+        local totalRegistered = table.Count(lia.config.stored)
+        local totalSaved = table.Count(configData)
+        lia.debug("[LIA CONFIG LOAD] Starting load. Registered keys: " .. totalRegistered .. " | Saved keys on disk: " .. totalSaved)
         local existing = {}
         for cfgKey, cfgValue in pairs(configData) do
             lia.config.stored[cfgKey] = lia.config.stored[cfgKey] or {}
+            local preCoerce = cfgValue
             cfgValue = cfgCoerceValue(cfgKey, cfgValue)
             if cfgValue == nil or cfgValue == "" then
+                lia.debug("[LIA CONFIG LOAD] Key '" .. tostring(cfgKey) .. "' value was nil/empty after coerce (raw=" .. tostring(preCoerce) .. "), falling back to default: " .. tostring(lia.config.stored[cfgKey].default))
                 lia.config.stored[cfgKey].value = lia.config.stored[cfgKey].default
             else
+                lia.debug("[LIA CONFIG LOAD] Key '" .. tostring(cfgKey) .. "' loaded from disk: " .. tostring(cfgValue))
                 lia.config.stored[cfgKey].value = cfgValue
                 existing[cfgKey] = true
             end
@@ -490,11 +517,13 @@ if SERVER then
         local defaultedCount = 0
         for k, v in pairs(lia.config.stored) do
             if not existing[k] then
+                lia.debug("[LIA CONFIG LOAD] Key '" .. tostring(k) .. "' NOT in saved data, using default: " .. tostring(v.default))
                 lia.config.stored[k].value = v.default
                 defaultedCount = defaultedCount + 1
             end
         end
 
+        lia.debug("[LIA CONFIG LOAD] Load complete. Loaded from disk: " .. (totalSaved - defaultedCount) .. " | Defaulted: " .. defaultedCount)
         for key, config in pairs(lia.config.stored) do
             if config.value ~= nil then
                 if istable(config.value) then
@@ -505,6 +534,7 @@ if SERVER then
             end
         end
 
+        lia.debug("[LIA CONFIG LOAD] lastSyncedValues populated for " .. table.Count(lia.config.lastSyncedValues) .. " keys")
         hook.Run("InitializedConfig")
     end
 
@@ -533,17 +563,31 @@ if SERVER then
 ]]
     function lia.config.getChangedValues(includeDefaults)
         local data = {}
+        local skipped = 0
         for k, v in pairs(lia.config.stored) do
             local isDifferent
             if includeDefaults or lia.config.lastSyncedValues[k] == nil then
                 isDifferent = not cfgValuesEqual(v.default, v.value)
+                if not isDifferent then
+                    lia.debug("[LIA CONFIG CHANGED] Key '" .. tostring(k) .. "' SKIPPED (value equals default: " .. tostring(v.value) .. ")")
+                    skipped = skipped + 1
+                end
             else
                 local lastSynced = lia.config.lastSyncedValues[k]
                 isDifferent = not cfgValuesEqual(lastSynced, v.value)
+                if not isDifferent then
+                    lia.debug("[LIA CONFIG CHANGED] Key '" .. tostring(k) .. "' SKIPPED (value unchanged since last sync: " .. tostring(v.value) .. ")")
+                    skipped = skipped + 1
+                end
             end
 
-            if isDifferent then data[k] = cfgNormalizeValue(v.value) end
+            if isDifferent then
+                lia.debug("[LIA CONFIG CHANGED] Key '" .. tostring(k) .. "' INCLUDED (value=" .. tostring(istable(v.value) and util.TableToJSON(v.value) or v.value) .. ")")
+                data[k] = cfgNormalizeValue(v.value)
+            end
         end
+
+        lia.debug("[LIA CONFIG CHANGED] getChangedValues: included=" .. table.Count(data) .. " skipped=" .. skipped)
         return data
     end
 
@@ -571,9 +615,14 @@ if SERVER then
         local data
         if client then
             data = lia.data.get("config", {})
+            lia.debug("[LIA CONFIG SEND] Sending to specific client '" .. tostring(IsValid(client) and client:Name() or "INVALID") .. "' using raw disk data. Keys: " .. table.Count(data))
         else
             data = lia.config.getChangedValues()
-            if table.Count(data) == 0 then return end
+            lia.debug("[LIA CONFIG SEND] Broadcasting to all clients. Changed/non-default keys to send: " .. table.Count(data))
+            if table.Count(data) == 0 then
+                lia.debug("[LIA CONFIG SEND] No changed values — broadcast skipped")
+                return
+            end
         end
 
         local targets
@@ -583,8 +632,14 @@ if SERVER then
             targets = player.GetHumans()
         end
 
-        if not istable(targets) or #targets == 0 then return end
+        if not istable(targets) or #targets == 0 then
+            lia.debug("[LIA CONFIG SEND] No valid targets found, aborting send")
+            return
+        end
+
+        lia.debug("[LIA CONFIG SEND] Sending " .. table.Count(data) .. " config keys to " .. #targets .. " player(s)")
         for key, value in pairs(data) do
+            lia.debug("[LIA CONFIG SEND]   -> " .. tostring(key) .. " = " .. tostring(istable(value) and util.TableToJSON(value) or value))
             if istable(value) then
                 lia.config.lastSyncedValues[key] = util.TableToJSON(value) and util.JSONToTable(util.TableToJSON(value)) or value
             else
@@ -595,6 +650,7 @@ if SERVER then
         net.Start("liaCfgList")
         net.WriteTable(data)
         net.Send(targets)
+        lia.debug("[LIA CONFIG SEND] liaCfgList net message sent")
     end
 
     --[[

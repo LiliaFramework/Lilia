@@ -1162,9 +1162,9 @@ if SERVER then
             results[#results + 1] = string.format("  [%s] %s = %s", typeName, info.key, tostring(newVal))
         end
 
-        print("[lia_randomconfig] Set one random config per type:")
+        lia.debug("[lia_randomconfig] Set one random config per type:")
         for _, line in ipairs(results) do
-            print(line)
+            lia.debug(line)
         end
     end)
 
@@ -2802,10 +2802,7 @@ lia.command.add("forcegetup", {
             return
         end
 
-        if not IsValid(target:GetRagdollEntity()) then
-            target:notifyErrorLocalized("noRagdoll")
-            return
-        end
+        if not IsValid(target:GetRagdollEntity()) then return end
 
         local entity = target:GetRagdollEntity()
         if IsValid(entity) and entity.liaGrace and entity.liaGrace < CurTime() and entity:GetVelocity():Length2D() < 8 and not entity.liaWakingUp then
@@ -2851,10 +2848,7 @@ lia.command.add("chargetup", {
     adminOnly = false,
     desc = "@forceSelfGetUpDesc",
     onRun = function(client)
-        if not IsValid(client:GetRagdollEntity()) then
-            client:notifyErrorLocalized("noRagdoll")
-            return
-        end
+        if not IsValid(client:GetRagdollEntity()) then return end
 
         local entity = client:GetRagdollEntity()
         if IsValid(entity) and entity.liaGrace and entity.liaGrace < CurTime() and entity:GetVelocity():Length2D() < 8 and not entity.liaWakingUp then

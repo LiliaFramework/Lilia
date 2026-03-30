@@ -234,7 +234,7 @@ end
     Example Usage:
         ```lua
             local desc = lia.keybind.getDisplayDescription("openInventory")
-            print("Keybind description:", desc)
+            lia.debug("Keybind description:", desc)
         ```
 ]]
 function lia.keybind.getDisplayDescription(action)
@@ -265,7 +265,7 @@ end
     Example Usage:
         ```lua
             local cat = lia.keybind.getDisplayCategory("openInventory")
-            print("Keybind category:", cat)
+            lia.debug("Keybind category:", cat)
         ```
 ]]
 function lia.keybind.getDisplayCategory(action)
@@ -491,7 +491,7 @@ if CLIENT then
     Example Usage:
         ```lua
             local key = lia.keybind.get("openInventory", KEY_I)
-            print("Inventory key is:", input.GetKeyName(key))
+            lia.debug("Inventory key is:", input.GetKeyName(key))
         ```
     ]]
     function lia.keybind.get(a, df)

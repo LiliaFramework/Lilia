@@ -474,7 +474,7 @@ function lia.net.profiler.log(direction, messageName, size, sender, receiver)
     if lia.net.profiler.loggedMessages[logKey] then return end
     lia.net.profiler.loggedMessages[logKey] = true
     timer.Simple(0.05, function() lia.net.profiler.loggedMessages[logKey] = nil end)
-    print(string.format("[Net Profiler] [%s] %s | %s | Size: %s | From: %s | To: %s", timeStr, direction, messageName, sizeStr, senderStr, receiverStr))
+    lia.debug(string.format("[Net Profiler] [%s] %s | %s | Size: %s | From: %s | To: %s", timeStr, direction, messageName, sizeStr, senderStr, receiverStr))
 end
 
 function net.Start(messageName)
@@ -546,8 +546,8 @@ end
 concommand.Add("lia_net_profiler", function(ply, cmd, args)
     lia.net.profiler.active = not lia.net.profiler.active
     if lia.net.profiler.active then
-        print("[Net Profiler] Enabled - All network messages will be logged")
+        lia.debug("[Net Profiler] Enabled - All network messages will be logged")
     else
-        print("[Net Profiler] Disabled")
+        lia.debug("[Net Profiler] Disabled")
     end
 end)

@@ -870,7 +870,7 @@ if SERVER then
 
     Example Usage:
         ```lua
-            char:save(function() print("saved") end)
+            char:save(function() lia.debug("saved") end)
         ```
 ]]
     function characterMeta:save(callback)

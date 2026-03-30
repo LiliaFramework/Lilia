@@ -803,7 +803,7 @@ end
     Example Usage:
         ```lua
         hook.Add("CommandAdded", "LogCommands", function(name, data)
-            print("Command registered:", name, "adminOnly:", data.adminOnly)
+            lia.debug("Command registered:", name, "adminOnly:", data.adminOnly)
         end)
         ```
 ]]
@@ -2382,7 +2382,7 @@ end
     Example Usage:
         ```lua
             hook.Add("OnPlayerDroppedItem", "LogItemDrop", function(client, spawnedItem)
-                print(client:Name() .. " dropped an item")
+                lia.debug(client:Name() .. " dropped an item")
             end)
         ```
 ]]
@@ -2409,7 +2409,7 @@ end
     Example Usage:
         ```lua
             hook.Add("OnPlayerRotateItem", "LogItemRotation", function(client, item, newRot)
-                print(client:Name() .. " rotated " .. item:getName() .. " to " .. newRot)
+                lia.debug(client:Name() .. " rotated " .. item:getName() .. " to " .. newRot)
             end)
         ```
 ]]
@@ -2434,7 +2434,7 @@ end
     Example Usage:
         ```lua
             hook.Add("OnPlayerTakeItem", "LogItemPickup", function(client, item)
-                print(client:Name() .. " took " .. item:getName())
+                lia.debug(client:Name() .. " took " .. item:getName())
             end)
         ```
 ]]
@@ -2464,7 +2464,7 @@ end
     Example Usage:
         ```lua
         hook.Add("OnPrivilegeRegistered", "SyncPrivileges", function(priv)
-            print("Privilege added:", priv.Name or priv.name)
+            lia.debug("Privilege added:", priv.Name or priv.name)
         end)
         ```
 ]]
