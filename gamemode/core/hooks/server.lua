@@ -391,38 +391,44 @@ function GM:EntityTakeDamage(entity, dmgInfo)
     if lia.config.get("PainSoundEnabled", true) and entity:IsPlayer() and entity:Health() > 0 then
         local painSound = hook.Run("GetPlayerPainSound", entity, "hurt", entity:isFemale())
         if entity:WaterLevel() >= 3 then painSound = hook.Run("GetPlayerPainSound", entity, "drown", entity:isFemale()) end
-        if painSound and hook.Run("ShouldPlayPainSound", entity, painSound) ~= false then
+        if painSound and hook.Run("ShouldPlayPainSound", entity, painSound) ~= false and (entity.NextPain or 0) <= CurTime() then
             entity:EmitSound(painSound)
             hook.Run("OnPainSoundPlayed", entity, painSound)
             entity.NextPain = CurTime() + 0.33
         end
     end
 
-    local foundPlayer
     if entity:GetClass() == "prop_ragdoll" then
+        local owner
         for _, ply in player.Iterator() do
             if ply:GetRagdollEntity() == entity then
-                foundPlayer = ply
+                owner = ply
                 break
             end
         end
 
-        if IsValid(foundPlayer) then
-            if dmgInfo:IsDamageType(DMG_CRUSH) then
-                if (entity.liaFallGrace or 0) < CurTime() then
-                    if dmgInfo:GetDamage() <= 10 then dmgInfo:SetDamage(0) end
-                    entity.liaFallGrace = CurTime() + 0.5
-                else
-                    return
-                end
-            end
-
-            if IsValid(foundPlayer) then
-                foundPlayer:TakeDamageInfo(dmgInfo)
-                dmgInfo:SetDamage(0)
+        if not IsValid(owner) then return end
+        if dmgInfo:IsDamageType(DMG_CRUSH) then
+            if (entity.liaFallGrace or 0) < CurTime() then
+                if dmgInfo:GetDamage() <= 10 then dmgInfo:SetDamage(0) end
+                entity.liaFallGrace = CurTime() + 0.5
+            else
+                return true
             end
         end
-        return
+
+        local transfer = DamageInfo()
+        transfer:SetDamage(dmgInfo:GetDamage())
+        transfer:SetDamageType(dmgInfo:GetDamageType())
+        transfer:SetAttacker(IsValid(dmgInfo:GetAttacker()) and dmgInfo:GetAttacker() or game.GetWorld())
+        transfer:SetInflictor(IsValid(dmgInfo:GetInflictor()) and dmgInfo:GetInflictor() or game.GetWorld())
+        transfer:SetDamageForce(dmgInfo:GetDamageForce())
+        transfer:SetDamagePosition(dmgInfo:GetDamagePosition())
+        transfer:SetReportedPosition(dmgInfo:GetReportedPosition())
+        if dmgInfo.GetAmmoType then transfer:SetAmmoType(dmgInfo:GetAmmoType()) end
+        owner:TakeDamageInfo(transfer)
+        dmgInfo:SetDamage(0)
+        return true
     end
 
     if not entity:IsPlayer() then return end
@@ -433,17 +439,8 @@ function GM:EntityTakeDamage(entity, dmgInfo)
             if dmgInfo:GetDamage() <= 10 then dmgInfo:SetDamage(0) end
             entity.liaFallGrace = CurTime() + 0.5
         else
-            return
+            return true
         end
-    end
-
-    local damage = dmgInfo:GetDamage()
-    if IsValid(entity) then
-        local currentHealth = entity:Health()
-        local newHealth = math.max(currentHealth - damage, 0)
-        entity:SetHealth(newHealth)
-        if newHealth <= 0 and currentHealth > 0 then entity:Kill() end
-        dmgInfo:SetDamage(0)
     end
 end
 
