@@ -514,10 +514,16 @@ function GM:PostPlayerLoadout(client)
     if not character then return end
     client:Give("lia_hands")
     client:SetupHands()
-    for k, v in pairs(character:getBodygroups()) do
+    local savedGroups = character:getBodygroups()
+    lia.debug("[BODYGROUP] PostPlayerLoadout for " .. client:Name() .. " | saved bodygroups: " .. tostring(table.ToString(savedGroups, "bodygroups", true)))
+    for k, v in pairs(savedGroups) do
         local index = tonumber(k)
         local value = tonumber(v) or 0
-        if index then client:SetBodygroup(index, value) end
+        if index then
+            lia.debug("[BODYGROUP] PostPlayerLoadout applying index=" .. tostring(index) .. " value=" .. tostring(value))
+            lia.debug("[BODYGROUP] hooks/server.lua PostPlayerLoadout applying for " .. client:Name() .. " | index=" .. tostring(index) .. " value=" .. tostring(value))
+            client:SetBodygroup(index, value)
+        end
     end
 
     client:SetSkin(character:getSkin())
@@ -552,6 +558,8 @@ function GM:DoPlayerDeath(client, attacker)
 end
 
 function GM:PlayerSpawn(client)
+    local _dbgChar = client:getChar()
+    if _dbgChar then lia.debug("[BODYGROUP] PlayerSpawn for " .. client:Name() .. " | char bodygroups at spawn: " .. tostring(table.ToString(_dbgChar:getBodygroups(), "bodygroups", true))) end
     client:stopAction()
     client:SetDSP(1, false)
     if not client.diedInRagdoll then

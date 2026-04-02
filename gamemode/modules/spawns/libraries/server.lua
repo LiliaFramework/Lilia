@@ -231,15 +231,9 @@ end
 function MODULE:PlayerDeath(client, inflictor, attacker)
     local char = client:getChar()
     if not char then return end
-    local shouldAutoRespawnBot = client:IsBot() and hook.Run("ShouldBotAutoRespawn", client, lia.config.get("SpawnTime", 5))
-    if not client:IsBot() or shouldAutoRespawnBot == false then
-        local deathTime = os.time()
-        client:setLocalVar("lastDeathTime", deathTime)
-        timer.Simple(0.1, function() if IsValid(client) and client:getChar() and not client:Alive() then client:setLocalVar("lastDeathTime", deathTime) end end)
-    else
-        local spawnTime = lia.config.get("SpawnTime", 5)
-        timer.Simple(spawnTime, function() if IsValid(client) and client:getChar() and not client:Alive() then client:Spawn() end end)
-    end
+    local deathTime = os.time()
+    client:setLocalVar("lastDeathTime", deathTime)
+    timer.Simple(0.1, function() if IsValid(client) and client:getChar() and not client:Alive() then client:setLocalVar("lastDeathTime", deathTime) end end)
 
     if lia.config.get("DeathPopupEnabled", true) then
         local resolvedAttacker = ResolveDeathAttacker(client, inflictor, attacker)

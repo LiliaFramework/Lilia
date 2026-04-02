@@ -765,7 +765,6 @@ function lia.debug(...)
         MsgC(Color(200, 200, 200), tostring(v))
         if i < #args then MsgC(Color(200, 200, 200), "\t") end
     end
-
     MsgC(Color(200, 200, 200), "\n")
 end
 
@@ -1016,7 +1015,6 @@ function lia.loader.initializeGamemode(isReload)
                 if IsValid(client) then lia.config.send(client) end
             end
         end)
-
         timer.Create("liaReloadAdminSync", 2.0, 1, function() if adminHasChanges then lia.admin.sync() end end)
         timer.Create("liaReloadPlayerInteractSync", 3.5, 1, function() if playerInteractHasChanges then lia.playerinteract.sync() end end)
         timer.Create("liaReloadComplete", 5.0, 1, function()
