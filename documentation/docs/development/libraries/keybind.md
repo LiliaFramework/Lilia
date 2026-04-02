@@ -57,6 +57,76 @@ The keybind library provides comprehensive functionality for managing keyboard b
 
 ---
 
+<details class="realm-shared" id="function-liakeybindgetdisplaydescription">
+<summary><a id="lia.keybind.getDisplayDescription"></a>lia.keybind.getDisplayDescription(action)</summary>
+<div class="details-content">
+<h3 style="margin-bottom: 5px; font-weight: 700;"><a id="liakeybindgetdisplaydescription"></a>Purpose</h3>
+<div style="margin-left: 20px; margin-bottom: 20px;">
+  <p>Retrieve the localized description for a registered keybind action.</p>
+</div>
+
+<h3 style="margin-bottom: 5px; font-weight: 700;">When Called</h3>
+<div style="margin-left: 20px; margin-bottom: 20px;">
+  <p>When populating tooltips or description labels in the keybind configuration UI.</p>
+</div>
+
+<h3 style="margin-bottom: 5px; font-weight: 700;">Parameters</h3>
+<div style="margin-left: 20px; margin-bottom: 20px;">
+<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#2.1">string</a></span> <span class="parameter">action</span> The action name to look up.</p>
+</div>
+
+<h3 style="margin-bottom: 5px; font-weight: 700;">Returns</h3>
+<div style="margin-left: 20px; margin-bottom: 20px;">
+<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#2.1">string</a></span> Localized description string, or an empty string if the action does not exist.</p>
+</div>
+
+<h3 style="margin-bottom: 5px; font-weight: 700;">Example Usage</h3>
+<div style="margin-left: 20px; margin-bottom: 20px;">
+<pre><code class="language-lua">  local desc = lia.keybind.getDisplayDescription("openInventory")
+  lia.debug("Keybind description:", desc)
+</code></pre>
+</div>
+
+</div>
+</details>
+
+---
+
+<details class="realm-shared" id="function-liakeybindgetdisplaycategory">
+<summary><a id="lia.keybind.getDisplayCategory"></a>lia.keybind.getDisplayCategory(action)</summary>
+<div class="details-content">
+<h3 style="margin-bottom: 5px; font-weight: 700;"><a id="liakeybindgetdisplaycategory"></a>Purpose</h3>
+<div style="margin-left: 20px; margin-bottom: 20px;">
+  <p>Retrieve the localized category for a registered keybind action.</p>
+</div>
+
+<h3 style="margin-bottom: 5px; font-weight: 700;">When Called</h3>
+<div style="margin-left: 20px; margin-bottom: 20px;">
+  <p>When building the keybind UI to group actions under category headers.</p>
+</div>
+
+<h3 style="margin-bottom: 5px; font-weight: 700;">Parameters</h3>
+<div style="margin-left: 20px; margin-bottom: 20px;">
+<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#2.1">string</a></span> <span class="parameter">action</span> The action name to look up.</p>
+</div>
+
+<h3 style="margin-bottom: 5px; font-weight: 700;">Returns</h3>
+<div style="margin-left: 20px; margin-bottom: 20px;">
+<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#2.1">string</a></span> Localized category name, or "misc" as the default fallback.</p>
+</div>
+
+<h3 style="margin-bottom: 5px; font-weight: 700;">Example Usage</h3>
+<div style="margin-left: 20px; margin-bottom: 20px;">
+<pre><code class="language-lua">  local cat = lia.keybind.getDisplayCategory("openInventory")
+  lia.debug("Keybind category:", cat)
+</code></pre>
+</div>
+
+</div>
+</details>
+
+---
+
 <details class="realm-client" id="function-liakeybindget">
 <summary><a id="lia.keybind.get"></a>lia.keybind.get(a, df)</summary>
 <div class="details-content">
@@ -84,7 +154,7 @@ The keybind library provides comprehensive functionality for managing keyboard b
 <h3 style="margin-bottom: 5px; font-weight: 700;">Example Usage</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
 <pre><code class="language-lua">  local key = lia.keybind.get("openInventory", KEY_I)
-  print("Inventory key is:", input.GetKeyName(key))
+  lia.debug("Inventory key is:", input.GetKeyName(key))
 </code></pre>
 </div>
 

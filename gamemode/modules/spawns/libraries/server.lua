@@ -234,7 +234,6 @@ function MODULE:PlayerDeath(client, inflictor, attacker)
     local deathTime = os.time()
     client:setLocalVar("lastDeathTime", deathTime)
     timer.Simple(0.1, function() if IsValid(client) and client:getChar() and not client:Alive() then client:setLocalVar("lastDeathTime", deathTime) end end)
-
     if lia.config.get("DeathPopupEnabled", true) then
         local resolvedAttacker = ResolveDeathAttacker(client, inflictor, attacker)
         if lia.config.get("DeathDebug", false) then

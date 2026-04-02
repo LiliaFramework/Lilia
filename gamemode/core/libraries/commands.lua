@@ -2803,7 +2803,6 @@ lia.command.add("forcegetup", {
         end
 
         if not IsValid(target:GetRagdollEntity()) then return end
-
         local entity = target:GetRagdollEntity()
         if IsValid(entity) and entity.liaGrace and entity.liaGrace < CurTime() and entity:GetVelocity():Length2D() < 8 and not entity.liaWakingUp then
             entity.liaWakingUp = true
@@ -2849,7 +2848,6 @@ lia.command.add("chargetup", {
     desc = "@forceSelfGetUpDesc",
     onRun = function(client)
         if not IsValid(client:GetRagdollEntity()) then return end
-
         local entity = client:GetRagdollEntity()
         if IsValid(entity) and entity.liaGrace and entity.liaGrace < CurTime() and entity:GetVelocity():Length2D() < 8 and not entity.liaWakingUp then
             entity.liaWakingUp = true
