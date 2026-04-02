@@ -15,6 +15,9 @@
         The library integrates with the configuration system to allow customizable currency symbols and names.
 ]]
 lia.currency = lia.currency or {}
+lia.currency.singular = lia.lang.resolveToken(lia.config.get("CurrencySingularName", "@currencySingular"))
+lia.currency.plural = lia.lang.resolveToken(lia.config.get("CurrencyPluralName", "@currencyPlural"))
+lia.currency.symbol = ""
 --[[
     Purpose:
         Format a numeric amount into a localized currency string with the configured symbol and singular/plural name.

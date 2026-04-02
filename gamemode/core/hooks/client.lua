@@ -373,8 +373,10 @@ local function updateVoiceIndicator()
         end
 
         if count > 0 then
-            voiceText = voiceText .. " - " .. count .. " people can hear you"
-            tooltipLines[#tooltipLines + 1] = "<font=LiliaFont.16>" .. count .. " people can hear you</font>"
+            local canHearKey = count == 1 and "voiceOnePersonCanHearYou" or "voicePeopleCanHearYou"
+            local canHearText = L(canHearKey, count)
+            voiceText = voiceText .. " - " .. canHearText
+            tooltipLines[#tooltipLines + 1] = "<font=LiliaFont.16>" .. canHearText .. "</font>"
         end
     end
 

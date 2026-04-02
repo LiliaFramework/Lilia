@@ -1520,8 +1520,8 @@ lia.config.add("Workshop", "@mainMenuWorkshopURL", "", nil, {
     type = "Generic"
 })
 
-lia.config.add("CharMenuBGInputDisabled", "@mainMenuCharBGInputDisabled", true, nil, {
-    desc = "@mainMenuCharBGInputDisabledDesc",
+lia.config.add("CharMenuBGInputDisabled", "@charMenuBGInputDisabled", true, nil, {
+    desc = "@charMenuBGInputDisabledDesc",
     category = "Core",
     type = "Boolean"
 })

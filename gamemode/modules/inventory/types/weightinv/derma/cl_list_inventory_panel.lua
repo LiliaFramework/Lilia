@@ -14,7 +14,7 @@ function PANEL:Init()
     self.weightBar:DockMargin(PADDING, PADDING, PADDING, PADDING)
     self.weightBar.Paint = function(this, w, h) self:paintWeightBar(w, h) end
     self.weightLabel = self.weight:Add("DLabel")
-    self.weightLabel:SetText("WEIGHT: 0/10KG")
+    self.weightLabel:SetText(L("inventoryWeightStatus", 0, 10, lia.config.get("invWeightUnit", "KG")))
     self.weightLabel:SetFont("LiliaFont.20")
     self.weightLabel:Dock(FILL)
     self.weightLabel:SetContentAlignment(5)
@@ -111,7 +111,7 @@ end
 function PANEL:updateWeight()
     local inventory = self.inventory
     if not inventory then return end
-    self.weightLabel:SetText(L"weight":upper() .. ": " .. inventory:getWeight() .. "/" .. inventory:getMaxWeight() .. lia.config.get("invWeightUnit", "KG"))
+    self.weightLabel:SetText(L("inventoryWeightStatus", inventory:getWeight(), inventory:getMaxWeight(), lia.config.get("invWeightUnit", "KG")))
 end
 
 function PANEL:Center()

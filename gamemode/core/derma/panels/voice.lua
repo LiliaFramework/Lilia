@@ -55,7 +55,7 @@ function PANEL:UpdateTooltip()
     if not IsValid(self.client) then return end
     local vt = self.cachedVoiceType or VOICE_TALKING
     local voiceTypeText = L(vt)
-    local displayName = self.name or "Unknown"
+    local displayName = self.name or L("unknown")
     local lines = {}
     lines[#lines + 1] = "<font=LiliaFont.16b>" .. displayName .. "</font>"
     lines[#lines + 1] = "<font=LiliaFont.16>" .. L("youAre") .. " " .. voiceTypeText .. "</font>"

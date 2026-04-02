@@ -1025,6 +1025,8 @@ function MODULE:InitializedModules()
     self.adminStickCategoryOrder = categoryOrder
 end
 
+
+
 local function GetOrCreateCategoryMenu(parent, categoryKey, store)
     if not parent or not IsValid(parent) then return end
     MODULE.adminStickCategories = MODULE.adminStickCategories or {}
@@ -2125,7 +2127,7 @@ function MODULE:OpenAdminStickUI(tgt)
         }
 
         table.insert(lists, {
-            name = "Copy",
+            name = "@copy",
             category = "moderation",
             subcategory = "moderationTools",
             items = copyItems
