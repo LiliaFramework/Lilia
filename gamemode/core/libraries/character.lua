@@ -561,6 +561,9 @@ lia.char.registerVar("faction", {
         local client = character:getPlayer()
         client:SetTeam(value)
         character.vars.faction = faction.uniqueID
+        local currentClass = character:getClass()
+        local classData = currentClass and lia.class.list[currentClass]
+        if currentClass and (not classData or classData.faction ~= value) then character:setClass(nil) end
         net.Start("liaCharSet")
         net.WriteString("faction")
         net.WriteType(character.vars.faction)

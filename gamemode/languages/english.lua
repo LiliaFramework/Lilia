@@ -3397,7 +3397,6 @@ LANGUAGE = {
     player_welcome = "Welcome to the server, %s!",
     server_restart_time = "Server restarting in %d seconds",
     ui_settings_saved = "Settings saved successfully",
-    ui_welcome_back = "Welcome back, %s!",
     ui_health_critical = "Health critically low!",
     ui_health_good = "Health good",
     name = "Name",

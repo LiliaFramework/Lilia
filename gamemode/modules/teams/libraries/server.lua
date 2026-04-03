@@ -67,7 +67,7 @@ function MODULE:PlayerLoadedChar(client, character)
             end)
         end
 
-        if not lia.class.list[character:getClass()] then
+        if not class or class.faction ~= client:Team() then
             local defClass = lia.faction.getDefaultClass(client:Team())
             if defClass then
                 character:setClass(defClass.index)
@@ -176,6 +176,7 @@ function MODULE:PostPlayerLoadout(client)
     if not character then return end
     local faction = lia.faction.indices[character:getFaction()]
     local class = lia.class.list[character:getClass()]
+    if class and class.faction ~= client:Team() then class = nil end
     timer.Simple(0.2, function()
         if IsValid(client) then
             local mergedAttr = {}

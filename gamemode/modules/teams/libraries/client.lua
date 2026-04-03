@@ -27,13 +27,7 @@ local factionRosterPanel = nil
 function MODULE:CreateMenuButtons(tabs)
     if not lia.class or not lia.class.list then return end
     local joinable = lia.class.retrieveJoinable(LocalPlayer())
-    if #joinable >= 1 then
-        tabs["classes"] = {
-            name = "classes",
-            func = function(panel) panel:Add("liaClasses") end
-        }
-    end
-
+    if #joinable >= 1 then tabs["classes"] = {name = "classes", func = function(panel) panel:Add("liaClasses") end} end
     local client = LocalPlayer()
     if not IsValid(client) then return end
     local character = client:getChar()
