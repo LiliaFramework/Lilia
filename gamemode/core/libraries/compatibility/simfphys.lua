@@ -43,7 +43,7 @@
             entity.IsBeingEntered = true
             client:setAction(L("enteringVehicle"), delay, function()
                 if IsValid(entity) and IsValid(client) then
-                    entity.IsBeingEntered = false -- Reset flag
+                    entity.IsBeingEntered = false
                     local distance = client:GetPos():Distance(entity:GetPos())
                     if distance <= 150 then
                         entity:SetPassenger(client)
