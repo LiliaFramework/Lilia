@@ -34,24 +34,28 @@
         end
 
         local delay = lia.config.get("TimeToEnterVehicle", 5)
-        if entity:isSimfphysCar() and delay > 0 then
+        if entity:isSimfphysCar() then
+            if delay <= 0 then
+                entity:SetPassenger(client)
+                return true
+            end
+
             entity.IsBeingEntered = true
             client:setAction(L("enteringVehicle"), delay, function()
                 if IsValid(entity) and IsValid(client) then
+                    entity.IsBeingEntered = false -- Reset flag
                     local distance = client:GetPos():Distance(entity:GetPos())
                     if distance <= 150 then
-                        entity.IsBeingEntered = false
                         entity:SetPassenger(client)
                     else
-                        entity.IsBeingEntered = false
                         client:notifyWarningLocalized("tooFarAway")
                     end
                 elseif IsValid(entity) then
                     entity.IsBeingEntered = false
                 end
             end)
+            return true
         end
-        return true
     end)
 else
     hook.Remove("HUDPaint", "simfphys_HUD")
