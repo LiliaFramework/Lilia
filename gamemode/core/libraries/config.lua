@@ -163,7 +163,6 @@ end
     Example Usage:
         ```lua
             local name = lia.config.getDisplayName("MaxCarryWeight")
-            
         ```
 ]]
 function lia.config.getDisplayName(key)
@@ -194,7 +193,6 @@ end
     Example Usage:
         ```lua
             local desc = lia.config.getDisplayDesc("MaxCarryWeight")
-            
         ```
 ]]
 function lia.config.getDisplayDesc(key)
@@ -225,7 +223,6 @@ end
     Example Usage:
         ```lua
             local cat = lia.config.getDisplayCategory("MaxCarryWeight")
-            
         ```
 ]]
 function lia.config.getDisplayCategory(key)
