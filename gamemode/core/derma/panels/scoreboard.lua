@@ -206,6 +206,7 @@ function PANEL:Init()
 end
 
 function PANEL:Think()
+    if not self:IsVisible() then return end
     if (self.nextUpdate or 0) > CurTime() then return end
     for _, ply in player.Iterator() do
         if hook.Run("ShouldShowPlayerOnScoreboard", ply) == false or hook.Run("ShouldShowFactionOnScoreboard", ply) == false or (lia.faction.indices[ply:Team()] and lia.faction.indices[ply:Team()].scoreboardHidden) then continue end
@@ -246,6 +247,7 @@ function PANEL:addPlayer(ply, parent)
     local height = ScrH() * 0.08
     slot:SetTall(height)
     slot.Paint = function() end
+    slot.player = ply
     slot.character = ply:getChar()
     ply.liaScoreSlot = slot
     local margin, iconSize = 5, height * 0.75
@@ -372,7 +374,7 @@ function PANEL:addPlayer(ply, parent)
     end
 
     slot.ping.Think = function(lbl)
-        if not IsValid(ply) then return end
+        if not IsValid(ply) or not IsValid(self) or not self:IsVisible() then return end
         local txt = tostring(ply:Ping())
         if lbl:GetText() ~= txt then
             lbl:SetText(txt)
@@ -495,6 +497,9 @@ function PANEL:OnRemove()
     hook.Run("ScoreboardClosed", self)
     CloseDermaMenus()
     self:ClosePlayerOptionFrames()
+    for _, slot in ipairs(self.playerSlots or {}) do
+        if IsValid(slot) and IsValid(slot.player) and slot.player.liaScoreSlot == slot then slot.player.liaScoreSlot = nil end
+    end
 end
 
 vgui.Register("liaScoreboard", PANEL, "liaFrame")
@@ -517,6 +522,7 @@ local function liaScoreboardShow()
     if not IsValid(tracedEntity) or not tracedEntity:IsPlayer() then
         if IsValid(lia.gui.score) then
             if not lia.gui.score:IsVisible() then
+                lia.gui.score.nextUpdate = 0
                 lia.gui.score:SetVisible(true)
                 hook.Run("ScoreboardOpened", lia.gui.score)
             end

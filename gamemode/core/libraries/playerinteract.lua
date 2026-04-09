@@ -566,11 +566,24 @@ else
     end)
 
     lia.net.readBigTable("liaPlayerInteractCategories", function(data) if istable(data) then lia.playerinteract.categories = data end end)
-    timer.Simple(0.1, function()
+    local function shouldPreserveReloadPanel(panel)
+        if not IsValid(panel) then return true end
+        local panelName = panel.GetName and panel:GetName() or ""
+        if panelName == "liaChatBox" then return true end
+        local initInfo = panel.Init and debug.getinfo(panel.Init, "Sln")
+        local src = initInfo and initInfo.short_src or ""
+        return src:find("chatbox") or src:find("spawnmenu") or src:find("creationmenu") or src:find("controlpanel")
+    end
+
+    local function cleanupReloadPanels()
         if lia.gui then
             for key, panel in pairs(lia.gui) do
-                if IsValid(panel) and panel.Remove then panel:Remove() end
-                lia.gui[key] = nil
+                if not shouldPreserveReloadPanel(panel) then
+                    if IsValid(panel) and panel.Remove then panel:Remove() end
+                    lia.gui[key] = nil
+                elseif not IsValid(panel) then
+                    lia.gui[key] = nil
+                end
             end
         end
 
@@ -578,15 +591,13 @@ else
         if IsValid(world) then
             local children = world:GetChildren()
             for _, panel in ipairs(children) do
-                if IsValid(panel) then
-                    local initInfo = panel.Init and debug.getinfo(panel.Init, "Sln")
-                    local src = initInfo and initInfo.short_src or ""
-                    if not (src:find("chatbox") or src:find("spawnmenu") or src:find("creationmenu") or src:find("controlpanel")) then panel:Remove() end
-                end
+                if IsValid(panel) and not shouldPreserveReloadPanel(panel) then panel:Remove() end
             end
         end
-    end)
+    end
 
+    hook.Add("OnReloaded", "liaCleanupReloadPanels", function() timer.Simple(0.05, cleanupReloadPanels) end)
+    timer.Simple(0.05, cleanupReloadPanels)
     if lia.playerinteract.stored then table.Empty(lia.playerinteract.stored) end
     if lia.playerinteract.categories then table.Empty(lia.playerinteract.categories) end
 end

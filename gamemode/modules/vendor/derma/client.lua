@@ -1176,11 +1176,7 @@ function PANEL:Init()
     end)
 
     self.items = self.itemsFrame:Add("liaTable")
-    if not self.items then
-        lia.debug("ERROR: Failed to create liaTable")
-        return
-    end
-
+    if not self.items then return end
     self.items:Dock(FILL)
     self.items:DockMargin(8, 0, 8, 8)
     local nameCol = self.items:AddColumn(L("name"))
@@ -2139,7 +2135,6 @@ function PANEL:OnRowRightClick(_, rowData)
         return
     end
 
-    lia.debug("[liaVendorEditor] OnRowRightClick triggered for row", rowData and rowData.item)
     if IsValid(menu) then menu:Remove() end
     local uniqueID = rowData.item
     local itemTable = lia.item.list[uniqueID]

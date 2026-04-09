@@ -3865,7 +3865,7 @@ lia.command.add("charsetbodygroup", {
         local index = target:FindBodygroupByName(bodyGroup)
         if index > -1 then
             if value and value < 1 then value = nil end
-            local groups = target:getChar():getBodygroups()
+            local groups = lia.class.normalizeBodygroups(target:getChar().vars.bodygroups)
             groups[index] = value
             target:getChar():setBodygroups(groups)
             target:SetBodygroup(index, value or 0)

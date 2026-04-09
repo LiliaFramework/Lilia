@@ -215,7 +215,6 @@ ITEM.functions.Equip = {
         if client:HasWeapon(item.class) then client:StripWeapon(item.class) end
         local weapon = client:Give(item.class, true)
         if IsValid(weapon) then
-            timer.Simple(0, function() client:SelectWeapon(weapon:GetClass()) end)
             client:EmitSound(item.equipSound or "items/ammo_pickup.wav", 80)
             local ammoCount = client:GetAmmoCount(weapon:GetPrimaryAmmoType())
             if ammoCount == weapon:Clip1() and item:getData("ammo", 0) == 0 then client:RemoveAmmo(weapon:Clip1(), weapon:GetPrimaryAmmoType()) end

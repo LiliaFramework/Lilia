@@ -341,7 +341,7 @@ The data library provides comprehensive functionality for data persistence, seri
 
 <h3 style="margin-bottom: 5px; font-weight: 700;">Example Usage</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
-<pre><code class="language-lua">  lia.data.loadPersistence():next(function() lia.debug("Persistence columns ready") end)
+<pre><code class="language-lua">  lia.data.loadPersistence():next(function() print("Persistence columns ready") end)
 </code></pre>
 </div>
 

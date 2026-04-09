@@ -1,64 +1,52 @@
 ﻿if SERVER then
     hook.Add("EntityTakeDamage", "liaSimfphys", function(seat, dmgInfo)
-        local damageInCars = lia.config.get("DamageInCars", true)
-        if not damageInCars then return end
-        if seat:IsVehicle() and seat:GetClass() == "gmod_sent_vehicle_fphysics_base" then
-            local player = seat:GetDriver()
-            if IsValid(player) and isfunction(player.isStaffOnDuty) and player:isStaffOnDuty() then
-                dmgInfo:SetDamage(0)
-                return
-            end
+        if not lia.config.get("DamageInCars", true) then return end
+        if not seat:IsVehicle() or seat:GetClass() ~= "gmod_sent_vehicle_fphysics_base" then return end
+        local client = seat:GetDriver()
+        if IsValid(client) and isfunction(client.isStaffOnDuty) and client:isStaffOnDuty() then
+            dmgInfo:SetDamage(0)
+            return
+        end
 
-            if IsValid(player) then
-                local hitPos = dmgInfo:GetDamagePosition()
-                local playerPos = player:GetPos()
-                local thresholdDistance = 53
-                if hitPos:Distance(playerPos) <= thresholdDistance then
-                    local newHealth = player:Health() - dmgInfo:GetDamage() * 0.3
-                    if newHealth > 0 then
-                        player:SetHealth(newHealth)
-                    else
-                        player:Kill()
-                    end
-                end
-            end
+        if not IsValid(client) then return end
+        local hitPos = dmgInfo:GetDamagePosition()
+        if hitPos:Distance(client:GetPos()) > 53 then return end
+        local newHealth = client:Health() - dmgInfo:GetDamage() * 0.3
+        if newHealth > 0 then
+            client:SetHealth(newHealth)
+        else
+            client:Kill()
         end
     end)
 
     hook.Add("simfphysUse", "liaSimfphys", function(entity, client)
-        local enabled = lia.config.get("CarEntryDelayEnabled", true)
-        if not enabled then return end
+        if not lia.config.get("CarEntryDelayEnabled", true) then return end
+        if not entity:isSimfphysCar() then return end
         if entity.IsBeingEntered then
             client:notifyWarningLocalized("carOccupiedNotice")
             return true
         end
 
         local delay = lia.config.get("TimeToEnterVehicle", 5)
-        if entity:isSimfphysCar() then
-            if delay <= 0 then
-                entity:SetPassenger(client)
-                return true
-            end
-
-            entity.IsBeingEntered = true
-            client:setAction(L("enteringVehicle"), delay, function()
-                if IsValid(entity) and IsValid(client) then
-                    entity.IsBeingEntered = false
-                    local distance = client:GetPos():Distance(entity:GetPos())
-                    if distance <= 150 then
-                        entity:SetPassenger(client)
-                    else
-                        client:notifyWarningLocalized("tooFarAway")
-                    end
-                elseif IsValid(entity) then
-                    entity.IsBeingEntered = false
-                end
-            end)
+        if delay <= 0 then
+            entity:SetPassenger(client)
             return true
         end
+
+        entity.IsBeingEntered = true
+        client:setAction(L("enteringVehicle"), delay, function()
+            if IsValid(entity) then entity.IsBeingEntered = false end
+            if not IsValid(entity) or not IsValid(client) then return end
+            if client:GetPos():Distance(entity:GetPos()) <= 150 then
+                entity:SetPassenger(client)
+            else
+                client:notifyWarningLocalized("tooFarAway")
+            end
+        end)
+        return true
     end)
 else
-    hook.Remove("HUDPaint", "simfphys_HUD")
+    hook.Add("InitializedModules", "liaSimfphys", function() if lia.config.get("DisableSimfphysHUD", false) then hook.Remove("HUDPaint", "simfphys_HUD") end end)
 end
 
 hook.Add("CheckValidSit", "liaSimfphys", function(client)
@@ -66,6 +54,9 @@ hook.Add("CheckValidSit", "liaSimfphys", function(client)
     if IsValid(vehicle) and vehicle:isSimfphysCar() then return false end
 end)
 
+hook.Add("simfphysPhysicsCollide", "SIMFPHYS_simfphysPhysicsCollide", function() return true end)
+hook.Add("IsSuitableForTrunk", "SIMFPHYS_IsSuitableForTrunk", function(vehicle) if IsValid(vehicle) and vehicle:isSimfphysCar() then return true end end)
+hook.Add("CanProperty", "SIMFPHYS_CanProperty", function(client, property, ent) if property == "editentity" and ent:isSimfphysCar() then return client:hasPrivilege("canEditSimfphysCars") end end)
 lia.config.add("DamageInCars", "@takeDamageInCars", true, nil, {
     desc = "@takeDamageInCarsDesc",
     category = "@Core",
@@ -86,6 +77,14 @@ lia.config.add("TimeToEnterVehicle", "@timeToEnterVehicle", 4, nil, {
     max = 30
 })
 
-hook.Add("simfphysPhysicsCollide", "SIMFPHYS_simfphysPhysicsCollide", function() return true end)
-hook.Add("IsSuitableForTrunk", "SIMFPHYS_IsSuitableForTrunk", function(vehicle) if IsValid(vehicle) and vehicle:isSimfphysCar() then return true end end)
-hook.Add("CanProperty", "SIMFPHYS_CanProperty", function(client, property, ent) if property == "editentity" and ent:isSimfphysCar() then return client:hasPrivilege("canEditSimfphysCars") end end)
+lia.config.add("DisableSimfphysHUD", "@disableSimfphysHUD", false, function()
+    if SERVER then
+        for _, client in player.Iterator() do
+            if IsValid(client) then client:notifyInfoLocalized("simfphysHudRestartNotice") end
+        end
+    end
+end, {
+    desc = "@disableSimfphysHUDDesc",
+    category = "@Core",
+    type = "Boolean"
+})

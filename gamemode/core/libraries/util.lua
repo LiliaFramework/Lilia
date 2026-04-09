@@ -1344,7 +1344,7 @@ else
         end)
 
         for _, option in ipairs(istable(options) and options or {}) do
-            listView:AddMenuOption(option.name and L(option.name) or option.name, function()
+            listView:AddMenuOption(option.name and L(option.name) or option.name, function(rowData, rowIndex)
                 if not option.net then return end
                 if option.ExtraFields then
                     local inputPanel = vgui.Create("liaFrame")
@@ -1421,7 +1421,7 @@ else
 
                         net.Start(option.net)
                         net.WriteInt(charID, 32)
-                        net.WriteTable(listView.rows[rowIndex])
+                        net.WriteTable(rowData)
                         for _, fVal in pairs(values) do
                             if isnumber(fVal) then
                                 net.WriteInt(fVal, 32)
@@ -1437,7 +1437,7 @@ else
                 else
                     net.Start(option.net)
                     net.WriteInt(charID, 32)
-                    net.WriteTable(listView.rows[rowIndex])
+                    net.WriteTable(rowData)
                     net.SendToServer()
                     frame:Remove()
                 end

@@ -2314,6 +2314,32 @@ end
 ]]
 local drawBoxOverlaps = {}
 local drawBoxFrame = 0
+local function splitBoxTextLines(text)
+    local sourceLines = istable(text) and text or {text}
+    local textLines = {}
+    for _, value in ipairs(sourceLines) do
+        local normalized = tostring(value or ""):gsub("\r\n", "\n"):gsub("\r", "\n")
+        local startIndex = 1
+        while true do
+            local breakStart, breakEnd = normalized:find("\n", startIndex, true)
+            if not breakStart then
+                textLines[#textLines + 1] = normalized:sub(startIndex)
+                break
+            end
+
+            textLines[#textLines + 1] = normalized:sub(startIndex, breakStart - 1)
+            startIndex = breakEnd + 1
+            if startIndex > #normalized then
+                textLines[#textLines + 1] = ""
+                break
+            end
+        end
+    end
+
+    if #textLines == 0 then textLines[1] = "" end
+    return textLines
+end
+
 function lia.derma.drawBoxWithText(text, x, y, options)
     options = options or {}
     local font = options.font or "LiliaFont.16"
@@ -2335,16 +2361,21 @@ function lia.derma.drawBoxWithText(text, x, y, options)
     local autoSize = options.autoSize ~= false
     local lineSpacing = options.lineSpacing or 4
     local overlapMargin = options.overlapMargin or 8
-    local textLines = istable(text) and text or {text}
+    local textLines = splitBoxTextLines(text)
     surface.SetFont(font)
+    local _, defaultLineHeight = surface.GetTextSize("W")
     local maxWidth, totalHeight = 0, 0
+    local lineHeights = {}
     for i, line in ipairs(textLines) do
-        local t_w, t_h = surface.GetTextSize(line)
+        local measureText = line ~= "" and line or " "
+        local t_w, t_h = surface.GetTextSize(measureText)
+        if line == "" then t_w = 0 end
+        lineHeights[i] = math.max(t_h, defaultLineHeight)
         maxWidth = math.max(maxWidth, t_w)
         if i == 1 then
-            totalHeight = t_h
+            totalHeight = lineHeights[i]
         else
-            totalHeight = totalHeight + t_h + lineSpacing
+            totalHeight = totalHeight + lineHeights[i] + lineSpacing
         end
     end
 
@@ -2442,11 +2473,8 @@ function lia.derma.drawBoxWithText(text, x, y, options)
             textX = boxX + boxWidth - padding / 2
         end
 
-        lia.derma.drawText(line, textX, currentY, textColor, textAlignX, TEXT_ALIGN_TOP, font)
-        if i < #textLines then
-            local _, t_h = surface.GetTextSize(line)
-            currentY = currentY + t_h + lineSpacing
-        end
+        if line ~= "" then lia.derma.drawText(line, textX, currentY, textColor, textAlignX, TEXT_ALIGN_TOP, font) end
+        if i < #textLines then currentY = currentY + lineHeights[i] + lineSpacing end
     end
 
     drawBoxOverlaps[#drawBoxOverlaps + 1] = {

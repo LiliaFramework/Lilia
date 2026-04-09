@@ -168,14 +168,12 @@ function ITEM:removeOutfit(client)
         client:SetSkin(self:getData("oldSkin", character:getSkin()))
         self:setData("oldSkin", nil)
         local oldGroups = character:getData("oldGroups", {})
-        lia.debug("[BODYGROUP] removeOutfit '" .. tostring(self.uniqueID) .. "' for " .. client:Name() .. " | oldGroups from charData: " .. tostring(table.ToString(oldGroups, "oldGroups", true)))
         for k in pairs(self.bodyGroups or {}) do
             local index = client:FindBodygroupByName(k)
-            lia.debug("[BODYGROUP] removeOutfit restoring bodygroup name='" .. tostring(k) .. "' index=" .. tostring(index) .. " restoreTo=" .. tostring(oldGroups[index]))
             if index > -1 then
                 client:SetBodygroup(index, oldGroups[index] or 0)
                 oldGroups[index] = nil
-                local groups = character:getBodygroups()
+                local groups = lia.class.normalizeBodygroups(character.vars.bodygroups)
                 if groups[index] then
                     groups[index] = nil
                     character:setBodygroups(groups)
@@ -265,7 +263,6 @@ ITEM.functions.Equip = {
                     local index = item.player:FindBodygroupByName(k)
                     if index > -1 then
                         local currentVal = item.player:GetBodygroup(index)
-                        lia.debug("[BODYGROUP] Equip '" .. tostring(item.uniqueID) .. "' saving oldGroup name='" .. tostring(k) .. "' index=" .. tostring(index) .. " currentVal=" .. tostring(currentVal) .. " newVal=" .. tostring(value))
                         oldGroups[index] = currentVal
                         groups[index] = value
                     end
@@ -273,14 +270,12 @@ ITEM.functions.Equip = {
 
                 character:setData("oldGroups", oldGroups)
                 item:setData("oldGroups", oldGroups)
-                local newGroups = character:getBodygroups()
-                lia.debug("[BODYGROUP] Equip '" .. tostring(item.uniqueID) .. "' char bodygroups before merge: " .. tostring(table.ToString(newGroups, "bodygroups", true)))
+                local newGroups = lia.class.normalizeBodygroups(character.vars.bodygroups)
                 for index, value in pairs(groups) do
                     newGroups[index] = value
                     item.player:SetBodygroup(index, value)
                 end
 
-                lia.debug("[BODYGROUP] Equip '" .. tostring(item.uniqueID) .. "' char bodygroups after merge: " .. tostring(table.ToString(newGroups, "bodygroups", true)))
                 if table.Count(newGroups) > 0 then character:setBodygroups(newGroups) end
             end
         end

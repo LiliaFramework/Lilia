@@ -35,13 +35,13 @@ The flags library provides a comprehensive permission system for managing charac
 
 <h3 style="margin-bottom: 5px; font-weight: 700;">Example Usage</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
-<pre><code class="language-lua">  lia.flag.add("B", "@flagBuildMenu", function(client, isGiven)
-                  if isGiven then
-                      client:Give("weapon_physgun")
-                  else
-                      client:StripWeapon("weapon_physgun")
-                  end
-              end)
+<pre><code class="language-lua">  lia.flag.add("B", "flagBuildMenu", function(client, isGiven)
+      if isGiven then
+          client:Give("weapon_physgun")
+      else
+          client:StripWeapon("weapon_physgun")
+      end
+  end)
 </code></pre>
 </div>
 

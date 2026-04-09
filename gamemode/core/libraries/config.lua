@@ -163,7 +163,7 @@ end
     Example Usage:
         ```lua
             local name = lia.config.getDisplayName("MaxCarryWeight")
-            lia.debug("Config name:", name)
+            
         ```
 ]]
 function lia.config.getDisplayName(key)
@@ -194,7 +194,7 @@ end
     Example Usage:
         ```lua
             local desc = lia.config.getDisplayDesc("MaxCarryWeight")
-            lia.debug("Config description:", desc)
+            
         ```
 ]]
 function lia.config.getDisplayDesc(key)
@@ -225,7 +225,7 @@ end
     Example Usage:
         ```lua
             local cat = lia.config.getDisplayCategory("MaxCarryWeight")
-            lia.debug("Config category:", cat)
+            
         ```
 ]]
 function lia.config.getDisplayCategory(key)
@@ -1000,6 +1000,12 @@ lia.config.add("DeathSoundEnabled", "@enableDeathSound", true, nil, {
 
 lia.config.add("PainSoundEnabled", "@enablePainSound", true, nil, {
     desc = "@enablePainSoundDesc",
+    category = "Core",
+    type = "Boolean"
+})
+
+lia.config.add("FallDamageEnabled", "@fallDamageEnabled", true, nil, {
+    desc = "@fallDamageEnabledDesc",
     category = "Core",
     type = "Boolean"
 })

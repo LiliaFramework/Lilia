@@ -518,16 +518,14 @@ lia.char.registerVar("bodygroups", {
     end,
     onSet = function(character, value)
         local oldVar = character:getBodygroups()
-        lia.debug("[BODYGROUP] setBodygroups charID=" .. tostring(character:getID()) .. " old=" .. tostring(table.ToString(oldVar, "old", true)) .. " new=" .. tostring(table.ToString(value or {}, "new", true)))
-        character.vars.bodygroups = value
+        local normalizedValue = lia.class.normalizeBodygroups(value)
+        character.vars.bodygroups = normalizedValue
         local client = character:getPlayer()
+        local appliedGroups = character:getBodygroups()
         if IsValid(client) and client:getChar() == character then
-            for k, v in pairs(value or {}) do
+            for k, v in pairs(appliedGroups) do
                 local index = tonumber(k)
-                if index then
-                    lia.debug("[BODYGROUP] character.lua onSet applying for " .. client:Name() .. " | index=" .. tostring(index) .. " value=" .. tostring(v or 0))
-                    client:SetBodygroup(index, v or 0)
-                end
+                if index then client:SetBodygroup(index, v or 0) end
             end
         end
 
@@ -536,10 +534,14 @@ lia.char.registerVar("bodygroups", {
         net.WriteType(character.vars.bodygroups)
         net.WriteType(character:getID())
         net.Broadcast()
-        hook.Run("PlayerBodyGroupChanged", client, oldVar, value)
-        hook.Run("OnCharVarChanged", character, "bodygroups", oldVar, value)
+        hook.Run("PlayerBodyGroupChanged", client, oldVar, appliedGroups)
+        hook.Run("OnCharVarChanged", character, "bodygroups", oldVar, appliedGroups)
     end,
-    onGet = function(character, default) return character.vars.bodygroups or default or {} end,
+    onGet = function(character, default)
+        local mergedGroups = lia.class.getMergedBodygroups(character)
+        if next(mergedGroups) ~= nil then return mergedGroups end
+        return default or {}
+    end,
     noDisplay = true
 })
 
@@ -1330,12 +1332,9 @@ if SERVER then
                         character:setBodygroups(value)
                         local client = character:getPlayer()
                         if IsValid(client) and client:getChar() == character then
-                            for k, v in pairs(value or {}) do
+                            for k, v in pairs(character:getBodygroups()) do
                                 local index = tonumber(k)
-                                if index then
-                                    lia.debug("[BODYGROUP] character.lua DB load applying for " .. client:Name() .. " | index=" .. tostring(index) .. " value=" .. tostring(v or 0))
-                                    client:SetBodygroup(index, v or 0)
-                                end
+                                if index then client:SetBodygroup(index, v or 0) end
                             end
                         end
                     elseif field == "faction" then

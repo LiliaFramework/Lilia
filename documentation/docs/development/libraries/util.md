@@ -69,7 +69,7 @@ The utility library provides comprehensive functionality for common operations a
 
 <h3 style="margin-bottom: 5px; font-weight: 700;">Example Usage</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
-<pre><code class="language-lua">  lia.util.requestEntityInformation(client, ent, argTypes, function(info) lia.debug(info) end)
+<pre><code class="language-lua">  lia.util.requestEntityInformation(client, ent, argTypes, function(info) print(info) end)
 </code></pre>
 </div>
 
@@ -104,7 +104,7 @@ The utility library provides comprehensive functionality for common operations a
 <h3 style="margin-bottom: 5px; font-weight: 700;">Example Usage</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
 <pre><code class="language-lua">  local ply = lia.util.getBySteamID("76561198000000000")
-  if ply then lia.debug("Found", ply:Name()) end
+  if ply then print("Found", ply:Name()) end
 </code></pre>
 </div>
 
@@ -319,7 +319,7 @@ The utility library provides comprehensive functionality for common operations a
 
 <h3 style="margin-bottom: 5px; font-weight: 700;">Example Usage</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
-<pre><code class="language-lua">  if lia.util.stringMatches(ply:Name(), "john") then lia.debug("Matched player") end
+<pre><code class="language-lua">  if lia.util.stringMatches(ply:Name(), "john") then print("Matched player") end
 </code></pre>
 </div>
 
@@ -600,7 +600,7 @@ The utility library provides comprehensive functionality for common operations a
 <h3 style="margin-bottom: 5px; font-weight: 700;">Example Usage</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
 <pre><code class="language-lua">  local faction = lia.util.findFaction(ply, "combine")
-  if faction then lia.debug(faction.name) end
+  if faction then print(faction.name) end
 </code></pre>
 </div>
 
