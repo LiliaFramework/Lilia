@@ -124,6 +124,10 @@ local KeybindKeys = {
     ["scrolllocktoggle"] = KEY_SCROLLLOCKTOGGLE,
     ["last"] = KEY_LAST
 }
+local KeybindNamesByCode = {}
+for name, code in pairs(KeybindKeys) do
+    if isnumber(code) and code ~= KEY_FIRST and code ~= KEY_LAST and KeybindNamesByCode[code] == nil then KeybindNamesByCode[code] = name end
+end
 
 local function localizeKeybindLabel(value, ...)
     if not isstring(value) then return value end
@@ -629,6 +633,20 @@ if CLIENT then
             SetStyledTooltip(label, localizeKeybindLabel(text))
         end
 
+        local function getDisplayKeyName(keycode, fallbackName)
+            if not isnumber(keycode) or keycode == KEY_NONE then return "NONE" end
+            local keyName = input.GetKeyName(keycode)
+            if isstring(keyName) and keyName ~= "" then return tostring(keyName) end
+            local resolvedFallback = fallbackName or KeybindNamesByCode[keycode]
+            if isstring(resolvedFallback) and resolvedFallback ~= "" then return tostring(resolvedFallback) end
+            return tostring(keycode)
+        end
+
+        local function getKeyChoiceSortKey(displayName, keycode)
+            local normalizedCode = isnumber(keycode) and keycode or KEY_NONE
+            return string.format("%s:%s:%08d", normalizedCode == KEY_NONE and "0" or "1", tostring(displayName or ""):lower(), normalizedCode + 32768)
+        end
+
         local function AddKeybindField(scroll, action, data, allowEdit, taken, refreshFunc)
             local p = scroll:Add("DPanel")
             p:Dock(TOP)
@@ -654,25 +672,23 @@ if CLIENT then
                 combo:DockMargin(0, 8, 15, 8)
                 combo:SetFont("LiliaFont.18")
                 SetStyledTooltip(combo, description)
-                local currentKeyName = isnumber(currentKey) and (currentKey == KEY_NONE and "NONE" or input.GetKeyName(currentKey)) or "NONE"
+                local currentKeyName = getDisplayKeyName(currentKey)
                 combo:SetValue(currentKeyName)
                 local choices = {}
+                local seenCodes = {}
                 for name, code in pairs(KeybindKeys) do
-                    if not taken[code] or code == currentKey or code == KEY_NONE then
-                        local displayName = input.GetKeyName(code) or name
-                        if code == KEY_NONE then displayName = "NONE" end
+                    if code ~= KEY_FIRST and code ~= KEY_LAST and not seenCodes[code] and (not taken[code] or code == currentKey or code == KEY_NONE) then
+                        seenCodes[code] = true
+                        local displayName = getDisplayKeyName(code, name)
                         table.insert(choices, {
-                            txt = displayName,
-                            keycode = code
+                            txt = tostring(displayName),
+                            keycode = code,
+                            sortKey = getKeyChoiceSortKey(displayName, code)
                         })
                     end
                 end
 
-                table.sort(choices, function(a, b)
-                    if a.txt == "NONE" then return true end
-                    if b.txt == "NONE" then return false end
-                    return tostring(a.txt or ""):lower() < tostring(b.txt or ""):lower()
-                end)
+                table.sort(choices, function(a, b) return a.sortKey < b.sortKey end)
 
                 local hasNone = false
                 for _, c in ipairs(choices) do
@@ -711,19 +727,20 @@ if CLIENT then
 
                     local keybindData = lia.keybind.stored[action]
                     local oldKey = keybindData.value
-                    if oldKey then if lia.keybind.stored[oldKey] == action then lia.keybind.stored[oldKey] = nil end end
+                    if isnumber(oldKey) and oldKey ~= KEY_NONE and lia.keybind.stored[oldKey] == action then lia.keybind.stored[oldKey] = nil end
                     keybindData.value = newKey
+                    if isnumber(newKey) and newKey ~= KEY_NONE then lia.keybind.stored[newKey] = action end
                     lia.keybind.save()
                     if refreshFunc then refreshFunc() end
                     local client = LocalPlayer()
-                    if IsValid(client) then client:notifySuccess(L("keybindChanged", localizeKeybindLabel(action), input.GetKeyName(newKey) or "NONE")) end
+                    if IsValid(client) then client:notifySuccess(L("keybindChanged", localizeKeybindLabel(action), getDisplayKeyName(newKey))) end
                 end
             else
                 local lKey = p:Add("DLabel")
                 lKey:Dock(RIGHT)
                 lKey:DockMargin(0, 0, 15, 0)
                 lKey:SetWidth(200)
-                lKey:SetText(isnumber(currentKey) and (currentKey == KEY_NONE and "NONE" or input.GetKeyName(currentKey)) or "NONE")
+                lKey:SetText(getDisplayKeyName(currentKey))
                 lKey:SetFont("LiliaFont.18")
                 lKey:SetTextColor(lia.color.theme.text)
                 lKey:SetContentAlignment(6)
