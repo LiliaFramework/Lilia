@@ -45,18 +45,7 @@ function ENT:setItem(itemID)
 
     self:SetColor(itemTable.color or color_white)
     if itemTable.scale and itemTable.scale ~= 1 then self:SetModelScale(itemTable.scale) end
-    if itemTable.bodygroups and istable(itemTable.bodygroups) then
-        for k, v in pairs(itemTable.bodygroups) do
-            local bodygroupID
-            if isnumber(k) then
-                bodygroupID = k
-            elseif isstring(k) then
-                bodygroupID = self:FindBodygroupByName(k)
-            end
-
-            if bodygroupID and bodygroupID >= 0 then self:SetBodygroup(bodygroupID, v) end
-        end
-    end
+    if itemTable.bodygroups and istable(itemTable.bodygroups) then lia.util.applyBodygroups(self, itemTable.bodygroups) end
 
     self:PhysicsInit(SOLID_VPHYSICS)
     self:SetSolid(SOLID_VPHYSICS)

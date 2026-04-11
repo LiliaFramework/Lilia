@@ -169,11 +169,11 @@ function ITEM:removeOutfit(client)
         self:setData("oldSkin", nil)
         local oldGroups = character:getData("oldGroups", {})
         for k in pairs(self.bodyGroups or {}) do
-            local index = client:FindBodygroupByName(k)
-            if index > -1 then
+            local index = lia.util.resolveBodygroupIndex(client, k)
+            if index ~= nil then
                 client:SetBodygroup(index, oldGroups[index] or 0)
                 oldGroups[index] = nil
-                local groups = lia.class.normalizeBodygroups(character.vars.bodygroups)
+                local groups = lia.util.normalizeBodygroups(character.vars.bodygroups)
                 if groups[index] then
                     groups[index] = nil
                     character:setBodygroups(groups)
@@ -260,8 +260,8 @@ ITEM.functions.Equip = {
                 local oldGroups = character:getData("oldGroups", {})
                 local groups = {}
                 for k, value in pairs(item.bodyGroups) do
-                    local index = item.player:FindBodygroupByName(k)
-                    if index > -1 then
+                    local index = lia.util.resolveBodygroupIndex(item.player, k)
+                    if index ~= nil then
                         local currentVal = item.player:GetBodygroup(index)
                         oldGroups[index] = currentVal
                         groups[index] = value
@@ -270,12 +270,12 @@ ITEM.functions.Equip = {
 
                 character:setData("oldGroups", oldGroups)
                 item:setData("oldGroups", oldGroups)
-                local newGroups = lia.class.normalizeBodygroups(character.vars.bodygroups)
+                local newGroups = lia.util.normalizeBodygroups(character.vars.bodygroups)
                 for index, value in pairs(groups) do
                     newGroups[index] = value
-                    item.player:SetBodygroup(index, value)
                 end
 
+                lia.util.applyBodygroups(item.player, groups)
                 if table.Count(newGroups) > 0 then character:setBodygroups(newGroups) end
             end
         end

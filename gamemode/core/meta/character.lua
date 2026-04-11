@@ -988,11 +988,7 @@ if SERVER then
 
             client:SetTeam(self:getFaction())
             client:setNetVar("char", self:getID())
-            for k, v in pairs(self:getBodygroups()) do
-                local index = tonumber(k)
-                local value = tonumber(v) or 0
-                if index then client:SetBodygroup(index, value) end
-            end
+            lia.util.applyBodygroups(client, self:getBodygroups())
 
             client:SetSkin(self:getSkin())
             hook.Run("SetupPlayerModel", client, self)

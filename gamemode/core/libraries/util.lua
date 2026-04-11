@@ -13,6 +13,185 @@
 ]]
 --[[
     Purpose:
+        Normalizes a bodygroup identifier into either a numeric index or trimmed string name.
+
+    When Called:
+        Use when accepting bodygroup input that may be provided as an ID or name.
+
+    Parameters:
+        key (any)
+            Bodygroup identifier candidate.
+
+    Returns:
+        number|string|nil
+            Numeric index when possible, otherwise a trimmed string name, or nil.
+
+    Realm:
+        Shared
+
+    Example Usage:
+        ```lua
+            local key = lia.util.normalizeBodygroupKey("helmet")
+        ```
+]]
+function lia.util.normalizeBodygroupKey(key)
+    local numericKey = tonumber(key)
+    if numericKey ~= nil then return numericKey end
+    if isstring(key) and key ~= "" then return string.Trim(key) end
+end
+
+--[[
+    Purpose:
+        Resolves a bodygroup identifier against an entity.
+
+    When Called:
+        Use when bodygroup input may be a numeric ID or a named bodygroup.
+
+    Parameters:
+        target (Entity)
+            Entity to resolve the bodygroup against.
+        identifier (any)
+            Numeric ID or bodygroup name.
+
+    Returns:
+        number|nil
+            Resolved bodygroup index, or nil when no match is found.
+
+    Realm:
+        Shared
+
+    Example Usage:
+        ```lua
+            local index = lia.util.resolveBodygroupIndex(client, "helmet")
+        ```
+]]
+function lia.util.resolveBodygroupIndex(target, identifier)
+    local numericIdentifier = tonumber(identifier)
+    if numericIdentifier ~= nil then return numericIdentifier end
+    if not IsValid(target) or not isstring(identifier) then return nil end
+    local trimmedIdentifier = string.Trim(identifier)
+    if trimmedIdentifier == "" then return nil end
+    local directMatch = target:FindBodygroupByName(trimmedIdentifier)
+    if isnumber(directMatch) and directMatch > -1 then return directMatch end
+    local loweredIdentifier = string.lower(trimmedIdentifier)
+    for _, groupData in ipairs(target:GetBodyGroups() or {}) do
+        if isstring(groupData.name) and string.lower(groupData.name) == loweredIdentifier then return groupData.id end
+    end
+end
+
+--[[
+    Purpose:
+        Normalizes a bodygroups table into key-value pairs of identifier to numeric value.
+
+    When Called:
+        Use when accepting bodygroup data in mixed formats.
+
+    Parameters:
+        bodygroups (table)
+            Bodygroup definitions using numeric keys, names, or `{id/name, value}` entries.
+
+    Returns:
+        table
+            Normalized bodygroup mapping.
+
+    Realm:
+        Shared
+
+    Example Usage:
+        ```lua
+            local groups = lia.util.normalizeBodygroups({
+                {name = "helmet", value = 1}
+            })
+        ```
+]]
+function lia.util.normalizeBodygroups(bodygroups)
+    local normalized = {}
+    if not istable(bodygroups) then return normalized end
+    for _, entry in ipairs(bodygroups) do
+        if istable(entry) then
+            local index = lia.util.normalizeBodygroupKey(entry.id or entry.index or entry.bodygroup or entry.bodygroupID or entry.name or entry[1])
+            local value = tonumber(entry.value or entry.val or entry[2] or 0) or 0
+            if index ~= nil then normalized[index] = value end
+        end
+    end
+
+    for key, value in pairs(bodygroups) do
+        local index = lia.util.normalizeBodygroupKey(key)
+        if index ~= nil and not istable(value) then normalized[index] = tonumber(value) or 0 end
+    end
+    return normalized
+end
+
+--[[
+    Purpose:
+        Resolves a bodygroups table to numeric indexes for a specific entity.
+
+    When Called:
+        Use before applying bodygroups to an entity that may receive named identifiers.
+
+    Parameters:
+        target (Entity)
+            Entity receiving the bodygroups.
+        bodygroups (table)
+            Raw bodygroup definitions.
+
+    Returns:
+        table
+            Bodygroup mapping keyed by numeric index.
+
+    Realm:
+        Shared
+
+    Example Usage:
+        ```lua
+            local resolved = lia.util.resolveBodygroups(client, bodygroups)
+        ```
+]]
+function lia.util.resolveBodygroups(target, bodygroups)
+    local resolved = {}
+    for identifier, value in pairs(lia.util.normalizeBodygroups(bodygroups)) do
+        local index = lia.util.resolveBodygroupIndex(target, identifier)
+        if index ~= nil then resolved[index] = tonumber(value) or 0 end
+    end
+    return resolved
+end
+
+--[[
+    Purpose:
+        Applies bodygroups to an entity using numeric or named identifiers.
+
+    When Called:
+        Use when stored or configured bodygroups need to be set on an entity.
+
+    Parameters:
+        target (Entity)
+            Entity to modify.
+        bodygroups (table)
+            Raw bodygroup definitions.
+
+    Returns:
+        table
+            Resolved numeric bodygroup mapping that was applied.
+
+    Realm:
+        Shared
+
+    Example Usage:
+        ```lua
+            lia.util.applyBodygroups(client, bodygroups)
+        ```
+]]
+function lia.util.applyBodygroups(target, bodygroups)
+    if not IsValid(target) then return {} end
+    local resolved = lia.util.resolveBodygroups(target, bodygroups)
+    for index, value in pairs(resolved) do
+        target:SetBodygroup(index, value)
+    end
+    return resolved
+end
+
+--[[
+    Purpose:
         Finds all players within an axis-aligned bounding box.
 
     When Called:

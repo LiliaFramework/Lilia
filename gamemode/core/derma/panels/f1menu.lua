@@ -767,9 +767,7 @@ function PANEL:createModelPanel(parent, cl)
             local ent = panel.Entity
             if not IsValid(ent) then return end
             ent:SetSkin(panel.classData.skin or 0)
-            for _, bg in ipairs(panel.classData.bodyGroups or {}) do
-                ent:SetBodygroup(bg.id, bg.value or 0)
-            end
+            lia.util.applyBodygroups(ent, panel.classData.bodyGroups or panel.classData.bodygroups)
 
             for i, mat in ipairs(panel.classData.subMaterials or {}) do
                 ent:SetSubMaterial(i - 1, mat)

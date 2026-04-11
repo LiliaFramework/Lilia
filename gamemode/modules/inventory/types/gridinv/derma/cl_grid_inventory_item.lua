@@ -62,11 +62,7 @@ function PANEL:setItemType(itemTypeOrID)
         local skin = item:getSkin()
         if skin and isnumber(skin) then entity:SetSkin(skin) end
         local bodygroups = item:getBodygroups()
-        if bodygroups and istable(bodygroups) then
-            for groupIndex, groupValue in pairs(bodygroups) do
-                if isnumber(groupIndex) and isnumber(groupValue) then entity:SetBodygroup(groupIndex, groupValue) end
-            end
-        end
+        if bodygroups and istable(bodygroups) then lia.util.applyBodygroups(entity, bodygroups) end
 
         if isstring(paintMat) and paintMat ~= "" then
             entity:SetMaterial(paintMat)

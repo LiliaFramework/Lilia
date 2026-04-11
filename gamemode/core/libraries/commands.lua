@@ -3862,10 +3862,10 @@ lia.command.add("charsetbodygroup", {
             return
         end
 
-        local index = target:FindBodygroupByName(bodyGroup)
-        if index > -1 then
+        local index = lia.util.resolveBodygroupIndex(target, bodyGroup)
+        if index ~= nil then
             if value and value < 1 then value = nil end
-            local groups = lia.class.normalizeBodygroups(target:getChar().vars.bodygroups)
+            local groups = lia.util.normalizeBodygroups(target:getChar().vars.bodygroups)
             groups[index] = value
             target:getChar():setBodygroups(groups)
             target:SetBodygroup(index, value or 0)
@@ -7462,12 +7462,7 @@ lia.command.add("npcchangetype", {
                                 local currentPos = npc:GetPos()
                                 local currentAng = npc:GetAngles()
                                 npc:SetModel("models/Barney.mdl")
-                                if npcData.BodyGroups and istable(npcData.BodyGroups) then
-                                    for bodygroup, value in pairs(npcData.BodyGroups) do
-                                        local bgIndex = npc:FindBodygroupByName(bodygroup)
-                                        if bgIndex > -1 then npc:SetBodygroup(bgIndex, value) end
-                                    end
-                                end
+                                if npcData.BodyGroups and istable(npcData.BodyGroups) then lia.util.applyBodygroups(npc, npcData.BodyGroups) end
 
                                 if npcData.Skin then npc:SetSkin(npcData.Skin) end
                                 npc.NPCName = npcData.PrintName or "NPC"
@@ -7490,11 +7485,7 @@ lia.command.add("npcchangetype", {
                                     if existingCustomData.name and existingCustomData.name ~= "" then npc.NPCName = existingCustomData.name end
                                     if existingCustomData.model and existingCustomData.model ~= "" then npc:SetModel(existingCustomData.model) end
                                     if existingCustomData.skin then npc:SetSkin(tonumber(existingCustomData.skin) or 0) end
-                                    if existingCustomData.bodygroups and istable(existingCustomData.bodygroups) then
-                                        for bodygroupIndex, value in pairs(existingCustomData.bodygroups) do
-                                            npc:SetBodygroup(tonumber(bodygroupIndex) or 0, tonumber(value) or 0)
-                                        end
-                                    end
+                                    if existingCustomData.bodygroups and istable(existingCustomData.bodygroups) then lia.util.applyBodygroups(npc, existingCustomData.bodygroups) end
 
                                     if existingCustomData.animation and existingCustomData.animation ~= "auto" then
                                         local sequenceIndex = npc:LookupSequence(existingCustomData.animation)

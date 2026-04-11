@@ -366,7 +366,7 @@ The dialog library provides comprehensive functionality for managing NPC convers
 <h3 style="margin-bottom: 5px; font-weight: 700;">Example Usage</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
 <pre><code class="language-lua">  local data = lia.dialog.getNPCData("tutorial_guide")
-  if data then lia.debug("Greeting:", data.Greeting) end
+  if data then print("Greeting:", data.Greeting) end
 </code></pre>
 </div>
 
@@ -467,7 +467,7 @@ The dialog library provides comprehensive functionality for managing NPC convers
 <h3 style="margin-bottom: 5px; font-weight: 700;">Example Usage</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
 <pre><code class="language-lua">  local configs = lia.dialog.getAvailableConfigurations(LocalPlayer(), npc, npc.uniqueID)
-  for _, cfg in ipairs(configs) do lia.debug("Config:", cfg.id) end
+  for _, cfg in ipairs(configs) do print("Config:", cfg.id) end
 </code></pre>
 </div>
 

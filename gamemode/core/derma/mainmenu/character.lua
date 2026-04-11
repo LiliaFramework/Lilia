@@ -137,11 +137,7 @@ function PANEL:updateCreationModelEntity(context)
     if not IsValid(self.modelEntity) then return end
     self.modelEntity:SetSkin(context.skin or skin or 0)
     local finalGroups = istable(context.groups) and context.groups or istable(groups) and groups
-    if finalGroups then
-        for id, val in pairs(finalGroups) do
-            self.modelEntity:SetBodygroup(tonumber(id) or id, tonumber(val) or 0)
-        end
-    end
+    if finalGroups then lia.util.applyBodygroups(self.modelEntity, finalGroups) end
 
     hook.Run("SetupPlayerModel", self.modelEntity)
     local pos, ang
@@ -1393,12 +1389,7 @@ function PANEL:updateModelEntity(character)
     self.modelEntity = ClientsideModel(model, RENDERGROUP_OPAQUE)
     if not IsValid(self.modelEntity) then return end
     self.modelEntity:SetSkin(character:getSkin())
-    local groups = character:getBodygroups()
-    for i = 0, self.modelEntity:GetNumBodyGroups() - 1 do
-        local value = groups[i]
-        if value == nil then value = groups[tostring(i)] end
-        if value ~= nil then self.modelEntity:SetBodygroup(i, tonumber(value) or 0) end
-    end
+    lia.util.applyBodygroups(self.modelEntity, character:getBodygroups())
 
     hook.Run("SetupPlayerModel", self.modelEntity, character)
     local pos, ang = nil, nil

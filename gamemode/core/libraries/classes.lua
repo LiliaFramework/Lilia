@@ -13,32 +13,11 @@
 ]]
 lia.class = lia.class or {}
 lia.class.list = lia.class.list or {}
-local function normalizeBodygroups(bodygroups)
-    local normalized = {}
-    if not istable(bodygroups) then return normalized end
-    for _, entry in ipairs(bodygroups) do
-        if istable(entry) then
-            local index = tonumber(entry.id or entry.index or entry.bodygroup or entry.bodygroupID or entry[1])
-            local value = tonumber(entry.value or entry.val or entry[2] or 0) or 0
-            if index ~= nil then normalized[index] = value end
-        end
-    end
-
-    for key, value in pairs(bodygroups) do
-        local index = tonumber(key)
-        if index ~= nil and not istable(value) then normalized[index] = tonumber(value) or 0 end
-    end
-    return normalized
-end
-
-function lia.class.normalizeBodygroups(bodygroups)
-    return normalizeBodygroups(bodygroups)
-end
 
 function lia.class.getBodygroups(class)
     local classData = istable(class) and class or lia.class.get(class)
     if not classData then return {} end
-    return normalizeBodygroups(classData.bodyGroups or classData.bodygroups)
+    return lia.util.normalizeBodygroups(classData.bodyGroups or classData.bodygroups)
 end
 
 function lia.class.getMergedBodygroups(character)
@@ -50,7 +29,7 @@ function lia.class.getMergedBodygroups(character)
     end
 
     local overrides = character and character.vars and character.vars.bodygroups or nil
-    for index, value in pairs(normalizeBodygroups(overrides)) do
+    for index, value in pairs(lia.util.normalizeBodygroups(overrides)) do
         merged[index] = value
     end
     return merged

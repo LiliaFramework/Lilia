@@ -34,11 +34,7 @@ function PANEL:updateModel()
     entity:SetupBones()
     entity:SetSkin(self.context.skin or skin)
     local finalGroups = istable(self.context.groups) and self.context.groups or istable(groups) and groups
-    if finalGroups then
-        for id, val in pairs(finalGroups) do
-            entity:SetBodygroup(id, val)
-        end
-    end
+    if finalGroups then lia.util.applyBodygroups(entity, finalGroups) end
 
     hook.Run("ModifyCharacterModel", entity, self.context)
 end

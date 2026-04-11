@@ -518,16 +518,11 @@ lia.char.registerVar("bodygroups", {
     end,
     onSet = function(character, value)
         local oldVar = character:getBodygroups()
-        local normalizedValue = lia.class.normalizeBodygroups(value)
+        local normalizedValue = lia.util.normalizeBodygroups(value)
         character.vars.bodygroups = normalizedValue
         local client = character:getPlayer()
         local appliedGroups = character:getBodygroups()
-        if IsValid(client) and client:getChar() == character then
-            for k, v in pairs(appliedGroups) do
-                local index = tonumber(k)
-                if index then client:SetBodygroup(index, v or 0) end
-            end
-        end
+        if IsValid(client) and client:getChar() == character then lia.util.applyBodygroups(client, appliedGroups) end
 
         net.Start("liaCharSet")
         net.WriteString("bodygroups")
@@ -1331,12 +1326,7 @@ if SERVER then
                     elseif field == "bodygroups" then
                         character:setBodygroups(value)
                         local client = character:getPlayer()
-                        if IsValid(client) and client:getChar() == character then
-                            for k, v in pairs(character:getBodygroups()) do
-                                local index = tonumber(k)
-                                if index then client:SetBodygroup(index, v or 0) end
-                            end
-                        end
+                        if IsValid(client) and client:getChar() == character then lia.util.applyBodygroups(client, character:getBodygroups()) end
                     elseif field == "faction" then
                         character:setFaction(value)
                     elseif field == "banned" then

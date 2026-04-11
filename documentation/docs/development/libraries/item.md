@@ -38,7 +38,7 @@ The item library provides comprehensive functionality for managing items in the 
 <div style="margin-left: 20px; margin-bottom: 20px;">
 <pre><code class="language-lua">  local weaponItem = lia.item.get("weapon_pistol")
   if weaponItem then
-      lia.debug("Found weapon:", weaponItem.name)
+      print("Found weapon:", weaponItem.name)
   end
 </code></pre>
 </div>
@@ -106,10 +106,10 @@ after the base item properties are set but before final localization.</p>
 <div style="margin-left: 20px; margin-bottom: 20px;">
 <pre><code class="language-lua">  local itemData, errorMsg = lia.item.getItemByID(123)
   if itemData then
-      lia.debug("Item found at:", itemData.location)
+      print("Item found at:", itemData.location)
       -- Use itemData.item for item operations
   else
-      lia.debug("Error:", errorMsg)
+      print("Error:", errorMsg)
   end
 </code></pre>
 </div>
@@ -148,7 +148,7 @@ after the base item properties are set but before final localization.</p>
   if item then
       item:setData("customValue", "example")
   else
-      lia.debug("Error:", errorMsg)
+      print("Error:", errorMsg)
   end
 </code></pre>
 </div>
@@ -185,9 +185,9 @@ after the base item properties are set but before final localization.</p>
 <div style="margin-left: 20px; margin-bottom: 20px;">
 <pre><code class="language-lua">  local data, errorMsg = lia.item.getItemDataByID(123)
   if data then
-      lia.debug("Item durability:", data.durability or "N/A")
+      print("Item durability:", data.durability or "N/A")
   else
-      lia.debug("Error:", errorMsg)
+      print("Error:", errorMsg)
   end
 </code></pre>
 </div>
@@ -260,7 +260,7 @@ after the base item properties are set but before final localization.</p>
   if lia.item.isItem(someObject) then
       someObject:setData("used", true)
   else
-      lia.debug("Object is not an item")
+      print("Object is not an item")
   end
 </code></pre>
 </div>
@@ -297,7 +297,7 @@ after the base item properties are set but before final localization.</p>
 <div style="margin-left: 20px; margin-bottom: 20px;">
 <pre><code class="language-lua">  local inventory = lia.item.getInv(5)
   if inventory then
-      lia.debug("Inventory size:", inventory:getWidth(), "x", inventory:getHeight())
+      print("Inventory size:", inventory:getWidth(), "x", inventory:getHeight())
   end
 </code></pre>
 </div>
@@ -581,7 +581,7 @@ after the base item properties are set but before final localization.</p>
 <div style="margin-left: 20px; margin-bottom: 20px;">
 <pre><code class="language-lua">  -- Create a backpack inventory for character ID 5
   lia.item.newInv(5, "backpack", function(inventory)
-      lia.debug("Backpack created with ID:", inventory:getID())
+      print("Backpack created with ID:", inventory:getID())
   end)
 </code></pre>
 </div>
@@ -620,7 +620,7 @@ after the base item properties are set but before final localization.</p>
 <div style="margin-left: 20px; margin-bottom: 20px;">
 <pre><code class="language-lua">  -- Create a 4x6 container inventory
   local container = lia.item.createInv(4, 6, 1001)
-  lia.debug("Container created with ID:", container.id)
+  print("Container created with ID:", container.id)
 </code></pre>
 </div>
 
@@ -728,9 +728,9 @@ after the base item properties are set but before final localization.</p>
 <div style="margin-left: 20px; margin-bottom: 20px;">
 <pre><code class="language-lua">  local success, errorMsg = lia.item.setItemDataByID(123, "durability", 75)
   if success then
-      lia.debug("Item durability updated")
+      print("Item durability updated")
   else
-      lia.debug("Error:", errorMsg)
+      print("Error:", errorMsg)
   end
 </code></pre>
 </div>
@@ -772,7 +772,7 @@ after the base item properties are set but before final localization.</p>
 <div style="margin-left: 20px; margin-bottom: 20px;">
 <pre><code class="language-lua">  -- Create a pistol in inventory 5 at position 1,1
   lia.item.instance(5, "weapon_pistol", {}, 1, 1):next(function(item)
-      lia.debug("Created item with ID:", item:getID())
+      print("Created item with ID:", item:getID())
   end)
 </code></pre>
 </div>
@@ -875,7 +875,7 @@ after the base item properties are set but before final localization.</p>
 <div style="margin-left: 20px; margin-bottom: 20px;">
 <pre><code class="language-lua">  -- Spawn a pistol at a position
   lia.item.spawn("weapon_pistol", Vector(0, 0, 0), function(item)
-      lia.debug("Spawned item:", item:getName())
+      print("Spawned item:", item:getName())
   end)
 </code></pre>
 </div>
@@ -910,7 +910,7 @@ after the base item properties are set but before final localization.</p>
 <div style="margin-left: 20px; margin-bottom: 20px;">
 <pre><code class="language-lua">  -- Restore a 4x6 inventory
   lia.item.restoreInv(5, 4, 6, function(inventory)
-      lia.debug("Restored inventory with", inventory:getItemCount(), "items")
+      print("Restored inventory with", inventory:getItemCount(), "items")
   end)
 </code></pre>
 </div>
@@ -945,7 +945,7 @@ after the base item properties are set but before final localization.</p>
 <div style="margin-left: 20px; margin-bottom: 20px;">
 <pre><code class="language-lua">  -- Restore a 4x6 inventory
   lia.item.restoreInv(5, 4, 6, function(inventory)
-      lia.debug("Restored inventory with", inventory:getItemCount(), "items")
+      print("Restored inventory with", inventory:getItemCount(), "items")
   end)
 </code></pre>
 </div>

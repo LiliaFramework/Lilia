@@ -1206,11 +1206,7 @@ if SERVER then
                 npc:SetModel(customData.model)
             end
 
-            if customData.bodygroups and istable(customData.bodygroups) then
-                for bodygroupIndex, value in pairs(customData.bodygroups) do
-                    npc:SetBodygroup(tonumber(bodygroupIndex) or 0, tonumber(value) or 0)
-                end
-            end
+            if customData.bodygroups and istable(customData.bodygroups) then lia.util.applyBodygroups(npc, customData.bodygroups) end
 
             if customData.skin ~= nil then npc:SetSkin(tonumber(customData.skin) or 0) end
             if modelChanged then

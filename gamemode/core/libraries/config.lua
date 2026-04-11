@@ -163,6 +163,7 @@ end
     Example Usage:
         ```lua
             local name = lia.config.getDisplayName("MaxCarryWeight")
+
         ```
 ]]
 function lia.config.getDisplayName(key)

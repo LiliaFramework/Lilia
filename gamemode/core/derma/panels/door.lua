@@ -68,7 +68,9 @@ function PANEL:setDoor(door, accessData, fallback)
             if not s.textEntry:IsEditing() then
                 local ent = IsValid(fallback) and fallback or door
                 local doorData = lia.doors.getData(ent)
-                local doorName = doorData.name or L("doorTitleOwned")
+                local doorName = doorData.title or doorData.name or ent:getNetVar("doorTitle", "")
+                if isstring(doorName) then doorName = string.Trim(doorName) end
+                if doorName == "" then doorName = L("doorTitleOwned") end
                 if s:GetValue() ~= doorName then s:SetText(doorName) end
             end
         end

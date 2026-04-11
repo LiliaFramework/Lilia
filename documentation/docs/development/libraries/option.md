@@ -39,117 +39,12 @@ The option library provides comprehensive functionality for managing user-config
 <pre><code class="language-lua">  lia.option.add("hudScale", "HUD Scale", "Scale HUD elements", 1.0, function(old, new)
       hook.Run("HUDScaleChanged", old, new)
   end, {
-      category = "@Core",
+      category = "Core",
       min = 0.5,
       max = 1.5,
       decimals = 2,
       isQuick = true
   })
-</code></pre>
-</div>
-
-</div>
-</details>
-
----
-
-<details class="realm-shared" id="function-liaoptiongetdisplayname">
-<summary><a id="lia.option.getDisplayName"></a>lia.option.getDisplayName(key)</summary>
-<div class="details-content">
-<h3 style="margin-bottom: 5px; font-weight: 700;"><a id="liaoptiongetdisplayname"></a>Purpose</h3>
-<div style="margin-left: 20px; margin-bottom: 20px;">
-  <p>Retrieve the localized display name of an option entry.</p>
-</div>
-
-<h3 style="margin-bottom: 5px; font-weight: 700;">When Called</h3>
-<div style="margin-left: 20px; margin-bottom: 20px;">
-  <p>When rendering option entries in the config UI or sorting them by name.</p>
-</div>
-
-<h3 style="margin-bottom: 5px; font-weight: 700;">Parameters</h3>
-<div style="margin-left: 20px; margin-bottom: 20px;">
-<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#2.1">string</a></span> <span class="parameter">key</span> The option key to look up.</p>
-</div>
-
-<h3 style="margin-bottom: 5px; font-weight: 700;">Returns</h3>
-<div style="margin-left: 20px; margin-bottom: 20px;">
-<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#2.1">string</a></span> Localized display name, or the raw key if the entry does not exist.</p>
-</div>
-
-<h3 style="margin-bottom: 5px; font-weight: 700;">Example Usage</h3>
-<div style="margin-left: 20px; margin-bottom: 20px;">
-<pre><code class="language-lua">  local name = lia.option.getDisplayName("BarsAlwaysVisible")
-  lia.debug("Option name:", name)
-</code></pre>
-</div>
-
-</div>
-</details>
-
----
-
-<details class="realm-shared" id="function-liaoptiongetdisplaydesc">
-<summary><a id="lia.option.getDisplayDesc"></a>lia.option.getDisplayDesc(key)</summary>
-<div class="details-content">
-<h3 style="margin-bottom: 5px; font-weight: 700;"><a id="liaoptiongetdisplaydesc"></a>Purpose</h3>
-<div style="margin-left: 20px; margin-bottom: 20px;">
-  <p>Retrieve the localized description of an option entry.</p>
-</div>
-
-<h3 style="margin-bottom: 5px; font-weight: 700;">When Called</h3>
-<div style="margin-left: 20px; margin-bottom: 20px;">
-  <p>When populating tooltips or description labels in the options UI.</p>
-</div>
-
-<h3 style="margin-bottom: 5px; font-weight: 700;">Parameters</h3>
-<div style="margin-left: 20px; margin-bottom: 20px;">
-<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#2.1">string</a></span> <span class="parameter">key</span> The option key to look up.</p>
-</div>
-
-<h3 style="margin-bottom: 5px; font-weight: 700;">Returns</h3>
-<div style="margin-left: 20px; margin-bottom: 20px;">
-<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#2.1">string</a></span> Localized description string, or an empty string if none exists.</p>
-</div>
-
-<h3 style="margin-bottom: 5px; font-weight: 700;">Example Usage</h3>
-<div style="margin-left: 20px; margin-bottom: 20px;">
-<pre><code class="language-lua">  local desc = lia.option.getDisplayDesc("BarsAlwaysVisible")
-  lia.debug("Option description:", desc)
-</code></pre>
-</div>
-
-</div>
-</details>
-
----
-
-<details class="realm-shared" id="function-liaoptiongetdisplaycategory">
-<summary><a id="lia.option.getDisplayCategory"></a>lia.option.getDisplayCategory(key)</summary>
-<div class="details-content">
-<h3 style="margin-bottom: 5px; font-weight: 700;"><a id="liaoptiongetdisplaycategory"></a>Purpose</h3>
-<div style="margin-left: 20px; margin-bottom: 20px;">
-  <p>Retrieve the localized category of an option entry for grouping in the UI.</p>
-</div>
-
-<h3 style="margin-bottom: 5px; font-weight: 700;">When Called</h3>
-<div style="margin-left: 20px; margin-bottom: 20px;">
-  <p>When building the options UI to sort entries into category sections.</p>
-</div>
-
-<h3 style="margin-bottom: 5px; font-weight: 700;">Parameters</h3>
-<div style="margin-left: 20px; margin-bottom: 20px;">
-<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#2.1">string</a></span> <span class="parameter">key</span> The option key to look up.</p>
-</div>
-
-<h3 style="margin-bottom: 5px; font-weight: 700;">Returns</h3>
-<div style="margin-left: 20px; margin-bottom: 20px;">
-<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#2.1">string</a></span> Localized category name, or "misc" as the default fallback.</p>
-</div>
-
-<h3 style="margin-bottom: 5px; font-weight: 700;">Example Usage</h3>
-<div style="margin-left: 20px; margin-bottom: 20px;">
-<pre><code class="language-lua">  local cat = lia.option.getDisplayCategory("BarsAlwaysVisible")
-  lia.debug("Option category:", cat)
 </code></pre>
 </div>
 
@@ -184,7 +79,7 @@ The option library provides comprehensive functionality for managing user-config
 <h3 style="margin-bottom: 5px; font-weight: 700;">Example Usage</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
 <pre><code class="language-lua">  local list = lia.option.getOptions("weaponSelectorPosition")
-  for _, opt in pairs(list) do lia.debug("Choice:", opt) end
+  for _, opt in pairs(list) do print("Choice:", opt) end
 </code></pre>
 </div>
 

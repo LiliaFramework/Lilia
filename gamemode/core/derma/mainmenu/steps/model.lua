@@ -386,8 +386,17 @@ function PANEL:onDisplay()
             local model, skin, bodyGroups = data, 0, ""
             if istable(data) then
                 skin = data[2] or 0
+                local resolvedGroups = data[3] or {}
+                if istable(data[3]) and data[1] then
+                    local previewEntity = ClientsideModel(data[1], RENDERGROUP_OTHER)
+                    if IsValid(previewEntity) then
+                        resolvedGroups = lia.util.resolveBodygroups(previewEntity, data[3])
+                        previewEntity:Remove()
+                    end
+                end
+
                 for i = 0, 8 do
-                    bodyGroups = bodyGroups .. tostring((data[3] or {})[i] or 0)
+                    bodyGroups = bodyGroups .. tostring(resolvedGroups[i] or 0)
                 end
 
                 model = data[1]

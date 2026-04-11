@@ -12,12 +12,7 @@
         physObj:Sleep()
     end
 
-    if self.BodyGroups and istable(self.BodyGroups) then
-        for bodygroup, value in pairs(self.BodyGroups) do
-            local bgIndex = self:FindBodygroupByName(bodygroup)
-            if bgIndex > -1 then self:SetBodygroup(bgIndex, value) end
-        end
-    end
+    if self.BodyGroups and istable(self.BodyGroups) then lia.util.applyBodygroups(self, self.BodyGroups) end
 
     if self.skin then self:SetSkin(self.skin) end
     if IsValid(self) then self:setAnim() end

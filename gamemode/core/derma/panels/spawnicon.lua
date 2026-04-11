@@ -35,11 +35,7 @@ function PANEL:Init()
         if skin then entity:SetSkin(skin) end
         if panel.ItemTable then
             local bodygroups = panel.ItemTable:getBodygroups()
-            if bodygroups and istable(bodygroups) then
-                for groupIndex, groupValue in pairs(bodygroups) do
-                    if isnumber(groupIndex) and isnumber(groupValue) then entity:SetBodygroup(groupIndex, groupValue) end
-                end
-            end
+            if bodygroups and istable(bodygroups) then lia.util.applyBodygroups(entity, bodygroups) end
 
             local paintMat = hook.Run("PaintItem", panel.ItemTable)
             if isstring(paintMat) and paintMat ~= "" then
@@ -93,11 +89,7 @@ function PANEL:UpdateVisuals()
     if not IsValid(entity) then return end
     if self.ItemTable then
         local bodygroups = self.ItemTable:getBodygroups()
-        if bodygroups and istable(bodygroups) then
-            for groupIndex, groupValue in pairs(bodygroups) do
-                if isnumber(groupIndex) and isnumber(groupValue) then entity:SetBodygroup(groupIndex, groupValue) end
-            end
-        end
+        if bodygroups and istable(bodygroups) then lia.util.applyBodygroups(entity, bodygroups) end
 
         local skin = self.ItemTable:getSkin()
         if skin and isnumber(skin) then entity:SetSkin(skin) end

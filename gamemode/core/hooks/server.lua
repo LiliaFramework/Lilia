@@ -516,11 +516,7 @@ function GM:PostPlayerLoadout(client)
     client:Give("lia_hands")
     client:SetupHands()
     local savedGroups = character:getBodygroups()
-    for k, v in pairs(savedGroups) do
-        local index = tonumber(k)
-        local value = tonumber(v) or 0
-        if index then client:SetBodygroup(index, value) end
-    end
+    lia.util.applyBodygroups(client, savedGroups)
 
     client:SetSkin(character:getSkin())
     client:setLocalVar("VoiceType", VOICE_TALKING)
@@ -906,11 +902,7 @@ function GM:LoadData()
                 if ent.model then createdEnt:SetModel(ent.model) end
                 createdEnt:Spawn()
                 if ent.skin then createdEnt:SetSkin(tonumber(ent.skin) or 0) end
-                if istable(ent.bodygroups) then
-                    for idx, val in pairs(ent.bodygroups) do
-                        createdEnt:SetBodygroup(tonumber(idx) or 0, tonumber(val) or 0)
-                    end
-                end
+                if istable(ent.bodygroups) then lia.util.applyBodygroups(createdEnt, ent.bodygroups) end
 
                 createdEnt:Activate()
                 local loadData = table.Copy(ent)
@@ -1209,12 +1201,7 @@ function GM:OnEntityLoaded(ent, data)
         local hasCustomModel = data.data and data.data.customData and data.data.customData.model and data.data.customData.model ~= ""
         if npcData then
             if not hasCustomModel then ent:SetModel("models/Barney.mdl") end
-            if npcData.BodyGroups and istable(npcData.BodyGroups) then
-                for bodygroup, value in pairs(npcData.BodyGroups) do
-                    local bgIndex = ent:FindBodygroupByName(bodygroup)
-                    if bgIndex > -1 then ent:SetBodygroup(bgIndex, value) end
-                end
-            end
+            if npcData.BodyGroups and istable(npcData.BodyGroups) then lia.util.applyBodygroups(ent, npcData.BodyGroups) end
 
             if npcData.Skin then ent:SetSkin(npcData.Skin) end
         end
@@ -1224,11 +1211,7 @@ function GM:OnEntityLoaded(ent, data)
             if data.data.customData.name and data.data.customData.name ~= "" then ent.NPCName = data.data.customData.name end
             if data.data.customData.model and data.data.customData.model ~= "" then ent:SetModel(data.data.customData.model) end
             if data.data.customData.skin then ent:SetSkin(tonumber(data.data.customData.skin) or 0) end
-            if data.data.customData.bodygroups and istable(data.data.customData.bodygroups) then
-                for bodygroupIndex, value in pairs(data.data.customData.bodygroups) do
-                    ent:SetBodygroup(tonumber(bodygroupIndex) or 0, tonumber(value) or 0)
-                end
-            end
+            if data.data.customData.bodygroups and istable(data.data.customData.bodygroups) then lia.util.applyBodygroups(ent, data.data.customData.bodygroups) end
         end
 
         if data.data and data.data.customData and data.data.customData.animation and data.data.customData.animation ~= "auto" then

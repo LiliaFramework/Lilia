@@ -6,7 +6,8 @@
     local hasFactions = factions and #factions > 0
     local hasClasses = classes and #classes > 0
     local ownable = not (doorData.noSell or hasFactions or hasClasses)
-    local title = doorData.title or doorData.name or ""
+    local title = doorData.title or doorData.name or entity:getNetVar("doorTitle", "")
+    if isstring(title) then title = string.Trim(title) end
     if title and title ~= "" then
         table.insert(doorInfo, {
             text = title
