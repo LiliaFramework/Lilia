@@ -1600,3 +1600,13 @@ else
         }
     end)
 end
+
+lia.item.registerItem("lia_ammobox", "base_entities", {
+    name = "liaAmmoBoxItemName",
+    desc = "liaAmmoBoxItemDesc",
+    model = "models/items/boxsrounds.mdl",
+    category = "entities",
+    width = 1,
+    height = 1,
+    entityid = "lia_ammobox"
+})
