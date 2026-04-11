@@ -1,4 +1,4 @@
-ENT.Type = "anim"
+﻿ENT.Type = "anim"
 ENT.Base = "base_anim"
 ENT.PrintName = L("liaAmmoBoxName")
 ENT.Author = "Samael"

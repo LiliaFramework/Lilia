@@ -138,7 +138,6 @@ function PANEL:updateCreationModelEntity(context)
     self.modelEntity:SetSkin(context.skin or skin or 0)
     local finalGroups = istable(context.groups) and context.groups or istable(groups) and groups
     if finalGroups then lia.util.applyBodygroups(self.modelEntity, finalGroups) end
-
     hook.Run("SetupPlayerModel", self.modelEntity)
     local pos, ang
     if faction.mainMenuPosition then
@@ -1390,7 +1389,6 @@ function PANEL:updateModelEntity(character)
     if not IsValid(self.modelEntity) then return end
     self.modelEntity:SetSkin(character:getSkin())
     lia.util.applyBodygroups(self.modelEntity, character:getBodygroups())
-
     hook.Run("SetupPlayerModel", self.modelEntity, character)
     local pos, ang = nil, nil
     local hookResult = {hook.Run("GetMainMenuPosition", character)}

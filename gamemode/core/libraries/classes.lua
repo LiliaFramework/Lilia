@@ -13,7 +13,6 @@
 ]]
 lia.class = lia.class or {}
 lia.class.list = lia.class.list or {}
-
 function lia.class.getBodygroups(class)
     local classData = istable(class) and class or lia.class.get(class)
     if not classData then return {} end

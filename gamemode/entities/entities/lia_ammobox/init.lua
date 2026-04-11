@@ -1,4 +1,4 @@
-local function getHeldAmmoInfo(client)
+﻿local function getHeldAmmoInfo(client)
     local weapon = client:GetActiveWeapon()
     if not IsValid(weapon) then return end
     local ammoTypeID = weapon:GetPrimaryAmmoType()

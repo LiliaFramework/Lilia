@@ -124,6 +124,7 @@ local KeybindKeys = {
     ["scrolllocktoggle"] = KEY_SCROLLLOCKTOGGLE,
     ["last"] = KEY_LAST
 }
+
 local KeybindNamesByCode = {}
 for name, code in pairs(KeybindKeys) do
     if isnumber(code) and code ~= KEY_FIRST and code ~= KEY_LAST and KeybindNamesByCode[code] == nil then KeybindNamesByCode[code] = name end
@@ -689,7 +690,6 @@ if CLIENT then
                 end
 
                 table.sort(choices, function(a, b) return a.sortKey < b.sortKey end)
-
                 local hasNone = false
                 for _, c in ipairs(choices) do
                     if c.keycode == KEY_NONE then

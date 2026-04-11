@@ -523,7 +523,6 @@ lia.char.registerVar("bodygroups", {
         local client = character:getPlayer()
         local appliedGroups = character:getBodygroups()
         if IsValid(client) and client:getChar() == character then lia.util.applyBodygroups(client, appliedGroups) end
-
         net.Start("liaCharSet")
         net.WriteString("bodygroups")
         net.WriteType(character.vars.bodygroups)

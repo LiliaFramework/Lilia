@@ -989,7 +989,6 @@ if SERVER then
             client:SetTeam(self:getFaction())
             client:setNetVar("char", self:getID())
             lia.util.applyBodygroups(client, self:getBodygroups())
-
             client:SetSkin(self:getSkin())
             hook.Run("SetupPlayerModel", client, self)
             if not noNetworking then

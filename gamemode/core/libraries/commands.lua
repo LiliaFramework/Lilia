@@ -7463,7 +7463,6 @@ lia.command.add("npcchangetype", {
                                 local currentAng = npc:GetAngles()
                                 npc:SetModel("models/Barney.mdl")
                                 if npcData.BodyGroups and istable(npcData.BodyGroups) then lia.util.applyBodygroups(npc, npcData.BodyGroups) end
-
                                 if npcData.Skin then npc:SetSkin(npcData.Skin) end
                                 npc.NPCName = npcData.PrintName or "NPC"
                                 npc:setNetVar("uniqueID", npcType)
@@ -7486,7 +7485,6 @@ lia.command.add("npcchangetype", {
                                     if existingCustomData.model and existingCustomData.model ~= "" then npc:SetModel(existingCustomData.model) end
                                     if existingCustomData.skin then npc:SetSkin(tonumber(existingCustomData.skin) or 0) end
                                     if existingCustomData.bodygroups and istable(existingCustomData.bodygroups) then lia.util.applyBodygroups(npc, existingCustomData.bodygroups) end
-
                                     if existingCustomData.animation and existingCustomData.animation ~= "auto" then
                                         local sequenceIndex = npc:LookupSequence(existingCustomData.animation)
                                         if sequenceIndex >= 0 then

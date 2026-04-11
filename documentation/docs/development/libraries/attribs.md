@@ -32,7 +32,6 @@ The attributes library provides functionality for managing character attributes 
 <h3 style="margin-bottom: 5px; font-weight: 700;">Example Usage</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
 <pre><code class="language-lua">  -- Load default and custom attributes.
-  lia.attribs.loadFromDir(lia.plugin.getDir() .. "/attribs")
   lia.attribs.loadFromDir("schema/attribs")
 </code></pre>
 </div>

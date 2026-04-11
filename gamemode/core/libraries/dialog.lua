@@ -1207,7 +1207,6 @@ if SERVER then
             end
 
             if customData.bodygroups and istable(customData.bodygroups) then lia.util.applyBodygroups(npc, customData.bodygroups) end
-
             if customData.skin ~= nil then npc:SetSkin(tonumber(customData.skin) or 0) end
             if modelChanged then
                 npc.customAnimation = nil

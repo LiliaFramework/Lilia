@@ -517,7 +517,6 @@ function GM:PostPlayerLoadout(client)
     client:SetupHands()
     local savedGroups = character:getBodygroups()
     lia.util.applyBodygroups(client, savedGroups)
-
     client:SetSkin(character:getSkin())
     client:setLocalVar("VoiceType", VOICE_TALKING)
 end
@@ -903,7 +902,6 @@ function GM:LoadData()
                 createdEnt:Spawn()
                 if ent.skin then createdEnt:SetSkin(tonumber(ent.skin) or 0) end
                 if istable(ent.bodygroups) then lia.util.applyBodygroups(createdEnt, ent.bodygroups) end
-
                 createdEnt:Activate()
                 local loadData = table.Copy(ent)
                 if cls == "lia_npc" and ent.data and istable(ent.data) then
@@ -1202,7 +1200,6 @@ function GM:OnEntityLoaded(ent, data)
         if npcData then
             if not hasCustomModel then ent:SetModel("models/Barney.mdl") end
             if npcData.BodyGroups and istable(npcData.BodyGroups) then lia.util.applyBodygroups(ent, npcData.BodyGroups) end
-
             if npcData.Skin then ent:SetSkin(npcData.Skin) end
         end
 

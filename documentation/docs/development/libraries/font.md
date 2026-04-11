@@ -93,7 +93,7 @@ The font library provides comprehensive functionality for managing custom fonts 
 <h3 style="margin-bottom: 5px; font-weight: 700;">Example Usage</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
 <pre><code class="language-lua">  for _, name in ipairs(lia.font.getAvailableFonts()) do
-      print("Font:", name)
+      lia.debug("Font:", name)
   end
 </code></pre>
 </div>

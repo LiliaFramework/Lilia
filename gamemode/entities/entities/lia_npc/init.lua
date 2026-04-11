@@ -13,7 +13,6 @@
     end
 
     if self.BodyGroups and istable(self.BodyGroups) then lia.util.applyBodygroups(self, self.BodyGroups) end
-
     if self.skin then self:SetSkin(self.skin) end
     if IsValid(self) then self:setAnim() end
     self.uniqueID = self.uniqueID or ""

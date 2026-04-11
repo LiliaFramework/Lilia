@@ -349,10 +349,9 @@ function MODULE:OnEntityLoaded(ent, data)
     if data.model and data.model ~= "" and data.model ~= ent:GetModel() then
         ent:SetModel(data.model)
         timer.Simple(0.1, function()
-                if IsValid(ent) then
-                    if data.skin then ent:SetSkin(data.skin) end
-                    if istable(data.bodygroups) then lia.util.applyBodygroups(ent, data.bodygroups) end
-
+            if IsValid(ent) then
+                if data.skin then ent:SetSkin(data.skin) end
+                if istable(data.bodygroups) then lia.util.applyBodygroups(ent, data.bodygroups) end
                 if ent.isReadyForAnim and ent:isReadyForAnim() then
                     ent:setAnim()
                 else
@@ -363,7 +362,6 @@ function MODULE:OnEntityLoaded(ent, data)
     else
         if data.skin then ent:SetSkin(data.skin) end
         if istable(data.bodygroups) then lia.util.applyBodygroups(ent, data.bodygroups) end
-
         if ent.isReadyForAnim and ent:isReadyForAnim() then
             ent:setAnim()
         else
