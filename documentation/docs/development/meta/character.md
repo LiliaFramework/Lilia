@@ -731,7 +731,7 @@ The character meta table provides comprehensive functionality for managing chara
 
 <h3 style="margin-bottom: 5px; font-weight: 700;">Example Usage</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
-<pre><code class="language-lua">  char:save(function() lia.debug("saved") end)
+<pre><code class="language-lua">  char:save(function() print("saved") end)
 </code></pre>
 </div>
 
