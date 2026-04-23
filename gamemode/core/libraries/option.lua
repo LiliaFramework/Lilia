@@ -86,7 +86,7 @@ end
         lia.option.add("hudScale", "HUD Scale", "Scale HUD elements", 1.0, function(old, new)
             hook.Run("HUDScaleChanged", old, new)
         end, {
-            category = "@Core",
+            category = "@core",
             min = 0.5,
             max = 1.5,
             decimals = 2,
@@ -625,14 +625,14 @@ hook.Add("PopulateConfigurationButtons", "liaOptionsPopulate", function(pages)
 end)
 
 lia.option.add("descriptionWidth", "@descriptionWidth", "@descriptionWidthDesc", 0.5, nil, {
-    category = "@Core",
+    category = "@core",
     min = 0.1,
     max = 1,
     decimals = 2
 })
 
 lia.option.add("invertWeaponScroll", "@invertWeaponScroll", "@invertWeaponScrollDesc", false, nil, {
-    category = "@Core",
+    category = "@core",
     isQuick = true,
 })
 
@@ -767,7 +767,7 @@ lia.option.add("espPlayersColor", "@espPlayersColor", "@espPlayersColorDesc", {
 })
 
 lia.option.add("BarsAlwaysVisible", "@barsAlwaysVisible", "@barsAlwaysVisibleDesc", false, nil, {
-    category = "@Core",
+    category = "@core",
     isQuick = true,
 })
 
@@ -803,7 +803,7 @@ lia.option.add("thirdPersonDistance", "@thirdPersonDistance", "@thirdPersonDista
 })
 
 lia.option.add("ChatShowTime", "@chatShowTime", "@chatShowTimeDesc", false, nil, {
-    category = "@Core",
+    category = "@core",
     type = "Boolean"
 })
 
@@ -919,13 +919,13 @@ lia.option.add("smoothingTime", "@optionSmoothingTime", "@optionSmoothingTimeDes
 })
 
 lia.option.add("voiceRange", "@voiceRange", "@voiceRangeDesc", false, nil, {
-    category = "@Core",
+    category = "@core",
     isQuick = true,
     type = "Boolean"
 })
 
 lia.option.add("weaponSelectorPosition", "@weaponSelectorPosition", "@weaponSelectorPositionDesc", "left", nil, {
-    category = "@Core",
+    category = "@core",
     type = "Table",
     options = {
         {

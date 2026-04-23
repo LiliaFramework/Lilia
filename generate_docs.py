@@ -19,7 +19,7 @@ CORE_HOOKS = {
     'DoPlayerDeath', 'PlayerSpawn', 'PreCleanupMap', 'PostCleanupMap', 'ShutDown', 'PlayerAuthed',
     'PlayerDisconnected', 'PlayerInitialSpawn', 'PlayerLoadout', 'CreateDefaultInventory',
     'SetupBotPlayer', 'PlayerShouldTakeDamage', 'CanDrive', 'PlayerDeathThink', 'SaveData',
-    'LoadData', 'OnEntityCreated', 'UpdateEntityPersistence', 'EntityRemoved', 'LiliaTablesLoaded',
+    'LoadData', 'OnEntityCreated', 'UpdateEntityPersistence', 'EntityRemoved', 'OnDatabaseLoaded',
     'PlayerCanHearPlayersVoice', 'CreateSalaryTimers', 'ShowHelp', 'PlayerSpray', 'PlayerDeathSound',
     'CanPlayerSuicide', 'AllowPlayerPickup', 'PostDrawOpaqueRenderables', 'ShouldDrawEntityInfo',
     'GetInjuredText', 'DrawCharInfo', 'DrawEntityInfo', 'HUDPaint', 'TooltipInitialize',
@@ -1184,6 +1184,7 @@ GENERATOR_SUMMARIES = {
     'items/books.md': 'Templates for creating readable books and documents.',
     'items/grenade.md': 'Templates for creating explosive and grenade items.',
     'items/outfit.md': 'Templates for creating clothing and appearance items.',
+    'items/bags.md': 'Templates for creating storage bag items that open their own inventory.',
     'items/stackable.md': 'Templates for creating items that can stack in inventory.',
     'items/weapons.md': 'Templates for creating weapons and firearms.',
  # Full paths for comprehensive index
@@ -1195,6 +1196,7 @@ GENERATOR_SUMMARIES = {
     'generators/items/books.md': 'Templates for creating readable books and documents.',
     'generators/items/grenade.md': 'Templates for creating explosive and grenade items.',
     'generators/items/outfit.md': 'Templates for creating clothing and appearance items.',
+    'generators/items/bags.md': 'Templates for creating storage bag items that open their own inventory.',
     'generators/items/stackable.md': 'Templates for creating items that can stack in inventory.',
     'generators/items/weapons.md': 'Templates for creating weapons and firearms.'
 }
@@ -1208,6 +1210,7 @@ GENERATOR_TITLES = {
     'items/books.md': 'Books Item Generator',
     'items/grenade.md': 'Grenade Item Generator',
     'items/outfit.md': 'Outfit Item Generator',
+    'items/bags.md': 'Bag Item Generator',
     'items/stackable.md': 'Stackable Item Generator',
     'items/weapons.md': 'Weapons Item Generator'
 }

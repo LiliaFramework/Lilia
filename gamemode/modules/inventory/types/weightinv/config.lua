@@ -1,6 +1,6 @@
 ﻿lia.config.add("invMaxWeight", "@invMaxWeight", 10, nil, {
     desc = "@invMaxWeightDesc",
-    category = "@Core",
+    category = "@core",
     type = "Number",
     min = 1,
     max = 1000
@@ -8,7 +8,7 @@
 
 lia.config.add("invWeightUnit", "@invWeightUnit", "KG", nil, {
     desc = "@invWeightUnitDesc",
-    category = "@Core",
+    category = "@core",
     type = "String"
 })
 
@@ -33,7 +33,7 @@ lia.config.add("invW", "@invWidth", 6, function(_, newW)
     lia.db.query("UPDATE lia_invdata SET value = '" .. lia.db.escape(json) .. "' WHERE key = 'w' AND invID IN (SELECT invID FROM lia_inventories WHERE charID IS NOT NULL)")
 end, {
     desc = "@invWidthDesc",
-    category = "@Core",
+    category = "@core",
     type = "Number",
     min = 1,
     max = 20
@@ -60,7 +60,7 @@ lia.config.add("invH", "@invHeight", 4, function(_, newH)
     lia.db.query("UPDATE lia_invdata SET value = '" .. lia.db.escape(json) .. "' WHERE key = 'h' AND invID IN (SELECT invID FROM lia_inventories WHERE charID IS NOT NULL)")
 end, {
     desc = "@invHeightDesc",
-    category = "@Core",
+    category = "@core",
     type = "Number",
     min = 1,
     max = 20
@@ -68,7 +68,7 @@ end, {
 
 lia.config.add("trunkInvW", "@trunkInvWidth", 10, nil, {
     desc = "@trunkInvWidthDesc",
-    category = "@Core",
+    category = "@core",
     type = "Number",
     min = 1,
     max = 20
@@ -76,7 +76,7 @@ lia.config.add("trunkInvW", "@trunkInvWidth", 10, nil, {
 
 lia.config.add("trunkInvH", "@trunkInvHeight", 2, nil, {
     desc = "@trunkInvHeightDesc",
-    category = "@Core",
+    category = "@core",
     type = "Number",
     min = 1,
     max = 20

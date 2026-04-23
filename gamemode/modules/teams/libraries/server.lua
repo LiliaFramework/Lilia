@@ -192,11 +192,21 @@ function MODULE:PostPlayerLoadout(client)
                 end
 
                 if class.model then
+                    local appliedClassModel
                     if isstring(class.model) then
                         client:SetModel(class.model)
+                        appliedClassModel = true
                     elseif istable(class.model) then
                         local selected = character:getData("classModel")
-                        if isstring(selected) and selected ~= "" and (not util or not util.IsValidModel or util.IsValidModel(selected)) then client:SetModel(selected) end
+                        if isstring(selected) and selected ~= "" and (not util or not util.IsValidModel or util.IsValidModel(selected)) then
+                            client:SetModel(selected)
+                            appliedClassModel = true
+                        end
+                    end
+
+                    if appliedClassModel then
+                        lia.util.applyBodygroups(client, character:getBodygroups())
+                        client:SetSkin(character:getSkin())
                     end
                 end
             end

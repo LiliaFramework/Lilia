@@ -32,7 +32,7 @@ lia.config.add("vendorSaleScale", "@vendorSellScale", 0.5, function(value)
     return true
 end, {
     desc = "@vendorSaleScaleDesc",
-    category = "@Core",
+    category = "@core",
     type = "Number",
     min = 0.1,
     max = 2.0,

@@ -559,7 +559,20 @@ function lia.item.register(uniqueID, baseID, isBaseItem, path, luaGenerated)
     end
 
     if not luaGenerated and path then lia.loader.include(path, "shared") end
-    for funcName, funcTable in pairs(ITEM.functions) do
+    lia.item.localizeDefinition(ITEM)
+    ITEM:onRegistered()
+    local itemType = ITEM.uniqueID
+    targetTable[itemType] = ITEM
+    if not isBaseItem then lia.item.applyWeaponOverride(itemType) end
+    lia.item.localizeDefinition(targetTable[itemType])
+    hook.Run("OnItemRegistered", ITEM)
+    ITEM = nil
+    return targetTable[itemType]
+end
+
+function lia.item.localizeDefinition(itemDef)
+    if not istable(itemDef) then return end
+    for funcName, funcTable in pairs(itemDef.functions or {}) do
         if isstring(funcTable.name) then
             funcTable.name = lia.lang.resolveToken(funcTable.name)
         else
@@ -569,16 +582,9 @@ function lia.item.register(uniqueID, baseID, isBaseItem, path, luaGenerated)
         if isstring(funcTable.tip) then funcTable.tip = lia.lang.resolveToken(funcTable.tip) end
     end
 
-    if isstring(ITEM.name) then ITEM.name = lia.lang.resolveToken(ITEM.name) end
-    if isstring(ITEM.desc) then ITEM.desc = lia.lang.resolveToken(ITEM.desc) end
-    if isstring(ITEM.category) then ITEM.category = lia.lang.resolveToken(ITEM.category) end
-    ITEM:onRegistered()
-    local itemType = ITEM.uniqueID
-    targetTable[itemType] = ITEM
-    if not isBaseItem then lia.item.applyWeaponOverride(itemType) end
-    hook.Run("OnItemRegistered", ITEM)
-    ITEM = nil
-    return targetTable[itemType]
+    if isstring(itemDef.name) then itemDef.name = lia.lang.resolveToken(itemDef.name) end
+    if isstring(itemDef.desc) then itemDef.desc = lia.lang.resolveToken(itemDef.desc) end
+    if isstring(itemDef.category) then itemDef.category = lia.lang.resolveToken(itemDef.category) end
 end
 
 --[[
@@ -1334,6 +1340,8 @@ hook.Add("InitializedModules", "liaItems", function()
             for key, value in pairs(registration.properties) do
                 item[key] = value
             end
+
+            lia.item.localizeDefinition(item)
         end
     end
 
@@ -1366,6 +1374,8 @@ hook.Add("InitializedModules", "liaItems", function()
             for key, value in pairs(properties) do
                 item[key] = value
             end
+
+            lia.item.localizeDefinition(item)
         end
     end
 
@@ -1457,6 +1467,7 @@ hook.Add("InitializedModules", "liaItems", function()
                 end
             end
 
+            lia.item.localizeDefinition(item)
             hook.Run("OnItemOverridden", item, overrides)
         else
             lia.error("[Lilia] Cannot override item '" .. tostring(uniqueID) .. "': item not found\n")
@@ -1602,8 +1613,8 @@ else
 end
 
 lia.item.registerItem("lia_ammobox", "base_entities", {
-    name = "liaAmmoBoxItemName",
-    desc = "liaAmmoBoxItemDesc",
+    name = "@liaAmmoBoxItemName",
+    desc = "@liaAmmoBoxItemDesc",
     model = "models/items/boxsrounds.mdl",
     category = "entities",
     width = 1,

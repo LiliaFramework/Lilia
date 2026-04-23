@@ -8,6 +8,16 @@
     return weapon, ammoTypeID, ammoType
 end
 
+function ENT:SpawnFunction(client, trace)
+    if not trace.Hit then return end
+    local entity = ents.Create("lia_ammobox")
+    entity:SetPos(trace.HitPos + trace.HitNormal * 12)
+    entity:SetAngles(Angle(0, client:EyeAngles().y, 0))
+    entity:Spawn()
+    entity:Activate()
+    return entity
+end
+
 function ENT:Initialize()
     self:SetModel(self.Model)
     self:SetSolid(SOLID_VPHYSICS)

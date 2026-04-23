@@ -447,13 +447,11 @@ if SERVER then
                     local tokens = combineBracketArgs(arguments)
                     local missing = {}
                     local prefix = {}
-                    local firstMissingIndex
                     for i, field in ipairs(fields) do
                         local arg = tokens[i]
                         local isMissing = not arg or isPlaceholder(arg)
                         if isMissing then
-                            if not firstMissingIndex then firstMissingIndex = i end
-                            if (not field.optional) or (i >= firstMissingIndex) then missing[#missing + 1] = field.name end
+                            if not field.optional then missing[#missing + 1] = field.name end
                         else
                             prefix[#prefix + 1] = arg
                         end
@@ -6325,11 +6323,12 @@ lia.command.add("beclass", {
             client:notifyErrorLocalized("invalidClass")
             return
         end
+        local classModels = classData.model or classData.models
 
         local currentClass = character:getClass()
         local isSameClass = currentClass == classID
         local function applyRequestedClassModel()
-            if not istable(classData.model) then
+            if not istable(classModels) then
                 character:setData("classModel", nil)
                 return false
             end
@@ -6346,7 +6345,7 @@ lia.command.add("beclass", {
             end
 
             local validModels = {}
-            gatherModels(classData.model, validModels)
+            gatherModels(classModels, validModels)
             local ok = false
             for _, v in ipairs(validModels) do
                 if v == requestedModel then
@@ -6368,7 +6367,7 @@ lia.command.add("beclass", {
 
         if lia.class.canBe(client, classID) then
             if character:joinClass(classID) then
-                if not istable(classData.model) then character:setData("classModel", nil) end
+                if not istable(classModels) then character:setData("classModel", nil) end
                 applyRequestedClassModel()
                 client:notifySuccessLocalized("becomeClass", classData.name)
                 lia.log.add(client, "beClass", classData.name)

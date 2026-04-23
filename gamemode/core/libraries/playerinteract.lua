@@ -605,7 +605,7 @@ end
 lia.keybind.add("interactionMenu", {
     keyBind = KEY_TAB,
     desc = "@interactionMenuDesc",
-    category = "@Core",
+    category = "@core",
     onPress = function()
         net.Start("liaRequestInteractOptions")
         net.WriteString("interaction")
@@ -616,7 +616,7 @@ lia.keybind.add("interactionMenu", {
 lia.keybind.add("personalActions", {
     keyBind = KEY_G,
     desc = "@personalActionsDesc",
-    category = "@Core",
+    category = "@core",
     onPress = function()
         net.Start("liaRequestInteractOptions")
         net.WriteString("action")

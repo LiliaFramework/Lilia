@@ -915,9 +915,11 @@ function PANEL:addClassDetails(parent, cl)
 end
 
 function PANEL:addJoinButton(parent, cl, canBe)
+    local classModels = cl.model or cl.models
+    local hasModelChoices = istable(classModels)
     local isCurrent = LocalPlayer():getChar() and LocalPlayer():getChar():getClass() == cl.index
     local btn = parent:Add("liaMediumButton")
-    if isCurrent and istable(cl.model) then
+    if isCurrent and hasModelChoices then
         btn:SetText(L("changeModel"))
     else
         btn:SetText(isCurrent and L("alreadyInClass") or L("joinClass"))
@@ -944,16 +946,16 @@ function PANEL:addJoinButton(parent, cl, canBe)
         end
     end
 
-    btn:SetDisabled((not canBe and not isCurrent) or (isCurrent and not istable(cl.model)))
+    btn:SetDisabled((not canBe and not isCurrent) or (isCurrent and not hasModelChoices))
     btn.DoClick = function()
         lia.websound.playButtonSound()
         if isCurrent then
-            if istable(cl.model) then lia.command.send("beclass", cl.index, self.selectedClassModels and self.selectedClassModels[cl.index] or nil) end
+            if hasModelChoices then lia.command.send("beclass", cl.index, self.selectedClassModels and self.selectedClassModels[cl.index] or nil) end
             return
         end
 
         if not canBe then return end
-        if istable(cl.model) then
+        if hasModelChoices then
             lia.command.send("beclass", cl.index, self.selectedClassModels and self.selectedClassModels[cl.index] or nil)
         else
             lia.command.send("beclass", cl.index)
