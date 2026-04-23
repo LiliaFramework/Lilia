@@ -34,6 +34,77 @@ local defaultUserTools = {
     remover = true,
 }
 
+local camiPathExceptions = {
+    "lua/sam/",
+}
+
+local function isBundledCamiCompatibility(path)
+    local normalizedPath = path:gsub("\\", "/"):lower()
+    if normalizedPath == "lilia/gamemode/core/libraries/compatibility/cami.lua" or normalizedPath:find("/core/libraries/compatibility/cami.lua", 1, true) ~= nil then return true end
+    for _, exception in ipairs(camiPathExceptions) do
+        if normalizedPath:find(exception, 1, true) ~= nil then return true end
+    end
+    return false
+end
+
+local function findCamiConflictFiles()
+    local matches = {}
+    local seen = {}
+    local function addMatch(path)
+        local normalizedPath = path:gsub("\\", "/"):lower()
+        if seen[normalizedPath] then return end
+        if isBundledCamiCompatibility(path) then return end
+        seen[normalizedPath] = true
+        matches[#matches + 1] = path
+    end
+
+    local function scanTarget(baseDir, searchPath)
+        local function recurse(currentDir)
+            local files, folders = file.Find(currentDir .. "*", searchPath)
+            if not files then return end
+            folders = folders or {}
+            for _, fileName in ipairs(files) do
+                local normalizedName = string.lower(fileName)
+                if normalizedName == "sh_cami.lua" or normalizedName == "cami.lua" then addMatch(baseDir .. fileName) end
+            end
+
+            for _, folderName in ipairs(folders) do
+                recurse(currentDir .. folderName .. "/")
+            end
+        end
+
+        recurse(baseDir)
+    end
+
+    local schema = engine.ActiveGamemode()
+    if schema and schema ~= "" then scanTarget("gamemodes/" .. schema .. "/", "GAME") end
+    for _, addon in ipairs(engine.GetAddons() or {}) do
+        if addon and addon.title and addon.title:lower() ~= "lilia" then scanTarget(addon.baseDir or "", addon.title) end
+    end
+
+    local files, _ = file.Find("lua/*", "GAME")
+    for _, fileName in ipairs(files or {}) do
+        local normalizedName = string.lower(fileName)
+        if normalizedName == "sh_cami.lua" or normalizedName == "cami.lua" then addMatch("lua/" .. fileName) end
+    end
+
+    local function scanLuaDirectories(baseDir)
+        local dirFiles, dirFolders = file.Find(baseDir .. "*", "GAME")
+        for _, fileName in ipairs(dirFiles or {}) do
+            local normalizedName = string.lower(fileName)
+            if normalizedName == "sh_cami.lua" or normalizedName == "cami.lua" then addMatch(baseDir .. fileName) end
+        end
+
+        for _, directoryName in ipairs(dirFolders or {}) do
+            scanLuaDirectories(baseDir .. directoryName .. "/")
+        end
+    end
+
+    scanLuaDirectories("lua/")
+    table.sort(matches, function(a, b) return a:lower() < b:lower() end)
+    return matches
+end
+
 local function ensureDefaults(groups)
     local created = false
     for _, grp in ipairs({"user", "admin", "superadmin"}) do
@@ -1959,4 +2030,15 @@ else
     end)
 end
 
-hook.Add("OnAdminSystemLoaded", "liaAdminSyncAfterLoad", function() lia.admin.sync() end)
+hook.Add("OnAdminSystemLoaded", "liaAdminSyncAfterLoad", function()
+    lia.admin.sync()
+    if lia.admin._reportedCamiConflicts then return end
+    lia.admin._reportedCamiConflicts = true
+    local conflictFiles = findCamiConflictFiles()
+    if #conflictFiles == 0 then return end
+    local header = "[Lilia] Incompatible CAMI installation detected. Remove external CAMI files to avoid admin system conflicts."
+    lia.error(header)
+    for _, path in ipairs(conflictFiles) do
+        lia.error("[Lilia] CAMI conflict file found: " .. path)
+    end
+end)
