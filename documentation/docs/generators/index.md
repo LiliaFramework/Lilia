@@ -40,6 +40,10 @@ This section contains generators and templates for creating Lilia framework comp
     <h3>Outfit Item Generator</h3>
     <p></p>
   </a>
+  <a href="items/bags/" class="card">
+    <h3>Bag Item Generator</h3>
+    <p></p>
+  </a>
   <a href="items/stackable/" class="card">
     <h3>Stackable Item Generator</h3>
     <p></p>
