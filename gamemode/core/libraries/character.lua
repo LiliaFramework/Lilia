@@ -345,6 +345,28 @@ function lia.char.registerVar(key, data)
     end
 
     lia.meta.character.vars[key] = data.default
+    if SERVER and data.field and data.fieldType and lia.db and lia.db.tablesLoaded then
+        local typeMap = {
+            string = function(d) return ("%s VARCHAR(%d)"):format(d.field, d.length or 255) end,
+            integer = function(d) return ("%s INT"):format(d.field) end,
+            int = function(d) return ("%s INT"):format(d.field) end,
+            float = function(d) return ("%s FLOAT"):format(d.field) end,
+            boolean = function(d) return ("%s TINYINT(1)"):format(d.field) end,
+            datetime = function(d) return ("%s DATETIME"):format(d.field) end,
+            text = function(d) return ("%s TEXT"):format(d.field) end,
+        }
+
+        local builder = typeMap[data.fieldType]
+        if builder then
+            lia.db.fieldExists("lia_characters", data.field):next(function(exists)
+                if not exists then
+                    local colDef = builder(data)
+                    if data.default ~= nil then colDef = colDef .. " DEFAULT '" .. tostring(data.default) .. "'" end
+                    lia.db.query("ALTER TABLE lia_characters ADD COLUMN " .. colDef)
+                end
+            end)
+        end
+    end
 end
 
 lia.char.registerVar("name", {
