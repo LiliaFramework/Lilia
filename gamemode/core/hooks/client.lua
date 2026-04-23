@@ -32,6 +32,7 @@ local VoiceRanges = {
     [VOICE_YELLING] = 600,
 }
 
+local falloverBlackoutAlpha = 0
 local lastEntity
 local nextUpdate = 0
 local healthPercent = {
@@ -69,7 +70,10 @@ local NoDrawCrosshairWeapon = {
 }
 
 local function canDrawAmmo(wpn)
-    if IsValid(wpn) and wpn.DrawAmmo ~= false and lia.config.get("AmmoDrawEnabled", false) then return hook.Run("ShouldDrawAmmo", wpn) ~= false end
+    if not IsValid(wpn) or wpn.DrawAmmo == false then return false end
+    local hookResult = hook.Run("ShouldDrawAmmo", wpn)
+    if hookResult ~= nil then return hookResult end
+    return lia.config.get("AmmoDrawEnabled", false)
 end
 
 local function drawAmmo(wpn)
@@ -102,12 +106,17 @@ local function canDrawCrosshair()
     local client = LocalPlayer()
     local rag = client:GetRagdollEntity()
     local wpn = client:GetActiveWeapon()
-    if not client:getChar() then return false end
-    if IsValid(wpn) then
-        local cl = wpn:GetClass()
-        if cl == "gmod_tool" or string.find(cl, "lia_") or string.find(cl, "detector_") then return true end
-        if not NoDrawCrosshairWeapon[cl] and lia.config.get("CrosshairEnabled", true) and client:Alive() and not IsValid(rag) and not (g_ContextMenu:IsVisible() or IsValid(lia.gui.character) and lia.gui.character:IsVisible()) then return true end
-    end
+    if not client:getChar() or not IsValid(wpn) then return false end
+    local cl = wpn:GetClass()
+    if cl == "gmod_tool" or string.find(cl, "lia_") or string.find(cl, "detector_") then return true end
+    if NoDrawCrosshairWeapon[cl] then return false end
+    if not client:Alive() then return false end
+    if IsValid(rag) then return false end
+    if g_ContextMenu:IsVisible() then return false end
+    if IsValid(lia.gui.character) and lia.gui.character:IsVisible() then return false end
+    local hookResult = hook.Run("ShouldDrawCrosshair", client, wpn)
+    if hookResult ~= nil then return hookResult end
+    return lia.config.get("CrosshairEnabled", true)
 end
 
 local function drawCrosshair()
@@ -616,6 +625,18 @@ end
 function GM:HUDPaintBackground()
     lia.menu.drawAll()
     RenderEntities()
+    local client = LocalPlayer()
+    if IsValid(client) then
+        local shouldBlackout = client:Alive() and IsValid(client:GetRagdollEntity())
+        local targetAlpha = shouldBlackout and 255 or 0
+        local fadeSpeed = shouldBlackout and 900 or 600
+        falloverBlackoutAlpha = mathApproach(falloverBlackoutAlpha, targetAlpha, FrameTime() * fadeSpeed)
+        if falloverBlackoutAlpha > 0 then
+            surface.SetDrawColor(0, 0, 0, falloverBlackoutAlpha)
+            surface.DrawRect(0, 0, ScrW(), ScrH())
+        end
+    end
+
     if BRANCH ~= "x86-64" then draw.SimpleText(L("switchTo64Bit"), "LiliaFont.17", ScrW() * 0.5, ScrH() * 0.97, Color(255, 255, 255, 10), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER) end
 end
 
