@@ -68,6 +68,34 @@ local function DoSpawnLogic(client, isRespawning)
         return
     end
 
+    local classIndex = character:getClass()
+    if classIndex and classIndex ~= -1 then
+        local spawnData = lia.data.get("spawns", {})
+        local classSpawns = istable(spawnData) and istable(spawnData.classes) and spawnData.classes[classIndex]
+        if classSpawns and #classSpawns > 0 then
+            local curMap = lia.data.getEquivalencyMap(game.GetMap()):lower()
+            local valid = {}
+            for _, v in ipairs(classSpawns) do
+                local map = v.map and tostring(v.map):lower() or nil
+                if not map or map == curMap then valid[#valid + 1] = v end
+            end
+
+            if #valid > 0 then
+                local data = table.Random(valid)
+                local pos = data.pos or data.position
+                local ang = data.ang or data.angle
+                if isvector(pos) then
+                    pos = pos + Vector(0, 0, 16)
+                    client:SetPos(pos)
+                end
+
+                if isangle(ang) then client:SetEyeAngles(ang) end
+                hook.Run("PlayerSpawnPointSelected", client, pos or Vector(0, 0, 16), ang or angle_zero)
+                return
+            end
+        end
+    end
+
     local factionID
     for _, info in ipairs(lia.faction.indices) do
         if info.index == client:Team() then
@@ -137,7 +165,7 @@ end
 
 function MODULE:CharPreSave(character)
     local client = character:getPlayer()
-    if IsValid(client) and client:getChar() == character then
+    if IsValid(client) and client:getChar() == character and client:Alive() then
         local lastPosData = {
             pos = client:GetPos(),
             ang = Angle(0, 0, 0),
