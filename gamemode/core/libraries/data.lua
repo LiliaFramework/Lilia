@@ -760,6 +760,14 @@ if SERVER then
         end)
         ```
     ]]
+    local function hasNearbyPersistentPosition(positions, pos)
+        if not isvector(pos) then return false end
+        for _, existingPos in ipairs(positions) do
+            if isvector(existingPos) and existingPos:DistToSqr(pos) <= 2500 then return true end
+        end
+        return false
+    end
+
     function lia.data.loadPersistenceData(callback)
         local gamemode = SCHEMA and SCHEMA.folder or engine.ActiveGamemode()
         local map = game.GetMap()
@@ -768,6 +776,9 @@ if SERVER then
         ensurePersistenceColumns(baseCols):next(function() return lia.db.select("*", "persistence", condition) end):next(function(res)
             local rows = res.results or {}
             local entities = {}
+            local nearbyByClass = {}
+            local removedDuplicates = false
+            table.sort(rows, function(a, b) return tonumber(a.id) > tonumber(b.id) end)
             for _, row in ipairs(rows) do
                 local ent = {}
                 for k, v in pairs(row) do
@@ -778,10 +789,22 @@ if SERVER then
                 ent.pos = lia.data.decodeVector(row.pos)
                 ent.angles = lia.data.decodeAngle(row.angles)
                 ent.model = row.model
+                if isstring(ent.class) and ent.class ~= "" and isvector(ent.pos) then
+                    nearbyByClass[ent.class] = nearbyByClass[ent.class] or {}
+                    if hasNearbyPersistentPosition(nearbyByClass[ent.class], ent.pos) then
+                        removedDuplicates = true
+                        lia.warning(string.format("Skipping duplicate persistent entity '%s' near (%.2f, %.2f, %.2f); keeping the newest saved row.", ent.class, ent.pos.x, ent.pos.y, ent.pos.z))
+                        continue
+                    end
+
+                    nearbyByClass[ent.class][#nearbyByClass[ent.class] + 1] = ent.pos
+                end
+
                 entities[#entities + 1] = ent
             end
 
             lia.data.persistCache = entities
+            if removedDuplicates then lia.data.savePersistence(entities) end
             if callback then callback(entities) end
         end)
     end
