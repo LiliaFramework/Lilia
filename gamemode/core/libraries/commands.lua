@@ -6323,8 +6323,8 @@ lia.command.add("beclass", {
             client:notifyErrorLocalized("invalidClass")
             return
         end
-        local classModels = classData.model or classData.models
 
+        local classModels = classData.model or classData.models
         local currentClass = character:getClass()
         local isSameClass = currentClass == classID
         local function applyRequestedClassModel()
