@@ -1,6 +1,6 @@
 ﻿function MODULE:CheckFactionLimitReached(faction, character, client)
     if faction.OnCheckLimitReached then return faction:OnCheckLimitReached(character, client) end
-    if not isnumber(faction.limit) then return false end
+    if not isnumber(faction.limit) or faction.limit == 0 then return false end
     local maxPlayers = faction.limit
     if faction.limit < 1 then maxPlayers = math.Round(player.GetCount() * faction.limit) end
     return team.NumPlayers(faction.index) >= maxPlayers
