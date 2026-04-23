@@ -150,7 +150,7 @@ The derma library provides comprehensive UI rendering and interaction functional
 
 <h3 style="margin-bottom: 5px; font-weight: 700;">Example Usage</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
-<pre><code class="language-lua">  lia.derma.requestColorPicker(function(col) print("Picked", col) end, Color(0, 200, 255))
+<pre><code class="language-lua">  lia.derma.requestColorPicker(function(col) lia.debug("Picked", col) end, Color(0, 200, 255))
 </code></pre>
 </div>
 
@@ -184,7 +184,7 @@ The derma library provides comprehensive UI rendering and interaction functional
 
 <h3 style="margin-bottom: 5px; font-weight: 700;">Example Usage</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
-<pre><code class="language-lua">  lia.derma.radialMenu({{label = "Yes", callback = function() print("yes") end}})
+<pre><code class="language-lua">  lia.derma.radialMenu({{label = "Yes", callback = function() lia.debug("yes") end}})
 </code></pre>
 </div>
 
@@ -1595,7 +1595,7 @@ The derma library provides comprehensive UI rendering and interaction functional
 
 <h3 style="margin-bottom: 5px; font-weight: 700;">Example Usage</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
-<pre><code class="language-lua">  lia.derma.requestDropdown("Choose color", {"Red", "Green", "Blue"}, function(choice) print("Picked", choice) end)
+<pre><code class="language-lua">  lia.derma.requestDropdown("Choose color", {"Red", "Green", "Blue"}, function(choice) lia.debug("Picked", choice) end)
 </code></pre>
 </div>
 
@@ -1635,7 +1635,7 @@ The derma library provides comprehensive UI rendering and interaction functional
 
 <h3 style="margin-bottom: 5px; font-weight: 700;">Example Usage</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
-<pre><code class="language-lua">  lia.derma.requestString("Rename", "Enter a new name:", function(val) if val then print("New name", val) end end, "Default")
+<pre><code class="language-lua">  lia.derma.requestString("Rename", "Enter a new name:", function(val) if val then lia.debug("New name", val) end end, "Default")
 </code></pre>
 </div>
 
@@ -1659,7 +1659,7 @@ The derma library provides comprehensive UI rendering and interaction functional
 
 <h3 style="margin-bottom: 5px; font-weight: 700;">Parameters</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
-<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#2.1">string</a></span> <span class="parameter">title</span> <span class="optional">optional</span> Title text key; defaults to `"selectOptions"`.</p>
+<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#2.1">string</a></span> <span class="parameter">title</span> <span class="optional">optional</span> Title text key; defaults to the localized "Select Options" prompt.</p>
 <p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#2.1">table</a></span> <span class="parameter">options</span> Array where each entry is either a value or `{display, data}` table; tables create dropdowns, values create checkboxes.</p>
 <p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#2.1">function</a></span> <span class="parameter">callback</span> <span class="optional">optional</span> Invoked with a table of selected values or `false` when cancelled.</p>
 <p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#2.1">table</a></span> <span class="parameter">defaults</span> <span class="optional">optional</span> Default selections; for dropdowns this can map option names to selected values.</p>
@@ -1710,7 +1710,7 @@ The derma library provides comprehensive UI rendering and interaction functional
 
 <h3 style="margin-bottom: 5px; font-weight: 700;">Example Usage</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
-<pre><code class="language-lua">  lia.derma.requestBinaryQuestion("Confirm", "Delete item?", function(ok) if ok then print("Deleted") end end)
+<pre><code class="language-lua">  lia.derma.requestBinaryQuestion("Confirm", "Delete item?", function(ok) if ok then lia.debug("Deleted") end end)
 </code></pre>
 </div>
 
@@ -1747,7 +1747,7 @@ The derma library provides comprehensive UI rendering and interaction functional
 
 <h3 style="margin-bottom: 5px; font-weight: 700;">Example Usage</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
-<pre><code class="language-lua">  lia.derma.requestButtons("Choose action", {"Heal", "Damage"}, function(_, text) print("Pressed", text) end, "Pick an effect:")
+<pre><code class="language-lua">  lia.derma.requestButtons("Choose action", {"Heal", "Damage"}, function(_, text) lia.debug("Pressed", text) end, "Pick an effect:")
 </code></pre>
 </div>
 

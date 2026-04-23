@@ -102,7 +102,7 @@ provides hooks for custom door behavior integration.
 <h3 style="margin-bottom: 5px; font-weight: 700;">Example Usage</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
 <pre><code class="language-lua">  local data = lia.doors.getCachedData(door)
-  print("Door price:", data.price)
+  lia.debug("Door price:", data.price)
 </code></pre>
 </div>
 

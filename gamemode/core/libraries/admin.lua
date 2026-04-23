@@ -34,10 +34,7 @@ local defaultUserTools = {
     remover = true,
 }
 
-local camiPathExceptions = {
-    "lua/sam/",
-}
-
+local camiPathExceptions = {"lua/sam/",}
 local function isBundledCamiCompatibility(path)
     local normalizedPath = path:gsub("\\", "/"):lower()
     if normalizedPath == "lilia/gamemode/core/libraries/compatibility/cami.lua" or normalizedPath:find("/core/libraries/compatibility/cami.lua", 1, true) ~= nil then return true end

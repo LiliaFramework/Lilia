@@ -1079,7 +1079,7 @@ Server-side hooks in the Lilia framework handle server-side logic, data persiste
 <h3 style="margin-bottom: 5px; font-weight: 700;">Example Usage</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
 <pre><code class="language-lua">  hook.Add("DatabaseConnected", "InitPlugins", function()
-      lia.plugin.loadAll()
+      lia.module.loadAll()
   end)
 </code></pre>
 </div>
@@ -2289,32 +2289,6 @@ Server-side hooks in the Lilia framework handle server-side logic, data persiste
 <div style="margin-left: 20px; margin-bottom: 20px;">
 <pre><code class="language-lua">  hook.Add("KickedFromChar", "LogCharKick", function(characterID, wasCurrent)
       lia.log.add(nil, "charKicked", characterID, wasCurrent)
-  end)
-</code></pre>
-</div>
-
-</div>
-</details>
-
----
-
-<details class="realm-server" id="function-liliatablesloaded">
-<summary><a id="OnDatabaseLoaded"></a>OnDatabaseLoaded()</summary>
-<div class="details-content">
-<h3 style="margin-bottom: 5px; font-weight: 700;"><a id="liliatablesloaded"></a>Purpose</h3>
-<div style="margin-left: 20px; margin-bottom: 20px;">
-  <p>Indicates that all Lilia database tables have been created/loaded.</p>
-</div>
-
-<h3 style="margin-bottom: 5px; font-weight: 700;">When Called</h3>
-<div style="margin-left: 20px; margin-bottom: 20px;">
-  <p>After tables are created during startup.</p>
-</div>
-
-<h3 style="margin-bottom: 5px; font-weight: 700;">Example Usage</h3>
-<div style="margin-left: 20px; margin-bottom: 20px;">
-<pre><code class="language-lua">  hook.Add("OnDatabaseLoaded", "SeedDefaults", function()
-      lia.seed.run()
   end)
 </code></pre>
 </div>
@@ -3557,7 +3531,7 @@ Server-side hooks in the Lilia framework handle server-side logic, data persiste
 <h3 style="margin-bottom: 5px; font-weight: 700;">Example Usage</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
 <pre><code class="language-lua">  hook.Add("OnSetUsergroup", "LogUsergroupChange", function(sid, new, source, ply)
-      print(string.format("Usergroup changed for %s to %s by %s", sid, new, source))
+      lia.debug(string.format("Usergroup changed for %s to %s by %s", sid, new, source))
   end)
 </code></pre>
 </div>
@@ -4825,7 +4799,7 @@ Server-side hooks in the Lilia framework handle server-side logic, data persiste
 <h3 style="margin-bottom: 5px; font-weight: 700;">Example Usage</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
 <pre><code class="language-lua">  hook.Add("RemoveWarning", "MirrorWarningRemoval", function(charID, index)
-      print("Warning removed", charID, index)
+      lia.debug("Warning removed", charID, index)
   end)
 </code></pre>
 </div>
@@ -4914,7 +4888,7 @@ Server-side hooks in the Lilia framework handle server-side logic, data persiste
 <h3 style="margin-bottom: 5px; font-weight: 700;">Example Usage</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
 <pre><code class="language-lua">  hook.Add("SetupBotPlayer", "BotWelcome", function(client)
-      print("Bot setup complete", client)
+      lia.debug("Bot setup complete", client)
   end)
 </code></pre>
 </div>
@@ -5933,7 +5907,7 @@ Server-side hooks in the Lilia framework handle server-side logic, data persiste
 <h3 style="margin-bottom: 5px; font-weight: 700;">Example Usage</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
 <pre><code class="language-lua">  hook.Add("VendorSynchronized", "AfterVendorSync", function(vendor)
-      print("Vendor synced", vendor)
+      lia.debug("Vendor synced", vendor)
   end)
 </code></pre>
 </div>
