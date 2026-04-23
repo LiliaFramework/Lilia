@@ -1,8 +1,20 @@
 ﻿if SERVER then
-    hook.Add("EntityTakeDamage", "liaSimfphys", function(seat, dmgInfo)
+    hook.Add("EntityTakeDamage", "liaSimfphys", function(target, dmgInfo)
+        if IsValid(target) and target:isSimfphysCar() then
+            local attacker = dmgInfo:GetAttacker()
+            if IsValid(attacker) and attacker:IsPlayer() then
+                local wep = attacker:GetActiveWeapon()
+                if IsValid(wep) and wep:GetClass() == "lia_hands" then
+                    dmgInfo:SetDamage(0)
+                    dmgInfo:SetDamageType(DMG_DIRECT)
+                    return true
+                end
+            end
+        end
+
         if not lia.config.get("DamageInCars", true) then return end
-        if not seat:IsVehicle() or seat:GetClass() ~= "gmod_sent_vehicle_fphysics_base" then return end
-        local client = seat:GetDriver()
+        if not target:IsVehicle() or target:GetClass() ~= "gmod_sent_vehicle_fphysics_base" then return end
+        local client = target:GetDriver()
         if IsValid(client) and isfunction(client.isStaffOnDuty) and client:isStaffOnDuty() then
             dmgInfo:SetDamage(0)
             return
@@ -49,6 +61,14 @@ else
     hook.Add("InitializedModules", "liaSimfphys", function() if lia.config.get("DisableSimfphysHUD", false) then hook.Remove("HUDPaint", "simfphys_HUD") end end)
 end
 
+hook.Add("StartCommand", "SimfphysHandsRightClickBlock", function(client, cmd)
+    if not cmd:KeyDown(IN_ATTACK2) then return end
+    local wep = client:GetActiveWeapon()
+    if not IsValid(wep) or wep:GetClass() ~= "lia_hands" then return end
+    local tr = client:GetEyeTrace()
+    if IsValid(tr.Entity) and tr.Entity:isSimfphysCar() and tr.HitPos:DistToSqr(client:GetShootPos()) < 15000 then cmd:RemoveKey(IN_ATTACK2) end
+end)
+
 hook.Add("CheckValidSit", "liaSimfphys", function(client)
     local vehicle = client:getTracedEntity()
     if IsValid(vehicle) and vehicle:isSimfphysCar() then return false end
@@ -56,22 +76,22 @@ end)
 
 hook.Add("simfphysPhysicsCollide", "SIMFPHYS_simfphysPhysicsCollide", function() return true end)
 hook.Add("IsSuitableForTrunk", "SIMFPHYS_IsSuitableForTrunk", function(vehicle) if IsValid(vehicle) and vehicle:isSimfphysCar() then return true end end)
-hook.Add("CanProperty", "SIMFPHYS_CanProperty", function(client, property, ent) if property == "editentity" and ent:isSimfphysCar() then return client:hasPrivilege("canEditSimfphysCars") end end)
+hook.Add("CanProperty", "SIMFPHYS_CanProperty", function(client, property, ent) if property == "editentity" and IsValid(ent) and ent:isSimfphysCar() then return client:hasPrivilege("canEditSimfphysCars") end end)
 lia.config.add("DamageInCars", "@takeDamageInCars", true, nil, {
     desc = "@takeDamageInCarsDesc",
-    category = "@Core",
+    category = "@core",
     type = "Boolean"
 })
 
 lia.config.add("CarEntryDelayEnabled", "@carEntryDelayEnabled", true, nil, {
     desc = "@carEntryDelayEnabledDesc",
-    category = "@Core",
+    category = "@core",
     type = "Boolean"
 })
 
 lia.config.add("TimeToEnterVehicle", "@timeToEnterVehicle", 4, nil, {
     desc = "@timeToEnterVehicleDesc",
-    category = "@Core",
+    category = "@core",
     type = "Int",
     min = 1,
     max = 30
@@ -85,6 +105,6 @@ lia.config.add("DisableSimfphysHUD", "@disableSimfphysHUD", false, function()
     end
 end, {
     desc = "@disableSimfphysHUDDesc",
-    category = "@Core",
+    category = "@core",
     type = "Boolean"
 })
