@@ -2,7 +2,6 @@
 AccessorFunc(PANEL, "m_eTarget", "Target")
 local leftrotate, rightrotate = input.LookupBinding("+moveleft"), input.LookupBinding("+moveright")
 local leftinput, rightinput = input.GetKeyCode(leftrotate), input.GetKeyCode(rightrotate)
-
 function PANEL:GetCurrentBodygroups()
     local model = self.model and self.model.Entity
     if not IsValid(model) then return {} end
@@ -29,6 +28,7 @@ function PANEL:BuildBodygroupExport()
     lines[#lines + 1] = "}"
     return table.concat(lines, "\n")
 end
+
 function PANEL:Init()
     self:SetSize(ScrW() / 1.5, ScrH() / 1.5)
     self:Center()
@@ -83,7 +83,6 @@ function PANEL:Init()
         if IsValid(model) then
             local skn = model:GetSkin()
             local groups = self:GetCurrentBodygroups()
-
             local makeChange = true
             if self.originalSkin == skn then makeChange = false end
             if not makeChange then

@@ -737,6 +737,68 @@ after the base item properties are set but before final localization.</p>
 
 ---
 
+<details class="realm-shared" id="function-liaitemapplyruntimeoverridepath">
+<summary><a id="lia.item.applyRuntimeOverridePath"></a>lia.item.applyRuntimeOverridePath(className)</summary>
+<div class="details-content">
+<h3 style="margin-bottom: 5px; font-weight: 700;"><a id="liaitemapplyruntimeoverridepath"></a>Purpose</h3>
+<div style="margin-left: 20px; margin-bottom: 20px;">
+  <p>Adds a weapon class to the blacklist to prevent it from being auto-generated as an item.</p>
+</div>
+
+<h3 style="margin-bottom: 5px; font-weight: 700;">When Called</h3>
+<div style="margin-left: 20px; margin-bottom: 20px;">
+  <p>Called during weapon generation setup to exclude certain weapons from item creation.</p>
+</div>
+
+<h3 style="margin-bottom: 5px; font-weight: 700;">Parameters</h3>
+<div style="margin-left: 20px; margin-bottom: 20px;">
+<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#2.1">string</a></span> <span class="parameter">className</span> The weapon class name to blacklist.</p>
+</div>
+
+<h3 style="margin-bottom: 5px; font-weight: 700;">Example Usage</h3>
+<div style="margin-left: 20px; margin-bottom: 20px;">
+<pre><code class="language-lua">  -- Prevent admin tools from being generated as items
+  lia.item.addWeaponToBlacklist("weapon_physgun")
+  lia.item.addWeaponToBlacklist("gmod_tool")
+</code></pre>
+</div>
+
+</div>
+</details>
+
+---
+
+<details class="realm-shared" id="function-liaitemgetruntimevalue">
+<summary><a id="lia.item.getRuntimeValue"></a>lia.item.getRuntimeValue(className)</summary>
+<div class="details-content">
+<h3 style="margin-bottom: 5px; font-weight: 700;"><a id="liaitemgetruntimevalue"></a>Purpose</h3>
+<div style="margin-left: 20px; margin-bottom: 20px;">
+  <p>Adds a weapon class to the blacklist to prevent it from being auto-generated as an item.</p>
+</div>
+
+<h3 style="margin-bottom: 5px; font-weight: 700;">When Called</h3>
+<div style="margin-left: 20px; margin-bottom: 20px;">
+  <p>Called during weapon generation setup to exclude certain weapons from item creation.</p>
+</div>
+
+<h3 style="margin-bottom: 5px; font-weight: 700;">Parameters</h3>
+<div style="margin-left: 20px; margin-bottom: 20px;">
+<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#2.1">string</a></span> <span class="parameter">className</span> The weapon class name to blacklist.</p>
+</div>
+
+<h3 style="margin-bottom: 5px; font-weight: 700;">Example Usage</h3>
+<div style="margin-left: 20px; margin-bottom: 20px;">
+<pre><code class="language-lua">  -- Prevent admin tools from being generated as items
+  lia.item.addWeaponToBlacklist("weapon_physgun")
+  lia.item.addWeaponToBlacklist("gmod_tool")
+</code></pre>
+</div>
+
+</div>
+</details>
+
+---
+
 <details class="realm-server" id="function-liaitemsetitemdatabyid">
 <summary><a id="lia.item.setItemDataByID"></a>lia.item.setItemDataByID(itemID, key, value, receivers, noSave, noCheckEntity)</summary>
 <div class="details-content">
@@ -965,6 +1027,41 @@ after the base item properties are set but before final localization.</p>
 <summary><a id="lia.item.loadWeaponOverrides"></a>lia.item.loadWeaponOverrides(invID, w, h, callback)</summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="liaitemloadweaponoverrides"></a>Purpose</h3>
+<div style="margin-left: 20px; margin-bottom: 20px;">
+  <p>Restores an inventory from the database and sets its dimensions.</p>
+</div>
+
+<h3 style="margin-bottom: 5px; font-weight: 700;">When Called</h3>
+<div style="margin-left: 20px; margin-bottom: 20px;">
+  <p>Called when loading saved inventories from the database.</p>
+</div>
+
+<h3 style="margin-bottom: 5px; font-weight: 700;">Parameters</h3>
+<div style="margin-left: 20px; margin-bottom: 20px;">
+<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#2.1">number</a></span> <span class="parameter">invID</span> The unique ID of the inventory to restore.</p>
+<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#2.1">number</a></span> <span class="parameter">w</span> The width of the inventory.</p>
+<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#2.1">number</a></span> <span class="parameter">h</span> The height of the inventory.</p>
+<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#2.2">function, optional</a></span> <span class="parameter">callback</span> Function called when inventory is restored.</p>
+</div>
+
+<h3 style="margin-bottom: 5px; font-weight: 700;">Example Usage</h3>
+<div style="margin-left: 20px; margin-bottom: 20px;">
+<pre><code class="language-lua">  -- Restore a 4x6 inventory
+  lia.item.restoreInv(5, 4, 6, function(inventory)
+      lia.debug("Restored inventory with", inventory:getItemCount(), "items")
+  end)
+</code></pre>
+</div>
+
+</div>
+</details>
+
+---
+
+<details class="realm-server" id="function-liaitemloadweaponruntimeoverrides">
+<summary><a id="lia.item.loadWeaponRuntimeOverrides"></a>lia.item.loadWeaponRuntimeOverrides(invID, w, h, callback)</summary>
+<div class="details-content">
+<h3 style="margin-bottom: 5px; font-weight: 700;"><a id="liaitemloadweaponruntimeoverrides"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
   <p>Restores an inventory from the database and sets its dimensions.</p>
 </div>
