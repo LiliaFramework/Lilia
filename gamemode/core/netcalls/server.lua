@@ -78,6 +78,76 @@ net.Receive("liaWeaponOverrideUpdate", function(len, ply)
     hook.Run("OnWeaponOverrideUpdated", className, key, value)
 end)
 
+local function sanitizeRuntimePath(path)
+    if not isstring(path) or path == "" then return nil end
+    if not path:match("^[%a_][%w_]*%.[%a_][%w_]*$") then return nil end
+    return path
+end
+
+local function coerceRuntimeValue(raw)
+    local n = tonumber(raw)
+    if n ~= nil then return n end
+    if raw == "true" then return true end
+    if raw == "false" then return false end
+    return raw
+end
+
+local function refreshWeaponHolders(className)
+    for _, ply in player.Iterator() do
+        if ply:HasWeapon(className) then
+            ply:StripWeapon(className)
+            ply:Give(className)
+            ply:SelectWeapon(className)
+        end
+    end
+end
+
+net.Receive("liaWeaponRuntimeOverrideUpdate", function(_, ply)
+    if not ply:hasPrivilege("ManageWeaponOverrides") then return end
+    local className = net.ReadString()
+    local dotPath = sanitizeRuntimePath(net.ReadString())
+    local rawValue = net.ReadString()
+    if not dotPath then return end
+    local value = coerceRuntimeValue(rawValue)
+    local wep = weapons.GetStored(className)
+    if not wep then return end
+    if not lia.item.applyRuntimeOverridePath(wep, dotPath, value) then return end
+    lia.item.WeaponRuntimeOverrides[className] = lia.item.WeaponRuntimeOverrides[className] or {}
+    lia.item.WeaponRuntimeOverrides[className][dotPath] = value
+    lia.data.set("weaponRuntimeOverrides", lia.item.WeaponRuntimeOverrides, true, true)
+    refreshWeaponHolders(className)
+    ply:notifyLocalized("weaponOverrideUpdated", dotPath, className)
+    net.Start("liaWeaponRuntimeOverrideSync")
+    net.WriteBool(false)
+    net.WriteString(className)
+    net.WriteString(dotPath)
+    net.WriteType(value)
+    net.Broadcast()
+    hook.Run("OnWeaponRuntimeOverrideUpdated", className, dotPath, value)
+end)
+
+net.Receive("liaWeaponRuntimeOverrideReset", function(_, ply)
+    if not ply:hasPrivilege("ManageWeaponOverrides") then return end
+    local className = net.ReadString()
+    local wep = weapons.GetStored(className)
+    if not wep then return end
+    local defaults = lia.item.defaultRuntimeValues and lia.item.defaultRuntimeValues[className] or {}
+    for dotPath, originalValue in pairs(defaults) do
+        lia.item.applyRuntimeOverridePath(wep, dotPath, originalValue)
+    end
+
+    lia.item.WeaponRuntimeOverrides[className] = nil
+    lia.data.set("weaponRuntimeOverrides", lia.item.WeaponRuntimeOverrides, true, true)
+    refreshWeaponHolders(className)
+    ply:notifyLocalized("weaponOverrideUpdated", "reset", className)
+    net.Start("liaWeaponRuntimeOverrideSync")
+    net.WriteBool(false)
+    net.WriteString(className)
+    net.WriteString("")
+    net.WriteType(false)
+    net.Broadcast()
+end)
+
 net.Receive("liaInsertKeyPressed", function(_, client)
     if not IsValid(client) then return end
     local char = client:getChar()
@@ -1284,6 +1354,78 @@ net.Receive("liaRequestNPCSelection", function(_, client)
         if character then
             npcEntity.uniqueID = uniqueID
             setupNPCType(client, npcEntity)
+        end
+    end
+end)
+
+net.Receive("BodygrouperMenuClose", function(_, client)
+    for _, v in pairs(ents.FindByClass("lia_bodygrouper")) do
+        if v:HasUser(client) then v:RemoveUser(client) end
+    end
+end)
+
+local function CanAccessBodygrouper(client)
+    for _, v in pairs(ents.FindByClass("lia_bodygrouper")) do
+        if v:GetPos():Distance(client:GetPos()) <= 128 then return true end
+    end
+    return client:hasPrivilege("manageBodygroups")
+end
+
+net.Receive("BodygrouperMenu", function(_, client)
+    local target = net.ReadEntity()
+    local skn = net.ReadUInt(10)
+    local groups = net.ReadTable()
+    local closetuser = false
+    if not IsValid(target) then return end
+    if target ~= client then
+        if not (client:hasPrivilege("manageBodygroups") or client:hasPrivilege("changeBodygroups")) then
+            client:notifyLocalized("noAccess")
+            return
+        end
+    else
+        if not CanAccessBodygrouper(client) then
+            client:notifyLocalized("noAccess")
+            return
+        end
+
+        closetuser = true
+    end
+
+    if target:SkinCount() and skn > target:SkinCount() then
+        client:notifyLocalized("invalidSkin")
+        return
+    end
+
+    if target:GetNumBodyGroups() and target:GetNumBodyGroups() > 0 then
+        for k, v in pairs(groups) do
+            if v > target:GetBodygroupCount(k) then
+                client:notifyLocalized("invalidBodygroup")
+                return
+            end
+        end
+    end
+
+    local character = target:getChar()
+    if not character then return end
+    target:SetSkin(skn)
+    character:setSkin(skn)
+    for k, v in pairs(groups) do
+        target:SetBodygroup(k, v)
+    end
+
+    character:setBodygroups(groups)
+    if target == client then
+        target:notifyLocalized("bodygroupChanged", "your")
+    else
+        client:notifyLocalized("bodygroupChanged", target:Name() .. "'s")
+        target:notifyLocalized("bodygroupChangedBy", client:Name())
+    end
+
+    net.Start("BodygrouperMenuCloseClientside")
+    net.Send(client)
+    if closetuser then
+        for _, v in pairs(ents.FindByClass("lia_bodygrouper")) do
+            if v:HasUser(target) then v:RemoveUser(target) end
         end
     end
 end)

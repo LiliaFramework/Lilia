@@ -20,6 +20,7 @@ lia.item.itemEntities = lia.item.itemEntities or {}
 lia.item.inventories = lia.inventory.instances or {}
 lia.item.inventoryTypes = lia.item.inventoryTypes or {}
 lia.item.WeaponOverrides = lia.item.WeaponOverrides or {}
+lia.item.WeaponRuntimeOverrides = lia.item.WeaponRuntimeOverrides or {}
 lia.item.pendingOverrides = lia.item.pendingOverrides or {}
 lia.item.pendingRegistrations = lia.item.pendingRegistrations or {}
 lia.item.WeaponsBlackList = lia.item.WeaponsBlackList or {
@@ -1021,6 +1022,32 @@ function lia.item.addWeaponToBlacklist(className)
     lia.item.WeaponsBlackList[className] = true
 end
 
+function lia.item.applyRuntimeOverridePath(wepTable, dotPath, value)
+    if not istable(wepTable) then return false end
+    local parts = string.Explode(".", dotPath)
+    if #parts < 2 then return false end
+    local cur = wepTable
+    for i = 1, #parts - 1 do
+        local seg = parts[i]
+        if not istable(cur[seg]) then return false end
+        cur = cur[seg]
+    end
+
+    cur[parts[#parts]] = value
+    return true
+end
+
+function lia.item.getRuntimeValue(wepTable, dotPath)
+    if not istable(wepTable) then return nil end
+    local parts = string.Explode(".", dotPath)
+    local cur = wepTable
+    for _, seg in ipairs(parts) do
+        if not istable(cur) then return nil end
+        cur = cur[seg]
+    end
+    return cur
+end
+
 if SERVER then
     --[[
     Purpose:
@@ -1490,6 +1517,19 @@ if SERVER then
             end
         end
     end
+
+    function lia.item.loadWeaponRuntimeOverrides()
+        local stored = lia.data.get("weaponRuntimeOverrides") or {}
+        lia.item.WeaponRuntimeOverrides = stored
+        for className, paths in pairs(stored) do
+            local wep = weapons.GetStored(className)
+            if wep then
+                for dotPath, value in pairs(paths) do
+                    lia.item.applyRuntimeOverridePath(wep, dotPath, value)
+                end
+            end
+        end
+    end
 else
     local function CreateEntry(scroll, className, weaponTable, overrideData)
         local container = scroll:Add("DPanel")
@@ -1497,7 +1537,7 @@ else
         container:Dock(TOP)
         container:DockMargin(5, 0, 0, 3)
         local expanded = false
-        local expandedHeight = 320
+        local expandedHeight = 660
         local header = container:Add("DPanel")
         header:Dock(TOP)
         header:SetTall(50)
@@ -1575,6 +1615,65 @@ else
         AddField(L("weaponItemHeight"), "height", defHeight, true)
         AddField(L("price"), "price", 500, true)
         AddField(L("Category"), "category", L("weapons"), false)
+        local runtimeFields = {{"Primary.Damage", "Pri.Damage", true}, {"Primary.NumShots", "Pri.Shots", true}, {"Primary.Recoil", "Pri.Recoil", true}, {"Primary.Cone", "Pri.Cone", true}, {"Primary.Delay", "Pri.Delay", true}, {"Secondary.Damage", "Sec.Damage", true},}
+        local sepPanel = content:Add("DPanel")
+        sepPanel:Dock(TOP)
+        sepPanel:SetTall(26)
+        sepPanel:DockMargin(0, 8, 0, 4)
+        sepPanel.Paint = function(s, w, h)
+            draw.SimpleText("Runtime SWEP Stats", "LiliaFont.18b", 0, h * 0.5, lia.color.theme.text, TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)
+            local accent = lia.color.theme.accent or lia.color.theme.theme or Color(116, 185, 255)
+            surface.SetDrawColor(accent)
+            surface.DrawLine(0, h - 1, w, h - 1)
+        end
+
+        local livewep = weapons.Get(className)
+        local runtimeOverrides = lia.item.WeaponRuntimeOverrides[className] or {}
+        local function AddRuntimeField(dotPath, label)
+            local default = livewep and lia.item.getRuntimeValue(livewep, dotPath)
+            local current = runtimeOverrides[dotPath] ~= nil and runtimeOverrides[dotPath] or default
+            local p = content:Add("DPanel")
+            p:Dock(TOP)
+            p:SetTall(35)
+            p:DockMargin(0, 3, 0, 0)
+            p.Paint = function() end
+            local l = p:Add("DLabel")
+            l:Dock(LEFT)
+            l:SetWidth(100)
+            l:SetText(label)
+            l:SetFont("LiliaFont.18")
+            l:SetTextColor(lia.color.theme.text)
+            local entry = p:Add("liaEntry")
+            entry:Dock(FILL)
+            if current ~= nil then entry:SetValue(tostring(current)) end
+            entry.textEntry.OnEnter = function(s)
+                local raw = s:GetValue()
+                net.Start("liaWeaponRuntimeOverrideUpdate")
+                net.WriteString(className)
+                net.WriteString(dotPath)
+                net.WriteString(raw)
+                net.SendToServer()
+                lia.item.WeaponRuntimeOverrides[className] = lia.item.WeaponRuntimeOverrides[className] or {}
+                lia.item.WeaponRuntimeOverrides[className][dotPath] = raw
+            end
+        end
+
+        for _, rf in ipairs(runtimeFields) do
+            AddRuntimeField(rf[1], rf[2])
+        end
+
+        local resetBtn = content:Add("DButton")
+        resetBtn:Dock(TOP)
+        resetBtn:SetTall(30)
+        resetBtn:DockMargin(0, 8, 0, 0)
+        resetBtn:SetText("Reset Runtime Overrides")
+        resetBtn:SetFont("LiliaFont.18")
+        resetBtn.DoClick = function()
+            net.Start("liaWeaponRuntimeOverrideReset")
+            net.WriteString(className)
+            net.SendToServer()
+            lia.item.WeaponRuntimeOverrides[className] = nil
+        end
     end
 
     hook.Add("PopulateConfigurationButtons", "liaWeaponItemsConfig", function(pages)
@@ -1621,3 +1720,17 @@ lia.item.registerItem("lia_ammobox", "base_entities", {
     height = 1,
     entityid = "lia_ammobox"
 })
+
+local RUNTIME_SNAPSHOT_PATHS = {"Primary.Damage", "Primary.NumShots", "Primary.Recoil", "Primary.Cone", "Primary.Delay", "Primary.ClipSize", "Secondary.Damage", "Secondary.NumShots", "Secondary.Recoil", "Secondary.Cone", "Secondary.Delay",}
+hook.Add("InitPostEntity", "liaWeaponRuntimeDefaults", function()
+    lia.item.defaultRuntimeValues = {}
+    for _, wep in ipairs(weapons.GetList()) do
+        local cls = wep.ClassName
+        if not cls then continue end
+        lia.item.defaultRuntimeValues[cls] = {}
+        for _, path in ipairs(RUNTIME_SNAPSHOT_PATHS) do
+            local val = lia.item.getRuntimeValue(wep, path)
+            if val ~= nil then lia.item.defaultRuntimeValues[cls][path] = val end
+        end
+    end
+end)

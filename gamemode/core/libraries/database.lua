@@ -183,6 +183,7 @@ function lia.db.loadTables()
             lia.config.send()
             lia.playerinteract.sync()
             lia.item.loadWeaponOverrides()
+            lia.item.loadWeaponRuntimeOverrides()
         end)
     end
 

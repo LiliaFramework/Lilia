@@ -674,6 +674,14 @@ function GM:PlayerInitialSpawn(client)
             net.Send(client)
         end)
 
+        timer.Simple(5, function()
+            if not IsValid(client) then return end
+            net.Start("liaWeaponRuntimeOverrideSync")
+            net.WriteBool(true)
+            net.WriteTable(lia.item.WeaponRuntimeOverrides)
+            net.Send(client)
+        end)
+
         hook.Run("PlayerLiliaDataLoaded", client)
         net.Start("liaAssureClientSideAssets")
         net.Send(client)

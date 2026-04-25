@@ -18,6 +18,16 @@ MODULE.Privileges = {
         MinAccess = "superadmin",
         Category = "@categoryBlacklisting",
     },
+    ["manageBodygroups"] = {
+        Name = "manageBodygroups",
+        MinAccess = "admin",
+        Category = "bodygroups",
+    },
+    ["changeBodygroups"] = {
+        Name = "changeBodygroups",
+        MinAccess = "admin",
+        Category = "bodygroups",
+    },
     ["manageVehicleBlacklist"] = {
         Name = "@manageVehicleBlacklist",
         MinAccess = "superadmin",

@@ -44,6 +44,46 @@ net.Receive("liaWeaponOverrideSync", function()
     end
 end)
 
+net.Receive("liaWeaponRuntimeOverrideSync", function()
+    local isBulkSync = net.ReadBool()
+    if isBulkSync then
+        local overrides = net.ReadTable()
+        if istable(overrides) then
+            lia.item.WeaponRuntimeOverrides = overrides
+            for className, paths in pairs(overrides) do
+                local wep = weapons.GetStored(className)
+                if wep then
+                    for dotPath, value in pairs(paths) do
+                        lia.item.applyRuntimeOverridePath(wep, dotPath, value)
+                    end
+                end
+            end
+
+            hook.Run("OnWeaponRuntimeOverridesBulkSynced", overrides)
+        end
+    else
+        local className = net.ReadString()
+        local dotPath = net.ReadString()
+        local value = net.ReadType()
+        if dotPath == "" then
+            lia.item.WeaponRuntimeOverrides[className] = nil
+            local defaults = lia.item.defaultRuntimeValues and lia.item.defaultRuntimeValues[className] or {}
+            local wep = weapons.GetStored(className)
+            if wep then
+                for path, orig in pairs(defaults) do
+                    lia.item.applyRuntimeOverridePath(wep, path, orig)
+                end
+            end
+        else
+            lia.item.WeaponRuntimeOverrides[className] = lia.item.WeaponRuntimeOverrides[className] or {}
+            lia.item.WeaponRuntimeOverrides[className][dotPath] = value
+            local wep = weapons.GetStored(className)
+            if wep then lia.item.applyRuntimeOverridePath(wep, dotPath, value) end
+            hook.Run("OnWeaponRuntimeOverrideUpdated", className, dotPath, value)
+        end
+    end
+end)
+
 net.Receive("liaClassUpdate", function()
     local joinedClient = net.ReadEntity()
     if lia.gui.classes and lia.gui.classes:IsVisible() then
@@ -1532,4 +1572,14 @@ net.Receive("liaGroupPermChanged", function()
 end)
 
 net.Receive("liaJobNpcCloseDialog", function() if IsValid(lia.dialog.vgui) then lia.dialog.vgui:Remove() end end)
+net.Receive("BodygrouperMenu", function()
+    local client = LocalPlayer()
+    if IsValid(lia.gui.bodygroupMenu) then lia.gui.bodygroupMenu:Remove() end
+    local entity = net.ReadEntity()
+    lia.gui.bodygroupMenu = vgui.Create("BodygrouperMenu")
+    local target = IsValid(entity) and entity or client
+    lia.gui.bodygroupMenu:SetTarget(target)
+end)
+
+net.Receive("BodygrouperMenuCloseClientside", function() if IsValid(lia.gui.bodygroupMenu) then lia.gui.bodygroupMenu:Remove() end end)
 netstream.Hook("liaSyncGesture", function(entity, a, b, c) if IsValid(entity) then entity:AnimRestartGesture(a, b, c) end end)

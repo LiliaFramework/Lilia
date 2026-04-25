@@ -3609,6 +3609,7 @@ lia.command.add("charsetspeed", {
 
 lia.command.add("charsetmodel", {
     adminOnly = true,
+    privilege = "manageCharacterInformation",
     desc = "@setModelDesc",
     arguments = {
         {
@@ -3633,6 +3634,34 @@ lia.command.add("charsetmodel", {
         target:SetupHands()
         client:notifySuccessLocalized("changeModelAdmin", client:Name(), target:Name(), arguments[2] or oldModel)
         lia.log.add(client, "charsetmodel", target:Name(), arguments[2], oldModel)
+    end
+})
+
+lia.command.add("chareditbodygroups", {
+    adminOnly = true,
+    privilege = "changeBodygroups",
+    desc = "@editBodygroupsDesc",
+    arguments = {
+        {
+            name = "name",
+            type = "player"
+        }
+    },
+    onRun = function(client, arguments)
+        local target = lia.util.findPlayer(client, arguments[1] or "")
+        if not target or not IsValid(target) then
+            client:notifyErrorLocalized("targetNotFound")
+            return
+        end
+
+        if not target:getChar() then
+            client:notifyErrorLocalized("noCharacterLoaded")
+            return
+        end
+
+        net.Start("BodygrouperMenu")
+        net.WriteEntity(target)
+        net.Send(client)
     end
 })
 
@@ -7944,3 +7973,30 @@ concommand.Add("lia_give_money_steamid", function(client, _, args)
         end
     end):catch(function(err) MsgC(Color(255, 0, 0), "[Lilia] ", Color(255, 255, 255), L("databaseErrorValue", tostring(err)) .. "\n") end)
 end)
+
+lia.command.add("viewBodygroups", {
+    adminOnly = true,
+    arguments = {
+        {
+            name = "target",
+            type = "player"
+        }
+    },
+    desc = "viewBodygroupsDesc",
+    AdminStick = {
+        Name = "viewBodygroupsDesc",
+        Category = "characterManagement",
+        SubCategory = "bodygrouper"
+    },
+    onRun = function(client, arguments)
+        local target = lia.util.findPlayer(client, arguments[1] or "")
+        if not target or not IsValid(target) then
+            client:notifyLocalized("targetNotFound")
+            return
+        end
+
+        net.Start("BodygrouperMenu")
+        net.WriteEntity(target)
+        net.Send(client)
+    end
+})

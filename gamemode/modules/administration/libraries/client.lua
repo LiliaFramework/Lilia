@@ -1595,6 +1595,14 @@ local function IncludeCharacterManagement(tgt, menu, stores)
             timer.Simple(0.1, function() AdminStickIsOpen = false end)
         end):SetIcon("icon16/user_suit.png")
     end
+
+    if cl:hasPrivilege("changeBodygroups") then
+        charCategory:AddOption(L("adminStickEditCharBodygroupsName"), function()
+            local id = GetIdentifier(tgt)
+            if id ~= "" then RunConsoleCommand("say", "/chareditbodygroups " .. QuoteArgs(id)) end
+            timer.Simple(0.1, function() AdminStickIsOpen = false end)
+        end):SetIcon("icon16/user_gray.png")
+    end
 end
 
 local function IncludeFlagManagement(tgt, menu, stores)
