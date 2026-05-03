@@ -2252,6 +2252,11 @@ lia.command.add("plyblindfade", {
     onRun = function(client, arguments)
         local target = lia.util.findPlayer(client, arguments[1])
         if IsValid(target) then
+            if lia.admin.isProtectedStaffTarget("blind", target) then
+                lia.admin.notifyProtectedStaffTarget(client)
+                return
+            end
+
             local duration = tonumber(arguments[2]) or 0
             local colorName = (arguments[3] or "black"):lower()
             local fadeIn = tonumber(arguments[4])
@@ -2540,6 +2545,204 @@ lia.command.add("plystrip", {
     },
     onRun = function(client, arguments) lia.admin.serverExecCommand("strip", arguments[1], nil, nil, client) end
 })
+
+if SERVER then
+    local function registerAdminConsoleCommand(name, callback)
+        concommand.Add("lia_" .. name, function(client, _, arguments) callback(client, arguments or {}) end)
+    end
+
+    local function hasConsoleCommandAccess(client, privilegeID)
+        if not IsValid(client) then return true end
+        if lia.admin.hasAccess(client, privilegeID) then return true end
+        client:notifyErrorLocalized("noPerm")
+        lia.log.add(client, "unauthorizedCommand", privilegeID)
+        return false
+    end
+
+    local function runTargetedAdminCommand(commandID, client, arguments, durationIndex, reasonStartIndex)
+        if not hasConsoleCommandAccess(client, "command_" .. commandID) then return end
+        local target = arguments[1]
+        if not target or target == "" then
+            if IsValid(client) then
+                client:notifyErrorLocalized("targetNotFound")
+            else
+                print("[Lilia] Missing target.")
+            end
+            return
+        end
+
+        local duration = durationIndex and arguments[durationIndex] or nil
+        local reason = reasonStartIndex and table.concat(arguments, " ", reasonStartIndex) or nil
+        if reason == "" then reason = nil end
+        lia.admin.serverExecCommand(commandID, target, duration, reason, client)
+    end
+
+    registerAdminConsoleCommand("plyban", function(client, arguments) runTargetedAdminCommand("ban", client, arguments, 2, 3) end)
+    registerAdminConsoleCommand("plykick", function(client, arguments) runTargetedAdminCommand("kick", client, arguments, nil, 2) end)
+    registerAdminConsoleCommand("plykill", function(client, arguments) runTargetedAdminCommand("kill", client, arguments) end)
+    registerAdminConsoleCommand("plyunban", function(client, arguments)
+        if not hasConsoleCommandAccess(client, "command_ban") then return end
+        local steamid = arguments[1]
+        if not steamid or steamid == "" then
+            if IsValid(client) then
+                client:notifyErrorLocalized("targetNotFound")
+            else
+                print("[Lilia] Missing SteamID.")
+            end
+            return
+        end
+
+        lia.db.query("DELETE FROM lia_bans WHERE playerSteamID = " .. lia.db.convertDataType(steamid))
+        if IsValid(client) then
+            client:notifySuccessLocalized("playerUnbanned")
+            lia.log.add(client, "plyUnban", steamid)
+        else
+            print("[Lilia] Unbanned " .. steamid .. ".")
+            lia.log.add(nil, "command", "Console unbanned " .. steamid)
+        end
+    end)
+
+    registerAdminConsoleCommand("plyfreeze", function(client, arguments) runTargetedAdminCommand("freeze", client, arguments, 2) end)
+    registerAdminConsoleCommand("plyunfreeze", function(client, arguments) runTargetedAdminCommand("unfreeze", client, arguments) end)
+    registerAdminConsoleCommand("plyslay", function(client, arguments) runTargetedAdminCommand("slay", client, arguments) end)
+    registerAdminConsoleCommand("plyrespawn", function(client, arguments) runTargetedAdminCommand("respawn", client, arguments) end)
+    registerAdminConsoleCommand("plyblind", function(client, arguments) runTargetedAdminCommand("blind", client, arguments, 2) end)
+    registerAdminConsoleCommand("plyunblind", function(client, arguments) runTargetedAdminCommand("unblind", client, arguments) end)
+    registerAdminConsoleCommand("plygag", function(client, arguments) runTargetedAdminCommand("gag", client, arguments) end)
+    registerAdminConsoleCommand("plyungag", function(client, arguments) runTargetedAdminCommand("ungag", client, arguments) end)
+    registerAdminConsoleCommand("plymute", function(client, arguments) runTargetedAdminCommand("mute", client, arguments) end)
+    registerAdminConsoleCommand("plyunmute", function(client, arguments) runTargetedAdminCommand("unmute", client, arguments) end)
+    registerAdminConsoleCommand("plybring", function(client, arguments) runTargetedAdminCommand("bring", client, arguments) end)
+    registerAdminConsoleCommand("plygoto", function(client, arguments) runTargetedAdminCommand("goto", client, arguments) end)
+    registerAdminConsoleCommand("plyreturn", function(client, arguments)
+        if not arguments[1] and IsValid(client) then arguments[1] = client:Name() end
+        runTargetedAdminCommand("return", client, arguments)
+    end)
+
+    registerAdminConsoleCommand("plyjail", function(client, arguments) runTargetedAdminCommand("jail", client, arguments) end)
+    registerAdminConsoleCommand("plyunjail", function(client, arguments) runTargetedAdminCommand("unjail", client, arguments) end)
+    registerAdminConsoleCommand("plycloak", function(client, arguments) runTargetedAdminCommand("cloak", client, arguments) end)
+    registerAdminConsoleCommand("plyuncloak", function(client, arguments) runTargetedAdminCommand("uncloak", client, arguments) end)
+    registerAdminConsoleCommand("plygod", function(client, arguments) runTargetedAdminCommand("god", client, arguments) end)
+    registerAdminConsoleCommand("plyungod", function(client, arguments) runTargetedAdminCommand("ungod", client, arguments) end)
+    registerAdminConsoleCommand("plyignite", function(client, arguments) runTargetedAdminCommand("ignite", client, arguments, 2) end)
+    registerAdminConsoleCommand("plyextinguish", function(client, arguments) runTargetedAdminCommand("extinguish", client, arguments) end)
+    registerAdminConsoleCommand("plystrip", function(client, arguments) runTargetedAdminCommand("strip", client, arguments) end)
+    registerAdminConsoleCommand("plyblindfade", function(client, arguments)
+        if not hasConsoleCommandAccess(client, "command_blind") then return end
+        local target = lia.util.findPlayer(client, arguments[1])
+        if not IsValid(target) then
+            if not IsValid(client) then print("[Lilia] Target not found.") end
+            return
+        end
+
+        if lia.admin.isProtectedStaffTarget("blind", target) then
+            if IsValid(client) then
+                lia.admin.notifyProtectedStaffTarget(client)
+            else
+                print("[Lilia] You cannot use targeted admin commands on players in the staff faction.")
+            end
+            return
+        end
+
+        local duration = tonumber(arguments[2]) or 0
+        local colorName = (arguments[3] or "black"):lower()
+        local fadeIn = tonumber(arguments[4]) or duration * 0.05
+        local fadeOut = tonumber(arguments[5]) or duration * 0.05
+        net.Start("liaBlindFade")
+        net.WriteBool(colorName == "white")
+        net.WriteFloat(duration)
+        net.WriteFloat(fadeIn)
+        net.WriteFloat(fadeOut)
+        net.Send(target)
+        if IsValid(client) then
+            lia.log.add(client, "plyBlindFade", target:Name(), duration, colorName)
+        else
+            print(string.format("[Lilia] Applied blind fade to %s.", target:Name()))
+            lia.log.add(nil, "command", string.format("Console applied blind fade to %s for %s seconds (%s).", target:Name(), tostring(duration), colorName))
+        end
+    end)
+
+    registerAdminConsoleCommand("blindfadeall", function(client, arguments)
+        if not hasConsoleCommandAccess(client, "command_blind") then return end
+        local duration = tonumber(arguments[1]) or 0
+        local colorName = (arguments[2] or "black"):lower()
+        local fadeIn = tonumber(arguments[3]) or duration * 0.05
+        local fadeOut = tonumber(arguments[4]) or duration * 0.05
+        local isWhite = colorName == "white"
+        for _, ply in player.Iterator() do
+            if not ply:isStaffOnDuty() then
+                net.Start("liaBlindFade")
+                net.WriteBool(isWhite)
+                net.WriteFloat(duration)
+                net.WriteFloat(fadeIn)
+                net.WriteFloat(fadeOut)
+                net.Send(ply)
+            end
+        end
+
+        if IsValid(client) then
+            lia.log.add(client, "blindFadeAll", duration, colorName)
+        else
+            print("[Lilia] Applied blind fade to all non-staff-faction players.")
+            lia.log.add(nil, "command", string.format("Console applied blind fade to all non-staff-faction players for %s seconds (%s).", tostring(duration), colorName))
+        end
+    end)
+
+    registerAdminConsoleCommand("charvoicetoggle", function(client, arguments)
+        if not hasConsoleCommandAccess(client, "command_mute") then return end
+        local target = lia.util.findPlayer(client, arguments[1])
+        if not IsValid(target) then
+            if not IsValid(client) then print("[Lilia] Target not found.") end
+            return
+        end
+
+        if lia.admin.isProtectedStaffTarget("mute", target) then
+            if IsValid(client) then
+                lia.admin.notifyProtectedStaffTarget(client)
+            else
+                print("[Lilia] You cannot use targeted admin commands on players in the staff faction.")
+            end
+            return
+        end
+
+        if IsValid(client) and target == client then
+            client:notifyErrorLocalized("cannotMuteSelf")
+            return
+        end
+
+        if not target:getChar() then
+            if IsValid(client) then
+                client:notifyErrorLocalized("noValidCharacter")
+            else
+                print("[Lilia] That player does not have a valid character.")
+            end
+            return
+        end
+
+        local isMuted = target:getLiliaData("liaMuted", false)
+        target:setLiliaData("liaMuted", not isMuted)
+        if IsValid(client) then
+            if isMuted then
+                client:notifySuccessLocalized("textUnmuted", target:Name())
+                target:notifyInfoLocalized("textUnmutedByAdmin")
+            else
+                client:notifySuccessLocalized("textMuted", target:Name())
+                target:notifyWarningLocalized("textMutedByAdmin")
+            end
+
+            lia.log.add(client, "textToggle", target:Name(), isMuted and L("unmuted") or L("muted"))
+        else
+            if isMuted then
+                print(string.format("[Lilia] Unmuted %s for text chat.", target:Name()))
+            else
+                print(string.format("[Lilia] Muted %s for text chat.", target:Name()))
+            end
+
+            lia.log.add(nil, "command", string.format("Console toggled text mute for %s to %s.", target:Name(), isMuted and "unmuted" or "muted"))
+        end
+    end)
+end
 
 lia.command.add("charunbanoffline", {
     superAdminOnly = true,
@@ -3109,6 +3312,11 @@ lia.command.add("charvoicetoggle", {
         if not target or not IsValid(target) then
             client:notifyErrorLocalized("targetNotFound")
             return
+        end
+
+        if lia.admin.isProtectedStaffTarget("mute", target) then
+            lia.admin.notifyProtectedStaffTarget(client)
+            return false
         end
 
         if target == client then
@@ -5288,7 +5496,7 @@ lia.command.add("doortogglelock", {
         Category = "doorManagement",
         SubCategory = "settings",
         TargetClass = "door",
-        Icon = "icon16/lock.png"
+        Icon = "icon16/cog.png"
     },
     onRun = function(client)
         local door = client:getTracedEntity()
@@ -5302,14 +5510,12 @@ lia.command.add("doortogglelock", {
                     door:EmitSound("doors/door_latch3.wav")
                     doorData.locked = true
                     lia.doors.setCachedData(door, doorData)
-                    client:notifyInfoLocalized("doorToggleLocked", L("locked"):lower())
                     lia.log.add(client, "toggleLock", door, L("locked"))
                 else
                     door:Fire("unlock")
                     door:EmitSound("doors/door_latch1.wav")
                     doorData.locked = false
                     lia.doors.setCachedData(door, doorData)
-                    client:notifyInfoLocalized("doorToggleLocked", L("unlocked"))
                     lia.log.add(client, "toggleLock", door, L("unlocked"))
                 end
 
@@ -5641,7 +5847,6 @@ lia.command.add("doorinfo", {
             end
 
             local hidden = doorData.hidden or false
-            local locked = doorData.locked or false
             local infoData = {
                 {
                     property = L("disabled"),
@@ -5670,10 +5875,6 @@ lia.command.add("doorinfo", {
                 {
                     property = L("doorInfoHidden"),
                     value = tostring(hidden)
-                },
-                {
-                    property = L("locked"),
-                    value = tostring(locked)
                 }
             }
 

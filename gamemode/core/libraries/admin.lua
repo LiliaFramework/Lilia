@@ -149,6 +149,42 @@ end
 
 ensureDefaults(lia.admin.groups)
 local privilegeCategoryCache = {}
+local protectedStaffCommands = {
+    kick = true,
+    ban = true,
+    mute = true,
+    unmute = true,
+    gag = true,
+    ungag = true,
+    freeze = true,
+    unfreeze = true,
+    slay = true,
+    kill = true,
+    bring = true,
+    ["return"] = true,
+    jail = true,
+    unjail = true,
+    cloak = true,
+    uncloak = true,
+    god = true,
+    ungod = true,
+    ignite = true,
+    extinguish = true,
+    unignite = true,
+    strip = true,
+    respawn = true,
+    blind = true,
+    unblind = true
+}
+
+function lia.admin.isProtectedStaffTarget(cmd, target)
+    return protectedStaffCommands[string.lower(tostring(cmd or ""))] and IsValid(target) and target:IsPlayer() and target:isStaffOnDuty() or false
+end
+
+function lia.admin.notifyProtectedStaffTarget(admin)
+    if IsValid(admin) then admin:notifyErrorLocalized("staffFactionCommandBlocked") end
+end
+
 function getPrivilegeCategory(privilegeName)
     if not privilegeName then return lia.lang.resolveToken("@unassigned") end
     if privilegeCategoryCache[privilegeName] then return privilegeCategoryCache[privilegeName] end
@@ -1278,9 +1314,34 @@ if SERVER then
         ```
 ]]
     function lia.admin.serverExecCommand(cmd, victim, dur, reason, admin)
+        local isConsoleAdmin = not IsValid(admin)
+        local adminName = isConsoleAdmin and "Console" or admin:Name()
+        local adminSteamID = isConsoleAdmin and "CONSOLE" or admin:SteamID()
+        local target
+        local function notifyAdmin(kind, key, ...)
+            if not isstring(key) or key == "" then return end
+            if IsValid(admin) then
+                if kind == "error" then
+                    admin:notifyErrorLocalized(key, ...)
+                else
+                    admin:notifySuccessLocalized(key, ...)
+                end
+            elseif SERVER then
+                print("[Lilia] " .. tostring(L(key, ...)))
+            end
+        end
+
+        local function logAdminAction(logType, ...)
+            if IsValid(admin) then
+                lia.log.add(admin, logType, ...)
+            else
+                lia.log.add(nil, "command", string.format("Console executed %s on %s", tostring(cmd), IsValid(target) and target:Name() or tostring(victim)))
+            end
+        end
+
         local privilegeID = string.lower("command_" .. cmd)
-        if not lia.admin.hasAccess(admin, privilegeID) then
-            admin:notifyErrorLocalized("noPerm")
+        if not isConsoleAdmin and not lia.admin.hasAccess(admin, privilegeID) then
+            notifyAdmin("error", "noPerm")
             lia.log.add(admin, "unauthorizedCommand", cmd)
             return false
         end
@@ -1289,7 +1350,6 @@ if SERVER then
             StaffAddTextShadowed(Color(255, 215, 0), tag, Color(255, 255, 255), text)
         end
 
-        local target
         if IsValid(victim) then
             target = victim
         elseif isstring(victim) then
@@ -1297,135 +1357,150 @@ if SERVER then
         end
 
         if not IsValid(target) then
-            admin:notifyErrorLocalized("targetNotFound")
+            notifyAdmin("error", "targetNotFound")
+            return false
+        end
+
+        if lia.admin.isProtectedStaffTarget(cmd, target) then
+            notifyAdmin("error", "staffFactionCommandBlocked")
             return false
         end
 
         local targetInfo = L("staffLogPlayerSteam64", target:Name(), target:SteamID64())
         if cmd == "kick" then
             target:Kick(reason or L("genericReason"))
-            admin:notifySuccessLocalized("plyKicked")
-            lia.log.add(admin, "plyKick", target:Name())
-            staffAction("KICK", L("staffActionKicked", admin:Name(), target:Name(), target:SteamID64()))
+            notifyAdmin("success", "plyKicked")
+            logAdminAction("plyKick", target:Name())
+            staffAction("KICK", L("staffActionKicked", adminName, target:Name(), target:SteamID64()))
             lia.db.insertTable({
                 player = target:Name(),
                 playerSteamID = target:SteamID(),
                 steamID = target:SteamID(),
                 action = "plykick",
-                staffName = admin:Name(),
-                staffSteamID = admin:SteamID(),
+                staffName = adminName,
+                staffSteamID = adminSteamID,
                 timestamp = os.time()
             }, nil, "staffactions")
             return true
         elseif cmd == "ban" then
             target:banPlayer(reason, tonumber(dur) or 0, admin)
-            admin:notifySuccessLocalized("plyBanned")
-            lia.log.add(admin, "plyBan", target:Name())
-            staffAction("BAN", L("staffActionBanned", admin:Name(), target:Name(), target:SteamID64()))
+            notifyAdmin("success", "plyBanned")
+            logAdminAction("plyBan", target:Name())
+            staffAction("BAN", L("staffActionBanned", adminName, target:Name(), target:SteamID64()))
             return true
         elseif cmd == "unban" then
             local steamid = IsValid(target) and target:SteamID() or tostring(victim)
             if steamid and steamid ~= "" then
                 lia.db.query("DELETE FROM lia_bans WHERE playerSteamID = " .. lia.db.convertDataType(steamid))
-                admin:notifySuccessLocalized("playerUnbanned")
-                lia.log.add(admin, "plyUnban", steamid)
-                staffAction("UNBAN", L("staffActionUnbannedSteamID", admin:Name(), steamid))
+                notifyAdmin("success", "playerUnbanned")
+                logAdminAction("plyUnban", steamid)
+                staffAction("UNBAN", L("staffActionUnbannedSteamID", adminName, steamid))
                 return true
             end
         elseif cmd == "mute" then
             if target:getChar() then
                 target:setLiliaData("liaMuted", true)
-                admin:notifySuccessLocalized("plyMuted")
-                lia.log.add(admin, "plyMute", target:Name())
+                notifyAdmin("success", "plyMuted")
+                logAdminAction("plyMute", target:Name())
                 lia.db.insertTable({
                     player = target:Name(),
                     playerSteamID = target:SteamID(),
                     steamID = target:SteamID(),
                     action = "plymute",
-                    staffName = admin:Name(),
-                    staffSteamID = admin:SteamID(),
+                    staffName = adminName,
+                    staffSteamID = adminSteamID,
                     timestamp = os.time()
                 }, nil, "staffactions")
 
-                staffAction("MUTE", L("staffActionMuted", admin:Name(), target:Name(), target:SteamID64()))
+                staffAction("MUTE", L("staffActionMuted", adminName, target:Name(), target:SteamID64()))
                 hook.Run("PlayerMuted", target, admin)
                 return true
             end
         elseif cmd == "unmute" then
             if target:getChar() then
                 target:setLiliaData("liaMuted", false)
-                admin:notifySuccessLocalized("plyUnmuted")
-                lia.log.add(admin, "plyUnmute", target:Name())
-                staffAction("UNMUTE", L("staffActionUnmuted", admin:Name(), target:Name(), target:SteamID64()))
+                notifyAdmin("success", "plyUnmuted")
+                logAdminAction("plyUnmute", target:Name())
+                staffAction("UNMUTE", L("staffActionUnmuted", adminName, target:Name(), target:SteamID64()))
                 hook.Run("PlayerUnmuted", target, admin)
                 return true
             end
         elseif cmd == "gag" then
             target:setLiliaData("liaGagged", true)
-            admin:notifySuccessLocalized("plyGagged")
-            lia.log.add(admin, "plyGag", target:Name())
-            staffAction("GAG", admin:Name() .. " gagged " .. targetInfo)
+            notifyAdmin("success", "plyGagged")
+            logAdminAction("plyGag", target:Name())
+            staffAction("GAG", adminName .. " gagged " .. targetInfo)
             hook.Run("PlayerGagged", target, admin)
             return true
         elseif cmd == "ungag" then
             target:setLiliaData("liaGagged", false)
-            admin:notifySuccessLocalized("plyUngagged")
-            lia.log.add(admin, "plyUngag", target:Name())
-            staffAction("UNGAG", admin:Name() .. " ungagged " .. targetInfo)
+            notifyAdmin("success", "plyUngagged")
+            logAdminAction("plyUngag", target:Name())
+            staffAction("UNGAG", adminName .. " ungagged " .. targetInfo)
             hook.Run("PlayerUngagged", target, admin)
             return true
         elseif cmd == "freeze" then
             target:Freeze(true)
             local duration = tonumber(dur) or 0
             if duration > 0 then timer.Simple(duration, function() if IsValid(target) then target:Freeze(false) end end) end
-            admin:notifySuccessLocalized("plyFrozen", target:Name())
-            lia.log.add(admin, "plyFreeze", target:Name(), duration)
-            staffAction("FREEZE", admin:Name() .. " froze " .. targetInfo)
+            notifyAdmin("success", "plyFrozen", target:Name())
+            logAdminAction("plyFreeze", target:Name(), duration)
+            staffAction("FREEZE", adminName .. " froze " .. targetInfo)
             return true
         elseif cmd == "unfreeze" then
             target:Freeze(false)
-            admin:notifySuccessLocalized("plyUnfrozen", target:Name())
-            lia.log.add(admin, "plyUnfreeze", target:Name())
-            staffAction("UNFREEZE", admin:Name() .. " unfroze " .. targetInfo)
+            notifyAdmin("success", "plyUnfrozen", target:Name())
+            logAdminAction("plyUnfreeze", target:Name())
+            staffAction("UNFREEZE", adminName .. " unfroze " .. targetInfo)
             return true
         elseif cmd == "slay" then
             target:Kill()
             timer.Simple(0.05, function() if IsValid(target) and not target:Alive() then hook.Run("PlayerDeath", target, nil, admin) end end)
-            admin:notifySuccessLocalized("plyKilled")
-            lia.log.add(admin, "plySlay", target:Name())
-            staffAction("SLAY", admin:Name() .. " slayed " .. targetInfo)
+            notifyAdmin("success", "plyKilled")
+            logAdminAction("plySlay", target:Name())
+            staffAction("SLAY", adminName .. " slayed " .. targetInfo)
             return true
         elseif cmd == "kill" then
             target:Kill()
-            admin:notifySuccessLocalized("plyKilled")
-            lia.log.add(admin, "plyKill", target:Name())
+            notifyAdmin("success", "plyKilled")
+            logAdminAction("plyKill", target:Name())
             lia.db.insertTable({
                 player = target:Name(),
                 playerSteamID = target:SteamID(),
                 steamID = target:SteamID(),
                 action = "plykill",
-                staffName = admin:Name(),
-                staffSteamID = admin:SteamID(),
+                staffName = adminName,
+                staffSteamID = adminSteamID,
                 timestamp = os.time()
             }, nil, "staffactions")
 
-            staffAction("KILL", admin:Name() .. " killed " .. targetInfo)
+            staffAction("KILL", adminName .. " killed " .. targetInfo)
             return true
         elseif cmd == "bring" then
+            if isConsoleAdmin then
+                print("[Lilia] lia_plybring cannot be used from the server console.")
+                return false
+            end
+
             returnPositions = returnPositions or {}
             returnPositions[target] = target:GetPos()
             target:SetPos(admin:GetPos() + admin:GetForward() * 50)
-            admin:notifySuccessLocalized("plyBrought", target:Name())
-            lia.log.add(admin, "plyBring", target:Name())
-            staffAction("BRING", admin:Name() .. " brought " .. targetInfo)
+            notifyAdmin("success", "plyBrought", target:Name())
+            logAdminAction("plyBring", target:Name())
+            staffAction("BRING", adminName .. " brought " .. targetInfo)
             return true
         elseif cmd == "goto" then
+            if isConsoleAdmin then
+                print("[Lilia] lia_plygoto cannot be used from the server console.")
+                return false
+            end
+
             returnPositions = returnPositions or {}
             returnPositions[admin] = admin:GetPos()
             admin:SetPos(target:GetPos() + target:GetForward() * 50)
-            admin:notifySuccessLocalized("plyGoto", target:Name())
-            lia.log.add(admin, "plyGoto", target:Name())
-            staffAction("GOTO", admin:Name() .. " went to " .. targetInfo)
+            notifyAdmin("success", "plyGoto", target:Name())
+            logAdminAction("plyGoto", target:Name())
+            staffAction("GOTO", adminName .. " went to " .. targetInfo)
             return true
         elseif cmd == "return" then
             returnPositions = returnPositions or {}
@@ -1434,104 +1509,104 @@ if SERVER then
                 (IsValid(target) and target or admin):SetPos(pos)
                 returnPositions[target] = nil
                 returnPositions[admin] = nil
-                admin:notifySuccessLocalized("plyReturned", IsValid(target) and target:Name() or admin:Name())
-                lia.log.add(admin, "plyReturn", IsValid(target) and target:Name() or admin:Name())
-                staffAction("RETURN", admin:Name() .. " returned " .. targetInfo)
+                notifyAdmin("success", "plyReturned", IsValid(target) and target:Name() or adminName)
+                logAdminAction("plyReturn", IsValid(target) and target:Name() or adminName)
+                staffAction("RETURN", adminName .. " returned " .. targetInfo)
                 return true
             end
         elseif cmd == "jail" then
             target:Lock()
             target:Freeze(true)
-            admin:notifySuccessLocalized("plyJailed", target:Name())
-            lia.log.add(admin, "plyJail", target:Name())
+            notifyAdmin("success", "plyJailed", target:Name())
+            logAdminAction("plyJail", target:Name())
             lia.db.insertTable({
                 player = target:Name(),
                 playerSteamID = target:SteamID(),
                 steamID = target:SteamID(),
                 action = "plyjail",
-                staffName = admin:Name(),
-                staffSteamID = admin:SteamID(),
+                staffName = adminName,
+                staffSteamID = adminSteamID,
                 timestamp = os.time()
             }, nil, "staffactions")
 
-            staffAction("JAIL", admin:Name() .. " jailed " .. targetInfo)
+            staffAction("JAIL", adminName .. " jailed " .. targetInfo)
             return true
         elseif cmd == "unjail" then
             target:UnLock()
             target:Freeze(false)
-            admin:notifySuccessLocalized("plyUnjailed", target:Name())
-            lia.log.add(admin, "plyUnjail", target:Name())
-            staffAction("UNJAIL", admin:Name() .. " unjailed " .. targetInfo)
+            notifyAdmin("success", "plyUnjailed", target:Name())
+            logAdminAction("plyUnjail", target:Name())
+            staffAction("UNJAIL", adminName .. " unjailed " .. targetInfo)
             return true
         elseif cmd == "cloak" then
             target:SetNoDraw(true)
-            admin:notifySuccessLocalized("plyCloaked", target:Name())
-            lia.log.add(admin, "plyCloak", target:Name())
-            staffAction("CLOAK", admin:Name() .. " cloaked " .. targetInfo)
+            notifyAdmin("success", "plyCloaked", target:Name())
+            logAdminAction("plyCloak", target:Name())
+            staffAction("CLOAK", adminName .. " cloaked " .. targetInfo)
             return true
         elseif cmd == "uncloak" then
             target:SetNoDraw(false)
-            admin:notifySuccessLocalized("plyUncloaked", target:Name())
-            lia.log.add(admin, "plyUncloak", target:Name())
-            staffAction("UNCLOAK", admin:Name() .. " uncloaked " .. targetInfo)
+            notifyAdmin("success", "plyUncloaked", target:Name())
+            logAdminAction("plyUncloak", target:Name())
+            staffAction("UNCLOAK", adminName .. " uncloaked " .. targetInfo)
             return true
         elseif cmd == "god" then
             target:GodEnable()
-            admin:notifySuccessLocalized("plyGodded", target:Name())
-            lia.log.add(admin, "plyGod", target:Name())
-            staffAction("GOD", admin:Name() .. " enabled god mode for " .. targetInfo)
+            notifyAdmin("success", "plyGodded", target:Name())
+            logAdminAction("plyGod", target:Name())
+            staffAction("GOD", adminName .. " enabled god mode for " .. targetInfo)
             return true
         elseif cmd == "ungod" then
             target:GodDisable()
-            admin:notifySuccessLocalized("plyUngodded", target:Name())
-            lia.log.add(admin, "plyUngod", target:Name())
-            staffAction("UNGOD", admin:Name() .. " disabled god mode for " .. targetInfo)
+            notifyAdmin("success", "plyUngodded", target:Name())
+            logAdminAction("plyUngod", target:Name())
+            staffAction("UNGOD", adminName .. " disabled god mode for " .. targetInfo)
             return true
         elseif cmd == "ignite" then
             local duration = tonumber(dur) or 5
             target:Ignite(duration)
-            admin:notifySuccessLocalized("plyIgnited", target:Name())
-            lia.log.add(admin, "plyIgnite", target:Name(), duration)
-            staffAction("IGNITE", admin:Name() .. " ignited " .. targetInfo)
+            notifyAdmin("success", "plyIgnited", target:Name())
+            logAdminAction("plyIgnite", target:Name(), duration)
+            staffAction("IGNITE", adminName .. " ignited " .. targetInfo)
             return true
         elseif cmd == "extinguish" or cmd == "unignite" then
             target:Extinguish()
-            admin:notifySuccessLocalized("plyExtinguished", target:Name())
-            lia.log.add(admin, "plyExtinguish", target:Name())
-            staffAction("EXTINGUISH", admin:Name() .. " extinguished " .. targetInfo)
+            notifyAdmin("success", "plyExtinguished", target:Name())
+            logAdminAction("plyExtinguish", target:Name())
+            staffAction("EXTINGUISH", adminName .. " extinguished " .. targetInfo)
             return true
         elseif cmd == "strip" then
             target:StripWeapons()
-            admin:notifySuccessLocalized("plyStripped", target:Name())
-            lia.log.add(admin, "plyStrip", target:Name())
+            notifyAdmin("success", "plyStripped", target:Name())
+            logAdminAction("plyStrip", target:Name())
             lia.db.insertTable({
                 player = target:Name(),
                 playerSteamID = target:SteamID(),
                 steamID = target:SteamID(),
                 action = "plystrip",
-                staffName = admin:Name(),
-                staffSteamID = admin:SteamID(),
+                staffName = adminName,
+                staffSteamID = adminSteamID,
                 timestamp = os.time()
             }, nil, "staffactions")
 
-            staffAction("STRIP", admin:Name() .. " stripped weapons from " .. targetInfo)
+            staffAction("STRIP", adminName .. " stripped weapons from " .. targetInfo)
             return true
         elseif cmd == "respawn" then
             target:Spawn()
             target:setLocalVar("lastDeathTime", 0)
-            admin:notifySuccessLocalized("plyRespawned", target:Name())
-            lia.log.add(admin, "plyRespawn", target:Name())
+            notifyAdmin("success", "plyRespawned", target:Name())
+            logAdminAction("plyRespawn", target:Name())
             lia.db.insertTable({
                 player = target:Name(),
                 playerSteamID = target:SteamID(),
                 steamID = target:SteamID(),
                 action = "plyrespawn",
-                staffName = admin:Name(),
-                staffSteamID = admin:SteamID(),
+                staffName = adminName,
+                staffSteamID = adminSteamID,
                 timestamp = os.time()
             }, nil, "staffactions")
 
-            staffAction("RESPAWN", admin:Name() .. " respawned " .. targetInfo)
+            staffAction("RESPAWN", adminName .. " respawned " .. targetInfo)
             return true
         elseif cmd == "blind" then
             net.Start("liaBlindTarget")
@@ -1548,27 +1623,27 @@ if SERVER then
                 end)
             end
 
-            admin:notifySuccessLocalized("plyBlinded", target:Name())
-            lia.log.add(admin, "plyBlind", target:Name(), duration)
+            notifyAdmin("success", "plyBlinded", target:Name())
+            logAdminAction("plyBlind", target:Name(), duration)
             lia.db.insertTable({
                 player = target:Name(),
                 playerSteamID = target:SteamID(),
                 steamID = target:SteamID(),
                 action = "plyblind",
-                staffName = admin:Name(),
-                staffSteamID = admin:SteamID(),
+                staffName = adminName,
+                staffSteamID = adminSteamID,
                 timestamp = os.time()
             }, nil, "staffactions")
 
-            staffAction("BLIND", admin:Name() .. " blinded " .. targetInfo)
+            staffAction("BLIND", adminName .. " blinded " .. targetInfo)
             return true
         elseif cmd == "unblind" then
             net.Start("liaBlindTarget")
             net.WriteBool(false)
             net.Send(target)
-            admin:notifySuccessLocalized("plyUnblinded", target:Name())
-            lia.log.add(admin, "plyUnblind", target:Name())
-            staffAction("UNBLIND", admin:Name() .. " unblinded " .. targetInfo)
+            notifyAdmin("success", "plyUnblinded", target:Name())
+            logAdminAction("plyUnblind", target:Name())
+            staffAction("UNBLIND", adminName .. " unblinded " .. targetInfo)
             return true
         end
         return false
@@ -1638,6 +1713,11 @@ else
         ```
 ]]
     function lia.admin.execCommand(cmd, victim, dur, reason)
+        if lia.admin.isProtectedStaffTarget(cmd, victim) then
+            lia.admin.notifyProtectedStaffTarget(LocalPlayer())
+            return false
+        end
+
         local hookResult, callback = hook.Run("RunAdminSystemCommand", cmd, victim, dur, reason)
         if hookResult == true then
             callback()
