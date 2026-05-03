@@ -64,7 +64,13 @@ function MODULE:PlayerSay(client, text)
         return ""
     end
 
-    if client:getLiliaData("liaMuted", false) then return "" end
+    if client:getLiliaData("liaMuted", false) then
+        if (client.liaNextMutedTalkNotice or 0) <= CurTime() then
+            client.liaNextMutedTalkNotice = CurTime() + 2
+            client:notifyWarningLocalized("mutedTryTalk")
+        end
+        return ""
+    end
 end
 
 function MODULE:PlayerSpawn(client)
