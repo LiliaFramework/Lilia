@@ -188,7 +188,7 @@ function PANEL:setActive(state)
                 end
 
                 for cmdName, cmdInfo in SortedPairs(self.commands) do
-                    if not tobool(string.find(cmdName:lower(), "^" .. input:sub(2):lower())) then continue end
+                    if not cmdName:lower():StartWith(input:sub(2):lower()) then continue end
                     local btn = self.commandList:Add("liaButton")
                     btn:SetText("/" .. cmdName .. " - " .. (cmdInfo.desc ~= "" and cmdInfo.desc or L("noDesc")))
                     btn:Dock(TOP)
@@ -224,7 +224,7 @@ function PANEL:setActive(state)
                     for _, prefix in ipairs(chatInfo.prefix) do
                         if prefix:sub(1, 1) == "/" then
                             local cmd = prefix:gsub("^/", ""):lower()
-                            if cmd ~= "" and not self.commands[cmd] and tobool(string.find(cmd, "^" .. input:sub(2):lower())) then
+                            if cmd ~= "" and not self.commands[cmd] and cmd:StartWith(input:sub(2):lower()) then
                                 local btn = self.commandList:Add("liaButton")
                                 btn:SetText(prefix .. " - " .. (chatInfo.desc ~= "" and chatInfo.desc or L("noDesc")))
                                 btn:Dock(TOP)
