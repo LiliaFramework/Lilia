@@ -38,7 +38,7 @@ The item library provides comprehensive functionality for managing items in the 
 <div style="margin-left: 20px; margin-bottom: 20px;">
 <pre><code class="language-lua">  local weaponItem = lia.item.get("weapon_pistol")
   if weaponItem then
-      print("Found weapon:", weaponItem.name)
+      lia.debug("Found weapon:", weaponItem.name)
   end
 </code></pre>
 </div>
@@ -106,10 +106,10 @@ after the base item properties are set but before final localization.</p>
 <div style="margin-left: 20px; margin-bottom: 20px;">
 <pre><code class="language-lua">  local itemData, errorMsg = lia.item.getItemByID(123)
   if itemData then
-      print("Item found at:", itemData.location)
+      lia.debug("Item found at:", itemData.location)
       -- Use itemData.item for item operations
   else
-      print("Error:", errorMsg)
+      lia.debug("Error:", errorMsg)
   end
 </code></pre>
 </div>
@@ -148,7 +148,7 @@ after the base item properties are set but before final localization.</p>
   if item then
       item:setData("customValue", "example")
   else
-      print("Error:", errorMsg)
+      lia.debug("Error:", errorMsg)
   end
 </code></pre>
 </div>
@@ -185,9 +185,9 @@ after the base item properties are set but before final localization.</p>
 <div style="margin-left: 20px; margin-bottom: 20px;">
 <pre><code class="language-lua">  local data, errorMsg = lia.item.getItemDataByID(123)
   if data then
-      print("Item durability:", data.durability or "N/A")
+      lia.debug("Item durability:", data.durability or "N/A")
   else
-      print("Error:", errorMsg)
+      lia.debug("Error:", errorMsg)
   end
 </code></pre>
 </div>
@@ -260,7 +260,7 @@ after the base item properties are set but before final localization.</p>
   if lia.item.isItem(someObject) then
       someObject:setData("used", true)
   else
-      print("Object is not an item")
+      lia.debug("Object is not an item")
   end
 </code></pre>
 </div>
@@ -297,7 +297,7 @@ after the base item properties are set but before final localization.</p>
 <div style="margin-left: 20px; margin-bottom: 20px;">
 <pre><code class="language-lua">  local inventory = lia.item.getInv(5)
   if inventory then
-      print("Inventory size:", inventory:getWidth(), "x", inventory:getHeight())
+      lia.debug("Inventory size:", inventory:getWidth(), "x", inventory:getHeight())
   end
 </code></pre>
 </div>
@@ -342,6 +342,47 @@ after the base item properties are set but before final localization.</p>
 <summary><a id="lia.item.register"></a>lia.item.register(uniqueID, baseID, isBaseItem, path, luaGenerated)</summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="liaitemregister"></a>Purpose</h3>
+<div style="margin-left: 20px; margin-bottom: 20px;">
+  <p>Registers an item definition with the Lilia item system, setting up inheritance and default functions.</p>
+</div>
+
+<h3 style="margin-bottom: 5px; font-weight: 700;">When Called</h3>
+<div style="margin-left: 20px; margin-bottom: 20px;">
+  <p>Called during item loading to register item definitions, either from files or programmatically generated.</p>
+</div>
+
+<h3 style="margin-bottom: 5px; font-weight: 700;">Parameters</h3>
+<div style="margin-left: 20px; margin-bottom: 20px;">
+<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#2.1">string</a></span> <span class="parameter">uniqueID</span> The unique identifier for the item.</p>
+<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#2.2">string, optional</a></span> <span class="parameter">baseID</span> The base item ID to inherit from (defaults to lia.meta.item).</p>
+<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#2.2">boolean, optional</a></span> <span class="parameter">isBaseItem</span> Whether this is a base item definition.</p>
+<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#2.2">string, optional</a></span> <span class="parameter">path</span> The file path for loading the item (used for shared loading).</p>
+<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#2.2">boolean, optional</a></span> <span class="parameter">luaGenerated</span> Whether the item is generated programmatically rather than loaded from a file.</p>
+</div>
+
+<h3 style="margin-bottom: 5px; font-weight: 700;">Returns</h3>
+<div style="margin-left: 20px; margin-bottom: 20px;">
+<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#2.1">table</a></span> The registered item definition table.</p>
+</div>
+
+<h3 style="margin-bottom: 5px; font-weight: 700;">Example Usage</h3>
+<div style="margin-left: 20px; margin-bottom: 20px;">
+<pre><code class="language-lua">  -- Register a base item
+  lia.item.register("base_weapon", nil, true, "path/to/base_weapon.lua")
+  -- Register a regular item
+  lia.item.register("weapon_pistol", "base_weapon", false, "path/to/weapon_pistol.lua")
+</code></pre>
+</div>
+
+</div>
+</details>
+
+---
+
+<details class="realm-shared" id="function-liaitemlocalizedefinition">
+<summary><a id="lia.item.localizeDefinition"></a>lia.item.localizeDefinition(uniqueID, baseID, isBaseItem, path, luaGenerated)</summary>
+<div class="details-content">
+<h3 style="margin-bottom: 5px; font-weight: 700;"><a id="liaitemlocalizedefinition"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
   <p>Registers an item definition with the Lilia item system, setting up inheritance and default functions.</p>
 </div>
@@ -581,7 +622,7 @@ after the base item properties are set but before final localization.</p>
 <div style="margin-left: 20px; margin-bottom: 20px;">
 <pre><code class="language-lua">  -- Create a backpack inventory for character ID 5
   lia.item.newInv(5, "backpack", function(inventory)
-      print("Backpack created with ID:", inventory:getID())
+      lia.debug("Backpack created with ID:", inventory:getID())
   end)
 </code></pre>
 </div>
@@ -620,7 +661,7 @@ after the base item properties are set but before final localization.</p>
 <div style="margin-left: 20px; margin-bottom: 20px;">
 <pre><code class="language-lua">  -- Create a 4x6 container inventory
   local container = lia.item.createInv(4, 6, 1001)
-  print("Container created with ID:", container.id)
+  lia.debug("Container created with ID:", container.id)
 </code></pre>
 </div>
 
@@ -696,6 +737,68 @@ after the base item properties are set but before final localization.</p>
 
 ---
 
+<details class="realm-shared" id="function-liaitemapplyruntimeoverridepath">
+<summary><a id="lia.item.applyRuntimeOverridePath"></a>lia.item.applyRuntimeOverridePath(className)</summary>
+<div class="details-content">
+<h3 style="margin-bottom: 5px; font-weight: 700;"><a id="liaitemapplyruntimeoverridepath"></a>Purpose</h3>
+<div style="margin-left: 20px; margin-bottom: 20px;">
+  <p>Adds a weapon class to the blacklist to prevent it from being auto-generated as an item.</p>
+</div>
+
+<h3 style="margin-bottom: 5px; font-weight: 700;">When Called</h3>
+<div style="margin-left: 20px; margin-bottom: 20px;">
+  <p>Called during weapon generation setup to exclude certain weapons from item creation.</p>
+</div>
+
+<h3 style="margin-bottom: 5px; font-weight: 700;">Parameters</h3>
+<div style="margin-left: 20px; margin-bottom: 20px;">
+<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#2.1">string</a></span> <span class="parameter">className</span> The weapon class name to blacklist.</p>
+</div>
+
+<h3 style="margin-bottom: 5px; font-weight: 700;">Example Usage</h3>
+<div style="margin-left: 20px; margin-bottom: 20px;">
+<pre><code class="language-lua">  -- Prevent admin tools from being generated as items
+  lia.item.addWeaponToBlacklist("weapon_physgun")
+  lia.item.addWeaponToBlacklist("gmod_tool")
+</code></pre>
+</div>
+
+</div>
+</details>
+
+---
+
+<details class="realm-shared" id="function-liaitemgetruntimevalue">
+<summary><a id="lia.item.getRuntimeValue"></a>lia.item.getRuntimeValue(className)</summary>
+<div class="details-content">
+<h3 style="margin-bottom: 5px; font-weight: 700;"><a id="liaitemgetruntimevalue"></a>Purpose</h3>
+<div style="margin-left: 20px; margin-bottom: 20px;">
+  <p>Adds a weapon class to the blacklist to prevent it from being auto-generated as an item.</p>
+</div>
+
+<h3 style="margin-bottom: 5px; font-weight: 700;">When Called</h3>
+<div style="margin-left: 20px; margin-bottom: 20px;">
+  <p>Called during weapon generation setup to exclude certain weapons from item creation.</p>
+</div>
+
+<h3 style="margin-bottom: 5px; font-weight: 700;">Parameters</h3>
+<div style="margin-left: 20px; margin-bottom: 20px;">
+<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#2.1">string</a></span> <span class="parameter">className</span> The weapon class name to blacklist.</p>
+</div>
+
+<h3 style="margin-bottom: 5px; font-weight: 700;">Example Usage</h3>
+<div style="margin-left: 20px; margin-bottom: 20px;">
+<pre><code class="language-lua">  -- Prevent admin tools from being generated as items
+  lia.item.addWeaponToBlacklist("weapon_physgun")
+  lia.item.addWeaponToBlacklist("gmod_tool")
+</code></pre>
+</div>
+
+</div>
+</details>
+
+---
+
 <details class="realm-server" id="function-liaitemsetitemdatabyid">
 <summary><a id="lia.item.setItemDataByID"></a>lia.item.setItemDataByID(itemID, key, value, receivers, noSave, noCheckEntity)</summary>
 <div class="details-content">
@@ -728,9 +831,9 @@ after the base item properties are set but before final localization.</p>
 <div style="margin-left: 20px; margin-bottom: 20px;">
 <pre><code class="language-lua">  local success, errorMsg = lia.item.setItemDataByID(123, "durability", 75)
   if success then
-      print("Item durability updated")
+      lia.debug("Item durability updated")
   else
-      print("Error:", errorMsg)
+      lia.debug("Error:", errorMsg)
   end
 </code></pre>
 </div>
@@ -772,7 +875,7 @@ after the base item properties are set but before final localization.</p>
 <div style="margin-left: 20px; margin-bottom: 20px;">
 <pre><code class="language-lua">  -- Create a pistol in inventory 5 at position 1,1
   lia.item.instance(5, "weapon_pistol", {}, 1, 1):next(function(item)
-      print("Created item with ID:", item:getID())
+      lia.debug("Created item with ID:", item:getID())
   end)
 </code></pre>
 </div>
@@ -875,7 +978,7 @@ after the base item properties are set but before final localization.</p>
 <div style="margin-left: 20px; margin-bottom: 20px;">
 <pre><code class="language-lua">  -- Spawn a pistol at a position
   lia.item.spawn("weapon_pistol", Vector(0, 0, 0), function(item)
-      print("Spawned item:", item:getName())
+      lia.debug("Spawned item:", item:getName())
   end)
 </code></pre>
 </div>
@@ -910,7 +1013,7 @@ after the base item properties are set but before final localization.</p>
 <div style="margin-left: 20px; margin-bottom: 20px;">
 <pre><code class="language-lua">  -- Restore a 4x6 inventory
   lia.item.restoreInv(5, 4, 6, function(inventory)
-      print("Restored inventory with", inventory:getItemCount(), "items")
+      lia.debug("Restored inventory with", inventory:getItemCount(), "items")
   end)
 </code></pre>
 </div>
@@ -945,7 +1048,42 @@ after the base item properties are set but before final localization.</p>
 <div style="margin-left: 20px; margin-bottom: 20px;">
 <pre><code class="language-lua">  -- Restore a 4x6 inventory
   lia.item.restoreInv(5, 4, 6, function(inventory)
-      print("Restored inventory with", inventory:getItemCount(), "items")
+      lia.debug("Restored inventory with", inventory:getItemCount(), "items")
+  end)
+</code></pre>
+</div>
+
+</div>
+</details>
+
+---
+
+<details class="realm-server" id="function-liaitemloadweaponruntimeoverrides">
+<summary><a id="lia.item.loadWeaponRuntimeOverrides"></a>lia.item.loadWeaponRuntimeOverrides(invID, w, h, callback)</summary>
+<div class="details-content">
+<h3 style="margin-bottom: 5px; font-weight: 700;"><a id="liaitemloadweaponruntimeoverrides"></a>Purpose</h3>
+<div style="margin-left: 20px; margin-bottom: 20px;">
+  <p>Restores an inventory from the database and sets its dimensions.</p>
+</div>
+
+<h3 style="margin-bottom: 5px; font-weight: 700;">When Called</h3>
+<div style="margin-left: 20px; margin-bottom: 20px;">
+  <p>Called when loading saved inventories from the database.</p>
+</div>
+
+<h3 style="margin-bottom: 5px; font-weight: 700;">Parameters</h3>
+<div style="margin-left: 20px; margin-bottom: 20px;">
+<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#2.1">number</a></span> <span class="parameter">invID</span> The unique ID of the inventory to restore.</p>
+<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#2.1">number</a></span> <span class="parameter">w</span> The width of the inventory.</p>
+<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#2.1">number</a></span> <span class="parameter">h</span> The height of the inventory.</p>
+<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#2.2">function, optional</a></span> <span class="parameter">callback</span> Function called when inventory is restored.</p>
+</div>
+
+<h3 style="margin-bottom: 5px; font-weight: 700;">Example Usage</h3>
+<div style="margin-left: 20px; margin-bottom: 20px;">
+<pre><code class="language-lua">  -- Restore a 4x6 inventory
+  lia.item.restoreInv(5, 4, 6, function(inventory)
+      lia.debug("Restored inventory with", inventory:getItemCount(), "items")
   end)
 </code></pre>
 </div>

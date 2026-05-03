@@ -109,7 +109,7 @@ The inventory library provides comprehensive functionality for managing inventor
 <h3 style="margin-bottom: 5px; font-weight: 700;">Example Usage</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
 <pre><code class="language-lua">  lia.inventory.loadByID(123):next(function(inventory)
-      print("Loaded inventory:", inventory.id)
+      lia.debug("Loaded inventory:", inventory.id)
   end)
 </code></pre>
 </div>
@@ -220,7 +220,7 @@ The inventory library provides comprehensive functionality for managing inventor
 <div style="margin-left: 20px; margin-bottom: 20px;">
 <pre><code class="language-lua">  lia.inventory.loadAllFromCharID(42):next(function(inventories)
       for _, inv in ipairs(inventories) do
-          print("Loaded inventory:", inv.id)
+          lia.debug("Loaded inventory:", inv.id)
       end
   end)
 </code></pre>
@@ -396,7 +396,7 @@ The inventory library provides comprehensive functionality for managing inventor
 <div style="margin-left: 20px; margin-bottom: 20px;">
 <pre><code class="language-lua">  local storage = lia.inventory.getStorage("models/props_c17/lockers001a.mdl")
   if storage then
-      print("Storage name:", storage.name)
+      lia.debug("Storage name:", storage.name)
   end
 </code></pre>
 </div>
@@ -472,7 +472,7 @@ The inventory library provides comprehensive functionality for managing inventor
 <div style="margin-left: 20px; margin-bottom: 20px;">
 <pre><code class="language-lua">  local trunk = lia.inventory.getTrunk("vehicle_class")
   if trunk then
-      print("Trunk capacity:", trunk.invData.w, "x", trunk.invData.h)
+      lia.debug("Trunk capacity:", trunk.invData.w, "x", trunk.invData.h)
   end
 </code></pre>
 </div>
@@ -504,7 +504,7 @@ The inventory library provides comprehensive functionality for managing inventor
 <div style="margin-left: 20px; margin-bottom: 20px;">
 <pre><code class="language-lua">  local trunks = lia.inventory.getAllTrunks()
   for class, config in pairs(trunks) do
-      print("Trunk for", class, ":", config.name)
+      lia.debug("Trunk for", class, ":", config.name)
   end
 </code></pre>
 </div>

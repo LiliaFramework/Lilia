@@ -126,6 +126,43 @@ The dialog library provides comprehensive functionality for managing NPC convers
 
 ---
 
+<details class="realm-shared" id="function-liadialogresolvedialogtypeidentifier">
+<summary><a id="lia.dialog.resolveDialogTypeIdentifier"></a>lia.dialog.resolveDialogTypeIdentifier(uniqueID)</summary>
+<div class="details-content">
+<h3 style="margin-bottom: 5px; font-weight: 700;"><a id="liadialogresolvedialogtypeidentifier"></a>Purpose</h3>
+<div style="margin-left: 20px; margin-bottom: 20px;">
+  <p>Retrieves a registered configuration entry by its unique identifier.</p>
+</div>
+
+<h3 style="margin-bottom: 5px; font-weight: 700;">When Called</h3>
+<div style="margin-left: 20px; margin-bottom: 20px;">
+  <p>When accessing configuration menus or checking configuration availability.</p>
+</div>
+
+<h3 style="margin-bottom: 5px; font-weight: 700;">Parameters</h3>
+<div style="margin-left: 20px; margin-bottom: 20px;">
+<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#2.1">string</a></span> <span class="parameter">uniqueID</span> The unique identifier of the configuration to retrieve.</p>
+</div>
+
+<h3 style="margin-bottom: 5px; font-weight: 700;">Returns</h3>
+<div style="margin-left: 20px; margin-bottom: 20px;">
+<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#2.1">table|nil</a></span> The configuration table if found, nil otherwise.</p>
+</div>
+
+<h3 style="margin-bottom: 5px; font-weight: 700;">Example Usage</h3>
+<div style="margin-left: 20px; margin-bottom: 20px;">
+<pre><code class="language-lua">  local cfg = lia.dialog.getConfiguration("appearance")
+  if cfg and cfg.shouldShow(LocalPlayer()) then
+      cfg.onOpen(npc)
+  end
+</code></pre>
+</div>
+
+</div>
+</details>
+
+---
+
 <details class="realm-server" id="function-liadialoggetnpcdata">
 <summary><a id="lia.dialog.getNPCData"></a>lia.dialog.getNPCData(npcID)</summary>
 <div class="details-content">
@@ -366,7 +403,7 @@ The dialog library provides comprehensive functionality for managing NPC convers
 <h3 style="margin-bottom: 5px; font-weight: 700;">Example Usage</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
 <pre><code class="language-lua">  local data = lia.dialog.getNPCData("tutorial_guide")
-  if data then print("Greeting:", data.Greeting) end
+  if data then lia.debug("Greeting:", data.Greeting) end
 </code></pre>
 </div>
 
@@ -429,7 +466,7 @@ The dialog library provides comprehensive functionality for managing NPC convers
 <div style="margin-left: 20px; margin-bottom: 20px;">
 <pre><code class="language-lua">  properties.Add("CustomNPCConfig", {
       Filter = function(_, ent) return ent:GetClass() == "lia_npc" end,
-      Action = function(_, ent) lia.dialog.openCustomizationUI(ent, "appearance") end
+      Action = function(_, ent) lia.dialog.openConfigurationPicker(ent) end
   })
 </code></pre>
 </div>
@@ -467,7 +504,7 @@ The dialog library provides comprehensive functionality for managing NPC convers
 <h3 style="margin-bottom: 5px; font-weight: 700;">Example Usage</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
 <pre><code class="language-lua">  local configs = lia.dialog.getAvailableConfigurations(LocalPlayer(), npc, npc.uniqueID)
-  for _, cfg in ipairs(configs) do print("Config:", cfg.id) end
+  for _, cfg in ipairs(configs) do lia.debug("Config:", cfg.id) end
 </code></pre>
 </div>
 

@@ -54,7 +54,7 @@ The loader library is the core initialization system for the Lilia framework, re
 
 <h3 style="margin-bottom: 5px; font-weight: 700;">When Called</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
-  <p>To load plugin folders or schema-specific directories.</p>
+  <p>To load module folders or schema-specific directories.</p>
 </div>
 
 <h3 style="margin-bottom: 5px; font-weight: 700;">Parameters</h3>
@@ -252,6 +252,31 @@ The loader library is the core initialization system for the Lilia framework, re
 <pre><code class="language-lua">  -- Log bootstrap progress during initialization
   lia.bootstrap("Database", "Connecting to MySQL server...")
   lia.bootstrap("Modules", "Loading character system...")
+</code></pre>
+</div>
+
+</div>
+</details>
+
+---
+
+<details class="realm-shared" id="function-liadebug">
+<summary><a id="lia.debug"></a>lia.debug()</summary>
+<div class="details-content">
+<h3 style="margin-bottom: 5px; font-weight: 700;"><a id="liadebug"></a>Purpose</h3>
+<div style="margin-left: 20px; margin-bottom: 20px;">
+  <p>Prints debug messages to the console when the schema is running in development mode.</p>
+</div>
+
+<h3 style="margin-bottom: 5px; font-weight: 700;">When Called</h3>
+<div style="margin-left: 20px; margin-bottom: 20px;">
+  <p>Called anywhere in the codebase to emit debug output that should only appear during development.</p>
+</div>
+
+<h3 style="margin-bottom: 5px; font-weight: 700;">Example Usage</h3>
+<div style="margin-left: 20px; margin-bottom: 20px;">
+<pre><code class="language-lua">  lia.debug("Player spawned:", ply)
+  lia.debug("Config value:", lia.config.Get("SomeKey"))
 </code></pre>
 </div>
 

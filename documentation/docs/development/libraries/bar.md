@@ -38,7 +38,7 @@ The bars library provides a comprehensive system for creating and managing dynam
 <div style="margin-left: 20px; margin-bottom: 20px;">
 <pre><code class="language-lua">  local staminaBar = lia.bar.get("stamina")
   if staminaBar then
-      print("Current priority:", staminaBar.priority)
+      lia.debug("Current priority:", staminaBar.priority)
   end
 </code></pre>
 </div>

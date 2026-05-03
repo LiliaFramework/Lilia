@@ -40,12 +40,12 @@ The menu library provides a comprehensive context menu system for the Lilia fram
 <div style="margin-left: 20px; margin-bottom: 20px;">
 <pre><code class="language-lua">  -- Create a simple menu for an entity
   lia.menu.add({
-      ["Open"] = function() print("Opening...") end,
-      ["Close"] = function() print("Closing...") end
+      ["Open"] = function() lia.debug("Opening...") end,
+      ["Close"] = function() lia.debug("Closing...") end
   }, entity)
   -- Create a world-positioned menu
   lia.menu.add({
-      ["Pickup"] = function() print("Picked up!") end
+      ["Pickup"] = function() lia.debug("Picked up!") end
   }, Vector(0, 0, 0))
 </code></pre>
 </div>
@@ -152,7 +152,7 @@ The menu library provides a comprehensive context menu system for the Lilia fram
   if menuIndex then
       local success = lia.menu.onButtonPressed(menuIndex, callback)
       if success then
-          print("Menu action executed successfully")
+          lia.debug("Menu action executed successfully")
       end
   end
   -- Remove a menu without executing callback

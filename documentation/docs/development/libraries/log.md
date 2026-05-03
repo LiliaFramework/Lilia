@@ -71,7 +71,7 @@ The logger library provides comprehensive logging functionality for the Lilia fr
 <h3 style="margin-bottom: 5px; font-weight: 700;">Example Usage</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
 <pre><code class="language-lua">  local text, category = lia.log.getString(ply, "playerDeath", attackerName)
-  if text then print(category, text) end
+  if text then lia.debug(category, text) end
 </code></pre>
 </div>
 
