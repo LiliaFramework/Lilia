@@ -133,11 +133,6 @@ function MODULE:LoadData()
                 hasData = true
             end
 
-            if tonumber(row.locked) == 1 then
-                doorData.locked = true
-                hasData = true
-            end
-
             if tonumber(row.disabled) == 1 then
                 doorData.disabled = true
                 hasData = true
@@ -182,13 +177,6 @@ function MODULE:LoadData()
                 doorData = hook.Run("PostDoorDataLoad", ent, doorData) or doorData
                 lia.doors.setCachedData(ent, doorData)
                 loadedCount = loadedCount + 1
-                if ent:isDoor() then
-                    if doorData.locked then
-                        ent:Fire("lock")
-                    else
-                        ent:Fire("unlock")
-                    end
-                end
             end
         end
 
@@ -206,11 +194,6 @@ function MODULE:LoadData()
 
                         if doorVars.price and doorVars.price > 0 then
                             doorData.price = doorVars.price
-                            hasPresetData = true
-                        end
-
-                        if doorVars.locked then
-                            doorData.locked = true
                             hasPresetData = true
                         end
 
@@ -248,13 +231,6 @@ function MODULE:LoadData()
                             lia.doors.setCachedData(ent, doorData)
                             lia.information(L("appliedPresetToDoor", doorID))
                             loadedCount = loadedCount + 1
-                            if ent:isDoor() then
-                                if doorData.locked then
-                                    ent:Fire("lock")
-                                else
-                                    ent:Fire("unlock")
-                                end
-                            end
                         end
                     else
                         lia.warning(L("doorNotFoundForPreset", doorID))
@@ -333,7 +309,6 @@ function MODULE:SaveData()
                 ownable = isUnownable and 0 or 1,
                 name = name,
                 price = price,
-                locked = doorData.locked and 1 or 0
             }
 
             for fieldName, info in pairs(extraFields) do
