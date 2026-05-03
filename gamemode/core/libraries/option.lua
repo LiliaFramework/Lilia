@@ -631,6 +631,21 @@ lia.option.add("descriptionWidth", "@descriptionWidth", "@descriptionWidthDesc",
     decimals = 2
 })
 
+lia.option.add("drawPlayerHoverInfo", "@drawPlayerHoverInfo", "@drawPlayerHoverInfoDesc", true, nil, {
+    category = "@core",
+    isQuick = true,
+})
+
+lia.option.add("drawItemHoverInfo", "@drawItemHoverInfo", "@drawItemHoverInfoDesc", true, nil, {
+    category = "@core",
+    isQuick = true,
+})
+
+lia.option.add("drawEntityHoverInfo", "@drawEntityHoverInfo", "@drawEntityHoverInfoDesc", true, nil, {
+    category = "@core",
+    isQuick = true,
+})
+
 lia.option.add("invertWeaponScroll", "@invertWeaponScroll", "@invertWeaponScrollDesc", false, nil, {
     category = "@core",
     isQuick = true,
