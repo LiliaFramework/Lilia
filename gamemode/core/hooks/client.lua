@@ -107,6 +107,8 @@ local function canDrawCrosshair()
     local rag = client:GetRagdollEntity()
     local wpn = client:GetActiveWeapon()
     if not client:getChar() or not IsValid(wpn) then return false end
+    local hookResult = hook.Run("ShouldDrawCrosshair", client, wpn)
+    if hookResult ~= nil then return hookResult end
     local cl = wpn:GetClass()
     if cl == "gmod_tool" or string.find(cl, "lia_") or string.find(cl, "detector_") then return true end
     if NoDrawCrosshairWeapon[cl] then return false end
@@ -114,8 +116,6 @@ local function canDrawCrosshair()
     if IsValid(rag) then return false end
     if g_ContextMenu:IsVisible() then return false end
     if IsValid(lia.gui.character) and lia.gui.character:IsVisible() then return false end
-    local hookResult = hook.Run("ShouldDrawCrosshair", client, wpn)
-    if hookResult ~= nil then return hookResult end
     return lia.config.get("CrosshairEnabled", true)
 end
 
@@ -188,6 +188,25 @@ local function RenderEntities()
     end
 end
 
+local function getEntityInfoCategory(entity)
+    if not IsValid(entity) then return nil end
+    if entity:IsPlayer() then return "players" end
+    if entity:GetClass() == "prop_ragdoll" then
+        for _, ply in player.Iterator() do
+            if ply:GetRagdollEntity() == entity then return "players" end
+        end
+    end
+
+    if entity.isItem and entity:isItem() or entity.isMoney and entity:isMoney() then return "items" end
+    return "entities"
+end
+
+local entityInfoOptionByCategory = {
+    players = "drawPlayerHoverInfo",
+    items = "drawItemHoverInfo",
+    entities = "drawEntityHoverInfo"
+}
+
 function GM:PostDrawOpaqueRenderables()
     if not lia.option.get("voiceRange", false) then return end
     local client = LocalPlayer()
@@ -208,28 +227,31 @@ function GM:PostDrawOpaqueRenderables()
 end
 
 function GM:ShouldDrawEntityInfo(e)
-    if IsValid(e) then
-        if e:IsPlayer() and e:getChar() then
-            if e:GetMoveType() == MOVETYPE_NOCLIP or e:GetNoDraw() then return false end
-            return true
-        end
-
-        local ply
-        if e:GetClass() == "prop_ragdoll" then
-            for _, p in player.Iterator() do
-                if p:GetRagdollEntity() == e then
-                    ply = p
-                    break
-                end
-            end
-        end
-
-        if IsValid(ply) then return e == LocalPlayer() and not LocalPlayer():ShouldDrawLocalPlayer() end
-        if e.DrawEntityInfo then return true end
-        if e.onShouldDrawEntityInfo and e:onShouldDrawEntityInfo() then return true end
+    if not IsValid(e) then return false end
+    local category = getEntityInfoCategory(e)
+    local optionKey = category and entityInfoOptionByCategory[category]
+    if optionKey and not lia.option.get(optionKey, true) then return false end
+    local hookResult = hook.Run("CanDrawEntityHoverInfo", e, category)
+    if hookResult ~= nil then return hookResult end
+    if e:IsPlayer() and e:getChar() then
+        if e:GetMoveType() == MOVETYPE_NOCLIP or e:GetNoDraw() then return false end
         return true
     end
-    return false
+
+    local ply
+    if e:GetClass() == "prop_ragdoll" then
+        for _, p in player.Iterator() do
+            if p:GetRagdollEntity() == e then
+                ply = p
+                break
+            end
+        end
+    end
+
+    if IsValid(ply) then return e == LocalPlayer() and not LocalPlayer():ShouldDrawLocalPlayer() end
+    if e.DrawEntityInfo then return true end
+    if e.onShouldDrawEntityInfo and e:onShouldDrawEntityInfo() then return true end
+    return true
 end
 
 function GM:GetInjuredText(c)
