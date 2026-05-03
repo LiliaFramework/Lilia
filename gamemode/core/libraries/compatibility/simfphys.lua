@@ -34,6 +34,11 @@
     hook.Add("simfphysUse", "liaSimfphys", function(entity, client)
         if not lia.config.get("CarEntryDelayEnabled", true) then return end
         if not entity:isSimfphysCar() then return end
+        if entity:isLocked() then
+            entity:EmitSound("doors/default_locked.wav")
+            return true
+        end
+
         if entity.IsBeingEntered then
             client:notifyWarningLocalized("carOccupiedNotice")
             return true
@@ -46,14 +51,45 @@
         end
 
         entity.IsBeingEntered = true
-        client:setAction(L("enteringVehicle"), delay, function()
-            if IsValid(entity) then entity.IsBeingEntered = false end
-            if not IsValid(entity) or not IsValid(client) then return end
-            if client:GetPos():Distance(entity:GetPos()) <= 150 then
-                entity:SetPassenger(client)
-            else
+        local timerID = "liaSimfphysEntryCheck_" .. client:SteamID64()
+        timer.Create(timerID, 0.1, 0, function()
+            if not IsValid(client) or not IsValid(entity) then
+                timer.Remove(timerID)
+                if IsValid(entity) then entity.IsBeingEntered = false end
+                return
+            end
+
+            if entity:isLocked() then
+                timer.Remove(timerID)
+                entity.IsBeingEntered = false
+                client:setAction()
+                entity:EmitSound("doors/default_locked.wav")
+                return
+            end
+
+            if client:GetPos():DistToSqr(entity:GetPos()) > 250 * 250 then
+                timer.Remove(timerID)
+                entity.IsBeingEntered = false
+                client:setAction()
                 client:notifyWarningLocalized("tooFarAway")
             end
+        end)
+
+        client:setAction(L("enteringVehicle"), delay, function()
+            timer.Remove(timerID)
+            if IsValid(entity) then entity.IsBeingEntered = false end
+            if not IsValid(entity) or not IsValid(client) then return end
+            if entity:isLocked() then
+                entity:EmitSound("doors/default_locked.wav")
+                return
+            end
+
+            if client:GetPos():DistToSqr(entity:GetPos()) > 250 * 250 then
+                client:notifyWarningLocalized("tooFarAway")
+                return
+            end
+
+            entity:SetPassenger(client)
         end)
         return true
     end)
