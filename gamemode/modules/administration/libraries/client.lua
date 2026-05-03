@@ -2778,6 +2778,16 @@ net.Receive("liaAdminModeSwapCharacter", function()
     end)
 
     d:catch(function(err) if err and err ~= "" then LocalPlayer():notifyErrorLocalized(err) end end)
+end)
+
+net.Receive("liaManagesitrooms", function()
+    local rooms = net.ReadTable() or {}
+    local frame = vgui.Create("liaFrame")
+    frame:SetTitle(L("manageSitRooms"))
+    frame:SetSize(640, 420)
+    frame:Center()
+    frame:MakePopup()
+    local scroll = vgui.Create("DScrollPanel", frame)
     scroll:Dock(FILL)
     scroll:DockMargin(10, 30, 10, 10)
     for name in pairs(rooms) do
