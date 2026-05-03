@@ -76,7 +76,7 @@ The player interaction library provides comprehensive functionality for managing
 
 <h3 style="margin-bottom: 5px; font-weight: 700;">Returns</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
-<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#2.1">table</a></span> Map of interaction name ? data filtered for the target.</p>
+<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#2.1">table</a></span> Map of interaction name → data filtered for the target.</p>
 </div>
 
 <h3 style="margin-bottom: 5px; font-weight: 700;">Example Usage</h3>
@@ -115,7 +115,7 @@ The player interaction library provides comprehensive functionality for managing
 
 <h3 style="margin-bottom: 5px; font-weight: 700;">Returns</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
-<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#2.1">table</a></span> Map of action name ? data available for this player.</p>
+<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#2.1">table</a></span> Map of action name → data available for this player.</p>
 </div>
 
 <h3 style="margin-bottom: 5px; font-weight: 700;">Example Usage</h3>
@@ -150,7 +150,7 @@ The player interaction library provides comprehensive functionality for managing
 
 <h3 style="margin-bottom: 5px; font-weight: 700;">Parameters</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
-<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#2.1">table</a></span> <span class="parameter">options</span> Map of name ? option entry (expects `opt.category`).</p>
+<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#2.1">table</a></span> <span class="parameter">options</span> Map of name → option entry (expects `opt.category`).</p>
 </div>
 
 <h3 style="margin-bottom: 5px; font-weight: 700;">Returns</h3>
@@ -196,7 +196,7 @@ The player interaction library provides comprehensive functionality for managing
 <pre><code class="language-lua">  lia.playerinteract.addInteraction("zipTie", {
       target = "player",
       range = 96,
-      category = "@categoryRestraint",
+      category = "categoryRestraint",
       timeToComplete = 4,
       actionText = "@tying",
       targetActionText = "@beingTied",
@@ -237,7 +237,7 @@ The player interaction library provides comprehensive functionality for managing
 <h3 style="margin-bottom: 5px; font-weight: 700;">Example Usage</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
 <pre><code class="language-lua">  lia.playerinteract.addAction("wave", {
-      category = "@categoryEmotes",
+      category = "categoryEmotes",
       timeToComplete = 1,
       actionText = "@gesturing",
       onRun = function(client)

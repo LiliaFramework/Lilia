@@ -96,7 +96,7 @@ The languages library provides comprehensive internationalization (i18n) functio
 <h3 style="margin-bottom: 5px; font-weight: 700;">Example Usage</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
 <pre><code class="language-lua">  for _, langName in ipairs(lia.lang.getLanguages()) do
-      lia.debug("Language option:", langName)
+      print("Language option:", langName)
   end
 </code></pre>
 </div>
@@ -226,37 +226,64 @@ The languages library provides comprehensive internationalization (i18n) functio
 </div>
 
 </div>
-</details>
 
 ---
 
 <details class="realm-shared" id="function-lialangresolvetoken">
-<summary><a id="lia.lang.resolveToken"></a>lia.lang.resolveToken(value)</summary>
+<summary><a id="lia.lang.resolveToken"></a>lia.lang.resolveToken(value, ...)</summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="lialangresolvetoken"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
-  <p>Resolve @-prefixed localization tokens into their translated value.</p>
+  <p>Resolve @-prefixed localization tokens to translated text and optionally format them using passed arguments.</p>
 </div>
 
 <h3 style="margin-bottom: 5px; font-weight: 700;">When Called</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
-  <p>When config, options, or other string fields may store localization tokens.</p>
+  <p>When a string may contain a localization token that needs runtime resolution or when non-token values should pass through unchanged.</p>
 </div>
 
 <h3 style="margin-bottom: 5px; font-weight: 700;">Parameters</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
-<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#2.1">string|any</a></span> <span class="parameter">value</span> Raw value to inspect and optionally localize.</p>
+<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#2.1">string</a></span> <span class="parameter">value</span> A raw value to resolve. If this value is an @token string, it's translated.</p>
+<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#2.1">... (vararg)</a></span> Optional formatting arguments forwarded to `lia.lang.getLocalizedString`.</p>
 </div>
 
 <h3 style="margin-bottom: 5px; font-weight: 700;">Returns</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
-<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#2.1">string|any</a></span> Localized string for @tokens, or the original value when no token is present.</p>
+<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#2.1">string</a></span> Translated string when `value` is an @token; otherwise returns the original `value`.</p>
 </div>
 
 <h3 style="margin-bottom: 5px; font-weight: 700;">Example Usage</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
 <pre><code class="language-lua">  local title = lia.lang.resolveToken("@currencyPlural")
-  local welcome = lia.lang.resolveToken("@welcomeUser", client:Name(), os.date())
+  local welcome = lia.lang.resolveToken("@welcomeUser", client:Name())
+  local literal = lia.lang.resolveToken("NotAToken") -- returns "NotAToken"
+</code></pre>
+</div>
+
+</div>
+
+---
+
+<h3 style="margin-bottom: 5px; font-weight: 700;">When Called</h3>
+<div style="margin-left: 20px; margin-bottom: 20px;">
+  <p>Every time L() is used to display text with parameters.</p>
+</div>
+
+<h3 style="margin-bottom: 5px; font-weight: 700;">Parameters</h3>
+<div style="margin-left: 20px; margin-bottom: 20px;">
+<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#2.1">string</a></span> <span class="parameter">key</span> Localization key.</p>
+</div>
+
+<h3 style="margin-bottom: 5px; font-weight: 700;">Returns</h3>
+<div style="margin-left: 20px; margin-bottom: 20px;">
+<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#2.1">string</a></span> Formatted localized string or key when missing.</p>
+</div>
+
+<h3 style="margin-bottom: 5px; font-weight: 700;">Example Usage</h3>
+<div style="margin-left: 20px; margin-bottom: 20px;">
+<pre><code class="language-lua">  local msg = lia.lang.getLocalizedString("welcomeUser", ply:Name(), os.date())
+  chat.AddText(msg)
 </code></pre>
 </div>
 

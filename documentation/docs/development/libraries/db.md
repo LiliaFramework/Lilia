@@ -33,7 +33,7 @@ The database library provides comprehensive database management functionality fo
 <h3 style="margin-bottom: 5px; font-weight: 700;">Example Usage</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
 <pre><code class="language-lua">  lia.db.connect(function()
-      lia.debug("Database connected successfully!")
+      print("Database connected successfully!")
   end)
 </code></pre>
 </div>
@@ -64,7 +64,7 @@ The database library provides comprehensive database management functionality fo
 <h3 style="margin-bottom: 5px; font-weight: 700;">Example Usage</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
 <pre><code class="language-lua">  lia.db.wipeTables(function()
-      lia.debug("All Lilia tables have been wiped!")
+      print("All Lilia tables have been wiped!")
   end)
 </code></pre>
 </div>
@@ -121,7 +121,7 @@ The database library provides comprehensive database management functionality fo
 <pre><code class="language-lua">  lia.db.waitForTablesToLoad():next(function()
       -- Database tables are now ready
       lia.db.select("*", "characters"):next(function(results)
-          lia.debug("Characters loaded:", #results)
+          print("Characters loaded:", #results)
       end)
   end)
 </code></pre>
@@ -202,9 +202,9 @@ The database library provides comprehensive database management functionality fo
       name = "John Doe",
       money = "1000"
   }, function(results, lastID)
-      lia.debug("Character created with ID:", lastID)
+      print("Character created with ID:", lastID)
   end, "characters"):next(function(result)
-      lia.debug("Insert completed, last ID:", result.lastID)
+      print("Insert completed, last ID:", result.lastID)
   end)
 </code></pre>
 </div>
@@ -246,7 +246,7 @@ The database library provides comprehensive database management functionality fo
   lia.db.updateTable({
       money = "500"
   }, nil, "characters", {id = 123}):next(function()
-      lia.debug("Character money updated")
+      print("Character money updated")
   end)
   -- Update with string condition
   lia.db.updateTable({
@@ -290,19 +290,19 @@ The database library provides comprehensive database management functionality fo
 <div style="margin-left: 20px; margin-bottom: 20px;">
 <pre><code class="language-lua">  -- Select all characters
   lia.db.select("*", "characters"):next(function(result)
-      lia.debug("Found", #result.results, "characters")
+      print("Found", #result.results, "characters")
   end)
   -- Select specific fields with condition
   lia.db.select({"name", "money"}, "characters", {steamID = "STEAM_0:1:12345678"}):next(function(result)
       for _, char in ipairs(result.results) do
-          lia.debug(char.name, "has", char.money, "money")
+          print(char.name, "has", char.money, "money")
       end
   end)
   -- Select with limit
   lia.db.select("name", "characters", nil, 5):next(function(result)
-      lia.debug("First 5 characters:")
+      print("First 5 characters:")
       for _, char in ipairs(result.results) do
-          lia.debug("-", char.name)
+          print("-", char.name)
       end
   end)
 </code></pre>
@@ -347,7 +347,7 @@ The database library provides comprehensive database management functionality fo
       money = {operator = "&gt;", value = 1000},
       faction = "citizen"
   }, 10, "name ASC"):next(function(result)
-      lia.debug("Found", #result.results, "rich citizens")
+      print("Found", #result.results, "rich citizens")
   end)
 </code></pre>
 </div>
@@ -385,11 +385,11 @@ The database library provides comprehensive database management functionality fo
 <div style="margin-left: 20px; margin-bottom: 20px;">
 <pre><code class="language-lua">  -- Count all characters
   lia.db.count("characters"):next(function(count)
-      lia.debug("Total characters:", count)
+      print("Total characters:", count)
   end)
   -- Count characters for a specific player
   lia.db.count("characters", {steamID = "STEAM_0:1:12345678"}):next(function(count)
-      lia.debug("Player has", count, "characters")
+      print("Player has", count, "characters")
   end)
 </code></pre>
 </div>
@@ -451,9 +451,9 @@ The database library provides comprehensive database management functionality fo
 <div style="margin-left: 20px; margin-bottom: 20px;">
 <pre><code class="language-lua">  lia.db.exists("characters", {steamID = "STEAM_0:1:12345678"}):next(function(exists)
       if exists then
-          lia.debug("Player has characters")
+          print("Player has characters")
       else
-          lia.debug("Player has no characters")
+          print("Player has no characters")
       end
   end)
 </code></pre>
@@ -494,15 +494,15 @@ The database library provides comprehensive database management functionality fo
 <pre><code class="language-lua">  -- Get character by ID
   lia.db.selectOne("*", "characters", {id = 123}):next(function(character)
       if character then
-          lia.debug("Found character:", character.name)
+          print("Found character:", character.name)
       else
-          lia.debug("Character not found")
+          print("Character not found")
       end
   end)
   -- Get player data by SteamID
   lia.db.selectOne({"name", "money"}, "players", {steamID = "STEAM_0:1:12345678"}):next(function(player)
       if player then
-          lia.debug(player.name, "has", player.money, "money")
+          print(player.name, "has", player.money, "money")
       end
   end)
 </code></pre>
@@ -545,7 +545,7 @@ The database library provides comprehensive database management functionality fo
       {uniqueID = "item3", invID = 2, quantity = 1}
   }
   lia.db.bulkInsert("items", items):next(function()
-      lia.debug("Bulk insert completed")
+      print("Bulk insert completed")
   end)
 </code></pre>
 </div>
@@ -586,7 +586,7 @@ The database library provides comprehensive database management functionality fo
       {id = 2, name = "Item 2", value = 200}
   }
   lia.db.bulkUpsert("custom_items", data):next(function()
-      lia.debug("Bulk upsert completed")
+      print("Bulk upsert completed")
   end)
 </code></pre>
 </div>
@@ -626,7 +626,7 @@ The database library provides comprehensive database management functionality fo
       steamID = "STEAM_0:1:12345678",
       name = "Player Name"
   }, "players"):next(function(result)
-      lia.debug("Player record inserted or already exists")
+      print("Player record inserted or already exists")
   end)
 </code></pre>
 </div>
@@ -663,9 +663,9 @@ The database library provides comprehensive database management functionality fo
 <div style="margin-left: 20px; margin-bottom: 20px;">
 <pre><code class="language-lua">  lia.db.tableExists("lia_characters"):next(function(exists)
       if exists then
-          lia.debug("Characters table exists")
+          print("Characters table exists")
       else
-          lia.debug("Characters table does not exist")
+          print("Characters table does not exist")
       end
   end)
 </code></pre>
@@ -704,9 +704,9 @@ The database library provides comprehensive database management functionality fo
 <div style="margin-left: 20px; margin-bottom: 20px;">
 <pre><code class="language-lua">  lia.db.fieldExists("lia_characters", "custom_field"):next(function(exists)
       if exists then
-          lia.debug("Custom field exists")
+          print("Custom field exists")
       else
-          lia.debug("Custom field does not exist")
+          print("Custom field does not exist")
       end
   end)
 </code></pre>
@@ -738,9 +738,9 @@ The database library provides comprehensive database management functionality fo
 <h3 style="margin-bottom: 5px; font-weight: 700;">Example Usage</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
 <pre><code class="language-lua">  lia.db.getTables():next(function(tables)
-      lia.debug("Lilia tables:")
+      print("Lilia tables:")
       for _, tableName in ipairs(tables) do
-          lia.debug("-", tableName)
+          print("-", tableName)
       end
   end)
 </code></pre>
@@ -782,9 +782,9 @@ The database library provides comprehensive database management functionality fo
       "INSERT INTO lia_logs (message) VALUES ('Money transfer completed')"
   }
   lia.db.transaction(queries):next(function()
-      lia.debug("Transaction completed successfully")
+      print("Transaction completed successfully")
   end):catch(function(err)
-      lia.debug("Transaction failed:", err)
+      print("Transaction failed:", err)
   end)
 </code></pre>
 </div>
@@ -864,7 +864,7 @@ The database library provides comprehensive database management functionality fo
       name = "John Doe",
       money = "1000"
   }, "characters"):next(function(result)
-      lia.debug("Character upserted, last ID:", result.lastID)
+      print("Character upserted, last ID:", result.lastID)
   end)
 </code></pre>
 </div>
@@ -902,11 +902,11 @@ The database library provides comprehensive database management functionality fo
 <div style="margin-left: 20px; margin-bottom: 20px;">
 <pre><code class="language-lua">  -- Delete a specific character
   lia.db.delete("characters", {id = 123}):next(function()
-      lia.debug("Character deleted")
+      print("Character deleted")
   end)
   -- Delete all characters for a player
   lia.db.delete("characters", {steamID = "STEAM_0:1:12345678"}):next(function()
-      lia.debug("All player characters deleted")
+      print("All player characters deleted")
   end)
 </code></pre>
 </div>
@@ -949,7 +949,7 @@ The database library provides comprehensive database management functionality fo
       {name = "value", type = "integer", default = 0}
   }
   lia.db.createTable("custom_data", "id", schema):next(function()
-      lia.debug("Custom table created")
+      print("Custom table created")
   end)
 </code></pre>
 </div>
@@ -989,9 +989,9 @@ The database library provides comprehensive database management functionality fo
 <div style="margin-left: 20px; margin-bottom: 20px;">
 <pre><code class="language-lua">  lia.db.createColumn("characters", "custom_field", "VARCHAR(100)", "default_value"):next(function(success)
       if success then
-          lia.debug("Column added successfully")
+          print("Column added successfully")
       else
-          lia.debug("Column already exists")
+          print("Column already exists")
       end
   end)
 </code></pre>
@@ -1029,9 +1029,9 @@ The database library provides comprehensive database management functionality fo
 <div style="margin-left: 20px; margin-bottom: 20px;">
 <pre><code class="language-lua">  lia.db.removeTable("custom_data"):next(function(success)
       if success then
-          lia.debug("Table removed successfully")
+          print("Table removed successfully")
       else
-          lia.debug("Table does not exist")
+          print("Table does not exist")
       end
   end)
 </code></pre>
@@ -1070,9 +1070,9 @@ The database library provides comprehensive database management functionality fo
 <div style="margin-left: 20px; margin-bottom: 20px;">
 <pre><code class="language-lua">  lia.db.removeColumn("characters", "old_field"):next(function(success)
       if success then
-          lia.debug("Column removed successfully")
+          print("Column removed successfully")
       else
-          lia.debug("Column or table does not exist")
+          print("Column or table does not exist")
       end
   end)
 </code></pre>
@@ -1104,9 +1104,9 @@ The database library provides comprehensive database management functionality fo
 <h3 style="margin-bottom: 5px; font-weight: 700;">Example Usage</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
 <pre><code class="language-lua">  lia.db.getCharacterTable(function(columns)
-      lia.debug("Character table columns:")
+      print("Character table columns:")
       for _, column in ipairs(columns) do
-          lia.debug("-", column)
+          print("-", column)
       end
   end)
 </code></pre>
@@ -1143,7 +1143,7 @@ The database library provides comprehensive database management functionality fo
 <h3 style="margin-bottom: 5px; font-weight: 700;">Example Usage</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
 <pre><code class="language-lua">  lia.db.createSnapshot("characters"):next(function(snapshot)
-      lia.debug("Snapshot created:", snapshot.file, "with", snapshot.records, "records")
+      print("Snapshot created:", snapshot.file, "with", snapshot.records, "records")
   end)
 </code></pre>
 </div>
@@ -1179,7 +1179,7 @@ The database library provides comprehensive database management functionality fo
 <h3 style="margin-bottom: 5px; font-weight: 700;">Example Usage</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
 <pre><code class="language-lua">  lia.db.loadSnapshot("snapshot_characters_1640995200.json"):next(function(result)
-      lia.debug("Restored", result.records, "records to", result.table)
+      print("Restored", result.records, "records to", result.table)
   end)
 </code></pre>
 </div>

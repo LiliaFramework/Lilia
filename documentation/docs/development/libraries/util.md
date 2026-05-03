@@ -11,181 +11,6 @@ The utility library provides comprehensive functionality for common operations a
 
 ---
 
-<details class="realm-shared" id="function-liautilnormalizebodygroupkey">
-<summary><a id="lia.util.normalizeBodygroupKey"></a>lia.util.normalizeBodygroupKey(key)</summary>
-<div class="details-content">
-<h3 style="margin-bottom: 5px; font-weight: 700;"><a id="liautilnormalizebodygroupkey"></a>Purpose</h3>
-<div style="margin-left: 20px; margin-bottom: 20px;">
-  <p>Normalizes a bodygroup identifier into either a numeric index or trimmed string name.</p>
-</div>
-
-<h3 style="margin-bottom: 5px; font-weight: 700;">When Called</h3>
-<div style="margin-left: 20px; margin-bottom: 20px;">
-  <p>Use when accepting bodygroup input that may be provided as an ID or name.</p>
-</div>
-
-<h3 style="margin-bottom: 5px; font-weight: 700;">Parameters</h3>
-<div style="margin-left: 20px; margin-bottom: 20px;">
-<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#2.1">any</a></span> <span class="parameter">key</span> Bodygroup identifier candidate.</p>
-</div>
-
-<h3 style="margin-bottom: 5px; font-weight: 700;">Returns</h3>
-<div style="margin-left: 20px; margin-bottom: 20px;">
-<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#2.1">number|string|nil</a></span> Numeric index when possible, otherwise a trimmed string name, or nil.</p>
-</div>
-
-<h3 style="margin-bottom: 5px; font-weight: 700;">Example Usage</h3>
-<div style="margin-left: 20px; margin-bottom: 20px;">
-<pre><code class="language-lua">  local key = lia.util.normalizeBodygroupKey("helmet")
-</code></pre>
-</div>
-
-</div>
-</details>
-
----
-
-<details class="realm-shared" id="function-liautilresolvebodygroupindex">
-<summary><a id="lia.util.resolveBodygroupIndex"></a>lia.util.resolveBodygroupIndex(target, identifier)</summary>
-<div class="details-content">
-<h3 style="margin-bottom: 5px; font-weight: 700;"><a id="liautilresolvebodygroupindex"></a>Purpose</h3>
-<div style="margin-left: 20px; margin-bottom: 20px;">
-  <p>Resolves a bodygroup identifier against an entity.</p>
-</div>
-
-<h3 style="margin-bottom: 5px; font-weight: 700;">When Called</h3>
-<div style="margin-left: 20px; margin-bottom: 20px;">
-  <p>Use when bodygroup input may be a numeric ID or a named bodygroup.</p>
-</div>
-
-<h3 style="margin-bottom: 5px; font-weight: 700;">Parameters</h3>
-<div style="margin-left: 20px; margin-bottom: 20px;">
-<p><span class="types"><a class="type" href="/development/meta/entity/">Entity</a></span> <span class="parameter">target</span> Entity to resolve the bodygroup against.</p>
-<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#2.1">any</a></span> <span class="parameter">identifier</span> Numeric ID or bodygroup name.</p>
-</div>
-
-<h3 style="margin-bottom: 5px; font-weight: 700;">Returns</h3>
-<div style="margin-left: 20px; margin-bottom: 20px;">
-<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#2.1">number|nil</a></span> Resolved bodygroup index, or nil when no match is found.</p>
-</div>
-
-<h3 style="margin-bottom: 5px; font-weight: 700;">Example Usage</h3>
-<div style="margin-left: 20px; margin-bottom: 20px;">
-<pre><code class="language-lua">  local index = lia.util.resolveBodygroupIndex(client, "helmet")
-</code></pre>
-</div>
-
-</div>
-</details>
-
----
-
-<details class="realm-shared" id="function-liautilnormalizebodygroups">
-<summary><a id="lia.util.normalizeBodygroups"></a>lia.util.normalizeBodygroups(bodygroups)</summary>
-<div class="details-content">
-<h3 style="margin-bottom: 5px; font-weight: 700;"><a id="liautilnormalizebodygroups"></a>Purpose</h3>
-<div style="margin-left: 20px; margin-bottom: 20px;">
-  <p>Normalizes a bodygroups table into key-value pairs of identifier to numeric value.</p>
-</div>
-
-<h3 style="margin-bottom: 5px; font-weight: 700;">When Called</h3>
-<div style="margin-left: 20px; margin-bottom: 20px;">
-  <p>Use when accepting bodygroup data in mixed formats.</p>
-</div>
-
-<h3 style="margin-bottom: 5px; font-weight: 700;">Parameters</h3>
-<div style="margin-left: 20px; margin-bottom: 20px;">
-<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#2.1">table</a></span> <span class="parameter">bodygroups</span> Bodygroup definitions using numeric keys, names, or `{id/name, value}` entries.</p>
-</div>
-
-<h3 style="margin-bottom: 5px; font-weight: 700;">Returns</h3>
-<div style="margin-left: 20px; margin-bottom: 20px;">
-<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#2.1">table</a></span> Normalized bodygroup mapping.</p>
-</div>
-
-<h3 style="margin-bottom: 5px; font-weight: 700;">Example Usage</h3>
-<div style="margin-left: 20px; margin-bottom: 20px;">
-<pre><code class="language-lua">  local groups = lia.util.normalizeBodygroups({
-      {name = "helmet", value = 1}
-  })
-</code></pre>
-</div>
-
-</div>
-</details>
-
----
-
-<details class="realm-shared" id="function-liautilresolvebodygroups">
-<summary><a id="lia.util.resolveBodygroups"></a>lia.util.resolveBodygroups(target, bodygroups)</summary>
-<div class="details-content">
-<h3 style="margin-bottom: 5px; font-weight: 700;"><a id="liautilresolvebodygroups"></a>Purpose</h3>
-<div style="margin-left: 20px; margin-bottom: 20px;">
-  <p>Resolves a bodygroups table to numeric indexes for a specific entity.</p>
-</div>
-
-<h3 style="margin-bottom: 5px; font-weight: 700;">When Called</h3>
-<div style="margin-left: 20px; margin-bottom: 20px;">
-  <p>Use before applying bodygroups to an entity that may receive named identifiers.</p>
-</div>
-
-<h3 style="margin-bottom: 5px; font-weight: 700;">Parameters</h3>
-<div style="margin-left: 20px; margin-bottom: 20px;">
-<p><span class="types"><a class="type" href="/development/meta/entity/">Entity</a></span> <span class="parameter">target</span> Entity receiving the bodygroups.</p>
-<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#2.1">table</a></span> <span class="parameter">bodygroups</span> Raw bodygroup definitions.</p>
-</div>
-
-<h3 style="margin-bottom: 5px; font-weight: 700;">Returns</h3>
-<div style="margin-left: 20px; margin-bottom: 20px;">
-<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#2.1">table</a></span> Bodygroup mapping keyed by numeric index.</p>
-</div>
-
-<h3 style="margin-bottom: 5px; font-weight: 700;">Example Usage</h3>
-<div style="margin-left: 20px; margin-bottom: 20px;">
-<pre><code class="language-lua">  local resolved = lia.util.resolveBodygroups(client, bodygroups)
-</code></pre>
-</div>
-
-</div>
-</details>
-
----
-
-<details class="realm-shared" id="function-liautilapplybodygroups">
-<summary><a id="lia.util.applyBodygroups"></a>lia.util.applyBodygroups(target, bodygroups)</summary>
-<div class="details-content">
-<h3 style="margin-bottom: 5px; font-weight: 700;"><a id="liautilapplybodygroups"></a>Purpose</h3>
-<div style="margin-left: 20px; margin-bottom: 20px;">
-  <p>Applies bodygroups to an entity using numeric or named identifiers.</p>
-</div>
-
-<h3 style="margin-bottom: 5px; font-weight: 700;">When Called</h3>
-<div style="margin-left: 20px; margin-bottom: 20px;">
-  <p>Use when stored or configured bodygroups need to be set on an entity.</p>
-</div>
-
-<h3 style="margin-bottom: 5px; font-weight: 700;">Parameters</h3>
-<div style="margin-left: 20px; margin-bottom: 20px;">
-<p><span class="types"><a class="type" href="/development/meta/entity/">Entity</a></span> <span class="parameter">target</span> Entity to modify.</p>
-<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#2.1">table</a></span> <span class="parameter">bodygroups</span> Raw bodygroup definitions.</p>
-</div>
-
-<h3 style="margin-bottom: 5px; font-weight: 700;">Returns</h3>
-<div style="margin-left: 20px; margin-bottom: 20px;">
-<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#2.1">table</a></span> Resolved numeric bodygroup mapping that was applied.</p>
-</div>
-
-<h3 style="margin-bottom: 5px; font-weight: 700;">Example Usage</h3>
-<div style="margin-left: 20px; margin-bottom: 20px;">
-<pre><code class="language-lua">  lia.util.applyBodygroups(client, bodygroups)
-</code></pre>
-</div>
-
-</div>
-</details>
-
----
-
 <details class="realm-shared" id="function-liautilfindplayersinbox">
 <summary><a id="lia.util.findPlayersInBox"></a>lia.util.findPlayersInBox(mins, maxs)</summary>
 <div class="details-content">
@@ -244,7 +69,7 @@ The utility library provides comprehensive functionality for common operations a
 
 <h3 style="margin-bottom: 5px; font-weight: 700;">Example Usage</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
-<pre><code class="language-lua">  lia.util.requestEntityInformation(client, ent, argTypes, function(info) lia.debug(info) end)
+<pre><code class="language-lua">  lia.util.requestEntityInformation(client, ent, argTypes, function(info) print(info) end)
 </code></pre>
 </div>
 
@@ -279,7 +104,7 @@ The utility library provides comprehensive functionality for common operations a
 <h3 style="margin-bottom: 5px; font-weight: 700;">Example Usage</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
 <pre><code class="language-lua">  local ply = lia.util.getBySteamID("76561198000000000")
-  if ply then lia.debug("Found", ply:Name()) end
+  if ply then print("Found", ply:Name()) end
 </code></pre>
 </div>
 
@@ -494,7 +319,7 @@ The utility library provides comprehensive functionality for common operations a
 
 <h3 style="margin-bottom: 5px; font-weight: 700;">Example Usage</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
-<pre><code class="language-lua">  if lia.util.stringMatches(ply:Name(), "john") then lia.debug("Matched player") end
+<pre><code class="language-lua">  if lia.util.stringMatches(ply:Name(), "john") then print("Matched player") end
 </code></pre>
 </div>
 
@@ -775,7 +600,7 @@ The utility library provides comprehensive functionality for common operations a
 <h3 style="margin-bottom: 5px; font-weight: 700;">Example Usage</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
 <pre><code class="language-lua">  local faction = lia.util.findFaction(ply, "combine")
-  if faction then lia.debug(faction.name) end
+  if faction then print(faction.name) end
 </code></pre>
 </div>
 

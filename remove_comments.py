@@ -231,7 +231,8 @@ def main():
             r"D:\GMOD\Server\garrysmod\gamemodes\Lilia\gamemode",
             r"D:\GMOD\Server\garrysmod\gamemodes\metrorp\modules",
             r"D:\GMOD\Server\garrysmod\gamemodes\metrorp\gitmodules",
-            r"D:\GMOD\Server\garrysmod\gamemodes\lilia_rp\modules"
+            r"D:\GMOD\Server\garrysmod\gamemodes\lilia_rp",
+            r"D:\GMOD\Server\garrysmod\gamemodes\falloutrp"
         ]
 
     total_count = 0

@@ -60,7 +60,7 @@ The player meta table provides comprehensive functionality for managing player d
 
 <h3 style="margin-bottom: 5px; font-weight: 700;">Example Usage</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
-<pre><code class="language-lua">  lia.debug(ply:tostring())
+<pre><code class="language-lua">  print(ply:tostring())
 </code></pre>
 </div>
 
@@ -1146,6 +1146,67 @@ The player meta table provides comprehensive functionality for managing player d
 <h3 style="margin-bottom: 5px; font-weight: 700;">Example Usage</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
 <pre><code class="language-lua">  if ply:meetsRequiredSkills(reqs) then ...
+</code></pre>
+</div>
+
+</div>
+</details>
+
+---
+
+<details class="realm-shared" id="function-forcesequence">
+<summary><a id="forceSequence"></a>forceSequence(sequenceName, callback, time, noFreeze)</summary>
+<div class="details-content">
+<h3 style="margin-bottom: 5px; font-weight: 700;"><a id="forcesequence"></a>Purpose</h3>
+<div style="margin-left: 20px; margin-bottom: 20px;">
+  <p>Forces the player to play a sequence and freezes movement if needed.</p>
+</div>
+
+<h3 style="margin-bottom: 5px; font-weight: 700;">When Called</h3>
+<div style="margin-left: 20px; margin-bottom: 20px;">
+  <p>Use for scripted animations like sit or interact sequences.</p>
+</div>
+
+<h3 style="margin-bottom: 5px; font-weight: 700;">Parameters</h3>
+<div style="margin-left: 20px; margin-bottom: 20px;">
+<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#2.1">string</a></span> <span class="parameter">sequenceName</span> <span class="optional">optional</span> Sequence to play; nil clears the current sequence.</p>
+<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#2.1">function</a></span> <span class="parameter">callback</span> <span class="optional">optional</span> Called when the sequence ends.</p>
+<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#2.1">number</a></span> <span class="parameter">time</span> <span class="optional">optional</span> Override duration.</p>
+<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#2.1">boolean</a></span> <span class="parameter">noFreeze</span> Prevent movement freeze when true.</p>
+</div>
+
+<h3 style="margin-bottom: 5px; font-weight: 700;">Returns</h3>
+<div style="margin-left: 20px; margin-bottom: 20px;">
+<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#2.1">number|boolean|nil</a></span> Duration when started, false on failure, or nil when clearing.</p>
+</div>
+
+<h3 style="margin-bottom: 5px; font-weight: 700;">Example Usage</h3>
+<div style="margin-left: 20px; margin-bottom: 20px;">
+<pre><code class="language-lua">  ply:forceSequence("sit", nil, 5)
+</code></pre>
+</div>
+
+</div>
+</details>
+
+---
+
+<details class="realm-shared" id="function-leavesequence">
+<summary><a id="leaveSequence"></a>leaveSequence()</summary>
+<div class="details-content">
+<h3 style="margin-bottom: 5px; font-weight: 700;"><a id="leavesequence"></a>Purpose</h3>
+<div style="margin-left: 20px; margin-bottom: 20px;">
+  <p>Stops the forced sequence, unfreezes movement, and runs callbacks.</p>
+</div>
+
+<h3 style="margin-bottom: 5px; font-weight: 700;">When Called</h3>
+<div style="margin-left: 20px; margin-bottom: 20px;">
+  <p>Use when a sequence finishes or must be cancelled.</p>
+</div>
+
+<h3 style="margin-bottom: 5px; font-weight: 700;">Example Usage</h3>
+<div style="margin-left: 20px; margin-bottom: 20px;">
+<pre><code class="language-lua">  ply:leaveSequence()
 </code></pre>
 </div>
 
@@ -2338,7 +2399,7 @@ The player meta table provides comprehensive functionality for managing player d
 <div style="margin-left: 20px; margin-bottom: 20px;">
 <pre><code class="language-lua">  local parts = ply:getParts()
   if parts["helmet"] then
-      lia.debug("Player has helmet equipped")
+      print("Player has helmet equipped")
   end
 </code></pre>
 </div>

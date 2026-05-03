@@ -1019,7 +1019,7 @@ Shared hooks in the Lilia framework handle functionality available on both clien
 <h3 style="margin-bottom: 5px; font-weight: 700;">Example Usage</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
 <pre><code class="language-lua">  hook.Add("CommandAdded", "LogCommands", function(name, data)
-      lia.debug("Command registered:", name, "adminOnly:", data.adminOnly)
+      print("Command registered:", name, "adminOnly:", data.adminOnly)
   end)
 </code></pre>
 </div>
@@ -1417,44 +1417,6 @@ Shared hooks in the Lilia framework handle functionality available on both clien
 <div style="margin-left: 20px; margin-bottom: 20px;">
 <pre><code class="language-lua">  hook.Add("GetHandsAttackSpeed", "FasterCombatDrugs", function(client, defaultDelay)
       if client:getNetVar("combatStim") then return defaultDelay * 0.75 end
-  end)
-</code></pre>
-</div>
-
-</div>
-</details>
-
----
-
-<details class="realm-shared" id="function-getinventorymaxweight">
-<summary><a id="GetInventoryMaxWeight"></a>GetInventoryMaxWeight(inventory, maxWeight)</summary>
-<div class="details-content">
-<h3 style="margin-bottom: 5px; font-weight: 700;"><a id="getinventorymaxweight"></a>Purpose</h3>
-<div style="margin-left: 20px; margin-bottom: 20px;">
-  <p>Override the maximum carry weight of a weight-based inventory.</p>
-</div>
-
-<h3 style="margin-bottom: 5px; font-weight: 700;">When Called</h3>
-<div style="margin-left: 20px; margin-bottom: 20px;">
-  <p>Inside `WeightInv:getMaxWeight()` after the base max weight is computed from config and negative-weight items.</p>
-</div>
-
-<h3 style="margin-bottom: 5px; font-weight: 700;">Parameters</h3>
-<div style="margin-left: 20px; margin-bottom: 20px;">
-<p><span class="types"><a class="type" href="/development/libraries/inventory/">Inventory</a></span> <span class="parameter">inventory</span> The inventory whose max weight is being evaluated.</p>
-<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#2.1">number</a></span> <span class="parameter">maxWeight</span> Calculated max weight before this hook runs.</p>
-</div>
-
-<h3 style="margin-bottom: 5px; font-weight: 700;">Returns</h3>
-<div style="margin-left: 20px; margin-bottom: 20px;">
-<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#2.1">number|nil</a></span> New maximum weight to use; nil keeps the computed value.</p>
-</div>
-
-<h3 style="margin-bottom: 5px; font-weight: 700;">Example Usage</h3>
-<div style="margin-left: 20px; margin-bottom: 20px;">
-<pre><code class="language-lua">  hook.Add("GetInventoryMaxWeight", "VIPCarryBonus", function(inventory, maxWeight)
-      local char = lia.char.loaded[inventory:getData("char")]
-      if char and char:getPlayer():IsUserGroup("vip") then return maxWeight + 10 end
   end)
 </code></pre>
 </div>
@@ -2935,7 +2897,7 @@ Shared hooks in the Lilia framework handle functionality available on both clien
 <h3 style="margin-bottom: 5px; font-weight: 700;">Example Usage</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
 <pre><code class="language-lua">  hook.Add("OnPlayerDroppedItem", "LogItemDrop", function(client, spawnedItem)
-      lia.debug(client:Name() .. " dropped an item")
+      print(client:Name() .. " dropped an item")
   end)
 </code></pre>
 </div>
@@ -2968,7 +2930,7 @@ Shared hooks in the Lilia framework handle functionality available on both clien
 <h3 style="margin-bottom: 5px; font-weight: 700;">Example Usage</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
 <pre><code class="language-lua">  hook.Add("OnPlayerRotateItem", "LogItemRotation", function(client, item, newRot)
-      lia.debug(client:Name() .. " rotated " .. item:getName() .. " to " .. newRot)
+      print(client:Name() .. " rotated " .. item:getName() .. " to " .. newRot)
   end)
 </code></pre>
 </div>
@@ -3000,7 +2962,7 @@ Shared hooks in the Lilia framework handle functionality available on both clien
 <h3 style="margin-bottom: 5px; font-weight: 700;">Example Usage</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
 <pre><code class="language-lua">  hook.Add("OnPlayerTakeItem", "LogItemPickup", function(client, item)
-      lia.debug(client:Name() .. " took " .. item:getName())
+      print(client:Name() .. " took " .. item:getName())
   end)
 </code></pre>
 </div>
@@ -3034,7 +2996,7 @@ Shared hooks in the Lilia framework handle functionality available on both clien
 <h3 style="margin-bottom: 5px; font-weight: 700;">Example Usage</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
 <pre><code class="language-lua">  hook.Add("OnPrivilegeRegistered", "SyncPrivileges", function(priv)
-      lia.debug("Privilege added:", priv.Name or priv.name)
+      print("Privilege added:", priv.Name or priv.name)
   end)
 </code></pre>
 </div>
@@ -3390,7 +3352,7 @@ Shared hooks in the Lilia framework handle functionality available on both clien
 
 <h3 style="margin-bottom: 5px; font-weight: 700;">Parameters</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
-<p><span class="types"><a class="type" href="/development/meta/player/">Player</a></span> <span class="parameter">client</span> Player whose customization permissions are being checked.</p>
+<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#2.1">Player</a></span> <span class="parameter">client</span> Player whose customization permissions are being checked.</p>
 <p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#2.1">number|string|table</a></span> <span class="parameter">faction</span> Faction identifier or resolved faction table.</p>
 <p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#2.1">any</a></span> <span class="parameter">context</span> Optional caller-specific context describing where the check originated.</p>
 <p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#2.1">boolean</a></span> <span class="parameter">skinAllowed</span> Current skin customization permission after faction defaults are applied.</p>
@@ -3399,7 +3361,7 @@ Shared hooks in the Lilia framework handle functionality available on both clien
 
 <h3 style="margin-bottom: 5px; font-weight: 700;">Returns</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
-<p>table|boolean|nil, boolean|nil Return a table with `skinAllowed` and/or `bodygroupsAllowed` keys, or return booleans directly as first/second values.</p>
+<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#2.1">table|boolean|nil</a>, <a class="type" href="https://www.lua.org/manual/5.1/manual.html#2.1">boolean|nil</a></span> Return a table with <code>skinAllowed</code> and/or <code>bodygroupsAllowed</code> keys, or return booleans directly as first/second values.</p>
 </div>
 
 <h3 style="margin-bottom: 5px; font-weight: 700;">Example Usage</h3>

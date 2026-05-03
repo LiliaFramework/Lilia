@@ -147,7 +147,7 @@ The item meta table provides comprehensive functionality for managing item data,
 
 <h3 style="margin-bottom: 5px; font-weight: 700;">Example Usage</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
-<pre><code class="language-lua">  lia.debug(item:tostring())
+<pre><code class="language-lua">  print(item:tostring())
 </code></pre>
 </div>
 

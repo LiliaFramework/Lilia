@@ -72,7 +72,7 @@ The character library provides comprehensive functionality for managing player c
 <h3 style="margin-bottom: 5px; font-weight: 700;">Example Usage</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
 <pre><code class="language-lua">  for ply, char in pairs(lia.char.getAll()) do
-      lia.debug(ply:Name(), char:getName())
+      print(ply:Name(), char:getName())
   end
 </code></pre>
 </div>
@@ -474,7 +474,7 @@ The character library provides comprehensive functionality for managing player c
 
 <h3 style="margin-bottom: 5px; font-weight: 700;">Example Usage</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
-<pre><code class="language-lua">  lia.char.create(payload, function(charID) lia.debug("created", charID) end)
+<pre><code class="language-lua">  lia.char.create(payload, function(charID) print("created", charID) end)
 </code></pre>
 </div>
 
@@ -505,7 +505,7 @@ The character library provides comprehensive functionality for managing player c
 
 <h3 style="margin-bottom: 5px; font-weight: 700;">Example Usage</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
-<pre><code class="language-lua">  lia.char.restore(ply, function(chars) lia.debug("loaded", #chars) end)
+<pre><code class="language-lua">  lia.char.restore(ply, function(chars) print("loaded", #chars) end)
 </code></pre>
 </div>
 

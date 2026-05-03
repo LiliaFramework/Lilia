@@ -16,7 +16,7 @@ The notice library provides comprehensive functionality for displaying notificat
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="lianoticesreceivenotify"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
-  <p>Receives notification data from the server via network message, allows overriding behavior via a unified hook, and displays it to the client.</p>
+  <p>Receives notification data from the server via network message and displays it to the client.</p>
 </div>
 
 <h3 style="margin-bottom: 5px; font-weight: 700;">When Called</h3>
@@ -26,12 +26,8 @@ The notice library provides comprehensive functionality for displaying notificat
 
 <h3 style="margin-bottom: 5px; font-weight: 700;">Example Usage</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
-<pre><code class="language-lua">  hook.Add("LiliaNoticeOverride", "CustomNoticeHandler", function(msg, ntype)
-      if ntype == "error" then
-          chat.AddText(Color(255, 0, 0), "[ERROR] " .. msg)
-          return true
-      end
-  end)
+<pre><code class="language-lua">  -- This function is called automatically when receiving server notifications
+  -- No manual calling needed
 </code></pre>
 </div>
 
@@ -45,24 +41,18 @@ The notice library provides comprehensive functionality for displaying notificat
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="lianoticesreceivenotifyl"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
-  <p>Receives localized notification data from the server, resolves it into a string, allows overriding via a unified hook, and displays it to the client.</p>
+  <p>Receives localized notification data from the server and displays the localized message to the client.</p>
 </div>
 
 <h3 style="margin-bottom: 5px; font-weight: 700;">When Called</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
-  <p>Automatically called when the client receives a "liaNotifyLocal" network message from the server.</p>
+  <p>Automatically called when the client receives a "liaNotifyLocal" network message from the server containing localized notification data.</p>
 </div>
 
 <h3 style="margin-bottom: 5px; font-weight: 700;">Example Usage</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
-<pre><code class="language-lua">  hook.Add("LiliaNoticeOverride", "CustomLocalizedHandler", function(msg, ntype)
-      if string.find(msg, "inventory") then
-          return {
-              message = "[Inventory] " .. msg,
-              type = "warning"
-          }
-      end
-  end)
+<pre><code class="language-lua">  -- This function is called automatically when receiving localized server notifications
+  -- No manual calling needed
 </code></pre>
 </div>
 
@@ -92,7 +82,9 @@ The notice library provides comprehensive functionality for displaying notificat
 
 <h3 style="margin-bottom: 5px; font-weight: 700;">Example Usage</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
-<pre><code class="language-lua">  lia.notices.notifyInfoLocalized(player, "item.purchased", itemName, price)
+<pre><code class="language-lua">  -- Send localized info notification to a specific player
+  lia.notices.notifyInfoLocalized(player, "item.purchased", itemName, price)
+  -- Send to all players
   lia.notices.notifyInfoLocalized(nil, "server.restart", "5")
 </code></pre>
 </div>
@@ -123,7 +115,9 @@ The notice library provides comprehensive functionality for displaying notificat
 
 <h3 style="margin-bottom: 5px; font-weight: 700;">Example Usage</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
-<pre><code class="language-lua">  lia.notices.notifyWarningLocalized(player, "inventory.full")
+<pre><code class="language-lua">  -- Send localized warning notification to a specific player
+  lia.notices.notifyWarningLocalized(player, "inventory.full")
+  -- Send to all players
   lia.notices.notifyWarningLocalized(nil, "server.maintenance", "30")
 </code></pre>
 </div>
@@ -154,7 +148,9 @@ The notice library provides comprehensive functionality for displaying notificat
 
 <h3 style="margin-bottom: 5px; font-weight: 700;">Example Usage</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
-<pre><code class="language-lua">  lia.notices.notifyErrorLocalized(player, "command.noPermission")
+<pre><code class="language-lua">  -- Send localized error notification to a specific player
+  lia.notices.notifyErrorLocalized(player, "command.noPermission")
+  -- Send to all players
   lia.notices.notifyErrorLocalized(nil, "server.error", errorCode)
 </code></pre>
 </div>
@@ -185,7 +181,9 @@ The notice library provides comprehensive functionality for displaying notificat
 
 <h3 style="margin-bottom: 5px; font-weight: 700;">Example Usage</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
-<pre><code class="language-lua">  lia.notices.notifySuccessLocalized(player, "quest.completed", questName)
+<pre><code class="language-lua">  -- Send localized success notification to a specific player
+  lia.notices.notifySuccessLocalized(player, "quest.completed", questName)
+  -- Send to all players
   lia.notices.notifySuccessLocalized(nil, "server.update.complete")
 </code></pre>
 </div>
@@ -216,7 +214,9 @@ The notice library provides comprehensive functionality for displaying notificat
 
 <h3 style="margin-bottom: 5px; font-weight: 700;">Example Usage</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
-<pre><code class="language-lua">  lia.notices.notifyMoneyLocalized(player, "money.earned", amount, reason)
+<pre><code class="language-lua">  -- Send localized money notification to a specific player
+  lia.notices.notifyMoneyLocalized(player, "money.earned", amount, reason)
+  -- Send to all players
   lia.notices.notifyMoneyLocalized(nil, "lottery.winner", winnerName, prize)
 </code></pre>
 </div>
@@ -247,7 +247,9 @@ The notice library provides comprehensive functionality for displaying notificat
 
 <h3 style="margin-bottom: 5px; font-weight: 700;">Example Usage</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
-<pre><code class="language-lua">  lia.notices.notifyAdminLocalized(player, "admin.kicked", reason)
+<pre><code class="language-lua">  -- Send localized admin notification to a specific player
+  lia.notices.notifyAdminLocalized(player, "admin.kicked", reason)
+  -- Send to all players
   lia.notices.notifyAdminLocalized(nil, "admin.announcement", message)
 </code></pre>
 </div>
@@ -279,8 +281,11 @@ The notice library provides comprehensive functionality for displaying notificat
 
 <h3 style="margin-bottom: 5px; font-weight: 700;">Example Usage</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
-<pre><code class="language-lua">  lia.notices.notifyLocalized(player, "item.purchased", "success", itemName, price)
+<pre><code class="language-lua">  -- Server-side: Send to specific player
+  lia.notices.notifyLocalized(player, "item.purchased", "success", itemName, price)
+  -- Server-side: Send to all players
   lia.notices.notifyLocalized(nil, "server.restart", "warning", "5")
+  -- Client-side: Display localized notification
   lia.notices.notifyLocalized(nil, "ui.button.clicked", "info")
 </code></pre>
 </div>
@@ -312,8 +317,11 @@ The notice library provides comprehensive functionality for displaying notificat
 
 <h3 style="margin-bottom: 5px; font-weight: 700;">Example Usage</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
-<pre><code class="language-lua">  lia.notices.notify(player, "You have received 100 credits!", "money")
+<pre><code class="language-lua">  -- Server-side: Send to specific player
+  lia.notices.notify(player, "You have received 100 credits!", "money")
+  -- Server-side: Send to all players
   lia.notices.notify(nil, "Server restarting in 5 minutes", "warning")
+  -- Client-side: Display notification
   lia.notices.notify(nil, "Welcome to the server!", "info")
 </code></pre>
 </div>
