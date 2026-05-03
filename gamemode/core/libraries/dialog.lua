@@ -157,6 +157,16 @@ function lia.dialog.getConfiguration(uniqueID)
     return lia.dialog.configurations[uniqueID]
 end
 
+function lia.dialog.resolveDialogTypeIdentifier(value)
+    if not isstring(value) or value == "" or value == "none" then return value end
+    if lia.dialog.stored and lia.dialog.stored[value] then return value end
+    for uniqueID, data in pairs(lia.dialog.stored or {}) do
+        local displayName = lia.lang.resolveToken(data.PrintName or uniqueID)
+        if displayName == value then return uniqueID end
+    end
+    return value
+end
+
 if SERVER then
     --[[
     Purpose:
@@ -680,7 +690,7 @@ else
         ```lua
         properties.Add("CustomNPCConfig", {
             Filter = function(_, ent) return ent:GetClass() == "lia_npc" end,
-            Action = function(_, ent) lia.dialog.openCustomizationUI(ent, "appearance") end
+            Action = function(_, ent) lia.dialog.openConfigurationPicker(ent) end
         })
         ```
 ]]
@@ -881,24 +891,12 @@ else
             animationCombo:SetTall(25)
             animationCombo:DockMargin(0, 0, 0, 10)
             animationCombo:SetValue(selectedAnimation == "auto" and L("npcAnimationAuto") or selectedAnimation)
-            local selectedIndex = 0
-            if selectedAnimation == "auto" then
-                selectedIndex = 1
-            else
-                for i, animName in ipairs(availableAnimations) do
-                    if animName == selectedAnimation then
-                        selectedIndex = i + 1
-                        break
-                    end
-                end
-            end
-
-            animationCombo:ChooseOption(selectedAnimation, selectedIndex)
-            animationCombo:AddChoice(L("npcAnimationAuto"), "auto", selectedAnimation == "auto")
+            animationCombo:AddChoice(L("npcAnimationAuto"), "auto")
             for _, animName in ipairs(availableAnimations) do
-                animationCombo:AddChoice(animName, animName, animName == selectedAnimation)
+                animationCombo:AddChoice(animName, animName)
             end
 
+            animationCombo:ChooseOptionData(selectedAnimation)
             animationCombo.OnSelect = function(_, _, value)
                 selectedAnimation = value
                 if IsValid(npc) and value ~= "auto" then
@@ -919,11 +917,12 @@ else
                     local sequences = npc:GetSequenceList()
                     if sequences and #sequences > 0 then
                         animationCombo:Clear()
-                        animationCombo:AddChoice(L("npcAnimationAuto"), "auto", selectedAnimation == "auto")
+                        animationCombo:AddChoice(L("npcAnimationAuto"), "auto")
                         for _, animName in ipairs(sequences) do
-                            animationCombo:AddChoice(animName, animName, animName == selectedAnimation)
+                            animationCombo:AddChoice(animName, animName)
                         end
 
+                        animationCombo:ChooseOptionData(selectedAnimation)
                         LocalPlayer():notifySuccessLocalized("animationListRefreshed", #sequences)
                     else
                         LocalPlayer():notifyErrorLocalized("noAnimationsFoundForModel")
@@ -965,15 +964,29 @@ else
         dialogTypeCombo:Dock(TOP)
         dialogTypeCombo:SetTall(30)
         dialogTypeCombo:DockMargin(0, 0, 0, 10)
-        dialogTypeCombo:AddChoice(L("noneNoDialog"), "none", currentType == "none" or currentType == nil)
+        dialogTypeCombo:AddChoice(L("noneNoDialog"), "none")
         for uniqueID, data in pairs(lia.dialog.stored) do
             local displayName = lia.lang.resolveToken(data.PrintName or uniqueID)
-            dialogTypeCombo:AddChoice(displayName, uniqueID, uniqueID == currentType)
+            dialogTypeCombo:AddChoice(displayName, uniqueID)
         end
 
+        dialogTypeCombo:ChooseOptionData(currentType or "none")
         dialogTypeCombo:FinishAddingOptions()
         dialogTypeCombo:PostInit()
         dialogTypeCombo.OnSelect = function(_, _, value) selectedDialogType = value end
+        local isCarDealerNPC = currentType == "cardealer" or (IsValid(npc) and npc.uniqueID == "cardealer")
+        if isCarDealerNPC and lia.cardealer and isfunction(lia.cardealer.openCategoryConfigUI) then
+            local categoriesBtn = vgui.Create("liaButton", scroll)
+            categoriesBtn:Dock(TOP)
+            categoriesBtn:SetTall(35)
+            categoriesBtn:SetText("Car Dealer Categories")
+            categoriesBtn:DockMargin(0, 0, 0, 10)
+            categoriesBtn.DoClick = function()
+                frame:Close()
+                lia.cardealer.openCategoryConfigUI(npc)
+            end
+        end
+
         local applyBtn = vgui.Create("liaButton", scroll)
         applyBtn:Dock(TOP)
         applyBtn:SetTall(35)
@@ -997,9 +1010,10 @@ else
 
             if hasAnimations and animationCombo then customData.animation = selectedAnimation end
             lia.dialog.submitConfiguration(configID, npc, customData)
-            if selectedDialogType ~= currentType then
+            local resolvedSelectedDialogType = lia.dialog.resolveDialogTypeIdentifier(selectedDialogType or dialogTypeCombo:GetValue() or "none")
+            if resolvedSelectedDialogType ~= currentType then
                 lia.dialog.submitConfiguration("dialog_type", npc, {
-                    dialogType = selectedDialogType
+                    dialogType = resolvedSelectedDialogType
                 })
             end
 
@@ -1145,12 +1159,13 @@ function lia.dialog.openConfigurationPicker(npc, npcID)
     local primaryConfig = appearanceConfig or configurations[1]
     if primaryConfig and isfunction(primaryConfig.onOpen) then
         if IsValid(lia.dialog.vgui) then lia.dialog.vgui:Remove() end
-        primaryConfig.onOpen(npc, npcID)
         if #otherConfigs > 0 then
             lia.dialog.pendingOtherConfigs = otherConfigs
             lia.dialog.pendingNPC = npc
             lia.dialog.pendingNPCID = npcID
         end
+
+        primaryConfig.onOpen(npc, npcID)
     end
 end
 
@@ -1178,7 +1193,25 @@ if SERVER then
             if not IsValid(npc) then return end
             customData = istable(customData) and customData or {}
             if customData.dialogType then
-                npc.uniqueID = customData.dialogType
+                local resolvedType = lia.dialog.resolveDialogTypeIdentifier(customData.dialogType)
+                local dialogType = resolvedType == "none" and "" or resolvedType
+                npc.uniqueID = dialogType
+                npc:setNetVar("uniqueID", dialogType)
+                if dialogType == "" then
+                    npc.NPCName = L("unconfiguredNPC")
+                    npc:setNetVar("NPCName", npc.NPCName)
+                    hook.Run("UpdateEntityPersistence", npc)
+                    hook.Run("SaveData")
+                    ply:notifySuccessLocalized("npcDialogTypeUpdated")
+                    return
+                end
+
+                local npcData = lia.dialog.getNPCData(dialogType)
+                if npcData and npcData.PrintName then
+                    npc.NPCName = npcData.PrintName
+                    npc:setNetVar("NPCName", npc.NPCName)
+                end
+
                 hook.Run("UpdateEntityPersistence", npc)
                 hook.Run("SaveData")
                 ply:notifySuccessLocalized("npcDialogTypeUpdated")
