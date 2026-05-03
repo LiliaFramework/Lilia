@@ -361,8 +361,8 @@ end
         ```
 ]]
 function entityMeta:isLocked()
-    if not IsValid(self) then return false end
-    return self:getNetVar("locked", false)
+    if self:IsVehicle() then return self:GetInternalVariable("VehicleLocked") end
+    return self:GetInternalVariable("m_bLocked")
 end
 
 --[[
