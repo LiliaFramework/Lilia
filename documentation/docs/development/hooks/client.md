@@ -3780,7 +3780,7 @@ Client-side hooks in the Lilia framework handle UI, rendering, input, and other 
 ---
 
 <details class="realm-client" id="function-shouldrespawnscreenappear">
-<summary><a id="ShouldRespawnScreenAppear"></a>ShouldRespawnScreenAppear()</summary>
+<summary><a id="ShouldRespawnScreenAppear"></a>ShouldRespawnScreenAppear(client, timeLeft, baseTime, lastDeath)</summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="shouldrespawnscreenappear"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -3792,6 +3792,14 @@ Client-side hooks in the Lilia framework handle UI, rendering, input, and other 
   <p>When the client dies and the respawn UI might show.</p>
 </div>
 
+<h3 style="margin-bottom: 5px; font-weight: 700;">Parameters</h3>
+<div style="margin-left: 20px; margin-bottom: 20px;">
+<p><span class="types"><a class="type" href="/development/meta/player/">Player</a></span> <span class="parameter">client</span> Dead local player.</p>
+<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#2.1">number</a></span> <span class="parameter">timeLeft</span> Seconds remaining before respawn is available.</p>
+<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#2.1">number</a></span> <span class="parameter">baseTime</span> Total respawn delay in seconds.</p>
+<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#2.1">number</a></span> <span class="parameter">lastDeath</span> Last recorded death timestamp.</p>
+</div>
+
 <h3 style="margin-bottom: 5px; font-weight: 700;">Returns</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
 <p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#2.1">boolean</a></span> false to suppress; nil/true to display.</p>
@@ -3801,6 +3809,48 @@ Client-side hooks in the Lilia framework handle UI, rendering, input, and other 
 <div style="margin-left: 20px; margin-bottom: 20px;">
 <pre><code class="language-lua">  hook.Add("ShouldRespawnScreenAppear", "ExampleShouldRespawnScreenAppear", function(...)
       -- add custom client-side behavior
+  end)
+</code></pre>
+</div>
+
+</div>
+</details>
+
+---
+
+<details class="realm-client" id="function-onrespawnkeypressed">
+<summary><a id="OnRespawnKeyPressed"></a>OnRespawnKeyPressed(client, key, timeLeft, baseTime, lastDeath)</summary>
+<div class="details-content">
+<h3 style="margin-bottom: 5px; font-weight: 700;"><a id="onrespawnkeypressed"></a>Purpose</h3>
+<div style="margin-left: 20px; margin-bottom: 20px;">
+  <p>Intercept the default respawn key behavior.</p>
+</div>
+
+<h3 style="margin-bottom: 5px; font-weight: 700;">When Called</h3>
+<div style="margin-left: 20px; margin-bottom: 20px;">
+  <p>When the dead player presses the respawn key before the stock request is sent.</p>
+</div>
+
+<h3 style="margin-bottom: 5px; font-weight: 700;">Parameters</h3>
+<div style="margin-left: 20px; margin-bottom: 20px;">
+<p><span class="types"><a class="type" href="/development/meta/player/">Player</a></span> <span class="parameter">client</span> Dead local player.</p>
+<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#2.1">number</a></span> <span class="parameter">key</span> Key code that triggered the input.</p>
+<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#2.1">number</a></span> <span class="parameter">timeLeft</span> Seconds remaining before respawn is available.</p>
+<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#2.1">number</a></span> <span class="parameter">baseTime</span> Total respawn delay in seconds.</p>
+<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#2.1">number</a></span> <span class="parameter">lastDeath</span> Last recorded death timestamp.</p>
+</div>
+
+<h3 style="margin-bottom: 5px; font-weight: 700;">Returns</h3>
+<div style="margin-left: 20px; margin-bottom: 20px;">
+<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#2.1">boolean</a></span> false to suppress the default SPACE-to-respawn behavior.</p>
+</div>
+
+<h3 style="margin-bottom: 5px; font-weight: 700;">Example Usage</h3>
+<div style="margin-left: 20px; margin-bottom: 20px;">
+<pre><code class="language-lua">  hook.Add("OnRespawnKeyPressed", "CustomDeathScreen", function(client, key)
+      if key ~= KEY_SPACE then return end
+      -- open your own death UI or send your own net message here
+      return false
   end)
 </code></pre>
 </div>

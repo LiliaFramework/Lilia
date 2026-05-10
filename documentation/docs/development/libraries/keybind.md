@@ -127,6 +127,55 @@ The keybind library provides comprehensive functionality for managing keyboard b
 
 ---
 
+<details class="realm-client" id="function-liakeybindbuildreservedkeys">
+<summary><a id="lia.keybind.buildReservedKeys"></a>lia.keybind.buildReservedKeys()</summary>
+<div class="details-content">
+<h3 style="margin-bottom: 5px; font-weight: 700;"><a id="liakeybindbuildreservedkeys"></a>Purpose</h3>
+<div style="margin-left: 20px; margin-bottom: 20px;">
+  <p>Dynamically build the set of reserved key codes by resolving
+each GMOD default bind name through input.LookupBinding, then
+allow modules to inject extra reserved keys via the
+"AddReservedKeybinds" hook.</p>
+</div>
+
+<h3 style="margin-bottom: 5px; font-weight: 700;">When Called</h3>
+<div style="margin-left: 20px; margin-bottom: 20px;">
+  <p>Once after keybinds are initialized.</p>
+</div>
+
+</div>
+</details>
+
+---
+
+<details class="realm-client" id="function-liakeybindiskeyreserved">
+<summary><a id="lia.keybind.isKeyReserved"></a>lia.keybind.isKeyReserved(keyCode)</summary>
+<div class="details-content">
+<h3 style="margin-bottom: 5px; font-weight: 700;"><a id="liakeybindiskeyreserved"></a>Purpose</h3>
+<div style="margin-left: 20px; margin-bottom: 20px;">
+  <p>Check whether a key code is reserved by GMOD's current binds.</p>
+</div>
+
+<h3 style="margin-bottom: 5px; font-weight: 700;">When Called</h3>
+<div style="margin-left: 20px; margin-bottom: 20px;">
+  <p>When validating keybind assignments in the UI.</p>
+</div>
+
+<h3 style="margin-bottom: 5px; font-weight: 700;">Parameters</h3>
+<div style="margin-left: 20px; margin-bottom: 20px;">
+<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#2.1">number</a></span> <span class="parameter">keyCode</span> The numeric key code to test.</p>
+</div>
+
+<h3 style="margin-bottom: 5px; font-weight: 700;">Returns</h3>
+<div style="margin-left: 20px; margin-bottom: 20px;">
+<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#2.2">bool</a></span></p>
+</div>
+
+</div>
+</details>
+
+---
+
 <details class="realm-client" id="function-liakeybindget">
 <summary><a id="lia.keybind.get"></a>lia.keybind.get(a, df)</summary>
 <div class="details-content">

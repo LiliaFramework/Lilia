@@ -3494,6 +3494,45 @@ Shared hooks in the Lilia framework handle functionality available on both clien
 
 ---
 
+<details class="realm-shared" id="function-canplayerrespawn">
+<summary><a id="CanPlayerRespawn"></a>CanPlayerRespawn(client, timePassed, baseTime, lastDeath)</summary>
+<div class="details-content">
+<h3 style="margin-bottom: 5px; font-weight: 700;"><a id="canplayerrespawn"></a>Purpose</h3>
+<div style="margin-left: 20px; margin-bottom: 20px;">
+  <p>Control or override whether a respawn request should succeed.</p>
+</div>
+
+<h3 style="margin-bottom: 5px; font-weight: 700;">When Called</h3>
+<div style="margin-left: 20px; margin-bottom: 20px;">
+  <p>When the server receives a player respawn request.</p>
+</div>
+
+<h3 style="margin-bottom: 5px; font-weight: 700;">Parameters</h3>
+<div style="margin-left: 20px; margin-bottom: 20px;">
+<p><span class="types"><a class="type" href="/development/meta/player/">Player</a></span> <span class="parameter">client</span> Player requesting a respawn.</p>
+<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#2.1">number</a></span> <span class="parameter">timePassed</span> <span class="optional">optional</span> Seconds since death, or nil when no death timestamp is available.</p>
+<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#2.1">number</a></span> <span class="parameter">baseTime</span> Total respawn delay in seconds.</p>
+<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#2.1">number</a></span> <span class="parameter">lastDeath</span> <span class="optional">optional</span> Last recorded death timestamp.</p>
+</div>
+
+<h3 style="margin-bottom: 5px; font-weight: 700;">Returns</h3>
+<div style="margin-left: 20px; margin-bottom: 20px;">
+<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#2.1">boolean|nil</a></span> false to block the respawn request, true to force-allow it, nil to use default handling.</p>
+</div>
+
+<h3 style="margin-bottom: 5px; font-weight: 700;">Example Usage</h3>
+<div style="margin-left: 20px; margin-bottom: 20px;">
+<pre><code class="language-lua">  hook.Add("CanPlayerRespawn", "BlockDefaultRespawn", function(client)
+      if client:GetNetVar("customDeathActive") then return false end
+  end)
+</code></pre>
+</div>
+
+</div>
+</details>
+
+---
+
 <details class="realm-shared" id="function-playerthrowpunch">
 <summary><a id="PlayerThrowPunch"></a>PlayerThrowPunch(client)</summary>
 <div class="details-content">
