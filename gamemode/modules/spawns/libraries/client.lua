@@ -4,9 +4,8 @@ local hideKey = false
 local fastFade = false
 local deathTimeReceived = 0
 local lastDeathTimeValue = 0
-function MODULE:HUDPaint()
-    local ply, ft = LocalPlayer(), FrameTime()
-    if not ply:getChar() then return end
+
+local function getRespawnState(ply)
     local baseTime = lia.config.get("SpawnTime", 5)
     baseTime = hook.Run("OverrideSpawnTime", ply, baseTime) or baseTime
     local lastDeath = ply:getLocalVar("lastDeathTime", os.time())
@@ -20,7 +19,14 @@ function MODULE:HUDPaint()
     local left = clamp(baseTime - preciseTimeSinceDeath, 0, baseTime)
     if deathTimeReceived == 0 or preciseTimeSinceDeath < 0 then left = clamp(baseTime - timeSinceDeath, 0, baseTime) end
     if left >= baseTime and not ply:Alive() then left = baseTime end
-    if hook.Run("ShouldRespawnScreenAppear") == false then return end
+    return baseTime, lastDeath, left
+end
+
+function MODULE:HUDPaint()
+    local ply, ft = LocalPlayer(), FrameTime()
+    if not ply:getChar() then return end
+    local baseTime, lastDeath, left = getRespawnState(ply)
+    if hook.Run("ShouldRespawnScreenAppear", ply, left, baseTime, lastDeath) == false then return end
     if ply:getChar() and ply:Alive() then
         if deathTimeReceived > 0 then
             deathTimeReceived = 0
@@ -82,13 +88,8 @@ function MODULE:PlayerButtonDown(client, key)
     local ply = LocalPlayer()
     local char = ply:getChar()
     if key ~= KEY_SPACE or not IsFirstTimePredicted() or not IsValid(ply) or ply ~= client or ply:Alive() or not char then return end
-    local baseTime = lia.config.get("SpawnTime", 5)
-    baseTime = hook.Run("OverrideSpawnTime", ply, baseTime) or baseTime
-    local lastDeath = ply:getLocalVar("lastDeathTime", os.time())
-    local timeSinceDeath = os.time() - lastDeath
-    local preciseTimeSinceDeath = CurTime() - deathTimeReceived
-    local left = math.Clamp(baseTime - preciseTimeSinceDeath, 0, baseTime)
-    if deathTimeReceived == 0 or preciseTimeSinceDeath < 0 then left = math.Clamp(baseTime - timeSinceDeath, 0, baseTime) end
+    local baseTime, lastDeath, left = getRespawnState(ply)
+    if hook.Run("OnRespawnKeyPressed", ply, key, left, baseTime, lastDeath) == false then return end
     if left > 0 then return end
     fastFade = true
     net.Start("liaPlayerRespawn")

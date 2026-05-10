@@ -5,6 +5,17 @@
     local baseTime = lia.config.get("SpawnTime", 5)
     baseTime = hook.Run("OverrideSpawnTime", client, baseTime) or baseTime
     local lastDeath = client:getLocalVar("lastDeathTime")
+    local timePassed = lastDeath and lastDeath ~= 0 and os.time() - lastDeath or nil
+    local canRespawn = hook.Run("CanPlayerRespawn", client, timePassed, baseTime, lastDeath)
+    if canRespawn == false then
+        lia.log.add(client, "respawn", "Respawn blocked by CanPlayerRespawn")
+        return
+    elseif canRespawn == true then
+        client.liaIsRespawning = true
+        client:Spawn()
+        return
+    end
+
     if not lastDeath or lastDeath == 0 then
         client.liaIsRespawning = true
         client:Spawn()
@@ -12,7 +23,7 @@
         return
     end
 
-    local timePassed = os.time() - lastDeath
+    timePassed = os.time() - lastDeath
     if timePassed >= baseTime then
         client.liaIsRespawning = true
         client:Spawn()
