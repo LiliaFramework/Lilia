@@ -2843,6 +2843,40 @@ end
 
 --[[
     Purpose:
+        Control or override whether a respawn request should succeed.
+
+    When Called:
+        When the server receives a player respawn request.
+
+    Parameters:
+        client (Player)
+            Player requesting a respawn.
+        timePassed (number|nil)
+            Seconds since death, or nil when no death timestamp is available.
+        baseTime (number)
+            Total respawn delay in seconds.
+        lastDeath (number|nil)
+            Last recorded death timestamp.
+
+    Returns:
+        boolean|nil
+            false to block the respawn request, true to force-allow it, nil to use default handling.
+
+    Realm:
+        Shared
+
+    Example Usage:
+        ```lua
+        hook.Add("CanPlayerRespawn", "BlockDefaultRespawn", function(client)
+            if client:GetNetVar("customDeathActive") then return false end
+        end)
+        ```
+]]
+function CanPlayerRespawn(client, timePassed, baseTime, lastDeath)
+end
+
+--[[
+    Purpose:
         Perform post-punch logic such as stamina consumption.
 
     When Called:

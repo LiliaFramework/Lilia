@@ -3094,7 +3094,14 @@ end
         When the client dies and the respawn UI might show.
 
     Parameters:
-        None
+        client (Player)
+            Dead local player.
+        timeLeft (number)
+            Seconds remaining before respawn is available.
+        baseTime (number)
+            Total respawn delay in seconds.
+        lastDeath (number)
+            Last recorded death timestamp.
 
     Returns:
         boolean
@@ -3110,7 +3117,45 @@ end
             end)
         ```
 ]]
-function ShouldRespawnScreenAppear()
+function ShouldRespawnScreenAppear(client, timeLeft, baseTime, lastDeath)
+end
+
+--[[
+    Purpose:
+        Intercept the default respawn key behavior.
+
+    When Called:
+        When the dead player presses the respawn key before the stock request is sent.
+
+    Parameters:
+        client (Player)
+            Dead local player.
+        key (number)
+            Key code that triggered the input.
+        timeLeft (number)
+            Seconds remaining before respawn is available.
+        baseTime (number)
+            Total respawn delay in seconds.
+        lastDeath (number)
+            Last recorded death timestamp.
+
+    Returns:
+        boolean
+            false to suppress the default SPACE-to-respawn behavior.
+
+    Realm:
+        Client
+
+    Example Usage:
+        ```lua
+            hook.Add("OnRespawnKeyPressed", "CustomDeathScreen", function(client, key)
+                if key ~= KEY_SPACE then return end
+                -- open your own death UI or send your own net message here
+                return false
+            end)
+        ```
+]]
+function OnRespawnKeyPressed(client, key, timeLeft, baseTime, lastDeath)
 end
 
 --[[

@@ -88,11 +88,15 @@ local KeybindKeys = {
     ["escape"] = KEY_ESCAPE,
     ["scrolllock"] = KEY_SCROLLLOCK,
     ["insert"] = KEY_INSERT,
+    ["ins"] = KEY_INSERT,
     ["delete"] = KEY_DELETE,
+    ["del"] = KEY_DELETE,
     ["home"] = KEY_HOME,
     ["end"] = KEY_END,
     ["pageup"] = KEY_PAGEUP,
+    ["pgup"] = KEY_PAGEUP,
     ["pagedown"] = KEY_PAGEDOWN,
+    ["pgdn"] = KEY_PAGEDOWN,
     ["break"] = KEY_BREAK,
     ["lshift"] = KEY_LSHIFT,
     ["rshift"] = KEY_RSHIFT,
@@ -438,6 +442,63 @@ lia.keybind.add("convertEntity", {
 })
 
 if CLIENT then
+    --[[
+        GMODDefaultBindNames
+
+        List of GMOD console bind names to dynamically resolve via
+        input.LookupBinding. The returned key for each bind is
+        blocked from custom keybind assignment.
+    ]]
+    local GMODDefaultBindNames = {"+forward", "+back", "+moveleft", "+moveright", "+use", "+jump", "+duck", "+walk", "+speed", "+reload", "impulse 100", "+showscores", "messagemode", "messagemode2", "+menu_context", "+menu", "slot1", "slot2", "slot3", "slot4", "slot5", "slot6", "slot7", "slot8", "slot9", "slot0", "undo", "+zoom",}
+    --[[
+        Purpose:
+            Dynamically build the set of reserved key codes by resolving
+            each GMOD default bind name through input.LookupBinding, then
+            allow modules to inject extra reserved keys via the
+            "AddReservedKeybinds" hook.
+
+        When Called:
+            Once after keybinds are initialized.
+
+        Realm:
+            Client
+    ]]
+    function lia.keybind.buildReservedKeys()
+        local reserved = {}
+        for _, bindName in ipairs(GMODDefaultBindNames) do
+            local keyName = input.LookupBinding(bindName)
+            if isstring(keyName) and keyName ~= "" then
+                local code = KeybindKeys[string.lower(keyName)]
+                if isnumber(code) and code ~= KEY_NONE then reserved[code] = true end
+            end
+        end
+
+        hook.Run("AddReservedKeybinds", reserved)
+        lia.keybind.reservedKeys = reserved
+    end
+
+    --[[
+        Purpose:
+            Check whether a key code is reserved by GMOD's current binds.
+
+        When Called:
+            When validating keybind assignments in the UI.
+
+        Parameters:
+            keyCode (number)
+                The numeric key code to test.
+
+        Returns:
+            bool
+
+        Realm:
+            Client
+    ]]
+    function lia.keybind.isKeyReserved(keyCode)
+        if not lia.keybind.reservedKeys then return false end
+        return lia.keybind.reservedKeys[keyCode] == true
+    end
+
     hook.Add("PlayerButtonDown", "liaKeybindPress", function(p, b)
         local action = lia.keybind.stored[b]
         if not IsFirstTimePredicted() then return end
@@ -529,8 +590,11 @@ if CLIENT then
             if istable(v) and v.value then d[k] = v.value end
         end
 
-        local j = util.TableToJSON(d, true)
-        if j then file.Write(path, j) end
+        local j = util.TableToJSON(d)
+        if j then
+            local ok = file.Write(path, j)
+            MsgC(Color(255, 200, 0), "[Keybind Save] " .. path .. " | " .. tostring(ok) .. " | " .. j .. "\n")
+        end
     end
 
     --[[
@@ -553,10 +617,14 @@ if CLIENT then
     function lia.keybind.load()
         local path = "lilia/keybinds.json"
         local d = file.Read(path, "DATA")
+        MsgC(Color(100, 255, 100), "[Keybind Load] File exists: " .. tostring(d ~= nil) .. "\n")
         if d then
+            MsgC(Color(100, 255, 100), "[Keybind Load] Raw: " .. d .. "\n")
             local s = util.JSONToTable(d)
+            MsgC(Color(100, 255, 100), "[Keybind Load] Parsed: " .. tostring(s ~= nil) .. "\n")
             if s then
                 for k, v in pairs(s) do
+                    MsgC(Color(100, 255, 100), "[Keybind Load] " .. tostring(k) .. " = " .. tostring(v) .. " (" .. type(v) .. ")\n")
                     if lia.keybind.stored[k] then
                         if isstring(v) then
                             local keyCode = KeybindKeys[string.lower(v)]
@@ -577,7 +645,7 @@ if CLIENT then
                 if istable(v) and v.value then out[k] = v.value end
             end
 
-            local json = util.TableToJSON(out, true)
+            local json = util.TableToJSON(out)
             if json then file.Write(path, json) end
         end
 
@@ -589,6 +657,7 @@ if CLIENT then
             if istable(data) and data.value then lia.keybind.stored[data.value] = action end
         end
 
+        lia.keybind.buildReservedKeys()
         hook.Run("InitializedKeybinds")
     end
 
@@ -709,7 +778,8 @@ if CLIENT then
                     combo:AddChoice(c.txt, c.keycode)
                 end
 
-                combo.OnSelect = function(_, _, newKey)
+                combo.OnSelect = function(_, index, text, keyCode)
+                    local newKey = keyCode
                     if newKey == nil then return end
                     if isstring(newKey) then
                         local code = KeybindKeys[string.lower(newKey)]
@@ -727,6 +797,7 @@ if CLIENT then
 
                     local keybindData = lia.keybind.stored[action]
                     local oldKey = keybindData.value
+                    MsgC(Color(0, 200, 255), "[Keybind Select] action=" .. tostring(action) .. " text=" .. tostring(text) .. " newKey=" .. tostring(newKey) .. " oldKey=" .. tostring(oldKey) .. "\n")
                     if isnumber(oldKey) and oldKey ~= KEY_NONE and lia.keybind.stored[oldKey] == action then lia.keybind.stored[oldKey] = nil end
                     keybindData.value = newKey
                     if isnumber(newKey) and newKey ~= KEY_NONE then lia.keybind.stored[newKey] = action end
@@ -765,8 +836,12 @@ if CLIENT then
                 scroll:GetCanvas():DockPadding(10, 10, 10, 10)
                 local function populate(filter)
                     local taken = {}
+                    local actionCount = 0
                     for action, data in pairs(lia.keybind.stored) do
-                        if istable(data) and data.value then taken[data.value] = action end
+                        if istable(data) and data.value then
+                            taken[data.value] = action
+                            actionCount = actionCount + 1
+                        end
                     end
 
                     scroll:Clear()

@@ -197,6 +197,9 @@ function lia.class.canBe(client, class)
     if character and character:getClass() == class then return false, L("alreadyInClass") end
     local currentCount = #lia.class.getPlayers(info.index)
     if info.limit > 0 and currentCount >= info.limit then return false, L("classFull") end
+    if info.isDefault == false and lia.class.hasWhitelist(class) and character and not character:getClasswhitelists()[class] then
+        return false, L("classWhitelistRequired")
+    end
     local hookResult = hook.Run("CanPlayerJoinClass", client, class, info)
     if hookResult == false then return false end
     if info.OnCanBe then
@@ -363,7 +366,8 @@ function lia.class.hasWhitelist(class)
     local info = lia.class.list[class]
     if not info then return false end
     if info.isDefault then return false end
-    return info.isWhitelisted
+    if info.isWhitelisted ~= nil then return info.isWhitelisted end
+    return true
 end
 
 --[[
