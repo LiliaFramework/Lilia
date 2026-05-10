@@ -918,11 +918,16 @@ function PANEL:addJoinButton(parent, cl, canBe)
     local classModels = cl.model or cl.models
     local hasModelChoices = istable(classModels)
     local isCurrent = LocalPlayer():getChar() and LocalPlayer():getChar():getClass() == cl.index
+    local isNonDefault = cl.isDefault == false
     local btn = parent:Add("liaMediumButton")
     if isCurrent and hasModelChoices then
         btn:SetText(L("changeModel"))
+    elseif isCurrent then
+        btn:SetText(L("alreadyInClass"))
+    elseif not canBe and isNonDefault then
+        btn:SetText(L("classRequirementsNotMet"))
     else
-        btn:SetText(isCurrent and L("alreadyInClass") or L("joinClass"))
+        btn:SetText(L("joinClass"))
     end
 
     btn:SetTall(45)
