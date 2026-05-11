@@ -118,9 +118,7 @@ function PANEL:AddOption(text, func, icon, optData)
     option._cachedIconMat = nil
     local function syncOptionImage(newIcon)
         if not newIcon then
-            if IsValid(option.m_Image) then
-                option.m_Image:Remove()
-            end
+            if IsValid(option.m_Image) then option.m_Image:Remove() end
             option.m_Image = nil
             return
         end
@@ -261,7 +259,6 @@ function PANEL:AddOption(text, func, icon, optData)
             end
 
             if submenu.RunDeferredBuild then submenu:RunDeferredBuild() end
-
             local parentX, parentY = self:LocalToScreen(self:GetWide(), 0)
             local submenuWidth, submenuHeight = submenu:GetSize()
             local screenWidth, screenHeight = ScrW(), ScrH()
@@ -345,9 +342,7 @@ function PANEL:AddOption(text, func, icon, optData)
         if not IsValid(self.m_Image) then return end
         h = h or self:GetTall()
         local textPadding = 14
-        if self._isCheckable then
-            textPadding = textPadding + 16 + 8
-        end
+        if self._isCheckable then textPadding = textPadding + 16 + 8 end
         local iconSize = 16
         self.m_Image:SetSize(iconSize, iconSize)
         self.m_Image:SetPos(textPadding, math.floor((h - iconSize) * 0.5))
@@ -487,6 +482,7 @@ function PANEL:RunDeferredBuild()
     for _, builder in ipairs(builders) do
         builder(self)
     end
+
     self:UpdateSize()
 end
 
