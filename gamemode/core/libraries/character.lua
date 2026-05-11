@@ -591,7 +591,13 @@ lia.char.registerVar("faction", {
         return true
     end,
     onGet = function(character, default)
-        local faction = lia.faction.teams[character.vars.faction]
+        local factionValue = character.vars.faction
+        local faction = lia.faction.teams[factionValue]
+        if not faction then
+            local factionIndex = tonumber(factionValue)
+            if factionIndex then faction = lia.faction.indices[factionIndex] end
+        end
+
         return faction and faction.index or default or 0
     end,
     onValidate = function(value, _, client)

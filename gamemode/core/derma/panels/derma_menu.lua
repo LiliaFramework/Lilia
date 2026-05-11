@@ -116,9 +116,29 @@ function PANEL:AddOption(text, func, icon, optData)
     option.OnMousePressed = function(_, keyCode) if keyCode == MOUSE_LEFT then option:DoClick() end end
     option.IconWidth = icon and 16 or 0
     option._cachedIconMat = nil
+    local function syncOptionImage(newIcon)
+        if not newIcon then
+            if IsValid(option.m_Image) then
+                option.m_Image:Remove()
+            end
+            option.m_Image = nil
+            return
+        end
+
+        if not IsValid(option.m_Image) then
+            option.m_Image = vgui.Create("DImage", option)
+            option.m_Image:SetMouseInputEnabled(false)
+        end
+
+        option.m_Image:SetImage(newIcon)
+        option.m_Image:SizeToContents()
+        option:InvalidateLayout(true)
+    end
+
     function option:SetImage(newIcon)
         option.Icon = newIcon
         option._cachedIconMat = nil
+        syncOptionImage(newIcon)
         local newIconWidth = newIcon and 16 or 0
         if IsValid(option:GetParent()) then
             local parent = option:GetParent()
@@ -240,6 +260,8 @@ function PANEL:AddOption(text, func, icon, optData)
                 if IsValid(sibling) and sibling ~= self and sibling.CloseSubMenu then sibling:CloseSubMenu() end
             end
 
+            if submenu.RunDeferredBuild then submenu:RunDeferredBuild() end
+
             local parentX, parentY = self:LocalToScreen(self:GetWide(), 0)
             local submenuWidth, submenuHeight = submenu:GetSize()
             local screenWidth, screenHeight = ScrW(), ScrH()
@@ -319,6 +341,19 @@ function PANEL:AddOption(text, func, icon, optData)
         end
     end
 
+    function option:PerformLayout(w, h)
+        if not IsValid(self.m_Image) then return end
+        w = w or self:GetWide()
+        h = h or self:GetTall()
+        local textPadding = 14
+        if self._isCheckable then
+            textPadding = textPadding + 16 + 8
+        end
+        local iconSize = 16
+        self.m_Image:SetSize(iconSize, iconSize)
+        self.m_Image:SetPos(textPadding, math.floor((h - iconSize) * 0.5))
+    end
+
     option.Paint = function(pnl, w, h)
         w = w or pnl:GetWide()
         h = h or pnl:GetTall()
@@ -383,7 +418,10 @@ function PANEL:AddOption(text, func, icon, optData)
             textPadding = textPadding + checkboxSize + 8
         end
 
-        if iconMat then
+        if IsValid(pnl.m_Image) then
+            pnl.m_Image:SetVisible(true)
+            pnl:PerformLayout(w, h)
+        elseif iconMat then
             local iconSize = 16
             lia.derma.drawSurfaceTexture(iconMat, color_white, textPadding, (h - iconSize) * 0.5, iconSize, iconSize)
         end
@@ -411,6 +449,7 @@ function PANEL:AddOption(text, func, icon, optData)
     end
 
     table.insert(self.Items, option)
+    if icon then option:SetImage(icon) end
     self:UpdateSize()
     return option
 end
@@ -427,6 +466,29 @@ function PANEL:AddSpacer()
     table.insert(self.Items, spacer)
     self:UpdateSize()
     return spacer
+end
+
+function PANEL:SetDeferredBuild(builder)
+    self._deferredBuilders = builder and {builder} or nil
+    self._deferredBuilt = false
+end
+
+function PANEL:AppendDeferredBuild(builder)
+    if not isfunction(builder) then return end
+    self._deferredBuilders = self._deferredBuilders or {}
+    self._deferredBuilders[#self._deferredBuilders + 1] = builder
+    self._deferredBuilt = false
+end
+
+function PANEL:RunDeferredBuild()
+    if self._deferredBuilt or not self._deferredBuilders or #self._deferredBuilders == 0 then return end
+    self._deferredBuilt = true
+    local builders = self._deferredBuilders
+    self._deferredBuilders = nil
+    for _, builder in ipairs(builders) do
+        builder(self)
+    end
+    self:UpdateSize()
 end
 
 function PANEL:AddSubMenu(text, func, icon)
@@ -503,6 +565,7 @@ function PANEL:UpdateSize()
 end
 
 function PANEL:Open(x, y, skipanimation, ownerpanel)
+    print(string.format("[liaDermaMenu] PANEL:Open self=%s class=%s x=%s y=%s owner=%s", tostring(self), tostring(self.ClassName or self:GetName()), tostring(x), tostring(y), tostring(ownerpanel)))
     if RegisterDermaMenuForClose then RegisterDermaMenuForClose(self) end
     if x and y then
         self:SetPos(x, y)
@@ -767,7 +830,27 @@ vgui.Register("liaDermaMenu", PANEL, "DPanel")
 if not _liaDermaMenuOverride then
     _liaDermaMenuOverride = true
     local oldDermaMenu = DermaMenu
+    local function shouldUseOriginalDermaMenu()
+        local info = debug.getinfo(3, "S") or debug.getinfo(2, "S")
+        local src = info and info.short_src or ""
+        src = string.lower(src)
+        return src:find("vgui/dmenubar.lua", 1, true) ~= nil or src:find("spawnmenu", 1, true) ~= nil or src:find("creationmenu", 1, true) ~= nil or src:find("controlpanel", 1, true) ~= nil
+    end
+
     function DermaMenu(parentmenu, parent)
+        local info = debug.getinfo(2, "Sln")
+        local src = info and info.short_src or "unknown"
+        local line = info and info.currentline or -1
+        local useOriginal = oldDermaMenu and type(oldDermaMenu) == "function" and shouldUseOriginalDermaMenu()
+        print(string.format("[Lilia DermaMenu] caller=%s:%s parentmenu=%s parent=%s useOriginal=%s", tostring(src), tostring(line), tostring(parentmenu), tostring(parent), tostring(useOriginal)))
+        if useOriginal then
+            local menu = oldDermaMenu(parentmenu, parent)
+            local menuName = IsValid(menu) and (menu.ClassName or menu:GetName()) or type(menu)
+            local hasOpen = IsValid(menu) and isfunction(menu.Open)
+            print(string.format("[Lilia DermaMenu] original returned=%s class=%s hasOpen=%s", tostring(menu), tostring(menuName), tostring(hasOpen)))
+            return menu
+        end
+
         if not parentmenu then
             if oldDermaMenu and type(oldDermaMenu) == "function" then
                 oldDermaMenu(false)
@@ -785,6 +868,10 @@ if not _liaDermaMenuOverride then
                 return vgui.Create("DMenu", parent)
             end
         end
+
+        local menuName = menu.ClassName or menu:GetName()
+        local hasOpen = isfunction(menu.Open)
+        print(string.format("[Lilia DermaMenu] custom returned=%s class=%s hasOpen=%s", tostring(menu), tostring(menuName), tostring(hasOpen)))
         return menu
     end
 end

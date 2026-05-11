@@ -334,11 +334,11 @@ lia.keybind.add("adminMode", {
             end
         else
             local currentChar = client:getChar()
-            if currentChar and currentChar:getFaction() ~= "staff" then client.ReturnPosition = client:GetPos() end
+            if currentChar and currentChar:getFaction() ~= FACTION_STAFF then client.ReturnPosition = client:GetPos() end
             lia.db.query(string.format("SELECT * FROM lia_characters WHERE steamID = \"%s\"", lia.db.escape(steamID)), function(data)
                 for _, row in ipairs(data) do
                     local id = tonumber(row.id)
-                    if row.faction == "staff" then
+                    if row.faction == "staff" or tonumber(row.faction) == FACTION_STAFF then
                         client.oldCharID = client:getChar():getID()
                         net.Start("liaAdminModeSwapCharacter")
                         net.WriteInt(id, 32)
@@ -353,7 +353,7 @@ lia.keybind.add("adminMode", {
                         steamID = steamID,
                         name = client:steamName(),
                         desc = "",
-                        faction = "staff",
+                        faction = FACTION_STAFF,
                         model = lia.faction.indices["staff"] and lia.faction.indices["staff"].models[1] or "models/Humans/Group02/male_07.mdl"
                     }
 
