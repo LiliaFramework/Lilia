@@ -223,7 +223,7 @@ end
 
 function MODULE:CanPlayerSwitchChar(client, currentCharacter, newCharacter)
     local faction = lia.faction.indices[newCharacter:getFaction()]
-    if self:CheckFactionLimitReached(faction, newCharacter, client) then return false, L("limitFaction") end
+    if faction and self:CheckFactionLimitReached(faction, newCharacter, client) then return false, L("limitFaction") end
 end
 
 net.Receive("liaRequestFactionMembers", function(_, client)
