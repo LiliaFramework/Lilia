@@ -343,7 +343,6 @@ function PANEL:AddOption(text, func, icon, optData)
 
     function option:PerformLayout(w, h)
         if not IsValid(self.m_Image) then return end
-        w = w or self:GetWide()
         h = h or self:GetTall()
         local textPadding = 14
         if self._isCheckable then

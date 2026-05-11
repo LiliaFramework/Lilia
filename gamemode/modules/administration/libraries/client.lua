@@ -41,12 +41,6 @@ local subMenuIcons = {
     permissions = "icon16/key.png",
 }
 
-local adminStickDebugCVar = CreateClientConVar("lia_debug_adminstick", "0", true, false, "Enable clientside admin stick timing debug output")
-local function adminStickDebug(fmt, ...)
-    if not adminStickDebugCVar:GetBool() then return end
-    MsgC(Color(255, 200, 0), "[Lilia AdminStick Debug] ", color_white, string.format(fmt, ...), "\n")
-end
-
 local function hasAdminStickGeneratedLists(target)
     local lists = {}
     hook.Run("GetAdminStickLists", target, lists)
@@ -1874,7 +1868,6 @@ local function hasAdminStickTargetClass(class)
 end
 
 function MODULE:OpenAdminStickUI(tgt)
-    local totalStart = SysTime()
     local cl = LocalPlayer()
     if not IsValid(tgt) or not tgt:isDoor() and not tgt:IsPlayer() and not tgt.isStorageEntity and not hasAdminStickTargetClass(tgt:GetClass()) then return end
     if not (cl:hasPrivilege("alwaysSpawnAdminStick") or cl:isStaffOnDuty()) then return end
@@ -1909,7 +1902,6 @@ function MODULE:OpenAdminStickUI(tgt)
 
     local tgtClass = tgt:GetClass()
     local cmds = {}
-    local commandScanStart = SysTime()
     for k, v in pairs(lia.command.list) do
         if v.AdminStick and istable(v.AdminStick) and not v.realCommand then
             local tc = v.AdminStick.TargetClass
@@ -1932,19 +1924,14 @@ function MODULE:OpenAdminStickUI(tgt)
             end
         end
     end
-    adminStickDebug("Command scan for %s took %.2f ms and found %d commands", tgtClass, (SysTime() - commandScanStart) * 1000, #cmds)
-
     if #cmds > 0 then hasOptions = true end
     if IsValid(tgt) and tgt.isStorageEntity then hasOptions = true end
     if not hasOptions then
-        local generatedListsStart = SysTime()
         local generatedLists = hasAdminStickGeneratedLists(tgt)
-        adminStickDebug("Generated-list probe for %s took %.2f ms and returned %s", tgtClass, (SysTime() - generatedListsStart) * 1000, tostring(generatedLists))
         if generatedLists then hasOptions = true end
     end
 
     if not hasOptions then
-        adminStickDebug("No admin stick options for %s after %.2f ms", tgtClass, (SysTime() - totalStart) * 1000)
         cl:notifyInfoLocalized("noOptionsAvailable")
         return
     end
@@ -2106,25 +2093,14 @@ function MODULE:OpenAdminStickUI(tgt)
         menu:AddSpacer()
     end
 
-    local organizedMenuStart = SysTime()
     CreateOrganizedAdminStickMenu(tgt, stores, menu)
-    adminStickDebug("CreateOrganizedAdminStickMenu for %s took %.2f ms", tgtClass, (SysTime() - organizedMenuStart) * 1000)
     if tgt:IsPlayer() then
-        local adminMenuStart = SysTime()
         IncludeAdminMenu(tgt, menu, stores)
-        adminStickDebug("IncludeAdminMenu for %s took %.2f ms", tgt:Nick(), (SysTime() - adminMenuStart) * 1000)
-        local characterManagementStart = SysTime()
         IncludeCharacterManagement(tgt, menu, stores)
-        adminStickDebug("IncludeCharacterManagement for %s took %.2f ms", tgt:Nick(), (SysTime() - characterManagementStart) * 1000)
-        local flagManagementStart = SysTime()
         IncludeFlagManagement(tgt, menu, stores)
-        adminStickDebug("IncludeFlagManagement for %s took %.2f ms", tgt:Nick(), (SysTime() - flagManagementStart) * 1000)
-        local teleportationStart = SysTime()
         IncludeTeleportation(tgt, menu, stores)
-        adminStickDebug("IncludeTeleportation for %s took %.2f ms", tgt:Nick(), (SysTime() - teleportationStart) * 1000)
     end
 
-    local commandBuildStart = SysTime()
     table.sort(cmds, function(a, b) return a.name < b.name end)
     local categorizedCommands = {}
     local uncategorizedCommands = {}
@@ -2163,10 +2139,7 @@ function MODULE:OpenAdminStickUI(tgt)
             end):SetIcon(ic)
         end
     end
-    adminStickDebug("Command menu population for %s took %.2f ms (%d categorized groups, %d uncategorized commands)", tgtClass, (SysTime() - commandBuildStart) * 1000, table.Count(categorizedCommands), #uncategorizedCommands)
-
     hook.Add("GetAdminStickLists", "liaDefaultAdminStickLists", function(target, lists)
-        local listBuildStart = SysTime()
         local client = LocalPlayer()
         local canFaction = client:hasPrivilege("manageTransfers")
         local canClass = client:hasPrivilege("manageClasses")
@@ -2412,11 +2385,9 @@ function MODULE:OpenAdminStickUI(tgt)
             end
         end
 
-        adminStickDebug("GetAdminStickLists for %s took %.2f ms and produced %d top-level lists", IsValid(target) and target:GetClass() or "invalid", (SysTime() - listBuildStart) * 1000, #lists)
     end)
 
     hook.Add("PopulateAdminStick", "liaAddAdminStickLists", function(currentMenu, currentTarget, currentStores)
-        local populateListsStart = SysTime()
         local optionsAdded = 0
         local lists = {}
         hook.Run("GetAdminStickLists", currentTarget, lists)
@@ -2467,12 +2438,9 @@ function MODULE:OpenAdminStickUI(tgt)
                 end
             end)
         end
-        adminStickDebug("liaAddAdminStickLists for %s took %.2f ms and added %d options across %d lists", IsValid(currentTarget) and currentTarget:GetClass() or "invalid", (SysTime() - populateListsStart) * 1000, optionsAdded, #lists)
     end)
 
-    local populateHookStart = SysTime()
     hook.Run("PopulateAdminStick", menu, tgt, stores)
-    adminStickDebug("PopulateAdminStick hook for %s took %.2f ms", tgtClass, (SysTime() - populateHookStart) * 1000)
     finishAdminStickMenuBatch(batchState)
     function menu:OnRemove()
         if AdminStickMenu == self then
@@ -2511,7 +2479,6 @@ function MODULE:OpenAdminStickUI(tgt)
             end
         end)
     end
-    adminStickDebug("OpenAdminStickUI total for %s took %.2f ms", tgtClass, (SysTime() - totalStart) * 1000)
 end
 
 local currentCategoryData = {}
