@@ -4229,7 +4229,7 @@ Server-side hooks in the Lilia framework handle server-side logic, data persiste
 <h3 style="margin-bottom: 5px; font-weight: 700;">Example Usage</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
 <pre><code class="language-lua">  hook.Add("PlayerStaminaLost", "WarnLowStamina", function(client)
-      if client:getLocalVar("stm", 100) &lt; 10 then client:notifyLocalized("lowStamina") end
+      if client:getLocalVar("stamina", 100) &lt; 10 then client:notifyLocalized("lowStamina") end
   end)
 </code></pre>
 </div>

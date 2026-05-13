@@ -16,17 +16,20 @@ function PANEL:Init()
     self._scrollPanel = nil
     self._usingScroll = false
     if RegisterDermaMenuForClose then RegisterDermaMenuForClose(self) end
+    local function isMenuTreeHovered(menu)
+        if not IsValid(menu) then return false end
+        if menu:IsHovered() or menu:IsChildHovered() then return true end
+        for _, item in ipairs(menu.Items or {}) do
+            local submenu = IsValid(item) and item._submenu
+            if IsValid(submenu) and item._submenu_open and isMenuTreeHovered(submenu) then return true end
+        end
+        return false
+    end
+
     self.Think = function()
         if CurTime() - self._openTime < 0.1 then return end
         if (input.IsMouseDown(MOUSE_LEFT) or input.IsMouseDown(MOUSE_RIGHT)) and not self:IsChildHovered() then
-            local anySubmenuHovered = false
-            for _, item in ipairs(self.Items or {}) do
-                if IsValid(item) and item._submenu and item._submenu_open and IsValid(item._submenu) and item._submenu:IsHovered() then
-                    anySubmenuHovered = true
-                    break
-                end
-            end
-
+            local anySubmenuHovered = isMenuTreeHovered(self)
             if not anySubmenuHovered then
                 if self.deleteSelf ~= false then
                     self:Remove()

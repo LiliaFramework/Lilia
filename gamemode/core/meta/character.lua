@@ -577,7 +577,7 @@ if SERVER then
 
     Example Usage:
         ```lua
-            char:updateAttrib("stm", 5)
+            char:updateAttrib("stamina", 5)
         ```
 ]]
     function characterMeta:updateAttrib(key, value)

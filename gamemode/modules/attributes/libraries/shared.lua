@@ -25,7 +25,7 @@
             if value == 0 and not client:getLocalVar("brth", false) then
                 client:setLocalVar("brth", true)
                 char:updateAttrib("end", 0.1)
-                char:updateAttrib("stm", 0.01)
+                char:updateAttrib("stamina", 0.01)
                 hook.Run("PlayerStaminaLost", client)
             elseif value >= 50 and client:getLocalVar("brth", false) then
                 client:setLocalVar("brth", nil)

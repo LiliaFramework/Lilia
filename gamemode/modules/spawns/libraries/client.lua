@@ -4,6 +4,7 @@ local hideKey = false
 local fastFade = false
 local deathTimeReceived = 0
 local lastDeathTimeValue = 0
+
 local function getRespawnState(ply)
     local baseTime = lia.config.get("SpawnTime", 5)
     baseTime = hook.Run("OverrideSpawnTime", ply, baseTime) or baseTime

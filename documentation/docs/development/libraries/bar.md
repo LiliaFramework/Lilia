@@ -79,7 +79,7 @@ The bars library provides a comprehensive system for creating and managing dynam
 <pre><code class="language-lua">  -- Add a stamina bar that fades after inactivity.
   lia.bar.add(function()
       local client = LocalPlayer()
-      local stamina = client:getLocalVar("stm", 100)
+      local stamina = client:getLocalVar("stamina", 100)
       return math.Clamp(stamina / 100, 0, 1)
   end, Color(120, 200, 80), 2, "stamina")
 </code></pre>

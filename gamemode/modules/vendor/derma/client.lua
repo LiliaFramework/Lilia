@@ -1095,32 +1095,6 @@ function PANEL:Init()
     self:MakePopup()
     self:Center()
     self:SetTitle(L("vendorEditor"))
-    self.name = self:Add("liaEntry")
-    self.name:Dock(TOP)
-    self.name:SetPlaceholderText(L("name"))
-    self.name:SetValue(entity:getName())
-    self.name.action = function(value)
-        local currentName = lia.vendor.getVendorProperty(entity, "name")
-        if currentName ~= value then
-            if not value or value == "" then value = L("vendorDefaultName") end
-            if not self.name.processing then
-                self.name.processing = true
-                lia.vendor.editor.name(value)
-                timer.Simple(0.1, function() if IsValid(self) and IsValid(self.name) then self.name.processing = false end end)
-            end
-        end
-    end
-
-    self.model = self:Add("liaEntry")
-    self.model:Dock(TOP)
-    self.model:DockMargin(0, 4, 0, 0)
-    self.model:SetPlaceholderText(L("model"))
-    self.model:SetValue(entity:GetModel())
-    self.model.action = function(value)
-        local modelText = value:lower()
-        if entity:GetModel():lower() ~= modelText then lia.vendor.editor.model(modelText) end
-    end
-
     self.backgroundPanel = self:Add("DPanel")
     self.backgroundPanel:Dock(FILL)
     self.backgroundPanel:SetPaintBackground(false)
@@ -1261,38 +1235,57 @@ end
 
 function PANEL:initializeGeneralInfoPanel(entity)
     if not IsValid(entity) or not IsValid(self.generalScroll) then return end
-    if not IsValid(self.nameLabel) then
-        self.nameLabel = self.generalScroll:Add("DLabel")
-        self.nameLabel:Dock(TOP)
-        self.nameLabel:DockMargin(0, 0, 0, 6)
-        self.nameLabel:SetText(L("name"))
-        self.nameLabel:SetFont("LiliaFont.20b")
-        self.nameLabel:SetTextColor(lia.color.theme.text or color_white)
-        self.nameLabel:SetContentAlignment(5)
-        self.nameLabel:SetTall(24)
+    if IsValid(self.nameLabel) then
+        self.nameLabel:Remove()
+        self.nameLabel = nil
+    end
+
+    if IsValid(self.modelLabel) then
+        self.modelLabel:Remove()
+        self.modelLabel = nil
+    end
+
+    local generalCanvas = self.generalScroll.GetCanvas and self.generalScroll:GetCanvas() or self.generalScroll
+    if IsValid(generalCanvas) then
+        for _, child in ipairs(generalCanvas:GetChildren()) do
+            if IsValid(child) and child:GetClassName() == "DLabel" then
+                local text = child.GetText and child:GetText() or ""
+                if text == L("name") or text == L("model") then child:Remove() end
+            end
+        end
     end
 
     if not IsValid(self.name) then
-        self.name:SetParent(self.generalScroll)
+        self.name = self.generalScroll:Add("liaEntry")
         self.name:Dock(TOP)
         self.name:DockMargin(0, 0, 0, 12)
-    end
-
-    if not IsValid(self.modelLabel) then
-        self.modelLabel = self.generalScroll:Add("DLabel")
-        self.modelLabel:Dock(TOP)
-        self.modelLabel:DockMargin(0, 0, 0, 6)
-        self.modelLabel:SetText(L("model"))
-        self.modelLabel:SetFont("LiliaFont.20b")
-        self.modelLabel:SetTextColor(lia.color.theme.text or color_white)
-        self.modelLabel:SetContentAlignment(5)
-        self.modelLabel:SetTall(24)
+        self.name:SetPlaceholderText("")
+        self.name:SetContentAlignment(5)
+        self.name:SetValue(entity:getName())
+        self.name.action = function(value)
+            local currentName = lia.vendor.getVendorProperty(entity, "name")
+            if currentName ~= value then
+                if not value or value == "" then value = L("vendorDefaultName") end
+                if not self.name.processing then
+                    self.name.processing = true
+                    lia.vendor.editor.name(value)
+                    timer.Simple(0.1, function() if IsValid(self) and IsValid(self.name) then self.name.processing = false end end)
+                end
+            end
+        end
     end
 
     if not IsValid(self.model) then
-        self.model:SetParent(self.generalScroll)
+        self.model = self.generalScroll:Add("liaEntry")
         self.model:Dock(TOP)
         self.model:DockMargin(0, 0, 0, 12)
+        self.model:SetPlaceholderText("")
+        self.model:SetContentAlignment(5)
+        self.model:SetValue(entity:GetModel())
+        self.model.action = function(value)
+            local modelText = value:lower()
+            if entity:GetModel():lower() ~= modelText then lia.vendor.editor.model(modelText) end
+        end
     end
 
     if entity:SkinCount() > 1 and not IsValid(self.skinLabel) then

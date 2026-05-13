@@ -3459,7 +3459,7 @@ end
     Example Usage:
         ```lua
             hook.Add("PlayerStaminaLost", "WarnLowStamina", function(client)
-                if client:getLocalVar("stm", 100) < 10 then client:notifyLocalized("lowStamina") end
+                if client:getLocalVar("stamina", 100) < 10 then client:notifyLocalized("lowStamina") end
             end)
         ```
 ]]

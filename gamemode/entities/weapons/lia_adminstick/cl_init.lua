@@ -1,16 +1,27 @@
-﻿local function closeAdminStickMenu()
+local function closeAdminStickMenu()
     if AdminStickIsOpen and IsValid(AdminStickMenu) then AdminStickMenu:Remove() end
+end
+
+local function isSelfSelectHeld(client)
+    return IsValid(client) and (client:KeyDown(IN_SPEED) or input.IsKeyDown(KEY_LSHIFT) or input.IsKeyDown(KEY_RSHIFT))
+end
+
+local function openAdminStickTarget(client, target)
+    if not IsValid(client) or not IsValid(target) then return end
+    closeAdminStickMenu()
+    client.AdminStickTarget = target
+    hook.Run("OpenAdminStickUI", target)
 end
 
 function SWEP:PrimaryAttack()
     local client = LocalPlayer()
     if not IsFirstTimePredicted() then return end
-    local target = client:GetEyeTrace().Entity
-    if IsValid(target) then
-        closeAdminStickMenu()
-        client.AdminStickTarget = target
-        hook.Run("OpenAdminStickUI", target)
+    if isSelfSelectHeld(client) then
+        openAdminStickTarget(client, client)
+        return
     end
+
+    openAdminStickTarget(client, client:GetEyeTrace().Entity)
 end
 
 function SWEP:SecondaryAttack()
@@ -41,10 +52,8 @@ function SWEP:Reload()
     if self.NextReload and self.NextReload > SysTime() then return end
     self.NextReload = SysTime() + 0.5
     local client = LocalPlayer()
-    if client:KeyDown(IN_SPEED) then
-        closeAdminStickMenu()
-        client.AdminStickTarget = client
-        hook.Run("OpenAdminStickUI", client)
+    if isSelfSelectHeld(client) then
+        openAdminStickTarget(client, client)
     else
         closeAdminStickMenu()
         client.AdminStickTarget = nil
