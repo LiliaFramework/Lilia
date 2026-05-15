@@ -840,12 +840,8 @@ if not _liaDermaMenuOverride then
         local src = info and info.short_src or "unknown"
         local line = info and info.currentline or -1
         local useOriginal = oldDermaMenu and type(oldDermaMenu) == "function" and shouldUseOriginalDermaMenu()
-        print(string.format("[Lilia DermaMenu] caller=%s:%s parentmenu=%s parent=%s useOriginal=%s", tostring(src), tostring(line), tostring(parentmenu), tostring(parent), tostring(useOriginal)))
         if useOriginal then
             local menu = oldDermaMenu(parentmenu, parent)
-            local menuName = IsValid(menu) and (menu.ClassName or menu:GetName()) or type(menu)
-            local hasOpen = IsValid(menu) and isfunction(menu.Open)
-            print(string.format("[Lilia DermaMenu] original returned=%s class=%s hasOpen=%s", tostring(menu), tostring(menuName), tostring(hasOpen)))
             return menu
         end
 
@@ -867,9 +863,6 @@ if not _liaDermaMenuOverride then
             end
         end
 
-        local menuName = menu.ClassName or menu:GetName()
-        local hasOpen = isfunction(menu.Open)
-        print(string.format("[Lilia DermaMenu] custom returned=%s class=%s hasOpen=%s", tostring(menu), tostring(menuName), tostring(hasOpen)))
         return menu
     end
 end
