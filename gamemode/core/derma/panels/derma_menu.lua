@@ -836,9 +836,6 @@ if not _liaDermaMenuOverride then
     end
 
     function DermaMenu(parentmenu, parent)
-        local info = debug.getinfo(2, "Sln")
-        local src = info and info.short_src or "unknown"
-        local line = info and info.currentline or -1
         local useOriginal = oldDermaMenu and type(oldDermaMenu) == "function" and shouldUseOriginalDermaMenu()
         if useOriginal then
             local menu = oldDermaMenu(parentmenu, parent)
@@ -862,7 +859,6 @@ if not _liaDermaMenuOverride then
                 return vgui.Create("DMenu", parent)
             end
         end
-
         return menu
     end
 end
