@@ -258,8 +258,8 @@ function PANEL:SetContentAlignment(align)
         self._centerText = true
         if IsValid(self.textEntry) then
             self.textEntry.Paint = function(s, w, h) return end
-            self.textEntry:SetPaintBackground(false)
-            self.textEntry:SetPaintBorder(false)
+            if self.textEntry.SetPaintBackground then self.textEntry:SetPaintBackground(false) end
+            if self.textEntry.SetDrawBorder then self.textEntry:SetDrawBorder(false) end
         end
     else
         self._centerText = false

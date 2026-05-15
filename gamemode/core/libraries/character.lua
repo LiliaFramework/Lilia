@@ -597,6 +597,7 @@ lia.char.registerVar("faction", {
             local factionIndex = tonumber(factionValue)
             if factionIndex then faction = lia.faction.indices[factionIndex] end
         end
+
         return faction and faction.index or default or 0
     end,
     onValidate = function(value, _, client)

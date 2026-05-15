@@ -22,6 +22,7 @@ end
 
 function ENT:onDrawEntityInfo(alpha)
     local name = lia.vendor.getVendorProperty(self, "name")
+    local desc = lia.vendor.getVendorProperty(self, "desc") or ""
     if not lia.vendor.stored[self] or not lia.vendor.stored[self]["name"] then
         net.Start("liaVendorRequestData")
         net.WriteEntity(self)
@@ -29,4 +30,5 @@ function ENT:onDrawEntityInfo(alpha)
     end
 
     lia.util.drawEntText(self, name, 0, alpha)
+    if desc ~= "" then lia.util.drawEntText(self, desc, 40, alpha) end
 end

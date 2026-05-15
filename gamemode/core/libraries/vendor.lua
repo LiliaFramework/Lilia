@@ -17,6 +17,7 @@ lia.vendor.editor = lia.vendor.editor or {}
 lia.vendor.presets = lia.vendor.presets or {}
 lia.vendor.defaults = {
     name = L("vendorDefaultName"),
+    desc = "",
     preset = "none",
     animation = "idle_all_01",
     items = {},
@@ -38,6 +39,11 @@ if SERVER then
         if not name or name == "" then name = lia.vendor.defaults.name or L("vendorDefaultName") end
         vendor:setName(name)
         client:notifyLocalized("vendorNameChanged")
+    end)
+
+    addEditor("desc", function() return net.ReadString() end, function(vendor, client, desc)
+        vendor:setDescription(desc or "")
+        client:notifyLocalized("vendorDescriptionChanged")
     end)
 
     addEditor("mode", function() return net.ReadString(), net.ReadInt(8) end, function(vendor, _, itemType, mode) vendor:setTradeMode(itemType, mode) end)
@@ -93,6 +99,7 @@ else
     end
 
     addEditor("name", function(name) net.WriteString(name) end)
+    addEditor("desc", function(desc) net.WriteString(desc or "") end)
     addEditor("mode", function(itemType, mode)
         net.WriteString(itemType)
         net.WriteInt(isnumber(mode) and mode or -1, 8)

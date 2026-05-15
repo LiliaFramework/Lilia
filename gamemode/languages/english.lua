@@ -3160,6 +3160,7 @@ LANGUAGE = {
     vendorSavePresetTitle = "Save Vendor Preset",
     vendorSavePresetPrompt = "Enter a name for this preset:",
     vendorNameChanged = "Successfully changed vendor name.",
+    vendorDescriptionChanged = "Successfully changed vendor description.",
     vendorModelChanged = "Successfully changed vendor model.",
     vendorSkinChanged = "Successfully changed vendor skin.",
     vendorBodygroupChanged = "Successfully changed vendor bodygroup.",

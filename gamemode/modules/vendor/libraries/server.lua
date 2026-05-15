@@ -293,6 +293,7 @@ function MODULE:GetEntitySaveData(ent)
 
     local data = {
         name = lia.vendor.getVendorProperty(ent, "name"),
+        desc = lia.vendor.getVendorProperty(ent, "desc"),
         items = ent.items or {},
         factions = ent.factions or {},
         classes = ent.classes or {},
@@ -319,6 +320,7 @@ function MODULE:OnEntityLoaded(ent, data)
     if not istable(data.factionBuyScales) then data.factionBuyScales = {} end
     if not istable(data.factionSellScales) then data.factionSellScales = {} end
     lia.vendor.setVendorProperty(ent, "name", data.name)
+    lia.vendor.setVendorProperty(ent, "desc", data.desc or "")
     lia.vendor.setVendorProperty(ent, "animation", data.animation or "")
     ent.items = data.items or {}
     ent.factions = istable(data.factions) and data.factions or {}

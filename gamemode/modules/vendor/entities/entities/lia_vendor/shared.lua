@@ -14,6 +14,7 @@ ENT.IsPersistent = true
 function ENT:setupVars()
     if SERVER and not self.hasSetupVars then
         lia.vendor.setVendorProperty(self, "name", L("vendorDefaultName"))
+        lia.vendor.setVendorProperty(self, "desc", "")
         lia.vendor.setVendorProperty(self, "preset", "none")
         lia.vendor.setVendorProperty(self, "animation", "")
     end
@@ -229,6 +230,15 @@ end
 
 function ENT:setName(name)
     lia.vendor.setVendorProperty(self, "name", name)
+    if SERVER then hook.Run("UpdateEntityPersistence", self) end
+end
+
+function ENT:getDescription()
+    return lia.vendor.getVendorProperty(self, "desc") or ""
+end
+
+function ENT:setDescription(description)
+    lia.vendor.setVendorProperty(self, "desc", description or "")
     if SERVER then hook.Run("UpdateEntityPersistence", self) end
 end
 

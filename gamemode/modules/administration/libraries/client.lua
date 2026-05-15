@@ -62,7 +62,11 @@ local function beginAdminStickMenuBatch(menu)
         if not IsValid(panel) or panel._liaAdminStickBatchState == state then return end
         panel._liaAdminStickBatchState = state
         panel._liaAdminStickOriginalUpdateSize = panel._liaAdminStickOriginalUpdateSize or panel.UpdateSize
-        panel.UpdateSize = function(self) if self._liaAdminStickOriginalUpdateSize then self._liaAdminStickBatchDirty = true end end
+        panel.UpdateSize = function(self)
+            if self._liaAdminStickOriginalUpdateSize then
+                self._liaAdminStickBatchDirty = true
+            end
+        end
         state.menus[#state.menus + 1] = panel
     end
 
@@ -1711,7 +1715,6 @@ local function IncludeFlagManagement(tgt, menu, stores)
                 net.WriteBool(false)
                 net.SendToServer()
             end, currentFlags)
-
             timer.Simple(0.1, function() AdminStickIsOpen = false end)
         end):SetIcon("icon16/flag_orange.png")
 
@@ -1924,7 +1927,6 @@ function MODULE:OpenAdminStickUI(tgt)
             end
         end
     end
-
     if #cmds > 0 then hasOptions = true end
     if IsValid(tgt) and tgt.isStorageEntity then hasOptions = true end
     if not hasOptions then
@@ -2140,7 +2142,6 @@ function MODULE:OpenAdminStickUI(tgt)
             end):SetIcon(ic)
         end
     end
-
     hook.Add("GetAdminStickLists", "liaDefaultAdminStickLists", function(target, lists)
         local client = LocalPlayer()
         local canFaction = client:hasPrivilege("manageTransfers")
@@ -2386,6 +2387,7 @@ function MODULE:OpenAdminStickUI(tgt)
                 end
             end
         end
+
     end)
 
     hook.Add("PopulateAdminStick", "liaAddAdminStickLists", function(currentMenu, currentTarget, currentStores)
@@ -2429,8 +2431,8 @@ function MODULE:OpenAdminStickUI(tgt)
                         if item.callback then item.callback(currentTarget, item) end
                         timer.Simple(0.1, function() AdminStickIsOpen = false end)
                     end)
-
                     optionsAdded = optionsAdded + 1
+
                     if item.icon and IsValid(option) then
                         option:SetIcon(item.icon)
                     elseif icon and icon ~= "icon16/page.png" and IsValid(option) then
@@ -2847,6 +2849,7 @@ net.Receive("liaAdminModeSwapCharacter", function()
     net.Start("liaCharChoose")
     net.WriteUInt(id, 32)
     net.SendToServer()
+
     d:catch(function(err) if err and err ~= "" then LocalPlayer():notifyErrorLocalized(err) end end)
 end)
 
