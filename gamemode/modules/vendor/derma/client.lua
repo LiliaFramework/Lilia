@@ -1379,7 +1379,6 @@ function PANEL:initializeGeneralInfoPanel(entity)
     if IsValid(self.model) then self.model:SetZPos(12) end
     if IsValid(self.skinLabel) then self.skinLabel:SetZPos(13) end
     if IsValid(self.skin) then self.skin:SetZPos(14) end
-
     local hasBodygroupsBottom = false
     for i = 0, entity:GetNumBodyGroups() - 1 do
         if entity:GetBodygroupCount(i) > 1 then

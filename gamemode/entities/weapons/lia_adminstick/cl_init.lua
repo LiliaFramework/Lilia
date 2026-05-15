@@ -1,4 +1,4 @@
-local function closeAdminStickMenu()
+﻿local function closeAdminStickMenu()
     if AdminStickIsOpen and IsValid(AdminStickMenu) then AdminStickMenu:Remove() end
 end
 
