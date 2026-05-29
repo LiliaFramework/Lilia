@@ -178,7 +178,13 @@ local protectedStaffCommands = {
 }
 
 function lia.admin.isProtectedStaffTarget(cmd, target)
-    return protectedStaffCommands[string.lower(tostring(cmd or ""))] and IsValid(target) and target:IsPlayer() and target:isStaffOnDuty() or false
+    local protectedCommand = protectedStaffCommands[string.lower(tostring(cmd or ""))] or false
+    local validTarget = IsValid(target)
+    local targetIsPlayer = validTarget and target:IsPlayer() or false
+    local targetIsStaffOnDuty = targetIsPlayer and target:isStaffOnDuty() or false
+    local permission = protectedCommand and validTarget and targetIsPlayer and targetIsStaffOnDuty or false
+    lia.debug("[Permissions]", "Permission Check for function lia.admin.isProtectedStaffTarget", "commandProtected=", tostring(protectedCommand), "targetValid=", tostring(validTarget), "targetIsPlayer=", tostring(targetIsPlayer), "targetIsStaffOnDuty=", tostring(targetIsStaffOnDuty), "finalResult=", tostring(permission))
+    return permission
 end
 
 function lia.admin.notifyProtectedStaffTarget(admin)
@@ -1014,7 +1020,8 @@ if SERVER then
 ]]
     function lia.admin.notifyAdmin(notification)
         for _, client in player.Iterator() do
-            if IsValid(client) and client:hasPrivilege("canSeeAltingNotifications") then client:notifyAdminLocalized(notification) end
+            local permission = IsValid(client) and client:hasPrivilege("canSeeAltingNotifications") or false
+            if permission then client:notifyAdminLocalized(notification) end
         end
     end
 
@@ -2089,7 +2096,9 @@ else
     end
 
     hook.Add("PopulateAdminTabs", "liaAdmin", function(pages)
-        if not IsValid(LocalPlayer()) or not LocalPlayer():hasPrivilege("manageUsergroups") then return end
+        local client = LocalPlayer()
+        local permission = IsValid(client) and client:hasPrivilege("manageUsergroups") or false
+        if not permission then return end
         pages[#pages + 1] = {
             name = "userGroups",
             icon = "icon16/group.png",

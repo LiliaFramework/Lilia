@@ -18,6 +18,16 @@ MODULE.Privileges = {
         MinAccess = "superadmin",
         Category = "@categoryBlacklisting",
     },
+    ["staffHUD"] = {
+        Name = "staffHUD",
+        MinAccess = "superadmin",
+        Category = "developmentHUD",
+    },
+    ["developmentHUD"] = {
+        Name = "developmentHUD",
+        MinAccess = "superadmin",
+        Category = "developmentHUD",
+    },
     ["manageBodygroups"] = {
         Name = "manageBodygroups",
         MinAccess = "admin",

@@ -44,12 +44,18 @@ end)
 hook.Add("SAM.CanRunCommand", "liaSAM", function(client, _, _, cmd)
     if type(client) ~= "Player" then return true end
     if lia.config.get("SAMEnforceStaff", false) then
-        if cmd.permission and not client:HasPermission(cmd.permission) then
+        local hasSamPermission = cmd.permission and client:HasPermission(cmd.permission) or true
+        lia.debug("[Permissions]", "Permission Check for hook SAM.CanRunCommand SAM permission", "commandPermission=", tostring(cmd.permission), "HasPermission=", tostring(hasSamPermission), "finalResult=", tostring(hasSamPermission))
+        if cmd.permission and not hasSamPermission then
             client:notifyErrorLocalized("staffPermissionDenied")
             return false
         end
 
-        if client:hasPrivilege("canBypassSAMFactionWhitelist") or client:isStaffOnDuty() then
+        local canBypassSAMFactionWhitelist = client:hasPrivilege("canBypassSAMFactionWhitelist")
+        local isStaffOnDuty = client:isStaffOnDuty()
+        local permission = canBypassSAMFactionWhitelist or isStaffOnDuty
+        lia.debug("[Permissions]", "Permission Check for hook SAM.CanRunCommand staff whitelist", "hasPrivilege(canBypassSAMFactionWhitelist)=", tostring(canBypassSAMFactionWhitelist), "isStaffOnDuty=", tostring(isStaffOnDuty), "finalResult=", tostring(permission))
+        if permission then
             return true
         else
             client:notifyErrorLocalized("staffRestrictedCommand")
@@ -97,7 +103,10 @@ end
 local function CanReadNotifications(client)
     if not lia.config.get("AdminOnlyNotification", true) then return true end
     if not IsValid(client) then return false end
-    return client:hasPrivilege("canSeeSAMNotificationsOutsideStaff") or client:isStaffOnDuty()
+    local hasPrivilege = client:hasPrivilege("canSeeSAMNotificationsOutsideStaff")
+    local isStaffOnDuty = client:isStaffOnDuty()
+    local permission = hasPrivilege or isStaffOnDuty
+    return permission
 end
 
 function sam.player.send_message(client, msg, tbl)

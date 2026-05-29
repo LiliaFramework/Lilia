@@ -69,6 +69,70 @@ local NoDrawCrosshairWeapon = {
     weapon_bugbait = true
 }
 
+local function getHUDFont(size, suffix)
+    return "HUDFont." .. tostring(size) .. (suffix or "")
+end
+
+local function isToolgunHUDHidden(client)
+    local weapon = IsValid(client) and client:GetActiveWeapon() or nil
+    return IsValid(weapon) and weapon:GetClass() == "gmod_tool"
+end
+
+local function formatDevHUDVector(vec)
+    return string.format("%.2f, %.2f, %.2f", vec.x, vec.y, vec.z)
+end
+
+local function drawDevelopmentOverlay(client)
+    if not lia.option.get("drawDevelopmentHUD", true) then return end
+    local canDrawDevHUD = client:hasPrivilege("developmentHUD")
+    local canDrawStaffHUD = client:hasPrivilege("staffHUD")
+    if not canDrawDevHUD and not canDrawStaffHUD then return end
+    local lines = {}
+    if canDrawDevHUD then
+        lines[#lines + 1] = string.format("SteamID64: %s | SteamID: %s", client:SteamID64(), client:SteamID())
+        lines[#lines + 1] = os.date("%m/%d/%Y | %X", os.time())
+    end
+
+    if canDrawStaffHUD then
+        local trace = client:GetEyeTraceNoCursor()
+        local hitPos = trace.HitPos
+        local ent = trace.Entity
+        lines[#lines + 1] = string.format("Pos: %s | Ang: %s", formatDevHUDVector(client:GetPos()), formatDevHUDVector(client:EyeAngles()))
+        lines[#lines + 1] = string.format("Trace Pos: %s | Trace Dist: %.2f", formatDevHUDVector(hitPos), client:GetPos():Distance(hitPos))
+        lines[#lines + 1] = string.format("Health: %d | Ping: %d | FPS: %d | FrameTime: %.4f", client:Health(), client:Ping(), math.Round(1 / FrameTime(), 0), FrameTime())
+        if IsValid(ent) then lines[#lines + 1] = string.format("Trace Ent: %s | Model: %s", ent:GetClass(), ent.GetModel and ent:GetModel() or "N/A") end
+    end
+
+    if #lines == 0 then return end
+    lia.derma.drawBoxWithText(table.concat(lines, "\n"), 24, 24, {
+        font = getHUDFont(18),
+        textColor = lia.color.theme.text or color_white,
+        backgroundColor = Color(25, 28, 35, 235),
+        borderRadius = 12,
+        padding = 18,
+        lineSpacing = 8,
+        textAlignX = TEXT_ALIGN_LEFT,
+        textAlignY = TEXT_ALIGN_TOP,
+        blur = {
+            enabled = true,
+            amount = 4,
+            passes = 1,
+            alpha = 200
+        },
+        shadow = {
+            enabled = true,
+            offsetX = 12,
+            offsetY = 12,
+            color = Color(0, 0, 0, 170)
+        },
+        accentBorder = {
+            enabled = true,
+            height = 2,
+            color = lia.color.theme.accent or lia.color.theme.header or lia.color.theme.theme
+        }
+    })
+end
+
 local function canDrawAmmo(wpn)
     if not IsValid(wpn) or wpn.DrawAmmo == false then return false end
     local hookResult = hook.Run("ShouldDrawAmmo", wpn)
@@ -88,7 +152,7 @@ local function drawAmmo(wpn)
         local shadowBlur = 12
         lia.derma.rect(x, y, 64, 64):Rad(6):Color(lia.color.theme.window_shadow):Shadow(shadowIntensity, shadowBlur):Shape(lia.derma.SHAPE_IOS):Draw()
         lia.derma.rect(x, y, 64, 64):Radii(6, 6, 6, 6):Color(Color(25, 28, 35, 250)):Draw()
-        lia.util.drawText(sec, x + 32, y + 32, lia.color.theme.text, 1, 1, "LiliaFont.36")
+        lia.util.drawText(sec, x + 32, y + 32, lia.color.theme.text, 1, 1, getHUDFont(36))
     end
 
     if wpn:GetClass() ~= "weapon_slam" and (clip > 0 or count > 0) then
@@ -98,7 +162,7 @@ local function drawAmmo(wpn)
         local shadowBlur = 12
         lia.derma.rect(x, y, 128, 64):Rad(6):Color(lia.color.theme.window_shadow):Shadow(shadowIntensity, shadowBlur):Shape(lia.derma.SHAPE_IOS):Draw()
         lia.derma.rect(x, y, 128, 64):Radii(6, 6, 6, 6):Color(Color(25, 28, 35, 250)):Draw()
-        lia.util.drawText(ammoText, x + 64, y + 32, lia.color.theme.text, 1, 1, "LiliaFont.36")
+        lia.util.drawText(ammoText, x + 64, y + 32, lia.color.theme.text, 1, 1, getHUDFont(36))
     end
 end
 
@@ -135,6 +199,11 @@ end
 
 local function RenderEntities()
     local client = LocalPlayer()
+    if isToolgunHUDHidden(client) then
+        table.Empty(paintedEntitiesCache)
+        return
+    end
+
     if client:getChar() then
         local ft = FrameTime()
         local rt = RealTime()
@@ -289,7 +358,7 @@ function GM:DrawEntityInfo(e, a, pos)
     if name ~= e.liaNameCache then
         e.liaNameCache = name
         if #name > 250 then name = name:sub(1, 250) .. "..." end
-        e.liaNameLines = lia.util.wrapText(name, ScrW() * width, "LiliaFont.17")
+        e.liaNameLines = lia.util.wrapText(name, ScrW() * width, getHUDFont(17))
     end
 
     for i = 1, #e.liaNameLines do
@@ -300,7 +369,7 @@ function GM:DrawEntityInfo(e, a, pos)
     if desc ~= e.liaDescCache then
         e.liaDescCache = desc
         if #desc > 250 then desc = desc:sub(1, 250) .. "..." end
-        e.liaDescLines = lia.util.wrapText(desc, ScrW() * width, "LiliaFont.17")
+        e.liaDescLines = lia.util.wrapText(desc, ScrW() * width, getHUDFont(17))
     end
 
     for i = 1, #e.liaDescLines do
@@ -309,7 +378,7 @@ function GM:DrawEntityInfo(e, a, pos)
 
     if ch then hook.Run("DrawCharInfo", e, ch, charInfo) end
     if #charInfo > 0 then
-        surface.SetFont("LiliaFont.17")
+        surface.SetFont(getHUDFont(17))
         local maxWidth = 0
         local totalHeight = 0
         local lineHeights = {}
@@ -342,7 +411,7 @@ function GM:DrawEntityInfo(e, a, pos)
             local info = charInfo[i]
             local text = info[1]:gsub("#", "\226\128\139#")
             local textColor = ColorAlpha(info[2] or color_white, a)
-            lia.util.drawText(text, x, currentY, textColor, 1, 1, "LiliaFont.17")
+            lia.util.drawText(text, x, currentY, textColor, 1, 1, getHUDFont(17))
             currentY = currentY + lineHeights[i] + 2
         end
     end
@@ -361,6 +430,14 @@ clearLegacyVoiceIndicatorPanels()
 local function updateVoiceIndicator()
     local client = LocalPlayer()
     if not IsValid(client) then
+        if IsValid(voiceIndicatorPanel) then
+            voiceIndicatorPanel:Remove()
+            voiceIndicatorPanel = nil
+        end
+        return
+    end
+
+    if isToolgunHUDHidden(client) then
         if IsValid(voiceIndicatorPanel) then
             voiceIndicatorPanel:Remove()
             voiceIndicatorPanel = nil
@@ -407,20 +484,20 @@ local function updateVoiceIndicator()
             local canHearKey = count == 1 and "voiceOnePersonCanHearYou" or "voicePeopleCanHearYou"
             local canHearText = L(canHearKey, count)
             voiceText = voiceText .. " - " .. canHearText
-            tooltipLines[#tooltipLines + 1] = "<font=LiliaFont.16>" .. canHearText .. "</font>"
+            tooltipLines[#tooltipLines + 1] = "<font=" .. getHUDFont(16) .. ">" .. canHearText .. "</font>"
         end
     end
 
     local modifiedText = hook.Run("ModifyVoiceIndicatorText", client, voiceText, voiceType)
     if modifiedText then voiceText = modifiedText end
-    table.insert(tooltipLines, "<font=LiliaFont.16b>" .. voiceText .. "</font>")
-    table.insert(tooltipLines, "<font=LiliaFont.16>" .. L("voiceRange") .. ": " .. (VoiceRanges[voiceType] or VoiceRanges[VOICE_TALKING]) .. " units</font>")
+    table.insert(tooltipLines, "<font=" .. getHUDFont(16, "b") .. ">" .. voiceText .. "</font>")
+    table.insert(tooltipLines, "<font=" .. getHUDFont(16) .. ">" .. L("voiceRange") .. ": " .. (VoiceRanges[voiceType] or VoiceRanges[VOICE_TALKING]) .. " units</font>")
     voiceIndicatorPanel:SetTooltip(table.concat(tooltipLines, "\n"))
     voiceIndicatorPanel.Paint = function(pnl, w, h)
         lia.util.drawBlur(pnl, 4, 2)
         lia.derma.rect(0, 0, w, h):Rad(8):Color(Color(0, 0, 0, 150)):Draw()
         lia.derma.rect(0, 0, w, h):Rad(8):Color(lia.color.theme.theme):Outline(2):Draw()
-        draw.SimpleText(voiceText, "LiliaFont.18", w / 2, h / 2, Color(255, 255, 255), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
+        draw.SimpleText(voiceText, getHUDFont(18), w / 2, h / 2, Color(255, 255, 255), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
     end
 end
 
@@ -430,6 +507,14 @@ end
 
 function GM:HUDPaint()
     local client = LocalPlayer()
+    if isToolgunHUDHidden(client) then
+        if IsValid(voiceIndicatorPanel) then
+            voiceIndicatorPanel:Remove()
+            voiceIndicatorPanel = nil
+        end
+        return
+    end
+
     if client:Alive() and client:getChar() then
         local wpn = client:GetActiveWeapon()
         if canDrawAmmo(wpn) then drawAmmo(wpn) end
@@ -441,7 +526,7 @@ function GM:HUDPaint()
                 if info.text and info.position then
                     local drawOptions = {
                         textColor = info.color or Color(180, 180, 180),
-                        font = info.font or "LiliaFont.16",
+                        font = info.font or getHUDFont(16),
                         backgroundColor = Color(25, 28, 35, 250),
                         borderRadius = 12,
                         borderThickness = 0,
@@ -490,6 +575,7 @@ function GM:HUDPaint()
         end
     end
 
+    drawDevelopmentOverlay(client)
     drawVoiceIndicator()
 end
 
@@ -659,7 +745,7 @@ function GM:HUDPaintBackground()
         end
     end
 
-    if BRANCH ~= "x86-64" then draw.SimpleText(L("switchTo64Bit"), "LiliaFont.17", ScrW() * 0.5, ScrH() * 0.97, Color(255, 255, 255, 10), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER) end
+    if not isToolgunHUDHidden(client) and BRANCH ~= "x86-64" then draw.SimpleText(L("switchTo64Bit"), getHUDFont(17), ScrW() * 0.5, ScrH() * 0.97, Color(255, 255, 255, 10), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER) end
 end
 
 function GM:OnContextMenuOpen()
@@ -744,7 +830,11 @@ end
 
 function GM:SpawnMenuOpen()
     local client = LocalPlayer()
-    if lia.config.get("SpawnMenuLimit", false) and not (client:hasFlags("pet") or client:isStaffOnDuty() or client:hasPrivilege("canSpawnProps")) then return end
+    local limitEnabled = lia.config.get("SpawnMenuLimit", false)
+    local hasFlag = client:hasFlags("pet")
+    local isStaff = client:isStaffOnDuty()
+    local hasPrivilege = client:hasPrivilege("canSpawnProps")
+    if limitEnabled and not (hasFlag or isStaff or hasPrivilege) then return end
     return true
 end
 

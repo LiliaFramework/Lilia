@@ -220,7 +220,9 @@ end
 
 function GM:CanPlayerInteractItem(client, action, item)
     action = string.lower(action)
-    if client:hasPrivilege("noItemCooldown") then return true end
+    local hasNoItemCooldown = client:hasPrivilege("noItemCooldown")
+    lia.debug("[Permissions]", "Permission Check for hook GM:CanPlayerInteractItem", "action=", tostring(action), "hasPrivilege(noItemCooldown)=", tostring(hasNoItemCooldown), "finalResult=", tostring(hasNoItemCooldown))
+    if hasNoItemCooldown then return true end
     if not client:Alive() then return false, L("forbiddenActionStorage") end
     if IsValid(client:GetRagdollEntity()) then return false, L("forbiddenActionStorage") end
     if action == "drop" then
@@ -433,7 +435,10 @@ function GM:EntityTakeDamage(entity, dmgInfo)
     end
 
     if not entity:IsPlayer() then return end
-    if entity:isStaffOnDuty() and lia.config.get("StaffHasGodMode", true) then return true end
+    local isStaffOnDuty = entity:isStaffOnDuty()
+    local staffHasGodMode = lia.config.get("StaffHasGodMode", true)
+    lia.debug("[Permissions]", "Permission Check for hook GM:EntityTakeDamage staff godmode", "isStaffOnDuty=", tostring(isStaffOnDuty), "StaffHasGodMode=", tostring(staffHasGodMode), "finalResult=", tostring(isStaffOnDuty and staffHasGodMode))
+    if isStaffOnDuty and staffHasGodMode then return true end
     if entity:GetMoveType() == MOVETYPE_NOCLIP then return true end
     if dmgInfo:IsDamageType(DMG_CRUSH) then
         if (entity.liaFallGrace or 0) < CurTime() then
@@ -846,6 +851,19 @@ local function IsEntityNearby(pos, class)
     return false
 end
 
+local function restorePersistentEntityTransform(ent, pos, ang)
+    if not IsValid(ent) or not isvector(pos) then return end
+    ent:SetPos(pos)
+    if isangle(ang) then ent:SetAngles(ang) end
+    local physObj = ent:GetPhysicsObject()
+    if IsValid(physObj) then
+        physObj:SetPos(pos)
+        if isangle(ang) then physObj:SetAngles(ang) end
+        physObj:Wake()
+        physObj:Sleep()
+    end
+end
+
 function GM:LoadData()
     lia.data.loadPersistenceData(function(entities)
         for _, ent in ipairs(entities) do
@@ -911,6 +929,7 @@ function GM:LoadData()
                 if ent.skin then createdEnt:SetSkin(tonumber(ent.skin) or 0) end
                 if istable(ent.bodygroups) then lia.util.applyBodygroups(createdEnt, ent.bodygroups) end
                 createdEnt:Activate()
+                restorePersistentEntityTransform(createdEnt, decodedPos, decodedAng)
                 local loadData = table.Copy(ent)
                 if cls == "lia_npc" and ent.data and istable(ent.data) then
                     if ent.data.uniqueID then loadData.uniqueID = ent.data.uniqueID end
@@ -925,6 +944,7 @@ function GM:LoadData()
                 end
 
                 hook.Run("OnEntityLoaded", createdEnt, loadData)
+                timer.Simple(0, function() restorePersistentEntityTransform(createdEnt, decodedPos, decodedAng) end)
             until true
         end
     end)
@@ -1098,6 +1118,7 @@ function StaffAddTextShadowed(tagColor, tagText, messageColor, message, predicat
     local timestamp = os.date("%Y-%m-%d %H:%M:%S", os.time())
     for _, staff in player.Iterator() do
         local isStaff = staff:isStaffOnDuty() or staff:hasPrivilege("canSeeLogs")
+        lia.debug("[Permissions]", "Permission Check for function StaffAddTextShadowed", "targetStaff=", tostring(IsValid(staff) and staff:Name() or "unknown"), "isStaffOnDuty=", tostring(staff:isStaffOnDuty()), "hasPrivilege(canSeeLogs)=", tostring(staff:hasPrivilege("canSeeLogs")), "predicatePassed=", tostring(predicate and predicate(staff) or false), "finalResult=", tostring((predicate and predicate(staff)) or isStaff))
         if (predicate and predicate(staff)) or isStaff then ClientAddTextShadowed(staff, tagColor or Color(255, 255, 255), tagText or "", messageColor or Color(255, 255, 255), " | " .. timestamp .. " | " .. message) end
     end
 end
@@ -1106,7 +1127,11 @@ function GM:PlayerCanHearPlayersVoice(listener, speaker)
     if not IsValid(listener) or not IsValid(speaker) or listener == speaker then return false, false end
     if not lia.config.get("IsVoiceEnabled", true) then return false, false end
     local bCanHear = listener.liaVoiceHear and listener.liaVoiceHear[speaker]
-    return bCanHear, bCanHear
+    if not bCanHear then return false, false end
+    local voiceType = speaker:getLocalVar("VoiceType", VOICE_TALKING)
+    -- Yelling uses a wider radius, so keep it non-spatialized to avoid sounding too quiet at the edge of that range.
+    local is3D = voiceType ~= VOICE_YELLING
+    return true, is3D
 end
 
 function GM:OnVoiceTypeChanged(client)

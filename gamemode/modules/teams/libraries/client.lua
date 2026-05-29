@@ -282,7 +282,8 @@ end
 function MODULE:PopulateAdminTabs(pages)
     local client = LocalPlayer()
     if not IsValid(client) then return end
-    if client:hasPrivilege("listCharacters") then
+    local canListCharacters = client:hasPrivilege("listCharacters")
+    if canListCharacters then
         table.insert(pages, {
             name = "@factionManagement",
             icon = "icon16/group.png",

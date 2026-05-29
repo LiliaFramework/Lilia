@@ -4,6 +4,10 @@ local hideKey = false
 local fastFade = false
 local deathTimeReceived = 0
 local lastDeathTimeValue = 0
+local function getHUDFont(size)
+    return "HUDFont." .. tostring(size)
+end
+
 local function getRespawnState(ply)
     local baseTime = lia.config.get("SpawnTime", 5)
     baseTime = hook.Run("OverrideSpawnTime", ply, baseTime) or baseTime
@@ -52,13 +56,13 @@ function MODULE:HUDPaint()
     surface.SetDrawColor(0, 0, 0, ceil(fade ^ 0.5 * 255))
     surface.DrawRect(-1, -1, ScrW() + 2, ScrH() + 2)
     local txtKey = "youHaveDied"
-    surface.SetFont("LiliaFont.72")
+    surface.SetFont(getHUDFont(72))
     local w, h = surface.GetTextSize(L(txtKey))
     local x, y = (ScrW() - w) / 2, (ScrH() - h) / 2
-    lia.util.drawText(L(txtKey), x + 2, y + 2, Color(0, 0, 0, ceil(shadowFade * 255)), 0, 0, "LiliaFont.72")
-    lia.util.drawText(L(txtKey), x, y, Color(255, 255, 255, ceil(shadowFade * 255)), 0, 0, "LiliaFont.72")
+    lia.util.drawText(L(txtKey), x + 2, y + 2, Color(0, 0, 0, ceil(shadowFade * 255)), 0, 0, getHUDFont(72))
+    lia.util.drawText(L(txtKey), x, y, Color(255, 255, 255, ceil(shadowFade * 255)), 0, 0, getHUDFont(72))
     if not hideKey then
-        surface.SetFont("LiliaFont.25")
+        surface.SetFont(getHUDFont(25))
         local text
         local displayLeft = ceil(left)
         if displayLeft <= 0 then
@@ -69,16 +73,16 @@ function MODULE:HUDPaint()
 
         local dw = select(1, surface.GetTextSize(text))
         local dx, dy = (ScrW() - dw) / 2, y + h + 10
-        lia.util.drawText(text, dx + 1, dy + 1, Color(0, 0, 0, 255), 0, 0, "LiliaFont.25")
-        lia.util.drawText(text, dx, dy, Color(255, 255, 255, 255), 0, 0, "LiliaFont.25")
+        lia.util.drawText(text, dx + 1, dy + 1, Color(0, 0, 0, 255), 0, 0, getHUDFont(25))
+        lia.util.drawText(text, dx, dy, Color(255, 255, 255, 255), 0, 0, getHUDFont(25))
         local timePassed = os.time() - lastDeath
         if timePassed >= (baseTime * 1.25) then
-            surface.SetFont("LiliaFont.17")
+            surface.SetFont(getHUDFont(17))
             local hintText = L("forceRespawnHint")
             local hw = select(1, surface.GetTextSize(hintText))
             local hx, hy = (ScrW() - hw) / 2, dy + 50
-            lia.util.drawText(hintText, hx + 1, hy + 1, Color(0, 0, 0, 200), 0, 0, "LiliaFont.17")
-            lia.util.drawText(hintText, hx, hy, Color(255, 255, 0, 200), 0, 0, "LiliaFont.17")
+            lia.util.drawText(hintText, hx + 1, hy + 1, Color(0, 0, 0, 200), 0, 0, getHUDFont(17))
+            lia.util.drawText(hintText, hx, hy, Color(255, 255, 0, 200), 0, 0, getHUDFont(17))
         end
     end
 end

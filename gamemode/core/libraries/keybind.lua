@@ -348,7 +348,8 @@ lia.keybind.add("adminMode", {
                     end
                 end
 
-                if client:hasPrivilege("createStaffCharacter") then
+                local canCreateStaffCharacter = client:hasPrivilege("createStaffCharacter")
+                if canCreateStaffCharacter then
                     local staffCharData = {
                         steamID = steamID,
                         name = client:steamName(),

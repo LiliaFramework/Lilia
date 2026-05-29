@@ -605,7 +605,9 @@ if SERVER then
         filteredData = safeRemoveFunctions(filteredData)
         net.Start("liaOpenNpcDialog")
         net.WriteEntity(npc)
-        net.WriteBool(client:hasPrivilege("canManageProperties"))
+        local canManageProperties = client:hasPrivilege("canManageProperties")
+        lia.debug("[Permissions]", "Permission Check for dialog liaOpenNpcDialog payload", "hasPrivilege(canManageProperties)=", tostring(canManageProperties), "finalResult=", tostring(canManageProperties))
+        net.WriteBool(canManageProperties)
         net.WriteTable(filteredData)
         net.Send(client)
     end

@@ -759,14 +759,53 @@ end
 ]]
 function lia.debug(...)
     if not lia.DevMode then return end
-    MsgC(Color(83, 143, 239), "[Lilia] ", "[" .. L("logDebug") .. "] ")
-    local args = {...}
-    for i, v in ipairs(args) do
-        MsgC(Color(200, 200, 200), tostring(v))
-        if i < #args then MsgC(Color(200, 200, 200), "\t") end
+    local prefixColor = Color(83, 143, 239)
+    local debugColor = Color(255, 184, 77)
+    local sectionColor = Color(0, 255, 0)
+    local textColor = Color(220, 220, 220)
+    local detailColor = Color(151, 211, 255)
+    local separatorColor = Color(120, 120, 120)
+    local boolColors = {
+        ["true"] = Color(110, 255, 140),
+        ["false"] = Color(255, 120, 120)
+    }
+
+    local function writeValue(value)
+        local text = tostring(value)
+        MsgC(boolColors[text] or textColor, text)
     end
 
-    MsgC(Color(200, 200, 200), "\n")
+    local function isKeyToken(value)
+        local text = tostring(value)
+        return text:sub(-1) == "=" and #text > 1
+    end
+
+    MsgC(prefixColor, "[Lilia] ", debugColor, "[" .. L("logDebug") .. "] ")
+    local args = {...}
+    local index = 1
+    if isstring(args[1]) and args[1]:match("^%b[]$") then
+        MsgC(sectionColor, args[1], " ")
+        index = 2
+    end
+
+    if args[index] ~= nil then
+        writeValue(args[index])
+        index = index + 1
+    end
+
+    while index <= #args do
+        MsgC(separatorColor, " | ")
+        if args[index + 1] ~= nil and isKeyToken(args[index]) then
+            MsgC(detailColor, tostring(args[index]))
+            writeValue(args[index + 1])
+            index = index + 2
+        else
+            writeValue(args[index])
+            index = index + 1
+        end
+    end
+
+    MsgC(textColor, "\n")
 end
 
 --[[

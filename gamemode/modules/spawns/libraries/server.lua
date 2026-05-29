@@ -309,6 +309,7 @@ function MODULE:PlayerDeath(client, inflictor, attacker)
 
         local deathMessage = L("staffLogDeathMessage", client:Name(), char:getID(), client:SteamID64(), attackerDisplay)
         local isStaff = client:isStaffOnDuty() or client:hasPrivilege("canSeeLogs")
+        lia.debug("[Permissions]", "Permission Check for spawns death message self visibility", "isStaffOnDuty=", tostring(client:isStaffOnDuty()), "hasPrivilege(canSeeLogs)=", tostring(client:hasPrivilege("canSeeLogs")), "finalResult=", tostring(isStaff))
         if not isStaff then ClientAddTextShadowed(client, Color(255, 0, 0), "DEATH", Color(255, 255, 255), " | " .. logTimestamp .. " | " .. deathMessage) end
         StaffAddTextShadowed(Color(255, 0, 0), "DEATH", Color(255, 255, 255), deathMessage)
     end

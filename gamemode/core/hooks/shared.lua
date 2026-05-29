@@ -1,5 +1,6 @@
 ﻿local GM = GM or GAMEMODE
 function GM:OnCharVarChanged(character, varName, oldVar, newVar)
+    local client = character:getPlayer()
     if varName == "model" then hook.Run("PlayerModelChanged", client, newVar) end
     if lia.char.varHooks[varName] then
         for _, v in pairs(lia.char.varHooks[varName]) do

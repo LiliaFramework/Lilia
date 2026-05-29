@@ -1,6 +1,8 @@
 ﻿local MODULE = MODULE
 function MODULE:CanPlayerSwitchChar(client, character, newCharacter)
-    if not client:isStaffOnDuty() then
+    local isStaffOnDuty = client:isStaffOnDuty()
+    lia.debug("[Permissions]", "Permission Check for function MODULE:CanPlayerSwitchChar staff bypass", "isStaffOnDuty=", tostring(isStaffOnDuty), "finalResult=", tostring(isStaffOnDuty))
+    if not isStaffOnDuty then
         local switchingToStaff = newCharacter and newCharacter:getFaction() == FACTION_STAFF
         local switchingFromStaff = character and character:getFaction() == FACTION_STAFF
         if not switchingToStaff and not switchingFromStaff then
@@ -22,7 +24,9 @@ function MODULE:CanPlayerSwitchChar(client, character, newCharacter)
 end
 
 function MODULE:EntityTakeDamage(entity, dmgInfo)
-    if IsValid(entity) and entity:IsPlayer() and entity:isStaffOnDuty() then
+    local entityIsOnDutyStaff = IsValid(entity) and entity:IsPlayer() and entity:isStaffOnDuty() or false
+    lia.debug("[Permissions]", "Permission Check for function MODULE:EntityTakeDamage player staff immunity", "entityValid=", tostring(IsValid(entity)), "entityIsPlayer=", tostring(IsValid(entity) and entity:IsPlayer() or false), "isStaffOnDuty=", tostring(entityIsOnDutyStaff), "finalResult=", tostring(entityIsOnDutyStaff))
+    if entityIsOnDutyStaff then
         dmgInfo:SetDamage(0)
         return
     end
@@ -30,7 +34,9 @@ function MODULE:EntityTakeDamage(entity, dmgInfo)
     if IsValid(entity) and entity:IsVehicle() and entity:GetClass():find("prop_vehicle") then
         local driver = entity:GetDriver()
         if IsValid(driver) then
-            if driver:isStaffOnDuty() then
+            local driverIsOnDutyStaff = driver:isStaffOnDuty()
+            lia.debug("[Permissions]", "Permission Check for function MODULE:EntityTakeDamage vehicle driver staff immunity", "driverValid=", tostring(IsValid(driver)), "isStaffOnDuty=", tostring(driverIsOnDutyStaff), "finalResult=", tostring(driverIsOnDutyStaff))
+            if driverIsOnDutyStaff then
                 dmgInfo:SetDamage(0)
                 return
             end
@@ -318,7 +324,11 @@ function MODULE:PlayerInitialSpawn(client)
                 lia.log.add(client, "cheaterDetected", client:Name(), client:SteamID())
                 client:notifyErrorLocalized("caughtCheating")
                 for _, p in player.Iterator() do
-                    if p:isStaffOnDuty() or p:hasPrivilege("receiveCheaterNotifications") then p:notifyWarningLocalized("cheaterDetectedStaff", client:Name(), client:SteamID()) end
+                    local isStaffOnDuty = p:isStaffOnDuty()
+                    local hasReceiveCheaterNotifications = p:hasPrivilege("receiveCheaterNotifications")
+                    local permission = isStaffOnDuty or hasReceiveCheaterNotifications
+                    lia.debug("[Permissions]", "Permission Check for protection cheat recipient", "targetPlayer=", tostring(p:Name()), "isStaffOnDuty=", tostring(isStaffOnDuty), "hasPrivilege(receiveCheaterNotifications)=", tostring(hasReceiveCheaterNotifications), "finalResult=", tostring(permission))
+                    if permission then p:notifyWarningLocalized("cheaterDetectedStaff", client:Name(), client:SteamID()) end
                 end
 
                 if client:getChar() then
@@ -326,7 +336,11 @@ function MODULE:PlayerInitialSpawn(client)
                     local severity = "High"
                     hook.Run("AddWarning", client:getChar():getID(), client:Nick(), client:SteamID(), timestamp, L("cheaterWarningReason"), "System", "SYSTEM", severity)
                     local message = L("staffLogCheaterFlagged", client:Name(), client:getChar():getID(), client:SteamID64(), severity)
-                    StaffAddTextShadowed(Color(255, 0, 0), "CHEAT", Color(255, 255, 255), message, function(staff) return staff:hasPrivilege("receiveCheaterNotifications") end)
+                    StaffAddTextShadowed(Color(255, 0, 0), "CHEAT", Color(255, 255, 255), message, function(staff)
+                        local permission = staff:hasPrivilege("receiveCheaterNotifications")
+                        lia.debug("[Permissions]", "Permission Check for protection StaffAddTextShadowed recipient", "targetPlayer=", tostring(staff:Name()), "hasPrivilege(receiveCheaterNotifications)=", tostring(permission), "finalResult=", tostring(permission))
+                        return permission
+                    end)
                 end
             end
 

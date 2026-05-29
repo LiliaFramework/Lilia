@@ -3154,7 +3154,8 @@ function MODULE:PopulateAdminTabs(pages)
         end)
     end
 
-    if not table.IsEmpty(entitiesByCreator) and client:hasPrivilege("viewEntityTab") then
+    local canViewEntityTab = client:hasPrivilege("viewEntityTab")
+    if not table.IsEmpty(entitiesByCreator) and canViewEntityTab then
         pages[#pages + 1] = {
             name = "@playerEntities",
             icon = "icon16/bricks.png",
@@ -3214,7 +3215,8 @@ function MODULE:PopulateAdminTabs(pages)
                             startSpectateView(ent, prevTP)
                         end)
 
-                        if client:hasPrivilege("teleportToEntity") then
+                        local canTeleportToEntity = client:hasPrivilege("teleportToEntity")
+                        if canTeleportToEntity then
                             makeBtn("teleport", function()
                                 if IsValid(lia.gui.menu) then lia.gui.menu:remove() end
                                 net.Start("liaTeleportToEntity")

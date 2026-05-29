@@ -177,6 +177,7 @@ end
 ]]
 function lia.font.registerFonts(fontName)
     local mainFont = fontName or lia.config.get("Font", "Montserrat Medium")
+    local hudFont = lia.config.get("HUDFont", "Montserrat Medium")
     local fontsToRegister = {
         {
             "Montserrat Regular",
@@ -264,6 +265,22 @@ function lia.font.registerFonts(fontName)
         weight = 500
     })
 
+    lia.font.register("LiliaHUDFont", {
+        font = hudFont,
+        size = 16,
+        extended = true,
+        antialias = true,
+        weight = 500
+    })
+
+    lia.font.register("HUDFont", {
+        font = hudFont,
+        size = 16,
+        extended = true,
+        antialias = true,
+        weight = 500
+    })
+
     for size = 1, 100 do
         lia.font.register("LiliaFont." .. size, {
             font = mainFont,
@@ -289,6 +306,56 @@ function lia.font.registerFonts(fontName)
             weight = 500,
             italic = true
         })
+
+        lia.font.register("LiliaHUDFont." .. size, {
+            font = hudFont,
+            size = size,
+            extended = true,
+            antialias = true,
+            weight = 500
+        })
+
+        lia.font.register("HUDFont." .. size, {
+            font = hudFont,
+            size = size,
+            extended = true,
+            antialias = true,
+            weight = 500
+        })
+
+        lia.font.register("LiliaHUDFont." .. size .. "b", {
+            font = lia.font.getBoldFontName(hudFont),
+            size = size,
+            extended = true,
+            antialias = true,
+            weight = 700
+        })
+
+        lia.font.register("HUDFont." .. size .. "b", {
+            font = lia.font.getBoldFontName(hudFont),
+            size = size,
+            extended = true,
+            antialias = true,
+            weight = 700
+        })
+
+        lia.font.register("LiliaHUDFont." .. size .. "i", {
+            font = hudFont,
+            size = size,
+            extended = true,
+            antialias = true,
+            weight = 500,
+            italic = true
+        })
+
+        lia.font.register("HUDFont." .. size .. "i", {
+            font = hudFont,
+            size = size,
+            extended = true,
+            antialias = true,
+            weight = 500,
+            italic = true
+        })
     end
 
     hook.Run("PostLoadFonts", mainFont, mainFont)
@@ -299,6 +366,7 @@ if CLIENT then
     function surface.SetFont(font)
         if isstring(font) and not lia.font.stored[font] and #font <= 63 then
             local mainFont = lia.config and lia.config.get("Font", "Montserrat Medium") or "Montserrat Medium"
+            local hudFont = lia.config and lia.config.get("HUDFont", "Montserrat Medium") or "Montserrat Medium"
             local fontData = {
                 font = font,
                 size = 16,
@@ -310,11 +378,16 @@ if CLIENT then
             if font == "LiliaFont" then
                 fontData.font = mainFont
                 fontData.size = 16
+            elseif font == "HUDFont" or font == "LiliaHUDFont" then
+                fontData.font = hudFont
+                fontData.size = 16
             else
                 local baseFont, sizeStr = font:match("^([^%.]+)%.(%d+)$")
                 if baseFont and sizeStr then
                     if baseFont == "LiliaFont" then
                         fontData.font = mainFont
+                    elseif baseFont == "HUDFont" or baseFont == "LiliaHUDFont" then
+                        fontData.font = hudFont
                     else
                         fontData.font = baseFont
                     end
@@ -327,6 +400,8 @@ if CLIENT then
             if boldMatch then
                 if string.match(boldMatch, "^LiliaFont") then
                     fontData.font = lia.font.getBoldFontName(mainFont)
+                elseif string.match(boldMatch, "^HUDFont") or string.match(boldMatch, "^LiliaHUDFont") then
+                    fontData.font = lia.font.getBoldFontName(hudFont)
                 else
                     fontData.font = boldMatch
                 end
@@ -342,6 +417,8 @@ if CLIENT then
             if boldItalicMatch then
                 if string.match(boldItalicMatch, "^LiliaFont") then
                     fontData.font = lia.font.getBoldFontName(mainFont)
+                elseif string.match(boldItalicMatch, "^HUDFont") or string.match(boldItalicMatch, "^LiliaHUDFont") then
+                    fontData.font = lia.font.getBoldFontName(hudFont)
                 else
                     fontData.font = boldItalicMatch
                 end
@@ -354,6 +431,8 @@ if CLIENT then
             if boldShadowMatch then
                 if string.match(boldShadowMatch, "^LiliaFont") then
                     fontData.font = lia.font.getBoldFontName(mainFont)
+                elseif string.match(boldShadowMatch, "^HUDFont") or string.match(boldShadowMatch, "^LiliaHUDFont") then
+                    fontData.font = lia.font.getBoldFontName(hudFont)
                 else
                     fontData.font = boldShadowMatch
                 end
@@ -397,3 +476,12 @@ end, {
     type = "Table",
     options = lia.font.getAvailableFonts()
 })
+
+hook.Add("OnConfigUpdated", "liaHUDFontsOnConfigUpdate", function(key, oldValue, newValue)
+    if not CLIENT or oldValue == newValue or key ~= "HUDFont" then return end
+    lia.font.registerFonts(lia.config.get("Font", "Montserrat Medium"))
+    timer.Simple(0.1, function()
+        lia.font.loadFonts()
+        hook.Run("RefreshFonts")
+    end)
+end)

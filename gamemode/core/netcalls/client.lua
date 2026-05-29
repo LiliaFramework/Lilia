@@ -645,11 +645,13 @@ net.Receive("liaActBar", function()
 end)
 
 net.Receive("liaOpenInvMenu", function()
-    if not IsValid(LocalPlayer()) or not LocalPlayer():hasPrivilege("checkInventories") then return end
+    local client = LocalPlayer()
+    local permission = IsValid(client) and client:hasPrivilege("checkInventories") or false
+    if not permission then return end
     local target = net.ReadEntity()
     local index = net.ReadType()
     local targetInv = lia.inventory.instances[index]
-    local myInv = LocalPlayer():getChar():getInv()
+    local myInv = client:getChar():getInv()
     local panels = lia.inventory.showDual(myInv, targetInv)
     if panels and panels[1] and panels[2] then panels[2]:SetTitle(L("inventoryTitle", target:getChar():getName())) end
 end)

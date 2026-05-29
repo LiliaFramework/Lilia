@@ -227,6 +227,7 @@ function MODULE:CanPlayerSwitchChar(client, currentCharacter, newCharacter)
 end
 
 net.Receive("liaRequestFactionMembers", function(_, client)
+    lia.debug("[Permissions]", "Permission Check for net.Receive liaRequestFactionMembers", "hasPrivilege(listCharacters)=", tostring(client:hasPrivilege("listCharacters")), "finalResult=", tostring(client:hasPrivilege("listCharacters")))
     if not client:hasPrivilege("listCharacters") then return end
     local factionUniqueID = net.ReadString()
     if not factionUniqueID or factionUniqueID == "" then return end
@@ -271,6 +272,7 @@ net.Receive("liaRequestFactionMembers", function(_, client)
 end)
 
 net.Receive("liaKickCharacterToBase", function(_, client)
+    lia.debug("[Permissions]", "Permission Check for net.Receive liaKickCharacterToBase", "hasPrivilege(canManageFactions)=", tostring(client:hasPrivilege("canManageFactions")), "finalResult=", tostring(client:hasPrivilege("canManageFactions")))
     if not client:hasPrivilege("canManageFactions") then return end
     local characterID = net.ReadUInt(32)
     local defaultFaction

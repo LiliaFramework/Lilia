@@ -15,7 +15,9 @@
         if not lia.config.get("DamageInCars", true) then return end
         if not target:IsVehicle() or target:GetClass() ~= "gmod_sent_vehicle_fphysics_base" then return end
         local client = target:GetDriver()
-        if IsValid(client) and isfunction(client.isStaffOnDuty) and client:isStaffOnDuty() then
+        local permission = IsValid(client) and isfunction(client.isStaffOnDuty) and client:isStaffOnDuty() or false
+        lia.debug("[Permissions]", "Permission Check for hook liaSimfphys staff vehicle damage immunity", "driverValid=", tostring(IsValid(client)), "hasIsStaffOnDutyMethod=", tostring(IsValid(client) and isfunction(client.isStaffOnDuty) or false), "isStaffOnDuty=", tostring(permission), "finalResult=", tostring(permission))
+        if permission then
             dmgInfo:SetDamage(0)
             return
         end
@@ -112,7 +114,14 @@ end)
 
 hook.Add("simfphysPhysicsCollide", "SIMFPHYS_simfphysPhysicsCollide", function() return true end)
 hook.Add("IsSuitableForTrunk", "SIMFPHYS_IsSuitableForTrunk", function(vehicle) if IsValid(vehicle) and vehicle:isSimfphysCar() then return true end end)
-hook.Add("CanProperty", "SIMFPHYS_CanProperty", function(client, property, ent) if property == "editentity" and IsValid(ent) and ent:isSimfphysCar() then return client:hasPrivilege("canEditSimfphysCars") end end)
+hook.Add("CanProperty", "SIMFPHYS_CanProperty", function(client, property, ent)
+    if property == "editentity" and IsValid(ent) and ent:isSimfphysCar() then
+        local canEditSimfphysCars = client:hasPrivilege("canEditSimfphysCars")
+        lia.debug("[Permissions]", "Permission Check for hook SIMFPHYS_CanProperty", "property=", tostring(property), "entityIsSimfphysCar=", tostring(ent:isSimfphysCar()), "hasPrivilege(canEditSimfphysCars)=", tostring(canEditSimfphysCars), "finalResult=", tostring(canEditSimfphysCars))
+        return canEditSimfphysCars
+    end
+end)
+
 lia.config.add("DamageInCars", "@takeDamageInCars", true, nil, {
     desc = "@takeDamageInCarsDesc",
     category = "@core",

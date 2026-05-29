@@ -284,7 +284,11 @@ lia.chat.register("eventlocal", {
         },
     },
     desc = "@eventlocalDesc",
-    onCanSay = function(speaker) return speaker:hasPrivilege("localEventChat") end,
+    onCanSay = function(speaker)
+        local canSay = speaker:hasPrivilege("localEventChat")
+        lia.debug("[Permissions]", "Permission Check for chat eventlocal onCanSay", "hasPrivilege(localEventChat)=", tostring(canSay), "finalResult=", tostring(canSay))
+        return canSay
+    end,
     onCanHear = function(speaker, listener)
         if speaker == listener then return true end
         if speaker:EyePos():Distance(listener:EyePos()) <= lia.config.get("YellRange", 840) * 2 then return true end
@@ -302,7 +306,11 @@ lia.chat.register("event", {
         },
     },
     desc = "@eventDesc",
-    onCanSay = function(speaker) return speaker:hasPrivilege("eventChat") end,
+    onCanSay = function(speaker)
+        local canSay = speaker:hasPrivilege("eventChat")
+        lia.debug("[Permissions]", "Permission Check for chat event onCanSay", "hasPrivilege(eventChat)=", tostring(canSay), "finalResult=", tostring(canSay))
+        return canSay
+    end,
     onCanHear = function() return true end,
     onChatAdd = function(_, text) chat.AddText((lia.color.theme and lia.color.theme.chat) or Color(255, 239, 150), text) end,
     prefix = {"/event"}
@@ -317,7 +325,10 @@ lia.chat.register("ooc", {
     },
     desc = "@oocDesc",
     onCanSay = function(speaker, text)
-        if lia.config.get("OOCBlocked", false) and not speaker:hasPrivilege("bypassOOCBlock") then
+        local oocBlocked = lia.config.get("OOCBlocked", false)
+        local canBypassOOCBlock = speaker:hasPrivilege("bypassOOCBlock")
+        lia.debug("[Permissions]", "Permission Check for chat ooc onCanSay OOC block", "OOCBlocked=", tostring(oocBlocked), "hasPrivilege(bypassOOCBlock)=", tostring(canBypassOOCBlock), "finalResult=", tostring(not oocBlocked or canBypassOOCBlock))
+        if oocBlocked and not canBypassOOCBlock then
             speaker:notifyErrorLocalized("oocBlocked")
             return false
         end
@@ -334,7 +345,9 @@ lia.chat.register("ooc", {
 
         local customDelay = hook.Run("GetOOCDelay", speaker)
         local oocDelay = customDelay or lia.config.get("OOCDelay", 10)
-        if not speaker:hasPrivilege("noOOCCooldown") and oocDelay > 0 and speaker.liaLastOOC then
+        local hasNoOOCCooldown = speaker:hasPrivilege("noOOCCooldown")
+        lia.debug("[Permissions]", "Permission Check for chat ooc onCanSay cooldown bypass", "hasPrivilege(noOOCCooldown)=", tostring(hasNoOOCCooldown), "oocDelayPositive=", tostring(oocDelay > 0), "hasLastOOC=", tostring(speaker.liaLastOOC ~= nil), "finalResult=", tostring(hasNoOOCCooldown or not (oocDelay > 0 and speaker.liaLastOOC ~= nil)))
+        if not hasNoOOCCooldown and oocDelay > 0 and speaker.liaLastOOC then
             local lastOOC = CurTime() - speaker.liaLastOOC
             if lastOOC <= oocDelay then
                 speaker:notifyWarningLocalized("oocDelay", oocDelay - math.ceil(lastOOC))
@@ -401,7 +414,12 @@ lia.chat.register("help", {
     desc = "@helpDesc",
     onCanSay = function() return true end,
     onCanHear = function(speaker, listener)
-        if listener:isStaffOnDuty() or listener == speaker or listener:hasPrivilege("accessHelpChat") then return true end
+        local isStaffOnDuty = listener:isStaffOnDuty()
+        local isSpeaker = listener == speaker
+        local hasPrivilege = listener:hasPrivilege("accessHelpChat")
+        local canHear = isStaffOnDuty or isSpeaker or hasPrivilege
+        lia.debug("[Permissions]", "Permission Check for chat help onCanHear", "isStaffOnDuty=", tostring(isStaffOnDuty), "listenerIsSpeaker=", tostring(isSpeaker), "hasPrivilege(accessHelpChat)=", tostring(hasPrivilege), "finalResult=", tostring(canHear))
+        if canHear then return true end
         return false
     end,
     onChatAdd = function(speaker, text) chat.AddText((lia.color.theme and lia.color.theme.text) or Color(210, 235, 235), "[" .. L("help") .. "] ", (lia.color.theme and lia.color.theme.chat) or Color(255, 239, 150), speaker:GetName(), ": " .. text) end

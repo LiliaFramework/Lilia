@@ -7,7 +7,11 @@ local REMOVAL_MENU_OPEN = false
 local function canUseTool()
     local cl = LocalPlayer()
     if not IsValid(cl) then return false end
-    return cl:hasPrivilege("usePositionTool") or cl:hasPrivilege("alwaysSpawnAdminStick") or cl:isStaffOnDuty()
+    local hasUsePositionTool = cl:hasPrivilege("usePositionTool")
+    local hasAlwaysSpawnAdminStick = cl:hasPrivilege("alwaysSpawnAdminStick")
+    local isStaffOnDuty = cl:isStaffOnDuty()
+    local permission = hasUsePositionTool or hasAlwaysSpawnAdminStick or isStaffOnDuty
+    return permission
 end
 
 local function getTypes()

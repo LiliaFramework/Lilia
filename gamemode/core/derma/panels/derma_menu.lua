@@ -563,7 +563,6 @@ function PANEL:UpdateSize()
 end
 
 function PANEL:Open(x, y, skipanimation, ownerpanel)
-    print(string.format("[liaDermaMenu] PANEL:Open self=%s class=%s x=%s y=%s owner=%s", tostring(self), tostring(self.ClassName or self:GetName()), tostring(x), tostring(y), tostring(ownerpanel)))
     if RegisterDermaMenuForClose then RegisterDermaMenuForClose(self) end
     if x and y then
         self:SetPos(x, y)

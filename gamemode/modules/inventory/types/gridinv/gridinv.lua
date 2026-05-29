@@ -67,6 +67,7 @@ end
 
 function GridInv:doesFitInventory(item)
     if isstring(item) then item = lia.item.list[item] end
+    if not istable(item) then return false end
     local x, y = self:findFreePosition(item)
     if x and y then return true end
     for _, bagItem in pairs(self:getItems(true)) do
@@ -80,12 +81,14 @@ function GridInv:doesFitInventory(item)
 end
 
 function GridInv:canItemFitInInventory(item, x, y)
+    if not istable(item) then return false end
     local invW, invH = self:getSize()
     local itemW, itemH = item:getWidth(), item:getHeight()
     return x >= 1 and y >= 1 and x + itemW - 1 <= invW and y + itemH - 1 <= invH
 end
 
 function GridInv:doesItemFitAtPos(testItem, x, y)
+    if not istable(testItem) then return false end
     if not self:canItemFitInInventory(testItem, x, y) then return false end
     for _, v in pairs(self.items) do
         if v ~= testItem and self:doesItemOverlapWithOther(testItem, x, y, v) then return false, v end
@@ -103,6 +106,7 @@ function GridInv:doesItemFitAtPos(testItem, x, y)
 end
 
 function GridInv:findFreePosition(item)
+    if not istable(item) then return end
     local w, h = self:getSize()
     for x = 1, w do
         for y = 1, h do
