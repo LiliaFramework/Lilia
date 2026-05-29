@@ -59,6 +59,7 @@ function SWEP:PrimaryAttack()
     self:SetNextSecondaryFire(CurTime() + time2)
     if not IsFirstTimePredicted() then return end
     if not IsValid(entity) then return end
+    if not (entity:isDoor() or entity:IsVehicle() or entity:isSimfphysCar()) then return end
     hook.Run("KeyLock", owner, entity, time)
 end
 
@@ -75,5 +76,6 @@ function SWEP:SecondaryAttack()
     self:SetNextSecondaryFire(CurTime() + time2)
     if not IsFirstTimePredicted() then return end
     if not IsValid(entity) then return end
+    if not (entity:isDoor() or entity:IsVehicle() or entity:isSimfphysCar()) then return end
     hook.Run("KeyUnlock", owner, entity, time)
 end

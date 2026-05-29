@@ -480,16 +480,21 @@ local function resetKeyCooldown(client)
     end
 end
 
+local function isLockableEntity(entity)
+    return IsValid(entity) and (entity:isDoor() or entity:IsVehicle() or entity:isSimfphysCar())
+end
+
 function MODULE:KeyLock(client, door, time)
     if not IsValid(door) or not IsValid(client) then return end
     if hook.Run("CanPlayerLock", client, door) == false then return end
+    local isProperEntity = isLockableEntity(door)
     local distance = client:GetPos():Distance(door:GetPos())
-    local isProperEntity = door:isDoor() or door:IsVehicle() or door:isSimfphysCar()
-    local hasDoorAccess = door:checkDoorAccess(client)
+    local hasDoorAccess = isProperEntity and door:checkDoorAccess(client) or false
     local isCreator = door:GetCreator() == client
     local isStaffOnDuty = client:isStaffOnDuty()
-    local permission = isProperEntity and not door:isLocked() and distance <= 256 and (hasDoorAccess or isCreator or isStaffOnDuty)
-    lia.debug("[Permissions]", "Permission Check for function MODULE:KeyLock", "isProperEntity=", tostring(isProperEntity), "doorIsLocked=", tostring(door:isLocked()), "distanceWithin256=", tostring(distance <= 256), "door:checkDoorAccess=", tostring(hasDoorAccess), "doorCreatorMatch=", tostring(isCreator), "isStaffOnDuty=", tostring(isStaffOnDuty), "finalResult=", tostring(permission))
+    local isLocked = isProperEntity and door:isLocked() or false
+    local permission = isProperEntity and not isLocked and distance <= 256 and (hasDoorAccess or isCreator or isStaffOnDuty)
+    lia.debug("[Permissions]", "Permission Check for function MODULE:KeyLock", "isProperEntity=", tostring(isProperEntity), "doorIsLocked=", tostring(isLocked), "distanceWithin256=", tostring(distance <= 256), "door:checkDoorAccess=", tostring(hasDoorAccess), "doorCreatorMatch=", tostring(isCreator), "isStaffOnDuty=", tostring(isStaffOnDuty), "finalResult=", tostring(permission))
     if permission then
         client:stopAction()
         client:setAction(L("locking"), time, function() end)
@@ -505,13 +510,14 @@ end
 function MODULE:KeyUnlock(client, door, time)
     if not IsValid(door) or not IsValid(client) then return end
     if hook.Run("CanPlayerUnlock", client, door) == false then return end
+    local isProperEntity = isLockableEntity(door)
     local distance = client:GetPos():Distance(door:GetPos())
-    local isProperEntity = door:isDoor() or door:IsVehicle() or door:isSimfphysCar()
-    local hasDoorAccess = door:checkDoorAccess(client)
+    local hasDoorAccess = isProperEntity and door:checkDoorAccess(client) or false
     local isCreator = door:GetCreator() == client
     local isStaffOnDuty = client:isStaffOnDuty()
-    local permission = isProperEntity and door:isLocked() and distance <= 256 and (hasDoorAccess or isCreator or isStaffOnDuty)
-    lia.debug("[Permissions]", "Permission Check for function MODULE:KeyUnlock", "isProperEntity=", tostring(isProperEntity), "doorIsLocked=", tostring(door:isLocked()), "distanceWithin256=", tostring(distance <= 256), "door:checkDoorAccess=", tostring(hasDoorAccess), "doorCreatorMatch=", tostring(isCreator), "isStaffOnDuty=", tostring(isStaffOnDuty), "finalResult=", tostring(permission))
+    local isLocked = isProperEntity and door:isLocked() or false
+    local permission = isProperEntity and isLocked and distance <= 256 and (hasDoorAccess or isCreator or isStaffOnDuty)
+    lia.debug("[Permissions]", "Permission Check for function MODULE:KeyUnlock", "isProperEntity=", tostring(isProperEntity), "doorIsLocked=", tostring(isLocked), "distanceWithin256=", tostring(distance <= 256), "door:checkDoorAccess=", tostring(hasDoorAccess), "doorCreatorMatch=", tostring(isCreator), "isStaffOnDuty=", tostring(isStaffOnDuty), "finalResult=", tostring(permission))
     if permission then
         client:stopAction()
         client:setAction(L("unlocking"), time, function() end)
