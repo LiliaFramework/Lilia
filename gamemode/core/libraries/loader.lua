@@ -1118,5 +1118,4 @@ end
 
 if #loadedCompatibility > 0 then lia.bootstrap(L("compatibility"), L("compatibilityLoadedSingle", table.concat(loadedCompatibility, ", "))) end
 if game.IsDedicated() then concommand.Remove("gm_save") end
-
 lia.DevMode = true
