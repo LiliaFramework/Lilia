@@ -465,6 +465,7 @@ if SERVER then
                         net.WriteString(match)
                         net.WriteTable(missing)
                         net.WriteTable(prefix)
+                        net.WriteTable(command.arguments or {})
                         net.Send(client)
                         return true
                     end
@@ -506,8 +507,10 @@ else
         lia.command.openArgumentPrompt("pm", {"target", "message"}, {"steamid"})
         ```
     ]]
-    function lia.command.openArgumentPrompt(cmdKey, missing, prefix)
-        local command = lia.command.list[cmdKey]
+    function lia.command.openArgumentPrompt(cmdKey, missing, prefix, definitions)
+        local command = lia.command.list[cmdKey] or {
+            arguments = definitions or {}
+        }
         if not command then return end
         local fields = {}
         local lookup = {}
@@ -2571,7 +2574,7 @@ if SERVER then
     end
 
     local function runTargetedAdminCommand(commandID, client, arguments, durationIndex, reasonStartIndex)
-        if not hasConsoleCommandAccess(client, "command_" .. commandID) then return end
+        if not hasConsoleCommandAccess(client, lia.admin.getCommandPrivilegeID(commandID)) then return end
         local target = arguments[1]
         if not target or target == "" then
             if IsValid(client) then
@@ -2592,7 +2595,7 @@ if SERVER then
     registerAdminConsoleCommand("plykick", function(client, arguments) runTargetedAdminCommand("kick", client, arguments, nil, 2) end)
     registerAdminConsoleCommand("plykill", function(client, arguments) runTargetedAdminCommand("kill", client, arguments) end)
     registerAdminConsoleCommand("plyunban", function(client, arguments)
-        if not hasConsoleCommandAccess(client, "command_ban") then return end
+        if not hasConsoleCommandAccess(client, lia.admin.getCommandPrivilegeID("unban")) then return end
         local steamid = arguments[1]
         if not steamid or steamid == "" then
             if IsValid(client) then

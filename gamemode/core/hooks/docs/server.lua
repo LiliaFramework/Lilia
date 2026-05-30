@@ -2693,29 +2693,6 @@ end
 
 --[[
     Purpose:
-        Fired when a player exits an animated sequence.
-
-    When Called:
-        When the sequence finishes or is cancelled.
-
-    Parameters:
-        client (Player)
-            Player leaving the sequence.
-    Realm:
-        Server
-
-    Example Usage:
-        ```lua
-            hook.Add("OnPlayerLeaveSequence", "SequenceEndLog", function(client)
-                lia.log.add(client, "sequenceEnd")
-            end)
-        ```
-]]
-function OnPlayerLeaveSequence(client)
-end
-
---[[
-    Purpose:
         Notifies when a player loses a stackable item (stack count reaches zero).
 
     When Called:

@@ -55,6 +55,26 @@ local function SendPopup(client, message)
     end
 end
 
+lia.command.add("ticket", {
+    arguments = {
+        {
+            name = "text",
+            type = "string"
+        },
+    },
+    desc = "@ticketDesc",
+    onRun = function(client, arguments)
+        local message = table.concat(arguments, " ")
+        if not message or message == "" then
+            client:notifyErrorLocalized("mustProvideString")
+            return
+        end
+
+        ClientAddText(client, Color(70, 0, 130), L("you"), Color(151, 211, 255), " " .. L("ticketMessageToAdmins") .. ": ", Color(0, 255, 0), message)
+        SendPopup(client, message)
+    end
+})
+
 function MODULE:PlayerSay(client, text)
     if text and string.sub(text, 1, 1) == "@" then
         local message = string.sub(text, 2)

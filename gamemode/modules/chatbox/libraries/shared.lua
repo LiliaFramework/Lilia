@@ -424,3 +424,29 @@ lia.chat.register("help", {
     end,
     onChatAdd = function(speaker, text) chat.AddText((lia.color.theme and lia.color.theme.text) or Color(210, 235, 235), "[" .. L("help") .. "] ", (lia.color.theme and lia.color.theme.chat) or Color(255, 239, 150), speaker:GetName(), ": " .. text) end
 })
+
+lia.chat.register("adminchat", {
+    arguments = {
+        {
+            name = "text",
+            type = "string"
+        },
+    },
+    desc = "@adminchatDesc",
+    onCanSay = function(speaker)
+        local canSay = speaker:hasPrivilege("adminChat")
+        lia.debug("[Permissions]", "Permission Check for chat adminchat onCanSay", "hasPrivilege(adminChat)=", tostring(canSay), "finalResult=", tostring(canSay))
+        return canSay
+    end,
+    onCanHear = function(speaker, listener)
+        local isSpeaker = listener == speaker
+        local isStaffOnDuty = listener:isStaffOnDuty()
+        local hasPrivilege = listener:hasPrivilege("adminChat")
+        local canHear = isSpeaker or isStaffOnDuty or hasPrivilege
+        lia.debug("[Permissions]", "Permission Check for chat adminchat onCanHear", "listenerIsSpeaker=", tostring(isSpeaker), "isStaffOnDuty=", tostring(isStaffOnDuty), "hasPrivilege(adminChat)=", tostring(hasPrivilege), "finalResult=", tostring(canHear))
+        if canHear then return true end
+        return false
+    end,
+    onChatAdd = function(speaker, text) chat.AddText((lia.color.theme and lia.color.theme.text) or Color(210, 235, 235), "[" .. L("adminChat") .. "] ", (lia.color.theme and lia.color.theme.chat) or Color(255, 239, 150), speaker:GetName(), ": " .. text) end,
+    prefix = {"/adminchat", "/ac"}
+})

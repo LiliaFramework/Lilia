@@ -474,7 +474,10 @@ end, {
     desc = "@fontDesc",
     category = "@core",
     type = "Table",
-    options = lia.font.getAvailableFonts()
+    options = function()
+        if lia.font and isfunction(lia.font.getAvailableFonts) then return lia.font.getAvailableFonts() end
+        return {"Montserrat Medium"}
+    end
 })
 
 hook.Add("OnConfigUpdated", "liaHUDFontsOnConfigUpdate", function(key, oldValue, newValue)

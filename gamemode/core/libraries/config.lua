@@ -1676,7 +1676,10 @@ lia.config.add("HUDFont", "@hudFont", "Montserrat Medium", function() if not CLI
     desc = "@hudFontDesc",
     category = "fonts",
     type = "Table",
-    options = CLIENT and lia.font.getAvailableFonts() or {"Montserrat Medium"}
+    options = function()
+        if CLIENT and lia.font and isfunction(lia.font.getAvailableFonts) then return lia.font.getAvailableFonts() end
+        return {"Montserrat Medium"}
+    end
 })
 
 lia.config.add("BodyGrouperModel", "@bodyGrouperModel", "models/props_c17/FurnitureDresser001a.mdl", nil, {

@@ -1,4 +1,77 @@
 ﻿hook.Remove("PostGamemodeLoaded", "SAM.DarkRP")
+local function getGroupLevelForPermissionSummary(groupName, visited)
+    visited = visited or {}
+    if visited[groupName] then return 1 end
+    visited[groupName] = true
+    local defaultGroups = lia.admin and lia.admin.DefaultGroups or {}
+    if defaultGroups[groupName] then return defaultGroups[groupName] end
+    local groupData = lia.admin and lia.admin.groups and lia.admin.groups[groupName]
+    if not groupData then return 1 end
+    local inheritance = groupData._info and groupData._info.inheritance or "user"
+    if inheritance == groupName then return 1 end
+    return getGroupLevelForPermissionSummary(inheritance, visited)
+end
+
+local function getDefaultPermissionValueForSummary(groupName, privilege, visited)
+    visited = visited or {}
+    local visitKey = tostring(groupName) .. ":" .. tostring(privilege)
+    if visited[visitKey] then return false end
+    visited[visitKey] = true
+    local privilegeMinAccess = lia.admin and lia.admin.privileges and lia.admin.privileges[privilege]
+    local defaultGroups = lia.admin and lia.admin.DefaultGroups or {}
+    if privilegeMinAccess and getGroupLevelForPermissionSummary(groupName) >= (defaultGroups[tostring(privilegeMinAccess):lower()] or 1) then return true end
+    local groupData = lia.admin and lia.admin.groups and lia.admin.groups[groupName]
+    if not groupData then return false end
+    local inheritance = groupData._info and groupData._info.inheritance or "user"
+    if inheritance and inheritance ~= "" and inheritance ~= groupName then
+        local inheritedGroup = lia.admin and lia.admin.groups and lia.admin.groups[inheritance]
+        if inheritedGroup and inheritedGroup[privilege] == true then return true end
+        return getDefaultPermissionValueForSummary(inheritance, privilege, visited)
+    end
+    return false
+end
+
+local function getGroupPermissionOverrides(groupName)
+    local groupData = lia.admin and lia.admin.groups and lia.admin.groups[groupName]
+    if not groupData then return {} end
+    local overrides = {}
+    for permission in pairs(lia.admin.privileges or {}) do
+        if permission ~= "_info" and groupData[permission] ~= nil then
+            local currentValue = groupData[permission] == true
+            local defaultValue = getDefaultPermissionValueForSummary(groupName, permission)
+            if currentValue ~= defaultValue then
+                overrides[#overrides + 1] = (currentValue and "+" or "-") .. permission
+            end
+        end
+    end
+
+    table.sort(overrides)
+    return overrides
+end
+
+local function announceSAMPermissionChange(rankName, permission, value)
+    if not SERVER then return end
+    local lines = {"Usergroup " .. string.upper(tostring(rankName))}
+    local changedPrefix = value and "[+] " or "[-] "
+    local changedPermissionName = lia.admin and lia.admin.privilegeNames and lia.admin.privilegeNames[permission] or permission
+    lines[#lines + 1] = changedPrefix .. tostring(changedPermissionName) .. " - " .. permission
+    for _, override in ipairs(getGroupPermissionOverrides(rankName)) do
+        local permissionID = override:sub(2)
+        if permissionID ~= permission then
+            local prefix = override:sub(1, 1) == "+" and "[+] " or "[-] "
+            local permissionName = lia.admin and lia.admin.privilegeNames and lia.admin.privilegeNames[permissionID] or permissionID
+            lines[#lines + 1] = prefix .. tostring(permissionName) .. " - " .. permissionID
+        end
+    end
+
+    lia.information(table.concat(lines, "\n"))
+    net.Start("liaGroupPermChanged")
+    net.WriteString(rankName)
+    net.WriteString(permission)
+    net.WriteBool(value)
+    net.Broadcast()
+end
+
 local samCommands = {
     kick = function(id, _, reason) RunConsoleCommand("sam", "kick", id, reason or "") end,
     ban = function(id, dur, reason) RunConsoleCommand("sam", "ban", id, tostring(dur or 0), reason or "") end,
@@ -142,13 +215,19 @@ hook.Add("SAM.RankPermissionGiven", "liaSAMHandlePermissionGiven", function(rank
     end
 
     lia.debug("[Permissions]", "SAM granted rank permission", "rank=", tostring(rankName), "permission=", tostring(permission))
-    if SERVER then lia.admin.addPermission(rankName, permission, true) end
+    if SERVER then
+        lia.admin.addPermission(rankName, permission, true)
+        announceSAMPermissionChange(rankName, permission, true)
+    end
 end)
 
 hook.Add("SAM.RankPermissionTaken", "liaSAMHandlePermissionTaken", function(rankName, permission)
     if not rankName or not permission then return end
     lia.debug("[Permissions]", "SAM removed rank permission", "rank=", tostring(rankName), "permission=", tostring(permission))
-    if SERVER then lia.admin.removePermission(rankName, permission, true) end
+    if SERVER then
+        lia.admin.removePermission(rankName, permission, true)
+        announceSAMPermissionChange(rankName, permission, false)
+    end
 end)
 
 lia.command.add("cleardecals", {
