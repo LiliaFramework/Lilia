@@ -1555,7 +1555,6 @@ net.Receive("liaGroupsSetPerm", function(_, p)
     end
 
     lia.debug("[Permissions]", "Applied liaGroupsSetPerm", "group=", tostring(group), "privilege=", tostring(privilege), "currentValue=", tostring(lia.admin.groups[group] and lia.admin.groups[group][privilege] == true))
-
     net.Start("liaGroupPermChanged")
     net.WriteString(group)
     net.WriteString(privilege)

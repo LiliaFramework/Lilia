@@ -537,6 +537,7 @@ function lia.admin.hasAccess(ply, privilege)
             local playerInfo = IsValid(ply) and ply:Nick() .. " (" .. ply:SteamID() .. ")" or "Unknown"
             lia.log.add(ply, "missingPrivilege", privilege, playerInfo, grp)
         end
+
         lia.debug("[Permissions]", "Access Check fallback for unregistered privilege", "group=", tostring(grp), "privilege=", tostring(privilege), "groupLevel=", tostring(groupLevel), "adminLevel=", tostring(adminLevel), "finalResult=", tostring(groupLevel >= adminLevel))
         return groupLevel >= adminLevel
     end
@@ -545,11 +546,13 @@ function lia.admin.hasAccess(ply, privilege)
         lia.debug("[Permissions]", "Access Check superadmin bypass", "group=", tostring(grp), "privilege=", tostring(privilege), "groupLevel=", tostring(groupLevel), "superadminLevel=", tostring(superadminLevel), "finalResult=", "true")
         return true
     end
+
     local g = lia.admin.groups and lia.admin.groups[grp] or nil
     if g and g[privilege] == true then
         lia.debug("[Permissions]", "Access Check explicit group permission", "group=", tostring(grp), "privilege=", tostring(privilege), "groupHasPermission=", "true", "finalResult=", "true")
         return true
     end
+
     local min = lia.admin.privileges[privilege]
     local result = shouldGrant(grp, min)
     lia.debug("[Permissions]", "Access Check inherited/min-access result", "group=", tostring(grp), "privilege=", tostring(privilege), "groupLevel=", tostring(groupLevel), "minimumAccess=", tostring(min), "finalResult=", tostring(result))
@@ -600,6 +603,7 @@ function lia.admin.save(noNetwork)
     for _, row in ipairs(rows) do
         lia.debug("[Permissions]", "Saving admin group row", "group=", tostring(row.usergroup), "inheritance=", tostring(row.inheritance), "privilegesJSON=", tostring(row.privileges), "typesJSON=", tostring(row.types))
     end
+
     lia.db.query("DELETE FROM lia_admin")
     lia.db.bulkInsert("admin", rows)
     if noNetwork or lia.admin._loading then return end
