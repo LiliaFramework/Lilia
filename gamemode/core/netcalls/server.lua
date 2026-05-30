@@ -1545,6 +1545,7 @@ net.Receive("liaGroupsSetPerm", function(_, p)
     if group == "" or privilege == "" then return end
     if lia.admin.DefaultGroups and lia.admin.DefaultGroups[group] then return end
     if not lia.admin.groups or not lia.admin.groups[group] then return end
+    lia.debug("[Permissions]", "Received liaGroupsSetPerm", "actor=", IsValid(p) and p:SteamName() or "unknown", "group=", tostring(group), "privilege=", tostring(privilege), "requestedValue=", tostring(value), "previousValue=", tostring(lia.admin.groups[group] and lia.admin.groups[group][privilege] == true))
     if SERVER then
         if value then
             lia.admin.addPermission(group, privilege, true)
@@ -1552,6 +1553,8 @@ net.Receive("liaGroupsSetPerm", function(_, p)
             lia.admin.removePermission(group, privilege, true)
         end
     end
+
+    lia.debug("[Permissions]", "Applied liaGroupsSetPerm", "group=", tostring(group), "privilege=", tostring(privilege), "currentValue=", tostring(lia.admin.groups[group] and lia.admin.groups[group][privilege] == true))
 
     net.Start("liaGroupPermChanged")
     net.WriteString(group)

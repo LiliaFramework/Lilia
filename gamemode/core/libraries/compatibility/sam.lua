@@ -38,6 +38,7 @@ end)
 hook.Add("OnSetUsergroup", "liaSAMSetUserGroup", function(steamID, group)
     if not sam and not SAM then return end
     if not steamID or steamID == "" or not group or group == "" then return end
+    lia.debug("[Permissions]", "SAM syncing usergroup", "steamID=", tostring(steamID), "group=", tostring(group))
     RunConsoleCommand("sam", "setrankid", steamID, group)
 end)
 
@@ -140,11 +141,13 @@ hook.Add("SAM.RankPermissionGiven", "liaSAMHandlePermissionGiven", function(rank
         })
     end
 
+    lia.debug("[Permissions]", "SAM granted rank permission", "rank=", tostring(rankName), "permission=", tostring(permission))
     if SERVER then lia.admin.addPermission(rankName, permission, true) end
 end)
 
 hook.Add("SAM.RankPermissionTaken", "liaSAMHandlePermissionTaken", function(rankName, permission)
     if not rankName or not permission then return end
+    lia.debug("[Permissions]", "SAM removed rank permission", "rank=", tostring(rankName), "permission=", tostring(permission))
     if SERVER then lia.admin.removePermission(rankName, permission, true) end
 end)
 

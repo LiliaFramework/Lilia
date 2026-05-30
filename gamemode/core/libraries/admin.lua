@@ -537,14 +537,23 @@ function lia.admin.hasAccess(ply, privilege)
             local playerInfo = IsValid(ply) and ply:Nick() .. " (" .. ply:SteamID() .. ")" or "Unknown"
             lia.log.add(ply, "missingPrivilege", privilege, playerInfo, grp)
         end
+        lia.debug("[Permissions]", "Access Check fallback for unregistered privilege", "group=", tostring(grp), "privilege=", tostring(privilege), "groupLevel=", tostring(groupLevel), "adminLevel=", tostring(adminLevel), "finalResult=", tostring(groupLevel >= adminLevel))
         return groupLevel >= adminLevel
     end
 
-    if groupLevel >= superadminLevel then return true end
+    if groupLevel >= superadminLevel then
+        lia.debug("[Permissions]", "Access Check superadmin bypass", "group=", tostring(grp), "privilege=", tostring(privilege), "groupLevel=", tostring(groupLevel), "superadminLevel=", tostring(superadminLevel), "finalResult=", "true")
+        return true
+    end
     local g = lia.admin.groups and lia.admin.groups[grp] or nil
-    if g and g[privilege] == true then return true end
+    if g and g[privilege] == true then
+        lia.debug("[Permissions]", "Access Check explicit group permission", "group=", tostring(grp), "privilege=", tostring(privilege), "groupHasPermission=", "true", "finalResult=", "true")
+        return true
+    end
     local min = lia.admin.privileges[privilege]
-    return shouldGrant(grp, min)
+    local result = shouldGrant(grp, min)
+    lia.debug("[Permissions]", "Access Check inherited/min-access result", "group=", tostring(grp), "privilege=", tostring(privilege), "groupLevel=", tostring(groupLevel), "minimumAccess=", tostring(min), "finalResult=", tostring(result))
+    return result
 end
 
 --[[
@@ -587,6 +596,10 @@ function lia.admin.save(noNetwork)
         }
     end
 
+    lia.debug("[Permissions]", "Saving admin groups", "groupCount=", tostring(table.Count(lia.admin.groups or {})), "rowCount=", tostring(#rows), "noNetwork=", tostring(noNetwork == true))
+    for _, row in ipairs(rows) do
+        lia.debug("[Permissions]", "Saving admin group row", "group=", tostring(row.usergroup), "inheritance=", tostring(row.inheritance), "privilegesJSON=", tostring(row.privileges), "typesJSON=", tostring(row.types))
+    end
     lia.db.query("DELETE FROM lia_admin")
     lia.db.bulkInsert("admin", rows)
     if noNetwork or lia.admin._loading then return end
@@ -818,6 +831,7 @@ function lia.admin.load()
 
     lia.db.select("*", "admin"):next(function(res)
         local rows = res and res.results or {}
+        lia.debug("[Permissions]", "Loading admin groups from database", "rowCount=", tostring(#rows))
         local groups = {}
         for _, row in ipairs(rows or {}) do
             local name = row.usergroup or row.usergroups or row.group
@@ -829,6 +843,7 @@ function lia.admin.load()
                 }
 
                 groups[name] = privs
+                lia.debug("[Permissions]", "Loaded admin group row", "group=", tostring(name), "inheritance=", tostring(privs._info and privs._info.inheritance or "user"), "privilegesJSON=", tostring(row.privileges), "typesJSON=", tostring(row.types))
             end
         end
 
@@ -1063,8 +1078,10 @@ if SERVER then
         end
 
         if lia.admin.DefaultGroups[groupName] then return end
+        lia.debug("[Permissions]", "Adding permission to group", "group=", tostring(groupName), "permission=", tostring(permission), "silent=", tostring(silent == true), "previousValue=", tostring(lia.admin.groups[groupName][permission] == true))
         lia.admin.groups[groupName][permission] = true
         lia.admin.save(silent and true or false)
+        lia.debug("[Permissions]", "Added permission to group", "group=", tostring(groupName), "permission=", tostring(permission), "currentValue=", tostring(lia.admin.groups[groupName][permission] == true))
         hook.Run("OnUsergroupPermissionsChanged", groupName, lia.admin.groups[groupName])
     end
 
@@ -1106,8 +1123,10 @@ if SERVER then
         end
 
         if lia.admin.DefaultGroups[groupName] then return end
+        lia.debug("[Permissions]", "Removing permission from group", "group=", tostring(groupName), "permission=", tostring(permission), "silent=", tostring(silent == true), "previousValue=", tostring(lia.admin.groups[groupName][permission] == true))
         lia.admin.groups[groupName][permission] = nil
         lia.admin.save(silent and true or false)
+        lia.debug("[Permissions]", "Removed permission from group", "group=", tostring(groupName), "permission=", tostring(permission), "currentValue=", tostring(lia.admin.groups[groupName][permission] == true))
         hook.Run("OnUsergroupPermissionsChanged", groupName, lia.admin.groups[groupName])
     end
 
