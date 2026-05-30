@@ -1,4 +1,4 @@
-﻿MODULE.name = "@categoryAdministration"
+﻿MODULE.Name = "@categoryAdministration"
 MODULE.author = "Samael"
 MODULE.discord = "@liliaplayer"
 MODULE.desc = "@administrationToolsDescription"
@@ -19,22 +19,22 @@ MODULE.Privileges = {
         Category = "@categoryBlacklisting",
     },
     ["staffHUD"] = {
-        Name = "staffHUD",
+        Name = "@staffHUD",
         MinAccess = "superadmin",
         Category = "developmentHUD",
     },
     ["developmentHUD"] = {
-        Name = "developmentHUD",
+        Name = "@developmentHUD",
         MinAccess = "superadmin",
         Category = "developmentHUD",
     },
     ["manageBodygroups"] = {
-        Name = "manageBodygroups",
+        Name = "@manageBodygroups",
         MinAccess = "admin",
         Category = "bodygroups",
     },
     ["changeBodygroups"] = {
-        Name = "changeBodygroups",
+        Name = "@changeBodygroups",
         MinAccess = "admin",
         Category = "bodygroups",
     },
