@@ -1,4 +1,24 @@
 ﻿local PANEL = {}
+local function paintChatMarkupText(chatbox, text, font, x, y, color, halign, valign, alpha)
+    alpha = alpha or color.a or 255
+    surface.SetFont(font)
+    if IsValid(chatbox) and not chatbox.active then
+        surface.SetTextColor(0, 0, 0, alpha)
+        for offsetX = -1, 1 do
+            for offsetY = -1, 1 do
+                if offsetX ~= 0 or offsetY ~= 0 then
+                    surface.SetTextPos(x + offsetX, y + offsetY)
+                    surface.DrawText(text)
+                end
+            end
+        end
+    end
+
+    surface.SetTextColor(color.r, color.g, color.b, alpha)
+    surface.SetTextPos(x, y)
+    surface.DrawText(text)
+end
+
 function PANEL:Init()
     local border = 32
     local screenW, screenH = ScrW(), ScrH()
@@ -374,7 +394,7 @@ function PANEL:addText(...)
     markup = markup .. "</font>"
     local panel = self.scroll:Add("liaMarkupPanel")
     panel:SetWide(self:GetWide() - 16)
-    panel:setMarkup(markup)
+    panel:setMarkup(markup, function(...) paintChatMarkupText(self, ...) end)
     panel.originalArgs = argList
     panel.markupArgs = {
         markup = markup,
@@ -511,7 +531,7 @@ function PANEL:rebuildPanelMarkup(panel)
     end
 
     markup = markup .. "</font>"
-    panel:setMarkup(markup)
+    panel:setMarkup(markup, function(...) paintChatMarkupText(self, ...) end)
     panel.markupArgs.markup = markup
     panel.markupArgs.themeState = {
         chatColor = currentChatColor,

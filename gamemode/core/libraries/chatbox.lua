@@ -113,7 +113,7 @@ function lia.chat.register(chatType, data)
     data.color = data.color or (lia.color.theme and lia.color.theme.chat) or Color(255, 239, 150)
     data.format = data.format or "chatFormat"
     data.onChatAdd = data.onChatAdd or function(speaker, text, anonymous) chat.AddText(lia.chat.timestamp(false), (lia.color.theme and lia.color.theme.chat) or Color(255, 239, 150), L(data.format, anonymous and L("someone") or hook.Run("GetDisplayedName", speaker, chatType) or IsValid(speaker) and speaker:Name() or L("console"), text)) end
-    if CLIENT and data.prefix then
+    if data.prefix then
         local rawPrefixes = istable(data.prefix) and data.prefix or {data.prefix}
         local aliases, lookup = {}, {}
         for _, prefix in ipairs(rawPrefixes) do
@@ -132,7 +132,14 @@ function lia.chat.register(chatType, data)
                 arguments = data.arguments,
                 desc = data.desc,
                 alias = aliases,
-                onRun = function(_, args) lia.chat.parse(LocalPlayer(), table.concat(args, " ")) end
+                onRun = function(client, args)
+                    local text = table.concat(args, " ")
+                    if SERVER then
+                        lia.chat.send(client, chatType, text)
+                    else
+                        lia.chat.parse(LocalPlayer(), table.concat(args, " "))
+                    end
+                end
             })
         end
     end
