@@ -282,10 +282,15 @@ local function clearGroupLevelCache()
 end
 
 local function getGroupLevel(group)
-    if groupLevelCache[group] ~= nil then return groupLevelCache[group] end
+    if groupLevelCache[group] ~= nil then
+        lia.debug("[Permissions]", "getGroupLevel cache hit", "group=", tostring(group), "level=", tostring(groupLevelCache[group]), "isDefaultGroup=", tostring(lia.admin.DefaultGroups and lia.admin.DefaultGroups[group] ~= nil))
+        return groupLevelCache[group]
+    end
+
     local levels = lia.admin.DefaultGroups or {}
     if levels[group] then
         groupLevelCache[group] = levels[group]
+        lia.debug("[Permissions]", "getGroupLevel resolved default group", "group=", tostring(group), "level=", tostring(levels[group]), "inheritance=", tostring(group))
         return levels[group]
     end
 
@@ -297,6 +302,7 @@ local function getGroupLevel(group)
         local inh = g and g._info and g._info.inheritance or "user"
         if levels[inh] then
             groupLevelCache[group] = levels[inh]
+            lia.debug("[Permissions]", "getGroupLevel resolved inherited group", "group=", tostring(group), "resolvedThrough=", tostring(current), "inheritance=", tostring(inh), "level=", tostring(levels[inh]), "groupExists=", tostring(g ~= nil))
             return levels[inh]
         end
 
@@ -305,13 +311,18 @@ local function getGroupLevel(group)
 
     local defaultLevel = levels.user or 1
     groupLevelCache[group] = defaultLevel
+    lia.debug("[Permissions]", "getGroupLevel fell back to user", "group=", tostring(group), "level=", tostring(defaultLevel), "knownGroup=", tostring(lia.admin.groups and lia.admin.groups[group] ~= nil))
     return defaultLevel
 end
 
 local function shouldGrant(group, min)
     local levels = lia.admin.DefaultGroups or {}
     local m = tostring(min or "user"):lower()
-    return getGroupLevel(group) >= (levels[m] or 1)
+    local groupLevel = getGroupLevel(group)
+    local requiredLevel = levels[m] or 1
+    local result = groupLevel >= requiredLevel
+    lia.debug("[Permissions]", "shouldGrant evaluated", "group=", tostring(group), "groupLevel=", tostring(groupLevel), "requiredMinAccess=", tostring(m), "requiredLevel=", tostring(requiredLevel), "isDefaultGroup=", tostring(levels[group] ~= nil), "finalResult=", tostring(result))
+    return result
 end
 
 local targetedCommandPrivilegeMap = {
@@ -567,20 +578,37 @@ function lia.admin.hasAccess(ply, privilege)
     local defaultGroups = lia.admin.DefaultGroups or {}
     local superadminLevel = defaultGroups.superadmin or 3
     local adminLevel = defaultGroups.admin or 3
+    local actorDescription = IsValid(ply) and string.format("%s (%s)", ply:Nick(), ply:SteamID()) or tostring(grp)
     if not lia.admin.privileges[privilege] then
         if SERVER then
             local playerInfo = IsValid(ply) and ply:Nick() .. " (" .. ply:SteamID() .. ")" or "Unknown"
             lia.log.add(ply, "missingPrivilege", privilege, playerInfo, grp)
         end
+
+        lia.debug("[Permissions]", "hasAccess fallback for unregistered privilege", "actor=", actorDescription, "group=", tostring(grp), "privilege=", tostring(privilege), "groupLevel=", tostring(groupLevel), "adminLevel=", tostring(adminLevel), "finalResult=", tostring(groupLevel >= adminLevel))
         return groupLevel >= adminLevel
     end
 
-    if groupLevel >= superadminLevel then return true end
+    if groupLevel >= superadminLevel then
+        lia.debug("[Permissions]", "hasAccess resolved privilege", "actor=", actorDescription, "group=", tostring(grp), "privilege=", tostring(privilege), "resolution=", "superadmin_level", "groupLevel=", tostring(groupLevel), "requiredMinAccess=", tostring(lia.admin.privileges[privilege]), "finalResult=", "true")
+        return true
+    end
+
     local g = lia.admin.groups and lia.admin.groups[grp] or nil
-    if g and g[privilege] == true then return true end
-    if g and g[privilege] == false then return false end
+    if g and g[privilege] == true then
+        lia.debug("[Permissions]", "hasAccess resolved privilege", "actor=", actorDescription, "group=", tostring(grp), "privilege=", tostring(privilege), "resolution=", "explicit_true", "requiredMinAccess=", tostring(lia.admin.privileges[privilege]), "finalResult=", "true")
+        return true
+    end
+
+    if g and g[privilege] == false then
+        lia.debug("[Permissions]", "hasAccess resolved privilege", "actor=", actorDescription, "group=", tostring(grp), "privilege=", tostring(privilege), "resolution=", "explicit_false", "requiredMinAccess=", tostring(lia.admin.privileges[privilege]), "finalResult=", "false")
+        return false
+    end
+
     local min = lia.admin.privileges[privilege]
-    return shouldGrant(grp, min)
+    local result = shouldGrant(grp, min)
+    lia.debug("[Permissions]", "hasAccess resolved privilege", "actor=", actorDescription, "group=", tostring(grp), "privilege=", tostring(privilege), "resolution=", "minaccess_inheritance", "requiredMinAccess=", tostring(min), "groupLevel=", tostring(groupLevel), "finalResult=", tostring(result))
+    return result
 end
 
 --[[
@@ -1178,6 +1206,7 @@ if SERVER then
         local function push(ply)
             if not IsValid(ply) then return end
             if not lia.net.ready[ply] then return end
+            lia.debug("[Permissions Sync]", "Pushing admin sync", "target=", tostring(ply:Nick()) .. " (" .. tostring(ply:SteamID()) .. ")", "targetUserGroup=", tostring(ply:GetUserGroup() or "user"), "privilegeCount=", tostring(table.Count(lia.admin.privileges or {})), "groupCount=", tostring(table.Count(lia.admin.groups or {})), "hasAlwaysSpawnAdminStick=", tostring(lia.admin.privileges and lia.admin.privileges.alwaysSpawnAdminStick or "nil"), "defaultUserGroupExists=", tostring(lia.admin.groups and lia.admin.groups.user ~= nil), "defaultAdminGroupExists=", tostring(lia.admin.groups and lia.admin.groups.admin ~= nil), "defaultSuperAdminGroupExists=", tostring(lia.admin.groups and lia.admin.groups.superadmin ~= nil))
             lia.net.writeBigTable(ply, "liaUpdateAdminPrivileges", {
                 privileges = lia.admin.privileges or {},
                 names = lia.admin.privilegeNames or {}
@@ -1310,6 +1339,7 @@ if SERVER then
         local ply = lia.util.getBySteamID(sid)
         local old = IsValid(ply) and tostring(ply:GetUserGroup() or "user") or "user"
         if old == new then return end
+        lia.debug("[Permissions]", "setSteamIDUsergroup called", "steamID=", tostring(sid), "oldGroup=", tostring(old), "newGroup=", tostring(new), "source=", tostring(source), "playerValid=", tostring(IsValid(ply)), "isDefaultNewGroup=", tostring(lia.admin.DefaultGroups and lia.admin.DefaultGroups[new] ~= nil), "newGroupExistsInLilia=", tostring(lia.admin.groups and lia.admin.groups[new] ~= nil))
         if IsValid(ply) then ply:SetUserGroup(new) end
         if CAMI then CAMI.SignalSteamIDUserGroupChanged(sid, old, new, source or "Lilia") end
         hook.Run("OnSetUsergroup", sid, new, source, ply)
@@ -1956,9 +1986,13 @@ else
             row:Dock(TOP)
             row:SetTall(20)
             row:DockMargin(4, 0, 4, 4)
-            row:SetPrivilege(name, current[name] and true or false, editable)
+            local explicitValue = current[name]
+            local effectiveValue = lia.admin.hasAccess(g, name)
+            lia.debug("[Permissions UI]", "Rendering privilege row", "group=", tostring(g), "privilege=", tostring(name), "explicitValue=", tostring(explicitValue), "effectiveValue=", tostring(effectiveValue), "requiredMinAccess=", tostring(lia.admin.privileges and lia.admin.privileges[name] or "nil"), "editable=", tostring(editable))
+            row:SetPrivilege(name, effectiveValue, editable)
             if editable then
                 row.OnChange = function(_, value)
+                    lia.debug("[Permissions UI]", "Privilege row changed", "group=", tostring(g), "privilege=", tostring(name), "previousExplicitValue=", tostring(current[name]), "previousEffectiveValue=", tostring(lia.admin.hasAccess(g, name)), "newRequestedValue=", tostring(value))
                     if value then
                         current[name] = true
                     else
@@ -2017,6 +2051,7 @@ else
 
     lia.net.readBigTable("liaUpdateAdminGroups", function(tbl)
         lia.admin.groups = tbl
+        lia.debug("[Permissions UI]", "Received admin groups sync", "groupCount=", tostring(table.Count(lia.admin.groups or {})))
         if IsValid(lia.gui.usergroups) and lia.gui.usergroups.refreshTabs then lia.gui.usergroups.refreshTabs() end
     end)
 
@@ -2028,6 +2063,7 @@ else
             lia.admin.privileges = tbl
         end
 
+        lia.debug("[Permissions UI]", "Received admin privileges sync", "privilegeCount=", tostring(table.Count(lia.admin.privileges or {})), "hasAlwaysSpawnAdminStick=", tostring(lia.admin.privileges and lia.admin.privileges.alwaysSpawnAdminStick or "nil"))
         hook.Run("AdminPrivilegesUpdated")
     end)
 

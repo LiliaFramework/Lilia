@@ -511,7 +511,6 @@ else
         local command = lia.command.list[cmdKey] or {
             arguments = definitions or {}
         }
-
         if not command then return end
         local fields = {}
         local lookup = {}

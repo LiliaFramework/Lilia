@@ -605,6 +605,7 @@ function GM:PlayerAuthed(client, steamid)
             lia.db.query(Format("UPDATE lia_players SET userGroup = '%s' WHERE steamID = %s", lia.db.escape(group), lia.db.convertDataType(steamid)))
         end
 
+        lia.debug("[Permissions]", "PlayerAuthed applying stored usergroup", "player=", tostring(client:Nick()) .. " (" .. tostring(steamid) .. ")", "storedGroup=", tostring(group), "isDefaultGroup=", tostring(lia.admin.DefaultGroups and lia.admin.DefaultGroups[group] ~= nil), "groupExistsInLilia=", tostring(lia.admin.groups and lia.admin.groups[group] ~= nil))
         client:SetUserGroup(group)
         lia.db.selectOne({"reason"}, "bans", "playerSteamID = " .. lia.db.convertDataType(steamid)):next(function(banData)
             if not IsValid(client) or not banData then return end
@@ -651,6 +652,7 @@ function GM:PlayerInitialSpawn(client)
     client:SetNoDraw(true)
     lia.config.send(client)
     client.liaJoinTime = RealTime()
+    lia.debug("[Permissions Sync]", "Initial sync for connecting player", "player=", tostring(client:Nick()) .. " (" .. tostring(client:SteamID()) .. ")", "currentUserGroup=", tostring(client:GetUserGroup() or "user"))
     lia.admin.sync(client)
     client:loadLiliaData(function(data)
         if not IsValid(client) then return end
