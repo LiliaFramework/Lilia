@@ -3274,6 +3274,37 @@ Server-side hooks in the Lilia framework handle server-side logic, data persiste
 
 ---
 
+<details class="realm-server" id="function-onplayerleavesequence">
+<summary><a id="OnPlayerLeaveSequence"></a>OnPlayerLeaveSequence(client)</summary>
+<div class="details-content">
+<h3 style="margin-bottom: 5px; font-weight: 700;"><a id="onplayerleavesequence"></a>Purpose</h3>
+<div style="margin-left: 20px; margin-bottom: 20px;">
+  <p>Fired when a player exits an animated sequence.</p>
+</div>
+
+<h3 style="margin-bottom: 5px; font-weight: 700;">When Called</h3>
+<div style="margin-left: 20px; margin-bottom: 20px;">
+  <p>When the sequence finishes or is cancelled.</p>
+</div>
+
+<h3 style="margin-bottom: 5px; font-weight: 700;">Parameters</h3>
+<div style="margin-left: 20px; margin-bottom: 20px;">
+<p><span class="types"><a class="type" href="/development/meta/player/">Player</a></span> <span class="parameter">client</span> Player leaving the sequence.</p>
+</div>
+
+<h3 style="margin-bottom: 5px; font-weight: 700;">Example Usage</h3>
+<div style="margin-left: 20px; margin-bottom: 20px;">
+<pre><code class="language-lua">  hook.Add("OnPlayerLeaveSequence", "SequenceEndLog", function(client)
+      lia.log.add(client, "sequenceEnd")
+  end)
+</code></pre>
+</div>
+
+</div>
+</details>
+
+---
+
 <details class="realm-server" id="function-onplayerloststackitem">
 <summary><a id="OnPlayerLostStackItem"></a>OnPlayerLostStackItem(itemTypeOrItem)</summary>
 <div class="details-content">

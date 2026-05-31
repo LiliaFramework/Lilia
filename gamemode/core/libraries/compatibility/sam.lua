@@ -74,16 +74,15 @@ local function syncSAMPermission(id, data)
     if not sam or not sam.permissions or not sam.permissions.add then return end
     id = tostring(id or "")
     if id == "" then return end
-    local category = data and data.Category or "Lilia"
     local minAccess = data and data.MinAccess or lia.admin and lia.admin.privileges and lia.admin.privileges[id] or "admin"
-    sam.permissions.add(id, tostring(category), tostring(minAccess or "admin"):lower())
+    sam.permissions.add(lia.admin.getExternalPrivilegeName(id), "Lilia", tostring(minAccess or "admin"):lower())
 end
 
 local function removeSAMPermission(id)
     if not sam or not sam.permissions or not sam.permissions.remove then return end
     id = tostring(id or "")
     if id == "" then return end
-    sam.permissions.remove(id)
+    sam.permissions.remove(lia.admin.getExternalPrivilegeName(id))
 end
 
 local function syncAllLiliaPermissionsToSAM()
@@ -234,7 +233,8 @@ hook.Add("SAM.RankPermissionGiven", "liaSAMHandlePermissionGiven", function(rank
     if CAMI and not CAMI.GetPrivilege(permission) then
         CAMI.RegisterPrivilege({
             Name = permission,
-            MinAccess = "admin"
+            MinAccess = "admin",
+            Category = "Lilia"
         })
     end
 

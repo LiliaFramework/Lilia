@@ -4,7 +4,8 @@
         if CAMI and not CAMI.GetPrivilege(access) then
             CAMI.RegisterPrivilege({
                 Name = access,
-                MinAccess = "admin"
+                MinAccess = "admin",
+                Category = "Lilia"
             })
         end
 

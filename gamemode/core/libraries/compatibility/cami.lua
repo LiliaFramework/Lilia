@@ -33,6 +33,7 @@ local function shouldGrant(group, min)
 end
 
 local function defaultAccessHandler(actor, privilege, callback, _, extra)
+    privilege = lia.admin.normalizePrivilege(privilege)
     local grp = "user"
     if IsValid(actor) then
         if actor.getUserGroup then
@@ -95,7 +96,8 @@ hook.Add("CAMI.OnUsergroupUnregistered", "liaAdminUGRemoved", function(usergroup
 end)
 
 hook.Add("CAMI.OnPrivilegeRegistered", "liaAdminPrivAdded", function(priv)
-    local name = priv and priv.Name
+    if lia.admin and lia.admin._suppressCamiPrivilegeHooks then return end
+    local name = lia.admin.normalizePrivilege(priv and priv.Name)
     if not isstring(name) or name == "" then return end
     if lia.admin.privileges[name] ~= nil then return end
     local min = tostring(priv.MinAccess or "user"):lower()
@@ -104,7 +106,7 @@ hook.Add("CAMI.OnPrivilegeRegistered", "liaAdminPrivAdded", function(priv)
     local defaultGroups = lia.admin.DefaultGroups or {}
     local minLevel = defaultGroups[min] or 1
     for groupName in pairs(lia.admin.groups or {}) do
-        if getGroupLevel(groupName) >= minLevel then lia.admin.groups[groupName][name] = true end
+        if not defaultGroups[groupName] and getGroupLevel(groupName) >= minLevel then lia.admin.groups[groupName][name] = true end
     end
 
     if SERVER then
@@ -114,7 +116,8 @@ hook.Add("CAMI.OnPrivilegeRegistered", "liaAdminPrivAdded", function(priv)
 end)
 
 hook.Add("CAMI.OnPrivilegeUnregistered", "liaAdminPrivRemoved", function(priv)
-    local name = priv and priv.Name
+    if lia.admin and lia.admin._suppressCamiPrivilegeHooks then return end
+    local name = lia.admin.normalizePrivilege(priv and priv.Name)
     if not isstring(name) or name == "" then return end
     if lia.admin.privileges[name] == nil then return end
     lia.admin.privileges[name] = nil

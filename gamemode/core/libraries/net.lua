@@ -21,7 +21,11 @@ lia.net.profiler = lia.net.profiler or {}
 lia.net.registry = lia.net.registry or {}
 lia.net.profiler.active = lia.net.profiler.active or false
 lia.net.profiler.loggedMessages = lia.net.profiler.loggedMessages or {}
+lia.net.profiler.messageCounts = lia.net.profiler.messageCounts or {}
 lia.net.profiler.currentMessage = lia.net.profiler.currentMessage or nil
+lia.net.profiler.snapshotInterval = lia.net.profiler.snapshotInterval or 5
+lia.net.profiler.snapshotTimer = lia.net.profiler.snapshotTimer or "liaNetProfilerSnapshot"
+lia.net.profiler.snapshotDir = lia.net.profiler.snapshotDir or "netprof"
 local chunkTime = 0.05
 local CACHE_TTL = 30
 local MAX_CACHE_SIZE = 1000
@@ -440,6 +444,57 @@ if not lia.net.profiler.originalNetStart then
     lia.net.profiler.originalNetReceive = net.Receive
 end
 
+local function buildProfilerSnapshot()
+    local snapshot = {
+        capturedAt = os.time(),
+        active = lia.net.profiler.active,
+        totals = {
+            uniqueLogs = table.Count(lia.net.profiler.loggedMessages),
+            trackedMessages = 0
+        },
+        topMessages = {}
+    }
+
+    local ranked = {}
+    for messageKey, count in pairs(lia.net.profiler.messageCounts) do
+        snapshot.totals.trackedMessages = snapshot.totals.trackedMessages + count
+        ranked[#ranked + 1] = {
+            message = messageKey,
+            count = count
+        }
+    end
+
+    table.sort(ranked, function(a, b) return a.count > b.count end)
+    for i = 1, math.min(#ranked, 25) do
+        snapshot.topMessages[#snapshot.topMessages + 1] = ranked[i]
+    end
+
+    return snapshot
+end
+
+local function writeProfilerSnapshot()
+    if not SERVER or not lia.net.profiler.active then return end
+    file.CreateDir(lia.net.profiler.snapshotDir)
+    local snapshot = buildProfilerSnapshot()
+    file.Write(lia.net.profiler.snapshotDir .. "/latest_snapshot.json", util.TableToJSON(snapshot, true) or "{}")
+end
+
+local function stopProfilerSnapshots()
+    if SERVER then timer.Remove(lia.net.profiler.snapshotTimer) end
+end
+
+local function startProfilerSnapshots()
+    if not SERVER then return end
+    timer.Create(lia.net.profiler.snapshotTimer, lia.net.profiler.snapshotInterval, 0, function()
+        if not lia.net.profiler.active then
+            stopProfilerSnapshots()
+            return
+        end
+
+        writeProfilerSnapshot()
+    end)
+end
+
 function lia.net.profiler.log(direction, messageName, size, sender, receiver)
     if not lia.net.profiler.active then return end
     local senderStr = "Unknown"
@@ -473,6 +528,8 @@ function lia.net.profiler.log(direction, messageName, size, sender, receiver)
     local logKey = string.format("%.2f|%s|%s|%s|%s|%d", math.floor(CurTime() * 100) / 100, direction, messageName, senderID, receiverID, size)
     if lia.net.profiler.loggedMessages[logKey] then return end
     lia.net.profiler.loggedMessages[logKey] = true
+    local countKey = direction .. "|" .. messageName
+    lia.net.profiler.messageCounts[countKey] = (lia.net.profiler.messageCounts[countKey] or 0) + 1
     timer.Simple(0.05, function() lia.net.profiler.loggedMessages[logKey] = nil end)
     lia.debug(string.format("[Net Profiler] [%s] %s | %s | Size: %s | From: %s | To: %s", timeStr, direction, messageName, sizeStr, senderStr, receiverStr))
 end
@@ -544,10 +601,21 @@ function net.Receive(messageName, callback)
 end
 
 concommand.Add("lia_net_profiler", function(ply, cmd, args)
-    lia.net.profiler.active = not lia.net.profiler.active
+    local mode = string.lower(tostring(args[1] or "on"))
+    local shouldDisable = mode == "0" or mode == "false" or mode == "off" or mode == "disable" or mode == "stop"
+    local wasActive = lia.net.profiler.active
+    lia.net.profiler.active = not shouldDisable
     if lia.net.profiler.active then
-        lia.debug("[Net Profiler] Enabled - All network messages will be logged")
+        if not wasActive then
+            lia.net.profiler.messageCounts = {}
+            lia.net.profiler.loggedMessages = {}
+        end
+
+        startProfilerSnapshots()
+        writeProfilerSnapshot()
+        lia.debug(string.format("[Net Profiler] Enabled - snapshots will be written every %d seconds", lia.net.profiler.snapshotInterval))
     else
+        stopProfilerSnapshots()
         lia.debug("[Net Profiler] Disabled")
     end
 end)

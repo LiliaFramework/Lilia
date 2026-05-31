@@ -21,6 +21,9 @@ lia.admin.groups = lia.admin.groups or {}
 lia.admin.privileges = lia.admin.privileges or {}
 lia.admin.privilegeCategories = lia.admin.privilegeCategories or {}
 lia.admin.privilegeNames = lia.admin.privilegeNames or {}
+lia.admin.privilegeAliases = lia.admin.privilegeAliases or {}
+lia.admin.externalPrivilegeNames = lia.admin.externalPrivilegeNames or {}
+lia.admin.externalPrivilegeIDsByName = lia.admin.externalPrivilegeIDsByName or {}
 lia.admin.missingGroups = lia.admin.missingGroups or {}
 lia.admin._lastSyncPrivilegeCount = lia.admin._lastSyncPrivilegeCount or 0
 lia.admin._lastSyncGroupCount = lia.admin._lastSyncGroupCount or 0
@@ -145,6 +148,29 @@ local function ensureDefaults(groups)
         end
     end
     return created
+end
+
+local function warnBaseGroupMutation(groupName, permission, action, source)
+    lia.warning(string.format("[Lilia] Refused to %s base usergroup '%s'%s%s. Base groups are immutable and will be reset to default behavior.", tostring(action or "modify"), tostring(groupName), permission and permission ~= "" and (" for privilege '" .. tostring(permission) .. "'") or "", source and source ~= "" and (" (source: " .. tostring(source) .. ")") or ""))
+end
+
+local function sanitizeBaseGroups(groups, source)
+    groups = groups or {}
+    local changed = false
+    for groupName in pairs(lia.admin.DefaultGroups or {}) do
+        local groupData = groups[groupName]
+        if groupData then
+            for key in pairs(groupData) do
+                if key ~= "_info" then
+                    groupData[key] = nil
+                    changed = true
+                end
+            end
+        end
+    end
+
+    if changed then lia.debug("[Permissions]", "Sanitized base usergroups", "source=", tostring(source or "unknown")) end
+    return changed
 end
 
 ensureDefaults(lia.admin.groups)
@@ -276,21 +302,38 @@ local function clearPrivilegeCategoryCache()
     privilegeCategoryCache = {}
 end
 
+function lia.admin.getExternalPrivilegeName(id)
+    id = tostring(id or "")
+    if id == "" then return "" end
+    if lia.admin.externalPrivilegeNames and lia.admin.externalPrivilegeNames[id] then return lia.admin.externalPrivilegeNames[id] end
+    local displayName = lia.admin.privilegeNames and lia.admin.privilegeNames[id] or id
+    local externalName = tostring(displayName or id)
+    local owner = lia.admin.externalPrivilegeIDsByName and lia.admin.externalPrivilegeIDsByName[externalName] or nil
+    if owner and owner ~= id then externalName = string.format("%s (%s)", externalName, id) end
+    lia.admin.externalPrivilegeNames[id] = externalName
+    lia.admin.externalPrivilegeIDsByName[externalName] = id
+    lia.admin.privilegeAliases[externalName] = id
+    return externalName
+end
+
+function lia.admin.normalizePrivilege(privilege)
+    privilege = tostring(privilege or "")
+    if privilege == "" then return privilege end
+    if lia.admin.privileges and lia.admin.privileges[privilege] ~= nil then return privilege end
+    return lia.admin.privilegeAliases and lia.admin.privilegeAliases[privilege] or privilege
+end
+
 local groupLevelCache = {}
 local function clearGroupLevelCache()
     groupLevelCache = {}
 end
 
 local function getGroupLevel(group)
-    if groupLevelCache[group] ~= nil then
-        lia.debug("[Permissions]", "getGroupLevel cache hit", "group=", tostring(group), "level=", tostring(groupLevelCache[group]), "isDefaultGroup=", tostring(lia.admin.DefaultGroups and lia.admin.DefaultGroups[group] ~= nil))
-        return groupLevelCache[group]
-    end
+    if groupLevelCache[group] ~= nil then return groupLevelCache[group] end
 
     local levels = lia.admin.DefaultGroups or {}
     if levels[group] then
         groupLevelCache[group] = levels[group]
-        lia.debug("[Permissions]", "getGroupLevel resolved default group", "group=", tostring(group), "level=", tostring(levels[group]), "inheritance=", tostring(group))
         return levels[group]
     end
 
@@ -302,7 +345,6 @@ local function getGroupLevel(group)
         local inh = g and g._info and g._info.inheritance or "user"
         if levels[inh] then
             groupLevelCache[group] = levels[inh]
-            lia.debug("[Permissions]", "getGroupLevel resolved inherited group", "group=", tostring(group), "resolvedThrough=", tostring(current), "inheritance=", tostring(inh), "level=", tostring(levels[inh]), "groupExists=", tostring(g ~= nil))
             return levels[inh]
         end
 
@@ -311,18 +353,13 @@ local function getGroupLevel(group)
 
     local defaultLevel = levels.user or 1
     groupLevelCache[group] = defaultLevel
-    lia.debug("[Permissions]", "getGroupLevel fell back to user", "group=", tostring(group), "level=", tostring(defaultLevel), "knownGroup=", tostring(lia.admin.groups and lia.admin.groups[group] ~= nil))
     return defaultLevel
 end
 
 local function shouldGrant(group, min)
     local levels = lia.admin.DefaultGroups or {}
     local m = tostring(min or "user"):lower()
-    local groupLevel = getGroupLevel(group)
-    local requiredLevel = levels[m] or 1
-    local result = groupLevel >= requiredLevel
-    lia.debug("[Permissions]", "shouldGrant evaluated", "group=", tostring(group), "groupLevel=", tostring(groupLevel), "requiredMinAccess=", tostring(m), "requiredLevel=", tostring(requiredLevel), "isDefaultGroup=", tostring(levels[group] ~= nil), "finalResult=", tostring(result))
-    return result
+    return getGroupLevel(group) >= (levels[m] or 1)
 end
 
 local targetedCommandPrivilegeMap = {
@@ -406,11 +443,22 @@ local function camiUnregisterUsergroup(name)
 end
 
 local function camiRegisterPrivilege(name, min)
-    if CAMI and not CAMI.GetPrivilege(name) then
+    if CAMI then
+        local externalName = lia.admin.getExternalPrivilegeName(name)
+        if name ~= externalName and CAMI.GetPrivilege(name) then
+            lia.admin._suppressCamiPrivilegeHooks = true
+            CAMI.UnregisterPrivilege(name)
+            lia.admin._suppressCamiPrivilegeHooks = false
+        end
+
+        if CAMI.GetPrivilege(externalName) then return end
+        lia.admin._suppressCamiPrivilegeHooks = true
         CAMI.RegisterPrivilege({
-            Name = name,
+            Name = externalName,
             MinAccess = tostring(min or "user"):lower()
         })
+
+        lia.admin._suppressCamiPrivilegeHooks = false
     end
 end
 
@@ -534,6 +582,7 @@ function lia.admin.hasAccess(ply, privilege)
         return false
     end
 
+    privilege = lia.admin.normalizePrivilege(privilege)
     local grp = "user"
     if isstring(ply) then
         grp = ply
@@ -578,37 +627,23 @@ function lia.admin.hasAccess(ply, privilege)
     local defaultGroups = lia.admin.DefaultGroups or {}
     local superadminLevel = defaultGroups.superadmin or 3
     local adminLevel = defaultGroups.admin or 3
-    local actorDescription = IsValid(ply) and string.format("%s (%s)", ply:Nick(), ply:SteamID()) or tostring(grp)
     if not lia.admin.privileges[privilege] then
         if SERVER then
             local playerInfo = IsValid(ply) and ply:Nick() .. " (" .. ply:SteamID() .. ")" or "Unknown"
             lia.log.add(ply, "missingPrivilege", privilege, playerInfo, grp)
         end
 
-        lia.debug("[Permissions]", "hasAccess fallback for unregistered privilege", "actor=", actorDescription, "group=", tostring(grp), "privilege=", tostring(privilege), "groupLevel=", tostring(groupLevel), "adminLevel=", tostring(adminLevel), "finalResult=", tostring(groupLevel >= adminLevel))
         return groupLevel >= adminLevel
     end
 
-    if groupLevel >= superadminLevel then
-        lia.debug("[Permissions]", "hasAccess resolved privilege", "actor=", actorDescription, "group=", tostring(grp), "privilege=", tostring(privilege), "resolution=", "superadmin_level", "groupLevel=", tostring(groupLevel), "requiredMinAccess=", tostring(lia.admin.privileges[privilege]), "finalResult=", "true")
-        return true
-    end
+    if groupLevel >= superadminLevel then return true end
 
     local g = lia.admin.groups and lia.admin.groups[grp] or nil
-    if g and g[privilege] == true then
-        lia.debug("[Permissions]", "hasAccess resolved privilege", "actor=", actorDescription, "group=", tostring(grp), "privilege=", tostring(privilege), "resolution=", "explicit_true", "requiredMinAccess=", tostring(lia.admin.privileges[privilege]), "finalResult=", "true")
-        return true
-    end
-
-    if g and g[privilege] == false then
-        lia.debug("[Permissions]", "hasAccess resolved privilege", "actor=", actorDescription, "group=", tostring(grp), "privilege=", tostring(privilege), "resolution=", "explicit_false", "requiredMinAccess=", tostring(lia.admin.privileges[privilege]), "finalResult=", "false")
-        return false
-    end
+    if g and g[privilege] == true then return true end
+    if g and g[privilege] == false then return false end
 
     local min = lia.admin.privileges[privilege]
-    local result = shouldGrant(grp, min)
-    lia.debug("[Permissions]", "hasAccess resolved privilege", "actor=", actorDescription, "group=", tostring(grp), "privilege=", tostring(privilege), "resolution=", "minaccess_inheritance", "requiredMinAccess=", tostring(min), "groupLevel=", tostring(groupLevel), "finalResult=", tostring(result))
-    return result
+    return shouldGrant(grp, min)
 end
 
 --[[
@@ -637,6 +672,7 @@ end
         ```
 ]]
 function lia.admin.save(noNetwork)
+    sanitizeBaseGroups(lia.admin.groups, "lia.admin.save")
     rebuildPrivileges()
     local rows = {}
     for name, data in pairs(lia.admin.groups) do
@@ -719,6 +755,8 @@ function lia.admin.registerPrivilege(priv)
     local min = tostring(priv.MinAccess or "user"):lower()
     lia.admin.privileges[id] = min
     lia.admin.privilegeNames[id] = lia.lang.resolveToken(priv.Name or priv.ID)
+    lia.admin.privilegeAliases[id] = id
+    lia.admin.getExternalPrivilegeName(id)
     clearPrivilegeCategoryCache()
     if priv.Category then lia.admin.privilegeCategories[id] = lia.lang.resolveToken(priv.Category) end
     local defaultGroups = lia.admin.DefaultGroups or {}
@@ -726,7 +764,7 @@ function lia.admin.registerPrivilege(priv)
     for groupName, perms in pairs(lia.admin.groups) do
         perms = perms or {}
         lia.admin.groups[groupName] = perms
-        if getGroupLevel(groupName) >= minLevel then perms[id] = true end
+        if not defaultGroups[groupName] and getGroupLevel(groupName) >= minLevel then perms[id] = true end
     end
 
     local name = lia.admin.privilegeNames[id]
@@ -768,15 +806,27 @@ end
 function lia.admin.unregisterPrivilege(id)
     id = tostring(id or "")
     if id == "" or lia.admin.privileges[id] == nil then return end
+    local externalName = lia.admin.externalPrivilegeNames and lia.admin.externalPrivilegeNames[id] or nil
     lia.admin.privileges[id] = nil
     clearPrivilegeCategoryCache()
     lia.admin.privilegeCategories[id] = nil
     lia.admin.privilegeNames[id] = nil
+    lia.admin.externalPrivilegeNames[id] = nil
+    lia.admin.privilegeAliases[id] = nil
+    if externalName then
+        lia.admin.externalPrivilegeIDsByName[externalName] = nil
+        lia.admin.privilegeAliases[externalName] = nil
+    end
+
     for _, perms in pairs(lia.admin.groups or {}) do
         perms[id] = nil
     end
 
-    if CAMI then CAMI.UnregisterPrivilege(id) end
+    if CAMI then
+        if externalName then CAMI.UnregisterPrivilege(externalName) end
+        if externalName ~= id then CAMI.UnregisterPrivilege(id) end
+    end
+
     hook.Run("OnPrivilegeUnregistered", {
         Name = id,
         ID = id
@@ -812,6 +862,12 @@ function lia.admin.applyInheritance(groupName)
     local groups = lia.admin.groups or {}
     local g = groups[groupName]
     if not g then return end
+    if lia.admin.DefaultGroups[groupName] then
+        sanitizeBaseGroups(groups, "lia.admin.applyInheritance:" .. tostring(groupName))
+        clearGroupLevelCache()
+        return
+    end
+
     local info = g._info or {}
     local inh = info.inheritance or "user"
     local visited = {}
@@ -903,8 +959,9 @@ function lia.admin.load()
             lia.admin.applyInheritance(n)
         end
 
+        local sanitized = sanitizeBaseGroups(lia.admin.groups, "lia.admin.load")
         rebuildPrivileges()
-        if created then lia.admin.save(true) end
+        if created or sanitized then lia.admin.save(true) end
         lia.admin._loading = false
         continueLoad(groups)
     end)
@@ -1117,6 +1174,7 @@ if SERVER then
         ```
 ]]
     function lia.admin.addPermission(groupName, permission, silent)
+        permission = lia.admin.normalizePrivilege(permission)
         if not lia.admin.groups[groupName] then
             if lia.admin._loading then return end
             if not lia.admin.missingGroups[groupName] then
@@ -1126,7 +1184,12 @@ if SERVER then
             return
         end
 
-        if lia.admin.DefaultGroups[groupName] then return end
+        if lia.admin.DefaultGroups[groupName] then
+            warnBaseGroupMutation(groupName, permission, "grant", "lia.admin.addPermission")
+            sanitizeBaseGroups(lia.admin.groups, "lia.admin.addPermission")
+            return
+        end
+
         lia.admin.groups[groupName][permission] = true
         lia.admin.save(silent and true or false)
         hook.Run("OnUsergroupPermissionsChanged", groupName, lia.admin.groups[groupName])
@@ -1160,6 +1223,7 @@ if SERVER then
         ```
 ]]
     function lia.admin.removePermission(groupName, permission, silent)
+        permission = lia.admin.normalizePrivilege(permission)
         if not lia.admin.groups[groupName] then
             if lia.admin._loading then return end
             if not lia.admin.missingGroups[groupName] then
@@ -1169,7 +1233,12 @@ if SERVER then
             return
         end
 
-        if lia.admin.DefaultGroups[groupName] then return end
+        if lia.admin.DefaultGroups[groupName] then
+            warnBaseGroupMutation(groupName, permission, "revoke", "lia.admin.removePermission")
+            sanitizeBaseGroups(lia.admin.groups, "lia.admin.removePermission")
+            return
+        end
+
         lia.admin.groups[groupName][permission] = false
         lia.admin.save(silent and true or false)
         hook.Run("OnUsergroupPermissionsChanged", groupName, lia.admin.groups[groupName])
@@ -2140,6 +2209,7 @@ else
             tabPanel.Paint = function() end
             local isDefault = lia.admin.DefaultGroups and lia.admin.DefaultGroups[groupName] ~= nil
             local editable = not isDefault
+            lia.debug("[Permissions UI]", "Creating group tab", "group=", tostring(groupName), "isDefaultGroup=", tostring(isDefault), "localPlayerUserGroup=", tostring(IsValid(LocalPlayer()) and LocalPlayer():GetUserGroup() or "unknown"), "localPlayerHasGroup=", tostring(IsValid(LocalPlayer()) and tostring(LocalPlayer():GetUserGroup() or "user") == tostring(groupName) or false))
             local privContainer = tabPanel:Add("DPanel")
             privContainer:Dock(FILL)
             privContainer:DockMargin(20, 20, 20, 20)
@@ -2159,6 +2229,7 @@ else
             end
 
             table.sort(keys, function(a, b) return a:lower() < b:lower() end)
+            lia.debug("[Permissions UI]", "Refreshing group tabs", "groupCount=", tostring(#keys), "localPlayerUserGroup=", tostring(IsValid(LocalPlayer()) and LocalPlayer():GetUserGroup() or "unknown"))
             for _, groupName in ipairs(keys) do
                 createGroupTab(groupName, groups)
             end
@@ -2175,6 +2246,7 @@ else
             name = "userGroups",
             icon = "icon16/group.png",
             drawFunc = function(parent)
+                lia.debug("[Permissions UI]", "Opening usergroups page", "localPlayer=", tostring(IsValid(LocalPlayer()) and LocalPlayer():Nick() or "unknown"), "localPlayerUserGroup=", tostring(IsValid(LocalPlayer()) and LocalPlayer():GetUserGroup() or "unknown"))
                 lia.gui.usergroups = parent
                 parent:Clear()
                 parent:DockPadding(10, 10, 10, 10)

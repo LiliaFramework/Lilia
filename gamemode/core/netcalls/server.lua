@@ -1498,7 +1498,11 @@ net.Receive("liaGroupsAdd", function(_, p)
     local n = string.Trim(tostring(data.name or ""))
     if n == "" then return end
     lia.admin.groups = lia.admin.groups or {}
-    if lia.admin.DefaultGroups and lia.admin.DefaultGroups[n] then return end
+    if lia.admin.DefaultGroups and lia.admin.DefaultGroups[n] then
+        p:notifyErrorLocalized("baseUsergroupCannotBeEdited")
+        return
+    end
+
     if lia.admin.groups[n] then return end
     lia.admin.createGroup(n, {
         _info = {
@@ -1515,7 +1519,12 @@ end)
 net.Receive("liaGroupsRemove", function(_, p)
     if not p:hasPrivilege("manageUsergroups") then return end
     local n = net.ReadString()
-    if n == "" or lia.admin.DefaultGroups and lia.admin.DefaultGroups[n] then return end
+    if n == "" then return end
+    if lia.admin.DefaultGroups and lia.admin.DefaultGroups[n] then
+        p:notifyErrorLocalized("baseUsergroupCannotBeRemoved")
+        return
+    end
+
     lia.admin.removeGroup(n)
     if lia.admin.groups then lia.admin.groups[n] = nil end
     lia.admin.save()
@@ -1530,8 +1539,16 @@ net.Receive("liaGroupsRename", function(_, p)
     if old == "" or new == "" then return end
     if old == new then return end
     if not lia.admin.groups or not lia.admin.groups[old] then return end
-    if lia.admin.groups[new] or lia.admin.DefaultGroups and lia.admin.DefaultGroups[new] then return end
-    if lia.admin.DefaultGroups and lia.admin.DefaultGroups[old] then return end
+    if lia.admin.groups[new] or lia.admin.DefaultGroups and lia.admin.DefaultGroups[new] then
+        p:notifyErrorLocalized("baseUsergroupCannotBeRenamed")
+        return
+    end
+
+    if lia.admin.DefaultGroups and lia.admin.DefaultGroups[old] then
+        p:notifyErrorLocalized("baseUsergroupCannotBeRenamed")
+        return
+    end
+
     lia.admin.renameGroup(old, new)
     broadcastGroups()
     p:notifySuccessLocalized("groupRenamed", old, new)
@@ -1591,7 +1608,11 @@ net.Receive("liaGroupsSetPerm", function(_, p)
     local privilege = net.ReadString()
     local value = net.ReadBool()
     if group == "" or privilege == "" then return end
-    if lia.admin.DefaultGroups and lia.admin.DefaultGroups[group] then return end
+    if lia.admin.DefaultGroups and lia.admin.DefaultGroups[group] then
+        p:notifyErrorLocalized("baseUsergroupCannotBeEdited")
+        return
+    end
+
     if not lia.admin.groups or not lia.admin.groups[group] then return end
     lia.debug("[Permissions UI]", "Received permission edit request", "editor=", tostring(IsValid(p) and p:Nick() .. " (" .. p:SteamID() .. ")" or "unknown"), "group=", tostring(group), "privilege=", tostring(privilege), "requestedValue=", tostring(value), "previousExplicitValue=", tostring(lia.admin.groups[group][privilege]), "previousEffectiveValue=", tostring(lia.admin.hasAccess(group, privilege)))
     if SERVER then

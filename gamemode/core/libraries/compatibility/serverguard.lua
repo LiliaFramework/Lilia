@@ -25,7 +25,8 @@ function serverguard.permission:Add(identifier, priv)
             if priv then
                 CAMI.RegisterPrivilege({
                     Name = identifier,
-                    MinAccess = "invalid"
+                    MinAccess = "invalid",
+                    Category = "Lilia"
                 })
 
                 if lia.admin and lia.admin.registerPrivilege then
@@ -33,7 +34,7 @@ function serverguard.permission:Add(identifier, priv)
                         Name = identifier,
                         ID = identifier,
                         MinAccess = "admin",
-                        Category = "@compatibility"
+                        Category = "Lilia"
                     })
                 end
             end
@@ -105,7 +106,8 @@ hook.Add("serverguard.RankPermissionGiven", "liaServerGuardHandlePermissionGiven
     if CAMI and not CAMI.GetPrivilege(permission) then
         CAMI.RegisterPrivilege({
             Name = permission,
-            MinAccess = "admin"
+            MinAccess = "admin",
+            Category = "Lilia"
         })
     end
 
