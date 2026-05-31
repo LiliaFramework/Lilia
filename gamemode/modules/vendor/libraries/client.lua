@@ -44,6 +44,9 @@ net.Receive("liaVendorOpen", function()
     local vendor = net.ReadEntity()
     if IsValid(vendor) then
         liaVendorEnt = vendor
+        net.Start("liaVendorRequestData")
+        net.WriteEntity(vendor)
+        net.SendToServer()
         hook.Run("VendorOpened", vendor)
     end
 end)
@@ -238,6 +241,7 @@ net.Receive("liaVendorInitialSync", function()
             if success and valueTable and valueTable[1] ~= nil then
                 local propertyValue = valueTable[1]
                 lia.vendor.stored[vendor][propertyName] = propertyValue
+                hook.Run("VendorPropertyUpdated", vendor, propertyName, propertyValue)
             end
         end
     end
@@ -252,11 +256,13 @@ net.Receive("liaVendorPropertySync", function()
     if isDefault then
         lia.vendor.stored[vendor][propertyName] = nil
         if table.IsEmpty(lia.vendor.stored[vendor]) then lia.vendor.stored[vendor] = nil end
+        hook.Run("VendorPropertyUpdated", vendor, propertyName, lia.vendor.defaults[propertyName])
     else
         local success, valueTable = pcall(net.ReadTable)
         if success and valueTable and valueTable[1] ~= nil then
             local propertyValue = valueTable[1]
             lia.vendor.stored[vendor][propertyName] = propertyValue
+            hook.Run("VendorPropertyUpdated", vendor, propertyName, propertyValue)
         end
     end
 end)

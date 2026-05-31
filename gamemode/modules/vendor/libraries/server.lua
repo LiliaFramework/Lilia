@@ -339,7 +339,22 @@ function MODULE:OnEntityLoaded(ent, data)
     ent.messages = istable(data.messages) and data.messages or {}
     ent.factionBuyScales = istable(data.factionBuyScales) and data.factionBuyScales or {}
     ent.factionSellScales = istable(data.factionSellScales) and data.factionSellScales or {}
-    hook.Run("UpdateEntityPersistence", ent)
+    local function finalizeVendorLoad()
+        if not IsValid(ent) then return end
+        if data.skin then ent:SetSkin(data.skin) end
+        if istable(data.bodygroups) then lia.util.applyBodygroups(ent, data.bodygroups) end
+        if ent.isReadyForAnim and ent:isReadyForAnim() then
+            ent:setAnim()
+        else
+            timer.Simple(0.2, function() if IsValid(ent) and ent.isReadyForAnim and ent:isReadyForAnim() then ent:setAnim() end end)
+        end
+
+        hook.Run("UpdateEntityPersistence", ent)
+        for _, client in player.Iterator() do
+            if IsValid(client) then syncVendorDataToClient(client) end
+        end
+    end
+
     timer.Simple(0.1, function()
         if not IsValid(ent) then return end
         local savedPos = ent:GetPos()
@@ -354,34 +369,13 @@ function MODULE:OnEntityLoaded(ent, data)
             physObj:SetPos(savedPos)
             physObj:SetAngles(savedAng)
         end
-
-        for _, client in player.Iterator() do
-            if IsValid(client) then syncVendorDataToClient(client) end
+        if data.model and data.model ~= "" and data.model ~= ent:GetModel() then
+            ent:SetModel(data.model)
+            timer.Simple(0.1, finalizeVendorLoad)
+        else
+            finalizeVendorLoad()
         end
     end)
-
-    if data.model and data.model ~= "" and data.model ~= ent:GetModel() then
-        ent:SetModel(data.model)
-        timer.Simple(0.1, function()
-            if IsValid(ent) then
-                if data.skin then ent:SetSkin(data.skin) end
-                if istable(data.bodygroups) then lia.util.applyBodygroups(ent, data.bodygroups) end
-                if ent.isReadyForAnim and ent:isReadyForAnim() then
-                    ent:setAnim()
-                else
-                    timer.Simple(0.2, function() if IsValid(ent) and ent.isReadyForAnim and ent:isReadyForAnim() then ent:setAnim() end end)
-                end
-            end
-        end)
-    else
-        if data.skin then ent:SetSkin(data.skin) end
-        if istable(data.bodygroups) then lia.util.applyBodygroups(ent, data.bodygroups) end
-        if ent.isReadyForAnim and ent:isReadyForAnim() then
-            ent:setAnim()
-        else
-            timer.Simple(0.2, function() if IsValid(ent) and ent.isReadyForAnim and ent:isReadyForAnim() then ent:setAnim() end end)
-        end
-    end
 end
 
 net.Receive("liaVendorExit", function(_, client)

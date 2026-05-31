@@ -344,6 +344,7 @@ function PANEL:listenForChanges()
     hook.Add("VendorItemMaxStockUpdated", self, self.onItemStockUpdated)
     hook.Add("VendorItemModeUpdated", self, self.onVendorModeUpdated)
     hook.Add("VendorEdited", self, self.onVendorPropEdited)
+    hook.Add("VendorPropertyUpdated", self, self.onVendorPropertyUpdated)
     hook.Add("VendorSynchronized", self, self.onVendorSynchronized)
 end
 
@@ -372,6 +373,11 @@ function PANEL:onVendorPropEdited(_, key)
     end
 
     self:applyCategoryFilter()
+end
+
+function PANEL:onVendorPropertyUpdated(vendor, key)
+    if vendor ~= liaVendorEnt then return end
+    self:onVendorPropEdited(nil, key)
 end
 
 function PANEL:onVendorPriceUpdated(_, id)
@@ -2363,6 +2369,11 @@ function PANEL:onNameDescChanged(key)
     end
 end
 
+function PANEL:onVendorPropertyUpdated(vendor, key)
+    if vendor ~= liaVendorEnt then return end
+    self:onNameDescChanged(key)
+end
+
 function PANEL:onItemModeUpdated()
     self:ReloadItemList(self.lastSearchValue)
 end
@@ -2382,6 +2393,7 @@ end
 
 function PANEL:listenForUpdates()
     hook.Add("VendorEdited", self, self.onNameDescChanged)
+    hook.Add("VendorPropertyUpdated", self, self.onVendorPropertyUpdated)
     hook.Add("VendorItemModeUpdated", self, self.onItemModeUpdated)
     hook.Add("VendorItemBuyPriceUpdated", self, self.onItemPriceUpdated)
     hook.Add("VendorItemSellPriceUpdated", self, self.onItemPriceUpdated)

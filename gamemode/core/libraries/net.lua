@@ -468,6 +468,7 @@ local function buildProfilerSnapshot()
     for i = 1, math.min(#ranked, 25) do
         snapshot.topMessages[#snapshot.topMessages + 1] = ranked[i]
     end
+
     return snapshot
 end
 

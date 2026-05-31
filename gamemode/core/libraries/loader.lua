@@ -759,6 +759,7 @@ end
 ]]
 function lia.debug(...)
     if not lia.DevMode then return end
+    local args = {...}
     local prefixColor = Color(83, 143, 239)
     local debugColor = Color(255, 184, 77)
     local sectionColor = Color(0, 255, 0)
@@ -781,7 +782,6 @@ function lia.debug(...)
     end
 
     MsgC(prefixColor, "[Lilia] ", debugColor, "[" .. L("logDebug") .. "] ")
-    local args = {...}
     local index = 1
     if isstring(args[1]) and args[1]:match("^%b[]$") then
         MsgC(sectionColor, args[1], " ")
