@@ -248,6 +248,7 @@ function ENT:loadPreset(name)
                 if self.items[itemType][VENDOR_BUYPRICE] == nil then self.items[itemType][VENDOR_BUYPRICE] = self.items[itemType][VENDOR_PRICE] end
                 if self.items[itemType][VENDOR_SELLPRICE] == nil then self.items[itemType][VENDOR_SELLPRICE] = self.items[itemType][VENDOR_PRICE] end
             end
+
             if itemData[VENDOR_STOCK] ~= nil then self.items[itemType][VENDOR_STOCK] = tonumber(itemData[VENDOR_STOCK]) end
             if itemData[VENDOR_MAXSTOCK] ~= nil then self.items[itemType][VENDOR_MAXSTOCK] = tonumber(itemData[VENDOR_MAXSTOCK]) end
             if itemData[VENDOR_MODE] ~= nil then self.items[itemType][VENDOR_MODE] = tonumber(itemData[VENDOR_MODE]) end

@@ -1106,9 +1106,7 @@ local function addSectionHeader(parent, title, subtitle)
     subtitleLabel:SetContentAlignment(5)
     subtitleLabel:SetWrap(true)
     subtitleLabel:SetAutoStretchVertical(true)
-    subtitleLabel.Paint = function(s, w, h)
-        draw.SimpleText(s.centeredText or "", s:GetFont(), w * 0.5, h * 0.5, s:GetTextColor(), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
-    end
+    subtitleLabel.Paint = function(s, w, h) draw.SimpleText(s.centeredText or "", s:GetFont(), w * 0.5, h * 0.5, s:GetTextColor(), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER) end
     return header, titleLabel, subtitleLabel
 end
 
@@ -1163,6 +1161,7 @@ function PANEL:Init()
         lia.derma.rect(0, 0, w, h):Rad(10):Color(borderColor):Outline(1):Draw()
         lia.derma.rect(12, h - 12, w - 24, 2):Rad(2):Color(ColorAlpha(theme.theme or Color(100, 150, 200), 120)):Draw()
     end
+
     self.itemsHeaderTitle = self.itemsHeaderCard:Add("DLabel")
     self.itemsHeaderTitle:Dock(TOP)
     self.itemsHeaderTitle:SetTall(24)
@@ -1181,9 +1180,7 @@ function PANEL:Init()
     self.itemsHeaderSubtitle:SetContentAlignment(5)
     self.itemsHeaderSubtitle:SetWrap(true)
     self.itemsHeaderSubtitle:SetAutoStretchVertical(true)
-    self.itemsHeaderSubtitle.Paint = function(s, w, h)
-        draw.SimpleText(s.centeredText or "", s:GetFont(), w * 0.5, h * 0.5, s:GetTextColor(), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
-    end
+    self.itemsHeaderSubtitle.Paint = function(s, w, h) draw.SimpleText(s.centeredText or "", s:GetFont(), w * 0.5, h * 0.5, s:GetTextColor(), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER) end
     self.itemSearchBar = self.itemsFrame:Add("liaEntry")
     self.itemSearchBar:Dock(TOP)
     self.itemSearchBar:DockMargin(8, 0, 8, 4)
@@ -1214,6 +1211,7 @@ function PANEL:Init()
         surface.SetDrawColor(theme.panel and theme.panel[2] or Color(80, 80, 80, 100))
         surface.DrawOutlinedRect(0, 0, w, h)
     end
+
     self.itemHeaderStock = self.itemHeader:Add("DLabel")
     self.itemHeaderStock:Dock(RIGHT)
     self.itemHeaderStock:SetWide(120)
@@ -1445,6 +1443,7 @@ function PANEL:initializeGeneralInfoPanel(entity)
             lia.derma.rect(0, 0, w, h):Rad(10):Color(borderColor):Outline(1):Draw()
             lia.derma.rect(12, 62, w - 24, 2):Rad(2):Color(ColorAlpha(theme.theme or Color(100, 150, 200), 120)):Draw()
         end
+
         self.factionAccessTitle = self.factionAccessPanel:Add("DLabel")
         self.factionAccessTitle:Dock(TOP)
         self.factionAccessTitle:SetTall(26)
@@ -1463,9 +1462,7 @@ function PANEL:initializeGeneralInfoPanel(entity)
         self.factionAccessSubtitle:SetContentAlignment(5)
         self.factionAccessSubtitle:SetWrap(true)
         self.factionAccessSubtitle:SetAutoStretchVertical(true)
-        self.factionAccessSubtitle.Paint = function(s, w, h)
-            draw.SimpleText(s.centeredText or "", s:GetFont(), w * 0.5, h * 0.5, s:GetTextColor(), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
-        end
+        self.factionAccessSubtitle.Paint = function(s, w, h) draw.SimpleText(s.centeredText or "", s:GetFont(), w * 0.5, h * 0.5, s:GetTextColor(), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER) end
         self.factionScroll = self.factionAccessPanel:Add("liaScrollPanel")
         self.factionScroll:Dock(FILL)
         self.factionScroll:DockMargin(0, 8, 0, 0)
@@ -1707,7 +1704,6 @@ local VendorModeChoices = {
 }
 
 local VendorStockChoices = {5, 10, 15, 20, 25, 30}
-
 function PANEL:getModeText(mode)
     return mode and L(VendorText[mode]) or L("none")
 end
@@ -1733,7 +1729,6 @@ function PANEL:getItemRowValue(itemType)
 end
 
 local ROW = {}
-
 function ROW:Init()
     self:SetTall(42)
     self:DockPadding(10, 6, 10, 6)
@@ -1757,6 +1752,7 @@ function ROW:Init()
         surface.SetDrawColor(borderColor)
         surface.DrawOutlinedRect(0, 0, w, h)
     end
+
     self.stockCombo = self:Add("liaComboBox")
     self.stockCombo:Dock(RIGHT)
     self.stockCombo:SetWide(120)
@@ -1772,6 +1768,7 @@ function ROW:Init()
         if self.isRefreshing or not IsValid(self.editor) then return end
         self:CommitStock(text, value)
     end
+
     self.sellPriceEntry = self:Add("liaEntry")
     self.sellPriceEntry:Dock(RIGHT)
     self.sellPriceEntry:SetWide(100)
@@ -1803,6 +1800,7 @@ function ROW:Init()
         lia.vendor.editor.mode(self.itemID, value)
         self.modeCombo:SetValue(text)
     end
+
     self.nameLabel = self:Add("DLabel")
     self.nameLabel:Dock(LEFT)
     self.nameLabel:SetWide(180)
@@ -1925,7 +1923,6 @@ function ROW:OnMousePressed(code)
 end
 
 vgui.Register("liaVendorEditorItemRow", ROW, "DPanel")
-
 function PANEL:OnRemove()
     if IsValid(lia.gui.editorFaction) then lia.gui.editorFaction:Remove() end
     if IsValid(self.presetSelector) then self.presetSelector:Remove() end
