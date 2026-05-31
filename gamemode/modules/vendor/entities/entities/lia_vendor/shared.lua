@@ -184,9 +184,7 @@ function ENT:getPrice(uniqueID, isSellingToVendor, client)
     if price == nil then price = itemData[VENDOR_PRICE] end
     if price == nil then price = defaultPrice end
     local overridePrice = hook.Run("GetPriceOverride", client, self, uniqueID, price, isSellingToVendor)
-    if overridePrice ~= nil then
-        price = overridePrice
-    end
+    if overridePrice ~= nil then price = overridePrice end
     return math.max(math.floor(tonumber(price) or 0), 0)
 end
 

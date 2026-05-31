@@ -39,9 +39,7 @@ local function getGroupPermissionOverrides(groupName)
         if permission ~= "_info" and groupData[permission] ~= nil then
             local currentValue = groupData[permission] == true
             local defaultValue = getDefaultPermissionValueForSummary(groupName, permission)
-            if currentValue ~= defaultValue then
-                overrides[#overrides + 1] = (currentValue and "+" or "-") .. permission
-            end
+            if currentValue ~= defaultValue then overrides[#overrides + 1] = (currentValue and "+" or "-") .. permission end
         end
     end
 
@@ -256,26 +254,11 @@ hook.Add("SAM.RankPermissionTaken", "liaSAMHandlePermissionTaken", function(rank
     end
 end)
 
-hook.Add("OnPrivilegeRegistered", "liaSAMRegisterPrivilege", function(priv)
-    syncSAMPermission(priv and priv.ID, priv)
-end)
-
-hook.Add("OnPrivilegeUnregistered", "liaSAMUnregisterPrivilege", function(priv)
-    removeSAMPermission(priv and priv.ID)
-end)
-
-hook.Add("InitializedModules", "liaSAMSyncAllPrivileges", function()
-    syncAllLiliaPermissionsToSAM()
-end)
-
-hook.Add("OnAdminSystemLoaded", "liaSAMResyncPrivileges", function()
-    syncAllLiliaPermissionsToSAM()
-end)
-
-hook.Add("SAM.LoadedRanks", "liaSAMResyncPrivilegesOnRankLoad", function()
-    syncAllLiliaPermissionsToSAM()
-end)
-
+hook.Add("OnPrivilegeRegistered", "liaSAMRegisterPrivilege", function(priv) syncSAMPermission(priv and priv.ID, priv) end)
+hook.Add("OnPrivilegeUnregistered", "liaSAMUnregisterPrivilege", function(priv) removeSAMPermission(priv and priv.ID) end)
+hook.Add("InitializedModules", "liaSAMSyncAllPrivileges", function() syncAllLiliaPermissionsToSAM() end)
+hook.Add("OnAdminSystemLoaded", "liaSAMResyncPrivileges", function() syncAllLiliaPermissionsToSAM() end)
+hook.Add("SAM.LoadedRanks", "liaSAMResyncPrivilegesOnRankLoad", function() syncAllLiliaPermissionsToSAM() end)
 lia.command.add("cleardecals", {
     adminOnly = true,
     desc = "@cleardecalsDesc",

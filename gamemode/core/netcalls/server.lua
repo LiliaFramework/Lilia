@@ -1577,9 +1577,7 @@ local function getGroupPermissionOverrides(groupName)
         if permission ~= "_info" and groupData[permission] ~= nil then
             local currentValue = groupData[permission] == true
             local defaultValue = getDefaultPermissionValueForSummary(groupName, permission)
-            if currentValue ~= defaultValue then
-                overrides[#overrides + 1] = (currentValue and "+" or "-") .. permission
-            end
+            if currentValue ~= defaultValue then overrides[#overrides + 1] = (currentValue and "+" or "-") .. permission end
         end
     end
 
@@ -1605,7 +1603,6 @@ net.Receive("liaGroupsSetPerm", function(_, p)
     end
 
     lia.debug("[Permissions UI]", "Applied permission edit request", "group=", tostring(group), "privilege=", tostring(privilege), "newExplicitValue=", tostring(lia.admin.groups[group] and lia.admin.groups[group][privilege]), "newEffectiveValue=", tostring(lia.admin.hasAccess(group, privilege)))
-
     local overrides = getGroupPermissionOverrides(group)
     local lines = {"Usergroup " .. string.upper(tostring(group))}
     local changedPrefix = value and "[+] " or "[-] "
@@ -1619,6 +1616,7 @@ net.Receive("liaGroupsSetPerm", function(_, p)
             lines[#lines + 1] = prefix .. tostring(permissionName) .. " - " .. permissionID
         end
     end
+
     lia.information(table.concat(lines, "\n"))
     net.Start("liaGroupPermChanged")
     net.WriteString(group)
