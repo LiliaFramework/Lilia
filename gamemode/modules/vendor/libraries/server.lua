@@ -277,6 +277,17 @@ local function syncVendorDataToClient(client)
     net.Send(client)
 end
 
+local function normalizeLegacyVendorPrices(items)
+    if not istable(items) then return {} end
+    for _, itemData in pairs(items) do
+        if istable(itemData) and itemData[VENDOR_PRICE] ~= nil then
+            if itemData[VENDOR_BUYPRICE] == nil then itemData[VENDOR_BUYPRICE] = itemData[VENDOR_PRICE] end
+            if itemData[VENDOR_SELLPRICE] == nil then itemData[VENDOR_SELLPRICE] = itemData[VENDOR_PRICE] end
+        end
+    end
+    return items
+end
+
 function MODULE:GetEntitySaveData(ent)
     if ent:GetClass() ~= "lia_vendor" then return end
     local factionBuyScales = ent.factionBuyScales
@@ -322,12 +333,13 @@ function MODULE:OnEntityLoaded(ent, data)
     lia.vendor.setVendorProperty(ent, "name", data.name)
     lia.vendor.setVendorProperty(ent, "desc", data.desc or "")
     lia.vendor.setVendorProperty(ent, "animation", data.animation or "")
-    ent.items = data.items or {}
+    ent.items = normalizeLegacyVendorPrices(data.items or {})
     ent.factions = istable(data.factions) and data.factions or {}
     ent.classes = istable(data.classes) and data.classes or {}
     ent.messages = istable(data.messages) and data.messages or {}
     ent.factionBuyScales = istable(data.factionBuyScales) and data.factionBuyScales or {}
     ent.factionSellScales = istable(data.factionSellScales) and data.factionSellScales or {}
+    hook.Run("UpdateEntityPersistence", ent)
     timer.Simple(0.1, function()
         if not IsValid(ent) then return end
         local savedPos = ent:GetPos()

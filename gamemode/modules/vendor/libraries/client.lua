@@ -15,16 +15,22 @@ net.Receive("liaVendorSync", function()
     vendor.items = {}
     for _ = 1, count do
         local itemType = net.ReadString()
-        local price = net.ReadInt(32)
+        local legacyPrice = net.ReadInt(32)
+        local buyPrice = net.ReadInt(32)
+        local sellPrice = net.ReadInt(32)
         local stock = net.ReadInt(32)
         local maxStock = net.ReadInt(32)
         local mode = net.ReadInt(8)
-        if price < 0 then price = nil end
+        if legacyPrice < 0 then legacyPrice = nil end
+        if buyPrice < 0 then buyPrice = nil end
+        if sellPrice < 0 then sellPrice = nil end
         if stock < 0 then stock = nil end
         if maxStock <= 0 then maxStock = nil end
         if mode < 0 then mode = nil end
         vendor.items[itemType] = {
-            [VENDOR_PRICE] = price,
+            [VENDOR_PRICE] = legacyPrice,
+            [VENDOR_BUYPRICE] = buyPrice,
+            [VENDOR_SELLPRICE] = sellPrice,
             [VENDOR_STOCK] = stock,
             [VENDOR_MAXSTOCK] = maxStock,
             [VENDOR_MODE] = mode
@@ -60,15 +66,26 @@ net.Receive("liaVendorFaction", function()
     if IsValid(liaVendorEnt) then liaVendorEnt.factions[factionID] = true end
 end)
 
-net.Receive("liaVendorPrice", function()
+net.Receive("liaVendorBuyPrice", function()
     if not IsValid(liaVendorEnt) then return end
     local vendor = liaVendorEnt
     local itemType = net.ReadString()
     local value = net.ReadInt(32)
     if value < 0 then value = nil end
     vendor.items[itemType] = vendor.items[itemType] or {}
-    vendor.items[itemType][VENDOR_PRICE] = value
-    hook.Run("VendorItemPriceUpdated", vendor, itemType, value)
+    vendor.items[itemType][VENDOR_BUYPRICE] = value
+    hook.Run("VendorItemBuyPriceUpdated", vendor, itemType, value)
+end)
+
+net.Receive("liaVendorSellPrice", function()
+    if not IsValid(liaVendorEnt) then return end
+    local vendor = liaVendorEnt
+    local itemType = net.ReadString()
+    local value = net.ReadInt(32)
+    if value < 0 then value = nil end
+    vendor.items[itemType] = vendor.items[itemType] or {}
+    vendor.items[itemType][VENDOR_SELLPRICE] = value
+    hook.Run("VendorItemSellPriceUpdated", vendor, itemType, value)
 end)
 
 net.Receive("liaVendorMode", function()

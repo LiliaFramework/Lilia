@@ -126,15 +126,29 @@ function ENT:setTradeMode(itemType, mode)
     net.Broadcast()
 end
 
-function ENT:setItemPrice(itemType, value)
+function ENT:setItemBuyPrice(itemType, value)
     if not lia.item.list[itemType] then return end
     if not isnumber(value) or value < 0 then value = nil end
     self.items[itemType] = self.items[itemType] or {}
+    self.items[itemType][VENDOR_BUYPRICE] = value
+    hook.Run("UpdateEntityPersistence", self)
+    self:syncToAll()
+end
+
+function ENT:setItemSellPrice(itemType, value)
+    if not lia.item.list[itemType] then return end
+    if not isnumber(value) or value < 0 then value = nil end
+    self.items[itemType] = self.items[itemType] or {}
+    self.items[itemType][VENDOR_SELLPRICE] = value
+    hook.Run("UpdateEntityPersistence", self)
+    self:syncToAll()
+end
+
+function ENT:setItemPrice(itemType, value)
+    self:setItemBuyPrice(itemType, value)
+    self:setItemSellPrice(itemType, value)
+    self.items[itemType] = self.items[itemType] or {}
     self.items[itemType][VENDOR_PRICE] = value
-    net.Start("liaVendorPrice")
-    net.WriteString(itemType)
-    net.WriteInt(value or -1, 32)
-    net.Broadcast()
 end
 
 function ENT:setItemStock(itemType, value)
@@ -228,6 +242,12 @@ function ENT:loadPreset(name)
         if lia.item.list[itemType] and istable(itemData) then
             self.items[itemType] = {}
             if itemData[VENDOR_PRICE] ~= nil then self.items[itemType][VENDOR_PRICE] = tonumber(itemData[VENDOR_PRICE]) end
+            if itemData[VENDOR_BUYPRICE] ~= nil then self.items[itemType][VENDOR_BUYPRICE] = tonumber(itemData[VENDOR_BUYPRICE]) end
+            if itemData[VENDOR_SELLPRICE] ~= nil then self.items[itemType][VENDOR_SELLPRICE] = tonumber(itemData[VENDOR_SELLPRICE]) end
+            if self.items[itemType][VENDOR_PRICE] ~= nil then
+                if self.items[itemType][VENDOR_BUYPRICE] == nil then self.items[itemType][VENDOR_BUYPRICE] = self.items[itemType][VENDOR_PRICE] end
+                if self.items[itemType][VENDOR_SELLPRICE] == nil then self.items[itemType][VENDOR_SELLPRICE] = self.items[itemType][VENDOR_PRICE] end
+            end
             if itemData[VENDOR_STOCK] ~= nil then self.items[itemType][VENDOR_STOCK] = tonumber(itemData[VENDOR_STOCK]) end
             if itemData[VENDOR_MAXSTOCK] ~= nil then self.items[itemType][VENDOR_MAXSTOCK] = tonumber(itemData[VENDOR_MAXSTOCK]) end
             if itemData[VENDOR_MODE] ~= nil then self.items[itemType][VENDOR_MODE] = tonumber(itemData[VENDOR_MODE]) end
@@ -245,6 +265,8 @@ function ENT:sync(client)
     for itemType, item in pairs(self.items) do
         net.WriteString(itemType)
         net.WriteInt(item[VENDOR_PRICE] or -1, 32)
+        net.WriteInt(item[VENDOR_BUYPRICE] or -1, 32)
+        net.WriteInt(item[VENDOR_SELLPRICE] or -1, 32)
         net.WriteInt(item[VENDOR_STOCK] or -1, 32)
         net.WriteInt(item[VENDOR_MAXSTOCK] or -1, 32)
         net.WriteInt(item[VENDOR_MODE] or -1, 8)
@@ -260,6 +282,8 @@ function ENT:syncToAll()
     for itemType, item in pairs(self.items) do
         net.WriteString(itemType)
         net.WriteInt(item[VENDOR_PRICE] or -1, 32)
+        net.WriteInt(item[VENDOR_BUYPRICE] or -1, 32)
+        net.WriteInt(item[VENDOR_SELLPRICE] or -1, 32)
         net.WriteInt(item[VENDOR_STOCK] or -1, 32)
         net.WriteInt(item[VENDOR_MAXSTOCK] or -1, 32)
         net.WriteInt(item[VENDOR_MODE] or -1, 8)

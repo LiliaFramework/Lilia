@@ -172,27 +172,22 @@ end
 
 function ENT:getPrice(uniqueID, isSellingToVendor, client)
     if not self.items then self:setupVars() end
-    local price = lia.item.list[uniqueID] and self.items[uniqueID] and self.items[uniqueID][VENDOR_PRICE] or (lia.item.list[uniqueID] and lia.item.list[uniqueID]:getPrice() or 0)
-    local overridePrice = hook.Run("GetPriceOverride", client, self, uniqueID, price, isSellingToVendor)
-    if overridePrice then
-        price = overridePrice
+    local itemData = self.items[uniqueID] or {}
+    local defaultPrice = lia.item.list[uniqueID] and lia.item.list[uniqueID]:getPrice() or 0
+    local price
+    if isSellingToVendor then
+        price = itemData[VENDOR_SELLPRICE]
     else
-        if isSellingToVendor then
-            price = math.floor(price * self:getSellScale())
-            if client and client:getChar() then
-                local factionID = client:Team()
-                local factionSellScale = self:getFactionSellScale(factionID)
-                price = math.floor(price * factionSellScale)
-            end
-        else
-            if client and client:getChar() then
-                local factionID = client:Team()
-                local factionBuyScale = self:getFactionBuyScale(factionID)
-                price = math.floor(price * factionBuyScale)
-            end
-        end
+        price = itemData[VENDOR_BUYPRICE]
     end
-    return price
+
+    if price == nil then price = itemData[VENDOR_PRICE] end
+    if price == nil then price = defaultPrice end
+    local overridePrice = hook.Run("GetPriceOverride", client, self, uniqueID, price, isSellingToVendor)
+    if overridePrice ~= nil then
+        price = overridePrice
+    end
+    return math.max(math.floor(tonumber(price) or 0), 0)
 end
 
 function ENT:getTradeMode(itemType)
@@ -210,18 +205,6 @@ end
 
 function ENT:isFactionAllowed(factionID)
     return self.factions[factionID]
-end
-
-function ENT:getSellScale()
-    local scale = lia.config.get("vendorSaleScale", 0.5)
-    local hookScale = hook.Run("GetVendorSaleScale", self)
-    if hookScale ~= nil and hookScale ~= false then
-        local numHookScale = tonumber(hookScale)
-        if numHookScale then return math.Clamp(numHookScale, 0.1, 2.0) end
-    end
-
-    local finalScale = tonumber(scale) or 0.5
-    return math.Clamp(finalScale, 0.1, 2.0)
 end
 
 function ENT:getName()

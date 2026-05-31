@@ -22,19 +22,8 @@ VENDOR_PRICE = 1
 VENDOR_STOCK = 2
 VENDOR_MODE = 3
 VENDOR_MAXSTOCK = 4
+VENDOR_BUYPRICE = 5
+VENDOR_SELLPRICE = 6
 VENDOR_SELLANDBUY = 1
 VENDOR_SELLONLY = 2
 VENDOR_BUYONLY = 3
-lia.config.add("vendorSaleScale", "@vendorSellScale", 0.5, function(value)
-    local num = tonumber(value)
-    if not num then return false, L("configValueMustBeNumber") end
-    if num < 0.1 or num > 2.0 then return false, L("configValueMustBeBetween", 0.1, 2.0) end
-    return true
-end, {
-    desc = "@vendorSaleScaleDesc",
-    category = "@core",
-    type = "Number",
-    min = 0.1,
-    max = 2.0,
-    decimals = 2
-})

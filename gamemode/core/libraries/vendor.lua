@@ -47,14 +47,13 @@ if SERVER then
     end)
 
     addEditor("mode", function() return net.ReadString(), net.ReadInt(8) end, function(vendor, _, itemType, mode) vendor:setTradeMode(itemType, mode) end)
-    addEditor("price", function() return net.ReadString(), net.ReadInt(32) end, function(vendor, _, itemType, price) vendor:setItemPrice(itemType, price) end)
+    addEditor("buyPrice", function() return net.ReadString(), net.ReadInt(32) end, function(vendor, _, itemType, price) vendor:setItemBuyPrice(itemType, price) end)
+    addEditor("sellPrice", function() return net.ReadString(), net.ReadInt(32) end, function(vendor, _, itemType, price) vendor:setItemSellPrice(itemType, price) end)
     addEditor("stockDisable", function() return net.ReadString() end, function(vendor, _, itemType) vendor:setMaxStock(itemType, nil) end)
     addEditor("stockMax", function() return net.ReadString(), net.ReadUInt(32) end, function(vendor, _, itemType, value) vendor:setMaxStock(itemType, value) end)
     addEditor("stock", function() return net.ReadString(), net.ReadUInt(32) end, function(vendor, _, itemType, value) vendor:setStock(itemType, value) end)
     addEditor("faction", function() return net.ReadUInt(8), net.ReadBool() end, function(vendor, _, factionID, allowed) vendor:setFactionAllowed(factionID, allowed) end)
     addEditor("class", function() return net.ReadUInt(8), net.ReadBool() end, function(vendor, _, classID, allowed) vendor:setClassAllowed(classID, allowed) end)
-    addEditor("factionBuyScale", function() return net.ReadUInt(8), net.ReadFloat() end, function(vendor, _, factionID, scale) vendor:setFactionBuyScale(factionID, scale) end)
-    addEditor("factionSellScale", function() return net.ReadUInt(8), net.ReadFloat() end, function(vendor, _, factionID, scale) vendor:setFactionSellScale(factionID, scale) end)
     addEditor("model", function() return net.ReadString() end, function(vendor, client, model)
         vendor:setModel(model)
         client:notifyLocalized("vendorModelChanged")
@@ -79,7 +78,6 @@ if SERVER then
     end)
 
     addEditor("money", function() return net.ReadUInt(32) end, function(vendor, _, money) vendor:setMoney(money) end)
-    addEditor("scale", function() return net.ReadFloat() end, function(vendor, _, scale) vendor:setSellScale(scale) end)
     addEditor("preset", function() return net.ReadString() end, function(vendor, _, preset) vendor:applyPreset(preset) end)
     addEditor("animation", function()
         local anim = net.ReadString()
@@ -105,7 +103,12 @@ else
         net.WriteInt(isnumber(mode) and mode or -1, 8)
     end)
 
-    addEditor("price", function(itemType, price)
+    addEditor("buyPrice", function(itemType, price)
+        net.WriteString(itemType)
+        net.WriteInt(isnumber(price) and price or -1, 32)
+    end)
+
+    addEditor("sellPrice", function(itemType, price)
         net.WriteString(itemType)
         net.WriteInt(isnumber(price) and price or -1, 32)
     end)
@@ -135,16 +138,6 @@ else
         net.WriteBool(allowed)
     end)
 
-    addEditor("factionBuyScale", function(factionID, scale)
-        net.WriteUInt(factionID, 8)
-        net.WriteFloat(scale)
-    end)
-
-    addEditor("factionSellScale", function(factionID, scale)
-        net.WriteUInt(factionID, 8)
-        net.WriteFloat(scale)
-    end)
-
     addEditor("model", function(model) net.WriteString(model) end)
     addEditor("skin", function(skin) net.WriteUInt(math.Clamp(skin or 0, 0, 255), 8) end)
     addEditor("bodygroup", function(index, value)
@@ -158,7 +151,6 @@ else
         net.WriteInt(amt, 32)
     end)
 
-    addEditor("scale", function(scale) net.WriteFloat(scale) end)
     addEditor("preset", function(preset) net.WriteString(preset) end)
     addEditor("animation", function(animation) net.WriteString(animation or "") end)
 end
