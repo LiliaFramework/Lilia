@@ -369,6 +369,7 @@ function MODULE:OnEntityLoaded(ent, data)
             physObj:SetPos(savedPos)
             physObj:SetAngles(savedAng)
         end
+
         if data.model and data.model ~= "" and data.model ~= ent:GetModel() then
             ent:SetModel(data.model)
             timer.Simple(0.1, finalizeVendorLoad)

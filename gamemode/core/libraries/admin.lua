@@ -330,7 +330,6 @@ end
 
 local function getGroupLevel(group)
     if groupLevelCache[group] ~= nil then return groupLevelCache[group] end
-
     local levels = lia.admin.DefaultGroups or {}
     if levels[group] then
         groupLevelCache[group] = levels[group]
@@ -632,16 +631,13 @@ function lia.admin.hasAccess(ply, privilege)
             local playerInfo = IsValid(ply) and ply:Nick() .. " (" .. ply:SteamID() .. ")" or "Unknown"
             lia.log.add(ply, "missingPrivilege", privilege, playerInfo, grp)
         end
-
         return groupLevel >= adminLevel
     end
 
     if groupLevel >= superadminLevel then return true end
-
     local g = lia.admin.groups and lia.admin.groups[grp] or nil
     if g and g[privilege] == true then return true end
     if g and g[privilege] == false then return false end
-
     local min = lia.admin.privileges[privilege]
     return shouldGrant(grp, min)
 end
