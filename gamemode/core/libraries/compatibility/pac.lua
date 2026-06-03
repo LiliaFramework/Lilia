@@ -1,4 +1,4 @@
-local playerMeta = FindMetaTable("Player")
+﻿local playerMeta = FindMetaTable("Player")
 function playerMeta:getParts()
     return self:getNetVar("parts", {})
 end
@@ -8,6 +8,7 @@ if SERVER then
         net.Start("liaPacSync")
         net.Send(self)
     end
+
     function playerMeta:addPart(partID)
         if self:getParts()[partID] then return end
         net.Start("liaPacPartAdd")
@@ -18,6 +19,7 @@ if SERVER then
         parts[partID] = true
         self:setNetVar("parts", parts)
     end
+
     function playerMeta:removePart(partID)
         net.Start("liaPacPartRemove")
         net.WriteEntity(self)
@@ -27,6 +29,7 @@ if SERVER then
         parts[partID] = nil
         self:setNetVar("parts", parts)
     end
+
     function playerMeta:resetParts()
         net.Start("liaPacPartReset")
         net.WriteEntity(self)
@@ -219,4 +222,3 @@ lia.admin.registerPrivilege({
 })
 
 lia.flag.add("P", "@flagPac3")
-

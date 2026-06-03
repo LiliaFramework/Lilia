@@ -1,4 +1,4 @@
-lia.menu = lia.menu or {}
+﻿lia.menu = lia.menu or {}
 lia.menu.list = lia.menu.list or {}
 local surface_SetFont = surface.SetFont
 local surface_GetTextSize = surface.GetTextSize
@@ -39,6 +39,7 @@ local function buildItems(opts)
     table_sort(list, function(a, b) return tostring(a[1]) < tostring(b[1]) end)
     return list, w
 end
+
 function lia.menu.add(opts, pos, onRemove)
     local client = LocalPlayer()
     local items, txtW = buildItems(opts)
@@ -77,6 +78,7 @@ local function drawBackground(x, y, w, h, a)
     surface_SetDrawColor(0, 0, 0, a90 * 0.25)
     surface_DrawOutlinedRect(x - 4, y - 4, w + 8, h + 8)
 end
+
 function lia.menu.drawAll()
     local client = LocalPlayer()
     local sw, sh = ScrW(), ScrH()
@@ -124,6 +126,7 @@ function lia.menu.drawAll()
         end
     end
 end
+
 function lia.menu.getActiveMenu()
     local client = LocalPlayer()
     local sw, sh = ScrW(), ScrH()
@@ -147,6 +150,7 @@ function lia.menu.getActiveMenu()
         if item then return i, item[2] end
     end
 end
+
 function lia.menu.onButtonPressed(id, cb)
     table_remove(lia.menu.list, id)
     if cb then
@@ -155,5 +159,3 @@ function lia.menu.onButtonPressed(id, cb)
     end
     return false
 end
-
-

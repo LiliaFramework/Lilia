@@ -1,4 +1,4 @@
-lia.font = lia.font or {}
+﻿lia.font = lia.font or {}
 lia.font.stored = lia.font.stored or {}
 function lia.font.loadFonts()
     if not CLIENT then return end
@@ -15,6 +15,7 @@ function lia.font.loadFonts()
         end
     end
 end
+
 function lia.font.register(fontName, fontData)
     if not (isstring(fontName) and istable(fontData)) then return lia.error(L("invalidFont")) end
     if #fontName > 63 then return end
@@ -25,6 +26,7 @@ function lia.font.register(fontName, fontData)
 
     if CLIENT then surface.CreateFont(fontName, fontData) end
 end
+
 function lia.font.getAvailableFonts()
     local list = {}
     for name in pairs(lia.font.stored) do
@@ -34,6 +36,7 @@ function lia.font.getAvailableFonts()
     table.sort(list)
     return list
 end
+
 function lia.font.getBoldFontName(fontName)
     if string.find(fontName, "Montserrat") then
         return fontName:gsub(" Medium", " Bold"):gsub("Montserrat$", "Montserrat Bold")
@@ -41,6 +44,7 @@ function lia.font.getBoldFontName(fontName)
         return fontName:gsub(" Medium", " Bold")
     end
 end
+
 function lia.font.registerFonts(fontName)
     local mainFont = fontName or lia.config.get("Font", "Montserrat Medium")
     local hudFont = lia.config.get("HUDFont", "Montserrat Medium")
@@ -354,5 +358,3 @@ hook.Add("OnConfigUpdated", "liaHUDFontsOnConfigUpdate", function(key, oldValue,
         hook.Run("RefreshFonts")
     end)
 end)
-
-

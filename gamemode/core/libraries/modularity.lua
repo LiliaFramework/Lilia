@@ -1,4 +1,4 @@
-lia.module = lia.module or {}
+﻿lia.module = lia.module or {}
 lia.module.list = lia.module.list or {}
 local function loadPermissions(Privileges)
     if not Privileges or not istable(Privileges) then return end
@@ -89,6 +89,7 @@ local function loadExtras(path)
 
     hook.Run("DoModuleIncludes", path, MODULE)
 end
+
 function lia.module.load(uniqueID, path, variable, skipSubmodules)
     variable = variable or "MODULE"
     local lowerVar = variable:lower()
@@ -177,6 +178,7 @@ function lia.module.load(uniqueID, path, variable, skipSubmodules)
         _G[variable] = prev
     end
 end
+
 function lia.module.initialize()
     local schemaPath = engine.ActiveGamemode():gsub("\\", "/")
     lia.module.load("schema", schemaPath .. "/schema", "schema")
@@ -213,6 +215,7 @@ function lia.module.initialize()
     if SERVER then lia.db.addDatabaseFields() end
     lia.UpdateCheckDone = true
 end
+
 function lia.module.loadFromDir(directory, group, skip)
     local locationVar = group == "schema" and "SCHEMA" or "MODULE"
     local _, folders = file.Find(directory .. "/*", "LUA")
@@ -220,8 +223,7 @@ function lia.module.loadFromDir(directory, group, skip)
         if not skip or not skip[folderName] then lia.module.load(folderName, directory .. "/" .. folderName, locationVar) end
     end
 end
+
 function lia.module.get(identifier)
     return lia.module.list[identifier]
 end
-
-

@@ -1,10 +1,11 @@
-local characterMeta = lia.meta.character or {}
+﻿local characterMeta = lia.meta.character or {}
 characterMeta.__index = characterMeta
 characterMeta.id = characterMeta.id or 0
 characterMeta.vars = characterMeta.vars or {}
 function characterMeta:getID()
     return self.id
 end
+
 function characterMeta:getPlayer()
     if IsValid(self.player) then return self.player end
     for _, v in player.Iterator() do
@@ -22,6 +23,7 @@ function characterMeta:getPlayer()
         end
     end
 end
+
 function characterMeta:getDisplayedName(client)
     local isRecognitionEnabled = lia.config.get("RecognitionEnabled", true)
     if not isRecognitionEnabled then return self:getName() end
@@ -35,11 +37,13 @@ function characterMeta:getDisplayedName(client)
     if ourCharacter:doesFakeRecognize(characterID) and myReg[characterID] then return myReg[characterID] end
     return L("unknown")
 end
+
 function characterMeta:hasMoney(amount)
     amount = tonumber(amount) or 0
     if amount < 0 then return false end
     return self:getMoney() >= amount
 end
+
 function characterMeta:hasFlags(flagStr)
     local flags = self:getFlags()
     for i = 1, #flagStr do
@@ -48,6 +52,7 @@ function characterMeta:hasFlags(flagStr)
     end
     return false
 end
+
 function characterMeta:getAttrib(key, default)
     local att = self:getAttribs()[key] or default or 0
     local boosts = self:getVar("boosts", {})[key]
@@ -58,14 +63,17 @@ function characterMeta:getAttrib(key, default)
     end
     return att
 end
+
 function characterMeta:doesRecognize(id)
     if not isnumber(id) and id.getID then id = id:getID() end
     return hook.Run("IsCharRecognized", self, id) ~= false
 end
+
 function characterMeta:doesFakeRecognize(id)
     if not isnumber(id) and id.getID then id = id:getID() end
     return hook.Run("IsCharFakeRecognized", self, id) ~= false
 end
+
 function characterMeta:setData(k, v, noReplication, receiver)
     if not self.dataVars then self.dataVars = {} end
     local toNetwork = {}
@@ -124,6 +132,7 @@ function characterMeta:setData(k, v, noReplication, receiver)
         end
     end
 end
+
 function characterMeta:getData(key, default)
     self.dataVars = self.dataVars or {}
     if not key then return self.dataVars end
@@ -143,6 +152,7 @@ function characterMeta:getData(key, default)
     end
     return value
 end
+
 function characterMeta:isBanned()
     local banned = self:getBanned()
     return banned ~= 0 and (banned == -1 or banned > os.time())
@@ -167,6 +177,7 @@ if SERVER then
         end
         return true
     end
+
     function characterMeta:joinClass(class, isForced)
         if not class then
             self:kickClass()
@@ -194,6 +205,7 @@ if SERVER then
             return false
         end
     end
+
     function characterMeta:kickClass()
         local client = self:getPlayer()
         if not client then return end
@@ -212,6 +224,7 @@ if SERVER then
             self:setClass(nil)
         end
     end
+
     function characterMeta:updateAttrib(key, value)
         local client = self:getPlayer()
         local attribute = lia.attribs.list[key]
@@ -229,6 +242,7 @@ if SERVER then
             hook.Run("OnCharAttribUpdated", client, self, key, attrib[key])
         end
     end
+
     function characterMeta:setAttrib(key, value)
         local client = self:getPlayer()
         local attribute = lia.attribs.list[key]
@@ -245,6 +259,7 @@ if SERVER then
             end
         end
     end
+
     function characterMeta:addBoost(boostID, attribID, boostAmount)
         local boosts = self:getVar("boosts", {})
         boosts[attribID] = boosts[attribID] or {}
@@ -252,6 +267,7 @@ if SERVER then
         hook.Run("OnCharAttribBoosted", self:getPlayer(), self, attribID, boostID, boostAmount)
         return self:setVar("boosts", boosts, nil, self:getPlayer())
     end
+
     function characterMeta:removeBoost(boostID, attribID)
         local boosts = self:getVar("boosts", {})
         boosts[attribID] = boosts[attribID] or {}
@@ -259,6 +275,7 @@ if SERVER then
         hook.Run("OnCharAttribBoosted", self:getPlayer(), self, attribID, boostID, true)
         return self:setVar("boosts", boosts, nil, self:getPlayer())
     end
+
     function characterMeta:clearAllBoosts()
         local client = self:getPlayer()
         local boosts = self:getVar("boosts", {})
@@ -269,6 +286,7 @@ if SERVER then
         end
         return self:setVar("boosts", {}, nil, client)
     end
+
     function characterMeta:setFlags(flags)
         local oldFlags = self:getFlags()
         self.vars.flags = flags
@@ -296,6 +314,7 @@ if SERVER then
             end
         end
     end
+
     function characterMeta:giveFlags(flags)
         local addedFlags = ""
         local ply = self:getPlayer()
@@ -313,6 +332,7 @@ if SERVER then
             if ply and IsValid(ply) then hook.Run("OnCharFlagsGiven", ply, self, addedFlags) end
         end
     end
+
     function characterMeta:takeFlags(flags)
         local oldFlags = self:getFlags()
         local newFlags = oldFlags
@@ -331,6 +351,7 @@ if SERVER then
             if removedFlags ~= "" then hook.Run("OnCharFlagsTaken", ply, self, removedFlags) end
         end
     end
+
     function characterMeta:save(callback)
         if self.isBot then return end
         local shouldSave = hook.Run("CharPreSave", self)
@@ -346,6 +367,7 @@ if SERVER then
             end, nil, "id = " .. self:getID())
         end
     end
+
     function characterMeta:sync(receiver)
         if receiver == nil then
             for _, v in player.Iterator() do
@@ -396,6 +418,7 @@ if SERVER then
             end
         end
     end
+
     function characterMeta:setup(noNetworking)
         local client = self:getPlayer()
         if IsValid(client) then
@@ -423,6 +446,7 @@ if SERVER then
             self.firstTimeLoaded = true
         end
     end
+
     function characterMeta:kick()
         local client = self:getPlayer()
         client:KillSilent()
@@ -446,6 +470,7 @@ if SERVER then
 
         hook.Run("OnCharKick", self, client)
     end
+
     function characterMeta:ban(time)
         time = tonumber(time)
         local value
@@ -460,24 +485,29 @@ if SERVER then
         self:kick()
         hook.Run("OnCharPermakilled", self, time or nil)
     end
+
     function characterMeta:delete()
         lia.char.delete(self:getID(), self:getPlayer())
     end
+
     function characterMeta:destroy()
         local id = self:getID()
         lia.char.removeCharacter(id)
     end
+
     function characterMeta:giveMoney(amount)
         local client = self:getPlayer()
         if not IsValid(client) then return false end
         return client:addMoney(amount)
     end
+
     function characterMeta:takeMoney(amount)
         amount = math.abs(amount)
         self:giveMoney(-amount)
         lia.log.add(self:getPlayer(), "money", -amount)
         return true
     end
+
     function characterMeta:isMainCharacter()
         local client = self:getPlayer()
         if not IsValid(client) then return false end
@@ -487,5 +517,3 @@ if SERVER then
 end
 
 lia.meta.character = characterMeta
-
-

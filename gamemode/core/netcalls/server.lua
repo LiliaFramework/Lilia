@@ -1,4 +1,4 @@
-net.Receive("liaPlayerRespawn", function(_, client)
+﻿net.Receive("liaPlayerRespawn", function(_, client)
     if not IsValid(client) or client:Alive() then return end
     local char = client:getChar()
     if not char then return end

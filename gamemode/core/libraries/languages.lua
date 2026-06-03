@@ -1,4 +1,4 @@
-lia.lang = lia.lang or {}
+﻿lia.lang = lia.lang or {}
 lia.lang.names = lia.lang.names or {}
 lia.lang.stored = lia.lang.stored or {}
 lia.lang.cache = lia.lang.cache or {}
@@ -30,6 +30,7 @@ function lia.lang.loadFromDir(directory)
         end
     end
 end
+
 function lia.lang.addTable(name, tbl)
     local lowerName = tostring(name):lower()
     lia.lang.stored[lowerName] = lia.lang.stored[lowerName] or {}
@@ -39,6 +40,7 @@ function lia.lang.addTable(name, tbl)
 
     lia.lang.clearCache()
 end
+
 function lia.lang.getLanguages()
     local languages = {}
     for key, _ in pairs(lia.lang.stored) do
@@ -49,6 +51,7 @@ function lia.lang.getLanguages()
     table.sort(languages)
     return languages
 end
+
 function lia.lang.generateCacheKey(lang, key, ...)
     local argCount = select("#", ...)
     if argCount == 0 then return lang .. ":" .. key end
@@ -59,6 +62,7 @@ function lia.lang.generateCacheKey(lang, key, ...)
     end
     return lang .. ":" .. key .. paramStr
 end
+
 function lia.lang.cleanupCache()
     local cache = lia.lang.cache
     local keys = {}
@@ -74,12 +78,14 @@ function lia.lang.cleanupCache()
 
     cache.currentSize = #keys - removeCount
 end
+
 function lia.lang.clearCache()
     lia.lang.cache = {
         maxSize = lia.lang.cache.maxSize or 1000,
         currentSize = 0
     }
 end
+
 function lia.lang.getLocalizedString(key, ...)
     local lang = lia.config and lia.config.get("Language", "english") or "english"
     local cacheKey = lia.lang.generateCacheKey(lang, key, ...)
@@ -114,6 +120,7 @@ function lia.lang.getLocalizedString(key, ...)
     if lia.lang.cache.currentSize > lia.lang.cache.maxSize then lia.lang.cleanupCache() end
     return result
 end
+
 function lia.lang.resolveToken(value, ...)
     if not isstring(value) then return value end
     if value:sub(1, 1) ~= "@" then return value end
@@ -126,5 +133,3 @@ L = lia.lang.getLocalizedString
 lia.lang.loadFromDir("lilia/gamemode/languages")
 hook.Run("OnLocalizationLoaded")
 hook.Add("OnConfigUpdated", "lia.lang.cache", function(key, oldValue, newValue) if key == "Language" and oldValue ~= newValue then lia.lang.clearCache() end end)
-
-

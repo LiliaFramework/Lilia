@@ -1,4 +1,4 @@
-lia.bar = lia.bar or {}
+﻿lia.bar = lia.bar or {}
 lia.bar.delta = lia.bar.delta or {}
 lia.bar.values = lia.bar.values or {}
 lia.bar.list = {}
@@ -8,11 +8,13 @@ local function findIndexByIdentifier(identifier)
         if bar.identifier == identifier then return idx end
     end
 end
+
 function lia.bar.get(identifier)
     for _, bar in ipairs(lia.bar.list) do
         if bar.identifier == identifier then return bar end
     end
 end
+
 function lia.bar.add(getValue, color, priority, identifier)
     if identifier then
         local existingIdx = findIndexByIdentifier(identifier)
@@ -31,6 +33,7 @@ function lia.bar.add(getValue, color, priority, identifier)
     })
     return priority
 end
+
 function lia.bar.remove(identifier)
     local idx = findIndexByIdentifier(identifier)
     if idx then table.remove(lia.bar.list, idx) end
@@ -39,6 +42,7 @@ end
 local function PaintPanel(x, y, w, h)
     lia.derma.rect(x, y, w, h):Rad(4):Color(Color(0, 0, 0, 150)):Draw()
 end
+
 function lia.bar.drawBar(x, y, w, h, pos, max, color)
     pos = math.min(pos, max)
     local usable = math.max(w - 6, 0)
@@ -46,6 +50,7 @@ function lia.bar.drawBar(x, y, w, h, pos, max, color)
     PaintPanel(x, y, w + 6, h)
     if fill > 0 then lia.derma.rect(x + 3, y + 3, fill, h - 6):Rad(3):Color(color):Draw() end
 end
+
 function lia.bar.drawAction(text, duration)
     if IsValid(lia.gui.actionPanel) then lia.gui.actionPanel:Remove() end
     local startTime, endTime = CurTime(), CurTime() + duration
@@ -75,6 +80,7 @@ function lia.bar.drawAction(text, duration)
     lia.gui.actionPanel:SetKeyboardInputEnabled(false)
     lia.gui.actionPanel:SetMouseInputEnabled(false)
 end
+
 function lia.bar.drawAll()
     if hook.Run("ShouldHideBars") then return end
     table.sort(lia.bar.list, function(a, b)
@@ -121,5 +127,3 @@ lia.bar.add(function()
 end, Color(30, 70, 180), 3, "armor")
 
 hook.Add("HUDPaintBackground", "liaBarDraw", lia.bar.drawAll)
-
-

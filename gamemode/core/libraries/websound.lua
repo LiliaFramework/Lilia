@@ -1,4 +1,4 @@
-lia.websound = lia.websound or {}
+﻿lia.websound = lia.websound or {}
 lia.websound.stored = lia.websound.stored or {}
 local baseDir = "lilia/websounds/"
 local cache = {}
@@ -8,6 +8,7 @@ local stats = {
     lastReset = os.time(),
     downloadedSounds = {}
 }
+
 local function normalizeName(name)
     if not isstring(name) then return name end
     name = name:gsub("\\", "/")
@@ -16,6 +17,7 @@ local function normalizeName(name)
     if string.StartWith(name, "sound/") then name = name:sub(7) end
     return name
 end
+
 local function deriveUrlSaveName(url)
     local filename = url:match("([^/]+)$") or util.CRC(url) .. ".mp3"
     if file.Exists(baseDir .. filename, "DATA") then return filename end
@@ -23,6 +25,7 @@ local function deriveUrlSaveName(url)
     if path:find("/") then path = path:gsub("^[^/]+/", "", 1) end
     return "urlsounds/" .. path
 end
+
 local function ensureDir(p)
     local parts = string.Explode("/", p)
     local cur = ""
@@ -31,9 +34,11 @@ local function ensureDir(p)
         if not file.Exists(cur, "DATA") then file.CreateDir(cur) end
     end
 end
+
 local function buildPath(p)
     return "data/" .. p
 end
+
 local function validateSoundFile(filePath, fileData)
     if not fileData or #fileData == 0 then return false, "empty file" end
     local fileSize = #fileData
@@ -51,6 +56,7 @@ local function validateSoundFile(filePath, fileData)
     end
     return true
 end
+
 local function validateURL(url)
     if not url or not isstring(url) then return false, L("urlNotValidString") end
     if not url:find("^https?://") then return false, L("urlMustStartWithHttp") end
@@ -74,6 +80,7 @@ local function validateURL(url)
     if #url > 2048 then return false, L("urlTooLong") end
     return true
 end
+
 function lia.websound.download(name, url, cb)
     if not isstring(name) then return end
     name = normalizeName(name)
@@ -153,11 +160,13 @@ function lia.websound.download(name, url, cb)
         end
     end)
 end
+
 function lia.websound.register(name, url, cb)
     name = normalizeName(name)
     lia.websound.stored[name] = url
     return lia.websound.download(name, url, cb)
 end
+
 function lia.websound.get(name)
     name = normalizeName(name)
     local key = urlMap[name] or name
@@ -380,6 +389,7 @@ function surface.PlaySound(soundPath, _, cb)
     origSurfacePlaySound(soundPath)
     if cb then cb(true) end
 end
+
 function lia.websound.getStats()
     local totalStored = 0
     for _ in pairs(lia.websound.stored) do
@@ -391,6 +401,7 @@ function lia.websound.getStats()
         lastReset = stats.lastReset
     }
 end
+
 function lia.websound.clearCache(skipReRegister)
     cache = {}
     urlMap = {}
@@ -417,6 +428,7 @@ function lia.websound.clearCache(skipReRegister)
         end
     end
 end
+
 function lia.websound.playButtonSound(customSound, callback)
     if customSound and customSound ~= "button_click.wav" then
         if customSound:find("^lilia/websounds/") or customSound:find("^websounds/") then
@@ -465,5 +477,3 @@ end
 lia.websound.register("button_click.wav", "https://bleonheart.github.io/Samael-Assets/misc/button_click.wav")
 lia.websound.register("ratio_button.wav", "https://bleonheart.github.io/Samael-Assets/misc/ratio_button.wav")
 ensureDir(baseDir)
-
-

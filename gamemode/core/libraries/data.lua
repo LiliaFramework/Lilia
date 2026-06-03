@@ -1,4 +1,4 @@
-lia.data = lia.data or {}
+﻿lia.data = lia.data or {}
 lia.data.stored = lia.data.stored or {}
 lia.data.equivalencyMaps = lia.data.equivalencyMaps or {}
 if SERVER then
@@ -223,9 +223,11 @@ if SERVER then
         if isangle(ang) then return ang end
         return value
     end
+
     function lia.data.decode(value)
         return deepDecode(value)
     end
+
     function lia.data.serialize(value)
         local encoded = lia.data.encodetable(value)
         if encoded == nil and value ~= nil then encoded = value end
@@ -236,6 +238,7 @@ if SERVER then
         end
         return util.TableToJSON(encoded)
     end
+
     function lia.data.deserialize(raw)
         if not raw then return nil end
         local decoded
@@ -255,6 +258,7 @@ if SERVER then
         if istable(decoded) and decoded.value ~= nil and table.Count(decoded) == 1 then return lia.data.decode(decoded.value) end
         return lia.data.decode(decoded)
     end
+
     function lia.data.decodeVector(raw)
         if not raw then return nil end
         local direct = _decodeVector(raw)
@@ -273,6 +277,7 @@ if SERVER then
         if decoded == nil then decoded = raw end
         return _decodeVector(decoded)
     end
+
     function lia.data.decodeAngle(raw)
         if not raw then return nil end
         local direct = _decodeAngle(raw)
@@ -338,6 +343,7 @@ if SERVER then
         local keySafe = sanitizeKeyToFilename(tostring(key))
         return "lilia/" .. gmSafe .. "/" .. mapSafe .. "/" .. keySafe .. ".json"
     end
+
     function lia.data.set(key, value, global, ignoreMap)
         lia.data.stored[key] = value
         local gamemode, map = getDataScope(nil, nil, global, ignoreMap)
@@ -354,6 +360,7 @@ if SERVER then
         hook.Run("OnDataSet", key, value, gamemode, map)
         return gamemode .. "/" .. map .. "/"
     end
+
     function lia.data.delete(key, global, ignoreMap)
         lia.data.stored[key] = nil
         local gamemode, map = getDataScope(nil, nil, global, ignoreMap)
@@ -361,6 +368,7 @@ if SERVER then
         if file.Exists(path, "DATA") then file.Delete(path) end
         return true
     end
+
     function lia.data.loadTables()
         local gamemode = (SCHEMA and SCHEMA.folder) or engine.ActiveGamemode()
         local map = lia.data.getEquivalencyMap(game.GetMap())
@@ -409,9 +417,11 @@ if SERVER then
         end
         return d
     end
+
     function lia.data.loadPersistence()
         return ensurePersistenceColumns(baseCols)
     end
+
     function lia.data.savePersistence(entities)
         local gamemode = SCHEMA and SCHEMA.folder or engine.ActiveGamemode()
         local map = game.GetMap()
@@ -463,6 +473,7 @@ if SERVER then
             if #rows > 0 then return lia.db.bulkInsert("persistence", rows) end
         end)
     end
+
     local function hasNearbyPersistentPosition(positions, pos)
         if not isvector(pos) then return false end
         for _, existingPos in ipairs(positions) do
@@ -511,6 +522,7 @@ if SERVER then
             if callback then callback(entities) end
         end)
     end
+
     function lia.data.get(key, default)
         local stored = lia.data.stored[key]
         if stored ~= nil then
@@ -522,6 +534,7 @@ if SERVER then
         end
         return default
     end
+
     function lia.data.getPersistence()
         return lia.data.persistCache or {}
     end
@@ -532,12 +545,12 @@ if SERVER then
         hook.Run("PersistenceSave")
     end)
 end
+
 function lia.data.addEquivalencyMap(map1, map2)
     lia.data.equivalencyMaps[map1] = map2
     lia.data.equivalencyMaps[map2] = map1
 end
+
 function lia.data.getEquivalencyMap(map)
     return lia.data.equivalencyMaps[map] or map
 end
-
-

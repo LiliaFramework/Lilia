@@ -1,4 +1,4 @@
-lia.workshop = lia.workshop or {}
+﻿lia.workshop = lia.workshop or {}
 lia.workshop.ids = lia.workshop.ids or {}
 lia.workshop.known = lia.workshop.known or {}
 if SERVER then
@@ -17,6 +17,7 @@ if SERVER then
             lia.bootstrap(L("workshopDownloader"), L("workshopAdded", id))
         end
     end
+
     function lia.workshop.gather()
         local ids = table.Copy(lia.workshop.ids)
         for _, addon in pairs(engine.GetAddons() or {}) do
@@ -100,12 +101,14 @@ else
         end
         return false
     end
+
     function lia.workshop.hasContentToDownload()
         for id in pairs(lia.workshop.serverIds or {}) do
             if id ~= FORCE_ID and not mounted(id) and not mountLocal(id) then return true end
         end
         return false
     end
+
     function lia.workshop.mountContent()
         local ids = lia.workshop.serverIds or {}
         local needed = {}
@@ -302,5 +305,3 @@ else
         })
     end)
 end
-
-

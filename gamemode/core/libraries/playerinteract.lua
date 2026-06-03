@@ -1,4 +1,4 @@
-local VOICE_WHISPERING = "whispering"
+﻿local VOICE_WHISPERING = "whispering"
 local VOICE_TALKING = "talking"
 local VOICE_YELLING = "yelling"
 lia.playerinteract = lia.playerinteract or {}
@@ -11,6 +11,7 @@ function lia.playerinteract.isWithinRange(client, entity, customRange)
     local range = customRange or 100
     return entity:GetPos():DistToSqr(client:GetPos()) < range * range
 end
+
 function lia.playerinteract.getInteractions(client)
     client = client or LocalPlayer()
     local ent = client:getTracedEntity(100)
@@ -26,6 +27,7 @@ function lia.playerinteract.getInteractions(client)
     end
     return interactions
 end
+
 function lia.playerinteract.getActions(client)
     client = client or LocalPlayer()
     if not IsValid(client) or not client:getChar() then return {} end
@@ -35,6 +37,7 @@ function lia.playerinteract.getActions(client)
     end
     return actions
 end
+
 function lia.playerinteract.getCategorizedOptions(options)
     local categorized = {}
     local categories = {}
@@ -99,6 +102,7 @@ if SERVER then
             }
         end
     end
+
     function lia.playerinteract.addAction(name, data)
         data.type = "action"
         data.range = data.range or 100
@@ -124,6 +128,7 @@ if SERVER then
             }
         end
     end
+
     function lia.playerinteract.sync(client)
         local filteredData = {}
         for name, data in pairs(lia.playerinteract.stored) do
@@ -168,6 +173,7 @@ if SERVER then
             end
         end
     end
+
     function lia.playerinteract.hasChanges()
         local currentInteractionCount = table.Count(lia.playerinteract.stored)
         local currentCategoryCount = table.Count(lia.playerinteract.categories)
@@ -343,5 +349,3 @@ lia.keybind.add("personalActions", {
         net.SendToServer()
     end,
 })
-
-

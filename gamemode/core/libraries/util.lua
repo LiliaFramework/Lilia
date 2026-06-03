@@ -1,8 +1,9 @@
-function lia.util.normalizeBodygroupKey(key)
+﻿function lia.util.normalizeBodygroupKey(key)
     local numericKey = tonumber(key)
     if numericKey ~= nil then return numericKey end
     if isstring(key) and key ~= "" then return string.Trim(key) end
 end
+
 function lia.util.resolveBodygroupIndex(target, identifier)
     local numericIdentifier = tonumber(identifier)
     if numericIdentifier ~= nil then return numericIdentifier end
@@ -16,6 +17,7 @@ function lia.util.resolveBodygroupIndex(target, identifier)
         if isstring(groupData.name) and string.lower(groupData.name) == loweredIdentifier then return groupData.id end
     end
 end
+
 function lia.util.normalizeBodygroups(bodygroups)
     local normalized = {}
     if not istable(bodygroups) then return normalized end
@@ -33,6 +35,7 @@ function lia.util.normalizeBodygroups(bodygroups)
     end
     return normalized
 end
+
 function lia.util.resolveBodygroups(target, bodygroups)
     local resolved = {}
     for identifier, value in pairs(lia.util.normalizeBodygroups(bodygroups)) do
@@ -41,6 +44,7 @@ function lia.util.resolveBodygroups(target, bodygroups)
     end
     return resolved
 end
+
 function lia.util.applyBodygroups(target, bodygroups)
     if not IsValid(target) then return {} end
     local resolved = lia.util.resolveBodygroups(target, bodygroups)
@@ -49,6 +53,7 @@ function lia.util.applyBodygroups(target, bodygroups)
     end
     return resolved
 end
+
 function lia.util.findPlayersInBox(mins, maxs)
     local entsList = ents.FindInBox(mins, maxs)
     local plyList = {}
@@ -57,6 +62,7 @@ function lia.util.findPlayersInBox(mins, maxs)
     end
     return plyList
 end
+
 function lia.util.requestEntityInformation(client, entity, argTypes, callback)
     if not IsValid(entity) then
         ErrorNoHalt("[lia.util.requestEntityInformation] Invalid entity provided\n")
@@ -71,6 +77,7 @@ function lia.util.requestEntityInformation(client, entity, argTypes, callback)
         end
     end)
 end
+
 function lia.util.getBySteamID(steamID)
     if not isstring(steamID) or steamID == "" then return end
     local sid = steamID
@@ -79,6 +86,7 @@ function lia.util.getBySteamID(steamID)
         if client:SteamID() == sid and client:getChar() then return client end
     end
 end
+
 function lia.util.findPlayersInSphere(origin, radius)
     local plys = {}
     local r2 = radius ^ 2
@@ -87,6 +95,7 @@ function lia.util.findPlayersInSphere(origin, radius)
     end
     return plys
 end
+
 function lia.util.findPlayer(client, identifier)
     local isValidClient = IsValid(client)
     if not isstring(identifier) or identifier == "" then
@@ -128,6 +137,7 @@ function lia.util.findPlayer(client, identifier)
     if isValidClient then client:notifyErrorLocalized("plyNoExist") end
     return nil
 end
+
 function lia.util.findPlayerItems(client)
     local items = {}
     for _, item in ents.Iterator() do
@@ -135,6 +145,7 @@ function lia.util.findPlayerItems(client)
     end
     return items
 end
+
 function lia.util.findPlayerItemsByClass(client, class)
     local items = {}
     for _, item in ents.Iterator() do
@@ -142,6 +153,7 @@ function lia.util.findPlayerItemsByClass(client, class)
     end
     return items
 end
+
 function lia.util.findPlayerEntities(client, class)
     local entities = {}
     for _, entity in ents.Iterator() do
@@ -149,6 +161,7 @@ function lia.util.findPlayerEntities(client, class)
     end
     return entities
 end
+
 function lia.util.stringMatches(a, b)
     if a and b then
         local a2, b2 = a:lower(), b:lower()
@@ -159,6 +172,7 @@ function lia.util.stringMatches(a, b)
     end
     return false
 end
+
 function lia.util.getAdmins()
     local staff = {}
     for _, client in player.Iterator() do
@@ -167,17 +181,20 @@ function lia.util.getAdmins()
     end
     return staff
 end
+
 function lia.util.findPlayerBySteamID64(SteamID64)
     local SteamID = util.SteamIDFrom64(SteamID64)
     if not SteamID then return nil end
     return lia.util.findPlayerBySteamID(SteamID)
 end
+
 function lia.util.findPlayerBySteamID(SteamID)
     for _, client in player.Iterator() do
         if client:SteamID() == SteamID then return client end
     end
     return nil
 end
+
 function lia.util.canFit(pos, mins, maxs, filter)
     mins = mins ~= nil and mins or Vector(16, 16, 0)
     local tr = util.TraceHull({
@@ -190,6 +207,7 @@ function lia.util.canFit(pos, mins, maxs, filter)
     })
     return not tr.Hit
 end
+
 function lia.util.playerInRadius(pos, dist)
     dist = dist * dist
     local t = {}
@@ -198,6 +216,7 @@ function lia.util.playerInRadius(pos, dist)
     end
     return t
 end
+
 function lia.util.formatStringNamed(format, ...)
     local arguments = {...}
     local bArray = false
@@ -216,11 +235,13 @@ function lia.util.formatStringNamed(format, ...)
     end)
     return result
 end
+
 function lia.util.getMaterial(materialPath, materialParameters)
     lia.util.cachedMaterials = lia.util.cachedMaterials or {}
     lia.util.cachedMaterials[materialPath] = lia.util.cachedMaterials[materialPath] or Material(materialPath, materialParameters)
     return lia.util.cachedMaterials[materialPath]
 end
+
 function lia.util.findFaction(client, name)
     if lia.faction.teams[name] then return lia.faction.teams[name] end
     for _, v in ipairs(lia.faction.indices) do
@@ -301,6 +322,7 @@ if system.IsLinux() then
         return ret
     end
 end
+
 function lia.util.generateRandomName(firstNames, lastNames)
     local defaultFirstNames = {"John", "Jane", "Michael", "Sarah", "David", "Emily", "Robert", "Amanda", "James", "Jennifer", "William", "Elizabeth", "Richard", "Michelle", "Thomas", "Lisa", "Daniel", "Stephanie", "Matthew", "Nicole", "Anthony", "Samantha", "Charles", "Mary", "Joseph", "Patricia", "Christopher", "Linda", "Andrew", "Barbara", "Joshua", "Susan", "Ryan", "Jessica", "Brandon", "Helen", "Tyler", "Nancy", "Kevin", "Betty", "Jason", "Sandra", "Jacob", "Donna", "Kyle", "Carol", "Nathan", "Ruth", "Jeffrey", "Sharon", "Frank", "Michelle", "Scott", "Laura", "Steven", "Sarah", "Nicholas", "Kimberly", "Gregory", "Deborah", "Eric", "Dorothy", "Stephen", "Amy", "Timothy", "Angela", "Larry", "Melissa", "Jonathan", "Brenda", "Raymond", "Emma", "Patrick", "Anna", "Benjamin", "Rebecca", "Bryan", "Virginia", "Samuel", "Kathleen", "Alexander", "Pamela", "Jack", "Martha", "Dennis", "Debra", "Jerry", "Amanda", "Tyler", "Stephanie", "Aaron", "Christine", "Henry", "Marie", "Douglas", "Janet", "Peter", "Catherine", "Jose", "Frances", "Adam", "Ann", "Zachary", "Joyce", "Walter", "Diane", "Kenneth", "Alice", "Ryan", "Julie", "Gregory", "Heather", "Austin", "Teresa", "Keith", "Doris", "Samuel", "Gloria", "Gary", "Evelyn", "Jesse", "Jean", "Joe", "Cheryl", "Billy", "Mildred", "Bruce", "Katherine", "Gabriel", "Joan", "Roy", "Ashley", "Albert", "Judith", "Willie", "Rose", "Logan", "Janice", "Randy", "Kelly", "Louis", "Nicole", "Russell", "Judy", "Ralph", "Christina", "Sean", "Kathy", "Eugene", "Theresa", "Vincent", "Beverly", "Bobby", "Denise", "Johnny", "Tammy", "Bradley", "Irene", "Philip", "Jane", "Todd", "Lori", "Jesse", "Rachel", "Craig", "Marilyn", "Alan", "Andrea", "Shawn", "Kathryn", "Clarence", "Louise", "Sean", "Sara", "Victor", "Anne", "Jimmy", "Jacqueline", "Chad", "Wanda", "Phillip", "Bonnie", "Travis", "Julia", "Carlos", "Ruby", "Shane", "Lois", "Ronald", "Tina", "Brandon", "Phyllis", "Angel", "Norma", "Russell", "Paula", "Harold", "Diana", "Dustin", "Annie", "Pedro", "Lillian", "Shawn", "Emily", "Colin", "Robin", "Brian", "Rita"}
     local defaultLastNames = {"Smith", "Johnson", "Williams", "Brown", "Jones", "Garcia", "Miller", "Davis", "Rodriguez", "Martinez", "Hernandez", "Lopez", "Gonzalez", "Wilson", "Anderson", "Thomas", "Taylor", "Moore", "Jackson", "Martin", "Lee", "Perez", "Thompson", "White", "Harris", "Sanchez", "Clark", "Ramirez", "Lewis", "Robinson", "Walker", "Young", "Allen", "King", "Wright", "Scott", "Torres", "Nguyen", "Hill", "Flores", "Green", "Adams", "Nelson", "Baker", "Hall", "Rivera", "Campbell", "Mitchell", "Carter", "Roberts", "Gomez", "Phillips", "Evans", "Turner", "Diaz", "Parker", "Cruz", "Edwards", "Collins", "Reyes", "Stewart", "Morris", "Morales", "Murphy", "Cook", "Rogers", "Gutierrez", "Ortiz", "Morgan", "Cooper", "Peterson", "Bailey", "Reed", "Kelly", "Howard", "Ramos", "Kim", "Cox", "Ward", "Richardson", "Watson", "Brooks", "Chavez", "Wood", "James", "Bennett", "Gray", "Mendoza", "Ruiz", "Hughes", "Price", "Alvarez", "Castillo", "Sanders", "Patel", "Myers", "Long", "Ross", "Foster", "Jimenez", "Powell", "Jenkins", "Perry", "Russell", "Sullivan", "Bell", "Coleman", "Butler", "Henderson", "Barnes", "Gonzales", "Fisher", "Vasquez", "Simmons", "Romero", "Jordan", "Patterson", "Alexander", "Hamilton", "Graham", "Reynolds", "Griffin", "Wallace", "Moreno", "West", "Cole", "Hayes", "Bryant", "Herrera", "Gibson", "Ellis", "Tran", "Medina", "Aguilar", "Stevens", "Murray", "Ford", "Castro", "Marshall", "Owens", "Harrison", "Fernandez", "McDonald", "Woods", "Washington", "Kennedy", "Wells", "Vargas", "Henry", "Chen", "Freeman", "Webb", "Tucker", "Guzman", "Burns", "Crawford", "Olson", "Simpson", "Porter", "Hunter", "Gordon", "Mendez", "Silva", "Shaw", "Snyder", "Mason", "Dixon", "Munoz", "Hunt", "Hicks", "Holmes", "Palmer", "Wagner", "Black", "Robertson", "Boyd", "Rose", "Stone", "Salazar", "Fox", "Warren", "Mills", "Meyer", "Rice", "Schmidt", "Garza", "Daniels", "Ferguson", "Nichols", "Stephens", "Soto", "Weaver", "Ryan", "Gardner", "Payne", "Grant", "Dunn", "Kelley", "Spencer", "Hawkins", "Arnold", "Pierce", "Vazquez", "Hansen", "Peters", "Santos", "Hart", "Bradley", "Knight", "Elliott", "Cunningham", "Duncan", "Armstrong", "Hudson", "Carroll", "Lane", "Riley", "Andrews", "Alvarado", "Ray", "Delgado", "Berry", "Perkins", "Hoffman", "Johnston", "Matthews", "Pena", "Richards", "Contreras", "Willis", "Carpenter", "Lawrence", "Sandoval"}
@@ -371,6 +393,7 @@ if SERVER then
 
         lia.net.writeBigTable(client, "liaSendTableUI", tableUIData)
     end
+
     function lia.util.findEmptySpace(entity, filter, spacing, size, height, tolerance)
         spacing = spacing or 32
         size = size or 3
@@ -452,6 +475,7 @@ else
             end
         end
     end
+
     function lia.util.clampMenuPosition(panel)
         if not IsValid(panel) then return end
         local x, y = panel:GetPos()
@@ -481,11 +505,13 @@ else
         if logoMargin > 0 and y < logoMargin then y = logoMargin end
         panel:SetPos(x, y)
     end
+
     function lia.util.drawGradient(x, y, w, h, direction, colorShadow, radius, flags)
         local listGradients = {Material("vgui/gradient_up"), Material("vgui/gradient_down"), Material("vgui/gradient-l"), Material("vgui/gradient-r")}
         radius = radius and radius or 0
         lia.derma.drawMaterial(radius, x, y, w, h, colorShadow, listGradients[direction], flags)
     end
+
     function lia.util.wrapText(text, width, font)
         font = font or "LiliaFont.16"
         surface.SetFont(font)
@@ -513,6 +539,7 @@ else
         if line ~= "" then lines[#lines + 1] = line end
         return lines, maxW
     end
+
     function lia.util.drawBlur(panel, amount, passes, alpha)
         amount = amount or 5
         alpha = alpha or 255
@@ -529,6 +556,7 @@ else
             surface.DrawTexturedRect(x * -1, y * -1, ScrW(), ScrH())
         end
     end
+
     function lia.util.drawBlackBlur(panel, amount, passes, alpha, darkAlpha)
         if not IsValid(panel) then return end
         amount = amount or 6
@@ -553,6 +581,7 @@ else
         surface.SetDrawColor(0, 0, 0, darkAlpha)
         surface.DrawRect(x, y, panel:GetWide(), panel:GetTall())
     end
+
     function lia.util.drawBlurAt(x, y, w, h, amount, passes, alpha)
         amount = amount or 5
         alpha = alpha or 255
@@ -722,6 +751,7 @@ else
         end)
         return frame, listView
     end
+
     function lia.util.openOptionsMenu(title, options)
         if not istable(options) then return end
         local entries = {}
@@ -886,6 +916,7 @@ else
         if screenPos.visible == false then return end
         EntText(text, screenPos.x, screenPos.y + posY, fade)
     end
+
     function lia.util.drawLookText(text, posY, alphaOverride, maxDist)
         if not (text and text ~= "") then return end
         posY = posY or 0
@@ -932,8 +963,10 @@ else
         if screenPos.visible == false then return end
         EntText(text, screenPos.x, screenPos.y + posY, fade)
     end
+
     function lia.util.setFeaturePosition(pos, typeId)
     end
+
     function lia.util.drawLookText(text, posY, alphaOverride, maxDist)
         if not (text and text ~= "") then return end
         posY = posY or 0
@@ -980,6 +1013,7 @@ else
         if screenPos.visible == false then return end
         EntText(text, screenPos.x, screenPos.y + posY, fade)
     end
+
     function lia.util.setFeaturePosition(pos, typeId)
         if not isvector(pos) or not isstring(typeId) then return end
         local callback = lia.util.positionCallbacks[typeId]
@@ -992,6 +1026,7 @@ else
             callback.onRun(pos, client, typeId)
         end
     end
+
     function lia.util.removeFeaturePosition(pos, typeId)
         if not isvector(pos) or not isstring(typeId) then return end
         local callback = lia.util.positionCallbacks[typeId]
@@ -1007,6 +1042,7 @@ else
             callback.onRemove(pos, client, typeId)
         end
     end
+
     function lia.util.drawESPStyledText(text, x, y, espColor, font, fadeAlpha)
         fadeAlpha = fadeAlpha or 1
         surface.SetFont(font)
@@ -1024,5 +1060,3 @@ else
         return bh
     end
 end
-
-

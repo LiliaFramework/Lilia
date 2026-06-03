@@ -1,4 +1,4 @@
-lia.keybind = lia.keybind or {}
+﻿lia.keybind = lia.keybind or {}
 lia.keybind.stored = lia.keybind.stored or {}
 local KeybindKeys = {
     ["first"] = KEY_FIRST,
@@ -170,12 +170,14 @@ function lia.keybind.add(k, d, desc, cb)
     lia.keybind.stored[actionName].serverOnly = callbacks.serverOnly or false
     lia.keybind.stored[c] = actionName
 end
+
 function lia.keybind.getDisplayDescription(action)
     local data = lia.keybind.stored[action]
     if not data then return "" end
     local value = data.rawDescription or data.description or ""
     return isstring(value) and localizeKeybindLabel(value) or value
 end
+
 function lia.keybind.getDisplayCategory(action)
     local data = lia.keybind.stored[action]
     if not data then return localizeKeybindLabel("misc") end
@@ -342,7 +344,7 @@ lia.keybind.add("convertEntity", {
 })
 
 if CLIENT then
-local GMODDefaultBindNames = {"+forward", "+back", "+moveleft", "+moveright", "+use", "+jump", "+duck", "+walk", "+speed", "+reload", "impulse 100", "+showscores", "messagemode", "messagemode2", "+menu_context", "+menu", "slot1", "slot2", "slot3", "slot4", "slot5", "slot6", "slot7", "slot8", "slot9", "slot0", "undo", "+zoom",}
+    local GMODDefaultBindNames = {"+forward", "+back", "+moveleft", "+moveright", "+use", "+jump", "+duck", "+walk", "+speed", "+reload", "impulse 100", "+showscores", "messagemode", "messagemode2", "+menu_context", "+menu", "slot1", "slot2", "slot3", "slot4", "slot5", "slot6", "slot7", "slot8", "slot9", "slot0", "undo", "+zoom",}
     function lia.keybind.buildReservedKeys()
         local reserved = {}
         for _, bindName in ipairs(GMODDefaultBindNames) do
@@ -356,6 +358,7 @@ local GMODDefaultBindNames = {"+forward", "+back", "+moveleft", "+moveright", "+
         hook.Run("AddReservedKeybinds", reserved)
         lia.keybind.reservedKeys = reserved
     end
+
     function lia.keybind.isKeyReserved(keyCode)
         if not lia.keybind.reservedKeys then return false end
         return lia.keybind.reservedKeys[keyCode] == true
@@ -396,11 +399,13 @@ local GMODDefaultBindNames = {"+forward", "+back", "+moveleft", "+moveright", "+
             end
         end
     end)
+
     function lia.keybind.get(a, df)
         local act = lia.keybind.stored[a]
         if act then return act.value or act.default or df end
         return df
     end
+
     function lia.keybind.save()
         local path = "lilia/keybinds.json"
         local d = {}
@@ -414,6 +419,7 @@ local GMODDefaultBindNames = {"+forward", "+back", "+moveleft", "+moveright", "+
             MsgC(Color(255, 200, 0), "[Keybind Save] " .. path .. " | " .. tostring(ok) .. " | " .. j .. "\n")
         end
     end
+
     function lia.keybind.load()
         local path = "lilia/keybinds.json"
         local d = file.Read(path, "DATA")
@@ -719,5 +725,3 @@ local GMODDefaultBindNames = {"+forward", "+back", "+moveleft", "+moveright", "+
         }
     end)
 end
-
-

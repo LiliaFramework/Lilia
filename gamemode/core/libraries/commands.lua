@@ -1,4 +1,4 @@
-lia.command = lia.command or {}
+﻿lia.command = lia.command or {}
 lia.command.list = lia.command.list or {}
 function lia.command.buildSyntaxFromArguments(args)
     local tokens = {}
@@ -20,6 +20,7 @@ function lia.command.buildSyntaxFromArguments(args)
     end
     return table.concat(tokens, " ")
 end
+
 function lia.command.add(command, data)
     data.arguments = data.arguments or {}
     data.syntax = data.syntax or lia.command.buildSyntaxFromArguments(data.arguments)
@@ -134,6 +135,7 @@ function lia.command.add(command, data)
 
     hook.Run("CommandAdded", command, data)
 end
+
 function lia.command.hasAccess(client, command, data)
     if not data then data = lia.command.list[command] end
     if not data then return false, "unknown" end
@@ -171,6 +173,7 @@ function lia.command.hasAccess(client, command, data)
     lia.debug("[Permissions]", "Permission Check for function lia.command.hasAccess final", "command=", tostring(command), "privilegeID=", tostring(privilegeID), "finalResult=", tostring(hasAccess))
     return hasAccess, privilegeName
 end
+
 function lia.command.extractArgs(text)
     local skip = 0
     local arguments = {}
@@ -247,6 +250,7 @@ if SERVER then
             end
         end
     end
+
     function lia.command.parse(client, text, realCommand, arguments)
         if realCommand or utf8.sub(text, 1, 1) == "/" then
             local match = realCommand or text:lower():match("/" .. "([_%w]+)")
@@ -541,6 +545,7 @@ else
             frame:Remove()
         end
     end
+
     function lia.command.send(command, ...)
         net.Start("liaCommandData")
         net.WriteString(command)
@@ -6032,6 +6037,7 @@ lia.command.add("doorcopyfactions", {
             hasData = true,
             values = cloneDoorRestrictionList(doorData.factions)
         }
+
         client:notifySuccessLocalized("doorFactionsCopied", #(client.liaCopiedDoorFactions.values or {}))
     end
 })
@@ -6086,6 +6092,7 @@ lia.command.add("doorcopyclasses", {
             hasData = true,
             values = cloneDoorRestrictionList(doorData.classes)
         }
+
         client:notifySuccessLocalized("doorClassesCopied", #(client.liaCopiedDoorClasses.values or {}))
     end
 })
@@ -7956,6 +7963,7 @@ lia.command.add("viewBodygroups", {
         net.Send(client)
     end
 })
+
 concommand.Add("lia_set_inventory_size_all_chars", function(client, _, args)
     if IsValid(client) then return end
     local steamID = args[1]
@@ -8115,4 +8123,3 @@ concommand.Add("lia_give_money_steamid", function(client, _, args)
         end
     end):catch(function(err) MsgC(Color(255, 0, 0), "[Lilia] ", Color(255, 255, 255), L("databaseErrorValue", tostring(err)) .. "\n") end)
 end)
-

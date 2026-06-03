@@ -1,4 +1,4 @@
-local panelMeta = FindMetaTable("Panel")
+﻿local panelMeta = FindMetaTable("Panel")
 local originalSetSize = panelMeta.SetSize
 local originalSetPos = panelMeta.SetPos
 function panelMeta:liaListenForInventoryChanges(inventory)
@@ -38,6 +38,7 @@ function panelMeta:liaListenForInventoryChanges(inventory)
 
     table.insert(self.liaToRemoveHooks[id], "ItemDataChanged")
 end
+
 function panelMeta:liaDeleteInventoryHooks(id)
     if not self.liaHookID then return end
     if id == nil then
@@ -58,6 +59,7 @@ function panelMeta:liaDeleteInventoryHooks(id)
 
     self.liaToRemoveHooks[id] = nil
 end
+
 function panelMeta:setScaledPos(x, y)
     if not IsValid(self) then return end
     if not originalSetPos then
@@ -67,6 +69,7 @@ function panelMeta:setScaledPos(x, y)
 
     originalSetPos(self, ScreenScale(x), ScreenScaleH(y))
 end
+
 function panelMeta:setScaledSize(w, h)
     if not IsValid(self) then return end
     if not originalSetSize then
@@ -92,6 +95,7 @@ local function drawCircle(x, y, r)
 
     surface.DrawPoly(circle)
 end
+
 function panelMeta:On(name, fn)
     name = self.AppendOverwrite or name
     local old = self[name]
@@ -100,11 +104,13 @@ function panelMeta:On(name, fn)
         fn(s, ...)
     end
 end
+
 function panelMeta:SetupTransition(name, speed, fn)
     fn = self.TransitionFunc or fn
     self[name] = 0
     self:On("Think", function(s) s[name] = Lerp(FrameTime() * speed, s[name], fn(s) and 1 or 0) end)
 end
+
 function panelMeta:FadeHover(col, speed, rad)
     col = col or Color(255, 255, 255, 30)
     speed = speed or 6
@@ -119,6 +125,7 @@ function panelMeta:FadeHover(col, speed, rad)
         end
     end)
 end
+
 function panelMeta:BarHover(col, height, speed)
     col = col or Color(255, 255, 255, 255)
     height = height or 2
@@ -130,6 +137,7 @@ function panelMeta:BarHover(col, height, speed)
         surface.DrawRect(w / 2 - bar / 2, h - height, bar, height)
     end)
 end
+
 function panelMeta:FillHover(col, dir, speed, mat)
     col = col or Color(255, 255, 255, 30)
     dir = dir or LEFT
@@ -158,6 +166,7 @@ function panelMeta:FillHover(col, dir, speed, mat)
         end
     end)
 end
+
 function panelMeta:Background(col, rad, rtl, rtr, rbl, rbr)
     self:On("Paint", function(_, w, h)
         if rad and rad > 0 then
@@ -172,6 +181,7 @@ function panelMeta:Background(col, rad, rtl, rtr, rbl, rbr)
         end
     end)
 end
+
 function panelMeta:Material(mat, col)
     col = col or Color(255, 255, 255)
     self:On("Paint", function(_, w, h)
@@ -180,6 +190,7 @@ function panelMeta:Material(mat, col)
         surface.DrawTexturedRect(0, 0, w, h)
     end)
 end
+
 function panelMeta:TiledMaterial(mat, tw, th, col)
     col = col or Color(255, 255, 255, 255)
     self:On("Paint", function(_, w, h)
@@ -188,6 +199,7 @@ function panelMeta:TiledMaterial(mat, tw, th, col)
         surface.DrawTexturedRectUV(0, 0, w, h, 0, 0, w / tw, h / th)
     end)
 end
+
 function panelMeta:Outline(col, width)
     col = col or Color(255, 255, 255, 255)
     width = width or 1
@@ -198,6 +210,7 @@ function panelMeta:Outline(col, width)
         end
     end)
 end
+
 function panelMeta:LinedCorners(col, cornerLen)
     col = col or Color(255, 255, 255, 255)
     cornerLen = cornerLen or 15
@@ -209,6 +222,7 @@ function panelMeta:LinedCorners(col, cornerLen)
         surface.DrawRect(w - 1, h - cornerLen, 1, cornerLen - 1)
     end)
 end
+
 function panelMeta:SideBlock(col, size, side)
     col = col or Color(255, 255, 255, 255)
     size = size or 3
@@ -226,6 +240,7 @@ function panelMeta:SideBlock(col, size, side)
         end
     end)
 end
+
 function panelMeta:Text(text, font, col, alignment, ox, oy, paint)
     font = font or "Trebuchet24"
     col = col or Color(255, 255, 255, 255)
@@ -249,6 +264,7 @@ function panelMeta:Text(text, font, col, alignment, ox, oy, paint)
         end)
     end
 end
+
 function panelMeta:DualText(toptext, topfont, topcol, bottomtext, bottomfont, bottomcol, alignment, centerSpacing)
     topfont = topfont or "Trebuchet24"
     topcol = topcol or Color(0, 127, 255, 255)
@@ -275,6 +291,7 @@ function panelMeta:DualText(toptext, topfont, topcol, bottomtext, bottomfont, bo
         draw.SimpleText(bottomtext, bottomfont, x, y2 - centerSpacing, bottomcol, alignment, TEXT_ALIGN_CENTER)
     end)
 end
+
 function panelMeta:Blur(amount)
     self:On("Paint", function(s)
         local x, y = s:LocalToScreen(0, 0)
@@ -289,6 +306,7 @@ function panelMeta:Blur(amount)
         end
     end)
 end
+
 function panelMeta:CircleClick(col, speed, trad)
     col = col or Color(255, 255, 255, 50)
     speed = speed or 5
@@ -309,6 +327,7 @@ function panelMeta:CircleClick(col, speed, trad)
         s.Alpha = col.a
     end)
 end
+
 function panelMeta:CircleHover(col, speed, trad)
     col = col or Color(255, 255, 255, 30)
     speed = speed or 6
@@ -321,6 +340,7 @@ function panelMeta:CircleHover(col, speed, trad)
         drawCircle(s.LastX, s.LastY, s.CircleHover * (trad or w))
     end)
 end
+
 function panelMeta:SquareCheckbox(inner, outer, speed)
     inner = inner or Color(0, 255, 0, 255)
     outer = outer or Color(255, 255, 255, 255)
@@ -336,6 +356,7 @@ function panelMeta:SquareCheckbox(inner, outer, speed)
         surface.DrawRect(w / 2 - bw / 2, h / 2 - bh / 2, bw, bh)
     end)
 end
+
 function panelMeta:CircleCheckbox(inner, outer, speed)
     inner = inner or Color(0, 255, 0, 255)
     outer = outer or Color(255, 255, 255, 255)
@@ -349,6 +370,7 @@ function panelMeta:CircleCheckbox(inner, outer, speed)
         drawCircle(w / 2, h / 2, w * s.CircleCheckbox / 2)
     end)
 end
+
 function panelMeta:AvatarMask(mask)
     self.Avatar = vgui.Create("AvatarImage", self)
     self.Avatar:SetPaintedManually(true)
@@ -381,9 +403,11 @@ function panelMeta:AvatarMask(mask)
     self.SetPlayer = function(s, ply, size) s.Avatar:SetPlayer(ply, size) end
     self.SetSteamID = function(s, id, size) s.Avatar:SetSteamID(id, size) end
 end
+
 function panelMeta:CircleAvatar()
     self:AvatarMask(function(_, w, h) drawCircle(w / 2, h / 2, w / 2) end)
 end
+
 function panelMeta:Circle(col)
     col = col or Color(255, 255, 255, 255)
     self:On("Paint", function(_, w, h)
@@ -392,6 +416,7 @@ function panelMeta:Circle(col)
         drawCircle(w / 2, h / 2, math.min(w, h) / 2)
     end)
 end
+
 function panelMeta:CircleFadeHover(col, speed)
     col = col or Color(255, 255, 255, 30)
     speed = speed or 6
@@ -402,6 +427,7 @@ function panelMeta:CircleFadeHover(col, speed)
         drawCircle(w / 2, h / 2, w / 2)
     end)
 end
+
 function panelMeta:CircleExpandHover(col, speed)
     col = col or Color(255, 255, 255, 30)
     speed = speed or 6
@@ -413,6 +439,7 @@ function panelMeta:CircleExpandHover(col, speed)
         drawCircle(w / 2, h / 2, rad)
     end)
 end
+
 function panelMeta:Gradient(col, dir, frac, op)
     dir = dir or BOTTOM
     frac = frac or 1
@@ -440,9 +467,11 @@ function panelMeta:Gradient(col, dir, frac, op)
         surface.DrawTexturedRect(x, y, gw, gh)
     end)
 end
+
 function panelMeta:SetOpenURL(url)
     self:On("DoClick", function() gui.OpenURL(url) end)
 end
+
 function panelMeta:NetMessage(name, data)
     data = data or function() end
     self:On("DoClick", function()
@@ -451,6 +480,7 @@ function panelMeta:NetMessage(name, data)
         net.SendToServer()
     end)
 end
+
 function panelMeta:Stick(dock, margin, dontInvalidate)
     dock = dock or FILL
     margin = margin or 0
@@ -458,55 +488,66 @@ function panelMeta:Stick(dock, margin, dontInvalidate)
     if margin > 0 then self:DockMargin(margin, margin, margin, margin) end
     if not dontInvalidate then self:InvalidateParent(true) end
 end
+
 function panelMeta:DivTall(frac, target)
     frac = frac or 2
     target = target or self:GetParent()
     self:SetTall(target:GetTall() / frac)
 end
+
 function panelMeta:DivWide(frac, target)
     target = target or self:GetParent()
     frac = frac or 2
     self:SetWide(target:GetWide() / frac)
 end
+
 function panelMeta:SquareFromHeight()
     self:SetWide(self:GetTall())
 end
+
 function panelMeta:SquareFromWidth()
     self:SetTall(self:GetWide())
 end
+
 function panelMeta:SetRemove(target)
     target = target or self
     self:On("DoClick", function() if IsValid(target) then target:Remove() end end)
 end
+
 function panelMeta:FadeIn(time, alpha)
     time = time or 0.2
     alpha = alpha or 255
     self:SetAlpha(0)
     self:AlphaTo(alpha, time)
 end
+
 function panelMeta:HideVBar()
     local vbar = self:GetVBar()
     vbar:SetWide(0)
     vbar:Hide()
 end
+
 function panelMeta:SetTransitionFunc(fn)
     self.TransitionFunc = fn
 end
+
 function panelMeta:ClearTransitionFunc()
     self.TransitionFunc = nil
 end
+
 function panelMeta:SetAppendOverwrite(fn)
     self.AppendOverwrite = fn
 end
+
 function panelMeta:ClearAppendOverwrite()
     self.AppendOverwrite = nil
 end
+
 function panelMeta:ClearPaint()
     self.Paint = nil
 end
+
 function panelMeta:ReadyTextbox()
     self:SetPaintBackground(false)
     self:SetAppendOverwrite("PaintOver"):SetTransitionFunc(function(s) return s:IsEditing() end)
 end
-
-

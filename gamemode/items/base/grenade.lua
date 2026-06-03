@@ -1,4 +1,4 @@
-ITEM.name = "grenadeName"
+﻿ITEM.name = "grenadeName"
 ITEM.desc = "grenadeDesc"
 ITEM.category = "itemCatGrenades"
 ITEM.model = "models/weapons/w_eq_fraggrenade.mdl"

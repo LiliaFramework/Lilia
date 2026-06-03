@@ -1,4 +1,4 @@
-lia.notices = lia.notices or {}
+﻿lia.notices = lia.notices or {}
 if CLIENT then
     function lia.notices.receiveNotify()
         local msg = net.ReadString() or ""
@@ -21,6 +21,7 @@ if CLIENT then
             if IsValid(lp) then lp:EmitSound("garrysmod/content_downloaded.wav", 50, 250, 1, CHAN_AUTO) end
         end)
     end
+
     function lia.notices.receiveNotifyL()
         local key = net.ReadString() or ""
         local argc = net.ReadUInt(8) or 0
@@ -49,24 +50,31 @@ if CLIENT then
             if IsValid(lp) then lp:EmitSound("garrysmod/content_downloaded.wav", 50, 250, 1, CHAN_AUTO) end
         end)
     end
+
     function lia.notices.notifyInfoLocalized(client, key, ...)
         lia.notices.notify(client, L(key, ...), "info")
     end
+
     function lia.notices.notifyWarningLocalized(client, key, ...)
         lia.notices.notify(client, L(key, ...), "warning")
     end
+
     function lia.notices.notifyErrorLocalized(client, key, ...)
         lia.notices.notify(client, L(key, ...), "error")
     end
+
     function lia.notices.notifySuccessLocalized(client, key, ...)
         lia.notices.notify(client, L(key, ...), "success")
     end
+
     function lia.notices.notifyMoneyLocalized(client, key, ...)
         lia.notices.notify(client, L(key, ...), "money")
     end
+
     function lia.notices.notifyAdminLocalized(client, key, ...)
         lia.notices.notify(client, L(key, ...), "admin")
     end
+
     function notification.AddLegacy(text, typeId)
         local map = {
             [0] = "info",
@@ -104,6 +112,7 @@ if CLIENT then
         end
     end
 end
+
 function lia.notices.notifyLocalized(client, key, notifType, ...)
     if SERVER then
         local args = {...}
@@ -129,6 +138,7 @@ function lia.notices.notifyLocalized(client, key, notifType, ...)
         lia.notices.notify(client, L(key, ...), notifType or "default")
     end
 end
+
 function lia.notices.notify(client, message, notifType)
     if SERVER then
         net.Start("liaNotificationData")
@@ -152,5 +162,3 @@ function lia.notices.notify(client, message, notifType)
         end)
     end
 end
-
-

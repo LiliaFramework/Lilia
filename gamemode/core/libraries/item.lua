@@ -1,4 +1,4 @@
-lia.item = lia.item or {}
+﻿lia.item = lia.item or {}
 lia.item.base = lia.item.base or {}
 lia.item.list = lia.item.list or {}
 lia.item.rarities = lia.item.rarities or {}
@@ -164,6 +164,7 @@ lia.meta.item.height = 1
 function lia.item.get(identifier)
     return lia.item.base[identifier] or lia.item.list[identifier]
 end
+
 function lia.item.applyWeaponOverride(uniqueID)
     local data = lia.item.WeaponOverrides and lia.item.WeaponOverrides[uniqueID]
     if not istable(data) then return end
@@ -173,6 +174,7 @@ function lia.item.applyWeaponOverride(uniqueID)
         itemDef[k] = v
     end
 end
+
 function lia.item.getItemByID(itemID)
     assert(isnumber(itemID), L("itemIDNumberRequired"))
     local item = lia.item.instances[itemID]
@@ -189,18 +191,21 @@ function lia.item.getItemByID(itemID)
         location = location
     }
 end
+
 function lia.item.getInstancedItemByID(itemID)
     assert(isnumber(itemID), L("itemIDNumberRequired"))
     local item = lia.item.instances[itemID]
     if not item then return nil, L("itemNotFound") end
     return item
 end
+
 function lia.item.getItemDataByID(itemID)
     assert(isnumber(itemID), L("itemIDNumberRequired"))
     local item = lia.item.instances[itemID]
     if not item then return nil, L("itemNotFound") end
     return item.data
 end
+
 function lia.item.load(path, baseID, isBaseItem)
     local uniqueID = path:match("sh_([_%w]+)%.lua") or path:match("([_%w]+)%.lua")
     if uniqueID then
@@ -213,17 +218,21 @@ function lia.item.load(path, baseID, isBaseItem)
         lia.error("[Lilia] " .. L("invalidItemNaming", path) .. "\n")
     end
 end
+
 function lia.item.isItem(object)
     return istable(object) and object.isItem
 end
+
 function lia.item.getInv(invID)
     return lia.inventory.instances[invID]
 end
+
 function lia.item.addRarities(name, color)
     assert(isstring(name), L("vendorRarityNameString"))
     assert(IsColor(color), L("vendorColorMustBeColor"))
     lia.item.rarities[name] = color
 end
+
 function lia.item.register(uniqueID, baseID, isBaseItem, path, luaGenerated)
     assert(isstring(uniqueID), L("itemUniqueIDString"))
     local baseTable = lia.item.base[baseID] or lia.meta.item
@@ -299,6 +308,7 @@ function lia.item.localizeDefinition(itemDef)
     if isstring(itemDef.desc) then itemDef.desc = lia.lang.resolveToken(itemDef.desc) end
     if isstring(itemDef.category) then itemDef.category = lia.lang.resolveToken(itemDef.category) end
 end
+
 function lia.item.registerItem(id, base, properties)
     assert(isstring(id), L("itemUniqueIDString"))
     if properties ~= nil and not istable(properties) then
@@ -330,6 +340,7 @@ function lia.item.registerItem(id, base, properties)
     })
     return placeholder
 end
+
 function lia.item.overrideItem(uniqueID, overrides)
     assert(isstring(uniqueID), L("itemUniqueIDString"))
     assert(istable(overrides), "overrides must be a table")
@@ -338,6 +349,7 @@ function lia.item.overrideItem(uniqueID, overrides)
         lia.item.pendingOverrides[uniqueID][key] = value
     end
 end
+
 function lia.item.loadFromDir(directory)
     local files, folders
     files = file.Find(directory .. "/base/*.lua", "LUA")
@@ -359,6 +371,7 @@ function lia.item.loadFromDir(directory)
 
     hook.Run("InitializedItems")
 end
+
 function lia.item.new(uniqueID, id)
     id = id and tonumber(id) or id
     assert(isnumber(id), L("itemNonNumberID"))
@@ -381,6 +394,7 @@ function lia.item.new(uniqueID, id)
         error("[Lilia] " .. L("unknownItem", tostring(uniqueID)) .. "\n")
     end
 end
+
 function lia.item.registerInv(invType, w, h)
     local GridInv = FindMetaTable("GridInv")
     assert(GridInv, L("gridInvNotFound"))
@@ -396,6 +410,7 @@ function lia.item.registerInv(invType, w, h)
 
     inventory:register(invType)
 end
+
 function lia.item.newInv(owner, invType, callback)
     lia.inventory.instance(invType, {
         char = owner
@@ -413,6 +428,7 @@ function lia.item.newInv(owner, invType, callback)
         if callback then callback(inventory) end
     end)
 end
+
 function lia.item.createInv(w, h, id)
     local GridInv = FindMetaTable("GridInv")
     assert(GridInv, L("gridInvNotFound"))
@@ -489,9 +505,11 @@ lia.item.holdTypeSizeMapping = {
         height = 1
     }
 }
+
 function lia.item.addWeaponOverride(className, data)
     lia.item.WeaponOverrides[className] = data
 end
+
 function lia.item.addWeaponToBlacklist(className)
     lia.item.WeaponsBlackList[className] = true
 end
@@ -531,6 +549,7 @@ if SERVER then
         item:setData(key, value, receivers, noSave, noCheckEntity)
         return true
     end
+
     function lia.item.instance(index, uniqueID, itemData, x, y, callback)
         if isstring(index) and (istable(uniqueID) or itemData == nil and x == nil) then
             itemData = uniqueID
@@ -580,6 +599,7 @@ if SERVER then
         }, onItemCreated, "items")
         return d
     end
+
     function lia.item.deleteByID(id)
         if lia.item.instances[id] then
             lia.item.instances[id]:delete()
@@ -587,6 +607,7 @@ if SERVER then
             lia.db.delete("items", "itemID = " .. id)
         end
     end
+
     function lia.item.loadItemByID(itemIndex)
         local range
         if istable(itemIndex) then
@@ -615,6 +636,7 @@ if SERVER then
             end
         end)
     end
+
     function lia.item.spawn(uniqueID, position, callback, angles, data)
         local d
         if not isfunction(callback) then
@@ -643,6 +665,7 @@ if SERVER then
         end)
         return d
     end
+
     function lia.item.restoreInv(invID, w, h, callback)
         lia.inventory.loadByID(invID):next(function(inventory)
             if not inventory then return end
@@ -1028,5 +1051,3 @@ hook.Add("InitPostEntity", "liaWeaponRuntimeDefaults", function()
         end
     end
 end)
-
-

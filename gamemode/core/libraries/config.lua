@@ -1,4 +1,4 @@
-lia.config = lia.config or {}
+﻿lia.config = lia.config or {}
 lia.config.stored = lia.config.stored or {}
 lia.config.lastSyncedValues = lia.config.lastSyncedValues or {}
 local function cfgLocalizeLabel(value, ...)
@@ -58,6 +58,7 @@ local function cfgValuesEqual(a, b)
     if istable(a) and istable(b) then return util.TableToJSON(a) == util.TableToJSON(b) end
     return a == b
 end
+
 function lia.config.add(key, name, value, callback, data)
     assert(isstring(key), L("configKeyString", type(key)))
     assert(istable(data), L("configDataTable", type(data)))
@@ -99,24 +100,28 @@ function lia.config.add(key, name, value, callback, data)
         callback = callback
     }
 end
+
 function lia.config.getDisplayName(key)
     local config = lia.config.stored[key]
     if not config then return key end
     local value = config.rawName or config.name or key
     return isstring(value) and cfgLocalizeLabel(value) or value
 end
+
 function lia.config.getDisplayDesc(key)
     local config = lia.config.stored[key]
     if not config then return "" end
     local value = config.rawDesc or (config.data and config.data.rawDesc) or config.desc or ""
     return isstring(value) and cfgLocalizeLabel(value) or value
 end
+
 function lia.config.getDisplayCategory(key)
     local config = lia.config.stored[key]
     if not config then return cfgLocalizeLabel("character") end
     local value = config.rawCategory or (config.data and config.data.rawCategory) or config.category or "character"
     return isstring(value) and cfgLocalizeLabel(value) or value
 end
+
 function lia.config.getOptions(key)
     local config = lia.config.stored[key]
     if not config then return {} end
@@ -142,10 +147,12 @@ function lia.config.getOptions(key)
     end
     return {}
 end
+
 function lia.config.setDefault(key, value)
     local config = lia.config.stored[key]
     if config then config.default = value end
 end
+
 function lia.config.forceSet(key, value, noSave)
     local config = lia.config.stored[key]
     if config then
@@ -156,6 +163,7 @@ function lia.config.forceSet(key, value, noSave)
 
     if not noSave then lia.config.save() end
 end
+
 function lia.config.set(key, value)
     local config = lia.config.stored[key]
     if config then
@@ -179,6 +187,7 @@ function lia.config.set(key, value)
         if CLIENT and oldValue ~= value and IsValid(LocalPlayer()) then LocalPlayer():notifySuccess("Config '" .. tostring(lia.config.getDisplayName(key) or key) .. "' updated successfully") end
     end
 end
+
 function lia.config.get(key, default)
     local config = lia.config.stored[key]
     if config then
@@ -254,6 +263,7 @@ if SERVER then
 
         hook.Run("InitializedConfig")
     end
+
     function lia.config.getChangedValues(includeDefaults)
         local data = {}
         for k, v in pairs(lia.config.stored) do
@@ -268,6 +278,7 @@ if SERVER then
         end
         return data
     end
+
     function lia.config.send(client)
         local data
         if client then
@@ -297,6 +308,7 @@ if SERVER then
         net.WriteTable(data)
         net.Send(targets)
     end
+
     function lia.config.save()
         local configData = {}
         for k, v in pairs(lia.config.stored) do
@@ -305,6 +317,7 @@ if SERVER then
 
         lia.data.set("config", configData, true, true)
     end
+
     function lia.config.reset()
         for _, cfg in pairs(lia.config.stored) do
             local oldValue = cfg.value
@@ -1575,5 +1588,3 @@ lia.config.add("maxAttributes", "@maxAttributes", 100, nil, {
     min = 1,
     max = 1000
 })
-
-

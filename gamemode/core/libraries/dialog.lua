@@ -1,4 +1,4 @@
-lia.dialog = lia.dialog or {}
+﻿lia.dialog = lia.dialog or {}
 lia.dialog.stored = lia.dialog.stored or {}
 lia.dialog.configurations = lia.dialog.configurations or {}
 lia.dialog.clientHashes = lia.dialog.clientHashes or {}
@@ -33,6 +33,7 @@ function lia.dialog.isTableEqual(tbl1, tbl2, checked)
     end
     return true
 end
+
 function lia.dialog.registerConfiguration(uniqueID, data)
     if not isstring(uniqueID) then return end
     if not istable(data) then data = {} end
@@ -53,6 +54,7 @@ function lia.dialog.registerConfiguration(uniqueID, data)
     config.order = config.order or 0
     return config
 end
+
 function lia.dialog.getConfiguration(uniqueID)
     return lia.dialog.configurations[uniqueID]
 end
@@ -72,6 +74,7 @@ if SERVER then
         if lia.dialog.stored[npcID] then return lia.dialog.stored[npcID] end
         return nil
     end
+
     function lia.dialog.getOriginalNPCData(npcID)
         if lia.dialog.originalData and lia.dialog.originalData[npcID] then return lia.dialog.originalData[npcID] end
         return nil
@@ -219,6 +222,7 @@ if SERVER then
         local json = util.TableToJSON(data, false)
         return util.CRC(json or "")
     end
+
     function lia.dialog.syncToClients(client)
         local targetClients = client and {client} or player.GetAll()
         for _, ply in ipairs(targetClients) do
@@ -238,9 +242,11 @@ if SERVER then
             end
         end
     end
+
     function lia.dialog.syncDialogs()
         lia.dialog.syncToClients()
     end
+
     function lia.dialog.registerNPC(uniqueID, data, shouldSync)
         if not uniqueID or not data then return false end
         if not data.Conversation then return false end
@@ -259,6 +265,7 @@ if SERVER then
         if shouldSync ~= false and hasChanged then lia.dialog.syncToClients() end
         return true
     end
+
     function lia.dialog.openDialog(client, npc, npcID)
         local npcData = lia.dialog.getOriginalNPCData(npcID)
         if not npcData then
@@ -355,6 +362,7 @@ else
         if lia.dialog.stored[npcID] then return lia.dialog.stored[npcID] end
         return nil
     end
+
     function lia.dialog.submitConfiguration(configID, npc, payload)
         if not isstring(configID) or configID == "" then return end
         if not IsValid(npc) then return end
@@ -364,6 +372,7 @@ else
         net.WriteTable(payload or {})
         net.SendToServer()
     end
+
     function lia.dialog.openCustomizationUI(npc, configID)
         configID = configID or "appearance"
         if not IsValid(npc) then return end
@@ -741,6 +750,7 @@ local function isConfigurationVisible(config, ply, npc, npcID)
     end
     return result ~= false
 end
+
 function lia.dialog.getAvailableConfigurations(ply, npc, npcID)
     local options = {}
     if not IsValid(ply) then return options end
@@ -757,6 +767,7 @@ function lia.dialog.getAvailableConfigurations(ply, npc, npcID)
     end)
     return options
 end
+
 function lia.dialog.openConfigurationPicker(npc, npcID)
     npcID = npcID or (IsValid(npc) and npc.uniqueID)
     local ply = LocalPlayer()
@@ -920,5 +931,3 @@ else
         Action = function(_, ent) lia.dialog.openConfigurationPicker(ent) end
     })
 end
-
-

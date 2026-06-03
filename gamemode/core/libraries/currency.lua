@@ -1,4 +1,4 @@
-lia.currency = lia.currency or {}
+﻿lia.currency = lia.currency or {}
 lia.currency.singular = lia.lang.resolveToken(lia.config.get("CurrencySingularName", "@currencySingular"))
 lia.currency.plural = lia.lang.resolveToken(lia.config.get("CurrencyPluralName", "@currencyPlural"))
 lia.currency.symbol = ""
@@ -39,5 +39,3 @@ hook.Add("OnConfigUpdated", "CurrencyConfigUpdate", function(key)
         lia.currency.symbol = lia.config.get("CurrencySymbol", "")
     end
 end)
-
-

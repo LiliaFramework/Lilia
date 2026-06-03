@@ -1,10 +1,11 @@
-local playerMeta = FindMetaTable("Player")
+﻿local playerMeta = FindMetaTable("Player")
 do
     playerMeta.steamName = playerMeta.steamName or playerMeta.Name
     playerMeta.SteamName = playerMeta.steamName
     function playerMeta:getChar()
         return lia.char.getCharacter(self.getNetVar(self, "char"), self)
     end
+
     function playerMeta:tostring()
         local character = self:getChar()
         if character and character.getName then
@@ -13,6 +14,7 @@ do
             return self:SteamName()
         end
     end
+
     function playerMeta:Name()
         local character = self.getChar(self)
         return character and character.getName(character) or self.steamName(self)
@@ -21,11 +23,13 @@ do
     playerMeta.Nick = playerMeta.Name
     playerMeta.GetName = playerMeta.Name
 end
+
 function playerMeta:doGesture(a, b, c)
     self:AnimRestartGesture(a, b, c)
     self:AnimRestartGesture(a, b, c)
     netstream.Start(self:GetPos(), "liaSyncGesture", self, a, b, c)
 end
+
 function playerMeta:setAction(text, time, callback)
     if time and time <= 0 then
         if callback then callback(self) end
@@ -61,6 +65,7 @@ function playerMeta:setAction(text, time, callback)
         if callback then timer.Simple(time, function() if IsValid(self) then callback(self) end end) end
     end
 end
+
 function playerMeta:doStaredAction(entity, callback, time, onCancel, distance)
     local uniqueID = "liaStare" .. self:SteamID64()
     local data = {}
@@ -91,6 +96,7 @@ function playerMeta:doStaredAction(entity, callback, time, onCancel, distance)
         end
     end)
 end
+
 function playerMeta:stopAction()
     timer.Remove("liaAct" .. self:SteamID64())
     timer.Remove("liaStare" .. self:SteamID64())
@@ -98,6 +104,7 @@ function playerMeta:stopAction()
     net.WriteBool(false)
     net.Send(self)
 end
+
 function playerMeta:hasPrivilege(privilegeName)
     if not isstring(privilegeName) then
         lia.error(L("hasPrivilegeExpectedString", tostring(privilegeName)))
@@ -105,6 +112,7 @@ function playerMeta:hasPrivilege(privilegeName)
     end
     return lia.admin.hasAccess(self, privilegeName)
 end
+
 function playerMeta:removeRagdoll()
     local ragdoll = self:GetRagdollEntity()
     if not IsValid(ragdoll) then return end
@@ -112,6 +120,7 @@ function playerMeta:removeRagdoll()
     SafeRemoveEntity(ragdoll)
     self:setNetVar("ragdoll", nil)
 end
+
 function playerMeta:getItemWeapon()
     local character = self:getChar()
     local inv = character:getInv()
@@ -128,9 +137,11 @@ function playerMeta:getItemWeapon()
         end
     end
 end
+
 function playerMeta:isFamilySharedAccount()
     return util.SteamIDFrom64(self:OwnerSteamID64()) ~= self:SteamID()
 end
+
 function playerMeta:getItemDropPos()
     local data = {}
     data.start = self:GetShootPos()
@@ -143,6 +154,7 @@ function playerMeta:getItemDropPos()
     trace = util.TraceLine(data)
     return trace.HitPos
 end
+
 function playerMeta:getItems()
     local character = self:getChar()
     if character then
@@ -150,6 +162,7 @@ function playerMeta:getItems()
         if inv then return inv:getItems() end
     end
 end
+
 function playerMeta:getTracedEntity(distance)
     if not distance then distance = 96 end
     local data = {}
@@ -159,6 +172,7 @@ function playerMeta:getTracedEntity(distance)
     local targetEntity = util.TraceLine(data).Entity
     return targetEntity
 end
+
 function playerMeta:notify(message, notifType)
     if SERVER then
         lia.notices.notify(self, message, notifType or "default")
@@ -166,6 +180,7 @@ function playerMeta:notify(message, notifType)
         lia.notices.notify(nil, message, notifType or "default")
     end
 end
+
 function playerMeta:notifyLocalized(message, notifType, ...)
     if SERVER then
         lia.notices.notifyLocalized(self, message, notifType or "default", ...)
@@ -173,6 +188,7 @@ function playerMeta:notifyLocalized(message, notifType, ...)
         lia.notices.notifyLocalized(nil, message, notifType or "default", ...)
     end
 end
+
 function playerMeta:notifyError(message)
     if SERVER then
         lia.notices.notify(self, message, "error")
@@ -180,6 +196,7 @@ function playerMeta:notifyError(message)
         lia.notices.notify(nil, message, "error")
     end
 end
+
 function playerMeta:notifyWarning(message)
     if SERVER then
         lia.notices.notify(self, message, "warning")
@@ -187,6 +204,7 @@ function playerMeta:notifyWarning(message)
         lia.notices.notify(nil, message, "warning")
     end
 end
+
 function playerMeta:notifyInfo(message)
     if SERVER then
         lia.notices.notify(self, message, "info")
@@ -194,6 +212,7 @@ function playerMeta:notifyInfo(message)
         lia.notices.notify(nil, message, "info")
     end
 end
+
 function playerMeta:notifySuccess(message)
     if SERVER then
         lia.notices.notify(self, message, "success")
@@ -201,6 +220,7 @@ function playerMeta:notifySuccess(message)
         lia.notices.notify(nil, message, "success")
     end
 end
+
 function playerMeta:notifyMoney(message)
     if SERVER then
         lia.notices.notify(self, message, "money")
@@ -208,6 +228,7 @@ function playerMeta:notifyMoney(message)
         lia.notices.notify(nil, message, "money")
     end
 end
+
 function playerMeta:notifyAdmin(message)
     if SERVER then
         lia.notices.notify(self, message, "admin")
@@ -215,6 +236,7 @@ function playerMeta:notifyAdmin(message)
         lia.notices.notify(nil, message, "admin")
     end
 end
+
 function playerMeta:notifyErrorLocalized(key, ...)
     if SERVER then
         lia.notices.notifyLocalized(self, key, "error", ...)
@@ -222,6 +244,7 @@ function playerMeta:notifyErrorLocalized(key, ...)
         lia.notices.notifyLocalized(nil, key, "error", ...)
     end
 end
+
 function playerMeta:notifyWarningLocalized(key, ...)
     if SERVER then
         lia.notices.notifyLocalized(self, key, "warning", ...)
@@ -229,6 +252,7 @@ function playerMeta:notifyWarningLocalized(key, ...)
         lia.notices.notifyLocalized(nil, key, "warning", ...)
     end
 end
+
 function playerMeta:notifyInfoLocalized(key, ...)
     if SERVER then
         lia.notices.notifyLocalized(self, key, "info", ...)
@@ -236,6 +260,7 @@ function playerMeta:notifyInfoLocalized(key, ...)
         lia.notices.notifyLocalized(nil, key, "info", ...)
     end
 end
+
 function playerMeta:notifySuccessLocalized(key, ...)
     if SERVER then
         lia.notices.notifyLocalized(self, key, "success", ...)
@@ -243,6 +268,7 @@ function playerMeta:notifySuccessLocalized(key, ...)
         lia.notices.notifyLocalized(nil, key, "success", ...)
     end
 end
+
 function playerMeta:notifyMoneyLocalized(key, ...)
     if SERVER then
         lia.notices.notifyLocalized(self, key, "money", ...)
@@ -250,6 +276,7 @@ function playerMeta:notifyMoneyLocalized(key, ...)
         lia.notices.notifyLocalized(nil, key, "money", ...)
     end
 end
+
 function playerMeta:notifyAdminLocalized(key, ...)
     if SERVER then
         lia.notices.notifyLocalized(self, key, "admin", ...)
@@ -257,6 +284,7 @@ function playerMeta:notifyAdminLocalized(key, ...)
         lia.notices.notifyLocalized(nil, key, "admin", ...)
     end
 end
+
 function playerMeta:canEditVendor(vendor)
     local hookResult = hook.Run("CanPerformVendorEdit", self, vendor)
     if hookResult ~= nil then return hookResult end
@@ -280,12 +308,15 @@ local function groupHasType(groupName, t)
     end
     return false
 end
+
 function playerMeta:isStaff()
     return groupHasType(self:GetUserGroup(), "Staff")
 end
+
 function playerMeta:isStaffOnDuty()
     return self:Team() == FACTION_STAFF
 end
+
 function playerMeta:hasWhitelist(faction)
     local data = lia.faction.indices[faction]
     if data then
@@ -296,6 +327,7 @@ function playerMeta:hasWhitelist(faction)
     end
     return false
 end
+
 function playerMeta:getClassData()
     local character = self:getChar()
     if character then
@@ -306,23 +338,28 @@ function playerMeta:getClassData()
         end
     end
 end
+
 function playerMeta:getDarkRPVar(var)
     if var ~= "money" then return end
     local char = self:getChar()
     return char:getMoney()
 end
+
 function playerMeta:getMoney()
     local character = self:getChar()
     return character and character:getMoney() or 0
 end
+
 function playerMeta:canAfford(amount)
     local character = self:getChar()
     return character and character:hasMoney(amount)
 end
+
 function playerMeta:hasSkillLevel(skill, level)
     local currentLevel = self:getChar():getAttrib(skill, 0)
     return currentLevel >= level
 end
+
 function playerMeta:meetsRequiredSkills(requiredSkillLevels)
     if not requiredSkillLevels then return true end
     for skill, level in pairs(requiredSkillLevels) do
@@ -330,18 +367,22 @@ function playerMeta:meetsRequiredSkills(requiredSkillLevels)
     end
     return true
 end
+
 function playerMeta:getFlags()
     local char = self:getChar()
     return char and char:getFlags() or ""
 end
+
 function playerMeta:giveFlags(flags)
     local char = self:getChar()
     if char then char:giveFlags(flags) end
 end
+
 function playerMeta:takeFlags(flags)
     local char = self:getChar()
     if char then char:takeFlags(flags) end
 end
+
 function playerMeta:networkAnimation(active, boneData)
     if SERVER then
         net.Start("liaAnimationStatus")
@@ -370,6 +411,7 @@ function playerMeta:networkAnimation(active, boneData)
         end
     end
 end
+
 function playerMeta:getAllLiliaData()
     if SERVER then
         self.liaData = self.liaData or {}
@@ -379,6 +421,7 @@ function playerMeta:getAllLiliaData()
         return lia.localData
     end
 end
+
 function playerMeta:setWaypoint(name, vector, logo, onReach)
     if SERVER then
         net.Start("liaSetWaypoint")
@@ -458,6 +501,7 @@ function playerMeta:setWaypoint(name, vector, logo, onReach)
         end)
     end
 end
+
 function playerMeta:getLiliaData(key, default)
     local data
     if SERVER then
@@ -472,6 +516,7 @@ function playerMeta:getLiliaData(key, default)
         return data
     end
 end
+
 function playerMeta:getMainCharacter()
     local mainCharData = self:getLiliaData("mainCharacter")
     if mainCharData then
@@ -484,6 +529,7 @@ function playerMeta:getMainCharacter()
         return nil
     end
 end
+
 function playerMeta:setMainCharacter(charID)
     if SERVER then
         charID = tonumber(charID)
@@ -530,6 +576,7 @@ function playerMeta:setMainCharacter(charID)
         net.SendToServer()
     end
 end
+
 function playerMeta:hasFlags(flags)
     for i = 1, #flags do
         local flag = flags:sub(i, i)
@@ -537,11 +584,13 @@ function playerMeta:hasFlags(flags)
     end
     return hook.Run("CharHasFlags", self, flags) or false
 end
+
 function playerMeta:playTimeGreaterThan(time)
     local playTime = self:getPlayTime()
     if not playTime or not time then return false end
     return playTime > time
 end
+
 local function serializeRequestText(value)
     if istable(value) then
         local token = value[1]
@@ -575,6 +624,7 @@ function playerMeta:requestOptions(title, subTitle, options, limit, callback, on
         lia.derma.requestOptions(title, subTitle, options, tonumber(limit) or 1, callback, onCancel)
     end
 end
+
 function playerMeta:requestString(title, subTitle, callback, default)
     local d
     if not isfunction(callback) and default == nil then
@@ -598,6 +648,7 @@ function playerMeta:requestString(title, subTitle, callback, default)
         return d
     end
 end
+
 function playerMeta:requestArguments(title, argTypes, callback)
     local d
     if not isfunction(callback) then
@@ -623,6 +674,7 @@ function playerMeta:requestArguments(title, argTypes, callback)
         return d
     end
 end
+
 function playerMeta:requestBinaryQuestion(question, option1, option2, manualDismiss, callback)
     local title = ""
     if isstring(question) and isstring(option1) and isstring(option2) and (isbool(manualDismiss) or isfunction(manualDismiss)) then
@@ -649,6 +701,7 @@ function playerMeta:requestBinaryQuestion(question, option1, option2, manualDism
         lia.derma.requestBinaryQuestion(title, question, function(result) if callback then callback(result and 0 or 1) end end, option1, option2)
     end
 end
+
 function playerMeta:requestPopupQuestion(question, buttons)
     if SERVER then
         self.liaPopupReqs = self.liaPopupReqs or {}
@@ -672,6 +725,7 @@ function playerMeta:requestPopupQuestion(question, buttons)
         lia.derma.requestPopupQuestion(question, buttons)
     end
 end
+
 function playerMeta:getRagdoll()
     local ragdollValue = self:getNetVar("ragdoll")
     if isnumber(ragdollValue) then
@@ -694,6 +748,7 @@ function playerMeta:getRagdoll()
     end
     return nil
 end
+
 function playerMeta:requestButtons(title, buttons)
     if SERVER then
         self.buttonRequests = self.buttonRequests or {}
@@ -718,6 +773,7 @@ function playerMeta:requestButtons(title, buttons)
         lia.derma.requestButtons(title, buttons)
     end
 end
+
 function playerMeta:isStuck()
     return util.TraceEntity({
         start = self:GetPos(),
@@ -725,6 +781,7 @@ function playerMeta:isStuck()
         filter = self
     }, self).StartSolid
 end
+
 function playerMeta:requestDropdown(title, subTitle, options, callback)
     if SERVER then
         self.liaDropdownReqs = self.liaDropdownReqs or {}
@@ -756,6 +813,7 @@ if SERVER then
             hook.Run("PlayerStaminaGained", self)
         end
     end
+
     function playerMeta:consumeStamina(amount)
         local char = self:getChar()
         local max = char and (hook.Run("GetCharMaxStamina", char) or lia.config.get("DefaultStamina", 100)) or lia.config.get("DefaultStamina", 100)
@@ -769,6 +827,7 @@ if SERVER then
             end
         end
     end
+
     function playerMeta:addMoney(amount)
         local character = self:getChar()
         if not character then return false end
@@ -778,10 +837,12 @@ if SERVER then
         lia.log.add(self, "money", amount)
         return true
     end
+
     function playerMeta:takeMoney(amount)
         local character = self:getChar()
         if character then character:giveMoney(-amount) end
     end
+
     function playerMeta:loadLiliaData(callback)
         local name = self:steamName()
         local steamID = self:SteamID()
@@ -818,6 +879,7 @@ if SERVER then
             end
         end)
     end
+
     function playerMeta:saveLiliaData()
         if self:IsBot() then return end
         local name = self:steamName()
@@ -837,6 +899,7 @@ if SERVER then
             totalOnlineTime = stored + session
         }, nil, "players", "steamID = " .. lia.db.convertDataType(steamID))
     end
+
     function playerMeta:setLiliaData(key, value, noNetworking, noSave)
         self.liaData = self.liaData or {}
         self.liaData[key] = value
@@ -849,6 +912,7 @@ if SERVER then
 
         if not noSave then self:saveLiliaData() end
     end
+
     function playerMeta:banPlayer(reason, duration, banner)
         local steamID = self:SteamID()
         lia.db.insertTable({
@@ -863,6 +927,7 @@ if SERVER then
 
         self:Kick(L("banMessage", duration or 0, reason or L("genericReason")))
     end
+
     function playerMeta:getPlayTime()
         local hookResult = hook.Run("GetPlayTime", self)
         if hookResult ~= nil then return hookResult end
@@ -875,6 +940,7 @@ if SERVER then
         local diff = os.time(lia.time.toNumber(self.lastJoin)) - os.time(lia.time.toNumber(self.firstJoin))
         return diff + RealTime() - (self.liaJoinTime or RealTime())
     end
+
     function playerMeta:createRagdoll(freeze)
         local entity = ents.Create("prop_ragdoll")
         entity:SetPos(self:GetPos())
@@ -904,6 +970,7 @@ if SERVER then
         end
         return entity
     end
+
     function playerMeta:setRagdolled(state, time, getUpGrace)
         getUpGrace = getUpGrace or time or 5
         if state and time and time > 0 then time = hook.Run("GetRagdollTime", self, time) or time end
@@ -1027,6 +1094,7 @@ if SERVER then
             hook.Run("OnCharFallover", self, rag, false)
         end
     end
+
     function playerMeta:syncVars()
         for entity, data in pairs(lia.net) do
             if entity == "globals" then
@@ -1056,6 +1124,7 @@ if SERVER then
             end
         end
     end
+
     function playerMeta:setNetVar(key, value)
         if lia.net.checkBadType(key, value) then return end
         lia.net[self] = lia.net[self] or {}
@@ -1076,6 +1145,7 @@ if SERVER then
 
         hook.Run("NetVarChanged", self, key, oldValue, value)
     end
+
     function playerMeta:setLocalVar(key, value)
         if not IsValid(self) then return end
         if lia.net.checkBadType(key, value) then return end
@@ -1092,6 +1162,7 @@ if SERVER then
 
         hook.Run("NetVarChanged", self, key, oldValue, value)
     end
+
     function playerMeta:getLocalVar(key, default)
         if not IsValid(self) then return default end
         if lia.net.locals[self] and lia.net.locals[self][key] ~= nil then return lia.net.locals[self][key] end
@@ -1104,6 +1175,7 @@ else
         if lia.net[idx] and lia.net[idx][key] ~= nil then return lia.net[idx][key] end
         return default
     end
+
     function playerMeta:getPlayTime()
         local hookResult = hook.Run("GetPlayTime", self)
         if hookResult ~= nil then return hookResult end
@@ -1117,5 +1189,3 @@ else
         return diff + RealTime() - (lia.joinTime or 0)
     end
 end
-
-

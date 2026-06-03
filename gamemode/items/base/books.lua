@@ -1,4 +1,4 @@
-ITEM.name = "booksName"
+﻿ITEM.name = "booksName"
 ITEM.desc = "booksDesc"
 ITEM.category = "itemCatLiterature"
 ITEM.model = "models/props_lab/bindergraylabel01b.mdl"

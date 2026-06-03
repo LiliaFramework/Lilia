@@ -1,4 +1,4 @@
-lia.inventory = lia.inventory or {}
+﻿lia.inventory = lia.inventory or {}
 lia.inventory.types = lia.inventory.types or {}
 lia.inventory.storage = lia.inventory.storage or {}
 lia.inventory.instances = lia.inventory.instances or {}
@@ -26,6 +26,7 @@ local function checkType(typeID, struct, expected, prefix)
         if istable(expectedType) then checkType(typeID, actualValue, expectedType, prefix .. key .. ".") end
     end
 end
+
 function lia.inventory.newType(typeID, invTypeStruct)
     assert(not lia.inventory.types[typeID], L("duplicateInventoryType", typeID))
     assert(istable(invTypeStruct), L("expectedTableArg", 2))
@@ -33,6 +34,7 @@ function lia.inventory.newType(typeID, invTypeStruct)
     debug.getregistry()[invTypeStruct.className] = invTypeStruct
     lia.inventory.types[typeID] = invTypeStruct
 end
+
 function lia.inventory.new(typeID)
     local class = lia.inventory.types[typeID]
     assert(class ~= nil, L("invalidInventoryType", typeID))
@@ -67,6 +69,7 @@ if SERVER then
         assert(isnumber(id) and id >= 0, L("noInventoryLoader", tostring(id)))
         return lia.inventory.loadFromDefaultStorage(id, noCache)
     end
+
     function lia.inventory.loadFromDefaultStorage(id, noCache)
         return deferred.all({lia.db.select(INV_FIELDS, INV_TABLE, "invID = " .. id, 1), lia.db.select(DATA_FIELDS, DATA_TABLE, "invID = " .. id)}):next(function(res)
             if lia.inventory.instances[id] and not noCache then return lia.inventory.instances[id] end
@@ -96,6 +99,7 @@ if SERVER then
             lia.information(err)
         end)
     end
+
     function lia.inventory.instance(typeID, initialData)
         local invType = lia.inventory.types[typeID]
         if not istable(invType) then
@@ -121,6 +125,7 @@ if SERVER then
             return instance
         end)
     end
+
     function lia.inventory.loadAllFromCharID(charID)
         local originalCharID = charID
         charID = tonumber(charID)
@@ -130,6 +135,7 @@ if SERVER then
         end
         return lia.db.select({"invID"}, INV_TABLE, "charID = " .. charID):next(function(res) return deferred.map(res.results or {}, function(result) return lia.inventory.loadByID(tonumber(result.invID)) end) end)
     end
+
     function lia.inventory.deleteByID(id)
         lia.db.delete(DATA_TABLE, "invID = " .. id)
         lia.db.delete(INV_TABLE, "invID = " .. id)
@@ -137,11 +143,13 @@ if SERVER then
         local instance = lia.inventory.instances[id]
         if instance then instance:destroy() end
     end
+
     function lia.inventory.cleanUpForCharacter(character)
         for _, inventory in pairs(character:getInv(true)) do
             inventory:destroy()
         end
     end
+
     function lia.inventory.checkOverflow(inv, character, oldW, oldH)
         local overflow, toRemove = {}, {}
         for _, item in pairs(inv:getItems()) do
@@ -172,6 +180,7 @@ if SERVER then
         end
         return false
     end
+
     function lia.inventory.registerStorage(model, data)
         assert(isstring(model), L("modelMustBeString"))
         assert(istable(data), L("dataMustBeTable"))
@@ -183,10 +192,12 @@ if SERVER then
         lia.inventory.storage[model:lower()] = data
         return data
     end
+
     function lia.inventory.getStorage(model)
         if not model then return end
         return lia.inventory.storage[model:lower()]
     end
+
     function lia.inventory.registerTrunk(vehicleClass, data)
         assert(isstring(vehicleClass), L("vehicleClassMustBeString"))
         assert(istable(data), "Data must be a table")
@@ -202,11 +213,13 @@ if SERVER then
         lia.inventory.storage[vehicleClass:lower()] = data
         return data
     end
+
     function lia.inventory.getTrunk(vehicleClass)
         if not vehicleClass then return end
         local trunkData = lia.inventory.storage[vehicleClass:lower()]
         return trunkData and trunkData.isTrunk and trunkData or nil
     end
+
     function lia.inventory.getAllTrunks()
         local trunks = {}
         for key, data in pairs(lia.inventory.storage) do
@@ -214,6 +227,7 @@ if SERVER then
         end
         return trunks
     end
+
     function lia.inventory.getAllStorage(includeTrunks)
         if includeTrunks ~= false then
             return lia.inventory.storage
@@ -240,6 +254,7 @@ else
         lia.gui[globalName] = panel
         return panel
     end
+
     function lia.inventory.showDual(inventory1, inventory2, parent)
         if not inventory1 or not inventory1.id or not inventory2 or not inventory2.id then
             lia.error("Invalid inventories provided to showDual")
@@ -290,5 +305,3 @@ else
         return {panel1, panel2}
     end
 end
-
-

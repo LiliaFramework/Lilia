@@ -1,4 +1,4 @@
-lia.faction = lia.faction or {}
+﻿lia.faction = lia.faction or {}
 lia.faction.indices = lia.faction.indices or {}
 lia.faction.teams = lia.faction.teams or {}
 local DefaultModels = {"models/player/group01/male_01.mdl", "models/player/group01/male_02.mdl", "models/player/group01/male_03.mdl", "models/player/group01/male_04.mdl", "models/player/group01/male_05.mdl", "models/player/group01/male_06.mdl", "models/player/group01/female_01.mdl", "models/player/group01/female_02.mdl", "models/player/group01/female_03.mdl", "models/player/group01/female_04.mdl", "models/player/group01/female_05.mdl", "models/player/group01/female_06.mdl"}
@@ -41,6 +41,7 @@ function lia.faction.register(uniqueID, data)
     _G[constantName] = faction.index
     return faction.index, faction
 end
+
 function lia.faction.cacheModels(models)
     for _, modelData in pairs(models or {}) do
         if isstring(modelData) then
@@ -50,6 +51,7 @@ function lia.faction.cacheModels(models)
         end
     end
 end
+
 function lia.faction.loadFromDir(directory)
     for _, v in ipairs(file.Find(directory .. "/*.lua", "LUA")) do
         local niceName
@@ -102,6 +104,7 @@ function lia.faction.loadFromDir(directory)
         FACTION = nil
     end
 end
+
 function lia.faction.getAll()
     local allFactions = {}
     for _, faction in pairs(lia.faction.teams) do
@@ -109,9 +112,11 @@ function lia.faction.getAll()
     end
     return allFactions
 end
+
 function lia.faction.get(identifier)
     return lia.faction.indices[identifier] or lia.faction.teams[identifier]
 end
+
 function lia.faction.getModelCustomizationAllowed(client, faction, context)
     if isnumber(faction) or isstring(faction) then faction = lia.faction.get(faction) end
     if not faction then return false, false end
@@ -127,6 +132,7 @@ function lia.faction.getModelCustomizationAllowed(client, faction, context)
     end
     return skinAllowed, bodygroupsAllowed
 end
+
 function lia.faction.getBodygroupNameToIndex(modelPath)
     if not isstring(modelPath) or modelPath == "" then return {} end
     if lia.faction._bodygroupNameIndexCache[modelPath] then return lia.faction._bodygroupNameIndexCache[modelPath] end
@@ -158,6 +164,7 @@ function lia.faction.getBodygroupNameToIndex(modelPath)
     lia.faction._bodygroupNameIndexCache[modelPath] = map
     return map
 end
+
 function lia.faction.isSkinAllowedForFaction(faction, skin)
     if isnumber(faction) or isstring(faction) then faction = lia.faction.get(faction) end
     if not faction then return false end
@@ -171,6 +178,7 @@ function lia.faction.isSkinAllowedForFaction(faction, skin)
     end
     return false
 end
+
 function lia.faction.getDefaultAllowedSkinForFaction(faction, fallback)
     if isnumber(faction) or isstring(faction) then faction = lia.faction.get(faction) end
     if not faction then return fallback end
@@ -182,6 +190,7 @@ function lia.faction.getDefaultAllowedSkinForFaction(faction, fallback)
     end
     return fallback
 end
+
 function lia.faction.getBodygroupWhitelistRule(faction, modelPath, bodygroupIndex, bodygroupName)
     if isnumber(faction) or isstring(faction) then faction = lia.faction.get(faction) end
     if not faction then return nil end
@@ -218,6 +227,7 @@ function lia.faction.getBodygroupWhitelistRule(faction, modelPath, bodygroupInde
     end
     return nil
 end
+
 function lia.faction.isBodygroupValueAllowed(faction, modelPath, bodygroupIndex, value, bodygroupName)
     local rule = lia.faction.getBodygroupWhitelistRule(faction, modelPath, bodygroupIndex, bodygroupName)
     if rule == nil then return true end
@@ -233,9 +243,11 @@ function lia.faction.isBodygroupValueAllowed(faction, modelPath, bodygroupIndex,
     end
     return false
 end
+
 function lia.faction.getIndex(uniqueID)
     return lia.faction.teams[uniqueID] and lia.faction.teams[uniqueID].index
 end
+
 function lia.faction.getClasses(faction)
     local classes = {}
     for _, class in pairs(lia.class.list) do
@@ -243,6 +255,7 @@ function lia.faction.getClasses(faction)
     end
     return classes
 end
+
 function lia.faction.getPlayers(faction)
     local players = {}
     for _, v in player.Iterator() do
@@ -251,6 +264,7 @@ function lia.faction.getPlayers(faction)
     end
     return players
 end
+
 function lia.faction.getPlayerCount(faction)
     local count = 0
     for _, v in player.Iterator() do
@@ -259,10 +273,12 @@ function lia.faction.getPlayerCount(faction)
     end
     return count
 end
+
 function lia.faction.isFactionCategory(faction, categoryFactions)
     if table.HasValue(categoryFactions, faction) then return true end
     return false
 end
+
 function lia.faction.jobGenerate(index, name, color, default, models)
     local FACTION = {}
     FACTION.index = index
@@ -327,6 +343,7 @@ local function formatModelDataEntry(name, faction, modelIndex, modelData, catego
         end
     end
 end
+
 function lia.faction.formatModelData()
     for name, faction in pairs(lia.faction.teams) do
         if faction.models then
@@ -346,6 +363,7 @@ function lia.faction.formatModelData()
         end
     end
 end
+
 function lia.faction.getCategories(teamName)
     local categories = {}
     local faction = lia.faction.teams[teamName]
@@ -356,6 +374,7 @@ function lia.faction.getCategories(teamName)
     end
     return categories
 end
+
 function lia.faction.getModelsFromCategory(teamName, category)
     local models = {}
     local faction = lia.faction.teams[teamName]
@@ -366,6 +385,7 @@ function lia.faction.getModelsFromCategory(teamName, category)
     end
     return models
 end
+
 function lia.faction.getDefaultClass(id)
     local defaultClass = nil
     for _, class in ipairs(lia.class.list) do
@@ -412,5 +432,3 @@ else
         return false
     end
 end
-
-

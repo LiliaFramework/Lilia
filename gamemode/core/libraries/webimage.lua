@@ -1,4 +1,4 @@
-lia.webimage = lia.webimage or {}
+﻿lia.webimage = lia.webimage or {}
 lia.webimage.stored = lia.webimage.stored or {}
 local baseDir = "lilia/webimages/"
 local cache = {}
@@ -55,6 +55,7 @@ local function validateURL(url)
     if #url > 2048 then return false, L("urlTooLong") end
     return true
 end
+
 function lia.webimage.download(n, u, cb, flags)
     if not isstring(n) then return end
     local url = u or lia.webimage.stored[n] and lia.webimage.stored[n].url
@@ -138,6 +139,7 @@ function lia.webimage.download(n, u, cb, flags)
         if cb then cb(nil, false, e) end
     end)
 end
+
 function lia.webimage.register(n, u, cb, flags)
     lia.webimage.stored[n] = {
         url = u,
@@ -146,6 +148,7 @@ function lia.webimage.register(n, u, cb, flags)
 
     lia.webimage.download(n, u, cb, flags)
 end
+
 function lia.webimage.get(n, flags)
     local key = urlMap[n] or n
     if cache[key] then return cache[key] end
@@ -233,6 +236,7 @@ function dimage:SetImage(src, backup)
 
     origSetImage(self, src, backup)
 end
+
 function lia.webimage.getStats()
     local totalStored = 0
     for _ in pairs(lia.webimage.stored) do
@@ -244,6 +248,7 @@ function lia.webimage.getStats()
         lastReset = stats.lastReset
     }
 end
+
 function lia.webimage.clearCache(skipReRegister)
     cache = {}
     urlMap = {}
@@ -292,5 +297,3 @@ lia.webimage.register("emptyframe.png", "https://bleonheart.github.io/Samael-Ass
 lia.webimage.register("cuffed.png", "https://bleonheart.github.io/Samael-Assets/misc/cuffed.png")
 lia.webimage.register("backgroundsquare.png", "https://bleonheart.github.io/Samael-Assets/misc/backgroundsquare.png")
 ensureDir(baseDir)
-
-

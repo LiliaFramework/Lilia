@@ -1,4 +1,4 @@
-lia.doors = lia.doors or {}
+﻿lia.doors = lia.doors or {}
 lia.doors.presets = lia.doors.presets or {}
 lia.doors.stored = lia.doors.stored or {}
 DOOR_OWNER, DOOR_TENANT, DOOR_GUEST, DOOR_NONE = 3, 2, 1, 0
@@ -22,6 +22,7 @@ lia.doors.defaultValues = {
     useCount = 0,
     lastUsed = 0
 }
+
 function lia.doors.getDoorDefaultValues()
     local extras = {}
     hook.Run("CollectDoorDataFields", extras)
@@ -62,6 +63,7 @@ if SERVER then
 
         lia.doors.syncDoorData(door)
     end
+
     function lia.doors.getCachedData(door)
         local doorID = door:MapCreationID()
         if not doorID or doorID <= 0 then return {} end
@@ -81,6 +83,7 @@ if SERVER then
         end
         return fullData
     end
+
     function lia.doors.syncDoorData(door)
         local doorID = door:MapCreationID()
         if not doorID or doorID <= 0 then return end
@@ -96,13 +99,16 @@ if SERVER then
 
         net.Broadcast()
     end
+
     function lia.doors.syncAllDoorsToClient(client)
         if not IsValid(client) then return end
         lia.net.writeBigTable(client, "liaDoorDataBulk", lia.doors.stored, 2048)
     end
+
     function lia.doors.setData(door, data)
         lia.doors.setCachedData(door, data)
     end
+
     function lia.doors.addPreset(mapName, presetData)
         if not mapName or not presetData then
             error("lia.doors.addPreset: Missing required parameters (mapName, presetData)")
@@ -112,9 +118,11 @@ if SERVER then
         lia.doors.presets[mapName] = presetData
         lia.information(L("addedDoorPresetForMap") .. ": " .. mapName)
     end
+
     function lia.doors.getPreset(mapName)
         return lia.doors.presets[mapName]
     end
+
     function lia.doors.verifyDatabaseSchema()
         lia.db.query("PRAGMA table_info(lia_doors)"):next(function(res)
             if not res or not res.results then
@@ -164,6 +172,7 @@ if SERVER then
             end
         end):catch(function(err) lia.error(L("failedToVerifyDatabaseSchema") .. " " .. tostring(err)) end)
     end
+
     function lia.doors.cleanupCorruptedData()
         local gamemode = SCHEMA and SCHEMA.folder or engine.ActiveGamemode()
         local map = lia.data.getEquivalencyMap(game.GetMap())
@@ -202,6 +211,7 @@ if SERVER then
         end):catch(function(err) lia.error(L("failedToCheckCorruptedDoorData", tostring(err))) end)
     end
 end
+
 function lia.doors.getData(door)
     if SERVER then
         return lia.doors.getCachedData(door)
@@ -231,6 +241,7 @@ if CLIENT then
         end
         return fullData
     end
+
     function lia.doors.updateCachedData(doorID, data)
         if data then
             lia.doors.stored[doorID] = data
@@ -239,5 +250,3 @@ if CLIENT then
         end
     end
 end
-
-

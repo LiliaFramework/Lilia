@@ -1,4 +1,4 @@
-lia.log = lia.log or {}
+﻿lia.log = lia.log or {}
 lia.log.types = lia.log.types or {}
 local logTypeData = {
     character = {
@@ -239,12 +239,14 @@ for category, logTypes in pairs(logTypeData) do
         }
     end
 end
+
 function lia.log.addType(logType, func, category)
     lia.log.types[logType] = {
         func = func,
         category = category,
     }
 end
+
 function lia.log.getString(client, logType, ...)
     local logData = lia.log.types[logType]
     if not logData then return end
@@ -253,6 +255,7 @@ function lia.log.getString(client, logType, ...)
         if success then return result, logData.category end
     end
 end
+
 function lia.log.add(client, logType, ...)
     local logString, category = lia.log.getString(client, logType, ...)
     if not isstring(category) then category = L("uncategorized") end
@@ -279,5 +282,3 @@ function lia.log.add(client, logType, ...)
         steamID = steamID
     }, nil, "logs")
 end
-
-

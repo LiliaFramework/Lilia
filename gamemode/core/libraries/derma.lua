@@ -1,4 +1,4 @@
-lia.derma = lia.derma or {}
+﻿lia.derma = lia.derma or {}
 local color_disconnect = Color(210, 65, 65)
 local color_bot = Color(70, 150, 220)
 local color_online = Color(120, 180, 70)
@@ -24,6 +24,7 @@ local function liaDermaIsSequential(tbl)
     end
     return true
 end
+
 function lia.derma.optionsMenu(rawOptions, config)
     config = config or {}
     local mode = config.mode
@@ -304,6 +305,7 @@ function lia.derma.optionsMenu(rawOptions, config)
     if registryKey then lia.gui[registryKey] = frame end
     return frame
 end
+
 function lia.derma.interactionTooltip(rawOptions, config)
     config = config or {}
     local mode = config.mode
@@ -602,6 +604,7 @@ function lia.derma.interactionTooltip(rawOptions, config)
     if registryKey then lia.gui[registryKey] = tooltip end
     return tooltip
 end
+
 function lia.derma.requestColorPicker(func, colorStandard)
     if IsValid(lia.gui.menuColorPicker) then lia.gui.menuColorPicker:Remove() end
     local selected_color = colorStandard or Color(255, 255, 255)
@@ -765,6 +768,7 @@ function lia.derma.requestColorPicker(func, colorStandard)
 
     timer.Simple(0.1, function() lia.gui.menuColorPicker:SetAlpha(255) end)
 end
+
 function lia.derma.radialMenu(options)
     if IsValid(lia.gui.menu_radial) then lia.gui.menu_radial:Remove() end
     local m = vgui.Create("liaRadialPanel")
@@ -772,6 +776,7 @@ function lia.derma.radialMenu(options)
     lia.gui.menu_radial = m
     return m
 end
+
 function lia.derma.requestPlayerSelector(doClick)
     if IsValid(lia.gui.menuPlayerSelector) then lia.gui.menuPlayerSelector:Remove() end
     lia.gui.menuPlayerSelector = vgui.Create("liaFrame")
@@ -1066,28 +1071,36 @@ local function drawRounded(x, y, w, h, col, flags, tl, tr, bl, br, texture, thic
     setupDraw()
     return surface_DrawTexturedRectUV(x, y, w, h, -0.015625, -0.015625, 1.015625, 1.015625)
 end
+
 function lia.derma.draw(radius, x, y, w, h, col, flags)
     return drawRounded(x, y, w, h, col, flags, radius, radius, radius, radius)
 end
+
 function lia.derma.drawOutlined(radius, x, y, w, h, col, thickness, flags)
     return drawRounded(x, y, w, h, col, flags, radius, radius, radius, radius, nil, thickness or 1)
 end
+
 function lia.derma.drawTexture(radius, x, y, w, h, col, texture, flags)
     return drawRounded(x, y, w, h, col, flags, radius, radius, radius, radius, texture)
 end
+
 function lia.derma.drawMaterial(radius, x, y, w, h, col, mat, flags)
     local tex = mat:GetTexture("$basetexture")
     if tex then return lia.derma.drawTexture(radius, x, y, w, h, col, tex, flags) end
 end
+
 function lia.derma.drawCircle(x, y, radius, col, flags)
     return lia.derma.draw(radius / 2, x - radius / 2, y - radius / 2, radius, radius, col, (flags or 0) + SHAPE_CIRCLE)
 end
+
 function lia.derma.drawCircleOutlined(x, y, radius, col, thickness, flags)
     return lia.derma.drawOutlined(radius / 2, x - radius / 2, y - radius / 2, radius, radius, col, thickness, (flags or 0) + SHAPE_CIRCLE)
 end
+
 function lia.derma.drawCircleTexture(x, y, radius, col, texture, flags)
     return lia.derma.drawTexture(radius / 2, x - radius / 2, y - radius / 2, radius, radius, col, texture, (flags or 0) + SHAPE_CIRCLE)
 end
+
 function lia.derma.drawCircleMaterial(x, y, radius, col, mat, flags)
     return lia.derma.drawMaterial(radius / 2, x - radius / 2, y - radius / 2, radius, radius, col, mat, (flags or 0) + SHAPE_CIRCLE)
 end
@@ -1109,6 +1122,7 @@ local function drawBlur()
     materialSetFloat(MAT, blurVertical, 1)
     surface_DrawTexturedRect(X, Y, W, H)
 end
+
 function lia.derma.drawBlur(x, y, w, h, flags, tl, tr, bl, br, thickness)
     resetParams()
     if not flags then flags = defaultDrawFlags end
@@ -1148,6 +1162,7 @@ local function drawShadows(r, g, b, a)
     setupDraw()
     surface_DrawTexturedRectUV(X, Y, W, H, -0.015625, -0.015625, 1.015625, 1.015625)
 end
+
 function lia.derma.drawShadowsEx(x, y, w, h, col, flags, tl, tr, bl, br, spread, intensity, thickness)
     if col and col.a == 0 then return end
     local OLD_CLIPPING_STATE = DisableClipping(true)
@@ -1165,9 +1180,11 @@ function lia.derma.drawShadowsEx(x, y, w, h, col, flags, tl, tr, bl, br, spread,
     if bit_band(flags, manualColor) == 0 then drawShadows(col and col.r or 0, col and col.g or 0, col and col.b or 0, col and col.a or 255) end
     DisableClipping(OLD_CLIPPING_STATE)
 end
+
 function lia.derma.drawShadows(radius, x, y, w, h, col, spread, intensity, flags)
     return lia.derma.drawShadowsEx(x, y, w, h, col, flags, radius, radius, radius, radius, spread, intensity)
 end
+
 function lia.derma.drawShadowsOutlined(radius, x, y, w, h, col, thickness, spread, intensity, flags)
     return lia.derma.drawShadowsEx(x, y, w, h, col, flags, radius, radius, radius, radius, spread, intensity, thickness or 1)
 end
@@ -1346,9 +1363,11 @@ lia.derma.Types = {
         return lia.derma.Circle
     end
 }
+
 function lia.derma.rect(x, y, w, h)
     return lia.derma.Types.Rect(x, y, w, h)
 end
+
 function lia.derma.circle(x, y, r)
     return lia.derma.Types.Circle(x, y, r)
 end
@@ -1370,10 +1389,12 @@ function lia.derma.setFlag(flags, flag, bool)
         return bit.band(flags, bit.bnot(flag))
     end
 end
+
 function lia.derma.setDefaultShape(shape)
     defaultShape = shape or SHAPE_FIGMA
     defaultDrawFlags = defaultShape
 end
+
 function lia.derma.shadowText(text, font, x, y, colortext, colorshadow, dist, xalign, yalign)
     surface.SetFont(font)
     local _, h = surface.GetTextSize(text)
@@ -1386,6 +1407,7 @@ function lia.derma.shadowText(text, font, x, y, colortext, colorshadow, dist, xa
     draw.DrawText(text, font, x + dist, y + dist, colorshadow, xalign)
     draw.DrawText(text, font, x, y, colortext, xalign)
 end
+
 function lia.derma.drawTextOutlined(text, font, x, y, colour, xalign, outlinewidth, outlinecolour)
     local steps = (outlinewidth * 2) / 3
     if steps < 1 then steps = 1 end
@@ -1396,6 +1418,7 @@ function lia.derma.drawTextOutlined(text, font, x, y, colour, xalign, outlinewid
     end
     return draw.DrawText(text, font, x, y, colour, xalign)
 end
+
 function lia.derma.drawTip(x, y, w, h, text, font, textCol, outlineCol)
     draw.NoTexture()
     local rectH = 0.85
@@ -1435,6 +1458,7 @@ function lia.derma.drawTip(x, y, w, h, text, font, textCol, outlineCol)
     surface.DrawPoly(verts)
     draw.SimpleText(text, font, x + w / 2, y + h / 2, textCol, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
 end
+
 function lia.derma.drawText(text, x, y, color, alignX, alignY, font, alpha)
     color = color or Color(255, 255, 255)
     return draw.TextShadow({
@@ -1446,6 +1470,7 @@ function lia.derma.drawText(text, x, y, color, alignX, alignY, font, alpha)
         yalign = alignY or 0
     }, 1, alpha or color.a * 0.575)
 end
+
 local drawBoxOverlaps = {}
 local drawBoxFrame = 0
 local function splitBoxTextLines(text)
@@ -1619,6 +1644,7 @@ function lia.derma.drawBoxWithText(text, x, y, options)
     }
     return boxWidth, boxHeight
 end
+
 function lia.derma.drawSurfaceTexture(material, color, x, y, w, h)
     surface.SetDrawColor(color or Color(255, 255, 255))
     if isstring(material) then
@@ -1629,6 +1655,7 @@ function lia.derma.drawSurfaceTexture(material, color, x, y, w, h)
 
     surface.DrawTexturedRect(x, y, w, h)
 end
+
 function lia.derma.skinFunc(name, panel, a, b, c, d, e, f, g)
     local skin = ispanel(panel) and IsValid(panel) and panel:GetSkin() or derma.GetDefaultSkin()
     if not skin then return end
@@ -1636,13 +1663,16 @@ function lia.derma.skinFunc(name, panel, a, b, c, d, e, f, g)
     if not func then return end
     return func(skin, panel, a, b, c, d, e, f, g)
 end
+
 function lia.derma.approachExp(current, target, speed, dt)
     local t = 1 - math.exp(-speed * dt)
     return current + (target - current) * t
 end
+
 function lia.derma.easeOutCubic(t)
     return 1 - (1 - t) * (1 - t) * (1 - t)
 end
+
 function lia.derma.easeInOutCubic(t)
     if t < 0.5 then
         return 4 * t * t * t
@@ -1650,6 +1680,7 @@ function lia.derma.easeInOutCubic(t)
         return 1 - math.pow(-2 * t + 2, 3) / 2
     end
 end
+
 function lia.derma.animateAppearance(panel, targetWidth, targetHeight, duration, alphaDuration, callback, scaleFactor)
     scaleFactor = scaleFactor or 0.8
     if not IsValid(panel) then return end
@@ -1693,6 +1724,7 @@ function lia.derma.animateAppearance(panel, targetWidth, targetHeight, duration,
         end
     end
 end
+
 function lia.derma.clampMenuPosition(panel)
     if not IsValid(panel) then return end
     local x, y = panel:GetPos()
@@ -1712,11 +1744,13 @@ function lia.derma.clampMenuPosition(panel)
 
     panel:SetPos(x, y)
 end
+
 function lia.derma.drawGradient(x, y, w, h, direction, colorShadow, radius, flags)
     local listGradients = {Material("vgui/gradient_up"), Material("vgui/gradient_down"), Material("vgui/gradient-l"), Material("vgui/gradient-r")}
     radius = radius and radius or 0
     lia.derma.drawMaterial(radius, x, y, w, h, colorShadow, listGradients[direction], flags)
 end
+
 function lia.derma.wrapText(text, width, font)
     font = font or "LiliaFont.16"
     surface.SetFont(font)
@@ -1744,6 +1778,7 @@ function lia.derma.wrapText(text, width, font)
     if line ~= "" then lines[#lines + 1] = line end
     return lines, maxW
 end
+
 function lia.derma.drawBlur(panel, amount, passes, alpha)
     amount = amount or 5
     alpha = alpha or 255
@@ -1757,6 +1792,7 @@ function lia.derma.drawBlur(panel, amount, passes, alpha)
         surface.DrawTexturedRect(x * -1, y * -1, ScrW(), ScrH())
     end
 end
+
 function lia.derma.drawBlackBlur(panel, amount, passes, alpha, darkAlpha)
     if not IsValid(panel) then return end
     amount = amount or 6
@@ -1781,6 +1817,7 @@ function lia.derma.drawBlackBlur(panel, amount, passes, alpha, darkAlpha)
     surface.SetDrawColor(0, 0, 0, darkAlpha)
     surface.DrawRect(x, y, panel:GetWide(), panel:GetTall())
 end
+
 function lia.derma.drawBlurAt(x, y, w, h, amount, passes, alpha)
     amount = amount or 5
     alpha = alpha or 255
@@ -1795,6 +1832,7 @@ function lia.derma.drawBlurAt(x, y, w, h, amount, passes, alpha)
         surface.DrawTexturedRectUV(x, y, w, h, x2, y2, w2, h2)
     end
 end
+
 function lia.derma.requestArguments(title, argTypes, onSubmit, defaults)
     defaults = defaults or {}
     local count = table.Count(argTypes)
@@ -2046,6 +2084,7 @@ function lia.derma.requestArguments(title, argTypes, onSubmit, defaults)
 
     frame.OnClose = function() if isfunction(onSubmit) then onSubmit(false) end end
 end
+
 function lia.derma.createTableUI(title, columns, data, options, charID)
     if IsValid(lia.gui.menuTableUI) then lia.gui.menuTableUI:Remove() end
     local frameWidth, frameHeight = ScrW() * 0.8, ScrH() * 0.8
@@ -2203,6 +2242,7 @@ function lia.derma.createTableUI(title, columns, data, options, charID)
     frame.OnRemove = function() if lia.gui.menuTableUI == frame then lia.gui.menuTableUI = nil end end
     return frame, listView
 end
+
 function lia.derma.openOptionsMenu(title, options)
     if not istable(options) then return end
     if IsValid(lia.gui.menuOpenOptions) then lia.gui.menuOpenOptions:Remove() end
@@ -2358,6 +2398,7 @@ function lia.derma.drawEntText(ent, text, posY, alphaOverride)
     if screenPos.visible == false then return end
     EntText(text, screenPos.x, screenPos.y + posY, fade)
 end
+
 local function resolveRequestText(text, fallback)
     if text == nil then return fallback end
     if istable(text) then
@@ -2483,6 +2524,7 @@ function lia.derma.requestDropdown(title, options, callback, defaultValue)
     lia.gui.menuRequestDropdown = frame
     return frame
 end
+
 function lia.derma.requestString(title, description, callback, defaultValue, maxLength)
     if IsValid(lia.gui.menuRequestString) then lia.gui.menuRequestString:Remove() end
     local vendorPanel = lia.gui.vendor
@@ -2542,6 +2584,7 @@ function lia.derma.requestString(title, description, callback, defaultValue, max
     lia.gui.menuRequestString = frame
     return frame
 end
+
 function lia.derma.requestOptions(title, subTitle, options, callback, onCancel)
     if IsValid(lia.gui.menuRequestOptions) then lia.gui.menuRequestOptions:Remove() end
     local count = #options
@@ -2676,6 +2719,7 @@ function lia.derma.requestOptions(title, subTitle, options, callback, onCancel)
     lia.gui.menuRequestOptions = frame
     return frame
 end
+
 function lia.derma.requestBinaryQuestion(title, question, callback, yesText, noText)
     if IsValid(lia.gui.menuRequestBinary) then lia.gui.menuRequestBinary:Remove() end
     local frame = vgui.Create("liaFrame")
@@ -2722,6 +2766,7 @@ function lia.derma.requestBinaryQuestion(title, question, callback, yesText, noT
     lia.gui.menuRequestBinary = frame
     return frame
 end
+
 function lia.derma.requestButtons(title, buttons, callback, description)
     if IsValid(lia.gui.menuRequestButtons) then lia.gui.menuRequestButtons:Remove() end
     local buttonCount = #buttons
@@ -2798,6 +2843,7 @@ function lia.derma.requestButtons(title, buttons, callback, description)
     lia.gui.menuRequestButtons = frame
     return frame, buttonPanels
 end
+
 function lia.derma.requestPopupQuestion(question, buttons)
     if IsValid(lia.gui.menuRequestPopup) then lia.gui.menuRequestPopup:Remove() end
     local buttonCount = #buttons
@@ -2848,5 +2894,3 @@ function lia.derma.requestPopupQuestion(question, buttons)
     lia.gui.menuRequestPopup = frame
     return frame
 end
-
-

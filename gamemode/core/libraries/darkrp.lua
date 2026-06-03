@@ -1,4 +1,4 @@
-lia.darkrp = lia.darkrp or {}
+﻿lia.darkrp = lia.darkrp or {}
 DarkRP = DarkRP or {}
 RPExtraTeams = RPExtraTeams or {}
 DarkRP.disabledDefaults = DarkRP.disabledDefaults or {}
@@ -17,6 +17,7 @@ if SERVER then
         end
         return isClear and isEmpty
     end
+
     function lia.darkrp.findEmptyPos(startPos, entitiesToIgnore, maxDistance, searchStep, checkArea)
         if lia.darkrp.isEmpty(startPos, entitiesToIgnore) and lia.darkrp.isEmpty(startPos + checkArea, entitiesToIgnore) then return startPos end
         for distance = searchStep, maxDistance, searchStep do
@@ -29,6 +30,7 @@ if SERVER then
         end
         return startPos
     end
+
     function lia.darkrp.notify(client, notifyType, duration, message)
         client:notifyInfoLocalized(message)
     end
@@ -46,6 +48,7 @@ else
         end)
         return text, accumulatedWidth
     end
+
     function lia.darkrp.textWrap(text, fontName, maxLineWidth)
         local accumulatedWidth = 0
         surface.SetFont(fontName)
@@ -74,9 +77,11 @@ else
         return text
     end
 end
+
 function lia.darkrp.formatMoney(amount)
     return lia.currency.get(amount)
 end
+
 function lia.darkrp.createEntity(name, data)
     local cmd = data.cmd or string.lower(name)
     local ITEM = lia.item.register(cmd, "base_entities", nil, nil, true)
@@ -88,10 +93,13 @@ function lia.darkrp.createEntity(name, data)
     ITEM.price = data.price or 0
     lia.information(L("generatedDarkRPItem", name))
 end
+
 function lia.darkrp.createCategory()
 end
+
 function DarkRP.removeChatCommand()
 end
+
 function DarkRP.defineChatCommand(cmd, callback)
     cmd = string.lower(cmd)
     lia.command.add(cmd, {
@@ -103,6 +111,7 @@ function DarkRP.defineChatCommand(cmd, callback)
         end
     })
 end
+
 function DarkRP.definePrivilegedChatCommand(cmd, priv, callback)
     cmd = string.lower(cmd)
     lia.command.add(cmd, {
@@ -136,5 +145,3 @@ hook.Add("InitializedModules", "liaDarkRPModules", function()
         RPExtraTeams[index].team = index
     end
 end)
-
-

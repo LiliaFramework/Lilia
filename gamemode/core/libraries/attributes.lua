@@ -1,4 +1,4 @@
-lia.attribs = lia.attribs or {}
+﻿lia.attribs = lia.attribs or {}
 lia.attribs.list = lia.attribs.list or {}
 function lia.attribs.loadFromDir(directory)
     for _, v in ipairs(file.Find(directory .. "/*.lua", "LUA")) do
@@ -9,6 +9,7 @@ function lia.attribs.loadFromDir(directory)
         ATTRIBUTE = nil
     end
 end
+
 function lia.attribs.register(uniqueID, data)
     assert(isstring(uniqueID), "uniqueID must be a string")
     assert(istable(data), "data must be a table")
@@ -34,5 +35,3 @@ if SERVER then
         end
     end
 end
-
-

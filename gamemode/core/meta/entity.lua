@@ -1,4 +1,4 @@
-local entityMeta = FindMetaTable("Entity")
+﻿local entityMeta = FindMetaTable("Entity")
 local baseEmitSound = entityMeta.EmitSound
 local validClasses = {
     ["lvs_base"] = true,
@@ -6,6 +6,7 @@ local validClasses = {
     ["gmod_sent_vehicle_fphysics_wheel"] = true,
     ["prop_vehicle_prisoner_pod"] = true,
 }
+
 function entityMeta:EmitSound(soundName, soundLevel, pitchPercent, volume, channel, flags, dsp)
     if isstring(soundName) and (soundName:find("^https?://") or soundName:find("^lilia/websounds/") or soundName:find("^websounds/")) then
         if SERVER then
@@ -46,22 +47,27 @@ function entityMeta:EmitSound(soundName, soundLevel, pitchPercent, volume, chann
     end
     return baseEmitSound(self, soundName, soundLevel, pitchPercent, volume, channel, flags, dsp)
 end
+
 function entityMeta:isProp()
     if not IsValid(self) then return false end
     return self:GetClass() == "prop_physics"
 end
+
 function entityMeta:isItem()
     if not IsValid(self) then return false end
     return self:GetClass() == "lia_item"
 end
+
 function entityMeta:isMoney()
     if not IsValid(self) then return false end
     return self:GetClass() == "lia_money"
 end
+
 function entityMeta:isSimfphysCar()
     if not IsValid(self) then return false end
     return validClasses[self:GetClass()] or self.IsSimfphyscar or self.LVS or validClasses[self.Base]
 end
+
 function entityMeta:checkDoorAccess(client, access)
     if not IsValid(self) then return false end
     if not self:isDoor() then return false end
@@ -70,6 +76,7 @@ function entityMeta:checkDoorAccess(client, access)
     if self.liaAccess and (self.liaAccess[client] or 0) >= access then return true end
     return false
 end
+
 function entityMeta:keysOwn(client)
     if not IsValid(self) then return end
     if self:IsVehicle() then
@@ -79,30 +86,37 @@ function entityMeta:keysOwn(client)
         self:setNetVar("ownerName", client:getChar():getName())
     end
 end
+
 function entityMeta:keysLock()
     if not IsValid(self) then return end
     if self:IsVehicle() then self:Fire("lock") end
 end
+
 function entityMeta:keysUnLock()
     if not IsValid(self) then return end
     if self:IsVehicle() then self:Fire("unlock") end
 end
+
 function entityMeta:getDoorOwner()
     if not IsValid(self) then return nil end
     if self:IsVehicle() and self.CPPIGetOwner then return self:CPPIGetOwner() end
 end
+
 function entityMeta:isLocked()
     if self:IsVehicle() then return self:GetInternalVariable("VehicleLocked") end
     return self:GetInternalVariable("m_bLocked")
 end
+
 function entityMeta:isDoorLocked()
     if not IsValid(self) then return false end
     return self:GetInternalVariable("m_bLocked") or self.locked or false
 end
+
 function entityMeta:isFemale()
     if not IsValid(self) then return false end
     return hook.Run("GetModelGender", self:GetModel()) == "female"
 end
+
 function entityMeta:getDoorPartner()
     if SERVER then
         return self.liaPartner
@@ -132,6 +146,7 @@ if SERVER then
             net.Broadcast()
         end
     end
+
     function entityMeta:clearNetVars(receiver)
         if not IsValid(self) then return end
         lia.net[self] = nil
@@ -145,6 +160,7 @@ if SERVER then
             net.Broadcast()
         end
     end
+
     function entityMeta:removeDoorAccessData()
         if IsValid(self) then
             for k, _ in pairs(self.liaAccess or {}) do
@@ -156,10 +172,12 @@ if SERVER then
             self:SetDTEntity(0, nil)
         end
     end
+
     function entityMeta:setLocked(state)
         if not IsValid(self) then return end
         self:setNetVar("locked", state)
     end
+
     function entityMeta:setKeysNonOwnable(state)
         if not IsValid(self) then return end
         if self:isDoor() then
@@ -170,6 +188,7 @@ if SERVER then
             self:setNetVar("noSell", state)
         end
     end
+
     function entityMeta:setNetVar(key, value, receiver)
         if not IsValid(self) then return end
         if lia.net.checkBadType(key, value) then return end
@@ -179,11 +198,13 @@ if SERVER then
         self:sendNetVar(key, receiver)
         hook.Run("NetVarChanged", self, key, oldValue, value)
     end
+
     function entityMeta:setLocalVar(key, value)
         if not IsValid(self) then return end
         lia.net.locals[self] = lia.net.locals[self] or {}
         lia.net.locals[self][key] = value
     end
+
     function entityMeta:getLocalVar(key, default)
         if not IsValid(self) then return default end
         if lia.net.locals[self] and lia.net.locals[self][key] ~= nil then return lia.net.locals[self][key] end
@@ -328,6 +349,7 @@ else
         end
     end
 end
+
 function entityMeta:isDoor()
     if not IsValid(self) then return false end
     if SERVER then
@@ -342,6 +364,7 @@ function entityMeta:isDoor()
         return self:GetClass():find("door")
     end
 end
+
 function entityMeta:getNetVar(key, default)
     if not IsValid(self) then return default end
     if SERVER then
@@ -353,5 +376,3 @@ function entityMeta:getNetVar(key, default)
         return default
     end
 end
-
-

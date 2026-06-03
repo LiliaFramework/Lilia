@@ -1,4 +1,4 @@
-lia.option = lia.option or {}
+﻿lia.option = lia.option or {}
 lia.option.stored = lia.option.stored or {}
 local function localizeMenuLabel(value, ...)
     if not isstring(value) then return value end
@@ -44,6 +44,7 @@ local function getSelectableOptionLabel(options, selectedValue)
     end
     return selectedValue
 end
+
 function lia.option.add(key, name, desc, default, callback, data)
     assert(isstring(key), L("optionKeyString", type(key)))
     assert(isstring(name), L("optionNameString", type(name)))
@@ -87,18 +88,21 @@ function lia.option.add(key, name, desc, default, callback, data)
 
     hook.Run("OptionAdded", key, lia.option.stored[key])
 end
+
 function lia.option.getDisplayName(key)
     local option = lia.option.stored[key]
     if not option then return key end
     local value = option.rawName or option.name or key
     return isstring(value) and localizeMenuLabel(value) or value
 end
+
 function lia.option.getDisplayDesc(key)
     local option = lia.option.stored[key]
     if not option then return "" end
     local value = option.rawDesc or option.desc or ""
     return isstring(value) and localizeMenuLabel(value) or value
 end
+
 function lia.option.getDisplayCategory(key)
     local option = lia.option.stored[key]
     if not option then return localizeMenuLabel("misc") end
@@ -106,6 +110,7 @@ function lia.option.getDisplayCategory(key)
     local value = data.rawCategory or data.category or "misc"
     return isstring(value) and localizeMenuLabel(value) or value
 end
+
 function lia.option.getOptions(key)
     local option = lia.option.stored[key]
     if not option then return {} end
@@ -131,6 +136,7 @@ function lia.option.getOptions(key)
     end
     return {}
 end
+
 function lia.option.set(key, value)
     local opt = lia.option.stored[key]
     if not opt then return end
@@ -141,6 +147,7 @@ function lia.option.set(key, value)
     lia.option.save()
     if opt.shouldNetwork and SERVER then hook.Run("OptionReceived", nil, key, value) end
 end
+
 function lia.option.get(key, default)
     local opt = lia.option.stored[key]
     if opt then
@@ -149,6 +156,7 @@ function lia.option.get(key, default)
     end
     return default
 end
+
 function lia.option.save()
     local path = "lilia/options.json"
     local out = {}
@@ -159,6 +167,7 @@ function lia.option.save()
     local json = util.TableToJSON(out, true)
     if json then file.Write(path, json) end
 end
+
 function lia.option.load()
     local path = "lilia/options.json"
     local data = file.Read(path, "DATA")
@@ -776,5 +785,3 @@ lia.option.add("weaponSelectorPosition", "@weaponSelectorPosition", "@weaponSele
         }
     }
 })
-
-

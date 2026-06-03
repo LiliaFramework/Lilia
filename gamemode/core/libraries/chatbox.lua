@@ -1,8 +1,9 @@
-lia.chat = lia.chat or {}
+﻿lia.chat = lia.chat or {}
 lia.chat.classes = lia.chat.classes or {}
 function lia.chat.timestamp(ooc)
     return lia.option.ChatShowTime and (ooc and " " or "") .. "(" .. lia.time.getHour() .. ")" .. (ooc and "" or " ") or ""
 end
+
 function lia.chat.register(chatType, data)
     data.arguments = data.arguments or {}
     data.syntax = lia.lang.resolveToken(lia.command.buildSyntaxFromArguments(data.arguments))
@@ -85,6 +86,7 @@ function lia.chat.register(chatType, data)
     data.filter = data.filter or "ic"
     lia.chat.classes[chatType] = data
 end
+
 function lia.chat.parse(client, message, noSend)
     local anonymous = false
     local chatType = "ic"
@@ -151,5 +153,3 @@ if SERVER then
         end
     end
 end
-
-

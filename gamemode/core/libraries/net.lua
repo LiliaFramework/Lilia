@@ -1,4 +1,4 @@
-lia.net = lia.net or {}
+﻿lia.net = lia.net or {}
 lia.net.sendq = lia.net.sendq or {}
 lia.net.cache = lia.net.cache or {}
 lia.net.locals = lia.net.locals or {}
@@ -56,11 +56,13 @@ local function cleanupCache()
         end
     end
 end
+
 function lia.net.isCacheHit(name, args)
     local key = generateCacheKey(name, args)
     local entry = lia.net.cache[key]
     return entry and CurTime() - entry.timestamp <= CACHE_TTL
 end
+
 function lia.net.addToCache(name, args)
     local key = generateCacheKey(name, args)
     lia.net.cache[key] = {
@@ -69,6 +71,7 @@ function lia.net.addToCache(name, args)
 
     cleanupCache()
 end
+
 function lia.net.readBigTable(netStr, callback)
     lia.net.buffers[netStr] = lia.net.buffers[netStr] or {}
     net.Receive(netStr, function(_, ply)
@@ -159,6 +162,7 @@ if SERVER then
             sendChunk(ply, ss, sid, 1)
         end)
     end
+
     function lia.net.writeBigTable(targets, netStr, tbl, chunkSize)
         if not istable(tbl) then return end
         local json = util.TableToJSON(tbl)
@@ -205,6 +209,7 @@ if SERVER then
             end
         end
     end
+
     function lia.net.checkBadType(name, object)
         if isfunction(object) then
             lia.error(L("netVarBadType", name))
@@ -215,6 +220,7 @@ if SERVER then
             end
         end
     end
+
     function lia.net.setNetVar(key, value, receiver)
         if lia.net.checkBadType(key, value) then return end
         local oldValue = lia.net.getNetVar(key)
@@ -237,6 +243,7 @@ if SERVER then
     hook.Add("EntityRemoved", "liaNetworkingCleanup", function(entity) entity:clearNetVars() end)
     hook.Add("PlayerInitialSpawn", "liaNetworkingSync", function(client) client:syncVars() end)
 end
+
 function lia.net.getNetVar(key, default)
     local value = lia.net.globals[key]
     return value ~= nil and value or default
@@ -274,7 +281,6 @@ local function buildProfilerSnapshot()
     for i = 1, math.min(#ranked, 25) do
         snapshot.topMessages[#snapshot.topMessages + 1] = ranked[i]
     end
-
     return snapshot
 end
 
@@ -425,5 +431,3 @@ concommand.Add("lia_net_profiler", function(ply, cmd, args)
         lia.debug("[Net Profiler] Disabled")
     end
 end)
-
-

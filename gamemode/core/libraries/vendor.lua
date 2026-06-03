@@ -1,4 +1,4 @@
-lia.vendor = lia.vendor or {}
+﻿lia.vendor = lia.vendor or {}
 lia.vendor.stored = lia.vendor.stored or {}
 lia.vendor.editor = lia.vendor.editor or {}
 lia.vendor.presets = lia.vendor.presets or {}
@@ -141,6 +141,7 @@ else
     addEditor("preset", function(preset) net.WriteString(preset) end)
     addEditor("animation", function(animation) net.WriteString(animation or "") end)
 end
+
 function lia.vendor.addPreset(name, items)
     assert(isstring(name), L("vendorPresetNameString"))
     assert(istable(items), L("vendorPresetItemsTable"))
@@ -151,15 +152,18 @@ function lia.vendor.addPreset(name, items)
 
     lia.vendor.presets[string.lower(name)] = validItems
 end
+
 function lia.vendor.getPreset(name)
     return lia.vendor.presets[string.lower(name)]
 end
+
 function lia.vendor.getVendorProperty(entity, property)
     if not IsValid(entity) then return lia.vendor.defaults[property] end
     local cached = lia.vendor.stored[entity]
     if cached and cached[property] ~= nil then return cached[property] end
     return lia.vendor.defaults[property]
 end
+
 function lia.vendor.setVendorProperty(entity, property, value)
     if not IsValid(entity) then return end
     local defaultValue = lia.vendor.defaults[property]
@@ -180,6 +184,7 @@ function lia.vendor.setVendorProperty(entity, property, value)
 
     if SERVER then lia.vendor.syncVendorProperty(entity, property, value, isDefault) end
 end
+
 function lia.vendor.syncVendorProperty(entity, property, value, isDefault)
     if not SERVER then return end
     net.Start("liaVendorPropertySync")
@@ -194,6 +199,7 @@ function lia.vendor.syncVendorProperty(entity, property, value, isDefault)
 
     net.Broadcast()
 end
+
 function lia.vendor.getAllVendorData(entity)
     if not IsValid(entity) then return {} end
     local data = {}
@@ -202,5 +208,3 @@ function lia.vendor.getAllVendorData(entity)
     end
     return data
 end
-
-

@@ -1,4 +1,4 @@
-lia.class = lia.class or {}
+﻿lia.class = lia.class or {}
 lia.class.list = lia.class.list or {}
 function lia.class.getBodygroups(class)
     local classData = istable(class) and class or lia.class.get(class)
@@ -20,6 +20,7 @@ function lia.class.getMergedBodygroups(character)
     end
     return merged
 end
+
 function lia.class.register(uniqueID, data)
     assert(isstring(uniqueID), L("itemUniqueIDString"))
     assert(istable(data), L("classDataTable"))
@@ -54,6 +55,7 @@ function lia.class.register(uniqueID, data)
     lia.class.list[index] = class
     return class
 end
+
 function lia.class.loadFromDir(directory)
     for _, v in ipairs(file.Find(directory .. "/*.lua", "LUA")) do
         local index = #lia.class.list + 1
@@ -92,6 +94,7 @@ function lia.class.loadFromDir(directory)
         CLASS = nil
     end
 end
+
 function lia.class.canBe(client, class)
     if not lia.class.list then return false, L("classNoInfo") end
     local info = lia.class.list[class]
@@ -110,10 +113,12 @@ function lia.class.canBe(client, class)
     end
     return true
 end
+
 function lia.class.get(identifier)
     if not lia.class.list then return nil end
     return lia.class.list[identifier]
 end
+
 function lia.class.getPlayers(class)
     if not lia.class.list then return {} end
     local players = {}
@@ -123,6 +128,7 @@ function lia.class.getPlayers(class)
     end
     return players
 end
+
 function lia.class.getPlayerCount(class)
     if not lia.class.list then return 0 end
     local count = 0
@@ -132,6 +138,7 @@ function lia.class.getPlayerCount(class)
     end
     return count
 end
+
 function lia.class.retrieveClass(class)
     if not lia.class.list then return nil end
     for key, classTable in pairs(lia.class.list) do
@@ -139,6 +146,7 @@ function lia.class.retrieveClass(class)
     end
     return nil
 end
+
 function lia.class.hasWhitelist(class)
     if not lia.class.list then return false end
     local info = lia.class.list[class]
@@ -147,6 +155,7 @@ function lia.class.hasWhitelist(class)
     if info.isWhitelisted ~= nil then return info.isWhitelisted end
     return true
 end
+
 function lia.class.retrieveJoinable(client)
     client = client or CLIENT and LocalPlayer() or nil
     if not IsValid(client) then return {} end
@@ -157,5 +166,3 @@ function lia.class.retrieveJoinable(client)
     end
     return classes
 end
-
-

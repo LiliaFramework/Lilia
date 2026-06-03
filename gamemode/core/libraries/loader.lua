@@ -1,4 +1,4 @@
-lia = lia or {
+﻿lia = lia or {
     util = {},
     gui = {},
     meta = {},
@@ -276,6 +276,7 @@ local ConditionalFiles = {
         realm = "server"
     }
 }
+
 function lia.loader.include(path, realm)
     if not path then lia.error(L("missingFilePath")) end
     path = path:gsub("\\", "/")
@@ -309,6 +310,7 @@ function lia.loader.include(path, realm)
         include(path)
     end
 end
+
 function lia.loader.includeDir(dir, raw, deep, realm)
     local root = raw and dir or (SCHEMA and SCHEMA.folder and SCHEMA.loading and SCHEMA.folder .. "/schema" or "lilia/gamemode") .. "/" .. dir
     local function loadDir(folder)
@@ -325,6 +327,7 @@ function lia.loader.includeDir(dir, raw, deep, realm)
 
     loadDir(root)
 end
+
 function lia.loader.includeGroupedDir(dir, raw, recursive, forceRealm)
     local baseDir = raw and dir or (SCHEMA and SCHEMA.folder and SCHEMA.loading and SCHEMA.folder .. "/schema" or "lilia/gamemode") .. "/" .. dir
     local stack = {baseDir}
@@ -525,20 +528,24 @@ function lia.error(msg)
     MsgC(Color(83, 143, 239), "[Lilia] ", "[" .. L("logError") .. "] ")
     MsgC(Color(255, 0, 0), tostring(msg), "\n")
 end
+
 function lia.warning(msg)
     MsgC(Color(83, 143, 239), "[Lilia] ", "[" .. L("warning") .. "] ")
     MsgC(Color(255, 255, 0), tostring(msg), "\n")
 end
+
 function lia.information(msg)
     MsgC(Color(83, 143, 239), "[Lilia] ", "[" .. L("information") .. "] ")
     MsgC(Color(83, 143, 239), tostring(msg), "\n")
 end
+
 function lia.bootstrap(section, msg)
     if lia.isReloading and section ~= "HotReload" then return end
     MsgC(Color(83, 143, 239), "[Lilia] ", "[" .. L("logBootstrap") .. "] ")
     MsgC(Color(0, 255, 0), "[" .. section .. "] ")
     MsgC(Color(255, 255, 255), tostring(msg), "\n")
 end
+
 function lia.debug(...)
     if not lia.DevMode then return end
     local args = {...}
@@ -589,6 +596,7 @@ function lia.debug(...)
 
     MsgC(textColor, "\n")
 end
+
 function lia.relaydiscordMessage(embed)
     if not lia.discordWebhook or not istable(embed) then return end
     local ForceHTTPMode = not util.IsBinaryModuleInstalled("chttp")
@@ -628,6 +636,7 @@ end
 for _, files in ipairs(FilesToLoad) do
     lia.loader.include(files.path, files.realm)
 end
+
 function lia.loader.includeEntities(path)
     local function IncludeFiles(path2)
         if file.Exists(path2 .. "init.lua", "LUA") then lia.loader.include(path2 .. "init.lua", "server") end
@@ -836,4 +845,3 @@ end
 if #loadedCompatibility > 0 then lia.bootstrap(L("compatibility"), L("compatibilityLoadedSingle", table.concat(loadedCompatibility, ", "))) end
 if game.IsDedicated() then concommand.Remove("gm_save") end
 lia.DevMode = true
-

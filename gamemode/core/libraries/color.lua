@@ -1,4 +1,4 @@
-lia.color = lia.color or {}
+﻿lia.color = lia.color or {}
 lia.color.stored = lia.color.stored or {}
 lia.color.themes = lia.color.themes or {}
 if SERVER then
@@ -13,20 +13,25 @@ else
     function lia.color.register(name, color)
         lia.color.stored[name:lower()] = color
     end
+
     function lia.color.adjust(color, rOffset, gOffset, bOffset, aOffset)
         return Color(math.Clamp(color.r + rOffset, 0, 255), math.Clamp(color.g + gOffset, 0, 255), math.Clamp(color.b + bOffset, 0, 255), math.Clamp((color.a or 255) + (aOffset or 0), 0, 255))
     end
+
     function lia.color.darken(color, factor)
         factor = factor or 0.1
         local darkenFactor = 1 - math.Clamp(factor, 0, 1)
         return Color(math.floor(color.r * darkenFactor), math.floor(color.g * darkenFactor), math.floor(color.b * darkenFactor), color.a or 255)
     end
+
     function lia.color.getCurrentTheme()
         return lia.config.get("Theme", "Teal"):lower()
     end
+
     function lia.color.getCurrentThemeName()
         return lia.config.get("Theme", "Teal")
     end
+
     function lia.color.getMainColor()
         local currentTheme = lia.color.getCurrentTheme()
         local themeData = lia.color.themes[currentTheme]
@@ -34,6 +39,7 @@ else
         local defaultTheme = lia.color.themes["teal"]
         return defaultTheme and defaultTheme.maincolor or Color(80, 180, 180)
     end
+
     function lia.color.applyTheme(themeName, useTransition)
         themeName = (themeName or lia.color.getCurrentTheme()):lower()
         local themeData = lia.color.themes[themeName]
@@ -64,9 +70,11 @@ else
             hook.Run("OnThemeChanged", themeName, useTransition)
         end
     end
+
     function lia.color.isTransitionActive()
         return lia.color.transition and lia.color.transition.active or false
     end
+
     function lia.color.testThemeTransition(themeName)
         lia.color.applyTheme(themeName, true)
     end
@@ -78,6 +86,7 @@ else
         speed = 3,
         colorBlend = 8
     }
+
     function lia.color.startThemeTransition(name)
         local targetTheme = lia.color.themes[name:lower()]
         if not targetTheme then
@@ -141,9 +150,11 @@ else
             end)
         end
     end
+
     function lia.color.isColor(v)
         return istable(v) and isnumber(v.r) and isnumber(v.g) and isnumber(v.b) and isnumber(v.a)
     end
+
     function lia.color.calculateNegativeColor(mainColor)
         if not mainColor then mainColor = lia.color.getMainColor() end
         local r, g, b = mainColor.r, mainColor.g, mainColor.b
@@ -164,6 +175,7 @@ else
         negativeB = math.Clamp(negativeB * 0.7 + b * 0.3, 0, 255)
         return Color(negativeR, negativeG, negativeB, 255)
     end
+
     function lia.color.returnMainAdjustedColors()
         local base = lia.color.getMainColor()
         local background = lia.color.adjust(base, -20, -10, -50, 0)
@@ -181,6 +193,7 @@ else
             negative = negativeColor
         }
     end
+
     function lia.color.lerp(frac, col1, col2)
         local ft = FrameTime() * frac
         local r1 = col1 and col1.r or 255
@@ -228,10 +241,12 @@ else
     lia.color.register("magenta", {255, 0, 255})
     hook.Add("InitializedConfig", "ApplyTheme", function() lia.color.applyTheme() end)
 end
+
 function lia.color.registerTheme(name, themeData)
     local id = name:lower()
     lia.color.themes[id] = themeData
 end
+
 function lia.color.getAllThemes()
     local themes = {}
     for id, _ in pairs(lia.color.themes) do
@@ -589,5 +604,3 @@ end, {
         return themes
     end
 })
-
-
