@@ -264,16 +264,13 @@ function MODULE:PlayerDeath(client, inflictor, attacker)
     timer.Simple(0.1, function() if IsValid(client) and client:getChar() and not client:Alive() then client:setLocalVar("lastDeathTime", deathTime) end end)
     if lia.config.get("DeathPopupEnabled", true) then
         local resolvedAttacker = ResolveDeathAttacker(client, inflictor, attacker)
-        if lia.config.get("DeathDebug", false) then
-            local function entShort(ent)
-                if not IsValid(ent) then return "<invalid>" end
-                if ent:IsPlayer() then return ent:Name() end
-                return ent.GetClass and ent:GetClass() or tostring(ent)
-            end
-
-            MsgC(Color(255, 200, 0), "[Lilia DeathDebug] ", color_white, "PlayerDeath victim=", client:Name(), " attacker=", entShort(attacker), " inflictor=", entShort(inflictor), " resolved=", entShort(resolvedAttacker), "\n")
+        local function entShort(ent)
+            if not IsValid(ent) then return "<invalid>" end
+            if ent:IsPlayer() then return ent:Name() end
+            return ent.GetClass and ent:GetClass() or tostring(ent)
         end
 
+        lia.debug("[DeathDebug]", "PlayerDeath", "victim=", client:Name(), "attacker=", entShort(attacker), "inflictor=", entShort(inflictor), "resolved=", entShort(resolvedAttacker))
         local dateStr = os.date("%d/%m/%Y", os.time())
         local timeStr = os.date("%H:%M:%S", os.time())
         local attackerName = L("na")
