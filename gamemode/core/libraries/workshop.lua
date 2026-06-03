@@ -1,40 +1,7 @@
-﻿--[[
-    Folder: Libraries
-    File: workshop.md
-]]
---[[
-    Workshop
-
-    Steam Workshop addon downloading, mounting, and management system for the Lilia framework.
-]]
---[[
-    Purpose:
-        Workshop addon management system for Lilia framework.
-        Handles downloading, mounting, and managing Steam Workshop content.
-
-    Realm:
-        Shared (server/client split)
-]]
 lia.workshop = lia.workshop or {}
 lia.workshop.ids = lia.workshop.ids or {}
 lia.workshop.known = lia.workshop.known or {}
 if SERVER then
-    --[[
-    Purpose:
-        Add a workshop ID to the list of required addons.
-
-    Parameters:
-        id (string)
-            Workshop addon ID to add.
-
-    Realm:
-        Server
-
-    Example Usage:
-        ```lua
-            lia.workshop.addWorkshop("123456789")
-        ```
-    ]]
     function lia.workshop.addWorkshop(id)
         id = tostring(id)
         if not lia.workshop.ids[id] then
@@ -50,31 +17,6 @@ if SERVER then
             lia.bootstrap(L("workshopDownloader"), L("workshopAdded", id))
         end
     end
-
-    --[[
-    Purpose:
-        Gather every known workshop ID from mounted addons and registered modules.
-
-    When Called:
-        Once modules are initialized to cache which workshop addons are needed.
-
-    Parameters:
-        None
-
-    Returns:
-        table
-            Set of workshop IDs that should be downloaded/mounted.
-
-    Realm:
-        Server
-
-    Example Usage:
-        ```lua
-            -- Gather all workshop IDs that need to be downloaded
-            local workshopIds = lia.workshop.gather()
-            lia.workshop.cache = workshopIds
-        ```
-    ]]
     function lia.workshop.gather()
         local ids = table.Copy(lia.workshop.ids)
         for _, addon in pairs(engine.GetAddons() or {}) do
@@ -101,26 +43,6 @@ if SERVER then
     end
 
     hook.Add("InitializedModules", "liaWorkshopInitializedModules", function() lia.workshop.cache = lia.workshop.gather() end)
-    --[[
-    Purpose:
-        Send the cached workshop IDs to a player so the client knows what to download.
-
-    When Called:
-        Automatically when a player initially spawns.
-
-    Parameters:
-        ply (Player)
-            The player entity to notify.
-
-    Realm:
-        Server
-
-    Example Usage:
-        ```lua
-            -- Send workshop cache to a specific player
-            lia.workshop.send(player.GetByID(1))
-        ```
-    ]]
     function lia.workshop.send(ply)
         net.Start("liaWorkshopDownloaderStart")
         net.WriteTable(lia.workshop.cache)
@@ -178,58 +100,12 @@ else
         end
         return false
     end
-
-    --[[
-    Purpose:
-        Determine whether there is any extra workshop content the client needs to download.
-
-    When Called:
-        Before prompting the player to download server workshop addons.
-
-    Parameters:
-        None
-
-    Returns:
-        boolean
-            true if the client is missing workshop content that needs to be fetched.
-
-    Realm:
-        Client
-
-    Example Usage:
-        ```lua
-            -- Check if client needs to download workshop content
-            if lia.workshop.hasContentToDownload() then
-                -- Show download prompt to player
-            end
-        ```
-    ]]
     function lia.workshop.hasContentToDownload()
         for id in pairs(lia.workshop.serverIds or {}) do
             if id ~= FORCE_ID and not mounted(id) and not mountLocal(id) then return true end
         end
         return false
     end
-
-    --[[
-    Purpose:
-        Initiate mounting (downloading) of server-required workshop addons.
-
-    When Called:
-        When the player explicitly asks to install missing workshop content from the info panel.
-
-    Parameters:
-        None
-
-    Realm:
-        Client
-
-    Example Usage:
-        ```lua
-            -- Start downloading missing workshop content
-            lia.workshop.mountContent()
-        ```
-    ]]
     function lia.workshop.mountContent()
         local ids = lia.workshop.serverIds or {}
         local needed = {}
@@ -426,3 +302,5 @@ else
         })
     end)
 end
+
+

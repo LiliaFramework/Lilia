@@ -652,7 +652,6 @@ function GM:PlayerInitialSpawn(client)
     client:SetNoDraw(true)
     lia.config.send(client)
     client.liaJoinTime = RealTime()
-    lia.debug("[Permissions Sync]", "Initial sync for connecting player", "player=", tostring(client:Nick()) .. " (" .. tostring(client:SteamID()) .. ")", "currentUserGroup=", tostring(client:GetUserGroup() or "user"))
     lia.admin.sync(client)
     client:loadLiliaData(function(data)
         if not IsValid(client) then return end

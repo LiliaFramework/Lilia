@@ -1,16 +1,3 @@
-﻿--[[
-    Folder: Libraries
-    File: keybind.md
-]]
---[[
-    Keybind
-
-    Keyboard binding registration, storage, and execution system for the Lilia framework.
-]]
---[[
-    Overview:
-        The keybind library provides comprehensive functionality for managing keyboard bindings in the Lilia framework. It handles registration, storage, and execution of custom keybinds that can be triggered by players. The library supports both client-side and server-side keybind execution, with automatic networking for server-only keybinds. It includes persistent storage of keybind configurations, user interface for keybind management, and validation to prevent key conflicts. The library operates on both client and server sides, with the client handling input detection and UI, while the server processes server-only keybind actions. It ensures proper key mapping, callback execution, and provides a complete keybind management system for the gamemode.
-]]
 lia.keybind = lia.keybind or {}
 lia.keybind.stored = lia.keybind.stored or {}
 local KeybindKeys = {
@@ -142,44 +129,6 @@ local function localizeKeybindLabel(value, ...)
 end
 
 lia.keybind.localizeValue = localizeKeybindLabel
---[[
-    Purpose:
-        Register a keybind action with callbacks and optional metadata.
-
-    When Called:
-        During initialization to expose actions to the keybind system/UI.
-
-    Parameters:
-        k (string|number)
-            Key code or key name (or actionName when using table config form).
-        d (string|table)
-            Action name or config table when first arg is action name.
-        desc (string|nil)
-            Description when using legacy signature.
-        cb (table|nil)
-            Callback table {onPress, onRelease, shouldRun, serverOnly}.
-    Realm:
-        Shared
-
-    Example Usage:
-        ```lua
-            -- Table-based registration with shouldRun and serverOnly.
-            lia.keybind.add("toggleMap", {
-                keyBind = KEY_M,
-                desc = "Open the world map",
-                serverOnly = false,
-                shouldRun = function(client) return client:Alive() end,
-                onPress = function(client)
-                    if IsValid(client.mapPanel) then
-                        client.mapPanel:Close()
-                        client.mapPanel = nil
-                    else
-                        client.mapPanel = vgui.Create("liaWorldMap")
-                    end
-                end
-            })
-        ```
-]]
 function lia.keybind.add(k, d, desc, cb)
     local actionName, key, description, callbacks, category
     if isstring(k) and istable(d) and desc == nil and cb == nil then
@@ -221,62 +170,12 @@ function lia.keybind.add(k, d, desc, cb)
     lia.keybind.stored[actionName].serverOnly = callbacks.serverOnly or false
     lia.keybind.stored[c] = actionName
 end
-
---[[
-    Purpose:
-        Retrieve the localized description for a registered keybind action.
-
-    When Called:
-        When populating tooltips or description labels in the keybind configuration UI.
-
-    Parameters:
-        action (string)
-            The action name to look up.
-
-    Returns:
-        string
-            Localized description string, or an empty string if the action does not exist.
-
-    Realm:
-        Shared
-
-    Example Usage:
-        ```lua
-            local desc = lia.keybind.getDisplayDescription("openInventory")
-            lia.debug("Keybind description:", desc)
-        ```
-]]
 function lia.keybind.getDisplayDescription(action)
     local data = lia.keybind.stored[action]
     if not data then return "" end
     local value = data.rawDescription or data.description or ""
     return isstring(value) and localizeKeybindLabel(value) or value
 end
-
---[[
-    Purpose:
-        Retrieve the localized category for a registered keybind action.
-
-    When Called:
-        When building the keybind UI to group actions under category headers.
-
-    Parameters:
-        action (string)
-            The action name to look up.
-
-    Returns:
-        string
-            Localized category name, or "misc" as the default fallback.
-
-    Realm:
-        Shared
-
-    Example Usage:
-        ```lua
-            local cat = lia.keybind.getDisplayCategory("openInventory")
-            lia.debug("Keybind category:", cat)
-        ```
-]]
 function lia.keybind.getDisplayCategory(action)
     local data = lia.keybind.stored[action]
     if not data then return localizeKeybindLabel("misc") end
@@ -443,27 +342,7 @@ lia.keybind.add("convertEntity", {
 })
 
 if CLIENT then
-    --[[
-        GMODDefaultBindNames
-
-        List of GMOD console bind names to dynamically resolve via
-        input.LookupBinding. The returned key for each bind is
-        blocked from custom keybind assignment.
-    ]]
-    local GMODDefaultBindNames = {"+forward", "+back", "+moveleft", "+moveright", "+use", "+jump", "+duck", "+walk", "+speed", "+reload", "impulse 100", "+showscores", "messagemode", "messagemode2", "+menu_context", "+menu", "slot1", "slot2", "slot3", "slot4", "slot5", "slot6", "slot7", "slot8", "slot9", "slot0", "undo", "+zoom",}
-    --[[
-        Purpose:
-            Dynamically build the set of reserved key codes by resolving
-            each GMOD default bind name through input.LookupBinding, then
-            allow modules to inject extra reserved keys via the
-            "AddReservedKeybinds" hook.
-
-        When Called:
-            Once after keybinds are initialized.
-
-        Realm:
-            Client
-    ]]
+local GMODDefaultBindNames = {"+forward", "+back", "+moveleft", "+moveright", "+use", "+jump", "+duck", "+walk", "+speed", "+reload", "impulse 100", "+showscores", "messagemode", "messagemode2", "+menu_context", "+menu", "slot1", "slot2", "slot3", "slot4", "slot5", "slot6", "slot7", "slot8", "slot9", "slot0", "undo", "+zoom",}
     function lia.keybind.buildReservedKeys()
         local reserved = {}
         for _, bindName in ipairs(GMODDefaultBindNames) do
@@ -477,24 +356,6 @@ if CLIENT then
         hook.Run("AddReservedKeybinds", reserved)
         lia.keybind.reservedKeys = reserved
     end
-
-    --[[
-        Purpose:
-            Check whether a key code is reserved by GMOD's current binds.
-
-        When Called:
-            When validating keybind assignments in the UI.
-
-        Parameters:
-            keyCode (number)
-                The numeric key code to test.
-
-        Returns:
-            bool
-
-        Realm:
-            Client
-    ]]
     function lia.keybind.isKeyReserved(keyCode)
         if not lia.keybind.reservedKeys then return false end
         return lia.keybind.reservedKeys[keyCode] == true
@@ -535,55 +396,11 @@ if CLIENT then
             end
         end
     end)
-
-    --[[
-    Purpose:
-        Get the key code assigned to an action, with default fallback.
-
-    When Called:
-        When populating keybind UI or triggering actions manually.
-
-    Parameters:
-        a (string)
-            Action name.
-        df (number|nil)
-            Default key code if not set.
-
-    Returns:
-        number|nil
-
-    Realm:
-        Client
-
-    Example Usage:
-        ```lua
-            local key = lia.keybind.get("openInventory", KEY_I)
-            lia.debug("Inventory key is:", input.GetKeyName(key))
-        ```
-    ]]
     function lia.keybind.get(a, df)
         local act = lia.keybind.stored[a]
         if act then return act.value or act.default or df end
         return df
     end
-
-    --[[
-    Purpose:
-        Persist current keybind overrides to disk.
-
-    When Called:
-        After users change keybinds in the config UI.
-
-    Parameters:
-        None
-    Realm:
-        Client
-
-    Example Usage:
-        ```lua
-            lia.keybind.save()
-        ```
-    ]]
     function lia.keybind.save()
         local path = "lilia/keybinds.json"
         local d = {}
@@ -597,24 +414,6 @@ if CLIENT then
             MsgC(Color(255, 200, 0), "[Keybind Save] " .. path .. " | " .. tostring(ok) .. " | " .. j .. "\n")
         end
     end
-
-    --[[
-    Purpose:
-        Load keybind overrides from disk, falling back to defaults if missing.
-
-    When Called:
-        On client init/config load; rebuilds reverse lookup table for keys.
-
-    Parameters:
-        None
-    Realm:
-        Client
-
-    Example Usage:
-        ```lua
-            hook.Add("Initialize", "LoadLiliaKeybinds", lia.keybind.load)
-        ```
-    ]]
     function lia.keybind.load()
         local path = "lilia/keybinds.json"
         local d = file.Read(path, "DATA")
@@ -920,3 +719,5 @@ if CLIENT then
         }
     end)
 end
+
+

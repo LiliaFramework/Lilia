@@ -1,70 +1,8 @@
-﻿--[[
-    Folder: Libraries
-    File: util.md
-]]
---[[
-    Utility
-
-    Common operations and helper functions for the Lilia framework.
-]]
---[[
-    Overview:
-        The utility library provides comprehensive functionality for common operations and helper functions used throughout the Lilia framework. It contains a wide range of utilities for player management, string processing, entity handling, UI operations, and general purpose calculations. The library is divided into server-side functions for game logic and data management, and client-side functions for user interface, visual effects, and player interaction. These utilities simplify complex operations, provide consistent behavior across the framework, and offer reusable components for modules and plugins. The library handles everything from player identification and spatial queries to advanced UI animations and text processing, ensuring robust and efficient operations across both server and client environments.
-]]
---[[
-    Purpose:
-        Normalizes a bodygroup identifier into either a numeric index or trimmed string name.
-
-    When Called:
-        Use when accepting bodygroup input that may be provided as an ID or name.
-
-    Parameters:
-        key (any)
-            Bodygroup identifier candidate.
-
-    Returns:
-        number|string|nil
-            Numeric index when possible, otherwise a trimmed string name, or nil.
-
-    Realm:
-        Shared
-
-    Example Usage:
-        ```lua
-            local key = lia.util.normalizeBodygroupKey("helmet")
-        ```
-]]
 function lia.util.normalizeBodygroupKey(key)
     local numericKey = tonumber(key)
     if numericKey ~= nil then return numericKey end
     if isstring(key) and key ~= "" then return string.Trim(key) end
 end
-
---[[
-    Purpose:
-        Resolves a bodygroup identifier against an entity.
-
-    When Called:
-        Use when bodygroup input may be a numeric ID or a named bodygroup.
-
-    Parameters:
-        target (Entity)
-            Entity to resolve the bodygroup against.
-        identifier (any)
-            Numeric ID or bodygroup name.
-
-    Returns:
-        number|nil
-            Resolved bodygroup index, or nil when no match is found.
-
-    Realm:
-        Shared
-
-    Example Usage:
-        ```lua
-            local index = lia.util.resolveBodygroupIndex(client, "helmet")
-        ```
-]]
 function lia.util.resolveBodygroupIndex(target, identifier)
     local numericIdentifier = tonumber(identifier)
     if numericIdentifier ~= nil then return numericIdentifier end
@@ -78,32 +16,6 @@ function lia.util.resolveBodygroupIndex(target, identifier)
         if isstring(groupData.name) and string.lower(groupData.name) == loweredIdentifier then return groupData.id end
     end
 end
-
---[[
-    Purpose:
-        Normalizes a bodygroups table into key-value pairs of identifier to numeric value.
-
-    When Called:
-        Use when accepting bodygroup data in mixed formats.
-
-    Parameters:
-        bodygroups (table)
-            Bodygroup definitions using numeric keys, names, or `{id/name, value}` entries.
-
-    Returns:
-        table
-            Normalized bodygroup mapping.
-
-    Realm:
-        Shared
-
-    Example Usage:
-        ```lua
-            local groups = lia.util.normalizeBodygroups({
-                {name = "helmet", value = 1}
-            })
-        ```
-]]
 function lia.util.normalizeBodygroups(bodygroups)
     local normalized = {}
     if not istable(bodygroups) then return normalized end
@@ -121,32 +33,6 @@ function lia.util.normalizeBodygroups(bodygroups)
     end
     return normalized
 end
-
---[[
-    Purpose:
-        Resolves a bodygroups table to numeric indexes for a specific entity.
-
-    When Called:
-        Use before applying bodygroups to an entity that may receive named identifiers.
-
-    Parameters:
-        target (Entity)
-            Entity receiving the bodygroups.
-        bodygroups (table)
-            Raw bodygroup definitions.
-
-    Returns:
-        table
-            Bodygroup mapping keyed by numeric index.
-
-    Realm:
-        Shared
-
-    Example Usage:
-        ```lua
-            local resolved = lia.util.resolveBodygroups(client, bodygroups)
-        ```
-]]
 function lia.util.resolveBodygroups(target, bodygroups)
     local resolved = {}
     for identifier, value in pairs(lia.util.normalizeBodygroups(bodygroups)) do
@@ -155,32 +41,6 @@ function lia.util.resolveBodygroups(target, bodygroups)
     end
     return resolved
 end
-
---[[
-    Purpose:
-        Applies bodygroups to an entity using numeric or named identifiers.
-
-    When Called:
-        Use when stored or configured bodygroups need to be set on an entity.
-
-    Parameters:
-        target (Entity)
-            Entity to modify.
-        bodygroups (table)
-            Raw bodygroup definitions.
-
-    Returns:
-        table
-            Resolved numeric bodygroup mapping that was applied.
-
-    Realm:
-        Shared
-
-    Example Usage:
-        ```lua
-            lia.util.applyBodygroups(client, bodygroups)
-        ```
-]]
 function lia.util.applyBodygroups(target, bodygroups)
     if not IsValid(target) then return {} end
     local resolved = lia.util.resolveBodygroups(target, bodygroups)
@@ -189,32 +49,6 @@ function lia.util.applyBodygroups(target, bodygroups)
     end
     return resolved
 end
-
---[[
-    Purpose:
-        Finds all players within an axis-aligned bounding box.
-
-    When Called:
-        Use when you need the players contained inside specific world bounds (e.g. triggers or zones).
-
-    Parameters:
-        mins (Vector)
-            Minimum corner of the search box.
-        maxs (Vector)
-            Maximum corner of the search box.
-
-    Returns:
-        table
-            List of player entities inside the box.
-
-    Realm:
-        Shared
-
-    Example Usage:
-        ```lua
-            local players = lia.util.findPlayersInBox(Vector(-128, -128, 0), Vector(128, 128, 128))
-        ```
-]]
 function lia.util.findPlayersInBox(mins, maxs)
     local entsList = ents.FindInBox(mins, maxs)
     local plyList = {}
@@ -223,32 +57,6 @@ function lia.util.findPlayersInBox(mins, maxs)
     end
     return plyList
 end
-
---[[
-    Purpose:
-        Prompts the user for entity information and forwards the result.
-
-    When Called:
-        Use when a client must supply additional data for an entity action.
-
-    Parameters:
-        client (Player)
-            Player who will be prompted for the information.
-        entity (Entity)
-            Entity that the information pertains to; removed if the request fails.
-        argTypes (table)
-            Argument descriptors passed to `requestArguments`.
-        callback (function|nil)
-            Invoked with the collected information on success.
-
-    Realm:
-        Server
-
-    Example Usage:
-        ```lua
-            lia.util.requestEntityInformation(client, ent, argTypes, function(info) lia.debug(info) end)
-        ```
-]]
 function lia.util.requestEntityInformation(client, entity, argTypes, callback)
     if not IsValid(entity) then
         ErrorNoHalt("[lia.util.requestEntityInformation] Invalid entity provided\n")
@@ -263,31 +71,6 @@ function lia.util.requestEntityInformation(client, entity, argTypes, callback)
         end
     end)
 end
-
---[[
-    Purpose:
-        Locates a connected player by SteamID or SteamID64 and requires an active character.
-
-    When Called:
-        Use when commands or systems need to resolve a Steam identifier to a live player with a character loaded.
-
-    Parameters:
-        steamID (string)
-            SteamID (e.g. "STEAM_0:1:12345") or SteamID64; empty/invalid strings are ignored.
-
-    Returns:
-        Player|nil
-            The matching player with a loaded character, or nil if not found/invalid input.
-
-    Realm:
-        Shared
-
-    Example Usage:
-        ```lua
-            local ply = lia.util.getBySteamID("76561198000000000")
-            if ply then lia.debug("Found", ply:Name()) end
-        ```
-]]
 function lia.util.getBySteamID(steamID)
     if not isstring(steamID) or steamID == "" then return end
     local sid = steamID
@@ -296,34 +79,6 @@ function lia.util.getBySteamID(steamID)
         if client:SteamID() == sid and client:getChar() then return client end
     end
 end
-
---[[
-    Purpose:
-        Returns all players inside a spherical radius from a point.
-
-    When Called:
-        Use to gather players near a position for proximity-based effects or checks.
-
-    Parameters:
-        origin (Vector)
-            Center of the search sphere.
-        radius (number)
-            Radius of the search sphere.
-
-    Returns:
-        table
-            Players whose positions are within the given radius.
-
-    Realm:
-        Shared
-
-    Example Usage:
-        ```lua
-            for _, ply in ipairs(lia.util.findPlayersInSphere(pos, 256)) do
-                ply:ChatPrint("You feel a nearby pulse.")
-            end
-        ```
-]]
 function lia.util.findPlayersInSphere(origin, radius)
     local plys = {}
     local r2 = radius ^ 2
@@ -332,34 +87,6 @@ function lia.util.findPlayersInSphere(origin, radius)
     end
     return plys
 end
-
---[[
-    Purpose:
-        Resolves a player from various identifiers and optionally informs the caller on failure.
-
-    When Called:
-        Use in admin/command handlers that accept flexible player identifiers (SteamID, SteamID64, name, "^", "@").
-
-    Parameters:
-        client (Player|nil)
-            The player requesting the lookup; used for localized error notifications.
-        identifier (string)
-            Identifier to match: SteamID, SteamID64, "^" (self), "@" (trace target), or partial name.
-
-    Returns:
-        Player|nil
-            Matched player or nil when no match is found/identifier is invalid.
-
-    Realm:
-        Shared
-
-    Example Usage:
-        ```lua
-            local target = lia.util.findPlayer(caller, args[1])
-            if not target then return end
-            target:kick("Example")
-        ```
-]]
 function lia.util.findPlayer(client, identifier)
     local isValidClient = IsValid(client)
     if not isstring(identifier) or identifier == "" then
@@ -401,32 +128,6 @@ function lia.util.findPlayer(client, identifier)
     if isValidClient then client:notifyErrorLocalized("plyNoExist") end
     return nil
 end
-
---[[
-    Purpose:
-        Collects all spawned item entities created by a specific player.
-
-    When Called:
-        Use when cleaning up or inspecting items a player has spawned into the world.
-
-    Parameters:
-        client (Player)
-            Player whose created item entities should be found.
-
-    Returns:
-        table
-            List of item entities created by the player.
-
-    Realm:
-        Shared
-
-    Example Usage:
-        ```lua
-            for _, ent in ipairs(lia.util.findPlayerItems(ply)) do
-                ent:Remove()
-            end
-        ```
-]]
 function lia.util.findPlayerItems(client)
     local items = {}
     for _, item in ents.Iterator() do
@@ -434,32 +135,6 @@ function lia.util.findPlayerItems(client)
     end
     return items
 end
-
---[[
-    Purpose:
-        Collects spawned item entities from a player filtered by item class.
-
-    When Called:
-        Use when you need only specific item classes (by netvar "id") created by a player.
-
-    Parameters:
-        client (Player)
-            Player whose item entities are being inspected.
-        class (string)
-            Item class/netvar id to match.
-
-    Returns:
-        table
-            Item entities created by the player that match the class.
-
-    Realm:
-        Shared
-
-    Example Usage:
-        ```lua
-            local ammo = lia.util.findPlayerItemsByClass(ply, "ammo_9mm")
-        ```
-]]
 function lia.util.findPlayerItemsByClass(client, class)
     local items = {}
     for _, item in ents.Iterator() do
@@ -467,32 +142,6 @@ function lia.util.findPlayerItemsByClass(client, class)
     end
     return items
 end
-
---[[
-    Purpose:
-        Finds entities created by or associated with a player, optionally by class.
-
-    When Called:
-        Use to track props or scripted entities a player spawned or owns.
-
-    Parameters:
-        client (Player)
-            Player whose entities should be matched.
-        class (string|nil)
-            Optional entity class filter; nil includes all classes.
-
-    Returns:
-        table
-            Entities created by or linked via entity.client to the player that match the class filter.
-
-    Realm:
-        Shared
-
-    Example Usage:
-        ```lua
-            local ragdolls = lia.util.findPlayerEntities(ply, "prop_ragdoll")
-        ```
-]]
 function lia.util.findPlayerEntities(client, class)
     local entities = {}
     for _, entity in ents.Iterator() do
@@ -500,32 +149,6 @@ function lia.util.findPlayerEntities(client, class)
     end
     return entities
 end
-
---[[
-    Purpose:
-        Performs case-insensitive equality and substring comparison between two strings.
-
-    When Called:
-        Use for loose name matching where exact case is not important.
-
-    Parameters:
-        a (string)
-            First string to compare.
-        b (string)
-            Second string to compare.
-
-    Returns:
-        boolean
-            True if the strings are equal (case-insensitive) or one contains the other; otherwise false.
-
-    Realm:
-        Shared
-
-    Example Usage:
-        ```lua
-            if lia.util.stringMatches(ply:Name(), "john") then lia.debug("Matched player") end
-        ```
-]]
 function lia.util.stringMatches(a, b)
     if a and b then
         local a2, b2 = a:lower(), b:lower()
@@ -536,31 +159,6 @@ function lia.util.stringMatches(a, b)
     end
     return false
 end
-
---[[
-    Purpose:
-        Returns all connected staff members.
-
-    When Called:
-        Use when broadcasting staff notifications or iterating over staff-only recipients.
-
-    Parameters:
-        (none)
-
-    Returns:
-        table
-            Players that pass `isStaff()`.
-
-    Realm:
-        Shared
-
-    Example Usage:
-        ```lua
-            for _, admin in ipairs(lia.util.getAdmins()) do
-                admin:notify("Server restart in 5 minutes.")
-            end
-        ```
-]]
 function lia.util.getAdmins()
     local staff = {}
     for _, client in player.Iterator() do
@@ -569,97 +167,17 @@ function lia.util.getAdmins()
     end
     return staff
 end
-
---[[
-    Purpose:
-        Resolves a player from a SteamID64 wrapper around `findPlayerBySteamID`.
-
-    When Called:
-        Use when you have a 64-bit SteamID and need the corresponding player entity.
-
-    Parameters:
-        SteamID64 (string)
-            SteamID64 to resolve.
-
-    Returns:
-        Player|nil
-            Matching player or nil when none is found/SteamID64 is invalid.
-
-    Realm:
-        Shared
-
-    Example Usage:
-        ```lua
-            local ply = lia.util.findPlayerBySteamID64(steamID64)
-        ```
-]]
 function lia.util.findPlayerBySteamID64(SteamID64)
     local SteamID = util.SteamIDFrom64(SteamID64)
     if not SteamID then return nil end
     return lia.util.findPlayerBySteamID(SteamID)
 end
-
---[[
-    Purpose:
-        Searches connected players for a matching SteamID.
-
-    When Called:
-        Use when you need to map a SteamID string to the in-game player.
-
-    Parameters:
-        SteamID (string)
-            SteamID in legacy format (e.g. "STEAM_0:1:12345").
-
-    Returns:
-        Player|nil
-            Player whose SteamID matches, or nil if none.
-
-    Realm:
-        Shared
-
-    Example Usage:
-        ```lua
-            local ply = lia.util.findPlayerBySteamID("STEAM_0:1:12345")
-        ```
-]]
 function lia.util.findPlayerBySteamID(SteamID)
     for _, client in player.Iterator() do
         if client:SteamID() == SteamID then return client end
     end
     return nil
 end
-
---[[
-    Purpose:
-        Checks whether a bounding hull can fit at a position without collisions.
-
-    When Called:
-        Use before spawning or teleporting entities to ensure the space is clear.
-
-    Parameters:
-        pos (Vector)
-            Position to test.
-        mins (Vector)
-            Hull minimums; defaults to Vector(16, 16, 0) mirrored if positive.
-        maxs (Vector|nil)
-            Hull maximums; defaults to mins when nil.
-        filter (Entity|table|nil)
-            Entity or filter list to ignore in the trace.
-
-    Returns:
-        boolean
-            True if the hull does not hit anything solid, false otherwise.
-
-    Realm:
-        Shared
-
-    Example Usage:
-        ```lua
-            if lia.util.canFit(pos, Vector(16, 16, 0)) then
-                ent:SetPos(pos)
-            end
-        ```
-]]
 function lia.util.canFit(pos, mins, maxs, filter)
     mins = mins ~= nil and mins or Vector(16, 16, 0)
     local tr = util.TraceHull({
@@ -672,34 +190,6 @@ function lia.util.canFit(pos, mins, maxs, filter)
     })
     return not tr.Hit
 end
-
---[[
-    Purpose:
-        Finds all players within a given radius.
-
-    When Called:
-        Use for proximity-based logic such as AoE effects or notifications.
-
-    Parameters:
-        pos (Vector)
-            Center position for the search.
-        dist (number)
-            Radius to search, in units.
-
-    Returns:
-        table
-            Players whose distance squared to pos is less than dist^2.
-
-    Realm:
-        Shared
-
-    Example Usage:
-        ```lua
-            for _, ply in ipairs(lia.util.playerInRadius(pos, 512)) do
-                ply:notify("You are near the beacon.")
-            end
-        ```
-]]
 function lia.util.playerInRadius(pos, dist)
     dist = dist * dist
     local t = {}
@@ -708,33 +198,6 @@ function lia.util.playerInRadius(pos, dist)
     end
     return t
 end
-
---[[
-    Purpose:
-        Formats a string using named placeholders or positional arguments.
-
-    When Called:
-        Use to substitute tokens in a template string with table keys or ordered arguments.
-
-    Parameters:
-        format (string)
-            Template containing placeholders like "{name}".
-        ... (table|any)
-            Either a table of replacements or positional values when no table is provided.
-
-    Returns:
-        string
-            The formatted string with placeholders replaced.
-
-    Realm:
-        Shared
-
-    Example Usage:
-        ```lua
-            lia.util.formatStringNamed("Hello {who}", {who = "world"})
-            lia.util.formatStringNamed("{1} + {2}", 1, 2)
-        ```
-]]
 function lia.util.formatStringNamed(format, ...)
     local arguments = {...}
     local bArray = false
@@ -753,64 +216,11 @@ function lia.util.formatStringNamed(format, ...)
     end)
     return result
 end
-
---[[
-    Purpose:
-        Retrieves and caches a material by path and parameters.
-
-    When Called:
-        Use whenever drawing materials repeatedly to avoid recreating them.
-
-    Parameters:
-        materialPath (string)
-            Path to the material.
-        materialParameters (string|nil)
-            Optional material creation parameters.
-
-    Returns:
-        IMaterial
-            Cached or newly created material instance.
-
-    Realm:
-        Shared
-
-    Example Usage:
-        ```lua
-            local blurMat = lia.util.getMaterial("pp/blurscreen")
-        ```
-]]
 function lia.util.getMaterial(materialPath, materialParameters)
     lia.util.cachedMaterials = lia.util.cachedMaterials or {}
     lia.util.cachedMaterials[materialPath] = lia.util.cachedMaterials[materialPath] or Material(materialPath, materialParameters)
     return lia.util.cachedMaterials[materialPath]
 end
-
---[[
-    Purpose:
-        Resolves a faction table by name or unique ID and notifies the caller on failure.
-
-    When Called:
-        Use in commands or UI when users input a faction identifier.
-
-    Parameters:
-        client (Player)
-            Player to notify on invalid faction.
-        name (string)
-            Faction name or uniqueID to search for.
-
-    Returns:
-        table|nil
-            Matching faction table, or nil if not found.
-
-    Realm:
-        Shared
-
-    Example Usage:
-        ```lua
-            local faction = lia.util.findFaction(ply, "combine")
-            if faction then lia.debug(faction.name) end
-        ```
-]]
 function lia.util.findFaction(client, name)
     if lia.faction.teams[name] then return lia.faction.teams[name] end
     for _, v in ipairs(lia.faction.indices) do
@@ -891,32 +301,6 @@ if system.IsLinux() then
         return ret
     end
 end
-
---[[
-    Purpose:
-        Generates a random full name from provided or default name lists.
-
-    When Called:
-        Use when creating placeholder or randomized character names.
-
-    Parameters:
-        firstNames (table|nil)
-            Optional list of first names to draw from; defaults to built-in list when nil/empty.
-        lastNames (table|nil)
-            Optional list of last names to draw from; defaults to built-in list when nil/empty.
-
-    Returns:
-        string
-            Concatenated first and last name.
-
-    Realm:
-        Shared
-
-    Example Usage:
-        ```lua
-            local name = lia.util.generateRandomName()
-        ```
-]]
 function lia.util.generateRandomName(firstNames, lastNames)
     local defaultFirstNames = {"John", "Jane", "Michael", "Sarah", "David", "Emily", "Robert", "Amanda", "James", "Jennifer", "William", "Elizabeth", "Richard", "Michelle", "Thomas", "Lisa", "Daniel", "Stephanie", "Matthew", "Nicole", "Anthony", "Samantha", "Charles", "Mary", "Joseph", "Patricia", "Christopher", "Linda", "Andrew", "Barbara", "Joshua", "Susan", "Ryan", "Jessica", "Brandon", "Helen", "Tyler", "Nancy", "Kevin", "Betty", "Jason", "Sandra", "Jacob", "Donna", "Kyle", "Carol", "Nathan", "Ruth", "Jeffrey", "Sharon", "Frank", "Michelle", "Scott", "Laura", "Steven", "Sarah", "Nicholas", "Kimberly", "Gregory", "Deborah", "Eric", "Dorothy", "Stephen", "Amy", "Timothy", "Angela", "Larry", "Melissa", "Jonathan", "Brenda", "Raymond", "Emma", "Patrick", "Anna", "Benjamin", "Rebecca", "Bryan", "Virginia", "Samuel", "Kathleen", "Alexander", "Pamela", "Jack", "Martha", "Dennis", "Debra", "Jerry", "Amanda", "Tyler", "Stephanie", "Aaron", "Christine", "Henry", "Marie", "Douglas", "Janet", "Peter", "Catherine", "Jose", "Frances", "Adam", "Ann", "Zachary", "Joyce", "Walter", "Diane", "Kenneth", "Alice", "Ryan", "Julie", "Gregory", "Heather", "Austin", "Teresa", "Keith", "Doris", "Samuel", "Gloria", "Gary", "Evelyn", "Jesse", "Jean", "Joe", "Cheryl", "Billy", "Mildred", "Bruce", "Katherine", "Gabriel", "Joan", "Roy", "Ashley", "Albert", "Judith", "Willie", "Rose", "Logan", "Janice", "Randy", "Kelly", "Louis", "Nicole", "Russell", "Judy", "Ralph", "Christina", "Sean", "Kathy", "Eugene", "Theresa", "Vincent", "Beverly", "Bobby", "Denise", "Johnny", "Tammy", "Bradley", "Irene", "Philip", "Jane", "Todd", "Lori", "Jesse", "Rachel", "Craig", "Marilyn", "Alan", "Andrea", "Shawn", "Kathryn", "Clarence", "Louise", "Sean", "Sara", "Victor", "Anne", "Jimmy", "Jacqueline", "Chad", "Wanda", "Phillip", "Bonnie", "Travis", "Julia", "Carlos", "Ruby", "Shane", "Lois", "Ronald", "Tina", "Brandon", "Phyllis", "Angel", "Norma", "Russell", "Paula", "Harold", "Diana", "Dustin", "Annie", "Pedro", "Lillian", "Shawn", "Emily", "Colin", "Robin", "Brian", "Rita"}
     local defaultLastNames = {"Smith", "Johnson", "Williams", "Brown", "Jones", "Garcia", "Miller", "Davis", "Rodriguez", "Martinez", "Hernandez", "Lopez", "Gonzalez", "Wilson", "Anderson", "Thomas", "Taylor", "Moore", "Jackson", "Martin", "Lee", "Perez", "Thompson", "White", "Harris", "Sanchez", "Clark", "Ramirez", "Lewis", "Robinson", "Walker", "Young", "Allen", "King", "Wright", "Scott", "Torres", "Nguyen", "Hill", "Flores", "Green", "Adams", "Nelson", "Baker", "Hall", "Rivera", "Campbell", "Mitchell", "Carter", "Roberts", "Gomez", "Phillips", "Evans", "Turner", "Diaz", "Parker", "Cruz", "Edwards", "Collins", "Reyes", "Stewart", "Morris", "Morales", "Murphy", "Cook", "Rogers", "Gutierrez", "Ortiz", "Morgan", "Cooper", "Peterson", "Bailey", "Reed", "Kelly", "Howard", "Ramos", "Kim", "Cox", "Ward", "Richardson", "Watson", "Brooks", "Chavez", "Wood", "James", "Bennett", "Gray", "Mendoza", "Ruiz", "Hughes", "Price", "Alvarez", "Castillo", "Sanders", "Patel", "Myers", "Long", "Ross", "Foster", "Jimenez", "Powell", "Jenkins", "Perry", "Russell", "Sullivan", "Bell", "Coleman", "Butler", "Henderson", "Barnes", "Gonzales", "Fisher", "Vasquez", "Simmons", "Romero", "Jordan", "Patterson", "Alexander", "Hamilton", "Graham", "Reynolds", "Griffin", "Wallace", "Moreno", "West", "Cole", "Hayes", "Bryant", "Herrera", "Gibson", "Ellis", "Tran", "Medina", "Aguilar", "Stevens", "Murray", "Ford", "Castro", "Marshall", "Owens", "Harrison", "Fernandez", "McDonald", "Woods", "Washington", "Kennedy", "Wells", "Vargas", "Henry", "Chen", "Freeman", "Webb", "Tucker", "Guzman", "Burns", "Crawford", "Olson", "Simpson", "Porter", "Hunter", "Gordon", "Mendez", "Silva", "Shaw", "Snyder", "Mason", "Dixon", "Munoz", "Hunt", "Hicks", "Holmes", "Palmer", "Wagner", "Black", "Robertson", "Boyd", "Rose", "Stone", "Salazar", "Fox", "Warren", "Mills", "Meyer", "Rice", "Schmidt", "Garza", "Daniels", "Ferguson", "Nichols", "Stephens", "Soto", "Weaver", "Ryan", "Gardner", "Payne", "Grant", "Dunn", "Kelley", "Spencer", "Hawkins", "Arnold", "Pierce", "Vazquez", "Hansen", "Peters", "Santos", "Hart", "Bradley", "Knight", "Elliott", "Cunningham", "Duncan", "Armstrong", "Hudson", "Carroll", "Lane", "Riley", "Andrews", "Alvarado", "Ray", "Delgado", "Berry", "Perkins", "Hoffman", "Johnston", "Matthews", "Pena", "Richards", "Contreras", "Willis", "Carpenter", "Lawrence", "Sandoval"}
@@ -968,35 +352,6 @@ function lia.util.setPositionCallback(name, data)
 end
 
 if SERVER then
-    --[[
-    Purpose:
-        Sends a localized table UI payload to a client.
-
-    When Called:
-        Use when the server needs to present tabular data/options to a specific player.
-
-    Parameters:
-        client (Player)
-            Recipient player.
-        title (string|nil)
-            Localization key for the window title; defaults to "tableListTitle".
-        columns (table)
-            Column definitions; names are localized if present.
-        data (table)
-            Row data to display.
-        options (table|nil)
-            Optional menu options to accompany the table.
-        characterID (number|nil)
-            Optional character identifier to send with the payload.
-
-    Realm:
-        Server
-
-    Example Usage:
-        ```lua
-            lia.util.sendTableUI(ply, "staffList", columns, rows, options, charID)
-        ```
-]]
     function lia.util.sendTableUI(client, title, columns, data, options, characterID)
         if not IsValid(client) or not client:IsPlayer() then return end
         local localizedColumns = {}
@@ -1016,41 +371,6 @@ if SERVER then
 
         lia.net.writeBigTable(client, "liaSendTableUI", tableUIData)
     end
-
-    --[[
-    Purpose:
-        Finds nearby empty positions around an entity using grid sampling.
-
-    When Called:
-        Use when spawning items or players near an entity while avoiding collisions and the void.
-
-    Parameters:
-        entity (Entity)
-            Origin entity to search around.
-        filter (Entity|table|nil)
-            Optional trace filter to ignore certain entities; defaults to the origin entity.
-        spacing (number)
-            Grid spacing between samples; defaults to 32.
-        size (number)
-            Number of steps in each direction from the origin; defaults to 3.
-        height (number)
-            Hull height used for traces; defaults to 36.
-        tolerance (number)
-            Upward offset to avoid starting inside the ground; defaults to 5.
-
-    Returns:
-        table
-            Sorted list of valid origin positions, nearest to farthest from the entity.
-
-    Realm:
-        Server
-
-    Example Usage:
-        ```lua
-            local spots = lia.util.findEmptySpace(ent, nil, 24)
-            local pos = spots[1]
-        ```
-]]
     function lia.util.findEmptySpace(entity, filter, spacing, size, height, tolerance)
         spacing = spacing or 32
         size = size or 3
@@ -1089,37 +409,6 @@ else
     lia.util.approachExp = lia.derma.approachExp
     lia.util.easeOutCubic = lia.derma.easeOutCubic
     lia.util.easeInOutCubic = lia.derma.easeInOutCubic
-    --[[
-    Purpose:
-        Animates a panel appearing from a scaled, transparent state to its target size and opacity.
-
-    When Called:
-        Use when showing popups or menus that should ease into view.
-
-    Parameters:
-        panel (Panel)
-            Panel to animate.
-        targetWidth (number)
-            Final width of the panel.
-        targetHeight (number)
-            Final height of the panel.
-        duration (number|nil)
-            Duration for size/position easing; defaults to 0.18 seconds.
-        alphaDuration (number|nil)
-            Duration for alpha easing; defaults to duration.
-        callback (function|nil)
-            Called when the animation finishes.
-        scaleFactor (number|nil)
-            Initial size scale relative to target; defaults to 0.8.
-
-    Realm:
-        Client
-
-    Example Usage:
-        ```lua
-            lia.util.animateAppearance(panel, 300, 200)
-        ```
-]]
     function lia.util.animateAppearance(panel, targetWidth, targetHeight, duration, alphaDuration, callback, scaleFactor)
         scaleFactor = scaleFactor or 0.8
         if not IsValid(panel) then return end
@@ -1163,26 +452,6 @@ else
             end
         end
     end
-
-    --[[
-    Purpose:
-        Keeps a menu panel within the screen bounds, respecting the character logo space.
-
-    When Called:
-        Use after positioning a menu to prevent it from going off-screen.
-
-    Parameters:
-        panel (Panel)
-            Menu panel to clamp.
-
-    Realm:
-        Client
-
-    Example Usage:
-        ```lua
-            lia.util.clampMenuPosition(menu)
-        ```
-]]
     function lia.util.clampMenuPosition(panel)
         if not IsValid(panel) then return end
         local x, y = panel:GetPos()
@@ -1212,73 +481,11 @@ else
         if logoMargin > 0 and y < logoMargin then y = logoMargin end
         panel:SetPos(x, y)
     end
-
-    --[[
-    Purpose:
-        Draws a directional gradient rectangle.
-
-    When Called:
-        Use in panel paints when you need simple gradient backgrounds.
-
-    Parameters:
-        x (number)
-            X position of the gradient.
-        y (number)
-            Y position of the gradient.
-        w (number)
-            Width of the gradient.
-        h (number)
-            Height of the gradient.
-        direction (number)
-            Gradient direction index (1 up, 2 down, 3 left, 4 right).
-        colorShadow (Color)
-            Color tint for the gradient.
-        radius (number|nil)
-            Corner radius for drawing helper; defaults to 0.
-        flags (number|nil)
-            Optional draw flags passed to `drawMaterial`.
-
-    Realm:
-        Client
-
-    Example Usage:
-        ```lua
-            lia.util.drawGradient(0, 0, w, h, 2, Color(0, 0, 0, 180))
-        ```
-]]
     function lia.util.drawGradient(x, y, w, h, direction, colorShadow, radius, flags)
         local listGradients = {Material("vgui/gradient_up"), Material("vgui/gradient_down"), Material("vgui/gradient-l"), Material("vgui/gradient-r")}
         radius = radius and radius or 0
         lia.derma.drawMaterial(radius, x, y, w, h, colorShadow, listGradients[direction], flags)
     end
-
-    --[[
-    Purpose:
-        Wraps text to a maximum width using a specified font.
-
-    When Called:
-        Use when drawing text that must fit inside a set horizontal space.
-
-    Parameters:
-        text (string)
-            Text to wrap.
-        width (number)
-            Maximum width in pixels.
-        font (string|nil)
-            Font name to measure with; defaults to "LiliaFont.16".
-
-    Returns:
-        table, number
-            Array of wrapped lines and the widest line width.
-
-    Realm:
-        Client
-
-    Example Usage:
-        ```lua
-            local lines = lia.util.wrapText(description, 300, "LiliaFont.17")
-        ```
-]]
     function lia.util.wrapText(text, width, font)
         font = font or "LiliaFont.16"
         surface.SetFont(font)
@@ -1306,32 +513,6 @@ else
         if line ~= "" then lines[#lines + 1] = line end
         return lines, maxW
     end
-
-    --[[
-    Purpose:
-        Draws a blurred background behind a panel.
-
-    When Called:
-        Use inside a panel's Paint hook to soften the content behind it.
-
-    Parameters:
-        panel (Panel)
-            Panel whose screen area will be blurred.
-        amount (number|nil)
-            Blur strength; defaults to 5.
-        passes (number|nil)
-            Unused; kept for signature compatibility.
-        alpha (number|nil)
-            Draw color alpha; defaults to 255.
-
-    Realm:
-        Client
-
-    Example Usage:
-        ```lua
-            lia.util.drawBlur(self, 4)
-        ```
-]]
     function lia.util.drawBlur(panel, amount, passes, alpha)
         amount = amount or 5
         alpha = alpha or 255
@@ -1348,34 +529,6 @@ else
             surface.DrawTexturedRect(x * -1, y * -1, ScrW(), ScrH())
         end
     end
-
-    --[[
-    Purpose:
-        Draws a blurred background with a dark overlay in a panel's bounds.
-
-    When Called:
-        Use for modal overlays where both blur and darkening are desired.
-
-    Parameters:
-        panel (Panel)
-            Panel area to blur.
-        amount (number|nil)
-            Blur strength; defaults to 6.
-        passes (number|nil)
-            Number of blur passes; defaults to 5.
-        alpha (number|nil)
-            Blur draw alpha; defaults to 255.
-        darkAlpha (number|nil)
-            Alpha for the black overlay; defaults to 220.
-
-    Realm:
-        Client
-
-    Example Usage:
-        ```lua
-            lia.util.drawBlackBlur(self, 6, 4, 255, 200)
-        ```
-]]
     function lia.util.drawBlackBlur(panel, amount, passes, alpha, darkAlpha)
         if not IsValid(panel) then return end
         amount = amount or 6
@@ -1400,38 +553,6 @@ else
         surface.SetDrawColor(0, 0, 0, darkAlpha)
         surface.DrawRect(x, y, panel:GetWide(), panel:GetTall())
     end
-
-    --[[
-    Purpose:
-        Draws a blur effect over a specific rectangle on the screen.
-
-    When Called:
-        Use when you need a localized blur that is not tied to a panel.
-
-    Parameters:
-        x (number)
-            X coordinate of the rectangle.
-        y (number)
-            Y coordinate of the rectangle.
-        w (number)
-            Width of the rectangle.
-        h (number)
-            Height of the rectangle.
-        amount (number|nil)
-            Blur strength; defaults to 5.
-        passes (number|nil)
-            Number of blur samples; defaults to 0.2 steps when nil.
-        alpha (number|nil)
-            Draw alpha; defaults to 255.
-
-    Realm:
-        Client
-
-    Example Usage:
-        ```lua
-            lia.util.drawBlurAt(100, 100, 200, 150, 4)
-        ```
-]]
     function lia.util.drawBlurAt(x, y, w, h, amount, passes, alpha)
         amount = amount or 5
         alpha = alpha or 255
@@ -1448,37 +569,6 @@ else
     end
 
     lia.util.requestArguments = lia.derma.requestArguments
-    --[[
-    Purpose:
-        Builds and displays a table UI on the client.
-
-    When Called:
-        Use when the client needs to view tabular data with optional menu actions.
-
-    Parameters:
-        title (string|nil)
-            Localization key for the frame title; defaults to "tableListTitle".
-        columns (table)
-            Column definitions with `name`, `width`, `align`, and `sortable` fields.
-        data (table)
-            Row data keyed by column field names.
-        options (table|nil)
-            Optional menu options with callbacks or net names.
-        charID (number|nil)
-            Character identifier forwarded with net options.
-
-    Returns:
-        Panel, Panel
-            The created frame and table list view.
-
-    Realm:
-        Client
-
-    Example Usage:
-        ```lua
-            local frame, list = lia.util.createTableUI("myData", cols, rows)
-        ```
-]]
     function lia.util.createTableUI(title, columns, data, options, charID)
         local frameWidth, frameHeight = ScrW() * 0.8, ScrH() * 0.8
         local frame = vgui.Create("liaFrame")
@@ -1632,32 +722,6 @@ else
         end)
         return frame, listView
     end
-
-    --[[
-    Purpose:
-        Displays a simple options menu with clickable entries.
-
-    When Called:
-        Use to quickly prompt the user with a list of named actions.
-
-    Parameters:
-        title (string|nil)
-            Title text to show at the top of the menu; defaults to "options".
-        options (table)
-            Either an array of {name, callback} or a map of name -> callback.
-
-    Returns:
-        Panel|nil
-            The created frame, or nil if no valid options exist.
-
-    Realm:
-        Client
-
-    Example Usage:
-        ```lua
-            lia.util.openOptionsMenu("choose", {{"Yes", onYes}, {"No", onNo}})
-        ```
-]]
     function lia.util.openOptionsMenu(title, options)
         if not istable(options) then return end
         local entries = {}
@@ -1768,33 +832,6 @@ else
     end
 
     lia.util.entsScales = lia.util.entsScales or {}
-    --[[
-    Purpose:
-        Draws floating text above an entity that eases in based on distance.
-
-    When Called:
-        Use in HUD painting to label world entities when nearby.
-
-    Parameters:
-        ent (Entity)
-            Entity to draw text above.
-        text (string)
-            Text to display.
-        posY (number|nil)
-            Vertical offset in screen space; defaults to 0.
-        alphaOverride (number|nil)
-            Optional alpha multiplier (0-1 or 0-255).
-
-    Realm:
-        Client
-
-    Example Usage:
-        ```lua
-            hook.Add("HUDPaint", "DrawEntLabels", function()
-                lia.util.drawEntText(ent, "Storage")
-            end)
-        ```
-]]
     function lia.util.drawEntText(ent, text, posY, alphaOverride)
         if not (IsValid(ent) and text and text ~= "") then return end
         posY = posY or 0
@@ -1849,32 +886,6 @@ else
         if screenPos.visible == false then return end
         EntText(text, screenPos.x, screenPos.y + posY, fade)
     end
-
-    --[[
-    Purpose:
-        Draws text at the player's look position with distance-based easing.
-
-    When Called:
-        Use to display contextual prompts or hints where the player is aiming.
-
-    Parameters:
-        text (string)
-            Text to render at the hit position.
-        posY (number|nil)
-            Screen-space vertical offset; defaults to 0.
-        alphaOverride (number|nil)
-            Optional alpha multiplier (0-1 or 0-255).
-        maxDist (number|nil)
-            Maximum trace distance; defaults to 380 units.
-
-    Realm:
-        Client
-
-    Example Usage:
-        ```lua
-            lia.util.drawLookText("Press E to interact")
-        ```
-]]
     function lia.util.drawLookText(text, posY, alphaOverride, maxDist)
         if not (text and text ~= "") then return end
         posY = posY or 0
@@ -1921,56 +932,8 @@ else
         if screenPos.visible == false then return end
         EntText(text, screenPos.x, screenPos.y + posY, fade)
     end
-
-    --[[
-    Purpose:
-        Sets a feature position using the position tool callback system.
-
-    When Called:
-        Called by the position tool when a player sets a position (left-click or Shift+R).
-
-    Parameters:
-        pos (Vector)
-            The world position to set.
-        typeId (string)
-            The type ID of the position callback (e.g., "faction_spawn_adder", "sit_room").
-
-    Realm:
-        Client
-
-    Example Usage:
-        ```lua
-            lia.util.setFeaturePosition(Vector(0, 0, 0), "faction_spawn_adder")
-        ```
-]]
     function lia.util.setFeaturePosition(pos, typeId)
     end
-
-    --[[
-        Purpose:
-            Draws text at the player's look position with distance-based easing.
-
-        When Called:
-            Use to display contextual prompts or hints where the player is aiming.
-
-        Parameters:
-            text (string)
-                Text to render at the hit position.
-            posY (number|nil)
-                Screen-space vertical offset; defaults to 0.
-            alphaOverride (number|nil)
-                Optional alpha multiplier (0-1 or 0-255).
-            maxDist (number|nil)
-                Maximum trace distance; defaults to 380 units.
-
-        Realm:
-            Client
-
-        Example Usage:
-            ```lua
-                lia.util.drawLookText("Press E to interact")
-            ```
-        ]]
     function lia.util.drawLookText(text, posY, alphaOverride, maxDist)
         if not (text and text ~= "") then return end
         posY = posY or 0
@@ -2017,28 +980,6 @@ else
         if screenPos.visible == false then return end
         EntText(text, screenPos.x, screenPos.y + posY, fade)
     end
-
-    --[[
-        Purpose:
-            Sets a feature position using the position tool callback system.
-
-        When Called:
-            Called by the position tool when a player sets a position (left-click or Shift+R).
-
-        Parameters:
-            pos (Vector)
-                The world position to set.
-            typeId (string)
-                The type ID of the position callback (e.g., "faction_spawn_adder", "sit_room").
-
-        Realm:
-            Client
-
-        Example Usage:
-            ```lua
-                lia.util.setFeaturePosition(Vector(0, 0, 0), "faction_spawn_adder")
-            ```
-        ]]
     function lia.util.setFeaturePosition(pos, typeId)
         if not isvector(pos) or not isstring(typeId) then return end
         local callback = lia.util.positionCallbacks[typeId]
@@ -2051,28 +992,6 @@ else
             callback.onRun(pos, client, typeId)
         end
     end
-
-    --[[
-        Purpose:
-            Removes a feature position using the position tool callback system.
-
-        When Called:
-            Called by the position tool when a player removes a position (right-click).
-
-        Parameters:
-            pos (Vector)
-                The world position to remove.
-            typeId (string)
-                The type ID of the position callback (e.g., "faction_spawn_adder", "sit_room").
-
-        Realm:
-            Client
-
-        Example Usage:
-            ```lua
-                lia.util.removeFeaturePosition(Vector(0, 0, 0), "faction_spawn_adder")
-            ```
-        ]]
     function lia.util.removeFeaturePosition(pos, typeId)
         if not isvector(pos) or not isstring(typeId) then return end
         local callback = lia.util.positionCallbacks[typeId]
@@ -2088,40 +1007,6 @@ else
             callback.onRemove(pos, client, typeId)
         end
     end
-
-    --[[
-    Purpose:
-        Draws styled ESP text with background, blur, and theme support.
-
-    When Called:
-        Use when you need to draw text with ESP styling, including background panels and blur effects.
-
-    Parameters:
-        text (string)
-            The text to display.
-        x (number)
-            X position on screen.
-        y (number)
-            Y position on screen.
-        espColor (Color)
-            Color for the accent/bottom bar.
-        font (string)
-            Font to use for the text.
-        fadeAlpha (number, optional)
-            Alpha multiplier for fading (default: 1).
-
-    Returns:
-        number
-            Height of the drawn element.
-
-    Realm:
-        Client
-
-    Example Usage:
-        ```lua
-            local height = lia.util.drawESPStyledText("Player Name", 200, 100, Color(255, 0, 0), "liaMediumFont", 0.8)
-        ```
-]]
     function lia.util.drawESPStyledText(text, x, y, espColor, font, fadeAlpha)
         fadeAlpha = fadeAlpha or 1
         surface.SetFont(font)
@@ -2139,3 +1024,5 @@ else
         return bh
     end
 end
+
+

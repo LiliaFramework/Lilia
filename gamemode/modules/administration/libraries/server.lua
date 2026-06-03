@@ -791,7 +791,6 @@ net.Receive("liaRequestStaffSummary", function(_, client)
 end)
 
 net.Receive("liaRequestPlayers", function(_, client)
-    lia.debug("[Permissions]", "Permission Check for net.Receive liaRequestPlayers", "hasPrivilege(canAccessPlayerList)=", tostring(client:hasPrivilege("canAccessPlayerList")), "finalResult=", tostring(client:hasPrivilege("canAccessPlayerList")))
     if not client:hasPrivilege("canAccessPlayerList") then return end
     local gamemode = SCHEMA and SCHEMA.folder or engine.ActiveGamemode()
     local query = [[

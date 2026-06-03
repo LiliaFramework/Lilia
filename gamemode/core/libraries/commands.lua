@@ -1,45 +1,5 @@
-﻿--[[
-    Folder: Libraries
-    File: command.md
-]]
---[[
-    Commands
-
-    Comprehensive command registration, parsing, and execution system for the Lilia framework.
-]]
---[[
-    Overview:
-        The commands library provides comprehensive functionality for managing and executing commands in the Lilia framework. It handles command registration, argument parsing, access control, privilege management, and command execution across both server and client sides. The library supports complex argument types including players, booleans, strings, and tables, with automatic syntax generation and validation. It integrates with the administrator system for privilege-based access control and provides user interface elements for command discovery and argument prompting. The library ensures secure command execution with proper permission checks and logging capabilities.
-]]
 lia.command = lia.command or {}
 lia.command.list = lia.command.list or {}
---[[
-    Purpose:
-        Generate a human-readable syntax string from a list of argument definitions.
-
-    When Called:
-        During command registration to populate data.syntax for menus and help text.
-
-    Parameters:
-        args (table)
-            Array of argument tables {name=, type=, optional=}.
-
-    Returns:
-        string
-            Concatenated syntax tokens describing the command arguments.
-
-    Realm:
-        Shared
-
-    Example Usage:
-        ```lua
-        local syntax = lia.command.buildSyntaxFromArguments({
-            {name = "target", type = "player"},
-            {name = "amount", type = "number", optional = true}
-        })
-        -- "[player target] [string amount optional]"
-        ```
-]]
 function lia.command.buildSyntaxFromArguments(args)
     local tokens = {}
     for _, arg in ipairs(args) do
@@ -60,37 +20,6 @@ function lia.command.buildSyntaxFromArguments(args)
     end
     return table.concat(tokens, " ")
 end
-
---[[
-    Purpose:
-        Register a command and normalize its metadata, syntax, privileges, aliases, and callbacks.
-
-    When Called:
-        During schema or module initialization to expose new chat/console commands.
-
-    Parameters:
-        command (string)
-            Unique command key.
-        data (table)
-            Command definition (arguments, desc, privilege, superAdminOnly, adminOnly, alias, onRun, onCheckAccess, etc.).
-    Realm:
-        Shared
-
-    Example Usage:
-        ```lua
-        lia.command.add("bring", {
-            desc = "Bring a player to you.",
-            adminOnly = true,
-            arguments = {
-                {name = "target", type = "player"}
-            },
-            onRun = function(client, args)
-                local target = lia.command.findPlayer(args[1])
-                if IsValid(target) then target:SetPos(client:GetPos() + client:GetForward() * 50) end
-            end
-        })
-        ```
-]]
 function lia.command.add(command, data)
     data.arguments = data.arguments or {}
     data.syntax = data.syntax or lia.command.buildSyntaxFromArguments(data.arguments)
@@ -205,35 +134,6 @@ function lia.command.add(command, data)
 
     hook.Run("CommandAdded", command, data)
 end
-
---[[
-    Purpose:
-        Determine whether a client may run a command based on privileges, hooks, faction/class access, and custom checks.
-
-    When Called:
-        Before executing a command or showing it in help menus.
-
-    Parameters:
-        client (Player)
-            Player requesting access.
-        command (string)
-            Command name to check.
-        data (table|nil)
-            Command definition; looked up from lia.command.list when nil.
-
-    Returns:
-        boolean, string
-            allowed result and privilege name for UI/feedback.
-
-    Realm:
-        Shared
-
-    Example Usage:
-        ```lua
-        local canUse, priv = lia.command.hasAccess(ply, "bring")
-        if not canUse then ply:notifyErrorLocalized("noPerm") end
-        ```
-]]
 function lia.command.hasAccess(client, command, data)
     if not data then data = lia.command.list[command] end
     if not data then return false, "unknown" end
@@ -271,31 +171,6 @@ function lia.command.hasAccess(client, command, data)
     lia.debug("[Permissions]", "Permission Check for function lia.command.hasAccess final", "command=", tostring(command), "privilegeID=", tostring(privilegeID), "finalResult=", tostring(hasAccess))
     return hasAccess, privilegeName
 end
-
---[[
-    Purpose:
-        Split a raw command string into arguments while preserving quoted segments.
-
-    When Called:
-        When parsing chat-entered commands before validation or prompting.
-
-    Parameters:
-        text (string)
-            Raw command text excluding the leading slash.
-
-    Returns:
-        table
-            Array of parsed arguments.
-
-    Realm:
-        Shared
-
-    Example Usage:
-        ```lua
-        local args = lia.command.extractArgs("'John Doe' 250")
-        -- {"John Doe", "250"}
-        ```
-]]
 function lia.command.extractArgs(text)
     local skip = 0
     local arguments = {}
@@ -355,28 +230,6 @@ local function isPlaceholder(arg)
 end
 
 if SERVER then
-    --[[
-    Purpose:
-        Execute a registered command for a given client with arguments and emit post-run hooks.
-
-    When Called:
-        After parsing chat input or console invocation server-side.
-
-    Parameters:
-        client (Player|nil)
-            Player that issued the command (nil when run from server console).
-        command (string)
-            Command key to execute.
-        arguments (table|nil)
-            Parsed command arguments.
-    Realm:
-        Server
-
-    Example Usage:
-        ```lua
-        lia.command.run(ply, "bring", {targetSteamID})
-        ```
-    ]]
     function lia.command.run(client, command, arguments)
         local commandTbl = lia.command.list[command:lower()]
         if commandTbl then
@@ -394,38 +247,6 @@ if SERVER then
             end
         end
     end
-
-    --[[
-    Purpose:
-        Parse chat text into a command invocation, prompt for missing args, and dispatch authorized commands.
-
-    When Called:
-        On the server when a player sends chat starting with '/' or when manually dispatching a command.
-
-    Parameters:
-        client (Player)
-            Player whose chat is being parsed.
-        text (string)
-            Full chat text.
-        realCommand (string|nil)
-            Command key when bypassing parsing (used by net/message dispatch).
-        arguments (table|nil)
-            Pre-parsed arguments; when nil they are derived from text.
-
-    Returns:
-        boolean
-            true if the text was handled as a command.
-
-    Realm:
-        Server
-
-    Example Usage:
-        ```lua
-        hook.Add("PlayerSay", "liaChatCommands", function(ply, text)
-            if lia.command.parse(ply, text) then return "" end
-        end)
-        ```
-    ]]
     function lia.command.parse(client, text, realCommand, arguments)
         if realCommand or utf8.sub(text, 1, 1) == "/" then
             local match = realCommand or text:lower():match("/" .. "([_%w]+)")
@@ -485,28 +306,6 @@ if SERVER then
         return false
     end
 else
-    --[[
-    Purpose:
-        Display a clientside UI prompt for missing command arguments and send the completed command back through chat.
-
-    When Called:
-        After the server requests argument completion via the liaCmdArgPrompt net message.
-
-    Parameters:
-        cmdKey (string)
-            Command key being completed.
-        missing (table)
-            Names of missing arguments.
-        prefix (table|nil)
-            Prefilled argument values.
-    Realm:
-        Client
-
-    Example Usage:
-        ```lua
-        lia.command.openArgumentPrompt("pm", {"target", "message"}, {"steamid"})
-        ```
-    ]]
     function lia.command.openArgumentPrompt(cmdKey, missing, prefix, definitions)
         local command = lia.command.list[cmdKey] or {
             arguments = definitions or {}
@@ -742,27 +541,6 @@ else
             frame:Remove()
         end
     end
-
-    --[[
-    Purpose:
-        Send a command invocation to the server via net as a clientside helper.
-
-    When Called:
-        From UI elements or client logic instead of issuing chat/console commands directly.
-
-    Parameters:
-        command (string)
-            Command key to invoke.
-        ... (vararg)
-            Arguments to pass to the command.
-    Realm:
-        Client
-
-    Example Usage:
-        ```lua
-        lia.command.send("respawn", LocalPlayer():SteamID())
-        ```
-]]
     function lia.command.send(command, ...)
         net.Start("liaCommandData")
         net.WriteString(command)
@@ -1367,7 +1145,7 @@ else
             nameLabel:DockMargin(10, 0, 0, 0)
             nameLabel:SetWide(300)
             local playButton = vgui.Create("liaButton", panel)
-            playButton:SetText("▶ " .. L("play"))
+            playButton:SetText("? " .. L("play"))
             playButton:SetWide(80)
             playButton:Dock(RIGHT)
             playButton:DockMargin(5, 5, 5, 5)
@@ -1389,7 +1167,7 @@ else
             end
 
             local stopButton = vgui.Create("liaButton", panel)
-            stopButton:SetText("⏹ " .. L("stop"))
+            stopButton:SetText("? " .. L("stop"))
             stopButton:SetWide(80)
             stopButton:Dock(RIGHT)
             stopButton:DockMargin(5, 5, 5, 5)
@@ -1565,7 +1343,7 @@ else
             nameLabel:SetPos(120, 10)
             nameLabel:SetWide(300)
             local viewButton = vgui.Create("liaButton", panel)
-            viewButton:SetText("👁 " .. L("view"))
+            viewButton:SetText("?? " .. L("view"))
             viewButton:SetWide(80)
             viewButton:SetPos(120, 40)
             viewButton.DoClick = function()
@@ -1581,7 +1359,7 @@ else
             end
 
             local copyButton = vgui.Create("liaButton", panel)
-            copyButton:SetText("📋 " .. L("copyPath"))
+            copyButton:SetText("?? " .. L("copyPath"))
             copyButton:SetWide(100)
             copyButton:SetPos(210, 40)
             copyButton.DoClick = function()
@@ -6227,6 +6005,122 @@ lia.command.add("doorremoveclass", {
     end
 })
 
+local function cloneDoorRestrictionList(values)
+    local cloned = {}
+    for index, value in ipairs(values or {}) do
+        cloned[index] = value
+    end
+    return cloned
+end
+
+lia.command.add("doorcopyfactions", {
+    adminOnly = true,
+    onRun = function(client)
+        local door = client:getTracedEntity()
+        if not (IsValid(door) and door:isDoor()) then
+            client:notifyErrorLocalized("doorNotValid")
+            return
+        end
+
+        local doorData = lia.doors.getData(door)
+        if doorData.disabled then
+            client:notifyErrorLocalized("doorNotValid")
+            return
+        end
+
+        client.liaCopiedDoorFactions = {
+            hasData = true,
+            values = cloneDoorRestrictionList(doorData.factions)
+        }
+        client:notifySuccessLocalized("doorFactionsCopied", #(client.liaCopiedDoorFactions.values or {}))
+    end
+})
+
+lia.command.add("doorpastefactions", {
+    adminOnly = true,
+    onRun = function(client)
+        local door = client:getTracedEntity()
+        if not (IsValid(door) and door:isDoor()) then
+            client:notifyErrorLocalized("doorNotValid")
+            return
+        end
+
+        local doorData = lia.doors.getData(door)
+        if doorData.disabled then
+            client:notifyErrorLocalized("doorNotValid")
+            return
+        end
+
+        local copiedData = client.liaCopiedDoorFactions
+        if not copiedData or not copiedData.hasData then
+            client:notifyErrorLocalized("doorNoCopiedFactions")
+            return
+        end
+
+        local factions = cloneDoorRestrictionList(copiedData.values)
+        doorData.factions = factions
+        door.liaFactions = #factions > 0 and factions or nil
+        if #factions > 0 then doorData.noSell = true end
+        lia.doors.setData(door, doorData)
+        lia.module.get("doors"):SaveData()
+        client:notifySuccessLocalized("doorFactionsPasted", #factions)
+    end
+})
+
+lia.command.add("doorcopyclasses", {
+    adminOnly = true,
+    onRun = function(client)
+        local door = client:getTracedEntity()
+        if not (IsValid(door) and door:isDoor()) then
+            client:notifyErrorLocalized("doorNotValid")
+            return
+        end
+
+        local doorData = lia.doors.getData(door)
+        if doorData.disabled then
+            client:notifyErrorLocalized("doorNotValid")
+            return
+        end
+
+        client.liaCopiedDoorClasses = {
+            hasData = true,
+            values = cloneDoorRestrictionList(doorData.classes)
+        }
+        client:notifySuccessLocalized("doorClassesCopied", #(client.liaCopiedDoorClasses.values or {}))
+    end
+})
+
+lia.command.add("doorpasteclasses", {
+    adminOnly = true,
+    onRun = function(client)
+        local door = client:getTracedEntity()
+        if not (IsValid(door) and door:isDoor()) then
+            client:notifyErrorLocalized("doorNotValid")
+            return
+        end
+
+        local doorData = lia.doors.getData(door)
+        if doorData.disabled then
+            client:notifyErrorLocalized("doorNotValid")
+            return
+        end
+
+        local copiedData = client.liaCopiedDoorClasses
+        if not copiedData or not copiedData.hasData then
+            client:notifyErrorLocalized("doorNoCopiedClasses")
+            return
+        end
+
+        local classes = cloneDoorRestrictionList(copiedData.values)
+        doorData.classes = classes
+        door.liaClasses = #classes > 0 and classes or nil
+        if #classes > 0 then doorData.noSell = true end
+        lia.doors.setData(door, doorData)
+        lia.module.get("doors"):SaveData()
+        client:notifySuccessLocalized("doorClassesPasted", #classes)
+    end
+})
+
 lia.command.add("togglealldoors", {
     desc = "@togglealldoorsDesc",
     adminOnly = true,
@@ -8036,6 +7930,32 @@ concommand.Add("lia_setextrachars", function(client, _, args)
     end)
 end)
 
+lia.command.add("viewBodygroups", {
+    adminOnly = true,
+    arguments = {
+        {
+            name = "target",
+            type = "player"
+        }
+    },
+    desc = "viewBodygroupsDesc",
+    AdminStick = {
+        Name = "viewBodygroupsDesc",
+        Category = "characterManagement",
+        SubCategory = "bodygrouper"
+    },
+    onRun = function(client, arguments)
+        local target = lia.util.findPlayer(client, arguments[1] or "")
+        if not target or not IsValid(target) then
+            client:notifyLocalized("targetNotFound")
+            return
+        end
+
+        net.Start("BodygrouperMenu")
+        net.WriteEntity(target)
+        net.Send(client)
+    end
+})
 concommand.Add("lia_set_inventory_size_all_chars", function(client, _, args)
     if IsValid(client) then return end
     local steamID = args[1]
@@ -8196,29 +8116,3 @@ concommand.Add("lia_give_money_steamid", function(client, _, args)
     end):catch(function(err) MsgC(Color(255, 0, 0), "[Lilia] ", Color(255, 255, 255), L("databaseErrorValue", tostring(err)) .. "\n") end)
 end)
 
-lia.command.add("viewBodygroups", {
-    adminOnly = true,
-    arguments = {
-        {
-            name = "target",
-            type = "player"
-        }
-    },
-    desc = "viewBodygroupsDesc",
-    AdminStick = {
-        Name = "viewBodygroupsDesc",
-        Category = "characterManagement",
-        SubCategory = "bodygrouper"
-    },
-    onRun = function(client, arguments)
-        local target = lia.util.findPlayer(client, arguments[1] or "")
-        if not target or not IsValid(target) then
-            client:notifyLocalized("targetNotFound")
-            return
-        end
-
-        net.Start("BodygrouperMenu")
-        net.WriteEntity(target)
-        net.Send(client)
-    end
-})

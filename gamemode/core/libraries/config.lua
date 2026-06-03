@@ -1,16 +1,3 @@
-﻿--[[
-    Folder: Libraries
-    File: config.md
-]]
---[[
-    Configuration
-
-    Comprehensive user-configurable settings management system for the Lilia framework.
-]]
---[[
-    Overview:
-        The configuration library provides comprehensive functionality for managing user-configurable settings in the Lilia framework. It handles the creation, storage, retrieval, and persistence of various types of options including boolean toggles, numeric sliders, color pickers, text inputs, and dropdown selections. The library operates on both client and server sides, with automatic persistence to JSON files and optional networking capabilities for server-side options. It includes a complete user interface system for displaying and modifying options through the configuration menu, with support for categories, visibility conditions, and real-time updates. The library ensures that all user preferences are maintained across sessions and provides hooks for modules to react to option changes.
-]]
 lia.config = lia.config or {}
 lia.config.stored = lia.config.stored or {}
 lia.config.lastSyncedValues = lia.config.lastSyncedValues or {}
@@ -71,35 +58,6 @@ local function cfgValuesEqual(a, b)
     if istable(a) and istable(b) then return util.TableToJSON(a) == util.TableToJSON(b) end
     return a == b
 end
-
---[[
-    Purpose:
-        Register a config entry with defaults, UI metadata, and optional callback.
-
-    When Called:
-        During schema/module initialization to expose server-stored configuration.
-
-    Parameters:
-        key (string)
-            Unique identifier for the config entry.
-        name (string)
-            Display text or localization key for UI.
-        value (any)
-            Default value; type inferred when data.type is omitted.
-        callback (function|nil)
-            Invoked server-side as callback(oldValue, newValue) after set().
-        data (table)
-            Fields such as type, desc, category, options/optionsFunc, noNetworking, etc.
-    Realm:
-        Shared
-
-    Example Usage:
-        ```lua
-        lia.config.add("MaxThirdPersonDistance", "@maxThirdPersonDistance", 100, function(old, new)
-            lia.option.set("thirdPersonDistance", math.min(lia.option.get("thirdPersonDistance", new), new))
-        end, {category = "Lilia", type = "Int", min = 10, max = 200})
-        ```
-]]
 function lia.config.add(key, name, value, callback, data)
     assert(isstring(key), L("configKeyString", type(key)))
     assert(istable(data), L("configDataTable", type(data)))
@@ -141,121 +99,24 @@ function lia.config.add(key, name, value, callback, data)
         callback = callback
     }
 end
-
---[[
-    Purpose:
-        Retrieve the localized display name of a config entry.
-
-    When Called:
-        When rendering config entries in the UI or when a human-readable name is needed.
-
-    Parameters:
-        key (string)
-            The config key to look up.
-
-    Returns:
-        string
-            Localized display name, or the raw key if the entry does not exist.
-
-    Realm:
-        Shared
-
-    Example Usage:
-        ```lua
-            local name = lia.config.getDisplayName("MaxCarryWeight")
-
-        ```
-]]
 function lia.config.getDisplayName(key)
     local config = lia.config.stored[key]
     if not config then return key end
     local value = config.rawName or config.name or key
     return isstring(value) and cfgLocalizeLabel(value) or value
 end
-
---[[
-    Purpose:
-        Retrieve the localized description of a config entry.
-
-    When Called:
-        When populating tooltips or description fields in the config UI.
-
-    Parameters:
-        key (string)
-            The config key to look up.
-
-    Returns:
-        string
-            Localized description string, or an empty string if none exists.
-
-    Realm:
-        Shared
-
-    Example Usage:
-        ```lua
-            local desc = lia.config.getDisplayDesc("MaxCarryWeight")
-        ```
-]]
 function lia.config.getDisplayDesc(key)
     local config = lia.config.stored[key]
     if not config then return "" end
     local value = config.rawDesc or (config.data and config.data.rawDesc) or config.desc or ""
     return isstring(value) and cfgLocalizeLabel(value) or value
 end
-
---[[
-    Purpose:
-        Retrieve the localized category of a config entry for grouping in the UI.
-
-    When Called:
-        When building the config UI to sort entries into category sections.
-
-    Parameters:
-        key (string)
-            The config key to look up.
-
-    Returns:
-        string
-            Localized category name, or "character" as the default fallback.
-
-    Realm:
-        Shared
-
-    Example Usage:
-        ```lua
-            local cat = lia.config.getDisplayCategory("MaxCarryWeight")
-        ```
-]]
 function lia.config.getDisplayCategory(key)
     local config = lia.config.stored[key]
     if not config then return cfgLocalizeLabel("character") end
     local value = config.rawCategory or (config.data and config.data.rawCategory) or config.category or "character"
     return isstring(value) and cfgLocalizeLabel(value) or value
 end
-
---[[
-    Purpose:
-        Resolve a config entry's selectable options, static list or generated.
-
-    When Called:
-        Before rendering dropdown-type configs or validating submitted values.
-
-    Parameters:
-        key (string)
-            Config key to resolve options for.
-
-    Returns:
-        table
-            Options array or key/value table; empty when unavailable.
-
-    Realm:
-        Shared
-
-    Example Usage:
-        ```lua
-        local opts = lia.config.getOptions("Theme")
-        ```
-]]
 function lia.config.getOptions(key)
     local config = lia.config.stored[key]
     if not config then return {} end
@@ -281,54 +142,10 @@ function lia.config.getOptions(key)
     end
     return {}
 end
-
---[[
-    Purpose:
-        Override the default value for an already registered config entry.
-
-    When Called:
-        During migrations, schema overrides, or backward-compatibility fixes.
-
-    Parameters:
-        key (string)
-            Config key to override.
-        value (any)
-            New default value.
-    Realm:
-        Shared
-
-    Example Usage:
-        ```lua
-        lia.config.setDefault("StartingMoney", 300)
-        ```
-]]
 function lia.config.setDefault(key, value)
     local config = lia.config.stored[key]
     if config then config.default = value end
 end
-
---[[
-    Purpose:
-        Force-set a config value and fire update hooks without networking.
-
-    When Called:
-        Runtime adjustments (admin tools/commands) or hot reload scenarios.
-
-    Parameters:
-        key (string)
-            Config key to change.
-        value (any)
-            Value to assign.
-        noSave (boolean|nil)
-            When true, skip persisting to disk.
-    Realm:
-        Shared
-
-    Example Usage:
-        ```lua
-        lia.config.forceSet("MaxCharacters", 10, false)
-        ```
-]]
 function lia.config.forceSet(key, value, noSave)
     local config = lia.config.stored[key]
     if config then
@@ -339,27 +156,6 @@ function lia.config.forceSet(key, value, noSave)
 
     if not noSave then lia.config.save() end
 end
-
---[[
-    Purpose:
-        Set a config value, fire update hooks, run server callbacks, network to clients, and persist.
-
-    When Called:
-        Through admin tools/commands or internal code updating configuration.
-
-    Parameters:
-        key (string)
-            Config key to change.
-        value (any)
-            Value to assign and broadcast.
-    Realm:
-        Shared
-
-    Example Usage:
-        ```lua
-        lia.config.set("RunSpeed", 420)
-        ```
-]]
 function lia.config.set(key, value)
     local config = lia.config.stored[key]
     if config then
@@ -383,32 +179,6 @@ function lia.config.set(key, value)
         if CLIENT and oldValue ~= value and IsValid(LocalPlayer()) then LocalPlayer():notifySuccess("Config '" .. tostring(lia.config.getDisplayName(key) or key) .. "' updated successfully") end
     end
 end
-
---[[
-    Purpose:
-        Retrieve a config value with fallback to its stored default or a provided default.
-
-    When Called:
-        Anywhere configuration influences gameplay or UI logic.
-
-    Parameters:
-        key (string)
-            Config key to read.
-        default (any)
-            Optional fallback when no stored value or default exists.
-
-    Returns:
-        any
-            Stored value, default value, or supplied fallback.
-
-    Realm:
-        Shared
-
-    Example Usage:
-        ```lua
-        local walkSpeed = lia.config.get("WalkSpeed", 200)
-        ```
-]]
 function lia.config.get(key, default)
     local config = lia.config.stored[key]
     if config then
@@ -454,24 +224,6 @@ if CLIENT then
 end
 
 if SERVER then
-    --[[
-    Purpose:
-        Load config values from JSON files (server) or request them from the server (client).
-
-    When Called:
-        On initialization to hydrate lia.config.stored from JSON file storage.
-
-    Parameters:
-        None
-
-    Realm:
-        Shared
-
-    Example Usage:
-        ```lua
-        hook.Add("Initialize", "LoadLiliaConfig", lia.config.load)
-        ```
-]]
     function lia.config.load()
         local configData = lia.data.get("config", {})
         local existing = {}
@@ -502,30 +254,6 @@ if SERVER then
 
         hook.Run("InitializedConfig")
     end
-
-    --[[
-    Purpose:
-        Get all configuration values that have been changed from their defaults.
-
-    When Called:
-        During config synchronization to determine what needs to be sent to clients.
-
-    Parameters:
-        includeDefaults (boolean)
-            When true, includes all values even if they match defaults.
-
-    Returns:
-        table
-            Key/value pairs of changed configuration entries.
-
-    Realm:
-        Server
-
-    Example Usage:
-        ```lua
-        local changes = lia.config.getChangedValues()
-        ```
-]]
     function lia.config.getChangedValues(includeDefaults)
         local data = {}
         for k, v in pairs(lia.config.stored) do
@@ -540,27 +268,6 @@ if SERVER then
         end
         return data
     end
-
-    --[[
-    Purpose:
-        Send configuration data to a specific client or all clients.
-
-    When Called:
-        During initial connection or when config values change.
-
-    Parameters:
-        client (Player|nil)
-            Specific client to send to, or nil for all clients.
-
-    Realm:
-        Server
-
-    Example Usage:
-        ```lua
-        lia.config.send() -- Send to all clients
-        lia.config.send(client) -- Send to specific client
-        ```
-]]
     function lia.config.send(client)
         local data
         if client then
@@ -590,22 +297,6 @@ if SERVER then
         net.WriteTable(data)
         net.Send(targets)
     end
-
-    --[[
-    Purpose:
-        Persist configuration values to JSON file storage.
-
-    When Called:
-        After configuration changes to ensure values are saved between server restarts.
-
-    Realm:
-        Server
-
-    Example Usage:
-        ```lua
-        lia.config.save()
-        ```
-]]
     function lia.config.save()
         local configData = {}
         for k, v in pairs(lia.config.stored) do
@@ -614,22 +305,6 @@ if SERVER then
 
         lia.data.set("config", configData, true, true)
     end
-
-    --[[
-    Purpose:
-        Reset all configuration values to their defaults.
-
-    When Called:
-        During administrative operations or troubleshooting.
-
-    Realm:
-        Server
-
-    Example Usage:
-        ```lua
-        lia.config.reset()
-        ```
-]]
     function lia.config.reset()
         for _, cfg in pairs(lia.config.stored) do
             local oldValue = cfg.value
@@ -1900,3 +1575,5 @@ lia.config.add("maxAttributes", "@maxAttributes", 100, nil, {
     min = 1,
     max = 1000
 })
+
+

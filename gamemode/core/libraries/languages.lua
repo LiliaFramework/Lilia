@@ -1,42 +1,9 @@
-﻿--[[
-    Folder: Libraries
-    File: lang.md
-]]
---[[
-    Languages
-
-    Internationalization (i18n) and localization system for the Lilia framework.
-]]
---[[
-    Overview:
-        The languages library provides comprehensive internationalization (i18n) functionality for the Lilia framework. It handles loading, storing, and retrieving localized strings from language files, supporting multiple languages with fallback mechanisms. The library automatically loads language files from directories, processes them into a unified storage system, and provides string formatting with parameter substitution. It includes functions for adding custom language tables, retrieving available languages, and getting localized strings with proper error handling. The library operates on both server and client sides, ensuring consistent localization across the entire gamemode. It supports dynamic language switching and provides the global L() function for easy access to localized strings throughout the codebase.
-]]
 lia.lang = lia.lang or {}
 lia.lang.names = lia.lang.names or {}
 lia.lang.stored = lia.lang.stored or {}
 lia.lang.cache = lia.lang.cache or {}
 lia.lang.cache.maxSize = 1000
 lia.lang.cache.currentSize = 0
---[[
-    Purpose:
-        Load language files from a directory and merge them into storage.
-
-    When Called:
-        During startup to load built-in and schema-specific localization.
-
-    Parameters:
-        directory (string)
-            Path containing language Lua files.
-    Realm:
-        Shared
-
-    Example Usage:
-        ```lua
-            -- Load base languages and a custom pack.
-            lia.lang.loadFromDir("lilia/gamemode/languages")
-            lia.lang.loadFromDir("schema/languages")
-        ```
-]]
 function lia.lang.loadFromDir(directory)
     for _, v in ipairs(file.Find(directory .. "/*.lua", "LUA")) do
         local niceName
@@ -63,30 +30,6 @@ function lia.lang.loadFromDir(directory)
         end
     end
 end
-
---[[
-    Purpose:
-        Merge a table of localized strings into a named language.
-
-    When Called:
-        When adding runtime localization or extending a language.
-
-    Parameters:
-        name (string)
-            Language id (e.g., "english").
-        tbl (table)
-            Key/value pairs to merge.
-    Realm:
-        Shared
-
-    Example Usage:
-        ```lua
-            lia.lang.addTable("english", {
-                customGreeting = "Hello, %s!",
-                adminOnly = "You must be an admin."
-            })
-        ```
-]]
 function lia.lang.addTable(name, tbl)
     local lowerName = tostring(name):lower()
     lia.lang.stored[lowerName] = lia.lang.stored[lowerName] or {}
@@ -96,31 +39,6 @@ function lia.lang.addTable(name, tbl)
 
     lia.lang.clearCache()
 end
-
---[[
-    Purpose:
-        List available languages by display name.
-
-    When Called:
-        When populating language selection menus or config options.
-
-    Parameters:
-        None
-
-    Returns:
-        table
-            Sorted array of language display names.
-
-    Realm:
-        Shared
-
-    Example Usage:
-        ```lua
-            for _, langName in ipairs(lia.lang.getLanguages()) do
-                lia.debug("Language option:", langName)
-            end
-        ```
-]]
 function lia.lang.getLanguages()
     local languages = {}
     for key, _ in pairs(lia.lang.stored) do
@@ -131,31 +49,6 @@ function lia.lang.getLanguages()
     table.sort(languages)
     return languages
 end
-
---[[
-    Purpose:
-        Build a cache key for a localized string with parameters.
-
-    When Called:
-        Before caching formatted localization results.
-
-    Parameters:
-        lang (string)
-        key (string)
-        ... (vararg)
-            Parameters passed to string.format.
-
-    Returns:
-        string
-
-    Realm:
-        Shared
-
-    Example Usage:
-        ```lua
-            local cacheKey = lia.lang.generateCacheKey("english", "hello", "John")
-        ```
-]]
 function lia.lang.generateCacheKey(lang, key, ...)
     local argCount = select("#", ...)
     if argCount == 0 then return lang .. ":" .. key end
@@ -166,26 +59,6 @@ function lia.lang.generateCacheKey(lang, key, ...)
     end
     return lang .. ":" .. key .. paramStr
 end
-
---[[
-    Purpose:
-        Evict half of the cached localization entries when over capacity.
-
-    When Called:
-        Automatically from getLocalizedString when cache exceeds maxSize.
-
-    Parameters:
-        None
-    Realm:
-        Shared
-
-    Example Usage:
-        ```lua
-            if lia.lang.cache.currentSize > lia.lang.cache.maxSize then
-                lia.lang.cleanupCache()
-            end
-        ```
-]]
 function lia.lang.cleanupCache()
     local cache = lia.lang.cache
     local keys = {}
@@ -201,61 +74,12 @@ function lia.lang.cleanupCache()
 
     cache.currentSize = #keys - removeCount
 end
-
---[[
-    Purpose:
-        Reset the localization cache to its initial state.
-
-    When Called:
-        When changing languages or when flushing cached strings.
-
-    Parameters:
-        None
-    Realm:
-        Shared
-
-    Example Usage:
-        ```lua
-            hook.Add("OnConfigUpdated", "ClearLangCache", function(key, old, new)
-                if key == "Language" and old ~= new then
-                    lia.lang.clearCache()
-                end
-            end)
-        ```
-]]
 function lia.lang.clearCache()
     lia.lang.cache = {
         maxSize = lia.lang.cache.maxSize or 1000,
         currentSize = 0
     }
 end
-
---[[
-    Purpose:
-        Resolve and format a localized string with caching and fallbacks.
-
-    When Called:
-        Every time L() is used to display text with parameters.
-
-    Parameters:
-        key (string)
-            Localization key.
-        ... (vararg)
-            Values for string.format substitution.
-
-    Returns:
-        string
-            Formatted localized string or key when missing.
-
-    Realm:
-        Shared
-
-    Example Usage:
-        ```lua
-            local msg = lia.lang.getLocalizedString("welcomeUser", ply:Name(), os.date())
-            chat.AddText(msg)
-        ```
-]]
 function lia.lang.getLocalizedString(key, ...)
     local lang = lia.config and lia.config.get("Language", "english") or "english"
     local cacheKey = lia.lang.generateCacheKey(lang, key, ...)
@@ -290,33 +114,6 @@ function lia.lang.getLocalizedString(key, ...)
     if lia.lang.cache.currentSize > lia.lang.cache.maxSize then lia.lang.cleanupCache() end
     return result
 end
-
---[[
-    Purpose:
-        Resolve @-prefixed localization tokens into their translated value.
-
-    When Called:
-        When config, options, or other string fields may store localization tokens.
-
-    Parameters:
-        value (string|any)
-            Raw value to inspect and optionally localize.
-        ... (vararg)
-            Values forwarded to string.format substitution.
-
-    Returns:
-        string|any
-            Localized string for @tokens, or the original value when no token is present.
-
-    Realm:
-        Shared
-
-    Example Usage:
-        ```lua
-            local title = lia.lang.resolveToken("@currencyPlural")
-            local welcome = lia.lang.resolveToken("@welcomeUser", client:Name(), os.date())
-        ```
-]]
 function lia.lang.resolveToken(value, ...)
     if not isstring(value) then return value end
     if value:sub(1, 1) ~= "@" then return value end
@@ -329,3 +126,5 @@ L = lia.lang.getLocalizedString
 lia.lang.loadFromDir("lilia/gamemode/languages")
 hook.Run("OnLocalizationLoaded")
 hook.Add("OnConfigUpdated", "lia.lang.cache", function(key, oldValue, newValue) if key == "Language" and oldValue ~= newValue then lia.lang.clearCache() end end)
+
+

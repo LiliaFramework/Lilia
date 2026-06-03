@@ -1,16 +1,3 @@
-﻿--[[
-    Folder: Libraries
-    File: option.md
-]]
---[[
-    Option
-
-    User-configurable settings management system for the Lilia framework.
-]]
---[[
-    Overview:
-        The option library provides comprehensive functionality for managing user-configurable settings in the Lilia framework. It handles the creation, storage, retrieval, and persistence of various types of options including boolean toggles, numeric sliders, color pickers, text inputs, and dropdown selections. The library operates on both client and server sides, with automatic persistence to JSON files and optional networking capabilities for server-side options. It includes a complete user interface system for displaying and modifying options through the configuration menu, with support for categories, visibility conditions, and real-time updates. The library ensures that all user preferences are maintained across sessions and provides hooks for modules to react to option changes.
-]]
 lia.option = lia.option or {}
 lia.option.stored = lia.option.stored or {}
 local function localizeMenuLabel(value, ...)
@@ -57,43 +44,6 @@ local function getSelectableOptionLabel(options, selectedValue)
     end
     return selectedValue
 end
-
---[[
-    Purpose:
-        Register a configurable option with defaults, callbacks, and metadata.
-
-    When Called:
-        During initialization to expose settings to the config UI/system.
-
-    Parameters:
-        key (string)
-            Option identifier to resolve choices for.
-        name (string)
-            Display name or localization key.
-        desc (string)
-            Description or localization key.
-        default (any)
-            Default value; determines inferred type.
-        callback (function|nil)
-            function(old, new) invoked on change.
-        data (table)
-            Extra fields: category, min/max, options, visible, shouldNetwork, isQuick, type, etc.
-    Realm:
-        Shared
-
-    Example Usage:
-        ```lua
-        lia.option.add("hudScale", "HUD Scale", "Scale HUD elements", 1.0, function(old, new)
-            hook.Run("HUDScaleChanged", old, new)
-        end, {
-            category = "@core",
-            min = 0.5,
-            max = 1.5,
-            decimals = 2,
-            isQuick = true
-        })
-        ```
-]]
 function lia.option.add(key, name, desc, default, callback, data)
     assert(isstring(key), L("optionKeyString", type(key)))
     assert(isstring(name), L("optionNameString", type(name)))
@@ -137,93 +87,18 @@ function lia.option.add(key, name, desc, default, callback, data)
 
     hook.Run("OptionAdded", key, lia.option.stored[key])
 end
-
---[[
-    Purpose:
-        Retrieve the localized display name of an option entry.
-
-    When Called:
-        When rendering option entries in the config UI or sorting them by name.
-
-    Parameters:
-        key (string)
-            The option key to look up.
-
-    Returns:
-        string
-            Localized display name, or the raw key if the entry does not exist.
-
-    Realm:
-        Shared
-
-    Example Usage:
-        ```lua
-            local name = lia.option.getDisplayName("BarsAlwaysVisible")
-            lia.debug("Option name:", name)
-        ```
-]]
 function lia.option.getDisplayName(key)
     local option = lia.option.stored[key]
     if not option then return key end
     local value = option.rawName or option.name or key
     return isstring(value) and localizeMenuLabel(value) or value
 end
-
---[[
-    Purpose:
-        Retrieve the localized description of an option entry.
-
-    When Called:
-        When populating tooltips or description labels in the options UI.
-
-    Parameters:
-        key (string)
-            The option key to look up.
-
-    Returns:
-        string
-            Localized description string, or an empty string if none exists.
-
-    Realm:
-        Shared
-
-    Example Usage:
-        ```lua
-            local desc = lia.option.getDisplayDesc("BarsAlwaysVisible")
-            lia.debug("Option description:", desc)
-        ```
-]]
 function lia.option.getDisplayDesc(key)
     local option = lia.option.stored[key]
     if not option then return "" end
     local value = option.rawDesc or option.desc or ""
     return isstring(value) and localizeMenuLabel(value) or value
 end
-
---[[
-    Purpose:
-        Retrieve the localized category of an option entry for grouping in the UI.
-
-    When Called:
-        When building the options UI to sort entries into category sections.
-
-    Parameters:
-        key (string)
-            The option key to look up.
-
-    Returns:
-        string
-            Localized category name, or "misc" as the default fallback.
-
-    Realm:
-        Shared
-
-    Example Usage:
-        ```lua
-            local cat = lia.option.getDisplayCategory("BarsAlwaysVisible")
-            lia.debug("Option category:", cat)
-        ```
-]]
 function lia.option.getDisplayCategory(key)
     local option = lia.option.stored[key]
     if not option then return localizeMenuLabel("misc") end
@@ -231,30 +106,6 @@ function lia.option.getDisplayCategory(key)
     local value = data.rawCategory or data.category or "misc"
     return isstring(value) and localizeMenuLabel(value) or value
 end
-
---[[
-    Purpose:
-        Resolve option choices (static or generated) for dropdowns.
-
-    When Called:
-        By the config UI before rendering a Table option.
-
-    Parameters:
-        key (string)
-
-    Returns:
-        table
-            Array/map of options.
-
-    Realm:
-        Shared
-
-    Example Usage:
-        ```lua
-        local list = lia.option.getOptions("weaponSelectorPosition")
-        for _, opt in pairs(list) do lia.debug("Choice:", opt) end
-        ```
-]]
 function lia.option.getOptions(key)
     local option = lia.option.stored[key]
     if not option then return {} end
@@ -280,25 +131,6 @@ function lia.option.getOptions(key)
     end
     return {}
 end
-
---[[
-    Purpose:
-        Set an option value, run callbacks/hooks, persist and optionally network it.
-
-    When Called:
-        From UI interactions or programmatic changes.
-
-    Parameters:
-        key (string)
-        value (any)
-    Realm:
-        Shared
-
-    Example Usage:
-        ```lua
-        lia.option.set("BarsAlwaysVisible", true)
-        ```
-]]
 function lia.option.set(key, value)
     local opt = lia.option.stored[key]
     if not opt then return end
@@ -309,29 +141,6 @@ function lia.option.set(key, value)
     lia.option.save()
     if opt.shouldNetwork and SERVER then hook.Run("OptionReceived", nil, key, value) end
 end
-
---[[
-    Purpose:
-        Retrieve an option value with fallback to default or provided default.
-
-    When Called:
-        Anywhere an option influences behavior or UI.
-
-    Parameters:
-        key (string)
-        default (any)
-
-    Returns:
-        any
-
-    Realm:
-        Shared
-
-    Example Usage:
-        ```lua
-        local showTime = lia.option.get("ChatShowTime", false)
-        ```
-]]
 function lia.option.get(key, default)
     local opt = lia.option.stored[key]
     if opt then
@@ -340,24 +149,6 @@ function lia.option.get(key, default)
     end
     return default
 end
-
---[[
-    Purpose:
-        Persist option values to disk (data/lilia/options.json).
-
-    When Called:
-        After option changes; auto-called by lia.option.set.
-
-    Parameters:
-        None
-    Realm:
-        Shared
-
-    Example Usage:
-        ```lua
-        lia.option.save()
-        ```
-]]
 function lia.option.save()
     local path = "lilia/options.json"
     local out = {}
@@ -368,24 +159,6 @@ function lia.option.save()
     local json = util.TableToJSON(out, true)
     if json then file.Write(path, json) end
 end
-
---[[
-    Purpose:
-        Load option values from disk or initialize defaults when missing.
-
-    When Called:
-        On client init or config menu load.
-
-    Parameters:
-        None
-    Realm:
-        Shared
-
-    Example Usage:
-        ```lua
-        hook.Add("Initialize", "LoadLiliaOptions", lia.option.load)
-        ```
-]]
 function lia.option.load()
     local path = "lilia/options.json"
     local data = file.Read(path, "DATA")
@@ -1003,3 +776,5 @@ lia.option.add("weaponSelectorPosition", "@weaponSelectorPosition", "@weaponSele
         }
     }
 })
+
+

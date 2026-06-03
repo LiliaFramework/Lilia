@@ -1,4 +1,4 @@
-﻿local ceil, clamp = math.ceil, math.Clamp
+local ceil, clamp = math.ceil, math.Clamp
 local fade, shadowFade = 0, 0
 local hideKey = false
 local fastFade = false
