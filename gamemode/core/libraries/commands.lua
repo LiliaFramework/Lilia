@@ -1442,7 +1442,7 @@ lia.command.add("plygetplaytime", {
     },
     AdminStick = {
         Name = "@adminStickGetPlayTimeName",
-        Category = "moderation",
+        Category = "@moderation",
         SubCategory = "moderationTools",
         Icon = "icon16/time.png"
     },
@@ -1477,7 +1477,7 @@ lia.command.add("plycheckid", {
     },
     AdminStick = {
         Name = "@adminStickCheckCharIDName",
-        Category = "moderation",
+        Category = "@moderation",
         SubCategory = "moderationTools",
         Icon = "icon16/vcard.png"
     },
@@ -1562,7 +1562,7 @@ lia.command.add("sendtositroom", {
     },
     AdminStick = {
         Name = "@sendToSitRoom",
-        Category = "moderation",
+        Category = "@moderation",
         SubCategory = "moderationTools",
         Icon = "icon16/arrow_down.png"
     },
@@ -1610,7 +1610,7 @@ lia.command.add("returnsitroom", {
     },
     AdminStick = {
         Name = "@returnFromSitroom",
-        Category = "moderation",
+        Category = "@moderation",
         SubCategory = "moderationTools",
         Icon = "icon16/arrow_up.png"
     },
@@ -1646,7 +1646,7 @@ lia.command.add("charkill", {
     },
     AdminStick = {
         Name = "@adminStickCharKillName",
-        Category = "moderation",
+        Category = "@moderation",
         SubCategory = "moderationTools",
         Icon = "icon16/user_delete.png"
     },
@@ -1850,7 +1850,7 @@ lia.command.add("plyban", {
     },
     AdminStick = {
         Name = "@adminStickBanName",
-        Category = "moderation",
+        Category = "@moderation",
         SubCategory = "moderationTools",
         Icon = "icon16/lock.png"
     },
@@ -1873,7 +1873,7 @@ lia.command.add("plykick", {
     },
     AdminStick = {
         Name = "@adminStickKickName",
-        Category = "moderation",
+        Category = "@moderation",
         SubCategory = "moderationTools",
         Icon = "icon16/user_delete.png"
     },
@@ -1891,7 +1891,7 @@ lia.command.add("plykill", {
     },
     AdminStick = {
         Name = "@adminStickKillPlayerName",
-        Category = "moderation",
+        Category = "@moderation",
         SubCategory = "moderationTools",
         Icon = "icon16/user_red.png"
     },
@@ -1969,7 +1969,7 @@ lia.command.add("plyrespawn", {
     },
     AdminStick = {
         Name = "@adminStickRespawnPlayerName",
-        Category = "moderation",
+        Category = "@moderation",
         SubCategory = "moderationTools",
         Icon = "icon16/arrow_refresh.png"
     },
@@ -2036,7 +2036,7 @@ lia.command.add("plyblindfade", {
     },
     AdminStick = {
         Name = "@adminStickBlindFadeName",
-        Category = "moderation",
+        Category = "@moderation",
         SubCategory = "moderationTools",
         Icon = "icon16/eye.png"
     },
@@ -2231,7 +2231,7 @@ lia.command.add("plycloak", {
     },
     AdminStick = {
         Name = "@adminStickCloakName",
-        Category = "moderation",
+        Category = "@moderation",
         SubCategory = "moderationTools",
         Icon = "icon16/status_offline.png"
     },
@@ -2249,7 +2249,7 @@ lia.command.add("plyuncloak", {
     },
     AdminStick = {
         Name = "@adminStickUncloakName",
-        Category = "moderation",
+        Category = "@moderation",
         SubCategory = "moderationTools",
         Icon = "icon16/status_online.png"
     },
@@ -2267,7 +2267,7 @@ lia.command.add("plygod", {
     },
     AdminStick = {
         Name = "@adminStickGodModeName",
-        Category = "moderation",
+        Category = "@moderation",
         SubCategory = "moderationTools",
         Icon = "icon16/shield.png"
     },
@@ -2285,7 +2285,7 @@ lia.command.add("plyungod", {
     },
     AdminStick = {
         Name = "@adminStickRemoveGodModeName",
-        Category = "moderation",
+        Category = "@moderation",
         SubCategory = "moderationTools",
         Icon = "icon16/shield_delete.png"
     },
@@ -2332,7 +2332,7 @@ lia.command.add("plystrip", {
     },
     AdminStick = {
         Name = "@adminStickStripWeaponsName",
-        Category = "moderation",
+        Category = "@moderation",
         SubCategory = "moderationTools",
         Icon = "icon16/gun.png"
     },
@@ -2626,7 +2626,7 @@ lia.command.add("plyspectate", {
     },
     AdminStick = {
         Name = "@adminStickSpectateName",
-        Category = "moderation",
+        Category = "@moderation",
         SubCategory = "moderationTools",
         Icon = "icon16/zoom.png"
     },
@@ -3098,7 +3098,7 @@ lia.command.add("charvoicetoggle", {
     },
     AdminStick = {
         Name = "@toggleVoice",
-        Category = "moderation",
+        Category = "@moderation",
         SubCategory = "moderationTools",
         Icon = "icon16/sound_mute.png"
     },
@@ -3299,7 +3299,7 @@ lia.command.add("charkick", {
     },
     AdminStick = {
         Name = "@adminStickKickCharacterName",
-        Category = "moderation",
+        Category = "@moderation",
         SubCategory = "moderationTools",
         Icon = "icon16/user_delete.png"
     },
@@ -3367,7 +3367,7 @@ lia.command.add("charban", {
     },
     AdminStick = {
         Name = "@banCharacter",
-        Category = "moderation",
+        Category = "@moderation",
         SubCategory = "moderationTools",
         Icon = "icon16/user_red.png"
     },
@@ -3421,7 +3421,7 @@ lia.command.add("charwipe", {
     },
     AdminStick = {
         Name = "@wipeCharacter",
-        Category = "moderation",
+        Category = "@moderation",
         SubCategory = "moderationTools",
         Icon = "icon16/user_delete.png"
     },
@@ -4089,7 +4089,7 @@ lia.command.add("forcesay", {
     },
     AdminStick = {
         Name = "@adminStickForceSayName",
-        Category = "moderation",
+        Category = "@moderation",
         SubCategory = "moderationTools",
         Icon = "icon16/comments.png"
     },
@@ -5160,7 +5160,7 @@ lia.command.add("banooc", {
     },
     AdminStick = {
         Name = "@banOOC",
-        Category = "moderation",
+        Category = "@moderation",
         SubCategory = "moderationTools",
         Icon = "icon16/sound_mute.png"
     },
@@ -5188,7 +5188,7 @@ lia.command.add("unbanooc", {
     },
     AdminStick = {
         Name = "@unbanOOCStickName",
-        Category = "moderation",
+        Category = "@moderation",
         SubCategory = "moderationTools",
         Icon = "icon16/sound.png"
     },
@@ -7010,7 +7010,7 @@ lia.command.add("plyviewclaims", {
     },
     AdminStick = {
         Name = "@viewTicketClaims",
-        Category = "moderation",
+        Category = "@moderation",
         SubCategory = "moderationTools",
         Icon = "icon16/page_white_text.png"
     },
@@ -7223,7 +7223,7 @@ lia.command.add("warn", {
     },
     AdminStick = {
         Name = "@warnPlayer",
-        Category = "moderation",
+        Category = "@moderation",
         SubCategory = "moderationTools",
         Icon = "icon16/error.png"
     },
@@ -7304,7 +7304,7 @@ lia.command.add("viewwarns", {
     },
     AdminStick = {
         Name = "@viewPlayerWarnings",
-        Category = "moderation",
+        Category = "@moderation",
         SubCategory = "moderationTools",
         Icon = "icon16/eye.png"
     },
@@ -7449,7 +7449,7 @@ lia.command.add("recogwhisper", {
     desc = "@recogWhisperDesc",
     AdminStick = {
         Name = "@adminStickForceRecognitionWhisperName",
-        Category = "moderation",
+        Category = "@moderation",
         SubCategory = "moderationTools",
         Icon = "icon16/user_comment.png"
     },
@@ -7471,7 +7471,7 @@ lia.command.add("recognormal", {
     desc = "@recogNormalDesc",
     AdminStick = {
         Name = "@adminStickForceRecognitionNormalName",
-        Category = "moderation",
+        Category = "@moderation",
         SubCategory = "moderationTools",
         Icon = "icon16/user_green.png"
     },
@@ -7493,7 +7493,7 @@ lia.command.add("recogyell", {
     desc = "@recogYellDesc",
     AdminStick = {
         Name = "@adminStickForceRecognitionYellName",
-        Category = "moderation",
+        Category = "@moderation",
         SubCategory = "moderationTools",
         Icon = "icon16/user_red.png"
     },
@@ -7566,7 +7566,7 @@ lia.command.add("npcchangetype", {
     desc = "@npcchangetypeDesc",
     AdminStick = {
         Name = "@npcChangeTypeTitle",
-        Category = "moderation",
+        Category = "@moderation",
         SubCategory = "moderationTools",
         TargetClass = "lia_npc",
         Icon = "icon16/user_edit.png"
@@ -7938,11 +7938,11 @@ lia.command.add("viewBodygroups", {
             type = "player"
         }
     },
-    desc = "viewBodygroupsDesc",
+    desc = "@viewBodygroupsDesc",
     AdminStick = {
-        Name = "viewBodygroupsDesc",
-        Category = "characterManagement",
-        SubCategory = "bodygrouper"
+        Name = "@viewBodygroupsDesc",
+        Category = "@characterManagement",
+        SubCategory = "@bodygrouper"
     },
     onRun = function(client, arguments)
         local target = lia.util.findPlayer(client, arguments[1] or "")

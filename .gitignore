@@ -54,3 +54,4 @@ gamemode/modules/medals/module.lua
 gamemode/modules/medals/README.md
 *.bat
 /devdocs-site
+documentation/report.md
