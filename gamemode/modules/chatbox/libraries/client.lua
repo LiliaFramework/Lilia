@@ -64,17 +64,6 @@ function MODULE:InitPostEntity()
     hook.Run("CreateChatboxPanel")
 end
 
-local function RegenChat()
-    for _, panel in ipairs(vgui.GetAll()) do
-        if IsValid(panel) and panel:GetName() == "liaChatBox" then panel:Remove() end
-    end
-
-    MODULE.panel = nil
-    lia.gui.chat = nil
-    lia.chat.persistedMessages = {}
-    hook.Run("CreateChatboxPanel")
-end
-
 function MODULE:PlayerBindPress(_, bind, pressed)
     bind = bind:lower()
     if bind:find("messagemode") and pressed then
@@ -133,5 +122,3 @@ function MODULE:ChatAddText(text, ...)
         return "<font=LiliaFont.24>"
     end
 end
-
-net.Receive("liaRegenChat", RegenChat)

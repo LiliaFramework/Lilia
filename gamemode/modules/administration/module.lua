@@ -1,7 +1,31 @@
-﻿MODULE.Name = "@categoryAdministration"
+MODULE.Name = "@categoryAdministration"
 MODULE.author = "Samael"
 MODULE.discord = "@liliaplayer"
 MODULE.desc = "@administrationToolsDescription"
+MODULE.NetworkStrings = {
+    "liaAdminSetCharProperty",
+    "liaAllFlags",
+    "liaAllPks",
+    "liaAllPlayers",
+    "liaFeaturePositions",
+    "liaFeaturePositionsRequest",
+    "liaFullCharList",
+    "liaManagesitroomsAction",
+    "liaMapEntities",
+    "liaOnlineStaffData",
+    "liaPksCount",
+    "liaRequestAllFlags",
+    "liaRequestAllPks",
+    "liaRequestFullCharList",
+    "liaRequestMapEntities",
+    "liaRequestPksCount",
+    "liaRequestPlayers",
+    "liaRequestStaffSummary",
+    "liaSetFeaturePosition",
+    "liaSpawnMenuGiveItem",
+    "liaSpawnMenuSpawnItem",
+    "liaStaffSummary",
+}
 MODULE.Privileges = {
     ["ManageWeaponOverrides"] = {
         Name = "@ManageWeaponOverrides",
@@ -153,21 +177,6 @@ MODULE.Privileges = {
         MinAccess = "superadmin",
         Category = "@categoryStaffTools",
     },
-    ["viewPlayerWarnings"] = {
-        Name = "@viewPlayerWarnings",
-        MinAccess = "admin",
-        Category = "@warning",
-    },
-    ["canRemoveWarns"] = {
-        Name = "@canRemoveWarns",
-        MinAccess = "superadmin",
-        Category = "@warning",
-    },
-    ["alwaysSeeTickets"] = {
-        Name = "@alwaysSeeTickets",
-        MinAccess = "superadmin",
-        Category = "@tickets",
-    },
     ["canBypassCharacterLock"] = {
         Name = "@canBypassCharacterLock",
         MinAccess = "superadmin",
@@ -292,16 +301,6 @@ MODULE.Privileges = {
         Name = "@canRemoveWorldEntities",
         MinAccess = "superadmin",
         Category = "@categoryStaffManagement",
-    },
-    ["canSeeLogs"] = {
-        Name = "@canSeeLogs",
-        MinAccess = "superadmin",
-        Category = "@categoryLogging",
-    },
-    ["alwaysSpawnAdminStick"] = {
-        Name = "@alwaysSpawnAdminStick",
-        MinAccess = "superadmin",
-        Category = "@adminStick",
     },
     ["usePositionTool"] = {
         Name = "@usePositionTool",

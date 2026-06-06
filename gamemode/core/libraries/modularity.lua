@@ -50,7 +50,7 @@ local function loadExtras(path)
         items = "shared",
     }
 
-    local ModuleFolders = {"config", "dependencies", "libs", "hooks", "libraries", "commands", "netcalls", "meta", "derma"}
+    local ModuleFolders = {"config", "definitions", "dependencies", "libs", "hooks", "libraries", "commands", "netcalls", "meta", "derma"}
     lia.lang.loadFromDir(path .. "/languages")
     lia.faction.loadFromDir(path .. "/factions")
     lia.class.loadFromDir(path .. "/classes")

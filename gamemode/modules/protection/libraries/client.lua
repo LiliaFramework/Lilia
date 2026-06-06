@@ -3003,7 +3003,7 @@ local suspiciousDirs = {
 }
 
 local genericSuspiciousHookNeedles = {"aim", "esp", "wall", "hack", "cheat", "bhop", "trigger", "nospread", "norecoil", "cham", "xray"}
-local function VerifyCheats()
+function MODULE:VerifyCheats()
     local function flag()
         net.Start("liaCheckHack")
         net.SendToServer()
@@ -3248,8 +3248,3 @@ function MODULE:PopulateAdminTabs(pages)
     end
 end
 
-net.Receive("liaVerifyCheats", function()
-    VerifyCheats()
-    net.Start("liaVerifyCheatsResponse")
-    net.SendToServer()
-end)

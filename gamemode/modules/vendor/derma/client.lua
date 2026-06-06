@@ -1220,14 +1220,25 @@ function PANEL:Init()
 
     self.itemHeaderStock = self.itemHeader:Add("DLabel")
     self.itemHeaderStock:Dock(RIGHT)
-    self.itemHeaderStock:SetWide(120)
-    self.itemHeaderStock:SetText(L("stock"))
+    self.itemHeaderStock:SetWide(100)
+    self.itemHeaderStock:DockMargin(8, 0, 0, 0)
+    self.itemHeaderStock:SetText("Max")
+    self.itemHeaderStock:SetTooltip(L("vendorStockReq"))
     self.itemHeaderStock:SetFont("LiliaFont.16b")
     self.itemHeaderStock:SetTextColor(lia.color.theme.text or color_white)
     self.itemHeaderStock:SetContentAlignment(5)
+    self.itemHeaderCurrentStock = self.itemHeader:Add("DLabel")
+    self.itemHeaderCurrentStock:Dock(RIGHT)
+    self.itemHeaderCurrentStock:SetWide(72)
+    self.itemHeaderCurrentStock:DockMargin(8, 0, 0, 0)
+    self.itemHeaderCurrentStock:SetText("Cur.")
+    self.itemHeaderCurrentStock:SetTooltip(L("vendorEditCurStock"))
+    self.itemHeaderCurrentStock:SetFont("LiliaFont.16b")
+    self.itemHeaderCurrentStock:SetTextColor(lia.color.theme.text or color_white)
+    self.itemHeaderCurrentStock:SetContentAlignment(5)
     self.itemHeaderSellPrice = self.itemHeader:Add("DLabel")
     self.itemHeaderSellPrice:Dock(RIGHT)
-    self.itemHeaderSellPrice:SetWide(100)
+    self.itemHeaderSellPrice:SetWide(88)
     self.itemHeaderSellPrice:DockMargin(8, 0, 0, 0)
     self.itemHeaderSellPrice:SetText("Sell Price")
     self.itemHeaderSellPrice:SetFont("LiliaFont.16b")
@@ -1235,7 +1246,7 @@ function PANEL:Init()
     self.itemHeaderSellPrice:SetContentAlignment(5)
     self.itemHeaderBuyPrice = self.itemHeader:Add("DLabel")
     self.itemHeaderBuyPrice:Dock(RIGHT)
-    self.itemHeaderBuyPrice:SetWide(100)
+    self.itemHeaderBuyPrice:SetWide(88)
     self.itemHeaderBuyPrice:DockMargin(8, 0, 0, 0)
     self.itemHeaderBuyPrice:SetText("Buy Price")
     self.itemHeaderBuyPrice:SetFont("LiliaFont.16b")
@@ -1243,15 +1254,14 @@ function PANEL:Init()
     self.itemHeaderBuyPrice:SetContentAlignment(5)
     self.itemHeaderMode = self.itemHeader:Add("DLabel")
     self.itemHeaderMode:Dock(RIGHT)
-    self.itemHeaderMode:SetWide(150)
+    self.itemHeaderMode:SetWide(130)
     self.itemHeaderMode:DockMargin(8, 0, 0, 0)
     self.itemHeaderMode:SetText(L("mode"))
     self.itemHeaderMode:SetFont("LiliaFont.16b")
     self.itemHeaderMode:SetTextColor(lia.color.theme.text or color_white)
     self.itemHeaderMode:SetContentAlignment(5)
     self.itemHeaderName = self.itemHeader:Add("DLabel")
-    self.itemHeaderName:Dock(LEFT)
-    self.itemHeaderName:SetWide(180)
+    self.itemHeaderName:Dock(FILL)
     self.itemHeaderName:SetText(L("name"))
     self.itemHeaderName:SetFont("LiliaFont.16b")
     self.itemHeaderName:SetTextColor(lia.color.theme.text or color_white)
@@ -1434,6 +1444,36 @@ function PANEL:initializeGeneralInfoPanel(entity)
         end
     end
 
+    if not IsValid(self.stockEnabledLabel) then
+        self.stockEnabledLabel = self.generalScroll:Add("DLabel")
+        self.stockEnabledLabel:Dock(TOP)
+        self.stockEnabledLabel:DockMargin(0, 0, 0, 6)
+        self.stockEnabledLabel:SetText("Enable Stock")
+        self.stockEnabledLabel:SetFont("LiliaFont.20b")
+        self.stockEnabledLabel:SetTextColor(lia.color.theme.text or color_white)
+        self.stockEnabledLabel:SetContentAlignment(5)
+        self.stockEnabledLabel:SetTall(24)
+    end
+
+    if not IsValid(self.stockEnabledButton) then
+        self.stockEnabledButton = self.generalScroll:Add("liaButton")
+        self.stockEnabledButton:Dock(TOP)
+        self.stockEnabledButton:DockMargin(0, 0, 0, 8)
+        self.stockEnabledButton:SetFont("LiliaFont.16")
+        self.stockEnabledButton.DoClick = function()
+            local enabled = lia.vendor.getVendorProperty(entity, "stockEnabled")
+            lia.vendor.editor.stockEnabled(not enabled)
+            timer.Simple(0.1, function()
+                if IsValid(self) then
+                    self:updateStockEnabledButton()
+                    self:ReloadItemList(self.lastSearchValue)
+                end
+            end)
+        end
+    end
+
+    self:updateStockEnabledButton()
+
     if not IsValid(self.factionAccessPanel) then
         self.factionAccessPanel = self.generalScroll:Add("liaSemiTransparentDPanel")
         self.factionAccessPanel:Dock(TOP)
@@ -1485,9 +1525,11 @@ function PANEL:initializeGeneralInfoPanel(entity)
     if IsValid(self.deletePresetButton) then self.deletePresetButton:SetZPos(8) end
     if IsValid(self.presetButton) then self.presetButton:SetZPos(9) end
     if IsValid(self.savePresetButton) then self.savePresetButton:SetZPos(10) end
-    if IsValid(self.factionAccessPanel) then self.factionAccessPanel:SetZPos(11) end
-    if IsValid(self.skinLabel) then self.skinLabel:SetZPos(12) end
-    if IsValid(self.skin) then self.skin:SetZPos(13) end
+    if IsValid(self.stockEnabledLabel) then self.stockEnabledLabel:SetZPos(11) end
+    if IsValid(self.stockEnabledButton) then self.stockEnabledButton:SetZPos(12) end
+    if IsValid(self.factionAccessPanel) then self.factionAccessPanel:SetZPos(13) end
+    if IsValid(self.skinLabel) then self.skinLabel:SetZPos(14) end
+    if IsValid(self.skin) then self.skin:SetZPos(15) end
     local hasBodygroupsBottom = false
     for i = 0, entity:GetNumBodyGroups() - 1 do
         if entity:GetBodygroupCount(i) > 1 then
@@ -1722,7 +1764,7 @@ function PANEL:getItemRowValue(itemType)
     local entity = liaVendorEnt
     local itemTable = lia.item.list[itemType]
     if not IsValid(entity) or not itemTable then return end
-    local _, maxStock = entity:getStock(itemType)
+    local currentStock, maxStock = entity:getStock(itemType)
     return {
         item = itemType,
         name = itemTable.getName and itemTable:getName() or L(itemTable.name),
@@ -1730,7 +1772,8 @@ function PANEL:getItemRowValue(itemType)
         mode = entity.items[itemType] and entity.items[itemType][VENDOR_MODE],
         buyPrice = entity.items[itemType] and (entity.items[itemType][VENDOR_BUYPRICE] ~= nil and entity.items[itemType][VENDOR_BUYPRICE] or entity.items[itemType][VENDOR_PRICE]),
         sellPrice = entity.items[itemType] and (entity.items[itemType][VENDOR_SELLPRICE] ~= nil and entity.items[itemType][VENDOR_SELLPRICE] or entity.items[itemType][VENDOR_PRICE]),
-        stock = maxStock
+        stock = maxStock,
+        currentStock = currentStock
     }
 end
 
@@ -1759,25 +1802,25 @@ function ROW:Init()
         surface.DrawOutlinedRect(0, 0, w, h)
     end
 
-    self.stockCombo = self:Add("liaComboBox")
-    self.stockCombo:Dock(RIGHT)
-    self.stockCombo:SetWide(120)
-    self.stockCombo:SetTextColor(lia.color.theme.text or color_white)
-    self.stockCombo:PostInit()
-    for _, choice in ipairs(VendorStockChoices) do
-        self.stockCombo:AddChoice(tostring(choice), choice)
-    end
-
-    self.stockCombo:AddChoice("Custom Amount", "custom")
-    self.stockCombo:AddChoice("Disabled", "disabled")
-    self.stockCombo.OnSelect = function(_, _, text, value)
-        if self.isRefreshing or not IsValid(self.editor) then return end
-        self:CommitStock(text, value)
-    end
-
+    self.currentStockEntry = self:Add("liaEntry")
+    self.currentStockEntry:Dock(RIGHT)
+    self.currentStockEntry:SetWide(72)
+    self.currentStockEntry:DockMargin(8, 0, 0, 0)
+    self.currentStockEntry:SetFont("LiliaFont.16")
+    self.currentStockEntry:SetNumeric(true)
+    self.currentStockEntry:SetPlaceholderText("Cur.")
+    self.currentStockEntry.action = function() self:CommitCurrentStock() end
+    self.stockEntry = self:Add("liaEntry")
+    self.stockEntry:Dock(RIGHT)
+    self.stockEntry:SetWide(100)
+    self.stockEntry:DockMargin(8, 0, 0, 0)
+    self.stockEntry:SetFont("LiliaFont.16")
+    self.stockEntry:SetNumeric(true)
+    self.stockEntry:SetPlaceholderText("Max")
+    self.stockEntry.action = function() self:CommitStock() end
     self.sellPriceEntry = self:Add("liaEntry")
     self.sellPriceEntry:Dock(RIGHT)
-    self.sellPriceEntry:SetWide(100)
+    self.sellPriceEntry:SetWide(88)
     self.sellPriceEntry:DockMargin(8, 0, 0, 0)
     self.sellPriceEntry:SetFont("LiliaFont.16")
     self.sellPriceEntry:SetNumeric(true)
@@ -1785,7 +1828,7 @@ function ROW:Init()
     self.sellPriceEntry.action = function() self:CommitSellPrice() end
     self.buyPriceEntry = self:Add("liaEntry")
     self.buyPriceEntry:Dock(RIGHT)
-    self.buyPriceEntry:SetWide(100)
+    self.buyPriceEntry:SetWide(88)
     self.buyPriceEntry:DockMargin(8, 0, 0, 0)
     self.buyPriceEntry:SetFont("LiliaFont.16")
     self.buyPriceEntry:SetNumeric(true)
@@ -1793,7 +1836,7 @@ function ROW:Init()
     self.buyPriceEntry.action = function() self:CommitBuyPrice() end
     self.modeCombo = self:Add("liaComboBox")
     self.modeCombo:Dock(RIGHT)
-    self.modeCombo:SetWide(150)
+    self.modeCombo:SetWide(130)
     self.modeCombo:DockMargin(8, 0, 0, 0)
     self.modeCombo:PostInit()
     self.modeCombo:SetTextColor(lia.color.theme.text or color_white)
@@ -1808,8 +1851,7 @@ function ROW:Init()
     end
 
     self.nameLabel = self:Add("DLabel")
-    self.nameLabel:Dock(LEFT)
-    self.nameLabel:SetWide(180)
+    self.nameLabel:Dock(FILL)
     self.nameLabel:SetFont("LiliaFont.16")
     self.nameLabel:SetTextColor(lia.color.theme.text or color_white)
     self.nameLabel:SetContentAlignment(4)
@@ -1863,30 +1905,20 @@ function ROW:CommitSellPrice()
     lia.vendor.editor.sellPrice(self.itemID, value)
 end
 
-function ROW:CommitStock(text, value)
+function ROW:CommitStock()
     if self.isRefreshing or not IsValid(self.editor) then return end
-    if value == "disabled" then
+    if not self:IsStockEnabled() then
+        self.stockEntry:SetValue("")
+        return
+    end
+
+    local raw = string.Trim(self.stockEntry:GetValue() or "")
+    if raw == "" then
         lia.vendor.editor.stockDisable(self.itemID)
         return
     end
 
-    if value == "custom" then
-        local currentValue = self.currentStockValue or 0
-        LocalPlayer():requestString(L("stock"), "@vendorStockReq", function(input)
-            local stockValue = tonumber(input)
-            if not isnumber(stockValue) then
-                self.editor:notifyNumberError(L("stock"))
-                self:Refresh()
-                return
-            end
-
-            stockValue = math.max(math.Round(stockValue), 1)
-            lia.vendor.editor.stockMax(self.itemID, stockValue)
-        end, currentValue > 0 and currentValue or "")
-        return
-    end
-
-    local stockValue = tonumber(value or text)
+    local stockValue = tonumber(raw)
     if not isnumber(stockValue) then
         self.editor:notifyNumberError(L("stock"))
         self:Refresh()
@@ -1894,7 +1926,48 @@ function ROW:CommitStock(text, value)
     end
 
     stockValue = math.max(math.Round(stockValue), 1)
+    self.stockEntry:SetValue(stockValue)
     lia.vendor.editor.stockMax(self.itemID, stockValue)
+end
+
+function ROW:CommitCurrentStock()
+    if self.isRefreshing or not IsValid(self.editor) then return end
+    if not self:IsStockEnabled() then
+        self.currentStockEntry:SetValue("0")
+        return
+    end
+
+    local raw = string.Trim(self.currentStockEntry:GetValue() or "")
+    local currentStock = raw == "" and 0 or tonumber(raw)
+    if not isnumber(currentStock) then
+        self.editor:notifyNumberError(L("vendorEditCurStock"))
+        self:Refresh()
+        return
+    end
+
+    currentStock = math.max(math.Round(currentStock), 0)
+    if isnumber(self.currentMaxStockValue) then currentStock = math.min(currentStock, self.currentMaxStockValue) end
+    self.currentStockEntry:SetValue(currentStock)
+    lia.vendor.editor.stock(self.itemID, currentStock)
+end
+
+function ROW:IsStockEnabled()
+    return IsValid(liaVendorEnt) and lia.vendor.getVendorProperty(liaVendorEnt, "stockEnabled") or false
+end
+
+function ROW:UpdateStockFieldState()
+    local enabled = self:IsStockEnabled()
+    if IsValid(self.stockEntry) then
+        self.stockEntry:SetEditable(enabled)
+        self.stockEntry:SetDisabled(not enabled)
+        self.stockEntry:SetVisible(enabled)
+    end
+
+    if IsValid(self.currentStockEntry) then
+        self.currentStockEntry:SetEditable(enabled)
+        self.currentStockEntry:SetDisabled(not enabled)
+        self.currentStockEntry:SetVisible(enabled)
+    end
 end
 
 function ROW:Refresh()
@@ -1905,18 +1978,16 @@ function ROW:Refresh()
     self.nameLabel:SetText(data.name)
     self.nameLabel:SetTooltip(data.desc or data.name)
     self.currentStockValue = data.stock
+    self.currentMaxStockValue = data.stock
+    self.currentItemStockValue = data.currentStock
     self.modeCombo:SetValue(self.editor:getModeText(data.mode))
     self.buyPriceEntry:SetValue(data.buyPrice ~= nil and tostring(data.buyPrice) or "")
     self.sellPriceEntry:SetValue(data.sellPrice ~= nil and tostring(data.sellPrice) or "")
-    if data.stock == nil then
-        self.stockCombo:SetValue("Disabled")
-    elseif table.HasValue(VendorStockChoices, data.stock) then
-        self.stockCombo:SetValue(tostring(data.stock))
-    else
-        self.stockCombo:SetValue("Custom: " .. tostring(data.stock))
-    end
-
-    self.stockCombo:SetTooltip(data.stock ~= nil and string.format("%s: %s", L("stock"), data.stock) or L("disable"))
+    self.currentStockEntry:SetValue(data.currentStock ~= nil and tostring(data.currentStock) or "0")
+    self.stockEntry:SetValue(data.stock ~= nil and tostring(data.stock) or "")
+    self:UpdateStockFieldState()
+    self.currentStockEntry:SetTooltip(L("vendorEditCurStock"))
+    self.stockEntry:SetTooltip(data.stock ~= nil and string.format("%s: %s", L("stock"), data.stock) or L("disable"))
     self.isRefreshing = false
 end
 
@@ -1973,6 +2044,19 @@ end
 function PANEL:refreshPresetButton()
     if not IsValid(self.presetButton) then return end
     self.presetButton:SetText(L("loadThing", L("preset")))
+end
+
+function PANEL:updateStockEnabledButton()
+    if not IsValid(self.stockEnabledButton) or not IsValid(liaVendorEnt) then return end
+    local enabled = lia.vendor.getVendorProperty(liaVendorEnt, "stockEnabled")
+    self.stockEnabledButton:SetText(enabled and "Enabled" or "Disabled")
+end
+
+function PANEL:updateStockColumnVisibility()
+    if not IsValid(self.itemHeaderStock) or not IsValid(self.itemHeaderCurrentStock) or not IsValid(liaVendorEnt) then return end
+    local enabled = lia.vendor.getVendorProperty(liaVendorEnt, "stockEnabled")
+    self.itemHeaderStock:SetVisible(enabled)
+    self.itemHeaderCurrentStock:SetVisible(enabled)
 end
 
 function PANEL:openPresetSelector()
@@ -2372,6 +2456,11 @@ end
 function PANEL:onVendorPropertyUpdated(vendor, key)
     if vendor ~= liaVendorEnt then return end
     self:onNameDescChanged(key)
+    if key == "stockEnabled" then
+        self:updateStockEnabledButton()
+        self:updateStockColumnVisibility()
+        self:ReloadItemList(self.lastSearchValue)
+    end
 end
 
 function PANEL:onItemModeUpdated()
@@ -2462,6 +2551,7 @@ function PANEL:ReloadItemList(filter)
     if not IsValid(self.itemList) then return end
     self.itemList:Clear()
     if not IsValid(entity) then return end
+    self:updateStockColumnVisibility()
     for k, v in SortedPairsByMemberValue(lia.item.list, "name") do
         local name = v.getName and v:getName() or v.name
         if filter and not (v.getName and name or L(name)):lower():find(filter:lower(), 1, true) then continue end

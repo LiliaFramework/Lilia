@@ -82,8 +82,18 @@ local function formatDevHUDVector(vec)
     return string.format("%.2f, %.2f, %.2f", vec.x, vec.y, vec.z)
 end
 
+local function hasOpenTicketFrame()
+    local worldPanel = vgui.GetWorldPanel()
+    if not IsValid(worldPanel) then return false end
+    for _, panel in ipairs(worldPanel:GetChildren()) do
+        if IsValid(panel) and panel.requesterSteamID then return true end
+    end
+    return false
+end
+
 local function drawDevelopmentOverlay(client)
     if not lia.option.get("drawDevelopmentHUD", true) then return end
+    if hasOpenTicketFrame() then return end
     local canDrawDevHUD = client:hasPrivilege("developmentHUD")
     local canDrawStaffHUD = client:hasPrivilege("staffHUD")
     if not canDrawDevHUD and not canDrawStaffHUD then return end

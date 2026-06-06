@@ -1,9 +1,4 @@
-﻿local MODE_INDEX = 1
-local CACHED_POSITIONS = {}
-local CACHE_TYPE = nil
-local LAST_REQUEST = 0
-local REQUEST_THROTTLE = 0.5
-local REMOVAL_MENU_OPEN = false
+﻿local REQUEST_THROTTLE = 0.5
 local function canUseTool()
     local cl = LocalPlayer()
     if not IsValid(cl) then return false end
@@ -22,13 +17,13 @@ end
 local function getCurrentType()
     local types = getTypes()
     if #types == 0 then return nil end
-    local idx = (MODE_INDEX - 1) % #types + 1
+    local idx = (lia.mapConfigurerState.modeIndex - 1) % #types + 1
     return types[idx]
 end
 
 local function requestPositions(typeId)
-    if CurTime() - LAST_REQUEST < REQUEST_THROTTLE then return end
-    LAST_REQUEST = CurTime()
+    if CurTime() - lia.mapConfigurerState.lastRequest < REQUEST_THROTTLE then return end
+    lia.mapConfigurerState.lastRequest = CurTime()
     local callback = lia.util.positionCallbacks[typeId]
     if callback and callback.onSelect then
         if callback.serverOnly then
@@ -39,8 +34,8 @@ local function requestPositions(typeId)
             local client = LocalPlayer()
             if IsValid(client) then
                 callback.onSelect(client, function(positions, count)
-                    CACHE_TYPE = typeId
-                    CACHED_POSITIONS = positions or {}
+                    lia.mapConfigurerState.cacheType = typeId
+                    lia.mapConfigurerState.cachedPositions = positions or {}
                 end)
             end
         end
@@ -50,23 +45,6 @@ local function requestPositions(typeId)
         net.SendToServer()
     end
 end
-
-net.Receive("liaFeaturePositions", function()
-    local typeId = net.ReadString()
-    local count = net.ReadUInt(16)
-    local list = {}
-    for i = 1, count do
-        local pos = net.ReadVector()
-        local label = net.ReadString()
-        list[#list + 1] = {
-            pos = pos,
-            label = label
-        }
-    end
-
-    CACHE_TYPE = typeId
-    CACHED_POSITIONS = list
-end)
 
 function SWEP:PrimaryAttack()
     local client = LocalPlayer()
@@ -99,8 +77,8 @@ function SWEP:Reload()
     self.NextReload = SysTime() + 0.5
     local types = getTypes()
     if #types == 0 then return end
-    MODE_INDEX = MODE_INDEX + 1
-    if MODE_INDEX > #types then MODE_INDEX = 1 end
+    lia.mapConfigurerState.modeIndex = lia.mapConfigurerState.modeIndex + 1
+    if lia.mapConfigurerState.modeIndex > #types then lia.mapConfigurerState.modeIndex = 1 end
     local typeInfo = getCurrentType()
     if typeInfo then requestPositions(typeInfo.id) end
 end
@@ -123,16 +101,16 @@ end
 function SWEP:Think()
     local client = LocalPlayer()
     local typeInfo = getCurrentType()
-    if client:KeyDown(IN_SPEED) and client:KeyDown(IN_USE) and not REMOVAL_MENU_OPEN then
+    if client:KeyDown(IN_SPEED) and client:KeyDown(IN_USE) and not lia.mapConfigurerState.removalMenuOpen then
         if self._removalMenuCooldown and self._removalMenuCooldown > CurTime() then return end
         self._removalMenuCooldown = CurTime() + 1.0
         self:OpenRemovalMenu()
     end
 
     if typeInfo then
-        if CACHE_TYPE ~= typeInfo.id then
+        if lia.mapConfigurerState.cacheType ~= typeInfo.id then
             requestPositions(typeInfo.id)
-        elseif #CACHED_POSITIONS == 0 and (self._lastEmptyRequest or 0) < (CurTime() - 2) then
+        elseif #lia.mapConfigurerState.cachedPositions == 0 and (self._lastEmptyRequest or 0) < (CurTime() - 2) then
             self._lastEmptyRequest = CurTime()
             requestPositions(typeInfo.id)
         end
@@ -144,11 +122,11 @@ function SWEP:GetPositionToolMode()
 end
 
 function SWEP:GetCachedPositions()
-    return CACHED_POSITIONS
+    return lia.mapConfigurerState.cachedPositions
 end
 
 function SWEP:GetCacheType()
-    return CACHE_TYPE
+    return lia.mapConfigurerState.cacheType
 end
 
 function SWEP:CanUseTool()
@@ -156,7 +134,7 @@ function SWEP:CanUseTool()
 end
 
 function SWEP:Holster()
-    REMOVAL_MENU_OPEN = false
+    lia.mapConfigurerState.removalMenuOpen = false
     return true
 end
 
@@ -164,22 +142,22 @@ function SWEP:OpenRemovalMenu()
     if not canUseTool() then return end
     local typeInfo = getCurrentType()
     if not typeInfo then return end
-    REMOVAL_MENU_OPEN = true
+    lia.mapConfigurerState.removalMenuOpen = true
     local frame = vgui.Create("DFrame")
     frame:SetSize(600, 400)
     frame:SetTitle(L("removeThing", typeInfo.name or L("points")))
     frame:Center()
     frame:MakePopup()
     function frame:OnClose()
-        REMOVAL_MENU_OPEN = false
+        lia.mapConfigurerState.removalMenuOpen = false
     end
 
     local scroll = vgui.Create("DScrollPanel", frame)
     scroll:Dock(FILL)
     scroll:DockMargin(5, 5, 5, 5)
     local clientPos = LocalPlayer():GetPos()
-    if #CACHED_POSITIONS > 0 then
-        for i, point in ipairs(CACHED_POSITIONS) do
+    if #lia.mapConfigurerState.cachedPositions > 0 then
+        for i, point in ipairs(lia.mapConfigurerState.cachedPositions) do
             local distance = math.Round(clientPos:Distance(point.pos))
             local pointPanel = vgui.Create("DPanel", scroll)
             pointPanel:SetTall(60)
