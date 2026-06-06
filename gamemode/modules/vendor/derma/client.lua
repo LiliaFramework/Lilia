@@ -1751,7 +1751,6 @@ local VendorModeChoices = {
     }
 }
 
-local VendorStockChoices = {5, 10, 15, 20, 25, 30}
 function PANEL:getModeText(mode)
     return mode and L(VendorText[mode]) or L("none")
 end

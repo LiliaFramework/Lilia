@@ -1,4 +1,3 @@
-local MODULE = MODULE
 
 net.Receive("liaRestoreOverflowItems", function(_, client)
     local char = client:getChar()

@@ -1,4 +1,3 @@
-local MODULE = MODULE
 
 net.Receive("liaVendorExit", function(_, client)
     local vendor = client.liaVendor

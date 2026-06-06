@@ -90,9 +90,9 @@ function MODULE:CreateLogsUI(panel, categories)
     end
 
     local oldSetActiveTab = sheet.SetActiveTab
-    sheet.SetActiveTab = function(self, tabIndex)
-        oldSetActiveTab(self, tabIndex)
-        local activeTab = self.tabs[tabIndex]
+    sheet.SetActiveTab = function(tabs, tabIndex)
+        oldSetActiveTab(tabs, tabIndex)
+        local activeTab = tabs.tabs[tabIndex]
         if activeTab and activeTab.pan then
             local category = activeTab.pan.category
             requestLogsForCategory(category)

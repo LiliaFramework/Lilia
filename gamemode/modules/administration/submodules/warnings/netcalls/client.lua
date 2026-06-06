@@ -1,4 +1,3 @@
-local MODULE = MODULE
 
 net.Receive("liaAllWarnings", function()
     local warnings = net.ReadTable() or {}

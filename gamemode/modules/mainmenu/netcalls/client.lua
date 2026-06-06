@@ -1,4 +1,3 @@
-local MODULE = MODULE
 
 net.Receive("liaMainCharacterSet", function()
         local charID = net.ReadUInt(32)

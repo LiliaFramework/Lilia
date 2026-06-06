@@ -1,4 +1,3 @@
-local MODULE = MODULE
 
 net.Receive("liaTrunkInitStorage", function()
     local entity = net.ReadEntity()

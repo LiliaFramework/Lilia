@@ -1,4 +1,3 @@
-local MODULE = MODULE
 
 net.Receive("liaVendorSync", function()
     local vendor = net.ReadEntity()

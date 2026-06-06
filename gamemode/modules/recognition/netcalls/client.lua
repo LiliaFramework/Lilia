@@ -1,4 +1,3 @@
-local MODULE = MODULE
 
 net.Receive("liaRgnDone", function()
     local client = LocalPlayer()
