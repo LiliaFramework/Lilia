@@ -1,5 +1,4 @@
-
-net.Receive("liaRestoreOverflowItems", function(_, client)
+﻿net.Receive("liaRestoreOverflowItems", function(_, client)
     local char = client:getChar()
     if not char then return end
     local data = char:getData("overflowItems")

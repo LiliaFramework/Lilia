@@ -1,5 +1,4 @@
-
-net.Receive("liaRequestFactionMembers", function(_, client)
+﻿net.Receive("liaRequestFactionMembers", function(_, client)
     lia.debug("[Permissions]", "Permission Check for net.Receive liaRequestFactionMembers", "hasPrivilege(listCharacters)=", tostring(client:hasPrivilege("listCharacters")), "finalResult=", tostring(client:hasPrivilege("listCharacters")))
     if not client:hasPrivilege("listCharacters") then return end
     local factionUniqueID = net.ReadString()

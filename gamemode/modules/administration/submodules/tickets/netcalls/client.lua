@@ -1,5 +1,4 @@
-local MODULE = MODULE
-
+﻿local MODULE = MODULE
 net.Receive("liaActiveTickets", function()
     local tickets = net.ReadTable() or {}
     if not IsValid(ticketPanel) then return end

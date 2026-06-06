@@ -63,4 +63,3 @@ function MODULE:InitializeStorage(entity)
     entity.liaStorageInitPromise = tryInitialize()
     return entity.liaStorageInitPromise
 end
-

@@ -1,5 +1,4 @@
-local MODULE = MODULE
-
+﻿local MODULE = MODULE
 net.Receive("liaViewClaims", function(_, client)
     local sid = net.ReadString()
     MODULE:GetAllCaseClaims():next(function(caseclaims)

@@ -2,11 +2,7 @@
 MODULE.author = "Samael"
 MODULE.discord = "@liliaplayer"
 MODULE.desc = "@teamsSystemDescription"
-MODULE.NetworkStrings = {
-    "liaFactionMembers",
-    "liaKickCharacterToBase",
-    "liaRequestFactionMembers",
-}
+MODULE.NetworkStrings = {"liaFactionMembers", "liaKickCharacterToBase", "liaRequestFactionMembers",}
 MODULE.Privileges = {
     ["canManageFactions"] = {
         Name = "@canManageFactions",

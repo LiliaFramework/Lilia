@@ -1,5 +1,4 @@
-local MODULE = MODULE
-
+﻿local MODULE = MODULE
 net.Receive("liaSendLogsCategories", function()
     local categories = net.ReadTable()
     if not categories or #categories == 0 then

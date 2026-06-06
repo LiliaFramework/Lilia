@@ -1,4 +1,4 @@
-local MODULE = MODULE
+﻿local MODULE = MODULE
 function MODULE:PlayerSay(client, text)
     if text and string.sub(text, 1, 1) == "@" then return end
     if client:getLiliaData("liaMuted", false) then

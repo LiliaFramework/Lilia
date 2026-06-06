@@ -159,4 +159,3 @@ function MODULE:HandleItemTransferRequest(client, itemID, x, y, invID)
         return originalAddResult
     end):catch(fail)
 end
-

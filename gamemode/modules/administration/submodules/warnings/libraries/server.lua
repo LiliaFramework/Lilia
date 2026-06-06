@@ -1,4 +1,4 @@
-local MODULE = MODULE
+﻿local MODULE = MODULE
 function MODULE:GetWarnings(charID)
     local condition = "charID = " .. lia.db.convertDataType(charID)
     return lia.db.select({"id", "timestamp", "message", "warner", "warnerSteamID", "severity"}, "warnings", condition):next(function(res) return res.results or {} end)
@@ -28,4 +28,3 @@ function MODULE:RemoveWarning(charID, index)
     end)
     return d
 end
-

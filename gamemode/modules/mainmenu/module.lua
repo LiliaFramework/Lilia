@@ -2,9 +2,7 @@
 MODULE.author = "Samael"
 MODULE.discord = "@liliaplayer"
 MODULE.desc = "mainMenuDescription"
-MODULE.NetworkStrings = {
-    "liaMainCharacterSet",
-}
+MODULE.NetworkStrings = {"liaMainCharacterSet",}
 if SERVER then
     function MODULE:SyncCharList(client)
         if not client.liaCharList then return end
@@ -183,7 +181,6 @@ else
             end
         }
     end
-
 end
 
 function MODULE:CanPlayerCreateChar(client, data)

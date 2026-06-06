@@ -1473,7 +1473,6 @@ function PANEL:initializeGeneralInfoPanel(entity)
     end
 
     self:updateStockEnabledButton()
-
     if not IsValid(self.factionAccessPanel) then
         self.factionAccessPanel = self.generalScroll:Add("liaSemiTransparentDPanel")
         self.factionAccessPanel:Dock(TOP)

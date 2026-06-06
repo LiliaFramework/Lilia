@@ -1,4 +1,4 @@
-function MODULE:PopulateAdminTabs(pages)
+﻿function MODULE:PopulateAdminTabs(pages)
     local client = LocalPlayer()
     if not IsValid(client) then return end
     local canViewPlayerWarnings = client:hasPrivilege("viewPlayerWarnings")

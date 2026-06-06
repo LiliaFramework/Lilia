@@ -1,5 +1,4 @@
-
-net.Receive("liaVendorExit", function(_, client)
+﻿net.Receive("liaVendorExit", function(_, client)
     local vendor = client.liaVendor
     if IsValid(vendor) then vendor:removeReceiver(client, true) end
 end)

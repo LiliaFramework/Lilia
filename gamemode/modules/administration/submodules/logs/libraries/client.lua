@@ -1,4 +1,4 @@
-function MODULE:PopulateAdminTabs(pages)
+﻿function MODULE:PopulateAdminTabs(pages)
     local client = LocalPlayer()
     if not IsValid(client) then return end
     local canSeeLogs = client:hasPrivilege("canSeeLogs")
@@ -260,7 +260,6 @@ local function UpdateLogsUI(panel, logsData)
 end
 
 liaLogsPanel = liaLogsPanel or nil
-
 lia.net.readBigTable("liaSendLogs", function(logsData)
     local logsPanel = liaLogsPanel
     if not IsValid(logsPanel) then
@@ -300,4 +299,3 @@ lia.net.readBigTable("liaSendLogs", function(logsData)
         chat.AddText(Color(255, 100, 100), L("logsPanelError"))
     end
 end)
-

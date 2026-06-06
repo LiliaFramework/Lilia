@@ -57,4 +57,3 @@ function MODULE:PlayerLoadedChar(client, character)
 
     client:Spawn()
 end
-

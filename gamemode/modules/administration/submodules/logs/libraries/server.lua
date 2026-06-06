@@ -1,4 +1,4 @@
-local MODULE = MODULE
+﻿local MODULE = MODULE
 function MODULE:CanPlayerSeeLog(client)
     local adminConsoleNetworkLogs = lia.config.get("AdminConsoleNetworkLogs", true)
     local canSeeLogs = client:hasPrivilege("canSeeLogs")
@@ -199,4 +199,3 @@ end
 function MODULE:ItemDraggedOutOfInventory(client, item)
     lia.log.add(client, "itemDraggedOut", item:getName())
 end
-

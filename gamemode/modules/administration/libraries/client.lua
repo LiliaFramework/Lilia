@@ -1,4 +1,4 @@
-local MODULE = MODULE
+﻿local MODULE = MODULE
 function MODULE:ShowPlayerOptions(target, options)
     local client = LocalPlayer()
     if not IsValid(client) or not IsValid(target) then return end

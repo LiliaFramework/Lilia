@@ -1,5 +1,4 @@
-local MODULE = MODULE
-
+﻿local MODULE = MODULE
 net.Receive("liaRequestRemoveWarning", function(_, client)
     lia.debug("[Permissions]", "Permission Check for net.Receive liaRequestRemoveWarning", "hasPrivilege(canRemoveWarns)=", tostring(client:hasPrivilege("canRemoveWarns")), "finalResult=", tostring(client:hasPrivilege("canRemoveWarns")))
     if not client:hasPrivilege("canRemoveWarns") then return end

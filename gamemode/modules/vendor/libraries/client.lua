@@ -56,4 +56,3 @@ function MODULE:AddToAdminStickHUD(client, target, information)
         end
     end
 end
-

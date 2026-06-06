@@ -1,4 +1,4 @@
-lia.mapConfigurerState = lia.mapConfigurerState or {
+﻿lia.mapConfigurerState = lia.mapConfigurerState or {
     modeIndex = 1,
     cachedPositions = {},
     cacheType = nil,

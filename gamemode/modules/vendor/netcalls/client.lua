@@ -1,5 +1,4 @@
-
-net.Receive("liaVendorSync", function()
+﻿net.Receive("liaVendorSync", function()
     local vendor = net.ReadEntity()
     if not IsValid(vendor) then return end
     local count = net.ReadUInt(16)
@@ -170,7 +169,6 @@ net.Receive("liaVendorSyncMessages", function()
 end)
 
 net.Receive("liaVendorSyncPresets", function() lia.vendor.presets = net.ReadTable() end)
-
 net.Receive("liaVendorInitialSync", function()
     local vendorCount = net.ReadUInt(16)
     for _ = 1, vendorCount do

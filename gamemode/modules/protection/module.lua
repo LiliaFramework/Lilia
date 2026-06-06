@@ -2,9 +2,7 @@
 MODULE.author = "Samael"
 MODULE.discord = "@liliaplayer"
 MODULE.desc = "@anticheatDescription"
-MODULE.NetworkStrings = {
-    "liaVerifyCheats",
-}
+MODULE.NetworkStrings = {"liaVerifyCheats",}
 MODULE.Privileges = {
     ["canSeeAltingNotifications"] = {
         Name = "@canSeeAltingNotifications",

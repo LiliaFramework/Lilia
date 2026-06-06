@@ -3247,4 +3247,3 @@ function MODULE:PopulateAdminTabs(pages)
         }
     end
 end
-

@@ -1,5 +1,4 @@
-local MODULE = MODULE
-
+﻿local MODULE = MODULE
 net.Receive("liaSendLogsRequest", function(_, client)
     if not MODULE:CanPlayerSeeLog(client) then return end
     local category = net.ReadString()

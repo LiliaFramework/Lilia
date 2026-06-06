@@ -1,5 +1,4 @@
-
-net.Receive("liaAllWarnings", function()
+﻿net.Receive("liaAllWarnings", function()
     local warnings = net.ReadTable() or {}
     if not IsValid(panelRef) then return end
     panelRef:Clear()

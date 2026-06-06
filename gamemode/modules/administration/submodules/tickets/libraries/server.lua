@@ -1,6 +1,5 @@
-local MODULE = MODULE
+﻿local MODULE = MODULE
 MODULE.ActiveTickets = MODULE.ActiveTickets or {}
-
 local function SendPopup(client, message)
     for _, v in player.Iterator() do
         local hasAlwaysSeeTickets = v:hasPrivilege("alwaysSeeTickets")

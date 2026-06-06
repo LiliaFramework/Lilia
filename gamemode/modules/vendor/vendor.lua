@@ -79,6 +79,7 @@ if SERVER then
         local newPrice = vendor:getPrice(itemType, true, client)
         client:notifyLocalized("vendorSellPriceChanged", itemName, lia.currency.get(oldPrice), lia.currency.get(newPrice))
     end)
+
     addEditor("stockDisable", function() return net.ReadString() end, function(vendor, client, itemType)
         local itemName = getItemName(itemType)
         local oldMax = vendor:getMaxStock(itemType)
@@ -144,6 +145,7 @@ if SERVER then
         else
             vendor:setMoney(nil)
         end
+
         client:notifyLocalized("vendorUseMoneyChanged", getEnabledText(oldValue), getEnabledText(useMoney))
     end)
 
@@ -210,7 +212,6 @@ else
     end)
 
     addEditor("stockEnabled", function(enabled) net.WriteBool(enabled and true or false) end)
-
     addEditor("faction", function(factionID, allowed)
         net.WriteUInt(factionID, 8)
         net.WriteBool(allowed)

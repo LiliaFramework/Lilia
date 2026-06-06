@@ -1,4 +1,4 @@
-function MODULE:PopulateAdminTabs(pages)
+﻿function MODULE:PopulateAdminTabs(pages)
     local client = LocalPlayer()
     if not IsValid(client) then return end
     local canAlwaysSeeTickets = client:hasPrivilege("alwaysSeeTickets")
@@ -69,6 +69,7 @@ function MODULE:CreateTicketFrame(requester, message, claimed)
         msg.textEntry:SetKeyboardInputEnabled(true)
         if msg.textEntry.SetVerticalScrollbarEnabled then msg.textEntry:SetVerticalScrollbarEnabled(true) end
     end
+
     msg.Paint = function(panel, w, h)
         lia.derma.rect(0, 0, w, h):Rad(4):Color((lia.color.theme and lia.color.theme.panel and lia.color.theme.panel[1]) or Color(34, 62, 62)):Shape(lia.derma.SHAPE_IOS):Draw()
         panel:DrawTextEntryText((lia.color.theme and lia.color.theme.text) or Color(210, 235, 235), (lia.color.theme and lia.color.theme.text) or Color(210, 235, 235), (lia.color.theme and lia.color.theme.text) or Color(210, 235, 235))

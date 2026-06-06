@@ -40,4 +40,3 @@ function MODULE:ShouldAllowScoreboardOverride(client, var)
     local isNotRecognized = not (ourCharacter:doesRecognize(character:getID()) or ourCharacter:doesFakeRecognize(character:getID()))
     return isRecognitionEnabled and isVarHiddenInScoreboard and isNotRecognized
 end
-

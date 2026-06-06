@@ -1,4 +1,4 @@
-local spawnCooldowns = {}
+﻿local spawnCooldowns = {}
 net.Receive("liaAdminSetCharProperty", function(_, client)
     lia.debug("[Permissions]", "Permission Check for net.Receive liaAdminSetCharProperty", "hasPrivilege(listCharacters)=", tostring(client:hasPrivilege("listCharacters")), "finalResult=", tostring(client:hasPrivilege("listCharacters")))
     if not client:hasPrivilege("listCharacters") then return end

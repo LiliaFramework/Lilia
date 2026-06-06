@@ -2,28 +2,7 @@
 MODULE.author = "Samael"
 MODULE.discord = "@liliaplayer"
 MODULE.desc = "@npcVendorDescription"
-MODULE.NetworkStrings = {
-    "liaVendorAllowClass",
-    "liaVendorAllowFaction",
-    "liaVendorBuyPrice",
-    "liaVendorDeletePreset",
-    "liaVendorExit",
-    "liaVendorFaction",
-    "liaVendorFactionBuyScale",
-    "liaVendorFactionSellScale",
-    "liaVendorInitialSync",
-    "liaVendorLoadPreset",
-    "liaVendorMaxStock",
-    "liaVendorMode",
-    "liaVendorOpen",
-    "liaVendorRequestData",
-    "liaVendorSavePreset",
-    "liaVendorSellPrice",
-    "liaVendorStock",
-    "liaVendorSync",
-    "liaVendorSyncMessages",
-    "liaVendorTrade",
-}
+MODULE.NetworkStrings = {"liaVendorAllowClass", "liaVendorAllowFaction", "liaVendorBuyPrice", "liaVendorDeletePreset", "liaVendorExit", "liaVendorFaction", "liaVendorFactionBuyScale", "liaVendorFactionSellScale", "liaVendorInitialSync", "liaVendorLoadPreset", "liaVendorMaxStock", "liaVendorMode", "liaVendorOpen", "liaVendorRequestData", "liaVendorSavePreset", "liaVendorSellPrice", "liaVendorStock", "liaVendorSync", "liaVendorSyncMessages", "liaVendorTrade",}
 MODULE.Privileges = {
     ["canEditVendors"] = {
         Name = "@canEditVendors",

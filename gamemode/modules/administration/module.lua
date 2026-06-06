@@ -1,31 +1,8 @@
-MODULE.Name = "@categoryAdministration"
+﻿MODULE.Name = "@categoryAdministration"
 MODULE.author = "Samael"
 MODULE.discord = "@liliaplayer"
 MODULE.desc = "@administrationToolsDescription"
-MODULE.NetworkStrings = {
-    "liaAdminSetCharProperty",
-    "liaAllFlags",
-    "liaAllPks",
-    "liaAllPlayers",
-    "liaFeaturePositions",
-    "liaFeaturePositionsRequest",
-    "liaFullCharList",
-    "liaManagesitroomsAction",
-    "liaMapEntities",
-    "liaOnlineStaffData",
-    "liaPksCount",
-    "liaRequestAllFlags",
-    "liaRequestAllPks",
-    "liaRequestFullCharList",
-    "liaRequestMapEntities",
-    "liaRequestPksCount",
-    "liaRequestPlayers",
-    "liaRequestStaffSummary",
-    "liaSetFeaturePosition",
-    "liaSpawnMenuGiveItem",
-    "liaSpawnMenuSpawnItem",
-    "liaStaffSummary",
-}
+MODULE.NetworkStrings = {"liaAdminSetCharProperty", "liaAllFlags", "liaAllPks", "liaAllPlayers", "liaFeaturePositions", "liaFeaturePositionsRequest", "liaFullCharList", "liaManagesitroomsAction", "liaMapEntities", "liaOnlineStaffData", "liaPksCount", "liaRequestAllFlags", "liaRequestAllPks", "liaRequestFullCharList", "liaRequestMapEntities", "liaRequestPksCount", "liaRequestPlayers", "liaRequestStaffSummary", "liaSetFeaturePosition", "liaSpawnMenuGiveItem", "liaSpawnMenuSpawnItem", "liaStaffSummary",}
 MODULE.Privileges = {
     ["ManageWeaponOverrides"] = {
         Name = "@ManageWeaponOverrides",

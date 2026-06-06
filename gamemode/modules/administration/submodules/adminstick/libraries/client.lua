@@ -1,4 +1,4 @@
-local MODULE = MODULE
+﻿local MODULE = MODULE
 AdminStickIsOpen = false
 AdminStickMenu = nil
 AdminStickWarnings = {}
