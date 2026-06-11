@@ -1,1 +1,7 @@
 title: Generators
+arrange:
+  - index.md
+  - attribute.md
+  - class.md
+  - faction.md
+  - items

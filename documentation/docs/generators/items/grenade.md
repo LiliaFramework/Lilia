@@ -1,17 +1,12 @@
 # Grenade Item Generator
 
-Define explosive or utility throwable items for your server.
+Create explosive or utility throwable items backed by grenade or weapon entities. Grenade-style items should be handled carefully because they affect combat pacing, staff moderation, map safety, and event balance.
 
----
+Output Location:
 
-<h3 style="margin-bottom: 5px; font-weight: 700;">Overview</h3>
-<div style="margin-left: 20px; margin-bottom: 20px;">
-  <p>Use this tool to generate the Lua structure for your custom grenade. Once generated, the code should be placed in a new file within your schema's items directory.</p>
-  <p><strong>Recommended Placement:</strong></p>
-  <code style="display: block; padding: 12px; background: rgba(0, 0, 0, 0.05); border-left: 4px solid #46a9ff; margin-top: 10px; font-family: 'JetBrains Mono', monospace;">garrysmod/gamemodes/[schema folder]/schema/items/[item_id].lua</code>
-</div>
-
----
+```text
+garrysmod/gamemodes/[schema folder]/schema/items/grenade/[item_id].lua
+```
 
 <div class="generator-grid">
   <!-- Input Column -->
@@ -65,6 +60,13 @@ Define explosive or utility throwable items for your server.
           <small>Inventory slot height</small>
         </div>
       </div>
+
+      <div class="input-group">
+        <label>
+          <input type="checkbox" id="drop-on-death" checked oninput="generateGrenadeItem()"> Drop On Death
+        </label>
+        <small>Controls whether the grenade item should drop on death</small>
+      </div>
     </div>
 
     <div class="button-group">
@@ -91,20 +93,20 @@ function generateGrenadeItem() {
   const width = document.getElementById('item-width').value || '1';
   const height = document.getElementById('item-height').value || '1';
   const weaponClass = (document.getElementById('weapon-class').value || '').trim() || 'weapon_frag';
+  const dropOnDeath = document.getElementById('drop-on-death').checked;
 
   const properties = [
     `    name = ${JSON.stringify(name)},`,
     `    desc = ${JSON.stringify(desc)},`,
     `    model = ${JSON.stringify(model)},`,
-    `    width = ${width},`,
-    `    height = ${height},`,
     `    class = ${JSON.stringify(weaponClass)}`
   ];
 
+  if (width !== '1') properties.splice(3, 0, `    width = ${width},`);
+  if (height !== '1') properties.splice(width !== '1' ? 4 : 3, 0, `    height = ${height},`);
+  if (!dropOnDeath) properties.push('    DropOnDeath = false');
+
   const lines = [
-  '-- Copy and paste this code into any Lua file that loads during initialization',
-  '-- Example: [schema folder]/schema/items.lua',
-  '',
   `lia.item.registerItem(${JSON.stringify(uniqueId)}, "base_grenade", {`,
   ...properties,
   '})'
@@ -126,6 +128,7 @@ function fillExampleGrenade() {
   document.getElementById('weapon-class').value = 'weapon_flashbang';
   document.getElementById('item-width').value = '1';
   document.getElementById('item-height').value = '1';
+  document.getElementById('drop-on-death').checked = true;
 
   generateGrenadeItem();
 }
@@ -135,5 +138,3 @@ document.addEventListener('DOMContentLoaded', () => {
   generateGrenadeItem();
 });
 </script>
-
----

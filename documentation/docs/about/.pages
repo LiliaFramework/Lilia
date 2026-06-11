@@ -1,6 +1,6 @@
-title: About
+title: Framework
 arrange:
- - index.md
- - installation.md
- - compatibility.md
- - features.md
+  - index.md
+  - installation.md
+  - features.md
+  - compatibility.md

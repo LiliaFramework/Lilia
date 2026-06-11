@@ -1,17 +1,12 @@
 # Stackable Item Generator
 
-Create items that can be stacked together to save space, like currency, resources, or scraps.
+Create items that stack together, such as currency-like objects, crafting resources, scraps, ammo bundles, or supplies. Stackable items are ideal for economies where quantity matters more than unique item state.
 
----
+Output Location:
 
-<h3 style="margin-bottom: 5px; font-weight: 700;">Overview</h3>
-<div style="margin-left: 20px; margin-bottom: 20px;">
-  <p>Use this tool to generate the Lua structure for your custom stackable item. Once generated, the code should be placed in a new file within your schema's items directory.</p>
-  <p><strong>Recommended Placement:</strong></p>
-  <code style="display: block; padding: 12px; background: rgba(0, 0, 0, 0.05); border-left: 4px solid #46a9ff; margin-top: 10px; font-family: 'JetBrains Mono', monospace;">garrysmod/gamemodes/[schema folder]/schema/items/[item_id].lua</code>
-</div>
-
----
+```text
+garrysmod/gamemodes/[schema folder]/schema/items/stackable/[item_id].lua
+```
 
 <div class="generator-grid">
   <!-- Input Column -->
@@ -28,11 +23,6 @@ Create items that can be stacked together to save space, like currency, resource
           <label for="item-name">Item Name:</label>
           <input type="text" id="item-name" placeholder="e.g., Metal Scrap" value="Industrial Metal Scrap" oninput="generateStackableItem()">
         </div>
-      </div>
-
-      <div class="input-group">
-        <label for="item-desc">Description:</label>
-        <textarea id="item-desc" placeholder="e.g., Raw metal scraps that can be used for crafting" oninput="generateStackableItem()">Torn fragments of industrial-grade steel and iron, often salvaged from abandoned structures.</textarea>
       </div>
 
     </div>
@@ -58,10 +48,17 @@ Create items that can be stacked together to save space, like currency, resource
         </div>
 
         <div class="input-group">
-          <label for="max-stacks">Max Stacks:</label>
+          <label for="max-stacks">Max Quantity:</label>
           <input type="number" id="max-stacks" placeholder="16" min="1" value="10" oninput="generateStackableItem()">
-          <small>Highest stack count</small>
+          <small>Highest quantity allowed in one stack</small>
         </div>
+      </div>
+
+      <div class="input-group">
+        <label>
+          <input type="checkbox" id="can-split" checked oninput="generateStackableItem()"> Allow Splitting
+        </label>
+        <small>Controls the base `canSplit` field</small>
       </div>
     </div>
 
@@ -84,25 +81,23 @@ Create items that can be stacked together to save space, like currency, resource
 function generateStackableItem() {
   const uniqueId = (document.getElementById('item-id').value || '').trim() || 'stackable_example';
   const name = (document.getElementById('item-name').value || '').trim() || 'Stackable Item';
-  const desc = (document.getElementById('item-desc').value || '').trim() || 'A stackable item';
   const model = (document.getElementById('item-model').value || '').trim() || 'models/props_junk/garbage_metalcan002a.mdl';
   const width = document.getElementById('item-width').value || '1';
   const height = document.getElementById('item-height').value || '1';
-  const maxStacks = document.getElementById('max-stacks').value || '16';
+  const maxQuantity = document.getElementById('max-stacks').value || '16';
+  const canSplit = document.getElementById('can-split').checked;
 
   const properties = [
     `    name = ${JSON.stringify(name)},`,
-    `    desc = ${JSON.stringify(desc)},`,
     `    model = ${JSON.stringify(model)},`,
-    `    width = ${width},`,
-    `    height = ${height},`,
-    `    maxStacks = ${maxStacks}`
+    `    maxQuantity = ${maxQuantity}`
   ];
 
+  if (width !== '1') properties.splice(3, 0, `    width = ${width},`);
+  if (height !== '1') properties.splice(width !== '1' ? 4 : 3, 0, `    height = ${height},`);
+  if (!canSplit) properties.push('    canSplit = false');
+
   const lines = [
-  '-- Copy and paste this code into any Lua file that loads during initialization',
-  '-- Example: [schema folder]/schema/items.lua',
-  '',
   `lia.item.registerItem(${JSON.stringify(uniqueId)}, "base_stackable", {`,
   ...properties,
   '})'
@@ -119,11 +114,11 @@ function generateStackableItem() {
 function fillExampleStackable() {
   document.getElementById('item-id').value = 'copper_wire';
   document.getElementById('item-name').value = 'Copper Wiring';
-  document.getElementById('item-desc').value = 'Exposed copper wires salvaged from electronic components. A vital resource for electrical maintenance and crafting.';
   document.getElementById('item-model').value = 'models/props_lab/cactus.mdl'; // Example path
   document.getElementById('item-width').value = '1';
   document.getElementById('item-height').value = '1';
   document.getElementById('max-stacks').value = '20';
+  document.getElementById('can-split').checked = true;
 
   generateStackableItem();
 }
@@ -133,5 +128,3 @@ document.addEventListener('DOMContentLoaded', () => {
   generateStackableItem();
 });
 </script>
-
----

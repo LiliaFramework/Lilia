@@ -1,17 +1,12 @@
 # Aid Item Generator
 
-Create consumable items that restore health, armor, or stamina.
+Create consumable items that restore health, armor, stamina, or similar survival resources. Aid items are useful for medical systems, survival pacing, event supplies, and economy-controlled recovery.
 
----
+Output Location:
 
-<h3 style="margin-bottom: 5px; font-weight: 700;">Overview</h3>
-<div style="margin-left: 20px; margin-bottom: 20px;">
-  <p>Use this tool to generate the Lua structure for your custom aid item. Once generated, the code should be placed in a new file within your schema's items directory.</p>
-  <p><strong>Recommended Placement:</strong></p>
-  <code style="display: block; padding: 12px; background: rgba(0, 0, 0, 0.05); border-left: 4px solid #46a9ff; margin-top: 10px; font-family: 'JetBrains Mono', monospace;">garrysmod/gamemodes/[schema folder]/schema/items/[item_id].lua</code>
-</div>
-
----
+```text
+garrysmod/gamemodes/[schema folder]/schema/items/aid/[item_id].lua
+```
 
 <div class="generator-grid">
   <!-- Input Column -->
@@ -81,6 +76,22 @@ Create consumable items that restore health, armor, or stamina.
       </div>
     </div>
 
+    <div class="generator-section">
+      <div class="form-grid-2">
+        <div class="input-group">
+          <label for="heal-time">Heal Duration:</label>
+          <input type="number" id="heal-time" placeholder="0" min="0" step="0.1" value="5" oninput="generateAidItem()">
+          <small>Total seconds to spread health across. Use 0 for instant healing.</small>
+        </div>
+
+        <div class="input-group">
+          <label for="heal-interval">Heal Interval:</label>
+          <input type="number" id="heal-interval" placeholder="1" min="0.1" step="0.1" value="1" oninput="generateAidItem()">
+          <small>Seconds between healing ticks when duration is above 0.</small>
+        </div>
+      </div>
+    </div>
+
     <div class="button-group">
       <button onclick="generateAidItem()" class="generate-btn">Generate Aid Item Code</button>
       <button onclick="fillExampleAidItem()" class="generate-btn example-btn">Generate Example</button>
@@ -107,26 +118,24 @@ function generateAidItem() {
   const healthAmount = document.getElementById('health-amount').value.trim();
   const armorAmount = document.getElementById('armor-amount').value.trim();
   const staminaAmount = document.getElementById('stamina-amount').value.trim();
-
-  const healthValue = healthAmount || '0';
-  const armorValue = armorAmount || '0';
-  const staminaValue = staminaAmount || '0';
+  const healTimeAmount = document.getElementById('heal-time').value.trim();
+  const healIntervalAmount = document.getElementById('heal-interval').value.trim();
 
   const properties = [
     `    name = ${JSON.stringify(name)},`,
     `    desc = ${JSON.stringify(desc)},`,
-    `    model = ${JSON.stringify(model)},`,
-    `    width = ${width},`,
-    `    height = ${height},`,
-    `    health = ${healthValue},`,
-    `    armor = ${armorValue},`,
-    `    stamina = ${staminaValue}`
+    `    model = ${JSON.stringify(model)},`
   ];
 
+  if (width !== '1') properties.push(`    width = ${width},`);
+  if (height !== '1') properties.push(`    height = ${height},`);
+  if (healthAmount && healthAmount !== '0') properties.push(`    health = ${healthAmount},`);
+  if (armorAmount && armorAmount !== '0') properties.push(`    armor = ${armorAmount},`);
+  if (staminaAmount && staminaAmount !== '0') properties.push(`    stamina = ${staminaAmount},`);
+  if (healTimeAmount && healTimeAmount !== '0') properties.push(`    healTime = ${healTimeAmount},`);
+  if (healIntervalAmount && healIntervalAmount !== '1') properties.push(`    healInterval = ${healIntervalAmount}`);
+
   const lines = [
-  '-- Copy and paste this code into any Lua file that loads during initialization',
-  '-- Example: [schema folder]/schema/items.lua',
-  '',
   `lia.item.registerItem(${JSON.stringify(uniqueId)}, "base_aid", {`,
   ...properties,
   '})'
@@ -150,6 +159,8 @@ function fillExampleAidItem() {
   document.getElementById('health-amount').value = '25';
   document.getElementById('armor-amount').value = '10';
   document.getElementById('stamina-amount').value = '50';
+  document.getElementById('heal-time').value = '5';
+  document.getElementById('heal-interval').value = '1';
 
   generateAidItem();
 }
@@ -159,5 +170,3 @@ document.addEventListener('DOMContentLoaded', () => {
   generateAidItem();
 });
 </script>
-
----

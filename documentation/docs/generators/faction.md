@@ -1,17 +1,14 @@
 # Faction Generator
 
-Define the core groups and teams that players can join on your server.
+Define the major playable groups in your schema, such as civilians, police, staff, medical teams, military units, or custom setting-specific organizations. Factions are the top-level structure for character creation, whitelisting, models, limits, and default roleplay permissions.
 
----
+Output Location:
 
-<h3 style="margin-bottom: 5px; font-weight: 700;">Overview</h3>
-<div style="margin-left: 20px; margin-bottom: 20px;">
-  <p>Use this tool to generate the Lua structure for your custom faction. Once generated, the code should be placed in a new file within your schema's factions directory.</p>
-  <p><strong>Recommended Placement:</strong></p>
-  <code style="display: block; padding: 12px; background: rgba(0, 0, 0, 0.05); border-left: 4px solid #46a9ff; margin-top: 10px; font-family: 'JetBrains Mono', monospace;">garrysmod/gamemodes/[schema folder]/schema/factions/[faction_name].lua</code>
-</div>
+```text
+garrysmod/gamemodes/[schema folder]/schema/definitions/sh_factions.lua
+```
 
----
+You can also add callback fields like `OnTransferred`, `OnSpawn`, `NameTemplate`, `GetDefaultName`, `GetDefaultDesc`, or any custom logic manually after generation. You can find those in [Faction Definitions](../definitions/faction.md).
 
 <div class="generator-grid">
   <!-- Input Column -->
@@ -20,7 +17,7 @@ Define the core groups and teams that players can join on your server.
       <div class="input-group">
         <label for="faction-index">Faction Index:</label>
         <input type="text" id="faction-index" placeholder="e.g., FACTION_POLICE">
-        <small>The unique identifier for this faction (e.g., FACTION_POLICE)</small>
+        <small>The constant name you want to assign to the registered faction index.</small>
       </div>
 
       <div class="input-group">
@@ -36,17 +33,17 @@ Define the core groups and teams that players can join on your server.
       <div class="form-grid-2">
         <div class="input-group">
           <label for="faction-color-picker">Color (R,G,B):</label>
-          <div style="display:flex; align-items:center; gap:8px;">
-            <input type="color" id="faction-color-picker" value="#000000" style="width:40px; height:32px; padding:2px; cursor:pointer; border:1px solid var(--border-color,#ccc); border-radius:4px; background:none;">
-            <input type="text" id="faction-color" placeholder="e.g., 0, 100, 255" pattern="\d{1,3},\s*\d{1,3},\s*\d{1,3}" style="flex:1;">
+          <div class="color-input-row">
+            <input type="color" id="faction-color-picker" value="#000000">
+            <input type="text" id="faction-color" placeholder="e.g., 0, 100, 255" pattern="\d{1,3},\s*\d{1,3},\s*\d{1,3}">
           </div>
-          <small>Comma-separated RGB values (0-255)</small>
+          <small>Use three numbers from 0 to 255.</small>
         </div>
 
         <div class="input-group">
           <label for="faction-logo">Logo:</label>
           <input type="text" id="faction-logo" placeholder="materials/ui/faction/police_logo.png">
-          <small>Logo material path or URL for scoreboard (leave empty for no logo)</small>
+          <small>Logo shown on the scoreboard. You can use a material path or a web URL. Leave empty for no logo.</small>
         </div>
       </div>
     </div>
@@ -69,16 +66,8 @@ Define the core groups and teams that players can join on your server.
 
         <div class="input-group">
           <label for="faction-limit">Player Limit:</label>
-          <input type="number" id="faction-limit" placeholder="0" min="0">
+          <input type="number" id="faction-limit" placeholder="0" min="0" step="0.01">
           <small>0 = unlimited, decimals = percentage of server (e.g., 0.1 = 10%)</small>
-        </div>
-      </div>
-
-      <div class="form-grid-2">
-        <div class="input-group">
-          <label for="member-limit">Member Limit:</label>
-          <input type="number" id="member-limit" placeholder="" min="1">
-          <small>Hard cap on total characters in this faction (online or offline). Leave empty for no cap.</small>
         </div>
       </div>
     </div>
@@ -88,7 +77,7 @@ Define the core groups and teams that players can join on your server.
         <label>Models:</label>
         <div id="models-list" class="dynamic-list"></div>
         <button onclick="addModelRow()" class="add-btn">+ Add Model</button>
-        <small>Add player model paths</small>
+        <small>Add the player models this faction can use.</small>
       </div>
 
       <div class="form-grid-2">
@@ -111,14 +100,14 @@ Define the core groups and teams that players can join on your server.
         <label>Allowed Skins:</label>
         <div id="allowed-skins-list" class="dynamic-list"></div>
         <button onclick="addAllowedSkinRow()" class="add-btn">+ Add Skin</button>
-        <small>Whitelist of skin IDs players can select. Leave empty to allow all skins.</small>
+        <small>Skin numbers players are allowed to choose. Leave empty to allow all skins.</small>
       </div>
 
       <div class="input-group">
         <label>Allowed Bodygroups:</label>
         <div id="allowed-bodygroups-list" class="dynamic-list"></div>
         <button onclick="addAllowedBodygroupRow()" class="add-btn">+ Add Bodygroup</button>
-        <small>Whitelist of bodygroup values players can select, by bodygroup index and allowed values. Leave empty to allow all.</small>
+        <small>Allowed bodygroup values by bodygroup number. More advanced setups can be added manually later.</small>
       </div>
     </div>
 
@@ -137,21 +126,21 @@ Define the core groups and teams that players can join on your server.
 
       <div class="form-grid-3">
         <div class="input-group">
-          <label for="run-speed">Run Speed:</label>
-          <input type="number" id="run-speed" placeholder="280" min="1">
-          <label><input type="checkbox" id="run-speed-multiplier"> Use as multiplier</label>
+          <label for="run-speed">Run Speed Multiplier:</label>
+          <input type="number" id="run-speed" placeholder="1" min="0" step="0.01">
+          <small>Always multiplies the configured run speed. Use <code>1</code> for default speed.</small>
         </div>
 
         <div class="input-group">
-          <label for="walk-speed">Walk Speed:</label>
-          <input type="number" id="walk-speed" placeholder="150" min="1">
-          <label><input type="checkbox" id="walk-speed-multiplier"> Use as multiplier</label>
+          <label for="walk-speed">Walk Speed Multiplier:</label>
+          <input type="number" id="walk-speed" placeholder="1" min="0" step="0.01">
+          <small>Always multiplies the configured walk speed. Use <code>1</code> for default speed.</small>
         </div>
 
         <div class="input-group">
-          <label for="jump-power">Jump Power:</label>
-          <input type="number" id="jump-power" placeholder="200" min="1">
-          <label><input type="checkbox" id="jump-power-multiplier"> Use as multiplier</label>
+          <label for="jump-power">Jump Power Multiplier:</label>
+          <input type="number" id="jump-power" placeholder="1" min="0" step="0.01">
+          <small>Always multiplies the player's base jump power. Use <code>1</code> for default jump.</small>
         </div>
       </div>
 
@@ -159,13 +148,7 @@ Define the core groups and teams that players can join on your server.
         <div class="input-group">
           <label for="pay">Pay/Salary:</label>
           <input type="number" id="pay" placeholder="0" min="0">
-          <small>Currency amount per paycheck</small>
-        </div>
-
-        <div class="input-group">
-          <label for="pay-timer">Pay Timer (seconds):</label>
-          <input type="number" id="pay-timer" placeholder="300" min="1">
-          <small>Interval in seconds between paychecks (defaults to global salary interval if not set)</small>
+          <small>How much they get paid each paycheck.</small>
         </div>
       </div>
 
@@ -173,7 +156,7 @@ Define the core groups and teams that players can join on your server.
         <div class="input-group">
           <label for="faction-scale">Model Scale:</label>
           <input type="number" id="faction-scale" placeholder="1.0" step="0.1" min="0.1">
-          <small>Model scale multiplier. Also adjusts view offset proportionally. Leave empty for default (1).</small>
+          <small>Character size. Leave empty for normal size.</small>
         </div>
 
         <div class="input-group">
@@ -187,7 +170,7 @@ Define the core groups and teams that players can join on your server.
             <option value="BLOOD_COLOR_ANTLION">BLOOD_COLOR_ANTLION</option>
             <option value="BLOOD_COLOR_ZOMBIE">BLOOD_COLOR_ZOMBIE</option>
           </select>
-          <small>Blood color constant applied on spawn. Leave default unless the faction is non-human.</small>
+          <small>Blood color used for this faction. Leave default for normal human characters.</small>
         </div>
       </div>
     </div>
@@ -197,14 +180,14 @@ Define the core groups and teams that players can join on your server.
         <label>Weapons:</label>
         <div id="weapons-list" class="dynamic-list"></div>
         <button onclick="addWeaponRow()" class="add-btn">+ Add Weapon</button>
-        <small>Add weapon classes</small>
+        <small>Weapons this faction receives on spawn.</small>
       </div>
 
       <div class="input-group">
         <label>Starting Items:</label>
         <div id="items-list" class="dynamic-list"></div>
         <button onclick="addItemRow()" class="add-btn">+ Add Item</button>
-        <small>Add item unique IDs</small>
+        <small>Items new characters in this faction start with.</small>
       </div>
     </div>
 
@@ -213,21 +196,21 @@ Define the core groups and teams that players can join on your server.
         <label>
           <input type="checkbox" id="recognizes-globally"> Recognizes Globally
         </label>
-        <small>Members are always globally recognized</small>
+        <small>Members of this faction always recognize everyone.</small>
       </div>
 
       <div class="input-group">
         <label>
           <input type="checkbox" id="globally-recognized"> Globally Recognized
         </label>
-        <small>Faction is globally recognizable to others</small>
+        <small>Everyone automatically recognizes members of this faction.</small>
       </div>
 
       <div class="input-group">
         <label>
           <input type="checkbox" id="member-auto-recognition"> Member Auto-Recognition
         </label>
-        <small>Members automatically recognize each other</small>
+        <small>Members of this faction automatically recognize each other.</small>
       </div>
 
       <div class="input-group">
@@ -240,21 +223,21 @@ Define the core groups and teams that players can join on your server.
       <div class="input-group">
         <label for="scoreboard-priority">Scoreboard Priority:</label>
         <input type="number" id="scoreboard-priority" placeholder="999" min="1">
-        <small>Lower numbers appear first in scoreboard (default: 999)</small>
+        <small>Lower numbers show higher on the scoreboard.</small>
       </div>
 
       <div class="input-group">
         <label>
           <input type="checkbox" id="scoreboard-classes-public"> Scoreboard Classes Public
         </label>
-        <small>All players can see this faction's classes on the scoreboard</small>
+        <small>Everyone can see this faction's classes on the scoreboard.</small>
       </div>
 
       <div class="input-group">
         <label>
           <input type="checkbox" id="scoreboard-see-all-classes"> See All Classes on Scoreboard
         </label>
-        <small>Members of this faction can see every faction's classes on the scoreboard</small>
+        <small>Members of this faction can see every faction's classes on the scoreboard.</small>
       </div>
     </div>
 
@@ -263,14 +246,14 @@ Define the core groups and teams that players can join on your server.
         <label>Custom Spawns:</label>
         <div id="spawns-list" class="dynamic-list"></div>
         <button onclick="addSpawnRow()" class="add-btn">+ Add Spawn Point</button>
-        <small>Map Name, Position Vector, Angle</small>
+        <small>Where this faction can spawn on each map.</small>
       </div>
 
       <div class="input-group">
         <label>Main Menu Position:</label>
         <div id="main-menu-list" class="dynamic-list"></div>
         <button onclick="addMainMenuRow()" class="add-btn">+ Add Main Menu Position</button>
-        <small>Map Name (leave empty for all), Position Vector, Angle</small>
+        <small>Where this faction preview appears in the main menu.</small>
       </div>
     </div>
 
@@ -279,7 +262,7 @@ Define the core groups and teams that players can join on your server.
         <label>NPC Relations:</label>
         <div id="npc-relations-list" class="dynamic-list"></div>
         <button onclick="addNPCRelationRow()" class="add-btn">+ Add NPC Relation</button>
-        <small>NPC class (e.g. npc_combine_s) and disposition (D_LI, D_HT, D_FR, D_NU)</small>
+        <small>How NPCs react to this faction.</small>
       </div>
     </div>
 
@@ -288,7 +271,7 @@ Define the core groups and teams that players can join on your server.
         <label>Commands:</label>
         <div id="commands-list" class="dynamic-list"></div>
         <button onclick="addCommandRow()" class="add-btn">+ Add Command</button>
-        <small>Command names members of this faction can execute</small>
+        <small>Command names that members of this faction can execute.</small>
       </div>
     </div>
 
@@ -314,7 +297,7 @@ function addTextRow(containerId, placeholder, value = '') {
   const div = document.createElement('div');
   div.className = 'dynamic-row';
   div.innerHTML = `
-  <input type="text" value="${value}" placeholder="${placeholder}">
+  <input type="text" value="${value}" placeholder="${placeholder}" class="list-input">
   <button onclick="this.parentElement.remove()" class="remove-btn">×</button>
   `;
   container.appendChild(div);
@@ -348,7 +331,7 @@ function addMainMenuRow(map='', pos='', ang='') {
   container.appendChild(div);
 }
 
-function addCommandRow(val='') { addTextRow('commands-list', 'lia_faction_chat', val); }
+function addCommandRow(val='') { addTextRow('commands-list', 'kick', val); }
 
 // Wrappers for specific lists
 function addModelRow(val='') { addTextRow('models-list', 'models/player/...', val); }
@@ -397,7 +380,7 @@ function getNPCRelationValues() {
 }
 
 function getListValues(containerId) {
-  return Array.from(document.querySelectorAll(`#${containerId} input[type="text"]`))
+  return Array.from(document.querySelectorAll(`#${containerId} .list-input`))
   .map(input => input.value.trim())
   .filter(val => val !== '');
 }
@@ -452,7 +435,7 @@ function getMainMenuValues() {
 }
 
 function getCommandValues() {
-  return Array.from(document.querySelectorAll('#commands-list input[type="text"]'))
+  return Array.from(document.querySelectorAll('#commands-list .list-input'))
   .map(input => input.value.trim())
   .filter(val => val !== '');
 }
@@ -476,16 +459,39 @@ function getAllowedBodygroupsValues() {
   return result;
 }
 
+function toLuaIdentifier(value, prefix) {
+  return (value || '')
+  .trim()
+  .toLowerCase()
+  .replace(new RegExp(`^${prefix}_`), '')
+  .replace(/[^a-z0-9]+/g, '_')
+  .replace(/^_+|_+$/g, '') || `${prefix.toLowerCase()}_name`;
+}
+
 function generateFaction() {
+  const DEFAULTS = {
+    limit: '0',
+    health: '100',
+    armor: '0',
+    pay: '0',
+    runSpeed: '1',
+    walkSpeed: '1',
+    jumpPower: '1',
+    scale: '1',
+    scaleAlt: '1.0',
+    scoreboardPriority: '999'
+  };
   const index = (document.getElementById('faction-index').value || '').trim() || 'FACTION_NAME';
   const name = (document.getElementById('faction-name').value || '').trim() || 'Faction Name';
   const desc = (document.getElementById('faction-desc').value || '').trim() || 'Faction description';
+  const uniqueIDSource = index && index !== 'FACTION_NAME' ? index : name;
+  const uniqueID = toLuaIdentifier(uniqueIDSource, 'faction');
   const colorInput = document.getElementById('faction-color').value.trim();
+  const logo = document.getElementById('faction-logo').value.trim();
 
   const isDefault = document.getElementById('is-default').checked;
   const oneCharOnly = document.getElementById('one-char-only').checked;
-  const limit = document.getElementById('faction-limit').value || '0';
-  const memberLimit = document.getElementById('member-limit').value.trim();
+  const limit = document.getElementById('faction-limit').value || DEFAULTS.limit;
 
   // Harvest dynamic lists
   const models = getListValues('models-list');
@@ -503,16 +509,12 @@ function generateFaction() {
   const allowedSkins = getAllowedSkinsValues();
   const allowedBodygroups = getAllowedBodygroupsValues();
 
-  const health = document.getElementById('health').value || '100';
-  const armor = document.getElementById('armor').value || '0';
-  const runSpeed = document.getElementById('run-speed').value || '280';
-  const runSpeedMultiplier = document.getElementById('run-speed-multiplier').checked;
-  const walkSpeed = document.getElementById('walk-speed').value || '150';
-  const walkSpeedMultiplier = document.getElementById('walk-speed-multiplier').checked;
-  const jumpPower = document.getElementById('jump-power').value || '200';
-  const jumpPowerMultiplier = document.getElementById('jump-power-multiplier').checked;
-  const pay = document.getElementById('pay').value || '0';
-  const payTimer = document.getElementById('pay-timer').value || '';
+  const health = document.getElementById('health').value.trim();
+  const armor = document.getElementById('armor').value.trim();
+  const runSpeed = document.getElementById('run-speed').value.trim();
+  const walkSpeed = document.getElementById('walk-speed').value.trim();
+  const jumpPower = document.getElementById('jump-power').value.trim();
+  const pay = document.getElementById('pay').value.trim();
 
   const recognizesGlobally = document.getElementById('recognizes-globally').checked;
   const globallyRecognized = document.getElementById('globally-recognized').checked;
@@ -521,161 +523,150 @@ function generateFaction() {
   const scoreboardPriority = document.getElementById('scoreboard-priority').value.trim();
   const scoreboardClassesPublic = document.getElementById('scoreboard-classes-public').checked;
   const scoreboardSeeAllClasses = document.getElementById('scoreboard-see-all-classes').checked;
-  const logo = document.getElementById('faction-logo').value.trim();
 
-  const lines = [
-  '-- Copy and paste this code into your faction file',
-  `-- Example: [schema folder]/factions/${name.toLowerCase().replace(/[^a-z0-9]/g, '')}.lua`,
-  '',
-  `FACTION.name = ${JSON.stringify(name)}`,
-  `FACTION.desc = ${JSON.stringify(desc)}`,
-  `FACTION.color = ${colorInput ? `Color(${colorInput})` : 'Color(150, 150, 150)'}`,
-  '',
-  '-- Access Control',
-  `FACTION.isDefault = ${isDefault}`,
-  `FACTION.oneCharOnly = ${oneCharOnly}`,
-  `FACTION.limit = ${limit}`
-  ];
+  const lines = [];
+  const pushField = (key, value) => {
+    lines.push(`    ${key} = ${value},`);
+  };
+  const pushTableStart = key => {
+    lines.push(`    ${key} = {`);
+  };
 
-  if (memberLimit) lines.push(`FACTION.memberLimit = ${memberLimit}`);
+  lines.push(index !== 'FACTION_NAME' ? `${index} = lia.faction.register(${JSON.stringify(uniqueID)}, {` : `lia.faction.register(${JSON.stringify(uniqueID)}, {`);
+  pushField('name', JSON.stringify(name));
+  pushField('desc', JSON.stringify(desc));
 
-  if (models.length > 0) {
-  lines.push('', '-- Models', 'FACTION.models = {');
-  models.forEach(model => {
-  lines.push(` ${JSON.stringify(model)},`);
-  });
-  lines.push('}');
+  if (!isDefault || oneCharOnly || limit !== DEFAULTS.limit) {
+    lines.push('');
+    if (!isDefault) pushField('isDefault', 'false');
+    if (oneCharOnly) pushField('oneCharOnly', 'true');
+    if (limit !== DEFAULTS.limit) pushField('limit', limit);
   }
 
-  if (skinAllowed || bodygroupsAllowed || allowedSkins.length > 0 || Object.keys(allowedBodygroups).length > 0) {
-  lines.push('', '-- Model Customization');
-  if (skinAllowed) lines.push('FACTION.skinAllowed = true');
-  if (bodygroupsAllowed) lines.push('FACTION.bodygroupsAllowed = true');
-  if (allowedSkins.length > 0) {
-    lines.push('FACTION.allowedSkins = {');
-    allowedSkins.forEach(s => lines.push(`  ${s},`));
-    lines.push('}');
-  }
-  if (Object.keys(allowedBodygroups).length > 0) {
-    lines.push('FACTION.allowedBodygroups = {');
-    Object.entries(allowedBodygroups).forEach(([idx, vals]) => {
-      lines.push(`  [${idx}] = { ${vals.join(', ')} },`);
-    });
-    lines.push('}');
-  }
+  const hasCustomScale = scale && scale !== DEFAULTS.scale && scale !== DEFAULTS.scaleAlt;
+
+  if (models.length > 0 || colorInput || logo || hasCustomScale || skinAllowed || bodygroupsAllowed || allowedSkins.length > 0 || Object.keys(allowedBodygroups).length > 0) {
+    lines.push('');
+    if (models.length > 0) {
+      pushTableStart('models');
+      models.forEach(model => lines.push(`        ${JSON.stringify(model)},`));
+      lines.push('    },');
+    }
+    if (colorInput) pushField('color', `Color(${colorInput})`);
+    if (logo) pushField('logo', JSON.stringify(logo));
+    if (hasCustomScale) pushField('scale', scale);
+    if (skinAllowed) pushField('skinAllowed', 'true');
+    if (bodygroupsAllowed) pushField('bodygroupsAllowed', 'true');
+    if (allowedSkins.length > 0) {
+      pushTableStart('allowedSkins');
+      allowedSkins.forEach(skin => lines.push(`        ${skin},`));
+      lines.push('    },');
+    }
+    if (Object.keys(allowedBodygroups).length > 0) {
+      pushTableStart('allowedBodygroups');
+      Object.entries(allowedBodygroups).forEach(([bodygroupIndex, values]) => {
+        lines.push(`        [${bodygroupIndex}] = { ${values.join(', ')} },`);
+      });
+      lines.push('    },');
+    }
   }
 
-  lines.push(
-  '',
-  '-- Gameplay Properties',
-  `FACTION.health = ${health}`,
-  `FACTION.armor = ${armor}`,
-  `FACTION.runSpeed = ${runSpeed}`,
-  `FACTION.walkSpeed = ${walkSpeed}`,
-  `FACTION.jumpPower = ${jumpPower}`
-  );
+  const hasCustomStats = (health && health !== DEFAULTS.health) ||
+    (armor && armor !== DEFAULTS.armor) ||
+    (pay && pay !== DEFAULTS.pay) ||
+    (runSpeed && runSpeed !== DEFAULTS.runSpeed) ||
+    (walkSpeed && walkSpeed !== DEFAULTS.walkSpeed) ||
+    (jumpPower && jumpPower !== DEFAULTS.jumpPower) ||
+    bloodcolor;
 
-  if (runSpeedMultiplier) lines.push('FACTION.runSpeedMultiplier = true');
-  if (walkSpeedMultiplier) lines.push('FACTION.walkSpeedMultiplier = true');
-  if (jumpPowerMultiplier) lines.push('FACTION.jumpPowerMultiplier = true');
-  if (scale) lines.push(`FACTION.scale = ${scale}`);
-  if (bloodcolor) lines.push(`FACTION.bloodcolor = ${bloodcolor}`);
-
-  lines.push(`FACTION.pay = ${pay}`);
-  if (payTimer) {
-  lines.push(`FACTION.payTimer = ${payTimer}`);
+  if (hasCustomStats) {
+    lines.push('');
+    if (health && health !== DEFAULTS.health) pushField('health', health);
+    if (armor && armor !== DEFAULTS.armor) pushField('armor', armor);
+    if (pay && pay !== DEFAULTS.pay) pushField('pay', pay);
+    if (runSpeed && runSpeed !== DEFAULTS.runSpeed) pushField('runSpeed', runSpeed);
+    if (walkSpeed && walkSpeed !== DEFAULTS.walkSpeed) pushField('walkSpeed', walkSpeed);
+    if (jumpPower && jumpPower !== DEFAULTS.jumpPower) pushField('jumpPower', jumpPower);
+    if (bloodcolor) pushField('bloodcolor', bloodcolor);
   }
 
   if (weapons.length > 0) {
-  lines.push('', '-- Weapons', 'FACTION.weapons = {');
-  weapons.forEach(weapon => {
-  lines.push(` ${JSON.stringify(weapon)},`);
-  });
-  lines.push('}');
+    lines.push('');
+    pushTableStart('weapons');
+    weapons.forEach(weapon => lines.push(`        ${JSON.stringify(weapon)},`));
+    lines.push('    },');
   }
 
   if (startingItems.length > 0) {
-  lines.push('', '-- Starting Items', 'FACTION.items = {');
-  startingItems.forEach(item => {
-  lines.push(` ${JSON.stringify(item)},`);
-  });
-  lines.push('}');
+    lines.push('');
+    pushTableStart('items');
+    startingItems.forEach(item => lines.push(`        ${JSON.stringify(item)},`));
+    lines.push('    },');
   }
 
-  if (logo) {
-  lines.push('', '-- Visual', `FACTION.logo = ${JSON.stringify(logo)}`);
-  }
-
-  if (recognizesGlobally || globallyRecognized || memberAutoRecognition || scoreboardHidden || scoreboardClassesPublic || scoreboardSeeAllClasses || (scoreboardPriority && scoreboardPriority !== '999')) {
-  lines.push('', '-- Special Features');
-  if (recognizesGlobally) lines.push('FACTION.RecognizesGlobally = true');
-  if (globallyRecognized) lines.push('FACTION.isGloballyRecognized = true');
-  if (memberAutoRecognition) lines.push('FACTION.MemberToMemberAutoRecognition = true');
-  if (scoreboardHidden) lines.push('FACTION.scoreboardHidden = true');
-  if (scoreboardPriority && scoreboardPriority !== '999') lines.push(`FACTION.scoreboardPriority = ${scoreboardPriority}`);
-  if (scoreboardClassesPublic) lines.push('FACTION.scoreboardClassesPublic = true');
-  if (scoreboardSeeAllClasses) lines.push('FACTION.scoreboardSeeAllClasses = true');
-  }
-
-  // Spawns
-  const mapKeys = Object.keys(spawns);
-  if (mapKeys.length > 0) {
-  lines.push('', '-- Custom Spawns', 'FACTION.spawns = {');
-  mapKeys.forEach(map => {
-  lines.push(` ["${map}"] = {`);
-  spawns[map].forEach(s => {
-  lines.push(` {position = ${s.position}, angles = ${s.angle}},`);
-  });
-  lines.push(` },`);
-  });
-  lines.push('}');
-  }
-
-  // Main Menu Position
-  const menuKeys = Object.keys(mainMenuPos);
-  if (menuKeys.length > 0) {
-  lines.push('', '-- Main Menu Position');
-  // Check if there's only 'default' (no map specified case) - simplistic handling
-  if (menuKeys.length === 1 && menuKeys[0] === 'default') {
-  // Handle simple vector case if needed, but for now we follow table structure or assume dictionary
-  lines.push('FACTION.mainMenuPosition = {');
-  // Not putting default key
-  const v = mainMenuPos['default'];
-  lines.push(` position = ${v.position},`);
-  lines.push(` angles = ${v.angles}`);
-  lines.push('}');
-  } else {
-  lines.push('FACTION.mainMenuPosition = {');
-  menuKeys.forEach(map => {
-  const v = mainMenuPos[map];
-  lines.push(` ["${map}"] = {`);
-  lines.push(` position = ${v.position},`);
-  lines.push(` angles = ${v.angles}`);
-  lines.push(` },`);
-  });
-  lines.push('}');
-  }
-  }
-
-  // NPC Relations
   if (npcRelations.length > 0) {
-  lines.push('', '-- NPC Relations', 'FACTION.NPCRelations = {');
-  npcRelations.forEach(r => {
-  lines.push(` [${JSON.stringify(r.npc)}] = ${r.disp},`);
-  });
-  lines.push('}');
+    lines.push('');
+    pushTableStart('NPCRelations');
+    npcRelations.forEach(relation => {
+      lines.push(`        [${JSON.stringify(relation.npc)}] = ${relation.disp},`);
+    });
+    lines.push('    },');
   }
 
-  // Commands
-  if (commands.length > 0) {
-  lines.push('', '-- Commands', 'FACTION.commands = {');
-  commands.forEach(cmd => {
-  lines.push(` ${JSON.stringify(cmd)},`);
-  });
-  lines.push('}');
+  if (recognizesGlobally || globallyRecognized || memberAutoRecognition || scoreboardHidden || scoreboardClassesPublic || scoreboardSeeAllClasses || (scoreboardPriority && scoreboardPriority !== DEFAULTS.scoreboardPriority) || commands.length > 0) {
+    lines.push('');
+    if (recognizesGlobally) pushField('RecognizesGlobally', 'true');
+    if (globallyRecognized) pushField('isGloballyRecognized', 'true');
+    if (memberAutoRecognition) pushField('MemberToMemberAutoRecognition', 'true');
+    if (scoreboardHidden) pushField('scoreboardHidden', 'true');
+    if (scoreboardPriority && scoreboardPriority !== DEFAULTS.scoreboardPriority) pushField('scoreboardPriority', scoreboardPriority);
+    if (scoreboardClassesPublic) pushField('scoreboardClassesPublic', 'true');
+    if (scoreboardSeeAllClasses) pushField('scoreboardSeeAllClasses', 'true');
+    if (commands.length > 0) {
+      pushTableStart('commands');
+      commands.forEach(cmd => lines.push(`        ${JSON.stringify(cmd)},`));
+      lines.push('    },');
+    }
   }
 
-  lines.push('', `${index} = FACTION.index`);
+  const mapKeys = Object.keys(spawns);
+  const menuKeys = Object.keys(mainMenuPos);
+  if (mapKeys.length > 0 || menuKeys.length > 0) {
+    lines.push('');
+    if (mapKeys.length > 0) {
+      pushTableStart('spawns');
+      mapKeys.forEach(map => {
+        lines.push(`        ["${map}"] = {`);
+        spawns[map].forEach(spawn => {
+          lines.push(`            {position = ${spawn.position}, angles = ${spawn.angle}},`);
+        });
+        lines.push('        },');
+      });
+      lines.push('    },');
+    }
+
+    if (menuKeys.length > 0) {
+      if (menuKeys.length === 1 && menuKeys[0] === 'default') {
+        const menuEntry = mainMenuPos.default;
+        pushTableStart('mainMenuPosition');
+        lines.push(`        position = ${menuEntry.position},`);
+        lines.push(`        angles = ${menuEntry.angles}`);
+        lines.push('    },');
+      } else {
+        pushTableStart('mainMenuPosition');
+        menuKeys.forEach(map => {
+          const menuEntry = mainMenuPos[map];
+          lines.push(`        ["${map}"] = {`);
+          lines.push(`            position = ${menuEntry.position},`);
+          lines.push(`            angles = ${menuEntry.angles}`);
+          lines.push('        },');
+        });
+        lines.push('    },');
+      }
+    }
+  }
+
+  lines.push('})');
 
   const code = `${lines.join('\n')}\n`;
 
@@ -720,16 +711,11 @@ function fillExampleFaction() {
 
   document.getElementById('health').value = '100';
   document.getElementById('armor').value = '0';
-  document.getElementById('run-speed').value = '250';
-  document.getElementById('run-speed-multiplier').checked = false;
-  document.getElementById('walk-speed').value = '150';
-  document.getElementById('walk-speed-multiplier').checked = false;
-  document.getElementById('jump-power').value = '200';
-  document.getElementById('jump-power-multiplier').checked = false;
+  document.getElementById('run-speed').value = '1';
+  document.getElementById('walk-speed').value = '1';
+  document.getElementById('jump-power').value = '1';
   document.getElementById('pay').value = '20';
-  document.getElementById('pay-timer').value = '300';
 
-  document.getElementById('member-limit').value = '';
   document.getElementById('skin-allowed').checked = false;
   document.getElementById('bodygroups-allowed').checked = false;
   document.getElementById('recognizes-globally').checked = false;
@@ -782,5 +768,3 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 </script>
-
----

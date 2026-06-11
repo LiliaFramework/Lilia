@@ -1,0 +1,11 @@
+title: Items
+arrange:
+  - aid.md
+  - ammo.md
+  - bags.md
+  - books.md
+  - grenade.md
+  - outfit.md
+  - pacoutfit.md
+  - stackable.md
+  - weapons.md

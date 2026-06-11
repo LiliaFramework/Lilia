@@ -1,17 +1,12 @@
 # Outfit Item Generator
 
-Create wearable clothing and armor that changes the player's model and adds protection.
+Create wearable clothing or armor that can change a character's model and apply protection values. Outfit items are useful for uniforms, armor tiers, disguises, event costumes, and equipment-based presentation.
 
----
+Output Location:
 
-<h3 style="margin-bottom: 5px; font-weight: 700;">Overview</h3>
-<div style="margin-left: 20px; margin-bottom: 20px;">
-  <p>Use this tool to generate the Lua structure for your custom outfit. Once generated, the code should be placed in a new file within your schema's items directory.</p>
-  <p><strong>Recommended Placement:</strong></p>
-  <code style="display: block; padding: 12px; background: rgba(0, 0, 0, 0.05); border-left: 4px solid #46a9ff; margin-top: 10px; font-family: 'JetBrains Mono', monospace;">garrysmod/gamemodes/[schema folder]/schema/items/[item_id].lua</code>
-</div>
-
----
+```text
+garrysmod/gamemodes/[schema folder]/schema/items/outfit/[item_id].lua
+```
 
 <div class="generator-grid">
   <!-- Input Column -->
@@ -61,9 +56,9 @@ Create wearable clothing and armor that changes the player's model and adds prot
 
     <div class="generator-section">
       <div class="input-group">
-        <label for="outfit-model">Wearable Model:</label>
-        <input type="text" id="outfit-model" placeholder="models/player/combine_super_soldier.mdl" value="models/player/combine_super_soldier.mdl" oninput="generateOutfitItem()">
-        <small>The player model that is applied when this outfit is worn</small>
+        <label for="replacement-model">Replacement Model:</label>
+        <input type="text" id="replacement-model" placeholder="models/player/combine_super_soldier.mdl" value="models/player/combine_super_soldier.mdl" oninput="generateOutfitItem()">
+        <small>Optional model path applied through the base replacement logic</small>
       </div>
 
       <div class="form-grid-2">
@@ -74,9 +69,9 @@ Create wearable clothing and armor that changes the player's model and adds prot
         </div>
 
         <div class="input-group">
-          <label for="speed-reduction">Speed Multiplier:</label>
-          <input type="number" id="speed-reduction" placeholder="1.0" min="0" step="0.1" value="0.9" oninput="generateOutfitItem()">
-          <small>1.0 = normal speed, 0.5 = half speed</small>
+          <label for="outfit-category">Outfit Category:</label>
+          <input type="text" id="outfit-category" placeholder="e.g., uniform" value="armor" oninput="generateOutfitItem()">
+          <small>Only one equipped item per outfit category is allowed</small>
         </div>
       </div>
     </div>
@@ -104,26 +99,24 @@ function generateOutfitItem() {
   const model = (document.getElementById('item-model').value || '').trim() || 'models/props_c17/SuitCase001a.mdl';
   const width = document.getElementById('item-width').value || '1';
   const height = document.getElementById('item-height').value || '1';
-  const outfitModel = (document.getElementById('outfit-model').value || '').trim() || 'models/player/group01/male_01.mdl';
+  const replacementModel = (document.getElementById('replacement-model').value || '').trim() || 'models/player/group01/male_01.mdl';
   const armorValue = document.getElementById('armor-value').value || '0';
-  const speedMult = document.getElementById('speed-reduction').value || '1.0';
+  const outfitCategory = (document.getElementById('outfit-category').value || '').trim() || 'uniform';
 
   const properties = [
     `    name = ${JSON.stringify(name)},`,
     `    desc = ${JSON.stringify(desc)},`,
     `    model = ${JSON.stringify(model)},`,
-    `    width = ${width},`,
-    `    height = ${height},`,
-    '    category = "Outfits",',
-    `    armor = ${armorValue},`,
-    `    speed = ${speedMult},`,
-    `    outfitModel = ${JSON.stringify(outfitModel)}`
+    '    category = "outfit",',
+    `    outfitCategory = ${JSON.stringify(outfitCategory)},`,
+    `    replacement = ${JSON.stringify(replacementModel)}`
   ];
 
+  if (width !== '1') properties.splice(3, 0, `    width = ${width},`);
+  if (height !== '1') properties.splice(width !== '1' ? 4 : 3, 0, `    height = ${height},`);
+  if (armorValue !== '0') properties.splice(properties.length - 1, 0, `    armor = ${armorValue},`);
+
   const lines = [
-  '-- Copy and paste this code into any Lua file that loads during initialization',
-  '-- Example: [schema folder]/schema/items.lua',
-  '',
   `lia.item.registerItem(${JSON.stringify(uniqueId)}, "base_outfit", {`,
   ...properties,
   '})'
@@ -144,9 +137,9 @@ function fillExampleOutfit() {
   document.getElementById('item-model').value = 'models/props_junk/metalgascan.mdl';
   document.getElementById('item-width').value = '2';
   document.getElementById('item-height').value = '2';
-  document.getElementById('outfit-model').value = 'models/player/corpse1.mdl'; // Example path
+  document.getElementById('replacement-model').value = 'models/player/corpse1.mdl';
   document.getElementById('armor-value').value = '25';
-  document.getElementById('speed-reduction').value = '0.7';
+  document.getElementById('outfit-category').value = 'hazmat';
 
   generateOutfitItem();
 }
@@ -156,5 +149,3 @@ document.addEventListener('DOMContentLoaded', () => {
   generateOutfitItem();
 });
 </script>
-
----

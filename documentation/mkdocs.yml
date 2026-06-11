@@ -1,32 +1,30 @@
 site_name: Lilia Documentation
 site_description: Official documentation for the Lilia Framework
 site_author: Lilia Framework Team
-site_url: 'https://liliaframework.github.io/'
-repo_url: 'https://github.com/LiliaFramework/Lilia'
+site_url: https://liliaframework.github.io/
+repo_url: https://github.com/LiliaFramework/Lilia
+repo_name: LiliaFramework/Lilia
 
 theme:
   name: material
   logo: assets/logo.png
   favicon: assets/favicon.ico
+  language: en
   features:
     - navigation.instant
     - navigation.instant.prefetch
     - navigation.instant.progress
-    - navigation.instant.preview
     - navigation.tracking
     - navigation.tabs
     - navigation.tabs.sticky
     - navigation.sections
-    - navigation.expand
+    - navigation.indexes
     - navigation.path
     - navigation.prune
-    - navigation.indexes
+    - navigation.top
+    - navigation.footer
     - toc.follow
     - toc.integrate
-    - navigation.top
-    - header.autohide
-    - announce.dismiss
-    - navigation.footer
     - search.suggest
     - search.highlight
     - search.share
@@ -35,28 +33,78 @@ theme:
     - content.code.annotate
     - content.tabs.link
     - content.tooltips
-    - content.footnote.tooltips
   font:
-    text: Inter
-    code: Roboto Mono
+    text: IBM Plex Sans
+    code: IBM Plex Mono
   palette:
     - scheme: slate
-      toggle:
-        icon: material/weather-sunny
-        name: Dark mode
       primary: teal
-      accent: lavender
-    - scheme: default
-      toggle:
-        icon: material/weather-night
-        name: Light mode
-      primary: teal
-      accent: lavender
+      accent: cyan
+
+nav:
+  - Home: index.md
+  - Reference:
+      - Overview: definitions/index.md
+      - Core:
+          - Attributes: definitions/attributes.md
+          - Factions: definitions/faction.md
+          - Classes: definitions/class.md
+          - Modules: definitions/module.md
+          - MetroRP GitModules: modules/index.md
+      - Items:
+          - Aid Items: definitions/items/aid.md
+          - Ammo Items: definitions/items/ammo.md
+          - ArcCW Attachments: definitions/items/arccw_att.md
+          - Books and Notes: definitions/items/books.md
+          - Entity Items: definitions/items/entities.md
+          - Grenades: definitions/items/grenade.md
+          - Outfits: definitions/items/outfit.md
+          - PAC3 Outfits: definitions/items/pacoutfit.md
+          - Stackable Items: definitions/items/stackable.md
+          - URL Items: definitions/items/url.md
+          - Weapons: definitions/items/weapons.md
+  - Generators:
+      - Overview: generators/index.md
+      - Schema Generators:
+          - Attributes: generators/attribute.md
+          - Classes: generators/class.md
+          - Factions: generators/faction.md
+      - Item Generators:
+          - Aid Items: generators/items/aid.md
+          - Ammo Items: generators/items/ammo.md
+          - Bags: generators/items/bags.md
+          - Books and Notes: generators/items/books.md
+          - Grenades: generators/items/grenade.md
+          - Outfits: generators/items/outfit.md
+          - PAC3 Outfits: generators/items/pacoutfit.md
+          - Stackable Items: generators/items/stackable.md
+          - Weapons: generators/items/weapons.md
+  - Guides:
+      - Framework Overview: about/index.md
+      - Installation: about/installation.md
+      - Feature Map: about/features.md
+      - Addon Compatibility: about/compatibility.md
 
 extra_css:
   - stylesheets/extra.css
 
+extra:
+  social:
+    - icon: fontawesome/brands/github
+      link: https://github.com/LiliaFramework/Lilia
+    - icon: fontawesome/brands/discord
+      link: https://discord.gg/esCRH5ckbQ
+
 markdown_extensions:
+  - admonition
+  - attr_list
+  - md_in_html
+  - abbr
+  - tables
+  - toc:
+      permalink: true
+      title: On this page
+  - pymdownx.details
   - pymdownx.highlight:
       anchor_linenums: true
       line_spans: __span

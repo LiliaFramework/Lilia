@@ -1,23 +1,12 @@
-<style>
-.input-group { margin-bottom: 16px !important; }
-.generator-card .generator-section { margin-bottom: 24px !important; }
-.input-group label { margin-bottom: 8px !important; }
-</style>
-
 # Ammo Item Generator
 
-Create ammunition items for your server's weapons.
+Create ammunition items that pair inventory objects with Garry's Mod ammo types. Ammo items help keep weapon supply, vendors, loot tables, and storage behavior visible inside Lilia's inventory system.
 
----
+Output Location:
 
-<h3 style="margin-bottom: 5px; font-weight: 700;">Overview</h3>
-<div style="margin-left: 20px; margin-bottom: 20px;">
-  <p>Use this tool to generate the Lua structure for your custom ammo item. Once generated, the code should be placed in a new file within your schema's items directory.</p>
-  <p><strong>Recommended Placement:</strong></p>
-  <code style="display: block; padding: 12px; background: rgba(0, 0, 0, 0.05); border-left: 4px solid #46a9ff; margin-top: 10px; font-family: 'JetBrains Mono', monospace;">garrysmod/gamemodes/[schema folder]/schema/items/[item_id].lua</code>
-</div>
-
----
+```text
+garrysmod/gamemodes/[schema folder]/schema/items/ammo/[item_id].lua
+```
 
 <div class="generator-grid">
   <!-- Input Column -->
@@ -33,11 +22,6 @@ Create ammunition items for your server's weapons.
       <div class="input-group">
         <label for="item-name">Item Name:</label>
         <input type="text" id="item-name" placeholder="e.g., 9mm Ammo" value="9mm Ammo" oninput="generateAmmoItem()">
-      </div>
-
-      <div class="input-group">
-        <label for="item-desc">Description:</label>
-        <textarea id="item-desc" placeholder="e.g., Standard 9mm pistol ammunition" oninput="generateAmmoItem()">A box containing 30 rounds of 9mm ammunition.</textarea>
       </div>
 
     </div>
@@ -70,9 +54,9 @@ Create ammunition items for your server's weapons.
       </div>
 
       <div class="input-group">
-        <label for="ammo-amount">Ammo Amount:</label>
-        <input type="number" id="ammo-amount" placeholder="30" value="30" min="1" oninput="generateAmmoItem()">
-        <small>Amount of ammo given to the player</small>
+        <label for="use-sound">Use Sound:</label>
+        <input type="text" id="use-sound" placeholder="items/ammo_pickup.wav" value="" oninput="generateAmmoItem()">
+        <small>Optional sound override used when the ammo item is loaded</small>
       </div>
     </div>
 
@@ -95,26 +79,23 @@ Create ammunition items for your server's weapons.
 function generateAmmoItem() {
   const uniqueId = (document.getElementById('item-id').value || '').trim() || 'ammo_example';
   const name = (document.getElementById('item-name').value || '').trim() || 'Ammo Item';
-  const desc = (document.getElementById('item-desc').value || '').trim() || 'Ammo item description';
   const model = (document.getElementById('item-model').value || '').trim() || 'models/items/boxsrounds.mdl';
   const width = document.getElementById('item-width').value || '1';
   const height = document.getElementById('item-height').value || '1';
   const ammoType = (document.getElementById('ammo-type').value || '').trim() || 'pistol';
-  const ammoAmount = document.getElementById('ammo-amount').value || '30';
+  const useSound = (document.getElementById('use-sound').value || '').trim();
 
   const properties = [
     `    name = ${JSON.stringify(name)},`,
-    `    desc = ${JSON.stringify(desc)},`,
-    `    model = ${JSON.stringify(model)},`,
-    `    width = ${width},`,
-    `    height = ${height},`,
-    `    ammo = ${JSON.stringify(ammoType)},`
+    `    model = ${JSON.stringify(model)},`
   ];
 
+  if (width !== '1') properties.push(`    width = ${width},`);
+  if (height !== '1') properties.push(`    height = ${height},`);
+  if (ammoType !== 'pistol') properties.push(`    ammo = ${JSON.stringify(ammoType)},`);
+  if (useSound) properties.push(`    useSound = ${JSON.stringify(useSound)}`);
+
   const lines = [
-  '-- Copy and paste this code into any Lua file that loads during initialization',
-  '-- Example: [schema folder]/schema/items.lua',
-  '',
   `lia.item.registerItem(${JSON.stringify(uniqueId)}, "base_ammo", {`,
   ...properties,
   '})'
@@ -131,11 +112,11 @@ function generateAmmoItem() {
 function fillExampleAmmoItem() {
   document.getElementById('item-id').value = 'ammo_357';
   document.getElementById('item-name').value = '.357 Magnum Ammo';
-  document.getElementById('item-desc').value = 'A cylinder of six .357 magnum rounds, known for high penetration and damage.';
   document.getElementById('item-model').value = 'models/items/357ammo.mdl';
   document.getElementById('item-width').value = '1';
   document.getElementById('item-height').value = '1';
   document.getElementById('ammo-type').value = '357';
+  document.getElementById('use-sound').value = 'items/ammo_pickup.wav';
 
   generateAmmoItem();
 }
@@ -145,5 +126,3 @@ document.addEventListener('DOMContentLoaded', () => {
   generateAmmoItem();
 });
 </script>
-
----

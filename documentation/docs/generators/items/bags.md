@@ -1,23 +1,12 @@
-<style>
-.input-group { margin-bottom: 16px !important; }
-.generator-card .generator-section { margin-bottom: 24px !important; }
-.input-group label { margin-bottom: 8px !important; }
-</style>
-
 # Bag Item Generator
 
-Create storage bags that open their own inventory. Use this generator to define bags with a custom size and appearance.
+Create storage bags that open their own inventory grid and expand what a character can carry. Bags are one of the strongest economy levers in Lilia because they change how much equipment, loot, and supplies a player can move.
 
----
+Output Location:
 
-<h3 style="margin-bottom: 5px; font-weight: 700;">Overview</h3>
-<div style="margin-left: 20px; margin-bottom: 20px;">
-  <p>Use this tool to generate the Lua structure for a custom bag item. Once generated, place the code in a new item file inside your schema's items directory.</p>
-  <p><strong>Recommended Placement:</strong></p>
-  <code style="display: block; padding: 12px; background: rgba(0, 0, 0, 0.05); border-left: 4px solid #46a9ff; margin-top: 10px; font-family: 'JetBrains Mono', monospace;">garrysmod/gamemodes/[schema folder]/schema/items/[item_id].lua</code>
-</div>
-
----
+```text
+garrysmod/gamemodes/[schema folder]/schema/items/[item_id].lua
+```
 
 <div class="generator-grid">
   <!-- Input Column -->
@@ -47,12 +36,6 @@ Create storage bags that open their own inventory. Use this generator to define 
         <label for="item-model">Model:</label>
         <input type="text" id="item-model" placeholder="models/props_junk/garbage_bag001a.mdl" value="models/props_junk/garbage_bag001a.mdl" oninput="generateBagItem()">
         <small>3D model path for the bag</small>
-      </div>
-
-      <div class="input-group">
-        <label for="bag-weight">Bag Weight:</label>
-        <input type="number" id="bag-weight" placeholder="-6" value="" oninput="generateBagItem()">
-        <small>Optional negative weight for weight-based bags. Leave blank to generate a grid-based bag using width and height.</small>
       </div>
 
       <div class="form-grid-3">
@@ -91,7 +74,6 @@ function generateBagItem() {
   const name = (document.getElementById('item-name').value || '').trim() || 'Bag Item';
   const desc = (document.getElementById('item-desc').value || '').trim() || 'A storage bag item.';
   const model = (document.getElementById('item-model').value || '').trim() || 'models/props_junk/garbage_bag001a.mdl';
-  const bagWeight = (document.getElementById('bag-weight').value || '').trim();
   const invWidth = document.getElementById('inv-width').value || '2';
   const invHeight = document.getElementById('inv-height').value || '2';
 
@@ -101,18 +83,10 @@ function generateBagItem() {
     `    model = ${JSON.stringify(model)},`
   ];
 
-  if (bagWeight !== '') {
-    const normalizedWeight = bagWeight.startsWith('-') ? bagWeight : `-${bagWeight}`;
-    properties.push(`    weight = ${normalizedWeight}`);
-  } else {
-    properties.push(`    invWidth = ${invWidth},`);
-    properties.push(`    invHeight = ${invHeight}`);
-  }
+  if (invWidth !== '2') properties.push(`    invWidth = ${invWidth},`);
+  if (invHeight !== '2') properties.push(`    invHeight = ${invHeight}`);
 
   const lines = [
-    '-- Copy and paste this code into any Lua file that loads during initialization',
-    '-- Example: [schema folder]/schema/items.lua',
-    '',
     `lia.item.registerItem(${JSON.stringify(uniqueId)}, "base_bags", {`,
     ...properties,
     '})'
@@ -130,7 +104,6 @@ function fillExampleBagItem() {
   document.getElementById('item-name').value = 'Small Backpack';
   document.getElementById('item-desc').value = 'A compact backpack for carrying extra supplies.';
   document.getElementById('item-model').value = 'models/props_junk/garbage_bag001a.mdl';
-  document.getElementById('bag-weight').value = '';
   document.getElementById('inv-width').value = '3';
   document.getElementById('inv-height').value = '2';
   generateBagItem();
@@ -141,5 +114,3 @@ document.addEventListener('DOMContentLoaded', () => {
   generateBagItem();
 });
 </script>
-
----

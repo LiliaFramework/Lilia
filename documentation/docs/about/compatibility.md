@@ -1,259 +1,223 @@
 # Addon Compatibility
 
-Information about addon integrations and compatibility features in Lilia.
+Lilia includes compatibility behavior for common Garry's Mod admin systems, weapon bases, vehicle addons, PAC3, duplication tools, roleplay addons, and sandbox systems. These integrations help protect Lilia's permissions, persistence, character money, HUD behavior, and anti-abuse systems.
 
----
+Compatibility can still vary by addon version and server configuration. Test admin commands, economy purchases, vehicle damage, PAC3 outfits, weapon HUD behavior, and duplication tools before opening a live server.
 
-<h3 style="margin-bottom: 5px; font-weight: 700;">Overview</h3>
-<div style="margin-left: 20px; margin-bottom: 20px;">
-  <p>Lilia is designed to be highly compatible with the most popular Garry's Mod addons. The framework includes built-in compatibility layers that ensure external systems (like admin mods, vehicle systems, and UI addons) work seamlessly with Lilia's core mechanics.</p>
-  <p>These integrations typically handle rank synchronization, money conversion, permission checking, and UI conflict resolution automatically, allowing server owners to use their favorite workshop content without manual configuration.</p>
-</div>
-
----
+## Admin And Permission Systems
 
 <details class="realm-shared no-icon">
-<summary><a id="DarkRP"></a>DarkRP</summary>
+<summary>CAMI</summary>
 <div class="details-content">
-<h3 style="margin-bottom: 5px; font-weight: 700;"><a id="darkrp"></a>Features</h3>
-<div style="margin-left: 20px; margin-bottom: 20px;">
-<ul>
-<li>Allows you to use almost all DarkRP addons directly with Lilia.</li>
-<li>Maintains compatibility with DarkRP money, jobs, and entities.</li>
-<li>Fixes common errors that usually happen when moving from DarkRP to a new framework.</li>
-</ul>
-</div>
+
+- Lets other admin addons recognize Lilia staff ranks.
+- Helps synchronize rank changes with Lilia's database-backed permissions.
+- Reduces permission conflicts when multiple addons use CAMI checks.
+
 </div>
 </details>
 
 <details class="realm-shared no-icon">
-<summary><a id="AdvancedDuplicator"></a>Advanced Duplicator</summary>
+<summary>SAM</summary>
 <div class="details-content">
-<h3 style="margin-bottom: 5px; font-weight: 700;"><a id="advancedduplicator"></a>Features</h3>
-<div style="margin-left: 20px; margin-bottom: 20px;">
-<ul>
-<li>Blocks players from spawning problematic or restricted dupes.</li>
-<li>Prevents gigantic props from crashing the server.</li>
-<li>Alerts admins if someone tries to use a malicious dupe.</li>
-</ul>
-</div>
+
+- Allows SAM commands to work while respecting Lilia permissions.
+- Synchronizes staff ranks between SAM and Lilia.
+- Adds support for staff actions such as blind and unblind.
+- Keeps moderation hierarchy checks aligned so staff cannot act above their rank.
+
 </div>
 </details>
 
 <details class="realm-shared no-icon">
-<summary><a id="AdvancedDuplicator2"></a>Advanced Duplicator 2</summary>
+<summary>SAdmin</summary>
 <div class="details-content">
-<h3 style="margin-bottom: 5px; font-weight: 700;"><a id="advancedduplicator2"></a>Features</h3>
-<div style="margin-left: 20px; margin-bottom: 20px;">
-<ul>
-<li>Stops players from spawning dupes that lag or crash the server.</li>
-<li>Respects your server's blacklist settings.</li>
-</ul>
-</div>
+
+- Lets SAdmin menus and commands use Lilia rank data.
+- Applies permission checks to administrative actions such as kicking and banning.
+- Synchronizes usergroups automatically.
+
 </div>
 </details>
 
 <details class="realm-shared no-icon">
-<summary><a id="ARCCW"></a>ArcCW</summary>
+<summary>ServerGuard</summary>
 <div class="details-content">
-<h3 style="margin-bottom: 5px; font-weight: 700;"><a id="arccw"></a>Features</h3>
-<div style="margin-left: 20px; margin-bottom: 20px;">
-<ul>
-<li>Hides the default ArcCW HUD so it doesn't clash with Lilia's interface.</li>
-<li>Configures weapon dropping and attachments to feel natural in RP.</li>
-<li>Automatically applies the best settings for server performance.</li>
-</ul>
-</div>
+
+- Links ServerGuard ranks with Lilia's permission system.
+- Allows ServerGuard commands to run alongside Lilia administration.
+
 </div>
 </details>
 
 <details class="realm-shared no-icon">
-<summary><a id="CAMI"></a>CAMI</summary>
+<summary>ULX</summary>
 <div class="details-content">
-<h3 style="margin-bottom: 5px; font-weight: 700;"><a id="cami"></a>Features</h3>
-<div style="margin-left: 20px; margin-bottom: 20px;">
-<ul>
-<li>Makes other admin addons recognize your Lilia staff ranks.</li>
-<li>Automatically syncs rank changes to your database.</li>
-<li>Prevents permission conflicts between different addons.</li>
-</ul>
+
+- Allows ULX commands and menus to work with Lilia.
+- Synchronizes admin and superadmin groups.
+- Ensures ULX actions respect Lilia permission rules where compatibility hooks apply.
+
 </div>
+</details>
+
+## Roleplay And Economy Addons
+
+<details class="realm-shared no-icon">
+<summary>DarkRP-oriented addons</summary>
+<div class="details-content">
+
+- Provides bridge behavior for many addons originally written around DarkRP-style assumptions.
+- Maintains compatibility for money, jobs, and entities where supported.
+- Reduces common errors when DarkRP-adjacent addons expect roleplay framework functions.
+
 </div>
 </details>
 
 <details class="realm-shared no-icon">
-<summary><a id="LVS"></a>LVS</summary>
+<summary>VCMod</summary>
 <div class="details-content">
-<h3 style="margin-bottom: 5px; font-weight: 700;"><a id="lvs"></a>Features</h3>
-<div style="margin-left: 20px; margin-bottom: 20px;">
-<ul>
-<li>Stops you from accidentally hurting yourself with your own vehicle's weapons or collisions.</li>
-</ul>
+
+- Uses character money when players purchase vehicles or upgrades.
+- Prevents purchases when the active character cannot afford the cost.
+
 </div>
+</details>
+
+## Weapons, PAC, And Player Presentation
+
+<details class="realm-shared no-icon">
+<summary>ArcCW</summary>
+<div class="details-content">
+
+- Hides the default ArcCW HUD when it conflicts with Lilia's interface.
+- Adjusts weapon dropping and attachment behavior for roleplay servers.
+- Applies compatibility settings intended to reduce avoidable performance issues.
+
 </div>
 </details>
 
 <details class="realm-shared no-icon">
-<summary><a id="PAC3"></a>PAC3</summary>
+<summary>PAC3</summary>
 <div class="details-content">
-<h3 style="margin-bottom: 5px; font-weight: 700;"><a id="pac3"></a>Features</h3>
-<div style="margin-left: 20px; margin-bottom: 20px;">
-<ul>
-<li>Ensures everyone sees each other's outfits correctly.</li>
-<li>Adds easy commands to fix or disable outfits if they cause lag.</li>
-<li>Prevents loading outfits from external websites for security.</li>
-<li>Automatically puts outfits on player ragdolls when they die.</li>
-</ul>
+
+- Helps synchronize player outfits so other clients see them correctly.
+- Adds behavior for fixing or disabling problematic outfits.
+- Blocks external outfit loading where required for security.
+- Applies outfits to ragdolls when characters die.
+
+Use the [PAC3 outfit generator](../generators/items/pacoutfit.md) to scaffold PAC-backed item definitions.
+
 </div>
+</details>
+
+## Vehicles And Seating
+
+<details class="realm-shared no-icon">
+<summary>LVS</summary>
+<div class="details-content">
+
+- Prevents players from accidentally damaging themselves with their own vehicle weapons or collisions.
+
 </div>
 </details>
 
 <details class="realm-shared no-icon">
-<summary><a id="PermaProps"></a>PermaProps</summary>
+<summary>Simfphys Vehicles</summary>
 <div class="details-content">
-<h3 style="margin-bottom: 5px; font-weight: 700;"><a id="permaprops"></a>Features</h3>
-<div style="margin-left: 20px; margin-bottom: 20px;">
-<ul>
-<li>Stops PermaProps from interfering with Lilia's own save system.</li>
-<li>Warns you if you try to save a prop that is already saved by Lilia.</li>
-</ul>
-</div>
+
+- Applies crash damage behavior for drivers.
+- Prevents players from abusing seats on top of vehicles.
+- Adds trunk storage support where configured.
+- Allows vehicle editing to be restricted to administrators.
+
 </div>
 </details>
 
 <details class="realm-shared no-icon">
-<summary><a id="ProneMod"></a>Prone Mod</summary>
+<summary>Sit Anywhere</summary>
 <div class="details-content">
-<h3 style="margin-bottom: 5px; font-weight: 700;"><a id="pronemod"></a>Features</h3>
-<div style="margin-left: 20px; margin-bottom: 20px;">
-<ul>
-<li>Automatically stands players up when they die or switch characters.</li>
-</ul>
-</div>
+
+- Prevents players from sitting on each other or on moving vehicles.
+- Reduces seat-based wall and position exploits.
+
 </div>
 </details>
 
 <details class="realm-shared no-icon">
-<summary><a id="SAM"></a>SAM</summary>
+<summary>Prone Mod</summary>
 <div class="details-content">
-<h3 style="margin-bottom: 5px; font-weight: 700;"><a id="sam"></a>Features</h3>
-<div style="margin-left: 20px; margin-bottom: 20px;">
-<ul>
-<li>Allows you to use SAM commands while keeping Lilia's permission system.</li>
-<li>Syncs staff ranks perfectly between both systems.</li>
-<li>Adds useful features like blind/unblind commands and playtime tracking.</li>
-<li>Ensures admins can only ban/kick people lower than them.</li>
-</ul>
+
+- Automatically returns players to a standing state when they die or switch characters.
+
 </div>
+</details>
+
+## Building And Duplication Tools
+
+<details class="realm-shared no-icon">
+<summary>Advanced Duplicator</summary>
+<div class="details-content">
+
+- Blocks problematic or restricted duplications.
+- Prevents very large props from causing server instability.
+- Alerts administrators when suspicious duplications are attempted.
+
 </div>
 </details>
 
 <details class="realm-shared no-icon">
-<summary><a id="SAdmin"></a>SAdmin</summary>
+<summary>Advanced Duplicator 2</summary>
 <div class="details-content">
-<h3 style="margin-bottom: 5px; font-weight: 700;"><a id="sadmin"></a>Features</h3>
-<div style="margin-left: 20px; margin-bottom: 20px;">
-<ul>
-<li>Lets you use SAdmin's menu and commands with Lilia's ranks.</li>
-<li>Enforces all proper permission checks for kicking, banning, etc.</li>
-<li>Syncs usergroups automatically.</li>
-</ul>
-</div>
+
+- Stops lag-heavy or crash-prone duplications.
+- Respects server blacklist settings.
+
 </div>
 </details>
 
 <details class="realm-shared no-icon">
-<summary><a id="SimfphysVehicles"></a>Simfphys Vehicles</summary>
+<summary>PermaProps</summary>
 <div class="details-content">
-<h3 style="margin-bottom: 5px; font-weight: 700;"><a id="simfphysvehicles"></a>Features</h3>
-<div style="margin-left: 20px; margin-bottom: 20px;">
-<ul>
-<li>Drivers take damage if they crash their car.</li>
-<li>Prevents people from sitting on top of cars (anti-abuse).</li>
-<li>Adds trunk storage support to vehicles.</li>
-<li>Allows you to restrict vehicle editing to admins only.</li>
-</ul>
-</div>
+
+- Prevents PermaProps from interfering with Lilia's persistence behavior.
+- Warns when a prop is already saved by Lilia.
+
 </div>
 </details>
 
 <details class="realm-shared no-icon">
-<summary><a id="SitAnywhere"></a>Sit Anywhere</summary>
+<summary>Wiremod</summary>
 <div class="details-content">
-<h3 style="margin-bottom: 5px; font-weight: 700;"><a id="sitanywhere"></a>Features</h3>
-<div style="margin-left: 20px; margin-bottom: 20px;">
-<ul>
-<li>Stops players from sitting on each other or on moving cars.</li>
-<li>Prevents players from using seats to glitch through walls.</li>
-</ul>
-</div>
+
+- Restricts potentially dangerous Expression 2 uploads.
+- Limits advanced Wiremod features to appropriate ranks such as administrators or donors.
+- Keeps Wiremod behavior aligned with Lilia save and protection systems.
+
 </div>
 </details>
 
+## NPC And Sandbox Systems
+
 <details class="realm-shared no-icon">
-<summary><a id="ServerGuard"></a>ServerGuard</summary>
+<summary>VJ Base</summary>
 <div class="details-content">
-<h3 style="margin-bottom: 5px; font-weight: 700;"><a id="serverguard"></a>Features</h3>
-<div style="margin-left: 20px; margin-bottom: 20px;">
-<ul>
-<li>Links ServerGuard's ranks with Lilia's permission system.</li>
-<li>Allows ServerGuard commands to work seamlessly.</li>
-</ul>
-</div>
+
+- Disables lag-prone or insecure behavior where compatibility hooks apply.
+- Prevents players from spawning game-breaking NPCs.
+- Adjusts settings based on player count to reduce avoidable load.
+
 </div>
 </details>
 
-<details class="realm-shared no-icon">
-<summary><a id="ULX"></a>ULX</summary>
-<div class="details-content">
-<h3 style="margin-bottom: 5px; font-weight: 700;"><a id="ulx"></a>Features</h3>
-<div style="margin-left: 20px; margin-bottom: 20px;">
-<ul>
-<li>Lets you use ULX commands and menus with Lilia.</li>
-<li>Syncs all your admins and superadmins automatically.</li>
-<li>Ensures ULX respects Lilia's permission rules.</li>
-</ul>
-</div>
-</div>
-</details>
+## Launch Checklist
 
-<details class="realm-shared no-icon">
-<summary><a id="VCMod"></a>VCMod</summary>
-<div class="details-content">
-<h3 style="margin-bottom: 5px; font-weight: 700;"><a id="vcmod"></a>Features</h3>
-<div style="margin-left: 20px; margin-bottom: 20px;">
-<ul>
-<li>When you buy a car or upgrade in VCMod, it takes money from your character.</li>
-<li>Ensures you can't buy things if you don't have the cash.</li>
-</ul>
-</div>
-</div>
-</details>
-
-<details class="realm-shared no-icon">
-<summary><a id="VJBase"></a>VJBase</summary>
-<div class="details-content">
-<h3 style="margin-bottom: 5px; font-weight: 700;"><a id="vjbase"></a>Features</h3>
-<div style="margin-left: 20px; margin-bottom: 20px;">
-<ul>
-<li>Removes laggy or insecure features automatically.</li>
-<li>Prevents players from spawning game-breaking NPCs.</li>
-<li>Adjusts settings based on how many players are online to reduce lag.</li>
-</ul>
-</div>
-</div>
-</details>
-
-<details class="realm-shared no-icon">
-<summary><a id="Wiremod"></a>Wiremod</summary>
-<div class="details-content">
-<h3 style="margin-bottom: 5px; font-weight: 700;"><a id="wiremod"></a>Features</h3>
-<div style="margin-left: 20px; margin-bottom: 20px;">
-<ul>
-<li>Prevents regular players from uploading potentially dangerous E2 code.</li>
-<li>Restricts advanced features to Admins or Donators only.</li>
-<li>Ensures Wiremod respects Lilia's save/protection systems.</li>
-</ul>
-</div>
-</div>
-</details>
+| Area | What to verify |
+| --- | --- |
+| Permissions | Your admin system recognizes Lilia ranks and respects hierarchy checks. |
+| Economy | Addons that charge money read and write character money correctly. |
+| Weapons | Weapon bases do not duplicate HUD elements or bypass inventory expectations. |
+| PAC3 | Outfits apply, replicate, unequip, and appear on ragdolls as expected. |
+| Vehicles | Purchase, damage, trunk, and seat behavior do not bypass roleplay rules. |
+| Duplication tools | Ordinary duplications work while large or blacklisted duplications are blocked. |
+| Logs | Server logs stay clean after testing the highest-risk addon workflows. |

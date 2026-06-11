@@ -1,18 +1,14 @@
 # Weapon Item Generator
 
-Create equippable weapons that players can carry in their inventory and use in combat.
+Create equippable weapon items that players can carry in their inventory and use in combat. Use this generator when a weapon should be visible to Lilia's inventory, vendor, storage, and balancing systems.
 
----
+Lilia can automatically generate weapon items for registered weapon entities that do not have manual item definitions. Use this generator when you want to override that default behavior for a specific weapon class.
 
-<h3 style="margin-bottom: 5px; font-weight: 700;">Overview</h3>
-<div style="margin-left: 20px; margin-bottom: 20px;">
-  <p>Use this tool to generate the Lua structure for your custom weapon item. Once generated, the code should be placed in a new file within your schema's items directory.</p>
-  <p><strong>Note on Automatic Generation:</strong> Lilia automatically generates weapon items for any registered weapon entity that does not have a manual item definition. Using this generator to create a custom item will override that default behavior for the specified weapon class.</p>
-  <p><strong>Recommended Placement:</strong></p>
-  <code style="display: block; padding: 12px; background: rgba(0, 0, 0, 0.05); border-left: 4px solid #46a9ff; margin-top: 10px; font-family: 'JetBrains Mono', monospace;">garrysmod/gamemodes/[schema folder]/schema/items/[item_id].lua</code>
-</div>
+Output Location:
 
----
+```text
+garrysmod/gamemodes/[schema folder]/schema/items/weapons/[item_id].lua
+```
 
 <div class="generator-grid">
   <!-- Input Column -->
@@ -69,21 +65,39 @@ Create equippable weapons that players can carry in their inventory and use in c
     </div>
 
     <div class="generator-section">
-      <div class="input-group">
-        <label>
-          <input type="checkbox" id="is-holsterable" checked oninput="generateWeaponItem()"> Holsterable
-        </label>
-        <small>Can the weapon be holstered/visible on the player's back?</small>
+      <div class="form-grid-2">
+        <div class="input-group">
+          <label for="weapon-category">Weapon Category:</label>
+          <input type="text" id="weapon-category" placeholder="e.g., primary" value="" oninput="generateWeaponItem()">
+          <small>Optional category key used to prevent equipping another weapon in the same slot</small>
+        </div>
+
+        <div class="input-group">
+          <label>
+            <input type="checkbox" id="drop-on-death" checked oninput="generateWeaponItem()"> Drop On Death
+          </label>
+          <small>Controls the base `DropOnDeath` field</small>
+        </div>
+      </div>
+
+      <div class="form-grid-2">
+        <div class="input-group">
+          <label for="equip-sound">Equip Sound:</label>
+          <input type="text" id="equip-sound" placeholder="items/ammo_pickup.wav" value="" oninput="generateWeaponItem()">
+          <small>Optional sound override played when equipping</small>
+        </div>
+
+        <div class="input-group">
+          <label for="unequip-sound">Unequip Sound:</label>
+          <input type="text" id="unequip-sound" placeholder="items/ammo_pickup.wav" value="" oninput="generateWeaponItem()">
+          <small>Optional sound override played when unequipping</small>
+        </div>
       </div>
 
       <div class="input-group">
-        <label for="holster-slot">Holster Slot:</label>
-        <select id="holster-slot" oninput="generateWeaponItem()">
-          <option value="none">None</option>
-          <option value="back" selected>Back (Primary)</option>
-          <option value="side">Side (Sidearm)</option>
-        </select>
-        <small>Visual attachment point on the player model</small>
+        <label for="required-skills">Required Skill Levels:</label>
+        <textarea id="required-skills" placeholder="Optional. One per line, format: guns=5" oninput="generateWeaponItem()"></textarea>
+        <small>Optional skill requirements written as <code>skill=value</code>, one per line</small>
       </div>
     </div>
 
@@ -103,6 +117,27 @@ Create equippable weapons that players can carry in their inventory and use in c
 </div>
 
 <script>
+function parseRequiredSkills() {
+  const raw = (document.getElementById('required-skills').value || '').trim();
+  if (!raw) return [];
+
+  return raw
+    .split('\n')
+    .map((line) => line.trim())
+    .filter(Boolean)
+    .map((line) => {
+      const separatorIndex = line.indexOf('=');
+      if (separatorIndex === -1) return null;
+
+      const key = line.slice(0, separatorIndex).trim();
+      const value = line.slice(separatorIndex + 1).trim();
+      if (!key || !value) return null;
+
+      return {key, value};
+    })
+    .filter(Boolean);
+}
+
 function generateWeaponItem() {
   const uniqueId = (document.getElementById('item-id').value || '').trim() || 'weapon_example';
   const name = (document.getElementById('item-name').value || '').trim() || 'Weapon Item';
@@ -111,24 +146,35 @@ function generateWeaponItem() {
   const width = document.getElementById('item-width').value || '1';
   const height = document.getElementById('item-height').value || '1';
   const weaponClass = (document.getElementById('weapon-class').value || '').trim() || 'weapon_ak47';
-  const holsterable = document.getElementById('is-holsterable').checked;
-  const holsterSlot = document.getElementById('holster-slot').value;
+  const weaponCategory = (document.getElementById('weapon-category').value || '').trim();
+  const dropOnDeath = document.getElementById('drop-on-death').checked;
+  const equipSound = (document.getElementById('equip-sound').value || '').trim();
+  const unequipSound = (document.getElementById('unequip-sound').value || '').trim();
+  const requiredSkills = parseRequiredSkills();
 
   const properties = [
     `    name = ${JSON.stringify(name)},`,
     `    desc = ${JSON.stringify(desc)},`,
     `    model = ${JSON.stringify(model)},`,
-    `    width = ${width},`,
-    `    height = ${height},`,
-    `    class = ${JSON.stringify(weaponClass)},`,
-    `    isHolsterable = ${holsterable},`,
-    `    holsterSlot = ${JSON.stringify(holsterSlot)}`
+    `    class = ${JSON.stringify(weaponClass)},`
   ];
 
+  if (width !== '2') properties.splice(3, 0, `    width = ${width},`);
+  if (height !== '2') properties.splice(width !== '2' ? 4 : 3, 0, `    height = ${height},`);
+  if (weaponCategory) properties.push(`    weaponCategory = ${JSON.stringify(weaponCategory)},`);
+  if (!dropOnDeath) properties.push('    DropOnDeath = false,');
+  if (equipSound) properties.push(`    equipSound = ${JSON.stringify(equipSound)},`);
+  if (unequipSound) properties.push(`    unequipSound = ${JSON.stringify(unequipSound)},`);
+  if (requiredSkills.length > 0) {
+    properties.push('    RequiredSkillLevels = {');
+    requiredSkills.forEach((entry, index) => {
+      const suffix = index === requiredSkills.length - 1 ? '' : ',';
+      properties.push(`        ${entry.key} = ${entry.value}${suffix}`);
+    });
+    properties.push('    }');
+  }
+
   const lines = [
-  '-- Copy and paste this code into any Lua file that loads during initialization',
-  '-- Example: [schema folder]/schema/items.lua',
-  '',
   `lia.item.registerItem(${JSON.stringify(uniqueId)}, "base_weapons", {`,
   ...properties,
   '})'
@@ -150,8 +196,11 @@ function fillExampleWeapon() {
   document.getElementById('weapon-class').value = 'weapon_glock';
   document.getElementById('item-width').value = '2';
   document.getElementById('item-height').value = '1';
-  document.getElementById('is-holsterable').checked = true;
-  document.getElementById('holster-slot').value = 'side';
+  document.getElementById('weapon-category').value = 'sidearm';
+  document.getElementById('drop-on-death').checked = true;
+  document.getElementById('equip-sound').value = 'items/ammo_pickup.wav';
+  document.getElementById('unequip-sound').value = 'items/ammo_pickup.wav';
+  document.getElementById('required-skills').value = 'guns=3';
 
   generateWeaponItem();
 }
@@ -161,5 +210,3 @@ document.addEventListener('DOMContentLoaded', () => {
   generateWeaponItem();
 });
 </script>
-
----

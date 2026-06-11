@@ -1,18 +1,14 @@
 # PAC3 Item Generator
 
-Create wearable PAC3 outfit items that attach PAC parts to the player when equipped.
+Create wearable PAC3 outfit items that attach PAC parts to the player when equipped. PAC3 outfits are useful for small visual accessories, faction markers, event props, and cosmetic progression that should live inside Lilia's inventory rules.
 
----
+PAC3 must be installed on the server for these items to work. Generated items target `base_pacoutfit`, which applies the PAC part on equip and removes it on unequip.
 
-<h3 style="margin-bottom: 5px; font-weight: 700;">Overview</h3>
-<div style="margin-left: 20px; margin-bottom: 20px;">
-  <p>Use this tool to generate the Lua structure for a custom PAC3 item. It targets <code>base_pacoutfit</code>, which equips a PAC part and removes it when unequipped.</p>
-  <p><strong>Requirements:</strong> PAC3 must be installed and available on the server for these items to work correctly.</p>
-  <p><strong>Recommended Placement:</strong></p>
-  <code style="display: block; padding: 12px; background: rgba(0, 0, 0, 0.05); border-left: 4px solid #46a9ff; margin-top: 10px; font-family: 'JetBrains Mono', monospace;">garrysmod/gamemodes/[schema folder]/schema/items/pacoutfit/[item_id].lua</code>
-</div>
+Output Location:
 
----
+```text
+garrysmod/gamemodes/[schema folder]/schema/items/pacoutfit/[item_id].lua
+```
 
 <div class="generator-grid">
   <div class="generator-card form-card">
@@ -153,10 +149,8 @@ function generatePac3Item() {
   const properties = [
     `    name = ${JSON.stringify(name)},`,
     `    desc = ${JSON.stringify(desc)},`,
-    `    category = "PAC3",`,
+    `    category = "outfit",`,
     `    model = ${JSON.stringify(model)},`,
-    `    width = ${width},`,
-    `    height = ${height},`,
     `    outfitCategory = ${JSON.stringify(outfitCategory)},`,
     '    pacData = {',
     '        [1] = {',
@@ -172,6 +166,9 @@ function generatePac3Item() {
     '    },'
   ];
 
+  if (width !== '1') properties.splice(4, 0, `    width = ${width},`);
+  if (height !== '1') properties.splice(width !== '1' ? 5 : 4, 0, `    height = ${height},`);
+
   if (attribBoosts.length > 0) {
     properties.push('    attribBoosts = {');
     attribBoosts.forEach((entry, index) => {
@@ -182,9 +179,6 @@ function generatePac3Item() {
   }
 
   const lines = [
-    '-- Copy and paste this code into a Lua file that loads during initialization',
-    '-- Example: [schema folder]/schema/items/pacoutfit/[item_id].lua',
-    '',
     `lia.item.registerItem(${JSON.stringify(uniqueId)}, "base_pacoutfit", {`,
     ...properties,
     '})'
@@ -219,5 +213,3 @@ document.addEventListener('DOMContentLoaded', () => {
   generatePac3Item();
 });
 </script>
-
----

@@ -1,22 +1,25 @@
 # Attribute Generator
 
-Quickly create custom character attributes like Strength, Endurance, or Intelligence.
+Create persistent character attributes such as strength, endurance, intelligence, crafting skill, medical knowledge, or schema-specific progression stats. Attributes are best used for values that should follow a character over time and influence schema logic, item behavior, or roleplay progression.
 
----
+Output Location:
 
-<h3 style="margin-bottom: 5px; font-weight: 700;">Overview</h3>
-<div style="margin-left: 20px; margin-bottom: 20px;">
-  <p>Use this tool to generate the Lua structure for your custom attribute. Once generated, the code should be placed in a new file within your schema's attributes directory.</p>
-  <p><strong>Recommended Placement:</strong></p>
-  <code style="display: block; padding: 12px; background: rgba(0, 0, 0, 0.05); border-left: 4px solid #46a9ff; margin-top: 10px; font-family: 'JetBrains Mono', monospace;">garrysmod/gamemodes/[schema folder]/schema/attributes/[attribute_name].lua</code>
-</div>
+```text
+garrysmod/gamemodes/[schema folder]/schema/definitions/sh_attributes.lua
+```
 
----
+You can also add callback fields like `OnSetup` or any custom logic manually after generation. You can find those in [Attribute Definitions](../definitions/attributes.md).
 
 <div class="generator-grid">
   <!-- Input Column -->
   <div class="generator-card form-card">
     <div class="generator-section">
+      <div class="input-group">
+        <label for="attribute-id">Attribute ID:</label>
+        <input type="text" id="attribute-id" placeholder="e.g., strength">
+        <small>Unique ID used when registering the attribute. Leave empty to derive it from the name.</small>
+      </div>
+
       <div class="input-group">
         <label for="attribute-name">Attribute Name:</label>
         <input type="text" id="attribute-name" placeholder="e.g., Strength">
@@ -67,24 +70,40 @@ Quickly create custom character attributes like Strength, Endurance, or Intellig
 </div>
 
 <script>
+function toLuaIdentifier(value) {
+  return (value || '')
+  .trim()
+  .toLowerCase()
+  .replace(/[^a-z0-9]+/g, '_')
+  .replace(/^_+|_+$/g, '') || 'attribute_name';
+}
+
 function generateAttribute() {
+  const uniqueIDSource = (document.getElementById('attribute-id').value || '').trim();
   const name = (document.getElementById('attribute-name').value || '').trim() || 'Attribute Name';
   const desc = (document.getElementById('attribute-desc').value || '').trim() || 'Attribute description';
-  const maxValue = document.getElementById('max-value').value || '100';
+  const uniqueID = toLuaIdentifier(uniqueIDSource || name);
+  const maxValue = document.getElementById('max-value').value.trim() || '100';
   const startingMax = document.getElementById('starting-max').value.trim();
   const noStartBonus = document.getElementById('no-start-bonus').checked;
 
   const lines = [
-    '-- Copy and paste this code into your attribute file',
-    '-- Example: [schema folder]/attributes/strength.lua',
-    '',
-    `ATTRIBUTE.name = ${JSON.stringify(name)}`,
-    `ATTRIBUTE.desc = ${JSON.stringify(desc)}`,
-    `ATTRIBUTE.maxValue = ${maxValue}`
+    `lia.attribs.register(${JSON.stringify(uniqueID)}, {`,
+    `    name = ${JSON.stringify(name)},`,
+    `    desc = ${JSON.stringify(desc)},`
   ];
 
-  if (startingMax) lines.push(`ATTRIBUTE.startingMax = ${startingMax}`);
-  lines.push(`ATTRIBUTE.noStartBonus = ${noStartBonus ? 'true' : 'false'}`);
+  if (maxValue !== '100') {
+    lines.push(`    maxValue = ${maxValue},`);
+  }
+
+  if (startingMax || noStartBonus) {
+    lines.push('');
+    if (startingMax) lines.push(`    startingMax = ${startingMax},`);
+    if (noStartBonus) lines.push('    noStartBonus = true,');
+  }
+
+  lines.push('})');
 
   const code = `${lines.join('\n')}\n`;
 
@@ -95,6 +114,7 @@ function generateAttribute() {
 }
 
 function fillExampleAttribute() {
+  document.getElementById('attribute-id').value = 'endurance';
   document.getElementById('attribute-name').value = 'Endurance';
   document.getElementById('attribute-desc').value = 'Physical stamina and resilience. Affects maximum health and sprint duration.';
   document.getElementById('max-value').value = '100';
@@ -109,5 +129,3 @@ document.addEventListener('DOMContentLoaded', () => {
   generateAttribute();
 });
 </script>
-
----
