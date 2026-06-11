@@ -1142,41 +1142,66 @@ end
 function GM:CreateSalaryTimers()
     local defaultSalaryInterval = lia.config.get("SalaryInterval", 300)
     if hook.Run("ShouldOverrideSalaryTimers") == true then return end
-    if timer.Exists("liaSalaryGlobal") then timer.Remove("liaSalaryGlobal") end
-    for uniqueID, faction in pairs(lia.faction.teams) do
-        local timerName = "liaSalaryFaction_" .. uniqueID
+    self.salaryTimerNames = self.salaryTimerNames or {}
+    for _, timerName in ipairs(self.salaryTimerNames) do
         if timer.Exists(timerName) then timer.Remove(timerName) end
-        local factionInterval = faction.payTimer or defaultSalaryInterval
-        if isnumber(factionInterval) and factionInterval > 0 then
-            local factionTimer = function()
-                for _, client in player.Iterator() do
-                    if IsValid(client) and client:getChar() and hook.Run("CanPlayerEarnSalary", client) ~= false then
-                        local char = client:getChar()
-                        local charFaction = lia.faction.indices[char:getFaction()]
-                        if charFaction and charFaction.uniqueID == uniqueID then
-                            local class = lia.class.list[char:getClass()]
-                            local pay = hook.Run("GetSalaryAmount", client, charFaction, class)
-                            pay = isnumber(pay) and pay or class and class.pay or charFaction and charFaction.pay or 0
-                            local adjustedPay = hook.Run("OnSalaryAdjust", client)
-                            if isnumber(adjustedPay) then pay = adjustedPay end
-                            local prestigeBonus = hook.Run("GetPrestigePayBonus", client, char, pay, charFaction, class)
-                            if isnumber(prestigeBonus) then pay = pay + prestigeBonus end
-                            if pay > 0 then
-                                local handled = hook.Run("PreSalaryGive", client, char, pay, charFaction, class)
-                                if handled ~= true then
-                                    local finalPay = hook.Run("OnSalaryGiven", client, char, pay, charFaction, class)
-                                    if isnumber(finalPay) then pay = finalPay end
-                                    char:giveMoney(pay)
-                                    client:notifyMoneyLocalized("salary", lia.currency.get(pay), L("salaryWord"))
-                                end
+    end
+
+    self.salaryTimerNames = {}
+    if timer.Exists("liaSalaryGlobal") then timer.Remove("liaSalaryGlobal") end
+    local function getSalaryInterval(faction, class)
+        local classInterval = class and class.payTimer
+        if isnumber(classInterval) and classInterval > 0 then return classInterval end
+        local factionInterval = faction and faction.payTimer
+        if isnumber(factionInterval) and factionInterval > 0 then return factionInterval end
+        return defaultSalaryInterval
+    end
+
+    local salaryIntervals = {}
+    for uniqueID, faction in pairs(lia.faction.teams) do
+        local legacyTimerName = "liaSalaryFaction_" .. uniqueID
+        if timer.Exists(legacyTimerName) then timer.Remove(legacyTimerName) end
+        local factionInterval = getSalaryInterval(faction)
+        if isnumber(factionInterval) and factionInterval > 0 then salaryIntervals[factionInterval] = true end
+    end
+
+    for _, class in pairs(lia.class.list) do
+        local faction = lia.faction.indices[class.faction]
+        local classInterval = getSalaryInterval(faction, class)
+        if isnumber(classInterval) and classInterval > 0 then salaryIntervals[classInterval] = true end
+    end
+
+    for interval in pairs(salaryIntervals) do
+        local timerName = "liaSalaryInterval_" .. tostring(interval):gsub("[^%w]", "_")
+        local salaryTimer = function()
+            for _, client in player.Iterator() do
+                if IsValid(client) and client:getChar() and hook.Run("CanPlayerEarnSalary", client) ~= false then
+                    local char = client:getChar()
+                    local charFaction = lia.faction.indices[char:getFaction()]
+                    local class = lia.class.list[char:getClass()]
+                    if charFaction and getSalaryInterval(charFaction, class) == interval then
+                        local pay = hook.Run("GetSalaryAmount", client, charFaction, class)
+                        pay = isnumber(pay) and pay or class and class.pay or charFaction and charFaction.pay or 0
+                        local adjustedPay = hook.Run("OnSalaryAdjust", client)
+                        if isnumber(adjustedPay) then pay = adjustedPay end
+                        local prestigeBonus = hook.Run("GetPrestigePayBonus", client, char, pay, charFaction, class)
+                        if isnumber(prestigeBonus) then pay = pay + prestigeBonus end
+                        if pay > 0 then
+                            local handled = hook.Run("PreSalaryGive", client, char, pay, charFaction, class)
+                            if handled ~= true then
+                                local finalPay = hook.Run("OnSalaryGiven", client, char, pay, charFaction, class)
+                                if isnumber(finalPay) then pay = finalPay end
+                                char:giveMoney(pay)
+                                client:notifyMoneyLocalized("salary", lia.currency.get(pay), L("salaryWord"))
                             end
                         end
                     end
                 end
             end
-
-            timer.Create(timerName, factionInterval, 0, factionTimer)
         end
+
+        timer.Create(timerName, interval, 0, salaryTimer)
+        self.salaryTimerNames[#self.salaryTimerNames + 1] = timerName
     end
 end
 
