@@ -104,33 +104,18 @@ local function applyAttributes(client, attr)
     local configRunSpeed = lia.config.get("RunSpeed")
     local configWalkSpeed = lia.config.get("WalkSpeed")
     if attr.runSpeed then
-        if attr.runSpeedMultiplier then
-            client:SetRunSpeed(math.Round(configRunSpeed * attr.runSpeed))
-        else
-            client:SetRunSpeed(attr.runSpeed)
-        end
+        client:SetRunSpeed(math.Round(configRunSpeed * attr.runSpeed))
     else
         client:SetRunSpeed(configRunSpeed)
     end
 
     if attr.walkSpeed then
-        if attr.walkSpeedMultiplier then
-            client:SetWalkSpeed(math.Round(configWalkSpeed * attr.walkSpeed))
-        else
-            client:SetWalkSpeed(attr.walkSpeed)
-        end
+        client:SetWalkSpeed(math.Round(configWalkSpeed * attr.walkSpeed))
     else
         client:SetWalkSpeed(configWalkSpeed)
     end
 
-    if attr.jumpPower then
-        if attr.jumpPowerMultiplier then
-            client:SetJumpPower(math.Round(client:GetJumpPower() * attr.jumpPower))
-        else
-            client:SetJumpPower(attr.jumpPower)
-        end
-    end
-
+    if attr.jumpPower then client:SetJumpPower(math.Round(client:GetJumpPower() * attr.jumpPower)) end
     client:SetBloodColor(attr.bloodcolor or BLOOD_COLOR_RED)
     if attr.health then
         client:SetMaxHealth(attr.health)

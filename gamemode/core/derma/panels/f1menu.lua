@@ -894,11 +894,11 @@ function PANEL:addClassDetails(parent, cl)
 
     add(L("weapons") .. ": " .. (#weaponNames > 0 and table.concat(weaponNames, ", ") or L("none")))
     add(L("modelScale") .. ": " .. tostring(cl.scale or 1))
-    local rs = cl.runSpeedMultiplier and math.Round(run * cl.runSpeed) or cl.runSpeed or run
+    local rs = cl.runSpeed and math.Round(run * cl.runSpeed) or run
     add(L("runSpeed") .. ": " .. tostring(rs))
-    local ws = cl.walkSpeedMultiplier and math.Round(walk * cl.walkSpeed) or cl.walkSpeed or walk
+    local ws = cl.walkSpeed and math.Round(walk * cl.walkSpeed) or walk
     add(L("walkSpeed") .. ": " .. tostring(ws))
-    local jp = cl.jumpPowerMultiplier and math.Round(maxJ * cl.jumpPower) or cl.jumpPower or maxJ
+    local jp = cl.jumpPower and math.Round(maxJ * cl.jumpPower) or maxJ
     add(L("jumpPower") .. ": " .. tostring(jp))
     local bloodMap = {
         [-1] = L("bloodNo"),
