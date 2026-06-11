@@ -6731,7 +6731,7 @@ lia.command.add("spawnadd", {
                 table.insert(spawns[factionInfo.uniqueID], newSpawn)
                 lia.module.get("spawns"):StoreSpawns(spawns):next(function()
                     lia.log.add(client, "spawnAdd", factionInfo.name)
-                    client:notifySuccessLocalized("spawnAdded", L(factionInfo.name))
+                    client:notifySuccessLocalized("spawnAdded")
                 end)
             end)
         else
@@ -6775,11 +6775,11 @@ lia.command.add("spawnremoveinradius", {
             if removedCount > 0 then
                 lia.module.get("spawns"):StoreSpawns(spawns):next(function()
                     lia.log.add(client, "spawnRemoveRadius", radius, removedCount)
-                    client:notifySuccessLocalized("spawnDeleted", removedCount)
+                    client:notifySuccessLocalized("spawnDeleted")
                 end)
             else
                 lia.log.add(client, "spawnRemoveRadius", radius, removedCount)
-                client:notifySuccessLocalized("spawnDeleted", removedCount)
+                client:notifySuccessLocalized("spawnDeleted")
             end
         end)
     end
@@ -6822,7 +6822,7 @@ lia.command.add("spawnremovebyname", {
                         if #list == 0 then spawns[factionInfo.uniqueID] = nil end
                         lia.module.get("spawns"):StoreSpawns(spawns):next(function()
                             lia.log.add(client, "spawnRemoveByName", factionInfo.name, removedCount)
-                            client:notifySuccessLocalized("spawnDeletedByName", L(factionInfo.name), removedCount)
+                            client:notifySuccessLocalized("spawnDeletedByName")
                         end)
                     else
                         client:notifyInfoLocalized("noSpawnsForFaction")
