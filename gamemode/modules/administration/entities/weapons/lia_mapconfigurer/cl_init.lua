@@ -158,13 +158,15 @@ function SWEP:OpenRemovalMenu()
     local clientPos = LocalPlayer():GetPos()
     if #lia.mapConfigurerState.cachedPositions > 0 then
         for i, point in ipairs(lia.mapConfigurerState.cachedPositions) do
-            local distance = math.Round(clientPos:Distance(point.pos))
+            local idx = i
+            local pt = point
+            local distance = math.Round(clientPos:Distance(pt.pos))
             local pointPanel = vgui.Create("DPanel", scroll)
             pointPanel:SetTall(60)
             pointPanel:Dock(TOP)
             pointPanel:DockMargin(0, 0, 0, 5)
             local infoLabel = vgui.Create("DLabel", pointPanel)
-            infoLabel:SetText(L("pointDistanceInfo", point.label or L("pointNumber", i), distance))
+            infoLabel:SetText(L("pointDistanceInfo", pt.label or L("pointNumber", idx), distance))
             infoLabel:SetFont("LiliaFont.20")
             infoLabel:Dock(LEFT)
             infoLabel:DockMargin(10, 0, 0, 0)
@@ -175,8 +177,8 @@ function SWEP:OpenRemovalMenu()
             removeButton:Dock(RIGHT)
             removeButton:DockMargin(0, 15, 10, 15)
             removeButton.DoClick = function()
-                lia.util.removeFeaturePosition(point.pos, typeInfo.id)
-                LocalPlayer():notifyLocalized("removedPoint", point.label or L("pointNumber", i))
+                lia.util.removeFeaturePosition(pt.pos, typeInfo.id)
+                LocalPlayer():notifyLocalized("removedPoint", pt.label or L("pointNumber", idx))
                 frame:Close()
                 timer.Simple(0.5, function() if IsValid(LocalPlayer()) and IsValid(LocalPlayer():GetActiveWeapon()) and LocalPlayer():GetActiveWeapon():GetClass() == "lia_mapconfigurer" then requestPositions(typeInfo.id) end end)
             end

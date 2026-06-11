@@ -324,7 +324,7 @@ function MODULE:PostPlayerLoadout(client)
     if not character then return end
     if client.liaSpawnHandled then return end
     if client.liaIsRespawning then
-        local respawnLocation = hook.Run("GetPlayerRespawnLocation", client)
+        local respawnLocation = hook.Run("GetPlayerRespawnLocation", client, character)
         if respawnLocation then
             local pos = respawnLocation.pos or respawnLocation.position
             local ang = respawnLocation.ang or respawnLocation.angle

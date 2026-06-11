@@ -24,16 +24,21 @@ end
 function lia.class.register(uniqueID, data)
     assert(isstring(uniqueID), L("itemUniqueIDString"))
     assert(istable(data), L("classDataTable"))
-    local index = #lia.class.list + 1
     local existing
+    local constantName = "CLASS_" .. string.upper(uniqueID)
+    local providedIndex = tonumber(data.index)
+    local constantIndex = tonumber(_G[constantName])
+    local index = providedIndex or constantIndex
     for i, v in ipairs(lia.class.list) do
         if v.uniqueID == uniqueID then
-            index = i
             existing = v
+            index = index or i
             break
         end
     end
 
+    index = index or #lia.class.list + 1
+    assert(not lia.class.list[index] or lia.class.list[index] == existing, "class index is already in use")
     local class = existing or {
         index = index
     }
@@ -42,6 +47,7 @@ function lia.class.register(uniqueID, data)
         class[k] = v
     end
 
+    class.index = index
     class.uniqueID = uniqueID
     class.name = lia.lang.resolveToken(class.name) or lia.lang.resolveToken("@unknown")
     class.desc = lia.lang.resolveToken(class.desc) or lia.lang.resolveToken("@noDesc")
@@ -53,7 +59,8 @@ function lia.class.register(uniqueID, data)
 
     if not class.OnCanBe then class.OnCanBe = function() return true end end
     lia.class.list[index] = class
-    return class
+    _G[constantName] = class.index
+    return class.index, class
 end
 
 function lia.class.loadFromDir(directory)
