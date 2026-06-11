@@ -110,6 +110,68 @@ properties.Add("copytoclipboard", {
     end,
 })
 
+properties.Add("CopyBodygroupsByName", {
+    MenuLabel = L("copyBodygroupsByName"),
+    Order = 998,
+    MenuIcon = "icon16/group.png",
+    Filter = function(_, ent)
+        if ent == nil then return false end
+        if not IsValid(ent) then return false end
+        return true
+    end,
+    Action = function(self, ent)
+        self:MsgStart()
+        local bodygroups = ent:GetBodyGroups()
+        local lines = {}
+        for _, bg in ipairs(bodygroups) do
+            local value = ent:GetBodygroup(bg.id)
+            lines[#lines + 1] = bg.name .. " - " .. value
+        end
+
+        SetClipboardText(table.concat(lines, "\n"))
+        self:MsgEnd()
+    end,
+})
+
+properties.Add("CopyBodygroupsByID", {
+    MenuLabel = L("copyBodygroupsByID"),
+    Order = 997,
+    MenuIcon = "icon16/group.png",
+    Filter = function(_, ent)
+        if ent == nil then return false end
+        if not IsValid(ent) then return false end
+        return true
+    end,
+    Action = function(self, ent)
+        self:MsgStart()
+        local bodygroups = ent:GetBodyGroups()
+        local lines = {}
+        for _, bg in ipairs(bodygroups) do
+            local value = ent:GetBodygroup(bg.id)
+            lines[#lines + 1] = tostring(bg.id) .. " - " .. value
+        end
+
+        SetClipboardText(table.concat(lines, "\n"))
+        self:MsgEnd()
+    end,
+})
+
+properties.Add("CopySkin", {
+    MenuLabel = L("copySkinClipboard"),
+    Order = 996,
+    MenuIcon = "icon16/palette.png",
+    Filter = function(_, ent)
+        if ent == nil then return false end
+        if not IsValid(ent) then return false end
+        return true
+    end,
+    Action = function(self, ent)
+        self:MsgStart()
+        SetClipboardText(tostring(ent:GetSkin()))
+        self:MsgEnd()
+    end,
+})
+
 lia.util.setPositionCallback(L("factionSpawnAdderTitle"), {
     onRun = function(pos, client, typeId)
         if SERVER then
@@ -127,7 +189,7 @@ lia.util.setPositionCallback(L("factionSpawnAdderTitle"), {
 
                 lia.module.get("spawns"):StoreSpawns(spawns):next(function()
                     lia.log.add(client, "spawnAdd", factionInfo.name)
-                    client:notifySuccessLocalized("spawnAdded", L(factionInfo.name))
+                    client:notifySuccessLocalized("spawnAdded")
                 end)
             end)
         else
@@ -186,6 +248,26 @@ lia.util.setPositionCallback(L("factionSpawnAdderTitle"), {
             net.SendToServer()
         end
     end,
+    onRemove = function(pos, client, typeId)
+        lia.module.get("spawns"):FetchSpawns():next(function(spawns)
+            local curMap = lia.data.getEquivalencyMap(game.GetMap()):lower()
+            for factionID, factionSpawns in pairs(spawns) do
+                for i = #factionSpawns, 1, -1 do
+                    local data = factionSpawns[i]
+                    local dpos = data.pos or data.position
+                    if isvector(dpos) and dpos:DistToSqr(pos) < 1 then
+                        local map = data.map and (isstring(data.map) and data.map:lower() or tostring(data.map):lower()) or nil
+                        if not map or map == curMap then
+                            table.remove(factionSpawns, i)
+                            lia.module.get("spawns"):StoreSpawns(spawns)
+                            lia.log.add(client, "spawnRemove", factionID)
+                            return
+                        end
+                    end
+                end
+            end
+        end)
+    end,
     color = Color(100, 200, 100),
     serverOnly = true
 })
@@ -210,7 +292,7 @@ lia.util.setPositionCallback(L("classSpawnAdderTitle"), {
 
             lia.data.set("spawns", data)
             lia.log.add(client, "classSpawnAdd", classData.name)
-            client:notifySuccessLocalized("spawnAdded", classData.name)
+            client:notifySuccessLocalized("spawnAdded")
         else
             local names, idByDisplay = {}, {}
             for k, v in pairs(lia.class.list or {}) do
@@ -270,6 +352,27 @@ lia.util.setPositionCallback(L("classSpawnAdderTitle"), {
             net.SendToServer()
         end
     end,
+    onRemove = function(pos, client, typeId)
+        local stored = lia.data.get("spawns", {})
+        local data = istable(stored) and stored or {}
+        local classes = data.classes or {}
+        local curMap = lia.data.getEquivalencyMap(game.GetMap()):lower()
+        for classID, classSpawns in pairs(classes) do
+            for i = #classSpawns, 1, -1 do
+                local spawnData = classSpawns[i]
+                local dpos = spawnData.pos or spawnData.position
+                if isvector(dpos) and dpos:DistToSqr(pos) < 1 then
+                    local map = spawnData.map and (isstring(spawnData.map) and spawnData.map:lower() or tostring(spawnData.map):lower()) or nil
+                    if not map or map == curMap then
+                        table.remove(classSpawns, i)
+                        lia.data.set("spawns", data)
+                        lia.log.add(client, "classSpawnRemove", classID)
+                        return
+                    end
+                end
+            end
+        end
+    end,
     color = Color(200, 150, 100),
     serverOnly = true
 })
@@ -318,6 +421,17 @@ lia.util.setPositionCallback(L("sitRoomTitle"), {
             net.Start("liaFeaturePositionsRequest")
             net.WriteString("sit_room")
             net.SendToServer()
+        end
+    end,
+    onRemove = function(pos, client, typeId)
+        local rooms = lia.data.get("sitrooms", {})
+        for name, roomPos in pairs(rooms) do
+            if isvector(roomPos) and roomPos:DistToSqr(pos) < 1 then
+                rooms[name] = nil
+                lia.data.set("sitrooms", rooms)
+                lia.log.add(client, "sitRoomRemove", name)
+                return
+            end
         end
     end,
     color = Color(123, 104, 238),
