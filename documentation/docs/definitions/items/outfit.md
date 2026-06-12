@@ -23,10 +23,12 @@ Use `lia.item.register` from a shared Lua file when you want to register an item
 | `isOutfit` | `boolean` | Marks the item as an outfit definition. |
 | `armor` | `number` | Optional armor added while the outfit is equipped. |
 | `newSkin` | `number` | Optional skin index applied while the outfit is equipped. |
+| `skin` | `number` | Alias of `newSkin`. Also used by inventory/world model presentation. |
 | `bodyGroups` | `table` | Optional bodygroup values applied while the outfit is equipped. |
+| `bodygroups` | `table` | Alias of `bodyGroups`. Also used by inventory/world model presentation. |
 | `attribBoosts` | `table` | Optional attribute boosts applied while the outfit is equipped. |
-| `replacement` | `string` | Optional replacement model path applied on equip. |
-| `replacements` | `string \| table` | Optional replacement rule or replacement rule list applied on equip. |
+| `replacement` | `string` | Optional replacement model path applied on equip. When you use this form, set `skin` and `bodygroups` on the item itself. |
+| `replacements` | `string \| table` | Optional replacement rule or replacement rule list applied on equip. This also supports a per-model lookup table where each entry can define `replacement`, `skin`, and `bodygroups`. |
 
 ## Normal Item File Example
 
@@ -75,5 +77,33 @@ item.functions.Equip = {
         itemInstance:setData("equip", true)
         return false
     end
+}
+```
+
+## Appearance Override Patterns
+
+Use top-level appearance overrides when the outfit has a single direct replacement:
+
+```lua
+ITEM.replacement = "models/example/new_uniform.mdl"
+ITEM.skin = 1
+ITEM.bodygroups = {
+    [1] = 2,
+    helmet = 0
+}
+```
+
+Use a keyed `replacements` table when different source models need different replacement data:
+
+```lua
+ITEM.replacements = {
+    ["models/player/group01/male_07.mdl"] = {
+        replacement = "models/example/male_uniform.mdl",
+        skin = 2,
+        bodygroups = {
+            [1] = 2,
+            helmet = 0
+        }
+    }
 }
 ```

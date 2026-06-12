@@ -238,7 +238,10 @@ lia.char.registerVar("model", {
     onValidate = function(_, data, client)
         local faction = lia.faction.indices[data.faction]
         if faction then
-            if not data.model or not faction.models[data.model] then
+            local class = lia.faction.getCharacterCreationClass(faction, data.class)
+            local models, _, forced = lia.faction.getCharacterCreationModelChoices(faction, class)
+            if forced then return true end
+            if not data.model or not models[data.model] then
                 local canCreateStaffCharacter = data.faction == FACTION_STAFF and client and client:hasPrivilege("createStaffCharacter") or false
                 lia.debug("[Permissions]", "Permission Check for char var model onValidate staff model bypass", "targetFactionIsStaff=", tostring(data.faction == FACTION_STAFF), "clientExists=", tostring(client ~= nil), "hasPrivilege(createStaffCharacter)=", tostring(client and client:hasPrivilege("createStaffCharacter") or false), "finalResult=", tostring(canCreateStaffCharacter))
                 if canCreateStaffCharacter then return true end
@@ -251,21 +254,23 @@ lia.char.registerVar("model", {
     onAdjust = function(client, data, value, newData)
         local faction = lia.faction.indices[data.faction]
         if faction then
-            local model = faction.models[value]
+            local class = lia.faction.getCharacterCreationClass(faction, data.class)
+            local model = lia.faction.getCharacterCreationModelInfo(faction, class, value)
+            local parsedModel = lia.faction.getModelData(value, model)
             if isstring(model) then
                 newData.model = model
-            elseif istable(model) then
-                newData.model = model[1]
-                local defaultSkin = model[2] or 0
+            elseif parsedModel then
+                newData.model = parsedModel.model
+                local defaultSkin = parsedModel.skin or 0
                 local groups = {}
-                if isstring(model[3]) then
+                if isstring(parsedModel.bodygroups) then
                     local i = 0
-                    for digit in model[3]:gmatch("%d") do
+                    for digit in parsedModel.bodygroups:gmatch("%d") do
                         groups[i] = tonumber(digit)
                         i = i + 1
                     end
-                elseif istable(model[3]) then
-                    for groupIndex, groupValue in pairs(model[3]) do
+                elseif istable(parsedModel.bodygroups) then
+                    for groupIndex, groupValue in pairs(parsedModel.bodygroups) do
                         groups[tonumber(groupIndex)] = tonumber(groupValue)
                     end
                 end
@@ -273,7 +278,7 @@ lia.char.registerVar("model", {
                 local skinAllowed, bodygroupsAllowed = lia.faction.getModelCustomizationAllowed(client, faction, data)
                 if skinAllowed and data.skin ~= nil then
                     local desiredSkin = tonumber(data.skin) or defaultSkin
-                    if istable(faction.allowedSkins) and not lia.faction.isSkinAllowedForFaction(faction, desiredSkin) then desiredSkin = lia.faction.getDefaultAllowedSkinForFaction(faction, defaultSkin) end
+                    if not lia.faction.isSkinAllowedForFaction(faction, desiredSkin, model, value) then desiredSkin = lia.faction.getDefaultAllowedSkinForFaction(faction, defaultSkin, model, value) end
                     newData.skin = desiredSkin
                 else
                     newData.skin = defaultSkin
@@ -286,7 +291,7 @@ lia.char.registerVar("model", {
                         local idx = tonumber(k)
                         if idx then
                             local desiredValue = tonumber(v) or 0
-                            if istable(faction.allowedBodygroups) and not lia.faction.isBodygroupValueAllowed(faction, newData.model, idx, desiredValue) then desiredValue = tonumber(groups[idx]) or 0 end
+                            if not lia.faction.isBodygroupValueAllowed(faction, newData.model, idx, desiredValue, nil, model, value) then desiredValue = tonumber(groups[idx]) or 0 end
                             chosenGroups[idx] = desiredValue
                         end
                     end

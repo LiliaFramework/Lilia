@@ -1,11 +1,21 @@
 ﻿local PANEL = {}
-function PANEL:filterCharacterModels(faction)
-    if not faction or not faction.models then return {} end
+function PANEL:getCreationModelSource()
+    local factionIndex = self:getContext("faction")
+    if not factionIndex then return end
+    local faction = lia.faction.indices[factionIndex]
+    if not faction then return end
+    local class = lia.faction.getCharacterCreationClass(faction, self:getContext("class"))
+    local models, _, forced = lia.faction.getCharacterCreationModelChoices(faction, class)
+    local info = lia.faction.getCharacterCreationModelInfo(faction, class, self:getContext("model"))
+    return faction, class, models, info, forced
+end
+
+function PANEL:filterCharacterModels(faction, class)
+    local modelChoices = lia.faction.getCharacterCreationModelChoices(faction, class)
+    if not istable(modelChoices) then return {} end
     local filteredModels = {}
-    for idx, data in pairs(faction.models) do
-        if isstring(idx) and istable(data) then
-            filteredModels[idx] = data
-        else
+    for idx, data in pairs(modelChoices) do
+        if lia.faction.getModelData(idx, data) then
             local shouldInclude = hook.Run("FilterCharModels", LocalPlayer(), faction, data, idx)
             if shouldInclude ~= false then filteredModels[idx] = data end
         end
@@ -264,13 +274,11 @@ function PANEL:updateCustomizationControls()
     self:resetCustomizationControls()
     if not IsValid(self.customPanel) or not IsValid(self.controls) then return end
     local context = self:getContext()
-    local factionIndex = context.faction
-    if not factionIndex then return end
-    local faction = lia.faction.indices[factionIndex]
-    if not faction then return end
-    local info = faction.models[context.model or 1]
+    local faction, _, _, info = self:getCreationModelSource()
+    if not faction or not info then return end
+    local parsed = lia.faction.getModelData(context.model, info)
     local mdl, defaultSkin, defaultGroups = info, 0, {}
-    if istable(info) then mdl, defaultSkin, defaultGroups = info[1], info[2] or 0, info[3] or {} end
+    if parsed then mdl, defaultSkin, defaultGroups = parsed.model, parsed.skin or 0, parsed.bodygroups or {} end
     local entity
     if IsValid(lia.gui.charCreate) and IsValid(lia.gui.charCreate.model) then entity = lia.gui.charCreate.model:GetEntity() end
     local tempEntity
@@ -326,9 +334,7 @@ end
 
 function PANEL:onDisplay()
     self.models:Clear()
-    local factionIndex = self:getContext("faction")
-    if not factionIndex then return end
-    local faction = lia.faction.indices[factionIndex]
+    local faction, class, _, _, forced = self:getCreationModelSource()
     if not faction then return end
     if IsValid(self.customPanel) then
         self.customPanel:SetVisible(false)
@@ -342,7 +348,7 @@ function PANEL:onDisplay()
         self.models:DockMargin(mm[1] or 0, 0, mm[3] or 0, mm[4] or 0)
     end
 
-    local modelsToDisplay = self:filterCharacterModels(faction)
+    local modelsToDisplay = self:filterCharacterModels(faction, class)
     local modelCount = 0
     local firstIdx
     for idx, _ in pairs(modelsToDisplay) do
@@ -358,7 +364,7 @@ function PANEL:onDisplay()
         if shouldCenter then
             modelPanel:Dock(FILL)
             modelPanel:MoveToFront()
-            if modelCount == 1 and self:getContext("model") == nil then self:setContext("model", firstIdx or 1) end
+            if not forced and modelCount == 1 and self:getContext("model") == nil then self:setContext("model", firstIdx or 1) end
             self:updateModelPanel()
             self:updateCustomizationControls()
         else
@@ -383,14 +389,15 @@ function PANEL:onDisplay()
             icon.index = idx
             icon.PaintOver = paintOver
             icon.DoClick = function() self:onModelSelected(icon) end
+            local parsed = lia.faction.getModelData(idx, data)
             local model, skin, bodyGroups = data, 0, ""
-            if istable(data) then
-                skin = data[2] or 0
-                local resolvedGroups = data[3] or {}
-                if istable(data[3]) and data[1] then
-                    local previewEntity = ClientsideModel(data[1], RENDERGROUP_OTHER)
+            if parsed then
+                skin = parsed.skin or 0
+                local resolvedGroups = parsed.bodygroups or {}
+                if istable(parsed.bodygroups) and parsed.model then
+                    local previewEntity = ClientsideModel(parsed.model, RENDERGROUP_OTHER)
                     if IsValid(previewEntity) then
-                        resolvedGroups = lia.util.resolveBodygroups(previewEntity, data[3])
+                        resolvedGroups = lia.util.resolveBodygroups(previewEntity, parsed.bodygroups)
                         previewEntity:Remove()
                     end
                 end
@@ -399,7 +406,7 @@ function PANEL:onDisplay()
                     bodyGroups = bodyGroups .. tostring(resolvedGroups[i] or 0)
                 end
 
-                model = data[1]
+                model = parsed.model
             end
 
             icon:SetModel(model, skin, bodyGroups)
@@ -432,7 +439,8 @@ function PANEL:paintIcon(icon, w, h)
 end
 
 function PANEL:updateContext()
-    if not self:getContext("model") then self:setContext("model", 1) end
+    local _, _, _, _, forced = self:getCreationModelSource()
+    if not forced and not self:getContext("model") then self:setContext("model", 1) end
 end
 
 function PANEL:onModelSelected(icon, noSound)
@@ -446,11 +454,15 @@ function PANEL:onModelSelected(icon, noSound)
 end
 
 function PANEL:shouldSkip()
-    return false
+    local _, _, _, _, forced = self:getCreationModelSource()
+    return forced == true
 end
 
 function PANEL:onSkip()
-    self:setContext("model", 1)
+    self:setContext("model", nil)
+    self:setContext("skin", nil)
+    self:setContext("bodygroups", nil)
+    self:setContext("groups", nil)
 end
 
 function PANEL:onHide()

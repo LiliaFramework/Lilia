@@ -7,6 +7,68 @@ ITEM.height = 1
 ITEM.outfitCategory = "model"
 ITEM.pacData = {}
 ITEM.isOutfit = true
+function ITEM:getOutfitSkin()
+    if isnumber(self.newSkin) then return self.newSkin end
+    if isnumber(self.skin) then return self.skin end
+end
+
+function ITEM:getOutfitBodygroups()
+    if istable(self.bodyGroups) then return self.bodyGroups end
+    if istable(self.bodygroups) then return self.bodygroups end
+    return nil
+end
+
+function ITEM:getReplacementData(model)
+    local currentModel = isstring(model) and model:lower() or ""
+    local data = {
+        model = nil,
+        skin = self:getOutfitSkin(),
+        bodygroups = self:getOutfitBodygroups()
+    }
+
+    if isfunction(self.onGetReplacement) then
+        data.model = self:onGetReplacement()
+        return data
+    end
+
+    if isstring(self.replacement) then
+        data.model = self.replacement
+        return data
+    end
+
+    if not istable(self.replacements) then
+        if self.replacements ~= nil then data.model = tostring(self.replacements) end
+        return data
+    end
+
+    local replacementEntry = currentModel ~= "" and self.replacements[currentModel] or nil
+    if istable(replacementEntry) then
+        data.model = replacementEntry.replacement or replacementEntry.model
+        if isnumber(replacementEntry.newSkin) then
+            data.skin = replacementEntry.newSkin
+        elseif isnumber(replacementEntry.skin) then
+            data.skin = replacementEntry.skin
+        end
+
+        if istable(replacementEntry.bodyGroups) then
+            data.bodygroups = replacementEntry.bodyGroups
+        elseif istable(replacementEntry.bodygroups) then
+            data.bodygroups = replacementEntry.bodygroups
+        end
+        return data
+    end
+
+    if #self.replacements == 2 and isstring(self.replacements[1]) then
+        data.model = currentModel:gsub(self.replacements[1], self.replacements[2]):lower()
+        return data
+    end
+
+    for _, v in ipairs(self.replacements) do
+        if istable(v) and isstring(v[1]) and isstring(v[2]) then data.model = currentModel:gsub(v[1], v[2]) end
+    end
+    return data
+end
+
 if CLIENT then
     function ITEM:paintOver(item, w, h)
         if item:getData("equip") then
@@ -24,6 +86,7 @@ end
 
 function ITEM:removeOutfit(client)
     local character = client:getChar()
+    local outfitBodygroups = self:getData("appliedBodygroups", self:getOutfitBodygroups() or {})
     self:setData("equip", nil)
     if hook.Run("CanOutfitChangeModel", self) ~= false then
         character:setModel(self:getData("oldMdl", character:getModel()))
@@ -31,7 +94,7 @@ function ITEM:removeOutfit(client)
         client:SetSkin(self:getData("oldSkin", character:getSkin()))
         self:setData("oldSkin", nil)
         local oldGroups = character:getData("oldGroups", {})
-        for k in pairs(self.bodyGroups or {}) do
+        for k in pairs(outfitBodygroups) do
             local index = lia.util.resolveBodygroupIndex(client, k)
             if index ~= nil then
                 client:SetBodygroup(index, oldGroups[index] or 0)
@@ -47,6 +110,7 @@ function ITEM:removeOutfit(client)
         character:setData("oldGroups", oldGroups)
     end
 
+    self:setData("appliedBodygroups", nil)
     if self.pacData and client.removePart then client:removePart(self.uniqueID) end
     if self.attribBoosts then
         for k, _ in pairs(self.attribBoosts) do
@@ -83,6 +147,9 @@ ITEM.functions.Equip = {
     icon = "icon16/tick.png",
     onRun = function(item)
         local character = item.player:getChar()
+        local replacementData = item:getReplacementData(item.player:GetModel())
+        local outfitSkin = replacementData.skin
+        local outfitBodygroups = replacementData.bodygroups
         local items = character:getInv():getItems()
         for _, other in pairs(items) do
             if item ~= other and item.outfitCategory == other.outfitCategory and other:getData("equip") then
@@ -93,36 +160,21 @@ ITEM.functions.Equip = {
 
         item:setData("equip", true)
         if hook.Run("CanOutfitChangeModel", item) ~= false then
-            if isfunction(item.onGetReplacement) then
-                character:setModel(item:onGetReplacement())
+            if isstring(replacementData.model) and replacementData.model ~= "" then
                 item:setData("oldMdl", item.player:GetModel())
-            elseif item.replacement or item.replacements then
-                if istable(item.replacements) then
-                    item:setData("oldMdl", item.player:GetModel())
-                    if #item.replacements == 2 and isstring(item.replacements[1]) then
-                        local newModel = item.player:GetModel():lower():gsub(item.replacement[1], item.replacements[2]):lower()
-                        character:setModel(newModel)
-                    else
-                        for _, v in ipairs(item.replacements) do
-                            character:setModel(item.player:GetModel():gsub(v[1], v[2]))
-                        end
-                    end
-                else
-                    item:setData("oldMdl", item.player:GetModel())
-                    character:setModel(tostring(item.replacement or item.replacements))
-                end
+                character:setModel(replacementData.model)
             end
 
-            if isnumber(item.newSkin) then
+            if isnumber(outfitSkin) then
                 item:setData("oldSkin", item.player:GetSkin())
-                character:setSkin(item.newSkin)
-                item.player:SetSkin(item.newSkin)
+                character:setSkin(outfitSkin)
+                item.player:SetSkin(outfitSkin)
             end
 
-            if istable(item.bodyGroups) then
+            if istable(outfitBodygroups) then
                 local oldGroups = character:getData("oldGroups", {})
                 local groups = {}
-                for k, value in pairs(item.bodyGroups) do
+                for k, value in pairs(outfitBodygroups) do
                     local index = lia.util.resolveBodygroupIndex(item.player, k)
                     if index ~= nil then
                         local currentVal = item.player:GetBodygroup(index)
@@ -138,6 +190,7 @@ ITEM.functions.Equip = {
                     newGroups[index] = value
                 end
 
+                item:setData("appliedBodygroups", outfitBodygroups)
                 lia.util.applyBodygroups(item.player, groups)
                 if table.Count(newGroups) > 0 then character:setBodygroups(newGroups) end
             end

@@ -87,6 +87,8 @@ This reference is derived only from the Lua item bases in [`gamemode/items/base`
 | `outfitCategory` | `string` | Conflict group used to stop multiple outfits of the same type from equipping together. | `"model"` |
 | `pacData` | `table` | PAC data associated with the outfit. | `{}` |
 | `isOutfit` | `boolean` | Marks the item as an outfit item. | `true` |
+| `skin` | `number` | Optional outfit skin override. Works as an alias of `newSkin` and also affects item model presentation. | `nil` |
+| `bodygroups` | `table` | Optional outfit bodygroup overrides. Works as an alias of `bodyGroups` and also affects item model presentation. | `{}` |
 | `armor` | `number` | Armor added on equip and removed on unequip. | None |
 | `newSkin` | `number` | Skin index applied while equipped. | None |
 | `bodyGroups` | `table` | Bodygroup values applied while equipped. | None |

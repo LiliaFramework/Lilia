@@ -24,9 +24,12 @@ function PANEL:updateModel()
     if not IsValid(self.model) then return end
     local faction = lia.faction.indices[self.context.faction]
     if not faction then return end
-    local info = faction.models[self.context.model or 1]
+    local class = lia.faction.getCharacterCreationClass(faction, self.context.class)
+    local info = lia.faction.getCharacterCreationModelInfo(faction, class, self.context.model)
+    if not info then return end
+    local parsed = lia.faction.getModelData(self.context.model, info)
     local mdl, skin, groups = info, 0, {}
-    if istable(info) then mdl, skin, groups = info[1], info[2], info[3] end
+    if parsed then mdl, skin, groups = parsed.model, parsed.skin, parsed.bodygroups end
     self.model:SetModel(mdl)
     self.model:fitFOV()
     local entity = self.model:GetEntity()

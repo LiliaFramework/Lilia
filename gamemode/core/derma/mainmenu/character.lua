@@ -128,10 +128,13 @@ function PANEL:updateCreationModelEntity(context)
     if not istable(context) then return end
     local factionIndex = context.faction
     local faction = factionIndex and lia.faction.indices[factionIndex] or nil
-    if not faction or not faction.models then return end
-    local info = faction.models[context.model or 1]
+    if not faction then return end
+    local class = lia.faction.getCharacterCreationClass(faction, context.class)
+    local info = lia.faction.getCharacterCreationModelInfo(faction, class, context.model)
+    if not info then return end
+    local parsed = lia.faction.getModelData(context.model, info)
     local mdl, skin, groups = info, 0, {}
-    if istable(info) then mdl, skin, groups = info[1], info[2], info[3] end
+    if parsed then mdl, skin, groups = parsed.model, parsed.skin, parsed.bodygroups end
     if IsValid(self.modelEntity) then self.modelEntity:Remove() end
     self.modelEntity = ClientsideModel(mdl or "models/error.mdl", RENDERGROUP_OPAQUE)
     if not IsValid(self.modelEntity) then return end

@@ -43,13 +43,46 @@ function lia.faction.register(uniqueID, data)
 end
 
 function lia.faction.cacheModels(models)
-    for _, modelData in pairs(models or {}) do
-        if isstring(modelData) then
-            util.PrecacheModel(modelData)
-        elseif istable(modelData) then
-            util.PrecacheModel(modelData[1])
-        end
+    for modelKey, modelData in pairs(models or {}) do
+        local parsed = lia.faction.getModelData and lia.faction.getModelData(modelKey, modelData)
+        if parsed and isstring(parsed.model) and parsed.model ~= "" then util.PrecacheModel(parsed.model) end
     end
+end
+
+function lia.faction.getModelData(modelKey, modelData)
+    if isstring(modelData) then
+        return {
+            model = modelData,
+            skin = 0,
+            bodygroups = {},
+            allowedSkins = nil,
+            allowedBodygroups = nil
+        }
+    end
+
+    if not istable(modelData) then return nil end
+    local parsed = {
+        model = nil,
+        skin = 0,
+        bodygroups = {},
+        allowedSkins = modelData.allowedSkins,
+        allowedBodygroups = modelData.allowedBodygroups
+    }
+
+    if isstring(modelData[1]) then
+        parsed.model = modelData[1]
+        parsed.skin = modelData[2] or 0
+        parsed.bodygroups = modelData[3] or {}
+        return parsed
+    end
+
+    if isstring(modelKey) and (modelData.allowedSkins ~= nil or modelData.allowedBodygroups ~= nil or modelData.skin ~= nil or modelData.defaultSkin ~= nil or modelData.bodygroups ~= nil or modelData.defaultBodygroups ~= nil or modelData.groups ~= nil or modelData.model ~= nil) then
+        parsed.model = modelData.model or modelKey
+        parsed.skin = modelData.skin or modelData.defaultSkin or 0
+        parsed.bodygroups = modelData.bodygroups or modelData.defaultBodygroups or modelData.groups or {}
+        return parsed
+    end
+    return nil
 end
 
 function lia.faction.loadFromDir(directory)
@@ -91,14 +124,7 @@ function lia.faction.loadFromDir(directory)
         FACTION.uniqueID = FACTION.uniqueID or niceName
         if FACTION.skinAllowed == nil then FACTION.skinAllowed = false end
         if FACTION.bodygroupsAllowed == nil then FACTION.bodygroupsAllowed = false end
-        for _, modelData in pairs(FACTION.models) do
-            if isstring(modelData) then
-                util.PrecacheModel(modelData)
-            elseif istable(modelData) then
-                util.PrecacheModel(modelData[1])
-            end
-        end
-
+        lia.faction.cacheModels(FACTION.models)
         lia.faction.indices[FACTION.index] = FACTION
         lia.faction.teams[niceName] = FACTION
         FACTION = nil
@@ -165,10 +191,24 @@ function lia.faction.getBodygroupNameToIndex(modelPath)
     return map
 end
 
-function lia.faction.isSkinAllowedForFaction(faction, skin)
+function lia.faction.getAllowedSkins(faction, modelData, modelKey)
+    if isnumber(faction) or isstring(faction) then faction = lia.faction.get(faction) end
+    local parsed = lia.faction.getModelData(modelKey, modelData)
+    if parsed and istable(parsed.allowedSkins) then return parsed.allowedSkins end
+    return faction and faction.allowedSkins or nil
+end
+
+function lia.faction.getAllowedBodygroups(faction, modelData, modelKey)
+    if isnumber(faction) or isstring(faction) then faction = lia.faction.get(faction) end
+    local parsed = lia.faction.getModelData(modelKey, modelData)
+    if parsed and istable(parsed.allowedBodygroups) then return parsed.allowedBodygroups end
+    return faction and faction.allowedBodygroups or nil
+end
+
+function lia.faction.isSkinAllowedForFaction(faction, skin, modelData, modelKey)
     if isnumber(faction) or isstring(faction) then faction = lia.faction.get(faction) end
     if not faction then return false end
-    local whitelist = faction.allowedSkins
+    local whitelist = lia.faction.getAllowedSkins(faction, modelData, modelKey)
     if not istable(whitelist) then return true end
     if next(whitelist) == nil then return true end
     skin = tonumber(skin)
@@ -179,11 +219,12 @@ function lia.faction.isSkinAllowedForFaction(faction, skin)
     return false
 end
 
-function lia.faction.getDefaultAllowedSkinForFaction(faction, fallback)
+function lia.faction.getDefaultAllowedSkinForFaction(faction, fallback, modelData, modelKey)
     if isnumber(faction) or isstring(faction) then faction = lia.faction.get(faction) end
     if not faction then return fallback end
-    if istable(faction.allowedSkins) then
-        for _, v in pairs(faction.allowedSkins) do
+    local allowedSkins = lia.faction.getAllowedSkins(faction, modelData, modelKey)
+    if istable(allowedSkins) then
+        for _, v in pairs(allowedSkins) do
             local n = tonumber(v)
             if n ~= nil then return n end
         end
@@ -191,10 +232,10 @@ function lia.faction.getDefaultAllowedSkinForFaction(faction, fallback)
     return fallback
 end
 
-function lia.faction.getBodygroupWhitelistRule(faction, modelPath, bodygroupIndex, bodygroupName)
+function lia.faction.getBodygroupWhitelistRule(faction, modelPath, bodygroupIndex, bodygroupName, modelData, modelKey)
     if isnumber(faction) or isstring(faction) then faction = lia.faction.get(faction) end
     if not faction then return nil end
-    local rules = faction.allowedBodygroups
+    local rules = lia.faction.getAllowedBodygroups(faction, modelData, modelKey)
     if not istable(rules) then return nil end
     if next(rules) == nil then return nil end
     local idx = tonumber(bodygroupIndex)
@@ -228,8 +269,8 @@ function lia.faction.getBodygroupWhitelistRule(faction, modelPath, bodygroupInde
     return nil
 end
 
-function lia.faction.isBodygroupValueAllowed(faction, modelPath, bodygroupIndex, value, bodygroupName)
-    local rule = lia.faction.getBodygroupWhitelistRule(faction, modelPath, bodygroupIndex, bodygroupName)
+function lia.faction.isBodygroupValueAllowed(faction, modelPath, bodygroupIndex, value, bodygroupName, modelData, modelKey)
+    local rule = lia.faction.getBodygroupWhitelistRule(faction, modelPath, bodygroupIndex, bodygroupName, modelData, modelKey)
     if rule == nil then return true end
     if rule == true then return true end
     if rule == false then return false end
@@ -279,6 +320,47 @@ function lia.faction.isFactionCategory(faction, categoryFactions)
     return false
 end
 
+function lia.faction.getCharacterCreationClass(faction, class)
+    local factionData = istable(faction) and faction or lia.faction.get(faction)
+    local classData = istable(class) and class or lia.class and lia.class.get and lia.class.get(class)
+    if not classData and factionData then classData = lia.faction.getDefaultClass(factionData.index) end
+    if not classData then return nil end
+    if factionData and classData.faction ~= factionData.index then return nil end
+    return classData
+end
+
+function lia.faction.getCharacterCreationModelSource(faction, class)
+    local factionData = istable(faction) and faction or lia.faction.get(faction)
+    local classData = lia.faction.getCharacterCreationClass(factionData, class)
+    if classData then
+        if classData.model ~= nil then return classData.model, classData, true end
+        if classData.models ~= nil then return classData.models, classData, false end
+    end
+
+    if factionData then
+        if factionData.model ~= nil then return factionData.model, factionData, true end
+        if factionData.models ~= nil then return factionData.models, factionData, false end
+    end
+    return DefaultModels, factionData, false
+end
+
+function lia.faction.getCharacterCreationModelChoices(faction, class)
+    local source, owner, forced = lia.faction.getCharacterCreationModelSource(faction, class)
+    if forced then
+        return {
+            [1] = source
+        }, owner, true
+    end
+    return source or {}, owner, false
+end
+
+function lia.faction.getCharacterCreationModelInfo(faction, class, selectedModel)
+    local source, owner, forced = lia.faction.getCharacterCreationModelSource(faction, class)
+    if forced then return source, owner, true end
+    if not istable(source) then return nil, owner, false end
+    return source[selectedModel or 1], owner, false
+end
+
 function lia.faction.jobGenerate(index, name, color, default, models)
     local FACTION = {}
     FACTION.index = index
@@ -288,14 +370,7 @@ function lia.faction.jobGenerate(index, name, color, default, models)
     FACTION.color = color
     FACTION.models = models or DefaultModels
     FACTION.uniqueID = FACTION.uniqueID or name
-    for _, v in pairs(FACTION.models) do
-        if isstring(v) then
-            util.PrecacheModel(v)
-        elseif istable(v) then
-            util.PrecacheModel(v[1])
-        end
-    end
-
+    lia.faction.cacheModels(FACTION.models)
     lia.faction.indices[FACTION.index] = FACTION
     lia.faction.teams[name] = FACTION
     team.SetUp(FACTION.index, FACTION.name, FACTION.color)
@@ -304,42 +379,73 @@ end
 
 local function formatModelDataEntry(name, faction, modelIndex, modelData, category)
     local newGroups
-    if istable(modelData) and modelData[3] then
+    local parsed = lia.faction.getModelData(modelIndex, modelData)
+    if parsed and parsed.bodygroups then
         local groups = {}
-        if istable(modelData[3]) then
+        if istable(parsed.bodygroups) then
             local dummy
             if SERVER then
                 dummy = ents.Create("prop_physics")
-                dummy:SetModel(modelData[1])
+                dummy:SetModel(parsed.model)
             else
-                dummy = ClientsideModel(modelData[1])
+                dummy = ClientsideModel(parsed.model)
             end
 
             local groupData = dummy:GetBodyGroups()
             for _, group in ipairs(groupData) do
                 if group.id > 0 then
-                    if modelData[3][group.id] then
-                        groups[group.id] = modelData[3][group.id]
-                    elseif modelData[3][group.name] then
-                        groups[group.id] = modelData[3][group.name]
+                    if parsed.bodygroups[group.id] then
+                        groups[group.id] = parsed.bodygroups[group.id]
+                    elseif parsed.bodygroups[group.name] then
+                        groups[group.id] = parsed.bodygroups[group.name]
                     end
                 end
             end
 
             dummy:Remove()
             newGroups = groups
-        elseif isstring(modelData[3]) then
-            newGroups = string.Explode("", modelData[3])
+        elseif isstring(parsed.bodygroups) then
+            newGroups = string.Explode("", parsed.bodygroups)
         end
     end
 
     if newGroups then
         if category then
-            lia.faction.teams[name].models[category][modelIndex][3] = newGroups
-            lia.faction.indices[faction.index].models[category][modelIndex][3] = newGroups
+            local teamEntry = lia.faction.teams[name].models[category][modelIndex]
+            local indexEntry = lia.faction.indices[faction.index].models[category][modelIndex]
+            if istable(teamEntry) then
+                if teamEntry[1] then
+                    teamEntry[3] = newGroups
+                else
+                    teamEntry.bodygroups = newGroups
+                end
+            end
+
+            if istable(indexEntry) then
+                if indexEntry[1] then
+                    indexEntry[3] = newGroups
+                else
+                    indexEntry.bodygroups = newGroups
+                end
+            end
         else
-            lia.faction.teams[name].models[modelIndex][3] = newGroups
-            lia.faction.indices[faction.index].models[modelIndex][3] = newGroups
+            local teamEntry = lia.faction.teams[name].models[modelIndex]
+            local indexEntry = lia.faction.indices[faction.index].models[modelIndex]
+            if istable(teamEntry) then
+                if teamEntry[1] then
+                    teamEntry[3] = newGroups
+                else
+                    teamEntry.bodygroups = newGroups
+                end
+            end
+
+            if istable(indexEntry) then
+                if indexEntry[1] then
+                    indexEntry[3] = newGroups
+                else
+                    indexEntry.bodygroups = newGroups
+                end
+            end
         end
     end
 end
@@ -349,7 +455,9 @@ function lia.faction.formatModelData()
         if faction.models then
             for modelIndex, modelData in pairs(faction.models) do
                 if isstring(modelIndex) then
-                    if istable(modelData) then
+                    if lia.faction.getModelData(modelIndex, modelData) then
+                        formatModelDataEntry(name, faction, modelIndex, modelData)
+                    elseif istable(modelData) then
                         for subIndex, subData in pairs(modelData) do
                             formatModelDataEntry(name, faction, subIndex, subData, modelIndex)
                         end
@@ -369,7 +477,7 @@ function lia.faction.getCategories(teamName)
     local faction = lia.faction.teams[teamName]
     if faction and faction.models then
         for key, _ in pairs(faction.models) do
-            if isstring(key) then table.insert(categories, key) end
+            if isstring(key) and not lia.faction.getModelData(key, faction.models[key]) then table.insert(categories, key) end
         end
     end
     return categories
