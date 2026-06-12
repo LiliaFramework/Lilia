@@ -407,50 +407,53 @@ function generateClass() {
   const subMaterials = getSubMaterialValues();
   const npcRelations = getNPCRelationValues();
 
-  const lines = [
-  `${index} = lia.class.register(${JSON.stringify(uniqueID)}, {`,
-  `    name = ${JSON.stringify(name)},`,
-  `    desc = ${JSON.stringify(desc)},`,
-  `    faction = ${faction},`
-  ];
+  const lines = [];
+  const pushField = (key, value) => {
+    lines.push(`    ${key} = ${value},`);
+  };
+  const pushTableStart = key => {
+    lines.push(`    ${key} = {`);
+  };
+
+  lines.push(index !== 'CLASS_NAME' ? `${index} = lia.class.register(${JSON.stringify(uniqueID)}, {` : `lia.class.register(${JSON.stringify(uniqueID)}, {`);
+  pushField('name', JSON.stringify(name));
+  pushField('desc', JSON.stringify(desc));
+  pushField('faction', faction);
 
   const hasCustomScale = scale && scale !== DEFAULTS.scale && scale !== DEFAULTS.scaleAlt;
 
   if (isWhitelisted || isDefault || limit !== DEFAULTS.limit) {
   lines.push('');
-  if (isWhitelisted) lines.push('    isWhitelisted = true,');
-  if (isDefault) lines.push('    isDefault = true,');
-  if (limit !== DEFAULTS.limit) lines.push(`    limit = ${limit},`);
+  if (isWhitelisted) pushField('isWhitelisted', 'true');
+  if (isDefault) pushField('isDefault', 'true');
+  if (limit !== DEFAULTS.limit) pushField('limit', limit);
   }
 
   if (models.length > 0 || colorInput || skin || logo || hasCustomScale || bodyGroups.length > 0 || subMaterials.length > 0) {
   lines.push('');
   if (models.length === 1) {
-  lines.push(`    model = ${JSON.stringify(models[0])},`);
+  pushField('model', JSON.stringify(models[0]));
   } else if (models.length > 1) {
-  lines.push('    models = {');
+  pushTableStart('models');
   models.forEach(m => lines.push(`        ${JSON.stringify(m)},`));
   lines.push('    },');
   }
   if (colorInput) {
-  lines.push(`    color = Color(${colorInput}),`);
+  pushField('color', `Color(${colorInput})`);
   }
-  if (skin) lines.push(`    skin = ${skin},`);
-  if (logo) lines.push(`    logo = ${JSON.stringify(logo)},`);
-  if (hasCustomScale) lines.push(`    scale = ${scale},`);
+  if (skin) pushField('skin', skin);
+  if (logo) pushField('logo', JSON.stringify(logo));
+  if (hasCustomScale) pushField('scale', scale);
   if (bodyGroups.length > 0) {
-  lines.push('    bodyGroups = {');
+  pushTableStart('bodyGroups');
   bodyGroups.forEach(bg => lines.push(`        {id = ${bg.id}, value = ${bg.value}},`));
   lines.push('    },');
   }
   if (subMaterials.length > 0) {
-  // Build a sparse array keyed by slot index (1-indexed)
-  const maxSlot = Math.max(...subMaterials.map(s => s.slot));
-  lines.push('    subMaterials = {');
-  for (let i = 1; i <= maxSlot; i++) {
-    const entry = subMaterials.find(s => s.slot === i);
-    lines.push(`        ${entry ? JSON.stringify(entry.mat) : 'nil'},`);
-  }
+  pushTableStart('subMaterials');
+  subMaterials.forEach(entry => {
+  lines.push(`        [${entry.slot}] = ${JSON.stringify(entry.mat)},`);
+  });
   lines.push('    },');
   }
   }
@@ -466,18 +469,19 @@ function generateClass() {
 
   if (hasCustomStats) {
   lines.push('');
-  if (health && health !== DEFAULTS.health) lines.push(`    health = ${health},`);
-  if (armor && armor !== DEFAULTS.armor) lines.push(`    armor = ${armor},`);
-  if (pay && pay !== DEFAULTS.pay) lines.push(`    pay = ${pay},`);
-  if (payTimer && payTimer !== DEFAULTS.payTimer) lines.push(`    payTimer = ${payTimer},`);
-  if (runSpeed && runSpeed !== DEFAULTS.runSpeed) lines.push(`    runSpeed = ${runSpeed},`);
-  if (walkSpeed && walkSpeed !== DEFAULTS.walkSpeed) lines.push(`    walkSpeed = ${walkSpeed},`);
-  if (jumpPower && jumpPower !== DEFAULTS.jumpPower) lines.push(`    jumpPower = ${jumpPower},`);
-  if (bloodcolor) lines.push(`    bloodcolor = ${bloodcolor},`);
+  if (health && health !== DEFAULTS.health) pushField('health', health);
+  if (armor && armor !== DEFAULTS.armor) pushField('armor', armor);
+  if (pay && pay !== DEFAULTS.pay) pushField('pay', pay);
+  if (payTimer && payTimer !== DEFAULTS.payTimer) pushField('payTimer', payTimer);
+  if (runSpeed && runSpeed !== DEFAULTS.runSpeed) pushField('runSpeed', runSpeed);
+  if (walkSpeed && walkSpeed !== DEFAULTS.walkSpeed) pushField('walkSpeed', walkSpeed);
+  if (jumpPower && jumpPower !== DEFAULTS.jumpPower) pushField('jumpPower', jumpPower);
+  if (bloodcolor) pushField('bloodcolor', bloodcolor);
   }
 
   if (weapons.length > 0) {
-  lines.push('', '    weapons = {');
+  lines.push('');
+  pushTableStart('weapons');
   weapons.forEach(weapon => {
   lines.push(`        ${JSON.stringify(weapon.trim())},`);
   });
@@ -485,7 +489,8 @@ function generateClass() {
   }
 
   if (npcRelations.length > 0) {
-  lines.push('', '    NPCRelations = {');
+  lines.push('');
+  pushTableStart('NPCRelations');
   npcRelations.forEach(r => {
   lines.push(`        [${JSON.stringify(r.npc)}] = ${r.disp},`);
   });
@@ -494,11 +499,11 @@ function generateClass() {
 
   if (scoreboardHidden || canInviteFaction || canInviteClass || commands.length > 0) {
   lines.push('');
-  if (scoreboardHidden) lines.push('    scoreboardHidden = true,');
-  if (canInviteFaction) lines.push('    canInviteToFaction = true,');
-  if (canInviteClass) lines.push('    canInviteToClass = true,');
+  if (scoreboardHidden) pushField('scoreboardHidden', 'true');
+  if (canInviteFaction) pushField('canInviteToFaction', 'true');
+  if (canInviteClass) pushField('canInviteToClass', 'true');
   if (commands.length > 0) {
-  lines.push('    commands = {');
+  pushTableStart('commands');
   commands.forEach(cmd => {
   lines.push(`        ${JSON.stringify(cmd)},`);
   });

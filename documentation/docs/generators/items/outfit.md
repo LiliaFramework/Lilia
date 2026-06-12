@@ -55,10 +55,44 @@ garrysmod/gamemodes/[schema folder]/schema/items/outfit/[item_id].lua
     </div>
 
     <div class="generator-section">
-      <div class="input-group">
-        <label for="replacement-model">Replacement Model:</label>
-        <input type="text" id="replacement-model" placeholder="models/player/combine_super_soldier.mdl" value="models/player/combine_super_soldier.mdl" oninput="generateOutfitItem()">
-        <small>Optional model path applied through the base replacement logic</small>
+      <div class="form-grid-2">
+        <div class="input-group">
+          <label for="source-model">Source Model:</label>
+          <input type="text" id="source-model" placeholder="Leave blank to use ITEM.replacement" value="" oninput="generateOutfitItem()">
+          <small>If set, the generator outputs a keyed <code>ITEM.replacements[sourceModel]</code> entry.</small>
+        </div>
+
+        <div class="input-group">
+          <label for="replacement-model">Replacement Model:</label>
+          <input type="text" id="replacement-model" placeholder="models/player/combine_super_soldier.mdl" value="models/player/combine_super_soldier.mdl" oninput="generateOutfitItem()">
+          <small>Model path applied by the outfit when equipped.</small>
+        </div>
+      </div>
+
+      <div class="form-grid-2">
+        <div class="input-group">
+          <label for="skin-value">Skin:</label>
+          <input type="number" id="skin-value" placeholder="0" min="0" value="1" oninput="generateOutfitItem()">
+          <small>Applied at the item level or inside the keyed replacement entry.</small>
+        </div>
+
+        <div class="input-group">
+          <label for="bodygroups-value">Bodygroups:</label>
+          <textarea id="bodygroups-value" placeholder='[1] = 2,\nhelmet = 0' oninput="generateOutfitItem()">[1] = 1,
+helmet = 0</textarea>
+          <small>Enter Lua table entries only. They will be wrapped in the selected bodygroup field.</small>
+        </div>
+      </div>
+
+      <div class="form-grid-2">
+        <div class="input-group">
+          <label for="bodygroups-field">Bodygroups Field:</label>
+          <select id="bodygroups-field" oninput="generateOutfitItem()">
+            <option value="bodygroups" selected>bodygroups</option>
+            <option value="bodyGroups">bodyGroups</option>
+          </select>
+          <small>Both field names are supported by the outfit base.</small>
+        </div>
       </div>
 
       <div class="form-grid-2">
@@ -72,6 +106,20 @@ garrysmod/gamemodes/[schema folder]/schema/items/outfit/[item_id].lua
           <label for="outfit-category">Outfit Category:</label>
           <input type="text" id="outfit-category" placeholder="e.g., uniform" value="armor" oninput="generateOutfitItem()">
           <small>Only one equipped item per outfit category is allowed</small>
+        </div>
+      </div>
+
+      <div class="form-grid-2">
+        <div class="input-group">
+          <label for="attrib-boosts">Attribute Boosts:</label>
+          <textarea id="attrib-boosts" placeholder="Optional. One per line, format: strength=2" oninput="generateOutfitItem()"></textarea>
+          <small>Optional boosts applied while equipped, such as <code>strength=2</code>.</small>
+        </div>
+
+        <div class="input-group">
+          <label for="pac-data">PAC Data:</label>
+          <textarea id="pac-data" placeholder='Optional raw Lua entries, e.g.&#10;[1] = {&#10;    children = {},&#10;    self = {ClassName = "model"}&#10;}' oninput="generateOutfitItem()"></textarea>
+          <small>Optional raw <code>pacData</code> table contents for hybrid outfit items.</small>
         </div>
       </div>
     </div>
@@ -92,6 +140,27 @@ garrysmod/gamemodes/[schema folder]/schema/items/outfit/[item_id].lua
 </div>
 
 <script>
+function parseAttributeBoosts() {
+  const raw = (document.getElementById('attrib-boosts').value || '').trim();
+  if (!raw) return [];
+
+  return raw
+    .split('\n')
+    .map((line) => line.trim())
+    .filter(Boolean)
+    .map((line) => {
+      const separatorIndex = line.indexOf('=');
+      if (separatorIndex === -1) return null;
+
+      const key = line.slice(0, separatorIndex).trim();
+      const value = line.slice(separatorIndex + 1).trim();
+      if (!key || !value) return null;
+
+      return {key, value};
+    })
+    .filter(Boolean);
+}
+
 function generateOutfitItem() {
   const uniqueId = (document.getElementById('item-id').value || '').trim() || 'outfit_example';
   const name = (document.getElementById('item-name').value || '').trim() || 'Outfit Item';
@@ -99,22 +168,71 @@ function generateOutfitItem() {
   const model = (document.getElementById('item-model').value || '').trim() || 'models/props_c17/SuitCase001a.mdl';
   const width = document.getElementById('item-width').value || '1';
   const height = document.getElementById('item-height').value || '1';
+  const sourceModel = (document.getElementById('source-model').value || '').trim();
   const replacementModel = (document.getElementById('replacement-model').value || '').trim() || 'models/player/group01/male_01.mdl';
+  const skinValue = (document.getElementById('skin-value').value || '').trim();
+  const bodygroupsValue = (document.getElementById('bodygroups-value').value || '').trim();
+  const bodygroupsField = document.getElementById('bodygroups-field').value || 'bodygroups';
   const armorValue = document.getElementById('armor-value').value || '0';
   const outfitCategory = (document.getElementById('outfit-category').value || '').trim() || 'uniform';
+  const attribBoosts = parseAttributeBoosts();
+  const pacData = (document.getElementById('pac-data').value || '').trim();
 
   const properties = [
     `    name = ${JSON.stringify(name)},`,
     `    desc = ${JSON.stringify(desc)},`,
     `    model = ${JSON.stringify(model)},`,
     '    category = "outfit",',
-    `    outfitCategory = ${JSON.stringify(outfitCategory)},`,
-    `    replacement = ${JSON.stringify(replacementModel)}`
+    `    outfitCategory = ${JSON.stringify(outfitCategory)},`
   ];
 
   if (width !== '1') properties.splice(3, 0, `    width = ${width},`);
   if (height !== '1') properties.splice(width !== '1' ? 4 : 3, 0, `    height = ${height},`);
-  if (armorValue !== '0') properties.splice(properties.length - 1, 0, `    armor = ${armorValue},`);
+  if (armorValue !== '0') properties.push(`    armor = ${armorValue},`);
+  if (attribBoosts.length > 0) {
+    properties.push('    attribBoosts = {');
+    attribBoosts.forEach((entry, index) => {
+      const suffix = index === attribBoosts.length - 1 ? '' : ',';
+      properties.push(`        ${entry.key} = ${entry.value}${suffix}`);
+    });
+    properties.push('    },');
+  }
+  if (pacData) {
+    properties.push('    pacData = {');
+    pacData.split('\n').forEach(line => {
+      const trimmed = line.trim();
+      if (trimmed) properties.push(`        ${trimmed}`);
+    });
+    properties.push('    },');
+  }
+
+  if (sourceModel) {
+    properties.push('    replacements = {');
+    properties.push(`        [${JSON.stringify(sourceModel)}] = {`);
+    properties.push(`            replacement = ${JSON.stringify(replacementModel)},`);
+    if (skinValue !== '') properties.push(`            skin = ${skinValue},`);
+    if (bodygroupsValue) {
+      properties.push(`            ${bodygroupsField} = {`);
+      bodygroupsValue.split('\n').forEach(line => {
+        const trimmed = line.trim();
+        if (trimmed) properties.push(`                ${trimmed}`);
+      });
+      properties.push('            }');
+    }
+    properties.push('        }');
+    properties.push('    }');
+  } else {
+    properties.push(`    replacement = ${JSON.stringify(replacementModel)},`);
+    if (skinValue !== '') properties.push(`    skin = ${skinValue},`);
+    if (bodygroupsValue) {
+      properties.push(`    ${bodygroupsField} = {`);
+      bodygroupsValue.split('\n').forEach(line => {
+        const trimmed = line.trim();
+        if (trimmed) properties.push(`        ${trimmed}`);
+      });
+      properties.push('    }');
+    }
+  }
 
   const lines = [
   `lia.item.registerItem(${JSON.stringify(uniqueId)}, "base_outfit", {`,
@@ -137,9 +255,15 @@ function fillExampleOutfit() {
   document.getElementById('item-model').value = 'models/props_junk/metalgascan.mdl';
   document.getElementById('item-width').value = '2';
   document.getElementById('item-height').value = '2';
+  document.getElementById('source-model').value = 'models/player/group01/male_07.mdl';
   document.getElementById('replacement-model').value = 'models/player/corpse1.mdl';
+  document.getElementById('skin-value').value = '2';
+  document.getElementById('bodygroups-value').value = '[1] = 2,\nhelmet = 0';
+  document.getElementById('bodygroups-field').value = 'bodyGroups';
   document.getElementById('armor-value').value = '25';
   document.getElementById('outfit-category').value = 'hazmat';
+  document.getElementById('attrib-boosts').value = 'endurance=3\nstrength=1';
+  document.getElementById('pac-data').value = '';
 
   generateOutfitItem();
 }

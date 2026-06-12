@@ -150,6 +150,12 @@ You can also add callback fields like `OnTransferred`, `OnSpawn`, `NameTemplate`
           <input type="number" id="pay" placeholder="0" min="0">
           <small>How much they get paid each paycheck.</small>
         </div>
+
+        <div class="input-group">
+          <label for="pay-timer">Pay Timer (seconds):</label>
+          <input type="number" id="pay-timer" placeholder="0" min="0">
+          <small>How often this faction gets paid. Leave empty to use the server salary timer.</small>
+        </div>
       </div>
 
       <div class="form-grid-2">
@@ -474,6 +480,7 @@ function generateFaction() {
     health: '100',
     armor: '0',
     pay: '0',
+    payTimer: '0',
     runSpeed: '1',
     walkSpeed: '1',
     jumpPower: '1',
@@ -515,6 +522,7 @@ function generateFaction() {
   const walkSpeed = document.getElementById('walk-speed').value.trim();
   const jumpPower = document.getElementById('jump-power').value.trim();
   const pay = document.getElementById('pay').value.trim();
+  const payTimer = document.getElementById('pay-timer').value.trim();
 
   const recognizesGlobally = document.getElementById('recognizes-globally').checked;
   const globallyRecognized = document.getElementById('globally-recognized').checked;
@@ -547,7 +555,9 @@ function generateFaction() {
 
   if (models.length > 0 || colorInput || logo || hasCustomScale || skinAllowed || bodygroupsAllowed || allowedSkins.length > 0 || Object.keys(allowedBodygroups).length > 0) {
     lines.push('');
-    if (models.length > 0) {
+    if (models.length === 1) {
+      pushField('model', JSON.stringify(models[0]));
+    } else if (models.length > 1) {
       pushTableStart('models');
       models.forEach(model => lines.push(`        ${JSON.stringify(model)},`));
       lines.push('    },');
@@ -574,6 +584,7 @@ function generateFaction() {
   const hasCustomStats = (health && health !== DEFAULTS.health) ||
     (armor && armor !== DEFAULTS.armor) ||
     (pay && pay !== DEFAULTS.pay) ||
+    (payTimer && payTimer !== DEFAULTS.payTimer) ||
     (runSpeed && runSpeed !== DEFAULTS.runSpeed) ||
     (walkSpeed && walkSpeed !== DEFAULTS.walkSpeed) ||
     (jumpPower && jumpPower !== DEFAULTS.jumpPower) ||
@@ -584,6 +595,7 @@ function generateFaction() {
     if (health && health !== DEFAULTS.health) pushField('health', health);
     if (armor && armor !== DEFAULTS.armor) pushField('armor', armor);
     if (pay && pay !== DEFAULTS.pay) pushField('pay', pay);
+    if (payTimer && payTimer !== DEFAULTS.payTimer) pushField('payTimer', payTimer);
     if (runSpeed && runSpeed !== DEFAULTS.runSpeed) pushField('runSpeed', runSpeed);
     if (walkSpeed && walkSpeed !== DEFAULTS.walkSpeed) pushField('walkSpeed', walkSpeed);
     if (jumpPower && jumpPower !== DEFAULTS.jumpPower) pushField('jumpPower', jumpPower);
@@ -715,6 +727,7 @@ function fillExampleFaction() {
   document.getElementById('walk-speed').value = '1';
   document.getElementById('jump-power').value = '1';
   document.getElementById('pay').value = '20';
+  document.getElementById('pay-timer').value = '300';
 
   document.getElementById('skin-allowed').checked = false;
   document.getElementById('bodygroups-allowed').checked = false;
