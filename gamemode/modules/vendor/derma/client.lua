@@ -1035,7 +1035,6 @@ function PANEL:setItemType(itemType)
     assert(item, L("invalidItemTypeOrID", tostring(itemType)))
     self.item = item
     local itemIcon = item.icon
-    if not itemIcon and item.functions and item.functions.use and item.functions.use.icon then itemIcon = item.functions.use.icon end
     if itemIcon then
         self.icon:SetVisible(false)
         self.iconFrame.ExtraPaint = function(pnl, w, h) drawIcon(itemIcon, pnl, w, h) end
