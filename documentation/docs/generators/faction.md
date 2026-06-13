@@ -297,6 +297,15 @@ You can also add callback fields like `OnTransferred`, `OnSpawn`, `NameTemplate`
 </div>
 
 <script>
+const REMOVE_BUTTON_HTML = '&times;';
+
+function normalizeRemoveButtons(scope = document) {
+  scope.querySelectorAll('.remove-btn').forEach((button) => {
+    button.innerHTML = REMOVE_BUTTON_HTML;
+    button.setAttribute('aria-label', 'Remove row');
+  });
+}
+
 // Helper to create a generic text input row
 function addTextRow(containerId, placeholder, value = '') {
   const container = document.getElementById(containerId);
@@ -311,6 +320,7 @@ function addTextRow(containerId, placeholder, value = '') {
   <button onclick="this.parentElement.remove()" class="remove-btn">&times;</button>
   `;
   container.appendChild(div);
+  normalizeRemoveButtons(div);
 }
 
 // Helper to create a spawn row (Map, Pos, Ang)
@@ -322,9 +332,10 @@ function addSpawnRow(map='', pos='', ang='') {
   <input type="text" placeholder="Map Name (e.g. gm_construct)" value="${map}" class="spawn-map small-input">
   <input type="text" placeholder="Vector(0,0,0)" value="${pos}" class="spawn-pos">
   <input type="text" placeholder="Angle(0,0,0)" value="${ang}" class="spawn-ang">
-  <button onclick="this.parentElement.remove()" class="remove-btn">Ãƒâ€”</button>
+  <button onclick="this.parentElement.remove()" class="remove-btn">&times;</button>
   `;
   container.appendChild(div);
+  normalizeRemoveButtons(div);
 }
 
 // Helper to create a main menu position row (Map, Pos, Ang)
@@ -336,9 +347,10 @@ function addMainMenuRow(map='', pos='', ang='') {
   <input type="text" placeholder="Map (Blank for all)" value="${map}" class="mm-map small-input">
   <input type="text" placeholder="Vector(0,0,0)" value="${pos}" class="mm-pos">
   <input type="text" placeholder="Angle(0,0,0)" value="${ang}" class="mm-ang">
-  <button onclick="this.parentElement.remove()" class="remove-btn">Ãƒâ€”</button>
+  <button onclick="this.parentElement.remove()" class="remove-btn">&times;</button>
   `;
   container.appendChild(div);
+  normalizeRemoveButtons(div);
 }
 
 function addCommandRow(val='') { addTextRow('commands-list', 'kick', val); }
@@ -363,6 +375,7 @@ function addModelRow(model='', skin='', bodygroups='', allowedSkins='', allowedB
   </div>
   `;
   container.appendChild(div);
+  normalizeRemoveButtons(div);
 }
 function addWeaponRow(val='') { addTextRow('weapons-list', 'weapon_class', val); }
 function addItemRow(val='') { addTextRow('items-list', 'item_unique_id', val); }
@@ -375,9 +388,10 @@ function addAllowedBodygroupRow(index='', values='') {
   div.innerHTML = `
   <input type="number" placeholder="Bodygroup index" value="${index}" min="0" class="abg-index small-input">
   <input type="text" placeholder="Allowed values (e.g. 0,1,2)" value="${values}" class="abg-values">
-  <button onclick="this.parentElement.remove()" class="remove-btn">Ãƒâ€”</button>
+  <button onclick="this.parentElement.remove()" class="remove-btn">&times;</button>
   `;
   container.appendChild(div);
+  normalizeRemoveButtons(div);
 }
 
 function addNPCRelationRow(npc='', disposition='D_HT') {
@@ -392,9 +406,10 @@ function addNPCRelationRow(npc='', disposition='D_HT') {
     <option value="D_FR"${disposition==='D_FR'?' selected':''}>D_FR (Fear)</option>
     <option value="D_NU"${disposition==='D_NU'?' selected':''}>D_NU (Neutral)</option>
   </select>
-  <button onclick="this.parentElement.remove()" class="remove-btn">Ãƒâ€”</button>
+  <button onclick="this.parentElement.remove()" class="remove-btn">&times;</button>
   `;
   container.appendChild(div);
+  normalizeRemoveButtons(div);
 }
 
 function getNPCRelationValues() {
@@ -901,6 +916,8 @@ document.addEventListener('DOMContentLoaded', () => {
   const picker = document.getElementById('faction-color-picker');
   const text = document.getElementById('faction-color');
 
+  normalizeRemoveButtons();
+
   picker.addEventListener('input', () => {
     text.value = hexToRgbText(picker.value);
     generateFaction();
@@ -921,3 +938,4 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 </script>
+

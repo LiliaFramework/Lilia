@@ -90,9 +90,10 @@ garrysmod/gamemodes/[schema folder]/schema/definitions/sh_items.lua
 
     <div class="generator-section">
       <div class="input-group">
-        <label for="attrib-boosts">Attribute Boosts:</label>
-        <textarea id="attrib-boosts" placeholder="Optional. One per line, format: strength=2" oninput="generatePac3Item()"></textarea>
-        <small>Optional boosts added while the item is equipped, such as <code>strength=2</code> or <code>agility=1</code></small>
+        <label>Attribute Boosts:</label>
+        <div id="attrib-boosts-list" class="dynamic-list"></div>
+        <button onclick="addAttribBoostRow(); generatePac3Item();" class="add-btn">+ Add Attribute Boost</button>
+        <small>Optional boosts added while the item is equipped, such as <code>strength = 2</code> or <code>agility = 1</code>.</small>
       </div>
     </div>
 
@@ -111,25 +112,30 @@ garrysmod/gamemodes/[schema folder]/schema/definitions/sh_items.lua
 </div>
 
 <script>
+function addAttribBoostRow(attribute = '', value = '') {
+  const container = document.getElementById('attrib-boosts-list');
+  const div = document.createElement('div');
+  div.className = 'dynamic-row';
+  div.innerHTML = `
+  <input type="text" placeholder="Attribute key (e.g. strength)" value="${attribute}" class="attrib-boost-key" oninput="generatePac3Item()">
+  <input type="number" placeholder="Value" value="${value}" class="attrib-boost-value" oninput="generatePac3Item()">
+  <button onclick="this.parentElement.remove(); generatePac3Item();" class="remove-btn" aria-label="Remove row">&times;</button>
+  `;
+  container.appendChild(div);
+}
+
 function parseAttributeBoosts() {
-  const raw = (document.getElementById('attrib-boosts').value || '').trim();
-  if (!raw) return [];
+  const rows = document.querySelectorAll('#attrib-boosts-list .dynamic-row');
+  const entries = [];
 
-  return raw
-    .split('\n')
-    .map((line) => line.trim())
-    .filter(Boolean)
-    .map((line) => {
-      const separatorIndex = line.indexOf('=');
-      if (separatorIndex === -1) return null;
+  rows.forEach((row) => {
+    const key = (row.querySelector('.attrib-boost-key').value || '').trim();
+    const value = (row.querySelector('.attrib-boost-value').value || '').trim();
+    if (!key || value === '') return;
+    entries.push({key, value});
+  });
 
-      const key = line.slice(0, separatorIndex).trim();
-      const value = line.slice(separatorIndex + 1).trim();
-      if (!key || !value) return null;
-
-      return {key, value};
-    })
-    .filter(Boolean);
+  return entries;
 }
 
 function generatePac3Item() {
@@ -204,12 +210,19 @@ function fillExamplePac3Item() {
   document.getElementById('pac-bone').value = 'head';
   document.getElementById('pac-model').value = 'models/captainbigbutt/skeyler/accessories/glasses01.mdl';
   document.getElementById('pac-size').value = '1';
-  document.getElementById('attrib-boosts').value = 'perception=1\nstamina=5';
+  document.getElementById('attrib-boosts-list').innerHTML = '';
+  addAttribBoostRow('perception', '1');
+  addAttribBoostRow('stamina', '5');
 
   generatePac3Item();
 }
 
 document.addEventListener('DOMContentLoaded', () => {
+  if (!document.querySelector('#attrib-boosts-list .dynamic-row')) {
+    addAttribBoostRow('perception', '1');
+    addAttribBoostRow('stamina', '5');
+  }
+
   generatePac3Item();
 });
 </script>

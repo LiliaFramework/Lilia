@@ -77,10 +77,10 @@ garrysmod/gamemodes/[schema folder]/schema/definitions/sh_items.lua
         </div>
 
         <div class="input-group">
-          <label for="bodygroups-value">Bodygroups:</label>
-          <textarea id="bodygroups-value" placeholder='[1] = 2,\nhelmet = 0' oninput="generateOutfitItem()">[1] = 1,
-helmet = 0</textarea>
-          <small>Enter Lua table entries only. They will be wrapped in the selected bodygroup field.</small>
+          <label>Bodygroups:</label>
+          <div id="bodygroups-list" class="dynamic-list"></div>
+          <button onclick="addBodygroupRow(); generateOutfitItem();" class="add-btn">+ Add Bodygroup</button>
+          <small>Add one bodygroup entry at a time. Use numeric indexes like <code>1</code> or named keys like <code>helmet</code>.</small>
         </div>
       </div>
 
@@ -111,9 +111,10 @@ helmet = 0</textarea>
 
       <div class="form-grid-2">
         <div class="input-group">
-          <label for="attrib-boosts">Attribute Boosts:</label>
-          <textarea id="attrib-boosts" placeholder="Optional. One per line, format: strength=2" oninput="generateOutfitItem()"></textarea>
-          <small>Optional boosts applied while equipped, such as <code>strength=2</code>.</small>
+          <label>Attribute Boosts:</label>
+          <div id="attrib-boosts-list" class="dynamic-list"></div>
+          <button onclick="addAttribBoostRow(); generateOutfitItem();" class="add-btn">+ Add Attribute Boost</button>
+          <small>Optional boosts applied while equipped, such as <code>strength = 2</code>.</small>
         </div>
 
         <div class="input-group">
@@ -140,25 +141,56 @@ helmet = 0</textarea>
 </div>
 
 <script>
+function addBodygroupRow(key = '', value = '') {
+  const container = document.getElementById('bodygroups-list');
+  const div = document.createElement('div');
+  div.className = 'dynamic-row';
+  div.innerHTML = `
+  <input type="text" placeholder="Bodygroup key (e.g. 1 or helmet)" value="${key}" class="bodygroup-key" oninput="generateOutfitItem()">
+  <input type="number" placeholder="Value" value="${value}" min="0" class="bodygroup-value" oninput="generateOutfitItem()">
+  <button onclick="this.parentElement.remove(); generateOutfitItem();" class="remove-btn" aria-label="Remove row">&times;</button>
+  `;
+  container.appendChild(div);
+}
+
+function getBodygroupEntries() {
+  const rows = document.querySelectorAll('#bodygroups-list .dynamic-row');
+  const entries = [];
+
+  rows.forEach((row) => {
+    const key = (row.querySelector('.bodygroup-key').value || '').trim();
+    const value = (row.querySelector('.bodygroup-value').value || '').trim();
+    if (!key || value === '') return;
+    entries.push({key, value});
+  });
+
+  return entries;
+}
+
+function addAttribBoostRow(attribute = '', value = '') {
+  const container = document.getElementById('attrib-boosts-list');
+  const div = document.createElement('div');
+  div.className = 'dynamic-row';
+  div.innerHTML = `
+  <input type="text" placeholder="Attribute key (e.g. strength)" value="${attribute}" class="attrib-boost-key" oninput="generateOutfitItem()">
+  <input type="number" placeholder="Value" value="${value}" class="attrib-boost-value" oninput="generateOutfitItem()">
+  <button onclick="this.parentElement.remove(); generateOutfitItem();" class="remove-btn" aria-label="Remove row">&times;</button>
+  `;
+  container.appendChild(div);
+}
+
 function parseAttributeBoosts() {
-  const raw = (document.getElementById('attrib-boosts').value || '').trim();
-  if (!raw) return [];
+  const rows = document.querySelectorAll('#attrib-boosts-list .dynamic-row');
+  const entries = [];
 
-  return raw
-    .split('\n')
-    .map((line) => line.trim())
-    .filter(Boolean)
-    .map((line) => {
-      const separatorIndex = line.indexOf('=');
-      if (separatorIndex === -1) return null;
+  rows.forEach((row) => {
+    const key = (row.querySelector('.attrib-boost-key').value || '').trim();
+    const value = (row.querySelector('.attrib-boost-value').value || '').trim();
+    if (!key || value === '') return;
+    entries.push({key, value});
+  });
 
-      const key = line.slice(0, separatorIndex).trim();
-      const value = line.slice(separatorIndex + 1).trim();
-      if (!key || !value) return null;
-
-      return {key, value};
-    })
-    .filter(Boolean);
+  return entries;
 }
 
 function generateOutfitItem() {
@@ -171,7 +203,7 @@ function generateOutfitItem() {
   const sourceModel = (document.getElementById('source-model').value || '').trim();
   const replacementModel = (document.getElementById('replacement-model').value || '').trim() || 'models/player/group01/male_01.mdl';
   const skinValue = (document.getElementById('skin-value').value || '').trim();
-  const bodygroupsValue = (document.getElementById('bodygroups-value').value || '').trim();
+  const bodygroupsValue = getBodygroupEntries();
   const bodygroupsField = document.getElementById('bodygroups-field').value || 'bodygroups';
   const armorValue = document.getElementById('armor-value').value || '0';
   const outfitCategory = (document.getElementById('outfit-category').value || '').trim() || 'uniform';
@@ -211,11 +243,11 @@ function generateOutfitItem() {
     properties.push(`        [${JSON.stringify(sourceModel)}] = {`);
     properties.push(`            replacement = ${JSON.stringify(replacementModel)},`);
     if (skinValue !== '') properties.push(`            skin = ${skinValue},`);
-    if (bodygroupsValue) {
+    if (bodygroupsValue.length > 0) {
       properties.push(`            ${bodygroupsField} = {`);
-      bodygroupsValue.split('\n').forEach(line => {
-        const trimmed = line.trim();
-        if (trimmed) properties.push(`                ${trimmed}`);
+      bodygroupsValue.forEach((entry) => {
+        const formattedKey = /^\d+$/.test(entry.key) ? `[${entry.key}]` : entry.key;
+        properties.push(`                ${formattedKey} = ${entry.value},`);
       });
       properties.push('            }');
     }
@@ -224,11 +256,11 @@ function generateOutfitItem() {
   } else {
     properties.push(`    replacement = ${JSON.stringify(replacementModel)},`);
     if (skinValue !== '') properties.push(`    skin = ${skinValue},`);
-    if (bodygroupsValue) {
+    if (bodygroupsValue.length > 0) {
       properties.push(`    ${bodygroupsField} = {`);
-      bodygroupsValue.split('\n').forEach(line => {
-        const trimmed = line.trim();
-        if (trimmed) properties.push(`        ${trimmed}`);
+      bodygroupsValue.forEach((entry) => {
+        const formattedKey = /^\d+$/.test(entry.key) ? `[${entry.key}]` : entry.key;
+        properties.push(`        ${formattedKey} = ${entry.value},`);
       });
       properties.push('    }');
     }
@@ -258,11 +290,15 @@ function fillExampleOutfit() {
   document.getElementById('source-model').value = 'models/player/group01/male_07.mdl';
   document.getElementById('replacement-model').value = 'models/player/corpse1.mdl';
   document.getElementById('skin-value').value = '2';
-  document.getElementById('bodygroups-value').value = '[1] = 2,\nhelmet = 0';
+  document.getElementById('bodygroups-list').innerHTML = '';
+  addBodygroupRow('1', '2');
+  addBodygroupRow('helmet', '0');
   document.getElementById('bodygroups-field').value = 'bodyGroups';
   document.getElementById('armor-value').value = '25';
   document.getElementById('outfit-category').value = 'hazmat';
-  document.getElementById('attrib-boosts').value = 'endurance=3\nstrength=1';
+  document.getElementById('attrib-boosts-list').innerHTML = '';
+  addAttribBoostRow('endurance', '3');
+  addAttribBoostRow('strength', '1');
   document.getElementById('pac-data').value = '';
 
   generateOutfitItem();
@@ -270,6 +306,16 @@ function fillExampleOutfit() {
 
 // Initial generation
 document.addEventListener('DOMContentLoaded', () => {
+  if (!document.querySelector('#attrib-boosts-list .dynamic-row')) {
+    addAttribBoostRow('endurance', '3');
+    addAttribBoostRow('strength', '1');
+  }
+
+  if (!document.querySelector('#bodygroups-list .dynamic-row')) {
+    addBodygroupRow('1', '1');
+    addBodygroupRow('helmet', '0');
+  }
+
   generateOutfitItem();
 });
 </script>

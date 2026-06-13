@@ -95,9 +95,10 @@ garrysmod/gamemodes/[schema folder]/schema/definitions/sh_items.lua
       </div>
 
       <div class="input-group">
-        <label for="required-skills">Required Skill Levels:</label>
-        <textarea id="required-skills" placeholder="Optional. One per line, format: guns=5" oninput="generateWeaponItem()"></textarea>
-        <small>Optional skill requirements written as <code>skill=value</code>, one per line</small>
+        <label>Required Skill Levels:</label>
+        <div id="required-skills-list" class="dynamic-list"></div>
+        <button onclick="addRequiredSkillRow(); generateWeaponItem();" class="add-btn">+ Add Required Skill</button>
+        <small>Optional skill requirements as skill/value pairs, such as <code>guns = 5</code>.</small>
       </div>
     </div>
 
@@ -117,25 +118,30 @@ garrysmod/gamemodes/[schema folder]/schema/definitions/sh_items.lua
 </div>
 
 <script>
+function addRequiredSkillRow(skill = '', value = '') {
+  const container = document.getElementById('required-skills-list');
+  const div = document.createElement('div');
+  div.className = 'dynamic-row';
+  div.innerHTML = `
+  <input type="text" placeholder="Skill key (e.g. guns)" value="${skill}" class="required-skill-key" oninput="generateWeaponItem()">
+  <input type="number" placeholder="Level" value="${value}" min="0" class="required-skill-value" oninput="generateWeaponItem()">
+  <button onclick="this.parentElement.remove(); generateWeaponItem();" class="remove-btn" aria-label="Remove row">&times;</button>
+  `;
+  container.appendChild(div);
+}
+
 function parseRequiredSkills() {
-  const raw = (document.getElementById('required-skills').value || '').trim();
-  if (!raw) return [];
+  const rows = document.querySelectorAll('#required-skills-list .dynamic-row');
+  const entries = [];
 
-  return raw
-    .split('\n')
-    .map((line) => line.trim())
-    .filter(Boolean)
-    .map((line) => {
-      const separatorIndex = line.indexOf('=');
-      if (separatorIndex === -1) return null;
+  rows.forEach((row) => {
+    const key = (row.querySelector('.required-skill-key').value || '').trim();
+    const value = (row.querySelector('.required-skill-value').value || '').trim();
+    if (!key || value === '') return;
+    entries.push({key, value});
+  });
 
-      const key = line.slice(0, separatorIndex).trim();
-      const value = line.slice(separatorIndex + 1).trim();
-      if (!key || !value) return null;
-
-      return {key, value};
-    })
-    .filter(Boolean);
+  return entries;
 }
 
 function generateWeaponItem() {
@@ -200,13 +206,15 @@ function fillExampleWeapon() {
   document.getElementById('drop-on-death').checked = true;
   document.getElementById('equip-sound').value = 'items/ammo_pickup.wav';
   document.getElementById('unequip-sound').value = 'items/ammo_pickup.wav';
-  document.getElementById('required-skills').value = 'guns=3';
+  document.getElementById('required-skills-list').innerHTML = '';
+  addRequiredSkillRow('guns', '3');
 
   generateWeaponItem();
 }
 
 // Initial generation
 document.addEventListener('DOMContentLoaded', () => {
+  if (!document.querySelector('#required-skills-list .dynamic-row')) addRequiredSkillRow('guns', '3');
   generateWeaponItem();
 });
 </script>
