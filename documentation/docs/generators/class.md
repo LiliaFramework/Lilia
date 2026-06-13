@@ -70,7 +70,7 @@ You can also add callback fields like `OnCanBe`, `OnSet`, `OnTransferred`, `OnLe
         <label>Model:</label>
         <div id="models-list" class="dynamic-list"></div>
         <button onclick="addModelRow()" class="add-btn">+ Add Model</button>
-        <small>The model or models this class can use.</small>
+        <small>The model or models this class can use. Each entry is split into a model row and a second row for the skin/bodygroup rules tied to that model.</small>
       </div>
 
       <div class="form-grid-2">
@@ -262,7 +262,27 @@ function addTextRow(containerId, placeholder, value = '') {
 function addCommandRow(val='') { addTextRow('commands-list', 'kick', val); }
 
 function addWeaponRow(val='') { addTextRow('weapons-list', 'weapon_class', val); }
-function addModelRow(val='') { addTextRow('models-list', 'models/player/...', val); }
+function addModelRow(model='', skin='', bodygroups='', allowedSkins='', allowedBodygroups='') {
+  const container = document.getElementById('models-list');
+  const div = document.createElement('div');
+  div.className = 'dynamic-row';
+  div.style.flexDirection = 'column';
+  div.style.alignItems = 'stretch';
+  div.style.gap = '8px';
+  div.innerHTML = `
+  <div style="display:flex; gap:8px; flex-wrap:wrap; width:100%;">
+    <input type="text" placeholder="models/player/..." value="${model}" class="model-path" style="flex:2; min-width:220px;">
+    <input type="number" placeholder="Skin" value="${skin}" min="0" class="model-skin small-input">
+    <input type="text" placeholder="Default bodygroups (1=0; helmet=1)" value="${bodygroups}" class="model-bodygroups" style="flex:1.25; min-width:180px;">
+    <button onclick="this.closest('.dynamic-row').remove()" class="remove-btn">&times;</button>
+  </div>
+  <div style="display:flex; gap:8px; flex-wrap:wrap; width:100%;">
+    <input type="text" placeholder="Allowed skins for this model (0,1,2)" value="${allowedSkins}" class="model-allowed-skins" style="flex:1; min-width:220px;">
+    <input type="text" placeholder="Allowed bodygroups for this model (1=0|1; helmet=0|1)" value="${allowedBodygroups}" class="model-allowed-bodygroups" style="flex:1.5; min-width:260px;">
+  </div>
+  `;
+  container.appendChild(div);
+}
 
 function addBodygroupRow(id='', value='') {
   const container = document.getElementById('bodygroups-list');
@@ -344,6 +364,118 @@ function getListValues(containerId) {
   .filter(val => val !== '');
 }
 
+function parseNumberList(text) {
+  return (text || '')
+  .split(',')
+  .map(part => parseInt(part.trim(), 10))
+  .filter(value => !isNaN(value));
+}
+
+function parseBodygroupMap(text) {
+  const result = {};
+  (text || '').split(';').forEach(rule => {
+    const trimmedRule = rule.trim();
+    if (!trimmedRule) return;
+    const match = trimmedRule.match(/^([^:=]+)\s*[:=]\s*(.+)$/);
+    if (!match) return;
+    const rawKey = match[1].trim();
+    const rawValue = match[2].trim();
+    if (!rawKey || rawValue === '') return;
+    const numericKey = Number(rawKey);
+    const key = Number.isNaN(numericKey) ? rawKey : numericKey;
+    const numericValue = parseInt(rawValue, 10);
+    if (!isNaN(numericValue)) result[key] = numericValue;
+  });
+  return result;
+}
+
+function parseAllowedBodygroupMap(text) {
+  const result = {};
+  (text || '').split(';').forEach(rule => {
+    const trimmedRule = rule.trim();
+    if (!trimmedRule) return;
+    const match = trimmedRule.match(/^([^:=]+)\s*[:=]\s*(.+)$/);
+    if (!match) return;
+    const rawKey = match[1].trim();
+    const rawValues = match[2].trim();
+    if (!rawKey || !rawValues) return;
+    const numericKey = Number(rawKey);
+    const key = Number.isNaN(numericKey) ? rawKey : numericKey;
+    const values = rawValues.split('|').map(value => parseInt(value.trim(), 10)).filter(value => !isNaN(value));
+    if (values.length > 0) result[key] = values;
+  });
+  return result;
+}
+
+function getModelValues() {
+  const rows = document.querySelectorAll('#models-list .dynamic-row');
+  const models = [];
+  rows.forEach(row => {
+    const model = row.querySelector('.model-path').value.trim();
+    if (!model) return;
+    const skinValue = row.querySelector('.model-skin').value.trim();
+    const bodygroups = parseBodygroupMap(row.querySelector('.model-bodygroups').value.trim());
+    const allowedSkins = parseNumberList(row.querySelector('.model-allowed-skins').value.trim());
+    const allowedBodygroups = parseAllowedBodygroupMap(row.querySelector('.model-allowed-bodygroups').value.trim());
+    const hasAdvancedData = skinValue !== '' || Object.keys(bodygroups).length > 0 || allowedSkins.length > 0 || Object.keys(allowedBodygroups).length > 0;
+    if (!hasAdvancedData) {
+      models.push(model);
+      return;
+    }
+
+    models.push({
+      model,
+      skin: skinValue !== '' ? parseInt(skinValue, 10) : 0,
+      bodygroups,
+      allowedSkins,
+      allowedBodygroups
+    });
+  });
+  return models;
+}
+
+function formatLuaKey(key) {
+  return typeof key === 'number' ? `[${key}]` : `[${JSON.stringify(key)}]`;
+}
+
+function formatLuaBodygroupMap(map, indent) {
+  const entries = Object.entries(map);
+  if (entries.length === 0) return '{}';
+  const lines = ['{'];
+  entries.forEach(([key, value]) => {
+    const numericKey = Number(key);
+    const normalizedKey = Number.isNaN(numericKey) ? key : numericKey;
+    lines.push(`${indent}    ${formatLuaKey(normalizedKey)} = ${value},`);
+  });
+  lines.push(`${indent}}`);
+  return lines.join('\n');
+}
+
+function pushLuaModelEntry(lines, modelEntry) {
+  if (typeof modelEntry === 'string') {
+    lines.push(`        ${JSON.stringify(modelEntry)},`);
+    return;
+  }
+
+  lines.push('        {');
+  lines.push(`            ${JSON.stringify(modelEntry.model)},`);
+  lines.push(`            ${modelEntry.skin || 0},`);
+  lines.push(`            ${formatLuaBodygroupMap(modelEntry.bodygroups || {}, '            ')},`);
+  if ((modelEntry.allowedSkins || []).length > 0) {
+    lines.push(`            allowedSkins = {${modelEntry.allowedSkins.join(', ')}},`);
+  }
+  if (Object.keys(modelEntry.allowedBodygroups || {}).length > 0) {
+    lines.push('            allowedBodygroups = {');
+    Object.entries(modelEntry.allowedBodygroups).forEach(([bodygroupKey, values]) => {
+      const numericKey = Number(bodygroupKey);
+      const normalizedKey = Number.isNaN(numericKey) ? bodygroupKey : numericKey;
+      lines.push(`                ${formatLuaKey(normalizedKey)} = {${values.join(', ')}},`);
+    });
+    lines.push('            },');
+  }
+  lines.push('        },');
+}
+
 function getCommandValues() {
   return Array.from(document.querySelectorAll('#commands-list .list-input'))
   .map(input => input.value.trim())
@@ -400,7 +532,7 @@ function generateClass() {
   const canInviteClass = document.getElementById('class-can-invite-class').checked;
 
   // Harvest dynamic lists
-  const models = getListValues('models-list');
+  const models = getModelValues();
   const weapons = getListValues('weapons-list');
   const commands = getCommandValues();
   const bodyGroups = getBodygroupValues();
@@ -429,13 +561,18 @@ function generateClass() {
   if (limit !== DEFAULTS.limit) pushField('limit', limit);
   }
 
+  const hasAdvancedModelData = models.some(model => typeof model === 'object');
   if (models.length > 0 || colorInput || skin || logo || hasCustomScale || bodyGroups.length > 0 || subMaterials.length > 0) {
   lines.push('');
-  if (models.length === 1) {
+  if (models.length === 1 && !hasAdvancedModelData) {
   pushField('model', JSON.stringify(models[0]));
   } else if (models.length > 1) {
   pushTableStart('models');
-  models.forEach(m => lines.push(`        ${JSON.stringify(m)},`));
+  models.forEach(model => pushLuaModelEntry(lines, model));
+  lines.push('    },');
+  } else if (models.length === 1 && hasAdvancedModelData) {
+  pushTableStart('models');
+  models.forEach(model => pushLuaModelEntry(lines, model));
   lines.push('    },');
   }
   if (colorInput) {

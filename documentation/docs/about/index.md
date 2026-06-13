@@ -1,8 +1,8 @@
 # Framework Overview
 
-Lilia is an open-source Garry's Mod roleplay framework for servers that need persistent characters, structured factions, inventory-driven gameplay, administration tools, and room for custom schema logic. It is built for server owners who want a dependable production base and developers who want to spend their time on setting-specific systems instead of rebuilding common roleplay infrastructure.
+Lilia is an open-source Garry's Mod roleplay framework for servers that want persistent characters, groups, inventories, admin tools, and room for custom content. It gives you a strong base to start from so you can spend more time shaping your server and less time rebuilding common systems.
 
-This section is the orientation layer for the docs. Start here when you are planning a server, evaluating whether Lilia fits your addon stack, or preparing a schema project.
+This section is the best place to start if you are planning a server, checking whether Lilia fits your addons, or getting ready to build a schema.
 
 ## Recommended Reading Order
 
@@ -10,33 +10,18 @@ This section is the orientation layer for the docs. Start here when you are plan
   <a href="installation/" class="card">
     <span class="card-kicker">First server boot</span>
     <h3>Install Lilia</h3>
-    <p>Add the workshop content, install a schema, configure the startup command, and assign your first administrator group.</p>
+    <p>Install the framework, add a schema, set the startup command, and give yourself admin access.</p>
   </a>
   <a href="features/" class="card">
     <span class="card-kicker">System planning</span>
     <h3>Review the feature map</h3>
-    <p>Understand the built-in character, inventory, faction, chat, economy, moderation, protection, and interface systems.</p>
+    <p>See the built-in systems for characters, inventories, chat, factions, money, moderation, and more.</p>
   </a>
   <a href="compatibility/" class="card">
     <span class="card-kicker">Launch readiness</span>
     <h3>Check addon compatibility</h3>
-    <p>Review how Lilia works with common admin mods, PAC3, weapon bases, vehicles, duplication tools, and sandbox addons.</p>
+    <p>Check how Lilia behaves with common admin mods, PAC3, vehicles, weapon bases, and build tools.</p>
   </a>
 </div>
 
-## Start Paths
-
-| Audience | Recommended path |
-| --- | --- |
-| First-time server owners | [Install Lilia](installation.md), then verify core systems in [Feature Map](features.md). |
-| Schema developers | Read [Feature Map](features.md), then scaffold factions and classes from [Generator Overview](../generators/index.md). |
-| Module and plugin developers | Review [Addon Compatibility](compatibility.md), then use the generator pages as references for Lilia data shapes. |
-
-## What Belongs Here
-
-- **Installation and launch checks** for getting Lilia running on a dedicated Garry's Mod server.
-- **Framework capabilities** so owners can plan which systems to enable, customize, or extend.
-- **Compatibility notes** for common addons that affect permissions, persistence, money, weapons, vehicles, or protection behavior.
-- **Pointers into generator pages** when you are ready to create schema definitions.
-
-After this section, move to [Generator Overview](../generators/index.md) to build the Lua files that make your schema feel like its own server rather than a blank framework install.
+After this section, head to [Generator Overview](../generators/index.md) when you are ready to start building your own schema files.

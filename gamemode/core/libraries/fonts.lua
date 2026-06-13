@@ -27,10 +27,21 @@ function lia.font.register(fontName, fontData)
     if CLIENT then surface.CreateFont(fontName, fontData) end
 end
 
+local function isConfigDerivedFontName(fontName)
+    return isstring(fontName) and (fontName:StartWith("lia") or fontName:StartWith("LiliaFont") or fontName:StartWith("LiliaHUDFont") or fontName:StartWith("HUDFont"))
+end
+
 function lia.font.getAvailableFonts()
     local list = {}
-    for name in pairs(lia.font.stored) do
-        list[#list + 1] = name
+    local seen = {}
+    for name, fontData in pairs(lia.font.stored) do
+        if istable(fontData) and not isConfigDerivedFontName(name) then
+            local fontFace = fontData.font
+            if isstring(fontFace) and fontFace ~= "" and not seen[fontFace] then
+                seen[fontFace] = true
+                list[#list + 1] = fontFace
+            end
+        end
     end
 
     table.sort(list)
@@ -349,6 +360,15 @@ end, {
         return {"Montserrat Medium"}
     end
 })
+
+hook.Add("OnConfigUpdated", "liaFontsOnConfigUpdate", function(key, oldValue, newValue)
+    if not CLIENT or oldValue == newValue or key ~= "Font" then return end
+    lia.font.registerFonts(newValue or "Montserrat Medium")()
+    timer.Simple(0.1, function()
+        lia.font.loadFonts()
+        hook.Run("RefreshFonts")
+    end)
+end)
 
 hook.Add("OnConfigUpdated", "liaHUDFontsOnConfigUpdate", function(key, oldValue, newValue)
     if not CLIENT or oldValue == newValue or key ~= "HUDFont" then return end

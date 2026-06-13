@@ -11,6 +11,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+      - name: Clone modules repository
+        run: git clone --depth 1 https://github.com/LiliaFramework/Modules.git .cache/modules-repo
       - name: Configure Git Credentials
         run: |
           git config user.name github-actions[bot]
@@ -26,9 +28,9 @@ jobs:
           restore-keys: |
             mkdocs-material-
       - run: pip install mkdocs-material mkdocs-awesome-pages-plugin
+      - name: Sync module versioning data
+        run: python scripts/sync_versioning.py .cache/modules-repo
+      - name: Build modules page
+        run: python scripts/sync_modules_page.py
       - run: mkdocs build
-      - name: Copy versioning files to build directory
-        run: |
-          mkdir -p site/versioning
-          cp docs/versioning/*.json site/versioning/
       - run: mkdocs gh-deploy --force

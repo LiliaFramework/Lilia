@@ -15,6 +15,71 @@ lia.admin.DefaultGroups = {
     superadmin = 3
 }
 
+function lia.admin.isValidGroup(groupName)
+    local group = string.Trim(tostring(groupName or ""))
+    if group == "" then return false end
+    local groups = lia.admin.groups or {}
+    local defaultGroups = lia.admin.DefaultGroups or {}
+    return groups[group] ~= nil or defaultGroups[group] ~= nil
+end
+
+function lia.admin.getDefaultUserGroup()
+    local fallbackGroup = "user"
+    local configuredGroup = string.Trim(tostring(lia.config and lia.config.get and lia.config.get("DefaultUserGroup", fallbackGroup) or fallbackGroup))
+    if lia.admin.isValidGroup(configuredGroup) then return configuredGroup end
+    return fallbackGroup
+end
+
+function lia.admin.shouldShowUsergroupIcons()
+    return lia.config and lia.config.get and lia.config.get("ShowUsergroupIcons", true) or true
+end
+
+function lia.admin.getUsergroupIcon(groupOrPlayer)
+    if not lia.admin.shouldShowUsergroupIcons() then return nil end
+    local groupName = groupOrPlayer
+    if IsValid(groupOrPlayer) and groupOrPlayer:IsPlayer() then
+        groupName = groupOrPlayer:GetUserGroup()
+    end
+
+    groupName = string.Trim(tostring(groupName or ""))
+    if groupName == "" then return "icon16/group.png" end
+    local groupData = lia.admin.groups and lia.admin.groups[groupName] or nil
+    local info = istable(groupData) and groupData._info or nil
+    return hook.Run("GetUsergroupIcon", groupName, groupData, groupOrPlayer) or info and info.icon or groupData and groupData.icon or "icon16/group.png"
+end
+
+hook.Add("GetUsergroupIcon", "liaAdminDefaultUsergroupIcon", function(groupName)
+    local normalizedGroup = string.lower(string.Trim(tostring(groupName or "")))
+    if normalizedGroup == "superadmin" then
+        return "icon16/shield.png"
+    elseif normalizedGroup == "admin" then
+        return "icon16/star.png"
+    elseif normalizedGroup == "user" then
+        return "icon16/user.png"
+    end
+end)
+
+lia.config.add("DefaultUserGroup", "Default User Group", "user", nil, {
+    desc = "Usergroup assigned to players when Lilia does not already have one stored for their SteamID.",
+    category = "@userGroups",
+    type = "Generic",
+    options = function()
+        local options = {}
+        for groupName in pairs(lia.admin.groups or {}) do
+            options[#options + 1] = groupName
+        end
+
+        table.sort(options, function(a, b) return tostring(a):lower() < tostring(b):lower() end)
+        return options
+    end
+})
+
+lia.config.add("ShowUsergroupIcons", "Show Usergroup Icons", true, nil, {
+    desc = "Displays icon16 usergroup icons in OOC/LOOC chat and usergroup tabs.",
+    category = "@userGroups",
+    type = "Boolean"
+})
+
 local defaultUserTools = {
     remover = true,
 }
@@ -918,10 +983,11 @@ if SERVER then
     function lia.admin.setSteamIDUsergroup(steamId, newGroup, source)
         local sid = string.Trim(tostring(steamId or ""))
         if sid == "" or not string.match(sid, "^STEAM_%d+:%d+:%d+$") then return end
-        local new = tostring(newGroup or "user")
-        if new ~= "user" and not lia.admin.groups[new] then return end
+        local hasExplicitGroup = string.Trim(tostring(newGroup or "")) ~= ""
+        local new = hasExplicitGroup and tostring(newGroup) or lia.admin.getDefaultUserGroup()
+        if not lia.admin.isValidGroup(new) then return end
         local ply = lia.util.getBySteamID(sid)
-        local old = IsValid(ply) and tostring(ply:GetUserGroup() or "user") or "user"
+        local old = IsValid(ply) and tostring(ply:GetUserGroup() or lia.admin.getDefaultUserGroup()) or lia.admin.getDefaultUserGroup()
         if old == new then return end
         lia.debug("[Permissions]", "setSteamIDUsergroup called", "steamID=", tostring(sid), "oldGroup=", tostring(old), "newGroup=", tostring(new), "source=", tostring(source), "playerValid=", tostring(IsValid(ply)), "isDefaultNewGroup=", tostring(lia.admin.DefaultGroups and lia.admin.DefaultGroups[new] ~= nil), "newGroupExistsInLilia=", tostring(lia.admin.groups and lia.admin.groups[new] ~= nil))
         if IsValid(ply) then ply:SetUserGroup(new) end
@@ -1656,7 +1722,7 @@ else
             privContainer:DockMargin(20, 20, 20, 20)
             privContainer.Paint = function() end
             buildPrivilegeList(privContainer, groupName, groups, editable)
-            local tabData = tabs:AddTab(groupName, tabPanel)
+            local tabData = tabs:AddTab(groupName, tabPanel, lia.admin.getUsergroupIcon(groupName))
             tabData.groupName = groupName
             return tabData
         end

@@ -167,7 +167,6 @@ function PANEL:setItemType(itemTypeOrID)
 
     self:updateTooltip()
     local itemIcon = item.icon
-    if not itemIcon and item.functions and item.functions.use and item.functions.use.icon then itemIcon = item.functions.use.icon end
     if itemIcon then
         self.Icon:SetVisible(false)
         self.ExtraPaint = function(pnl, w, h) drawIcon(itemIcon, pnl, w, h) end

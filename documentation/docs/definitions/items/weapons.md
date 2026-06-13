@@ -4,9 +4,13 @@ Weapon items bind inventory entries to SWEP classes. Use them when players shoul
 
 ## Placement
 
-Use the normal `ITEM` form in item definition files loaded by the item loader, such as `schema/items/[item_id].lua`. If the item should inherit a base, place it under the matching base folder, such as `schema/items/weapons/[item_id].lua` or `modules/[module]/items/weapons/[item_id].lua`. Base item files themselves live under an `items/base` directory, for example `gamemode/items/base/weapons.lua` or `modules/[module]/items/base/weapons.lua`.
+Register weapon items in:
 
-Use `lia.item.register` from a shared Lua file when you want to register an item directly from code instead of relying on the item loader's `ITEM` table.
+```text
+garrysmod/gamemodes/[schema folder]/schema/definitions/sh_items.lua
+```
+
+Use `lia.item.registerItem` in that shared file to define the item directly from code.
 
 ## Reference
 
@@ -37,90 +41,24 @@ Use `lia.item.register` from a shared Lua file when you want to register an item
 | `OnSave()` | Persists any item-side state needed for restoration. |
 | `getName()` | Returns a runtime display name, often including ammo or condition state. |
 
-## Normal Item File Example
+## Example
 
 ```lua
-ITEM.name = "Pistol"
-ITEM.desc = "A standard issue sidearm."
-ITEM.category = "weapons"
-ITEM.model = "models/weapons/w_pistol.mdl"
-ITEM.class = "weapon_pistol"
-ITEM.width = 2
-ITEM.height = 2
-ITEM.isWeapon = true
-ITEM.RequiredSkillLevels = {
-    guns = 5
-}
-ITEM.DropOnDeath = true
-ITEM.weaponCategory = "sidearm"
-ITEM.equipSound = "items/ammo_pickup.wav"
-ITEM.unequipSound = "items/ammo_pickup.wav"
-
-ITEM.functions.Equip = {
-    name = "equip",
-    tip = "equipThisItem",
-    icon = "icon16/gun.png",
-    onRun = function(item)
-        local client = item.player
-        if IsValid(client) then
-            client:Give(item.class)
-        end
-
-        item:setData("equip", true)
-        return false
-    end
-}
-
-function ITEM:onLoadout()
-    if self:getData("equip") and IsValid(self.player) then
-        self.player:Give(self.class)
-    end
-end
-
-function ITEM:getName()
-    return self.name
-end
-```
-
-## Direct Registration Example
-
-```lua
-local item = lia.item.register("pistol", "base_weapons", false, nil, true)
-
-item.name = "Pistol"
-item.desc = "A standard issue sidearm."
-item.category = "weapons"
-item.model = "models/weapons/w_pistol.mdl"
-item.class = "weapon_pistol"
-item.width = 2
-item.height = 2
-item.isWeapon = true
-item.RequiredSkillLevels = {
-    guns = 5
-}
-item.DropOnDeath = true
-item.weaponCategory = "sidearm"
-item.equipSound = "items/ammo_pickup.wav"
-item.unequipSound = "items/ammo_pickup.wav"
-
-item.functions.Equip = {
-    name = "equip",
-    tip = "equipThisItem",
-    icon = "icon16/gun.png",
-    onRun = function(itemInstance)
-        local client = itemInstance.player
-        if IsValid(client) then
-            client:Give(itemInstance.class)
-        end
-
-        itemInstance:setData("equip", true)
-        return false
-    end
-}
-
-function item:onLoadout()
-    if self:getData("equip") and IsValid(self.player) then
-        self.player:Give(self.class)
-    end
-end
+lia.item.registerItem("pistol", "base_weapons", {
+    name = "Pistol",
+    desc = "A standard issue sidearm.",
+    category = "weapons",
+    model = "models/weapons/w_pistol.mdl",
+    class = "weapon_pistol",
+    width = 2,
+    height = 2,
+    isWeapon = true,
+    RequiredSkillLevels = {
+        guns = 5
+    },
+    DropOnDeath = true,
+    weaponCategory = "sidearm",
+    equipSound = "items/ammo_pickup.wav",
+    unequipSound = "items/ammo_pickup.wav"
+})
 ```

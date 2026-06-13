@@ -5,7 +5,7 @@ Create storage bags that open their own inventory grid and expand what a charact
 Output Location:
 
 ```text
-garrysmod/gamemodes/[schema folder]/schema/items/[item_id].lua
+garrysmod/gamemodes/[schema folder]/schema/definitions/sh_items.lua
 ```
 
 <div class="generator-grid">

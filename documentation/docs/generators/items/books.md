@@ -5,7 +5,7 @@ Create readable items such as books, documents, manuals, notes, rulesheets, or l
 Output Location:
 
 ```text
-garrysmod/gamemodes/[schema folder]/schema/items/books/[item_id].lua
+garrysmod/gamemodes/[schema folder]/schema/definitions/sh_items.lua
 ```
 
 <div class="generator-grid">

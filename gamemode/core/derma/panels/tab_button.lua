@@ -52,6 +52,12 @@ function PANEL:OnRemove()
 end
 
 function PANEL:SetIcon(icon)
+    if isstring(icon) and icon ~= "" then
+        icon = lia.util.getMaterial(icon)
+    elseif not icon then
+        icon = nil
+    end
+
     self.icon = icon
 end
 

@@ -5,7 +5,7 @@ Create items that stack together, such as currency-like objects, crafting resour
 Output Location:
 
 ```text
-garrysmod/gamemodes/[schema folder]/schema/items/stackable/[item_id].lua
+garrysmod/gamemodes/[schema folder]/schema/definitions/sh_items.lua
 ```
 
 <div class="generator-grid">

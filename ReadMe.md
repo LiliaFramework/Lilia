@@ -30,15 +30,27 @@
 ## Quick Start
 
 <p align="center">
- Follow our step-by-step <a href="https://liliaframework.github.io/about/installation/">installation tutorial</a> to set up Lilia on your server.
+ Follow our step-by-step <a href="https://liliaframework.github.io/about/installation/">installation guide</a> to get Lilia running on your server.
 </p>
 
 ## Documentation
 
 <p align="center">
- Explore the complete documentation for in-depth guides on configuring and extending Lilia:<br/>
+ Explore the complete documentation for setup help, framework guides, generators, and reference pages:<br/>
  <a href="https://liliaframework.github.io">https://liliaframework.github.io</a>
 </p>
+
+### Useful Starting Points
+
+- **Home:** https://liliaframework.github.io/
+- **Installation Guide:** https://liliaframework.github.io/about/installation/
+- **Framework Overview:** https://liliaframework.github.io/about/
+- **Feature Map:** https://liliaframework.github.io/about/features/
+- **Addon Compatibility:** https://liliaframework.github.io/about/compatibility/
+- **Generators:** https://liliaframework.github.io/generators/
+- **Reference:** https://liliaframework.github.io/definitions/
+- **Developer Docs:** https://liliaframework.github.io/developer/
+- **Modules:** https://liliaframework.github.io/modules/
 
 ## Contributing
 
@@ -53,5 +65,5 @@ We welcome contributions to both code and documentation! Here's how to get start
 
 <p align="center">
  <strong>Ready to build your dream roleplay server?</strong><br/>
- <a href="https://liliaframework.github.io/about/installation/">Get started with Lilia today!</a>
+ <a href="https://liliaframework.github.io/about/installation/">Start with the installation guide</a>
 </p>

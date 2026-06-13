@@ -31,6 +31,8 @@ CORE_HOOKS = {
     'GetMainMenuPosition'
 }
 
+REPO_BLOB_BASE = "https://github.com/LiliaFramework/Lilia/blob/main"
+
 
 def parse_comment_block(comment_text):
     lines = comment_text.strip().split('\n')
@@ -342,6 +344,31 @@ def parse_folder_directives(file_content):
     return folder, filename, append
 
 
+def normalize_doc_folder(folder: Optional[str]) -> Optional[str]:
+    """Normalize Lua folder directives to the generated docs structure."""
+    if not folder:
+        return folder
+
+    normalized = folder.strip().replace('\\', '/')
+    compact = re.sub(r'\s+', ' ', normalized).strip().lower()
+    compact = compact.replace(' - ', '/').replace(' > ', '/')
+    compact = compact.replace('developer/', '').replace('development/', '')
+
+    folder_map = {
+        'meta': 'developer/meta',
+        'meta tables': 'developer/meta',
+        'meta/table': 'developer/meta',
+        'meta tables/character': 'developer/meta',
+        'libraries': 'developer/libraries',
+        'library': 'developer/libraries',
+        'core libraries': 'developer/libraries',
+        'hooks': 'developer/hooks',
+        'compatibility': 'developer/compatibility',
+    }
+
+    return folder_map.get(compact, normalized)
+
+
 def format_lua_code(code_lines):
     if not code_lines:
         return code_lines
@@ -419,6 +446,32 @@ def extract_function_name_from_comment(comment_text, file_path):
     return filename
 
 
+def get_repo_relative_path(file_path, base_dir):
+    try:
+        return Path(file_path).resolve().relative_to(Path(base_dir).resolve()).as_posix()
+    except ValueError:
+        return Path(file_path).as_posix()
+
+
+def build_source_url(file_path, base_dir, line_number=None):
+    relative_path = get_repo_relative_path(file_path, base_dir)
+    url = f"{REPO_BLOB_BASE}/{relative_path}"
+    if line_number:
+        url += f"#L{line_number}"
+    return url
+
+
+def find_block_line(content, block_text):
+    if not block_text:
+        return None
+
+    start_index = content.find(block_text)
+    if start_index == -1:
+        return None
+
+    return content[:start_index].count('\n') + 1
+
+
 def find_functions_in_file(file_path, is_library=False):
     try:
         with open(file_path, 'r', encoding='utf-8') as f:
@@ -452,7 +505,9 @@ def find_functions_in_file(file_path, is_library=False):
         if preceding_comment:
             functions.append({
                 'name': func_name,
-                'comment': preceding_comment[1]
+                'comment': preceding_comment[1],
+                'line': func_line,
+                'comment_line': preceding_comment[0]
             })
 
     return functions
@@ -523,21 +578,21 @@ def get_type_link(type_name):
 
     # Lilia-specific type mappings
     lilia_mappings = {
-        'inventory': '/development/libraries/inventory/',
-        'item': '/development/libraries/item/',
-        'character': '/development/libraries/char/',
-        'faction': '/development/libraries/faction/',
-        'factions': '/development/libraries/faction/',
-        'class': '/development/libraries/class/',
-        'classes': '/development/libraries/class/',
-        'attribute': '/development/libraries/attribs/',
-        'attributes': '/development/libraries/attribs/',
-        'player': '/development/meta/player/',
-        'entity': '/development/meta/entity/',
-        'panel': '/development/meta/panel/',
-        'Character': '/development/meta/character/',
-        'ItemDefinition': '/development/meta/item/',
-        'InventoryType': '/development/libraries/inventory/',
+        'inventory': '/developer/libraries/inventory/',
+        'item': '/developer/libraries/item/',
+        'character': '/developer/libraries/char/',
+        'faction': '/developer/libraries/faction/',
+        'factions': '/developer/libraries/faction/',
+        'class': '/developer/libraries/class/',
+        'classes': '/developer/libraries/class/',
+        'attribute': '/developer/libraries/attribs/',
+        'attributes': '/developer/libraries/attribs/',
+        'player': '/developer/meta/player/',
+        'entity': '/developer/meta/entity/',
+        'panel': '/developer/meta/panel/',
+        'Character': '/developer/meta/character/',
+        'ItemDefinition': '/developer/meta/item/',
+        'InventoryType': '/developer/libraries/inventory/',
     }
 
     # Check for lia. prefix
@@ -545,7 +600,7 @@ def get_type_link(type_name):
         lib_name = lower[4:]
         if lib_name in lilia_mappings:
             return lilia_mappings[lib_name]
-        return f'/development/libraries/{lib_name}/'
+        return f'/developer/libraries/{lib_name}/'
 
     if lower in lilia_mappings:
         return lilia_mappings[lower]
@@ -600,7 +655,20 @@ def _split_returns_text(returns_text: str) -> Tuple[Optional[str], str]:
         return lines[0], ' '.join(lines[1:]).strip()
     return None, ' '.join(lines).strip()
 
-def generate_markdown_for_function(function_name, parsed_comment, is_library=False, no_realm=False, no_icon=False):
+
+def _should_render_returns(ret_type: Optional[str], ret_desc: str) -> bool:
+    """Skip empty nil-only return blocks while keeping meaningful optional returns."""
+    normalized_desc = (ret_desc or '').strip()
+    if not ret_type:
+        return bool(normalized_desc)
+
+    parts = [p.strip().lower() for p in str(ret_type).split('|') if p.strip()]
+    if parts == ['nil'] and not normalized_desc:
+        return False
+
+    return True
+
+def generate_markdown_for_function(function_name, parsed_comment, is_library=False, no_realm=False, no_icon=False, source_url=None):
     display_name = function_name
     if is_library and not function_name.startswith('lia.'):
         display_name = f'lia.{function_name}'
@@ -628,8 +696,13 @@ def generate_markdown_for_function(function_name, parsed_comment, is_library=Fal
         classes.append('no-icon')
     
     realm_attr = f' class="{" ".join(classes)}"' if classes else ''
+    summary_label = f'{display_name}{signature}'
     md = f'<details{realm_attr} id="function-{slug}">\n'
-    md += f'<summary><a id="{display_name}"></a>{display_name}{signature}</summary>\n'
+    md += '<summary>'
+    md += f'<span class="summary-main"><a id="{display_name}"></a>{summary_label}</span>'
+    if source_url:
+        md += f'<a class="source-link-button source-link-button--summary" href="{source_url}" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a>'
+    md += '</summary>\n'
     md += f'<div class="details-content">\n'
     if parsed_comment['purpose']:
         md += f'<h3 style="margin-bottom: 5px; font-weight: 700;"><a id="{slug}"></a>Purpose</h3>\n'
@@ -642,6 +715,9 @@ def generate_markdown_for_function(function_name, parsed_comment, is_library=Fal
         md += f'<h3 style="margin-bottom: 5px; font-weight: 700;">When Called</h3>\n'
         md += f'<div style="margin-left: 20px; margin-bottom: 20px;">\n  <p>{parsed_comment["when_used"]}</p>\n</div>\n\n'
 
+    if realm_text_raw and not no_realm:
+        md += '<h3 style="margin-bottom: 5px; font-weight: 700;">Realm</h3>\n'
+        md += f'<div style="margin-left: 20px; margin-bottom: 20px;">\n  <p>{realm_text_raw}</p>\n</div>\n\n'
 
     if parsed_comment['parameters']:
         md += '<h3 style="margin-bottom: 5px; font-weight: 700;">Parameters</h3>\n'
@@ -661,20 +737,21 @@ def generate_markdown_for_function(function_name, parsed_comment, is_library=Fal
         md += '</div>\n\n'
 
     if parsed_comment['returns']:
-        md += '<h3 style="margin-bottom: 5px; font-weight: 700;">Returns</h3>\n'
-        md += '<div style="margin-left: 20px; margin-bottom: 20px;">\n'
         ret_type, ret_desc = _split_returns_text(parsed_comment["returns"])
-        if ret_type:
-            display_type, link_type = _split_type_display_link(ret_type)
-            type_link = get_type_link(link_type)
-            ret_desc = (ret_desc or '').strip()
-            md += f'<p><span class="types"><a class="type" href="{type_link}">{display_type}</a></span>'
-            if ret_desc:
-                md += f' {ret_desc}'
-            md += '</p>\n'
-        else:
-            md += f'<p>{ret_desc}</p>\n'
-        md += '</div>\n\n'
+        if _should_render_returns(ret_type, ret_desc):
+            md += '<h3 style="margin-bottom: 5px; font-weight: 700;">Returns</h3>\n'
+            md += '<div style="margin-left: 20px; margin-bottom: 20px;">\n'
+            if ret_type:
+                display_type, link_type = _split_type_display_link(ret_type)
+                type_link = get_type_link(link_type)
+                ret_desc = (ret_desc or '').strip()
+                md += f'<p><span class="types"><a class="type" href="{type_link}">{display_type}</a></span>'
+                if ret_desc:
+                    md += f' {ret_desc}'
+                md += '</p>\n'
+            else:
+                md += f'<p>{ret_desc}</p>\n'
+            md += '</div>\n\n'
 
     if parsed_comment.get('explanation'):
         md += f'<h3 style="margin-bottom: 5px; font-weight: 700;">Explanation</h3>\n'
@@ -731,13 +808,7 @@ def generate_documentation_for_file(file_path, output_dir, is_library=False, bas
         return
 
     custom_folder, custom_filename, append = parse_folder_directives(file_content)
-    
-    # Remap legacy folder directives to new development structure
-    if custom_folder:
-        if custom_folder.lower() == 'meta':
-             custom_folder = 'development/meta'
-        elif custom_folder.lower() in ['libraries', 'library', 'core libraries']:
-             custom_folder = 'development/libraries'
+    custom_folder = normalize_doc_folder(custom_folder)
     comment_blocks, file_header, overview_section = find_comment_blocks_in_file(file_path)
 
     if file_header and ('Folder:' in file_header or 'File:' in file_header):
@@ -803,7 +874,14 @@ def generate_documentation_for_file(file_path, output_dir, is_library=False, bas
                 display_name = func['name']
             
             function_names.append(display_name)
-            section = generate_markdown_for_function(func['name'], parsed, is_library, no_realm=no_realm, no_icon=no_icon)
+            section = generate_markdown_for_function(
+                func['name'],
+                parsed,
+                is_library,
+                no_realm=no_realm,
+                no_icon=no_icon,
+                source_url=build_source_url(file_path, Path(__file__).parent, func.get('line'))
+            )
             sections.append(section)
 
     if not sections and not file_header and not overview_section:
@@ -812,6 +890,14 @@ def generate_documentation_for_file(file_path, output_dir, is_library=False, bas
 
     output_path.parent.mkdir(parents=True, exist_ok=True)
     output_filename = output_path.name
+    page_source_line = (
+        find_block_line(file_content, overview_section)
+        or find_block_line(file_content, file_header)
+        or (functions[0].get('comment_line') if functions else None)
+        or (functions[0].get('line') if functions else None)
+        or 1
+    )
+    page_source_url = build_source_url(file_path, Path(__file__).parent, page_source_line)
 
     file_mode = 'a' if append else 'w'
     with open(output_path, file_mode, encoding='utf-8') as f:
@@ -832,6 +918,29 @@ def generate_documentation_for_file(file_path, output_dir, is_library=False, bas
                     if len(parts) > 1 and parts[1].strip():
                         subtitle = parts[1].strip()
 
+            css_block = '''<style>
+details > summary {
+    position: relative;
+    display: flex;
+    align-items: center;
+    min-height: 70px;
+    padding-right: 180px;
+}
+
+details > summary .summary-main {
+    min-width: 0;
+}
+
+details > summary .source-link-button--summary {
+    position: absolute;
+    right: 56px;
+    top: 50%;
+    transform: translateY(-50%);
+    white-space: nowrap;
+    z-index: 2;
+}
+</style>\n\n'''
+            f.write(css_block)
             f.write(f'# {title}\n\n')
             f.write(f'{subtitle}\n\n')
             f.write('---\n\n')
@@ -898,7 +1007,14 @@ def generate_documentation_for_hooks_file(file_path: Path, output_dir: Path, bas
         else:
             display_name = func_name
         function_names.append(display_name)
-        sections.append(generate_markdown_for_function(func['name'], parsed, is_library=False))
+        sections.append(
+            generate_markdown_for_function(
+                func['name'],
+                parsed,
+                is_library=False,
+                source_url=build_source_url(file_path, Path(__file__).parent, func.get('line'))
+            )
+        )
 
     if custom_filename:
         display_name = custom_filename.replace('.md', '').title()
@@ -917,9 +1033,40 @@ def generate_documentation_for_hooks_file(file_path: Path, output_dir: Path, bas
 
     output_path.parent.mkdir(parents=True, exist_ok=True)
     file_mode = 'a' if append else 'w'
+    page_source_line = (
+        find_block_line(file_content, overview_section)
+        or find_block_line(file_content, file_header)
+        or (functions[0].get('comment_line') if functions else None)
+        or (functions[0].get('line') if functions else None)
+        or 1
+    )
+    page_source_url = build_source_url(file_path, Path(__file__).parent, page_source_line)
 
     with open(output_path, file_mode, encoding='utf-8') as f:
         if not append:
+            css_block = '''<style>
+details > summary {
+    position: relative;
+    display: flex;
+    align-items: center;
+    min-height: 70px;
+    padding-right: 180px;
+}
+
+details > summary .summary-main {
+    min-width: 0;
+}
+
+details > summary .source-link-button--summary {
+    position: absolute;
+    right: 56px;
+    top: 50%;
+    transform: translateY(-50%);
+    white-space: nowrap;
+    z-index: 2;
+}
+</style>\n\n'''
+            f.write(css_block)
             f.write(f'# {title}\n\n')
             f.write(subtitle + '\n\n')
             f.write('---\n\n')
@@ -1042,7 +1189,7 @@ def main():
 
     if args.command == 'meta':
         meta_dir = base_dir / 'gamemode' / 'core' / 'meta'
-        output_dir = docs_dir / 'development' / 'meta'
+        output_dir = docs_dir / 'developer' / 'meta'
         if meta_dir.exists():
             for file_path in meta_dir.rglob('*.lua'):
                 generate_documentation_for_file(file_path, output_dir, is_library=False, base_docs_dir=docs_dir, force=args.force, no_realm=False, no_icon=False)
@@ -1053,7 +1200,7 @@ def main():
              base_dir / 'gamemode' / 'core' / 'libraries',
              base_dir / 'gamemode' / 'modules'
         ]
-        output_dir = docs_dir / 'development' / 'libraries'
+        output_dir = docs_dir / 'developer' / 'libraries'
         for lib_dir in lib_dirs:
             if lib_dir.exists():
                 for file_path in lib_dir.rglob('*.lua'):
@@ -1062,7 +1209,7 @@ def main():
 
     elif args.command == 'hooks':
         hooks_dir = base_dir / 'gamemode' / 'core' / 'hooks' / 'docs'
-        output_dir = docs_dir / 'development' / 'hooks'
+        output_dir = docs_dir / 'developer' / 'hooks'
         if hooks_dir.exists():
             for file_path in hooks_dir.rglob('*.lua'):
                 generate_documentation_for_file(file_path, output_dir, is_library=False, base_docs_dir=docs_dir, force=args.force, no_realm=False, no_icon=False)
@@ -1070,7 +1217,7 @@ def main():
 
     elif args.command == 'compatibility':
         comp_dir = base_dir / 'gamemode' / 'core' / 'libraries' / 'compatibility'
-        output_dir = docs_dir / 'development' / 'compatibility'
+        output_dir = docs_dir / 'developer' / 'compatibility'
         if comp_dir.exists():
             for file_path in comp_dir.rglob('*.lua'):
                 generate_documentation_for_file(file_path, output_dir, is_library=False, base_docs_dir=docs_dir, force=args.force, no_realm=False, no_icon=True)
@@ -1092,8 +1239,9 @@ def main():
 
     # Generate pages file for all commands
     # generate_comprehensive_index(docs_dir)  # Disabled to preserve manual index.md
-    generate_development_index(docs_dir / 'development')
+    generate_development_index(docs_dir / 'developer')
     generate_pages_file(docs_dir)
+    sync_mkdocs_nav(base_dir / 'documentation' / 'mkdocs.yml', docs_dir)
 
 
 def extract_title_and_summary(md_file: Path) -> Tuple[str, str]:
@@ -1152,6 +1300,122 @@ def extract_title_and_summary(md_file: Path) -> Tuple[str, str]:
     return title, summary
 
 
+def _extract_markdown_title(md_file: Path) -> str:
+    title, _ = extract_title_and_summary(md_file)
+    return title
+
+
+def _sort_doc_paths(paths: List[Path], preferred_order: List[str]) -> List[Path]:
+    order_index = {name: index for index, name in enumerate(preferred_order)}
+    return sorted(
+        paths,
+        key=lambda path: (
+            order_index.get(path.stem.lower(), len(order_index)),
+            _extract_markdown_title(path).lower(),
+            path.stem.lower(),
+        ),
+    )
+
+
+def _build_nav_lines(files: List[Path], docs_dir: Path, base_indent: str, preferred_order: List[str]) -> List[str]:
+    lines: List[str] = []
+    for md_file in _sort_doc_paths(files, preferred_order):
+        if md_file.stem.lower() == 'index':
+            continue
+        title = _extract_markdown_title(md_file)
+        relative_path = md_file.relative_to(docs_dir).as_posix()
+        lines.append(f"{base_indent}- {title}: {relative_path}")
+    return lines
+
+
+def sync_mkdocs_nav(mkdocs_path: Path, docs_dir: Path) -> None:
+    """Sync selected MkDocs nav sections from the current docs tree."""
+    if not mkdocs_path.exists():
+        print(f" Warning: {mkdocs_path} does not exist. Skipping nav sync.")
+        return
+
+    try:
+        content = mkdocs_path.read_text(encoding='utf-8')
+    except OSError as exc:
+        print(f" Warning: Could not read {mkdocs_path}: {exc}")
+        return
+
+    sections = [
+        {
+            'name': 'meta tables',
+            'start_marker': '# AUTO-GENERATED: META TABLES START',
+            'end_marker': '# AUTO-GENERATED: META TABLES END',
+            'directory': docs_dir / 'developer' / 'meta',
+            'indent': '          ',
+            'preferred_order': ['character', 'entity', 'inventory', 'item', 'panel', 'player'],
+        },
+        {
+            'name': 'libraries',
+            'start_marker': '# AUTO-GENERATED: LIBRARIES START',
+            'end_marker': '# AUTO-GENERATED: LIBRARIES END',
+            'directory': docs_dir / 'developer' / 'libraries',
+            'indent': '          ',
+            'preferred_order': ['lia.currency'],
+        },
+        {
+            'name': 'item definitions',
+            'start_marker': '# AUTO-GENERATED: ITEM DEFINITIONS START',
+            'end_marker': '# AUTO-GENERATED: ITEM DEFINITIONS END',
+            'directory': docs_dir / 'definitions' / 'items',
+            'indent': '          ',
+            'preferred_order': [
+                'aid',
+                'ammo',
+                'arccw_att',
+                'base-field-reference',
+                'books',
+                'entities',
+                'grenade',
+                'outfit',
+                'pacoutfit',
+                'stackable',
+                'url',
+                'weapons',
+            ],
+        },
+    ]
+
+    updated_content = content
+    for section in sections:
+        directory = section['directory']
+        if not directory.exists():
+            print(f" Warning: {directory} does not exist. Skipping {section['name']} nav sync.")
+            continue
+
+        md_files = list(directory.glob('*.md'))
+        nav_lines = _build_nav_lines(md_files, docs_dir, section['indent'], section['preferred_order'])
+        replacement = '\n'.join([
+            f"{section['indent']}{section['start_marker']}",
+            *nav_lines,
+            f"{section['indent']}{section['end_marker']}",
+        ])
+        pattern = re.compile(
+            rf"^[ \t]*{re.escape(section['start_marker'])}\s*$.*?^[ \t]*{re.escape(section['end_marker'])}\s*$",
+            re.DOTALL | re.MULTILINE,
+        )
+
+        if not pattern.search(updated_content):
+            print(f" Warning: Nav markers for {section['name']} were not found in {mkdocs_path}.")
+            continue
+
+        updated_content = pattern.sub(replacement, updated_content)
+
+    if updated_content == content:
+        print(" MkDocs nav already up to date")
+        return
+
+    try:
+        mkdocs_path.write_text(updated_content, encoding='utf-8')
+        print(f" Synced dynamic navigation in {mkdocs_path.name}")
+    except OSError as exc:
+        print(f" Warning: Could not write {mkdocs_path}: {exc}")
+
+
 # Custom summaries for guides and generators
 GUIDE_SUMMARIES = {
     'getting_started.md': 'Step-by-step guide to set up Lilia Framework on your Garry\'s Mod server.',
@@ -1194,9 +1458,12 @@ GENERATOR_SUMMARIES = {
     'generators/items/aid.md': 'Templates for creating medical aid and healing items.',
     'generators/items/ammo.md': 'Templates for creating ammunition and magazine items.',
     'generators/items/books.md': 'Templates for creating readable books and documents.',
+    'generators/items/entities.md': 'Templates for creating placeable entity and deployable items.',
     'generators/items/grenade.md': 'Templates for creating explosive and grenade items.',
     'generators/items/outfit.md': 'Templates for creating clothing and appearance items.',
+    'generators/items/pacoutfit.md': 'Templates for creating wearable PAC3 outfit items.',
     'generators/items/bags.md': 'Templates for creating storage bag items that open their own inventory.',
+    'generators/items/url.md': 'Templates for creating items that open external links and web resources.',
     'generators/items/stackable.md': 'Templates for creating items that can stack in inventory.',
     'generators/items/weapons.md': 'Templates for creating weapons and firearms.'
 }
@@ -1208,9 +1475,12 @@ GENERATOR_TITLES = {
     'items/aid.md': 'Aid Item Generator',
     'items/ammo.md': 'Ammo Item Generator',
     'items/books.md': 'Books Item Generator',
+    'items/entities.md': 'Entity Item Generator',
     'items/grenade.md': 'Grenade Item Generator',
     'items/outfit.md': 'Outfit Item Generator',
+    'items/pacoutfit.md': 'PAC3 Item Generator',
     'items/bags.md': 'Bag Item Generator',
+    'items/url.md': 'URL Item Generator',
     'items/stackable.md': 'Stackable Item Generator',
     'items/weapons.md': 'Weapons Item Generator'
 }
@@ -1310,14 +1580,34 @@ def generate_index_file(output_dir: Path, doc_type: str) -> None:
             if items_files:
                 subdirs.append(('Item Generators', items_files))
 
-    if not md_files and not subdirs:
-        return
-
     title = TITLE_MAP.get(doc_type, doc_type.title())
 
     index_path = output_dir / 'index.md'
 
     with open(index_path, 'w', encoding='utf-8') as f:
+        css_block = '''<style>
+details > summary {
+    position: relative;
+    display: flex;
+    align-items: center;
+    min-height: 70px;
+    padding-right: 180px;
+}
+
+details > summary .summary-main {
+    min-width: 0;
+}
+
+details > summary .source-link-button--summary {
+    position: absolute;
+    right: 56px;
+    top: 50%;
+    transform: translateY(-50%);
+    white-space: nowrap;
+    z-index: 2;
+}
+</style>\n\n'''
+        f.write(css_block)
         f.write(f'# {title}\n\n')
 
         if doc_type == 'guides':
@@ -1326,6 +1616,14 @@ def generate_index_file(output_dir: Path, doc_type: str) -> None:
             f.write('This section contains generators and templates for creating Lilia framework components.\n\n')
         elif doc_type == 'about':
             f.write('General information about the Lilia framework, its features, and compatibility.\n\n')
+        elif doc_type == 'meta':
+            f.write('Reference pages for documented Lilia meta tables.\n\n')
+        elif doc_type == 'library':
+            f.write('Reference pages for documented Lilia libraries and module library helpers.\n\n')
+        elif doc_type == 'hooks':
+            f.write('Reference pages for documented Lilia hooks.\n\n')
+        elif doc_type == 'compatibility':
+            f.write('Reference pages for documented Lilia compatibility integrations.\n\n')
 
         if md_files:
             items = []
@@ -1355,6 +1653,8 @@ def generate_index_file(output_dir: Path, doc_type: str) -> None:
                 items.append((file_title, f'./{link_name}', summary))
             
             write_cards(f, items)
+        elif doc_type in {'meta', 'library', 'hooks', 'compatibility'}:
+            f.write('Additional pages will appear here as Lua documentation is added and regenerated.\n\n')
         
         for subdir_name, subdir_files in subdirs:
             f.write(f'## {subdir_name.title()}\n\n')
@@ -1388,7 +1688,7 @@ def generate_comprehensive_index(docs_dir: Path) -> None:
     sections = []
 
     # Development Section
-    dev_dir = docs_dir / 'development'
+    dev_dir = docs_dir / 'developer'
     if dev_dir.exists():
         # Subdirectories in development
         libraries_dir = dev_dir / 'libraries'
@@ -1426,7 +1726,7 @@ def generate_comprehensive_index(docs_dir: Path) -> None:
                 dev_subdirs.append(('Generators', generators_dir, all_gen_files))
 
         if dev_subdirs:
-             sections.append(('Development', dev_dir, [], dev_subdirs))
+             sections.append(('Developer', dev_dir, [], dev_subdirs))
 
 
     if not sections:
@@ -1509,14 +1809,15 @@ def generate_development_index(dev_dir: Path) -> None:
     index_path = dev_dir / 'index.md'
     
     sections = [
+        ('Meta Tables', 'meta', 'Documentation for Lilia meta tables.'),
         ('Libraries', 'libraries', 'Documentation for Lilia libraries.'),
-        ('Meta', 'meta', 'Documentation for Lilia meta tables.'),
-        ('Hooks', 'hooks', 'Documentation for Lilia hooks.')
+        ('Hooks', 'hooks', 'Documentation for Lilia hooks.'),
+        ('Compatibility', 'compatibility', 'Documentation for Lilia compatibility shims and integrations.')
     ]
 
     with open(index_path, 'w', encoding='utf-8') as f:
-        f.write('# Development\n\n')
-        f.write('Welcome to the development documentation associated with Lilia.\n\n')
+        f.write('# Developer\n\n')
+        f.write('Reference material for extending Lilia, including meta tables, libraries, hooks, and compatibility helpers.\n\n')
         
         cards = []
         for title, dirname, summary in sections:
@@ -1526,7 +1827,7 @@ def generate_development_index(dev_dir: Path) -> None:
         
         write_cards(f, cards)
 
-    print(f" Generated development/index.md")
+    print(f" Generated developer/index.md")
 
 def generate_pages_file(docs_dir: Path) -> None:
     """Generate .pages file for MkDocs navigation."""
@@ -1536,20 +1837,21 @@ def generate_pages_file(docs_dir: Path) -> None:
     nav_order = [
         'About',
         'Getting Started.md',
-        'development',
+        'developer',
         'generators'
     ]
     
     # We should also generate .pages for subdirectories to ensure order there
     
     # Development Pages
-    dev_pages_path = docs_dir / 'development' / '.pages'
+    dev_pages_path = docs_dir / 'developer' / '.pages'
     if dev_pages_path.parent.exists():
         with open(dev_pages_path, 'w', encoding='utf-8') as f:
-            f.write('title: Development\narrange:\n')
-            f.write(' - libraries\n')
+            f.write('title: Developer\narrange:\n')
             f.write(' - meta\n')
+            f.write(' - libraries\n')
             f.write(' - hooks\n')
+            f.write(' - compatibility\n')
 
  # Write root .pages file
     with open(pages_path, 'w', encoding='utf-8') as f:

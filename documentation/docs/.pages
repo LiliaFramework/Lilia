@@ -1,4 +1,5 @@
 arrange:
-  - index.md
-  - about
-  - generators
+ - About
+ - Getting Started.md
+ - developer
+ - generators

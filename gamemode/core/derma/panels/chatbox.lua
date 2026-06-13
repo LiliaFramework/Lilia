@@ -366,6 +366,22 @@ function PANEL:setActive(state)
     end
 end
 
+local function appendMarkupItem(markup, item)
+    if type(item) == "IMaterial" then return markup .. "<img=" .. item:GetName() .. ",16x16>" end
+    if item and istable(item) and item.GetName and item.Width and item.Height then return markup .. "<img=" .. item:GetName() .. "," .. item:Width() .. "x" .. item:Height() .. ">" end
+    if IsColor(item) then return markup .. "<color=" .. item.r .. "," .. item.g .. "," .. item.b .. ">" end
+    if IsValid(item) and item:IsPlayer() then
+        local clr = team.GetColor(item:Team())
+        return markup .. "<color=" .. clr.r .. "," .. clr.g .. "," .. clr.b .. ">" .. item:Name():gsub("<", "&lt;"):gsub(">", "&gt;"):gsub("#", "\226\128\139#")
+    end
+
+    local str = tostring(item):gsub("<", "&lt;"):gsub(">", "&gt;")
+    return markup .. str:gsub("%b**", function(val)
+        local inner = val:sub(2, -2)
+        if inner:find("%S") then return "<font=LiliaFont.20i>" .. inner .. "</font>" end
+    end)
+end
+
 function PANEL:addText(...)
     lia.chat = lia.chat or {}
     lia.chat.persistedMessages = lia.chat.persistedMessages or {}
@@ -374,21 +390,7 @@ function PANEL:addText(...)
     local markup = "<font=LiliaFont.20>"
     markup = hook.Run("ChatAddText", markup, unpack(argList)) or markup
     for _, item in ipairs(argList) do
-        if item and istable(item) and item.GetName and item.Width and item.Height then
-            local matName = item:GetName()
-            markup = markup .. "<img=" .. matName .. "," .. item:Width() .. "x" .. item:Height() .. ">"
-        elseif IsColor(item) then
-            markup = markup .. "<color=" .. item.r .. "," .. item.g .. "," .. item.b .. ">"
-        elseif IsValid(item) and item:IsPlayer() then
-            local clr = team.GetColor(item:Team())
-            markup = markup .. "<color=" .. clr.r .. "," .. clr.g .. "," .. clr.b .. ">" .. item:Name():gsub("<", "&lt;"):gsub(">", "&gt;"):gsub("#", "\226\128\139#")
-        else
-            local str = tostring(item):gsub("<", "&lt;"):gsub(">", "&gt;")
-            markup = markup .. str:gsub("%b**", function(val)
-                local inner = val:sub(2, -2)
-                if inner:find("%S") then return "<font=LiliaFont.20i>" .. inner .. "</font>" end
-            end)
-        end
+        markup = appendMarkupItem(markup, item)
     end
 
     markup = markup .. "</font>"
@@ -506,7 +508,9 @@ function PANEL:rebuildPanelMarkup(panel)
     local markup = "<font=LiliaFont.20>"
     markup = hook.Run("ChatAddText", markup, unpack(panel.markupArgs.arguments)) or markup
     for _, item in ipairs(panel.markupArgs.arguments) do
-        if item and istable(item) and item.GetName and item.Width and item.Height then
+        if type(item) == "IMaterial" then
+            markup = markup .. "<img=" .. item:GetName() .. ",16x16>"
+        elseif item and istable(item) and item.GetName and item.Width and item.Height then
             local matName = item:GetName()
             markup = markup .. "<img=" .. matName .. "," .. item:Width() .. "x" .. item:Height() .. ">"
         elseif IsColor(item) then

@@ -5,7 +5,7 @@ Create wearable clothing or armor that can change a character's model and apply 
 Output Location:
 
 ```text
-garrysmod/gamemodes/[schema folder]/schema/items/outfit/[item_id].lua
+garrysmod/gamemodes/[schema folder]/schema/definitions/sh_items.lua
 ```
 
 <div class="generator-grid">

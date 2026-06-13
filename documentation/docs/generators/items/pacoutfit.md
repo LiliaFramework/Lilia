@@ -7,7 +7,7 @@ PAC3 must be installed on the server for these items to work. Generated items ta
 Output Location:
 
 ```text
-garrysmod/gamemodes/[schema folder]/schema/items/pacoutfit/[item_id].lua
+garrysmod/gamemodes/[schema folder]/schema/definitions/sh_items.lua
 ```
 
 <div class="generator-grid">

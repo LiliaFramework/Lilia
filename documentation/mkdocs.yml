@@ -1,6 +1,5 @@
 site_name: Lilia Documentation
 site_description: Official documentation for the Lilia Framework
-site_author: Lilia Framework Team
 site_url: https://liliaframework.github.io/
 repo_url: https://github.com/LiliaFramework/Lilia
 repo_name: LiliaFramework/Lilia
@@ -43,6 +42,24 @@ theme:
 
 nav:
   - Home: index.md
+  - Developer:
+      - Overview: developer/index.md
+      - Meta Tables:
+          - Overview: developer/meta/index.md
+          # AUTO-GENERATED: META TABLES START
+          - Character: developer/meta/character.md
+          - Entity: developer/meta/entity.md
+          - Inventory: developer/meta/inventory.md
+          - Item: developer/meta/item.md
+          - Panel: developer/meta/panel.md
+          - Player: developer/meta/player.md
+          # AUTO-GENERATED: META TABLES END
+      - Libraries:
+          - Overview: developer/libraries/index.md
+          # AUTO-GENERATED: LIBRARIES START
+          - Currency: developer/libraries/lia.currency.md
+          # AUTO-GENERATED: LIBRARIES END
+      - Hooks: developer/hooks/index.md
   - Reference:
       - Overview: definitions/index.md
       - Core:
@@ -50,19 +67,21 @@ nav:
           - Factions: definitions/faction.md
           - Classes: definitions/class.md
           - Modules: definitions/module.md
-          - MetroRP GitModules: modules/index.md
       - Items:
-          - Aid Items: definitions/items/aid.md
-          - Ammo Items: definitions/items/ammo.md
-          - ArcCW Attachments: definitions/items/arccw_att.md
-          - Books and Notes: definitions/items/books.md
-          - Entity Items: definitions/items/entities.md
-          - Grenades: definitions/items/grenade.md
-          - Outfits: definitions/items/outfit.md
-          - PAC3 Outfits: definitions/items/pacoutfit.md
-          - Stackable Items: definitions/items/stackable.md
-          - URL Items: definitions/items/url.md
-          - Weapons: definitions/items/weapons.md
+          # AUTO-GENERATED: ITEM DEFINITIONS START
+          - Overview: definitions/items/index.md
+          - Aid Item Definition: definitions/items/aid.md
+          - Ammo Item Definition: definitions/items/ammo.md
+          - ArcCW Attachment Item Definition: definitions/items/arccw_att.md
+          - Books Item Definition: definitions/items/books.md
+          - Entity Item Definition: definitions/items/entities.md
+          - Grenade Item Definition: definitions/items/grenade.md
+          - Outfit Item Definition: definitions/items/outfit.md
+          - PAC Outfit Item Definition: definitions/items/pacoutfit.md
+          - Stackable Item Definition: definitions/items/stackable.md
+          - URL Item Definition: definitions/items/url.md
+          - Weapons Item Definition: definitions/items/weapons.md
+          # AUTO-GENERATED: ITEM DEFINITIONS END
   - Generators:
       - Overview: generators/index.md
       - Schema Generators:
@@ -74,13 +93,16 @@ nav:
           - Ammo Items: generators/items/ammo.md
           - Bags: generators/items/bags.md
           - Books and Notes: generators/items/books.md
+          - Entity Items: generators/items/entities.md
           - Grenades: generators/items/grenade.md
           - Outfits: generators/items/outfit.md
           - PAC3 Outfits: generators/items/pacoutfit.md
           - Stackable Items: generators/items/stackable.md
+          - URL Items: generators/items/url.md
           - Weapons: generators/items/weapons.md
   - Guides:
       - Framework Overview: about/index.md
+      - Modules: modules/index.md
       - Installation: about/installation.md
       - Feature Map: about/features.md
       - Addon Compatibility: about/compatibility.md

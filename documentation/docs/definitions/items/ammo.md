@@ -4,9 +4,13 @@ Ammo items represent stored ammunition inside the inventory. Use them when playe
 
 ## Placement
 
-Use the normal `ITEM` form in item definition files loaded by the item loader, such as `schema/items/[item_id].lua`. If the item should inherit a base, place it under the matching base folder, such as `schema/items/ammo/[item_id].lua` or `modules/[module]/items/ammo/[item_id].lua`. Base item files themselves live under an `items/base` directory, for example `gamemode/items/base/ammo.lua` or `modules/[module]/items/base/ammo.lua`.
+Register ammo items in:
 
-Use `lia.item.register` from a shared Lua file when you want to register an item directly from code instead of relying on the item loader's `ITEM` table.
+```text
+garrysmod/gamemodes/[schema folder]/schema/definitions/sh_items.lua
+```
+
+Use `lia.item.registerItem` in that shared file to define the item directly from code.
 
 ## Reference
 
@@ -20,54 +24,16 @@ Use `lia.item.register` from a shared Lua file when you want to register an item
 | `category` | `string` | Inventory category used for sorting and grouping. |
 | `useSound` | `string` | Optional sound played when ammo is loaded. |
 
-## Normal Item File Example
+## Example
 
 ```lua
-ITEM.name = "Pistol Ammo"
-ITEM.model = "models/items/boxsrounds.mdl"
-ITEM.width = 1
-ITEM.height = 1
-ITEM.ammo = "Pistol"
-ITEM.category = "ammo"
-ITEM.useSound = "items/ammo_pickup.wav"
-
-ITEM.functions.Use = {
-    name = "load",
-    tip = "useTip",
-    icon = "icon16/box.png",
-    onRun = function(item)
-        local client = item.player
-        if not IsValid(client) then return false end
-
-        client:GiveAmmo(24, item.ammo, true)
-        return true
-    end
-}
-```
-
-## Direct Registration Example
-
-```lua
-local item = lia.item.register("pistol_ammo", "base_ammo", false, nil, true)
-
-item.name = "Pistol Ammo"
-item.model = "models/items/boxsrounds.mdl"
-item.width = 1
-item.height = 1
-item.ammo = "Pistol"
-item.category = "ammo"
-item.useSound = "items/ammo_pickup.wav"
-
-item.functions.Use = {
-    name = "load",
-    tip = "useTip",
-    icon = "icon16/box.png",
-    onRun = function(itemInstance)
-        local client = itemInstance.player
-        if not IsValid(client) then return false end
-
-        client:GiveAmmo(24, itemInstance.ammo, true)
-        return true
-    end
-}
+lia.item.registerItem("pistol_ammo", "base_ammo", {
+    name = "Pistol Ammo",
+    model = "models/items/boxsrounds.mdl",
+    width = 1,
+    height = 1,
+    ammo = "Pistol",
+    category = "ammo",
+    useSound = "items/ammo_pickup.wav"
+})
 ```

@@ -1,15 +1,71 @@
-﻿local Inventory = lia.Inventory or {}
+--[[
+    Folder: Developer - Meta Tables
+    File: inventory.md
+]]
+--[[
+    Inventory
+
+    Inventory metadata helpers for inventory type registration, item lookup, data replication, persistence, access rules, and UI display.
+]]
+--[[
+    Overview:
+        The inventory meta table wraps inventory instances and inventory type definitions. It exposes helpers for reading and writing inventory data, registering inventory classes, searching contained items, managing server-side persistence and replication, enforcing access rules, and opening the client inventory interface.
+]]
+local Inventory = lia.Inventory or {}
 Inventory.__index = Inventory
 lia.Inventory = Inventory
 Inventory.data = {}
 Inventory.items = {}
 Inventory.id = -1
+--[[
+    Purpose:
+        Returns a stored inventory data value by key, or a fallback if the key is unset.
+
+    Parameters:
+        key (string)
+            The inventory data key to look up.
+        default (any)
+            The fallback value returned when the key is not present.
+
+    Returns:
+        any
+            The stored value for the key, or the provided default.
+
+    Example Usage:
+        ```lua
+        local ownerID = inventory:getData("ownerID", 0)
+        print("Owner ID:", ownerID)
+        ```
+
+    Realm:
+        Shared
+]]
 function Inventory:getData(key, default)
     local value = self.data[key]
     if value == nil then return default end
     return value
 end
 
+--[[
+    Purpose:
+        Creates or refreshes a derived inventory class in the debug registry.
+
+    Parameters:
+        className (string)
+            The registry class name used for the derived inventory table.
+
+    Returns:
+        table
+            The new subclass table inheriting from this inventory meta table.
+
+    Example Usage:
+        ```lua
+        local BagInventory = Inventory:extend("liaBagInventory")
+        ```
+
+    Realm:
+        Shared
+]]
 function Inventory:extend(className)
     local base = debug.getregistry()[className] or {}
     table.Empty(base)
@@ -19,15 +75,82 @@ function Inventory:extend(className)
     return subClass
 end
 
-function Inventory:configure()
+--[[
+    Purpose:
+        Serves as an override point for configuring an inventory type before registration completes.
+
+    Parameters:
+        config (table)
+            The configuration table prepared during registration.
+
+    Returns:
+        nil
+
+    Example Usage:
+        ```lua
+        function BagInventory:configure(config)
+            config.data.capacity = {}
+        end
+        ```
+
+    Realm:
+        Shared
+]]
+function Inventory:configure(config)
 end
 
+--[[
+    Purpose:
+        Registers a callback that runs whenever a specific inventory data key changes.
+
+    Parameters:
+        key (string)
+            The inventory data key to watch.
+        onChange (function)
+            The callback that receives the old and new values.
+
+    Returns:
+        nil
+
+    Example Usage:
+        ```lua
+        inventoryType:addDataProxy("locked", function(oldValue, newValue)
+            print("Lock state changed:", oldValue, newValue)
+        end)
+        ```
+
+    Realm:
+        Shared
+]]
 function Inventory:addDataProxy(key, onChange)
     local dataConfig = self.config.data[key] or {}
     dataConfig.proxies[#dataConfig.proxies + 1] = onChange
     self.config.data[key] = dataConfig
 end
 
+--[[
+    Purpose:
+        Returns all items in this inventory whose unique ID matches the requested value.
+
+    Parameters:
+        uniqueID (string)
+            The item unique ID to search for.
+        onlyMain (boolean|nil)
+            Forwarded to the underlying item retrieval call when supported.
+
+    Returns:
+        table
+            A sequential table of matching item instances.
+
+    Example Usage:
+        ```lua
+        local ammoItems = inventory:getItemsByUniqueID("ammo_9mm")
+        print("Found ammo stacks:", #ammoItems)
+        ```
+
+    Realm:
+        Shared
+]]
 function Inventory:getItemsByUniqueID(uniqueID, onlyMain)
     local items = {}
     for _, v in pairs(self:getItems(onlyMain)) do
@@ -36,6 +159,25 @@ function Inventory:getItemsByUniqueID(uniqueID, onlyMain)
     return items
 end
 
+--[[
+    Purpose:
+        Finalizes inventory type configuration and registers the type with the inventory library.
+
+    Parameters:
+        typeID (string)
+            The unique identifier used to register this inventory type.
+
+    Returns:
+        nil
+
+    Example Usage:
+        ```lua
+        BagInventory:register("bag")
+        ```
+
+    Realm:
+        Shared
+]]
 function Inventory:register(typeID)
     assert(isstring(typeID), L("registerTypeString", self.className))
     self.typeID = typeID
@@ -55,18 +197,89 @@ function Inventory:register(typeID)
     end
 end
 
+--[[
+    Purpose:
+        Creates a new inventory instance for this registered type.
+
+    Returns:
+        table
+            The newly created inventory instance.
+
+    Example Usage:
+        ```lua
+        local inventory = inventoryType:new()
+        ```
+
+    Realm:
+        Shared
+]]
 function Inventory:new()
     return lia.inventory.new(self.typeID)
 end
 
+--[[
+    Purpose:
+        Builds a readable localized label for this inventory instance.
+
+    Returns:
+        string
+            A string containing the localized class name and inventory ID.
+
+    Example Usage:
+        ```lua
+        print(inventory:tostring())
+        ```
+
+    Realm:
+        Shared
+]]
 function Inventory:tostring()
     return L(self.className) .. "[" .. tostring(self.id) .. "]"
 end
 
+--[[
+    Purpose:
+        Returns the registered inventory type definition associated with this instance.
+
+    Returns:
+        table|nil
+            The inventory type table when registered.
+
+    Example Usage:
+        ```lua
+        local inventoryType = inventory:getType()
+        ```
+
+    Realm:
+        Shared
+]]
 function Inventory:getType()
     return lia.inventory.types[self.typeID]
 end
 
+--[[
+    Purpose:
+        Runs any proxy callbacks registered for a changed inventory data key.
+
+    Parameters:
+        key (string)
+            The inventory data key that changed.
+        oldValue (any)
+            The previous value stored under the key.
+        newValue (any)
+            The new value stored under the key.
+
+    Returns:
+        nil
+
+    Example Usage:
+        ```lua
+        inventory:onDataChanged("locked", false, true)
+        ```
+
+    Realm:
+        Shared
+]]
 function Inventory:onDataChanged(key, oldValue, newValue)
     local keyData = self.config.data[key]
     if keyData and keyData.proxies then
@@ -76,10 +289,46 @@ function Inventory:onDataChanged(key, oldValue, newValue)
     end
 end
 
+--[[
+    Purpose:
+        Returns the internal item lookup table for this inventory.
+
+    Returns:
+        table
+            A table keyed by item ID containing item instances.
+
+    Example Usage:
+        ```lua
+        local items = inventory:getItems()
+        ```
+
+    Realm:
+        Shared
+]]
 function Inventory:getItems()
     return self.items
 end
 
+--[[
+    Purpose:
+        Returns every item in this inventory whose unique ID matches the requested type.
+
+    Parameters:
+        itemType (string)
+            The item unique ID to match.
+
+    Returns:
+        table
+            A sequential table of matching item instances.
+
+    Example Usage:
+        ```lua
+        local weapons = inventory:getItemsOfType("pistol")
+        ```
+
+    Realm:
+        Shared
+]]
 function Inventory:getItemsOfType(itemType)
     local items = {}
     for _, item in pairs(self:getItems()) do
@@ -88,12 +337,54 @@ function Inventory:getItemsOfType(itemType)
     return items
 end
 
+--[[
+    Purpose:
+        Returns the first item in this inventory whose unique ID matches the requested type.
+
+    Parameters:
+        itemType (string)
+            The item unique ID to match.
+
+    Returns:
+        table|nil
+            The first matching item instance, if one exists.
+
+    Example Usage:
+        ```lua
+        local firstMedkit = inventory:getFirstItemOfType("medkit")
+        ```
+
+    Realm:
+        Shared
+]]
 function Inventory:getFirstItemOfType(itemType)
     for _, item in pairs(self:getItems()) do
         if item.uniqueID == itemType then return item end
     end
 end
 
+--[[
+    Purpose:
+        Checks whether this inventory contains at least one item of the requested type.
+
+    Parameters:
+        itemType (string)
+            The item unique ID to search for.
+
+    Returns:
+        boolean
+            True if at least one matching item exists, otherwise false.
+
+    Example Usage:
+        ```lua
+        if inventory:hasItem("lockpick") then
+            print("Lockpick found.")
+        end
+        ```
+
+    Realm:
+        Shared
+]]
 function Inventory:hasItem(itemType)
     for _, item in pairs(self:getItems()) do
         if item.uniqueID == itemType then return true end
@@ -101,6 +392,26 @@ function Inventory:hasItem(itemType)
     return false
 end
 
+--[[
+    Purpose:
+        Counts item quantities in this inventory, optionally restricted to a specific item type.
+
+    Parameters:
+        itemType (string|nil)
+            The item unique ID to count, or nil to count all item quantities.
+
+    Returns:
+        number
+            The total quantity of matching items.
+
+    Example Usage:
+        ```lua
+        local totalAmmo = inventory:getItemCount("ammo_9mm")
+        ```
+
+    Realm:
+        Shared
+]]
 function Inventory:getItemCount(itemType)
     local count = 0
     for _, item in pairs(self:getItems()) do
@@ -109,11 +420,49 @@ function Inventory:getItemCount(itemType)
     return count
 end
 
+--[[
+    Purpose:
+        Returns the numeric ID assigned to this inventory instance.
+
+    Returns:
+        number
+            The inventory ID.
+
+    Example Usage:
+        ```lua
+        print("Inventory ID:", inventory:getID())
+        ```
+
+    Realm:
+        Shared
+]]
 function Inventory:getID()
     return self.id
 end
 
 if SERVER then
+    --[[
+    Purpose:
+        Adds an item to this inventory, updates its persisted inventory ID, and replicates the change.
+
+    Parameters:
+        item (table)
+            The item instance being added.
+        noReplicate (boolean|nil)
+            When true, skips running the `OnItemAdded` hook.
+
+    Returns:
+        table
+            This inventory instance for chaining.
+
+    Example Usage:
+        ```lua
+        inventory:addItem(itemInstance)
+        ```
+
+    Realm:
+        Server
+]]
     function Inventory:addItem(item, noReplicate)
         self.items[item:getID()] = item
         item.invID = self:getID()
@@ -128,10 +477,49 @@ if SERVER then
         return self
     end
 
+    --[[
+    Purpose:
+        Adds an item to this inventory using the shorthand alias for `addItem`.
+
+    Parameters:
+        item (table)
+            The item instance being added.
+
+    Returns:
+        table
+            This inventory instance for chaining.
+
+    Example Usage:
+        ```lua
+        inventory:add(itemInstance)
+        ```
+
+    Realm:
+        Server
+]]
     function Inventory:add(item)
         return self:addItem(item)
     end
 
+    --[[
+    Purpose:
+        Replicates a newly added item to all clients who can currently access this inventory.
+
+    Parameters:
+        item (table)
+            The item instance to sync.
+
+    Returns:
+        nil
+
+    Example Usage:
+        ```lua
+        inventory:syncItemAdded(itemInstance)
+        ```
+
+    Realm:
+        Server
+]]
     function Inventory:syncItemAdded(item)
         assert(istable(item) and item.getID, L("cannotSyncNonItem"))
         assert(self.items[item:getID()], L("itemDoesNotBelong", item:getID(), self.id))
@@ -143,6 +531,29 @@ if SERVER then
         net.Send(recipients)
     end
 
+    --[[
+    Purpose:
+        Creates persistent database rows for a new inventory and its initial data payload.
+
+    Parameters:
+        initialData (table)
+            A table of starting inventory data values. The special `char` key is stored on the inventory row.
+
+    Returns:
+        table
+            A deferred object that resolves with the new inventory ID.
+
+    Example Usage:
+        ```lua
+        inventoryType:initializeStorage({
+            char = character:getID(),
+            locked = false
+        })
+        ```
+
+    Realm:
+        Server
+]]
     function Inventory:initializeStorage(initialData)
         local d = deferred.new()
         local charID = initialData.char
@@ -169,9 +580,48 @@ if SERVER then
         return d
     end
 
+    --[[
+    Purpose:
+        Serves as an override point for restoring additional server-side state from storage.
+
+    Returns:
+        nil
+
+    Example Usage:
+        ```lua
+        function BagInventory:restoreFromStorage()
+            -- Restore custom state here.
+        end
+        ```
+
+    Realm:
+        Server
+]]
     function Inventory:restoreFromStorage()
     end
 
+    --[[
+    Purpose:
+        Removes an item from this inventory and optionally preserves the item instance in storage.
+
+    Parameters:
+        itemID (number)
+            The numeric item ID to remove.
+        preserveItem (boolean|nil)
+            When true, detaches the item from this inventory without deleting it.
+
+    Returns:
+        table
+            A deferred object that resolves after removal finishes.
+
+    Example Usage:
+        ```lua
+        inventory:removeItem(itemID, true)
+        ```
+
+    Realm:
+        Server
+]]
     function Inventory:removeItem(itemID, preserveItem)
         assert(isnumber(itemID), L("itemIDNumberRequired"))
         local d = deferred.new()
@@ -197,10 +647,52 @@ if SERVER then
         return d
     end
 
+    --[[
+    Purpose:
+        Removes an item from this inventory using the shorthand alias for `removeItem`.
+
+    Parameters:
+        itemID (number)
+            The numeric item ID to remove.
+
+    Returns:
+        table
+            A deferred object that resolves after removal finishes.
+
+    Example Usage:
+        ```lua
+        inventory:remove(itemID)
+        ```
+
+    Realm:
+        Server
+]]
     function Inventory:remove(itemID)
         return self:removeItem(itemID)
     end
 
+    --[[
+    Purpose:
+        Sets an inventory data value, persists it when allowed, replicates it, and triggers change proxies.
+
+    Parameters:
+        key (string)
+            The inventory data key to update.
+        value (any)
+            The value to store for the key.
+
+    Returns:
+        table
+            This inventory instance for chaining.
+
+    Example Usage:
+        ```lua
+        inventory:setData("locked", true)
+        ```
+
+    Realm:
+        Server
+]]
     function Inventory:setData(key, value)
         local oldValue = self.data[key]
         self.data[key] = value
@@ -226,6 +718,32 @@ if SERVER then
         return self
     end
 
+    --[[
+    Purpose:
+        Evaluates registered access rules for a specific inventory action and context.
+
+    Parameters:
+        action (string)
+            The action being checked, such as `repl`.
+        context (table|nil)
+            Optional contextual data passed to each rule.
+
+    Returns:
+        boolean|nil
+            The first non-nil rule result.
+        string|nil
+            An optional reason returned by the matching rule.
+
+    Example Usage:
+        ```lua
+        local canReplicate = inventory:canAccess("repl", {
+            client = client
+        })
+        ```
+
+    Realm:
+        Server
+]]
     function Inventory:canAccess(action, context)
         context = context or {}
         local result, reason
@@ -235,6 +753,32 @@ if SERVER then
         end
     end
 
+    --[[
+    Purpose:
+        Adds an access rule to this inventory's rule list, optionally at a specific priority.
+
+    Parameters:
+        rule (function)
+            The rule callback to add.
+        priority (number|nil)
+            The insert position for the rule when ordering matters.
+
+    Returns:
+        table
+            This inventory instance for chaining.
+
+    Example Usage:
+        ```lua
+        inventory:addAccessRule(function(inv, action, context)
+            if action == "repl" then
+                return context.client == inv:getOwner()
+            end
+        end)
+        ```
+
+    Realm:
+        Server
+]]
     function Inventory:addAccessRule(rule, priority)
         if isnumber(priority) then
             table.insert(self.config.accessRules, priority, rule)
@@ -244,11 +788,47 @@ if SERVER then
         return self
     end
 
+    --[[
+    Purpose:
+        Removes a previously registered access rule from this inventory.
+
+    Parameters:
+        rule (function)
+            The exact rule callback to remove.
+
+    Returns:
+        table
+            This inventory instance for chaining.
+
+    Example Usage:
+        ```lua
+        inventory:removeAccessRule(myRule)
+        ```
+
+    Realm:
+        Server
+]]
     function Inventory:removeAccessRule(rule)
         table.RemoveByValue(self.config.accessRules, rule)
         return self
     end
 
+    --[[
+    Purpose:
+        Returns all connected players who currently pass this inventory's replication access rules.
+
+    Returns:
+        table
+            A sequential table of recipient players.
+
+    Example Usage:
+        ```lua
+        local recipients = inventory:getRecipients()
+        ```
+
+    Realm:
+        Server
+]]
     function Inventory:getRecipients()
         local recipients = {}
         for _, client in player.Iterator() do
@@ -261,14 +841,66 @@ if SERVER then
         return recipients
     end
 
+    --[[
+    Purpose:
+        Serves as an override point after a server-side inventory instance is created.
+
+    Returns:
+        nil
+
+    Example Usage:
+        ```lua
+        function BagInventory:onInstanced()
+            print("Inventory instanced:", self:getID())
+        end
+        ```
+
+    Realm:
+        Server
+]]
     function Inventory:onInstanced()
     end
 
+    --[[
+    Purpose:
+        Serves as an override point after the inventory finishes loading.
+
+    Returns:
+        nil
+
+    Example Usage:
+        ```lua
+        function BagInventory:onLoaded()
+            print("Inventory loaded:", self:getID())
+        end
+        ```
+
+    Realm:
+        Server
+]]
     function Inventory:onLoaded()
     end
 
     local ITEM_TABLE = "items"
     local ITEM_FIELDS = {"itemID", "uniqueID", "data", "x", "y", "quantity"}
+    --[[
+    Purpose:
+        Loads all persisted items belonging to this inventory and restores them into memory.
+
+    Returns:
+        table
+            A promise-like query chain resolving to the restored item table.
+
+    Example Usage:
+        ```lua
+        inventory:loadItems():next(function(items)
+            print("Loaded items:", table.Count(items))
+        end)
+        ```
+
+    Realm:
+        Server
+]]
     function Inventory:loadItems()
         return lia.db.select(ITEM_FIELDS, ITEM_TABLE, "invID = " .. self.id):next(function(res)
             if not res or not istable(res) then
@@ -307,13 +939,77 @@ if SERVER then
         end)
     end
 
-    function Inventory:onItemsLoaded()
+    --[[
+    Purpose:
+        Serves as an override point after `loadItems` restores the inventory item table.
+
+    Parameters:
+        items (table)
+            The restored item table keyed by item ID.
+
+    Returns:
+        nil
+
+    Example Usage:
+        ```lua
+        function BagInventory:onItemsLoaded(items)
+            print("Items restored:", table.Count(items))
+        end
+        ```
+
+    Realm:
+        Server
+]]
+    function Inventory:onItemsLoaded(items)
     end
 
+    --[[
+    Purpose:
+        Creates and persists a new instance of this inventory type using initial data.
+
+    Parameters:
+        initialData (table)
+            The initial data table used during inventory instancing.
+
+    Returns:
+        table
+            The instanced inventory object or deferred result provided by the inventory library.
+
+    Example Usage:
+        ```lua
+        inventoryType:instance({
+            char = character:getID()
+        })
+        ```
+
+    Realm:
+        Server
+]]
     function Inventory:instance(initialData)
         return lia.inventory.instance(self.typeID, initialData)
     end
 
+    --[[
+    Purpose:
+        Replicates a single inventory data key to clients unless replication is disabled for that key.
+
+    Parameters:
+        key (string)
+            The inventory data key to replicate.
+        recipients (table|nil)
+            Optional recipient players. Defaults to current access recipients.
+
+    Returns:
+        nil
+
+    Example Usage:
+        ```lua
+        inventory:syncData("locked")
+        ```
+
+    Realm:
+        Server
+]]
     function Inventory:syncData(key, recipients)
         if self.config.data[key] and self.config.data[key].noReplication then return end
         net.Start("liaInventoryData")
@@ -323,6 +1019,25 @@ if SERVER then
         net.Send(recipients or self:getRecipients())
     end
 
+    --[[
+    Purpose:
+        Replicates the full inventory state and all contained items to clients.
+
+    Parameters:
+        recipients (table|nil)
+            Optional recipient players. Defaults to current access recipients.
+
+    Returns:
+        nil
+
+    Example Usage:
+        ```lua
+        inventory:sync()
+        ```
+
+    Realm:
+        Server
+]]
     function Inventory:sync(recipients)
         net.Start("liaInventoryInit")
         net.WriteType(self.id)
@@ -351,10 +1066,40 @@ if SERVER then
         end
     end
 
+    --[[
+    Purpose:
+        Deletes this inventory through the inventory library by its current ID.
+
+    Returns:
+        nil
+
+    Example Usage:
+        ```lua
+        inventory:delete()
+        ```
+
+    Realm:
+        Server
+]]
     function Inventory:delete()
         lia.inventory.deleteByID(self.id)
     end
 
+    --[[
+    Purpose:
+        Destroys all local item instances, unregisters this inventory instance, and broadcasts deletion.
+
+    Returns:
+        nil
+
+    Example Usage:
+        ```lua
+        inventory:destroy()
+        ```
+
+    Realm:
+        Server
+]]
     function Inventory:destroy()
         for _, item in pairs(self:getItems()) do
             item:destroy()
@@ -366,6 +1111,26 @@ if SERVER then
         net.Broadcast()
     end
 else
+    --[[
+    Purpose:
+        Opens this inventory in the client inventory UI.
+
+    Parameters:
+        parent (Panel|nil)
+            The parent panel used when creating the inventory view.
+
+    Returns:
+        Panel|table
+            The UI panel or value returned by the inventory display helper.
+
+    Example Usage:
+        ```lua
+        inventory:show(parentPanel)
+        ```
+
+    Realm:
+        Client
+]]
     function Inventory:show(parent)
         return lia.inventory.show(self, parent)
     end

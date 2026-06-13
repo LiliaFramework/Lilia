@@ -225,7 +225,17 @@ lia.chat.register("looc", {
 
         speaker.liaLastLOOC = CurTime()
     end,
-    onChatAdd = function(speaker, text) chat.AddText((lia.color.theme and lia.color.theme.text) or Color(210, 235, 235), "[" .. L("looc") .. "] ", (lia.color.theme and lia.color.theme.chat) or Color(255, 239, 150), speaker:Name(), ": " .. text) end,
+    onChatAdd = function(speaker, text)
+        local chatColor = (lia.color.theme and lia.color.theme.chat) or Color(255, 239, 150)
+        local name = hook.Run("GetDisplayedName", speaker, "looc") or IsValid(speaker) and speaker:Name() or L("console")
+        local iconPath = hook.Run("GetUsergroupIcon", IsValid(speaker) and speaker:GetUserGroup() or nil, nil, speaker)
+        if isstring(iconPath) and iconPath ~= "" then
+            chat.AddText(lia.util.getMaterial(iconPath), (lia.color.theme and lia.color.theme.text) or Color(210, 235, 235), " [" .. L("looc") .. "] ", chatColor, name, ": " .. text)
+            return
+        end
+
+        chat.AddText((lia.color.theme and lia.color.theme.text) or Color(210, 235, 235), "[" .. L("looc") .. "] ", chatColor, name, ": " .. text)
+    end,
     onCanHear = function(speaker, listener)
         if speaker == listener then return true end
         if speaker:EyePos():Distance(listener:EyePos()) <= lia.config.get("TalkRange", 280) then return true end
@@ -358,7 +368,17 @@ lia.chat.register("ooc", {
         speaker.liaLastOOC = CurTime()
     end,
     onCanHear = function() return true end,
-    onChatAdd = function(speaker, text) chat.AddText((lia.color.theme and lia.color.theme.text) or Color(210, 235, 235), " [" .. L("ooc") .. "] ", (lia.color.theme and lia.color.theme.chat) or Color(255, 239, 150), speaker:Name(), ": " .. text) end,
+    onChatAdd = function(speaker, text)
+        local chatColor = (lia.color.theme and lia.color.theme.chat) or Color(255, 239, 150)
+        local name = hook.Run("GetDisplayedName", speaker, "ooc") or IsValid(speaker) and speaker:Name() or L("console")
+        local iconPath = hook.Run("GetUsergroupIcon", IsValid(speaker) and speaker:GetUserGroup() or nil, nil, speaker)
+        if isstring(iconPath) and iconPath ~= "" then
+            chat.AddText(lia.util.getMaterial(iconPath), (lia.color.theme and lia.color.theme.text) or Color(210, 235, 235), " [" .. L("ooc") .. "] ", chatColor, name, ": " .. text)
+            return
+        end
+
+        chat.AddText((lia.color.theme and lia.color.theme.text) or Color(210, 235, 235), " [" .. L("ooc") .. "] ", chatColor, name, ": " .. text)
+    end,
     prefix = {"//", "/ooc"},
     noSpaceAfter = true,
     filter = "ooc"

@@ -1,111 +1,51 @@
 # Modules
 
-<div class="reference-hero">
-  <p class="home-eyebrow">MetroRP Markdown Sync</p>
-  <h1>Workflow-style markdown import</h1>
-  <p>This page is generated from <code>D:\GMOD\Server\garrysmod\gamemodes\metrorp\gitmodules</code> and imports only existing <code>.md</code> files into the workflow-style <code>docs/modules/index.md</code> output. No Lua scraping, ZIP packaging, or generated download artifacts are included.</p>
-</div>
-
-<div class="card-grid module-stats">
-  <div class="card">
-    <span class="card-kicker">Source</span>
-    <h3>Folder</h3>
-    <p><code>D:\GMOD\Server\garrysmod\gamemodes\metrorp\gitmodules</code></p>
-  </div>
-  <div class="card">
-    <span class="card-kicker">Markdown Files</span>
-    <h3>1</h3>
-    <p>Only files that already exist as markdown in the MetroRP gitmodules tree are copied here.</p>
-  </div>
-</div>
-
-## Imported Files
-
-<div class="home-grid">
-<a class="home-card" href="#code-of-conduct">
-  <span class="card-kicker">.</span>
-  <h3>Code Of Conduct</h3>
-  <p><code>Code_Of_Conduct.md</code></p>
-</a>
-</div>
-
-## Content
-
-### <a id="code-of-conduct"></a>Code Of Conduct
-
-`Code_Of_Conduct.md`
-
-# Contributor Covenant Code of Conduct
-
-## Our Pledge
-
-In the interest of fostering an open and welcoming environment, we as
-contributors and maintainers pledge to making participation in our project and
-our community a harassment-free experience for everyone, regardless of age, body
-size, disability, ethnicity, sex characteristics, gender identity and expression,
-level of experience, education, socio-economic status, nationality, personal
-appearance, race, religion, or sexual identity and orientation.
-
-## Our Standards
-
-Examples of behavior that contributes to creating a positive environment
-include:
-
-* Using welcoming and inclusive language
-* Being respectful of differing viewpoints and experiences
-* Gracefully accepting constructive criticism
-* Focusing on what is best for the community
-* Showing empathy towards other community members
-
-Examples of unacceptable behavior by participants include:
-
-* The use of sexualized language or imagery and unwelcome sexual attention or
- advances
-* Trolling, insulting/derogatory comments, and personal or political attacks
-* Public or private harassment
-* Publishing others' private information, such as a physical or electronic
- address, without explicit permission
-* Other conduct which could reasonably be considered inappropriate in a
- professional setting
-
-## Our Responsibilities
-
-Project maintainers are responsible for clarifying the standards of acceptable
-behavior and are expected to take appropriate and fair corrective action in
-response to any instances of unacceptable behavior.
-
-Project maintainers have the right and responsibility to remove, edit, or
-reject comments, commits, code, wiki edits, issues, and other contributions
-that are not aligned to this Code of Conduct, or to ban temporarily or
-permanently any contributor for other behaviors that they deem inappropriate,
-threatening, offensive, or harmful.
-
-## Scope
-
-This Code of Conduct applies both within project spaces and in public spaces
-when an individual is representing the project or its community. Examples of
-representing a project or community include using an official project e-mail
-address, posting via an official social media account, or acting as an appointed
-representative at an online or offline event. Representation of a project may be
-further defined and clarified by project maintainers.
-
-## Enforcement
-
-Instances of abusive, harassing, or otherwise unacceptable behavior may be
-reported by contacting the project team @bleonheart. All
-complaints will be reviewed and investigated and will result in a response that
-is deemed necessary and appropriate to the circumstances. The project team is
-obligated to maintain confidentiality with regard to the reporter of an incident.
-Further details of specific enforcement policies may be posted separately.
-
-Project maintainers who do not follow or enforce the Code of Conduct in good
-faith may face temporary or permanent repercussions as determined by other
-members of the project's leadership.
-
-## Attribution
-
-This Code of Conduct is adapted from the [Contributor Covenant](https://www.contributor-covenant.org), version 1.4,
-available at https://www.contributor-covenant.org/version/1/4/code-of-conduct.html
-
-For answers to common questions about this code of conduct, see
-https://www.contributor-covenant.org/faq
+| Module | Description | Author | Download |
+| :--- | :--- | :--- | :--- |
+| [Advertisements](https://github.com/LiliaFramework/Modules/tree/main/advert) | Implements a paid /advert command for server-wide announcements. Messages are colored, logged, and throttled by a cooldown to curb spam. | Samael | [Download](https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/advert.zip) |
+| [AFK Protection](https://github.com/LiliaFramework/Modules/tree/main/afk) | Comprehensive AFK protection system that automatically detects inactive players, prevents exploitation of AFK players, and integrates with restraint systems. Features configurable AFK detection, admin commands, multi-language support, and protection against various player actions. | Samael | [Download](https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/afk.zip) |
+| [Alcoholism](https://github.com/LiliaFramework/Modules/tree/main/alcoholism) | Adds drinkable alcohol that increases a player&#x27;s intoxication level. High BAC blurs vision and slows movement until the effect wears off. | Samael | [Download](https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/alcoholism.zip) |
+| [Anonymous Rumors](https://github.com/LiliaFramework/Modules/tree/main/rumour) | Adds an anonymous rumour chat command, hiding of the sender&#x27;s identity, encouragement for roleplay intrigue, a cooldown to prevent spam, and admin logging of rumour messages. | Samael | [Download](https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/rumour.zip) |
+| [Auto Restarter](https://github.com/LiliaFramework/Modules/tree/main/autorestarter) | Schedules automatic server restarts at set intervals. Players see a countdown so they can prepare before the map changes. | Samael | [Download](https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/autorestarter.zip) |
+| [Broadcasts](https://github.com/LiliaFramework/Modules/tree/main/broadcasts) | Allows staff to broadcast messages to chosen factions or classes. Every broadcast is logged and controlled through CAMI privileges. | Samael | [Download](https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/broadcasts.zip) |
+| [Captions](https://github.com/LiliaFramework/Modules/tree/main/captions) | Offers an API for timed on-screen captions suited for tutorials or story events. Captions can be triggered from the server or client and last for a chosen duration. | Samael | [Download](https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/captions.zip) |
+| [Cards](https://github.com/LiliaFramework/Modules/tree/main/cards) | Adds a full deck of playing cards that can be shuffled and drawn. Card draws sync to all players for simple in-game minigames. | Samael | [Download](https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/cards.zip) |
+| [Chat Messages](https://github.com/LiliaFramework/Modules/tree/main/chatmessages) | Periodically posts automated advert messages in chat on a timer. Keeps players informed with rotating tips even when staff are offline. | Samael | [Download](https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/chatmessages.zip) |
+| [Cinematic Text](https://github.com/LiliaFramework/Modules/tree/main/cinematictext) | Adds displays of cinematic splash text overlays, screen darkening with letterbox bars, support for scripted scenes, timed fades for dramatic effect, and customizable text fonts. | Samael | [Download](https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/cinematictext.zip) |
+| [Climbing](https://github.com/LiliaFramework/Modules/tree/main/climb) | Adds the ability to climb ledges using movement keys, custom climbing animations, and hooks for climb attempts. | Samael | [Download](https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/climb.zip) |
+| [Code Utilities](https://github.com/LiliaFramework/Modules/tree/main/utilities) | Adds extra helper functions in lia.util, simplified utilities for common scripting tasks, a central library used by other modules, utilities for networking data, and shared constants for modules. | Samael | [Download](https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/utilities.zip) |
+| [Community Commands](https://github.com/LiliaFramework/Modules/tree/main/communitycommands) | Adds chat commands to open community links, easy sharing of workshop and docs, configurable commands via settings, localization for command names, and the ability to add custom URLs. | Samael | [Download](https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/communitycommands.zip) |
+| [Cursor](https://github.com/LiliaFramework/Modules/tree/main/cursor) | Adds a toggleable custom cursor for the UI, a purely client-side implementation, improved menu navigation, a hotkey to quickly show or hide the cursor, and compatibility with other menu modules. | Samael | [Download](https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/cursor.zip) |
+| [Cutscenes](https://github.com/LiliaFramework/Modules/tree/main/cutscenes) | Adds a framework for simple cutscene playback, scenes defined through tables, syncing of camera movement across clients, commands to trigger cutscenes, and the ability for players to skip. | Samael | [Download](https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/cutscenes.zip) |
+| [Damage Numbers](https://github.com/LiliaFramework/Modules/tree/main/damagenumbers) | Adds floating combat text when hitting targets, different colors for damage types, display of damage dealt and received, scaling text based on damage amount, and client option to disable numbers. | Samael | [Download](https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/damagenumbers.zip) |
+| [Donator](https://github.com/LiliaFramework/Modules/tree/main/donator) | Adds libraries to manage donor perks, tracking for donor ranks and perks, configurable perks by tier, and commands to adjust character slots. | Samael | [Download](https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/donator.zip) |
+| [Door Kick](https://github.com/LiliaFramework/Modules/tree/main/doorkick) | Adds the ability to kick doors open with an animation, logging of door kick events, and a fun breach mechanic with physics force to fling doors open. | Samael | [Download](https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/doorkick.zip) |
+| [Extended Descriptions](https://github.com/LiliaFramework/Modules/tree/main/extendeddescriptions) | Adds support for long item descriptions, localization for multiple languages, better RP text display, automatic line wrapping, and fallback to short descriptions. | Samael | [Download](https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/extendeddescriptions.zip) |
+| [First Person Effects](https://github.com/LiliaFramework/Modules/tree/main/firstpersoneffects) | Adds head bob and view sway, camera motion synced to actions, a realistic first-person feel, and adjustable intensity via config. | Samael | [Download](https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/firstpersoneffects.zip) |
+| [Flashlight](https://github.com/LiliaFramework/Modules/tree/main/flashlight) | Adds a serious flashlight with dynamic light, darkening of surroundings when turned off, adjustable brightness, and keybind toggle support. | Samael | [Download](https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/flashlight.zip) |
+| [Free Look](https://github.com/LiliaFramework/Modules/tree/main/freelook) | Adds the ability to look around without turning the body, a toggle key similar to EFT, movement direction preservation, and adjustable sensitivity while freelooking. | Samael | [Download](https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/freelook.zip) |
+| [Gamemaster Points](https://github.com/LiliaFramework/Modules/tree/main/gamemasterpoints) | Adds teleport points for game masters, quick navigation across large maps, saving of locations for reuse, a command to list saved points, and sharing of points with other staff. | Samael | [Download](https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/gamemasterpoints.zip) |
+| [Hospitals](https://github.com/LiliaFramework/Modules/tree/main/hospitals) | Adds respawning of players at hospitals with support for multiple hospital spawn locations on different maps. | Samael | [Download](https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/hospitals.zip) |
+| [HUD Extras](https://github.com/LiliaFramework/Modules/tree/main/hud_extras) | Adds extra HUD elements like an FPS counter, fonts configurable with FPSHudFont, hooks so other modules can extend, performance stats display, and toggles for individual HUD elements. | Samael | [Download](https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/hud_extras.zip) |
+| [Instakill](https://github.com/LiliaFramework/Modules/tree/main/instakill) | Adds instant kill on headshots, lethality configurable per weapon, extra tension to combat, and integration with damage numbers. | Samael | [Download](https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/instakill.zip) |
+| [Join Leave Messages](https://github.com/LiliaFramework/Modules/tree/main/joinleavemessages) | Adds announcements when players join, notifications on disconnect, improved community awareness, relay of messages to Discord, and per-player toggle to hide messages. | Samael | [Download](https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/joinleavemessages.zip) |
+| [Load Messages](https://github.com/LiliaFramework/Modules/tree/main/loadmessages) | Adds faction-based load messages, execution when players first load a character, customizable message text, color-coded formatting options, and per-faction enable toggles. | Samael | [Download](https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/loadmessages.zip) |
+| [Loyalism](https://github.com/LiliaFramework/Modules/tree/main/loyalism) | Adds a loyalty tier system for players, the /partytier command access, permission control through flags, automatic tier progression, and customizable rewards per tier. | Samael | [Download](https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/loyalism.zip) |
+| [Map Cleaner](https://github.com/LiliaFramework/Modules/tree/main/mapcleaner) | Adds periodic cleaning of map debris, a configurable interval, reduced server lag, a whitelist for protected entities, and manual cleanup commands. | Samael | [Download](https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/mapcleaner.zip) |
+| [Model Pay](https://github.com/LiliaFramework/Modules/tree/main/modelpay) | Adds payment to characters based on model, custom wage definitions, integration into the economy, config to exclude certain models, and logs of wages issued. | Samael | [Download](https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/modelpay.zip) |
+| [Model Tweaker](https://github.com/LiliaFramework/Modules/tree/main/modeltweaker) | Adds an entity to tweak prop models, adjustments for scale and rotation, easy UI controls, saving of tweaked props between restarts, and undo support for recent tweaks. | Samael | [Download](https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/modeltweaker.zip) |
+| [NPC Drop](https://github.com/LiliaFramework/Modules/tree/main/npcdrop) | Adds NPCs that drop items on death, DropTable to define probabilities, encouragement for looting, editable drop tables per NPC type, and weighted chances for rare items. | Samael | [Download](https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/npcdrop.zip) |
+| [NPC Money](https://github.com/LiliaFramework/Modules/tree/main/npcmoney) | Adds NPCs that give money to players on death, MoneyTable to define rewards, editable money amounts per NPC type, and configurable default values. | Samael | [Download](https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/npcmoney.zip) |
+| [NPC Spawner](https://github.com/LiliaFramework/Modules/tree/main/npcspawner) | Adds automatic NPC spawns at points, the ability for admins to force spawns, logging of spawn actions, and configuration for spawn intervals. | Samael | [Download](https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/npcspawner.zip) |
+| [Perma Remove](https://github.com/LiliaFramework/Modules/tree/main/permaremove) | Adds ability to permanently delete map entities, logging for each removed entity, an admin-only command, confirmation prompts before removal, and restore list to undo mistakes. | Boz [Base Code] &amp; Samael [Rewrite] | [Download](https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/permaremove.zip) |
+| [Radio](https://github.com/LiliaFramework/Modules/tree/main/radio) | Adds a radio chat channel for players, font configuration via RadioFont, workshop models for radios, frequency channels for groups, and handheld radio items. | Samael | [Download](https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/radio.zip) |
+| [Raised Weapons](https://github.com/LiliaFramework/Modules/tree/main/raisedweapons) | Adds auto-lowering of weapons when running, a raise delay set by WeaponRaiseSpeed, prevention of accidental fire, a toggle to keep weapons lowered, and compatibility with melee weapons. | Samael | [Download](https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/raisedweapons.zip) |
+| [Realistic View](https://github.com/LiliaFramework/Modules/tree/main/realisticview) | Adds a first-person view that shows the full body, immersive camera transitions, compatibility with animations, smooth leaning animations, and optional third-person override. | Samael | [Download](https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/realisticview.zip) |
+| [Shoot Lock](https://github.com/LiliaFramework/Modules/tree/main/shootlock) | Adds the ability to shoot door locks to open them, a quick breach alternative, a loud action that may alert others, and chance-based lock destruction. | Samael | [Download](https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/shootlock.zip) |
+| [Simple Lockpicking](https://github.com/LiliaFramework/Modules/tree/main/simple_lockpicking) | Adds a simple lockpick tool for doors, logging of successful picks, brute-force style gameplay, configurable pick time, and chance for tools to break. | 76561198312513285 | [Download](https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/simple_lockpicking.zip) |
+| [Slot Machine](https://github.com/LiliaFramework/Modules/tree/main/slots) | Adds a slot machine minigame, a workshop model for the machine, handling of payouts to winners, customizable payout odds, and sound and animation effects. | Samael | [Download](https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/slots.zip) |
+| [Slow Weapons](https://github.com/LiliaFramework/Modules/tree/main/slowweapons) | Adds slower movement while holding heavy weapons, speed penalties defined per weapon, encouragement for strategic choices, customizable weapon speed table, and automatic speed restore when switching. | Samael | [Download](https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/slowweapons.zip) |
+| [Steam Group Rewards](https://github.com/LiliaFramework/Modules/tree/main/steamgrouprewards) | Provides Steam group membership rewards system that automatically checks group membership and gives money rewards to players who join your Steam group. | Samael | [Download](https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/steamgrouprewards.zip) |
+| [View Manipulation](https://github.com/LiliaFramework/Modules/tree/main/vmanip) | Adds VManip animation support, hand gestures for items, functionality within Lilia, API for custom gesture triggers, and fallback animations when VManip is missing. | Samael | [Download](https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/vmanip.zip) |
+| [War Table](https://github.com/LiliaFramework/Modules/tree/main/wartable) | Adds an interactive 3D war table, the ability to plan operations on a map, a workshop model, marker placement for strategies, and support for multiple map layouts. | Samael | [Download](https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/wartable.zip) |
+| [Word Filter](https://github.com/LiliaFramework/Modules/tree/main/wordfilter) | Adds chat word filtering, blocking of banned phrases, an easy-to-extend list, and admin commands to modify the list. | Samael | [Download](https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/wordfilter.zip) |

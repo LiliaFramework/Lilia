@@ -594,8 +594,10 @@ html .md-typeset .md-typeset__table table code {
 .md-typeset div.realm-shared > .realm-header,
 .md-typeset div.realm-server > .realm-header {
     position: relative;
-    display: block;
-    padding: 0.75rem 1rem 0.75rem 2.8rem !important;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.75rem 1rem 0.75rem 2.3rem !important;
     border-bottom: 1px solid var(--lilia-soft-border);
     background: color-mix(in srgb, var(--md-primary-fg-color) 8%, transparent);
     font-weight: 800;
@@ -655,12 +657,12 @@ html .md-typeset .md-typeset__table table code {
     content: "" !important;
     position: absolute;
     top: 50%;
-    left: 0.8rem;
+    left: 0.95rem;
     z-index: 1;
     display: block !important;
-    width: 0.85rem;
-    height: 0.85rem;
-    border-radius: 0.22rem !important;
+    width: 0.5rem;
+    height: 0.5rem;
+    border-radius: 999px !important;
     background-image: none !important;
     transform: translateY(-50%);
     mask: none !important;
@@ -746,6 +748,49 @@ html .md-typeset .md-typeset__table table code {
 
 .md-typeset details details > .details-content > ul:first-child {
     margin-top: 0;
+}
+
+.source-link-row {
+    margin: 0 0 1rem;
+}
+
+.source-link-button {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    min-height: 2rem;
+    padding: 0.42rem 0.78rem;
+    border: 1px solid color-mix(in srgb, var(--md-accent-fg-color) 45%, transparent);
+    border-radius: 0.45rem;
+    background: color-mix(in srgb, var(--md-primary-fg-color) 10%, transparent);
+    color: var(--md-accent-fg-color) !important;
+    font-size: 0.74rem;
+    font-weight: 800;
+    text-decoration: none !important;
+    transition: background-color 140ms ease, border-color 140ms ease, transform 140ms ease;
+}
+
+.source-link-button:hover {
+    border-color: color-mix(in srgb, var(--md-accent-fg-color) 75%, transparent);
+    background: color-mix(in srgb, var(--md-accent-fg-color) 14%, transparent);
+    transform: translateY(-1px);
+}
+
+.md-typeset details > summary {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.9rem;
+}
+
+.summary-main {
+    min-width: 0;
+    flex: 1;
+}
+
+.source-link-button--summary {
+    flex-shrink: 0;
+    margin-left: auto;
 }
 
 /* Generator layout */

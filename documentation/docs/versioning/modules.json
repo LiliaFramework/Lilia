@@ -1,0 +1,425 @@
+[
+  {
+    "moduleID": "advert",
+    "name": "Advertisements",
+    "description": "Implements a paid /advert command for server-wide announcements. Messages are colored, logged, and throttled by a cooldown to curb spam.",
+    "author": "Samael",
+    "versionID": "public_advert",
+    "version": "1.0",
+    "url": "https://github.com/LiliaFramework/Modules/tree/main/advert"
+  },
+  {
+    "moduleID": "afk",
+    "name": "AFK Protection",
+    "description": "Comprehensive AFK protection system that automatically detects inactive players, prevents exploitation of AFK players, and integrates with restraint systems. Features configurable AFK detection, admin commands, multi-language support, and protection against various player actions.",
+    "author": "Samael",
+    "versionID": "public_afk",
+    "version": "1.0",
+    "url": "https://github.com/LiliaFramework/Modules/tree/main/afk"
+  },
+  {
+    "moduleID": "alcoholism",
+    "name": "Alcoholism",
+    "description": "Adds drinkable alcohol that increases a player's intoxication level. High BAC blurs vision and slows movement until the effect wears off.",
+    "author": "Samael",
+    "versionID": "public_alcoholism",
+    "version": "1.0",
+    "url": "https://github.com/LiliaFramework/Modules/tree/main/alcoholism"
+  },
+  {
+    "moduleID": "rumour",
+    "name": "Anonymous Rumors",
+    "description": "Adds an anonymous rumour chat command, hiding of the sender's identity, encouragement for roleplay intrigue, a cooldown to prevent spam, and admin logging of rumour messages.",
+    "author": "Samael",
+    "versionID": "public_rumour",
+    "version": "1.0",
+    "url": "https://github.com/LiliaFramework/Modules/tree/main/rumour"
+  },
+  {
+    "moduleID": "autorestarter",
+    "name": "Auto Restarter",
+    "description": "Schedules automatic server restarts at set intervals. Players see a countdown so they can prepare before the map changes.",
+    "author": "Samael",
+    "versionID": "public_autorestarter",
+    "version": "1.0",
+    "url": "https://github.com/LiliaFramework/Modules/tree/main/autorestarter"
+  },
+  {
+    "moduleID": "broadcasts",
+    "name": "Broadcasts",
+    "description": "Allows staff to broadcast messages to chosen factions or classes. Every broadcast is logged and controlled through CAMI privileges.",
+    "author": "Samael",
+    "versionID": "public_broadcasts",
+    "version": "1.0",
+    "url": "https://github.com/LiliaFramework/Modules/tree/main/broadcasts"
+  },
+  {
+    "moduleID": "captions",
+    "name": "Captions",
+    "description": "Offers an API for timed on-screen captions suited for tutorials or story events. Captions can be triggered from the server or client and last for a chosen duration.",
+    "author": "Samael",
+    "versionID": "public_captions",
+    "version": "1.0",
+    "url": "https://github.com/LiliaFramework/Modules/tree/main/captions"
+  },
+  {
+    "moduleID": "cards",
+    "name": "Cards",
+    "description": "Adds a full deck of playing cards that can be shuffled and drawn. Card draws sync to all players for simple in-game minigames.",
+    "author": "Samael",
+    "versionID": "public_cards",
+    "version": "1.0",
+    "url": "https://github.com/LiliaFramework/Modules/tree/main/cards"
+  },
+  {
+    "moduleID": "chatmessages",
+    "name": "Chat Messages",
+    "description": "Periodically posts automated advert messages in chat on a timer. Keeps players informed with rotating tips even when staff are offline.",
+    "author": "Samael",
+    "versionID": "public_chatmessages",
+    "version": "1.0",
+    "url": "https://github.com/LiliaFramework/Modules/tree/main/chatmessages"
+  },
+  {
+    "moduleID": "cinematictext",
+    "name": "Cinematic Text",
+    "description": "Adds displays of cinematic splash text overlays, screen darkening with letterbox bars, support for scripted scenes, timed fades for dramatic effect, and customizable text fonts.",
+    "author": "Samael",
+    "versionID": "public_cinematictext",
+    "version": "1.0",
+    "url": "https://github.com/LiliaFramework/Modules/tree/main/cinematictext"
+  },
+  {
+    "moduleID": "climb",
+    "name": "Climbing",
+    "description": "Adds the ability to climb ledges using movement keys, custom climbing animations, and hooks for climb attempts.",
+    "author": "Samael",
+    "versionID": "public_climb",
+    "version": "1.0",
+    "url": "https://github.com/LiliaFramework/Modules/tree/main/climb"
+  },
+  {
+    "moduleID": "utilities",
+    "name": "Code Utilities",
+    "description": "Adds extra helper functions in lia.util, simplified utilities for common scripting tasks, a central library used by other modules, utilities for networking data, and shared constants for modules.",
+    "author": "Samael",
+    "versionID": "public_utilities",
+    "version": "1.4",
+    "url": "https://github.com/LiliaFramework/Modules/tree/main/utilities"
+  },
+  {
+    "moduleID": "communitycommands",
+    "name": "Community Commands",
+    "description": "Adds chat commands to open community links, easy sharing of workshop and docs, configurable commands via settings, localization for command names, and the ability to add custom URLs.",
+    "author": "Samael",
+    "versionID": "public_communitycommands",
+    "version": "1.0",
+    "url": "https://github.com/LiliaFramework/Modules/tree/main/communitycommands"
+  },
+  {
+    "moduleID": "cursor",
+    "name": "Cursor",
+    "description": "Adds a toggleable custom cursor for the UI, a purely client-side implementation, improved menu navigation, a hotkey to quickly show or hide the cursor, and compatibility with other menu modules.",
+    "author": "Samael",
+    "versionID": "public_cursor",
+    "version": "1.0",
+    "url": "https://github.com/LiliaFramework/Modules/tree/main/cursor"
+  },
+  {
+    "moduleID": "cutscenes",
+    "name": "Cutscenes",
+    "description": "Adds a framework for simple cutscene playback, scenes defined through tables, syncing of camera movement across clients, commands to trigger cutscenes, and the ability for players to skip.",
+    "author": "Samael",
+    "versionID": "public_cutscenes",
+    "version": "1.0",
+    "url": "https://github.com/LiliaFramework/Modules/tree/main/cutscenes"
+  },
+  {
+    "moduleID": "damagenumbers",
+    "name": "Damage Numbers",
+    "description": "Adds floating combat text when hitting targets, different colors for damage types, display of damage dealt and received, scaling text based on damage amount, and client option to disable numbers.",
+    "author": "Samael",
+    "versionID": "public_damagenumbers",
+    "version": "1.0",
+    "url": "https://github.com/LiliaFramework/Modules/tree/main/damagenumbers"
+  },
+  {
+    "moduleID": "donator",
+    "name": "Donator",
+    "description": "Adds libraries to manage donor perks, tracking for donor ranks and perks, configurable perks by tier, and commands to adjust character slots.",
+    "author": "Samael",
+    "versionID": "public_donator",
+    "version": "1.0",
+    "url": "https://github.com/LiliaFramework/Modules/tree/main/donator"
+  },
+  {
+    "moduleID": "doorkick",
+    "name": "Door Kick",
+    "description": "Adds the ability to kick doors open with an animation, logging of door kick events, and a fun breach mechanic with physics force to fling doors open.",
+    "author": "Samael",
+    "versionID": "public_doorkick",
+    "version": "1.0",
+    "url": "https://github.com/LiliaFramework/Modules/tree/main/doorkick"
+  },
+  {
+    "moduleID": "extendeddescriptions",
+    "name": "Extended Descriptions",
+    "description": "Adds support for long item descriptions, localization for multiple languages, better RP text display, automatic line wrapping, and fallback to short descriptions.",
+    "author": "Samael",
+    "versionID": "public_extendeddescriptions",
+    "version": "1.0",
+    "url": "https://github.com/LiliaFramework/Modules/tree/main/extendeddescriptions"
+  },
+  {
+    "moduleID": "firstpersoneffects",
+    "name": "First Person Effects",
+    "description": "Adds head bob and view sway, camera motion synced to actions, a realistic first-person feel, and adjustable intensity via config.",
+    "author": "Samael",
+    "versionID": "public_firstpersoneffects",
+    "version": "1.0",
+    "url": "https://github.com/LiliaFramework/Modules/tree/main/firstpersoneffects"
+  },
+  {
+    "moduleID": "flashlight",
+    "name": "Flashlight",
+    "description": "Adds a serious flashlight with dynamic light, darkening of surroundings when turned off, adjustable brightness, and keybind toggle support.",
+    "author": "Samael",
+    "versionID": "public_flashlight",
+    "version": "1.0",
+    "url": "https://github.com/LiliaFramework/Modules/tree/main/flashlight"
+  },
+  {
+    "moduleID": "freelook",
+    "name": "Free Look",
+    "description": "Adds the ability to look around without turning the body, a toggle key similar to EFT, movement direction preservation, and adjustable sensitivity while freelooking.",
+    "author": "Samael",
+    "versionID": "public_freelook",
+    "version": "1.0",
+    "url": "https://github.com/LiliaFramework/Modules/tree/main/freelook"
+  },
+  {
+    "moduleID": "gamemasterpoints",
+    "name": "Gamemaster Points",
+    "description": "Adds teleport points for game masters, quick navigation across large maps, saving of locations for reuse, a command to list saved points, and sharing of points with other staff.",
+    "author": "Samael",
+    "versionID": "public_gamemasterpoints",
+    "version": "1.0",
+    "url": "https://github.com/LiliaFramework/Modules/tree/main/gamemasterpoints"
+  },
+  {
+    "moduleID": "hospitals",
+    "name": "Hospitals",
+    "description": "Adds respawning of players at hospitals with support for multiple hospital spawn locations on different maps.",
+    "author": "Samael",
+    "versionID": "public_hospitals",
+    "version": "1.0",
+    "url": "https://github.com/LiliaFramework/Modules/tree/main/hospitals"
+  },
+  {
+    "moduleID": "hud_extras",
+    "name": "HUD Extras",
+    "description": "Adds extra HUD elements like an FPS counter, fonts configurable with FPSHudFont, hooks so other modules can extend, performance stats display, and toggles for individual HUD elements.",
+    "author": "Samael",
+    "versionID": "public_hud_extras",
+    "version": "1.0",
+    "url": "https://github.com/LiliaFramework/Modules/tree/main/hud_extras"
+  },
+  {
+    "moduleID": "instakill",
+    "name": "Instakill",
+    "description": "Adds instant kill on headshots, lethality configurable per weapon, extra tension to combat, and integration with damage numbers.",
+    "author": "Samael",
+    "versionID": "public_instakill",
+    "version": "1.0",
+    "url": "https://github.com/LiliaFramework/Modules/tree/main/instakill"
+  },
+  {
+    "moduleID": "joinleavemessages",
+    "name": "Join Leave Messages",
+    "description": "Adds announcements when players join, notifications on disconnect, improved community awareness, relay of messages to Discord, and per-player toggle to hide messages.",
+    "author": "Samael",
+    "versionID": "public_joinleavemessages",
+    "version": "1.0",
+    "url": "https://github.com/LiliaFramework/Modules/tree/main/joinleavemessages"
+  },
+  {
+    "moduleID": "loadmessages",
+    "name": "Load Messages",
+    "description": "Adds faction-based load messages, execution when players first load a character, customizable message text, color-coded formatting options, and per-faction enable toggles.",
+    "author": "Samael",
+    "versionID": "public_loadmessages",
+    "version": "1.0",
+    "url": "https://github.com/LiliaFramework/Modules/tree/main/loadmessages"
+  },
+  {
+    "moduleID": "loyalism",
+    "name": "Loyalism",
+    "description": "Adds a loyalty tier system for players, the /partytier command access, permission control through flags, automatic tier progression, and customizable rewards per tier.",
+    "author": "Samael",
+    "versionID": "public_loyalism",
+    "version": "1.0",
+    "url": "https://github.com/LiliaFramework/Modules/tree/main/loyalism"
+  },
+  {
+    "moduleID": "mapcleaner",
+    "name": "Map Cleaner",
+    "description": "Adds periodic cleaning of map debris, a configurable interval, reduced server lag, a whitelist for protected entities, and manual cleanup commands.",
+    "author": "Samael",
+    "versionID": "public_mapcleaner",
+    "version": "1.0",
+    "url": "https://github.com/LiliaFramework/Modules/tree/main/mapcleaner"
+  },
+  {
+    "moduleID": "modelpay",
+    "name": "Model Pay",
+    "description": "Adds payment to characters based on model, custom wage definitions, integration into the economy, config to exclude certain models, and logs of wages issued.",
+    "author": "Samael",
+    "versionID": "public_modelpay",
+    "version": "1.0",
+    "url": "https://github.com/LiliaFramework/Modules/tree/main/modelpay"
+  },
+  {
+    "moduleID": "modeltweaker",
+    "name": "Model Tweaker",
+    "description": "Adds an entity to tweak prop models, adjustments for scale and rotation, easy UI controls, saving of tweaked props between restarts, and undo support for recent tweaks.",
+    "author": "Samael",
+    "versionID": "public_modeltweaker",
+    "version": "1.0",
+    "url": "https://github.com/LiliaFramework/Modules/tree/main/modeltweaker"
+  },
+  {
+    "moduleID": "npcdrop",
+    "name": "NPC Drop",
+    "description": "Adds NPCs that drop items on death, DropTable to define probabilities, encouragement for looting, editable drop tables per NPC type, and weighted chances for rare items.",
+    "author": "Samael",
+    "versionID": "public_npcdrop",
+    "version": "1.0",
+    "url": "https://github.com/LiliaFramework/Modules/tree/main/npcdrop"
+  },
+  {
+    "moduleID": "npcmoney",
+    "name": "NPC Money",
+    "description": "Adds NPCs that give money to players on death, MoneyTable to define rewards, editable money amounts per NPC type, and configurable default values.",
+    "author": "Samael",
+    "versionID": "public_npcmoney",
+    "version": "1.0",
+    "url": "https://github.com/LiliaFramework/Modules/tree/main/npcmoney"
+  },
+  {
+    "moduleID": "npcspawner",
+    "name": "NPC Spawner",
+    "description": "Adds automatic NPC spawns at points, the ability for admins to force spawns, logging of spawn actions, and configuration for spawn intervals.",
+    "author": "Samael",
+    "versionID": "public_npcspawner",
+    "version": "1.0",
+    "url": "https://github.com/LiliaFramework/Modules/tree/main/npcspawner"
+  },
+  {
+    "moduleID": "permaremove",
+    "name": "Perma Remove",
+    "description": "Adds ability to permanently delete map entities, logging for each removed entity, an admin-only command, confirmation prompts before removal, and restore list to undo mistakes.",
+    "author": "Boz [Base Code] & Samael [Rewrite]",
+    "versionID": "public_permaremove",
+    "version": "1.0",
+    "url": "https://github.com/LiliaFramework/Modules/tree/main/permaremove"
+  },
+  {
+    "moduleID": "radio",
+    "name": "Radio",
+    "description": "Adds a radio chat channel for players, font configuration via RadioFont, workshop models for radios, frequency channels for groups, and handheld radio items.",
+    "author": "Samael",
+    "versionID": "public_radio",
+    "version": "1.0",
+    "url": "https://github.com/LiliaFramework/Modules/tree/main/radio"
+  },
+  {
+    "moduleID": "raisedweapons",
+    "name": "Raised Weapons",
+    "description": "Adds auto-lowering of weapons when running, a raise delay set by WeaponRaiseSpeed, prevention of accidental fire, a toggle to keep weapons lowered, and compatibility with melee weapons.",
+    "author": "Samael",
+    "versionID": "public_raisedweapons",
+    "version": "1.0",
+    "url": "https://github.com/LiliaFramework/Modules/tree/main/raisedweapons"
+  },
+  {
+    "moduleID": "realisticview",
+    "name": "Realistic View",
+    "description": "Adds a first-person view that shows the full body, immersive camera transitions, compatibility with animations, smooth leaning animations, and optional third-person override.",
+    "author": "Samael",
+    "versionID": "public_realisticview",
+    "version": "1.0",
+    "url": "https://github.com/LiliaFramework/Modules/tree/main/realisticview"
+  },
+  {
+    "moduleID": "shootlock",
+    "name": "Shoot Lock",
+    "description": "Adds the ability to shoot door locks to open them, a quick breach alternative, a loud action that may alert others, and chance-based lock destruction.",
+    "author": "Samael",
+    "versionID": "public_shootlock",
+    "version": "1.0",
+    "url": "https://github.com/LiliaFramework/Modules/tree/main/shootlock"
+  },
+  {
+    "moduleID": "simple_lockpicking",
+    "name": "Simple Lockpicking",
+    "description": "Adds a simple lockpick tool for doors, logging of successful picks, brute-force style gameplay, configurable pick time, and chance for tools to break.",
+    "author": "76561198312513285",
+    "versionID": "public_simple_lockpicking",
+    "version": "1.0",
+    "url": "https://github.com/LiliaFramework/Modules/tree/main/simple_lockpicking"
+  },
+  {
+    "moduleID": "slots",
+    "name": "Slot Machine",
+    "description": "Adds a slot machine minigame, a workshop model for the machine, handling of payouts to winners, customizable payout odds, and sound and animation effects.",
+    "author": "Samael",
+    "versionID": "public_slots",
+    "version": "1.0",
+    "url": "https://github.com/LiliaFramework/Modules/tree/main/slots"
+  },
+  {
+    "moduleID": "slowweapons",
+    "name": "Slow Weapons",
+    "description": "Adds slower movement while holding heavy weapons, speed penalties defined per weapon, encouragement for strategic choices, customizable weapon speed table, and automatic speed restore when switching.",
+    "author": "Samael",
+    "versionID": "public_slowweapons",
+    "version": "1.0",
+    "url": "https://github.com/LiliaFramework/Modules/tree/main/slowweapons"
+  },
+  {
+    "moduleID": "steamgrouprewards",
+    "name": "Steam Group Rewards",
+    "description": "Provides Steam group membership rewards system that automatically checks group membership and gives money rewards to players who join your Steam group.",
+    "author": "Samael",
+    "versionID": "public_steamgrouprewards",
+    "version": "1.0",
+    "url": "https://github.com/LiliaFramework/Modules/tree/main/steamgrouprewards"
+  },
+  {
+    "moduleID": "vmanip",
+    "name": "View Manipulation",
+    "description": "Adds VManip animation support, hand gestures for items, functionality within Lilia, API for custom gesture triggers, and fallback animations when VManip is missing.",
+    "author": "Samael",
+    "versionID": "public_vmanip",
+    "version": "1.0",
+    "url": "https://github.com/LiliaFramework/Modules/tree/main/vmanip"
+  },
+  {
+    "moduleID": "wartable",
+    "name": "War Table",
+    "description": "Adds an interactive 3D war table, the ability to plan operations on a map, a workshop model, marker placement for strategies, and support for multiple map layouts.",
+    "author": "Samael",
+    "versionID": "public_wartable",
+    "version": "1.0",
+    "url": "https://github.com/LiliaFramework/Modules/tree/main/wartable"
+  },
+  {
+    "moduleID": "wordfilter",
+    "name": "Word Filter",
+    "description": "Adds chat word filtering, blocking of banned phrases, an easy-to-extend list, and admin commands to modify the list.",
+    "author": "Samael",
+    "versionID": "public_wordfilter",
+    "version": "1.0",
+    "url": "https://github.com/LiliaFramework/Modules/tree/main/wordfilter"
+  }
+]

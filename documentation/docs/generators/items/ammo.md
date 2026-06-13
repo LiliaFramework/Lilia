@@ -5,7 +5,7 @@ Create ammunition items that pair inventory objects with Garry's Mod ammo types.
 Output Location:
 
 ```text
-garrysmod/gamemodes/[schema folder]/schema/items/ammo/[item_id].lua
+garrysmod/gamemodes/[schema folder]/schema/definitions/sh_items.lua
 ```
 
 <div class="generator-grid">

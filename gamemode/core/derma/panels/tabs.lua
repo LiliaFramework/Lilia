@@ -168,9 +168,11 @@ function PANEL:Rebuild()
         for id, tab in ipairs(self.tabs) do
             surface.SetFont("LiliaFont.18")
             local textW = surface.GetTextSize(tab.name)
+            local iconW = tab.icon and 16 or 0
+            local iconTextGap = tab.icon and 8 or 0
             local padding = 16
             local minWidth = 80
-            local btnWidth = math.max(minWidth, padding + textW + padding)
+            local btnWidth = math.max(minWidth, padding + iconW + iconTextGap + textW + padding)
             tabWidths[id] = btnWidth
         end
 
@@ -185,6 +187,7 @@ function PANEL:Rebuild()
             btnTab:SetTall(34)
             btnTab:SetWide(btnWidth)
             btnTab:SetText(tab.name)
+            btnTab:SetIcon(tab.icon)
             btnTab:SetActive(self.active_id == id)
             btnTab:SetDoClick(function()
                 if self.active_id == id then return end

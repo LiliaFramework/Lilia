@@ -600,8 +600,8 @@ function GM:PlayerAuthed(client, steamid)
     lia.db.selectOne({"userGroup"}, "players", "steamID = " .. lia.db.convertDataType(steamid)):next(function(data)
         if not IsValid(client) then return end
         local group = data and data.userGroup
-        if not group or group == "" then
-            group = "user"
+        if not lia.admin.isValidGroup(group) then
+            group = lia.admin.getDefaultUserGroup()
             lia.db.query(Format("UPDATE lia_players SET userGroup = '%s' WHERE steamID = %s", lia.db.escape(group), lia.db.convertDataType(steamid)))
         end
 

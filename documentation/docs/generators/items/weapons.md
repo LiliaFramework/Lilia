@@ -7,7 +7,7 @@ Lilia can automatically generate weapon items for registered weapon entities tha
 Output Location:
 
 ```text
-garrysmod/gamemodes/[schema folder]/schema/items/weapons/[item_id].lua
+garrysmod/gamemodes/[schema folder]/schema/definitions/sh_items.lua
 ```
 
 <div class="generator-grid">

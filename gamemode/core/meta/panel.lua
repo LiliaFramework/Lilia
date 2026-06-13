@@ -1,6 +1,38 @@
-﻿local panelMeta = FindMetaTable("Panel")
+--[[
+    Folder: Developer - Meta Tables
+    File: panel.md
+]]
+--[[
+    Panel
+
+    Panel metatable helpers for inventory-aware UI behavior, layout, transitions, and drawing.
+]]
+--[[
+    Overview:
+        The panel meta table extends Garry's Mod VGUI panels with convenience helpers for inventory hook forwarding, scaled positioning and sizing, composable paint and hover effects, avatar masking, click behaviors, layout shortcuts, and transition-driven UI animation.
+]]
+local panelMeta = FindMetaTable("Panel")
 local originalSetSize = panelMeta.SetSize
 local originalSetPos = panelMeta.SetPos
+--[[
+    Purpose:
+        Starts listening for inventory-related hooks and forwards matching events to this panel.
+
+    Parameters:
+        inventory (table)
+            The inventory object whose events should be observed.
+
+    Returns:
+        nil
+
+    Example Usage:
+        ```lua
+        panel:liaListenForInventoryChanges(inventory)
+        ```
+
+    Realm:
+        Client
+]]
 function panelMeta:liaListenForInventoryChanges(inventory)
     assert(inventory, L("noInventorySet"))
     local id = inventory:getID()
@@ -39,6 +71,26 @@ function panelMeta:liaListenForInventoryChanges(inventory)
     table.insert(self.liaToRemoveHooks[id], "ItemDataChanged")
 end
 
+--[[
+    Purpose:
+        Removes inventory hooks that were previously registered for this panel.
+
+    Parameters:
+        id (number|nil)
+            A specific inventory ID to stop listening to, or `nil` to remove all tracked inventory hooks.
+
+    Returns:
+        nil
+
+    Example Usage:
+        ```lua
+        panel:liaDeleteInventoryHooks()
+        panel:liaDeleteInventoryHooks(inventory:getID())
+        ```
+
+    Realm:
+        Client
+]]
 function panelMeta:liaDeleteInventoryHooks(id)
     if not self.liaHookID then return end
     if id == nil then
@@ -60,6 +112,27 @@ function panelMeta:liaDeleteInventoryHooks(id)
     self.liaToRemoveHooks[id] = nil
 end
 
+--[[
+    Purpose:
+        Sets the panel position using screen-scaled X and Y values.
+
+    Parameters:
+        x (number)
+            The horizontal position before `ScreenScale` is applied.
+        y (number)
+            The vertical position before `ScreenScaleH` is applied.
+
+    Returns:
+        nil
+
+    Example Usage:
+        ```lua
+        panel:setScaledPos(32, 24)
+        ```
+
+    Realm:
+        Client
+]]
 function panelMeta:setScaledPos(x, y)
     if not IsValid(self) then return end
     if not originalSetPos then
@@ -70,6 +143,27 @@ function panelMeta:setScaledPos(x, y)
     originalSetPos(self, ScreenScale(x), ScreenScaleH(y))
 end
 
+--[[
+    Purpose:
+        Sets the panel size using screen-scaled width and height values.
+
+    Parameters:
+        w (number)
+            The width before `ScreenScale` is applied.
+        h (number)
+            The height before `ScreenScaleH` is applied.
+
+    Returns:
+        nil
+
+    Example Usage:
+        ```lua
+        panel:setScaledSize(300, 160)
+        ```
+
+    Realm:
+        Client
+]]
 function panelMeta:setScaledSize(w, h)
     if not IsValid(self) then return end
     if not originalSetSize then
@@ -96,6 +190,29 @@ local function drawCircle(x, y, r)
     surface.DrawPoly(circle)
 end
 
+--[[
+    Purpose:
+        Appends a callback onto an existing panel method instead of replacing the method entirely.
+
+    Parameters:
+        name (string)
+            The panel method name to wrap.
+        fn (function)
+            The callback to run after the original method.
+
+    Returns:
+        nil
+
+    Example Usage:
+        ```lua
+        panel:On("Paint", function(_, w, h)
+            surface.DrawOutlinedRect(0, 0, w, h)
+        end)
+        ```
+
+    Realm:
+        Client
+]]
 function panelMeta:On(name, fn)
     name = self.AppendOverwrite or name
     local old = self[name]
@@ -105,12 +222,60 @@ function panelMeta:On(name, fn)
     end
 end
 
+--[[
+    Purpose:
+        Creates a transition value that smoothly lerps between `0` and `1` based on a predicate callback.
+
+    Parameters:
+        name (string)
+            The field name that stores the transition value.
+        speed (number)
+            The interpolation speed multiplier.
+        fn (function)
+            A callback that returns whether the transition should move toward `1`.
+
+    Returns:
+        nil
+
+    Example Usage:
+        ```lua
+        panel:SetupTransition("HoverAmount", 8, function(s)
+            return s:IsHovered()
+        end)
+        ```
+
+    Realm:
+        Client
+]]
 function panelMeta:SetupTransition(name, speed, fn)
     fn = self.TransitionFunc or fn
     self[name] = 0
     self:On("Think", function(s) s[name] = Lerp(FrameTime() * speed, s[name], fn(s) and 1 or 0) end)
 end
 
+--[[
+    Purpose:
+        Paints a fading hover overlay over the panel.
+
+    Parameters:
+        col (Color|nil)
+            The hover overlay color.
+        speed (number|nil)
+            The hover fade speed.
+        rad (number|nil)
+            An optional rounded corner radius.
+
+    Returns:
+        nil
+
+    Example Usage:
+        ```lua
+        panel:FadeHover(Color(255, 255, 255, 20), 6, 8)
+        ```
+
+    Realm:
+        Client
+]]
 function panelMeta:FadeHover(col, speed, rad)
     col = col or Color(255, 255, 255, 30)
     speed = speed or 6
@@ -126,6 +291,29 @@ function panelMeta:FadeHover(col, speed, rad)
     end)
 end
 
+--[[
+    Purpose:
+        Draws an animated bar along the bottom edge while the panel is hovered.
+
+    Parameters:
+        col (Color|nil)
+            The bar color.
+        height (number|nil)
+            The bar thickness.
+        speed (number|nil)
+            The transition speed.
+
+    Returns:
+        nil
+
+    Example Usage:
+        ```lua
+        panel:BarHover(Color(0, 120, 255), 3, 8)
+        ```
+
+    Realm:
+        Client
+]]
 function panelMeta:BarHover(col, height, speed)
     col = col or Color(255, 255, 255, 255)
     height = height or 2
@@ -138,6 +326,31 @@ function panelMeta:BarHover(col, height, speed)
     end)
 end
 
+--[[
+    Purpose:
+        Fills the panel from a chosen direction while it is hovered.
+
+    Parameters:
+        col (Color|nil)
+            The fill color.
+        dir (number|nil)
+            The fill direction constant such as `LEFT` or `TOP`.
+        speed (number|nil)
+            The transition speed.
+        mat (IMaterial|nil)
+            An optional material to draw instead of a solid rectangle.
+
+    Returns:
+        nil
+
+    Example Usage:
+        ```lua
+        panel:FillHover(Color(255, 255, 255, 25), LEFT, 8)
+        ```
+
+    Realm:
+        Client
+]]
 function panelMeta:FillHover(col, dir, speed, mat)
     col = col or Color(255, 255, 255, 30)
     dir = dir or LEFT
@@ -167,6 +380,35 @@ function panelMeta:FillHover(col, dir, speed, mat)
     end)
 end
 
+--[[
+    Purpose:
+        Draws a flat or rounded background in the panel paint hook.
+
+    Parameters:
+        col (Color)
+            The background color.
+        rad (number|nil)
+            The rounded corner radius.
+        rtl (boolean|nil)
+            Whether the top-left corner is rounded when using `draw.RoundedBoxEx`.
+        rtr (boolean|nil)
+            Whether the top-right corner is rounded.
+        rbl (boolean|nil)
+            Whether the bottom-left corner is rounded.
+        rbr (boolean|nil)
+            Whether the bottom-right corner is rounded.
+
+    Returns:
+        nil
+
+    Example Usage:
+        ```lua
+        panel:Background(Color(20, 20, 20, 220), 8)
+        ```
+
+    Realm:
+        Client
+]]
 function panelMeta:Background(col, rad, rtl, rtr, rbl, rbr)
     self:On("Paint", function(_, w, h)
         if rad and rad > 0 then
@@ -182,6 +424,27 @@ function panelMeta:Background(col, rad, rtl, rtr, rbl, rbr)
     end)
 end
 
+--[[
+    Purpose:
+        Paints a material stretched across the panel.
+
+    Parameters:
+        mat (IMaterial)
+            The material to draw.
+        col (Color|nil)
+            A tint color applied to the material.
+
+    Returns:
+        nil
+
+    Example Usage:
+        ```lua
+        panel:Material(Material("vgui/white"), Color(255, 255, 255))
+        ```
+
+    Realm:
+        Client
+]]
 function panelMeta:Material(mat, col)
     col = col or Color(255, 255, 255)
     self:On("Paint", function(_, w, h)
@@ -191,6 +454,31 @@ function panelMeta:Material(mat, col)
     end)
 end
 
+--[[
+    Purpose:
+        Paints a tiled material across the panel using UV scaling.
+
+    Parameters:
+        mat (IMaterial)
+            The material to tile.
+        tw (number)
+            The horizontal tile size.
+        th (number)
+            The vertical tile size.
+        col (Color|nil)
+            A tint color applied to the tiled material.
+
+    Returns:
+        nil
+
+    Example Usage:
+        ```lua
+        panel:TiledMaterial(Material("vgui/white"), 32, 32)
+        ```
+
+    Realm:
+        Client
+]]
 function panelMeta:TiledMaterial(mat, tw, th, col)
     col = col or Color(255, 255, 255, 255)
     self:On("Paint", function(_, w, h)
@@ -200,6 +488,27 @@ function panelMeta:TiledMaterial(mat, tw, th, col)
     end)
 end
 
+--[[
+    Purpose:
+        Draws an outline around the panel with configurable thickness.
+
+    Parameters:
+        col (Color|nil)
+            The outline color.
+        width (number|nil)
+            The outline thickness in pixels.
+
+    Returns:
+        nil
+
+    Example Usage:
+        ```lua
+        panel:Outline(Color(255, 255, 255), 2)
+        ```
+
+    Realm:
+        Client
+]]
 function panelMeta:Outline(col, width)
     col = col or Color(255, 255, 255, 255)
     width = width or 1
@@ -211,6 +520,27 @@ function panelMeta:Outline(col, width)
     end)
 end
 
+--[[
+    Purpose:
+        Draws simple line corners around the panel frame.
+
+    Parameters:
+        col (Color|nil)
+            The corner line color.
+        cornerLen (number|nil)
+            The length of each corner segment.
+
+    Returns:
+        nil
+
+    Example Usage:
+        ```lua
+        panel:LinedCorners(Color(255, 255, 255), 12)
+        ```
+
+    Realm:
+        Client
+]]
 function panelMeta:LinedCorners(col, cornerLen)
     col = col or Color(255, 255, 255, 255)
     cornerLen = cornerLen or 15
@@ -223,6 +553,29 @@ function panelMeta:LinedCorners(col, cornerLen)
     end)
 end
 
+--[[
+    Purpose:
+        Draws a solid accent block on one side of the panel.
+
+    Parameters:
+        col (Color|nil)
+            The block color.
+        size (number|nil)
+            The thickness of the block.
+        side (number|nil)
+            The side constant such as `LEFT` or `BOTTOM`.
+
+    Returns:
+        nil
+
+    Example Usage:
+        ```lua
+        panel:SideBlock(Color(0, 127, 255), 4, LEFT)
+        ```
+
+    Realm:
+        Client
+]]
 function panelMeta:SideBlock(col, size, side)
     col = col or Color(255, 255, 255, 255)
     size = size or 3
@@ -241,6 +594,37 @@ function panelMeta:SideBlock(col, size, side)
     end)
 end
 
+--[[
+    Purpose:
+        Sets built-in control text or paints centered text manually.
+
+    Parameters:
+        text (string)
+            The text to display.
+        font (string|nil)
+            The font name to use.
+        col (Color|nil)
+            The text color.
+        alignment (number|nil)
+            The horizontal text alignment constant.
+        ox (number|nil)
+            Horizontal paint offset.
+        oy (number|nil)
+            Vertical paint offset.
+        paint (boolean|nil)
+            Whether to force manual painting even when native text setters exist.
+
+    Returns:
+        nil
+
+    Example Usage:
+        ```lua
+        panel:Text("Confirm", "Trebuchet24", color_white)
+        ```
+
+    Realm:
+        Client
+]]
 function panelMeta:Text(text, font, col, alignment, ox, oy, paint)
     font = font or "Trebuchet24"
     col = col or Color(255, 255, 255, 255)
@@ -265,6 +649,39 @@ function panelMeta:Text(text, font, col, alignment, ox, oy, paint)
     end
 end
 
+--[[
+    Purpose:
+        Paints two stacked text lines with independent fonts and colors.
+
+    Parameters:
+        toptext (string)
+            The upper text line.
+        topfont (string|nil)
+            The upper line font.
+        topcol (Color|nil)
+            The upper line color.
+        bottomtext (string)
+            The lower text line.
+        bottomfont (string|nil)
+            The lower line font.
+        bottomcol (Color|nil)
+            The lower line color.
+        alignment (number|nil)
+            The horizontal text alignment.
+        centerSpacing (number|nil)
+            Extra spacing adjustment around the center.
+
+    Returns:
+        nil
+
+    Example Usage:
+        ```lua
+        panel:DualText("Lilia", "Trebuchet24", color_white, "Inventory", "Trebuchet18", Color(180, 180, 180))
+        ```
+
+    Realm:
+        Client
+]]
 function panelMeta:DualText(toptext, topfont, topcol, bottomtext, bottomfont, bottomcol, alignment, centerSpacing)
     topfont = topfont or "Trebuchet24"
     topcol = topcol or Color(0, 127, 255, 255)
@@ -292,6 +709,25 @@ function panelMeta:DualText(toptext, topfont, topcol, bottomtext, bottomfont, bo
     end)
 end
 
+--[[
+    Purpose:
+        Draws a blurred fullscreen backdrop behind the panel bounds.
+
+    Parameters:
+        amount (number|nil)
+            The maximum blur strength.
+
+    Returns:
+        nil
+
+    Example Usage:
+        ```lua
+        panel:Blur(8)
+        ```
+
+    Realm:
+        Client
+]]
 function panelMeta:Blur(amount)
     self:On("Paint", function(s)
         local x, y = s:LocalToScreen(0, 0)
@@ -307,6 +743,29 @@ function panelMeta:Blur(amount)
     end)
 end
 
+--[[
+    Purpose:
+        Plays an expanding circular ripple from the click position.
+
+    Parameters:
+        col (Color|nil)
+            The ripple color.
+        speed (number|nil)
+            The expansion and fade speed.
+        trad (number|nil)
+            The target radius for the ripple.
+
+    Returns:
+        nil
+
+    Example Usage:
+        ```lua
+        button:CircleClick(Color(255, 255, 255, 40), 5)
+        ```
+
+    Realm:
+        Client
+]]
 function panelMeta:CircleClick(col, speed, trad)
     col = col or Color(255, 255, 255, 50)
     speed = speed or 5
@@ -328,6 +787,29 @@ function panelMeta:CircleClick(col, speed, trad)
     end)
 end
 
+--[[
+    Purpose:
+        Draws a circular hover effect that follows the cursor.
+
+    Parameters:
+        col (Color|nil)
+            The hover effect color.
+        speed (number|nil)
+            The transition speed.
+        trad (number|nil)
+            The target hover radius.
+
+    Returns:
+        nil
+
+    Example Usage:
+        ```lua
+        panel:CircleHover(Color(255, 255, 255, 20), 6)
+        ```
+
+    Realm:
+        Client
+]]
 function panelMeta:CircleHover(col, speed, trad)
     col = col or Color(255, 255, 255, 30)
     speed = speed or 6
@@ -341,6 +823,29 @@ function panelMeta:CircleHover(col, speed, trad)
     end)
 end
 
+--[[
+    Purpose:
+        Paints an animated square checkbox fill based on checked state.
+
+    Parameters:
+        inner (Color|nil)
+            The fill color used when checked.
+        outer (Color|nil)
+            The outer frame color.
+        speed (number|nil)
+            The transition speed.
+
+    Returns:
+        nil
+
+    Example Usage:
+        ```lua
+        checkbox:SquareCheckbox(Color(0, 200, 0), color_white, 14)
+        ```
+
+    Realm:
+        Client
+]]
 function panelMeta:SquareCheckbox(inner, outer, speed)
     inner = inner or Color(0, 255, 0, 255)
     outer = outer or Color(255, 255, 255, 255)
@@ -357,6 +862,29 @@ function panelMeta:SquareCheckbox(inner, outer, speed)
     end)
 end
 
+--[[
+    Purpose:
+        Paints an animated circular checkbox fill based on checked state.
+
+    Parameters:
+        inner (Color|nil)
+            The fill color used when checked.
+        outer (Color|nil)
+            The outer frame color.
+        speed (number|nil)
+            The transition speed.
+
+    Returns:
+        nil
+
+    Example Usage:
+        ```lua
+        checkbox:CircleCheckbox(Color(0, 200, 0), color_white, 14)
+        ```
+
+    Realm:
+        Client
+]]
 function panelMeta:CircleCheckbox(inner, outer, speed)
     inner = inner or Color(0, 255, 0, 255)
     outer = outer or Color(255, 255, 255, 255)
@@ -371,6 +899,27 @@ function panelMeta:CircleCheckbox(inner, outer, speed)
     end)
 end
 
+--[[
+    Purpose:
+        Masks an embedded `AvatarImage` using a custom stencil shape callback.
+
+    Parameters:
+        mask (function)
+            A drawing callback that defines the stencil mask shape.
+
+    Returns:
+        nil
+
+    Example Usage:
+        ```lua
+        panel:AvatarMask(function(_, w, h)
+            draw.RoundedBox(8, 0, 0, w, h, color_white)
+        end)
+        ```
+
+    Realm:
+        Client
+]]
 function panelMeta:AvatarMask(mask)
     self.Avatar = vgui.Create("AvatarImage", self)
     self.Avatar:SetPaintedManually(true)
@@ -404,10 +953,44 @@ function panelMeta:AvatarMask(mask)
     self.SetSteamID = function(s, id, size) s.Avatar:SetSteamID(id, size) end
 end
 
+--[[
+    Purpose:
+        Applies a circular stencil mask to the panel avatar.
+
+    Returns:
+        nil
+
+    Example Usage:
+        ```lua
+        avatarPanel:CircleAvatar()
+        ```
+
+    Realm:
+        Client
+]]
 function panelMeta:CircleAvatar()
     self:AvatarMask(function(_, w, h) drawCircle(w / 2, h / 2, w / 2) end)
 end
 
+--[[
+    Purpose:
+        Draws a filled circle that fits inside the panel.
+
+    Parameters:
+        col (Color|nil)
+            The circle color.
+
+    Returns:
+        nil
+
+    Example Usage:
+        ```lua
+        panel:Circle(Color(255, 255, 255))
+        ```
+
+    Realm:
+        Client
+]]
 function panelMeta:Circle(col)
     col = col or Color(255, 255, 255, 255)
     self:On("Paint", function(_, w, h)
@@ -417,6 +1000,27 @@ function panelMeta:Circle(col)
     end)
 end
 
+--[[
+    Purpose:
+        Draws a circular hover overlay that fades in and out.
+
+    Parameters:
+        col (Color|nil)
+            The overlay color.
+        speed (number|nil)
+            The transition speed.
+
+    Returns:
+        nil
+
+    Example Usage:
+        ```lua
+        panel:CircleFadeHover(Color(255, 255, 255, 20), 6)
+        ```
+
+    Realm:
+        Client
+]]
 function panelMeta:CircleFadeHover(col, speed)
     col = col or Color(255, 255, 255, 30)
     speed = speed or 6
@@ -428,6 +1032,27 @@ function panelMeta:CircleFadeHover(col, speed)
     end)
 end
 
+--[[
+    Purpose:
+        Draws a circular hover overlay that expands with hover progress.
+
+    Parameters:
+        col (Color|nil)
+            The overlay color.
+        speed (number|nil)
+            The transition speed.
+
+    Returns:
+        nil
+
+    Example Usage:
+        ```lua
+        panel:CircleExpandHover(Color(255, 255, 255, 20), 6)
+        ```
+
+    Realm:
+        Client
+]]
 function panelMeta:CircleExpandHover(col, speed)
     col = col or Color(255, 255, 255, 30)
     speed = speed or 6
@@ -440,6 +1065,31 @@ function panelMeta:CircleExpandHover(col, speed)
     end)
 end
 
+--[[
+    Purpose:
+        Draws a directional gradient overlay with optional inversion.
+
+    Parameters:
+        col (Color)
+            The gradient tint color.
+        dir (number|nil)
+            The gradient direction constant.
+        frac (number|nil)
+            The fraction of the panel covered by the gradient.
+        op (boolean|nil)
+            Whether to invert the gradient material direction.
+
+    Returns:
+        nil
+
+    Example Usage:
+        ```lua
+        panel:Gradient(Color(0, 0, 0, 180), BOTTOM, 1)
+        ```
+
+    Realm:
+        Client
+]]
 function panelMeta:Gradient(col, dir, frac, op)
     dir = dir or BOTTOM
     frac = frac or 1
@@ -468,10 +1118,52 @@ function panelMeta:Gradient(col, dir, frac, op)
     end)
 end
 
+--[[
+    Purpose:
+        Opens the provided URL when the panel is clicked.
+
+    Parameters:
+        url (string)
+            The URL to open in the user's browser.
+
+    Returns:
+        nil
+
+    Example Usage:
+        ```lua
+        panel:SetOpenURL("https://example.com")
+        ```
+
+    Realm:
+        Client
+]]
 function panelMeta:SetOpenURL(url)
     self:On("DoClick", function() gui.OpenURL(url) end)
 end
 
+--[[
+    Purpose:
+        Sends a client-to-server net message when the panel is clicked.
+
+    Parameters:
+        name (string)
+            The net message name.
+        data (function|nil)
+            A callback that writes additional payload data into the net message.
+
+    Returns:
+        nil
+
+    Example Usage:
+        ```lua
+        button:NetMessage("liaRequestAction", function()
+            net.WriteUInt(1, 8)
+        end)
+        ```
+
+    Realm:
+        Client
+]]
 function panelMeta:NetMessage(name, data)
     data = data or function() end
     self:On("DoClick", function()
@@ -481,6 +1173,29 @@ function panelMeta:NetMessage(name, data)
     end)
 end
 
+--[[
+    Purpose:
+        Docks the panel with optional uniform margin and parent invalidation.
+
+    Parameters:
+        dock (number|nil)
+            The docking mode such as `FILL` or `TOP`.
+        margin (number|nil)
+            A uniform dock margin.
+        dontInvalidate (boolean|nil)
+            Whether to skip invalidating the parent layout.
+
+    Returns:
+        nil
+
+    Example Usage:
+        ```lua
+        panel:Stick(TOP, 4)
+        ```
+
+    Realm:
+        Client
+]]
 function panelMeta:Stick(dock, margin, dontInvalidate)
     dock = dock or FILL
     margin = margin or 0
@@ -489,31 +1204,143 @@ function panelMeta:Stick(dock, margin, dontInvalidate)
     if not dontInvalidate then self:InvalidateParent(true) end
 end
 
+--[[
+    Purpose:
+        Sets the panel height to a fraction of a target panel's height.
+
+    Parameters:
+        frac (number|nil)
+            The divisor used for the target height.
+        target (Panel|nil)
+            The panel whose height is used as the source measurement.
+
+    Returns:
+        nil
+
+    Example Usage:
+        ```lua
+        panel:DivTall(3, parent)
+        ```
+
+    Realm:
+        Client
+]]
 function panelMeta:DivTall(frac, target)
     frac = frac or 2
     target = target or self:GetParent()
     self:SetTall(target:GetTall() / frac)
 end
 
+--[[
+    Purpose:
+        Sets the panel width to a fraction of a target panel's width.
+
+    Parameters:
+        frac (number|nil)
+            The divisor used for the target width.
+        target (Panel|nil)
+            The panel whose width is used as the source measurement.
+
+    Returns:
+        nil
+
+    Example Usage:
+        ```lua
+        panel:DivWide(2, parent)
+        ```
+
+    Realm:
+        Client
+]]
 function panelMeta:DivWide(frac, target)
     target = target or self:GetParent()
     frac = frac or 2
     self:SetWide(target:GetWide() / frac)
 end
 
+--[[
+    Purpose:
+        Makes the panel square by matching its width to its current height.
+
+    Returns:
+        nil
+
+    Example Usage:
+        ```lua
+        panel:SquareFromHeight()
+        ```
+
+    Realm:
+        Client
+]]
 function panelMeta:SquareFromHeight()
     self:SetWide(self:GetTall())
 end
 
+--[[
+    Purpose:
+        Makes the panel square by matching its height to its current width.
+
+    Returns:
+        nil
+
+    Example Usage:
+        ```lua
+        panel:SquareFromWidth()
+        ```
+
+    Realm:
+        Client
+]]
 function panelMeta:SquareFromWidth()
     self:SetTall(self:GetWide())
 end
 
+--[[
+    Purpose:
+        Removes a target panel when this panel is clicked.
+
+    Parameters:
+        target (Panel|nil)
+            The panel to remove, or this panel when omitted.
+
+    Returns:
+        nil
+
+    Example Usage:
+        ```lua
+        closeButton:SetRemove(frame)
+        ```
+
+    Realm:
+        Client
+]]
 function panelMeta:SetRemove(target)
     target = target or self
     self:On("DoClick", function() if IsValid(target) then target:Remove() end end)
 end
 
+--[[
+    Purpose:
+        Fades the panel in from alpha `0` to a target opacity.
+
+    Parameters:
+        time (number|nil)
+            The fade duration in seconds.
+        alpha (number|nil)
+            The target alpha value.
+
+    Returns:
+        nil
+
+    Example Usage:
+        ```lua
+        panel:FadeIn(0.25, 255)
+        ```
+
+    Realm:
+        Client
+]]
 function panelMeta:FadeIn(time, alpha)
     time = time or 0.2
     alpha = alpha or 255
@@ -521,32 +1348,153 @@ function panelMeta:FadeIn(time, alpha)
     self:AlphaTo(alpha, time)
 end
 
+--[[
+    Purpose:
+        Hides and collapses a scroll panel's vertical scrollbar.
+
+    Returns:
+        nil
+
+    Example Usage:
+        ```lua
+        scrollPanel:HideVBar()
+        ```
+
+    Realm:
+        Client
+]]
 function panelMeta:HideVBar()
     local vbar = self:GetVBar()
     vbar:SetWide(0)
     vbar:Hide()
 end
 
+--[[
+    Purpose:
+        Sets the default predicate used by transition helpers.
+
+    Parameters:
+        fn (function)
+            The predicate callback used by `SetupTransition`.
+
+    Returns:
+        Panel
+            The current panel for chaining.
+
+    Example Usage:
+        ```lua
+        panel:SetTransitionFunc(function(s) return s:IsHovered() end)
+        ```
+
+    Realm:
+        Client
+]]
 function panelMeta:SetTransitionFunc(fn)
     self.TransitionFunc = fn
+    return self
 end
 
+--[[
+    Purpose:
+        Clears the default predicate override used by transition helpers.
+
+    Returns:
+        Panel
+            The current panel for chaining.
+
+    Example Usage:
+        ```lua
+        panel:ClearTransitionFunc()
+        ```
+
+    Realm:
+        Client
+]]
 function panelMeta:ClearTransitionFunc()
     self.TransitionFunc = nil
+    return self
 end
 
+--[[
+    Purpose:
+        Overrides which panel method `On` appends to.
+
+    Parameters:
+        fn (string)
+            The method name that `On` should use until cleared.
+
+    Returns:
+        Panel
+            The current panel for chaining.
+
+    Example Usage:
+        ```lua
+        panel:SetAppendOverwrite("PaintOver")
+        ```
+
+    Realm:
+        Client
+]]
 function panelMeta:SetAppendOverwrite(fn)
     self.AppendOverwrite = fn
+    return self
 end
 
+--[[
+    Purpose:
+        Clears the temporary method override used by `On`.
+
+    Returns:
+        Panel
+            The current panel for chaining.
+
+    Example Usage:
+        ```lua
+        panel:ClearAppendOverwrite()
+        ```
+
+    Realm:
+        Client
+]]
 function panelMeta:ClearAppendOverwrite()
     self.AppendOverwrite = nil
+    return self
 end
 
+--[[
+    Purpose:
+        Removes the panel `Paint` function.
+
+    Returns:
+        nil
+
+    Example Usage:
+        ```lua
+        panel:ClearPaint()
+        ```
+
+    Realm:
+        Client
+]]
 function panelMeta:ClearPaint()
     self.Paint = nil
 end
 
+--[[
+    Purpose:
+        Prepares a textbox for paint-over transitions while editing.
+
+    Returns:
+        nil
+
+    Example Usage:
+        ```lua
+        textEntry:ReadyTextbox()
+        ```
+
+    Realm:
+        Client
+]]
 function panelMeta:ReadyTextbox()
     self:SetPaintBackground(false)
     self:SetAppendOverwrite("PaintOver"):SetTransitionFunc(function(s) return s:IsEditing() end)

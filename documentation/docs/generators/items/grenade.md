@@ -5,7 +5,7 @@ Create explosive or utility throwable items backed by grenade or weapon entities
 Output Location:
 
 ```text
-garrysmod/gamemodes/[schema folder]/schema/items/grenade/[item_id].lua
+garrysmod/gamemodes/[schema folder]/schema/definitions/sh_items.lua
 ```
 
 <div class="generator-grid">

@@ -5,7 +5,7 @@ Create consumable items that restore health, armor, stamina, or similar survival
 Output Location:
 
 ```text
-garrysmod/gamemodes/[schema folder]/schema/items/aid/[item_id].lua
+garrysmod/gamemodes/[schema folder]/schema/definitions/sh_items.lua
 ```
 
 <div class="generator-grid">
