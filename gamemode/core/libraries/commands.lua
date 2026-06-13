@@ -1105,122 +1105,6 @@ else
         end
     end)
 
-    local function getPreviewFont(face, size, weight, italic)
-        local fontName = "liaFontPreview." .. util.CRC(table.concat({face or "", size or 0, weight or 500, italic and 1 or 0}, ":"))
-        if not lia.font.stored[fontName] then
-            lia.font.register(fontName, {
-                font = face,
-                size = size,
-                extended = true,
-                antialias = true,
-                weight = weight or 500,
-                italic = italic or false
-            })
-        end
-
-        return fontName
-    end
-
-    function lia.command.openFontTester()
-        if IsValid(lia.gui.fontTester) then lia.gui.fontTester:Remove() end
-        local theme = lia.color and lia.color.theme or {}
-        local textColor = theme.text or color_white
-        local accentColor = theme.theme or theme.accent or Color(255, 255, 255)
-        local frame = vgui.Create("liaFrame")
-        lia.gui.fontTester = frame
-        frame:SetTitle("")
-        frame:SetCenterTitle("Font Tester")
-        frame:SetSize(math.min(ScrW() * 0.8, 960), math.min(ScrH() * 0.82, 760))
-        frame:Center()
-        frame:MakePopup()
-        local scroll = vgui.Create("liaScrollPanel", frame)
-        scroll:Dock(FILL)
-        scroll:DockMargin(10, 36, 10, 10)
-        local sampleText = "The quick brown fox jumps over the lazy dog 0123456789"
-        local content = scroll.GetCanvas and scroll:GetCanvas() or scroll
-        local seenFaces = {}
-        local function addHeader(title, subtitle)
-            local panel = vgui.Create("DPanel", content)
-            panel:Dock(TOP)
-            panel:DockMargin(0, 0, 0, 10)
-            panel:SetTall(subtitle and 56 or 34)
-            panel.Paint = function(_, _, _)
-                draw.SimpleText(title, "LiliaFont.22b", 4, 8, textColor, TEXT_ALIGN_LEFT, TEXT_ALIGN_TOP)
-                if subtitle then draw.SimpleText(subtitle, "LiliaFont.16", 4, 32, ColorAlpha(textColor, 180), TEXT_ALIGN_LEFT, TEXT_ALIGN_TOP) end
-            end
-        end
-
-        local function addSampleRow(label, fontName, text)
-            local panel = vgui.Create("DPanel", content)
-            panel:Dock(TOP)
-            panel:DockMargin(0, 0, 0, 8)
-            panel:SetTall(80)
-            panel.Paint = function(_, w, h)
-                lia.derma.rect(0, 0, w, h):Rad(8):Color(Color(0, 0, 0, 80)):Draw()
-                lia.derma.rect(0, 0, w, h):Rad(8):Color(ColorAlpha(accentColor, 40)):Outline(1):Draw()
-            end
-
-            local name = vgui.Create("DLabel", panel)
-            name:Dock(TOP)
-            name:DockMargin(12, 10, 12, 2)
-            name:SetFont("LiliaFont.16b")
-            name:SetText(label)
-            name:SetTextColor(textColor)
-            name:SetTall(18)
-            local preview = vgui.Create("DLabel", panel)
-            preview:Dock(FILL)
-            preview:DockMargin(12, 0, 12, 10)
-            preview:SetWrap(true)
-            preview:SetAutoStretchVertical(true)
-            preview:SetFont(fontName)
-            preview:SetText(text or sampleText)
-            preview:SetTextColor(textColor)
-        end
-
-        local mainFont = lia.config.get("Font", "Montserrat Medium")
-        local hudFont = lia.config.get("HUDFont", "Montserrat Medium")
-        addHeader("Configured Fonts", "Current main and HUD font faces used by the schema.")
-        for _, faceData in ipairs({
-            {
-                label = "Main Font Face",
-                face = mainFont,
-                size = 26,
-                weight = 500
-            },
-            {
-                label = "Main Bold Face",
-                face = lia.font.getBoldFontName(mainFont),
-                size = 26,
-                weight = 700
-            },
-            {
-                label = "HUD Font Face",
-                face = hudFont,
-                size = 26,
-                weight = 500
-            },
-            {
-                label = "HUD Bold Face",
-                face = lia.font.getBoldFontName(hudFont),
-                size = 26,
-                weight = 700
-            }
-        }) do
-            addSampleRow(faceData.label .. "  [" .. faceData.face .. "]", getPreviewFont(faceData.face, faceData.size, faceData.weight, false))
-            seenFaces[faceData.face] = true
-        end
-
-        addHeader("Generated Aliases", "Common Lilia font aliases for regular, bold, italic, and HUD variants.")
-        for _, fontName in ipairs({"LiliaFont.14", "LiliaFont.18", "LiliaFont.24", "LiliaFont.32", "LiliaFont.18b", "LiliaFont.24b", "LiliaFont.18i", "HUDFont.18", "HUDFont.24", "HUDFont.18b", "HUDFont.24i"}) do
-            addSampleRow(fontName, fontName)
-        end
-
-        addHeader("Available Font Faces", "Raw registered faces discovered from the font library.")
-        for _, face in ipairs(lia.font.getAvailableFonts()) do
-            if not seenFaces[face] then addSampleRow(face, getPreviewFont(face, 24, 500, false)) end
-        end
-    end
-
     concommand.Add("lia_saved_sounds", function()
         local baseDir = "lilia/websounds/"
         local files = file.Find(baseDir .. "**", "DATA")
@@ -7413,16 +7297,6 @@ lia.command.add("previewchatmessages", {
         ClientAddTextShadowed(client, Color(123, 104, 238), "SIT", Color(255, 255, 255), " | " .. ts .. " | Teleport preview to sit room.")
         ClientAddText(client, Color(200, 200, 200), "[Preview] ", Color(255, 255, 255), "Non-shadowed chat line for comparison.")
         client:notifySuccessLocalized("previewMessagesSent")
-    end
-})
-
-lia.command.add("fonttest", {
-    desc = "Open the font tester menu.",
-    alias = {"fonts", "testfonts"},
-    onRun = function(client)
-        if not IsValid(client) then return end
-        net.Start("liaOpenFontTester")
-        net.Send(client)
     end
 })
 

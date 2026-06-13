@@ -3332,7 +3332,6 @@ LANGUAGE = {
     availableFonts = "Disponible fonts",
     missingFonts = "Missing fonts",
     chooseLiliaTheme = "Choose a lilia theme...",
-    systemFontsNotAvailable = "Advertencia: system.GetFonts() not disponible, usando fallback font testing method.",
     fontCheckNote = "Note: Fonts are checked against system font lista o por testing font creation.",
     fontMontserratBold = "Montserrat Bold",
     fontMontserratMedium = "Montserrat Medium",

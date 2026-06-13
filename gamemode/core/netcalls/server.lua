@@ -1428,6 +1428,7 @@ net.Receive("liaGroupsAdd", function(_, p)
     if not p:hasPrivilege("manageUsergroups") then return end
     local data = net.ReadTable()
     local n = string.Trim(tostring(data.name or ""))
+    local icon = string.Trim(tostring(data.icon or ""))
     if n == "" then return end
     lia.admin.groups = lia.admin.groups or {}
     if lia.admin.DefaultGroups and lia.admin.DefaultGroups[n] then
@@ -1440,7 +1441,8 @@ net.Receive("liaGroupsAdd", function(_, p)
         _info = {
             inheritance = data.inherit or "user",
             types = data.types or {}
-        }
+        },
+        icon = icon ~= "" and icon or nil
     })
 
     lia.admin.save()

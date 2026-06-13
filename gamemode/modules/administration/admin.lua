@@ -74,8 +74,8 @@ lia.config.add("DefaultUserGroup", "Default User Group", "user", nil, {
     end
 })
 
-lia.config.add("ShowUsergroupIcons", "Show Usergroup Icons", true, nil, {
-    desc = "Displays icon16 usergroup icons in OOC/LOOC chat and usergroup tabs.",
+lia.config.add("ShowUsergroupIcons", "OOC/LOOC Icon Message", true, nil, {
+    desc = "Displays icon16 usergroup icons in OOC/LOOC messages and usergroup tabs.",
     category = "@userGroups",
     type = "Boolean"
 })
@@ -1525,12 +1525,14 @@ else
         lia.derma.requestArguments(L("create") .. " " .. L("group"), {
             Name = "string",
             Inheritance = {"table", {"user", "admin", "superadmin"}},
+            IconPNG = "string",
             Staff = "boolean",
             User = "boolean",
             VIP = "boolean"
         }, function(success, data)
             if not success then return end
             local name = string.Trim(tostring(data.Name or ""))
+            local icon = string.Trim(tostring(data.IconPNG or ""))
             if name == "" then return end
             local types = {}
             if data.Staff then types[#types + 1] = "Staff" end
@@ -1540,7 +1542,8 @@ else
             net.WriteTable({
                 name = name,
                 inherit = data.Inheritance or "user",
-                types = types
+                types = types,
+                icon = icon
             })
 
             net.SendToServer()
@@ -1550,11 +1553,23 @@ else
     local function buildPrivilegeList(container, g, groups, editable)
         local current = table.Copy(groups[g] or {})
         current._info = nil
+        if not editable then
+            local disclaimer = container:Add("DLabel")
+            disclaimer:Dock(TOP)
+            disclaimer:DockMargin(12, 12, 12, 8)
+            disclaimer:SetFont("LiliaFont.17")
+            disclaimer:SetTextColor(Color(220, 160, 90))
+            disclaimer:SetWrap(true)
+            disclaimer:SetAutoStretchVertical(true)
+            disclaimer:SetContentAlignment(5)
+            disclaimer:SetText(L("baseUsergroupCannotBeEditedDesc"))
+        end
+
         local scrollPanel = container:Add("liaScrollPanel")
         scrollPanel:Dock(FILL)
         local list = scrollPanel:Add("DListLayout")
         list:Dock(TOP)
-        list:DockMargin(12, 12, 12, 12)
+        list:DockMargin(12, editable and 12 or 4, 12, 12)
         lia.gui.usergroups.checks = lia.gui.usergroups.checks or {}
         lia.gui.usergroups.checks[g] = lia.gui.usergroups.checks[g] or {}
         local function addRow(name)

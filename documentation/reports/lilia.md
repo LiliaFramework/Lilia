@@ -174,7 +174,6 @@ Count: 9 functions
 - `lia.command.extractArgs(text)`
 - `lia.command.hasAccess(client, command, data)`
 - `lia.command.openArgumentPrompt(cmdKey, missing, prefix, definitions)`
-- `lia.command.openFontTester()`
 - `lia.command.parse(client, text, realCommand, arguments)`
 - `lia.command.run(client, command, arguments)`
 - `lia.command.send(command, ...)`
@@ -1331,7 +1330,6 @@ These string literals are stored in localization-by-convention fields (e.g. `ITE
 | Field | Issue | Value | File | Line |
 |---|---|---|---|---:|
 | `data.category` | Unlocalized string | `.. lia.db.convertDataType(category),` | modules\administration\submodules\logs\libraries\server.lua | 16 |
-| `data.desc` | Unlocalized string | `Open the font tester menu.` | core\libraries\commands.lua | 7420 |
 | `data.desc` | Unlocalized string | `Usergroup assigned to players when Lilia does not already have one stored for their SteamID.` | modules\administration\admin.lua | 34 |
 | `lia.config.add:name` | Unlocalized string | `Default User Group` | modules\administration\admin.lua | 33 |
 

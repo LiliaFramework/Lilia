@@ -3332,7 +3332,6 @@ LANGUAGE = {
     availableFonts = "Доступно шрифты",
     missingFonts = "Отсутствует шрифты",
     chooseLiliaTheme = "Выбрать lilia тема...",
-    systemFontsNotAvailable = "Предупреждение: система.GetFonts() не доступно, использование резервное шрифт тестирование method.",
     fontCheckNote = "Заметка: Шрифты: checked against система шрифт список или от тестирование шрифт создание.",
     fontMontserratBold = "Montserrat Bold",
     fontMontserratMedium = "Montserrat Medium",

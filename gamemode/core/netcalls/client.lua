@@ -1587,8 +1587,4 @@ net.Receive("BodygrouperMenu", function()
 end)
 
 net.Receive("BodygrouperMenuCloseClientside", function() if IsValid(lia.gui.bodygroupMenu) then lia.gui.bodygroupMenu:Remove() end end)
-net.Receive("liaOpenFontTester", function()
-    if lia.command and isfunction(lia.command.openFontTester) then lia.command.openFontTester() end
-end)
-
 netstream.Hook("liaSyncGesture", function(entity, a, b, c) if IsValid(entity) then entity:AnimRestartGesture(a, b, c) end end)
