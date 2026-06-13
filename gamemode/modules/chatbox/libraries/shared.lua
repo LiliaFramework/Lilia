@@ -1,4 +1,4 @@
-lia.chat.register("ic", {
+﻿lia.chat.register("ic", {
     arguments = {
         {
             name = "text",
@@ -225,25 +225,7 @@ lia.chat.register("looc", {
 
         speaker.liaLastLOOC = CurTime()
     end,
-    onChatAdd = function(speaker, text)
-        local iconObj
-        if IsValid(speaker) and speaker:IsPlayer() then
-            local iconPath = hook.Run("GetUsergroupIcon", speaker:GetUserGroup())
-            if iconPath then
-                iconObj = {
-                    GetName = function() return iconPath end,
-                    Width = function() return 16 end,
-                    Height = function() return 16 end
-                }
-            end
-        end
-
-        if iconObj then
-            chat.AddText((lia.color.theme and lia.color.theme.text) or Color(210, 235, 235), "[" .. L("looc") .. "] ", iconObj, " ", (lia.color.theme and lia.color.theme.chat) or Color(255, 239, 150), speaker:Name(), ": " .. text)
-        else
-            chat.AddText((lia.color.theme and lia.color.theme.text) or Color(210, 235, 235), "[" .. L("looc") .. "] ", (lia.color.theme and lia.color.theme.chat) or Color(255, 239, 150), speaker:Name(), ": " .. text)
-        end
-    end,
+    onChatAdd = function(speaker, text) chat.AddText((lia.color.theme and lia.color.theme.text) or Color(210, 235, 235), "[" .. L("looc") .. "] ", (lia.color.theme and lia.color.theme.chat) or Color(255, 239, 150), speaker:Name(), ": " .. text) end,
     onCanHear = function(speaker, listener)
         if speaker == listener then return true end
         if speaker:EyePos():Distance(listener:EyePos()) <= lia.config.get("TalkRange", 280) then return true end
@@ -376,25 +358,7 @@ lia.chat.register("ooc", {
         speaker.liaLastOOC = CurTime()
     end,
     onCanHear = function() return true end,
-    onChatAdd = function(speaker, text)
-        local iconObj
-        if IsValid(speaker) and speaker:IsPlayer() then
-            local iconPath = hook.Run("GetUsergroupIcon", speaker:GetUserGroup())
-            if iconPath then
-                iconObj = {
-                    GetName = function() return iconPath end,
-                    Width = function() return 16 end,
-                    Height = function() return 16 end
-                }
-            end
-        end
-
-        if iconObj then
-            chat.AddText((lia.color.theme and lia.color.theme.text) or Color(210, 235, 235), " [" .. L("ooc") .. "] ", iconObj, " ", (lia.color.theme and lia.color.theme.chat) or Color(255, 239, 150), speaker:Name(), ": " .. text)
-        else
-            chat.AddText((lia.color.theme and lia.color.theme.text) or Color(210, 235, 235), " [" .. L("ooc") .. "] ", (lia.color.theme and lia.color.theme.chat) or Color(255, 239, 150), speaker:Name(), ": " .. text)
-        end
-    end,
+    onChatAdd = function(speaker, text) chat.AddText((lia.color.theme and lia.color.theme.text) or Color(210, 235, 235), " [" .. L("ooc") .. "] ", (lia.color.theme and lia.color.theme.chat) or Color(255, 239, 150), speaker:Name(), ": " .. text) end,
     prefix = {"//", "/ooc"},
     noSpaceAfter = true,
     filter = "ooc"

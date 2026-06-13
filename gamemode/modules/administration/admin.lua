@@ -1,4 +1,4 @@
-lia.admin = lia.admin or {}
+﻿lia.admin = lia.admin or {}
 lia.admin.groups = lia.admin.groups or {}
 lia.admin.privileges = lia.admin.privileges or {}
 lia.admin.privilegeCategories = lia.admin.privilegeCategories or {}
@@ -14,15 +14,6 @@ lia.admin.DefaultGroups = {
     admin = 2,
     superadmin = 3
 }
-
-hook.Add("GetUsergroupIcon", "liaDefaultGroupIcons", function(groupName)
-    local defaults = {
-        ["user"] = "icon16/user.png",
-        ["admin"] = "icon16/star.png",
-        ["superadmin"] = "icon16/shield.png"
-    }
-    return defaults[tostring(groupName)] or "icon16/user.png"
-end)
 
 local defaultUserTools = {
     remover = true,
@@ -1665,8 +1656,7 @@ else
             privContainer:DockMargin(20, 20, 20, 20)
             privContainer.Paint = function() end
             buildPrivilegeList(privContainer, groupName, groups, editable)
-            local iconPath = hook.Run("GetUsergroupIcon", groupName) or "icon16/user.png"
-            local tabData = tabs:AddTab(groupName, tabPanel, iconPath)
+            local tabData = tabs:AddTab(groupName, tabPanel)
             tabData.groupName = groupName
             return tabData
         end
