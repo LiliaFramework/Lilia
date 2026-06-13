@@ -1,4 +1,4 @@
-NAME = "Русский"
+﻿NAME = "Русский"
 LANGUAGE = {
     mustProvideString = "Необходимо указать строку",
     use = "Использовать",

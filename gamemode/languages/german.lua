@@ -1,4 +1,4 @@
-NAME = "Deutsch"
+﻿NAME = "Deutsch"
 LANGUAGE = {
     mustProvideString = "Muss eine Zeichenkette angeben",
     use = "Benutzen",

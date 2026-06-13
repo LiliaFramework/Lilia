@@ -37,10 +37,7 @@ end
 function lia.admin.getUsergroupIcon(groupOrPlayer)
     if not lia.admin.shouldShowUsergroupIcons() then return nil end
     local groupName = groupOrPlayer
-    if IsValid(groupOrPlayer) and groupOrPlayer:IsPlayer() then
-        groupName = groupOrPlayer:GetUserGroup()
-    end
-
+    if IsValid(groupOrPlayer) and groupOrPlayer:IsPlayer() then groupName = groupOrPlayer:GetUserGroup() end
     groupName = string.Trim(tostring(groupName or ""))
     if groupName == "" then return "icon16/group.png" end
     local groupData = lia.admin.groups and lia.admin.groups[groupName] or nil

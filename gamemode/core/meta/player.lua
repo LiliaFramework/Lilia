@@ -1,4 +1,4 @@
---[[
+﻿--[[
     Folder: Developer - Meta Tables
     File: player.md
 ]]
@@ -15,7 +15,6 @@ local playerMeta = FindMetaTable("Player")
 do
     playerMeta.steamName = playerMeta.steamName or playerMeta.Name
     playerMeta.SteamName = playerMeta.steamName
-
     --[[
         Purpose:
             Returns the currently loaded character attached to this player.

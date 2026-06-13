@@ -1,4 +1,4 @@
---[[
+﻿--[[
     Folder: Developer - Meta Tables
     File: character.md
 ]]
