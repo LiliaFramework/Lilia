@@ -1,4 +1,4 @@
---[[
+﻿--[[
     Folder: Developer - Libraries
     File: lia.currency.md
 ]]
@@ -15,7 +15,6 @@ lia.currency = lia.currency or {}
 lia.currency.singular = lia.lang.resolveToken(lia.config.get("CurrencySingularName", "@currencySingular"))
 lia.currency.plural = lia.lang.resolveToken(lia.config.get("CurrencyPluralName", "@currencyPlural"))
 lia.currency.symbol = ""
-
 --[[
     Purpose:
         Formats a numeric amount into the active in-game currency string.

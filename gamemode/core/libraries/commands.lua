@@ -1117,7 +1117,6 @@ else
                 italic = italic or false
             })
         end
-
         return fontName
     end
 
