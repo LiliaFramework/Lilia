@@ -1,4 +1,4 @@
-﻿NAME = "Français"
+NAME = "Français"
 LANGUAGE = {
     mustProvideString = "Vous devez fournir une chaîne",
     use = "Utiliser",
@@ -68,7 +68,7 @@ LANGUAGE = {
     weaponOverrideUpdated = "%s mis à jour avec succès pour %s",
     modelUpdatedOnRespawn = "Modèle mis à jour. S’appliquera à la réapparition.",
     listedEntitiesWithinRadius = "%s entités listées dans un rayon de %s unités",
-    removedPoint = "Point supprimé avec succès",
+    removedPoint = "Point supprimé avec succès : %s",
     pointNumber = "Point %s",
     points = "Points",
     removeThing = "Supprimer %s",

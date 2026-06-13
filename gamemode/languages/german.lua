@@ -1,4 +1,4 @@
-﻿NAME = "Deutsch"
+NAME = "Deutsch"
 LANGUAGE = {
     mustProvideString = "Muss eine Zeichenkette angeben",
     use = "Benutzen",
@@ -68,7 +68,7 @@ LANGUAGE = {
     weaponOverrideUpdated = "%s für %s erfolgreich aktualisiert",
     modelUpdatedOnRespawn = "Modell aktualisiert. Wird beim Respawn angewendet.",
     listedEntitiesWithinRadius = "%s Entitäten innerhalb von %s Einheiten aufgelistet",
-    removedPoint = "Punkt erfolgreich entfernt",
+    removedPoint = "%s erfolgreich entfernt",
     pointNumber = "Punkt %s",
     points = "Punkte",
     removeThing = "%s entfernen",

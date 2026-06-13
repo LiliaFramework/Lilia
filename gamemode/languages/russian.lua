@@ -1,4 +1,4 @@
-﻿NAME = "Русский"
+NAME = "Русский"
 LANGUAGE = {
     mustProvideString = "Необходимо указать строку",
     use = "Использовать",
@@ -68,7 +68,7 @@ LANGUAGE = {
     weaponOverrideUpdated = "Успешно обновлено %s для %s",
     modelUpdatedOnRespawn = "Модель обновлена. Будет применена при респавне.",
     listedEntitiesWithinRadius = "Выведено сущностей: %s в радиусе %s ед.",
-    removedPoint = "Sucessfully Удалено Точка",
+    removedPoint = "Точка успешно удалена: %s",
     pointNumber = "Точка %s",
     points = "Точки",
     removeThing = "Удалить %s",
