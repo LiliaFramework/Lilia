@@ -230,7 +230,7 @@ lia.chat.register("looc", {
         local name = hook.Run("GetDisplayedName", speaker, "looc") or IsValid(speaker) and speaker:Name() or L("console")
         local iconPath = hook.Run("GetUsergroupIcon", IsValid(speaker) and speaker:GetUserGroup() or nil, nil, speaker)
         if isstring(iconPath) and iconPath ~= "" then
-            chat.AddText(lia.util.getMaterial(iconPath), (lia.color.theme and lia.color.theme.text) or Color(210, 235, 235), " [" .. L("looc") .. "] ", chatColor, name, ": " .. text)
+            chat.AddText((lia.color.theme and lia.color.theme.text) or Color(210, 235, 235), "[" .. L("looc") .. "] ", lia.util.getMaterial(iconPath), " ", chatColor, name, ": " .. text)
             return
         end
 
@@ -373,7 +373,7 @@ lia.chat.register("ooc", {
         local name = hook.Run("GetDisplayedName", speaker, "ooc") or IsValid(speaker) and speaker:Name() or L("console")
         local iconPath = hook.Run("GetUsergroupIcon", IsValid(speaker) and speaker:GetUserGroup() or nil, nil, speaker)
         if isstring(iconPath) and iconPath ~= "" then
-            chat.AddText(lia.util.getMaterial(iconPath), (lia.color.theme and lia.color.theme.text) or Color(210, 235, 235), " [" .. L("ooc") .. "] ", chatColor, name, ": " .. text)
+            chat.AddText((lia.color.theme and lia.color.theme.text) or Color(210, 235, 235), "[" .. L("ooc") .. "] ", lia.util.getMaterial(iconPath), " ", chatColor, name, ": " .. text)
             return
         end
 
