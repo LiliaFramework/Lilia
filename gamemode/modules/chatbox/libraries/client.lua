@@ -121,6 +121,5 @@ function MODULE:ChatAddText(text, ...)
             end
         end
     end
-
     return "<font=LiliaFont.24>"
 end
