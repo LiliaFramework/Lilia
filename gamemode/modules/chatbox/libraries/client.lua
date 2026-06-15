@@ -107,18 +107,20 @@ end
 function MODULE:ChatAddText(text, ...)
     if not lia.config.get("ChatSizeDiff", false) then return text end
     local chatArgs = {...}
-    local chatMode = #chatArgs <= 4 and chatArgs[2] or chatArgs[3]
-    if not chatMode or istable(chatMode) then return "<font=LiliaFont.22>" end
-    chatMode = string.lower(chatMode)
-    if string.find(chatMode, "yell", 1, true) then
-        return "<font=LiliaFont.26b>"
-    elseif string.sub(chatMode, 1, 2) == "**" then
-        return "<font=LiliaFont.23i>"
-    elseif string.find(chatMode, "whisper", 1, true) then
-        return "<font=LiliaFont.20>"
-    elseif string.find(chatMode, "ooc", 1, true) or string.find(chatMode, "looc", 1, true) then
-        return "<font=LiliaFont.22>"
-    else
-        return "<font=LiliaFont.24>"
+    for _, chatArg in ipairs(chatArgs) do
+        if isstring(chatArg) then
+            local lowered = string.lower(chatArg)
+            if string.find(lowered, "yell", 1, true) then
+                return "<font=LiliaFont.26b>"
+            elseif string.sub(chatArg, 1, 2) == "**" then
+                return "<font=LiliaFont.23i>"
+            elseif string.find(lowered, "whisper", 1, true) then
+                return "<font=LiliaFont.20>"
+            elseif string.find(lowered, "ooc", 1, true) or string.find(lowered, "looc", 1, true) then
+                return "<font=LiliaFont.22>"
+            end
+        end
     end
+
+    return "<font=LiliaFont.24>"
 end
