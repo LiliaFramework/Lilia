@@ -70,6 +70,19 @@ local function announceSAMPermissionChange(rankName, permission, value)
     net.Broadcast()
 end
 
+local function handleImmutableBaseGroupSAMSync(rankName, permission, value)
+    local defaultGroups = lia.admin and lia.admin.DefaultGroups or {}
+    if not defaultGroups[rankName] then return false end
+    local defaultValue = getDefaultPermissionValueForSummary(rankName, permission)
+    if defaultValue == value then
+        lia.debug("[Permissions]", "Skipping SAM sync for immutable base group", "rank=", tostring(rankName), "permission=", tostring(permission), "value=", tostring(value), "reason=matches-default")
+    else
+        local action = value and "grant" or "revoke"
+        lia.warning(string.format("[Lilia] Ignoring SAM request to %s privilege '%s' on immutable base usergroup '%s'. Change does not match default MinAccess behavior.", action, tostring(permission), tostring(rankName)))
+    end
+    return true
+end
+
 local function syncSAMPermission(id, data)
     if not sam or not sam.permissions or not sam.permissions.add then return end
     id = tostring(id or "")
@@ -240,6 +253,7 @@ hook.Add("SAM.RankPermissionGiven", "liaSAMHandlePermissionGiven", function(rank
 
     lia.debug("[Permissions]", "SAM granted rank permission", "rank=", tostring(rankName), "permission=", tostring(permission))
     if SERVER then
+        if handleImmutableBaseGroupSAMSync(rankName, permission, true) then return end
         lia.admin.addPermission(rankName, permission, true)
         announceSAMPermissionChange(rankName, permission, true)
     end
@@ -249,6 +263,7 @@ hook.Add("SAM.RankPermissionTaken", "liaSAMHandlePermissionTaken", function(rank
     if not rankName or not permission then return end
     lia.debug("[Permissions]", "SAM removed rank permission", "rank=", tostring(rankName), "permission=", tostring(permission))
     if SERVER then
+        if handleImmutableBaseGroupSAMSync(rankName, permission, false) then return end
         lia.admin.removePermission(rankName, permission, true)
         announceSAMPermissionChange(rankName, permission, false)
     end

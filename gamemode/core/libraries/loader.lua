@@ -125,7 +125,7 @@ local FilesToLoad = {
         realm = "shared"
     },
     {
-        path = "lilia/gamemode/core/libraries/thirdperson.lua",
+        path = "lilia/gamemode/core/libraries/camera.lua",
         realm = "client"
     },
     {
@@ -274,7 +274,13 @@ local ConditionalFiles = {
         global = "WireLib",
         name = "Wiremod",
         realm = "server"
-    }
+    },
+    {
+        path = "lilia/gamemode/core/libraries/compatibility/vmanip.lua",
+        global = "VManip",
+        name = "VManip",
+        realm = "client"
+    },
 }
 
 function lia.loader.include(path, realm)
