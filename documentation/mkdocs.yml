@@ -71,11 +71,10 @@ nav:
           - Modules: definitions/module.md
       - Items:
           # AUTO-GENERATED: ITEM DEFINITIONS START
-          - Overview: definitions/items/index.md
-          - Item Base Field Reference: definitions/items/base-field-reference.md
           - Aid Item Definition: definitions/items/aid.md
           - Ammo Item Definition: definitions/items/ammo.md
           - ArcCW Attachment Item Definition: definitions/items/arccw_att.md
+          - Item Base Field Reference: definitions/items/base-field-reference.md
           - Books Item Definition: definitions/items/books.md
           - Entity Item Definition: definitions/items/entities.md
           - Grenade Item Definition: definitions/items/grenade.md
