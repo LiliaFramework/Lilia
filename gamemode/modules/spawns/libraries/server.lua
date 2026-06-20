@@ -1,4 +1,24 @@
 ﻿local MODULE = MODULE
+local MAP_SPAWN_CLASSES = {"info_player_start", "info_player_deathmatch", "info_player_counterterrorist", "info_player_terrorist", "info_player_combine", "info_player_rebel", "gmod_player_start", "info_player_axis", "info_player_allies"}
+local function getMapSpawnLocation()
+    local spawns = {}
+    for _, className in ipairs(MAP_SPAWN_CLASSES) do
+        local found = ents.FindByClass(className)
+        for i = 1, #found do
+            local spawn = found[i]
+            if IsValid(spawn) then spawns[#spawns + 1] = spawn end
+        end
+    end
+
+    if #spawns == 0 then return nil end
+    local spawn = table.Random(spawns)
+    if not IsValid(spawn) then return nil end
+    return {
+        pos = spawn:GetPos(),
+        ang = spawn:GetAngles()
+    }
+end
+
 function MODULE:FetchSpawns()
     local d = deferred.new()
     local stored = lia.data.get("spawns", {})
@@ -38,6 +58,22 @@ local function DoSpawnLogic(client, isRespawning)
     if not IsValid(client) then return end
     local character = client:getChar()
     if not character then return end
+    if hook.Run("ShouldUseMapSpawns", client, character, isRespawning) == true then
+        local spawnLocation = getMapSpawnLocation()
+        if spawnLocation then
+            local pos = spawnLocation.pos
+            local ang = spawnLocation.ang
+            if isvector(pos) then
+                pos = pos + Vector(0, 0, 16)
+                client:SetPos(pos)
+            end
+
+            if isangle(ang) then client:SetEyeAngles(ang) end
+            hook.Run("PlayerSpawnPointSelected", client, pos or Vector(0, 0, 16), ang or angle_zero)
+            return
+        end
+    end
+
     if isRespawning then
         local respawnLocation = hook.Run("GetPlayerRespawnLocation", client, character)
         if respawnLocation then
@@ -339,6 +375,14 @@ function MODULE:PostPlayerLoadout(client)
             hook.Run("PlayerSpawnPointSelected", client, pos or Vector(0, 0, 16), ang or angle_zero)
             return
         end
+    end
+
+    if hook.Run("ShouldUseMapSpawns", client, character, client.liaIsRespawning) == true then
+        client.liaSpawnHandled = true
+        local wasRespawning = client.liaIsRespawning
+        client.liaIsRespawning = nil
+        DoSpawnLogic(client, wasRespawning)
+        return
     end
 
     local lastPos = character:getLastPos()
