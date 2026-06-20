@@ -1,0 +1,1271 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Dialog NPC Generator</title>
+    <style>
+        :root {
+            color-scheme: dark;
+            --lilia-bg: #071c1f;
+            --lilia-bg-soft: #0d272b;
+            --lilia-panel: color-mix(in srgb, var(--lilia-bg) 82%, #ffffff 4%);
+            --lilia-panel-strong: #14343a;
+            --lilia-border: color-mix(in srgb, #d9ffff 18%, transparent);
+            --lilia-text: #edf9f8;
+            --lilia-muted: #9fc8c6;
+            --lilia-accent: #28d8ef;
+            --lilia-primary: #00a896;
+            --lilia-primary-dark: #006b62;
+            --lilia-danger: #c85d73;
+            --lilia-warning: #e2b35f;
+            --lilia-shadow: 0 1rem 2.8rem rgba(0, 0, 0, 0.34);
+            --lilia-radius: 14px;
+            --lilia-grid: rgba(40, 216, 239, 0.08);
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        html, body {
+            margin: 0;
+            min-height: 100%;
+            font-family: "IBM Plex Sans", "Segoe UI", sans-serif;
+            background:
+                radial-gradient(circle at top right, rgba(40, 216, 239, 0.14), transparent 24%),
+                radial-gradient(circle at bottom left, rgba(0, 168, 150, 0.12), transparent 28%),
+                linear-gradient(180deg, #06181b 0%, var(--lilia-bg) 100%);
+            color: var(--lilia-text);
+        }
+
+        body {
+            padding: 20px;
+        }
+
+        .app {
+            display: grid;
+            gap: 14px;
+            width: min(100%, 2200px);
+            margin: 0 auto;
+        }
+
+        .topbar {
+            display: flex;
+            justify-content: flex-start;
+        }
+
+        .panel {
+            border: 1px solid var(--lilia-border);
+            border-radius: var(--lilia-radius);
+            background: linear-gradient(180deg, rgba(255, 255, 255, 0.02), rgba(255, 255, 255, 0)), var(--lilia-panel);
+            box-shadow: var(--lilia-shadow);
+        }
+
+        .panel-head {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 10px;
+            padding: 16px 18px 0;
+        }
+
+        .panel-head h2 {
+            margin: 0;
+            font-size: 1.02rem;
+        }
+
+        .panel-head p {
+            margin: 0;
+            color: var(--lilia-muted);
+            font-size: 0.9rem;
+        }
+
+        .panel-body {
+            padding: 16px 18px 18px;
+        }
+
+        .top-fields {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }
+
+        .field {
+            display: grid;
+            gap: 7px;
+        }
+
+        .field label {
+            color: var(--lilia-muted);
+            font-size: 0.82rem;
+            font-weight: 600;
+        }
+
+        input,
+        textarea,
+        select,
+        button {
+            font: inherit;
+        }
+
+        input,
+        textarea,
+        select {
+            width: 100%;
+            border: 1px solid color-mix(in srgb, var(--lilia-accent) 14%, #ffffff 8%);
+            background: rgba(4, 15, 17, 0.5);
+            color: var(--lilia-text);
+            border-radius: 10px;
+            padding: 10px 12px;
+            outline: none;
+        }
+
+        input:focus,
+        textarea:focus,
+        select:focus {
+            border-color: color-mix(in srgb, var(--lilia-accent) 54%, #ffffff 18%);
+            box-shadow: 0 0 0 0.14rem color-mix(in srgb, var(--lilia-accent) 18%, transparent);
+        }
+
+        textarea {
+            min-height: 110px;
+            resize: vertical;
+        }
+
+        .action-bar {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        button {
+            border: 0;
+            border-radius: 10px;
+            padding: 10px 14px;
+            color: var(--lilia-text);
+            background: color-mix(in srgb, var(--lilia-primary) 24%, var(--lilia-panel-strong));
+            cursor: pointer;
+            transition: transform 120ms ease, background-color 120ms ease, box-shadow 120ms ease;
+            box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.03);
+        }
+
+        button:hover {
+            transform: translateY(-1px);
+            background: color-mix(in srgb, var(--lilia-primary) 34%, var(--lilia-panel-strong));
+        }
+
+        button.primary {
+            background: linear-gradient(90deg, var(--lilia-primary), var(--lilia-accent));
+            color: #062427;
+            font-weight: 700;
+        }
+
+        button.primary:hover {
+            background: linear-gradient(90deg, #18c5b4, #5de6f8);
+        }
+
+        button.danger {
+            background: color-mix(in srgb, var(--lilia-danger) 32%, var(--lilia-panel-strong));
+            color: #ffe5ea;
+        }
+
+        .workspace {
+            display: grid;
+            grid-template-columns: minmax(980px, 1fr) 388px;
+            gap: 14px;
+            min-height: 620px;
+        }
+
+        .canvas-wrap {
+            position: relative;
+            overflow: hidden;
+            min-height: 620px;
+            background:
+                linear-gradient(var(--lilia-grid) 1px, transparent 1px),
+                linear-gradient(90deg, var(--lilia-grid) 1px, transparent 1px),
+                linear-gradient(180deg, rgba(255, 255, 255, 0.02), rgba(255, 255, 255, 0)),
+                #0a1f23;
+            background-size: 48px 48px, 48px 48px, auto, auto;
+        }
+
+        #connections {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+        }
+
+        #nodeCanvas {
+            position: absolute;
+            inset: 0;
+        }
+
+        .node {
+            position: absolute;
+            width: 228px;
+            min-height: 118px;
+            padding: 14px 44px 14px 14px;
+            border-radius: 12px;
+            border: 1px solid color-mix(in srgb, var(--lilia-accent) 14%, #ffffff 6%);
+            background:
+                linear-gradient(180deg, rgba(255, 255, 255, 0.03), rgba(255, 255, 255, 0)),
+                color-mix(in srgb, var(--lilia-bg-soft) 84%, #ffffff 4%);
+            box-shadow: 0 0.9rem 2rem rgba(0, 0, 0, 0.25);
+            cursor: grab;
+            user-select: none;
+            touch-action: none;
+        }
+
+        .node.selected {
+            outline: 2px solid color-mix(in srgb, var(--lilia-accent) 82%, #ffffff 18%);
+            box-shadow: 0 1rem 2rem rgba(0, 172, 193, 0.22);
+        }
+
+        .node.start::before {
+            content: "";
+            position: absolute;
+            inset: 0 0 auto 0;
+            height: 6px;
+            border-radius: 12px 12px 0 0;
+            background: linear-gradient(90deg, var(--lilia-primary), var(--lilia-accent));
+        }
+
+        .node-title {
+            margin-bottom: 9px;
+            font-weight: 700;
+            font-size: 0.98rem;
+        }
+
+        .node-line {
+            margin-top: 6px;
+            color: var(--lilia-muted);
+            font-size: 0.86rem;
+            line-height: 1.4;
+            max-height: 36px;
+            overflow: hidden;
+        }
+
+        .node-connect {
+            position: absolute;
+            top: 50%;
+            right: 10px;
+            width: 26px;
+            height: 26px;
+            padding: 0;
+            border-radius: 999px;
+            transform: translateY(-50%);
+            background: color-mix(in srgb, var(--lilia-accent) 24%, var(--lilia-panel-strong));
+            color: #dffefe;
+            font-size: 0.95rem;
+            font-weight: 700;
+            line-height: 1;
+        }
+
+        .node-connect.active {
+            background: linear-gradient(90deg, var(--lilia-primary), var(--lilia-accent));
+            color: #062427;
+        }
+
+        .inspector {
+            display: grid;
+            grid-template-rows: auto 1fr auto;
+            gap: 12px;
+        }
+
+        .hint {
+            color: var(--lilia-muted);
+            line-height: 1.5;
+            font-size: 0.9rem;
+        }
+
+        .inspector-fields {
+            display: grid;
+            gap: 10px;
+            align-content: start;
+        }
+
+        .chip-list {
+            display: grid;
+            gap: 8px;
+        }
+
+        .chip {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 10px;
+            padding: 8px 10px;
+            border-radius: 10px;
+            background: rgba(255, 255, 255, 0.04);
+            color: var(--lilia-text);
+        }
+
+        .chip span {
+            font-size: 0.86rem;
+            color: var(--lilia-muted);
+        }
+
+        .chip button {
+            padding: 6px 10px;
+            font-size: 0.8rem;
+        }
+
+        .statusbar {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            gap: 10px;
+            padding-top: 8px;
+            color: var(--lilia-muted);
+            font-size: 0.88rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.06);
+        }
+
+        .output-box {
+            min-height: 280px;
+            font-family: "IBM Plex Mono", "Consolas", monospace;
+            font-size: 0.88rem;
+            line-height: 1.55;
+        }
+
+        .preview-box {
+            display: grid;
+            gap: 12px;
+        }
+
+        .preview-transcript {
+            min-height: 220px;
+            max-height: 420px;
+            overflow: auto;
+            padding: 14px;
+            border-radius: 12px;
+            background: rgba(4, 15, 17, 0.42);
+            border: 1px solid color-mix(in srgb, var(--lilia-accent) 12%, #ffffff 8%);
+        }
+
+        .preview-line {
+            margin-bottom: 10px;
+            padding: 10px 12px;
+            border-radius: 10px;
+            line-height: 1.5;
+        }
+
+        .preview-line strong {
+            display: block;
+            margin-bottom: 4px;
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .preview-line.npc {
+            background: rgba(40, 216, 239, 0.09);
+            border: 1px solid rgba(40, 216, 239, 0.16);
+        }
+
+        .preview-line.player {
+            background: rgba(0, 168, 150, 0.09);
+            border: 1px solid rgba(0, 168, 150, 0.16);
+        }
+
+        .preview-options {
+            display: grid;
+            gap: 10px;
+        }
+
+        .preview-meta {
+            color: var(--lilia-muted);
+            font-size: 0.88rem;
+        }
+
+        .preview-option-label {
+            display: block;
+            font-size: 0.82rem;
+            margin-top: 4px;
+            color: rgba(237, 249, 248, 0.92);
+            font-weight: 600;
+            line-height: 1.35;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        @media (max-width: 1120px) {
+            .workspace {
+                grid-template-columns: 1fr;
+            }
+
+        }
+
+        @media (max-width: 760px) {
+            body {
+                padding: 12px;
+            }
+
+            .top-fields {
+                grid-template-columns: 1fr;
+            }
+
+            .action-bar,
+            .statusbar {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+        }
+    </style>
+</head>
+<body>
+    <div class="app">
+        <div class="topbar">
+            <button type="button" onclick="window.location.href='index.html'">Back To Main Lilia</button>
+        </div>
+
+        <section class="panel">
+            <div class="panel-head">
+                <div>
+                    <h2>Dialog Settings</h2>
+                    <p>Give the dialog a short internal name and a player-facing display name.</p>
+                </div>
+            </div>
+            <div class="panel-body">
+                <div class="top-fields">
+                    <div class="field">
+                        <label for="dialogTypeID">Dialog Type ID</label>
+                        <input id="dialogTypeID" type="text" placeholder="example_npc_dialog">
+                    </div>
+                    <div class="field">
+                        <label for="printName">Display Name</label>
+                        <input id="printName" type="text" placeholder="Example NPC Dialog">
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="panel">
+            <div class="panel-head">
+                <div>
+                    <h2>Actions</h2>
+                    <p>Keep the workflow simple: add nodes, link them, set the start node, and save a browser draft if you want to come back later.</p>
+                </div>
+            </div>
+            <div class="panel-body">
+                <div class="action-bar">
+                    <button id="addNode">Add Node</button>
+                    <button id="createExample">Create Example</button>
+                    <button id="setStart">Set Start Node</button>
+                    <button id="deleteNode" class="danger">Delete Selected</button>
+                    <button id="saveBrowser">Save In Browser</button>
+                    <button id="loadBrowser">Load Browser Save</button>
+                </div>
+            </div>
+        </section>
+
+        <section class="workspace">
+            <section class="panel canvas-wrap" id="canvasWrap">
+                <svg id="connections"></svg>
+                <div id="nodeCanvas"></div>
+            </section>
+
+            <aside class="panel">
+                <div class="panel-body inspector">
+                    <div>
+                        <h2 style="margin:0 0 8px;">Node Details</h2>
+                        <p class="hint">Select a box to edit it. If a faction requirement fails, the requirement message is shown and the conversation stays on the current branch.</p>
+                    </div>
+
+                    <div id="emptyInspector" class="hint">No node selected yet.</div>
+
+                    <div id="inspectorFields" class="inspector-fields hidden">
+                        <div class="field">
+                            <label for="dialogID">Dialog ID</label>
+                            <input id="dialogID" type="text" placeholder="start">
+                        </div>
+                        <div class="field">
+                            <label for="npcText">NPC Text / Dialog Text</label>
+                            <textarea id="npcText" placeholder="NPC line shown when this node is reached"></textarea>
+                        </div>
+                        <div class="field">
+                            <label for="playerText">Player Response Text</label>
+                            <input id="playerText" type="text" placeholder="What the player sees as the reply option">
+                        </div>
+                        <div class="field">
+                            <label for="waypoint">Set Waypoint</label>
+                            <input id="waypoint" type="text" placeholder="Optional waypoint name or Vector(x, y, z)">
+                        </div>
+                        <div class="field">
+                            <label for="swepClass">Give Weapon (SWEP)</label>
+                            <input id="swepClass" type="text" placeholder="Optional weapon class, like weapon_pistol">
+                        </div>
+                        <div class="field">
+                            <label for="factionRequirement">Faction Requirement</label>
+                            <input id="factionRequirement" type="text" placeholder="Optional faction name, uniqueID, or index">
+                        </div>
+                        <div class="field">
+                            <label for="soundPath">Sound For This Dialog</label>
+                            <input id="soundPath" type="text" placeholder="Optional sound path, like vo/npc/example.wav">
+                        </div>
+                        <div class="field">
+                            <label for="requirementMessage">Requirement Dialog Message</label>
+                            <textarea id="requirementMessage" placeholder="Optional message shown if the player does not meet the requirement."></textarea>
+                        </div>
+                        <div>
+                            <label style="display:block; margin-bottom:7px; color:var(--lilia-muted); font-size:0.82rem; font-weight:600;">Connected Child Nodes</label>
+                            <div id="childLinks" class="chip-list"></div>
+                        </div>
+                    </div>
+
+                    <div class="statusbar">
+                        <span id="selectionStatus">Selected: none</span>
+                        <span id="connectStatus">Connection: idle</span>
+                    </div>
+                </div>
+            </aside>
+        </section>
+
+        <section class="panel">
+            <div class="panel-head">
+                <div>
+                    <h2>Lua Ready Export</h2>
+                    <p>This block is ready to copy into a Lilia dialog file.</p>
+                </div>
+            </div>
+            <div class="panel-body">
+                <textarea id="outputText" class="output-box" placeholder="Generated output appears here."></textarea>
+                <div class="action-bar" style="margin-top:12px;">
+                    <button id="refreshOutput" class="primary">Refresh Lua</button>
+                    <button id="copyOutput">Copy Lua</button>
+                    <button id="downloadOutput">Download Lua File</button>
+                    <button id="loadExample">Load Example</button>
+                </div>
+            </div>
+        </section>
+
+        <section class="panel">
+            <div class="panel-head">
+                <div>
+                    <h2>Dialog Preview</h2>
+                    <p>Click through the current dialog tree to test the conversation flow before exporting it.</p>
+                </div>
+            </div>
+            <div class="panel-body preview-box">
+                <div class="top-fields">
+                    <div class="field">
+                        <label for="previewFaction">Preview Faction</label>
+                        <input id="previewFaction" type="text" placeholder="Optional faction name, uniqueID, or index">
+                    </div>
+                    <div class="field">
+                        <label>&nbsp;</label>
+                        <button id="restartPreview" type="button">Restart Preview</button>
+                    </div>
+                </div>
+                <div id="previewMeta" class="preview-meta">Preview is idle.</div>
+                <div id="previewTranscript" class="preview-transcript"></div>
+                <div id="previewOptions" class="preview-options"></div>
+            </div>
+        </section>
+    </div>
+
+    <script>
+        const STORAGE_KEY = "lilia-dialog-npc-generator";
+        const LEGACY_STORAGE_KEY = "lilia-dialog-node-editor";
+        const nodeCanvas = document.getElementById("nodeCanvas");
+        const canvasWrap = document.getElementById("canvasWrap");
+        const connectionsSvg = document.getElementById("connections");
+        const outputText = document.getElementById("outputText");
+        const selectionStatus = document.getElementById("selectionStatus");
+        const connectStatus = document.getElementById("connectStatus");
+        const emptyInspector = document.getElementById("emptyInspector");
+        const inspectorFields = document.getElementById("inspectorFields");
+        const childLinks = document.getElementById("childLinks");
+        const dialogTypeIDInput = document.getElementById("dialogTypeID");
+        const printNameInput = document.getElementById("printName");
+        const previewFactionInput = document.getElementById("previewFaction");
+        const previewMeta = document.getElementById("previewMeta");
+        const previewTranscript = document.getElementById("previewTranscript");
+        const previewOptions = document.getElementById("previewOptions");
+        const inspectorInputs = {
+            dialogID: document.getElementById("dialogID"),
+            npcText: document.getElementById("npcText"),
+            playerText: document.getElementById("playerText"),
+            waypoint: document.getElementById("waypoint"),
+            swepClass: document.getElementById("swepClass"),
+            factionRequirement: document.getElementById("factionRequirement"),
+            soundPath: document.getElementById("soundPath"),
+            requirementMessage: document.getElementById("requirementMessage")
+        };
+
+        const state = {
+            dialogTypeID: "",
+            printName: "",
+            entryNodeID: "",
+            nodes: [],
+            selectedNodeID: "",
+            pendingConnectionID: "",
+            nodeCounter: 0,
+            preview: {
+                currentNodeID: "",
+                history: []
+            }
+        };
+
+        function trim(value) {
+            return String(value ?? "").trim();
+        }
+
+        function escapeLuaString(value) {
+            return `"${String(value ?? "")
+                .replace(/\\/g, "\\\\")
+                .replace(/\r/g, "\\r")
+                .replace(/\n/g, "\\n")
+                .replace(/\t/g, "\\t")
+                .replace(/"/g, '\\"')}"`;
+        }
+
+        function luaKey(key) {
+            return /^[A-Za-z_][A-Za-z0-9_]*$/.test(key) ? key : `[${escapeLuaString(key)}]`;
+        }
+
+        function serializeLua(value, indent = 0) {
+            const pad = " ".repeat(indent);
+            const nextPad = " ".repeat(indent + 4);
+
+            if (value === null || value === undefined) return "nil";
+            if (typeof value === "string") return escapeLuaString(value);
+            if (typeof value === "number" || typeof value === "boolean") return String(value);
+
+            if (Array.isArray(value)) {
+                if (!value.length) return "{}";
+                const items = value.map(item => `${nextPad}${serializeLua(item, indent + 4)}`);
+                return `{\n${items.join(",\n")}\n${pad}}`;
+            }
+
+            const entries = Object.entries(value);
+            if (!entries.length) return "{}";
+            const lines = entries.map(([key, val]) => `${nextPad}${luaKey(key)} = ${serializeLua(val, indent + 4)}`);
+            return `{\n${lines.join(",\n")}\n${pad}}`;
+        }
+
+        function createNode() {
+            state.nodeCounter += 1;
+            return {
+                id: `node_${state.nodeCounter}`,
+                dialogID: `dialog_${state.nodeCounter}`,
+                npcText: "",
+                playerText: "",
+                waypoint: "",
+                swepClass: "",
+                factionRequirement: "",
+                soundPath: "",
+                requirementMessage: "",
+                children: [],
+                position: {
+                    x: 40 + ((state.nodes.length % 5) * 30),
+                    y: 40 + ((state.nodes.length % 5) * 30)
+                }
+            };
+        }
+
+        function ensureDefaults() {
+            if (!state.nodes.length) {
+                const node = createNode();
+                node.dialogID = "start";
+                state.nodes.push(node);
+                state.entryNodeID = node.id;
+                state.selectedNodeID = node.id;
+            }
+            if (!state.entryNodeID && state.nodes[0]) state.entryNodeID = state.nodes[0].id;
+        }
+
+        function getNode(nodeID) {
+            return state.nodes.find(node => node.id === nodeID);
+        }
+
+        function previewFactionMatches(requirement) {
+            const required = trim(requirement).toLowerCase();
+            if (!required) return true;
+            return trim(previewFactionInput.value).toLowerCase() === required;
+        }
+
+        function resetPreview() {
+            const payload = makeGeneratedDialogPayload();
+            state.preview.currentNodeID = payload.generatedDialog.entryNodeID;
+            state.preview.history = [];
+            const startNode = getNode(state.preview.currentNodeID);
+            if (startNode) {
+                state.preview.history.push({
+                    type: "npc",
+                    nodeID: startNode.id
+                });
+            }
+            renderPreview();
+        }
+
+        function followPreviewNode(nodeID) {
+            const nextNode = getNode(nodeID);
+            if (!nextNode) return;
+
+            const requirementMet = previewFactionMatches(nextNode.factionRequirement);
+
+            state.preview.history.push({
+                type: "player",
+                nodeID: nextNode.id
+            });
+
+            state.preview.history.push({
+                type: "npc",
+                nodeID: nextNode.id,
+                failedRequirement: !requirementMet
+            });
+
+            state.preview.currentNodeID = requirementMet ? nextNode.id : state.preview.currentNodeID;
+            renderPreview();
+        }
+
+        function renderPreview() {
+            const currentNode = getNode(state.preview.currentNodeID);
+            previewTranscript.innerHTML = "";
+            previewOptions.innerHTML = "";
+
+            if (!currentNode) {
+                previewMeta.textContent = "Preview is idle.";
+                const empty = document.createElement("div");
+                empty.className = "hint";
+                empty.textContent = "No preview node is available yet.";
+                previewTranscript.appendChild(empty);
+                return;
+            }
+
+            const previewFaction = trim(previewFactionInput.value);
+            previewMeta.textContent = `Current node: ${trim(currentNode.dialogID) || currentNode.id}${previewFaction ? ` | Preview faction: ${previewFaction}` : " | Preview faction: none"}`;
+
+            state.preview.history.forEach(entry => {
+                const historyNode = getNode(entry.nodeID);
+                const line = document.createElement("div");
+                const isPlayer = entry.type === "player";
+                const label = isPlayer ? "Player" : "NPC";
+                let text = "";
+
+                if (!historyNode) {
+                    text = "(This node no longer exists.)";
+                } else if (isPlayer) {
+                    text = trim(historyNode.playerText) || trim(historyNode.dialogID) || historyNode.id;
+                } else if (entry.failedRequirement) {
+                    text = trim(historyNode.requirementMessage) || "You do not meet the requirement for this dialog.";
+                } else {
+                    text = trim(historyNode.npcText) || "(No NPC text set)";
+                }
+
+                line.className = `preview-line ${isPlayer ? "player" : "npc"}`;
+                line.innerHTML = `<strong>${label}</strong>${text}`;
+                previewTranscript.appendChild(line);
+            });
+
+            if (!state.preview.history.length) {
+                const empty = document.createElement("div");
+                empty.className = "hint";
+                empty.textContent = "Start the preview to see the conversation here.";
+                previewTranscript.appendChild(empty);
+            }
+
+            if (!currentNode.children.length) {
+                const end = document.createElement("div");
+                end.className = "hint";
+                end.textContent = "This branch has no child replies.";
+                previewOptions.appendChild(end);
+                return;
+            }
+
+            currentNode.children.forEach(childID => {
+                const childNode = getNode(childID);
+                if (!childNode) return;
+                const requirement = trim(childNode.factionRequirement);
+                const requirementMet = previewFactionMatches(requirement);
+                const button = document.createElement("button");
+                button.type = "button";
+                const label = trim(childNode.playerText) || trim(childNode.dialogID) || childNode.id;
+                button.innerHTML = requirement
+                    ? `${label}<span class="preview-option-label">${requirementMet ? `Requires ${requirement} (matched)` : `Requires ${requirement}`}</span>`
+                    : label;
+                button.onclick = () => followPreviewNode(childID);
+                previewOptions.appendChild(button);
+            });
+        }
+
+        function makeSanitizedGeneratedDialog(typeID) {
+            const seenNodeIDs = new Set();
+            const nodes = state.nodes.map((node, index) => {
+                const id = trim(node.id) || `node_${index + 1}`;
+                const dialogID = trim(node.dialogID) || id;
+                const children = [];
+                const seenChildren = new Set();
+
+                (node.children || []).forEach(childID => {
+                    const normalizedChildID = trim(childID);
+                    if (!normalizedChildID || normalizedChildID === id || seenChildren.has(normalizedChildID)) return;
+                    seenChildren.add(normalizedChildID);
+                    children.push(normalizedChildID);
+                });
+
+                return {
+                    id,
+                    dialogID,
+                    npcText: trim(node.npcText),
+                    playerText: trim(node.playerText),
+                    waypoint: trim(node.waypoint),
+                    swepClass: trim(node.swepClass),
+                    factionRequirement: trim(node.factionRequirement),
+                    soundPath: trim(node.soundPath),
+                    requirementMessage: trim(node.requirementMessage),
+                    children,
+                    position: {
+                        x: Math.round(Number(node.position?.x) || 40),
+                        y: Math.round(Number(node.position?.y) || 40)
+                    }
+                };
+            }).filter(node => {
+                if (seenNodeIDs.has(node.id)) return false;
+                seenNodeIDs.add(node.id);
+                return true;
+            });
+
+            if (!nodes.length) {
+                nodes.push({
+                    id: "node_1",
+                    dialogID: "start",
+                    npcText: "",
+                    playerText: "",
+                    waypoint: "",
+                    swepClass: "",
+                    factionRequirement: "",
+                    soundPath: "",
+                    requirementMessage: "",
+                    children: [],
+                    position: { x: 40, y: 40 }
+                });
+            }
+
+            const validNodeIDs = new Set(nodes.map(node => node.id));
+            nodes.forEach(node => {
+                node.children = node.children.filter(childID => validNodeIDs.has(childID));
+            });
+
+            let entryNodeID = trim(state.entryNodeID);
+            if (!entryNodeID || !validNodeIDs.has(entryNodeID)) {
+                entryNodeID = nodes[0].id;
+            }
+
+            return {
+                typeID,
+                entryNodeID,
+                nodes
+            };
+        }
+
+        function makeGeneratedDialogPayload() {
+            syncTopFields();
+            const typeID = trim(state.dialogTypeID) || "example_dialog";
+            const printName = trim(state.printName) || typeID;
+            const generatedDialog = makeSanitizedGeneratedDialog(typeID);
+
+            return {
+                dialogTypeID: typeID,
+                printName,
+                generatedDialog
+            };
+        }
+
+        function makeRegisterNPCData() {
+            const payload = makeGeneratedDialogPayload();
+            const startNode = payload.generatedDialog.nodes.find(node => node.id === payload.generatedDialog.entryNodeID) || payload.generatedDialog.nodes[0];
+
+            return {
+                PrintName: payload.printName,
+                Greeting: startNode ? startNode.npcText : "",
+                GeneratedDialog: payload.generatedDialog
+            };
+        }
+
+        function makeLuaExport() {
+            const payload = makeGeneratedDialogPayload();
+            return `lia.dialog.registerNPC(${escapeLuaString(payload.dialogTypeID)}, ${serializeLua(makeRegisterNPCData(), 0)})`;
+        }
+
+        function refreshOutput() {
+            syncTopFields();
+            outputText.value = makeLuaExport();
+        }
+
+        function syncTopFields() {
+            state.dialogTypeID = trim(dialogTypeIDInput.value);
+            state.printName = trim(printNameInput.value);
+        }
+
+        function setSelectedNode(nodeID) {
+            state.selectedNodeID = nodeID;
+            document.querySelectorAll(".node").forEach(nodeEl => {
+                nodeEl.classList.toggle("selected", nodeEl.dataset.nodeId === nodeID);
+            });
+            renderInspector();
+            refreshOutput();
+        }
+
+        function clearConnectionMode() {
+            state.pendingConnectionID = "";
+        }
+
+        function addNode() {
+            const node = createNode();
+            state.nodes.push(node);
+            if (!state.entryNodeID) state.entryNodeID = node.id;
+            state.selectedNodeID = node.id;
+            render();
+        }
+
+        function deleteSelectedNode() {
+            if (!state.selectedNodeID) return;
+            state.nodes = state.nodes.filter(node => node.id !== state.selectedNodeID);
+            state.nodes.forEach(node => {
+                node.children = node.children.filter(childID => childID !== state.selectedNodeID);
+            });
+            if (state.entryNodeID === state.selectedNodeID) {
+                state.entryNodeID = state.nodes[0] ? state.nodes[0].id : "";
+            }
+            state.selectedNodeID = state.nodes[0] ? state.nodes[0].id : "";
+            clearConnectionMode();
+            ensureDefaults();
+            render();
+        }
+
+        function setStartNode() {
+            if (!state.selectedNodeID) return;
+            state.entryNodeID = state.selectedNodeID;
+            render();
+        }
+
+        function beginConnectFromNode(nodeID) {
+            if (!nodeID) return;
+            setSelectedNode(nodeID);
+            state.pendingConnectionID = state.pendingConnectionID === nodeID ? "" : nodeID;
+            render();
+        }
+
+        function connectNodes(fromID, toID) {
+            if (!fromID || !toID || fromID === toID) return;
+            const source = getNode(fromID);
+            if (!source) return;
+            if (!source.children.includes(toID)) source.children.push(toID);
+            clearConnectionMode();
+            render();
+        }
+
+        function saveToBrowser() {
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(makeGeneratedDialogPayload(), null, 2));
+            refreshOutput();
+            window.alert("Dialog tree saved in your browser.");
+        }
+
+        function loadFromBrowser() {
+            const raw = localStorage.getItem(STORAGE_KEY) || localStorage.getItem(LEGACY_STORAGE_KEY);
+            if (!raw) {
+                window.alert("No browser save found yet.");
+                return;
+            }
+            importFromObject(JSON.parse(raw));
+        }
+
+        function importFromObject(data) {
+            const payload = data.generatedDialog ? data : {
+                dialogTypeID: data.typeID || "",
+                printName: data.printName || "",
+                generatedDialog: data
+            };
+            const generated = payload.generatedDialog || {};
+            state.dialogTypeID = trim(payload.dialogTypeID || generated.typeID);
+            state.printName = trim(payload.printName);
+            state.entryNodeID = trim(generated.entryNodeID);
+            state.nodes = (generated.nodes || []).map((node, index) => ({
+                id: trim(node.id) || `node_${index + 1}`,
+                dialogID: trim(node.dialogID) || trim(node.id) || `node_${index + 1}`,
+                npcText: trim(node.npcText),
+                playerText: trim(node.playerText),
+                waypoint: trim(node.waypoint),
+                swepClass: trim(node.swepClass),
+                factionRequirement: trim(node.factionRequirement),
+                soundPath: trim(node.soundPath),
+                requirementMessage: trim(node.requirementMessage),
+                children: Array.isArray(node.children) ? node.children.map(trim).filter(Boolean) : [],
+                position: {
+                    x: Number(node.position?.x) || 40 + (index * 24),
+                    y: Number(node.position?.y) || 40 + (index * 24)
+                }
+            }));
+            state.nodeCounter = state.nodes.reduce((highest, node) => {
+                const match = /node_(\d+)/.exec(node.id);
+                return Math.max(highest, match ? Number(match[1]) : 0);
+            }, 0);
+            ensureDefaults();
+            state.selectedNodeID = state.entryNodeID || (state.nodes[0] && state.nodes[0].id) || "";
+            clearConnectionMode();
+            dialogTypeIDInput.value = state.dialogTypeID;
+            printNameInput.value = state.printName;
+            resetPreview();
+            render();
+        }
+
+        function downloadOutput() {
+            refreshOutput();
+            const blob = new Blob([outputText.value], { type: "text/plain" });
+            const url = URL.createObjectURL(blob);
+            const link = document.createElement("a");
+            link.href = url;
+            link.download = `${trim(state.dialogTypeID) || "dialog_tree"}.lua`;
+            link.click();
+            URL.revokeObjectURL(url);
+        }
+
+        async function copyOutput() {
+            refreshOutput();
+            try {
+                await navigator.clipboard.writeText(outputText.value);
+                window.alert("Lua output copied to your clipboard.");
+            } catch (error) {
+                window.alert("Clipboard copy failed. You can still copy from the output box manually.");
+            }
+        }
+
+        function loadExample() {
+            importFromObject({
+                dialogTypeID: "example_guard_dialog",
+                printName: "Example Guard Dialog",
+                generatedDialog: {
+                    typeID: "example_guard_dialog",
+                    entryNodeID: "node_1",
+                    nodes: [
+                        {
+                            id: "node_1",
+                            dialogID: "start",
+                            npcText: "Halt. State your business.",
+                            playerText: "Start conversation",
+                            waypoint: "",
+                            swepClass: "",
+                            factionRequirement: "",
+                            soundPath: "",
+                            requirementMessage: "",
+                            children: ["node_2", "node_3"],
+                            position: { x: 72, y: 90 }
+                        },
+                        {
+                            id: "node_2",
+                            dialogID: "citizen_path",
+                            npcText: "You may pass. Stay out of trouble.",
+                            playerText: "I'm just passing through.",
+                            waypoint: "Gate",
+                            swepClass: "",
+                            factionRequirement: "citizen",
+                            soundPath: "",
+                            requirementMessage: "This guard does not trust your faction.",
+                            children: [],
+                            position: { x: 360, y: 70 }
+                        },
+                        {
+                            id: "node_3",
+                            dialogID: "armory_path",
+                            npcText: "Take this and report to the wall.",
+                            playerText: "Do you have a weapon for me?",
+                            waypoint: "Vector(0, 0, 0)",
+                            swepClass: "weapon_pistol",
+                            factionRequirement: "guard",
+                            soundPath: "buttons/button14.wav",
+                            requirementMessage: "Only guards can receive armory equipment.",
+                            children: [],
+                            position: { x: 360, y: 230 }
+                        }
+                    ]
+                }
+            });
+        }
+
+        function renderConnections() {
+            const width = canvasWrap.clientWidth;
+            const height = canvasWrap.clientHeight;
+            connectionsSvg.setAttribute("viewBox", `0 0 ${width} ${height}`);
+            connectionsSvg.innerHTML = "";
+
+            state.nodes.forEach(node => {
+                const sourceEl = document.querySelector(`[data-node-id="${node.id}"]`);
+                if (!sourceEl) return;
+                const sourceX = node.position.x + sourceEl.offsetWidth;
+                const sourceY = node.position.y + sourceEl.offsetHeight / 2;
+                node.children.forEach(childID => {
+                    const target = getNode(childID);
+                    const targetEl = document.querySelector(`[data-node-id="${childID}"]`);
+                    if (!target || !targetEl) return;
+                    const targetX = target.position.x;
+                    const targetY = target.position.y + targetEl.offsetHeight / 2;
+                    const curve = document.createElementNS("http://www.w3.org/2000/svg", "path");
+                    const mid = Math.max(60, Math.abs(targetX - sourceX) * 0.45);
+                    curve.setAttribute("d", `M ${sourceX} ${sourceY} C ${sourceX + mid} ${sourceY}, ${targetX - mid} ${targetY}, ${targetX} ${targetY}`);
+                    curve.setAttribute("fill", "none");
+                    curve.setAttribute("stroke", "rgba(40, 216, 239, 0.92)");
+                    curve.setAttribute("stroke-width", "3");
+                    curve.setAttribute("stroke-linecap", "round");
+                    connectionsSvg.appendChild(curve);
+                });
+            });
+        }
+
+        function renderInspector() {
+            const node = getNode(state.selectedNodeID);
+            const hasSelection = Boolean(node);
+            emptyInspector.classList.toggle("hidden", hasSelection);
+            inspectorFields.classList.toggle("hidden", !hasSelection);
+            selectionStatus.textContent = `Selected: ${node ? (trim(node.dialogID) || node.id) : "none"}`;
+            connectStatus.textContent = `Connection: ${state.pendingConnectionID ? `pick target for ${state.pendingConnectionID}` : "idle"}`;
+
+            if (!node) return;
+
+            Object.entries(inspectorInputs).forEach(([key, input]) => {
+                input.value = node[key] || "";
+                input.oninput = event => {
+                    node[key] = event.target.value;
+                    render();
+                };
+            });
+
+            childLinks.innerHTML = "";
+            node.children.forEach(childID => {
+                const childNode = getNode(childID);
+                const chip = document.createElement("div");
+                chip.className = "chip";
+                const label = document.createElement("span");
+                label.textContent = `${childNode ? (trim(childNode.dialogID) || childNode.id) : childID} -> ${childNode ? trim(childNode.playerText) : ""}`;
+                const removeButton = document.createElement("button");
+                removeButton.textContent = "Remove";
+                removeButton.onclick = () => {
+                    node.children = node.children.filter(id => id !== childID);
+                    render();
+                };
+                chip.append(label, removeButton);
+                childLinks.appendChild(chip);
+            });
+        }
+
+        function renderNodes() {
+            nodeCanvas.innerHTML = "";
+            state.nodes.forEach(node => {
+                const nodeEl = document.createElement("div");
+                nodeEl.className = "node";
+                if (state.selectedNodeID === node.id) nodeEl.classList.add("selected");
+                if (state.entryNodeID === node.id) nodeEl.classList.add("start");
+                nodeEl.dataset.nodeId = node.id;
+                nodeEl.style.left = `${node.position.x}px`;
+                nodeEl.style.top = `${node.position.y}px`;
+                nodeEl.innerHTML = `
+                    <div class="node-title">${trim(node.dialogID) || node.id}</div>
+                    <div class="node-line">${trim(node.playerText) || "Player response text"}</div>
+                    <div class="node-line">${trim(node.npcText) || "NPC text"}</div>
+                    <button type="button" class="node-connect ${state.pendingConnectionID === node.id ? "active" : ""}" title="Connect this node to another">→</button>
+                `;
+
+                const connectButton = nodeEl.querySelector(".node-connect");
+
+                let dragOffsetX = 0;
+                let dragOffsetY = 0;
+                let dragging = false;
+
+                connectButton.addEventListener("pointerdown", event => {
+                    event.stopPropagation();
+                });
+
+                connectButton.addEventListener("click", event => {
+                    event.stopPropagation();
+                    beginConnectFromNode(node.id);
+                });
+
+                nodeEl.addEventListener("pointerdown", event => {
+                    if (event.target.closest(".node-connect")) return;
+                    if (state.pendingConnectionID && state.pendingConnectionID !== node.id) {
+                        connectNodes(state.pendingConnectionID, node.id);
+                        return;
+                    }
+                    const bounds = canvasWrap.getBoundingClientRect();
+                    dragging = true;
+                    dragOffsetX = event.clientX - bounds.left - node.position.x;
+                    dragOffsetY = event.clientY - bounds.top - node.position.y;
+                    setSelectedNode(node.id);
+                    nodeEl.setPointerCapture(event.pointerId);
+                    nodeEl.style.cursor = "grabbing";
+                });
+
+                nodeEl.addEventListener("pointermove", event => {
+                    if (!dragging) return;
+                    const bounds = canvasWrap.getBoundingClientRect();
+                    node.position.x = Math.max(0, Math.min(bounds.width - nodeEl.offsetWidth, event.clientX - bounds.left - dragOffsetX));
+                    node.position.y = Math.max(0, Math.min(bounds.height - nodeEl.offsetHeight, event.clientY - bounds.top - dragOffsetY));
+                    nodeEl.style.left = `${node.position.x}px`;
+                    nodeEl.style.top = `${node.position.y}px`;
+                    renderConnections();
+                });
+
+                const stopDragging = event => {
+                    if (!dragging) return;
+                    dragging = false;
+                    if (nodeEl.hasPointerCapture(event.pointerId)) {
+                        nodeEl.releasePointerCapture(event.pointerId);
+                    }
+                    nodeEl.style.cursor = "grab";
+                    render();
+                };
+
+                nodeEl.addEventListener("pointerup", stopDragging);
+                nodeEl.addEventListener("pointercancel", stopDragging);
+
+                nodeEl.addEventListener("dblclick", () => {
+                    state.entryNodeID = node.id;
+                    render();
+                });
+
+                nodeCanvas.appendChild(nodeEl);
+            });
+            renderConnections();
+        }
+
+        function render() {
+            syncTopFields();
+            dialogTypeIDInput.value = state.dialogTypeID;
+            printNameInput.value = state.printName;
+            renderNodes();
+            renderInspector();
+            refreshOutput();
+            renderPreview();
+        }
+
+        document.getElementById("addNode").onclick = addNode;
+        document.getElementById("createExample").onclick = loadExample;
+        document.getElementById("setStart").onclick = setStartNode;
+        document.getElementById("deleteNode").onclick = deleteSelectedNode;
+        document.getElementById("saveBrowser").onclick = saveToBrowser;
+        document.getElementById("loadBrowser").onclick = loadFromBrowser;
+        document.getElementById("refreshOutput").onclick = refreshOutput;
+        document.getElementById("copyOutput").onclick = copyOutput;
+        document.getElementById("downloadOutput").onclick = downloadOutput;
+        document.getElementById("loadExample").onclick = loadExample;
+        document.getElementById("restartPreview").onclick = resetPreview;
+        dialogTypeIDInput.addEventListener("input", render);
+        printNameInput.addEventListener("input", render);
+        previewFactionInput.addEventListener("input", renderPreview);
+        window.addEventListener("resize", renderConnections);
+
+        ensureDefaults();
+        dialogTypeIDInput.value = "example_dialog";
+        printNameInput.value = "Example Dialog";
+        syncTopFields();
+        resetPreview();
+        render();
+    </script>
+</body>
+</html>

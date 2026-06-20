@@ -2,6 +2,7 @@ title: Generators
 arrange:
   - index.md
   - attribute.md
+  - dialog-npc.md
   - class.md
   - faction.md
   - items

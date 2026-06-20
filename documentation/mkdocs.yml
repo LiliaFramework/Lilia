@@ -61,6 +61,7 @@ nav:
           - Currency: developer/libraries/lia.currency.md
           # AUTO-GENERATED: LIBRARIES END
       - Hooks: developer/hooks/index.md
+      - Compatibility: developer/compatibility/index.md
   - Reference:
       - Overview: definitions/index.md
       - Core:
@@ -71,6 +72,7 @@ nav:
       - Items:
           # AUTO-GENERATED: ITEM DEFINITIONS START
           - Overview: definitions/items/index.md
+          - Item Base Field Reference: definitions/items/base-field-reference.md
           - Aid Item Definition: definitions/items/aid.md
           - Ammo Item Definition: definitions/items/ammo.md
           - ArcCW Attachment Item Definition: definitions/items/arccw_att.md
@@ -87,6 +89,7 @@ nav:
       - Overview: generators/index.md
       - Schema Generators:
           - Attributes: generators/attribute.md
+          - Dialog NPC Generator: generators/dialog.md
           - Classes: generators/class.md
           - Factions: generators/faction.md
       - Item Generators:

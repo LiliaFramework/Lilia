@@ -1,4 +1,4 @@
-# Generators
+ # Generators
 
 Use these generators to build starter files faster. They are helpful when you want a solid base to edit instead of writing every definition from scratch.
 
@@ -7,6 +7,11 @@ Use these generators to build starter files faster. They are helpful when you wa
     <span class="card-kicker">Character stats</span>
     <h3>Attribute Generator</h3>
     <p>Create a starter attribute with names, limits, and example setup code.</p>
+  </a>
+  <a href="./dialog/" class="card">
+    <span class="card-kicker">Interactive characters</span>
+    <h3>Dialog NPC Generator</h3>
+    <p>Build nested NPC conversations with waypoints, faction-specific replies, and common dialog fields.</p>
   </a>
   <a href="./class/" class="card">
     <span class="card-kicker">Faction roles</span>
@@ -79,4 +84,3 @@ Use these generators to build starter files faster. They are helpful when you wa
     <p>Create a weapon item with the standard fields already laid out.</p>
   </a>
 </div>
-
