@@ -9,3 +9,14 @@ net.Receive("liaRegenChat", function()
     lia.chat.persistedMessages = {}
     hook.Run("CreateChatboxPanel")
 end)
+
+net.Receive("liaChatboxSyncFilteredWords", function()
+    local wordCount = net.ReadUInt(16)
+    local words = {}
+    for index = 1, wordCount do
+        words[index] = net.ReadString()
+    end
+
+    MODULE.filteredWords = words
+    if IsValid(MODULE.filteredWordAdminPanel) and MODULE.filteredWordAdminPanel.populateFilteredWords then MODULE.filteredWordAdminPanel:populateFilteredWords(words) end
+end)

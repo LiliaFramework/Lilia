@@ -9,6 +9,7 @@ ENT.AdminOnly = false
 ENT.DrawEntityInfo = true
 ENT.Model = "models/player/breen.mdl"
 ENT.IsPersistent = true
+ENT.NodeGeneratedDialog = false
 function ENT:setAnim()
     if self.customAnimation and self.customAnimation ~= "auto" then
         local sequenceIndex = self:LookupSequence(self.customAnimation)

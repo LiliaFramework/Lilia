@@ -228,7 +228,7 @@ function lia.module.initialize()
     end
 
     for id in pairs(collectModuleIDs("lilia/gamemode/modules")) do
-        if not preloadIDs[id] and gamemodeIDs[id] then lia.bootstrap(L("module"), L("modulePreloadSuggestion", id)) end
+        if not preloadIDs[id] and gamemodeIDs[id] then lia.bootstrap(L("module"), L("modulePreloadSuggestion", id, schemaPath)) end
     end
 
     lia.module.loadFromDir("lilia/gamemode/modules", "module", preloadIDs)

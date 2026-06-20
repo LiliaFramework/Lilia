@@ -1098,7 +1098,7 @@ function MODULE:HUDPaint()
             label = item and item:getName() or L("unknown")
             baseColor = lia.option.get("espItemsColor")
         elseif lia.option.get("espEntities", false) and ent:GetClass():StartWith("lia_") then
-            if ent:GetClass() == "lia_npc" then
+            if lia.dialog.isDialogNPCEntity(ent) then
                 local uniqueID = ent:getNetVar("uniqueID", "")
                 if uniqueID ~= "" then
                     kind = "npcs"

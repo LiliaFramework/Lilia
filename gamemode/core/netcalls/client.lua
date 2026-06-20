@@ -1120,6 +1120,12 @@ net.Receive("liaNpcDialogDeliverResponse", function()
     if lia.dialog.vgui.DisplayServerResponse then lia.dialog.vgui:DisplayServerResponse(responses, npc) end
 end)
 
+net.Receive("liaNpcDialogNodeResult", function()
+    local result = net.ReadTable()
+    if not IsValid(lia.dialog.vgui) or not result then return end
+    if lia.dialog.vgui.HandleGeneratedDialogResult then lia.dialog.vgui:HandleGeneratedDialogResult(result) end
+end)
+
 net.Receive("liaRequestNPCSelection", function()
     local npcEntity = net.ReadEntity()
     local npcOptions = net.ReadTable()
@@ -1587,4 +1593,433 @@ net.Receive("BodygrouperMenu", function()
 end)
 
 net.Receive("BodygrouperMenuCloseClientside", function() if IsValid(lia.gui.bodygroupMenu) then lia.gui.bodygroupMenu:Remove() end end)
+lia.worldPreview = lia.worldPreview or {}
+if not lia.worldPreview.begin then
+    function lia.worldPreview.shouldHidePlayer(player)
+        local owner = lia.worldPreview.activeOwner
+        local data = IsValid(owner) and owner._liaWorldPreview
+        return data and istable(data.hiddenPlayers) and data.hiddenPlayers[player] or false
+    end
+
+    local function getPreviewAngle(client)
+        local eyeAngles = IsValid(client) and client:EyeAngles() or angle_zero
+        return Angle(0, eyeAngles.y + 180, 0)
+    end
+
+    local function getGroundPosition(pos, filter)
+        if not isvector(pos) then return pos end
+        local startPos = pos + Vector(0, 0, 64)
+        local tr = util.TraceLine({
+            start = startPos,
+            endpos = pos + Vector(0, 0, -16384),
+            mask = MASK_SOLID,
+            filter = filter
+        })
+
+        if tr.Hit and tr.HitWorld and not tr.HitSky then return tr.HitPos + Vector(0, 0, 2) end
+        return pos
+    end
+
+    local function getPreviewPosition(client)
+        if not IsValid(client) then return Vector() end
+        local forward = client:EyeAngles():Forward()
+        forward.z = 0
+        if forward:LengthSqr() <= 0 then
+            forward = Vector(1, 0, 0)
+        else
+            forward:Normalize()
+        end
+
+        local eyePos = client:EyePos()
+        local hull = util.TraceHull({
+            start = eyePos,
+            endpos = eyePos + forward * 96,
+            mins = Vector(-16, -16, 0),
+            maxs = Vector(16, 16, 72),
+            filter = client,
+            mask = MASK_SOLID
+        })
+
+        local basePos = hull.Hit and (hull.HitPos - forward * 28) or client:GetPos() + forward * 85
+        return getGroundPosition(basePos, client)
+    end
+
+    local function applyIdleSequence(ent)
+        if not IsValid(ent) then return end
+        local seq = ent:LookupSequence("idle_all_01")
+        if seq > 0 then
+            ent:ResetSequence(seq)
+            ent:SetCycle(0)
+            return
+        end
+
+        seq = ent:SelectWeightedSequence(ACT_IDLE)
+        if seq <= 0 then seq = ent:LookupSequence("idle_unarmed") end
+        if seq > 0 then
+            ent:ResetSequence(seq)
+            ent:SetCycle(0)
+            return
+        end
+
+        for _, name in ipairs(ent:GetSequenceList()) do
+            local lowered = name:lower()
+            if lowered ~= "idlenoise" and (lowered:find("idle") or lowered:find("fly")) then
+                ent:ResetSequence(name)
+                ent:SetCycle(0)
+                return
+            end
+        end
+    end
+
+    function lia.worldPreview.close(owner)
+        if not owner then return end
+        local data = owner._liaWorldPreview
+        if not data then return end
+        hook.Remove("CalcView", data.calcViewHook)
+        hook.Remove("PostDrawOpaqueRenderables", data.renderHook)
+        hook.Remove("PrePlayerDraw", data.prePlayerDrawHook)
+        hook.Remove("ShouldDrawLocalPlayer", data.shouldDrawLocalPlayerHook)
+        if IsValid(data.entity) then data.entity:Remove() end
+        if istable(data.hiddenEntities) then
+            for ent, noDraw in pairs(data.hiddenEntities) do
+                if IsValid(ent) then ent:SetNoDraw(noDraw) end
+            end
+        end
+
+        if istable(data.hiddenPlayerState) then
+            for player, state in pairs(data.hiddenPlayerState) do
+                if IsValid(player) then
+                    player:SetNoDraw(state.noDraw == true)
+                    if state.hadEffect then
+                        player:AddEffects(EF_NODRAW)
+                    else
+                        player:RemoveEffects(EF_NODRAW)
+                    end
+                end
+            end
+        end
+
+        if lia.worldPreview.activeOwner == owner then lia.worldPreview.activeOwner = nil end
+        owner._liaWorldPreview = nil
+    end
+
+    function lia.worldPreview.begin(owner, config)
+        if not IsValid(owner) then return end
+        if IsValid(lia.worldPreview.activeOwner) and lia.worldPreview.activeOwner ~= owner then lia.worldPreview.close(lia.worldPreview.activeOwner) end
+        lia.worldPreview.close(owner)
+        local data = {
+            config = config or {},
+            calcViewHook = "liaWorldPreviewCalcView" .. tostring(owner),
+            renderHook = "liaWorldPreviewRender" .. tostring(owner),
+            prePlayerDrawHook = "liaWorldPreviewPrePlayerDraw" .. tostring(owner),
+            shouldDrawLocalPlayerHook = "liaWorldPreviewShouldDrawLocalPlayer" .. tostring(owner)
+        }
+
+        owner._liaWorldPreview = data
+        lia.worldPreview.activeOwner = owner
+        data.hiddenEntities = {}
+        data.hiddenPlayers = {}
+        data.hiddenPlayerState = {}
+        local hiddenTargets = istable(data.config.hideEntities) and data.config.hideEntities or {}
+        for _, ent in ipairs(hiddenTargets) do
+            if not IsValid(ent) or ent == data.entity then continue end
+            if ent:IsPlayer() then
+                data.hiddenPlayers[ent] = true
+                data.hiddenPlayerState[ent] = {
+                    noDraw = ent:GetNoDraw(),
+                    hadEffect = ent:IsEffectActive(EF_NODRAW)
+                }
+
+                ent:SetNoDraw(true)
+                ent:AddEffects(EF_NODRAW)
+            elseif data.hiddenEntities[ent] == nil then
+                data.hiddenEntities[ent] = ent:GetNoDraw()
+                ent:SetNoDraw(true)
+            end
+        end
+
+        hook.Add("PrePlayerDraw", data.prePlayerDrawHook, function(player)
+            local previewData = IsValid(owner) and owner._liaWorldPreview
+            if not previewData then return end
+            if istable(previewData.hiddenPlayers) and previewData.hiddenPlayers[player] then return true end
+            if istable(previewData.hiddenEntities) and previewData.hiddenEntities[player] ~= nil then return true end
+        end)
+
+        hook.Add("ShouldDrawLocalPlayer", data.shouldDrawLocalPlayerHook, function(player)
+            local previewData = IsValid(owner) and owner._liaWorldPreview
+            if not previewData or not istable(previewData.hiddenPlayers) then return end
+            local client = IsValid(player) and player or LocalPlayer()
+            if previewData.hiddenPlayers[client] then return false end
+        end)
+
+        hook.Add("CalcView", data.calcViewHook, function(_, _, _, fov)
+            if not IsValid(owner) then
+                lia.worldPreview.close(owner)
+                return
+            end
+
+            local previewData = owner._liaWorldPreview
+            local ent = previewData and previewData.entity
+            if not IsValid(ent) then return end
+            local center = ent:GetPos() + Vector(0, 0, previewData.config.heightOffset or 60)
+            local desired = center + ent:GetAngles():Forward() * (previewData.config.distance or 70)
+            if not previewData.currentCamPos then
+                previewData.currentCamPos = desired
+            else
+                previewData.currentCamPos = LerpVector(FrameTime() * 5, previewData.currentCamPos, desired)
+            end
+
+            local target = center - ent:GetAngles():Right() * (previewData.config.sideOffset or 40)
+            return {
+                origin = previewData.currentCamPos,
+                angles = (target - previewData.currentCamPos):Angle(),
+                fov = fov,
+                drawviewer = true
+            }
+        end)
+
+        hook.Add("PostDrawOpaqueRenderables", data.renderHook, function()
+            if not IsValid(owner) then
+                lia.worldPreview.close(owner)
+                return
+            end
+
+            local previewData = owner._liaWorldPreview
+            local ent = previewData and previewData.entity
+            if not IsValid(ent) then return end
+            ent:FrameAdvance()
+            render.SuppressEngineLighting(true)
+            render.ResetModelLighting(1, 1, 1)
+            for i = 0, 6 do
+                render.SetModelLighting(i, 1, 1, 1)
+            end
+
+            ent:DrawModel()
+            render.SuppressEngineLighting(false)
+            render.ResetModelLighting(1, 1, 1)
+            for i = 0, 6 do
+                render.SetModelLighting(i, 0, 0, 0)
+            end
+        end)
+    end
+
+    function lia.worldPreview.setModel(owner, modelPath, options)
+        if not IsValid(owner) then return end
+        local data = owner._liaWorldPreview
+        if not data then
+            lia.worldPreview.begin(owner, options)
+            data = owner._liaWorldPreview
+        elseif options then
+            data.config = options
+        end
+
+        if IsValid(data.entity) then data.entity:Remove() end
+        data.entity = ClientsideModel(modelPath or "models/error.mdl", RENDERGROUP_OPAQUE)
+        if not IsValid(data.entity) then return end
+        local client = LocalPlayer()
+        local config = data.config or {}
+        data.entity:SetPos(config.position or getPreviewPosition(client))
+        data.entity:SetAngles(config.angle or getPreviewAngle(client))
+        data.entity:SetSkin(config.skin or 0)
+        if istable(config.bodygroups) then lia.util.applyBodygroups(data.entity, config.bodygroups) end
+        hook.Run("SetupPlayerModel", data.entity)
+        hook.Run("ModifyCharacterModel", data.entity, config.context)
+        applyIdleSequence(data.entity)
+        data.currentCamPos = nil
+    end
+
+    function lia.worldPreview.getEntity(owner)
+        local data = IsValid(owner) and owner._liaWorldPreview
+        return data and data.entity or nil
+    end
+
+    function lia.worldPreview.rotate(owner, deltaYaw)
+        local ent = lia.worldPreview.getEntity(owner)
+        if not IsValid(ent) then return end
+        local ang = ent:GetAngles()
+        ang.y = ang.y + deltaYaw
+        ent:SetAngles(ang)
+    end
+end
+
+net.Receive("SeeModelTable", function()
+    local models = net.ReadTable()
+    if not istable(models) or #models == 0 then return end
+    local selectedModel = models[1]
+    local frame = vgui.Create("liaFrame")
+    frame:setScaledSize(520, math.min(ScrH() * 0.82, 820))
+    frame:SetPos(ScrW() - frame:GetWide() - 48, math.max(48, (ScrH() - frame:GetTall()) * 0.5))
+    frame:SetTitle(L("wardrobeSelectTitle"))
+    frame:MakePopup()
+    frame:DockPadding(12, 34, 12, 12)
+    local function positionWardrobeCloseButton(this)
+        if IsValid(this.cls) then
+            this.cls:SetParent(this)
+            this.cls:SetSize(20, 20)
+            this.cls:SetPos(this:GetWide() - 22, 2)
+            this.cls:SetZPos(1000)
+        end
+    end
+
+    frame.OnSizeChanged = function(this) positionWardrobeCloseButton(this) end
+    positionWardrobeCloseButton(frame)
+    local title = frame:Add("liaHeaderPanel")
+    title:Dock(TOP)
+    title:DockMargin(0, 0, 0, 12)
+    title:SetTall(32)
+    title:SetLineColor(lia.color.theme and lia.color.theme.theme or Color(116, 185, 255))
+    title:SetLineWidth(2)
+    local titleLabel = title:Add("DLabel")
+    titleLabel:Dock(FILL)
+    titleLabel:DockMargin(8, 0, 8, 0)
+    titleLabel:SetFont("LiliaFont.18")
+    titleLabel:SetText(L("selectModel"):upper())
+    titleLabel:SetTextColor(lia.color.theme and lia.color.theme.text or color_white)
+    titleLabel:SetContentAlignment(5)
+    local hint = frame:Add("DLabel")
+    hint:Dock(TOP)
+    hint:DockMargin(0, 0, 0, 10)
+    hint:SetTall(20)
+    hint:SetFont("LiliaFont.16")
+    hint:SetTextColor(Color(220, 220, 220))
+    hint:SetContentAlignment(5)
+    hint:SetText(L("rotateInstruction", "A", "D"))
+    local confirmButton = vgui.Create("DButton", frame)
+    confirmButton:SetText(L("wardrobeConfirmButton"))
+    confirmButton:Dock(BOTTOM)
+    confirmButton:SetTall(40)
+    confirmButton:SetColor(Color(255, 255, 255))
+    confirmButton:SetFont("DermaDefaultBold")
+    confirmButton:SetContentAlignment(5)
+    confirmButton:DockMargin(0, 10, 0, 0)
+    local modelsScroll = vgui.Create("liaScrollPanel", frame)
+    modelsScroll:Dock(FILL)
+    modelsScroll:DockMargin(0, 0, 0, 0)
+    local iconLayoutParent = modelsScroll.GetCanvas and modelsScroll:GetCanvas() or modelsScroll
+    local iconLayout = iconLayoutParent:Add("DIconLayout")
+    iconLayout:Dock(LEFT)
+    iconLayout:SetSpaceX(8)
+    iconLayout:SetSpaceY(8)
+    iconLayout:SetPaintBackground(false)
+    frame._iconColumns = 5
+    frame._iconSpace = 8
+    local function requestIconResize()
+        if not IsValid(iconLayout) then return false end
+        local w = iconLayout:GetWide() or 0
+        if w <= 0 then return false end
+        frame._needsIconResize = true
+        frame:InvalidateLayout(true)
+        return true
+    end
+
+    local oldLayoutPerformLayout = iconLayout.PerformLayout
+    iconLayout.PerformLayout = function(layout, w, h)
+        if oldLayoutPerformLayout then oldLayoutPerformLayout(layout, w, h) end
+        local offsetX = layout._centerOffsetX or 0
+        local prevOffsetX = layout._appliedCenterOffsetX or 0
+        local delta = offsetX - prevOffsetX
+        if delta == 0 then return end
+        for _, child in ipairs(layout:GetChildren()) do
+            if IsValid(child) then
+                local x, y = child:GetPos()
+                child:SetPos(x + delta, y)
+            end
+        end
+
+        layout._appliedCenterOffsetX = offsetX
+    end
+
+    frame.PerformLayout = function(this, w, h)
+        local columns = this._iconColumns or 5
+        local space = this._iconSpace or 8
+        local layoutW = IsValid(modelsScroll) and modelsScroll:GetWide() or 0
+        if layoutW <= 0 then return end
+        iconLayout:SetWide(layoutW)
+        local iconW = math.floor((layoutW - (columns - 1) * space) / columns)
+        if iconW < 64 then iconW = 64 end
+        if iconW > 80 then iconW = 80 end
+        local iconH = math.floor(iconW * 2)
+        for _, child in ipairs(iconLayout:GetChildren()) do
+            if IsValid(child) and child.SetSize then child:SetSize(iconW, iconH) end
+        end
+
+        iconLayout:SizeToChildren(false, true)
+        local childCount = #iconLayout:GetChildren()
+        local usedWidth = math.min(childCount, columns) * iconW + math.max(0, math.min(childCount, columns) - 1) * space
+        iconLayout._centerOffsetX = math.max(0, math.floor((layoutW - usedWidth) * 0.5))
+        iconLayout:InvalidateLayout(true)
+        this._needsIconResize = nil
+    end
+
+    local function previewModel(modelPath)
+        lia.worldPreview.begin(frame, {
+            hideEntities = {LocalPlayer()}
+        })
+
+        lia.worldPreview.setModel(frame, modelPath)
+    end
+
+    local function setSelectedModel(modelPath)
+        selectedModel = modelPath
+        previewModel(modelPath)
+        if IsValid(iconLayout) then
+            for _, child in ipairs(iconLayout:GetChildren()) do
+                if IsValid(child) then child._liaSelected = child.modelPath == modelPath end
+            end
+        end
+    end
+
+    local function paintIcon(icon, w, h)
+        if not icon._liaSelected then return end
+        local col = lia.config.get("Color", color_white)
+        surface.SetDrawColor(col.r, col.g, col.b, 200)
+        for i = 1, 3 do
+            local o = i * 2
+            surface.DrawOutlinedRect(i, i, w - o, h - o)
+        end
+    end
+
+    local function buildModelIcons()
+        if not IsValid(iconLayout) then return end
+        iconLayout:Clear()
+        for _, modelPath in ipairs(models) do
+            local icon = iconLayout:Add("SpawnIcon")
+            icon:SetModel(modelPath)
+            icon.modelPath = modelPath
+            icon.PaintOver = paintIcon
+            icon.DoClick = function() setSelectedModel(modelPath) end
+        end
+
+        requestIconResize()
+    end
+
+    buildModelIcons()
+    setSelectedModel(models[1])
+    frame.Think = function()
+        if input.IsKeyDown(KEY_A) then
+            lia.worldPreview.rotate(frame, -50 * FrameTime())
+        elseif input.IsKeyDown(KEY_D) then
+            lia.worldPreview.rotate(frame, 50 * FrameTime())
+        end
+    end
+
+    frame.OnRemove = function() lia.worldPreview.close(frame) end
+    confirmButton.DoClick = function()
+        if isstring(selectedModel) and selectedModel ~= "" then
+            net.Start("WardrobeChangeModel")
+            net.WriteString(selectedModel)
+            net.SendToServer()
+            frame:Close()
+        else
+            chat.AddText(Color(255, 0, 0), L("wardrobeSelectError"))
+        end
+    end
+
+    timer.Simple(0, function()
+        if not IsValid(frame) then return end
+        requestIconResize()
+        timer.Simple(0.05, function() if IsValid(frame) then requestIconResize() end end)
+    end)
+end)
+
 netstream.Hook("liaSyncGesture", function(entity, a, b, c) if IsValid(entity) then entity:AnimRestartGesture(a, b, c) end end)

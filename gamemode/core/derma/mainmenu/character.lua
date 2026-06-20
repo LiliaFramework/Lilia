@@ -109,11 +109,8 @@ function PANEL:setInWorldPreviewEnabled(enabled)
     else
         self:restoreExternalEntities()
         self.currentCamPos = nil
-        if not self.isLoadMode then
-            hook.Remove("CalcView", "liaMainMenuCalcView")
-            hook.Remove("PrePlayerDraw", "liaMainMenuPrePlayerDraw")
-        end
-
+        hook.Remove("CalcView", "liaMainMenuCalcView")
+        hook.Remove("PrePlayerDraw", "liaMainMenuPrePlayerDraw")
         hook.Remove("PostDrawOpaqueRenderables", "liaMainMenuPostDrawOpaqueRenderables")
         if self.mainMenuRenderHookID then
             hook.Remove("PostDrawOpaqueRenderables", self.mainMenuRenderHookID)
@@ -138,7 +135,7 @@ function PANEL:updateCreationModelEntity(context)
     if IsValid(self.modelEntity) then self.modelEntity:Remove() end
     self.modelEntity = ClientsideModel(mdl or "models/error.mdl", RENDERGROUP_OPAQUE)
     if not IsValid(self.modelEntity) then return end
-    self.modelEntity:SetSkin(context.skin or skin or 0)
+    self.modelEntity:SetSkin(lia.faction.normalizeSkinValue(context.skin, skin))
     local finalGroups = istable(context.groups) and context.groups or istable(groups) and groups
     if finalGroups then lia.util.applyBodygroups(self.modelEntity, finalGroups) end
     hook.Run("SetupPlayerModel", self.modelEntity)
@@ -579,6 +576,7 @@ function PANEL:StartBGMusic()
 end
 
 function PANEL:hideExternalEntities()
+    if self.hiddenEntities then self:restoreExternalEntities() end
     self.hiddenEntities = {}
     for _, ent in ents.Iterator() do
         if ent ~= self.modelEntity and not ent:IsWorld() and not ent:CreatedByMap() then
@@ -606,6 +604,8 @@ end
 
 function PANEL:loadBackground()
     if self.isLoadMode then
+        hook.Remove("CalcView", "liaMainMenuCalcView")
+        hook.Remove("PrePlayerDraw", "liaMainMenuPrePlayerDraw")
         self:hideExternalEntities()
         hook.Add("PrePlayerDraw", "liaMainMenuPrePlayerDraw", function() return true end)
         self:updateSelectedCharacter()
@@ -656,6 +656,8 @@ function PANEL:loadBackground()
             }
         end)
     else
+        hook.Remove("CalcView", "liaMainMenuCalcView")
+        hook.Remove("PrePlayerDraw", "liaMainMenuPrePlayerDraw")
         self:restoreExternalEntities()
         if IsValid(self.modelEntity) then self.modelEntity:Remove() end
         if IsValid(self.leftArrow) then
@@ -1082,11 +1084,34 @@ function PANEL:createCharacterSelection()
 
     self.content:Clear()
     self.content:InvalidateLayout(true)
-    self:updateSelectedCharacter()
-    if self.availableCharacters and #self.availableCharacters > 1 then self:createArrows() end
+    self:loadBackground()
 end
 
 function PANEL:createCharacterCreation()
+    self:restoreExternalEntities()
+    hook.Remove("PrePlayerDraw", "liaMainMenuPrePlayerDraw")
+    hook.Remove("CalcView", "liaMainMenuCalcView")
+    hook.Remove("PostDrawOpaqueRenderables", "liaMainMenuPostDrawOpaqueRenderables")
+    if self.mainMenuRenderHookID then
+        hook.Remove("PostDrawOpaqueRenderables", self.mainMenuRenderHookID)
+        self.mainMenuRenderHookID = nil
+    end
+
+    if IsValid(self.modelEntity) then
+        self.modelEntity:Remove()
+        self.modelEntity = nil
+    end
+
+    if IsValid(self.leftArrow) then
+        self.leftArrow:Remove()
+        self.leftArrow = nil
+    end
+
+    if IsValid(self.rightArrow) then
+        self.rightArrow:Remove()
+        self.rightArrow = nil
+    end
+
     for _, name in ipairs{"background", "logo", "changelogPanel"} do
         if IsValid(self[name]) then
             self[name]:Remove()
@@ -1545,7 +1570,7 @@ end
 
 function PANEL:removeClientModelModifications()
     hook.Remove("PrePlayerDraw", "liaMainMenuPrePlayerDraw")
-    if not self.isLoadMode then hook.Remove("CalcView", "liaMainMenuCalcView") end
+    hook.Remove("CalcView", "liaMainMenuCalcView")
     hook.Remove("PostDrawOpaqueRenderables", "liaMainMenuPostDrawOpaqueRenderables")
     if self.mainMenuRenderHookID then
         hook.Remove("PostDrawOpaqueRenderables", self.mainMenuRenderHookID)

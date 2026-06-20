@@ -4,8 +4,8 @@
     type = "string"
 })
 
-local NotificationHeight = 36
-local NotificationPadding = 12
+local NotificationHeight = 54
+local NotificationPadding = 18
 local NotificationLifetime = 6
 local NotificationFadeoutTime = 1
 local function GetNotifIcon(notifType)
@@ -84,7 +84,7 @@ function PANEL:RecalcSize()
     if maxWidth == 0 or lineHeight == 0 then maxWidth, lineHeight = surface.GetTextSize(" ") end
     local minWidth = 300 * self.scale
     local extraSpacing = 40 * self.scale
-    local iconWidth = math.max(16, math.floor(16 * self.scale))
+    local iconWidth = 24 * self.scale
     local textPadding = math.min(60 * self.scale, maxWidth * 0.1)
     local requiredWidth = maxWidth + (NotificationPadding * 2) + iconWidth + extraSpacing + textPadding
     local w = math.max(requiredWidth, minWidth)
@@ -152,7 +152,7 @@ function PANEL:Paint(w, h)
     if icon then
         surface.SetMaterial(icon)
         surface.SetDrawColor(255, 255, 255, self.alpha)
-        surface.DrawTexturedRect(math.floor(self.padding), math.floor((h - self.iconSize) / 2), self.iconSize, self.iconSize)
+        surface.DrawTexturedRect(self.padding, (h - self.iconSize) / 2, self.iconSize, self.iconSize)
     end
 
     local textX = self.padding + self.iconSize + self.padding / 2

@@ -7584,16 +7584,14 @@ lia.command.add("npcchangetype", {
         if not permission then return client:notifyErrorLocalized("noManageNPCPermission") end
         local ent = client:getTracedEntity()
         if not ent or not IsValid(ent) then return client:notifyErrorLocalized("mustLookAtValidEntity") end
-        if ent:GetClass() ~= "lia_npc" then return client:notifyErrorLocalized("mustLookAtDialogNPC") end
+        if not lia.dialog.isDialogNPCEntity(ent) then return client:notifyErrorLocalized("mustLookAtDialogNPC") end
         lia.dialog.syncToClients(client)
         timer.Simple(0.1, function()
             if not IsValid(client) or not IsValid(ent) then return end
-            local npcOptions = {}
+            local npcOptions = lia.dialog.getCompatibleDialogOptions(ent)
             local displayToUniqueID = {}
-            for uniqueID, data in pairs(lia.dialog.stored) do
-                local displayName = data.PrintName or uniqueID
-                table.insert(npcOptions, {displayName, uniqueID})
-                displayToUniqueID[displayName] = uniqueID
+            for _, option in ipairs(npcOptions) do
+                displayToUniqueID[option[1]] = option[2]
             end
 
             if not table.IsEmpty(npcOptions) then

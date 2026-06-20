@@ -69,6 +69,240 @@ function lia.dialog.resolveDialogTypeIdentifier(value)
     return value
 end
 
+function lia.dialog.isDialogNPCEntity(npcOrClass)
+    local className = npcOrClass
+    if IsEntity(npcOrClass) then
+        if not IsValid(npcOrClass) then return false end
+        className = npcOrClass:GetClass()
+    end
+    return className == "lia_npc" or className == "lia_dialog_npc"
+end
+
+function lia.dialog.entityUsesGeneratedDialog(npc)
+    if not IsValid(npc) then return false end
+    if npc.NodeGeneratedDialog ~= nil then return npc.NodeGeneratedDialog == true end
+    return npc:GetClass() == "lia_dialog_npc"
+end
+
+function lia.dialog.isGeneratedDialogData(data)
+    return istable(data) and istable(data.GeneratedDialog)
+end
+
+function lia.dialog.isConversationDialogData(data)
+    return istable(data) and istable(data.Conversation)
+end
+
+function lia.dialog.isDialogCompatibleWithEntity(npc, data)
+    if not istable(data) then return false end
+    if lia.dialog.entityUsesGeneratedDialog(npc) then return lia.dialog.isGeneratedDialogData(data) end
+    return lia.dialog.isConversationDialogData(data)
+end
+
+function lia.dialog.getCompatibleDialogOptions(npc)
+    local options = {}
+    for uniqueID, data in pairs(lia.dialog.stored or {}) do
+        if lia.dialog.isDialogCompatibleWithEntity(npc, data) then options[#options + 1] = {lia.lang.resolveToken(data.PrintName or uniqueID), uniqueID} end
+    end
+
+    table.sort(options, function(a, b) return a[1] < b[1] end)
+    return options
+end
+
+local function trimToString(value)
+    return string.Trim(tostring(value or ""))
+end
+
+local function parseFactionRequirementTokens(requirement)
+    local trimmed = trimToString(requirement)
+    if trimmed == "" then return {} end
+    local tokens, seen = {}, {}
+    for token in string.gmatch(trimmed, "([^,]+)") do
+        token = trimToString(token)
+        local normalized = string.lower(token)
+        if token ~= "" and not seen[normalized] then
+            seen[normalized] = true
+            tokens[#tokens + 1] = token
+        end
+    end
+    return tokens
+end
+
+local function serializeFactionRequirementTokens(tokens)
+    local normalized = {}
+    for _, token in ipairs(tokens or {}) do
+        token = trimToString(token)
+        if token ~= "" then normalized[#normalized + 1] = token end
+    end
+    return table.concat(normalized, ", ")
+end
+
+local function getFactionByRequirementToken(token)
+    token = trimToString(token)
+    if token == "" or not lia.faction then return nil end
+    local direct = lia.faction.get and lia.faction.get(token) or nil
+    if direct then return direct end
+    local tokenLower = string.lower(token)
+    for _, faction in pairs(lia.faction.teams or {}) do
+        if string.lower(tostring(faction.uniqueID or "")) == tokenLower or string.lower(tostring(faction.name or "")) == tokenLower or tonumber(token) == faction.index then return faction end
+    end
+end
+
+local function getFactionRequirementDisplay(requirement)
+    local labels = {}
+    for _, token in ipairs(parseFactionRequirementTokens(requirement)) do
+        local faction = getFactionByRequirementToken(token)
+        labels[#labels + 1] = faction and trimToString(faction.name) ~= "" and faction.name or token
+    end
+    return #labels > 0 and table.concat(labels, ", ") or "Any faction"
+end
+
+local function factionMatchesRequirement(currentFactionIndex, requirement)
+    local currentFaction = lia.faction and lia.faction.indices and lia.faction.indices[currentFactionIndex] or nil
+    if not currentFaction then return false end
+    local tokens = parseFactionRequirementTokens(requirement)
+    if #tokens == 0 then return true end
+    for _, token in ipairs(tokens) do
+        local normalizedToken = string.lower(token)
+        if normalizedToken == string.lower(tostring(currentFaction.uniqueID or "")) or normalizedToken == string.lower(tostring(currentFaction.name or "")) or tonumber(token) == currentFactionIndex then return true end
+    end
+    return false
+end
+
+lia.dialog.parseFactionRequirementTokens = parseFactionRequirementTokens
+lia.dialog.serializeFactionRequirementTokens = serializeFactionRequirementTokens
+lia.dialog.getFactionRequirementDisplay = getFactionRequirementDisplay
+lia.dialog.factionMatchesRequirement = factionMatchesRequirement
+local function findGeneratedNode(generatedDialog, nodeID)
+    if not istable(generatedDialog) or not istable(generatedDialog.nodes) then return nil end
+    for _, node in ipairs(generatedDialog.nodes) do
+        if istable(node) and node.id == nodeID then return node end
+    end
+end
+
+local function getGeneratedStartNode(generatedDialog)
+    if not istable(generatedDialog) then return nil end
+    local entryNodeID = generatedDialog.entryNodeID
+    if entryNodeID and entryNodeID ~= "" then
+        local entryNode = findGeneratedNode(generatedDialog, entryNodeID)
+        if entryNode then return entryNode end
+    end
+
+    if istable(generatedDialog.nodes) then return generatedDialog.nodes[1] end
+end
+
+local function getGeneratedChildNodes(generatedDialog, nodeID)
+    local parentNode = findGeneratedNode(generatedDialog, nodeID)
+    local children = {}
+    if not istable(parentNode) or not istable(parentNode.children) then return children end
+    for _, childID in ipairs(parentNode.children) do
+        local childNode = findGeneratedNode(generatedDialog, childID)
+        if childNode then children[#children + 1] = childNode end
+    end
+
+    table.sort(children, function(a, b)
+        local aLabel = trimToString(a.dialogID)
+        local bLabel = trimToString(b.dialogID)
+        if aLabel == "" then aLabel = trimToString(a.playerText) end
+        if bLabel == "" then bLabel = trimToString(b.playerText) end
+        return aLabel < bLabel
+    end)
+    return children
+end
+
+lia.dialog.findGeneratedNode = findGeneratedNode
+lia.dialog.getGeneratedStartNode = getGeneratedStartNode
+lia.dialog.getGeneratedChildNodes = getGeneratedChildNodes
+local function sanitizeGeneratedNode(rawNode, index)
+    rawNode = istable(rawNode) and rawNode or {}
+    local nodeID = trimToString(rawNode.id)
+    if nodeID == "" then nodeID = "node_" .. tostring(index or 1) end
+    local children = {}
+    for _, childID in ipairs(rawNode.children or {}) do
+        childID = trimToString(childID)
+        if childID ~= "" and not table.HasValue(children, childID) then children[#children + 1] = childID end
+    end
+    return {
+        id = nodeID,
+        dialogID = trimToString(rawNode.dialogID),
+        npcText = trimToString(rawNode.npcText),
+        playerText = trimToString(rawNode.playerText),
+        waypoint = trimToString(rawNode.waypoint),
+        swepClass = trimToString(rawNode.swepClass),
+        factionRequirement = trimToString(rawNode.factionRequirement),
+        soundPath = trimToString(rawNode.soundPath),
+        requirementMessage = trimToString(rawNode.requirementMessage),
+        children = children,
+        position = {
+            x = math.Round(tonumber(rawNode.position and rawNode.position.x) or 40),
+            y = math.Round(tonumber(rawNode.position and rawNode.position.y) or 40)
+        }
+    }
+end
+
+local function sanitizeGeneratedDialogPayload(dialogTypeID, payload)
+    payload = istable(payload) and payload or {}
+    local generatedDialog = istable(payload.generatedDialog) and payload.generatedDialog or payload
+    local nodes = {}
+    local seenIDs = {}
+    for index, rawNode in ipairs(generatedDialog.nodes or {}) do
+        local node = sanitizeGeneratedNode(rawNode, index)
+        if not seenIDs[node.id] then
+            seenIDs[node.id] = true
+            nodes[#nodes + 1] = node
+        end
+    end
+
+    if #nodes == 0 then
+        nodes[1] = sanitizeGeneratedNode({
+            id = "node_1",
+            dialogID = "start",
+            npcText = "",
+            playerText = "",
+            children = {},
+            position = {
+                x = 40,
+                y = 40
+            }
+        }, 1)
+    end
+
+    local validNodeIDs = {}
+    for _, node in ipairs(nodes) do
+        validNodeIDs[node.id] = true
+    end
+
+    for _, node in ipairs(nodes) do
+        local filteredChildren = {}
+        for _, childID in ipairs(node.children or {}) do
+            if validNodeIDs[childID] and childID ~= node.id and not table.HasValue(filteredChildren, childID) then filteredChildren[#filteredChildren + 1] = childID end
+        end
+
+        node.children = filteredChildren
+    end
+
+    local entryNodeID = trimToString(generatedDialog.entryNodeID)
+    if entryNodeID == "" or not validNodeIDs[entryNodeID] then entryNodeID = nodes[1].id end
+    local printName = trimToString(payload.printName)
+    if printName == "" then printName = dialogTypeID end
+    local startNode = findGeneratedNode({
+        nodes = nodes
+    }, entryNodeID) or nodes[1]
+
+    if trimToString(startNode.dialogID) == "" then startNode.dialogID = startNode.id end
+    for _, node in ipairs(nodes) do
+        if trimToString(node.dialogID) == "" then node.dialogID = node.id end
+    end
+    return {
+        PrintName = printName ~= "" and printName or dialogTypeID,
+        Greeting = startNode and startNode.npcText or "",
+        GeneratedDialog = {
+            typeID = dialogTypeID,
+            entryNodeID = entryNodeID,
+            nodes = nodes
+        }
+    }
+end
+
 if SERVER then
     function lia.dialog.getNPCData(npcID)
         if lia.dialog.stored[npcID] then return lia.dialog.stored[npcID] end
@@ -91,6 +325,31 @@ if SERVER then
             return nil
         end
         return value
+    end
+
+    function lia.dialog.saveGeneratedDialogs()
+        local savedDialogs = {}
+        for uniqueID, data in pairs(lia.dialog.originalData or {}) do
+            if istable(data) and istable(data.GeneratedDialog) then
+                savedDialogs[uniqueID] = {
+                    printName = data.PrintName or uniqueID,
+                    generatedDialog = deepCopy(data.GeneratedDialog)
+                }
+            end
+        end
+
+        lia.data.set("generated_dialog_trees", savedDialogs)
+    end
+
+    function lia.dialog.loadGeneratedDialogs()
+        local storedDialogs = lia.data.get("generated_dialog_trees", {})
+        if not istable(storedDialogs) then return end
+        for uniqueID, payload in pairs(storedDialogs) do
+            uniqueID = trimToString(uniqueID)
+            if uniqueID == "" then continue end
+            local sanitized = sanitizeGeneratedDialogPayload(uniqueID, payload)
+            lia.dialog.registerNPC(uniqueID, sanitized, false)
+        end
     end
 
     local function normalizeResponseValue(response)
@@ -249,7 +508,7 @@ if SERVER then
 
     function lia.dialog.registerNPC(uniqueID, data, shouldSync)
         if not uniqueID or not data then return false end
-        if not data.Conversation then return false end
+        if not data.Conversation and not data.GeneratedDialog then return false end
         local hasChanged
         local sanitizedData = table.Copy(data)
         if sanitizedData.Conversation then sanitizedData.Conversation = sanitizeConversationTable(sanitizedData.Conversation) end
@@ -273,12 +532,7 @@ if SERVER then
             lia.dialog.syncToClients(client)
             timer.Simple(0.1, function()
                 if not IsValid(client) or not IsValid(npc) then return end
-                local npcOptions = {}
-                for uniqueID, data in pairs(lia.dialog.stored) do
-                    local displayName = lia.lang.resolveToken(data.PrintName or uniqueID)
-                    table.insert(npcOptions, {displayName, uniqueID})
-                end
-
+                local npcOptions = lia.dialog.getCompatibleDialogOptions(npc)
                 if not table.IsEmpty(npcOptions) then
                     client.npcEntity = npc
                     net.Start("liaRequestNPCSelection")
@@ -292,7 +546,18 @@ if SERVER then
             return
         end
 
+        if not lia.dialog.isDialogCompatibleWithEntity(npc, npcData) then
+            client:notifyError(lia.dialog.entityUsesGeneratedDialog(npc) and "This NPC can only use generated dialog trees." or "This NPC can only use hardcoded conversation dialogs.")
+            return
+        end
+
         local filteredData = table.Copy(npcData)
+        if lia.dialog.entityUsesGeneratedDialog(npc) then
+            filteredData.Conversation = nil
+        else
+            filteredData.GeneratedDialog = nil
+        end
+
         if filteredData.Conversation then
             filteredData.Conversation = filterConversationOptions(filteredData.Conversation, client, npc)
             for _, entry in pairs(filteredData.Conversation) do
@@ -644,9 +909,8 @@ else
         dialogTypeCombo:SetTall(30)
         dialogTypeCombo:DockMargin(0, 0, 0, 10)
         dialogTypeCombo:AddChoice(L("noneNoDialog"), "none")
-        for uniqueID, data in pairs(lia.dialog.stored) do
-            local displayName = lia.lang.resolveToken(data.PrintName or uniqueID)
-            dialogTypeCombo:AddChoice(displayName, uniqueID)
+        for _, option in ipairs(lia.dialog.getCompatibleDialogOptions(npc)) do
+            dialogTypeCombo:AddChoice(option[1], option[2])
         end
 
         dialogTypeCombo:ChooseOptionData(currentType or "none")
@@ -739,6 +1003,622 @@ else
         cancelBtn:DockMargin(0, 5, 0, 10)
         cancelBtn.DoClick = function() frame:Close() end
     end
+
+    local function cloneGeneratedDialogForEditor(sourceData, fallbackTypeID)
+        local source = istable(sourceData) and istable(sourceData.GeneratedDialog) and sourceData.GeneratedDialog or {}
+        local copy = {
+            typeID = trimToString(source.typeID),
+            entryNodeID = trimToString(source.entryNodeID),
+            nodes = {}
+        }
+
+        if copy.typeID == "" then copy.typeID = fallbackTypeID end
+        for index, node in ipairs(source.nodes or {}) do
+            copy.nodes[index] = {
+                id = trimToString(node.id),
+                dialogID = trimToString(node.dialogID),
+                npcText = trimToString(node.npcText),
+                playerText = trimToString(node.playerText),
+                waypoint = trimToString(node.waypoint),
+                swepClass = trimToString(node.swepClass),
+                factionRequirement = trimToString(node.factionRequirement),
+                soundPath = trimToString(node.soundPath),
+                requirementMessage = trimToString(node.requirementMessage),
+                children = table.Copy(node.children or {}),
+                position = {
+                    x = tonumber(node.position and node.position.x) or 40 + (index - 1) * 40,
+                    y = tonumber(node.position and node.position.y) or 40 + (index - 1) * 30
+                }
+            }
+
+            if copy.nodes[index].id == "" then copy.nodes[index].id = "node_" .. index end
+        end
+
+        if #copy.nodes == 0 then
+            copy.nodes[1] = {
+                id = "node_1",
+                dialogID = "start",
+                npcText = "",
+                playerText = "",
+                waypoint = "",
+                swepClass = "",
+                factionRequirement = "",
+                soundPath = "",
+                requirementMessage = "",
+                children = {},
+                position = {
+                    x = 60,
+                    y = 60
+                }
+            }
+
+            copy.entryNodeID = "node_1"
+        elseif copy.entryNodeID == "" then
+            copy.entryNodeID = copy.nodes[1].id
+        end
+        return copy
+    end
+
+    function lia.dialog.openNodeEditor(npc)
+        if not IsValid(npc) then return end
+        local currentTypeID = trimToString(npc:getNetVar("uniqueID", npc.uniqueID))
+        local fallbackTypeID = currentTypeID ~= "" and currentTypeID or ("dialog_" .. npc:EntIndex())
+        local existingData = lia.dialog.getNPCData(fallbackTypeID)
+        local editorData = cloneGeneratedDialogForEditor(existingData, fallbackTypeID)
+        local editorPrintName = trimToString(existingData and existingData.PrintName or fallbackTypeID)
+        local frame = vgui.Create("liaFrame")
+        frame:SetTitle("Dialog NPC Generator")
+        frame:SetSize(math.min(ScrW() - 60, 1680), math.min(ScrH() - 60, 940))
+        frame:Center()
+        frame:MakePopup()
+        frame:ShowCloseButton(true)
+        local frameW = frame:GetWide()
+        local entryHeight = 50
+        local buttonHeight = 38
+        local toolbar = frame:Add("DPanel")
+        toolbar:Dock(TOP)
+        toolbar:SetTall(entryHeight * 2 + 42)
+        toolbar:DockMargin(10, 10, 10, 0)
+        toolbar:SetPaintBackground(false)
+        local typeEntry = vgui.Create("liaEntry", toolbar)
+        typeEntry:Dock(TOP)
+        typeEntry:SetTitle("Dialog Type ID")
+        typeEntry:SetPlaceholder("example_npc_dialog")
+        typeEntry:SetValue(editorData.typeID)
+        typeEntry:SetTall(entryHeight)
+        typeEntry:DockMargin(0, 0, 0, 8)
+        local printNameEntry = vgui.Create("liaEntry", toolbar)
+        printNameEntry:Dock(TOP)
+        printNameEntry:SetTitle("Display Name")
+        printNameEntry:SetPlaceholder("Example NPC Dialog")
+        printNameEntry:SetValue(editorPrintName ~= "" and editorPrintName or editorData.typeID)
+        printNameEntry:SetTall(entryHeight)
+        printNameEntry:DockMargin(0, 0, 0, 8)
+        local helpLabel = vgui.Create("DLabel", toolbar)
+        helpLabel:Dock(TOP)
+        helpLabel:SetTall(18)
+        helpLabel:SetText("Add nodes, connect them, pick a start node, then save.")
+        helpLabel:SetTextColor(lia.color.theme.text or color_white)
+        local actionBar = frame:Add("DPanel")
+        actionBar:Dock(TOP)
+        actionBar:SetTall(buttonHeight)
+        actionBar:DockMargin(10, 8, 10, 0)
+        actionBar:SetPaintBackground(false)
+        local body = frame:Add("DPanel")
+        body:Dock(FILL)
+        body:DockMargin(10, 10, 10, 10)
+        body:SetPaintBackground(false)
+        local canvas = body:Add("DPanel")
+        canvas:Dock(FILL)
+        canvas.nodes = {}
+        canvas:DockMargin(0, 0, 10, 0)
+        local sidebar = body:Add("DPanel")
+        sidebar:Dock(RIGHT)
+        sidebar:SetWide(math.Clamp(math.floor(frameW * 0.28), 420, 520))
+        sidebar:SetPaintBackground(false)
+        local inspector = sidebar:Add("liaScrollPanel")
+        inspector:Dock(FILL)
+        inspector:DockMargin(0, 0, 0, 0)
+        canvas.Paint = function(panel, w, h)
+            lia.derma.rect(0, 0, w, h):Rad(12):Color(Color(22, 24, 30, 245)):Shape(lia.derma.SHAPE_IOS):Draw()
+            surface.SetDrawColor(55, 60, 72, 150)
+            for x = 0, w, 48 do
+                surface.DrawLine(x, 0, x, h)
+            end
+
+            for y = 0, h, 48 do
+                surface.DrawLine(0, y, w, y)
+            end
+
+            surface.SetDrawColor(116, 185, 255, 170)
+            for _, node in ipairs(editorData.nodes) do
+                local startPanel = panel.nodes[node.id]
+                if not IsValid(startPanel) then continue end
+                for _, childID in ipairs(node.children or {}) do
+                    local endPanel = panel.nodes[childID]
+                    if IsValid(endPanel) then
+                        local startX = startPanel.x + startPanel:GetWide()
+                        local startY = startPanel.y + startPanel:GetTall() * 0.5
+                        local endX = endPanel.x
+                        local endY = endPanel.y + endPanel:GetTall() * 0.5
+                        surface.DrawLine(startX, startY, endX, endY)
+                    end
+                end
+            end
+        end
+
+        local selectedNodeID
+        local pendingConnectionID
+        local fieldEntries = {}
+        local linkedChildrenPanel
+        local factionSummaryLabel
+        local nodeCounter = #editorData.nodes
+        local refreshCanvas
+        local refreshInspector
+        local function getNodeByID(nodeID)
+            return findGeneratedNode(editorData, nodeID)
+        end
+
+        local function syncTypeID()
+            editorData.typeID = trimToString(typeEntry:GetValue())
+            editorPrintName = trimToString(printNameEntry:GetValue())
+            if editorPrintName == "" then editorPrintName = editorData.typeID end
+        end
+
+        local function createField(parent, title, key, placeholder)
+            local entry = vgui.Create("liaEntry", parent)
+            entry:Dock(TOP)
+            entry:SetTall(entryHeight)
+            entry:SetTitle(title)
+            entry:SetPlaceholder(placeholder or "")
+            entry:DockMargin(0, 0, 0, 8)
+            fieldEntries[key] = entry
+            return entry
+        end
+
+        local function openFactionSelector(node)
+            if not istable(node) then return end
+            local selector = vgui.Create("liaFrame")
+            selector:SetTitle("Allowed Factions")
+            selector:SetSize(math.min(ScrW() - 120, 420), math.min(ScrH() - 120, 560))
+            selector:Center()
+            selector:MakePopup()
+            selector:ShowCloseButton(true)
+            local selectedTokens = {}
+            for _, token in ipairs(parseFactionRequirementTokens(node.factionRequirement)) do
+                selectedTokens[string.lower(token)] = token
+            end
+
+            local info = selector:Add("DLabel")
+            info:Dock(TOP)
+            info:SetTall(38)
+            info:SetWrap(true)
+            info:SetAutoStretchVertical(true)
+            info:SetText("Tick the factions that are allowed to use this reply. Leave all unchecked to allow every faction.")
+            info:SetTextColor(lia.color.theme.text or color_white)
+            info:DockMargin(10, 10, 10, 8)
+            local list = selector:Add("liaScrollPanel")
+            list:Dock(FILL)
+            list:DockMargin(10, 0, 10, 10)
+            local factions = {}
+            for _, faction in pairs(lia.faction.teams or {}) do
+                factions[#factions + 1] = faction
+            end
+
+            table.sort(factions, function(a, b) return string.lower(tostring(a.name or a.uniqueID or "")) < string.lower(tostring(b.name or b.uniqueID or "")) end)
+            for _, faction in ipairs(factions) do
+                local row = list:Add("DPanel")
+                row:Dock(TOP)
+                row:SetTall(42)
+                row:DockMargin(0, 0, 0, 8)
+                row.Paint = function(_, w, h) lia.derma.rect(0, 0, w, h):Rad(8):Color(Color(35, 38, 48, 240)):Shape(lia.derma.SHAPE_IOS):Draw() end
+                local text = vgui.Create("DLabel", row)
+                text:Dock(FILL)
+                text:DockMargin(12, 0, 0, 0)
+                text:SetText(string.format("%s (%s)", faction.name or faction.uniqueID, faction.uniqueID or faction.index))
+                text:SetTextColor(color_white)
+                local checkbox = row:Add("liaCheckbox")
+                checkbox:Dock(RIGHT)
+                checkbox:SetWide(72)
+                checkbox:DockMargin(8, 8, 8, 8)
+                checkbox:SetChecked(selectedTokens[string.lower(tostring(faction.uniqueID or ""))] ~= nil)
+                checkbox.OnChange = function(_, checked)
+                    local uniqueID = trimToString(faction.uniqueID)
+                    local normalized = string.lower(uniqueID)
+                    if checked then
+                        selectedTokens[normalized] = uniqueID
+                    else
+                        selectedTokens[normalized] = nil
+                    end
+
+                    local ordered = {}
+                    for _, sortedFaction in ipairs(factions) do
+                        local key = string.lower(trimToString(sortedFaction.uniqueID))
+                        if selectedTokens[key] then ordered[#ordered + 1] = selectedTokens[key] end
+                    end
+
+                    node.factionRequirement = serializeFactionRequirementTokens(ordered)
+                    if IsValid(factionSummaryLabel) then factionSummaryLabel:SetText("Allowed Factions: " .. getFactionRequirementDisplay(node.factionRequirement)) end
+                end
+
+                row.DoClick = function() checkbox:SetChecked(not checkbox:GetChecked()) end
+            end
+
+            local actions = selector:Add("DPanel")
+            actions:Dock(BOTTOM)
+            actions:SetTall(42)
+            actions:DockMargin(10, 0, 10, 10)
+            actions:SetPaintBackground(false)
+            local clearButton = actions:Add("liaButton")
+            clearButton:Dock(LEFT)
+            clearButton:SetWide(120)
+            clearButton:SetText("Clear All")
+            clearButton.DoClick = function()
+                node.factionRequirement = ""
+                selector:Close()
+                refreshInspector()
+            end
+
+            local doneButton = actions:Add("liaButton")
+            doneButton:Dock(RIGHT)
+            doneButton:SetWide(120)
+            doneButton:SetText("Done")
+            doneButton.DoClick = function()
+                selector:Close()
+                refreshInspector()
+            end
+        end
+
+        local function buildGeneratedDialogData()
+            syncTypeID()
+            local dialogTypeID = trimToString(editorData.typeID)
+            if dialogTypeID == "" then dialogTypeID = "example_dialog" end
+            return dialogTypeID
+        end
+
+        refreshInspector = function()
+            inspector:Clear()
+            fieldEntries = {}
+            factionSummaryLabel = nil
+            local summary = vgui.Create("DLabel", inspector)
+            summary:Dock(TOP)
+            summary:SetWrap(true)
+            summary:SetAutoStretchVertical(true)
+            summary:SetTextColor(lia.color.theme.text or color_white)
+            summary:SetText("Selected node fields stay minimal: core text, optional waypoint, SWEP, faction requirement, sound, and requirement fail message.")
+            summary:SetTall(48)
+            summary:DockMargin(0, 0, 0, 12)
+            if not selectedNodeID then
+                local emptyLabel = vgui.Create("DLabel", inspector)
+                emptyLabel:Dock(TOP)
+                emptyLabel:SetTall(24)
+                emptyLabel:SetText("Select a node to edit it.")
+                emptyLabel:SetTextColor(Color(190, 190, 190))
+                return
+            end
+
+            local node = getNodeByID(selectedNodeID)
+            if not node then return end
+            local stateLabel = vgui.Create("DLabel", inspector)
+            stateLabel:Dock(TOP)
+            stateLabel:SetTall(24)
+            stateLabel:SetText((editorData.entryNodeID == node.id and "Start Node" or "Dialog Node") .. "  |  Internal ID: " .. node.id)
+            stateLabel:SetTextColor(Color(150, 210, 255))
+            stateLabel:DockMargin(0, 0, 0, 8)
+            createField(inspector, "Dialog ID", "dialogID", "start")
+            createField(inspector, "NPC Text / Dialog Text", "npcText", "NPC line shown when this node is reached")
+            createField(inspector, "Player Response Text", "playerText", "Button text the player clicks")
+            createField(inspector, "Set Waypoint", "waypoint", "Waypoint name or Vector(x, y, z) from printpos")
+            createField(inspector, "Give Weapon (SWEP)", "swepClass", "weapon_pistol")
+            createField(inspector, "Sound Path", "soundPath", "vo/npc/example.wav")
+            createField(inspector, "Requirement Dialog Message", "requirementMessage", "You are not allowed to access this dialog.")
+            for key, entry in pairs(fieldEntries) do
+                entry:SetValue(node[key] or "")
+                entry.OnTextChanged = function(_, value)
+                    node[key] = trimToString(value)
+                    refreshCanvas()
+                end
+            end
+
+            local factionButton = vgui.Create("liaButton", inspector)
+            factionButton:Dock(TOP)
+            factionButton:SetTall(34)
+            factionButton:SetText("Select Factions")
+            factionButton:DockMargin(0, 0, 0, 6)
+            factionButton.DoClick = function() openFactionSelector(node) end
+            factionSummaryLabel = vgui.Create("DLabel", inspector)
+            factionSummaryLabel:Dock(TOP)
+            factionSummaryLabel:SetWrap(true)
+            factionSummaryLabel:SetAutoStretchVertical(true)
+            factionSummaryLabel:SetText("Allowed Factions: " .. getFactionRequirementDisplay(node.factionRequirement))
+            factionSummaryLabel:SetTextColor(Color(190, 190, 190))
+            factionSummaryLabel:DockMargin(0, 0, 0, 8)
+            local startButton = vgui.Create("liaButton", inspector)
+            startButton:Dock(TOP)
+            startButton:SetTall(34)
+            startButton:SetText("Set As Start Node")
+            startButton:DockMargin(0, 4, 0, 8)
+            startButton.DoClick = function()
+                editorData.entryNodeID = node.id
+                refreshCanvas()
+                refreshInspector()
+            end
+
+            local linkedLabel = vgui.Create("DLabel", inspector)
+            linkedLabel:Dock(TOP)
+            linkedLabel:SetTall(22)
+            linkedLabel:SetText("Connected Child Nodes")
+            linkedLabel:SetTextColor(lia.color.theme.text or color_white)
+            linkedLabel:DockMargin(0, 8, 0, 6)
+            linkedChildrenPanel = vgui.Create("DPanel", inspector)
+            linkedChildrenPanel:Dock(TOP)
+            linkedChildrenPanel:SetPaintBackground(false)
+            linkedChildrenPanel.PerformLayout = function(panel) panel:SizeToChildren(false, true) end
+            for _, childID in ipairs(node.children or {}) do
+                local childNode = getNodeByID(childID)
+                local row = vgui.Create("DPanel", linkedChildrenPanel)
+                row:Dock(TOP)
+                row:SetTall(32)
+                row:DockMargin(0, 0, 0, 6)
+                row.Paint = function(_, w, h) lia.derma.rect(0, 0, w, h):Rad(8):Color(Color(35, 38, 48, 240)):Shape(lia.derma.SHAPE_IOS):Draw() end
+                local label = vgui.Create("DLabel", row)
+                label:Dock(FILL)
+                label:DockMargin(10, 0, 0, 0)
+                label:SetText((childNode and childNode.dialogID or childID) .. " -> " .. (childNode and childNode.playerText or ""))
+                label:SetTextColor(color_white)
+                local removeButton = vgui.Create("liaButton", row)
+                removeButton:Dock(RIGHT)
+                removeButton:SetWide(78)
+                removeButton:SetText("Remove")
+                removeButton.DoClick = function()
+                    for index = #node.children, 1, -1 do
+                        if node.children[index] == childID then table.remove(node.children, index) end
+                    end
+
+                    refreshCanvas()
+                    refreshInspector()
+                end
+            end
+        end
+
+        typeEntry.OnTextChanged = function() syncTypeID() end
+        printNameEntry.OnTextChanged = function() syncTypeID() end
+        refreshCanvas = function()
+            canvas:Clear()
+            canvas.nodes = {}
+            for _, node in ipairs(editorData.nodes) do
+                local nodePanel = vgui.Create("DButton", canvas)
+                nodePanel:SetText("")
+                nodePanel:SetSize(250, 118)
+                nodePanel:SetPos(node.position.x, node.position.y)
+                nodePanel.x = node.position.x
+                nodePanel.y = node.position.y
+                nodePanel.dragging = false
+                nodePanel.Paint = function(panel, w, h)
+                    local isSelected = selectedNodeID == node.id
+                    local isStart = editorData.entryNodeID == node.id
+                    local bgColor = isSelected and Color(52, 92, 140, 245) or Color(33, 36, 44, 245)
+                    lia.derma.rect(0, 0, w, h):Rad(10):Color(bgColor):Shape(lia.derma.SHAPE_IOS):Draw()
+                    if isStart then lia.derma.rect(0, 0, w, 6):Radii(10, 10, 0, 0):Color(Color(116, 185, 255)):Draw() end
+                    draw.SimpleText(node.dialogID ~= "" and node.dialogID or node.id, "LiliaFont.20b", 12, 16, color_white, TEXT_ALIGN_LEFT, TEXT_ALIGN_TOP)
+                    draw.SimpleText(node.playerText ~= "" and node.playerText or "Player response text", "LiliaFont.18", 12, 44, Color(220, 220, 220), TEXT_ALIGN_LEFT, TEXT_ALIGN_TOP)
+                    draw.SimpleText(node.npcText ~= "" and node.npcText or "NPC text", "LiliaFont.16", 12, 72, Color(175, 190, 210), TEXT_ALIGN_LEFT, TEXT_ALIGN_TOP)
+                end
+
+                local connectButton = vgui.Create("liaButton", nodePanel)
+                connectButton:SetText(utf8.char(8594))
+                connectButton:SetSize(26, 26)
+                connectButton:SetPos(nodePanel:GetWide() - 34, math.floor(nodePanel:GetTall() * 0.5) - 13)
+                connectButton.DoClick = function()
+                    selectedNodeID = node.id
+                    pendingConnectionID = pendingConnectionID == node.id and nil or node.id
+                    refreshCanvas()
+                    refreshInspector()
+                end
+
+                connectButton.Paint = function(panel, w, h)
+                    local active = pendingConnectionID == node.id
+                    lia.derma.rect(0, 0, w, h):Rad(13):Color(active and Color(116, 185, 255) or Color(50, 59, 73, 240)):Shape(lia.derma.SHAPE_IOS):Draw()
+                    draw.SimpleText(utf8.char(8594), "LiliaFont.20b", w * 0.5, h * 0.5 - 1, active and Color(12, 28, 35) or color_white, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
+                end
+
+                nodePanel.OnMousePressed = function(panel, mouseCode)
+                    if mouseCode ~= MOUSE_LEFT then return end
+                    selectedNodeID = node.id
+                    if pendingConnectionID and pendingConnectionID ~= node.id then
+                        local sourceNode = getNodeByID(pendingConnectionID)
+                        if sourceNode and not table.HasValue(sourceNode.children, node.id) then sourceNode.children[#sourceNode.children + 1] = node.id end
+                        pendingConnectionID = nil
+                        refreshCanvas()
+                        refreshInspector()
+                        return
+                    end
+
+                    panel.dragging = true
+                    local localX, localY = panel:CursorPos()
+                    panel.dragOffsetX = localX
+                    panel.dragOffsetY = localY
+                    refreshInspector()
+                end
+
+                nodePanel.OnMouseReleased = function(panel) panel.dragging = false end
+                nodePanel.Think = function(panel)
+                    if not panel.dragging then return end
+                    if not input.IsMouseDown(MOUSE_LEFT) then
+                        panel.dragging = false
+                        return
+                    end
+
+                    local mouseX, mouseY = canvas:CursorPos()
+                    local newX = math.Clamp(mouseX - (panel.dragOffsetX or 0), 0, math.max(canvas:GetWide() - panel:GetWide(), 0))
+                    local newY = math.Clamp(mouseY - (panel.dragOffsetY or 0), 0, math.max(canvas:GetTall() - panel:GetTall(), 0))
+                    panel:SetPos(newX, newY)
+                    panel.x = newX
+                    panel.y = newY
+                    node.position.x = newX
+                    node.position.y = newY
+                end
+
+                nodePanel.DoClick = function()
+                    selectedNodeID = node.id
+                    refreshCanvas()
+                    refreshInspector()
+                end
+
+                canvas.nodes[node.id] = nodePanel
+            end
+
+            canvas:InvalidateLayout(true)
+            canvas:InvalidateParent(true)
+        end
+
+        local function makeActionButton(text, onClick)
+            local button = vgui.Create("liaButton", actionBar)
+            button:Dock(LEFT)
+            button:SetWide(132)
+            button:DockMargin(0, 0, 8, 0)
+            button:SetText(text)
+            button.DoClick = onClick
+            return button
+        end
+
+        makeActionButton("Add Node", function()
+            nodeCounter = nodeCounter + 1
+            local newNode = {
+                id = "node_" .. nodeCounter,
+                dialogID = "dialog_" .. nodeCounter,
+                npcText = "",
+                playerText = "",
+                waypoint = "",
+                swepClass = "",
+                factionRequirement = "",
+                soundPath = "",
+                requirementMessage = "",
+                children = {},
+                position = {
+                    x = 40 + (#editorData.nodes % 5) * 30,
+                    y = 40 + (#editorData.nodes % 5) * 30
+                }
+            }
+
+            editorData.nodes[#editorData.nodes + 1] = newNode
+            selectedNodeID = newNode.id
+            if not editorData.entryNodeID or editorData.entryNodeID == "" then editorData.entryNodeID = newNode.id end
+            refreshCanvas()
+            refreshInspector()
+        end)
+
+        makeActionButton("Create Example", function()
+            editorData.typeID = "example_guard_dialog"
+            typeEntry:SetValue(editorData.typeID)
+            editorPrintName = "Example Guard Dialog"
+            printNameEntry:SetValue(editorPrintName)
+            editorData.entryNodeID = "node_1"
+            editorData.nodes = {
+                {
+                    id = "node_1",
+                    dialogID = "start",
+                    npcText = "Halt. State your business.",
+                    playerText = "Start conversation",
+                    waypoint = "",
+                    swepClass = "",
+                    factionRequirement = "",
+                    soundPath = "",
+                    requirementMessage = "",
+                    children = {"node_2", "node_3"},
+                    position = {
+                        x = 72,
+                        y = 90
+                    }
+                },
+                {
+                    id = "node_2",
+                    dialogID = "citizen_path",
+                    npcText = "You may pass. Stay out of trouble.",
+                    playerText = "I'm just passing through.",
+                    waypoint = "Gate",
+                    swepClass = "",
+                    factionRequirement = "citizen",
+                    soundPath = "",
+                    requirementMessage = "This guard does not trust your faction.",
+                    children = {},
+                    position = {
+                        x = 360,
+                        y = 70
+                    }
+                },
+                {
+                    id = "node_3",
+                    dialogID = "armory_path",
+                    npcText = "Take this and report to the wall.",
+                    playerText = "Do you have a weapon for me?",
+                    waypoint = "Vector(0, 0, 0)",
+                    swepClass = "weapon_pistol",
+                    factionRequirement = "guard",
+                    soundPath = "buttons/button14.wav",
+                    requirementMessage = "Only guards can receive armory equipment.",
+                    children = {},
+                    position = {
+                        x = 360,
+                        y = 230
+                    }
+                }
+            }
+
+            nodeCounter = 3
+            selectedNodeID = "node_1"
+            pendingConnectionID = nil
+            refreshCanvas()
+            refreshInspector()
+        end)
+
+        makeActionButton("Delete Node", function()
+            if not selectedNodeID then return end
+            for index = #editorData.nodes, 1, -1 do
+                if editorData.nodes[index].id == selectedNodeID then
+                    table.remove(editorData.nodes, index)
+                    break
+                end
+            end
+
+            for _, node in ipairs(editorData.nodes) do
+                for index = #node.children, 1, -1 do
+                    if node.children[index] == selectedNodeID then table.remove(node.children, index) end
+                end
+            end
+
+            if editorData.entryNodeID == selectedNodeID then editorData.entryNodeID = editorData.nodes[1] and editorData.nodes[1].id or "" end
+            pendingConnectionID = nil
+            selectedNodeID = editorData.nodes[1] and editorData.nodes[1].id or nil
+            refreshCanvas()
+            refreshInspector()
+        end)
+
+        makeActionButton("Save Dialog", function()
+            local dialogTypeID = buildGeneratedDialogData()
+            if dialogTypeID == "" then
+                LocalPlayer():notifyError("Dialog Type ID is required.")
+                return
+            end
+
+            if #editorData.nodes == 0 then
+                LocalPlayer():notifyError("Create at least one node before saving.")
+                return
+            end
+
+            lia.dialog.submitConfiguration("dialog_editor", npc, {
+                dialogTypeID = dialogTypeID,
+                printName = editorPrintName,
+                generatedDialog = editorData
+            })
+
+            frame:Close()
+        end)
+
+        selectedNodeID = editorData.entryNodeID
+        refreshCanvas()
+        refreshInspector()
+    end
 end
 
 local function isConfigurationVisible(config, ply, npc, npcID)
@@ -826,6 +1706,12 @@ if SERVER then
             if customData.dialogType then
                 local resolvedType = lia.dialog.resolveDialogTypeIdentifier(customData.dialogType)
                 local dialogType = resolvedType == "none" and "" or resolvedType
+                local npcData = dialogType ~= "" and lia.dialog.getNPCData(dialogType) or nil
+                if dialogType ~= "" and not lia.dialog.isDialogCompatibleWithEntity(npc, npcData) then
+                    ply:notifyError(lia.dialog.entityUsesGeneratedDialog(npc) and "That dialog type requires a node dialog NPC." or "That dialog type requires a hardcoded conversation NPC.")
+                    return
+                end
+
                 npc.uniqueID = dialogType
                 npc:setNetVar("uniqueID", dialogType)
                 if dialogType == "" then
@@ -837,7 +1723,6 @@ if SERVER then
                     return
                 end
 
-                local npcData = lia.dialog.getNPCData(dialogType)
                 if npcData and npcData.PrintName then
                     npc.NPCName = npcData.PrintName
                     npc:setNetVar("NPCName", npc.NPCName)
@@ -915,9 +1800,56 @@ if SERVER then
             ply:notifySuccessLocalized("npcCustomizedSuccessfully")
         end
     })
+
+    lia.dialog.registerConfiguration("dialog_editor", {
+        shouldShow = function(ply, npc) return canAccessNPCConfigurations(ply) and lia.dialog.entityUsesGeneratedDialog(npc) end,
+        onApply = function(ply, npc, customData)
+            if not IsValid(npc) then return end
+            if not lia.dialog.entityUsesGeneratedDialog(npc) then
+                ply:notifyError("This editor can only be used on node dialog NPCs.")
+                return
+            end
+
+            customData = istable(customData) and customData or {}
+            local dialogTypeID = trimToString(customData.dialogTypeID)
+            if dialogTypeID == "" then
+                ply:notifyError("Dialog Type ID is required.")
+                return
+            end
+
+            local generatedDialogData = sanitizeGeneratedDialogPayload(dialogTypeID, customData)
+            if not lia.dialog.registerNPC(dialogTypeID, generatedDialogData, false) then
+                ply:notifyError("Failed to save dialog tree.")
+                return
+            end
+
+            npc.uniqueID = dialogTypeID
+            npc:setNetVar("uniqueID", dialogTypeID)
+            if not trimToString(npc.NPCName) or trimToString(npc.NPCName) == "" then
+                npc.NPCName = generatedDialogData.PrintName
+                npc:setNetVar("NPCName", npc.NPCName)
+            end
+
+            lia.dialog.saveGeneratedDialogs()
+            hook.Run("UpdateEntityPersistence", npc)
+            hook.Run("SaveData")
+            lia.dialog.syncToClients()
+            ply:notifySuccess("Dialog tree saved.")
+        end
+    })
+
+    hook.Add("LoadData", "liaDialogLoadGeneratedTrees", function() lia.dialog.loadGeneratedDialogs() end)
 else
     lia.dialog.registerConfiguration("appearance", {
         onOpen = function(npc) lia.dialog.openCustomizationUI(npc, "appearance") end
+    })
+
+    lia.dialog.registerConfiguration("dialog_editor", {
+        name = "Dialog Node Editor",
+        description = "Build a simple node-based dialog tree.",
+        order = 10,
+        shouldShow = function(ply, npc) return canAccessNPCConfigurations(ply) and lia.dialog.entityUsesGeneratedDialog(npc) end,
+        onOpen = function(npc) lia.dialog.openNodeEditor(npc) end
     })
 
     properties.Add("liaConfigureNPC", {
@@ -925,7 +1857,7 @@ else
         Order = 100,
         MenuIcon = "icon16/wrench.png",
         Filter = function(_, ent, ply)
-            if not IsValid(ent) or ent:GetClass() ~= "lia_npc" then return false end
+            if not IsValid(ent) or not lia.dialog.isDialogNPCEntity(ent) then return false end
             return canAccessNPCConfigurations(ply)
         end,
         Action = function(_, ent) lia.dialog.openConfigurationPicker(ent) end

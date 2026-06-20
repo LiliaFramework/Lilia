@@ -51,12 +51,7 @@ function ENT:Use(client)
     lia.dialog.syncToClients(client)
     timer.Simple(0.1, function()
         if not IsValid(client) or not IsValid(self) then return end
-        local npcOptions = {}
-        for uniqueID, data in pairs(lia.dialog.stored) do
-            local displayName = data.PrintName or uniqueID
-            table.insert(npcOptions, {displayName, uniqueID})
-        end
-
+        local npcOptions = lia.dialog.getCompatibleDialogOptions(self)
         if not table.IsEmpty(npcOptions) then
             client.npcEntity = self
             net.Start("liaRequestNPCSelection")

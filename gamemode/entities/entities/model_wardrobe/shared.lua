@@ -1,0 +1,10 @@
+﻿ENT.Type = "anim"
+ENT.PrintName = "Model Wardrobe"
+ENT.Author = "@liliaplayer"
+ENT.Spawnable = true
+ENT.AdminOnly = true
+ENT.Category = "Lilia"
+ENT.RenderGroup = RENDERGROUP_TRANSLUCENT
+ENT.NoPhysgun = true
+ENT.NoRemover = true
+ENT.IsPersistent = true

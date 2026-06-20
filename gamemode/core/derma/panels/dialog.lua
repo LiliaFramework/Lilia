@@ -370,6 +370,43 @@ function PANEL:OnRemove()
     if lia.dialog.historyFrame == self.dialogHistoryFrame then lia.dialog.historyFrame = nil end
 end
 
+function PANEL:BuildGeneratedOptions(nodeOptions)
+    local options = {}
+    for _, node in ipairs(nodeOptions or {}) do
+        local label = node.playerText ~= "" and node.playerText or node.dialogID or node.id
+        options[#options + 1] = {
+            label = label,
+            nodeID = node.id
+        }
+    end
+    return options
+end
+
+function PANEL:LoadGeneratedDialog(dialogData)
+    if not istable(dialogData) or not istable(dialogData.GeneratedDialog) then return end
+    local generatedDialog = dialogData.GeneratedDialog
+    local startNode = lia.dialog.getGeneratedStartNode and lia.dialog.getGeneratedStartNode(generatedDialog)
+    if not startNode then return end
+    self.generatedDialog = generatedDialog
+    self.currentGeneratedNodeID = startNode.id
+    self.generatedOptions = self:BuildGeneratedOptions(lia.dialog.getGeneratedChildNodes and lia.dialog.getGeneratedChildNodes(generatedDialog, startNode.id) or {})
+    self:SetDialogText(startNode.npcText or "")
+    self:ClearDialogOptions()
+    self:AddDialogOptions(self.generatedOptions, self.activeNPC, true)
+    if startNode.soundPath and startNode.soundPath ~= "" then surface.PlaySound(startNode.soundPath) end
+end
+
+function PANEL:HandleGeneratedDialogResult(result)
+    if not istable(result) then return end
+    self.pendingResponse = false
+    if result.npcText and result.npcText ~= "" then self:AppendDialogLine(result.npcText, false) end
+    if result.soundPath and result.soundPath ~= "" then surface.PlaySound(result.soundPath) end
+    if result.success then self.currentGeneratedNodeID = result.selectedNodeID or self.currentGeneratedNodeID end
+    self.generatedOptions = result.options or self.generatedOptions or {}
+    self:ClearDialogOptions()
+    self:AddDialogOptions(self.generatedOptions, self.activeNPC, true)
+end
+
 function PANEL:AddDialogOptions(options, npc, skipBackButton)
     local function labelMatches(text, ...)
         local normalized = string.Trim(string.lower(tostring(text or "")))
@@ -428,6 +465,17 @@ function PANEL:AddDialogOptions(options, npc, skipBackButton)
         choiceBtn:SetText(label)
         choiceBtn:SetFont("LiliaFont.32")
         choiceBtn.DoClick = function()
+            if info.nodeID and self.generatedDialog then
+                self:AppendDialogLine(label, true)
+                self.pendingResponse = true
+                net.Start("liaNpcDialogNodeSelect")
+                net.WriteEntity(IsValid(npc) and npc or self.activeNPC)
+                net.WriteString(info.nodeID)
+                net.WriteString(self.currentGeneratedNodeID or "")
+                net.SendToServer()
+                return
+            end
+
             local isGoodbye = info.closeDialog or labelMatches(label, "goodbye", "bye", "farewell", "close", L("close"))
             local isBack = labelMatches(label, "back", L("back"), "return", L("returnText"))
             if isBack and info.isAutoBack then
@@ -509,10 +557,17 @@ function PANEL:LoadNPCDialog(convoSettings, npc)
     local dialogText = convoSettings.Greeting or convoSettings.text or convoSettings.description or convoSettings.dialog or ""
     self.activeNPC = npc
     self.activeConversation = convoSettings
+    self.generatedDialog = nil
+    self.currentGeneratedNodeID = nil
+    self.generatedOptions = nil
     self.conversationStack = {}
     self:SetDialogText(dialogText)
     self:ClearDialogOptions()
-    if convoSettings.Conversation then self:AddDialogOptions(convoSettings.Conversation, npc, false) end
+    if convoSettings.GeneratedDialog then
+        self:LoadGeneratedDialog(convoSettings)
+    elseif convoSettings.Conversation then
+        self:AddDialogOptions(convoSettings.Conversation, npc, false)
+    end
 end
 
 vgui.Register("liaDialogMenu", PANEL, "liaFrame")

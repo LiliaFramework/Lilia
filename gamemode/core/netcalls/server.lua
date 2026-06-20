@@ -1177,13 +1177,47 @@ local function buildResponsePayload(response)
     return {lia.lang.resolveToken(tostring(response))}
 end
 
+local function dialogFactionMatches(ply, requirement)
+    requirement = string.Trim(tostring(requirement or ""))
+    if requirement == "" then return true end
+    local char = ply:getChar()
+    if not char then return false end
+    return lia.dialog.factionMatchesRequirement(char:getFaction(), requirement)
+end
+
+local function buildGeneratedNodeOptions(generatedDialog, nodeID)
+    local options = {}
+    for _, childNode in ipairs(lia.dialog.getGeneratedChildNodes(generatedDialog, nodeID) or {}) do
+        options[#options + 1] = {
+            label = childNode.playerText ~= "" and childNode.playerText or childNode.dialogID or childNode.id,
+            nodeID = childNode.id
+        }
+    end
+    return options
+end
+
+local function applyGeneratedNodeEffects(ply, npc, node)
+    if not IsValid(ply) or not istable(node) then return end
+    local swepClass = string.Trim(tostring(node.swepClass or ""))
+    if swepClass ~= "" and not ply:HasWeapon(swepClass) then ply:Give(swepClass) end
+    local waypointValue = string.Trim(tostring(node.waypoint or ""))
+    if waypointValue ~= "" then
+        local waypointVector = lia.data.decodeVector(waypointValue)
+        if isvector(waypointVector) then
+            ply:setWaypoint(node.dialogID ~= "" and node.dialogID or "Dialog", waypointVector)
+        elseif IsValid(npc) then
+            ply:setWaypoint(waypointValue, npc:GetPos())
+        end
+    end
+end
+
 local function setupNPCType(client, npc)
     if not IsValid(npc) then return end
     local npcType = npc.uniqueID
     if not npcType then return end
     local existingCustomData = npc.customData
     local npcData = lia.dialog.getNPCData(npcType)
-    if npcData then
+    if npcData and lia.dialog.isDialogCompatibleWithEntity(npc, npcData) then
         local currentPos = npc:GetPos()
         local currentAng = npc:GetAngles()
         npc:SetModel("models/Barney.mdl")
@@ -1284,6 +1318,47 @@ net.Receive("liaNpcDialogRequestResponse", function(_, ply)
     net.Start("liaNpcDialogDeliverResponse")
     net.WriteEntity(npc)
     net.WriteTable(payload)
+    net.Send(ply)
+end)
+
+net.Receive("liaNpcDialogNodeSelect", function(_, ply)
+    local npc = net.ReadEntity()
+    local selectedNodeID = net.ReadString()
+    local currentNodeID = net.ReadString()
+    if not IsValid(ply) or not IsValid(npc) or not npc.uniqueID then return end
+    local npcData = lia.dialog.getOriginalNPCData(npc.uniqueID)
+    local generatedDialog = npcData and npcData.GeneratedDialog
+    if not istable(generatedDialog) then return end
+    local selectedNode = lia.dialog.findGeneratedNode(generatedDialog, selectedNodeID)
+    local currentNode = lia.dialog.findGeneratedNode(generatedDialog, currentNodeID)
+    if not selectedNode then return end
+    local allowed = false
+    if currentNode then
+        for _, childID in ipairs(currentNode.children or {}) do
+            if childID == selectedNodeID then
+                allowed = true
+                break
+            end
+        end
+    else
+        local startNode = lia.dialog.getGeneratedStartNode(generatedDialog)
+        if startNode and startNode.id == selectedNodeID then allowed = true end
+    end
+
+    if not allowed and currentNodeID ~= "" then return end
+    local success = dialogFactionMatches(ply, selectedNode.factionRequirement)
+    local responseText = success and selectedNode.npcText or (selectedNode.requirementMessage ~= "" and selectedNode.requirementMessage or "You do not meet the requirement for this dialog.")
+    if success then applyGeneratedNodeEffects(ply, npc, selectedNode) end
+    net.Start("liaNpcDialogNodeResult")
+    net.WriteTable({
+        success = success,
+        selectedNodeID = selectedNodeID,
+        currentNodeID = currentNodeID,
+        npcText = responseText,
+        soundPath = success and selectedNode.soundPath or "",
+        options = buildGeneratedNodeOptions(generatedDialog, success and selectedNodeID or currentNodeID)
+    })
+
     net.Send(ply)
 end)
 
@@ -1401,6 +1476,73 @@ net.Receive("BodygrouperMenu", function(_, client)
             if v:HasUser(target) then v:RemoveUser(target) end
         end
     end
+end)
+
+local function appendWardrobeModels(models, seen, source)
+    if not istable(source) then return end
+    for modelKey, modelData in pairs(source) do
+        local parsed = lia.faction.getModelData(modelKey, modelData)
+        if parsed and lia.faction.isModelUsable(parsed.model) then
+            local lowered = string.lower(parsed.model)
+            if not seen[lowered] then
+                seen[lowered] = true
+                models[#models + 1] = parsed.model
+            end
+        elseif istable(modelData) then
+            appendWardrobeModels(models, seen, modelData)
+        end
+    end
+end
+
+local function getWardrobeModelsForCharacter(character)
+    local models = {}
+    local seen = {}
+    if not character then return models end
+    if lia.config.get("WardrobeEnableFactionModels", true) then
+        local factionData = lia.faction.indices[character:getFaction()]
+        appendWardrobeModels(models, seen, factionData and factionData.models)
+    end
+
+    if lia.config.get("WardrobeEnableClassModels", true) then
+        local classData = lia.class.list[character:getClass()]
+        appendWardrobeModels(models, seen, classData and classData.models)
+    end
+    return models
+end
+
+local function canAccessWardrobe(client)
+    for _, wardrobe in ipairs(ents.FindByClass("model_wardrobe")) do
+        if IsValid(wardrobe) and wardrobe:GetPos():Distance(client:GetPos()) <= 128 then return true end
+    end
+    return client:hasPrivilege("manageBodygroups")
+end
+
+net.Receive("WardrobeChangeModel", function(_, client)
+    local character = client:getChar()
+    if not character then return end
+    if not canAccessWardrobe(client) then
+        client:notifyLocalized("noAccess")
+        return
+    end
+
+    local newModel = net.ReadString()
+    if not lia.faction.isModelUsable(newModel) then
+        client:notifyLocalized("wardrobeModelInvalid")
+        return
+    end
+
+    local validModels = getWardrobeModelsForCharacter(character)
+    for _, modelPath in ipairs(validModels) do
+        if string.lower(modelPath) == string.lower(newModel) then
+            character:setModel(modelPath)
+            client:SetModel(modelPath)
+            client:SetupHands()
+            client:notifyLocalized("wardrobeModelChanged")
+            return
+        end
+    end
+
+    client:notifyLocalized("wardrobeModelInvalid")
 end)
 
 local function broadcastGroups()

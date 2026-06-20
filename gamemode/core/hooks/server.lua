@@ -932,7 +932,7 @@ function GM:LoadData()
                 createdEnt:Activate()
                 restorePersistentEntityTransform(createdEnt, decodedPos, decodedAng)
                 local loadData = table.Copy(ent)
-                if cls == "lia_npc" and ent.data and istable(ent.data) then
+                if lia.dialog.isDialogNPCEntity(cls) and ent.data and istable(ent.data) then
                     if ent.data.uniqueID then loadData.uniqueID = ent.data.uniqueID end
                     if ent.data.npcName then loadData.npcName = ent.data.npcName end
                     loadData.data = {
@@ -1238,7 +1238,7 @@ game.ConsoleCommand = function(cmd)
 end
 
 function GM:GetEntitySaveData(ent)
-    if ent:GetClass() == "lia_npc" then
+    if lia.dialog.isDialogNPCEntity(ent) then
         local saveData = {
             uniqueID = ent.uniqueID or "",
             npcName = ent.NPCName or ""
@@ -1250,7 +1250,7 @@ function GM:GetEntitySaveData(ent)
 end
 
 function GM:OnEntityLoaded(ent, data)
-    if ent:GetClass() == "lia_npc" and data and data.uniqueID and data.uniqueID ~= "" then
+    if lia.dialog.isDialogNPCEntity(ent) and data and data.uniqueID and data.uniqueID ~= "" then
         ent.uniqueID = data.uniqueID
         ent.NPCName = data.npcName or "NPC"
         local npcData = lia.dialog.getNPCData(data.uniqueID)

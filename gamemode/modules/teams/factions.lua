@@ -45,8 +45,24 @@ end
 function lia.faction.cacheModels(models)
     for modelKey, modelData in pairs(models or {}) do
         local parsed = lia.faction.getModelData and lia.faction.getModelData(modelKey, modelData)
-        if parsed and isstring(parsed.model) and parsed.model ~= "" then util.PrecacheModel(parsed.model) end
+        if parsed and isstring(parsed.model) and parsed.model ~= "" and lia.faction.isModelUsable(parsed.model) then util.PrecacheModel(parsed.model) end
     end
+end
+
+function lia.faction.isModelUsable(modelPath)
+    return isstring(modelPath) and modelPath ~= "" and (not util or not util.IsValidModel or util.IsValidModel(modelPath))
+end
+
+function lia.faction.normalizeSkinValue(skin, fallback)
+    local defaultSkin = tonumber(fallback) or 0
+    if isnumber(skin) then return skin end
+    local numericSkin = tonumber(skin)
+    if numericSkin ~= nil then return numericSkin end
+    if isstring(skin) then
+        local lowered = string.Trim(skin):lower()
+        if lowered == "" or lowered == "default" then return defaultSkin end
+    end
+    return defaultSkin
 end
 
 function lia.faction.getModelData(modelKey, modelData)
@@ -71,14 +87,14 @@ function lia.faction.getModelData(modelKey, modelData)
 
     if isstring(modelData[1]) then
         parsed.model = modelData[1]
-        parsed.skin = modelData[2] or 0
+        parsed.skin = lia.faction.normalizeSkinValue(modelData[2], 0)
         parsed.bodygroups = modelData[3] or {}
         return parsed
     end
 
     if isstring(modelKey) and (modelData.allowedSkins ~= nil or modelData.allowedBodygroups ~= nil or modelData.skin ~= nil or modelData.defaultSkin ~= nil or modelData.bodygroups ~= nil or modelData.defaultBodygroups ~= nil or modelData.groups ~= nil or modelData.model ~= nil) then
         parsed.model = modelData.model or modelKey
-        parsed.skin = modelData.skin or modelData.defaultSkin or 0
+        parsed.skin = lia.faction.normalizeSkinValue(modelData.skin ~= nil and modelData.skin or modelData.defaultSkin, 0)
         parsed.bodygroups = modelData.bodygroups or modelData.defaultBodygroups or modelData.groups or {}
         return parsed
     end
@@ -160,7 +176,7 @@ function lia.faction.getModelCustomizationAllowed(client, faction, context)
 end
 
 function lia.faction.getBodygroupNameToIndex(modelPath)
-    if not isstring(modelPath) or modelPath == "" then return {} end
+    if not lia.faction.isModelUsable(modelPath) then return {} end
     if lia.faction._bodygroupNameIndexCache[modelPath] then return lia.faction._bodygroupNameIndexCache[modelPath] end
     local map = {}
     if CLIENT then
@@ -380,29 +396,26 @@ end
 local function formatModelDataEntry(name, faction, modelIndex, modelData, category)
     local newGroups
     local parsed = lia.faction.getModelData(modelIndex, modelData)
-    if parsed and parsed.bodygroups then
+    if parsed and parsed.bodygroups and lia.faction.isModelUsable(parsed.model) then
         local groups = {}
         if istable(parsed.bodygroups) then
             local dummy
-            if SERVER then
-                dummy = ents.Create("prop_physics")
-                dummy:SetModel(parsed.model)
-            else
-                dummy = ClientsideModel(parsed.model)
-            end
-
-            local groupData = dummy:GetBodyGroups()
-            for _, group in ipairs(groupData) do
-                if group.id > 0 then
-                    if parsed.bodygroups[group.id] then
-                        groups[group.id] = parsed.bodygroups[group.id]
-                    elseif parsed.bodygroups[group.name] then
-                        groups[group.id] = parsed.bodygroups[group.name]
+            if CLIENT then dummy = ClientsideModel(parsed.model) end
+            if IsValid(dummy) then
+                local groupData = dummy:GetBodyGroups()
+                for _, group in ipairs(groupData) do
+                    if group.id > 0 then
+                        if parsed.bodygroups[group.id] then
+                            groups[group.id] = parsed.bodygroups[group.id]
+                        elseif parsed.bodygroups[group.name] then
+                            groups[group.id] = parsed.bodygroups[group.name]
+                        end
                     end
                 end
+
+                dummy:Remove()
             end
 
-            dummy:Remove()
             newGroups = groups
         elseif isstring(parsed.bodygroups) then
             newGroups = string.Explode("", parsed.bodygroups)

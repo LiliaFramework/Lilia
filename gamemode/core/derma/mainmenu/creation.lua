@@ -35,7 +35,7 @@ function PANEL:updateModel()
     local entity = self.model:GetEntity()
     if not IsValid(entity) then return end
     entity:SetupBones()
-    entity:SetSkin(self.context.skin or skin)
+    entity:SetSkin(lia.faction.normalizeSkinValue(self.context.skin, skin))
     local finalGroups = istable(self.context.groups) and self.context.groups or istable(groups) and groups
     if finalGroups then lia.util.applyBodygroups(entity, finalGroups) end
     hook.Run("ModifyCharacterModel", entity, self.context)

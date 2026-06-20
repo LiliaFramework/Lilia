@@ -645,6 +645,64 @@ lia.option.add("thirdPersonDistance", "@thirdPersonDistance", "@thirdPersonDista
     max = lia.config.get("MaxThirdPersonDistance", 100),
 })
 
+lia.option.add("firstPersonEffects", "First Person Effects", "Toggle realistic first person head bobbing and motion effects", false, nil, {
+    category = "Effects",
+    type = "Boolean",
+    visible = true,
+    isQuick = true,
+})
+
+lia.option.add("realisticViewEnabled", "Enable Realistic View", "Enable realistic view for all non-whitelisted weapons instead of only keys.", false, nil, {
+    category = "View",
+    type = "Boolean",
+    isQuick = true
+})
+
+lia.option.add("alwaysRealisticView", "Always Enable Realistic View", "Automatically enable realistic view while holding non-whitelisted SWEPs.", false, nil, {
+    category = "View",
+    type = "Boolean",
+    isQuick = true
+})
+
+lia.option.add("realisticViewUseFullBody", "Use Full Body for Realistic View", "Enable or disable full-body angles in realistic view.", true, nil, {
+    category = "View",
+    type = "Boolean",
+    isQuick = true
+})
+
+lia.option.add("freelookEnabled", "Enable Freelook", "Enable or disable the freelook functionality.", false, nil, {
+    category = "View",
+    type = "Boolean",
+    isQuick = true
+})
+
+lia.option.add("freelookLimitVertical", "Freelook Vertical Limit", "Set the maximum freelook angle vertically.", 65, nil, {
+    category = "View",
+    type = "Int",
+    min = 30,
+    max = 90
+})
+
+lia.option.add("freelookLimitHorizontal", "Freelook Horizontal Limit", "Set the maximum freelook angle horizontally.", 90, nil, {
+    category = "View",
+    type = "Int",
+    min = 60,
+    max = 120
+})
+
+lia.option.add("freelookSmoothness", "Freelook Smoothness", "Set the smoothness of the freelook movement.", 1, nil, {
+    category = "View",
+    type = "Float",
+    min = 0.1,
+    max = 2,
+    decimals = 2
+})
+
+lia.option.add("freelookBlockADS", "Freelook Block ADS", "Prevent freelook while aiming down sights.", true, nil, {
+    category = "View",
+    type = "Boolean"
+})
+
 lia.option.add("ChatShowTime", "@chatShowTime", "@chatShowTimeDesc", false, nil, {
     category = "@core",
     type = "Boolean"

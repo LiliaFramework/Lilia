@@ -649,7 +649,7 @@ function GM:CreateMove(cmd)
 end
 
 function GM:CalcView(client, origin, angles, fov)
-    local view = self.BaseClass:CalcView(client, origin, angles, fov)
+    local view = lia.camera and lia.camera.calcView and lia.camera.calcView(client, origin, angles, fov) or self.BaseClass:CalcView(client, origin, angles, fov)
     local ragdoll = client:GetRagdollEntity()
     if IsValid(client:GetVehicle()) then return view end
     if not IsValid(client:GetVehicle()) and client:GetViewEntity() == client and not client:ShouldDrawLocalPlayer() and IsValid(ragdoll) then
@@ -1048,6 +1048,11 @@ function GM:CharLoaded(character)
 end
 
 function GM:PrePlayerDraw(client)
+    if lia.worldPreview and lia.worldPreview.shouldHidePlayer and lia.worldPreview.shouldHidePlayer(client) then
+        client:DrawShadow(false)
+        return true
+    end
+
     if IsValid(client:GetRagdollEntity()) then
         client:DrawShadow(false)
         return true

@@ -15,7 +15,8 @@ function PANEL:filterCharacterModels(faction, class)
     if not istable(modelChoices) then return {} end
     local filteredModels = {}
     for idx, data in pairs(modelChoices) do
-        if lia.faction.getModelData(idx, data) then
+        local parsed = lia.faction.getModelData(idx, data)
+        if parsed and lia.faction.isModelUsable(parsed.model) then
             local shouldInclude = hook.Run("FilterCharModels", LocalPlayer(), faction, data, idx)
             if shouldInclude ~= false then filteredModels[idx] = data end
         end
@@ -279,6 +280,7 @@ function PANEL:updateCustomizationControls()
     local parsed = lia.faction.getModelData(context.model, info)
     local mdl, defaultSkin, defaultGroups = info, 0, {}
     if parsed then mdl, defaultSkin, defaultGroups = parsed.model, parsed.skin or 0, parsed.bodygroups or {} end
+    if not lia.faction.isModelUsable(mdl) then return end
     local entity
     if IsValid(lia.gui.charCreate) and IsValid(lia.gui.charCreate.model) then entity = lia.gui.charCreate.model:GetEntity() end
     local tempEntity
