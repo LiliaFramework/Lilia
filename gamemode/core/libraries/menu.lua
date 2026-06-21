@@ -1,4 +1,17 @@
-﻿lia.menu = lia.menu or {}
+﻿--[[
+    Folder: Developer - Libraries
+    File: lia.menu.md
+]]
+--[[
+    Menu
+
+    Clientside helpers for world-anchored interaction menus.
+]]
+--[[
+    Overview:
+        The menu library manages temporary clientside option menus under `lia.menu`. Menus are anchored to either a world position or an entity-local position, drawn near their projected screen position, faded based on range and crosshair focus, and resolved into callbacks when the active option is selected.
+]]
+lia.menu = lia.menu or {}
 lia.menu.list = lia.menu.list or {}
 local surface_SetFont = surface.SetFont
 local surface_GetTextSize = surface.GetTextSize
@@ -40,6 +53,35 @@ local function buildItems(opts)
     return list, w
 end
 
+--[[
+    Purpose:
+        Adds a temporary clientside menu using the provided option table and anchor position.
+
+    Parameters:
+        opts (table)
+            A table where each key is the label displayed in the menu and each value is the callback or payload associated with that option.
+
+        pos (Vector|Entity|nil)
+            The world position used to anchor the menu. If an entity is provided, the current eye trace hit position is stored relative to that entity. If nil, the local player's current eye trace hit position is used.
+
+        onRemove (function|nil)
+            Optional function called with the menu data as self when the menu is automatically removed during drawing.
+
+    Returns:
+        number
+            The index of the inserted menu entry in `lia.menu.list`.
+
+    Example Usage:
+        ```lua
+        lia.menu.add({
+            Search = function() print("search") end,
+            Unlock = function() print("unlock") end
+        })
+        ```
+
+    Realm:
+        Client
+]]
 function lia.menu.add(opts, pos, onRemove)
     local client = LocalPlayer()
     local items, txtW = buildItems(opts)
@@ -79,6 +121,23 @@ local function drawBackground(x, y, w, h, a)
     surface_DrawOutlinedRect(x - 4, y - 4, w + 8, h + 8)
 end
 
+--[[
+    Purpose:
+        Draws every active menu, updates fade state, highlights the option under the screen center, and removes expired or invalid entries.
+
+    Returns:
+        nil
+
+    Example Usage:
+        ```lua
+        hook.Add("HUDPaint", "liaMenuDrawAll", function()
+            lia.menu.drawAll()
+        end)
+        ```
+
+    Realm:
+        Client
+]]
 function lia.menu.drawAll()
     local client = LocalPlayer()
     local sw, sh = ScrW(), ScrH()
@@ -127,6 +186,26 @@ function lia.menu.drawAll()
     end
 end
 
+--[[
+    Purpose:
+        Gets the menu option currently targeted by the screen center while the local player is within interaction distance.
+
+    Returns:
+        number|nil
+            The active menu index, or nil if no menu option is active.
+
+        any|nil
+            The callback or payload associated with the active option, or nil if no menu option is active.
+
+    Example Usage:
+        ```lua
+        local id, callback = lia.menu.getActiveMenu()
+        if id then lia.menu.onButtonPressed(id, callback) end
+        ```
+
+    Realm:
+        Client
+]]
 function lia.menu.getActiveMenu()
     local client = LocalPlayer()
     local sw, sh = ScrW(), ScrH()
@@ -151,6 +230,32 @@ function lia.menu.getActiveMenu()
     end
 end
 
+--[[
+    Purpose:
+        Removes a menu entry and runs the selected option callback when one is provided.
+
+    Parameters:
+        id (number)
+            The menu index to remove from `lia.menu.list`.
+
+        cb (function|nil)
+            Optional callback to run after the menu entry is removed.
+
+    Returns:
+        boolean
+            True if a callback was provided and executed, otherwise false.
+
+    Example Usage:
+        ```lua
+        local id, callback = lia.menu.getActiveMenu()
+        if id then
+            lia.menu.onButtonPressed(id, callback)
+        end
+        ```
+
+    Realm:
+        Client
+]]
 function lia.menu.onButtonPressed(id, cb)
     table_remove(lia.menu.list, id)
     if cb then

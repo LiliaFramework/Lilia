@@ -54,10 +54,6 @@ function MODULE:CanPlayerSpawnStorage(client, entity, info)
     if not info.invType or not lia.inventory.types[info.invType] then return false end
 end
 
-function MODULE:StorageItemRemoved()
-    self:SaveData()
-end
-
 function MODULE:InventoryItemAdded(inventory)
     if inventory.isStorage then self:SaveData() end
 end

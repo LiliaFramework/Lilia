@@ -129,8 +129,11 @@ if not lia.worldPreview.begin then
         data.hiddenEntities = {}
         data.hiddenPlayers = {}
         data.hiddenPlayerState = {}
+        local processedEntities = {}
         local hiddenTargets = istable(data.config.hideEntities) and data.config.hideEntities or {}
         for _, ent in ipairs(hiddenTargets) do
+            if processedEntities[ent] then continue end
+            processedEntities[ent] = true
             if not IsValid(ent) or ent == data.entity then continue end
             if ent:IsPlayer() then
                 data.hiddenPlayers[ent] = true

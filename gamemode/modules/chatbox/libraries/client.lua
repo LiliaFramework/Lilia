@@ -213,7 +213,7 @@ local function buildFilteredWordsAdminPanel(panel)
             draw.RoundedBox(10, 0, 0, w, h, border)
             draw.RoundedBox(10, 1, 1, w - 2, h - 2, fill)
             draw.SimpleText(this.word, "LiliaFont.17", 14, 18, Color(230, 230, 230), TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)
-            draw.SimpleText("filtered word", "LiliaFont.15", 14, 40, Color(145, 145, 145), TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)
+            draw.SimpleText(L("chatFilterWordLabel"), "LiliaFont.15", 14, 40, Color(145, 145, 145), TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)
         end
 
         local copyButton = card:Add("DButton")
@@ -227,7 +227,6 @@ local function buildFilteredWordsAdminPanel(panel)
             menu:AddOption(L("chatFilterRemoveWord"), function() removeFilteredWord(word) end):SetIcon("icon16/delete.png")
             menu:Open()
         end
-
         card.copyButton = copyButton
         local remove = card:Add("liaButton")
         remove:Dock(RIGHT)

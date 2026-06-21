@@ -1,11 +1,11 @@
 ﻿local MODULE = MODULE
 net.Receive("liaChatboxRequestFilteredWords", function(_, client)
-    if not MODULE:CanManageFilteredWords(client) then return end
+    if not hook.Run("CanManageFilteredWords", client) then return end
     MODULE:SyncFilteredWords(client)
 end)
 
 net.Receive("liaChatboxAddFilteredWord", function(_, client)
-    if not MODULE:CanManageFilteredWords(client) then return end
+    if not hook.Run("CanManageFilteredWords", client) then return end
     local word = net.ReadString()
     local success, result = MODULE:AddFilteredWord(word)
     if not success then
@@ -22,7 +22,7 @@ net.Receive("liaChatboxAddFilteredWord", function(_, client)
 end)
 
 net.Receive("liaChatboxRemoveFilteredWord", function(_, client)
-    if not MODULE:CanManageFilteredWords(client) then return end
+    if not hook.Run("CanManageFilteredWords", client) then return end
     local word = net.ReadString()
     local success, result = MODULE:RemoveFilteredWord(word)
     if not success then

@@ -1,4 +1,55 @@
-﻿MODULE.name = "mainMenuModuleName"
+--[[
+    Hooks:
+        GetMainCharacterID()
+
+    Purpose:
+        Allows code to override which character ID should be treated as the player's main character.
+
+    Parameters:
+        None
+
+    Returns:
+        number|nil
+            Return the character ID that should be loaded as the main character.
+
+    Realm:
+        Client
+]]
+--[[
+    Hooks:
+        OpenCharacterMenuOverride()
+
+    Purpose:
+        Allows code to replace the default character menu panel creation.
+
+    Parameters:
+        None
+
+    Returns:
+        Panel|boolean|nil
+            Return a panel to use instead of the default character menu, or any non-nil value to stop the default menu from opening.
+
+    Realm:
+        Client
+]]
+--[[
+    Hooks:
+        ThirdPersonToggled(enabled)
+
+    Purpose:
+        Called whenever the third-person option is toggled through the main menu or option system.
+
+    Parameters:
+        enabled (boolean)
+            The new third-person enabled state.
+
+    Returns:
+        nil
+
+    Realm:
+        Client
+]]
+MODULE.name = "mainMenuModuleName"
 MODULE.author = "Samael"
 MODULE.discord = "@liliaplayer"
 MODULE.desc = "mainMenuDescription"

@@ -1,4 +1,197 @@
-﻿lia.item = lia.item or {}
+﻿--[[
+    Folder: Developer - Libraries
+    File: lia.item.md
+]]
+--[[
+    Item
+
+    Item definition, registration, instancing, inventory helper, rarity, and generated weapon/ammunition item utilities for Lilia.
+]]
+--[[
+    Overview:
+        The item library manages registered item definitions and base items under `lia.item`, creates and restores item instances, creates inventory helpers, registers deferred item definitions and overrides, supports generated weapon and ammunition item definitions, and applies persistent weapon override data.
+]]
+--[[
+    Hooks:
+        OnPlayerDroppedItem(Player client, Entity itemEntity)
+
+    Purpose:
+        Runs after a player uses the default drop action and the item has been spawned into the world.
+
+    Parameters:
+        client (Player)
+            The player who dropped the item.
+        itemEntity (Entity)
+            The spawned world entity for the dropped item.
+
+    Realm:
+        Server
+]]
+--[[
+    Hooks:
+        OnPlayerTakeItem(Player client, Item item)
+
+    Purpose:
+        Runs after a player successfully takes a world item into their inventory.
+
+    Parameters:
+        client (Player)
+            The player who took the item.
+        item (Item)
+            The item instance that was added to the inventory.
+
+    Realm:
+        Server
+]]
+--[[
+    Hooks:
+        OnPlayerRotateItem(Player client, Item item, boolean rotated)
+
+    Purpose:
+        Runs after a player rotates an inventory item using the default rotate action.
+
+    Parameters:
+        client (Player)
+            The player who rotated the item.
+        item (Item)
+            The item instance that was rotated.
+        rotated (boolean)
+            The new rotated state stored on the item.
+
+    Realm:
+        Server
+]]
+--[[
+    Hooks:
+        HandleItemTransferRequest(Player client, number itemID, number|nil x, number|nil y, number targetInvID)
+
+    Purpose:
+        Handles the actual transfer when a player gives an item forward to another player.
+
+    Parameters:
+        client (Player)
+            The player initiating the transfer.
+        itemID (number)
+            The database ID of the item being transferred.
+        x (number|nil)
+            The destination inventory X position, if one is specified.
+        y (number|nil)
+            The destination inventory Y position, if one is specified.
+        targetInvID (number)
+            The inventory ID receiving the item.
+
+    Returns:
+        deferred|nil
+            Return a deferred transfer result to continue the give-forward flow, or nil to stop handling.
+
+    Realm:
+        Server
+]]
+--[[
+    Hooks:
+        ItemDefaultFunctions(table functions)
+
+    Purpose:
+        Allows modules to inspect or modify the default item action table during item registration.
+
+    Parameters:
+        functions (table)
+            The mutable table of item action definitions.
+
+    Realm:
+        Shared
+]]
+--[[
+    Hooks:
+        OnItemRegistered(Item itemDef)
+
+    Purpose:
+        Runs after an item definition or base item has been registered and localized.
+
+    Parameters:
+        itemDef (Item)
+            The registered item definition table.
+
+    Realm:
+        Shared
+]]
+--[[
+    Hooks:
+        InitializedItems()
+
+    Purpose:
+        Runs after item files have been loaded from the item directory.
+
+    Realm:
+        Shared
+]]
+--[[
+    Hooks:
+        OnItemCreated(Item item)
+
+    Purpose:
+        Runs after an item instance table is created from a registered item definition.
+
+    Parameters:
+        item (Item)
+            The newly created item instance.
+
+    Realm:
+        Shared
+]]
+--[[
+    Hooks:
+        GetWeaponName(table weaponTable)
+
+    Purpose:
+        Allows modules to provide a display name for automatically generated weapon items.
+
+    Parameters:
+        weaponTable (table)
+            The weapon table being converted into an item definition.
+
+    Returns:
+        string|nil
+            Return a string to override the generated item name, or nil to use the default name source.
+
+    Realm:
+        Shared
+]]
+--[[
+    Hooks:
+        OnItemOverridden(Item itemDef, table overrides)
+
+    Purpose:
+        Runs after pending overrides have been applied to an item definition.
+
+    Parameters:
+        itemDef (Item)
+            The item definition that received overrides.
+        overrides (table)
+            The override table that was applied.
+
+    Realm:
+        Shared
+]]
+--[[
+    Hooks:
+        CanPlayerModifyConfig(Player client)
+
+    Purpose:
+        Controls whether the local player can see the generated weapon item configuration page.
+
+    Parameters:
+        client (Player)
+            The player opening the configuration interface.
+
+    Returns:
+        boolean|nil
+            Return false to hide the configuration page. Return nil or true to allow it.
+
+    Realm:
+        Client
+]]
+lia.item = lia.item or {}
 lia.item.base = lia.item.base or {}
 lia.item.list = lia.item.list or {}
 lia.item.rarities = lia.item.rarities or {}
@@ -161,10 +354,52 @@ local DefaultFunctions = {
 
 lia.meta.item.width = 1
 lia.meta.item.height = 1
+--[[
+    Purpose:
+        Returns a registered base item or normal item definition by identifier.
+
+    Parameters:
+        identifier (string)
+            The unique ID of the item or base item to retrieve.
+
+    Returns:
+        Item|nil
+            The matching item definition, or nil if no registered item or base item exists for the identifier.
+
+    Example Usage:
+        ```lua
+        local itemDef = lia.item.get("water_bottle")
+        if itemDef then print(itemDef.name) end
+        ```
+
+    Realm:
+        Shared
+]]
 function lia.item.get(identifier)
     return lia.item.base[identifier] or lia.item.list[identifier]
 end
 
+--[[
+    Purpose:
+        Applies stored weapon override values to an already registered item definition.
+
+    Parameters:
+        uniqueID (string)
+            The unique ID or weapon class name of the generated weapon item to update.
+
+    Returns:
+        nil
+            This function does not return a value.
+
+    Example Usage:
+        ```lua
+        lia.item.addWeaponOverride("weapon_pistol", {name = "Sidearm"})
+        lia.item.applyWeaponOverride("weapon_pistol")
+        ```
+
+    Realm:
+        Shared
+]]
 function lia.item.applyWeaponOverride(uniqueID)
     local data = lia.item.WeaponOverrides and lia.item.WeaponOverrides[uniqueID]
     if not istable(data) then return end
@@ -175,6 +410,29 @@ function lia.item.applyWeaponOverride(uniqueID)
     end
 end
 
+--[[
+    Purpose:
+        Finds an instantiated item by database ID and reports where the item currently exists.
+
+    Parameters:
+        itemID (number)
+            The database ID of the item instance to retrieve.
+
+    Returns:
+        table|nil
+            A table containing `item` and `location` when found, or nil when the item does not exist.
+        string|nil
+            An error message when the item cannot be found.
+
+    Example Usage:
+        ```lua
+        local result, err = lia.item.getItemByID(15)
+        if result then print(result.location) end
+        ```
+
+    Realm:
+        Shared
+]]
 function lia.item.getItemByID(itemID)
     assert(isnumber(itemID), L("itemIDNumberRequired"))
     local item = lia.item.instances[itemID]
@@ -192,6 +450,29 @@ function lia.item.getItemByID(itemID)
     }
 end
 
+--[[
+    Purpose:
+        Returns an instantiated item directly from the item instance cache.
+
+    Parameters:
+        itemID (number)
+            The database ID of the item instance to retrieve.
+
+    Returns:
+        Item|nil
+            The item instance when it exists, or nil when it cannot be found.
+        string|nil
+            An error message when the item cannot be found.
+
+    Example Usage:
+        ```lua
+        local item, err = lia.item.getInstancedItemByID(15)
+        if item then print(item.uniqueID) end
+        ```
+
+    Realm:
+        Shared
+]]
 function lia.item.getInstancedItemByID(itemID)
     assert(isnumber(itemID), L("itemIDNumberRequired"))
     local item = lia.item.instances[itemID]
@@ -199,6 +480,29 @@ function lia.item.getInstancedItemByID(itemID)
     return item
 end
 
+--[[
+    Purpose:
+        Returns the data table stored on an instantiated item.
+
+    Parameters:
+        itemID (number)
+            The database ID of the item instance whose data should be returned.
+
+    Returns:
+        table|nil
+            The item data table when the item exists, or nil when it cannot be found.
+        string|nil
+            An error message when the item cannot be found.
+
+    Example Usage:
+        ```lua
+        local data = lia.item.getItemDataByID(15)
+        if data then print(data.x, data.y) end
+        ```
+
+    Realm:
+        Shared
+]]
 function lia.item.getItemDataByID(itemID)
     assert(isnumber(itemID), L("itemIDNumberRequired"))
     local item = lia.item.instances[itemID]
@@ -206,6 +510,31 @@ function lia.item.getItemDataByID(itemID)
     return item.data
 end
 
+--[[
+    Purpose:
+        Loads an item file path by deriving its unique ID and registering it as an item or base item.
+
+    Parameters:
+        path (string)
+            The Lua file path to load.
+        baseID (string|nil)
+            The base item unique ID to inherit from, if any.
+        isBaseItem (boolean|nil)
+            Whether the file should be registered as a base item.
+
+    Returns:
+        nil
+            This function does not return a value.
+
+    Example Usage:
+        ```lua
+        lia.item.load("lilia/gamemode/items/sh_example.lua")
+        lia.item.load("lilia/gamemode/items/base/sh_weapons.lua", nil, true)
+        ```
+
+    Realm:
+        Shared
+]]
 function lia.item.load(path, baseID, isBaseItem)
     local uniqueID = path:match("sh_([_%w]+)%.lua") or path:match("([_%w]+)%.lua")
     if uniqueID then
@@ -219,20 +548,112 @@ function lia.item.load(path, baseID, isBaseItem)
     end
 end
 
+--[[
+    Purpose:
+        Checks whether a value is an item table.
+
+    Parameters:
+        object (any)
+            The value to inspect.
+
+    Returns:
+        boolean
+            True when the value is a table marked as an item, otherwise false.
+
+    Example Usage:
+        ```lua
+        if lia.item.isItem(item) then print(item:getID()) end
+        ```
+
+    Realm:
+        Shared
+]]
 function lia.item.isItem(object)
     return istable(object) and object.isItem
 end
 
+--[[
+    Purpose:
+        Returns a registered inventory instance by inventory ID.
+
+    Parameters:
+        invID (number)
+            The inventory ID to retrieve.
+
+    Returns:
+        Inventory|nil
+            The inventory instance, or nil if no inventory is loaded for the ID.
+
+    Example Usage:
+        ```lua
+        local inventory = lia.item.getInv(item.invID)
+        if inventory then print(inventory:getID()) end
+        ```
+
+    Realm:
+        Shared
+]]
 function lia.item.getInv(invID)
     return lia.inventory.instances[invID]
 end
 
+--[[
+    Purpose:
+        Registers an item rarity color under a rarity name.
+
+    Parameters:
+        name (string)
+            The rarity name to register.
+        color (Color)
+            The color associated with the rarity.
+
+    Returns:
+        nil
+            This function does not return a value.
+
+    Example Usage:
+        ```lua
+        lia.item.addRarities("Legendary", Color(255, 170, 0))
+        ```
+
+    Realm:
+        Shared
+]]
 function lia.item.addRarities(name, color)
     assert(isstring(name), L("vendorRarityNameString"))
     assert(IsColor(color), L("vendorColorMustBeColor"))
     lia.item.rarities[name] = color
 end
 
+--[[
+    Purpose:
+        Registers an item definition or base item and prepares inherited hooks, functions, localization, and overrides.
+
+    Parameters:
+        uniqueID (string)
+            The unique ID to register.
+        baseID (string|nil)
+            The base item unique ID to inherit from.
+        isBaseItem (boolean|nil)
+            Whether the registration target is a base item.
+        path (string|nil)
+            The Lua file path to include for the item definition.
+        luaGenerated (boolean|nil)
+            Whether the item is being generated from Lua data instead of loaded from a file.
+
+    Returns:
+        Item
+            The registered item definition.
+
+    Example Usage:
+        ```lua
+        local itemDef = lia.item.register("example", "base_entities", false, nil, true)
+        itemDef.name = "Example Item"
+        ```
+
+    Realm:
+        Shared
+]]
 function lia.item.register(uniqueID, baseID, isBaseItem, path, luaGenerated)
     assert(isstring(uniqueID), L("itemUniqueIDString"))
     local baseTable = lia.item.base[baseID] or lia.meta.item
@@ -292,6 +713,27 @@ function lia.item.register(uniqueID, baseID, isBaseItem, path, luaGenerated)
     return targetTable[itemType]
 end
 
+--[[
+    Purpose:
+        Resolves localization tokens on an item definition and its item function names or tips.
+
+    Parameters:
+        itemDef (Item|table)
+            The item definition to localize.
+
+    Returns:
+        nil
+            This function does not return a value.
+
+    Example Usage:
+        ```lua
+        local itemDef = lia.item.get("water_bottle")
+        lia.item.localizeDefinition(itemDef)
+        ```
+
+    Realm:
+        Shared
+]]
 function lia.item.localizeDefinition(itemDef)
     if not istable(itemDef) then return end
     for funcName, funcTable in pairs(itemDef.functions or {}) do
@@ -309,6 +751,33 @@ function lia.item.localizeDefinition(itemDef)
     if isstring(itemDef.category) then itemDef.category = lia.lang.resolveToken(itemDef.category) end
 end
 
+--[[
+    Purpose:
+        Queues a Lua-generated item registration to be finalized after modules initialize.
+
+    Parameters:
+        id (string)
+            The unique ID of the item to register.
+        base (string|nil)
+            The base item unique ID to inherit from.
+        properties (table|nil)
+            Properties to copy onto the registered item definition.
+
+    Returns:
+        table
+            A placeholder item table that proxies to the actual registered item once it exists.
+
+    Example Usage:
+        ```lua
+        lia.item.registerItem("example_entity", "base_entities", {
+            name = "Example Entity",
+            entityid = "example_entity"
+        })
+        ```
+
+    Realm:
+        Shared
+]]
 function lia.item.registerItem(id, base, properties)
     assert(isstring(id), L("itemUniqueIDString"))
     if properties ~= nil and not istable(properties) then
@@ -341,6 +810,30 @@ function lia.item.registerItem(id, base, properties)
     return placeholder
 end
 
+--[[
+    Purpose:
+        Queues overrides for an item definition to be applied after modules initialize.
+
+    Parameters:
+        uniqueID (string)
+            The unique ID of the item to override.
+        overrides (table)
+            The fields, functions, hooks, or post hooks to merge into the item definition.
+
+    Returns:
+        nil
+            This function does not return a value.
+
+    Example Usage:
+        ```lua
+        lia.item.overrideItem("water_bottle", {
+            name = "Clean Water"
+        })
+        ```
+
+    Realm:
+        Shared
+]]
 function lia.item.overrideItem(uniqueID, overrides)
     assert(isstring(uniqueID), L("itemUniqueIDString"))
     assert(istable(overrides), "overrides must be a table")
@@ -350,6 +843,26 @@ function lia.item.overrideItem(uniqueID, overrides)
     end
 end
 
+--[[
+    Purpose:
+        Loads base item files, category item files, and direct item files from an item directory.
+
+    Parameters:
+        directory (string)
+            The Lua directory containing item files and optional base subdirectory.
+
+    Returns:
+        nil
+            This function does not return a value.
+
+    Example Usage:
+        ```lua
+        lia.item.loadFromDir("lilia/gamemode/items")
+        ```
+
+    Realm:
+        Shared
+]]
 function lia.item.loadFromDir(directory)
     local files, folders
     files = file.Find(directory .. "/base/*.lua", "LUA")
@@ -372,6 +885,29 @@ function lia.item.loadFromDir(directory)
     hook.Run("InitializedItems")
 end
 
+--[[
+    Purpose:
+        Creates or returns an item instance for a registered item definition and database ID.
+
+    Parameters:
+        uniqueID (string)
+            The unique ID of the registered item definition.
+        id (number|string)
+            The item database ID, converted to a number when possible.
+
+    Returns:
+        Item
+            The item instance for the provided unique ID and ID.
+
+    Example Usage:
+        ```lua
+        local item = lia.item.new("water_bottle", 15)
+        print(item:getID())
+        ```
+
+    Realm:
+        Shared
+]]
 function lia.item.new(uniqueID, id)
     id = id and tonumber(id) or id
     assert(isnumber(id), L("itemNonNumberID"))
@@ -395,6 +931,30 @@ function lia.item.new(uniqueID, id)
     end
 end
 
+--[[
+    Purpose:
+        Registers a grid inventory type with fixed width and height accessors.
+
+    Parameters:
+        invType (string)
+            The inventory type name to register.
+        w (number)
+            The inventory width.
+        h (number)
+            The inventory height.
+
+    Returns:
+        nil
+            This function does not return a value.
+
+    Example Usage:
+        ```lua
+        lia.item.registerInv("small_bag", 4, 4)
+        ```
+
+    Realm:
+        Shared
+]]
 function lia.item.registerInv(invType, w, h)
     local GridInv = FindMetaTable("GridInv")
     assert(GridInv, L("gridInvNotFound"))
@@ -411,6 +971,32 @@ function lia.item.registerInv(invType, w, h)
     inventory:register(invType)
 end
 
+--[[
+    Purpose:
+        Creates a new inventory instance for a character owner and optionally syncs it to the owning player.
+
+    Parameters:
+        owner (number|nil)
+            The character ID that owns the inventory.
+        invType (string)
+            The inventory type to instantiate.
+        callback (function|nil)
+            Called with the created inventory after it is available.
+
+    Returns:
+        nil
+            This function does not return a value.
+
+    Example Usage:
+        ```lua
+        lia.item.newInv(charID, "grid", function(inventory)
+            print(inventory:getID())
+        end)
+        ```
+
+    Realm:
+        Shared
+]]
 function lia.item.newInv(owner, invType, callback)
     lia.inventory.instance(invType, {
         char = owner
@@ -429,6 +1015,30 @@ function lia.item.newInv(owner, invType, callback)
     end)
 end
 
+--[[
+    Purpose:
+        Creates a grid inventory instance immediately using the provided dimensions and ID.
+
+    Parameters:
+        w (number)
+            The inventory width.
+        h (number)
+            The inventory height.
+        id (number)
+            The inventory ID to assign to the new instance.
+
+    Returns:
+        Inventory
+            The created grid inventory instance.
+
+    Example Usage:
+        ```lua
+        local inventory = lia.item.createInv(4, 4, 1001)
+        ```
+
+    Realm:
+        Shared
+]]
 function lia.item.createInv(w, h, id)
     local GridInv = FindMetaTable("GridInv")
     assert(GridInv, L("gridInvNotFound"))
@@ -506,14 +1116,83 @@ lia.item.holdTypeSizeMapping = {
     }
 }
 
+--[[
+    Purpose:
+        Stores item definition override data for a generated weapon item class.
+
+    Parameters:
+        className (string)
+            The weapon class or generated item unique ID to override.
+        data (table)
+            The override fields to apply to the generated item definition.
+
+    Returns:
+        nil
+            This function does not return a value.
+
+    Example Usage:
+        ```lua
+        lia.item.addWeaponOverride("weapon_pistol", {
+            width = 1,
+            height = 1
+        })
+        ```
+
+    Realm:
+        Shared
+]]
 function lia.item.addWeaponOverride(className, data)
     lia.item.WeaponOverrides[className] = data
 end
 
+--[[
+    Purpose:
+        Prevents a weapon class from being converted into an automatically generated item.
+
+    Parameters:
+        className (string)
+            The weapon class name to blacklist.
+
+    Returns:
+        nil
+            This function does not return a value.
+
+    Example Usage:
+        ```lua
+        lia.item.addWeaponToBlacklist("weapon_example_base")
+        ```
+
+    Realm:
+        Shared
+]]
 function lia.item.addWeaponToBlacklist(className)
     lia.item.WeaponsBlackList[className] = true
 end
 
+--[[
+    Purpose:
+        Applies a value to a nested field on a weapon table using a dot-separated path.
+
+    Parameters:
+        wepTable (table)
+            The weapon table to modify.
+        dotPath (string)
+            The dot-separated nested field path to write.
+        value (any)
+            The value to assign at the destination path.
+
+    Returns:
+        boolean
+            True when the value was applied, otherwise false.
+
+    Example Usage:
+        ```lua
+        local ok = lia.item.applyRuntimeOverridePath(SWEP, "Primary.Damage", 35)
+        ```
+
+    Realm:
+        Shared
+]]
 function lia.item.applyRuntimeOverridePath(wepTable, dotPath, value)
     if not istable(wepTable) then return false end
     local parts = string.Explode(".", dotPath)
@@ -529,6 +1208,28 @@ function lia.item.applyRuntimeOverridePath(wepTable, dotPath, value)
     return true
 end
 
+--[[
+    Purpose:
+        Reads a nested value from a weapon table using a dot-separated path.
+
+    Parameters:
+        wepTable (table)
+            The weapon table to read from.
+        dotPath (string)
+            The dot-separated nested field path to read.
+
+    Returns:
+        any|nil
+            The nested value when the path exists, or nil when it cannot be resolved.
+
+    Example Usage:
+        ```lua
+        local damage = lia.item.getRuntimeValue(SWEP, "Primary.Damage")
+        ```
+
+    Realm:
+        Shared
+]]
 function lia.item.getRuntimeValue(wepTable, dotPath)
     if not istable(wepTable) then return nil end
     local parts = string.Explode(".", dotPath)
@@ -541,6 +1242,38 @@ function lia.item.getRuntimeValue(wepTable, dotPath)
 end
 
 if SERVER then
+    --[[
+        Purpose:
+            Sets a data key on an instantiated item by database ID.
+
+        Parameters:
+            itemID (number)
+                The database ID of the item instance to update.
+            key (string)
+                The data key to set.
+            value (any)
+                The value to store.
+            receivers (Player|table|nil)
+                Optional networking recipients for the data update.
+            noSave (boolean|nil)
+                Whether to skip saving the data change.
+            noCheckEntity (boolean|nil)
+                Whether to skip entity validity checks during the update.
+
+        Returns:
+            boolean
+                True when the data was set, or false when the item was not found.
+            string|nil
+                An error message when the item cannot be found.
+
+        Example Usage:
+            ```lua
+            local ok, err = lia.item.setItemDataByID(15, "uses", 2)
+            ```
+
+        Realm:
+            Server
+    ]]
     function lia.item.setItemDataByID(itemID, key, value, receivers, noSave, noCheckEntity)
         assert(isnumber(itemID), L("itemIDNumberRequired"))
         assert(isstring(key), L("itemKeyString"))
@@ -550,6 +1283,38 @@ if SERVER then
         return true
     end
 
+    --[[
+        Purpose:
+            Creates a persistent item database record and item instance.
+
+        Parameters:
+            index (number|string|nil)
+                The inventory ID for the new item, or the unique ID when using the shorthand overload.
+            uniqueID (string|table|nil)
+                The item unique ID, or item data when using the shorthand overload.
+            itemData (table|nil)
+                Initial data to store on the item.
+            x (number|nil)
+                The item inventory X position.
+            y (number|nil)
+                The item inventory Y position.
+            callback (function|nil)
+                Called with the created item after the database insert completes.
+
+        Returns:
+            deferred
+                A deferred object that resolves with the created item or rejects with an error message.
+
+        Example Usage:
+            ```lua
+            lia.item.instance(invID, "water_bottle", {}, 1, 1, function(item)
+                print(item:getID())
+            end)
+            ```
+
+        Realm:
+            Server
+    ]]
     function lia.item.instance(index, uniqueID, itemData, x, y, callback)
         if isstring(index) and (istable(uniqueID) or itemData == nil and x == nil) then
             itemData = uniqueID
@@ -600,6 +1365,26 @@ if SERVER then
         return d
     end
 
+    --[[
+        Purpose:
+            Deletes an item by database ID, using the loaded instance when available or a direct database delete otherwise.
+
+        Parameters:
+            id (number)
+                The item database ID to delete.
+
+        Returns:
+            nil
+                This function does not return a value.
+
+        Example Usage:
+            ```lua
+            lia.item.deleteByID(15)
+            ```
+
+        Realm:
+            Server
+    ]]
     function lia.item.deleteByID(id)
         if lia.item.instances[id] then
             lia.item.instances[id]:delete()
@@ -608,6 +1393,27 @@ if SERVER then
         end
     end
 
+    --[[
+        Purpose:
+            Loads one or more items from the database into the item instance cache.
+
+        Parameters:
+            itemIndex (number|table)
+                A single item ID or a table of item IDs to restore.
+
+        Returns:
+            nil
+                This function does not return a value.
+
+        Example Usage:
+            ```lua
+            lia.item.loadItemByID(15)
+            lia.item.loadItemByID({15, 16, 17})
+            ```
+
+        Realm:
+            Server
+    ]]
     function lia.item.loadItemByID(itemIndex)
         local range
         if istable(itemIndex) then
@@ -637,6 +1443,36 @@ if SERVER then
         end)
     end
 
+    --[[
+        Purpose:
+            Creates an item instance and spawns it into the world.
+
+        Parameters:
+            uniqueID (string)
+                The unique ID of the item definition to spawn.
+            position (Vector)
+                The world position where the item should be spawned.
+            callback (function|Angle|nil)
+                Called with the spawned item, or used as angles when no callback is provided.
+            angles (Angle|table|nil)
+                The spawn angles, or item data when passed through the angle overload.
+            data (table|nil)
+                Initial data to store on the spawned item.
+
+        Returns:
+            deferred|nil
+                A deferred object when no callback function is supplied, otherwise nil.
+
+        Example Usage:
+            ```lua
+            lia.item.spawn("water_bottle", client:GetPos(), function(item)
+                if item then print(item:getID()) end
+            end)
+            ```
+
+        Realm:
+            Server
+    ]]
     function lia.item.spawn(uniqueID, position, callback, angles, data)
         local d
         if not isfunction(callback) then
@@ -666,6 +1502,34 @@ if SERVER then
         return d
     end
 
+    --[[
+        Purpose:
+            Loads an inventory by ID, restores its dimensions, and optionally passes it to a callback.
+
+        Parameters:
+            invID (number)
+                The inventory ID to load.
+            w (number)
+                The restored inventory width.
+            h (number)
+                The restored inventory height.
+            callback (function|nil)
+                Called with the restored inventory when it is available.
+
+        Returns:
+            nil
+                This function does not return a value.
+
+        Example Usage:
+            ```lua
+            lia.item.restoreInv(invID, 6, 4, function(inventory)
+                inventory:sync(client)
+            end)
+            ```
+
+        Realm:
+            Server
+    ]]
     function lia.item.restoreInv(invID, w, h, callback)
         lia.inventory.loadByID(invID):next(function(inventory)
             if not inventory then return end
@@ -822,6 +1686,22 @@ hook.Add("InitializedModules", "liaItems", function()
 end)
 
 if SERVER then
+    --[[
+        Purpose:
+            Loads saved generated weapon item override data and applies it to registered item definitions.
+
+        Returns:
+            nil
+                This function does not return a value.
+
+        Example Usage:
+            ```lua
+            lia.item.loadWeaponOverrides()
+            ```
+
+        Realm:
+            Server
+    ]]
     function lia.item.loadWeaponOverrides()
         local stored = lia.data.get("weaponOverrides") or {}
         lia.item.WeaponOverrides = stored
@@ -835,6 +1715,22 @@ if SERVER then
         end
     end
 
+    --[[
+        Purpose:
+            Loads saved runtime weapon stat overrides and applies them to stored weapon tables.
+
+        Returns:
+            nil
+                This function does not return a value.
+
+        Example Usage:
+            ```lua
+            lia.item.loadWeaponRuntimeOverrides()
+            ```
+
+        Realm:
+            Server
+    ]]
     function lia.item.loadWeaponRuntimeOverrides()
         local stored = lia.data.get("weaponRuntimeOverrides") or {}
         lia.item.WeaponRuntimeOverrides = stored

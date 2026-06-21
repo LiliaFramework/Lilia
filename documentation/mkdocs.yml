@@ -59,9 +59,64 @@ nav:
           - Overview: developer/libraries/index.md
           # AUTO-GENERATED: LIBRARIES START
           - Currency: developer/libraries/lia.currency.md
+          - Attributes: developer/libraries/lia.attribs.md
+          - Bar: developer/libraries/lia.bar.md
+          - Camera: developer/libraries/lia.camera.md
+          - Character: developer/libraries/lia.char.md
+          - Chat: developer/libraries/lia.chat.md
+          - Class: developer/libraries/lia.class.md
+          - Color: developer/libraries/lia.color.md
+          - Command: developer/libraries/lia.command.md
+          - Configuration: developer/libraries/lia.config.md
+          - DarkRP: developer/libraries/lia.darkrp.md
+          - Data: developer/libraries/lia.data.md
+          - Database: developer/libraries/lia.database.md
+          - Derma: developer/libraries/lia.derma.md
+          - Dialog: developer/libraries/lia.dialog.md
+          - Doors: developer/libraries/lia.doors.md
+          - Faction: developer/libraries/lia.faction.md
+          - Flags: developer/libraries/lia.flag.md
+          - Font: developer/libraries/lia.font.md
+          - Inventory: developer/libraries/lia.inventory.md
+          - Item: developer/libraries/lia.item.md
+          - Keybind: developer/libraries/lia.keybind.md
+          - Language: developer/libraries/lia.lang.md
+          - Loader: developer/libraries/lia.loader.md
+          - Log: developer/libraries/lia.log.md
+          - Menu: developer/libraries/lia.menu.md
+          - Module: developer/libraries/lia.module.md
+          - Net: developer/libraries/lia.net.md
+          - Notices: developer/libraries/lia.notices.md
+          - Option: developer/libraries/lia.option.md
+          - Player Interactions: developer/libraries/lia.playerinteract.md
+          - Time: developer/libraries/lia.time.md
+          - Utility: developer/libraries/lia.util.md
+          - Web Image: developer/libraries/lia.webimage.md
+          - WebSound: developer/libraries/lia.websound.md
+          - Workshop: developer/libraries/lia.workshop.md
           # AUTO-GENERATED: LIBRARIES END
-      - Hooks: developer/hooks/index.md
-      - Compatibility: developer/compatibility/index.md
+      - Hooks:
+          - Overview: developer/hooks/index.md
+          # AUTO-GENERATED: HOOKS START
+          - Admin: developer/hooks/administration.admin.md
+          - Administration: developer/hooks/administration.md
+          - Administration - Submodules/Adminstick: developer/hooks/administration.submodules-adminstick.md
+          - Administration - Submodules/Logs: developer/hooks/administration.submodules-logs.md
+          - Administration - Submodules/Tickets: developer/hooks/administration.submodules-tickets.md
+          - Attributes: developer/hooks/attributes.md
+          - Chatbox: developer/hooks/chatbox.md
+          - Doors: developer/hooks/doors.md
+          - Inventory: developer/hooks/inventory.md
+          - Inventory - Types/Gridinv: developer/hooks/inventory.types-gridinv.md
+          - Inventory - Types/Gridinv/Submodules/Storage: developer/hooks/inventory.types-gridinv-submodules-storage.md
+          - Inventory - Types/Weightinv: developer/hooks/inventory.types-weightinv.md
+          - Mainmenu: developer/hooks/mainmenu.md
+          - Recognition: developer/hooks/recognition.md
+          - Spawns: developer/hooks/spawns.md
+          - Teams: developer/hooks/teams.md
+          - Vendor: developer/hooks/vendor.md
+          # AUTO-GENERATED: HOOKS END
+        # Developer modules section removed — module libraries/hooks are surfaced under Libraries and Hooks
   - Reference:
       - Overview: definitions/index.md
       - Core:
@@ -71,10 +126,11 @@ nav:
           - Modules: definitions/module.md
       - Items:
           # AUTO-GENERATED: ITEM DEFINITIONS START
+          - Overview: definitions/items/index.md
+          - Item Base Field Reference: definitions/items/base-field-reference.md
           - Aid Item Definition: definitions/items/aid.md
           - Ammo Item Definition: definitions/items/ammo.md
           - ArcCW Attachment Item Definition: definitions/items/arccw_att.md
-          - Item Base Field Reference: definitions/items/base-field-reference.md
           - Books Item Definition: definitions/items/books.md
           - Entity Item Definition: definitions/items/entities.md
           - Grenade Item Definition: definitions/items/grenade.md
@@ -83,6 +139,7 @@ nav:
           - Stackable Item Definition: definitions/items/stackable.md
           - URL Item Definition: definitions/items/url.md
           - Weapons Item Definition: definitions/items/weapons.md
+          - Item Base Field Reference: definitions/items/base-field-reference.md
           # AUTO-GENERATED: ITEM DEFINITIONS END
   - Generators:
       - Overview: generators/index.md

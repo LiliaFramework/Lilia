@@ -1,5 +1,63 @@
-﻿lia.font = lia.font or {}
+﻿--[[
+    Folder: Developer - Libraries
+    File: lia.font.md
+]]
+--[[
+    Font
+
+    Font registration and loading helpers for Lilia UI and HUD text.
+]]
+--[[
+    Overview:
+        The font library centralizes registered font definitions under `lia.font`. It registers default Montserrat faces, creates configurable Lilia UI and HUD font aliases, exposes available font faces for configuration, reloads stored fonts on the client, and lazily creates missing `surface.SetFont` font variants when they are first requested.
+]]
+--[[
+    Hooks:
+        PostLoadFonts(string mainFont, string fontName)
+
+    Purpose:
+        Runs after `lia.font.registerFonts` finishes registering the standard font aliases and generated size variants.
+
+    Parameters:
+        mainFont (string)
+            The configured main interface font used for Lilia font aliases.
+
+        fontName (string)
+            The second font argument passed by this library. It currently receives the same value as `mainFont`.
+
+    Realm:
+        Shared
+]]
+--[[
+    Hooks:
+        RefreshFonts()
+
+    Purpose:
+        Runs when font-dependent UI should reload or repaint after font configuration is initialized or changed.
+
+    Realm:
+        Client
+]]
+lia.font = lia.font or {}
 lia.font.stored = lia.font.stored or {}
+--[[
+    Purpose:
+        Recreates every stored font definition on the client using `surface.CreateFont`.
+
+    Parameters:
+        None.
+
+    Returns:
+        nil
+
+    Example Usage:
+        ```lua
+        lia.font.loadFonts()
+        ```
+
+    Realm:
+        Client
+]]
 function lia.font.loadFonts()
     if not CLIENT then return end
     local loadedCount = 0
@@ -16,6 +74,35 @@ function lia.font.loadFonts()
     end
 end
 
+--[[
+    Purpose:
+        Registers a font definition under `lia.font.stored` and creates it immediately on the client.
+
+    Parameters:
+        fontName (string)
+            The name used to reference the font through Garry's Mod font APIs.
+
+        fontData (table)
+            The font definition table passed to `surface.CreateFont` on the client.
+
+    Returns:
+        nil|any
+            Returns the result of `lia.error(L("invalidFont"))` when the font name or data is invalid. Otherwise, this function has no explicit return value.
+
+    Example Usage:
+        ```lua
+        lia.font.register("LiliaCustomFont", {
+            font = "Montserrat Medium",
+            size = 20,
+            extended = true,
+            antialias = true,
+            weight = 500
+        })
+        ```
+
+    Realm:
+        Shared
+]]
 function lia.font.register(fontName, fontData)
     if not (isstring(fontName) and istable(fontData)) then return lia.error(L("invalidFont")) end
     if #fontName > 63 then return end
@@ -31,6 +118,25 @@ local function isConfigDerivedFontName(fontName)
     return isstring(fontName) and (fontName:StartWith("lia") or fontName:StartWith("LiliaFont") or fontName:StartWith("LiliaHUDFont") or fontName:StartWith("HUDFont"))
 end
 
+--[[
+    Purpose:
+        Returns unique registered font face names that can be shown as selectable font configuration options.
+
+    Parameters:
+        None.
+
+    Returns:
+        table
+            A sorted list of unique font face names, excluding Lilia-generated configuration aliases.
+
+    Example Usage:
+        ```lua
+        local fonts = lia.font.getAvailableFonts()
+        ```
+
+    Realm:
+        Shared
+]]
 function lia.font.getAvailableFonts()
     local list = {}
     local seen = {}
@@ -48,6 +154,26 @@ function lia.font.getAvailableFonts()
     return list
 end
 
+--[[
+    Purpose:
+        Derives the bold font face name for a given font name.
+
+    Parameters:
+        fontName (string)
+            The base font face name to convert to its bold variant.
+
+    Returns:
+        string
+            The derived bold font face name.
+
+    Example Usage:
+        ```lua
+        local boldFont = lia.font.getBoldFontName("Montserrat Medium")
+        ```
+
+    Realm:
+        Shared
+]]
 function lia.font.getBoldFontName(fontName)
     if string.find(fontName, "Montserrat") then
         return fontName:gsub(" Medium", " Bold"):gsub("Montserrat$", "Montserrat Bold")
@@ -56,6 +182,25 @@ function lia.font.getBoldFontName(fontName)
     end
 end
 
+--[[
+    Purpose:
+        Registers the default Montserrat faces, core Lilia font aliases, HUD font aliases, and generated size variants.
+
+    Parameters:
+        fontName (string|nil)
+            Optional main interface font. When omitted, the value from the `Font` configuration is used.
+
+    Returns:
+        nil
+
+    Example Usage:
+        ```lua
+        lia.font.registerFonts("Montserrat Medium")
+        ```
+
+    Realm:
+        Shared
+]]
 function lia.font.registerFonts(fontName)
     local mainFont = fontName or lia.config.get("Font", "Montserrat Medium")
     local hudFont = lia.config.get("HUDFont", "Montserrat Medium")

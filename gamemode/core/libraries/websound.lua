@@ -1,4 +1,34 @@
-﻿lia.websound = lia.websound or {}
+﻿--[[
+    Folder: Developer - Libraries
+    File: lia.websound.md
+]]
+--[[
+    WebSound
+
+    Web sound helpers for registering, downloading, caching, and playing remote audio through Lilia.
+]]
+--[[
+    Overview:
+        The web sound library centralizes clientside handling for remote sound assets under `lia.websound`. It validates HTTP and HTTPS URLs, downloads supported audio files into `data/lilia/websounds/`, reuses valid cached files, maps URLs to local cache names, and wraps Garry's Mod sound playback helpers so registered or remote web sounds can be played through local cached files when possible.
+]]
+--[[
+    Hooks:
+        WebSoundDownloaded(string name, string path)
+
+    Purpose:
+        Runs after a web sound is freshly downloaded, validated, written to the local data cache, and counted in the web sound statistics.
+
+    Parameters:
+        name (string)
+            The normalized web sound name or cache key used for the downloaded sound.
+
+        path (string)
+            The local `data/` path for the cached sound file.
+
+    Realm:
+        Client
+]]
+lia.websound = lia.websound or {}
 lia.websound.stored = lia.websound.stored or {}
 local baseDir = "lilia/websounds/"
 local cache = {}
@@ -81,6 +111,33 @@ local function validateURL(url)
     return true
 end
 
+--[[
+    Purpose:
+        Downloads and caches a remote web sound, using either the provided URL or the URL registered under the sound name.
+
+    Parameters:
+        name (string)
+            The sound name or cache path relative to `lilia/websounds/`.
+
+        url (string|nil)
+            The HTTP or HTTPS URL to download. When nil, the URL registered in `lia.websound.stored[name]` is used.
+
+        cb (function|nil)
+            Optional callback called with the local path and cache state on success, or nil, false, and an error message on failure.
+
+    Returns:
+        nil
+
+    Example Usage:
+        ```lua
+        lia.websound.download("effects/click.mp3", "https://example.com/click.mp3", function(path, fromCache, err)
+            if path then sound.PlayFile(path, "", function() end) end
+        end)
+        ```
+
+    Realm:
+        Client
+]]
 function lia.websound.download(name, url, cb)
     if not isstring(name) then return end
     name = normalizeName(name)
@@ -161,12 +218,58 @@ function lia.websound.download(name, url, cb)
     end)
 end
 
+--[[
+    Purpose:
+        Registers a web sound URL under a normalized name and immediately starts downloading it into the local cache.
+
+    Parameters:
+        name (string)
+            The sound name or cache path used to reference the web sound later.
+
+        url (string)
+            The HTTP or HTTPS URL for the sound file.
+
+        cb (function|nil)
+            Optional callback passed through to `lia.websound.download`.
+
+    Returns:
+        nil
+
+    Example Usage:
+        ```lua
+        lia.websound.register("effects/click.mp3", "https://example.com/click.mp3")
+        ```
+
+    Realm:
+        Client
+]]
 function lia.websound.register(name, url, cb)
     name = normalizeName(name)
     lia.websound.stored[name] = url
     return lia.websound.download(name, url, cb)
 end
 
+--[[
+    Purpose:
+        Gets the local cached data path for a registered or downloaded web sound when the file is available.
+
+    Parameters:
+        name (string)
+            The sound name, URL, or cache key to resolve.
+
+    Returns:
+        string|nil
+            The local `data/` path for the cached sound file, or nil when no cached file exists.
+
+    Example Usage:
+        ```lua
+        local path = lia.websound.get("effects/click.mp3")
+        if path then sound.PlayFile(path, "", function() end) end
+        ```
+
+    Realm:
+        Client
+]]
 function lia.websound.get(name)
     name = normalizeName(name)
     local key = urlMap[name] or name
@@ -390,6 +493,23 @@ function surface.PlaySound(soundPath, _, cb)
     if cb then cb(true) end
 end
 
+--[[
+    Purpose:
+        Returns current web sound cache statistics.
+
+    Returns:
+        table
+            A table containing the number of freshly downloaded sounds, the number of registered stored sounds, and the last reset timestamp.
+
+    Example Usage:
+        ```lua
+        local stats = lia.websound.getStats()
+        print(stats.downloaded, stats.stored, stats.lastReset)
+        ```
+
+    Realm:
+        Client
+]]
 function lia.websound.getStats()
     local totalStored = 0
     for _ in pairs(lia.websound.stored) do
@@ -402,6 +522,26 @@ function lia.websound.getStats()
     }
 end
 
+--[[
+    Purpose:
+        Clears the in-memory web sound cache, removes cached web sound files from data storage, and optionally re-registers stored sounds.
+
+    Parameters:
+        skipReRegister (boolean|nil)
+            When true, stored sounds are not registered again after the cache is cleared.
+
+    Returns:
+        nil
+
+    Example Usage:
+        ```lua
+        lia.websound.clearCache()
+        lia.websound.clearCache(true)
+        ```
+
+    Realm:
+        Client
+]]
 function lia.websound.clearCache(skipReRegister)
     cache = {}
     urlMap = {}
@@ -429,6 +569,31 @@ function lia.websound.clearCache(skipReRegister)
     end
 end
 
+--[[
+    Purpose:
+        Plays a button sound using a custom sound when provided, otherwise using the cached default web button sound.
+
+    Parameters:
+        customSound (string|nil)
+            Optional sound path or HTTP/HTTPS URL to play instead of the default button click sound.
+
+        callback (function|nil)
+            Optional callback called with true when playback was started successfully, or false when the default fallback path was used after a download failure.
+
+    Returns:
+        nil
+
+    Example Usage:
+        ```lua
+        lia.websound.playButtonSound()
+        lia.websound.playButtonSound("https://example.com/ui/button.wav", function(success)
+            print(success)
+        end)
+        ```
+
+    Realm:
+        Client
+]]
 function lia.websound.playButtonSound(customSound, callback)
     if customSound and customSound ~= "button_click.wav" then
         if customSound:find("^lilia/websounds/") or customSound:find("^websounds/") then

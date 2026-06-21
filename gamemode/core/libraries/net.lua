@@ -1,4 +1,40 @@
-﻿lia.net = lia.net or {}
+﻿--[[
+    Folder: Developer - Libraries
+    File: lia.net.md
+]]
+--[[
+    Net
+
+    Networking helpers for Lilia networked variables, chunked table transfer, lightweight send caching, and network traffic profiling.
+]]
+--[[
+    Overview:
+        The net library centralizes shared networking helpers under `lia.net`. It provides cache markers for repeated message work, sends and receives large compressed tables in chunks, manages global networked variables, synchronizes networked data on player join or entity cleanup, and wraps Garry's Mod net functions with optional profiling output.
+]]
+--[[
+    Hooks:
+        NetVarChanged(Entity|nil entity, string key, any oldValue, any newValue)
+
+    Purpose:
+        Runs after a networked variable changes. This file triggers it for global networked variables with `entity` set to nil.
+
+    Parameters:
+        entity (Entity|nil)
+            The entity whose networked variable changed, or nil when a global networked variable changed.
+
+        key (string)
+            The networked variable key that changed.
+
+        oldValue (any)
+            The previous value stored for the key.
+
+        newValue (any)
+            The new value stored for the key.
+
+    Realm:
+        Server
+]]
+lia.net = lia.net or {}
 lia.net.sendq = lia.net.sendq or {}
 lia.net.cache = lia.net.cache or {}
 lia.net.locals = lia.net.locals or {}
@@ -57,12 +93,56 @@ local function cleanupCache()
     end
 end
 
+--[[
+    Purpose:
+        Checks whether a named network cache entry exists and is still within the cache time-to-live window.
+
+    Parameters:
+        name (string)
+            The cache namespace or message name used when the entry was created.
+
+        args (table)
+            Ordered arguments used to build the cache key.
+
+    Returns:
+        boolean|nil
+            True when the cache entry exists and has not expired. False or nil otherwise.
+
+    Example Usage:
+        ```lua
+        if not lia.net.isCacheHit("SyncInventory", {client, itemID}) then
+            lia.net.addToCache("SyncInventory", {client, itemID})
+        end
+        ```
+
+    Realm:
+        Shared
+]]
 function lia.net.isCacheHit(name, args)
     local key = generateCacheKey(name, args)
     local entry = lia.net.cache[key]
     return entry and CurTime() - entry.timestamp <= CACHE_TTL
 end
 
+--[[
+    Purpose:
+        Adds or refreshes a named network cache entry and removes expired or excess cache entries.
+
+    Parameters:
+        name (string)
+            The cache namespace or message name to store.
+
+        args (table)
+            Ordered arguments used to build the cache key.
+
+    Example Usage:
+        ```lua
+        lia.net.addToCache("SyncInventory", {client, itemID})
+        ```
+
+    Realm:
+        Shared
+]]
 function lia.net.addToCache(name, args)
     local key = generateCacheKey(name, args)
     lia.net.cache[key] = {
@@ -72,6 +152,27 @@ function lia.net.addToCache(name, args)
     cleanupCache()
 end
 
+--[[
+    Purpose:
+        Registers a receiver for a chunked, compressed JSON table stream and rebuilds the table once every chunk has arrived.
+
+    Parameters:
+        netStr (string)
+            The network message name used for the chunk stream.
+
+        callback (function|nil)
+            Function called after the table is reconstructed. On the server it receives `(Player client, table data)`. On the client it receives `(table data)`.
+
+    Example Usage:
+        ```lua
+        lia.net.readBigTable("liaLargePayload", function(client, data)
+            print(client, data)
+        end)
+        ```
+
+    Realm:
+        Shared
+]]
 function lia.net.readBigTable(netStr, callback)
     lia.net.buffers[netStr] = lia.net.buffers[netStr] or {}
     net.Receive(netStr, function(_, ply)
@@ -163,6 +264,32 @@ if SERVER then
         end)
     end
 
+    --[[
+    Purpose:
+        Sends a table to one or more clients by JSON-encoding, compressing, chunking, and streaming it over a network message.
+
+    Parameters:
+        targets (Player|table|nil)
+            The player, player table, or nil target set. If no valid target is provided, all human players receive the stream.
+
+        netStr (string)
+            The network message name used for the chunk stream.
+
+        tbl (table)
+            The table to serialize and send.
+
+        chunkSize (number|nil)
+            Optional maximum chunk size. The value is clamped and adjusted during reloads.
+
+    Example Usage:
+        ```lua
+        lia.net.writeBigTable(client, "liaLargePayload", data)
+        lia.net.writeBigTable(player.GetHumans(), "liaLargePayload", data, 1024)
+        ```
+
+    Realm:
+        Server
+]]
     function lia.net.writeBigTable(targets, netStr, tbl, chunkSize)
         if not istable(tbl) then return end
         local json = util.TableToJSON(tbl)
@@ -210,6 +337,29 @@ if SERVER then
         end
     end
 
+    --[[
+    Purpose:
+        Validates that a networked value does not contain functions, including functions nested inside tables.
+
+    Parameters:
+        name (string)
+            The networked variable name being validated.
+
+        object (any)
+            The value or nested table key/value currently being inspected.
+
+    Returns:
+        boolean|nil
+            True when an unsupported function value is found. Nil otherwise.
+
+    Example Usage:
+        ```lua
+        if lia.net.checkBadType("score", value) then return end
+        ```
+
+    Realm:
+        Server
+]]
     function lia.net.checkBadType(name, object)
         if isfunction(object) then
             lia.error(L("netVarBadType", name))
@@ -221,6 +371,29 @@ if SERVER then
         end
     end
 
+    --[[
+    Purpose:
+        Sets a global networked variable, broadcasts or sends the change to clients, and runs the `NetVarChanged` hook.
+
+    Parameters:
+        key (string)
+            The global networked variable key to set.
+
+        value (any)
+            The value to store and send. Functions are rejected, including functions nested in tables.
+
+        receiver (Player|table|nil)
+            Optional recipient or recipient table. When omitted, the change is broadcast to all clients.
+
+    Example Usage:
+        ```lua
+        lia.net.setNetVar("roundState", "active")
+        lia.net.setNetVar("eventName", "cleanup", client)
+        ```
+
+    Realm:
+        Server
+]]
     function lia.net.setNetVar(key, value, receiver)
         if lia.net.checkBadType(key, value) then return end
         local oldValue = lia.net.getNetVar(key)
@@ -244,6 +417,29 @@ if SERVER then
     hook.Add("PlayerInitialSpawn", "liaNetworkingSync", function(client) client:syncVars() end)
 end
 
+--[[
+    Purpose:
+        Gets a global networked variable value from the local global networked variable store.
+
+    Parameters:
+        key (string)
+            The global networked variable key to read.
+
+        default (any)
+            Value returned when the key has not been set.
+
+    Returns:
+        any
+            The stored value when present, otherwise the provided default value.
+
+    Example Usage:
+        ```lua
+        local state = lia.net.getNetVar("roundState", "waiting")
+        ```
+
+    Realm:
+        Shared
+]]
 function lia.net.getNetVar(key, default)
     local value = lia.net.globals[key]
     return value ~= nil and value or default
@@ -307,6 +503,34 @@ local function startProfilerSnapshots()
     end)
 end
 
+--[[
+    Purpose:
+        Records and prints a network profiler entry for a message when the profiler is active.
+
+    Parameters:
+        direction (string)
+            Message direction label, such as `S->C` or `C->S`.
+
+        messageName (string)
+            The network message name being logged.
+
+        size (number)
+            The message size value supplied by the wrapper. Send wrappers pass `net.BytesWritten()`, while receive wrappers pass the `len` argument from `net.Receive`.
+
+        sender (Player|string|nil)
+            The sending player or sender label.
+
+        receiver (Player|string|nil)
+            The receiving player or receiver label.
+
+    Example Usage:
+        ```lua
+        lia.net.profiler.log("S->C", "liaGlobalVar", net.BytesWritten() or 0, "SERVER", client)
+        ```
+
+    Realm:
+        Shared
+]]
 function lia.net.profiler.log(direction, messageName, size, sender, receiver)
     if not lia.net.profiler.active then return end
     local senderStr = "Unknown"

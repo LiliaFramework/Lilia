@@ -1,28 +1,28 @@
 ## Executive Summary
 
 ### Function Documentation
-- **Total Functions:** 643
+- **Total Functions:** 695
 - **Documented:** 0 (0.0%)
-- **Missing Functions:** 643 unique (643 total occurrences)
-  - **Library Functions:** 464
+- **Missing Functions:** 695 unique (695 total occurrences)
+  - **Library Functions:** 510
   - **Hook Functions:** 179
   - **Meta Functions:** 0
 
 ### Hooks Documentation
-- **Missing Hooks:** 445 (used but undocumented)
+- **Missing Hooks:** 454 (used but undocumented)
 - **Unused Hooks:** 0 (documented but unused)
 - **Total Documented Hooks:** 0
-- **Total Registered Hooks:** 445
+- **Total Registered Hooks:** 454
 
 ### Localization Analysis
-- **Undefined Calls:** 5 unique
+- **Undefined Calls:** 14 unique
 - **@xxxxx Patterns:** 0 unique
 - **Module Key Conflicts:** 0 keys
-- **Argument Mismatches:** 1
+- **Argument Mismatches:** 0
 
 ### Net Message Analysis
-- **Defined Net Messages:** 216
-- **Used Net Messages:** 215
+- **Defined Net Messages:** 223
+- **Used Net Messages:** 222
 - **Defined But Unused:** 1
 - **Used But Undefined:** 0
 
@@ -34,11 +34,11 @@
 ## Function Documentation Analysis
 
 ### Summary
-- **Files Analyzed:** 42
-- **Missing Documentation:** 643 unique functions
+- **Files Analyzed:** 45
+- **Missing Documentation:** 695 unique functions
 
 ### Missing Library Functions
-Total: 464 functions
+Total: 510 functions
 
 #### lia
 Count: 6 functions
@@ -51,7 +51,7 @@ Count: 6 functions
 - `lia.warning(msg)`
 
 #### lia.admin
-Count: 26 functions
+Count: 28 functions
 
 - `lia.admin.addPermission(groupName, permission, silent)`
 - `lia.admin.applyInheritance(groupName)`
@@ -61,6 +61,7 @@ Count: 26 functions
 - `lia.admin.getCommandPrivilegeID(cmd)`
 - `lia.admin.getDefaultUserGroup()`
 - `lia.admin.getExternalPrivilegeName(id)`
+- `lia.admin.getUsergroupIcon(groupOrPlayer)`
 - `lia.admin.hasAccess(ply, privilege)`
 - `lia.admin.hasChanges()`
 - `lia.admin.isProtectedStaffTarget(cmd, target)`
@@ -77,6 +78,7 @@ Count: 26 functions
 - `lia.admin.serverExecCommand(cmd, victim, dur, reason, admin)`
 - `lia.admin.setPlayerUsergroup(ply, newGroup, source)`
 - `lia.admin.setSteamIDUsergroup(steamId, newGroup, source)`
+- `lia.admin.shouldShowUsergroupIcons()`
 - `lia.admin.sync(c)`
 - `lia.admin.unregisterPrivilege(id)`
 
@@ -96,6 +98,36 @@ Count: 6 functions
 - `lia.bar.drawBar(x, y, w, h, pos, max, color)`
 - `lia.bar.get(identifier)`
 - `lia.bar.remove(identifier)`
+
+#### lia.camera
+Count: 26 functions
+
+- `lia.camera.applyFreelookToAngles(client, angles)`
+- `lia.camera.beginFreelook(client)`
+- `lia.camera.buildFreelookBodyView(client, pos, ang, fov)`
+- `lia.camera.buildRealisticView(client, origin, angles, fov)`
+- `lia.camera.calcView(client, pos, ang, fov)`
+- `lia.camera.canOverrideView(client)`
+- `lia.camera.canUseFreelook(client)`
+- `lia.camera.canUseRealisticView(client)`
+- `lia.camera.endFreelook()`
+- `lia.camera.getFirstPersonHeadBoneChildren(client, rootBone)`
+- `lia.camera.getFirstPersonHeadBones(client)`
+- `lia.camera.getParentAttachmentNames(client)`
+- `lia.camera.isCharacterMenuOpen()`
+- `lia.camera.isHeadAttachmentName(name)`
+- `lia.camera.isHeadBodygroupName(name)`
+- `lia.camera.isHeadwearModel(model)`
+- `lia.camera.isHoldingFreelookBind(client)`
+- `lia.camera.isInSights(client)`
+- `lia.camera.isUsingThirdPersonCamera(client)`
+- `lia.camera.resetFreelookState()`
+- `lia.camera.setFirstPersonHeadBodygroupsHidden(client, hidden)`
+- `lia.camera.setFirstPersonHeadHidden(client, hidden)`
+- `lia.camera.setFirstPersonHeadwearHidden(client, hidden)`
+- `lia.camera.shouldDrawBodyForFreelook(client)`
+- `lia.camera.shouldHideFirstPersonChildEntity(client, entity)`
+- `lia.camera.shouldSuppressRealisticView(client)`
 
 #### lia.char
 Count: 22 functions
@@ -167,7 +199,7 @@ Count: 16 functions
 - `lia.color.testThemeTransition(themeName)`
 
 #### lia.command
-Count: 9 functions
+Count: 8 functions
 
 - `lia.command.add(command, data)`
 - `lia.command.buildSyntaxFromArguments(args)`
@@ -320,19 +352,29 @@ Count: 48 functions
 - `lia.derma.wrapText(text, width, font)`
 
 #### lia.dialog
-Count: 14 functions
+Count: 24 functions
 
+- `lia.dialog.entityUsesGeneratedDialog(npc)`
 - `lia.dialog.getAvailableConfigurations(ply, npc, npcID)`
+- `lia.dialog.getCompatibleDialogOptions(npc)`
 - `lia.dialog.getConfiguration(uniqueID)`
 - `lia.dialog.getNPCData(npcID)`
 - `lia.dialog.getOriginalNPCData(npcID)`
+- `lia.dialog.isConversationDialogData(data)`
+- `lia.dialog.isDialogCompatibleWithEntity(npc, data)`
+- `lia.dialog.isDialogNPCEntity(npcOrClass)`
+- `lia.dialog.isGeneratedDialogData(data)`
+- `lia.dialog.isGeneratedDialogSelection(value)`
 - `lia.dialog.isTableEqual(tbl1, tbl2, checked)`
+- `lia.dialog.loadGeneratedDialogs()`
 - `lia.dialog.openConfigurationPicker(npc, npcID)`
 - `lia.dialog.openCustomizationUI(npc, configID)`
 - `lia.dialog.openDialog(client, npc, npcID)`
+- `lia.dialog.openNodeEditor(npc)`
 - `lia.dialog.registerConfiguration(uniqueID, data)`
 - `lia.dialog.registerNPC(uniqueID, data, shouldSync)`
 - `lia.dialog.resolveDialogTypeIdentifier(value)`
+- `lia.dialog.saveGeneratedDialogs()`
 - `lia.dialog.submitConfiguration(configID, npc, payload)`
 - `lia.dialog.syncDialogs()`
 - `lia.dialog.syncToClients(client)`
@@ -354,7 +396,7 @@ Count: 12 functions
 - `lia.doors.verifyDatabaseSchema()`
 
 #### lia.faction
-Count: 29 functions
+Count: 31 functions
 
 - `lia.faction.cacheModels(models)`
 - `lia.faction.formatModelData()`
@@ -381,9 +423,11 @@ Count: 29 functions
 - `lia.faction.hasWhitelist(faction)`
 - `lia.faction.isBodygroupValueAllowed(faction, modelPath, bodygroupIndex, value, bodygroupName, modelData, modelKey)`
 - `lia.faction.isFactionCategory(faction, categoryFactions)`
+- `lia.faction.isModelUsable(modelPath)`
 - `lia.faction.isSkinAllowedForFaction(faction, skin, modelData, modelKey)`
 - `lia.faction.jobGenerate(index, name, color, default, models)`
 - `lia.faction.loadFromDir(directory)`
+- `lia.faction.normalizeSkinValue(skin, fallback)`
 - `lia.faction.register(uniqueID, data)`
 
 #### lia.flag
@@ -575,7 +619,7 @@ Count: 5 functions
 - `lia.time.toNumber(str)`
 
 #### lia.util
-Count: 39 functions
+Count: 40 functions
 
 - `lia.util.animateAppearance(panel, targetWidth, targetHeight, duration, alphaDuration, callback, scaleFactor)`
 - `lia.util.applyBodygroups(target, bodygroups)`
@@ -604,6 +648,7 @@ Count: 39 functions
 - `lia.util.getAdmins()`
 - `lia.util.getBySteamID(steamID)`
 - `lia.util.getMaterial(materialPath, materialParameters)`
+- `lia.util.normalizeBodygroupKey(key)`
 - `lia.util.normalizeBodygroups(bodygroups)`
 - `lia.util.openOptionsMenu(title, options)`
 - `lia.util.playerInRadius(pos, dist)`
@@ -654,6 +699,16 @@ Count: 5 functions
 - `lia.workshop.hasContentToDownload()`
 - `lia.workshop.mountContent()`
 - `lia.workshop.send(ply)`
+
+#### lia.worldPreview
+Count: 6 functions
+
+- `lia.worldPreview.begin(owner, config)`
+- `lia.worldPreview.close(owner)`
+- `lia.worldPreview.getEntity(owner)`
+- `lia.worldPreview.rotate(owner, deltaYaw)`
+- `lia.worldPreview.setModel(owner, modelPath, options)`
+- `lia.worldPreview.shouldHidePlayer(player)`
 
 ### Missing Hook Functions
 Total: 179 functions
@@ -841,14 +896,1370 @@ Total: 179 functions
 ## Hooks Documentation Analysis
 
 ### Summary
-- **Missing Hooks:** 445 (used in code but not documented)
+- **Missing Hooks:** 454 (used in code but not documented)
 - **Documented Hooks:** 0
-- **Registered Hooks:** 445
+- **Registered Hooks:** 454
+- **Method Hooks:** 19 (`function GM:HookName(...)`, `function MODULE:HookName(...)`, `function SCHEMA:HookName(...)`)
+- **Standard Hooks:** 435 (`hook.Add(...)`, `hook.Run(...)`, `hook.Call(...)`)
 - **Unused Hooks:** 0 (documented but not registered)
+
+### Method-Style Hooks:
+These hooks are defined as `function GM:HookName(...)`, `function MODULE:HookName(...)`, or `function SCHEMA:HookName(...)`.
+- `AddFilteredWord(word)`
+- `ChooseCharacter(id)`
+- `CreateCharacter(data)`
+- `CreateLogsUI(panel, categories)`
+- `CreateTicketFrame(requester, message, claimed)`
+- `DeleteCharacter(id)`
+- `FetchSpawns()`
+- `GetAllCaseClaims()`
+- `GetFilteredWords()`
+- `GetWarnings(charID)`
+- `LoadMainCharacter()`
+- `OpenCharacterMenu()`
+- `ReadLogEntries(category, page)`
+- `RemoveFilteredWord(word)`
+- `RemoveWarning(charID, index)`
+- `SetMainCharacter(charID)`
+- `StoreSpawns(spawns)`
+- `SyncFilteredWords(targets)`
+- `VerifyCheats()`
+
+### Library Hook Registration Locations:
+These entries show hooks registered from framework libraries.
+- `AddReservedKeybinds`
+  - library `keybind.lua` [standard] in `core/libraries/keybind.lua`
+- `AddWarning`
+  - library `commands.lua` [standard] in `core/libraries/commands.lua`
+- `AdjustPACPartData`
+  - library `compatibility` [standard] in `core/libraries/compatibility/pac.lua`
+- `AdvDupe_FinishPasting`
+  - library `compatibility` [standard] in `core/libraries/compatibility/advdupe2.lua`
+- `AttachPart`
+  - library `compatibility` [standard] in `core/libraries/compatibility/pac.lua`
+- `CanCharBeTransfered`
+  - library `commands.lua` [standard] in `core/libraries/commands.lua`
+- `CanPersistEntity`
+  - library `compatibility` [standard] in `core/libraries/compatibility/permaprops.lua`
+- `CanPlayerModifyConfig`
+  - library `config.lua` [standard] in `core/libraries/config.lua`
+  - library `item.lua` [standard] in `core/libraries/item.lua`
+- `CanPlayerUseCommand`
+  - library `commands.lua` [standard] in `core/libraries/commands.lua`
+- `CanTakeEntity`
+  - library `keybind.lua` [standard] in `core/libraries/keybind.lua`
+- `CharCleanUp`
+  - library `character.lua` [standard] in `core/libraries/character.lua`
+- `CharListExtraDetails`
+  - library `commands.lua` [standard] in `core/libraries/commands.lua`
+- `CharRestored`
+  - library `character.lua` [standard] in `core/libraries/character.lua`
+- `CommandAdded`
+  - library `commands.lua` [standard] in `core/libraries/commands.lua`
+- `CommandRan`
+  - library `commands.lua` [standard] in `core/libraries/commands.lua`
+- `ConfigChanged`
+  - library `config.lua` [standard] in `core/libraries/config.lua`
+- `CreateDefaultInventory`
+  - library `character.lua` [standard] in `core/libraries/character.lua`
+- `CreateInformationButtons`
+  - library `commands.lua` [standard] in `core/libraries/commands.lua`
+  - library `flags.lua` [standard] in `core/libraries/flags.lua`
+  - library `workshop.lua` [standard] in `core/libraries/workshop.lua`
+- `CreateMenuButtons`
+  - library `config.lua` [standard] in `core/libraries/config.lua`
+- `CreateSalaryTimers`
+  - library `config.lua` [standard] in `core/libraries/config.lua`
+- `DatabaseConnected`
+  - library `database.lua` [method] in `core/libraries/database.lua`
+  - library `loader.lua` [standard] in `core/libraries/loader.lua`
+- `DermaSkinChanged`
+  - library `config.lua` [standard] in `core/libraries/config.lua`
+- `DiscordRelayed`
+  - library `loader.lua` [standard] in `core/libraries/loader.lua`
+- `DiscordRelaySend`
+  - library `loader.lua` [standard] in `core/libraries/loader.lua`
+- `DiscordRelayUnavailable`
+  - library `loader.lua` [standard] in `core/libraries/loader.lua`
+- `DoModuleIncludes`
+  - library `modularity.lua` [standard] in `core/libraries/modularity.lua`
+- `DoorEnabledToggled`
+  - library `commands.lua` [standard] in `core/libraries/commands.lua`
+- `DoorHiddenToggled`
+  - library `commands.lua` [standard] in `core/libraries/commands.lua`
+- `DoorOwnableToggled`
+  - library `commands.lua` [standard] in `core/libraries/commands.lua`
+- `DoorPriceSet`
+  - library `commands.lua` [standard] in `core/libraries/commands.lua`
+- `DoorTitleSet`
+  - library `commands.lua` [standard] in `core/libraries/commands.lua`
+- `DrawPlayerRagdoll`
+  - library `compatibility` [standard] in `core/libraries/compatibility/pac.lua`
+- `ForceRecognizeRange`
+  - library `commands.lua` [standard] in `core/libraries/commands.lua`
+- `FreelookToggled`
+  - library `camera.lua` [standard] in `core/libraries/camera.lua`
+- `GetAdjustedPartData`
+  - library `compatibility` [standard] in `core/libraries/compatibility/pac.lua`
+- `GetAttributeMax`
+  - library `commands.lua` [standard] in `core/libraries/commands.lua`
+- `GetAttributeStartingMax`
+  - library `character.lua` [standard] in `core/libraries/character.lua`
+- `GetDefaultCharDesc`
+  - library `character.lua` [standard] in `core/libraries/character.lua`
+- `GetDefaultCharName`
+  - library `character.lua` [standard] in `core/libraries/character.lua`
+- `GetMaxStartingAttributePoints`
+  - library `character.lua` [standard] in `core/libraries/character.lua`
+- `GetPlayTime`
+  - library `compatibility` [standard] in `core/libraries/compatibility/sam.lua`
+- `GetWeaponName`
+  - library `item.lua` [standard] in `core/libraries/item.lua`
+- `HandleItemTransferRequest`
+  - library `item.lua` [standard] in `core/libraries/item.lua`
+- `InitializedConfig`
+  - library `color.lua` [standard] in `core/libraries/color.lua`
+  - library `config.lua` [standard] in `core/libraries/config.lua`
+  - library `fonts.lua` [standard] in `core/libraries/fonts.lua`
+- `InitializedItems`
+  - library `item.lua` [standard] in `core/libraries/item.lua`
+- `InitializedKeybinds`
+  - library `keybind.lua` [standard] in `core/libraries/keybind.lua`
+- `InitializedModules`
+  - library `currency.lua` [standard] in `core/libraries/currency.lua`
+  - library `darkrp.lua` [standard] in `core/libraries/darkrp.lua`
+  - library `item.lua` [standard] in `core/libraries/item.lua`
+  - library `modularity.lua` [standard] in `core/libraries/modularity.lua`
+  - library `performance.lua` [standard] in `core/libraries/performance.lua`
+  - library `workshop.lua` [standard] in `core/libraries/workshop.lua`
+  - library `compatibility` [standard] in `core/libraries/compatibility/arccw.lua`
+  - library `compatibility` [standard] in `core/libraries/compatibility/pac.lua`
+  - library `compatibility` [standard] in `core/libraries/compatibility/sam.lua`
+  - library `compatibility` [standard] in `core/libraries/compatibility/simfphys.lua`
+  - library `compatibility` [standard] in `core/libraries/compatibility/sitanywhere.lua`
+- `InitializedOptions`
+  - library `option.lua` [standard] in `core/libraries/option.lua`
+- `InitializedSchema`
+  - library `modularity.lua` [standard] in `core/libraries/modularity.lua`
+- `InteractionMenuClosed`
+  - library `derma.lua` [standard] in `core/libraries/derma.lua`
+- `InteractionMenuOpened`
+  - library `derma.lua` [standard] in `core/libraries/derma.lua`
+- `IsSuitableForTrunk`
+  - library `commands.lua` [standard] in `core/libraries/commands.lua`
+  - library `compatibility` [standard] in `core/libraries/compatibility/simfphys.lua`
+- `ItemDefaultFunctions`
+  - library `item.lua` [standard] in `core/libraries/item.lua`
+- `LiliaNoticeOverride`
+  - library `notice.lua` [standard] in `core/libraries/notice.lua`
+- `LoadData`
+  - library `dialog.lua` [standard] in `core/libraries/dialog.lua`
+- `NetVarChanged`
+  - library `net.lua` [standard] in `core/libraries/net.lua`
+- `OnAdminSystemLoaded`
+  - library `compatibility` [standard] in `core/libraries/compatibility/sam.lua`
+- `OnCharDelete`
+  - library `character.lua` [standard] in `core/libraries/character.lua`
+- `OnCharGetup`
+  - library `commands.lua` [standard] in `core/libraries/commands.lua`
+- `OnCharVarChanged`
+  - library `character.lua` [standard] in `core/libraries/character.lua`
+- `OnConfigUpdated`
+  - library `color.lua` [standard] in `core/libraries/color.lua`
+  - library `config.lua` [standard] in `core/libraries/config.lua`
+  - library `currency.lua` [standard] in `core/libraries/currency.lua`
+  - library `fonts.lua` [standard] in `core/libraries/fonts.lua`
+  - library `languages.lua` [standard] in `core/libraries/languages.lua`
+- `OnDatabaseLoaded`
+  - library `database.lua` [standard] in `core/libraries/database.lua`
+- `OnDataSet`
+  - library `data.lua` [standard] in `core/libraries/data.lua`
+- `OnItemCreated`
+  - library `item.lua` [standard] in `core/libraries/item.lua`
+- `OnItemOverridden`
+  - library `item.lua` [standard] in `core/libraries/item.lua`
+- `OnItemRegistered`
+  - library `item.lua` [standard] in `core/libraries/item.lua`
+- `OnLoadTables`
+  - library `database.lua` [standard] in `core/libraries/database.lua`
+- `OnLocalizationLoaded`
+  - library `languages.lua` [standard] in `core/libraries/languages.lua`
+- `OnNPCTypeSet`
+  - library `dialog.lua` [standard] in `core/libraries/dialog.lua`
+- `OnPAC3PartTransfered`
+  - library `compatibility` [standard] in `core/libraries/compatibility/pac.lua`
+- `OnPlayerDroppedItem`
+  - library `item.lua` [standard] in `core/libraries/item.lua`
+- `OnPlayerInteractItem`
+  - library `compatibility` [standard] in `core/libraries/compatibility/vmanip.lua`
+- `OnPlayerObserve`
+  - library `compatibility` [standard] in `core/libraries/compatibility/pac.lua`
+- `OnPlayerPurchaseDoor`
+  - library `commands.lua` [standard] in `core/libraries/commands.lua`
+- `OnPlayerRotateItem`
+  - library `item.lua` [standard] in `core/libraries/item.lua`
+- `OnPlayerTakeItem`
+  - library `item.lua` [standard] in `core/libraries/item.lua`
+- `OnPrivilegeRegistered`
+  - library `compatibility` [standard] in `core/libraries/compatibility/sam.lua`
+- `OnPrivilegeUnregistered`
+  - library `compatibility` [standard] in `core/libraries/compatibility/sam.lua`
+- `OnSetUsergroup`
+  - library `compatibility` [standard] in `core/libraries/compatibility/sadmin.lua`
+  - library `compatibility` [standard] in `core/libraries/compatibility/sam.lua`
+  - library `compatibility` [standard] in `core/libraries/compatibility/serverguard.lua`
+  - library `compatibility` [standard] in `core/libraries/compatibility/ulx.lua`
+- `OnThemeChanged`
+  - library `color.lua` [standard] in `core/libraries/color.lua`
+- `OnTransferred`
+  - library `commands.lua` [standard] in `core/libraries/commands.lua`
+- `OnVoiceTypeChanged`
+  - library `playerinteract.lua` [standard] in `core/libraries/playerinteract.lua`
+- `OptionAdded`
+  - library `option.lua` [standard] in `core/libraries/option.lua`
+- `OptionChanged`
+  - library `option.lua` [standard] in `core/libraries/option.lua`
+- `OptionReceived`
+  - library `option.lua` [standard] in `core/libraries/option.lua`
+- `OverrideSpawnTime`
+  - library `commands.lua` [standard] in `core/libraries/commands.lua`
+- `PlayerBodyGroupChanged`
+  - library `character.lua` [standard] in `core/libraries/character.lua`
+- `PlayerLoadedChar`
+  - library `compatibility` [standard] in `core/libraries/compatibility/prone.lua`
+- `PopulateConfigurationButtons`
+  - library `config.lua` [standard] in `core/libraries/config.lua`
+  - library `item.lua` [standard] in `core/libraries/item.lua`
+  - library `keybind.lua` [standard] in `core/libraries/keybind.lua`
+  - library `option.lua` [standard] in `core/libraries/option.lua`
+- `PostLoadData`
+  - library `commands.lua` [standard] in `core/libraries/commands.lua`
+- `PostLoadFonts`
+  - library `fonts.lua` [standard] in `core/libraries/fonts.lua`
+- `PostPlayerInitialSpawn`
+  - library `compatibility` [standard] in `core/libraries/compatibility/pac.lua`
+- `PostPlayerLoadedChar`
+  - library `keybind.lua` [standard] in `core/libraries/keybind.lua`
+- `PreCharDelete`
+  - library `character.lua` [standard] in `core/libraries/character.lua`
+- `PreFreelookToggle`
+  - library `camera.lua` [standard] in `core/libraries/camera.lua`
+- `RefreshFonts`
+  - library `fonts.lua` [standard] in `core/libraries/fonts.lua`
+- `RemovePart`
+  - library `compatibility` [standard] in `core/libraries/compatibility/pac.lua`
+- `RunAdminSystemCommand`
+  - library `compatibility` [standard] in `core/libraries/compatibility/sadmin.lua`
+  - library `compatibility` [standard] in `core/libraries/compatibility/sam.lua`
+  - library `compatibility` [standard] in `core/libraries/compatibility/serverguard.lua`
+  - library `compatibility` [standard] in `core/libraries/compatibility/ulx.lua`
+- `SAM.LoadedRanks`
+  - library `compatibility` [standard] in `core/libraries/compatibility/sam.lua`
+- `SaveData`
+  - library `data.lua` [standard] in `core/libraries/data.lua`
+  - library `dialog.lua` [standard] in `core/libraries/dialog.lua`
+- `SetupDatabase`
+  - library `database.lua` [method] in `core/libraries/database.lua`
+  - library `loader.lua` [standard] in `core/libraries/loader.lua`
+- `SetupPACDataFromItems`
+  - library `compatibility` [standard] in `core/libraries/compatibility/pac.lua`
+- `SetupQuickMenu`
+  - library `camera.lua` [standard] in `core/libraries/camera.lua`
+- `ShouldBarDraw`
+  - library `bars.lua` [standard] in `core/libraries/bars.lua`
+- `ShouldDisableThirdperson`
+  - library `camera.lua` [standard] in `core/libraries/camera.lua`
+- `ShouldHideBars`
+  - library `bars.lua` [standard] in `core/libraries/bars.lua`
+- `ShouldUseFreelook`
+  - library `camera.lua` [standard] in `core/libraries/camera.lua`
+- `SyncCharList`
+  - library `character.lua` [standard] in `core/libraries/character.lua`
+  - library `commands.lua` [standard] in `core/libraries/commands.lua`
+- `ThirdPersonToggled`
+  - library `camera.lua` [standard] in `core/libraries/camera.lua`
+  - library `option.lua` [standard] in `core/libraries/option.lua`
+- `TryViewModel`
+  - library `compatibility` [standard] in `core/libraries/compatibility/pac.lua`
+- `UpdateEntityPersistence`
+  - library `commands.lua` [standard] in `core/libraries/commands.lua`
+  - library `dialog.lua` [standard] in `core/libraries/dialog.lua`
+- `VoiceToggled`
+  - library `config.lua` [standard] in `core/libraries/config.lua`
+- `WarningIssued`
+  - library `commands.lua` [standard] in `core/libraries/commands.lua`
+- `WebImageDownloaded`
+  - library `webimage.lua` [standard] in `core/libraries/webimage.lua`
+- `WebSoundDownloaded`
+  - library `websound.lua` [standard] in `core/libraries/websound.lua`
+
+### Other Hook Registration Locations:
+These entries show hooks registered outside libraries and outside external module/submodule scans.
+- `AddBarField`
+  - other [standard] in `modules/attributes/libraries/client.lua`
+  - core `derma` [standard] in `core/derma/panels/f1menu.lua`
+- `AddFilteredWord`
+  - other [method] in `modules/chatbox/libraries/server.lua`
+- `AddSection`
+  - other [standard] in `modules/attributes/libraries/client.lua`
+  - core `derma` [standard] in `core/derma/panels/f1menu.lua`
+- `AddTextField`
+  - other [standard] in `modules/teams/libraries/client.lua`
+  - core `derma` [standard] in `core/derma/panels/f1menu.lua`
+- `AddToAdminStickHUD`
+  - other [method] in `modules/vendor/libraries/client.lua`
+  - other [method] in `modules/doors/libraries/client.lua`
+  - other [standard] in `modules/administration/submodules/adminstick/libraries/client.lua`
+- `AddWarning`
+  - other [standard] in `modules/protection/libraries/server.lua`
+  - other [method] in `modules/administration/submodules/warnings/libraries/server.lua`
+  - core `netcalls` [standard] in `core/netcalls/server.lua`
+- `AdjustCreationData`
+  - core `netcalls` [standard] in `core/netcalls/server.lua`
+- `AdjustStaminaOffset`
+  - other [standard] in `modules/attributes/libraries/shared.lua`
+- `AdminPrivilegesUpdated`
+  - other [standard] in `modules/administration/admin.lua`
+  - core `derma` [standard] in `core/derma/mainmenu/character.lua`
+- `AdminStickAddModels`
+  - other [method] in `modules/administration/submodules/adminstick/libraries/client.lua`
+  - other [standard] in `modules/administration/submodules/adminstick/libraries/client.lua`
+- `AttachPart`
+  - core `netcalls` [standard] in `core/netcalls/client.lua`
+- `BagInventoryReady`
+  - other [standard] in `modules/inventory/types/gridinv/items/base/bags.lua`
+- `BagInventoryRemoved`
+  - other [standard] in `modules/inventory/types/gridinv/items/base/bags.lua`
+- `CanCharBeTransfered`
+  - other [standard] in `modules/teams/pim.lua`
+  - other [method] in `modules/teams/libraries/server.lua`
+  - other [standard] in `modules/teams/netcalls/server.lua`
+- `CanDeleteChar`
+  - other [method] in `modules/protection/libraries/client.lua`
+  - core `derma` [standard] in `core/derma/mainmenu/character.lua`
+- `CanDisplayCharInfo`
+  - core `derma` [standard] in `core/derma/panels/f1menu.lua`
+- `CanDrawEntityHoverInfo`
+  - core `hooks` [standard] in `core/hooks/client.lua`
+- `CanInviteToClass`
+  - other [standard] in `modules/teams/pim.lua`
+- `CanInviteToFaction`
+  - other [standard] in `modules/teams/pim.lua`
+- `CanItemBeTransfered`
+  - other [standard] in `modules/vendor/libraries/server.lua`
+  - other [standard] in `modules/inventory/types/weightinv/libraries/server.lua`
+  - other [standard] in `modules/inventory/types/gridinv/libraries/server.lua`
+  - core `hooks` [method] in `core/hooks/server.lua`
+- `CanManageFilteredWords`
+  - other [method] in `modules/chatbox/libraries/server.lua`
+  - other [standard] in `modules/chatbox/libraries/server.lua`
+  - other [standard] in `modules/chatbox/netcalls/server.lua`
+- `CanOpenBagPanel`
+  - other [standard] in `modules/inventory/types/weightinv/libraries/client.lua`
+  - other [standard] in `modules/inventory/types/gridinv/libraries/client.lua`
+- `CanOutfitChangeModel`
+  - item `base` [standard] in `items/base/outfit.lua`
+- `CanPerformVendorEdit`
+  - meta `player` [standard] in `core/meta/player.lua`
+- `CanPersistEntity`
+  - other [method] in `modules/vendor/libraries/server.lua`
+  - other [standard] in `modules/administration/libraries/server.lua`
+- `CanPickupMoney`
+  - entity `entities` [standard] in `entities/entities/lia_money/init.lua`
+- `CanPlayerAccessDoor`
+  - other [method] in `modules/doors/libraries/server.lua`
+  - meta `entity` [standard] in `core/meta/entity.lua`
+- `CanPlayerAccessVendor`
+  - other [method] in `modules/vendor/libraries/server.lua`
+  - other [standard] in `modules/vendor/netcalls/server.lua`
+  - other [standard] in `modules/vendor/entities/entities/lia_vendor/init.lua`
+- `CanPlayerChooseWeapon`
+  - core `derma` [standard] in `core/derma/panels/weaponselector.lua`
+- `CanPlayerCreateChar`
+  - other [method] in `modules/mainmenu/module.lua`
+  - core `netcalls` [standard] in `core/netcalls/server.lua`
+  - core `derma` [standard] in `core/derma/mainmenu/character.lua`
+- `CanPlayerDropItem`
+  - core `hooks` [method] in `core/hooks/server.lua`
+  - core `hooks` [standard] in `core/hooks/server.lua`
+- `CanPlayerEarnSalary`
+  - core `hooks` [standard] in `core/hooks/server.lua`
+- `CanPlayerEquipItem`
+  - core `hooks` [method] in `core/hooks/server.lua`
+  - core `hooks` [standard] in `core/hooks/server.lua`
+- `CanPlayerHoldObject`
+  - entity `weapons` [standard] in `entities/weapons/lia_hands/shared.lua`
+  - core `hooks` [method] in `core/hooks/server.lua`
+- `CanPlayerInteractItem`
+  - other [method] in `modules/inventory/types/gridinv/submodules/storage/libraries/server.lua`
+  - core `hooks` [method] in `core/hooks/server.lua`
+  - meta `item` [standard] in `core/meta/item.lua`
+- `CanPlayerJoinClass`
+  - other [standard] in `modules/teams/classes.lua`
+  - other [method] in `modules/teams/libraries/server.lua`
+- `CanPlayerKnock`
+  - entity `weapons` [standard] in `entities/weapons/lia_hands/shared.lua`
+- `CanPlayerLock`
+  - other [standard] in `modules/doors/libraries/server.lua`
+- `CanPlayerModifyConfig`
+  - other [method] in `modules/administration/libraries/shared.lua`
+- `CanPlayerOpenScoreboard`
+  - core `derma` [standard] in `core/derma/panels/scoreboard.lua`
+- `CanPlayerRespawn`
+  - core `netcalls` [standard] in `core/netcalls/server.lua`
+- `CanPlayerRotateItem`
+  - core `hooks` [standard] in `core/hooks/server.lua`
+- `CanPlayerSeeLogCategory`
+  - other [standard] in `modules/administration/submodules/logs/netcalls/server.lua`
+- `CanPlayerSeeLogs`
+  - other [method] in `modules/administration/submodules/logs/libraries/server.lua`
+  - other [standard] in `modules/administration/submodules/logs/netcalls/server.lua`
+- `CanPlayerSpawnStorage`
+  - other [method] in `modules/inventory/types/gridinv/submodules/storage/libraries/server.lua`
+  - other [standard] in `modules/inventory/types/gridinv/submodules/storage/libraries/server.lua`
+- `CanPlayerSwitchChar`
+  - other [method] in `modules/teams/libraries/server.lua`
+  - other [method] in `modules/protection/libraries/server.lua`
+  - other [method] in `modules/mainmenu/libraries/server.lua`
+  - core `netcalls` [standard] in `core/netcalls/server.lua`
+- `CanPlayerTakeItem`
+  - core `hooks` [method] in `core/hooks/server.lua`
+  - core `hooks` [standard] in `core/hooks/server.lua`
+- `CanPlayerThrowPunch`
+  - other [method] in `modules/attributes/libraries/shared.lua`
+  - entity `weapons` [standard] in `entities/weapons/lia_hands/shared.lua`
+- `CanPlayerTradeWithVendor`
+  - other [method] in `modules/vendor/libraries/server.lua`
+  - other [standard] in `modules/vendor/libraries/server.lua`
+- `CanPlayerUnequipItem`
+  - core `hooks` [standard] in `core/hooks/server.lua`
+- `CanPlayerUnlock`
+  - other [standard] in `modules/doors/libraries/server.lua`
+- `CanPlayerUseAmmoBox`
+  - entity `entities` [standard] in `entities/entities/lia_ammobox/init.lua`
+- `CanPlayerUseChar`
+  - other [method] in `modules/teams/libraries/server.lua`
+  - other [method] in `modules/mainmenu/libraries/server.lua`
+  - other [method] in `modules/administration/libraries/server.lua`
+  - core `netcalls` [standard] in `core/netcalls/server.lua`
+- `CanPlayerUseDoor`
+  - other [method] in `modules/doors/libraries/server.lua`
+  - other [standard] in `modules/doors/libraries/server.lua`
+- `CanPlayerViewInventory`
+  - other [standard] in `modules/inventory/types/weightinv/libraries/client.lua`
+  - other [standard] in `modules/inventory/types/gridinv/libraries/client.lua`
+- `CanRunItemAction`
+  - core `hooks` [standard] in `core/hooks/client.lua`
+  - core `derma` [standard] in `core/derma/panels/item.lua`
+- `CanSaveData`
+  - other [standard] in `modules/inventory/types/gridinv/submodules/storage/libraries/server.lua`
+- `CharDeleted`
+  - core `netcalls` [standard] in `core/netcalls/server.lua`
+- `CharForceRecognized`
+  - other [standard] in `modules/recognition/libraries/server.lua`
+- `CharHasFlags`
+  - meta `player` [standard] in `core/meta/player.lua`
+- `CharListColumns`
+  - other [standard] in `modules/administration/libraries/client.lua`
+- `CharListEntry`
+  - other [standard] in `modules/administration/netcalls/server.lua`
+- `CharListLoaded`
+  - other [method] in `modules/mainmenu/module.lua`
+  - core `hooks` [method] in `core/hooks/client.lua`
+  - core `netcalls` [standard] in `core/netcalls/client.lua`
+- `CharListUpdated`
+  - core `netcalls` [standard] in `core/netcalls/client.lua`
+  - core `derma` [standard] in `core/derma/mainmenu/character.lua`
+- `CharLoaded`
+  - other [standard] in `modules/mainmenu/module.lua`
+  - other [standard] in `modules/administration/netcalls/client.lua`
+  - core `hooks` [method] in `core/hooks/client.lua`
+  - meta `character` [standard] in `core/meta/character.lua`
+- `CharMenuClosed`
+  - core `derma` [standard] in `core/derma/mainmenu/character.lua`
+- `CharMenuOpened`
+  - core `derma` [standard] in `core/derma/mainmenu/character.lua`
+- `CharPostSave`
+  - meta `character` [standard] in `core/meta/character.lua`
+- `CharPreSave`
+  - other [method] in `modules/spawns/libraries/server.lua`
+  - core `hooks` [method] in `core/hooks/server.lua`
+  - meta `character` [standard] in `core/meta/character.lua`
+- `CharRestored`
+  - other [method] in `modules/inventory/types/gridinv/libraries/server.lua`
+- `ChatAddText`
+  - other [method] in `modules/chatbox/libraries/client.lua`
+  - core `derma` [standard] in `core/derma/panels/chatbox.lua`
+- `ChatboxPanelCreated`
+  - other [standard] in `modules/chatbox/libraries/client.lua`
+  - core `netcalls` [standard] in `core/netcalls/client.lua`
+- `ChatboxTextAdded`
+  - other [standard] in `modules/chatbox/libraries/client.lua`
+- `ChatParsed`
+  - other [standard] in `modules/chatbox/chatbox.lua`
+- `CheckFactionLimitReached`
+  - other [standard] in `modules/teams/libraries/server.lua`
+  - other [method] in `modules/teams/libraries/shared.lua`
+- `ChooseCharacter`
+  - other [method] in `modules/mainmenu/module.lua`
+- `CollectDoorDataFields`
+  - other [standard] in `modules/doors/doors.lua`
+- `ConfigureCharacterCreationSteps`
+  - core `derma` [standard] in `core/derma/mainmenu/creation.lua`
+- `CreateCharacter`
+  - other [method] in `modules/mainmenu/module.lua`
+- `CreateChatboxPanel`
+  - other [method] in `modules/chatbox/libraries/client.lua`
+  - other [standard] in `modules/chatbox/libraries/client.lua`
+  - other [standard] in `modules/chatbox/netcalls/client.lua`
+  - core `netcalls` [standard] in `core/netcalls/client.lua`
+- `CreateDefaultInventory`
+  - core `hooks` [method] in `core/hooks/server.lua`
+- `CreateInformationButtons`
+  - core `derma` [standard] in `core/derma/panels/f1menu.lua`
+- `CreateInventoryPanel`
+  - other [standard] in `modules/inventory/inventory.lua`
+  - other [method] in `modules/inventory/types/weightinv/libraries/client.lua`
+  - other [method] in `modules/inventory/types/gridinv/libraries/client.lua`
+- `CreateLogsUI`
+  - other [method] in `modules/administration/submodules/logs/libraries/client.lua`
+- `CreateMenuButtons`
+  - other [method] in `modules/mainmenu/module.lua`
+  - other [method] in `modules/teams/libraries/client.lua`
+  - other [standard] in `modules/inventory/types/weightinv/libraries/client.lua`
+  - other [standard] in `modules/inventory/types/gridinv/libraries/client.lua`
+  - core `derma` [standard] in `core/derma/panels/f1menu.lua`
+- `CreateSalaryTimers`
+  - core `hooks` [method] in `core/hooks/server.lua`
+  - core `hooks` [standard] in `core/hooks/server.lua`
+- `CreateTicketFrame`
+  - other [method] in `modules/administration/submodules/tickets/libraries/client.lua`
+- `DatabaseConnected`
+  - other [method] in `modules/vendor/libraries/server.lua`
+- `DeleteCharacter`
+  - other [method] in `modules/mainmenu/module.lua`
+- `DermaSkinChanged`
+  - core `hooks` [method] in `core/hooks/client.lua`
+- `DisplayPlayerHUDInformation`
+  - other [method] in `modules/administration/libraries/client.lua`
+  - other [method] in `modules/administration/submodules/adminstick/libraries/client.lua`
+  - core `hooks` [standard] in `core/hooks/client.lua`
+- `DoorDataReceived`
+  - core `netcalls` [standard] in `core/netcalls/client.lua`
+- `DoorLockToggled`
+  - other [standard] in `modules/doors/libraries/server.lua`
+- `DrawCharInfo`
+  - other [method] in `modules/teams/libraries/client.lua`
+  - core `hooks` [method] in `core/hooks/client.lua`
+  - core `hooks` [standard] in `core/hooks/client.lua`
+- `DrawEntityInfo`
+  - other [method] in `modules/doors/libraries/client.lua`
+  - core `hooks` [method] in `core/hooks/client.lua`
+  - core `hooks` [standard] in `core/hooks/client.lua`
+- `DrawItemEntityInfo`
+  - entity `entities` [standard] in `entities/entities/lia_item/cl_init.lua`
+- `DrawLiliaModelView`
+  - core `hooks` [method] in `core/hooks/client.lua`
+  - core `derma` [standard] in `core/derma/panels/modelpanel.lua`
+- `DrawPlayerInfoBackground`
+  - core `hooks` [standard] in `core/hooks/client.lua`
+- `F1MenuClosed`
+  - core `derma` [standard] in `core/derma/panels/f1menu.lua`
+- `F1MenuOpened`
+  - core `derma` [standard] in `core/derma/panels/f1menu.lua`
+- `FetchSpawns`
+  - other [method] in `modules/spawns/libraries/server.lua`
+- `FilterCharModels`
+  - core `derma` [standard] in `core/derma/mainmenu/steps/model.lua`
+- `FilterDoorInfo`
+  - other [standard] in `modules/doors/libraries/client.lua`
+- `ForceRecognizeRange`
+  - other [method] in `modules/recognition/libraries/server.lua`
+- `GetAdminESPTarget`
+  - other [standard] in `modules/administration/libraries/client.lua`
+- `GetAdminStickLists`
+  - other [method] in `modules/doors/libraries/client.lua`
+  - other [standard] in `modules/administration/submodules/adminstick/libraries/client.lua`
+- `GetAllCaseClaims`
+  - other [method] in `modules/administration/submodules/tickets/libraries/server.lua`
+- `GetAttributeMax`
+  - other [standard] in `modules/attributes/libraries/client.lua`
+  - core `hooks` [method] in `core/hooks/shared.lua`
+  - meta `character` [standard] in `core/meta/character.lua`
+- `GetAttributeStartingMax`
+  - core `hooks` [method] in `core/hooks/shared.lua`
+- `GetBotModel`
+  - core `hooks` [standard] in `core/hooks/server.lua`
+- `GetCharacterCreateButtonTooltip`
+  - core `derma` [standard] in `core/derma/mainmenu/character.lua`
+- `GetCharacterCreationSummary`
+  - core `derma` [standard] in `core/derma/mainmenu/steps/summary.lua`
+- `GetCharacterDisconnectButtonTooltip`
+  - core `derma` [standard] in `core/derma/mainmenu/character.lua`
+- `GetCharacterDiscordButtonTooltip`
+  - core `derma` [standard] in `core/derma/mainmenu/character.lua`
+- `GetCharacterLoadButtonTooltip`
+  - core `derma` [standard] in `core/derma/mainmenu/character.lua`
+- `GetCharacterLoadMainButtonTooltip`
+  - core `derma` [standard] in `core/derma/mainmenu/character.lua`
+- `GetCharacterMountButtonTooltip`
+  - core `derma` [standard] in `core/derma/mainmenu/character.lua`
+- `GetCharacterReturnButtonTooltip`
+  - core `derma` [standard] in `core/derma/mainmenu/character.lua`
+- `GetCharacterStaffButtonTooltip`
+  - core `derma` [standard] in `core/derma/mainmenu/character.lua`
+- `GetCharacterWorkshopButtonTooltip`
+  - core `derma` [standard] in `core/derma/mainmenu/character.lua`
+- `GetCharMaxStamina`
+  - other [standard] in `modules/attributes/libraries/client.lua`
+  - other [standard] in `modules/attributes/libraries/server.lua`
+  - other [standard] in `modules/attributes/libraries/shared.lua`
+  - core `hooks` [standard] in `core/hooks/server.lua`
+  - meta `player` [standard] in `core/meta/player.lua`
+- `GetDamageScale`
+  - core `hooks` [standard] in `core/hooks/server.lua`
+- `GetDefaultCharDesc`
+  - other [method] in `modules/teams/libraries/shared.lua`
+  - core `derma` [standard] in `core/derma/mainmenu/steps/biography.lua`
+- `GetDefaultCharName`
+  - other [method] in `modules/teams/libraries/shared.lua`
+  - core `derma` [standard] in `core/derma/mainmenu/steps/biography.lua`
+- `GetDefaultInventorySize`
+  - other [standard] in `modules/inventory/types/gridinv/config.lua`
+  - other [standard] in `modules/inventory/types/weightinv/config.lua`
+  - other [standard] in `modules/inventory/types/gridinv/libraries/server.lua`
+- `GetDefaultInventoryType`
+  - other [standard] in `modules/inventory/module.lua`
+  - core `hooks` [standard] in `core/hooks/server.lua`
+- `GetDisplayedDescription`
+  - other [method] in `modules/recognition/libraries/client.lua`
+  - core `hooks` [standard] in `core/hooks/client.lua`
+  - core `derma` [standard] in `core/derma/panels/scoreboard.lua`
+- `GetDisplayedName`
+  - other [standard] in `modules/chatbox/chatbox.lua`
+  - other [method] in `modules/recognition/libraries/client.lua`
+  - other [standard] in `modules/chatbox/libraries/shared.lua`
+  - core `hooks` [standard] in `core/hooks/client.lua`
+  - core `derma` [standard] in `core/derma/panels/scoreboard.lua`
+  - core `derma` [standard] in `core/derma/panels/voice.lua`
+- `GetDoorInfo`
+  - other [method] in `modules/doors/libraries/client.lua`
+  - other [standard] in `modules/doors/libraries/client.lua`
+- `GetDoorInfoForAdminStick`
+  - other [standard] in `modules/doors/libraries/client.lua`
+- `GetEntitySaveData`
+  - other [method] in `modules/vendor/libraries/server.lua`
+  - other [method] in `modules/inventory/types/gridinv/submodules/storage/libraries/server.lua`
+  - core `hooks` [method] in `core/hooks/server.lua`
+  - core `hooks` [standard] in `core/hooks/server.lua`
+- `GetFilteredWords`
+  - other [method] in `modules/chatbox/libraries/server.lua`
+- `GetHandsAttackSpeed`
+  - entity `weapons` [standard] in `entities/weapons/lia_hands/shared.lua`
+- `GetInjuredText`
+  - core `hooks` [method] in `core/hooks/client.lua`
+  - core `hooks` [standard] in `core/hooks/client.lua`
+- `GetInventoryMaxWeight`
+  - other [standard] in `modules/inventory/types/weightinv/weightinv.lua`
+- `GetItemDropModel`
+  - entity `entities` [standard] in `entities/entities/lia_item/init.lua`
+- `GetMainCharacterID`
+  - other [method] in `modules/mainmenu/module.lua`
+  - other [standard] in `modules/mainmenu/module.lua`
+- `GetMainMenuPosition`
+  - core `hooks` [method] in `core/hooks/client.lua`
+  - core `derma` [standard] in `core/derma/mainmenu/character.lua`
+- `GetMaxPlayerChar`
+  - other [method] in `modules/mainmenu/module.lua`
+  - other [standard] in `modules/mainmenu/module.lua`
+  - core `derma` [standard] in `core/derma/mainmenu/character.lua`
+  - core `derma` [standard] in `core/derma/mainmenu/creation.lua`
+- `GetMaxStartingAttributePoints`
+  - core `hooks` [method] in `core/hooks/shared.lua`
+  - core `derma` [standard] in `core/derma/panels/attribs.lua`
+  - core `derma` [standard] in `core/derma/mainmenu/steps/biography.lua`
+- `GetModelGender`
+  - core `hooks` [method] in `core/hooks/shared.lua`
+  - meta `entity` [standard] in `core/meta/entity.lua`
+- `GetMoneyModel`
+  - entity `entities` [standard] in `entities/entities/lia_money/init.lua`
+- `GetNPCDialogOptions`
+  - core `netcalls` [standard] in `core/netcalls/client.lua`
+- `GetOOCDelay`
+  - other [standard] in `modules/chatbox/libraries/shared.lua`
+- `GetPlayerDeathSound`
+  - core `hooks` [method] in `core/hooks/server.lua`
+  - core `hooks` [standard] in `core/hooks/server.lua`
+- `GetPlayerPainSound`
+  - core `hooks` [method] in `core/hooks/server.lua`
+  - core `hooks` [standard] in `core/hooks/server.lua`
+- `GetPlayerPunchDamage`
+  - entity `weapons` [standard] in `entities/weapons/lia_hands/shared.lua`
+- `GetPlayerPunchRagdollTime`
+  - entity `weapons` [standard] in `entities/weapons/lia_hands/shared.lua`
+- `GetPlayerRespawnLocation`
+  - other [standard] in `modules/spawns/libraries/server.lua`
+- `GetPlayerSpawnLocation`
+  - other [standard] in `modules/spawns/libraries/server.lua`
+- `GetPlayTime`
+  - meta `player` [standard] in `core/meta/player.lua`
+- `GetPrestigePayBonus`
+  - core `hooks` [standard] in `core/hooks/server.lua`
+- `GetPriceOverride`
+  - other [standard] in `modules/vendor/entities/entities/lia_vendor/shared.lua`
+- `GetRagdollTime`
+  - meta `player` [standard] in `core/meta/player.lua`
+- `GetSalaryAmount`
+  - core `hooks` [standard] in `core/hooks/server.lua`
+- `GetUsergroupIcon`
+  - other [standard] in `modules/administration/admin.lua`
+  - other [standard] in `modules/chatbox/libraries/shared.lua`
+- `GetWarnings`
+  - other [method] in `modules/administration/submodules/warnings/libraries/server.lua`
+- `GetWeaponName`
+  - core `netcalls` [standard] in `core/netcalls/server.lua`
+  - core `derma` [standard] in `core/derma/panels/weaponselector.lua`
+- `HandleItemTransferRequest`
+  - other [method] in `modules/inventory/types/weightinv/libraries/server.lua`
+  - other [method] in `modules/inventory/types/gridinv/libraries/server.lua`
+  - other [standard] in `modules/inventory/types/gridinv/items/base/bags.lua`
+  - core `netcalls` [standard] in `core/netcalls/server.lua`
+- `InitializedModules`
+  - other [method] in `modules/administration/submodules/adminstick/libraries/client.lua`
+- `InitializedSchema`
+  - core `hooks` [method] in `core/hooks/server.lua`
+- `InitializeStorage`
+  - other [standard] in `modules/inventory/types/gridinv/submodules/storage/libraries/server.lua`
+  - other [method] in `modules/inventory/types/gridinv/submodules/storage/libraries/shared.lua`
+  - other [standard] in `modules/inventory/types/gridinv/submodules/storage/netcalls/shared.lua`
+- `InteractionMenuOpened`
+  - core `derma` [standard] in `core/derma/panels/scoreboard.lua`
+- `InterceptClickItemIcon`
+  - other [standard] in `modules/inventory/types/gridinv/derma/cl_grid_inventory_panel.lua`
+- `InventoryClosed`
+  - other [standard] in `modules/inventory/inventory.lua`
+- `InventoryDataChanged`
+  - core `netcalls` [standard] in `core/netcalls/client.lua`
+- `InventoryDeleted`
+  - core `netcalls` [standard] in `core/netcalls/client.lua`
+- `InventoryInitialized`
+  - core `netcalls` [standard] in `core/netcalls/client.lua`
+- `InventoryItemAdded`
+  - other [method] in `modules/inventory/types/gridinv/libraries/client.lua`
+  - other [method] in `modules/inventory/types/gridinv/submodules/storage/libraries/server.lua`
+  - core `netcalls` [standard] in `core/netcalls/client.lua`
+- `InventoryItemIconCreated`
+  - other [standard] in `modules/inventory/types/gridinv/derma/cl_grid_inventory_panel.lua`
+- `InventoryItemRemoved`
+  - other [method] in `modules/inventory/types/gridinv/libraries/client.lua`
+  - meta `inventory` [standard] in `core/meta/inventory.lua`
+  - core `netcalls` [standard] in `core/netcalls/client.lua`
+- `InventoryOpened`
+  - other [standard] in `modules/inventory/inventory.lua`
+- `InventoryPanelCreated`
+  - other [standard] in `modules/inventory/types/gridinv/libraries/client.lua`
+- `IsCharacterCreationOverridden`
+  - other [standard] in `modules/mainmenu/module.lua`
+  - core `derma` [standard] in `core/derma/mainmenu/character.lua`
+- `IsCharFakeRecognized`
+  - other [method] in `modules/recognition/libraries/shared.lua`
+  - meta `character` [standard] in `core/meta/character.lua`
+- `IsCharRecognized`
+  - other [standard] in `modules/recognition/pim.lua`
+  - other [method] in `modules/recognition/libraries/shared.lua`
+  - meta `character` [standard] in `core/meta/character.lua`
+- `IsRecognizedChatType`
+  - other [standard] in `modules/recognition/libraries/client.lua`
+- `IsSuitableForTrunk`
+  - other [method] in `modules/inventory/types/gridinv/submodules/storage/libraries/shared.lua`
+- `ItemCombine`
+  - other [method] in `modules/inventory/types/gridinv/libraries/server.lua`
+  - other [standard] in `modules/inventory/types/gridinv/libraries/server.lua`
+- `ItemDataChanged`
+  - meta `panel` [standard] in `core/meta/panel.lua`
+  - core `netcalls` [standard] in `core/netcalls/client.lua`
+- `ItemDeleted`
+  - core `netcalls` [standard] in `core/netcalls/client.lua`
+- `ItemDraggedOutOfInventory`
+  - other [standard] in `modules/inventory/types/weightinv/libraries/server.lua`
+  - other [method] in `modules/inventory/types/gridinv/libraries/server.lua`
+  - other [standard] in `modules/inventory/types/gridinv/libraries/server.lua`
+  - other [method] in `modules/administration/submodules/logs/libraries/server.lua`
+- `ItemFunctionCalled`
+  - other [method] in `modules/administration/submodules/logs/libraries/server.lua`
+  - meta `item` [standard] in `core/meta/item.lua`
+- `ItemInitialized`
+  - core `netcalls` [standard] in `core/netcalls/client.lua`
+- `ItemPaintOver`
+  - core `derma` [standard] in `core/derma/panels/item.lua`
+- `ItemQuantityChanged`
+  - core `netcalls` [standard] in `core/netcalls/client.lua`
+- `ItemShowEntityMenu`
+  - core `hooks` [method] in `core/hooks/client.lua`
+  - core `hooks` [standard] in `core/hooks/client.lua`
+- `ItemTransfered`
+  - other [standard] in `modules/inventory/types/weightinv/libraries/server.lua`
+  - other [standard] in `modules/inventory/types/gridinv/libraries/server.lua`
+  - other [standard] in `modules/inventory/types/gridinv/submodules/storage/netcalls/server.lua`
+  - other [method] in `modules/administration/submodules/logs/libraries/server.lua`
+- `KeyLock`
+  - other [method] in `modules/doors/libraries/server.lua`
+  - other [standard] in `modules/doors/entities/weapons/lia_keys/shared.lua`
+- `KeyUnlock`
+  - other [method] in `modules/doors/libraries/server.lua`
+  - other [standard] in `modules/doors/entities/weapons/lia_keys/shared.lua`
+- `KickedFromChar`
+  - other [method] in `modules/mainmenu/module.lua`
+  - core `netcalls` [standard] in `core/netcalls/client.lua`
+- `LiliaLoaded`
+  - other [method] in `modules/mainmenu/module.lua`
+  - core `hooks` [standard] in `core/hooks/client.lua`
+- `LiliaModelPanelPostDrawModel`
+  - core `derma` [standard] in `core/derma/panels/modelpanel.lua`
+- `LoadCharInformation`
+  - other [method] in `modules/teams/libraries/client.lua`
+  - other [method] in `modules/attributes/libraries/client.lua`
+  - core `derma` [standard] in `core/derma/panels/f1menu.lua`
+- `LoadData`
+  - other [method] in `modules/doors/libraries/server.lua`
+  - other [method] in `modules/chatbox/libraries/server.lua`
+  - other [method] in `modules/administration/submodules/permaremove/libraries/server.lua`
+  - core `hooks` [method] in `core/hooks/server.lua`
+  - core `hooks` [standard] in `core/hooks/server.lua`
+- `LoadMainCharacter`
+  - other [method] in `modules/mainmenu/module.lua`
+- `LoadMainMenuInformation`
+  - core `derma` [standard] in `core/derma/mainmenu/character.lua`
+- `ModifyCharacterCreationSummary`
+  - core `derma` [standard] in `core/derma/mainmenu/steps/summary.lua`
+- `ModifyCharacterModel`
+  - core `netcalls` [standard] in `core/netcalls/client.lua`
+  - core `derma` [standard] in `core/derma/mainmenu/character.lua`
+  - core `derma` [standard] in `core/derma/mainmenu/creation.lua`
+  - core `derma` [standard] in `core/derma/panels/bodygrouper.lua`
+- `ModifyScoreboardModel`
+  - core `derma` [standard] in `core/derma/panels/scoreboard.lua`
+- `ModifyVoiceIndicatorText`
+  - core `hooks` [standard] in `core/hooks/client.lua`
+- `NetVarChanged`
+  - meta `character` [standard] in `core/meta/character.lua`
+  - meta `entity` [standard] in `core/meta/entity.lua`
+  - meta `player` [standard] in `core/meta/player.lua`
+  - core `netcalls` [standard] in `core/netcalls/client.lua`
+- `OnAdminStickMenuClosed`
+  - other [method] in `modules/administration/submodules/adminstick/libraries/client.lua`
+  - other [standard] in `modules/administration/submodules/adminstick/libraries/client.lua`
+  - other [standard] in `modules/administration/submodules/adminstick/entities/weapons/lia_adminstick/cl_init.lua`
+- `OnAdminSystemLoaded`
+  - other [standard] in `modules/administration/admin.lua`
+- `OnAmmoBoxUsed`
+  - entity `entities` [standard] in `entities/entities/lia_ammobox/init.lua`
+- `OnCharacterCreationModelIconSet`
+  - core `derma` [standard] in `core/derma/mainmenu/steps/model.lua`
+- `OnCharAttribBoosted`
+  - meta `character` [standard] in `core/meta/character.lua`
+- `OnCharAttribUpdated`
+  - meta `character` [standard] in `core/meta/character.lua`
+- `OnCharCreated`
+  - other [method] in `modules/teams/libraries/server.lua`
+  - other [method] in `modules/inventory/types/gridinv/libraries/server.lua`
+  - other [method] in `modules/administration/submodules/logs/libraries/server.lua`
+  - core `netcalls` [standard] in `core/netcalls/server.lua`
+- `OnCharDelete`
+  - other [method] in `modules/administration/submodules/logs/libraries/server.lua`
+- `OnCharDisconnect`
+  - other [method] in `modules/spawns/libraries/server.lua`
+  - core `hooks` [standard] in `core/hooks/server.lua`
+- `OnCharFallover`
+  - meta `player` [standard] in `core/meta/player.lua`
+- `OnCharFlagsGiven`
+  - meta `character` [standard] in `core/meta/character.lua`
+- `OnCharFlagsTaken`
+  - meta `character` [standard] in `core/meta/character.lua`
+- `OnCharKick`
+  - meta `character` [standard] in `core/meta/character.lua`
+- `OnCharNetVarChanged`
+  - core `netcalls` [standard] in `core/netcalls/client.lua`
+- `OnCharPermakilled`
+  - meta `character` [standard] in `core/meta/character.lua`
+- `OnCharRecognized`
+  - other [standard] in `modules/recognition/pim.lua`
+  - other [standard] in `modules/recognition/libraries/server.lua`
+  - other [standard] in `modules/recognition/netcalls/client.lua`
+- `OnCharTradeVendor`
+  - other [method] in `modules/vendor/libraries/server.lua`
+  - other [standard] in `modules/vendor/libraries/server.lua`
+- `OnCharVarChanged`
+  - core `hooks` [method] in `core/hooks/shared.lua`
+  - meta `character` [standard] in `core/meta/character.lua`
+  - core `netcalls` [standard] in `core/netcalls/client.lua`
+- `OnChatReceived`
+  - core `hooks` [method] in `core/hooks/client.lua`
+  - core `netcalls` [standard] in `core/netcalls/client.lua`
+- `OnCheaterCaught`
+  - other [standard] in `modules/protection/libraries/server.lua`
+  - core `netcalls` [standard] in `core/netcalls/server.lua`
+- `OnCreateDualInventoryPanels`
+  - other [standard] in `modules/inventory/inventory.lua`
+- `OnCreateItemInteractionMenu`
+  - core `derma` [standard] in `core/derma/panels/item.lua`
+- `OnCreateStoragePanel`
+  - other [method] in `modules/inventory/types/gridinv/submodules/storage/libraries/client.lua`
+  - other [standard] in `modules/inventory/types/gridinv/submodules/storage/libraries/client.lua`
+- `OnDatabaseLoaded`
+  - core `hooks` [method] in `core/hooks/server.lua`
+- `OnDeathSoundPlayed`
+  - core `hooks` [standard] in `core/hooks/server.lua`
+- `OnDialogNPCTypeSet`
+  - core `netcalls` [standard] in `core/netcalls/server.lua`
+- `OnEntityLoaded`
+  - other [method] in `modules/vendor/libraries/server.lua`
+  - other [method] in `modules/inventory/types/gridinv/submodules/storage/libraries/server.lua`
+  - core `hooks` [method] in `core/hooks/server.lua`
+  - core `hooks` [standard] in `core/hooks/server.lua`
+- `OnEntityPersisted`
+  - core `hooks` [standard] in `core/hooks/server.lua`
+- `OnEntityPersistUpdated`
+  - core `hooks` [standard] in `core/hooks/server.lua`
+- `OnItemAdded`
+  - other [method] in `modules/administration/submodules/logs/libraries/server.lua`
+  - meta `inventory` [standard] in `core/meta/inventory.lua`
+- `OnItemCreated`
+  - entity `entities` [standard] in `entities/entities/lia_item/init.lua`
+- `OnItemSpawned`
+  - entity `entities` [standard] in `entities/entities/lia_item/init.lua`
+- `OnlineStaffDataReceived`
+  - other [standard] in `modules/administration/netcalls/client.lua`
+  - core `derma` [standard] in `core/derma/panels/f1menu.lua`
+- `OnLocalVarSet`
+  - other [method] in `modules/attributes/libraries/client.lua`
+  - core `netcalls` [standard] in `core/netcalls/client.lua`
+- `OnModelPanelSetup`
+  - core `derma` [standard] in `core/derma/panels/modelpanel.lua`
+- `OnOOCMessageSent`
+  - other [standard] in `modules/chatbox/chatbox.lua`
+- `OnOpenVendorMenu`
+  - other [standard] in `modules/vendor/libraries/client.lua`
+- `OnPainSoundPlayed`
+  - core `hooks` [standard] in `core/hooks/server.lua`
+- `OnPickupMoney`
+  - entity `entities` [standard] in `entities/entities/lia_money/init.lua`
+  - core `hooks` [method] in `core/hooks/server.lua`
+- `OnPlayerDroppedItem`
+  - other [method] in `modules/protection/libraries/server.lua`
+- `OnPlayerInteractItem`
+  - other [method] in `modules/administration/submodules/logs/libraries/server.lua`
+  - meta `item` [standard] in `core/meta/item.lua`
+- `OnPlayerJoinClass`
+  - other [standard] in `modules/teams/pim.lua`
+  - other [method] in `modules/teams/libraries/server.lua`
+  - other [standard] in `modules/teams/libraries/server.lua`
+  - meta `character` [standard] in `core/meta/character.lua`
+- `OnPlayerLostStackItem`
+  - other [standard] in `modules/inventory/types/gridinv/gridinv.lua`
+- `OnPlayerObserve`
+  - other [standard] in `modules/administration/libraries/server.lua`
+  - other [method] in `modules/administration/submodules/logs/libraries/server.lua`
+- `OnPlayerSwitchClass`
+  - meta `character` [standard] in `core/meta/character.lua`
+- `OnPrivilegeRegistered`
+  - other [standard] in `modules/administration/admin.lua`
+- `OnPrivilegeUnregistered`
+  - other [standard] in `modules/administration/admin.lua`
+- `OnRequestItemTransfer`
+  - other [standard] in `modules/inventory/types/gridinv/derma/cl_grid_inventory_panel.lua`
+- `OnRespawnKeyPressed`
+  - other [standard] in `modules/spawns/libraries/client.lua`
+- `OnSalaryAdjust`
+  - core `hooks` [standard] in `core/hooks/server.lua`
+- `OnSalaryGiven`
+  - core `hooks` [standard] in `core/hooks/server.lua`
+- `OnSavedItemLoaded`
+  - core `hooks` [standard] in `core/hooks/server.lua`
+- `OnServerLog`
+  - other [standard] in `modules/administration/submodules/logs/logger.lua`
+- `OnSetUsergroup`
+  - other [standard] in `modules/administration/admin.lua`
+- `OnThemeChanged`
+  - core `derma` [standard] in `core/derma/panels/chatbox.lua`
+  - core `derma` [standard] in `core/derma/panels/f1menu.lua`
+  - core `derma` [standard] in `core/derma/panels/panels.lua`
+- `OnTicketClaimed`
+  - other [standard] in `modules/administration/submodules/tickets/netcalls/server.lua`
+- `OnTicketClosed`
+  - other [standard] in `modules/administration/submodules/tickets/netcalls/server.lua`
+- `OnTicketCreated`
+  - other [standard] in `modules/administration/submodules/tickets/libraries/server.lua`
+- `OnTransferred`
+  - other [standard] in `modules/teams/pim.lua`
+  - other [method] in `modules/teams/libraries/server.lua`
+  - other [standard] in `modules/teams/libraries/server.lua`
+  - other [standard] in `modules/teams/netcalls/server.lua`
+  - core `netcalls` [standard] in `core/netcalls/server.lua`
+- `OnUsergroupCreated`
+  - other [standard] in `modules/administration/admin.lua`
+- `OnUsergroupPermissionsChanged`
+  - other [standard] in `modules/administration/admin.lua`
+- `OnUsergroupRemoved`
+  - other [standard] in `modules/administration/admin.lua`
+- `OnUsergroupRenamed`
+  - other [standard] in `modules/administration/admin.lua`
+- `OnVendorEdited`
+  - other [standard] in `modules/vendor/netcalls/server.lua`
+- `OnVoiceTypeChanged`
+  - core `hooks` [method] in `core/hooks/server.lua`
+- `OnWeaponOverridesBulkSynced`
+  - core `netcalls` [standard] in `core/netcalls/client.lua`
+- `OnWeaponOverrideUpdated`
+  - core `netcalls` [standard] in `core/netcalls/client.lua`
+  - core `netcalls` [standard] in `core/netcalls/server.lua`
+- `OnWeaponRuntimeOverridesBulkSynced`
+  - core `netcalls` [standard] in `core/netcalls/client.lua`
+- `OnWeaponRuntimeOverrideUpdated`
+  - core `netcalls` [standard] in `core/netcalls/client.lua`
+  - core `netcalls` [standard] in `core/netcalls/server.lua`
+- `OpenAdminStickUI`
+  - other [method] in `modules/administration/submodules/adminstick/libraries/client.lua`
+  - other [standard] in `modules/administration/submodules/adminstick/entities/weapons/lia_adminstick/cl_init.lua`
+- `OpenCharacterMenu`
+  - other [method] in `modules/mainmenu/module.lua`
+- `OpenCharacterMenuOverride`
+  - other [standard] in `modules/mainmenu/module.lua`
+- `OptionAdded`
+  - core `derma` [standard] in `core/derma/panels/panels.lua`
+- `OverrideFactionDesc`
+  - other [standard] in `modules/teams/factions.lua`
+- `OverrideFactionModelCustomization`
+  - other [standard] in `modules/teams/factions.lua`
+- `OverrideFactionModels`
+  - other [standard] in `modules/teams/factions.lua`
+- `OverrideFactionName`
+  - other [standard] in `modules/teams/factions.lua`
+- `OverrideSpawnTime`
+  - other [standard] in `modules/spawns/libraries/client.lua`
+  - core `netcalls` [standard] in `core/netcalls/server.lua`
+- `OverrideVoiceHearingStatus`
+  - core `hooks` [standard] in `core/hooks/server.lua`
+- `PaintItem`
+  - other [standard] in `modules/inventory/types/gridinv/derma/cl_grid_inventory_item.lua`
+  - entity `entities` [standard] in `entities/entities/lia_item/cl_init.lua`
+  - entity `entities` [standard] in `entities/entities/lia_item/init.lua`
+  - core `derma` [standard] in `core/derma/panels/item.lua`
+  - core `derma` [standard] in `core/derma/panels/spawnicon.lua`
+- `PlayerAccessVendor`
+  - other [method] in `modules/vendor/libraries/server.lua`
+  - other [standard] in `modules/vendor/entities/entities/lia_vendor/init.lua`
+- `PlayerCheatDetected`
+  - other [standard] in `modules/protection/libraries/server.lua`
+  - core `netcalls` [standard] in `core/netcalls/server.lua`
+- `PlayerGagged`
+  - other [standard] in `modules/administration/admin.lua`
+- `PlayerLiliaDataLoaded`
+  - other [method] in `modules/mainmenu/libraries/server.lua`
+  - core `hooks` [standard] in `core/hooks/server.lua`
+- `PlayerLoadedChar`
+  - other [method] in `modules/teams/libraries/server.lua`
+  - other [method] in `modules/mainmenu/libraries/server.lua`
+  - other [method] in `modules/inventory/types/gridinv/libraries/server.lua`
+  - other [method] in `modules/attributes/libraries/server.lua`
+  - core `hooks` [method] in `core/hooks/server.lua`
+  - core `hooks` [standard] in `core/hooks/server.lua`
+  - core `netcalls` [standard] in `core/netcalls/server.lua`
+- `PlayerMessageSend`
+  - other [standard] in `modules/chatbox/chatbox.lua`
+- `PlayerModelChanged`
+  - core `hooks` [standard] in `core/hooks/shared.lua`
+- `PlayerMuted`
+  - other [standard] in `modules/administration/admin.lua`
+- `PlayerShouldPermaKill`
+  - other [method] in `modules/administration/libraries/server.lua`
+  - core `hooks` [standard] in `core/hooks/server.lua`
+- `PlayerSpawnPointSelected`
+  - other [standard] in `modules/spawns/libraries/server.lua`
+- `PlayerStaminaGained`
+  - other [standard] in `modules/attributes/libraries/shared.lua`
+  - meta `player` [standard] in `core/meta/player.lua`
+- `PlayerStaminaLost`
+  - other [method] in `modules/attributes/libraries/server.lua`
+  - other [standard] in `modules/attributes/libraries/shared.lua`
+  - meta `player` [standard] in `core/meta/player.lua`
+- `PlayerThrowPunch`
+  - other [method] in `modules/attributes/libraries/server.lua`
+  - entity `weapons` [standard] in `entities/weapons/lia_hands/shared.lua`
+- `PlayerUngagged`
+  - other [standard] in `modules/administration/admin.lua`
+- `PlayerUnmuted`
+  - other [standard] in `modules/administration/admin.lua`
+- `PlayerUseDoor`
+  - other [standard] in `modules/doors/libraries/server.lua`
+- `PopulateAdminStick`
+  - other [standard] in `modules/administration/submodules/adminstick/libraries/client.lua`
+- `PopulateAdminTabs`
+  - other [standard] in `modules/administration/admin.lua`
+  - other [method] in `modules/teams/libraries/client.lua`
+  - other [method] in `modules/protection/libraries/client.lua`
+  - other [method] in `modules/chatbox/libraries/client.lua`
+  - other [method] in `modules/administration/libraries/client.lua`
+  - other [method] in `modules/administration/submodules/warnings/libraries/client.lua`
+  - other [method] in `modules/administration/submodules/tickets/libraries/client.lua`
+  - other [method] in `modules/administration/submodules/logs/libraries/client.lua`
+  - core `derma` [standard] in `core/derma/panels/f1menu.lua`
+- `PopulateConfigurationButtons`
+  - core `derma` [standard] in `core/derma/panels/f1menu.lua`
+- `PopulateFactionRosterOptions`
+  - other [standard] in `modules/teams/libraries/client.lua`
+- `PostBotSetup`
+  - core `hooks` [standard] in `core/hooks/server.lua`
+- `PostDoorDataLoad`
+  - other [standard] in `modules/doors/libraries/server.lua`
+- `PostDrawInventory`
+  - other [standard] in `modules/inventory/types/weightinv/libraries/client.lua`
+  - other [standard] in `modules/inventory/types/gridinv/libraries/client.lua`
+- `PostLoadData`
+  - other [method] in `modules/doors/libraries/server.lua`
+  - core `hooks` [standard] in `core/hooks/server.lua`
+- `PostPlayerInitialSpawn`
+  - other [method] in `modules/vendor/libraries/server.lua`
+  - core `hooks` [standard] in `core/hooks/server.lua`
+- `PostPlayerLoadedChar`
+  - other [method] in `modules/administration/submodules/logs/libraries/server.lua`
+  - core `netcalls` [standard] in `core/netcalls/server.lua`
+- `PostPlayerLoadout`
+  - other [method] in `modules/teams/libraries/server.lua`
+  - other [method] in `modules/spawns/libraries/server.lua`
+  - other [method] in `modules/doors/libraries/server.lua`
+  - other [method] in `modules/attributes/libraries/server.lua`
+  - other [method] in `modules/administration/libraries/server.lua`
+  - other [method] in `modules/administration/submodules/adminstick/libraries/server.lua`
+  - core `hooks` [method] in `core/hooks/server.lua`
+  - core `hooks` [standard] in `core/hooks/server.lua`
+- `PostPlayerSay`
+  - core `hooks` [standard] in `core/hooks/server.lua`
+- `PostScaleDamage`
+  - core `hooks` [standard] in `core/hooks/server.lua`
+- `PreDoorDataSave`
+  - other [standard] in `modules/doors/libraries/server.lua`
+- `PreLiliaLoaded`
+  - core `hooks` [standard] in `core/hooks/client.lua`
+- `PrePlayerInteractItem`
+  - meta `item` [standard] in `core/meta/item.lua`
+- `PrePlayerLoadedChar`
+  - core `hooks` [method] in `core/hooks/server.lua`
+  - core `netcalls` [standard] in `core/netcalls/server.lua`
+- `PreSalaryGive`
+  - core `hooks` [standard] in `core/hooks/server.lua`
+- `PreScaleDamage`
+  - core `hooks` [standard] in `core/hooks/server.lua`
+- `ReadLogEntries`
+  - other [method] in `modules/administration/submodules/logs/libraries/server.lua`
+- `RemoveFilteredWord`
+  - other [method] in `modules/chatbox/libraries/server.lua`
+- `RemovePart`
+  - core `netcalls` [standard] in `core/netcalls/client.lua`
+- `RemoveWarning`
+  - other [method] in `modules/administration/submodules/warnings/libraries/server.lua`
+- `ResetCharacterPanel`
+  - other [method] in `modules/mainmenu/module.lua`
+  - core `netcalls` [standard] in `core/netcalls/client.lua`
+  - core `derma` [standard] in `core/derma/mainmenu/creation.lua`
+- `RunAdminSystemCommand`
+  - other [standard] in `modules/administration/admin.lua`
+- `SaveData`
+  - other [method] in `modules/inventory/types/gridinv/submodules/storage/libraries/server.lua`
+  - other [method] in `modules/doors/libraries/server.lua`
+  - other [method] in `modules/chatbox/libraries/server.lua`
+  - core `hooks` [method] in `core/hooks/server.lua`
+  - core `hooks` [standard] in `core/hooks/server.lua`
+- `ScoreboardClosed`
+  - core `derma` [standard] in `core/derma/panels/scoreboard.lua`
+- `ScoreboardOpened`
+  - core `derma` [standard] in `core/derma/panels/scoreboard.lua`
+- `ScoreboardRowCreated`
+  - core `derma` [standard] in `core/derma/panels/scoreboard.lua`
+- `ScoreboardRowRemoved`
+  - core `derma` [standard] in `core/derma/panels/scoreboard.lua`
+- `SetMainCharacter`
+  - other [method] in `modules/mainmenu/module.lua`
+- `SetupBagInventoryAccessRules`
+  - other [method] in `modules/inventory/types/gridinv/libraries/server.lua`
+  - other [standard] in `modules/inventory/types/gridinv/items/base/bags.lua`
+- `SetupBotPlayer`
+  - core `hooks` [method] in `core/hooks/server.lua`
+  - core `hooks` [standard] in `core/hooks/server.lua`
+- `SetupPlayerModel`
+  - meta `character` [standard] in `core/meta/character.lua`
+  - core `netcalls` [standard] in `core/netcalls/client.lua`
+  - core `derma` [standard] in `core/derma/mainmenu/character.lua`
+  - core `derma` [standard] in `core/derma/panels/bodygrouper.lua`
+- `SetupQuickMenu`
+  - core `derma` [standard] in `core/derma/panels/panels.lua`
+- `ShouldAllowScoreboardOverride`
+  - other [method] in `modules/recognition/libraries/client.lua`
+  - core `derma` [standard] in `core/derma/panels/scoreboard.lua`
+  - core `derma` [standard] in `core/derma/panels/voice.lua`
+- `ShouldDataBeSaved`
+  - core `hooks` [standard] in `core/hooks/server.lua`
+- `ShouldDeleteSavedItems`
+  - core `hooks` [standard] in `core/hooks/server.lua`
+- `ShouldDrawAmmo`
+  - core `hooks` [standard] in `core/hooks/client.lua`
+- `ShouldDrawCrosshair`
+  - core `hooks` [standard] in `core/hooks/client.lua`
+- `ShouldDrawEntityInfo`
+  - core `hooks` [method] in `core/hooks/client.lua`
+  - core `hooks` [standard] in `core/hooks/client.lua`
+- `ShouldDrawPlayerInfo`
+  - core `hooks` [standard] in `core/hooks/client.lua`
+- `ShouldDrawWepSelect`
+  - core `derma` [standard] in `core/derma/panels/weaponselector.lua`
+- `ShouldEntityLoad`
+  - core `hooks` [standard] in `core/hooks/server.lua`
+- `ShouldEntitySave`
+  - core `hooks` [standard] in `core/hooks/server.lua`
+- `ShouldMenuButtonShow`
+  - core `derma` [standard] in `core/derma/mainmenu/creation.lua`
+- `ShouldOverrideSalaryTimers`
+  - core `hooks` [standard] in `core/hooks/server.lua`
+- `ShouldPlayDeathSound`
+  - core `hooks` [standard] in `core/hooks/server.lua`
+- `ShouldPlayPainSound`
+  - core `hooks` [standard] in `core/hooks/server.lua`
+- `ShouldRespawnScreenAppear`
+  - other [standard] in `modules/spawns/libraries/client.lua`
+- `ShouldSaveItem`
+  - entity `entities` [standard] in `entities/entities/lia_item/init.lua`
+- `ShouldShowCharVarInCreation`
+  - other [standard] in `modules/mainmenu/module.lua`
+  - core `derma` [standard] in `core/derma/mainmenu/steps/biography.lua`
+- `ShouldShowClassOnScoreboard`
+  - core `derma` [standard] in `core/derma/panels/scoreboard.lua`
+- `ShouldShowFactionOnScoreboard`
+  - core `derma` [standard] in `core/derma/panels/scoreboard.lua`
+- `ShouldShowPlayerOnScoreboard`
+  - core `derma` [standard] in `core/derma/panels/scoreboard.lua`
+- `ShouldShowQuickMenu`
+  - core `hooks` [standard] in `core/hooks/client.lua`
+- `ShouldSpawnClientRagdoll`
+  - core `hooks` [standard] in `core/hooks/server.lua`
+- `ShouldUseMapSpawns`
+  - other [standard] in `modules/spawns/libraries/server.lua`
+- `ShowPlayerOptions`
+  - other [method] in `modules/administration/libraries/client.lua`
+  - core `derma` [standard] in `core/derma/panels/scoreboard.lua`
+- `StorageCanTransferItem`
+  - other [standard] in `modules/inventory/types/gridinv/submodules/storage/netcalls/server.lua`
+- `StorageEntityRemoved`
+  - other [standard] in `modules/inventory/types/gridinv/submodules/storage/entities/entities/lia_storage/init.lua`
+- `StorageInventorySet`
+  - other [method] in `modules/inventory/types/gridinv/submodules/storage/libraries/server.lua`
+  - other [standard] in `modules/inventory/types/gridinv/submodules/storage/libraries/shared.lua`
+  - other [standard] in `modules/inventory/types/gridinv/submodules/storage/entities/entities/lia_storage/init.lua`
+- `StorageOpen`
+  - other [method] in `modules/inventory/types/weightinv/libraries/client.lua`
+  - other [method] in `modules/inventory/types/gridinv/submodules/storage/libraries/client.lua`
+  - other [standard] in `modules/inventory/types/gridinv/submodules/storage/netcalls/client.lua`
+- `StorageRestored`
+  - other [standard] in `modules/inventory/types/gridinv/submodules/storage/libraries/server.lua`
+- `StorageUnlockPrompt`
+  - other [method] in `modules/inventory/types/gridinv/submodules/storage/libraries/client.lua`
+  - other [standard] in `modules/inventory/types/gridinv/submodules/storage/netcalls/client.lua`
+- `StoreSpawns`
+  - other [method] in `modules/spawns/libraries/server.lua`
+- `SuppressHint`
+  - other [standard] in `shared.lua`
+- `SyncCharList`
+  - other [method] in `modules/mainmenu/module.lua`
+  - other [standard] in `modules/mainmenu/libraries/server.lua`
+  - core `netcalls` [standard] in `core/netcalls/server.lua`
+- `SyncFilteredWords`
+  - other [method] in `modules/chatbox/libraries/server.lua`
+- `ThirdPersonToggled`
+  - other [standard] in `modules/mainmenu/module.lua`
+- `TicketSystemClaim`
+  - other [standard] in `modules/administration/submodules/tickets/netcalls/server.lua`
+- `TicketSystemClose`
+  - other [standard] in `modules/administration/submodules/tickets/netcalls/server.lua`
+- `TooltipInitialize`
+  - core `hooks` [method] in `core/hooks/client.lua`
+  - core `derma` [standard] in `core/derma/panels/dproperties.lua`
+- `TooltipLayout`
+  - core `hooks` [method] in `core/hooks/client.lua`
+  - core `derma` [standard] in `core/derma/panels/dproperties.lua`
+- `TooltipPaint`
+  - core `hooks` [method] in `core/hooks/client.lua`
+  - core `derma` [standard] in `core/derma/panels/dproperties.lua`
+- `UpdateEntityPersistence`
+  - other [standard] in `modules/vendor/libraries/server.lua`
+  - other [standard] in `modules/vendor/netcalls/server.lua`
+  - other [standard] in `modules/vendor/entities/entities/lia_vendor/init.lua`
+  - other [standard] in `modules/vendor/entities/entities/lia_vendor/shared.lua`
+  - other [standard] in `modules/inventory/types/gridinv/submodules/storage/libraries/server.lua`
+  - other [standard] in `modules/inventory/types/gridinv/submodules/storage/netcalls/server.lua`
+  - core `hooks` [method] in `core/hooks/server.lua`
+  - core `netcalls` [standard] in `core/netcalls/server.lua`
+- `VendorClassUpdated`
+  - other [standard] in `modules/vendor/derma/client.lua`
+  - other [standard] in `modules/vendor/netcalls/client.lua`
+- `VendorEdited`
+  - other [standard] in `modules/vendor/derma/client.lua`
+  - other [standard] in `modules/vendor/netcalls/client.lua`
+- `VendorExited`
+  - other [method] in `modules/vendor/libraries/client.lua`
+  - other [standard] in `modules/vendor/netcalls/client.lua`
+- `VendorFactionBuyScaleUpdated`
+  - other [standard] in `modules/vendor/netcalls/client.lua`
+- `VendorFactionSellScaleUpdated`
+  - other [standard] in `modules/vendor/netcalls/client.lua`
+- `VendorFactionUpdated`
+  - other [standard] in `modules/vendor/derma/client.lua`
+  - other [standard] in `modules/vendor/netcalls/client.lua`
+- `VendorItemBuyPriceUpdated`
+  - other [standard] in `modules/vendor/derma/client.lua`
+  - other [standard] in `modules/vendor/netcalls/client.lua`
+- `VendorItemMaxStockUpdated`
+  - other [standard] in `modules/vendor/derma/client.lua`
+  - other [standard] in `modules/vendor/netcalls/client.lua`
+- `VendorItemModeUpdated`
+  - other [standard] in `modules/vendor/derma/client.lua`
+  - other [standard] in `modules/vendor/netcalls/client.lua`
+- `VendorItemSellPriceUpdated`
+  - other [standard] in `modules/vendor/derma/client.lua`
+  - other [standard] in `modules/vendor/netcalls/client.lua`
+- `VendorItemStockUpdated`
+  - other [standard] in `modules/vendor/derma/client.lua`
+  - other [standard] in `modules/vendor/netcalls/client.lua`
+- `VendorMessagesUpdated`
+  - other [standard] in `modules/vendor/netcalls/client.lua`
+- `VendorOpened`
+  - other [method] in `modules/vendor/libraries/client.lua`
+  - other [standard] in `modules/vendor/netcalls/client.lua`
+- `VendorPropertyUpdated`
+  - other [standard] in `modules/vendor/derma/client.lua`
+  - other [standard] in `modules/vendor/netcalls/client.lua`
+- `VendorSynchronized`
+  - other [standard] in `modules/vendor/derma/client.lua`
+  - other [standard] in `modules/vendor/netcalls/client.lua`
+- `VendorTradeEvent`
+  - other [method] in `modules/vendor/libraries/server.lua`
+  - other [standard] in `modules/vendor/netcalls/server.lua`
+- `VerifyCheats`
+  - other [method] in `modules/protection/libraries/client.lua`
+- `VoiceToggled`
+  - core `hooks` [method] in `core/hooks/client.lua`
+- `WarningIssued`
+  - other [method] in `modules/administration/submodules/logs/libraries/server.lua`
+- `WarningRemoved`
+  - other [standard] in `modules/administration/submodules/warnings/netcalls/server.lua`
+  - other [method] in `modules/administration/submodules/logs/libraries/server.lua`
+- `WeaponCycleSound`
+  - core `derma` [standard] in `core/derma/panels/weaponselector.lua`
+- `WeaponSelectSound`
+  - core `derma` [standard] in `core/derma/panels/weaponselector.lua`
 
 ### Missing Hook Documentation:
 These hooks are registered in code but missing from documentation:
 - `AddBarField(sectionName, fieldName, labelText, minFunc, maxFunc, valueFunc)`
+- `AddFilteredWord(word)`
 - `AddReservedKeybinds(reserved)`
 - `AddSection(sectionName, color, priority, location)`
 - `AddTextField(sectionName, fieldName, labelText, valueFunc)`
@@ -870,6 +2281,7 @@ These hooks are registered in code but missing from documentation:
 - `CanInviteToClass(client, target)`
 - `CanInviteToFaction(client, target)`
 - `CanItemBeTransfered(item, inventory, VendorInventoryMeasure, client)`
+- `CanManageFilteredWords(client)`
 - `CanOpenBagPanel(item)`
 - `CanOutfitChangeModel(self)`
 - `CanPerformVendorEdit(self, vendor)`
@@ -891,8 +2303,8 @@ These hooks are registered in code but missing from documentation:
 - `CanPlayerOpenScoreboard(arg1)`
 - `CanPlayerRespawn(client, timePassed, baseTime, lastDeath)`
 - `CanPlayerRotateItem(client, item)`
-- `CanPlayerSeeLog(client)`
 - `CanPlayerSeeLogCategory(client, category)`
+- `CanPlayerSeeLogs(client)`
 - `CanPlayerSpawnStorage(client, entity, info)`
 - `CanPlayerSwitchChar(client, currentCharacter, newCharacter)`
 - `CanPlayerTakeItem(client, item)`
@@ -970,6 +2382,7 @@ These hooks are registered in code but missing from documentation:
 - `FilterCharModels(arg1)`
 - `FilterDoorInfo(entity, doorData, doorInfo)`
 - `ForceRecognizeRange(ply, range, fakeName)`
+- `FreelookToggled(arg1)`
 - `GetAdjustedPartData(wearer, id)`
 - `GetAdminESPTarget(ent, client)`
 - `GetAdminStickLists(tgt, lists)`
@@ -998,6 +2411,7 @@ These hooks are registered in code but missing from documentation:
 - `GetDoorInfo(entity, doorData, doorInfo)`
 - `GetDoorInfoForAdminStick(target, extraInfo)`
 - `GetEntitySaveData(ent)`
+- `GetFilteredWords()`
 - `GetHandsAttackSpeed(arg1)`
 - `GetInjuredText(c)`
 - `GetInventoryMaxWeight(self, maxWeight)`
@@ -1021,6 +2435,7 @@ These hooks are registered in code but missing from documentation:
 - `GetPriceOverride(client, self, uniqueID, price, isSellingToVendor)`
 - `GetRagdollTime(self, time)`
 - `GetSalaryAmount(client, charFaction, class)`
+- `GetUsergroupIcon(groupName, groupData, groupOrPlayer)`
 - `GetWarnings(charID)`
 - `GetWeaponName(wep)`
 - `HandleItemTransferRequest(client, itemID, x, y, invID)`
@@ -1070,7 +2485,7 @@ These hooks are registered in code but missing from documentation:
 - `LoadMainCharacter()`
 - `LoadMainMenuInformation(info, character)`
 - `ModifyCharacterCreationSummary(arg1)`
-- `ModifyCharacterModel(arg1, context)`
+- `ModifyCharacterModel(arg1, arg2)`
 - `ModifyScoreboardModel(arg1, ply)`
 - `ModifyVoiceIndicatorText(client, voiceText, voiceType)`
 - `NetVarChanged(arg1, key, oldValue, value)`
@@ -1201,6 +2616,7 @@ These hooks are registered in code but missing from documentation:
 - `PostScaleDamage(hitgroup, dmgInfo, damageScale)`
 - `PreCharDelete(id)`
 - `PreDoorDataSave(door, doorData)`
+- `PreFreelookToggle(arg1)`
 - `PreLiliaLoaded()`
 - `PrePlayerInteractItem(client, action, self)`
 - `PrePlayerLoadedChar(client, character, currentChar)`
@@ -1208,6 +2624,7 @@ These hooks are registered in code but missing from documentation:
 - `PreScaleDamage(hitgroup, dmgInfo, damageScale)`
 - `ReadLogEntries(category, page)`
 - `RefreshFonts()`
+- `RemoveFilteredWord(word)`
 - `RemovePart(client, id)`
 - `RemoveWarning(charID, index)`
 - `ResetCharacterPanel()`
@@ -1224,7 +2641,7 @@ These hooks are registered in code but missing from documentation:
 - `SetupDatabase()`
 - `SetupPACDataFromItems()`
 - `SetupPlayerModel(client, self)`
-- `SetupQuickMenu(self)`
+- `SetupQuickMenu(menu)`
 - `ShouldAllowScoreboardOverride(client, var)`
 - `ShouldBarDraw(bar)`
 - `ShouldDataBeSaved()`
@@ -1250,17 +2667,19 @@ These hooks are registered in code but missing from documentation:
 - `ShouldShowPlayerOnScoreboard(ply)`
 - `ShouldShowQuickMenu()`
 - `ShouldSpawnClientRagdoll(client)`
+- `ShouldUseFreelook(owner)`
+- `ShouldUseMapSpawns(client, character, isRespawning)`
 - `ShowPlayerOptions(target, options)`
 - `StorageCanTransferItem(client, storage, item)`
 - `StorageEntityRemoved(self, inventory)`
 - `StorageInventorySet(entity, inventory, isCar)`
-- `StorageItemRemoved()`
 - `StorageOpen(storage, isCar)`
 - `StorageRestored(ent, inventory)`
 - `StorageUnlockPrompt(entity)`
 - `StoreSpawns(spawns)`
 - `SuppressHint(hint)`
 - `SyncCharList(client)`
+- `SyncFilteredWords(targets)`
 - `ThirdPersonToggled(arg1)`
 - `TicketSystemClaim(client, requester, ticketMessage)`
 - `TicketSystemClose(client, requester, ticketMessage)`
@@ -1296,32 +2715,44 @@ These hooks are registered in code but missing from documentation:
 
 ## Localization Analysis
 
-- **Unique Keys:** 3833
-- **Undefined Calls:** 5
-- **Argument Mismatch:** 1
+- **Unique Keys:** 3890
+- **Undefined Calls:** 14
+- **Argument Mismatch:** 0
 
 ### Undefined Calls
 
-- **salaryReceived** in core\meta\player.lua:504
-  - Context: client:notifyLocalized("salaryReceived", "money", 250)
-- **storageNearlyFull** in core\meta\player.lua:724
-  - Context: client:notifyWarningLocalized("storageNearlyFull")
-- **questUpdated** in core\meta\player.lua:753
-  - Context: client:notifyInfoLocalized("questUpdated")
-- **craftingFinished** in core\meta\player.lua:782
-  - Context: client:notifySuccessLocalized("craftingFinished")
-- **staffDutyEnabled** in core\meta\player.lua:840
-  - Context: client:notifyAdminLocalized("staffDutyEnabled")
+- **exampleDesc** in core\libraries\commands.lua:135
+  - Context: desc = "@exampleDesc",
+- **exampleEnabled** in core\libraries\config.lua:226
+  - Context: lia.config.add("ExampleEnabled", "@exampleEnabled", true, nil, {
+- **exampleEnabledDesc** in core\libraries\config.lua:227
+  - Context: desc = "@exampleEnabledDesc",
+- **inspect** in core\libraries\derma.lua:102
+  - Context: inspect = {label = L("inspect"), callback = function() end}
+- **enterName** in core\libraries\derma.lua:3833
+  - Context: lia.derma.requestString(L("name"), L("enterName"), function(value) end, "", 32)
+- **chooseOptions** in core\libraries\derma.lua:3921
+  - Context: lia.derma.requestOptions(L("options"), L("chooseOptions"), options, function(selected) end)
+- **pickOne** in core\libraries\derma.lua:4157
+  - Context: lia.derma.requestButtons(L("choose"), {"A", "B"}, function(index, text) end, L("pickOne"))
+- **continue** in core\libraries\derma.lua:4256
+  - Context: lia.derma.requestPopupQuestion(L("continue"), {{L("yes"), function() end}, L("no")})
+- **toggleExampleDesc** in core\libraries\keybind.lua:190
+  - Context: desc = "@toggleExampleDesc",
+- **exampleOption** in core\libraries\option.lua:193
+  - Context: lia.option.add("exampleOption", "@exampleOption", "@exampleOptionDesc", true, nil, {
+- **exampleOptionDesc** in core\libraries\option.lua:193
+  - Context: lia.option.add("exampleOption", "@exampleOption", "@exampleOptionDesc", true, nil, {
+- **permRemoveSuccess** in modules\administration\submodules\permaremove\commands.lua:12
+  - Context: client:notifyLocalized("permRemoveSuccess")
+- **permRemoveInvalid** in modules\administration\submodules\permaremove\commands.lua:14
+  - Context: client:notifyLocalized("permRemoveInvalid")
+- **usedFilteredWord** in modules\chatbox\libraries\shared.lua:479
+  - Context: client:notifyLocalized("usedFilteredWord")
 
 ### Argument Mismatches
 
-- **Total Mismatches:** 1
-
-
-#### modules\administration\entities\weapons\lia_mapconfigurer\cl_init.lua
-- **Line 181:** removedPoint(1)
-  - Expected: 0 args, Provided: 1 args
-  - Context: LocalPlayer():notifyLocalized("removedPoint", pt.label or L("pointNumber", idx))
+- **Total Mismatches:** 0
 
 ### Undefined or Unlocalized Inferred Localization Values
 
@@ -1330,8 +2761,6 @@ These string literals are stored in localization-by-convention fields (e.g. `ITE
 | Field | Issue | Value | File | Line |
 |---|---|---|---|---:|
 | `data.category` | Unlocalized string | `.. lia.db.convertDataType(category),` | modules\administration\submodules\logs\libraries\server.lua | 16 |
-| `data.desc` | Unlocalized string | `Usergroup assigned to players when Lilia does not already have one stored for their SteamID.` | modules\administration\admin.lua | 34 |
-| `lia.config.add:name` | Unlocalized string | `Default User Group` | modules\administration\admin.lua | 33 |
 
 ## Language File Comparison
 
@@ -1342,8 +2771,8 @@ These string literals are stored in localization-by-convention fields (e.g. `ITE
 ## Net Message Analysis
 
 ### Summary
-- **Defined Net Messages:** 216
-- **Used Net Messages:** 215
+- **Defined Net Messages:** 223
+- **Used Net Messages:** 222
 - **Defined But Unused:** 1
 - **Used But Undefined:** 0
 
@@ -1363,11 +2792,11 @@ None
 
 - `liaUpdateAdminPrivileges` in module `administration`
   - Reason: Used only by module "administration" but defined outside that module
-  - Usage sites: lia.net.readBigTable at modules/administration/admin.lua:1599; lia.net.writeBigTable at modules/administration/admin.lua:903
+  - Usage sites: lia.net.readBigTable at modules/administration/admin.lua:1646; lia.net.writeBigTable at modules/administration/admin.lua:935
   - Definition sites: init.lua networkStrings at init.lua:2
 - `liaVendorEdit` in module `vendor`
   - Reason: Used only by module "vendor" but defined outside that module
-  - Usage sites: net.Start at modules/vendor/derma/client.lua:2009; net.Start at modules/vendor/entities/entities/lia_vendor/init.lua:113; net.Start at modules/vendor/entities/entities/lia_vendor/init.lua:196; net.Start at modules/vendor/entities/entities/lia_vendor/init.lua:205; net.Start at modules/vendor/entities/entities/lia_vendor/init.lua:215
+  - Usage sites: net.Start at modules/vendor/derma/client.lua:2008; net.Start at modules/vendor/entities/entities/lia_vendor/init.lua:113; net.Start at modules/vendor/entities/entities/lia_vendor/init.lua:196; net.Start at modules/vendor/entities/entities/lia_vendor/init.lua:205; net.Start at modules/vendor/entities/entities/lia_vendor/init.lua:215
   - Definition sites: init.lua networkStrings at init.lua:2
 - `liaVendorPropertySync` in module `vendor`
   - Reason: Used only by module "vendor" but defined outside that module
@@ -1399,7 +2828,7 @@ Total suspicious patterns: **27**
   - Send sides: none
   - Receive sides: client
   - Sender sites: None
-  - Receiver sites: core/netcalls/client.lua:1410
+  - Receiver sites: core/netcalls/client.lua:1416
 - `liaItemData`
   - Reason: Message has receivers but no detected senders
   - Send sides: none
@@ -1411,7 +2840,7 @@ Total suspicious patterns: **27**
   - Send sides: none
   - Receive sides: client
   - Sender sites: None
-  - Receiver sites: core/netcalls/client.lua:1579
+  - Receiver sites: core/netcalls/client.lua:1585
 - `liaKickCharacter`
   - Reason: Message has receivers but no detected senders
   - Send sides: none
@@ -1429,7 +2858,7 @@ Total suspicious patterns: **27**
   - Send sides: none
   - Receive sides: client, server
   - Sender sites: None
-  - Receiver sites: core/netcalls/client.lua:1220; core/netcalls/server.lua:1104
+  - Receiver sites: core/netcalls/client.lua:1226; core/netcalls/server.lua:1104
 - `liaNPCWeaponChange`
   - Reason: Message has receivers but no detected senders
   - Send sides: none
@@ -1586,11 +3015,11 @@ None
 | `liaUserGroupList` | `framework` | `core/derma/panels/usergroup_list.lua:113` |
 | `liaVoicePanel` | `framework` | `core/derma/panels/voice.lua:111` |
 | `liaGridInventoryPanel` | `gridinv` | `modules/inventory/types/gridinv/derma/cl_grid_inventory_panel.lua:250` |
-| `liaGridInvItem` | `gridinv` | `modules/inventory/types/gridinv/derma/cl_grid_inventory_item.lua:133` |
-| `liaVendorBodygroupEditor` | `vendor` | `modules/vendor/derma/client.lua:2752` |
-| `liaVendorEditorItemRow` | `vendor` | `modules/vendor/derma/client.lua:2000` |
-| `liaVendorFactionEditor` | `vendor` | `modules/vendor/derma/client.lua:2700` |
-| `liaVendorItem` | `vendor` | `modules/vendor/derma/client.lua:1080` |
+| `liaGridInvItem` | `gridinv` | `modules/inventory/types/gridinv/derma/cl_grid_inventory_item.lua:132` |
+| `liaVendorBodygroupEditor` | `vendor` | `modules/vendor/derma/client.lua:2751` |
+| `liaVendorEditorItemRow` | `vendor` | `modules/vendor/derma/client.lua:1999` |
+| `liaVendorFactionEditor` | `vendor` | `modules/vendor/derma/client.lua:2699` |
+| `liaVendorItem` | `vendor` | `modules/vendor/derma/client.lua:1079` |
 | `liaListInventory` | `weightinv` | `modules/inventory/types/weightinv/derma/cl_list_inventory.lua:27` |
 | `liaListInventoryPanel` | `weightinv` | `modules/inventory/types/weightinv/derma/cl_list_inventory_panel.lua:157` |
 
@@ -1613,7 +3042,7 @@ None
 
 | Module | Location | Expected Folder | Reason |
 |---|---|---|---|
-| `administration` | `modules/administration/admin.lua:1623` | `D:\GMOD\Server\garrysmod\gamemodes\Lilia\gamemode\modules\administration\derma` | Module UI-heavy code is outside the derma folder |
+| `administration` | `modules/administration/admin.lua:1670` | `D:\GMOD\Server\garrysmod\gamemodes\Lilia\gamemode\modules\administration\derma` | Module UI-heavy code is outside the derma folder |
 | `administration` | `modules/administration/entities/weapons/lia_mapconfigurer/cl_init.lua:146` | `D:\GMOD\Server\garrysmod\gamemodes\Lilia\gamemode\modules\administration\derma` | Module UI-heavy code is outside the derma folder |
 | `administration` | `modules/administration/libraries/client.lua:581` | `D:\GMOD\Server\garrysmod\gamemodes\Lilia\gamemode\modules\administration\derma` | Module UI-heavy code is outside the derma folder |
 | `administration` | `modules/administration/netcalls/client.lua:91` | `D:\GMOD\Server\garrysmod\gamemodes\Lilia\gamemode\modules\administration\derma` | Module UI-heavy code is outside the derma folder |

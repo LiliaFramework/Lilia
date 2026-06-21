@@ -1,4 +1,43 @@
-﻿lia.log = lia.log or {}
+﻿--[[
+    Folder: Developer - Libraries
+    File: lia.log.md
+]]
+--[[
+    Log
+
+    Server log helpers for registering log types, formatting log messages, dispatching log hooks, printing log output, and saving log entries to the database.
+]]
+--[[
+    Overview:
+        The log library centralizes server-side logging under `lia.log`. It stores registered log type formatters in `lia.log.types`, resolves localized log messages through those formatters, emits `OnServerLog`, prints formatted log output to the server console, and persists log records to the `logs` database table with timestamp, gamemode, category, message, character ID, and SteamID data when available.
+]]
+--[[
+    Hooks:
+        OnServerLog(Player|nil client, string logType, string logString, string category)
+
+    Purpose:
+        Called after a log string has been generated and before the entry is printed to the server console and inserted into the database.
+
+    Parameters:
+        client (Player|nil)
+            The player associated with the log entry, if one exists.
+
+        logType (string)
+            The registered log type key used to generate the entry.
+
+        logString (string)
+            The formatted log message that will be printed and stored.
+
+        category (string)
+            The resolved category name for the log entry.
+
+    Returns:
+        None
+
+    Realm:
+        Server
+]]
+lia.log = lia.log or {}
 lia.log.types = lia.log.types or {}
 local logTypeData = {
     character = {
@@ -240,6 +279,33 @@ for category, logTypes in pairs(logTypeData) do
     end
 end
 
+--[[
+    Purpose:
+        Registers a log type formatter and assigns it to a category.
+
+    Parameters:
+        logType (string)
+            The unique log type key used when creating log entries.
+
+        func (function)
+            The formatter function called by `lia.log.getString`. It receives the client followed by any extra arguments passed to the log call and should return the final log message string.
+
+        category (string|nil)
+            The category name associated with this log type. If the category is not a string when a log is added, it falls back to the uncategorized label.
+
+    Returns:
+        None
+
+    Example Usage:
+        ```lua
+        lia.log.addType("customAction", function(client, targetName)
+            return client:Name() .. " performed a custom action on " .. targetName
+        end, L("admin"))
+        ```
+
+    Realm:
+        Server
+]]
 function lia.log.addType(logType, func, category)
     lia.log.types[logType] = {
         func = func,
@@ -247,6 +313,35 @@ function lia.log.addType(logType, func, category)
     }
 end
 
+--[[
+    Purpose:
+        Builds a formatted log message and retrieves the category for a registered log type.
+
+    Parameters:
+        client (Player|nil)
+            The player associated with the log entry, if one exists.
+
+        logType (string)
+            The registered log type key to resolve.
+
+        ... (any)
+            Additional arguments passed to the registered formatter function.
+
+    Returns:
+        string|nil
+            The formatted log message when the log type exists and its formatter succeeds.
+
+        string|nil
+            The category assigned to the log type when the formatter succeeds.
+
+    Example Usage:
+        ```lua
+        local logString, category = lia.log.getString(client, "charLoad", character:getName())
+        ```
+
+    Realm:
+        Server
+]]
 function lia.log.getString(client, logType, ...)
     local logData = lia.log.types[logType]
     if not logData then return end
@@ -256,6 +351,31 @@ function lia.log.getString(client, logType, ...)
     end
 end
 
+--[[
+    Purpose:
+        Creates a server log entry for a registered log type, emits the log hook, prints the entry to the server console, and saves it to the database.
+
+    Parameters:
+        client (Player|nil)
+            The player associated with the log entry, if one exists.
+
+        logType (string)
+            The registered log type key used to generate the entry.
+
+        ... (any)
+            Additional arguments passed to the registered formatter function.
+
+    Returns:
+        None
+
+    Example Usage:
+        ```lua
+        lia.log.add(client, "chatOOC", message)
+        ```
+
+    Realm:
+        Server
+]]
 function lia.log.add(client, logType, ...)
     local logString, category = lia.log.getString(client, logType, ...)
     if not isstring(category) then category = L("uncategorized") end

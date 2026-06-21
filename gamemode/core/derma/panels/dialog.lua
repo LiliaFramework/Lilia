@@ -1,4 +1,10 @@
 ﻿local PANEL = {}
+local function isGeneratedCloseNode(node)
+    if not istable(node) then return false end
+    local nodeID = string.Trim(string.lower(tostring(node.dialogID or "")))
+    return nodeID == "goodbye" or nodeID == "bye" or nodeID == "farewell" or nodeID == "close"
+end
+
 function PANEL:Init()
     if IsValid(lia.dialog.vgui) then lia.dialog.vgui:Remove() end
     lia.dialog.vgui = self
@@ -376,7 +382,8 @@ function PANEL:BuildGeneratedOptions(nodeOptions)
         local label = node.playerText ~= "" and node.playerText or node.dialogID or node.id
         options[#options + 1] = {
             label = label,
-            nodeID = node.id
+            nodeID = node.id,
+            closeDialog = isGeneratedCloseNode(node)
         }
     end
     return options
@@ -401,6 +408,12 @@ function PANEL:HandleGeneratedDialogResult(result)
     self.pendingResponse = false
     if result.npcText and result.npcText ~= "" then self:AppendDialogLine(result.npcText, false) end
     if result.soundPath and result.soundPath ~= "" then surface.PlaySound(result.soundPath) end
+    if result.closeDialog then
+        self.closingForGoodbye = true
+        self:Remove()
+        return
+    end
+
     if result.success then self.currentGeneratedNodeID = result.selectedNodeID or self.currentGeneratedNodeID end
     self.generatedOptions = result.options or self.generatedOptions or {}
     self:ClearDialogOptions()
@@ -420,11 +433,19 @@ function PANEL:AddDialogOptions(options, npc, skipBackButton)
     local ply = LocalPlayer()
     if isfunction(options) then options = options(ply, npc) end
     local validOptions = {}
+    if not istable(options) then return end
     for label, info in pairs(options) do
-        table.insert(validOptions, {
-            label = label,
-            info = info
-        })
+        if istable(info) and info.label ~= nil then
+            table.insert(validOptions, {
+                label = tostring(info.label),
+                info = info
+            })
+        else
+            table.insert(validOptions, {
+                label = tostring(label),
+                info = istable(info) and info or {}
+            })
+        end
     end
 
     if not skipBackButton and #self.conversationStack > 0 then
@@ -438,8 +459,8 @@ function PANEL:AddDialogOptions(options, npc, skipBackButton)
     end
 
     table.sort(validOptions, function(a, b)
-        local labelA = a.label:lower()
-        local labelB = b.label:lower()
+        local labelA = string.lower(tostring(a.label or ""))
+        local labelB = string.lower(tostring(b.label or ""))
         local aIsAdmin = labelA:find("^%[admin%]") or labelA:find("^%[admin%]:")
         local bIsAdmin = labelB:find("^%[admin%]") or labelB:find("^%[admin%]:")
         if aIsAdmin and not bIsAdmin then return true end
@@ -452,7 +473,7 @@ function PANEL:AddDialogOptions(options, npc, skipBackButton)
         local bIsGoodbye = b.info.closeDialog or labelMatches(b.label, "goodbye", "bye", "farewell", "close", L("close"))
         if aIsGoodbye and not bIsGoodbye then return false end
         if bIsGoodbye and not aIsGoodbye then return true end
-        return a.label < b.label
+        return labelA < labelB
     end)
 
     for _, option in ipairs(validOptions) do
@@ -468,6 +489,7 @@ function PANEL:AddDialogOptions(options, npc, skipBackButton)
             if info.nodeID and self.generatedDialog then
                 self:AppendDialogLine(label, true)
                 self.pendingResponse = true
+                self.generatedClosingNode = info.closeDialog or false
                 net.Start("liaNpcDialogNodeSelect")
                 net.WriteEntity(IsValid(npc) and npc or self.activeNPC)
                 net.WriteString(info.nodeID)

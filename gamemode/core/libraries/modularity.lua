@@ -1,4 +1,54 @@
-﻿lia.module = lia.module or {}
+﻿--[[
+    Folder: Developer - Libraries
+    File: lia.module.md
+]]
+--[[
+    Module
+
+    Module loading helpers for Lilia schemas, modules, submodules, dependencies, permissions, and module-provided assets.
+]]
+--[[
+    Overview:
+        The module library centralizes module discovery and loading under `lia.module`. It prepares the active `MODULE` or `SCHEMA` table, includes each module core file, registers privileges and dependencies, loads supported module folders and files, attaches module functions as hooks, initializes schema modules and overrides, and exposes lookup helpers for loaded modules.
+]]
+--[[
+    Hooks:
+        DoModuleIncludes(string path, table module)
+
+    Purpose:
+        Runs after a module's standard files, folders, entities, networking strings, and client web assets are included.
+
+    Parameters:
+        path (string)
+            The directory path of the module being loaded.
+
+        module (table)
+            The active module table for the module being loaded.
+
+    Realm:
+        Shared
+]]
+--[[
+    Hooks:
+        InitializedSchema()
+
+    Purpose:
+        Runs after the active schema has been loaded and before preload, base, schema, and override modules are loaded.
+
+    Realm:
+        Shared
+]]
+--[[
+    Hooks:
+        InitializedModules()
+
+    Purpose:
+        Runs after preload, base, schema, and override modules have been loaded.
+
+    Realm:
+        Shared
+]]
+lia.module = lia.module or {}
 lia.module.list = lia.module.list or {}
 local function loadPermissions(Privileges)
     if not Privileges or not istable(Privileges) then return end
@@ -126,6 +176,35 @@ local function loadExtras(path)
     hook.Run("DoModuleIncludes", path, MODULE)
 end
 
+--[[
+    Purpose:
+        Loads a schema, module, or submodule from a directory and registers its metadata, dependencies, permissions, extras, hooks, and optional submodules.
+
+    Parameters:
+        uniqueID (string)
+            The unique identifier used to register and retrieve the module.
+
+        path (string)
+            The directory path that contains the module core file and optional module folders.
+
+        variable (string|nil)
+            The global table name used while loading the module. Defaults to `MODULE`; schemas use `SCHEMA`.
+
+        skipSubmodules (boolean|nil)
+            Whether submodules should be skipped after the module finishes loading.
+
+    Returns:
+        nil
+
+    Example Usage:
+        ```lua
+        lia.module.load("inventory", "lilia/gamemode/modules/inventory", "MODULE")
+        lia.module.load("schema", engine.ActiveGamemode():gsub("\\", "/") .. "/schema", "SCHEMA")
+        ```
+
+    Realm:
+        Shared
+]]
 function lia.module.load(uniqueID, path, variable, skipSubmodules)
     variable = variable or "MODULE"
     local lowerVar = variable:lower()
@@ -215,6 +294,24 @@ function lia.module.load(uniqueID, path, variable, skipSubmodules)
     end
 end
 
+--[[
+    Purpose:
+        Initializes the schema and module loading sequence for the active gamemode.
+
+    Parameters:
+        None
+
+    Returns:
+        nil
+
+    Example Usage:
+        ```lua
+        lia.module.initialize()
+        ```
+
+    Realm:
+        Shared
+]]
 function lia.module.initialize()
     local schemaPath = engine.ActiveGamemode():gsub("\\", "/")
     lia.module.load("schema", schemaPath .. "/schema", "schema")
@@ -252,6 +349,32 @@ function lia.module.initialize()
     lia.UpdateCheckDone = true
 end
 
+--[[
+    Purpose:
+        Loads every folder in a directory as a module, unless that folder is listed in the skip table.
+
+    Parameters:
+        directory (string)
+            The directory whose child folders should be loaded as modules.
+
+        group (string|nil)
+            The module group used to determine the loading global. `schema` uses `SCHEMA`; all other values use `MODULE`.
+
+        skip (table|nil)
+            A table of module identifiers to skip, keyed by folder name.
+
+    Returns:
+        nil
+
+    Example Usage:
+        ```lua
+        lia.module.loadFromDir("lilia/gamemode/modules", "module")
+        lia.module.loadFromDir("schema/modules", "module", {example = true})
+        ```
+
+    Realm:
+        Shared
+]]
 function lia.module.loadFromDir(directory, group, skip)
     local locationVar = group == "schema" and "SCHEMA" or "MODULE"
     local _, folders = file.Find(directory .. "/*", "LUA")
@@ -260,6 +383,27 @@ function lia.module.loadFromDir(directory, group, skip)
     end
 end
 
+--[[
+    Purpose:
+        Returns a loaded module table by its unique identifier.
+
+    Parameters:
+        identifier (string)
+            The unique identifier of the module to retrieve.
+
+    Returns:
+        table|nil
+            The loaded module table, or nil if no module is registered with that identifier.
+
+    Example Usage:
+        ```lua
+        local module = lia.module.get("inventory")
+        if module then print(module.name) end
+        ```
+
+    Realm:
+        Shared
+]]
 function lia.module.get(identifier)
     return lia.module.list[identifier]
 end

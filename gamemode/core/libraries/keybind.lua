@@ -1,4 +1,41 @@
-﻿lia.keybind = lia.keybind or {}
+﻿--[[
+    Folder: Developer - Libraries
+    File: lia.keybind.md
+]]
+--[[
+    Keybind
+
+    Keybind helpers for Lilia action registration, configurable key assignment, keybind persistence, reserved-key handling, and keybind configuration UI integration.
+]]
+--[[
+    Overview:
+        The keybind library centralizes shared and clientside keybind behavior under `lia.keybind`. It registers named actions with press and release callbacks, supports default and saved key codes, localizes action descriptions and categories, detects reserved Garry's Mod bind keys, saves and loads client keybind choices, and adds the keybind editor to the configuration menu.
+]]
+--[[
+    Hooks:
+        AddReservedKeybinds(table reserved)
+
+    Purpose:
+        Allows plugins or modules to add extra reserved key codes before keybind choices are displayed.
+
+    Parameters:
+        reserved (table)
+            Lookup table keyed by numeric key code. Set reserved[keyCode] to true to reserve a key.
+
+    Realm:
+        Client
+]]
+--[[
+    Hooks:
+        InitializedKeybinds()
+
+    Purpose:
+        Runs after saved keybinds are loaded, numeric key lookups are rebuilt, and reserved keys are generated.
+
+    Realm:
+        Client
+]]
+lia.keybind = lia.keybind or {}
 lia.keybind.stored = lia.keybind.stored or {}
 local KeybindKeys = {
     ["first"] = KEY_FIRST,
@@ -129,6 +166,38 @@ local function localizeKeybindLabel(value, ...)
 end
 
 lia.keybind.localizeValue = localizeKeybindLabel
+--[[
+    Purpose:
+        Registers a keybind action and stores its default key, localized display metadata, press/release callbacks, optional run condition, and server-only behavior.
+
+    Parameters:
+        k (string|number)
+            The action name when using the configuration-table format, or the key code/key name when using the legacy argument format.
+        d (table|string)
+            The keybind configuration table when k is an action name, or the action name when using the legacy argument format.
+        desc (string|nil)
+            Optional description used by the legacy argument format.
+        cb (table|nil)
+            Optional callback table used by the legacy argument format. Must include onPress and may include onRelease, shouldRun, and serverOnly.
+
+    Returns:
+        nil
+
+    Example Usage:
+        ```lua
+        lia.keybind.add("toggleExample", {
+            keyBind = KEY_F6,
+            desc = "@toggleExampleDesc",
+            category = "misc",
+            onPress = function(client)
+                client:notify("Pressed example keybind.")
+            end
+        })
+        ```
+
+    Realm:
+        Shared
+]]
 function lia.keybind.add(k, d, desc, cb)
     local actionName, key, description, callbacks, category
     if isstring(k) and istable(d) and desc == nil and cb == nil then
@@ -171,6 +240,26 @@ function lia.keybind.add(k, d, desc, cb)
     lia.keybind.stored[c] = actionName
 end
 
+--[[
+    Purpose:
+        Gets the localized display description for a registered keybind action.
+
+    Parameters:
+        action (string)
+            The keybind action identifier.
+
+    Returns:
+        string
+            The localized action description, or an empty string if the action is not registered.
+
+    Example Usage:
+        ```lua
+        local description = lia.keybind.getDisplayDescription("openInventory")
+        ```
+
+    Realm:
+        Shared
+]]
 function lia.keybind.getDisplayDescription(action)
     local data = lia.keybind.stored[action]
     if not data then return "" end
@@ -178,6 +267,26 @@ function lia.keybind.getDisplayDescription(action)
     return isstring(value) and localizeKeybindLabel(value) or value
 end
 
+--[[
+    Purpose:
+        Gets the localized display category for a registered keybind action.
+
+    Parameters:
+        action (string)
+            The keybind action identifier.
+
+    Returns:
+        string
+            The localized action category, or the localized miscellaneous category when no category is set.
+
+    Example Usage:
+        ```lua
+        local category = lia.keybind.getDisplayCategory("openInventory")
+        ```
+
+    Realm:
+        Shared
+]]
 function lia.keybind.getDisplayCategory(action)
     local data = lia.keybind.stored[action]
     if not data then return localizeKeybindLabel("misc") end
@@ -345,6 +454,24 @@ lia.keybind.add("convertEntity", {
 
 if CLIENT then
     local GMODDefaultBindNames = {"+forward", "+back", "+moveleft", "+moveright", "+use", "+jump", "+duck", "+walk", "+speed", "+reload", "impulse 100", "+showscores", "messagemode", "messagemode2", "+menu_context", "+menu", "slot1", "slot2", "slot3", "slot4", "slot5", "slot6", "slot7", "slot8", "slot9", "slot0", "undo", "+zoom",}
+    --[[
+    Purpose:
+        Builds the clientside reserved-key lookup from Garry's Mod default bindings and entries added through AddReservedKeybinds.
+
+    Parameters:
+        None
+
+    Returns:
+        nil
+
+    Example Usage:
+        ```lua
+        lia.keybind.buildReservedKeys()
+        ```
+
+    Realm:
+        Client
+]]
     function lia.keybind.buildReservedKeys()
         local reserved = {}
         for _, bindName in ipairs(GMODDefaultBindNames) do
@@ -359,6 +486,26 @@ if CLIENT then
         lia.keybind.reservedKeys = reserved
     end
 
+    --[[
+    Purpose:
+        Checks whether a numeric key code is currently marked as reserved by the keybind system.
+
+    Parameters:
+        keyCode (number)
+            The key code to check.
+
+    Returns:
+        boolean
+            True if the key is reserved, otherwise false.
+
+    Example Usage:
+        ```lua
+        if lia.keybind.isKeyReserved(KEY_F1) then return end
+        ```
+
+    Realm:
+        Client
+]]
     function lia.keybind.isKeyReserved(keyCode)
         if not lia.keybind.reservedKeys then return false end
         return lia.keybind.reservedKeys[keyCode] == true
@@ -400,12 +547,52 @@ if CLIENT then
         end
     end)
 
+    --[[
+    Purpose:
+        Returns the selected key code for a registered keybind action, falling back to the action default or a provided fallback value.
+
+    Parameters:
+        a (string)
+            The keybind action identifier.
+        df (any)
+            Fallback value returned when the action is not registered or has no stored/default key.
+
+    Returns:
+        any
+            The selected key code, default key code, or fallback value.
+
+    Example Usage:
+        ```lua
+        local keyCode = lia.keybind.get("openInventory", KEY_NONE)
+        ```
+
+    Realm:
+        Client
+]]
     function lia.keybind.get(a, df)
         local act = lia.keybind.stored[a]
         if act then return act.value or act.default or df end
         return df
     end
 
+    --[[
+    Purpose:
+        Saves current clientside keybind values to `data/lilia/keybinds.json`.
+
+    Parameters:
+        None
+
+    Returns:
+        nil
+
+    Example Usage:
+        ```lua
+        lia.keybind.save()
+        ```
+
+    Realm:
+        Client
+]]
     function lia.keybind.save()
         local path = "lilia/keybinds.json"
         local d = {}
@@ -420,6 +607,24 @@ if CLIENT then
         end
     end
 
+    --[[
+    Purpose:
+        Loads clientside keybind values from `data/lilia/keybinds.json`, applies defaults when no save exists, rebuilds numeric key lookups, rebuilds reserved keys, and runs InitializedKeybinds.
+
+    Parameters:
+        None
+
+    Returns:
+        nil
+
+    Example Usage:
+        ```lua
+        lia.keybind.load()
+        ```
+
+    Realm:
+        Client
+]]
     function lia.keybind.load()
         local path = "lilia/keybinds.json"
         local d = file.Read(path, "DATA")

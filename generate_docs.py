@@ -797,6 +797,385 @@ def find_comment_blocks_in_file(file_path):
     return all_comment_blocks, file_header, overview_section
 
 
+def find_top_comment_blocks_in_file(file_path: Path):
+    try:
+        with open(file_path, 'r', encoding='utf-8-sig') as f:
+            content = f.read()
+    except UnicodeDecodeError:
+        print(f"Warning: Could not read {file_path} due to encoding issues")
+        return '', []
+
+    blocks = []
+    index = 0
+    length = len(content)
+    comment_pattern = re.compile(r'--\[\[.*?\]\]', re.DOTALL)
+
+    while index < length:
+        whitespace_match = re.match(r'\s*', content[index:])
+        if whitespace_match:
+            index += whitespace_match.end()
+
+        if index >= length:
+            break
+
+        if content.startswith('--[[', index):
+            match = comment_pattern.match(content, index)
+            if not match:
+                break
+            blocks.append({
+                'text': match.group(0),
+                'line': content[:match.start()].count('\n') + 1
+            })
+            index = match.end()
+            continue
+
+        if content.startswith('--', index):
+            newline_index = content.find('\n', index)
+            if newline_index == -1:
+                break
+            index = newline_index + 1
+            continue
+
+        break
+
+    return content, blocks
+
+
+def extract_hook_name_from_block(comment_text: str) -> Optional[str]:
+    lines = comment_text.splitlines()
+    in_hooks = False
+
+    for raw_line in lines:
+        line = raw_line.strip()
+        if not line or line in {'--[[', ']]'}:
+            continue
+
+        if line.startswith('Hooks:'):
+            in_hooks = True
+            inline = line[len('Hooks:'):].strip()
+            if inline:
+                match = re.match(r'([A-Za-z_][\w]*)\s*\(', inline)
+                if match:
+                    return match.group(1)
+            continue
+
+        if in_hooks:
+            match = re.match(r'([A-Za-z_][\w]*)\s*\(', line)
+            if match:
+                return match.group(1)
+            if ':' in line:
+                break
+
+    return None
+
+
+def find_hook_docs_in_file(file_path: Path):
+    file_content, top_blocks = find_top_comment_blocks_in_file(file_path)
+    if not top_blocks:
+        return file_content, None, None, []
+
+    file_header = None
+    overview_section = None
+    hooks = []
+
+    for block in top_blocks:
+        comment_text = block['text']
+        if 'Folder:' in comment_text or 'File:' in comment_text or 'Append:' in comment_text:
+            continue
+        if 'Overview:' in comment_text or 'Improvements Done:' in comment_text:
+            if overview_section is None:
+                overview_section = comment_text
+            continue
+        if 'Hooks:' in comment_text:
+            hook_name = extract_hook_name_from_block(comment_text)
+            if hook_name:
+                hooks.append({
+                    'name': hook_name,
+                    'comment': comment_text,
+                    'line': block['line']
+                })
+            continue
+        if file_header is None:
+            file_header = comment_text
+
+    return file_content, file_header, overview_section, hooks
+
+
+def slugify_filename(name: str) -> str:
+    value = name.strip().lower()
+    value = re.sub(r'[^a-z0-9]+', '-', value)
+    value = re.sub(r'-{2,}', '-', value).strip('-')
+    return value or 'index'
+
+
+def humanize_identifier(name: str) -> str:
+    return re.sub(r'[_\-]+', ' ', name).strip().title()
+
+
+def is_module_library_file(file_path: Path, base_dir: Path, file_content: Optional[str]=None) -> bool:
+    try:
+        rel_parts = file_path.resolve().relative_to(base_dir.resolve()).parts
+    except ValueError:
+        resolved_parts = file_path.resolve().parts
+        lowered_parts = tuple(part.lower() for part in resolved_parts)
+        try:
+            gamemode_index = lowered_parts.index('gamemode')
+        except ValueError:
+            return False
+        rel_parts = resolved_parts[gamemode_index:]
+    if len(rel_parts) < 3 or rel_parts[:2] != ('gamemode', 'modules'):
+        return False
+
+    custom_filename = None
+    if file_content is not None:
+        _, custom_filename, _ = parse_folder_directives(file_content)
+
+    return 'libraries' in rel_parts or bool(custom_filename and custom_filename.strip().lower().startswith('lia.'))
+
+
+def classify_hook_group(file_path: Path, base_dir: Path, file_content: str) -> Dict[str, str]:
+    rel_parts = file_path.resolve().relative_to(base_dir.resolve()).parts
+
+    if len(rel_parts) == 4 and rel_parts[:3] == ('gamemode', 'core', 'libraries') and rel_parts[-1].endswith('.lua'):
+        library_name = file_path.stem
+        return {
+            'section': 'library',
+            'key': f'library:{library_name}',
+            'filename': f'{slugify_filename(library_name)}.md',
+            'title': humanize_identifier(library_name),
+            'subtitle': f'This page documents the hooks defined by the {humanize_identifier(library_name).lower()} library.'
+        }
+
+    if is_module_library_file(file_path, base_dir, file_content):
+        library_name = file_path.stem
+        return {
+            'section': 'library',
+            'key': f'module-library:{library_name}',
+            'filename': f'{slugify_filename(library_name)}.md',
+            'title': humanize_identifier(library_name),
+            'subtitle': f'This page documents the hooks defined by the {humanize_identifier(library_name).lower()} module library.'
+        }
+
+    if len(rel_parts) >= 4 and rel_parts[:2] == ('gamemode', 'modules'):
+        module_name = rel_parts[2]
+        # Handle direct module entry files (gamemode/modules/<module>/module.lua)
+        if len(rel_parts) == 4 and rel_parts[3] == 'module.lua':
+            module_title = humanize_identifier(module_name)
+            return {
+                'section': 'module',
+                'key': f'module:{module_name}',
+                'filename': f'{slugify_filename(module_name)}.md',
+                'title': module_title,
+                'subtitle': f'This page documents the hooks defined by the {module_title.lower()} module.'
+            }
+
+        # Handle nested module entry files like gamemode/modules/<module>/.../module.lua
+        if file_path.name == 'module.lua':
+            try:
+                modules_index = rel_parts.index('modules')
+            except ValueError:
+                modules_index = 1
+            # parts between the module name and the final module.lua form the submodule path
+            subparts = rel_parts[modules_index + 2:-1]
+            if subparts:
+                submodule_name = '-'.join(subparts)
+                module_title = humanize_identifier(module_name)
+                submodule_title = humanize_identifier('/'.join(subparts))
+                return {
+                    'section': 'module',
+                    'key': f'submodule:{module_name}:{submodule_name}',
+                    'filename': f'{slugify_filename(module_name)}.{slugify_filename(submodule_name)}.md',
+                    'title': f'{module_title} - {submodule_title}',
+                    'subtitle': f'This page documents the hooks defined by the {submodule_title.lower()} submodule in the {module_title.lower()} module.'
+                }
+        
+        # Handle top-level module files like gamemode/modules/<module>/admin.lua
+        if len(rel_parts) == 4 and rel_parts[3].endswith('.lua') and rel_parts[3] != 'module.lua':
+            submodule_basename = rel_parts[3][:-4]
+            module_title = humanize_identifier(module_name)
+            submodule_title = humanize_identifier(submodule_basename)
+            submodule_name = submodule_basename
+            return {
+                'section': 'module',
+                'key': f'submodule:{module_name}:{submodule_name}',
+                'filename': f'{slugify_filename(module_name)}.{slugify_filename(submodule_name)}.md',
+                'title': f'{module_title} - {submodule_title}',
+                'subtitle': f'This page documents the hooks defined by the {submodule_title.lower()} submodule in the {module_title.lower()} module.'
+            }
+
+        # Legacy submodules structure support
+        if len(rel_parts) >= 6 and rel_parts[3] == 'submodules' and rel_parts[5] == 'module.lua':
+            submodule_name = rel_parts[4]
+            module_title = humanize_identifier(module_name)
+            submodule_title = humanize_identifier(submodule_name)
+            return {
+                'section': 'module',
+                'key': f'submodule:{module_name}:{submodule_name}',
+                'filename': f'{slugify_filename(module_name)}.{slugify_filename(submodule_name)}.md',
+                'title': f'{module_title} - {submodule_title}',
+                'subtitle': f'This page documents the hooks defined by the {submodule_title.lower()} submodule in the {module_title.lower()} module.'
+            }
+
+        # Fallback for other module-located hook files
+        return {
+            'section': 'module',
+            'key': 'module-uncategorized',
+            'filename': 'uncategorized.md',
+            'title': 'Uncategorized',
+            'subtitle': 'This page documents hooks found in module files that are not dedicated library, module, or submodule entry files.'
+        }
+
+    return {
+        'section': 'core',
+        'key': 'core',
+        'filename': 'core.md',
+        'title': 'Core',
+        'subtitle': 'This page documents hooks defined outside dedicated library, module, or submodule entry files.'
+    }
+
+
+def should_include_hook_file(file_path: Path, group_info: Dict[str, str], file_content: str) -> bool:
+    custom_folder, custom_filename, _ = parse_folder_directives(file_content)
+    if not custom_filename:
+        return True
+
+    if group_info['key'].startswith('library:'):
+        expected_filename = f'lia.{file_path.stem}.md'
+        return custom_filename.strip().lower() == expected_filename.lower()
+
+    return True
+
+
+def is_library_hook_group(group_info: Dict[str, str]) -> bool:
+    return group_info['section'] == 'library'
+
+
+def clear_generated_markdown(output_dir: Path) -> None:
+    output_dir.mkdir(parents=True, exist_ok=True)
+    for md_file in output_dir.glob('*.md'):
+        if md_file.name != 'index.md':
+            md_file.unlink()
+
+
+def get_documented_output_filename(file_path: Path, file_content: str) -> str:
+    _, custom_filename, _ = parse_folder_directives(file_content)
+    return custom_filename or f'{file_path.stem}.md'
+
+
+def write_hook_group_page(group: Dict[str, object], output_dir: Path, base_dir: Path) -> None:
+    output_path = output_dir / group['filename']
+    output_path.parent.mkdir(parents=True, exist_ok=True)
+
+    title = group['title']
+    subtitle = group['subtitle']
+    file_header = group.get('file_header')
+    overview_section = group.get('overview_section')
+    if file_header:
+        parsed_header = parse_file_header(file_header)
+        if '\n\n' in parsed_header:
+            parts = parsed_header.split('\n\n', 1)
+            title = parts[0].replace('**', '').replace('*', '').strip()
+            if len(parts) > 1 and parts[1].strip():
+                subtitle = parts[1].strip()
+
+    css_block = '''<style>
+details > summary {
+    position: relative;
+    display: flex;
+    align-items: center;
+    min-height: 70px;
+    padding-right: 180px;
+}
+
+details > summary .summary-main {
+    min-width: 0;
+}
+
+details > summary .source-link-button--summary {
+    position: absolute;
+    right: 56px;
+    top: 50%;
+    transform: translateY(-50%);
+    white-space: nowrap;
+    z-index: 2;
+}
+</style>\n\n'''
+
+    with open(output_path, 'w', encoding='utf-8') as f:
+        f.write(css_block)
+        f.write(f'# {title}\n\n')
+        f.write(f'{subtitle}\n\n')
+        f.write('---\n\n')
+
+        if overview_section:
+            f.write('<h3 style="margin-bottom: 5px;">Overview</h3>\n')
+            f.write('<div style="margin-left: 20px; margin-bottom: 20px;">\n')
+            f.write(parse_overview_section(overview_section) + '\n')
+            f.write('</div>\n\n')
+            f.write('---\n\n')
+
+        for hook in group['hooks']:
+            parsed = parse_comment_block(hook['comment'])
+            f.write(
+                generate_markdown_for_function(
+                    hook['name'],
+                    parsed,
+                    is_library=False,
+                    source_url=build_source_url(hook['file_path'], base_dir, hook['line'])
+                )
+            )
+            f.write('---\n\n')
+
+    print(f" Generated {output_path.name}")
+
+
+def generate_hook_documentation(core_output_dir: Path, module_output_dir: Path, base_dir: Path) -> None:
+    gamemode_dir = base_dir / 'gamemode'
+    grouped_hooks: Dict[str, Dict[str, object]] = {}
+
+    for file_path in gamemode_dir.rglob('*.lua'):
+        file_content, file_header, overview_section, hooks = find_hook_docs_in_file(file_path)
+        if not hooks:
+            continue
+
+        group_info = classify_hook_group(file_path, base_dir, file_content)
+        if is_library_hook_group(group_info):
+            continue
+        if not should_include_hook_file(file_path, group_info, file_content):
+            continue
+        group = grouped_hooks.setdefault(group_info['key'], {
+            'key': group_info['key'],
+            'section': group_info['section'],
+            'filename': group_info['filename'],
+            'title': group_info['title'],
+            'subtitle': group_info['subtitle'],
+            'hooks': [],
+            'file_header': None,
+            'overview_section': None,
+        })
+
+        if group['key'] != 'module-uncategorized' and group['file_header'] is None and file_header:
+            group['file_header'] = file_header
+        if group['key'] != 'module-uncategorized' and group['overview_section'] is None and overview_section:
+            group['overview_section'] = overview_section
+
+        for hook in hooks:
+            group['hooks'].append({
+                'name': hook['name'],
+                'comment': hook['comment'],
+                'line': hook['line'],
+                'file_path': file_path
+            })
+
+    clear_generated_markdown(core_output_dir)
+    clear_generated_markdown(module_output_dir)
+
+    for group in sorted(grouped_hooks.values(), key=lambda item: item['title'].lower()):
+        group['hooks'].sort(key=lambda hook: hook['name'].lower())
+        target_dir = module_output_dir if group['section'] == 'module' else core_output_dir
+        write_hook_group_page(group, target_dir, base_dir)
+
+
 def generate_documentation_for_file(file_path, output_dir, is_library=False, base_docs_dir=None, force=False, no_realm=False, no_icon=False):
     print(f"Processing {file_path}")
 
@@ -809,6 +1188,10 @@ def generate_documentation_for_file(file_path, output_dir, is_library=False, bas
 
     custom_folder, custom_filename, append = parse_folder_directives(file_content)
     custom_folder = normalize_doc_folder(custom_folder)
+    # For module libraries prefer the main developer/libraries area (do not use developer/modules)
+    if is_library and base_docs_dir and is_module_library_file(file_path, base_docs_dir.parent, file_content):
+        if custom_folder == 'developer/modules/libraries':
+            custom_folder = 'developer/libraries'
     comment_blocks, file_header, overview_section = find_comment_blocks_in_file(file_path)
 
     if file_header and ('Folder:' in file_header or 'File:' in file_header):
@@ -818,6 +1201,12 @@ def generate_documentation_for_file(file_path, output_dir, is_library=False, bas
                 break
 
     functions = find_functions_in_file(file_path, is_library)
+    file_hook_content = None
+    file_hook_header = None
+    file_hook_overview = None
+    file_hooks = []
+    if is_library:
+        file_hook_content, file_hook_header, file_hook_overview, file_hooks = find_hook_docs_in_file(file_path)
 
     if not functions and not file_header and not overview_section:
         print(f" No structured functions or documentation content found in {file_path}")
@@ -846,10 +1235,6 @@ def generate_documentation_for_file(file_path, output_dir, is_library=False, bas
             output_filename = f"{filename}.md"
 
         output_path = Path(output_dir) / output_filename
-
-    if output_path.exists() and output_path.stat().st_size > 0 and not force and not append:
-        print(f" {output_path.name} already exists, skipping")
-        return
 
     sections = []
     function_names = []
@@ -884,7 +1269,21 @@ def generate_documentation_for_file(file_path, output_dir, is_library=False, bas
             )
             sections.append(section)
 
-    if not sections and not file_header and not overview_section:
+    hook_sections = []
+    if is_library and file_hooks:
+        hook_sections = [
+            generate_markdown_for_function(
+                hook['name'],
+                parse_comment_block(hook['comment']),
+                is_library=False,
+                no_realm=no_realm,
+                no_icon=no_icon,
+                source_url=build_source_url(file_path, Path(__file__).parent, hook.get('line'))
+            )
+            for hook in sorted(file_hooks, key=lambda item: item['name'].lower())
+        ]
+
+    if not sections and not hook_sections and not file_header and not overview_section:
         print(f" No valid function documentation or content found in {file_path}")
         return
 
@@ -956,6 +1355,16 @@ details > summary .source-link-button--summary {
         for section in sections:
             f.write(section)
             f.write('---\n\n')
+
+        if hook_sections:
+            f.write('<h2 style="margin-bottom: 5px;">Hooks</h2>\n')
+            f.write('<div style="margin-left: 20px; margin-bottom: 20px;">\n')
+            f.write('<p>Library-specific hooks documented for this library.</p>\n')
+            f.write('</div>\n\n')
+            f.write('---\n\n')
+            for section in hook_sections:
+                f.write(section)
+                f.write('---\n\n')
 
     print(f" Generated {output_path.name}")
 
@@ -1085,15 +1494,30 @@ details > summary .source-link-button--summary {
 def generate_about_page(output_path, force=False):
     print(f"Generating About page at {output_path}")
 
-    # 1. Fetch modules list
-    modules_url = "https://raw.githubusercontent.com/LiliaFramework/Modules/gh-pages/modules.json"
-    try:
-        print(f" Fetching modules from {modules_url}...")
-        with urllib.request.urlopen(modules_url) as response:
-            data = json.loads(response.read().decode())
-    except Exception as e:
-        print(f" Failed to fetch modules list: {e}")
-        return
+    modules_candidates = [
+        Path(__file__).parent / 'documentation' / 'docs' / 'versioning' / 'modules.json',
+        Path(__file__).parent / 'documentation' / 'versioning' / 'modules.json',
+    ]
+    data = None
+    for modules_path in modules_candidates:
+        if modules_path.exists():
+            try:
+                print(f" Loading modules from {modules_path}...")
+                with open(modules_path, 'r', encoding='utf-8') as f:
+                    data = json.load(f)
+                break
+            except Exception as e:
+                print(f" Failed to read {modules_path}: {e}")
+
+    if data is None:
+        modules_url = "https://raw.githubusercontent.com/LiliaFramework/Modules/main/docs/versioning/modules.json"
+        try:
+            print(f" Fetching modules from {modules_url}...")
+            with urllib.request.urlopen(modules_url) as response:
+                data = json.loads(response.read().decode())
+        except Exception as e:
+            print(f" Failed to fetch modules list: {e}")
+            return
 
     # Sort by name
     modules = sorted(data, key=lambda x: x.get('name', ''))
@@ -1109,7 +1533,8 @@ def generate_about_page(output_path, force=False):
         url = mod.get('url', '')
         # Construct local path instead of using external URL
         module_id = url.rstrip('/').split('/')[-2] if '/' in url else name.lower().replace(' ', '')
-        name_link = f"[{name}](./modules/{module_id}/about.md)"
+        # Link module about pages into the libraries area (no separate modules section)
+        name_link = f"[{name}](./libraries/{module_id}/about.md)"
 
         table_lines.append(f"| {name_link} | {desc} | {author} |")
 
@@ -1134,7 +1559,7 @@ def generate_about_page(output_path, force=False):
     pattern = re.compile(f"{re.escape(start_marker)}.*?{re.escape(end_marker)}", re.DOTALL)
     
     if not pattern.search(content):
-        print(f" Markers {start_marker}...{end_marker} not found in {output_path}")
+        print(f" Markers {start_marker}...{end_marker} not found in {output_path}; skipping dynamic about injection.")
         return
 
     replacement = f"{start_marker}\n{modules_content}\n{end_marker}"
@@ -1152,6 +1577,65 @@ def generate_about_page(output_path, force=False):
         print(f" Successfully updated {output_path} with {len(modules)} modules.")
     except Exception as e:
         print(f" Error writing {output_path}: {e}")
+
+
+def run_meta_generation(base_dir: Path, docs_dir: Path, force: bool) -> None:
+    meta_dir = base_dir / 'gamemode' / 'core' / 'meta'
+    output_dir = docs_dir / 'developer' / 'meta'
+    if meta_dir.exists():
+        for file_path in meta_dir.rglob('*.lua'):
+            generate_documentation_for_file(file_path, output_dir, is_library=False, base_docs_dir=docs_dir, force=force, no_realm=False, no_icon=False)
+    generate_index_file(output_dir, 'meta')
+
+
+def run_library_generation(base_dir: Path, docs_dir: Path, force: bool) -> None:
+    core_output_dir = docs_dir / 'developer' / 'libraries'
+    core_lib_dir = base_dir / 'gamemode' / 'core' / 'libraries'
+    if core_lib_dir.exists():
+        for file_path in core_lib_dir.rglob('*.lua'):
+            generate_documentation_for_file(file_path, core_output_dir, is_library=True, base_docs_dir=docs_dir, force=force, no_realm=False, no_icon=False)
+    generate_index_file(core_output_dir, 'library')
+    # Also process module library files but write them into the main libraries directory
+    module_lib_dir = base_dir / 'gamemode' / 'modules'
+    if module_lib_dir.exists():
+        for file_path in module_lib_dir.rglob('*.lua'):
+            try:
+                with open(file_path, 'r', encoding='utf-8-sig') as f:
+                    file_content = f.read()
+            except UnicodeDecodeError:
+                print(f"Warning: Could not read {file_path} due to encoding issues")
+                continue
+            if is_module_library_file(file_path, base_dir, file_content):
+                # Generate module library docs into the main libraries folder
+                generate_documentation_for_file(file_path, core_output_dir, is_library=True, base_docs_dir=docs_dir, force=force, no_realm=False, no_icon=False)
+    # Index for libraries already generated above
+
+
+def run_hooks_generation(base_dir: Path, docs_dir: Path) -> None:
+    core_output_dir = docs_dir / 'developer' / 'hooks'
+    # Generate module hooks into the same hooks directory (no separate modules section)
+    generate_hook_documentation(core_output_dir, core_output_dir, base_dir)
+    generate_index_file(core_output_dir, 'hooks')
+
+
+def run_compatibility_generation(base_dir: Path, docs_dir: Path, force: bool) -> None:
+    comp_dir = base_dir / 'gamemode' / 'core' / 'libraries' / 'compatibility'
+    output_dir = docs_dir / 'developer' / 'compatibility'
+    if comp_dir.exists():
+        for file_path in comp_dir.rglob('*.lua'):
+            generate_documentation_for_file(file_path, output_dir, is_library=False, base_docs_dir=docs_dir, force=force, no_realm=False, no_icon=True)
+    generate_index_file(output_dir, 'compatibility')
+
+
+def run_generators_generation(docs_dir: Path) -> None:
+    output_dir = docs_dir / 'generators'
+    generate_index_file(output_dir, 'generators')
+
+
+def run_about_generation(docs_dir: Path, force: bool) -> None:
+    legacy_about_path = Path(__file__).parent / 'documentation' / 'about.md'
+    if legacy_about_path.exists():
+        generate_about_page(legacy_about_path, force=force)
 
 
 def main():
@@ -1182,56 +1666,43 @@ def main():
     about_parser = subparsers.add_parser('about', help='Generate about page with dynamic content')
     about_parser.add_argument('--force', action='store_true', help='Force regeneration (checking for updates)')
 
+    # All command
+    all_parser = subparsers.add_parser('all', help='Generate the full documentation site content')
+    all_parser.add_argument('--force', action='store_true', help='Force regeneration of pages that support force-aware workflows')
+
     args = parser.parse_args()
 
     base_dir = Path(__file__).parent
     docs_dir = base_dir / 'documentation' / 'docs'
+    should_sync_nav = True
+    force = getattr(args, 'force', False)
 
     if args.command == 'meta':
-        meta_dir = base_dir / 'gamemode' / 'core' / 'meta'
-        output_dir = docs_dir / 'developer' / 'meta'
-        if meta_dir.exists():
-            for file_path in meta_dir.rglob('*.lua'):
-                generate_documentation_for_file(file_path, output_dir, is_library=False, base_docs_dir=docs_dir, force=args.force, no_realm=False, no_icon=False)
-        generate_index_file(output_dir, 'meta')
+        run_meta_generation(base_dir, docs_dir, force)
 
     elif args.command == 'library':
-        lib_dirs = [
-             base_dir / 'gamemode' / 'core' / 'libraries',
-             base_dir / 'gamemode' / 'modules'
-        ]
-        output_dir = docs_dir / 'developer' / 'libraries'
-        for lib_dir in lib_dirs:
-            if lib_dir.exists():
-                for file_path in lib_dir.rglob('*.lua'):
-                    generate_documentation_for_file(file_path, output_dir, is_library=True, base_docs_dir=docs_dir, force=args.force, no_realm=False, no_icon=False)
-        generate_index_file(output_dir, 'library')
+        run_library_generation(base_dir, docs_dir, force)
 
     elif args.command == 'hooks':
-        hooks_dir = base_dir / 'gamemode' / 'core' / 'hooks' / 'docs'
-        output_dir = docs_dir / 'developer' / 'hooks'
-        if hooks_dir.exists():
-            for file_path in hooks_dir.rglob('*.lua'):
-                generate_documentation_for_file(file_path, output_dir, is_library=False, base_docs_dir=docs_dir, force=args.force, no_realm=False, no_icon=False)
-        generate_index_file(output_dir, 'hooks')
+        run_hooks_generation(base_dir, docs_dir)
+        should_sync_nav = False
 
     elif args.command == 'compatibility':
-        comp_dir = base_dir / 'gamemode' / 'core' / 'libraries' / 'compatibility'
-        output_dir = docs_dir / 'developer' / 'compatibility'
-        if comp_dir.exists():
-            for file_path in comp_dir.rglob('*.lua'):
-                generate_documentation_for_file(file_path, output_dir, is_library=False, base_docs_dir=docs_dir, force=args.force, no_realm=False, no_icon=True)
-        generate_index_file(output_dir, 'compatibility')
+        run_compatibility_generation(base_dir, docs_dir, force)
 
     elif args.command == 'generators':
-        output_dir = docs_dir / 'generators'
-        generate_index_file(output_dir, 'generators')
+        run_generators_generation(docs_dir)
 
     elif args.command == 'about':
-        output_path = docs_dir / 'about.md'
-        generate_about_page(output_path, force=args.force)
-        # Generate index for About directory
-        generate_index_file(docs_dir / 'About', 'about')
+        run_about_generation(docs_dir, force)
+
+    elif args.command == 'all':
+        run_meta_generation(base_dir, docs_dir, force)
+        run_library_generation(base_dir, docs_dir, force)
+        run_hooks_generation(base_dir, docs_dir)
+        run_compatibility_generation(base_dir, docs_dir, force)
+        run_generators_generation(docs_dir)
+        run_about_generation(docs_dir, force)
 
     else:
         parser.print_help()
@@ -1241,7 +1712,8 @@ def main():
     # generate_comprehensive_index(docs_dir)  # Disabled to preserve manual index.md
     generate_development_index(docs_dir / 'developer')
     generate_pages_file(docs_dir)
-    sync_mkdocs_nav(base_dir / 'documentation' / 'mkdocs.yml', docs_dir)
+    if should_sync_nav:
+        sync_mkdocs_nav(base_dir / 'documentation' / 'mkdocs.yml', docs_dir)
 
 
 def extract_title_and_summary(md_file: Path) -> Tuple[str, str]:
@@ -1358,16 +1830,28 @@ def sync_mkdocs_nav(mkdocs_path: Path, docs_dir: Path) -> None:
             'preferred_order': ['lia.currency'],
         },
         {
+            'name': 'hooks',
+            'start_marker': '# AUTO-GENERATED: HOOKS START',
+            'end_marker': '# AUTO-GENERATED: HOOKS END',
+            'directory': docs_dir / 'developer' / 'hooks',
+            'indent': '          ',
+            'preferred_order': ['core'],
+        },
+        # Note: module libraries/hooks are merged into the main libraries/hooks directories
+        {
             'name': 'item definitions',
             'start_marker': '# AUTO-GENERATED: ITEM DEFINITIONS START',
             'end_marker': '# AUTO-GENERATED: ITEM DEFINITIONS END',
             'directory': docs_dir / 'definitions' / 'items',
             'indent': '          ',
+            'static_lines': [
+                '          - Overview: definitions/items/index.md',
+                '          - Item Base Field Reference: definitions/items/base-field-reference.md',
+            ],
             'preferred_order': [
                 'aid',
                 'ammo',
                 'arccw_att',
-                'base-field-reference',
                 'books',
                 'entities',
                 'grenade',
@@ -1389,8 +1873,10 @@ def sync_mkdocs_nav(mkdocs_path: Path, docs_dir: Path) -> None:
 
         md_files = list(directory.glob('*.md'))
         nav_lines = _build_nav_lines(md_files, docs_dir, section['indent'], section['preferred_order'])
+        static_lines = section.get('static_lines', [])
         replacement = '\n'.join([
             f"{section['indent']}{section['start_marker']}",
+            *static_lines,
             *nav_lines,
             f"{section['indent']}{section['end_marker']}",
         ])
@@ -1807,27 +2293,65 @@ def generate_development_index(dev_dir: Path) -> None:
         return
 
     index_path = dev_dir / 'index.md'
-    
-    sections = [
-        ('Meta Tables', 'meta', 'Documentation for Lilia meta tables.'),
-        ('Libraries', 'libraries', 'Documentation for Lilia libraries.'),
-        ('Hooks', 'hooks', 'Documentation for Lilia hooks.'),
-        ('Compatibility', 'compatibility', 'Documentation for Lilia compatibility shims and integrations.')
-    ]
 
     with open(index_path, 'w', encoding='utf-8') as f:
         f.write('# Developer\n\n')
-        f.write('Reference material for extending Lilia, including meta tables, libraries, hooks, and compatibility helpers.\n\n')
-        
-        cards = []
-        for title, dirname, summary in sections:
+        f.write('This section is for people who want to change how Lilia works or build on top of it. It collects the main references in one place so you can find the right system faster.\n\n')
+        f.write('<div class="card-grid">\n')
+
+        sections = [
+            ('meta', 'Core objects', 'Meta Tables', 'Read what Character, Player, Entity, Item, Inventory, and Panel objects can do.'),
+            ('libraries', 'Helpers', 'Libraries', 'Find shared helper libraries for things like money, items, characters, and framework tools.'),
+            ('hooks', 'Events', 'Hooks', 'See the events you can listen to when you want to change or react to game behavior.'),
+        ]
+
+        for dirname, kicker, title, summary in sections:
             subdir = dev_dir / dirname
-            if subdir.exists() and any(subdir.iterdir()):
-                cards.append((title, f'./{dirname}/', summary))
-        
-        write_cards(f, cards)
+            if not (subdir.exists() and any(subdir.iterdir())):
+                continue
+
+            f.write(f'  <a href="./{dirname}/" class="card">\n')
+            f.write(f'    <span class="card-kicker">{kicker}</span>\n')
+            f.write(f'    <h3>{title}</h3>\n')
+            f.write(f'    <p>{summary}</p>\n')
+            f.write('  </a>\n')
+
+        f.write('</div>\n\n')
 
     print(f" Generated developer/index.md")
+
+
+def generate_module_development_index(dev_modules_dir: Path) -> None:
+    """Generate an index.md for the module development directory listing its subdirectories."""
+    if not dev_modules_dir.exists():
+        return
+
+    index_path = dev_modules_dir / 'index.md'
+
+    with open(index_path, 'w', encoding='utf-8') as f:
+        f.write('# Modules\n\n')
+        f.write('This section collects developer references that belong to bundled modules and submodules rather than the framework core.\n\n')
+        f.write('<div class="card-grid">\n')
+
+        sections = [
+            ('libraries', 'Helpers', 'Libraries', 'Find module-owned helper libraries and library-local hooks documented on the same page.'),
+            ('hooks', 'Events', 'Hooks', 'See hooks documented directly on module entry files, submodule entry files, or the uncategorized fallback page.'),
+        ]
+
+        for dirname, kicker, title, summary in sections:
+            subdir = dev_modules_dir / dirname
+            if not (subdir.exists() and any(subdir.iterdir())):
+                continue
+
+            f.write(f'  <a href="./{dirname}/" class="card">\n')
+            f.write(f'    <span class="card-kicker">{kicker}</span>\n')
+            f.write(f'    <h3>{title}</h3>\n')
+            f.write(f'    <p>{summary}</p>\n')
+            f.write('  </a>\n')
+
+        f.write('</div>\n\n')
+
+    print(f" Generated developer/modules/index.md")
 
 def generate_pages_file(docs_dir: Path) -> None:
     """Generate .pages file for MkDocs navigation."""
@@ -1852,6 +2376,8 @@ def generate_pages_file(docs_dir: Path) -> None:
             f.write(' - libraries\n')
             f.write(' - hooks\n')
             f.write(' - compatibility\n')
+
+    # No separate developer/modules .pages file: modules are surfaced under libraries/hooks
 
  # Write root .pages file
     with open(pages_path, 'w', encoding='utf-8') as f:

@@ -1,7 +1,90 @@
-﻿lia.data = lia.data or {}
+﻿--[[
+    Folder: Developer - Libraries
+    File: lia.data.md
+]]
+--[[
+    Data
+
+    Data persistence helpers for Lilia serialized data storage, map equivalency, entity persistence, and runtime data lookup.
+]]
+--[[
+    Overview:
+        The data library centralizes persistent data under `lia.data`. It serializes vectors, angles, colors, primitive values, and nested tables into JSON-safe data, stores scoped key/value data in Garry's Mod data files, loads scoped data, manages persistent entity records through the database, and maps equivalent map names for shared persistence.
+]]
+--[[
+    Hooks:
+        OnDataSet(string key, any value, string gamemode, string map)
+
+    Purpose:
+        Runs after `lia.data.set` updates the cached value and writes the scoped data file.
+
+    Parameters:
+        key (string)
+            The data key that was stored.
+
+        value (any)
+            The value that was stored.
+
+        gamemode (string)
+            The resolved gamemode scope used for the write.
+
+        map (string)
+            The resolved map scope used for the write.
+
+    Realm:
+        Server
+]]
+--[[
+    Hooks:
+        SaveData()
+
+    Purpose:
+        Runs on the periodic data-save timer so modules and plugins can save their own data.
+
+    Parameters:
+        This hook has no parameters.
+
+    Realm:
+        Server
+]]
+--[[
+    Hooks:
+        PersistenceSave()
+
+    Purpose:
+        Runs on the periodic data-save timer so modules and plugins can save persistent entities.
+
+    Parameters:
+        This hook has no parameters.
+
+    Realm:
+        Server
+]]
+lia.data = lia.data or {}
 lia.data.stored = lia.data.stored or {}
 lia.data.equivalencyMaps = lia.data.equivalencyMaps or {}
 if SERVER then
+    --[[
+        Purpose:
+            Converts values into JSON-safe data before storage.
+
+        Parameters:
+            value (any)
+                The value to encode. Vectors, angles, colors, and nested tables are converted recursively.
+
+        Returns:
+            any
+                The encoded value. Vectors become `{x, y, z}`, angles become `{p, y, r}`, colors become `{r, g, b, a}`, and tables are encoded recursively.
+
+        Example Usage:
+            ```lua
+            local encoded = lia.data.encodetable(Vector(1, 2, 3))
+            print(util.TableToJSON(encoded))
+            ```
+
+        Realm:
+            Server
+    ]]
     function lia.data.encodetable(value)
         if isvector(value) then
             return {
@@ -224,10 +307,52 @@ if SERVER then
         return value
     end
 
+    --[[
+        Purpose:
+            Recursively restores encoded data values into their Garry's Mod types when possible.
+
+        Parameters:
+            value (any)
+                The value to decode. Tables containing vector, angle, or color fields are converted recursively.
+
+        Returns:
+            any
+                The decoded value, including restored Vector, Angle, Color, or nested table values when recognized.
+
+        Example Usage:
+            ```lua
+            local decoded = lia.data.decode({x = 1, y = 2, z = 3})
+            print(decoded)
+            ```
+
+        Realm:
+            Server
+    ]]
     function lia.data.decode(value)
         return deepDecode(value)
     end
 
+    --[[
+        Purpose:
+            Serializes a value into a JSON string suitable for storage.
+
+        Parameters:
+            value (any)
+                The value to encode and serialize.
+
+        Returns:
+            string
+                A JSON string containing the encoded value. Primitive values are wrapped in a `value` field.
+
+        Example Usage:
+            ```lua
+            local raw = lia.data.serialize(Color(255, 200, 150))
+            file.Write("example.json", raw)
+            ```
+
+        Realm:
+            Server
+    ]]
     function lia.data.serialize(value)
         local encoded = lia.data.encodetable(value)
         if encoded == nil and value ~= nil then encoded = value end
@@ -239,6 +364,27 @@ if SERVER then
         return util.TableToJSON(encoded)
     end
 
+    --[[
+        Purpose:
+            Deserializes stored JSON or PON data and restores encoded Garry's Mod types.
+
+        Parameters:
+            raw (string|table|any)
+                The stored value to deserialize. Strings are decoded as JSON first, then PON as a fallback.
+
+        Returns:
+            any|nil
+                The decoded value, or nil when no value could be decoded.
+
+        Example Usage:
+            ```lua
+            local value = lia.data.deserialize(rawData)
+            print(value)
+            ```
+
+        Realm:
+            Server
+    ]]
     function lia.data.deserialize(raw)
         if not raw then return nil end
         local decoded
@@ -259,6 +405,27 @@ if SERVER then
         return lia.data.decode(decoded)
     end
 
+    --[[
+        Purpose:
+            Attempts to decode a stored value into a Vector.
+
+        Parameters:
+            raw (string|table|Vector|any)
+                The raw vector data to decode. JSON strings, PON strings, tables, and common vector string formats are supported.
+
+        Returns:
+            Vector|any|nil
+                A Vector when decoding succeeds, nil for nil input, or the original decoded value when it cannot be converted.
+
+        Example Usage:
+            ```lua
+            local pos = lia.data.decodeVector("[1 2 3]")
+            print(pos)
+            ```
+
+        Realm:
+            Server
+    ]]
     function lia.data.decodeVector(raw)
         if not raw then return nil end
         local direct = _decodeVector(raw)
@@ -278,6 +445,27 @@ if SERVER then
         return _decodeVector(decoded)
     end
 
+    --[[
+        Purpose:
+            Attempts to decode a stored value into an Angle.
+
+        Parameters:
+            raw (string|table|Angle|any)
+                The raw angle data to decode. JSON strings, PON strings, tables, and common angle string formats are supported.
+
+        Returns:
+            Angle|any|nil
+                An Angle when decoding succeeds, nil for nil input, or the original decoded value when it cannot be converted.
+
+        Example Usage:
+            ```lua
+            local ang = lia.data.decodeAngle("{0 90 0}")
+            print(ang)
+            ```
+
+        Realm:
+            Server
+    ]]
     function lia.data.decodeAngle(raw)
         if not raw then return nil end
         local direct = _decodeAngle(raw)
@@ -344,6 +532,36 @@ if SERVER then
         return "lilia/" .. gmSafe .. "/" .. mapSafe .. "/" .. keySafe .. ".json"
     end
 
+    --[[
+        Purpose:
+            Stores a key/value pair in memory and writes it to the resolved data-file scope.
+
+        Parameters:
+            key (string)
+                The data key to store.
+
+            value (any)
+                The value to store. Supported typed values are encoded before writing.
+
+            global (boolean|nil)
+                When true, stores the value in the global/global scope.
+
+            ignoreMap (boolean|nil)
+                When true, stores the value in the gamemode/global scope instead of the current map scope.
+
+        Returns:
+            string
+                The resolved storage directory in `gamemode/map/` format.
+
+        Example Usage:
+            ```lua
+            lia.data.set("spawnPoint", Entity(1):GetPos())
+            lia.data.set("globalSetting", true, true)
+            ```
+
+        Realm:
+            Server
+    ]]
     function lia.data.set(key, value, global, ignoreMap)
         lia.data.stored[key] = value
         local gamemode, map = getDataScope(nil, nil, global, ignoreMap)
@@ -361,6 +579,32 @@ if SERVER then
         return gamemode .. "/" .. map .. "/"
     end
 
+    --[[
+        Purpose:
+            Deletes a stored key from memory and removes its scoped data file when it exists.
+
+        Parameters:
+            key (string)
+                The data key to delete.
+
+            global (boolean|nil)
+                When true, deletes the key from the global/global scope.
+
+            ignoreMap (boolean|nil)
+                When true, deletes the key from the gamemode/global scope instead of the current map scope.
+
+        Returns:
+            boolean
+                Always returns true after clearing the cached value and attempting file removal.
+
+        Example Usage:
+            ```lua
+            lia.data.delete("spawnPoint")
+            ```
+
+        Realm:
+            Server
+    ]]
     function lia.data.delete(key, global, ignoreMap)
         lia.data.stored[key] = nil
         local gamemode, map = getDataScope(nil, nil, global, ignoreMap)
@@ -369,6 +613,25 @@ if SERVER then
         return true
     end
 
+    --[[
+        Purpose:
+            Loads stored key/value data from global, gamemode-global, and current-map data scopes.
+
+        Parameters:
+            This function has no parameters.
+
+        Returns:
+            nil
+                This function does not return a value.
+
+        Example Usage:
+            ```lua
+            lia.data.loadTables()
+            ```
+
+        Realm:
+            Server
+    ]]
     function lia.data.loadTables()
         local gamemode = (SCHEMA and SCHEMA.folder) or engine.ActiveGamemode()
         local map = lia.data.getEquivalencyMap(game.GetMap())
@@ -418,10 +681,53 @@ if SERVER then
         return d
     end
 
+    --[[
+        Purpose:
+            Ensures the persistence database table contains the base persistence columns.
+
+        Parameters:
+            This function has no parameters.
+
+        Returns:
+            Deferred
+                A database deferred chain for the column checks and additions.
+
+        Example Usage:
+            ```lua
+            lia.data.loadPersistence():next(function()
+                print("Persistence columns are ready")
+            end)
+            ```
+
+        Realm:
+            Server
+    ]]
     function lia.data.loadPersistence()
         return ensurePersistenceColumns(baseCols)
     end
 
+    --[[
+        Purpose:
+            Saves persistent entity data for the current gamemode and equivalent map.
+
+        Parameters:
+            entities (table)
+                An array of entity persistence records. Each record should include base fields such as `class`, `pos`, `angles`, and `model`; extra fields are added as dynamic columns.
+
+        Returns:
+            nil
+                This function does not return a value.
+
+        Example Usage:
+            ```lua
+            lia.data.savePersistence({
+                {class = "prop_physics", pos = pos, angles = ang, model = model}
+            })
+            ```
+
+        Realm:
+            Server
+    ]]
     function lia.data.savePersistence(entities)
         local gamemode = SCHEMA and SCHEMA.folder or engine.ActiveGamemode()
         local map = game.GetMap()
@@ -482,6 +788,28 @@ if SERVER then
         return false
     end
 
+    --[[
+        Purpose:
+            Loads persistent entity data for the current gamemode and equivalent map.
+
+        Parameters:
+            callback (function|nil)
+                Optional callback called with the loaded entity persistence records after the database query finishes.
+
+        Returns:
+            nil
+                This function does not return a value.
+
+        Example Usage:
+            ```lua
+            lia.data.loadPersistenceData(function(entities)
+                PrintTable(entities)
+            end)
+            ```
+
+        Realm:
+            Server
+    ]]
     function lia.data.loadPersistenceData(callback)
         local gamemode = SCHEMA and SCHEMA.folder or engine.ActiveGamemode()
         local map = game.GetMap()
@@ -523,6 +851,29 @@ if SERVER then
         end)
     end
 
+    --[[
+        Purpose:
+            Retrieves a cached data value by key.
+
+        Parameters:
+            key (string)
+                The data key to retrieve.
+
+            default (any)
+                The fallback value returned when the key is not cached.
+
+        Returns:
+            any
+                The stored value when present, otherwise the provided default value.
+
+        Example Usage:
+            ```lua
+            local spawnPoint = lia.data.get("spawnPoint", Vector(0, 0, 0))
+            ```
+
+        Realm:
+            Server
+    ]]
     function lia.data.get(key, default)
         local stored = lia.data.stored[key]
         if stored ~= nil then
@@ -535,6 +886,27 @@ if SERVER then
         return default
     end
 
+    --[[
+        Purpose:
+            Returns the currently cached persistence data.
+
+        Parameters:
+            This function has no parameters.
+
+        Returns:
+            table
+                The cached persistence records, or an empty table when none are loaded.
+
+        Example Usage:
+            ```lua
+            for _, data in ipairs(lia.data.getPersistence()) do
+                print(data.class)
+            end
+            ```
+
+        Realm:
+            Server
+    ]]
     function lia.data.getPersistence()
         return lia.data.persistCache or {}
     end
@@ -546,11 +918,54 @@ if SERVER then
     end)
 end
 
+--[[
+    Purpose:
+        Registers two map names as equivalent persistence scopes.
+
+    Parameters:
+        map1 (string)
+            The first map name.
+
+        map2 (string)
+            The second map name.
+
+    Returns:
+        nil
+            This function does not return a value.
+
+    Example Usage:
+        ```lua
+        lia.data.addEquivalencyMap("rp_city_v1", "rp_city_v2")
+        ```
+
+    Realm:
+        Shared
+]]
 function lia.data.addEquivalencyMap(map1, map2)
     lia.data.equivalencyMaps[map1] = map2
     lia.data.equivalencyMaps[map2] = map1
 end
 
+--[[
+    Purpose:
+        Returns the equivalent map name for a registered map, or the original map name when no equivalent exists.
+
+    Parameters:
+        map (string)
+            The map name to resolve.
+
+    Returns:
+        string
+            The registered equivalent map name, or the original map name.
+
+    Example Usage:
+        ```lua
+        local map = lia.data.getEquivalencyMap(game.GetMap())
+        ```
+
+    Realm:
+        Shared
+]]
 function lia.data.getEquivalencyMap(map)
     return lia.data.equivalencyMaps[map] or map
 end

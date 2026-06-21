@@ -1,4 +1,37 @@
-﻿lia.db = lia.db or {}
+﻿--[[
+    Folder: Developer - Libraries
+    File: lia.database.md
+]]
+--[[
+    Database
+
+    Database helpers for Lilia storage module setup, schema creation, SQL value conversion, table queries, migrations, transactions, and snapshot import/export.
+]]
+--[[
+    Overview:
+        The database library centralizes server-side persistence under `lia.db`. It initializes the active storage module, queues queries until the database is connected, creates core Lilia tables, adds missing character and warning fields, provides convenience helpers for selecting, inserting, updating, deleting, counting, and checking records, and supports administrative schema and snapshot utilities.
+]]
+--[[
+    Hooks:
+        OnDatabaseLoaded()
+
+    Purpose:
+        Runs after core database tables finish loading, database fields are checked, `lia.db.tablesLoaded` is set, and follow-up configuration, interaction, and item synchronization timers are scheduled.
+
+    Realm:
+        Server
+]]
+--[[
+    Hooks:
+        OnLoadTables()
+
+    Purpose:
+        Runs immediately after the core table creation query is submitted by `lia.db.loadTables`.
+
+    Realm:
+        Server
+]]
+lia.db = lia.db or {}
 lia.db.queryQueue = lia.db.queue or {}
 lia.db.prepared = lia.db.prepared or {}
 lia.db.modules = {
@@ -50,8 +83,74 @@ lia.db.modules = {
     }
 }
 
+--[[
+    Purpose:
+        Escapes a value with the active database module escape function.
+
+    Parameters:
+        value (any)
+            Value to escape for SQL usage.
+
+    Returns:
+        string
+            Escaped value suitable for SQL string construction.
+
+    Example Usage:
+        ```lua
+        local escaped = lia.db.escape(client:SteamID())
+        ```
+
+    Realm:
+        Server
+]]
 lia.db.escape = lia.db.escape or lia.db.modules.sqlite.escape
+--[[
+    Purpose:
+        Executes a SQL query through the active database module, or queues it until a database connection is available.
+
+    Parameters:
+        ... (any)
+            Query arguments passed through to the active database query implementation.
+
+    Returns:
+        any
+            Returns the active database query result when connected, or nil while the query is queued.
+
+    Example Usage:
+        ```lua
+        lia.db.query("SELECT * FROM lia_players", function(data)
+            PrintTable(data or {})
+        end)
+        ```
+
+    Realm:
+        Server
+]]
 lia.db.query = lia.db.query or function(...) lia.db.queryQueue[#lia.db.queryQueue + 1] = {...} end
+--[[
+    Purpose:
+        Connects the configured database module, marks the database as connected, assigns the module query and escape functions, and flushes queued queries.
+
+    Parameters:
+        callback (function|nil)
+            Optional function called after the database module finishes connecting.
+
+        reconnect (boolean|nil)
+            When true, allows the connection routine to run even if the database was previously marked as connected.
+
+    Returns:
+        nil
+
+    Example Usage:
+        ```lua
+        lia.db.connect(function()
+            lia.db.loadTables()
+        end)
+        ```
+
+    Realm:
+        Server
+]]
 function lia.db.connect(callback, reconnect)
     local dbModule = lia.db.modules[lia.db.module]
     if dbModule then
@@ -74,6 +173,27 @@ function lia.db.connect(callback, reconnect)
     end
 end
 
+--[[
+    Purpose:
+        Drops every SQLite table whose name starts with `lia_`, logs the wiped tables, and then runs an optional callback.
+
+    Parameters:
+        callback (function|nil)
+            Optional function called after all matching tables have been dropped.
+
+    Returns:
+        nil
+
+    Example Usage:
+        ```lua
+        lia.db.wipeTables(function()
+            lia.db.loadTables()
+        end)
+        ```
+
+    Realm:
+        Server
+]]
 function lia.db.wipeTables(callback)
     local wipedTables = {}
     local function realCallback()
@@ -101,6 +221,24 @@ function lia.db.wipeTables(callback)
     end)
 end
 
+--[[
+    Purpose:
+        Creates the core Lilia database tables, adds missing database fields, marks tables as loaded, runs database load hooks, and schedules configuration, interaction, and item synchronization.
+
+    Parameters:
+        None.
+
+    Returns:
+        nil
+
+    Example Usage:
+        ```lua
+        lia.db.loadTables()
+        ```
+
+    Realm:
+        Server
+]]
 function lia.db.loadTables()
     local function done()
         lia.db.addDatabaseFields()
@@ -270,6 +408,27 @@ CREATE TABLE IF NOT EXISTS lia_admin (
     hook.Run("OnLoadTables")
 end
 
+--[[
+    Purpose:
+        Returns a deferred object that resolves immediately if tables are already loaded, or resolves when `OnDatabaseLoaded` runs.
+
+    Parameters:
+        None.
+
+    Returns:
+        Deferred
+            Resolves after database tables are available.
+
+    Example Usage:
+        ```lua
+        lia.db.waitForTablesToLoad():next(function()
+            print("Tables are ready")
+        end)
+        ```
+
+    Realm:
+        Server
+]]
 function lia.db.waitForTablesToLoad()
     TABLE_WAIT_ID = TABLE_WAIT_ID or 0
     local d = deferred.new()
@@ -327,6 +486,29 @@ local function buildWhereClause(conditions)
     return ""
 end
 
+--[[
+    Purpose:
+        Converts Lua values into SQL-safe literal values used when constructing database queries.
+
+    Parameters:
+        value (any)
+            The value to convert. Strings and tables are escaped unless `noEscape` is true.
+
+        noEscape (boolean|nil)
+            When true, string and table values are returned without SQL escaping or quoting.
+
+    Returns:
+        string|number
+            The converted SQL literal, numeric boolean value, NULL literal, or original numeric value.
+
+    Example Usage:
+        ```lua
+        local value = lia.db.convertDataType({enabled = true})
+        ```
+
+    Realm:
+        Server
+]]
 function lia.db.convertDataType(value, noEscape)
     if value == nil then
         return "NULL"
@@ -350,6 +532,32 @@ function lia.db.convertDataType(value, noEscape)
     return value
 end
 
+--[[
+    Purpose:
+        Inserts a row into a `lia_` database table and resolves with the query results and last inserted row ID.
+
+    Parameters:
+        value (table)
+            Key-value pairs to insert into the target table.
+
+        callback (function|nil)
+            Optional function called with `results` and `lastID` after the insert query completes.
+
+        dbTable (string|nil)
+            Table suffix to insert into. Defaults to `characters`, producing `lia_characters`.
+
+    Returns:
+        Deferred
+            Resolves with a table containing `results` and `lastID`.
+
+    Example Usage:
+        ```lua
+        lia.db.insertTable({steamID = client:SteamID(), steamName = client:Name()}, nil, "players")
+        ```
+
+    Realm:
+        Server
+]]
 function lia.db.insertTable(value, callback, dbTable)
     local d = deferred.new()
     local query = "INSERT INTO " .. genInsertValues(value, dbTable)
@@ -363,6 +571,35 @@ function lia.db.insertTable(value, callback, dbTable)
     return d
 end
 
+--[[
+    Purpose:
+        Updates rows in a `lia_` database table using the supplied values and optional condition.
+
+    Parameters:
+        value (table)
+            Key-value pairs to assign in the update statement.
+
+        callback (function|nil)
+            Optional function called with `results` and `lastID` after the update query completes.
+
+        dbTable (string|nil)
+            Table suffix to update. Defaults to `characters`, producing `lia_characters`.
+
+        condition (string|table|nil)
+            Optional WHERE clause as a raw string or a table of field comparisons.
+
+    Returns:
+        Deferred
+            Resolves with a table containing `results` and `lastID`.
+
+    Example Usage:
+        ```lua
+        lia.db.updateTable({lastOnline = os.time()}, nil, "players", {steamID = client:SteamID()})
+        ```
+
+    Realm:
+        Server
+]]
 function lia.db.updateTable(value, callback, dbTable, condition)
     local d = deferred.new()
     local query = "UPDATE " .. "lia_" .. (dbTable or "characters") .. " SET " .. genUpdateList(value) .. buildWhereClause(condition)
@@ -376,6 +613,35 @@ function lia.db.updateTable(value, callback, dbTable, condition)
     return d
 end
 
+--[[
+    Purpose:
+        Selects rows from a `lia_` database table with optional conditions and result limiting.
+
+    Parameters:
+        fields (string|table)
+            Field list to select, or `*` for all fields.
+
+        dbTable (string|nil)
+            Table suffix to select from. Defaults to `characters`, producing `lia_characters`.
+
+        condition (string|table|nil)
+            Optional WHERE clause as a raw string or a table of field comparisons.
+
+        limit (number|string|nil)
+            Optional SQL LIMIT value.
+
+    Returns:
+        Deferred
+            Resolves with a table containing `results` and `lastID`.
+
+    Example Usage:
+        ```lua
+        lia.db.select({"id", "name"}, "characters", {steamID = client:SteamID()}, 1)
+        ```
+
+    Realm:
+        Server
+]]
 function lia.db.select(fields, dbTable, condition, limit)
     local d = deferred.new()
     if fields == nil then
@@ -397,6 +663,38 @@ function lia.db.select(fields, dbTable, condition, limit)
     return d
 end
 
+--[[
+    Purpose:
+        Selects rows from a `lia_` database table using optional conditions, ordering, and result limiting.
+
+    Parameters:
+        fields (string|table)
+            Field list to select, or `*` for all fields.
+
+        dbTable (string|nil)
+            Table suffix to select from. Defaults to `characters`, producing `lia_characters`.
+
+        conditions (string|table|nil)
+            Optional WHERE clause as a raw string or a table of field comparisons.
+
+        limit (number|string|nil)
+            Optional SQL LIMIT value.
+
+        orderBy (string|nil)
+            Optional SQL ORDER BY expression.
+
+    Returns:
+        Deferred
+            Resolves with a table containing `results` and `lastID`.
+
+    Example Usage:
+        ```lua
+        lia.db.selectWithCondition("*", "logs", {category = "admin"}, 25, "timestamp DESC")
+        ```
+
+    Realm:
+        Server
+]]
 function lia.db.selectWithCondition(fields, dbTable, conditions, limit, orderBy)
     local d = deferred.new()
     if fields == nil then
@@ -440,6 +738,31 @@ function lia.db.selectWithCondition(fields, dbTable, conditions, limit, orderBy)
     return d
 end
 
+--[[
+    Purpose:
+        Counts rows in a `lia_` database table that match an optional condition.
+
+    Parameters:
+        dbTable (string)
+            Table suffix to count from, producing `lia_<dbTable>`.
+
+        condition (string|table|nil)
+            Optional WHERE clause as a raw string or a table of field comparisons.
+
+    Returns:
+        Deferred
+            Resolves with the numeric row count.
+
+    Example Usage:
+        ```lua
+        lia.db.count("characters", {steamID = client:SteamID()}):next(function(total)
+            print(total)
+        end)
+        ```
+
+    Realm:
+        Server
+]]
 function lia.db.count(dbTable, condition)
     local c = deferred.new()
     local tbl = "`lia_" .. dbTable .. "`"
@@ -454,6 +777,24 @@ function lia.db.count(dbTable, condition)
     return c
 end
 
+--[[
+    Purpose:
+        Adds missing database columns for character variables defined in `lia.char.vars` and ensures the warnings table has a severity column.
+
+    Parameters:
+        None.
+
+    Returns:
+        nil
+
+    Example Usage:
+        ```lua
+        lia.db.addDatabaseFields()
+        ```
+
+    Realm:
+        Server
+]]
 function lia.db.addDatabaseFields()
     local typeMap = {
         string = function(d) return ("%s VARCHAR(%d)"):format(d.field, d.length or 255) end,
@@ -481,10 +822,63 @@ function lia.db.addDatabaseFields()
     lia.db.fieldExists("lia_warnings", "severity"):next(function(exists) if not exists then lia.db.query("ALTER TABLE lia_warnings ADD COLUMN severity TEXT DEFAULT 'Medium'") end end)
 end
 
+--[[
+    Purpose:
+        Checks whether at least one row exists in a `lia_` database table for the supplied condition.
+
+    Parameters:
+        dbTable (string)
+            Table suffix to check, producing `lia_<dbTable>`.
+
+        condition (string|table|nil)
+            Optional WHERE clause as a raw string or a table of field comparisons.
+
+    Returns:
+        Deferred
+            Resolves with true when at least one matching row exists, otherwise false.
+
+    Example Usage:
+        ```lua
+        lia.db.exists("players", {steamID = client:SteamID()}):next(function(found)
+            print(found)
+        end)
+        ```
+
+    Realm:
+        Server
+]]
 function lia.db.exists(dbTable, condition)
     return lia.db.count(dbTable, condition):next(function(n) return n > 0 end)
 end
 
+--[[
+    Purpose:
+        Selects the first row from a `lia_` database table that matches an optional condition.
+
+    Parameters:
+        fields (string|table)
+            Field list to select, or `*` for all fields.
+
+        dbTable (string)
+            Table suffix to select from, producing `lia_<dbTable>`.
+
+        condition (string|table|nil)
+            Optional WHERE clause as a raw string or a table of field comparisons.
+
+    Returns:
+        Deferred
+            Resolves with the first result row, or nil when no row matches.
+
+    Example Usage:
+        ```lua
+        lia.db.selectOne("*", "players", {steamID = client:SteamID()}):next(function(row)
+            PrintTable(row or {})
+        end)
+        ```
+
+    Realm:
+        Server
+]]
 function lia.db.selectOne(fields, dbTable, condition)
     local c = deferred.new()
     if fields == nil then
@@ -507,6 +901,32 @@ function lia.db.selectOne(fields, dbTable, condition)
     return c
 end
 
+--[[
+    Purpose:
+        Inserts multiple rows into a `lia_` database table with one multi-value INSERT query.
+
+    Parameters:
+        dbTable (string)
+            Table suffix to insert into, producing `lia_<dbTable>`.
+
+        rows (table)
+            Array of row tables to insert. Column names are taken from the first row.
+
+    Returns:
+        Deferred
+            Resolves when the bulk insert finishes.
+
+    Example Usage:
+        ```lua
+        lia.db.bulkInsert("logs", {
+            {category = "server", message = "Started"},
+            {category = "server", message = "Loaded"}
+        })
+        ```
+
+    Realm:
+        Server
+]]
 function lia.db.bulkInsert(dbTable, rows)
     if #rows == 0 then return deferred.new():resolve() end
     local c = deferred.new()
@@ -532,6 +952,32 @@ function lia.db.bulkInsert(dbTable, rows)
     return c
 end
 
+--[[
+    Purpose:
+        Inserts or replaces multiple rows in a `lia_` database table with one multi-value INSERT OR REPLACE query.
+
+    Parameters:
+        dbTable (string)
+            Table suffix to upsert into, producing `lia_<dbTable>`.
+
+        rows (table)
+            Array of row tables to upsert. Column names are taken from the first row.
+
+    Returns:
+        Deferred
+            Resolves when the bulk upsert finishes.
+
+    Example Usage:
+        ```lua
+        lia.db.bulkUpsert("invdata", {
+            {invID = 1, key = "width", value = "6"},
+            {invID = 1, key = "height", value = "4"}
+        })
+        ```
+
+    Realm:
+        Server
+]]
 function lia.db.bulkUpsert(dbTable, rows)
     if #rows == 0 then return deferred.new():resolve() end
     local c = deferred.new()
@@ -557,6 +1003,29 @@ function lia.db.bulkUpsert(dbTable, rows)
     return c
 end
 
+--[[
+    Purpose:
+        Inserts a row into a `lia_` database table only when it does not conflict with existing constraints.
+
+    Parameters:
+        value (table)
+            Key-value pairs to insert into the target table.
+
+        dbTable (string|nil)
+            Table suffix to insert into. Defaults to `characters`, producing `lia_characters`.
+
+    Returns:
+        Deferred
+            Resolves with a table containing `results` and `lastID`.
+
+    Example Usage:
+        ```lua
+        lia.db.insertOrIgnore({usergroup = "admin", privileges = "{}"}, "admin")
+        ```
+
+    Realm:
+        Server
+]]
 function lia.db.insertOrIgnore(value, dbTable)
     local c = deferred.new()
     local tbl = "`lia_" .. (dbTable or "characters") .. "`"
@@ -577,6 +1046,28 @@ function lia.db.insertOrIgnore(value, dbTable)
     return c
 end
 
+--[[
+    Purpose:
+        Checks whether a table exists in SQLite by its exact table name.
+
+    Parameters:
+        tbl (string)
+            Exact table name to check, such as `lia_characters`.
+
+    Returns:
+        Deferred
+            Resolves with true when the table exists, otherwise false.
+
+    Example Usage:
+        ```lua
+        lia.db.tableExists("lia_characters"):next(function(exists)
+            print(exists)
+        end)
+        ```
+
+    Realm:
+        Server
+]]
 function lia.db.tableExists(tbl)
     local d = deferred.new()
     local qt = "'" .. tbl:gsub("'", "''") .. "'"
@@ -584,6 +1075,31 @@ function lia.db.tableExists(tbl)
     return d
 end
 
+--[[
+    Purpose:
+        Checks whether a column exists in a table using SQLite table information.
+
+    Parameters:
+        tbl (string)
+            Exact table name to inspect, such as `lia_characters`.
+
+        field (string)
+            Column name to find.
+
+    Returns:
+        Deferred
+            Resolves with true when the column exists, otherwise false.
+
+    Example Usage:
+        ```lua
+        lia.db.fieldExists("lia_characters", "money"):next(function(exists)
+            print(exists)
+        end)
+        ```
+
+    Realm:
+        Server
+]]
 function lia.db.fieldExists(tbl, field)
     local d = deferred.new()
     lia.db.query("PRAGMA table_info(" .. tbl .. ")", function(res)
@@ -596,6 +1112,27 @@ function lia.db.fieldExists(tbl, field)
     return d
 end
 
+--[[
+    Purpose:
+        Retrieves all SQLite table names that start with `lia_`.
+
+    Parameters:
+        None.
+
+    Returns:
+        Deferred
+            Resolves with an array of matching table names.
+
+    Example Usage:
+        ```lua
+        lia.db.getTables():next(function(tables)
+            PrintTable(tables)
+        end)
+        ```
+
+    Realm:
+        Server
+]]
 function lia.db.getTables()
     local d = deferred.new()
     lia.db.query("SELECT name FROM sqlite_master WHERE type='table'", function(res)
@@ -609,6 +1146,29 @@ function lia.db.getTables()
     return d
 end
 
+--[[
+    Purpose:
+        Runs a list of SQL queries inside a transaction, committing when all queries pass and rolling back if any query fails.
+
+    Parameters:
+        queries (table)
+            Ordered array of SQL query strings to run.
+
+    Returns:
+        Deferred
+            Resolves after COMMIT succeeds, or rejects after ROLLBACK on failure.
+
+    Example Usage:
+        ```lua
+        lia.db.transaction({
+            "UPDATE lia_players SET userGroup = 'admin' WHERE steamID = 'STEAM_0:1:1'",
+            "INSERT INTO lia_logs (category, message) VALUES ('admin', 'Promoted user')"
+        })
+        ```
+
+    Realm:
+        Server
+]]
 function lia.db.transaction(queries)
     local c = deferred.new()
     lia.db.query("BEGIN TRANSACTION", function()
@@ -629,10 +1189,53 @@ function lia.db.transaction(queries)
     return c
 end
 
+--[[
+    Purpose:
+        Escapes a SQL identifier with backticks and doubles embedded backticks.
+
+    Parameters:
+        id (any)
+            Identifier value to convert into a safely quoted SQL identifier.
+
+    Returns:
+        string
+            Backtick-quoted SQL identifier.
+
+    Example Usage:
+        ```lua
+        local field = lia.db.escapeIdentifier("steamID")
+        ```
+
+    Realm:
+        Server
+]]
 function lia.db.escapeIdentifier(id)
     return "`" .. tostring(id):gsub("`", "``") .. "`"
 end
 
+--[[
+    Purpose:
+        Inserts or replaces a row in a `lia_` database table.
+
+    Parameters:
+        value (table)
+            Key-value pairs to insert or replace in the target table.
+
+        dbTable (string|nil)
+            Table suffix to upsert into. Defaults to `characters`, producing `lia_characters`.
+
+    Returns:
+        Deferred
+            Resolves with a table containing `results` and `lastID`.
+
+    Example Usage:
+        ```lua
+        lia.db.upsert({id = 1, name = "Example"}, "characters")
+        ```
+
+    Realm:
+        Server
+]]
 function lia.db.upsert(value, dbTable)
     local query = "INSERT OR REPLACE INTO " .. genInsertValues(value, dbTable)
     local d = deferred.new()
@@ -645,6 +1248,29 @@ function lia.db.upsert(value, dbTable)
     return d
 end
 
+--[[
+    Purpose:
+        Deletes rows from a `lia_` database table using an optional condition.
+
+    Parameters:
+        dbTable (string|nil)
+            Table suffix to delete from. Defaults to `character`, producing `lia_character`.
+
+        condition (string|table|nil)
+            Optional WHERE clause as a raw string or a table of field comparisons.
+
+    Returns:
+        Deferred
+            Resolves with a table containing `results` and `lastID`.
+
+    Example Usage:
+        ```lua
+        lia.db.delete("characters", {id = 5})
+        ```
+
+    Realm:
+        Server
+]]
 function lia.db.delete(dbTable, condition)
     dbTable = "lia_" .. (dbTable or "character")
     local query = "DELETE FROM " .. dbTable .. buildWhereClause(condition)
@@ -658,6 +1284,35 @@ function lia.db.delete(dbTable, condition)
     return d
 end
 
+--[[
+    Purpose:
+        Creates a `lia_` prefixed table from a schema definition when it does not already exist.
+
+    Parameters:
+        dbName (string)
+            Table suffix to create, producing `lia_<dbName>`.
+
+        primaryKey (string|nil)
+            Optional primary key column name.
+
+        schema (table)
+            Array of column definitions with `name`, `type`, optional `not_null`, and optional `default` fields.
+
+    Returns:
+        Deferred
+            Resolves with true when the create-table query completes.
+
+    Example Usage:
+        ```lua
+        lia.db.createTable("example", "id", {
+            {name = "id", type = "integer", not_null = true},
+            {name = "value", type = "text", default = ""}
+        })
+        ```
+
+    Realm:
+        Server
+]]
 function lia.db.createTable(dbName, primaryKey, schema)
     local d = deferred.new()
     local tableName = "lia_" .. dbName
@@ -685,6 +1340,35 @@ function lia.db.createTable(dbName, primaryKey, schema)
     return d
 end
 
+--[[
+    Purpose:
+        Adds a column to a `lia_` prefixed table when the column does not already exist.
+
+    Parameters:
+        tableName (string)
+            Table suffix to alter, producing `lia_<tableName>`.
+
+        columnName (string)
+            Column name to add.
+
+        columnType (string)
+            SQL column type to add.
+
+        defaultValue (any|nil)
+            Optional default value for the new column.
+
+    Returns:
+        Deferred
+            Resolves with true when the column is added, or false when it already exists.
+
+    Example Usage:
+        ```lua
+        lia.db.createColumn("warnings", "notes", "text", "")
+        ```
+
+    Realm:
+        Server
+]]
 function lia.db.createColumn(tableName, columnName, columnType, defaultValue)
     local d = deferred.new()
     local fullTableName = "lia_" .. tableName
@@ -712,6 +1396,26 @@ function lia.db.createColumn(tableName, columnName, columnType, defaultValue)
     return d
 end
 
+--[[
+    Purpose:
+        Drops a `lia_` prefixed table when it exists.
+
+    Parameters:
+        tableName (string)
+            Table suffix to remove, producing `lia_<tableName>`.
+
+    Returns:
+        Deferred
+            Resolves with true when the table is dropped, or false when it does not exist.
+
+    Example Usage:
+        ```lua
+        lia.db.removeTable("example")
+        ```
+
+    Realm:
+        Server
+]]
 function lia.db.removeTable(tableName)
     local d = deferred.new()
     local fullTableName = "lia_" .. tableName
@@ -727,6 +1431,29 @@ function lia.db.removeTable(tableName)
     return d
 end
 
+--[[
+    Purpose:
+        Removes a column from a `lia_` prefixed table by rebuilding the table without that column.
+
+    Parameters:
+        tableName (string)
+            Table suffix to alter, producing `lia_<tableName>`.
+
+        columnName (string)
+            Column name to remove.
+
+    Returns:
+        Deferred
+            Resolves with true when the column is removed, false when the table or column does not exist, or rejects when removal is not possible.
+
+    Example Usage:
+        ```lua
+        lia.db.removeColumn("warnings", "notes")
+        ```
+
+    Realm:
+        Server
+]]
 function lia.db.removeColumn(tableName, columnName)
     local d = deferred.new()
     local fullTableName = "lia_" .. tableName
@@ -776,6 +1503,27 @@ function lia.db.removeColumn(tableName, columnName)
     return d
 end
 
+--[[
+    Purpose:
+        Retrieves the column names from the `lia_characters` table and passes them to a callback.
+
+    Parameters:
+        callback (function)
+            Function called with an array of character table column names.
+
+    Returns:
+        nil
+
+    Example Usage:
+        ```lua
+        lia.db.getCharacterTable(function(columns)
+            PrintTable(columns)
+        end)
+        ```
+
+    Realm:
+        Server
+]]
 function lia.db.getCharacterTable(callback)
     local query = "PRAGMA table_info(lia_characters)"
     lia.db.query(query, function(results)
@@ -789,6 +1537,28 @@ function lia.db.getCharacterTable(callback)
     end)
 end
 
+--[[
+    Purpose:
+        Saves all rows from a `lia_` prefixed table to a JSON snapshot file under `data/lilia/snapshots`.
+
+    Parameters:
+        tableName (string)
+            Table suffix to snapshot, producing `lia_<tableName>`.
+
+    Returns:
+        Deferred
+            Resolves with snapshot file name, path, and record count.
+
+    Example Usage:
+        ```lua
+        lia.db.createSnapshot("characters"):next(function(snapshot)
+            print(snapshot.path)
+        end)
+        ```
+
+    Realm:
+        Server
+]]
 function lia.db.createSnapshot(tableName)
     local d = deferred.new()
     local fullTableName = "lia_" .. tableName
@@ -825,6 +1595,26 @@ function lia.db.createSnapshot(tableName)
     return d
 end
 
+--[[
+    Purpose:
+        Loads a JSON snapshot from `data/lilia/snapshots`, clears the target table, and restores the snapshot rows in batches.
+
+    Parameters:
+        fileName (string)
+            Snapshot file name to load from `lilia/snapshots`.
+
+    Returns:
+        Deferred
+            Resolves with restored table name, record count, and snapshot timestamp.
+
+    Example Usage:
+        ```lua
+        lia.db.loadSnapshot("snapshot_characters_1700000000.json")
+        ```
+
+    Realm:
+        Server
+]]
 function lia.db.loadSnapshot(fileName)
     local d = deferred.new()
     local filePath = "lilia/snapshots/" .. fileName

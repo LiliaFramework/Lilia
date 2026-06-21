@@ -1,9 +1,9 @@
 ﻿local MODULE = MODULE
-function MODULE:CanPlayerSeeLog(client)
+function MODULE:CanPlayerSeeLogs(client)
     local adminConsoleNetworkLogs = lia.config.get("AdminConsoleNetworkLogs", true)
     local canSeeLogs = client:hasPrivilege("canSeeLogs")
     local permission = adminConsoleNetworkLogs and canSeeLogs
-    lia.debug("[Permissions]", "Permission Check for function CanPlayerSeeLog", "AdminConsoleNetworkLogs=", tostring(adminConsoleNetworkLogs), "hasPrivilege(canSeeLogs)=", tostring(canSeeLogs), "finalResult=", tostring(permission))
+    lia.debug("[Permissions]", "Permission Check for function CanPlayerSeeLogs", "AdminConsoleNetworkLogs=", tostring(adminConsoleNetworkLogs), "hasPrivilege(canSeeLogs)=", tostring(canSeeLogs), "finalResult=", tostring(permission))
     return permission
 end
 

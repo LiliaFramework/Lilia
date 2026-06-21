@@ -95,14 +95,14 @@ end
 function MODULE:SyncFilteredWords(targets)
     local recipients = {}
     if IsValid(targets) then
-        if self:CanManageFilteredWords(targets) then recipients[#recipients + 1] = targets end
+        if hook.Run("CanManageFilteredWords", targets) then recipients[#recipients + 1] = targets end
     elseif istable(targets) then
         for _, client in ipairs(targets) do
-            if self:CanManageFilteredWords(client) then recipients[#recipients + 1] = client end
+            if hook.Run("CanManageFilteredWords", client) then recipients[#recipients + 1] = client end
         end
     else
         for _, client in player.Iterator() do
-            if self:CanManageFilteredWords(client) then recipients[#recipients + 1] = client end
+            if hook.Run("CanManageFilteredWords", client) then recipients[#recipients + 1] = client end
         end
     end
 
@@ -115,11 +115,4 @@ function MODULE:SyncFilteredWords(targets)
     end
 
     net.Send(recipients)
-end
-
-function MODULE:SyncFilteredWordsFromModule()
-    local wordFilterModule = getWordFilterModule()
-    if not (wordFilterModule and istable(wordFilterModule.WordBlackList)) then return end
-    self.FilteredWords = buildNormalizedWordList(wordFilterModule.WordBlackList)
-    self:SaveData()
 end

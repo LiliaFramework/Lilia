@@ -1,4 +1,78 @@
-﻿lia.admin = lia.admin or {}
+--[[
+    Folder: Developer - Libraries
+    File: admin.lua
+]]
+--[[
+    Admin
+
+    Shared administration helpers for usergroup management, privilege registration, permission checks, CAMI synchronization, and admin UI support.
+]]
+--[[
+    Overview:
+        This module powers Lilia's admin permission system under `lia.admin`. It manages built-in and custom usergroups, resolves privilege inheritance, integrates with CAMI, synchronizes permission data to clients, provides usergroup editing UI, and executes or routes admin commands depending on realm.
+]]
+--[[
+    Hooks:
+        GetUsergroupIcon(string groupName, table|nil groupData, string|Player groupOrPlayer)
+
+    Purpose:
+        Allows plugins or modules to override the icon path used for a usergroup in admin-related UI.
+
+    Parameters:
+        groupName (string)
+            The normalized usergroup name being resolved.
+
+        groupData (table|nil)
+            The stored group data for the usergroup, if available.
+
+        groupOrPlayer (string|Player)
+            The original argument passed into `lia.admin.getUsergroupIcon`.
+
+    Returns:
+        string|nil
+            Return a string icon path to override the default icon resolution. Return nil to continue normal behavior.
+
+    Realm:
+        Shared
+]]
+--[[
+    Hooks:
+        OnAdminSystemLoaded(table groups, table privileges)
+
+    Purpose:
+        Runs after the admin system finishes loading groups and privileges from storage.
+
+    Parameters:
+        groups (table)
+            The normalized admin usergroup table.
+
+        privileges (table)
+            The rebuilt privilege minimum-access table.
+
+    Returns:
+        nil
+
+    Realm:
+        Shared
+]]
+--[[
+    Hooks:
+        PopulateAdminTabs(table pages)
+
+    Purpose:
+        Allows modules to add pages to the admin menu, including the usergroup management panel defined in this file.
+
+    Parameters:
+        pages (table)
+            The mutable page definition array used to build the admin interface.
+
+    Returns:
+        nil
+
+    Realm:
+        Client
+]]
+lia.admin = lia.admin or {}
 lia.admin.groups = lia.admin.groups or {}
 lia.admin.privileges = lia.admin.privileges or {}
 lia.admin.privilegeCategories = lia.admin.privilegeCategories or {}
@@ -15,6 +89,26 @@ lia.admin.DefaultGroups = {
     superadmin = 3
 }
 
+--[[
+    Purpose:
+        Checks whether a usergroup name exists in the loaded admin groups or in the built-in default groups.
+
+    Parameters:
+        groupName (string|any)
+            The usergroup name to validate.
+
+    Returns:
+        boolean
+            True if the group name resolves to a known group. False otherwise.
+
+    Example Usage:
+        ```lua
+        local isValid = lia.admin.isValidGroup("admin")
+        ```
+
+    Realm:
+        Shared
+]]
 function lia.admin.isValidGroup(groupName)
     local group = string.Trim(tostring(groupName or ""))
     if group == "" then return false end
@@ -23,6 +117,25 @@ function lia.admin.isValidGroup(groupName)
     return groups[group] ~= nil or defaultGroups[group] ~= nil
 end
 
+--[[
+    Purpose:
+        Returns the configured default usergroup, falling back to `user` when the configured value is invalid.
+
+    Parameters:
+        None
+
+    Returns:
+        string
+            The valid default usergroup name to assign to players without an explicit rank.
+
+    Example Usage:
+        ```lua
+        local defaultGroup = lia.admin.getDefaultUserGroup()
+        ```
+
+    Realm:
+        Shared
+]]
 function lia.admin.getDefaultUserGroup()
     local fallbackGroup = "user"
     local configuredGroup = string.Trim(tostring(lia.config and lia.config.get and lia.config.get("DefaultUserGroup", fallbackGroup) or fallbackGroup))
@@ -30,10 +143,51 @@ function lia.admin.getDefaultUserGroup()
     return fallbackGroup
 end
 
+--[[
+    Purpose:
+        Reads the configuration that controls whether usergroup icons should be shown in the UI.
+
+    Parameters:
+        None
+
+    Returns:
+        boolean
+            True when usergroup icons should be displayed.
+
+    Example Usage:
+        ```lua
+        if lia.admin.shouldShowUsergroupIcons() then
+            -- draw icons
+        end
+        ```
+
+    Realm:
+        Shared
+]]
 function lia.admin.shouldShowUsergroupIcons()
     return lia.config and lia.config.get and lia.config.get("ShowUsergroupIcons", true) or true
 end
 
+--[[
+    Purpose:
+        Resolves the icon path for a usergroup name or player using configured group metadata and hooks.
+
+    Parameters:
+        groupOrPlayer (string|Player)
+            A usergroup name or a player whose current usergroup should be inspected.
+
+    Returns:
+        string|nil
+            The icon material path to use, or nil when icons are disabled.
+
+    Example Usage:
+        ```lua
+        local icon = lia.admin.getUsergroupIcon(LocalPlayer())
+        ```
+
+    Realm:
+        Shared
+]]
 function lia.admin.getUsergroupIcon(groupOrPlayer)
     if not lia.admin.shouldShowUsergroupIcons() then return nil end
     local groupName = groupOrPlayer
@@ -56,8 +210,8 @@ hook.Add("GetUsergroupIcon", "liaAdminDefaultUsergroupIcon", function(groupName)
     end
 end)
 
-lia.config.add("DefaultUserGroup", "Default User Group", "user", nil, {
-    desc = "Usergroup assigned to players when Lilia does not already have one stored for their SteamID.",
+lia.config.add("DefaultUserGroup", "@defaultUserGroupConfigName", "user", nil, {
+    desc = "@defaultUserGroupConfigDesc",
     category = "@userGroups",
     type = "Generic",
     options = function()
@@ -71,8 +225,8 @@ lia.config.add("DefaultUserGroup", "Default User Group", "user", nil, {
     end
 })
 
-lia.config.add("ShowUsergroupIcons", "OOC/LOOC Icon Message", true, nil, {
-    desc = "Displays icon16 usergroup icons in OOC/LOOC messages and usergroup tabs.",
+lia.config.add("ShowUsergroupIcons", "@showUsergroupIconsConfigName", true, nil, {
+    desc = "@showUsergroupIconsConfigDesc",
     category = "@userGroups",
     type = "Boolean"
 })
@@ -82,6 +236,26 @@ local defaultUserTools = {
 }
 
 local camiPathExceptions = {"lua/sam/",}
+--[[
+    Purpose:
+        Determines whether a CAMI-related file path belongs to Lilia's bundled compatibility layer or another allowed exception.
+
+    Parameters:
+        path (string)
+            The file path being checked.
+
+    Returns:
+        boolean
+            True if the path should be ignored during CAMI conflict detection.
+
+    Example Usage:
+        ```lua
+        local ignored = isBundledCamiCompatibility(path)
+        ```
+
+    Realm:
+        Shared
+]]
 local function isBundledCamiCompatibility(path)
     local normalizedPath = path:gsub("\\", "/"):lower()
     if normalizedPath == "lilia/gamemode/core/libraries/compatibility/cami.lua" or normalizedPath:find("/core/libraries/compatibility/cami.lua", 1, true) ~= nil then return true end
@@ -91,9 +265,47 @@ local function isBundledCamiCompatibility(path)
     return false
 end
 
+--[[
+    Purpose:
+        Scans known Lua locations for external CAMI files that may conflict with Lilia's bundled admin compatibility.
+
+    Parameters:
+        None
+
+    Returns:
+        table
+            An array of conflicting file paths sorted alphabetically.
+
+    Example Usage:
+        ```lua
+        local conflicts = findCamiConflictFiles()
+        ```
+
+    Realm:
+        Shared
+]]
 local function findCamiConflictFiles()
     local matches = {}
     local seen = {}
+    --[[
+        Purpose:
+            Adds a discovered CAMI file path to the conflict list once while ignoring bundled exceptions.
+
+        Parameters:
+            path (string)
+                The file path to record as a conflict candidate.
+
+        Returns:
+            nil
+
+        Example Usage:
+            ```lua
+            addMatch(path)
+            ```
+
+        Realm:
+            Shared
+    ]]
     local function addMatch(path)
         local normalizedPath = path:gsub("\\", "/"):lower()
         if seen[normalizedPath] then return end
@@ -102,7 +314,48 @@ local function findCamiConflictFiles()
         matches[#matches + 1] = path
     end
 
+    --[[
+        Purpose:
+            Recursively scans a base directory in a search path for CAMI files.
+
+        Parameters:
+            baseDir (string)
+                The root path prefix to scan.
+
+            searchPath (string)
+                The Garry's Mod file search realm to use.
+
+        Returns:
+            nil
+
+        Example Usage:
+            ```lua
+            scanTarget("gamemodes/schema/", "GAME")
+            ```
+
+        Realm:
+            Shared
+    ]]
     local function scanTarget(baseDir, searchPath)
+        --[[
+            Purpose:
+                Walks child directories beneath a scan target and records CAMI file matches.
+
+            Parameters:
+                currentDir (string)
+                    The current directory path being traversed.
+
+            Returns:
+                nil
+
+            Example Usage:
+                ```lua
+                recurse("lua/")
+                ```
+
+            Realm:
+                Shared
+        ]]
         local function recurse(currentDir)
             local files, folders = file.Find(currentDir .. "*", searchPath)
             if not files then return end
@@ -132,6 +385,25 @@ local function findCamiConflictFiles()
         if normalizedName == "sh_cami.lua" or normalizedName == "cami.lua" then addMatch("lua/" .. fileName) end
     end
 
+    --[[
+        Purpose:
+            Recursively scans the shared Lua directory tree for CAMI files in the `GAME` search path.
+
+        Parameters:
+            baseDir (string)
+                The Lua directory path prefix to scan.
+
+        Returns:
+            nil
+
+        Example Usage:
+            ```lua
+            scanLuaDirectories("lua/")
+            ```
+
+        Realm:
+            Shared
+    ]]
     local function scanLuaDirectories(baseDir)
         local dirFiles, dirFolders = file.Find(baseDir .. "*", "GAME")
         for _, fileName in ipairs(dirFiles or {}) do
@@ -149,6 +421,26 @@ local function findCamiConflictFiles()
     return matches
 end
 
+--[[
+    Purpose:
+        Ensures the built-in `user`, `admin`, and `superadmin` groups exist with required metadata and default staff flags.
+
+    Parameters:
+        groups (table)
+            The group table to normalize in-place.
+
+    Returns:
+        boolean
+            True if any default groups or metadata had to be created or corrected.
+
+    Example Usage:
+        ```lua
+        local changed = ensureDefaults(groups)
+        ```
+
+    Realm:
+        Shared
+]]
 local function ensureDefaults(groups)
     local created = false
     for _, grp in ipairs({"user", "admin", "superadmin"}) do
@@ -194,10 +486,61 @@ local function ensureDefaults(groups)
     return created
 end
 
+--[[
+    Purpose:
+        Emits a warning when code attempts to modify one of the immutable base usergroups.
+
+    Parameters:
+        groupName (string)
+            The base group that was targeted.
+
+        permission (string|nil)
+            The privilege involved in the attempted change, if any.
+
+        action (string|nil)
+            A short description of the attempted mutation.
+
+        source (string|nil)
+            The subsystem or function that attempted the change.
+
+    Returns:
+        nil
+
+    Example Usage:
+        ```lua
+        warnBaseGroupMutation("admin", "manageUsergroups", "grant", "lia.admin.addPermission")
+        ```
+
+    Realm:
+        Shared
+]]
 local function warnBaseGroupMutation(groupName, permission, action, source)
     lia.warning(string.format("[Lilia] Refused to %s base usergroup '%s'%s%s. Base groups are immutable and will be reset to default behavior.", tostring(action or "modify"), tostring(groupName), permission and permission ~= "" and (" for privilege '" .. tostring(permission) .. "'") or "", source and source ~= "" and (" (source: " .. tostring(source) .. ")") or ""))
 end
 
+--[[
+    Purpose:
+        Removes custom privilege overrides from immutable base groups so they keep their intended default behavior.
+
+    Parameters:
+        groups (table)
+            The usergroup table to sanitize.
+
+        source (string|nil)
+            A label describing where the sanitation request came from.
+
+    Returns:
+        boolean
+            True if any base group data was changed.
+
+    Example Usage:
+        ```lua
+        local changed = sanitizeBaseGroups(lia.admin.groups, "lia.admin.save")
+        ```
+
+    Realm:
+        Shared
+]]
 local function sanitizeBaseGroups(groups, source)
     groups = groups or {}
     local changed = false
@@ -247,6 +590,29 @@ local protectedStaffCommands = {
     unblind = true
 }
 
+--[[
+    Purpose:
+        Checks whether a command target is an on-duty staff member protected from targeted moderation actions.
+
+    Parameters:
+        cmd (string)
+            The admin command being attempted.
+
+        target (Entity|Player|nil)
+            The entity being targeted by the command.
+
+    Returns:
+        boolean
+            True when the target is protected from the requested action.
+
+    Example Usage:
+        ```lua
+        if lia.admin.isProtectedStaffTarget("kick", target) then return end
+        ```
+
+    Realm:
+        Shared
+]]
 function lia.admin.isProtectedStaffTarget(cmd, target)
     local protectedCommand = protectedStaffCommands[string.lower(tostring(cmd or ""))] or false
     local validTarget = IsValid(target)
@@ -257,10 +623,49 @@ function lia.admin.isProtectedStaffTarget(cmd, target)
     return permission
 end
 
+--[[
+    Purpose:
+        Sends the localized protected-staff warning to the acting administrator.
+
+    Parameters:
+        admin (Player|nil)
+            The player who attempted the blocked action.
+
+    Returns:
+        nil
+
+    Example Usage:
+        ```lua
+        lia.admin.notifyProtectedStaffTarget(client)
+        ```
+
+    Realm:
+        Shared
+]]
 function lia.admin.notifyProtectedStaffTarget(admin)
     if IsValid(admin) then admin:notifyErrorLocalized("staffFactionCommandBlocked") end
 end
 
+--[[
+    Purpose:
+        Resolves a display category label for a privilege using registered metadata, modules, CAMI, and fallback pattern rules.
+
+    Parameters:
+        privilegeName (string|nil)
+            The privilege ID to categorize.
+
+    Returns:
+        string
+            The localized category label for the privilege.
+
+    Example Usage:
+        ```lua
+        local category = getPrivilegeCategory("command_plykick")
+        ```
+
+    Realm:
+        Shared
+]]
 function getPrivilegeCategory(privilegeName)
     if not privilegeName then return lia.lang.resolveToken("@unassigned") end
     if privilegeCategoryCache[privilegeName] then return privilegeCategoryCache[privilegeName] end
@@ -342,10 +747,48 @@ function getPrivilegeCategory(privilegeName)
     return category
 end
 
+--[[
+    Purpose:
+        Clears the cached privilege category lookup table so categories can be rebuilt from fresh data.
+
+    Parameters:
+        None
+
+    Returns:
+        nil
+
+    Example Usage:
+        ```lua
+        clearPrivilegeCategoryCache()
+        ```
+
+    Realm:
+        Shared
+]]
 local function clearPrivilegeCategoryCache()
     privilegeCategoryCache = {}
 end
 
+--[[
+    Purpose:
+        Builds a display-safe external privilege name and caches alias mappings for integrations like CAMI.
+
+    Parameters:
+        id (string|any)
+            The internal privilege ID.
+
+    Returns:
+        string
+            The external display name for the privilege.
+
+    Example Usage:
+        ```lua
+        local name = lia.admin.getExternalPrivilegeName("command_plykick")
+        ```
+
+    Realm:
+        Shared
+]]
 function lia.admin.getExternalPrivilegeName(id)
     id = tostring(id or "")
     if id == "" then return "" end
@@ -360,6 +803,26 @@ function lia.admin.getExternalPrivilegeName(id)
     return externalName
 end
 
+--[[
+    Purpose:
+        Normalizes a privilege identifier by resolving stored aliases back to the canonical privilege ID.
+
+    Parameters:
+        privilege (string|any)
+            The privilege name or alias to normalize.
+
+    Returns:
+        string
+            The canonical privilege ID, or the original string when no alias exists.
+
+    Example Usage:
+        ```lua
+        local id = lia.admin.normalizePrivilege(privilege)
+        ```
+
+    Realm:
+        Shared
+]]
 function lia.admin.normalizePrivilege(privilege)
     privilege = tostring(privilege or "")
     if privilege == "" then return privilege end
@@ -368,10 +831,48 @@ function lia.admin.normalizePrivilege(privilege)
 end
 
 local groupLevelCache = {}
+--[[
+    Purpose:
+        Clears cached group level lookups so inheritance and permission comparisons can be recalculated.
+
+    Parameters:
+        None
+
+    Returns:
+        nil
+
+    Example Usage:
+        ```lua
+        clearGroupLevelCache()
+        ```
+
+    Realm:
+        Shared
+]]
 local function clearGroupLevelCache()
     groupLevelCache = {}
 end
 
+--[[
+    Purpose:
+        Resolves the effective base level for a usergroup by following inheritance until it reaches a default rank.
+
+    Parameters:
+        group (string)
+            The usergroup name to evaluate.
+
+    Returns:
+        number
+            The numeric level used for privilege comparisons.
+
+    Example Usage:
+        ```lua
+        local level = getGroupLevel("moderator")
+        ```
+
+    Realm:
+        Shared
+]]
 local function getGroupLevel(group)
     if groupLevelCache[group] ~= nil then return groupLevelCache[group] end
     local levels = lia.admin.DefaultGroups or {}
@@ -399,6 +900,29 @@ local function getGroupLevel(group)
     return defaultLevel
 end
 
+--[[
+    Purpose:
+        Determines whether a usergroup should inherit a privilege based on its effective level and a minimum access rank.
+
+    Parameters:
+        group (string)
+            The group being checked.
+
+        min (string|nil)
+            The minimum access level required for the privilege.
+
+    Returns:
+        boolean
+            True if the group meets or exceeds the required level.
+
+    Example Usage:
+        ```lua
+        local granted = shouldGrant("admin", "user")
+        ```
+
+    Realm:
+        Shared
+]]
 local function shouldGrant(group, min)
     local levels = lia.admin.DefaultGroups or {}
     local m = tostring(min or "user"):lower()
@@ -434,15 +958,73 @@ local targetedCommandPrivilegeMap = {
     strip = "command_plystrip"
 }
 
+--[[
+    Purpose:
+        Converts an admin command name into the privilege ID used to authorize that command.
+
+    Parameters:
+        cmd (string|any)
+            The command name to translate.
+
+    Returns:
+        string|nil
+            The matching privilege ID, or nil when the command name is empty.
+
+    Example Usage:
+        ```lua
+        local privilegeID = lia.admin.getCommandPrivilegeID("kick")
+        ```
+
+    Realm:
+        Shared
+]]
 function lia.admin.getCommandPrivilegeID(cmd)
     cmd = string.lower(tostring(cmd or ""))
     if cmd == "" then return nil end
     return targetedCommandPrivilegeMap[cmd] or "command_" .. cmd
 end
 
+--[[
+    Purpose:
+        Rebuilds the global privilege minimum-access map from the currently loaded group permission assignments.
+
+    Parameters:
+        None
+
+    Returns:
+        nil
+
+    Example Usage:
+        ```lua
+        rebuildPrivileges()
+        ```
+
+    Realm:
+        Shared
+]]
 local function rebuildPrivileges()
     lia.admin.privileges = lia.admin.privileges or {}
     local rebuildCache = {}
+    --[[
+        Purpose:
+            Retrieves and memoizes effective group levels during a privilege rebuild pass.
+
+        Parameters:
+            groupName (string)
+                The group whose level should be cached.
+
+        Returns:
+            number
+                The effective numeric level for the group.
+
+        Example Usage:
+            ```lua
+            local level = getCachedGroupLevel("admin")
+            ```
+
+        Realm:
+            Shared
+    ]]
     local function getCachedGroupLevel(groupName)
         if rebuildCache[groupName] == nil then rebuildCache[groupName] = getGroupLevel(groupName) end
         return rebuildCache[groupName]
@@ -472,6 +1054,28 @@ local function rebuildPrivileges()
     end
 end
 
+--[[
+    Purpose:
+        Registers a non-base Lilia usergroup with CAMI so external admin systems can recognize it.
+
+    Parameters:
+        name (string)
+            The usergroup name to register.
+
+        inherits (string|nil)
+            The CAMI parent group name.
+
+    Returns:
+        nil
+
+    Example Usage:
+        ```lua
+        camiRegisterUsergroup("moderator", "admin")
+        ```
+
+    Realm:
+        Shared
+]]
 local function camiRegisterUsergroup(name, inherits)
     if CAMI and name ~= "user" and name ~= "admin" and name ~= "superadmin" then
         CAMI.RegisterUsergroup({
@@ -481,10 +1085,51 @@ local function camiRegisterUsergroup(name, inherits)
     end
 end
 
+--[[
+    Purpose:
+        Unregisters a non-base Lilia usergroup from CAMI.
+
+    Parameters:
+        name (string)
+            The usergroup name to unregister.
+
+    Returns:
+        nil
+
+    Example Usage:
+        ```lua
+        camiUnregisterUsergroup("moderator")
+        ```
+
+    Realm:
+        Shared
+]]
 local function camiUnregisterUsergroup(name)
     if CAMI and name ~= "user" and name ~= "admin" and name ~= "superadmin" then CAMI.UnregisterUsergroup(name, "Lilia") end
 end
 
+--[[
+    Purpose:
+        Registers or refreshes a privilege in CAMI using Lilia's resolved external privilege naming.
+
+    Parameters:
+        name (string)
+            The internal privilege ID.
+
+        min (string|nil)
+            The minimum access level required for the privilege.
+
+    Returns:
+        nil
+
+    Example Usage:
+        ```lua
+        camiRegisterPrivilege("command_plykick", "admin")
+        ```
+
+    Realm:
+        Shared
+]]
 local function camiRegisterPrivilege(name, min)
     if CAMI then
         local externalName = lia.admin.getExternalPrivilegeName(name)
@@ -505,6 +1150,24 @@ local function camiRegisterPrivilege(name, min)
     end
 end
 
+--[[
+    Purpose:
+        Imports existing CAMI usergroups and privileges into Lilia's admin tables during startup.
+
+    Parameters:
+        None
+
+    Returns:
+        nil
+
+    Example Usage:
+        ```lua
+        camiBootstrapFromExisting()
+        ```
+
+    Realm:
+        Shared
+]]
 local function camiBootstrapFromExisting()
     if not CAMI then return end
     for _, ug in ipairs(CAMI.GetUsergroups() or {}) do
@@ -535,6 +1198,43 @@ local function camiBootstrapFromExisting()
     rebuildPrivileges()
 end
 
+--[[
+    Purpose:
+        Applies a standardized kick and/or ban punishment for a named infraction using localized reason strings.
+
+    Parameters:
+        client (Player)
+            The player receiving the punishment.
+
+        infraction (string)
+            The infraction label inserted into the localized reason text.
+
+        kick (boolean)
+            Whether the player should be kicked.
+
+        ban (boolean)
+            Whether the player should be banned.
+
+        time (number|nil)
+            The ban duration in minutes, or 0 for permanent/default behavior.
+
+        kickKey (string|nil)
+            The localization key used to build the kick reason.
+
+        banKey (string|nil)
+            The localization key used to build the ban reason.
+
+    Returns:
+        nil
+
+    Example Usage:
+        ```lua
+        lia.admin.applyPunishment(client, "cheating", true, true, 60)
+        ```
+
+    Realm:
+        Shared
+]]
 function lia.admin.applyPunishment(client, infraction, kick, ban, time, kickKey, banKey)
     local bantime = time or 0
     kickKey = kickKey or "kickedForInfraction"
@@ -543,6 +1243,31 @@ function lia.admin.applyPunishment(client, infraction, kick, ban, time, kickKey,
     if ban then lia.admin.execCommand("ban", client, bantime, L(banKey, infraction)) end
 end
 
+--[[
+    Purpose:
+        Determines whether a player or usergroup has access to a specific privilege, creating dynamic tool and property privileges when needed.
+
+    Parameters:
+        ply (Player|string)
+            The player to check, or a usergroup name.
+
+        privilege (string)
+            The privilege ID to authorize.
+
+    Returns:
+        boolean
+            True if the player or group has the requested privilege.
+
+    Example Usage:
+        ```lua
+        if lia.admin.hasAccess(client, "manageUsergroups") then
+            -- allow action
+        end
+        ```
+
+    Realm:
+        Shared
+]]
 function lia.admin.hasAccess(ply, privilege)
     if not isstring(privilege) then
         lia.error(L("hasAccessExpectedString", tostring(privilege)))
@@ -610,6 +1335,25 @@ function lia.admin.hasAccess(ply, privilege)
     return shouldGrant(grp, min)
 end
 
+--[[
+    Purpose:
+        Persists the current admin group configuration to the database and optionally re-syncs it to connected clients.
+
+    Parameters:
+        noNetwork (boolean|nil)
+            When true, skips the client synchronization step after saving.
+
+    Returns:
+        nil
+
+    Example Usage:
+        ```lua
+        lia.admin.save()
+        ```
+
+    Realm:
+        Shared
+]]
 function lia.admin.save(noNetwork)
     sanitizeBaseGroups(lia.admin.groups, "lia.admin.save")
     rebuildPrivileges()
@@ -645,6 +1389,29 @@ function lia.admin.save(noNetwork)
     lia.admin.sync()
 end
 
+--[[
+    Purpose:
+        Registers a new privilege, stores its metadata, seeds inherited group access, and notifies integrations.
+
+    Parameters:
+        priv (table)
+            The privilege definition containing fields such as `ID`, `Name`, `MinAccess`, and `Category`.
+
+    Returns:
+        nil
+
+    Example Usage:
+        ```lua
+        lia.admin.registerPrivilege({
+            ID = "examplePrivilege",
+            Name = "Example Privilege",
+            MinAccess = "admin"
+        })
+        ```
+
+    Realm:
+        Shared
+]]
 function lia.admin.registerPrivilege(priv)
     if not priv or not priv.ID then
         lia.error(L("privilegeRegistrationError"))
@@ -682,6 +1449,25 @@ function lia.admin.registerPrivilege(priv)
     if SERVER then lia.admin.save() end
 end
 
+--[[
+    Purpose:
+        Removes a privilege from Lilia's caches, usergroups, and CAMI registrations.
+
+    Parameters:
+        id (string|any)
+            The privilege ID to unregister.
+
+    Returns:
+        nil
+
+    Example Usage:
+        ```lua
+        lia.admin.unregisterPrivilege("examplePrivilege")
+        ```
+
+    Realm:
+        Shared
+]]
 function lia.admin.unregisterPrivilege(id)
     id = tostring(id or "")
     if id == "" or lia.admin.privileges[id] == nil then return end
@@ -714,6 +1500,25 @@ function lia.admin.unregisterPrivilege(id)
     if SERVER then lia.admin.save() end
 end
 
+--[[
+    Purpose:
+        Applies inherited permissions and default minimum-access grants to a usergroup.
+
+    Parameters:
+        groupName (string)
+            The group whose effective permissions should be rebuilt.
+
+    Returns:
+        nil
+
+    Example Usage:
+        ```lua
+        lia.admin.applyInheritance("moderator")
+        ```
+
+    Realm:
+        Shared
+]]
 function lia.admin.applyInheritance(groupName)
     local groups = lia.admin.groups or {}
     local g = groups[groupName]
@@ -727,6 +1532,25 @@ function lia.admin.applyInheritance(groupName)
     local info = g._info or {}
     local inh = info.inheritance or "user"
     local visited = {}
+    --[[
+        Purpose:
+            Copies inherited positive permissions from a source group chain into the target group once per ancestor.
+
+        Parameters:
+            srcName (string)
+                The group name currently being inherited from.
+
+        Returns:
+            nil
+
+        Example Usage:
+            ```lua
+            copyFrom("admin")
+            ```
+
+        Realm:
+            Shared
+    ]]
     local function copyFrom(srcName)
         if visited[srcName] then return end
         visited[srcName] = true
@@ -752,7 +1576,44 @@ function lia.admin.applyInheritance(groupName)
     clearGroupLevelCache()
 end
 
+--[[
+    Purpose:
+        Loads admin groups from the database, normalizes them, rebuilds privileges, and finishes CAMI synchronization.
+
+    Parameters:
+        None
+
+    Returns:
+        nil
+
+    Example Usage:
+        ```lua
+        lia.admin.load()
+        ```
+
+    Realm:
+        Shared
+]]
 function lia.admin.load()
+    --[[
+        Purpose:
+            Finalizes loaded admin data by storing it, synchronizing CAMI registrations, and firing load hooks.
+
+        Parameters:
+            groups (table)
+                The normalized admin group table that was loaded from storage.
+
+        Returns:
+            nil
+
+        Example Usage:
+            ```lua
+            continueLoad(groups)
+            ```
+
+        Realm:
+            Shared
+    ]]
     local function continueLoad(groups)
         lia.admin.groups = groups or {}
         if CAMI then
@@ -804,6 +1665,33 @@ function lia.admin.load()
     end)
 end
 
+--[[
+    Purpose:
+        Creates a new custom usergroup, applies inheritance, and registers it with hooks and CAMI.
+
+    Parameters:
+        groupName (string)
+            The name of the new usergroup.
+
+        info (table|nil)
+            Optional group data including `_info` metadata.
+
+    Returns:
+        nil
+
+    Example Usage:
+        ```lua
+        lia.admin.createGroup("moderator", {
+            _info = {
+                inheritance = "admin",
+                types = {"Staff"}
+            }
+        })
+        ```
+
+    Realm:
+        Shared
+]]
 function lia.admin.createGroup(groupName, info)
     if lia.admin.groups[groupName] then
         lia.error(L("usergroupExists"))
@@ -825,6 +1713,25 @@ function lia.admin.createGroup(groupName, info)
     if SERVER then lia.admin.save() end
 end
 
+--[[
+    Purpose:
+        Removes a custom usergroup and unregisters it from CAMI.
+
+    Parameters:
+        groupName (string)
+            The name of the group to remove.
+
+    Returns:
+        nil
+
+    Example Usage:
+        ```lua
+        lia.admin.removeGroup("moderator")
+        ```
+
+    Realm:
+        Shared
+]]
 function lia.admin.removeGroup(groupName)
     if groupName == "user" or groupName == "admin" or groupName == "superadmin" then
         lia.error(L("baseUsergroupCannotBeRemoved"))
@@ -843,6 +1750,28 @@ function lia.admin.removeGroup(groupName)
     if SERVER then lia.admin.save() end
 end
 
+--[[
+    Purpose:
+        Renames a custom usergroup while preserving its permissions and inheritance data.
+
+    Parameters:
+        oldName (string)
+            The existing group name.
+
+        newName (string)
+            The new group name to assign.
+
+    Returns:
+        nil
+
+    Example Usage:
+        ```lua
+        lia.admin.renameGroup("helper", "moderator")
+        ```
+
+    Realm:
+        Shared
+]]
 function lia.admin.renameGroup(oldName, newName)
     if lia.admin.DefaultGroups[oldName] then
         lia.error(L("baseUsergroupCannotBeRenamed"))
@@ -873,6 +1802,25 @@ function lia.admin.renameGroup(oldName, newName)
 end
 
 if SERVER then
+    --[[
+        Purpose:
+            Sends an admin-only localized notification to every player with permission to view alting-related alerts.
+
+        Parameters:
+            notification (string)
+                The localization key to send to eligible staff members.
+
+        Returns:
+            nil
+
+        Example Usage:
+            ```lua
+            lia.admin.notifyAdmin("playerAltDetected")
+            ```
+
+        Realm:
+            Server
+    ]]
     function lia.admin.notifyAdmin(notification)
         for _, client in player.Iterator() do
             local permission = IsValid(client) and client:hasPrivilege("canSeeAltingNotifications") or false
@@ -880,6 +1828,31 @@ if SERVER then
         end
     end
 
+    --[[
+        Purpose:
+            Grants or explicitly enables a privilege for a custom usergroup and saves the change.
+
+        Parameters:
+            groupName (string)
+                The usergroup receiving the permission.
+
+            permission (string)
+                The privilege ID or alias to enable.
+
+            silent (boolean|nil)
+                When true, skips immediate network synchronization during the save call.
+
+        Returns:
+            nil
+
+        Example Usage:
+            ```lua
+            lia.admin.addPermission("moderator", "manageUsergroups")
+            ```
+
+        Realm:
+            Server
+    ]]
     function lia.admin.addPermission(groupName, permission, silent)
         permission = lia.admin.normalizePrivilege(permission)
         if not lia.admin.groups[groupName] then
@@ -902,6 +1875,31 @@ if SERVER then
         hook.Run("OnUsergroupPermissionsChanged", groupName, lia.admin.groups[groupName])
     end
 
+    --[[
+        Purpose:
+            Revokes or explicitly disables a privilege for a custom usergroup and saves the change.
+
+        Parameters:
+            groupName (string)
+                The usergroup losing the permission.
+
+            permission (string)
+                The privilege ID or alias to disable.
+
+            silent (boolean|nil)
+                When true, skips immediate network synchronization during the save call.
+
+        Returns:
+            nil
+
+        Example Usage:
+            ```lua
+            lia.admin.removePermission("moderator", "manageUsergroups")
+            ```
+
+        Realm:
+            Server
+    ]]
     function lia.admin.removePermission(groupName, permission, silent)
         permission = lia.admin.normalizePrivilege(permission)
         if not lia.admin.groups[groupName] then
@@ -924,11 +1922,49 @@ if SERVER then
         hook.Run("OnUsergroupPermissionsChanged", groupName, lia.admin.groups[groupName])
     end
 
+    --[[
+        Purpose:
+            Sends the latest admin privilege and group tables to one client or to all ready human clients in batches.
+
+        Parameters:
+            c (Player|nil)
+                An optional player to sync individually. When nil, all ready human clients are synced.
+
+        Returns:
+            nil
+
+        Example Usage:
+            ```lua
+            lia.admin.sync()
+            ```
+
+        Realm:
+            Server
+    ]]
     function lia.admin.sync(c)
         lia.net.ready = lia.net.ready or setmetatable({}, {
             __mode = "k"
         })
 
+        --[[
+            Purpose:
+                Sends the current privilege and group tables to one ready client.
+
+            Parameters:
+                ply (Player)
+                    The client to receive the sync payload.
+
+            Returns:
+                nil
+
+            Example Usage:
+                ```lua
+                push(client)
+                ```
+
+            Realm:
+                Server
+        ]]
         local function push(ply)
             if not IsValid(ply) then return end
             if not lia.net.ready[ply] then return end
@@ -966,17 +2002,86 @@ if SERVER then
         end
     end
 
+    --[[
+        Purpose:
+            Compares current privilege and group counts against the last broadcast snapshot to detect unsynced changes.
+
+        Parameters:
+            None
+
+        Returns:
+            boolean
+                True when the cached sync counts no longer match the current admin data.
+
+        Example Usage:
+            ```lua
+            local dirty = lia.admin.hasChanges()
+            ```
+
+        Realm:
+            Server
+    ]]
     function lia.admin.hasChanges()
         local currentPrivilegeCount = table.Count(lia.admin.privileges)
         local currentGroupCount = table.Count(lia.admin.groups)
         return currentPrivilegeCount ~= lia.admin._lastSyncPrivilegeCount or currentGroupCount ~= lia.admin._lastSyncGroupCount
     end
 
+    --[[
+        Purpose:
+            Updates a live player's usergroup by SteamID through the shared SteamID assignment helper.
+
+        Parameters:
+            ply (Player)
+                The player whose rank should change.
+
+            newGroup (string|nil)
+                The target group name, or nil to fall back to the configured default group.
+
+            source (string|nil)
+                A source label passed into CAMI and hooks.
+
+        Returns:
+            nil
+
+        Example Usage:
+            ```lua
+            lia.admin.setPlayerUsergroup(client, "admin", "Console")
+            ```
+
+        Realm:
+            Server
+    ]]
     function lia.admin.setPlayerUsergroup(ply, newGroup, source)
         if not IsValid(ply) then return end
         lia.admin.setSteamIDUsergroup(ply:SteamID(), newGroup, source)
     end
 
+    --[[
+        Purpose:
+            Assigns a usergroup to a SteamID, updates the live player if connected, and signals CAMI and hooks.
+
+        Parameters:
+            steamId (string)
+                The SteamID to update.
+
+            newGroup (string|nil)
+                The target group name, or nil to use the configured default group.
+
+            source (string|nil)
+                A label describing who or what initiated the change.
+
+        Returns:
+            nil
+
+        Example Usage:
+            ```lua
+            lia.admin.setSteamIDUsergroup("STEAM_0:1:12345", "admin", "Lilia")
+            ```
+
+        Realm:
+            Server
+    ]]
     function lia.admin.setSteamIDUsergroup(steamId, newGroup, source)
         local sid = string.Trim(tostring(steamId or ""))
         if sid == "" or not string.match(sid, "^STEAM_%d+:%d+:%d+$") then return end
@@ -992,11 +2097,68 @@ if SERVER then
         hook.Run("OnSetUsergroup", sid, new, source, ply)
     end
 
+    --[[
+        Purpose:
+            Executes a server-side admin action against a target player after validating privileges and special protections.
+
+        Parameters:
+            cmd (string)
+                The admin command to execute.
+
+            victim (Player|string)
+                The target player entity or a lookup string.
+
+            dur (number|nil)
+                An optional duration used by timed commands.
+
+            reason (string|nil)
+                An optional reason string for punishments.
+
+            admin (Player|nil)
+                The acting administrator, or nil when the server console initiated the action.
+
+        Returns:
+            boolean
+                True when the command completed successfully. False otherwise.
+
+        Example Usage:
+            ```lua
+            lia.admin.serverExecCommand("kick", target, nil, "Rule violation", client)
+            ```
+
+        Realm:
+            Server
+    ]]
     function lia.admin.serverExecCommand(cmd, victim, dur, reason, admin)
         local isConsoleAdmin = not IsValid(admin)
         local adminName = isConsoleAdmin and "Console" or admin:Name()
         local adminSteamID = isConsoleAdmin and "CONSOLE" or admin:SteamID()
         local target
+        --[[
+            Purpose:
+                Reports command success or failure back to the acting admin or the server console.
+
+            Parameters:
+                kind (string)
+                    Either `error` or another value for success notifications.
+
+                key (string)
+                    The localization key to send or print.
+
+                ... (any)
+                    Optional localization formatting arguments.
+
+            Returns:
+                nil
+
+            Example Usage:
+                ```lua
+                notifyAdmin("error", "noPerm")
+                ```
+
+            Realm:
+                Server
+        ]]
         local function notifyAdmin(kind, key, ...)
             if not isstring(key) or key == "" then return end
             if IsValid(admin) then
@@ -1010,6 +2172,28 @@ if SERVER then
             end
         end
 
+        --[[
+            Purpose:
+                Writes an admin action entry to Lilia's logging system for a handled command.
+
+            Parameters:
+                logType (string)
+                    The log type identifier to record.
+
+                ... (any)
+                    Additional values passed to the logger.
+
+            Returns:
+                nil
+
+            Example Usage:
+                ```lua
+                logAdminAction("plyKick", target:Name())
+                ```
+
+            Realm:
+                Server
+        ]]
         local function logAdminAction(logType, ...)
             if IsValid(admin) then
                 lia.log.add(admin, logType, ...)
@@ -1025,6 +2209,28 @@ if SERVER then
             return false
         end
 
+        --[[
+            Purpose:
+                Broadcasts a formatted staff activity message using the staff action feed styling.
+
+            Parameters:
+                tag (string)
+                    The short action label to highlight.
+
+                text (string)
+                    The descriptive action text to display.
+
+            Returns:
+                nil
+
+            Example Usage:
+                ```lua
+                staffAction("KICK", message)
+                ```
+
+            Realm:
+                Server
+        ]]
         local function staffAction(tag, text)
             StaffAddTextShadowed(Color(255, 215, 0), tag, Color(255, 255, 255), text)
         end
@@ -1358,6 +2564,35 @@ else
         spectate = function(id) RunConsoleCommand("say", "/plyspectate " .. string.format("'%s'", tostring(id))) end
     }
 
+    --[[
+        Purpose:
+            Executes a clientside admin command by routing it through hooks or chat command fallbacks.
+
+        Parameters:
+            cmd (string)
+                The admin command to execute.
+
+            victim (Player|string)
+                The target player or identifier.
+
+            dur (number|nil)
+                An optional duration argument for timed actions.
+
+            reason (string|nil)
+                An optional reason string to forward with the command.
+
+        Returns:
+            boolean|nil
+                True when a command handler ran successfully, false when blocked, or nil when no handler exists.
+
+        Example Usage:
+            ```lua
+            lia.admin.execCommand("kick", target, nil, "Rule violation")
+            ```
+
+        Realm:
+            Client
+    ]]
     function lia.admin.execCommand(cmd, victim, dur, reason)
         if lia.admin.isProtectedStaffTarget(cmd, victim) then
             lia.admin.notifyProtectedStaffTarget(LocalPlayer())
@@ -1418,6 +2653,24 @@ for _, wep in ipairs(weapons.GetList()) do
 end
 
 if SERVER then
+    --[[
+        Purpose:
+            Ensures the server-side admin group table exists and that each known group has a table allocated.
+
+        Parameters:
+            None
+
+        Returns:
+            nil
+
+        Example Usage:
+            ```lua
+            ensureStructures()
+            ```
+
+        Realm:
+            Server
+    ]]
     local function ensureStructures()
         lia.admin.groups = lia.admin.groups or {}
         for n in pairs(lia.admin.groups) do
@@ -1429,6 +2682,26 @@ if SERVER then
 else
     local categoryMapCache = {}
     local lastCacheGroups = {}
+    --[[
+        Purpose:
+            Builds a cached category-to-privilege map for the clientside usergroup editor UI.
+
+        Parameters:
+            groups (table)
+                The current synced admin group table.
+
+        Returns:
+            table
+                An ordered array of category entries containing labels and privilege item lists.
+
+        Example Usage:
+            ```lua
+            local orderedCategories = computeCategoryMap(lia.admin.groups)
+            ```
+
+        Realm:
+            Client
+    ]]
     local function computeCategoryMap(groups)
         local groupsChanged = false
         local currentGroupsTable = {}
@@ -1518,6 +2791,24 @@ else
         return categoryMapCache
     end
 
+    --[[
+        Purpose:
+            Opens the clientside dialog used to create a new usergroup and sends the result to the server.
+
+        Parameters:
+            None
+
+        Returns:
+            nil
+
+        Example Usage:
+            ```lua
+            promptCreateGroup()
+            ```
+
+        Realm:
+            Client
+    ]]
     local function promptCreateGroup()
         lia.derma.requestArguments(L("create") .. " " .. L("group"), {
             Name = "string",
@@ -1547,6 +2838,34 @@ else
         end)
     end
 
+    --[[
+        Purpose:
+            Populates a usergroup panel with categorized privilege rows and editing controls.
+
+        Parameters:
+            container (Panel)
+                The parent panel that should receive the generated privilege UI.
+
+            g (string)
+                The usergroup name being displayed.
+
+            groups (table)
+                The full synced admin group table.
+
+            editable (boolean)
+                Whether the privilege rows should allow changes.
+
+        Returns:
+            nil
+
+        Example Usage:
+            ```lua
+            buildPrivilegeList(panel, "admin", lia.admin.groups, true)
+            ```
+
+        Realm:
+            Client
+    ]]
     local function buildPrivilegeList(container, g, groups, editable)
         local current = table.Copy(groups[g] or {})
         current._info = nil
@@ -1569,6 +2888,25 @@ else
         list:DockMargin(12, editable and 12 or 4, 12, 12)
         lia.gui.usergroups.checks = lia.gui.usergroups.checks or {}
         lia.gui.usergroups.checks[g] = lia.gui.usergroups.checks[g] or {}
+        --[[
+            Purpose:
+                Creates one privilege row widget for the current group and wires its editing behavior.
+
+            Parameters:
+                name (string)
+                    The privilege ID to render.
+
+            Returns:
+                nil
+
+            Example Usage:
+                ```lua
+                addRow("manageUsergroups")
+                ```
+
+            Realm:
+                Client
+        ]]
         local function addRow(name)
             local row = list:Add("liaPrivilegeRow")
             row:Dock(TOP)
@@ -1594,6 +2932,24 @@ else
                     net.SendToServer()
                 end
             else
+                --[[
+                    Purpose:
+                        Displays an error when the user tries to edit an immutable base usergroup row.
+
+                    Parameters:
+                        None
+
+                    Returns:
+                        nil
+
+                    Example Usage:
+                        ```lua
+                        showBaseRankNotification()
+                        ```
+
+                    Realm:
+                        Client
+                ]]
                 local function showBaseRankNotification()
                     LocalPlayer():notifyErrorLocalized("baseUsergroupCannotBeEdited")
                 end
@@ -1655,6 +3011,25 @@ else
         hook.Run("AdminPrivilegesUpdated")
     end)
 
+    --[[
+        Purpose:
+            Builds the clientside usergroup management interface, including tabs and group management buttons.
+
+        Parameters:
+            parent (Panel)
+                The parent panel that will host the interface.
+
+        Returns:
+            nil
+
+        Example Usage:
+            ```lua
+            SetupUserGroupInterface(parent)
+            ```
+
+        Realm:
+            Client
+    ]]
     local function SetupUserGroupInterface(parent)
         local container = parent:Add("DPanel")
         container:Dock(FILL)
@@ -1721,6 +3096,29 @@ else
             end)
         end
 
+        --[[
+            Purpose:
+                Creates one tab for a usergroup and fills it with that group's privilege list UI.
+
+            Parameters:
+                groupName (string)
+                    The group represented by the tab.
+
+                groups (table)
+                    The full synced admin group table.
+
+            Returns:
+                table|nil
+                    The created tab data, or nil if the group no longer exists.
+
+            Example Usage:
+                ```lua
+                createGroupTab("admin", lia.admin.groups)
+                ```
+
+            Realm:
+                Client
+        ]]
         local function createGroupTab(groupName, groups)
             if not groups[groupName] then return end
             local tabPanel = vgui.Create("DPanel")
@@ -1739,6 +3137,24 @@ else
             return tabData
         end
 
+        --[[
+            Purpose:
+                Rebuilds the usergroup tabs from the latest synced group table.
+
+            Parameters:
+                None
+
+            Returns:
+                nil
+
+            Example Usage:
+                ```lua
+                refreshTabs()
+                ```
+
+            Realm:
+                Client
+        ]]
         local function refreshTabs()
             tabs:Clear()
             local groups = lia.admin.groups or {}

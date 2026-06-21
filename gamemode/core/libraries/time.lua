@@ -1,4 +1,38 @@
-﻿lia.time = lia.time or {}
+﻿--[[
+    Folder: Developer - Libraries
+    File: lia.time.md
+]]
+--[[
+    Time
+
+    Time and date helpers for localized timestamps, elapsed-time text, and duration formatting.
+]]
+--[[
+    Overview:
+        The time library centralizes shared time formatting under `lia.time`. It converts timestamps and formatted date strings into localized readable output, builds current date and hour strings using the configured timestamp style, and formats durations into day, hour, and minute components.
+]]
+lia.time = lia.time or {}
+--[[
+    Purpose:
+        Returns a localized string describing how much time has passed since a timestamp or parsed date string.
+
+    Parameters:
+        strTime (number|string)
+            A Unix timestamp, or a date string supported by `lia.time.ParseTime`.
+
+    Returns:
+        string
+            A localized elapsed-time string, or a localized invalid input or invalid date message.
+
+    Example Usage:
+        ```lua
+        print(lia.time.timeSince(os.time() - 3600))
+        print(lia.time.timeSince("2024-01-01"))
+        ```
+
+    Realm:
+        Shared
+]]
 function lia.time.timeSince(strTime)
     local timestamp
     if isnumber(strTime) then
@@ -30,6 +64,27 @@ function lia.time.timeSince(strTime)
     end
 end
 
+--[[
+    Purpose:
+        Converts a formatted timestamp string into a table of numeric date and time components.
+
+    Parameters:
+        str (string|nil)
+            A timestamp string formatted as `YYYY-MM-DD HH:MM:SS`. Defaults to the current local time when nil.
+
+    Returns:
+        table
+            A table containing `year`, `month`, `day`, `hour`, `min`, and `sec` numeric fields.
+
+    Example Usage:
+        ```lua
+        local date = lia.time.toNumber("2024-01-31 18:45:10")
+        print(date.year, date.month, date.day)
+        ```
+
+    Realm:
+        Shared
+]]
 function lia.time.toNumber(str)
     str = str or os.date("%Y-%m-%d %H:%M:%S", os.time())
     return {
@@ -42,6 +97,25 @@ function lia.time.toNumber(str)
     }
 end
 
+--[[
+    Purpose:
+        Returns the current localized date and time string using the configured timestamp format.
+
+    Parameters:
+        None.
+
+    Returns:
+        string
+            The current date and time using either the American or default timestamp style.
+
+    Example Usage:
+        ```lua
+        print(lia.time.getDate())
+        ```
+
+    Realm:
+        Shared
+]]
 function lia.time.getDate()
     local ct = os.date("*t")
     local american = lia.config.get("AmericanTimeStamps", false)
@@ -56,6 +130,26 @@ function lia.time.getDate()
     return string.format("%s, %02d %s %04d, %02d:%02d:%02d", L(weekdayKeys[ct.wday]), ct.day, L(monthKeys[ct.month]), ct.year, ct.hour, ct.min, ct.sec)
 end
 
+--[[
+    Purpose:
+        Formats a duration in seconds as localized days, hours, and minutes.
+
+    Parameters:
+        seconds (number|nil)
+            The duration in seconds. Nil and negative values are treated as zero.
+
+    Returns:
+        string
+            A localized duration string containing the calculated days, hours, and minutes.
+
+    Example Usage:
+        ```lua
+        print(lia.time.formatDHM(93780))
+        ```
+
+    Realm:
+        Shared
+]]
 function lia.time.formatDHM(seconds)
     seconds = math.max(seconds or 0, 0)
     local days = math.floor(seconds / 86400)
@@ -66,6 +160,25 @@ function lia.time.formatDHM(seconds)
     return L("daysHoursMinutes", days, hours, minutes)
 end
 
+--[[
+    Purpose:
+        Returns the current hour using the configured timestamp format.
+
+    Parameters:
+        None.
+
+    Returns:
+        number|string
+            The current 24-hour value when American timestamps are disabled, or a localized 12-hour string with an AM/PM suffix when enabled.
+
+    Example Usage:
+        ```lua
+        print(lia.time.getHour())
+        ```
+
+    Realm:
+        Shared
+]]
 function lia.time.getHour()
     local ct = os.date("*t")
     local american = lia.config.get("AmericanTimeStamps", false)

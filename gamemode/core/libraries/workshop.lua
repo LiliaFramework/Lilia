@@ -1,7 +1,31 @@
-﻿lia.workshop = lia.workshop or {}
+﻿--[[
+    Folder: Developer - Libraries
+    File: lia.workshop.md
+]]
+--[[
+    Workshop
+
+    Workshop downloader helpers for Lilia server content discovery, synchronization, download prompts, and clientside addon mounting.
+]]
+--[[
+    Overview:
+        The workshop library centralizes Workshop collection under `lia.workshop`. It registers server-required Workshop IDs, gathers IDs from mounted addons and module WorkshopContent entries, caches the resulting list for clients, sends workshop metadata to joining players, detects missing client content, requests missing downloads, and displays available server Workshop addons in the information menu.
+]]
+lia.workshop = lia.workshop or {}
 lia.workshop.ids = lia.workshop.ids or {}
 lia.workshop.known = lia.workshop.known or {}
 if SERVER then
+    --[[
+    Purpose:
+        Registers a Steam Workshop addon ID as required server content.
+
+    Parameters:
+        id (string|number)
+            The Steam Workshop file ID to register.
+
+    Realm:
+        Server
+]]
     function lia.workshop.addWorkshop(id)
         id = tostring(id)
         if not lia.workshop.ids[id] then
@@ -18,6 +42,17 @@ if SERVER then
         end
     end
 
+    --[[
+    Purpose:
+        Collects all known server Workshop IDs from registered resources, mounted addons, and loaded module WorkshopContent definitions.
+
+    Returns:
+        table
+            A table keyed by Workshop ID strings with true values for each required addon.
+
+    Realm:
+        Server
+]]
     function lia.workshop.gather()
         local ids = table.Copy(lia.workshop.ids)
         for _, addon in pairs(engine.GetAddons() or {}) do
@@ -44,6 +79,17 @@ if SERVER then
     end
 
     hook.Add("InitializedModules", "liaWorkshopInitializedModules", function() lia.workshop.cache = lia.workshop.gather() end)
+    --[[
+    Purpose:
+        Sends the cached Workshop ID table to a player through the Workshop downloader start network message.
+
+    Parameters:
+        ply (Player)
+            The player receiving the cached Workshop content list.
+
+    Realm:
+        Server
+]]
     function lia.workshop.send(ply)
         net.Start("liaWorkshopDownloaderStart")
         net.WriteTable(lia.workshop.cache)
@@ -102,6 +148,17 @@ else
         return false
     end
 
+    --[[
+    Purpose:
+        Checks whether the client is missing any server-required Workshop content that is not already mounted locally.
+
+    Returns:
+        boolean
+            True when at least one required Workshop addon still needs to be downloaded or mounted, otherwise false.
+
+    Realm:
+        Client
+]]
     function lia.workshop.hasContentToDownload()
         for id in pairs(lia.workshop.serverIds or {}) do
             if id ~= FORCE_ID and not mounted(id) and not mountLocal(id) then return true end
@@ -109,6 +166,13 @@ else
         return false
     end
 
+    --[[
+    Purpose:
+        Prompts the client to download and mount missing server-required Workshop content after calculating the total download size.
+
+    Realm:
+        Client
+]]
     function lia.workshop.mountContent()
         local ids = lia.workshop.serverIds or {}
         local needed = {}

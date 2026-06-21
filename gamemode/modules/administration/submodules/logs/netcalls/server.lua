@@ -1,6 +1,6 @@
 ﻿local MODULE = MODULE
 net.Receive("liaSendLogsRequest", function(_, client)
-    if not MODULE:CanPlayerSeeLog(client) then return end
+    if not hook.Run("CanPlayerSeeLogs", client) then return end
     local category = net.ReadString()
     local page = net.ReadUInt(16)
     if hook.Run("CanPlayerSeeLogCategory", client, category) == false then return end
@@ -8,7 +8,7 @@ net.Receive("liaSendLogsRequest", function(_, client)
 end)
 
 net.Receive("liaSendLogsCategoriesRequest", function(_, client)
-    if not MODULE:CanPlayerSeeLog(client) then return end
+    if not hook.Run("CanPlayerSeeLogs", client) then return end
     local categories = {}
     for _, v in pairs(lia.log.types) do
         categories[v.category or L("uncategorized")] = true

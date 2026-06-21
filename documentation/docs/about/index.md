@@ -25,3 +25,4 @@ This section is the best place to start if you are planning a server, checking w
 </div>
 
 After this section, head to [Generator Overview](../generators/index.md) when you are ready to start building your own schema files.
+

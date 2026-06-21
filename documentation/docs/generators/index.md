@@ -1,27 +1,46 @@
- # Generators
+<style>
+details > summary {
+    position: relative;
+    display: flex;
+    align-items: center;
+    min-height: 70px;
+    padding-right: 180px;
+}
 
-Use these generators to build starter files faster. They are helpful when you want a solid base to edit instead of writing every definition from scratch.
+details > summary .summary-main {
+    min-width: 0;
+}
+
+details > summary .source-link-button--summary {
+    position: absolute;
+    right: 56px;
+    top: 50%;
+    transform: translateY(-50%);
+    white-space: nowrap;
+    z-index: 2;
+}
+</style>
+
+# Generators
+
+This section contains generators and templates for creating Lilia framework components.
 
 <div class="card-grid">
   <a href="./attribute/" class="card">
-    <span class="card-kicker">Character stats</span>
     <h3>Attribute Generator</h3>
-    <p>Create a starter attribute with names, limits, and example setup code.</p>
-  </a>
-  <a href="./dialog/" class="card">
-    <span class="card-kicker">Interactive characters</span>
-    <h3>Dialog NPC Generator</h3>
-    <p>Build nested NPC conversations with waypoints, faction-specific replies, and common dialog fields.</p>
+    <p>Code templates and examples for creating character attributes.</p>
   </a>
   <a href="./class/" class="card">
-    <span class="card-kicker">Faction roles</span>
     <h3>Class Generator</h3>
-    <p>Create a class with the usual fields for loadouts, access, and behavior.</p>
+    <p>Code templates and examples for creating character classes.</p>
+  </a>
+  <a href="./dialog/" class="card">
+    <h3>Dialog</h3>
+    <p></p>
   </a>
   <a href="./faction/" class="card">
-    <span class="card-kicker">Player groups</span>
     <h3>Faction Generator</h3>
-    <p>Create a faction with the common settings for models, flags, and spawn choices.</p>
+    <p>Code templates and examples for creating factions.</p>
   </a>
 </div>
 
@@ -29,58 +48,48 @@ Use these generators to build starter files faster. They are helpful when you wa
 
 <div class="card-grid">
   <a href="items/aid/" class="card">
-    <span class="card-kicker">Healing items</span>
     <h3>Aid Item Generator</h3>
-    <p>Make a starter healing or support item.</p>
+    <p></p>
   </a>
   <a href="items/ammo/" class="card">
-    <span class="card-kicker">Ammunition</span>
     <h3>Ammo Item Generator</h3>
-    <p>Build an ammo item with the usual fields already in place.</p>
+    <p></p>
   </a>
   <a href="items/bags/" class="card">
-    <span class="card-kicker">Storage items</span>
     <h3>Bag Item Generator</h3>
-    <p>Create a bag item that opens its own storage.</p>
+    <p></p>
   </a>
   <a href="items/books/" class="card">
-    <span class="card-kicker">Readable items</span>
     <h3>Books Item Generator</h3>
-    <p>Make books, notes, and other items with text players can read.</p>
+    <p></p>
   </a>
   <a href="items/entities/" class="card">
-    <span class="card-kicker">Placed objects</span>
     <h3>Entity Item Generator</h3>
-    <p>Create an item that spawns or places a world entity.</p>
+    <p></p>
   </a>
   <a href="items/grenade/" class="card">
-    <span class="card-kicker">Throwable weapons</span>
     <h3>Grenade Item Generator</h3>
-    <p>Build a grenade-style item with the common setup filled in.</p>
+    <p></p>
   </a>
   <a href="items/outfit/" class="card">
-    <span class="card-kicker">Clothing</span>
     <h3>Outfit Item Generator</h3>
-    <p>Create wearable clothing and appearance items.</p>
+    <p></p>
   </a>
   <a href="items/pacoutfit/" class="card">
-    <span class="card-kicker">PAC3 wearables</span>
     <h3>PAC3 Item Generator</h3>
-    <p>Build outfit items that use PAC3 parts.</p>
+    <p></p>
   </a>
   <a href="items/stackable/" class="card">
-    <span class="card-kicker">Quantity-based items</span>
     <h3>Stackable Item Generator</h3>
-    <p>Create items that can stack and split cleanly.</p>
+    <p></p>
   </a>
   <a href="items/url/" class="card">
-    <span class="card-kicker">Web links</span>
     <h3>URL Item Generator</h3>
-    <p>Make an item that opens a website or outside link.</p>
+    <p></p>
   </a>
   <a href="items/weapons/" class="card">
-    <span class="card-kicker">Guns and melee</span>
     <h3>Weapons Item Generator</h3>
-    <p>Create a weapon item with the standard fields already laid out.</p>
+    <p></p>
   </a>
 </div>
+

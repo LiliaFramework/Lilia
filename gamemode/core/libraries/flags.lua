@@ -1,5 +1,49 @@
-﻿lia.flag = lia.flag or {}
+﻿--[[
+    Folder: Developer - Libraries
+    File: lia.flag.md
+]]
+--[[
+    Flags
+
+    Flag helpers for registering character permission flags, storing flag metadata, reapplying flag callbacks on player spawn, and displaying available flags in the character information menu.
+]]
+--[[
+    Overview:
+        The flag library centralizes shared flag registration under `lia.flag`. Registered flags are stored in `lia.flag.list` with an optional localized description and callback. On the server, player spawn handling reapplies callbacks for each unique flag the player has. On the client, the information menu displays all registered flags and indicates whether the local character currently has each one.
+]]
+lia.flag = lia.flag or {}
 lia.flag.list = lia.flag.list or {}
+--[[
+    Purpose:
+        Registers a character permission flag with an optional localized description and optional callback.
+
+    Parameters:
+        flag (string)
+            The single-character flag identifier to register.
+
+        desc (string|nil)
+            The language token or description for the flag. When provided, it is resolved through lia.lang.resolveToken before being stored.
+
+        callback (function|nil)
+            Optional function called when the flag is applied or removed by flag handling code. The callback receives the player and a boolean indicating whether the flag is being given.
+
+    Returns:
+        nil
+
+    Example Usage:
+        ```lua
+        lia.flag.add("p", "@flagPhysgun", function(client, isGiven)
+            if isGiven then
+                client:Give("weapon_physgun")
+            else
+                client:StripWeapon("weapon_physgun")
+            end
+        end)
+        ```
+
+    Realm:
+        Shared
+]]
 function lia.flag.add(flag, desc, callback)
     if lia.flag.list[flag] then return end
     lia.flag.list[flag] = {
@@ -9,6 +53,25 @@ function lia.flag.add(flag, desc, callback)
 end
 
 if SERVER then
+    --[[
+    Purpose:
+        Reapplies registered flag callbacks for every unique flag the player has when spawn handling runs.
+
+    Parameters:
+        client (Player)
+            The player whose current flags should be processed.
+
+    Returns:
+        nil
+
+    Example Usage:
+        ```lua
+        lia.flag.onSpawn(client)
+        ```
+
+    Realm:
+        Server
+]]
     function lia.flag.onSpawn(client)
         local flags = client:getFlags()
         local processed = {}

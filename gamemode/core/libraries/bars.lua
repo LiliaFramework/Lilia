@@ -1,4 +1,52 @@
-﻿lia.bar = lia.bar or {}
+﻿--[[
+    Folder: Developer - Libraries
+    File: lia.bar.md
+]]
+--[[
+    Bar
+
+    HUD bar helpers for registering, retrieving, removing, drawing, and displaying temporary action progress bars.
+]]
+--[[
+    Overview:
+        The bar library centralizes clientside HUD bar behavior under `lia.bar`. It manages registered status bars, smooths value changes over time, controls visibility through options and hooks, draws bar panels, and provides a temporary action progress bar panel for timed clientside actions.
+]]
+--[[
+    Hooks:
+        ShouldHideBars()
+
+    Purpose:
+        Allows plugins or modules to hide all registered HUD bars before they are drawn.
+
+    Parameters:
+        None
+
+    Returns:
+        boolean|nil
+            Return true to stop all HUD bars from drawing. Return nil or false to allow normal drawing checks to continue.
+
+    Realm:
+        Client
+]]
+--[[
+    Hooks:
+        ShouldBarDraw(table bar)
+
+    Purpose:
+        Allows plugins or modules to force a specific registered HUD bar to draw even when it would not otherwise be visible.
+
+    Parameters:
+        bar (table)
+            The registered bar data currently being evaluated for drawing.
+
+    Returns:
+        boolean|nil
+            Return true to draw the bar. Return nil or false to continue normal visibility behavior.
+
+    Realm:
+        Client
+]]
+lia.bar = lia.bar or {}
 lia.bar.delta = lia.bar.delta or {}
 lia.bar.values = lia.bar.values or {}
 lia.bar.list = {}
@@ -9,12 +57,61 @@ local function findIndexByIdentifier(identifier)
     end
 end
 
+--[[
+    Purpose:
+        Gets a registered HUD bar by its identifier.
+
+    Parameters:
+        identifier (string)
+            The unique identifier assigned when the bar was registered.
+
+    Returns:
+        table
+            The registered bar data, or nil if no matching bar exists.
+
+    Example Usage:
+        ```lua
+        local bar = lia.bar.get("health")
+        if bar then print(bar.priority) end
+        ```
+
+    Realm:
+        Client
+]]
 function lia.bar.get(identifier)
     for _, bar in ipairs(lia.bar.list) do
         if bar.identifier == identifier then return bar end
     end
 end
 
+--[[
+    Purpose:
+        Registers a HUD bar and replaces an existing bar when the same identifier is provided.
+
+    Parameters:
+        getValue (function)
+            Function that returns the bar's current normalized value.
+        color (Color)
+            The color used to draw the bar fill. If omitted, a random bright color is used.
+        priority (number)
+            The sort priority used when drawing bars. Lower values draw first. If omitted, the next list position is used.
+        identifier (string)
+            Optional unique identifier used to retrieve, replace, or remove the bar later.
+
+    Returns:
+        number
+            The priority assigned to the registered bar.
+
+    Example Usage:
+        ```lua
+        lia.bar.add(function()
+            return LocalPlayer():Health() / LocalPlayer():GetMaxHealth()
+        end, Color(200, 50, 40), 1, "health")
+        ```
+
+    Realm:
+        Client
+]]
 function lia.bar.add(getValue, color, priority, identifier)
     if identifier then
         local existingIdx = findIndexByIdentifier(identifier)
@@ -34,6 +131,25 @@ function lia.bar.add(getValue, color, priority, identifier)
     return priority
 end
 
+--[[
+    Purpose:
+        Removes a registered HUD bar by its identifier.
+
+    Parameters:
+        identifier (string)
+            The unique identifier of the bar to remove.
+
+    Returns:
+        nil
+
+    Example Usage:
+        ```lua
+        lia.bar.remove("stamina")
+        ```
+
+    Realm:
+        Client
+]]
 function lia.bar.remove(identifier)
     local idx = findIndexByIdentifier(identifier)
     if idx then table.remove(lia.bar.list, idx) end
@@ -43,6 +159,37 @@ local function PaintPanel(x, y, w, h)
     lia.derma.rect(x, y, w, h):Rad(4):Color(Color(0, 0, 0, 150)):Draw()
 end
 
+--[[
+    Purpose:
+        Draws a single HUD bar panel and its filled portion.
+
+    Parameters:
+        x (number)
+            The horizontal screen position.
+        y (number)
+            The vertical screen position.
+        w (number)
+            The bar width.
+        h (number)
+            The bar height.
+        pos (number)
+            The current bar value.
+        max (number)
+            The maximum bar value.
+        color (Color)
+            The color used to draw the filled portion.
+
+    Returns:
+        nil
+
+    Example Usage:
+        ```lua
+        lia.bar.drawBar(4, 4, ScrW() * 0.35, 18, 0.75, 1, Color(200, 50, 40))
+        ```
+
+    Realm:
+        Client
+]]
 function lia.bar.drawBar(x, y, w, h, pos, max, color)
     pos = math.min(pos, max)
     local usable = math.max(w - 6, 0)
@@ -51,6 +198,27 @@ function lia.bar.drawBar(x, y, w, h, pos, max, color)
     if fill > 0 then lia.derma.rect(x + 3, y + 3, fill, h - 6):Rad(3):Color(color):Draw() end
 end
 
+--[[
+    Purpose:
+        Displays a temporary action progress bar with text and a countdown duration.
+
+    Parameters:
+        text (string)
+            The text displayed on the action progress bar.
+        duration (number)
+            The duration, in seconds, before the action progress bar is removed.
+
+    Returns:
+        nil
+
+    Example Usage:
+        ```lua
+        lia.bar.drawAction("Searching...", 5)
+        ```
+
+    Realm:
+        Client
+]]
 function lia.bar.drawAction(text, duration)
     if IsValid(lia.gui.actionPanel) then lia.gui.actionPanel:Remove() end
     local startTime, endTime = CurTime(), CurTime() + duration
@@ -81,6 +249,24 @@ function lia.bar.drawAction(text, duration)
     lia.gui.actionPanel:SetMouseInputEnabled(false)
 end
 
+--[[
+    Purpose:
+        Draws every registered HUD bar that should currently be visible.
+
+    Parameters:
+        None
+
+    Returns:
+        nil
+
+    Example Usage:
+        ```lua
+        hook.Add("HUDPaintBackground", "liaBarDraw", lia.bar.drawAll)
+        ```
+
+    Realm:
+        Client
+]]
 function lia.bar.drawAll()
     if hook.Run("ShouldHideBars") then return end
     table.sort(lia.bar.list, function(a, b)
