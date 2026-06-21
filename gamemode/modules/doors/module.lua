@@ -1,4 +1,4 @@
---[[
+﻿--[[
     Hooks:
         CanPlayerLock(client, door)
 

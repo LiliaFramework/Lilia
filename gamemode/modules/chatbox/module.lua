@@ -1,4 +1,4 @@
---[[
+﻿--[[
     Hooks:
         CanManageFilteredWords(client)
 

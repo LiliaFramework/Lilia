@@ -1,4 +1,4 @@
---[[
+﻿--[[
     Hooks:
         OnTicketClaimed(client, requester, ticketMessage)
 

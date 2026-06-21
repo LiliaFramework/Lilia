@@ -227,6 +227,7 @@ local function buildFilteredWordsAdminPanel(panel)
             menu:AddOption(L("chatFilterRemoveWord"), function() removeFilteredWord(word) end):SetIcon("icon16/delete.png")
             menu:Open()
         end
+
         card.copyButton = copyButton
         local remove = card:Add("liaButton")
         remove:Dock(RIGHT)
