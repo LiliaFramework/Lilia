@@ -1928,18 +1928,23 @@ GUIDE_TITLES = {
 GENERATOR_SUMMARIES = {
     'attribute.md': 'Code templates and examples for creating character attributes.',
     'class.md': 'Code templates and examples for creating character classes.',
+    'dialog.md': 'Launches the visual editor for building dialog NPC trees and conversation flows.',
     'faction.md': 'Code templates and examples for creating factions.',
     'items/aid.md': 'Templates for creating medical aid and healing items.',
     'items/ammo.md': 'Templates for creating ammunition and magazine items.',
     'items/books.md': 'Templates for creating readable books and documents.',
+    'items/entities.md': 'Templates for creating placeable entity and deployable items.',
     'items/grenade.md': 'Templates for creating explosive and grenade items.',
     'items/outfit.md': 'Templates for creating clothing and appearance items.',
+    'items/pacoutfit.md': 'Templates for creating wearable PAC3 outfit items.',
     'items/bags.md': 'Templates for creating storage bag items that open their own inventory.',
+    'items/url.md': 'Templates for creating items that open external links and web resources.',
     'items/stackable.md': 'Templates for creating items that can stack in inventory.',
     'items/weapons.md': 'Templates for creating weapons and firearms.',
  # Full paths for comprehensive index
     'generators/attribute.md': 'Code templates and examples for creating character attributes.',
     'generators/class.md': 'Code templates and examples for creating character classes.',
+    'generators/dialog.md': 'Launches the visual editor for building dialog NPC trees and conversation flows.',
     'generators/faction.md': 'Code templates and examples for creating factions.',
     'generators/items/aid.md': 'Templates for creating medical aid and healing items.',
     'generators/items/ammo.md': 'Templates for creating ammunition and magazine items.',
@@ -1957,6 +1962,7 @@ GENERATOR_SUMMARIES = {
 GENERATOR_TITLES = {
     'attribute.md': 'Attribute Generator',
     'class.md': 'Class Generator',
+    'dialog.md': 'Dialog NPC Generator',
     'faction.md': 'Faction Generator',
     'items/aid.md': 'Aid Item Generator',
     'items/ammo.md': 'Ammo Item Generator',
@@ -2132,7 +2138,7 @@ details > summary .source-link-button--summary {
                 elif doc_type == 'about':
                     summary = get_custom_summary('About', md_file, output_dir.parent.parent)
                 elif doc_type == 'generators':
-                    summary = get_custom_summary('Generators', md_file, output_dir.parent.parent)
+                    summary = get_custom_summary('Generators', md_file, output_dir.parent)
                 else:
                     _, summary = extract_title_and_summary(md_file)
                 
@@ -2148,7 +2154,7 @@ details > summary .source-link-button--summary {
             for md_file in subdir_files:
                 if doc_type == 'generators':
                      file_title = get_custom_title('Generators', md_file)
-                     summary = get_custom_summary('Generators', md_file, output_dir.parent.parent)
+                     summary = get_custom_summary('Generators', md_file, output_dir.parent)
                 else:
                      file_title, _ = extract_title_and_summary(md_file)
                      _, summary = extract_title_and_summary(md_file)
