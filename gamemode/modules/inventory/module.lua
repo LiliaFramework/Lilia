@@ -1,4 +1,4 @@
---[[
+﻿--[[
     Hooks:
         InventoryClosed(panel, inventory)
 

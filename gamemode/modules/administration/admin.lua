@@ -1,4 +1,4 @@
---[[
+﻿--[[
     Folder: Developer - Libraries
     File: admin.lua
 ]]

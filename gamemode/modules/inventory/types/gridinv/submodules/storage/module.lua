@@ -1,4 +1,4 @@
---[[
+﻿--[[
     Hooks:
         CanPlayerSpawnStorage(client, entity, info)
 

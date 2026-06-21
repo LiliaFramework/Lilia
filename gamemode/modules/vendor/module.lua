@@ -1,4 +1,4 @@
---[[
+﻿--[[
     Hooks:
         CanPlayerAccessVendor(client, vendor)
 

@@ -1406,6 +1406,7 @@ net.Receive("liaRequestNPCSelection", function(_, client)
                 uniqueID = lia.dialog.ensureGeneratedDialogType and select(1, lia.dialog.ensureGeneratedDialogType(npcEntity, nil, npcEntity.NPCName)) or nil
                 if not uniqueID then return end
             end
+
             npcEntity.uniqueID = uniqueID
             setupNPCType(client, npcEntity)
         end
