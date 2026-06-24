@@ -120,7 +120,7 @@ local FilesToLoad = {
         realm = "shared"
     },
     {
-        path = "lilia/gamemode/modules/administration/admin.lua",
+        path = "lilia/gamemode/core/libraries/admin.lua",
         realm = "shared"
     },
     {
@@ -168,7 +168,7 @@ local FilesToLoad = {
         realm = "server"
     },
     {
-        path = "lilia/gamemode/modules/administration/submodules/logs/logger.lua",
+        path = "lilia/gamemode/core/libraries/logger.lua",
         realm = "server"
     },
     {
@@ -176,7 +176,7 @@ local FilesToLoad = {
         realm = "shared"
     },
     {
-        path = "lilia/gamemode/modules/chatbox/chatbox.lua",
+        path = "lilia/gamemode/core/libraries/chatbox.lua",
         realm = "shared"
     },
     {
@@ -188,7 +188,7 @@ local FilesToLoad = {
         realm = "shared"
     },
     {
-        path = "lilia/gamemode/modules/inventory/inventory.lua",
+        path = "lilia/gamemode/core/libraries/inventory.lua",
         realm = "shared"
     },
     {
@@ -212,15 +212,15 @@ local FilesToLoad = {
         realm = "client"
     },
     {
-        path = "lilia/gamemode/modules/attributes/attributes.lua",
+        path = "lilia/gamemode/core/libraries/attributes.lua",
         realm = "shared"
     },
     {
-        path = "lilia/gamemode/modules/teams/factions.lua",
+        path = "lilia/gamemode/core/libraries/factions.lua",
         realm = "shared"
     },
     {
-        path = "lilia/gamemode/modules/teams/classes.lua",
+        path = "lilia/gamemode/core/libraries/classes.lua",
         realm = "shared"
     },
     {
@@ -232,11 +232,11 @@ local FilesToLoad = {
         realm = "shared"
     },
     {
-        path = "lilia/gamemode/modules/vendor/vendor.lua",
+        path = "lilia/gamemode/core/libraries/vendor.lua",
         realm = "shared"
     },
     {
-        path = "lilia/gamemode/modules/doors/doors.lua",
+        path = "lilia/gamemode/core/libraries/doors.lua",
         realm = "shared"
     },
     {
