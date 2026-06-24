@@ -4,8 +4,8 @@
     type = "string"
 })
 
-local NotificationHeight = 54
-local NotificationPadding = 18
+local NotificationHeight = 42
+local NotificationPadding = 12
 local NotificationLifetime = 6
 local NotificationFadeoutTime = 1
 local function GetNotifIcon(notifType)
@@ -82,10 +82,10 @@ function PANEL:RecalcSize()
     end
 
     if maxWidth == 0 or lineHeight == 0 then maxWidth, lineHeight = surface.GetTextSize(" ") end
-    local minWidth = 300 * self.scale
-    local extraSpacing = 40 * self.scale
-    local iconWidth = 24 * self.scale
-    local textPadding = math.min(60 * self.scale, maxWidth * 0.1)
+    local minWidth = 240 * self.scale
+    local extraSpacing = 18 * self.scale
+    local iconWidth = 12 * self.scale
+    local textPadding = math.min(24 * self.scale, maxWidth * 0.06)
     local requiredWidth = maxWidth + (NotificationPadding * 2) + iconWidth + extraSpacing + textPadding
     local w = math.max(requiredWidth, minWidth)
     local lineSpacing = 2 * self.scale
@@ -94,7 +94,7 @@ function PANEL:RecalcSize()
     self:SetSize(w, h)
     self.iconSize = iconWidth
     self.padding = NotificationPadding * self.scale
-    self.baseX = 32 * self.scale
+    self.baseX = 20 * self.scale
     self.lineHeight = lineHeight
     self.lines = lines
     self.lineSpacing = lineSpacing
@@ -146,9 +146,9 @@ function PANEL:Paint(w, h)
     local icon = self._cachedIcon
     local alpha = self.alpha / 255
     local bgColor = Color(25, 28, 35, math.floor(220 * alpha))
-    lia.derma.rect(0, 0, w, h):Rad(12):Color(bgColor):Shape(lia.derma.SHAPE_IOS):Draw()
-    lia.derma.rect(0, 0, 6, h):Radii(12, 0, 12, 0):Color(Color(typeColor.r, typeColor.g, typeColor.b, math.floor(255 * alpha))):Draw()
-    lia.derma.rect(6, 0, w - 6, h):Radii(0, 12, 0, 12):Color(Color(typeColor.r, typeColor.g, typeColor.b, math.floor(30 * alpha))):Draw()
+    lia.derma.rect(0, 0, w, h):Rad(10):Color(bgColor):Shape(lia.derma.SHAPE_IOS):Draw()
+    lia.derma.rect(0, 0, 5, h):Radii(10, 0, 10, 0):Color(Color(typeColor.r, typeColor.g, typeColor.b, math.floor(255 * alpha))):Draw()
+    lia.derma.rect(5, 0, w - 5, h):Radii(0, 10, 0, 10):Color(Color(typeColor.r, typeColor.g, typeColor.b, math.floor(30 * alpha))):Draw()
     if icon then
         surface.SetMaterial(icon)
         surface.SetDrawColor(255, 255, 255, self.alpha)

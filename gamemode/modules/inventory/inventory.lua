@@ -192,6 +192,16 @@ if SERVER then
     local DATA_FIELDS = {"key", "value"}
     local DATA_TABLE = "invdata"
     local ITEMS_TABLE = "items"
+    local function inventoryDevLog(...)
+        if not lia.devmode then return end
+        local parts = {...}
+        for i = 1, #parts do
+            parts[i] = tostring(parts[i])
+        end
+
+        MsgC(Color(83, 143, 239), "[Lilia] ", Color(255, 200, 0), "[DevMode] ", Color(255, 255, 255), table.concat(parts, " "), "\n")
+    end
+
     --[[
         Purpose:
             Loads an inventory by its persistent ID, using the cached instance unless `noCache` is enabled.
@@ -263,6 +273,7 @@ if SERVER then
             Server
     ]]
     function lia.inventory.loadFromDefaultStorage(id, noCache)
+        local started = SysTime()
         return deferred.all({lia.db.select(INV_FIELDS, INV_TABLE, "invID = " .. id, 1), lia.db.select(DATA_FIELDS, DATA_TABLE, "invID = " .. id)}):next(function(res)
             if lia.inventory.instances[id] and not noCache then return lia.inventory.instances[id] end
             local results = res[1].results and res[1].results[1] or nil
@@ -285,7 +296,10 @@ if SERVER then
             instance.data.char = tonumber(results.charID) or instance.data.char
             lia.inventory.instances[id] = instance
             instance:onLoaded()
-            return instance:loadItems():next(function() return instance end)
+            return instance:loadItems():next(function()
+                if lia.devmode then inventoryDevLog(string.format("Loaded inventory %s for char %s in %.3fs", tostring(id), tostring(instance.data.char or "nil"), SysTime() - started)) end
+                return instance
+            end)
         end, function(err)
             lia.information(L("failedLoadInventory", tostring(id)))
             lia.information(err)
@@ -369,12 +383,20 @@ if SERVER then
     ]]
     function lia.inventory.loadAllFromCharID(charID)
         local originalCharID = charID
+        local started = SysTime()
         charID = tonumber(charID)
         if not charID then
             lia.error(L("charIDMustBeNumber") .. " (received: " .. tostring(originalCharID) .. ", type: " .. type(originalCharID) .. ")")
             return deferred.reject(L("charIDMustBeNumber"))
         end
-        return lia.db.select({"invID"}, INV_TABLE, "charID = " .. charID):next(function(res) return deferred.map(res.results or {}, function(result) return lia.inventory.loadByID(tonumber(result.invID)) end) end)
+        return lia.db.select({"invID"}, INV_TABLE, "charID = " .. charID):next(function(res)
+            local rows = res.results or {}
+            if lia.devmode then inventoryDevLog("Loading", tostring(#rows), "inventories for char", tostring(charID)) end
+            return deferred.map(rows, function(result) return lia.inventory.loadByID(tonumber(result.invID)) end)
+        end):next(function(inventories)
+            if lia.devmode then inventoryDevLog(string.format("Finished loading inventories for char %s in %.3fs", tostring(charID), SysTime() - started)) end
+            return inventories
+        end)
     end
 
     --[[

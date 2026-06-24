@@ -1663,38 +1663,42 @@ else
             end
         end
 
-        local dialogTypeLabel = vgui.Create("DLabel", scroll)
-        dialogTypeLabel:Dock(TOP)
-        dialogTypeLabel:SetText(L("dialogTypeLabel"))
-        dialogTypeLabel:SetTall(20)
-        dialogTypeLabel:DockMargin(0, 15, 0, 5)
+        local canConfigureDialogType = lia.dialog.isDialogNPCEntity(npc)
         local currentType = npc:getNetVar("uniqueID", npc.uniqueID) or "none"
-        local currentUsesGeneratedDialog = lia.dialog.entityUsesGeneratedDialog(npc)
+        local currentUsesGeneratedDialog = canConfigureDialogType and lia.dialog.entityUsesGeneratedDialog(npc) or false
         local selectedDialogType = currentUsesGeneratedDialog and lia.dialog.generatedDialogSelectionID or currentType
-        local dialogTypeCombo = vgui.Create("liaComboBox", scroll)
-        dialogTypeCombo:Dock(TOP)
-        dialogTypeCombo:SetTall(30)
-        dialogTypeCombo:DockMargin(0, 0, 0, 10)
-        dialogTypeCombo:AddChoice(L("noneNoDialog"), "none")
-        for _, option in ipairs(lia.dialog.getCompatibleDialogOptions(npc)) do
-            dialogTypeCombo:AddChoice(option[1], option[2])
+        local dialogTypeCombo = nil
+        if canConfigureDialogType then
+            local dialogTypeLabel = vgui.Create("DLabel", scroll)
+            dialogTypeLabel:Dock(TOP)
+            dialogTypeLabel:SetText(L("dialogTypeLabel"))
+            dialogTypeLabel:SetTall(20)
+            dialogTypeLabel:DockMargin(0, 15, 0, 5)
+            dialogTypeCombo = vgui.Create("liaComboBox", scroll)
+            dialogTypeCombo:Dock(TOP)
+            dialogTypeCombo:SetTall(30)
+            dialogTypeCombo:DockMargin(0, 0, 0, 10)
+            dialogTypeCombo:AddChoice(L("noneNoDialog"), "none")
+            for _, option in ipairs(lia.dialog.getCompatibleDialogOptions(npc)) do
+                dialogTypeCombo:AddChoice(option[1], option[2])
+            end
+
+            dialogTypeCombo:ChooseOptionData(selectedDialogType or "none")
+            dialogTypeCombo:FinishAddingOptions()
+            dialogTypeCombo:PostInit()
+            dialogTypeCombo.OnSelect = function(_, _, value) selectedDialogType = value end
+            local customDialogBtn = vgui.Create("liaButton", scroll)
+            customDialogBtn:Dock(TOP)
+            customDialogBtn:SetTall(35)
+            customDialogBtn:SetText("Create / Edit Custom Dialog")
+            customDialogBtn:DockMargin(0, 0, 0, 10)
+            customDialogBtn.DoClick = function()
+                frame:Close()
+                lia.dialog.openNodeEditor(npc)
+            end
         end
 
-        dialogTypeCombo:ChooseOptionData(selectedDialogType or "none")
-        dialogTypeCombo:FinishAddingOptions()
-        dialogTypeCombo:PostInit()
-        dialogTypeCombo.OnSelect = function(_, _, value) selectedDialogType = value end
-        local customDialogBtn = vgui.Create("liaButton", scroll)
-        customDialogBtn:Dock(TOP)
-        customDialogBtn:SetTall(35)
-        customDialogBtn:SetText("Create / Edit Custom Dialog")
-        customDialogBtn:DockMargin(0, 0, 0, 10)
-        customDialogBtn.DoClick = function()
-            frame:Close()
-            lia.dialog.openNodeEditor(npc)
-        end
-
-        local isCarDealerNPC = currentType == "cardealer" or (IsValid(npc) and npc.uniqueID == "cardealer")
+        local isCarDealerNPC = canConfigureDialogType and (currentType == "cardealer" or (IsValid(npc) and npc.uniqueID == "cardealer"))
         if isCarDealerNPC and lia.cardealer and isfunction(lia.cardealer.openCategoryConfigUI) then
             local categoriesBtn = vgui.Create("liaButton", scroll)
             categoriesBtn:Dock(TOP)
@@ -1730,12 +1734,14 @@ else
 
             if hasAnimations and animationCombo then customData.animation = selectedAnimation end
             lia.dialog.submitConfiguration(configID, npc, customData)
-            local resolvedSelectedDialogType = selectedDialogType or dialogTypeCombo:GetValue() or "none"
-            local currentSelectionType = currentUsesGeneratedDialog and lia.dialog.generatedDialogSelectionID or currentType
-            if resolvedSelectedDialogType ~= currentSelectionType then
-                lia.dialog.submitConfiguration("dialog_type", npc, {
-                    dialogType = resolvedSelectedDialogType
-                })
+            if canConfigureDialogType and IsValid(dialogTypeCombo) then
+                local resolvedSelectedDialogType = selectedDialogType or dialogTypeCombo:GetValue() or "none"
+                local currentSelectionType = currentUsesGeneratedDialog and lia.dialog.generatedDialogSelectionID or currentType
+                if resolvedSelectedDialogType ~= currentSelectionType then
+                    lia.dialog.submitConfiguration("dialog_type", npc, {
+                        dialogType = resolvedSelectedDialogType
+                    })
+                end
             end
 
             frame:Close()
