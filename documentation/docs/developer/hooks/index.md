@@ -26,10 +26,6 @@ details > summary .source-link-button--summary {
 Reference pages for documented Lilia hooks.
 
 <div class="card-grid">
-  <a href="./administration.admin/" class="card">
-    <h3>Admin</h3>
-    <p>Shared administration helpers for usergroup management, privilege registration, permission checks, CAMI synchronization, and admin UI support.</p>
-  </a>
   <a href="./administration/" class="card">
     <h3>Administration</h3>
     <p>This page documents the hooks defined by the administration module.</p>

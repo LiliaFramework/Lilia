@@ -35,7 +35,7 @@ The chat library centralizes shared chat class registration, message prefix pars
 ---
 
 <details class="realm-shared" id="function-liachattimestamp">
-<summary><span class="summary-main"><a id="lia.chat.timestamp"></a>lia.chat.timestamp(ooc)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/modules/chatbox/chatbox.lua#L134" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="lia.chat.timestamp"></a>lia.chat.timestamp(ooc)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/chatbox.lua#L134" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="liachattimestamp"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -69,7 +69,7 @@ The chat library centralizes shared chat class registration, message prefix pars
 ---
 
 <details class="realm-shared" id="function-liachatregister">
-<summary><span class="summary-main"><a id="lia.chat.register"></a>lia.chat.register(chatType, data)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/modules/chatbox/chatbox.lua#L164" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="lia.chat.register"></a>lia.chat.register(chatType, data)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/chatbox.lua#L164" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="liachatregister"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -108,7 +108,7 @@ The chat library centralizes shared chat class registration, message prefix pars
 ---
 
 <details class="realm-shared" id="function-liachatparse">
-<summary><span class="summary-main"><a id="lia.chat.parse"></a>lia.chat.parse(client, message, noSend)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/modules/chatbox/chatbox.lua#L273" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="lia.chat.parse"></a>lia.chat.parse(client, message, noSend)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/chatbox.lua#L273" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="liachatparse"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -144,7 +144,7 @@ The chat library centralizes shared chat class registration, message prefix pars
 ---
 
 <details class="realm-server" id="function-liachatsend">
-<summary><span class="summary-main"><a id="lia.chat.send"></a>lia.chat.send(speaker, chatType, text, anonymous, receivers)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/modules/chatbox/chatbox.lua#L345" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="lia.chat.send"></a>lia.chat.send(speaker, chatType, text, anonymous, receivers)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/chatbox.lua#L345" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="liachatsend"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -189,7 +189,7 @@ The chat library centralizes shared chat class registration, message prefix pars
 ---
 
 <details class="realm-shared" id="function-chatparsed">
-<summary><span class="summary-main"><a id="ChatParsed"></a>ChatParsed(client, chatType, message, anonymous)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/modules/chatbox/chatbox.lua#L35" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="ChatParsed"></a>ChatParsed(client, chatType, message, anonymous)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/chatbox.lua#L35" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="chatparsed"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -220,7 +220,7 @@ The chat library centralizes shared chat class registration, message prefix pars
 ---
 
 <details class="realm-client" id="function-getdisplayedname">
-<summary><span class="summary-main"><a id="GetDisplayedName"></a>GetDisplayedName(speaker, chatType)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/modules/chatbox/chatbox.lua#L14" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="GetDisplayedName"></a>GetDisplayedName(speaker, chatType)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/chatbox.lua#L14" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="getdisplayedname"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -249,7 +249,7 @@ The chat library centralizes shared chat class registration, message prefix pars
 ---
 
 <details class="realm-server" id="function-onoocmessagesent">
-<summary><span class="summary-main"><a id="OnOOCMessageSent"></a>OnOOCMessageSent(client, message)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/modules/chatbox/chatbox.lua#L62" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="OnOOCMessageSent"></a>OnOOCMessageSent(client, message)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/chatbox.lua#L62" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="onoocmessagesent"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -278,7 +278,7 @@ The chat library centralizes shared chat class registration, message prefix pars
 ---
 
 <details class="realm-server" id="function-playermessagesend">
-<summary><span class="summary-main"><a id="PlayerMessageSend"></a>PlayerMessageSend(speaker, chatType, message, anonymous, receivers)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/modules/chatbox/chatbox.lua#L82" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="PlayerMessageSend"></a>PlayerMessageSend(speaker, chatType, message, anonymous, receivers)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/chatbox.lua#L82" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="playermessagesend"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
