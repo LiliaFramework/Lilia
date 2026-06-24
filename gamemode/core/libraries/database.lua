@@ -34,6 +34,16 @@
 lia.db = lia.db or {}
 lia.db.queryQueue = lia.db.queue or {}
 lia.db.prepared = lia.db.prepared or {}
+local function devLog(...)
+    if not lia.devmode then return end
+    local parts = {...}
+    for i = 1, #parts do
+        parts[i] = tostring(parts[i])
+    end
+
+    MsgC(Color(83, 143, 239), "[Lilia] ", Color(255, 200, 0), "[DevMode] ", Color(255, 255, 255), table.concat(parts, " "), "\n")
+end
+
 lia.db.modules = {
     ["sqlite"] = {
         query = function(query, callback)
@@ -48,9 +58,17 @@ lia.db.modules = {
                 end
             end
 
+            local started = SysTime()
             local data = sql.Query(query)
+            local duration = SysTime() - started
             local err = sql.LastError()
+            if lia.devmode and duration >= 0.25 then devLog(string.format("SQLite query took %.3fs:", duration), query) end
             if data == false then
+                if lia.devmode then
+                    devLog("SQLite query failed:", query)
+                    devLog("SQLite error:", tostring(err))
+                end
+
                 if string.find(err, "duplicate column name:") or string.find(err, "UNIQUE constraint failed: lia_config") then
                     if d then
                         d:resolve({

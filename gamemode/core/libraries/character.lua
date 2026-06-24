@@ -1249,6 +1249,17 @@ if SERVER then
             Server
     ]]
     function lia.char.restore(client, callback, id)
+        local function charDevLog(...)
+            if not lia.devmode then return end
+            local parts = {...}
+            for i = 1, #parts do
+                parts[i] = tostring(parts[i])
+            end
+
+            MsgC(Color(83, 143, 239), "[Lilia] ", Color(255, 200, 0), "[DevMode] ", Color(255, 255, 255), table.concat(parts, " "), "\n")
+        end
+
+        local restoreStarted = SysTime()
         local steamID = client:SteamID()
         local fields = {"id"}
         for _, var in pairs(lia.char.vars) do
@@ -1260,16 +1271,19 @@ if SERVER then
         local condition = "schema = '" .. lia.db.escape(gamemode) .. "' AND steamID = " .. lia.db.convertDataType(steamID)
         if id then condition = condition .. " AND id = " .. id end
         local query = "SELECT " .. fields .. " FROM lia_characters WHERE " .. condition
+        if lia.devmode then charDevLog("Restoring characters for", steamID, id and ("char " .. tostring(id)) or "(all chars)") end
         lia.db.query(query, function(data)
             local characters = {}
             local results = data or {}
             local done = 0
+            if lia.devmode then charDevLog("Character restore query returned", tostring(#results), "rows for", steamID) end
             if #results == 0 then
                 if callback then callback(characters) end
                 return
             end
 
             for _, v in ipairs(results) do
+                local charStarted = SysTime()
                 local charId = tonumber(v.id)
                 if not charId then
                     lia.error(L("invalidCharacterID", data.name or "nil"))
@@ -1342,7 +1356,9 @@ if SERVER then
                     character.vars.inv = inventories
                     lia.char.loaded[charId] = character
                     done = done + 1
+                    if lia.devmode then charDevLog(string.format("Character %s restored with %s inventories in %.3fs", tostring(charId), tostring(#inventories), SysTime() - charStarted)) end
                     if done == #results and callback then callback(characters) end
+                    if done == #results and lia.devmode then charDevLog(string.format("Finished restoring %s character(s) for %s in %.3fs", tostring(#results), steamID, SysTime() - restoreStarted)) end
                 end)
             end
         end)
