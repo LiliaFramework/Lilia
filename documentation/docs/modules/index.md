@@ -1,51 +1,1231 @@
 # Modules
 
-| Module | Description | Author | Download |
-| :--- | :--- | :--- | :--- |
-| [Advertisements](https://github.com/LiliaFramework/Modules/tree/main/advert) | Implements a paid /advert command for server-wide announcements. Messages are colored, logged, and throttled by a cooldown to curb spam. | Samael | [Download](https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/advert.zip) |
-| [AFK Protection](https://github.com/LiliaFramework/Modules/tree/main/afk) | Comprehensive AFK protection system that automatically detects inactive players, prevents exploitation of AFK players, and integrates with restraint systems. Features configurable AFK detection, admin commands, multi-language support, and protection against various player actions. | Samael | [Download](https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/afk.zip) |
-| [Alcoholism](https://github.com/LiliaFramework/Modules/tree/main/alcoholism) | Adds drinkable alcohol that increases a player&#x27;s intoxication level. High BAC blurs vision and slows movement until the effect wears off. | Samael | [Download](https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/alcoholism.zip) |
-| [Anonymous Rumors](https://github.com/LiliaFramework/Modules/tree/main/rumour) | Adds an anonymous rumour chat command, hiding of the sender&#x27;s identity, encouragement for roleplay intrigue, a cooldown to prevent spam, and admin logging of rumour messages. | Samael | [Download](https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/rumour.zip) |
-| [Auto Restarter](https://github.com/LiliaFramework/Modules/tree/main/autorestarter) | Schedules automatic server restarts at set intervals. Players see a countdown so they can prepare before the map changes. | Samael | [Download](https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/autorestarter.zip) |
-| [Broadcasts](https://github.com/LiliaFramework/Modules/tree/main/broadcasts) | Allows staff to broadcast messages to chosen factions or classes. Every broadcast is logged and controlled through CAMI privileges. | Samael | [Download](https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/broadcasts.zip) |
-| [Captions](https://github.com/LiliaFramework/Modules/tree/main/captions) | Offers an API for timed on-screen captions suited for tutorials or story events. Captions can be triggered from the server or client and last for a chosen duration. | Samael | [Download](https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/captions.zip) |
-| [Cards](https://github.com/LiliaFramework/Modules/tree/main/cards) | Adds a full deck of playing cards that can be shuffled and drawn. Card draws sync to all players for simple in-game minigames. | Samael | [Download](https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/cards.zip) |
-| [Chat Messages](https://github.com/LiliaFramework/Modules/tree/main/chatmessages) | Periodically posts automated advert messages in chat on a timer. Keeps players informed with rotating tips even when staff are offline. | Samael | [Download](https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/chatmessages.zip) |
-| [Cinematic Text](https://github.com/LiliaFramework/Modules/tree/main/cinematictext) | Adds displays of cinematic splash text overlays, screen darkening with letterbox bars, support for scripted scenes, timed fades for dramatic effect, and customizable text fonts. | Samael | [Download](https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/cinematictext.zip) |
-| [Climbing](https://github.com/LiliaFramework/Modules/tree/main/climb) | Adds the ability to climb ledges using movement keys, custom climbing animations, and hooks for climb attempts. | Samael | [Download](https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/climb.zip) |
-| [Code Utilities](https://github.com/LiliaFramework/Modules/tree/main/utilities) | Adds extra helper functions in lia.util, simplified utilities for common scripting tasks, a central library used by other modules, utilities for networking data, and shared constants for modules. | Samael | [Download](https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/utilities.zip) |
-| [Community Commands](https://github.com/LiliaFramework/Modules/tree/main/communitycommands) | Adds chat commands to open community links, easy sharing of workshop and docs, configurable commands via settings, localization for command names, and the ability to add custom URLs. | Samael | [Download](https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/communitycommands.zip) |
-| [Cursor](https://github.com/LiliaFramework/Modules/tree/main/cursor) | Adds a toggleable custom cursor for the UI, a purely client-side implementation, improved menu navigation, a hotkey to quickly show or hide the cursor, and compatibility with other menu modules. | Samael | [Download](https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/cursor.zip) |
-| [Cutscenes](https://github.com/LiliaFramework/Modules/tree/main/cutscenes) | Adds a framework for simple cutscene playback, scenes defined through tables, syncing of camera movement across clients, commands to trigger cutscenes, and the ability for players to skip. | Samael | [Download](https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/cutscenes.zip) |
-| [Damage Numbers](https://github.com/LiliaFramework/Modules/tree/main/damagenumbers) | Adds floating combat text when hitting targets, different colors for damage types, display of damage dealt and received, scaling text based on damage amount, and client option to disable numbers. | Samael | [Download](https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/damagenumbers.zip) |
-| [Donator](https://github.com/LiliaFramework/Modules/tree/main/donator) | Adds libraries to manage donor perks, tracking for donor ranks and perks, configurable perks by tier, and commands to adjust character slots. | Samael | [Download](https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/donator.zip) |
-| [Door Kick](https://github.com/LiliaFramework/Modules/tree/main/doorkick) | Adds the ability to kick doors open with an animation, logging of door kick events, and a fun breach mechanic with physics force to fling doors open. | Samael | [Download](https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/doorkick.zip) |
-| [Extended Descriptions](https://github.com/LiliaFramework/Modules/tree/main/extendeddescriptions) | Adds support for long item descriptions, localization for multiple languages, better RP text display, automatic line wrapping, and fallback to short descriptions. | Samael | [Download](https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/extendeddescriptions.zip) |
-| [First Person Effects](https://github.com/LiliaFramework/Modules/tree/main/firstpersoneffects) | Adds head bob and view sway, camera motion synced to actions, a realistic first-person feel, and adjustable intensity via config. | Samael | [Download](https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/firstpersoneffects.zip) |
-| [Flashlight](https://github.com/LiliaFramework/Modules/tree/main/flashlight) | Adds a serious flashlight with dynamic light, darkening of surroundings when turned off, adjustable brightness, and keybind toggle support. | Samael | [Download](https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/flashlight.zip) |
-| [Free Look](https://github.com/LiliaFramework/Modules/tree/main/freelook) | Adds the ability to look around without turning the body, a toggle key similar to EFT, movement direction preservation, and adjustable sensitivity while freelooking. | Samael | [Download](https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/freelook.zip) |
-| [Gamemaster Points](https://github.com/LiliaFramework/Modules/tree/main/gamemasterpoints) | Adds teleport points for game masters, quick navigation across large maps, saving of locations for reuse, a command to list saved points, and sharing of points with other staff. | Samael | [Download](https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/gamemasterpoints.zip) |
-| [Hospitals](https://github.com/LiliaFramework/Modules/tree/main/hospitals) | Adds respawning of players at hospitals with support for multiple hospital spawn locations on different maps. | Samael | [Download](https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/hospitals.zip) |
-| [HUD Extras](https://github.com/LiliaFramework/Modules/tree/main/hud_extras) | Adds extra HUD elements like an FPS counter, fonts configurable with FPSHudFont, hooks so other modules can extend, performance stats display, and toggles for individual HUD elements. | Samael | [Download](https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/hud_extras.zip) |
-| [Instakill](https://github.com/LiliaFramework/Modules/tree/main/instakill) | Adds instant kill on headshots, lethality configurable per weapon, extra tension to combat, and integration with damage numbers. | Samael | [Download](https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/instakill.zip) |
-| [Join Leave Messages](https://github.com/LiliaFramework/Modules/tree/main/joinleavemessages) | Adds announcements when players join, notifications on disconnect, improved community awareness, relay of messages to Discord, and per-player toggle to hide messages. | Samael | [Download](https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/joinleavemessages.zip) |
-| [Load Messages](https://github.com/LiliaFramework/Modules/tree/main/loadmessages) | Adds faction-based load messages, execution when players first load a character, customizable message text, color-coded formatting options, and per-faction enable toggles. | Samael | [Download](https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/loadmessages.zip) |
-| [Loyalism](https://github.com/LiliaFramework/Modules/tree/main/loyalism) | Adds a loyalty tier system for players, the /partytier command access, permission control through flags, automatic tier progression, and customizable rewards per tier. | Samael | [Download](https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/loyalism.zip) |
-| [Map Cleaner](https://github.com/LiliaFramework/Modules/tree/main/mapcleaner) | Adds periodic cleaning of map debris, a configurable interval, reduced server lag, a whitelist for protected entities, and manual cleanup commands. | Samael | [Download](https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/mapcleaner.zip) |
-| [Model Pay](https://github.com/LiliaFramework/Modules/tree/main/modelpay) | Adds payment to characters based on model, custom wage definitions, integration into the economy, config to exclude certain models, and logs of wages issued. | Samael | [Download](https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/modelpay.zip) |
-| [Model Tweaker](https://github.com/LiliaFramework/Modules/tree/main/modeltweaker) | Adds an entity to tweak prop models, adjustments for scale and rotation, easy UI controls, saving of tweaked props between restarts, and undo support for recent tweaks. | Samael | [Download](https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/modeltweaker.zip) |
-| [NPC Drop](https://github.com/LiliaFramework/Modules/tree/main/npcdrop) | Adds NPCs that drop items on death, DropTable to define probabilities, encouragement for looting, editable drop tables per NPC type, and weighted chances for rare items. | Samael | [Download](https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/npcdrop.zip) |
-| [NPC Money](https://github.com/LiliaFramework/Modules/tree/main/npcmoney) | Adds NPCs that give money to players on death, MoneyTable to define rewards, editable money amounts per NPC type, and configurable default values. | Samael | [Download](https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/npcmoney.zip) |
-| [NPC Spawner](https://github.com/LiliaFramework/Modules/tree/main/npcspawner) | Adds automatic NPC spawns at points, the ability for admins to force spawns, logging of spawn actions, and configuration for spawn intervals. | Samael | [Download](https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/npcspawner.zip) |
-| [Perma Remove](https://github.com/LiliaFramework/Modules/tree/main/permaremove) | Adds ability to permanently delete map entities, logging for each removed entity, an admin-only command, confirmation prompts before removal, and restore list to undo mistakes. | Boz [Base Code] &amp; Samael [Rewrite] | [Download](https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/permaremove.zip) |
-| [Radio](https://github.com/LiliaFramework/Modules/tree/main/radio) | Adds a radio chat channel for players, font configuration via RadioFont, workshop models for radios, frequency channels for groups, and handheld radio items. | Samael | [Download](https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/radio.zip) |
-| [Raised Weapons](https://github.com/LiliaFramework/Modules/tree/main/raisedweapons) | Adds auto-lowering of weapons when running, a raise delay set by WeaponRaiseSpeed, prevention of accidental fire, a toggle to keep weapons lowered, and compatibility with melee weapons. | Samael | [Download](https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/raisedweapons.zip) |
-| [Realistic View](https://github.com/LiliaFramework/Modules/tree/main/realisticview) | Adds a first-person view that shows the full body, immersive camera transitions, compatibility with animations, smooth leaning animations, and optional third-person override. | Samael | [Download](https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/realisticview.zip) |
-| [Shoot Lock](https://github.com/LiliaFramework/Modules/tree/main/shootlock) | Adds the ability to shoot door locks to open them, a quick breach alternative, a loud action that may alert others, and chance-based lock destruction. | Samael | [Download](https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/shootlock.zip) |
-| [Simple Lockpicking](https://github.com/LiliaFramework/Modules/tree/main/simple_lockpicking) | Adds a simple lockpick tool for doors, logging of successful picks, brute-force style gameplay, configurable pick time, and chance for tools to break. | 76561198312513285 | [Download](https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/simple_lockpicking.zip) |
-| [Slot Machine](https://github.com/LiliaFramework/Modules/tree/main/slots) | Adds a slot machine minigame, a workshop model for the machine, handling of payouts to winners, customizable payout odds, and sound and animation effects. | Samael | [Download](https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/slots.zip) |
-| [Slow Weapons](https://github.com/LiliaFramework/Modules/tree/main/slowweapons) | Adds slower movement while holding heavy weapons, speed penalties defined per weapon, encouragement for strategic choices, customizable weapon speed table, and automatic speed restore when switching. | Samael | [Download](https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/slowweapons.zip) |
-| [Steam Group Rewards](https://github.com/LiliaFramework/Modules/tree/main/steamgrouprewards) | Provides Steam group membership rewards system that automatically checks group membership and gives money rewards to players who join your Steam group. | Samael | [Download](https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/steamgrouprewards.zip) |
-| [View Manipulation](https://github.com/LiliaFramework/Modules/tree/main/vmanip) | Adds VManip animation support, hand gestures for items, functionality within Lilia, API for custom gesture triggers, and fallback animations when VManip is missing. | Samael | [Download](https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/vmanip.zip) |
-| [War Table](https://github.com/LiliaFramework/Modules/tree/main/wartable) | Adds an interactive 3D war table, the ability to plan operations on a map, a workshop model, marker placement for strategies, and support for multiple map layouts. | Samael | [Download](https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/wartable.zip) |
-| [Word Filter](https://github.com/LiliaFramework/Modules/tree/main/wordfilter) | Adds chat word filtering, blocking of banned phrases, an easy-to-extend list, and admin commands to modify the list. | Samael | [Download](https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/wordfilter.zip) |
+Comprehensive collection of official and community-built modules for the Lilia framework.
+
+---
+
+<h3 style="margin-bottom: 5px; font-weight: 700;">Overview</h3>
+<div style="margin-left: 20px; margin-bottom: 20px;">
+  <p>Modules are self-contained extensions that add new features or modify existing behavior in the Lilia framework. They allow for easy organization and distribution of custom code without modifying core gamemode files.</p>
+  <p>For server owners and developers looking to add custom functionality, modules should be placed in the following directory relative to your server installation:</p>
+  <code style="display: block; padding: 12px; background: rgba(0, 0, 0, 0.05); border-left: 4px solid #46a9ff; margin-top: 10px; font-family: 'JetBrains Mono', monospace;">garrysmod/gamemodes/[schema folder]/modules/[module folder]</code>
+</div>
+
+---
+
+<details class="realm-shared no-icon" id="module-advertisements">
+<summary><a id="Advertisements"></a>Advertisements</summary>
+<div class="details-content">
+<a id="advertisements"></a>
+<h3 style="margin-bottom: 5px; font-weight: 700;"><a id="advertisements"></a>Description</h3>
+<div style="margin-left: 20px; margin-bottom: 20px;">
+  <p>Lets players pay to send a server-wide advert.</p>
+</div>
+
+<h3 style="margin-bottom: 5px; font-weight: 700;">Changelog</h3>
+<div style="margin-left: 20px;">
+  <details class="realm-shared no-icon" id="changelog-advertisements-1-0">
+    <summary>Version 1.0</summary>
+    <div class="details-content" style="margin-left: 20px;">
+      <ul>
+        <li>Initial Release</li>
+      </ul>
+    </div>
+  </details>
+</div>
+
+<div style="display: flex; justify-content: center; margin-top: 20px;">
+  <a href="https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/advert.zip" style="display: inline-block; padding: 12px 24px; background-color: #007bff; color: white; text-decoration: none; border-radius: 6px; font-weight: bold; transition: background-color 0.2s;">
+    Download
+  </a>
+</div>
+</div>
+</details>
+
+---
+
+<details class="realm-shared no-icon" id="module-afk-protection">
+<summary><a id="AFK Protection"></a>AFK Protection</summary>
+<div class="details-content">
+<a id="afk-protection"></a>
+<h3 style="margin-bottom: 5px; font-weight: 700;"><a id="afk-protection"></a>Description</h3>
+<div style="margin-left: 20px; margin-bottom: 20px;">
+  <p>Marks inactive players as AFK and helps protect them.</p>
+</div>
+
+<h3 style="margin-bottom: 5px; font-weight: 700;">Changelog</h3>
+<div style="margin-left: 20px;">
+  <details class="realm-shared no-icon" id="changelog-afk-protection-1-0">
+    <summary>Version 1.0</summary>
+    <div class="details-content" style="margin-left: 20px;">
+      <ul>
+        <li>Initial Release</li>
+      </ul>
+    </div>
+  </details>
+</div>
+
+<div style="display: flex; justify-content: center; margin-top: 20px;">
+  <a href="https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/afk.zip" style="display: inline-block; padding: 12px 24px; background-color: #007bff; color: white; text-decoration: none; border-radius: 6px; font-weight: bold; transition: background-color 0.2s;">
+    Download
+  </a>
+</div>
+</div>
+</details>
+
+---
+
+<details class="realm-shared no-icon" id="module-alcoholism">
+<summary><a id="Alcoholism"></a>Alcoholism</summary>
+<div class="details-content">
+<a id="alcoholism"></a>
+<h3 style="margin-bottom: 5px; font-weight: 700;"><a id="alcoholism"></a>Description</h3>
+<div style="margin-left: 20px; margin-bottom: 20px;">
+  <p>Lets players drink alcohol and get drunk over time.</p>
+</div>
+
+<h3 style="margin-bottom: 5px; font-weight: 700;">Changelog</h3>
+<div style="margin-left: 20px;">
+  <details class="realm-shared no-icon" id="changelog-alcoholism-1-0">
+    <summary>Version 1.0</summary>
+    <div class="details-content" style="margin-left: 20px;">
+      <ul>
+        <li>Initial Release</li>
+      </ul>
+    </div>
+  </details>
+</div>
+
+<div style="display: flex; justify-content: center; margin-top: 20px;">
+  <a href="https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/alcoholism.zip" style="display: inline-block; padding: 12px 24px; background-color: #007bff; color: white; text-decoration: none; border-radius: 6px; font-weight: bold; transition: background-color 0.2s;">
+    Download
+  </a>
+</div>
+</div>
+</details>
+
+---
+
+<details class="realm-shared no-icon" id="module-animations">
+<summary><a id="Animations"></a>Animations</summary>
+<div class="details-content">
+<a id="animations"></a>
+<h3 style="margin-bottom: 5px; font-weight: 700;"><a id="animations"></a>Description</h3>
+<div style="margin-left: 20px; margin-bottom: 20px;">
+  <p>Adds extra animation support for characters and items.</p>
+</div>
+
+<div style="display: flex; justify-content: center; margin-top: 20px;">
+  <a href="https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/animations.zip" style="display: inline-block; padding: 12px 24px; background-color: #007bff; color: white; text-decoration: none; border-radius: 6px; font-weight: bold; transition: background-color 0.2s;">
+    Download
+  </a>
+</div>
+</div>
+</details>
+
+---
+
+<details class="realm-shared no-icon" id="module-anonymous-rumors">
+<summary><a id="Anonymous Rumors"></a>Anonymous Rumors</summary>
+<div class="details-content">
+<a id="anonymous-rumors"></a>
+<h3 style="margin-bottom: 5px; font-weight: 700;"><a id="anonymous-rumors"></a>Description</h3>
+<div style="margin-left: 20px; margin-bottom: 20px;">
+  <p>Lets players send anonymous rumours.</p>
+</div>
+
+<h3 style="margin-bottom: 5px; font-weight: 700;">Changelog</h3>
+<div style="margin-left: 20px;">
+  <details class="realm-shared no-icon" id="changelog-anonymous-rumors-1-0">
+    <summary>Version 1.0</summary>
+    <div class="details-content" style="margin-left: 20px;">
+      <ul>
+        <li>Initial Release</li>
+      </ul>
+    </div>
+  </details>
+</div>
+
+<div style="display: flex; justify-content: center; margin-top: 20px;">
+  <a href="https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/rumour.zip" style="display: inline-block; padding: 12px 24px; background-color: #007bff; color: white; text-decoration: none; border-radius: 6px; font-weight: bold; transition: background-color 0.2s;">
+    Download
+  </a>
+</div>
+</div>
+</details>
+
+---
+
+<details class="realm-shared no-icon" id="module-auto-restarter">
+<summary><a id="Auto Restarter"></a>Auto Restarter</summary>
+<div class="details-content">
+<a id="auto-restarter"></a>
+<h3 style="margin-bottom: 5px; font-weight: 700;"><a id="auto-restarter"></a>Description</h3>
+<div style="margin-left: 20px; margin-bottom: 20px;">
+  <p>Restarts the server on a timer with a warning countdown.</p>
+</div>
+
+<h3 style="margin-bottom: 5px; font-weight: 700;">Changelog</h3>
+<div style="margin-left: 20px;">
+  <details class="realm-shared no-icon" id="changelog-auto-restarter-1-0">
+    <summary>Version 1.0</summary>
+    <div class="details-content" style="margin-left: 20px;">
+      <ul>
+        <li>Initial Release</li>
+      </ul>
+    </div>
+  </details>
+</div>
+
+<div style="display: flex; justify-content: center; margin-top: 20px;">
+  <a href="https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/autorestarter.zip" style="display: inline-block; padding: 12px 24px; background-color: #007bff; color: white; text-decoration: none; border-radius: 6px; font-weight: bold; transition: background-color 0.2s;">
+    Download
+  </a>
+</div>
+</div>
+</details>
+
+---
+
+<details class="realm-shared no-icon" id="module-broadcasts">
+<summary><a id="Broadcasts"></a>Broadcasts</summary>
+<div class="details-content">
+<a id="broadcasts"></a>
+<h3 style="margin-bottom: 5px; font-weight: 700;"><a id="broadcasts"></a>Description</h3>
+<div style="margin-left: 20px; margin-bottom: 20px;">
+  <p>Lets staff send messages to specific factions or classes.</p>
+</div>
+
+<h3 style="margin-bottom: 5px; font-weight: 700;">Changelog</h3>
+<div style="margin-left: 20px;">
+  <details class="realm-shared no-icon" id="changelog-broadcasts-1-0">
+    <summary>Version 1.0</summary>
+    <div class="details-content" style="margin-left: 20px;">
+      <ul>
+        <li>Initial Release</li>
+      </ul>
+    </div>
+  </details>
+</div>
+
+<div style="display: flex; justify-content: center; margin-top: 20px;">
+  <a href="https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/broadcasts.zip" style="display: inline-block; padding: 12px 24px; background-color: #007bff; color: white; text-decoration: none; border-radius: 6px; font-weight: bold; transition: background-color 0.2s;">
+    Download
+  </a>
+</div>
+</div>
+</details>
+
+---
+
+<details class="realm-shared no-icon" id="module-captions">
+<summary><a id="Captions"></a>Captions</summary>
+<div class="details-content">
+<a id="captions"></a>
+<h3 style="margin-bottom: 5px; font-weight: 700;"><a id="captions"></a>Description</h3>
+<div style="margin-left: 20px; margin-bottom: 20px;">
+  <p>Shows timed captions on screen for events and scenes.</p>
+</div>
+
+<h3 style="margin-bottom: 5px; font-weight: 700;">Changelog</h3>
+<div style="margin-left: 20px;">
+  <details class="realm-shared no-icon" id="changelog-captions-1-0">
+    <summary>Version 1.0</summary>
+    <div class="details-content" style="margin-left: 20px;">
+      <ul>
+        <li>Initial Release</li>
+      </ul>
+    </div>
+  </details>
+</div>
+
+<div style="display: flex; justify-content: center; margin-top: 20px;">
+  <a href="https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/captions.zip" style="display: inline-block; padding: 12px 24px; background-color: #007bff; color: white; text-decoration: none; border-radius: 6px; font-weight: bold; transition: background-color 0.2s;">
+    Download
+  </a>
+</div>
+</div>
+</details>
+
+---
+
+<details class="realm-shared no-icon" id="module-cards">
+<summary><a id="Cards"></a>Cards</summary>
+<div class="details-content">
+<a id="cards"></a>
+<h3 style="margin-bottom: 5px; font-weight: 700;"><a id="cards"></a>Description</h3>
+<div style="margin-left: 20px; margin-bottom: 20px;">
+  <p>Adds a simple deck of cards players can draw from.</p>
+</div>
+
+<h3 style="margin-bottom: 5px; font-weight: 700;">Changelog</h3>
+<div style="margin-left: 20px;">
+  <details class="realm-shared no-icon" id="changelog-cards-1-0">
+    <summary>Version 1.0</summary>
+    <div class="details-content" style="margin-left: 20px;">
+      <ul>
+        <li>Initial Release</li>
+      </ul>
+    </div>
+  </details>
+</div>
+
+<div style="display: flex; justify-content: center; margin-top: 20px;">
+  <a href="https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/cards.zip" style="display: inline-block; padding: 12px 24px; background-color: #007bff; color: white; text-decoration: none; border-radius: 6px; font-weight: bold; transition: background-color 0.2s;">
+    Download
+  </a>
+</div>
+</div>
+</details>
+
+---
+
+<details class="realm-shared no-icon" id="module-chat-messages">
+<summary><a id="Chat Messages"></a>Chat Messages</summary>
+<div class="details-content">
+<a id="chat-messages"></a>
+<h3 style="margin-bottom: 5px; font-weight: 700;"><a id="chat-messages"></a>Description</h3>
+<div style="margin-left: 20px; margin-bottom: 20px;">
+  <p>Posts automatic chat messages on a timer.</p>
+</div>
+
+<h3 style="margin-bottom: 5px; font-weight: 700;">Changelog</h3>
+<div style="margin-left: 20px;">
+  <details class="realm-shared no-icon" id="changelog-chat-messages-1-0">
+    <summary>Version 1.0</summary>
+    <div class="details-content" style="margin-left: 20px;">
+      <ul>
+        <li>Initial Release</li>
+      </ul>
+    </div>
+  </details>
+</div>
+
+<div style="display: flex; justify-content: center; margin-top: 20px;">
+  <a href="https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/chatmessages.zip" style="display: inline-block; padding: 12px 24px; background-color: #007bff; color: white; text-decoration: none; border-radius: 6px; font-weight: bold; transition: background-color 0.2s;">
+    Download
+  </a>
+</div>
+</div>
+</details>
+
+---
+
+<details class="realm-shared no-icon" id="module-cinematic-text">
+<summary><a id="Cinematic Text"></a>Cinematic Text</summary>
+<div class="details-content">
+<a id="cinematic-text"></a>
+<h3 style="margin-bottom: 5px; font-weight: 700;"><a id="cinematic-text"></a>Description</h3>
+<div style="margin-left: 20px; margin-bottom: 20px;">
+  <p>Shows large cinematic text on screen for dramatic moments.</p>
+</div>
+
+<h3 style="margin-bottom: 5px; font-weight: 700;">Changelog</h3>
+<div style="margin-left: 20px;">
+  <details class="realm-shared no-icon" id="changelog-cinematic-text-1-0">
+    <summary>Version 1.0</summary>
+    <div class="details-content" style="margin-left: 20px;">
+      <ul>
+        <li>Initial Release</li>
+      </ul>
+    </div>
+  </details>
+</div>
+
+<div style="display: flex; justify-content: center; margin-top: 20px;">
+  <a href="https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/cinematictext.zip" style="display: inline-block; padding: 12px 24px; background-color: #007bff; color: white; text-decoration: none; border-radius: 6px; font-weight: bold; transition: background-color 0.2s;">
+    Download
+  </a>
+</div>
+</div>
+</details>
+
+---
+
+<details class="realm-shared no-icon" id="module-climbing">
+<summary><a id="Climbing"></a>Climbing</summary>
+<div class="details-content">
+<a id="climbing"></a>
+<h3 style="margin-bottom: 5px; font-weight: 700;"><a id="climbing"></a>Description</h3>
+<div style="margin-left: 20px; margin-bottom: 20px;">
+  <p>Lets players climb up ledges.</p>
+</div>
+
+<h3 style="margin-bottom: 5px; font-weight: 700;">Changelog</h3>
+<div style="margin-left: 20px;">
+  <details class="realm-shared no-icon" id="changelog-climbing-1-0">
+    <summary>Version 1.0</summary>
+    <div class="details-content" style="margin-left: 20px;">
+      <ul>
+        <li>Initial Release</li>
+      </ul>
+    </div>
+  </details>
+</div>
+
+<div style="display: flex; justify-content: center; margin-top: 20px;">
+  <a href="https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/climb.zip" style="display: inline-block; padding: 12px 24px; background-color: #007bff; color: white; text-decoration: none; border-radius: 6px; font-weight: bold; transition: background-color 0.2s;">
+    Download
+  </a>
+</div>
+</div>
+</details>
+
+---
+
+<details class="realm-shared no-icon" id="module-code-utilities">
+<summary><a id="Code Utilities"></a>Code Utilities</summary>
+<div class="details-content">
+<a id="code-utilities"></a>
+<h3 style="margin-bottom: 5px; font-weight: 700;"><a id="code-utilities"></a>Description</h3>
+<div style="margin-left: 20px; margin-bottom: 20px;">
+  <p>Adds shared utility functions for other modules.</p>
+</div>
+
+<div style="display: flex; justify-content: center; margin-top: 20px;">
+  <a href="https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/utilities.zip" style="display: inline-block; padding: 12px 24px; background-color: #007bff; color: white; text-decoration: none; border-radius: 6px; font-weight: bold; transition: background-color 0.2s;">
+    Download
+  </a>
+</div>
+</div>
+</details>
+
+---
+
+<details class="realm-shared no-icon" id="module-community-commands">
+<summary><a id="Community Commands"></a>Community Commands</summary>
+<div class="details-content">
+<a id="community-commands"></a>
+<h3 style="margin-bottom: 5px; font-weight: 700;"><a id="community-commands"></a>Description</h3>
+<div style="margin-left: 20px; margin-bottom: 20px;">
+  <p>Adds chat commands for community links like Discord or Workshop pages.</p>
+</div>
+
+<h3 style="margin-bottom: 5px; font-weight: 700;">Changelog</h3>
+<div style="margin-left: 20px;">
+  <details class="realm-shared no-icon" id="changelog-community-commands-1-0">
+    <summary>Version 1.0</summary>
+    <div class="details-content" style="margin-left: 20px;">
+      <ul>
+        <li>Initial Release</li>
+      </ul>
+    </div>
+  </details>
+</div>
+
+<div style="display: flex; justify-content: center; margin-top: 20px;">
+  <a href="https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/communitycommands.zip" style="display: inline-block; padding: 12px 24px; background-color: #007bff; color: white; text-decoration: none; border-radius: 6px; font-weight: bold; transition: background-color 0.2s;">
+    Download
+  </a>
+</div>
+</div>
+</details>
+
+---
+
+<details class="realm-shared no-icon" id="module-cursor">
+<summary><a id="Cursor"></a>Cursor</summary>
+<div class="details-content">
+<a id="cursor"></a>
+<h3 style="margin-bottom: 5px; font-weight: 700;"><a id="cursor"></a>Description</h3>
+<div style="margin-left: 20px; margin-bottom: 20px;">
+  <p>Adds a simple tweakable cursor.</p>
+</div>
+
+<h3 style="margin-bottom: 5px; font-weight: 700;">Changelog</h3>
+<div style="margin-left: 20px;">
+  <details class="realm-shared no-icon" id="changelog-cursor-1-0">
+    <summary>Version 1.0</summary>
+    <div class="details-content" style="margin-left: 20px;">
+      <ul>
+        <li>Initial Release</li>
+      </ul>
+    </div>
+  </details>
+</div>
+
+<div style="display: flex; justify-content: center; margin-top: 20px;">
+  <a href="https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/cursor.zip" style="display: inline-block; padding: 12px 24px; background-color: #007bff; color: white; text-decoration: none; border-radius: 6px; font-weight: bold; transition: background-color 0.2s;">
+    Download
+  </a>
+</div>
+</div>
+</details>
+
+---
+
+<details class="realm-shared no-icon" id="module-cutscenes">
+<summary><a id="Cutscenes"></a>Cutscenes</summary>
+<div class="details-content">
+<a id="cutscenes"></a>
+<h3 style="margin-bottom: 5px; font-weight: 700;"><a id="cutscenes"></a>Description</h3>
+<div style="margin-left: 20px; margin-bottom: 20px;">
+  <p>Plays simple cutscenes with synced camera movement.</p>
+</div>
+
+<h3 style="margin-bottom: 5px; font-weight: 700;">Changelog</h3>
+<div style="margin-left: 20px;">
+  <details class="realm-shared no-icon" id="changelog-cutscenes-1-0">
+    <summary>Version 1.0</summary>
+    <div class="details-content" style="margin-left: 20px;">
+      <ul>
+        <li>Initial Release</li>
+      </ul>
+    </div>
+  </details>
+</div>
+
+<div style="display: flex; justify-content: center; margin-top: 20px;">
+  <a href="https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/cutscenes.zip" style="display: inline-block; padding: 12px 24px; background-color: #007bff; color: white; text-decoration: none; border-radius: 6px; font-weight: bold; transition: background-color 0.2s;">
+    Download
+  </a>
+</div>
+</div>
+</details>
+
+---
+
+<details class="realm-shared no-icon" id="module-damage-numbers">
+<summary><a id="Damage Numbers"></a>Damage Numbers</summary>
+<div class="details-content">
+<a id="damage-numbers"></a>
+<h3 style="margin-bottom: 5px; font-weight: 700;"><a id="damage-numbers"></a>Description</h3>
+<div style="margin-left: 20px; margin-bottom: 20px;">
+  <p>Shows floating damage numbers when players or NPCs are hit.</p>
+</div>
+
+<h3 style="margin-bottom: 5px; font-weight: 700;">Changelog</h3>
+<div style="margin-left: 20px;">
+  <details class="realm-shared no-icon" id="changelog-damage-numbers-1-0">
+    <summary>Version 1.0</summary>
+    <div class="details-content" style="margin-left: 20px;">
+      <ul>
+        <li>Initial Release</li>
+      </ul>
+    </div>
+  </details>
+</div>
+
+<div style="display: flex; justify-content: center; margin-top: 20px;">
+  <a href="https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/damagenumbers.zip" style="display: inline-block; padding: 12px 24px; background-color: #007bff; color: white; text-decoration: none; border-radius: 6px; font-weight: bold; transition: background-color 0.2s;">
+    Download
+  </a>
+</div>
+</div>
+</details>
+
+---
+
+<details class="realm-shared no-icon" id="module-donator">
+<summary><a id="Donator"></a>Donator</summary>
+<div class="details-content">
+<a id="donator"></a>
+<h3 style="margin-bottom: 5px; font-weight: 700;"><a id="donator"></a>Description</h3>
+<div style="margin-left: 20px; margin-bottom: 20px;">
+  <p>Manages donor perks and extra character slots.</p>
+</div>
+
+<h3 style="margin-bottom: 5px; font-weight: 700;">Changelog</h3>
+<div style="margin-left: 20px;">
+  <details class="realm-shared no-icon" id="changelog-donator-1-0">
+    <summary>Version 1.0</summary>
+    <div class="details-content" style="margin-left: 20px;">
+      <ul>
+        <li>Initial Release</li>
+      </ul>
+    </div>
+  </details>
+</div>
+
+<div style="display: flex; justify-content: center; margin-top: 20px;">
+  <a href="https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/donator.zip" style="display: inline-block; padding: 12px 24px; background-color: #007bff; color: white; text-decoration: none; border-radius: 6px; font-weight: bold; transition: background-color 0.2s;">
+    Download
+  </a>
+</div>
+</div>
+</details>
+
+---
+
+<details class="realm-shared no-icon" id="module-door-kick">
+<summary><a id="Door Kick"></a>Door Kick</summary>
+<div class="details-content">
+<a id="door-kick"></a>
+<h3 style="margin-bottom: 5px; font-weight: 700;"><a id="door-kick"></a>Description</h3>
+<div style="margin-left: 20px; margin-bottom: 20px;">
+  <p>Lets players kick doors open.</p>
+</div>
+
+<h3 style="margin-bottom: 5px; font-weight: 700;">Changelog</h3>
+<div style="margin-left: 20px;">
+  <details class="realm-shared no-icon" id="changelog-door-kick-1-0">
+    <summary>Version 1.0</summary>
+    <div class="details-content" style="margin-left: 20px;">
+      <ul>
+        <li>Initial Release</li>
+      </ul>
+    </div>
+  </details>
+</div>
+
+<div style="display: flex; justify-content: center; margin-top: 20px;">
+  <a href="https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/doorkick.zip" style="display: inline-block; padding: 12px 24px; background-color: #007bff; color: white; text-decoration: none; border-radius: 6px; font-weight: bold; transition: background-color 0.2s;">
+    Download
+  </a>
+</div>
+</div>
+</details>
+
+---
+
+<details class="realm-shared no-icon" id="module-extended-descriptions">
+<summary><a id="Extended Descriptions"></a>Extended Descriptions</summary>
+<div class="details-content">
+<a id="extended-descriptions"></a>
+<h3 style="margin-bottom: 5px; font-weight: 700;"><a id="extended-descriptions"></a>Description</h3>
+<div style="margin-left: 20px; margin-bottom: 20px;">
+  <p>Lets items have longer and easier to read descriptions.</p>
+</div>
+
+<h3 style="margin-bottom: 5px; font-weight: 700;">Changelog</h3>
+<div style="margin-left: 20px;">
+  <details class="realm-shared no-icon" id="changelog-extended-descriptions-1-0">
+    <summary>Version 1.0</summary>
+    <div class="details-content" style="margin-left: 20px;">
+      <ul>
+        <li>Initial Release</li>
+      </ul>
+    </div>
+  </details>
+</div>
+
+<div style="display: flex; justify-content: center; margin-top: 20px;">
+  <a href="https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/extendeddescriptions.zip" style="display: inline-block; padding: 12px 24px; background-color: #007bff; color: white; text-decoration: none; border-radius: 6px; font-weight: bold; transition: background-color 0.2s;">
+    Download
+  </a>
+</div>
+</div>
+</details>
+
+---
+
+<details class="realm-shared no-icon" id="module-flashlight">
+<summary><a id="Flashlight"></a>Flashlight</summary>
+<div class="details-content">
+<a id="flashlight"></a>
+<h3 style="margin-bottom: 5px; font-weight: 700;"><a id="flashlight"></a>Description</h3>
+<div style="margin-left: 20px; margin-bottom: 20px;">
+  <p>Adds an improved flashlight with dynamic light.</p>
+</div>
+
+<h3 style="margin-bottom: 5px; font-weight: 700;">Changelog</h3>
+<div style="margin-left: 20px;">
+  <details class="realm-shared no-icon" id="changelog-flashlight-1-0">
+    <summary>Version 1.0</summary>
+    <div class="details-content" style="margin-left: 20px;">
+      <ul>
+        <li>Initial Release</li>
+      </ul>
+    </div>
+  </details>
+</div>
+
+<div style="display: flex; justify-content: center; margin-top: 20px;">
+  <a href="https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/flashlight.zip" style="display: inline-block; padding: 12px 24px; background-color: #007bff; color: white; text-decoration: none; border-radius: 6px; font-weight: bold; transition: background-color 0.2s;">
+    Download
+  </a>
+</div>
+</div>
+</details>
+
+---
+
+<details class="realm-shared no-icon" id="module-gamemaster-points">
+<summary><a id="Gamemaster Points"></a>Gamemaster Points</summary>
+<div class="details-content">
+<a id="gamemaster-points"></a>
+<h3 style="margin-bottom: 5px; font-weight: 700;"><a id="gamemaster-points"></a>Description</h3>
+<div style="margin-left: 20px; margin-bottom: 20px;">
+  <p>Lets game masters save and use teleport points.</p>
+</div>
+
+<h3 style="margin-bottom: 5px; font-weight: 700;">Changelog</h3>
+<div style="margin-left: 20px;">
+  <details class="realm-shared no-icon" id="changelog-gamemaster-points-1-0">
+    <summary>Version 1.0</summary>
+    <div class="details-content" style="margin-left: 20px;">
+      <ul>
+        <li>Initial Release</li>
+      </ul>
+    </div>
+  </details>
+</div>
+
+<div style="display: flex; justify-content: center; margin-top: 20px;">
+  <a href="https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/gamemasterpoints.zip" style="display: inline-block; padding: 12px 24px; background-color: #007bff; color: white; text-decoration: none; border-radius: 6px; font-weight: bold; transition: background-color 0.2s;">
+    Download
+  </a>
+</div>
+</div>
+</details>
+
+---
+
+<details class="realm-shared no-icon" id="module-hospitals">
+<summary><a id="Hospitals"></a>Hospitals</summary>
+<div class="details-content">
+<a id="hospitals"></a>
+<h3 style="margin-bottom: 5px; font-weight: 700;"><a id="hospitals"></a>Description</h3>
+<div style="margin-left: 20px; margin-bottom: 20px;">
+  <p>Respawns players at hospital spawn points.</p>
+</div>
+
+<h3 style="margin-bottom: 5px; font-weight: 700;">Changelog</h3>
+<div style="margin-left: 20px;">
+  <details class="realm-shared no-icon" id="changelog-hospitals-1-0">
+    <summary>Version 1.0</summary>
+    <div class="details-content" style="margin-left: 20px;">
+      <ul>
+        <li>Initial Release</li>
+      </ul>
+    </div>
+  </details>
+</div>
+
+<div style="display: flex; justify-content: center; margin-top: 20px;">
+  <a href="https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/hospitals.zip" style="display: inline-block; padding: 12px 24px; background-color: #007bff; color: white; text-decoration: none; border-radius: 6px; font-weight: bold; transition: background-color 0.2s;">
+    Download
+  </a>
+</div>
+</div>
+</details>
+
+---
+
+<details class="realm-shared no-icon" id="module-hud-extras">
+<summary><a id="HUD Extras"></a>HUD Extras</summary>
+<div class="details-content">
+<a id="hud-extras"></a>
+<h3 style="margin-bottom: 5px; font-weight: 700;"><a id="hud-extras"></a>Description</h3>
+<div style="margin-left: 20px; margin-bottom: 20px;">
+  <p>Adds extra HUD elements like an FPS counter.</p>
+</div>
+
+<h3 style="margin-bottom: 5px; font-weight: 700;">Changelog</h3>
+<div style="margin-left: 20px;">
+  <details class="realm-shared no-icon" id="changelog-hud-extras-1-0">
+    <summary>Version 1.0</summary>
+    <div class="details-content" style="margin-left: 20px;">
+      <ul>
+        <li>Initial Release</li>
+      </ul>
+    </div>
+  </details>
+</div>
+
+<div style="display: flex; justify-content: center; margin-top: 20px;">
+  <a href="https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/hud_extras.zip" style="display: inline-block; padding: 12px 24px; background-color: #007bff; color: white; text-decoration: none; border-radius: 6px; font-weight: bold; transition: background-color 0.2s;">
+    Download
+  </a>
+</div>
+</div>
+</details>
+
+---
+
+<details class="realm-shared no-icon" id="module-join-leave-messages">
+<summary><a id="Join Leave Messages"></a>Join Leave Messages</summary>
+<div class="details-content">
+<a id="join-leave-messages"></a>
+<h3 style="margin-bottom: 5px; font-weight: 700;"><a id="join-leave-messages"></a>Description</h3>
+<div style="margin-left: 20px; margin-bottom: 20px;">
+  <p>Announces when players join or leave the server.</p>
+</div>
+
+<h3 style="margin-bottom: 5px; font-weight: 700;">Changelog</h3>
+<div style="margin-left: 20px;">
+  <details class="realm-shared no-icon" id="changelog-join-leave-messages-1-0">
+    <summary>Version 1.0</summary>
+    <div class="details-content" style="margin-left: 20px;">
+      <ul>
+        <li>Initial Release</li>
+      </ul>
+    </div>
+  </details>
+</div>
+
+<div style="display: flex; justify-content: center; margin-top: 20px;">
+  <a href="https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/joinleavemessages.zip" style="display: inline-block; padding: 12px 24px; background-color: #007bff; color: white; text-decoration: none; border-radius: 6px; font-weight: bold; transition: background-color 0.2s;">
+    Download
+  </a>
+</div>
+</div>
+</details>
+
+---
+
+<details class="realm-shared no-icon" id="module-load-messages">
+<summary><a id="Load Messages"></a>Load Messages</summary>
+<div class="details-content">
+<a id="load-messages"></a>
+<h3 style="margin-bottom: 5px; font-weight: 700;"><a id="load-messages"></a>Description</h3>
+<div style="margin-left: 20px; margin-bottom: 20px;">
+  <p>Shows custom messages when players load into a character.</p>
+</div>
+
+<h3 style="margin-bottom: 5px; font-weight: 700;">Changelog</h3>
+<div style="margin-left: 20px;">
+  <details class="realm-shared no-icon" id="changelog-load-messages-1-0">
+    <summary>Version 1.0</summary>
+    <div class="details-content" style="margin-left: 20px;">
+      <ul>
+        <li>Initial Release</li>
+      </ul>
+    </div>
+  </details>
+</div>
+
+<div style="display: flex; justify-content: center; margin-top: 20px;">
+  <a href="https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/loadmessages.zip" style="display: inline-block; padding: 12px 24px; background-color: #007bff; color: white; text-decoration: none; border-radius: 6px; font-weight: bold; transition: background-color 0.2s;">
+    Download
+  </a>
+</div>
+</div>
+</details>
+
+---
+
+<details class="realm-shared no-icon" id="module-loyalism">
+<summary><a id="Loyalism"></a>Loyalism</summary>
+<div class="details-content">
+<a id="loyalism"></a>
+<h3 style="margin-bottom: 5px; font-weight: 700;"><a id="loyalism"></a>Description</h3>
+<div style="margin-left: 20px; margin-bottom: 20px;">
+  <p>Adds a loyalty tier system for players.</p>
+</div>
+
+<h3 style="margin-bottom: 5px; font-weight: 700;">Changelog</h3>
+<div style="margin-left: 20px;">
+  <details class="realm-shared no-icon" id="changelog-loyalism-1-0">
+    <summary>Version 1.0</summary>
+    <div class="details-content" style="margin-left: 20px;">
+      <ul>
+        <li>Initial Release</li>
+      </ul>
+    </div>
+  </details>
+</div>
+
+<div style="display: flex; justify-content: center; margin-top: 20px;">
+  <a href="https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/loyalism.zip" style="display: inline-block; padding: 12px 24px; background-color: #007bff; color: white; text-decoration: none; border-radius: 6px; font-weight: bold; transition: background-color 0.2s;">
+    Download
+  </a>
+</div>
+</div>
+</details>
+
+---
+
+<details class="realm-shared no-icon" id="module-map-cleaner">
+<summary><a id="Map Cleaner"></a>Map Cleaner</summary>
+<div class="details-content">
+<a id="map-cleaner"></a>
+<h3 style="margin-bottom: 5px; font-weight: 700;"><a id="map-cleaner"></a>Description</h3>
+<div style="margin-left: 20px; margin-bottom: 20px;">
+  <p>Cleans up map debris and loose entities on a timer.</p>
+</div>
+
+<h3 style="margin-bottom: 5px; font-weight: 700;">Changelog</h3>
+<div style="margin-left: 20px;">
+  <details class="realm-shared no-icon" id="changelog-map-cleaner-1-0">
+    <summary>Version 1.0</summary>
+    <div class="details-content" style="margin-left: 20px;">
+      <ul>
+        <li>Initial Release</li>
+      </ul>
+    </div>
+  </details>
+</div>
+
+<div style="display: flex; justify-content: center; margin-top: 20px;">
+  <a href="https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/mapcleaner.zip" style="display: inline-block; padding: 12px 24px; background-color: #007bff; color: white; text-decoration: none; border-radius: 6px; font-weight: bold; transition: background-color 0.2s;">
+    Download
+  </a>
+</div>
+</div>
+</details>
+
+---
+
+<details class="realm-shared no-icon" id="module-model-pay">
+<summary><a id="Model Pay"></a>Model Pay</summary>
+<div class="details-content">
+<a id="model-pay"></a>
+<h3 style="margin-bottom: 5px; font-weight: 700;"><a id="model-pay"></a>Description</h3>
+<div style="margin-left: 20px; margin-bottom: 20px;">
+  <p>Pays players based on the model they are using.</p>
+</div>
+
+<h3 style="margin-bottom: 5px; font-weight: 700;">Changelog</h3>
+<div style="margin-left: 20px;">
+  <details class="realm-shared no-icon" id="changelog-model-pay-1-0">
+    <summary>Version 1.0</summary>
+    <div class="details-content" style="margin-left: 20px;">
+      <ul>
+        <li>Initial Release</li>
+      </ul>
+    </div>
+  </details>
+</div>
+
+<div style="display: flex; justify-content: center; margin-top: 20px;">
+  <a href="https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/modelpay.zip" style="display: inline-block; padding: 12px 24px; background-color: #007bff; color: white; text-decoration: none; border-radius: 6px; font-weight: bold; transition: background-color 0.2s;">
+    Download
+  </a>
+</div>
+</div>
+</details>
+
+---
+
+<details class="realm-shared no-icon" id="module-npc-drop">
+<summary><a id="NPC Drop"></a>NPC Drop</summary>
+<div class="details-content">
+<a id="npc-drop"></a>
+<h3 style="margin-bottom: 5px; font-weight: 700;"><a id="npc-drop"></a>Description</h3>
+<div style="margin-left: 20px; margin-bottom: 20px;">
+  <p>Makes NPCs drop items when they die.</p>
+</div>
+
+<h3 style="margin-bottom: 5px; font-weight: 700;">Changelog</h3>
+<div style="margin-left: 20px;">
+  <details class="realm-shared no-icon" id="changelog-npc-drop-1-0">
+    <summary>Version 1.0</summary>
+    <div class="details-content" style="margin-left: 20px;">
+      <ul>
+        <li>Initial Release</li>
+      </ul>
+    </div>
+  </details>
+</div>
+
+<div style="display: flex; justify-content: center; margin-top: 20px;">
+  <a href="https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/npcdrop.zip" style="display: inline-block; padding: 12px 24px; background-color: #007bff; color: white; text-decoration: none; border-radius: 6px; font-weight: bold; transition: background-color 0.2s;">
+    Download
+  </a>
+</div>
+</div>
+</details>
+
+---
+
+<details class="realm-shared no-icon" id="module-npc-money">
+<summary><a id="NPC Money"></a>NPC Money</summary>
+<div class="details-content">
+<a id="npc-money"></a>
+<h3 style="margin-bottom: 5px; font-weight: 700;"><a id="npc-money"></a>Description</h3>
+<div style="margin-left: 20px; margin-bottom: 20px;">
+  <p>Gives players money for killing NPCs.</p>
+</div>
+
+<h3 style="margin-bottom: 5px; font-weight: 700;">Changelog</h3>
+<div style="margin-left: 20px;">
+  <details class="realm-shared no-icon" id="changelog-npc-money-1-0">
+    <summary>Version 1.0</summary>
+    <div class="details-content" style="margin-left: 20px;">
+      <ul>
+        <li>Initial Release</li>
+      </ul>
+    </div>
+  </details>
+</div>
+
+<div style="display: flex; justify-content: center; margin-top: 20px;">
+  <a href="https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/npcmoney.zip" style="display: inline-block; padding: 12px 24px; background-color: #007bff; color: white; text-decoration: none; border-radius: 6px; font-weight: bold; transition: background-color 0.2s;">
+    Download
+  </a>
+</div>
+</div>
+</details>
+
+---
+
+<details class="realm-shared no-icon" id="module-npc-spawner">
+<summary><a id="NPC Spawner"></a>NPC Spawner</summary>
+<div class="details-content">
+<a id="npc-spawner"></a>
+<h3 style="margin-bottom: 5px; font-weight: 700;"><a id="npc-spawner"></a>Description</h3>
+<div style="margin-left: 20px; margin-bottom: 20px;">
+  <p>Spawns NPCs automatically at set points.</p>
+</div>
+
+<h3 style="margin-bottom: 5px; font-weight: 700;">Changelog</h3>
+<div style="margin-left: 20px;">
+  <details class="realm-shared no-icon" id="changelog-npc-spawner-1-0">
+    <summary>Version 1.0</summary>
+    <div class="details-content" style="margin-left: 20px;">
+      <ul>
+        <li>Initial Release</li>
+      </ul>
+    </div>
+  </details>
+</div>
+
+<div style="display: flex; justify-content: center; margin-top: 20px;">
+  <a href="https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/npcspawner.zip" style="display: inline-block; padding: 12px 24px; background-color: #007bff; color: white; text-decoration: none; border-radius: 6px; font-weight: bold; transition: background-color 0.2s;">
+    Download
+  </a>
+</div>
+</div>
+</details>
+
+---
+
+<details class="realm-shared no-icon" id="module-radio">
+<summary><a id="Radio"></a>Radio</summary>
+<div class="details-content">
+<a id="radio"></a>
+<h3 style="margin-bottom: 5px; font-weight: 700;"><a id="radio"></a>Description</h3>
+<div style="margin-left: 20px; margin-bottom: 20px;">
+  <p>Adds handheld radios and radio chat.</p>
+</div>
+
+<h3 style="margin-bottom: 5px; font-weight: 700;">Changelog</h3>
+<div style="margin-left: 20px;">
+  <details class="realm-shared no-icon" id="changelog-radio-1-0">
+    <summary>Version 1.0</summary>
+    <div class="details-content" style="margin-left: 20px;">
+      <ul>
+        <li>Initial Release</li>
+      </ul>
+    </div>
+  </details>
+</div>
+
+<div style="display: flex; justify-content: center; margin-top: 20px;">
+  <a href="https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/radio.zip" style="display: inline-block; padding: 12px 24px; background-color: #007bff; color: white; text-decoration: none; border-radius: 6px; font-weight: bold; transition: background-color 0.2s;">
+    Download
+  </a>
+</div>
+</div>
+</details>
+
+---
+
+<details class="realm-shared no-icon" id="module-raised-weapons">
+<summary><a id="Raised Weapons"></a>Raised Weapons</summary>
+<div class="details-content">
+<a id="raised-weapons"></a>
+<h3 style="margin-bottom: 5px; font-weight: 700;"><a id="raised-weapons"></a>Description</h3>
+<div style="margin-left: 20px; margin-bottom: 20px;">
+  <p>Lowers weapons while running and lets players raise them when needed.</p>
+</div>
+
+<h3 style="margin-bottom: 5px; font-weight: 700;">Changelog</h3>
+<div style="margin-left: 20px;">
+  <details class="realm-shared no-icon" id="changelog-raised-weapons-1-0">
+    <summary>Version 1.0</summary>
+    <div class="details-content" style="margin-left: 20px;">
+      <ul>
+        <li>Initial Release</li>
+      </ul>
+    </div>
+  </details>
+</div>
+
+<div style="display: flex; justify-content: center; margin-top: 20px;">
+  <a href="https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/raisedweapons.zip" style="display: inline-block; padding: 12px 24px; background-color: #007bff; color: white; text-decoration: none; border-radius: 6px; font-weight: bold; transition: background-color 0.2s;">
+    Download
+  </a>
+</div>
+</div>
+</details>
+
+---
+
+<details class="realm-shared no-icon" id="module-shoot-lock">
+<summary><a id="Shoot Lock"></a>Shoot Lock</summary>
+<div class="details-content">
+<a id="shoot-lock"></a>
+<h3 style="margin-bottom: 5px; font-weight: 700;"><a id="shoot-lock"></a>Description</h3>
+<div style="margin-left: 20px; margin-bottom: 20px;">
+  <p>Lets players shoot door locks open.</p>
+</div>
+
+<h3 style="margin-bottom: 5px; font-weight: 700;">Changelog</h3>
+<div style="margin-left: 20px;">
+  <details class="realm-shared no-icon" id="changelog-shoot-lock-1-0">
+    <summary>Version 1.0</summary>
+    <div class="details-content" style="margin-left: 20px;">
+      <ul>
+        <li>Initial Release</li>
+      </ul>
+    </div>
+  </details>
+</div>
+
+<div style="display: flex; justify-content: center; margin-top: 20px;">
+  <a href="https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/shootlock.zip" style="display: inline-block; padding: 12px 24px; background-color: #007bff; color: white; text-decoration: none; border-radius: 6px; font-weight: bold; transition: background-color 0.2s;">
+    Download
+  </a>
+</div>
+</div>
+</details>
+
+---
+
+<details class="realm-shared no-icon" id="module-simple-lockpicking">
+<summary><a id="Simple Lockpicking"></a>Simple Lockpicking</summary>
+<div class="details-content">
+<a id="simple-lockpicking"></a>
+<h3 style="margin-bottom: 5px; font-weight: 700;"><a id="simple-lockpicking"></a>Description</h3>
+<div style="margin-left: 20px; margin-bottom: 20px;">
+  <p>Adds a simple lockpicking system for doors.</p>
+</div>
+
+<h3 style="margin-bottom: 5px; font-weight: 700;">Changelog</h3>
+<div style="margin-left: 20px;">
+  <details class="realm-shared no-icon" id="changelog-simple-lockpicking-1-0">
+    <summary>Version 1.0</summary>
+    <div class="details-content" style="margin-left: 20px;">
+      <ul>
+        <li>Initial Release</li>
+      </ul>
+    </div>
+  </details>
+</div>
+
+<div style="display: flex; justify-content: center; margin-top: 20px;">
+  <a href="https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/simple_lockpicking.zip" style="display: inline-block; padding: 12px 24px; background-color: #007bff; color: white; text-decoration: none; border-radius: 6px; font-weight: bold; transition: background-color 0.2s;">
+    Download
+  </a>
+</div>
+</div>
+</details>
+
+---
+
+<details class="realm-shared no-icon" id="module-slot-machine">
+<summary><a id="Slot Machine"></a>Slot Machine</summary>
+<div class="details-content">
+<a id="slot-machine"></a>
+<h3 style="margin-bottom: 5px; font-weight: 700;"><a id="slot-machine"></a>Description</h3>
+<div style="margin-left: 20px; margin-bottom: 20px;">
+  <p>Adds a slot machine players can use.</p>
+</div>
+
+<h3 style="margin-bottom: 5px; font-weight: 700;">Changelog</h3>
+<div style="margin-left: 20px;">
+  <details class="realm-shared no-icon" id="changelog-slot-machine-1-0">
+    <summary>Version 1.0</summary>
+    <div class="details-content" style="margin-left: 20px;">
+      <ul>
+        <li>Initial Release</li>
+      </ul>
+    </div>
+  </details>
+</div>
+
+<div style="display: flex; justify-content: center; margin-top: 20px;">
+  <a href="https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/slots.zip" style="display: inline-block; padding: 12px 24px; background-color: #007bff; color: white; text-decoration: none; border-radius: 6px; font-weight: bold; transition: background-color 0.2s;">
+    Download
+  </a>
+</div>
+</div>
+</details>
+
+---
+
+<details class="realm-shared no-icon" id="module-slow-weapons">
+<summary><a id="Slow Weapons"></a>Slow Weapons</summary>
+<div class="details-content">
+<a id="slow-weapons"></a>
+<h3 style="margin-bottom: 5px; font-weight: 700;"><a id="slow-weapons"></a>Description</h3>
+<div style="margin-left: 20px; margin-bottom: 20px;">
+  <p>Slows players down when holding heavy weapons.</p>
+</div>
+
+<h3 style="margin-bottom: 5px; font-weight: 700;">Changelog</h3>
+<div style="margin-left: 20px;">
+  <details class="realm-shared no-icon" id="changelog-slow-weapons-1-0">
+    <summary>Version 1.0</summary>
+    <div class="details-content" style="margin-left: 20px;">
+      <ul>
+        <li>Initial Release</li>
+      </ul>
+    </div>
+  </details>
+</div>
+
+<div style="display: flex; justify-content: center; margin-top: 20px;">
+  <a href="https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/slowweapons.zip" style="display: inline-block; padding: 12px 24px; background-color: #007bff; color: white; text-decoration: none; border-radius: 6px; font-weight: bold; transition: background-color 0.2s;">
+    Download
+  </a>
+</div>
+</div>
+</details>
+
+---
+
+<details class="realm-shared no-icon" id="module-steam-group-rewards">
+<summary><a id="Steam Group Rewards"></a>Steam Group Rewards</summary>
+<div class="details-content">
+<a id="steam-group-rewards"></a>
+<h3 style="margin-bottom: 5px; font-weight: 700;"><a id="steam-group-rewards"></a>Description</h3>
+<div style="margin-left: 20px; margin-bottom: 20px;">
+  <p>Rewards players for joining your Steam group.</p>
+</div>
+
+<h3 style="margin-bottom: 5px; font-weight: 700;">Changelog</h3>
+<div style="margin-left: 20px;">
+  <details class="realm-shared no-icon" id="changelog-steam-group-rewards-1-0">
+    <summary>Version 1.0</summary>
+    <div class="details-content" style="margin-left: 20px;">
+      <ul>
+        <li>Initial Release</li>
+      </ul>
+    </div>
+  </details>
+</div>
+
+<div style="display: flex; justify-content: center; margin-top: 20px;">
+  <a href="https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/steamgrouprewards.zip" style="display: inline-block; padding: 12px 24px; background-color: #007bff; color: white; text-decoration: none; border-radius: 6px; font-weight: bold; transition: background-color 0.2s;">
+    Download
+  </a>
+</div>
+</div>
+</details>
+
+---
+
+<details class="realm-shared no-icon" id="module-war-table">
+<summary><a id="War Table"></a>War Table</summary>
+<div class="details-content">
+<a id="war-table"></a>
+<h3 style="margin-bottom: 5px; font-weight: 700;"><a id="war-table"></a>Description</h3>
+<div style="margin-left: 20px; margin-bottom: 20px;">
+  <p>Adds an interactive war table for planning.</p>
+</div>
+
+<h3 style="margin-bottom: 5px; font-weight: 700;">Changelog</h3>
+<div style="margin-left: 20px;">
+  <details class="realm-shared no-icon" id="changelog-war-table-1-0">
+    <summary>Version 1.0</summary>
+    <div class="details-content" style="margin-left: 20px;">
+      <ul>
+        <li>Initial Release</li>
+      </ul>
+    </div>
+  </details>
+</div>
+
+<div style="display: flex; justify-content: center; margin-top: 20px;">
+  <a href="https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/wartable.zip" style="display: inline-block; padding: 12px 24px; background-color: #007bff; color: white; text-decoration: none; border-radius: 6px; font-weight: bold; transition: background-color 0.2s;">
+    Download
+  </a>
+</div>
+</div>
+</details>
+
+---
+

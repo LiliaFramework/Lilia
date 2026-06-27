@@ -35,7 +35,7 @@ The log library centralizes server-side logging under `lia.log`. It stores regis
 ---
 
 <details class="realm-server" id="function-lialogaddtype">
-<summary><span class="summary-main"><a id="lia.log.addType"></a>lia.log.addType(logType, func, category)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/modules/administration/submodules/logs/logger.lua#L309" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="lia.log.addType"></a>lia.log.addType(logType, func, category)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/logger.lua#L309" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="lialogaddtype"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -73,7 +73,7 @@ The log library centralizes server-side logging under `lia.log`. It stores regis
 ---
 
 <details class="realm-server" id="function-lialoggetstring">
-<summary><span class="summary-main"><a id="lia.log.getString"></a>lia.log.getString(client, logType)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/modules/administration/submodules/logs/logger.lua#L345" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="lia.log.getString"></a>lia.log.getString(client, logType)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/logger.lua#L345" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="lialoggetstring"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -108,7 +108,7 @@ The log library centralizes server-side logging under `lia.log`. It stores regis
 ---
 
 <details class="realm-server" id="function-lialogadd">
-<summary><span class="summary-main"><a id="lia.log.add"></a>lia.log.add(client, logType)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/modules/administration/submodules/logs/logger.lua#L379" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="lia.log.add"></a>lia.log.add(client, logType)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/logger.lua#L379" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="lialogadd"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -150,7 +150,7 @@ The log library centralizes server-side logging under `lia.log`. It stores regis
 ---
 
 <details class="realm-server" id="function-onserverlog">
-<summary><span class="summary-main"><a id="OnServerLog"></a>OnServerLog(client, logType, logString, category)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/modules/administration/submodules/logs/logger.lua#L14" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="OnServerLog"></a>OnServerLog(client, logType, logString, category)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/logger.lua#L14" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="onserverlog"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
