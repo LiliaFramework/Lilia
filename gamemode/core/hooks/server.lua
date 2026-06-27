@@ -19,11 +19,13 @@ local function getGender(isFemale)
 end
 
 function GM:GetPlayerDeathSound(client, isFemale)
+    if hook.Run("ShouldPlayDeathSound", client) == false then return end
     local sndTab = sounds[getGender(isFemale)].death
     return sndTab[math.random(#sndTab)]
 end
 
 function GM:GetPlayerPainSound(client, paintype, isFemale)
+    if hook.Run("ShouldPlayPainSound", client, paintype) == false then return end
     if paintype == "hurt" then
         local sndTab = sounds[getGender(isFemale)].hurt
         return sndTab[math.random(#sndTab)]
