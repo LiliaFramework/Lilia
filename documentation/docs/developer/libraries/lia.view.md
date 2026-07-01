@@ -35,7 +35,7 @@ The view library centralizes world-space preview behavior under `lia.view`. It c
 ---
 
 <details class="realm-client" id="function-liaviewshouldhideplayer">
-<summary><span class="summary-main"><a id="lia.view.shouldHidePlayer"></a>lia.view.shouldHidePlayer(player)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/view.lua#L100" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="lia.view.shouldHidePlayer"></a>lia.view.shouldHidePlayer(player)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/view.lua#L101" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="liaviewshouldhideplayer"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -63,7 +63,7 @@ The view library centralizes world-space preview behavior under `lia.view`. It c
 ---
 
 <details class="realm-client" id="function-liaviewclose">
-<summary><span class="summary-main"><a id="lia.view.close"></a>lia.view.close(owner)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/view.lua#L119" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="lia.view.close"></a>lia.view.close(owner)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/view.lua#L120" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="liaviewclose"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -86,7 +86,7 @@ The view library centralizes world-space preview behavior under `lia.view`. It c
 ---
 
 <details class="realm-client" id="function-liaviewbegin">
-<summary><span class="summary-main"><a id="lia.view.begin"></a>lia.view.begin(owner, config)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/view.lua#L166" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="lia.view.begin"></a>lia.view.begin(owner, config)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/view.lua#L167" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="liaviewbegin"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -110,7 +110,7 @@ The view library centralizes world-space preview behavior under `lia.view`. It c
 ---
 
 <details class="realm-client" id="function-liaviewsetmodel">
-<summary><span class="summary-main"><a id="lia.view.setModel"></a>lia.view.setModel(owner, modelPath, options)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/view.lua#L285" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="lia.view.setModel"></a>lia.view.setModel(owner, modelPath, options)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/view.lua#L287" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="liaviewsetmodel"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -135,7 +135,7 @@ The view library centralizes world-space preview behavior under `lia.view`. It c
 ---
 
 <details class="realm-client" id="function-liaviewgetentity">
-<summary><span class="summary-main"><a id="lia.view.getEntity"></a>lia.view.getEntity(owner)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/view.lua#L327" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="lia.view.getEntity"></a>lia.view.getEntity(owner)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/view.lua#L329" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="liaviewgetentity"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -163,7 +163,7 @@ The view library centralizes world-space preview behavior under `lia.view`. It c
 ---
 
 <details class="realm-client" id="function-liaviewrotate">
-<summary><span class="summary-main"><a id="lia.view.rotate"></a>lia.view.rotate(owner, deltaYaw)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/view.lua#L347" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="lia.view.rotate"></a>lia.view.rotate(owner, deltaYaw)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/view.lua#L349" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="liaviewrotate"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
