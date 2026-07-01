@@ -628,14 +628,10 @@ if CLIENT then
     function lia.keybind.load()
         local path = "lilia/keybinds.json"
         local d = file.Read(path, "DATA")
-        MsgC(Color(100, 255, 100), "[Keybind Load] File exists: " .. tostring(d ~= nil) .. "\n")
         if d then
-            MsgC(Color(100, 255, 100), "[Keybind Load] Raw: " .. d .. "\n")
             local s = util.JSONToTable(d)
-            MsgC(Color(100, 255, 100), "[Keybind Load] Parsed: " .. tostring(s ~= nil) .. "\n")
             if s then
                 for k, v in pairs(s) do
-                    MsgC(Color(100, 255, 100), "[Keybind Load] " .. tostring(k) .. " = " .. tostring(v) .. " (" .. type(v) .. ")\n")
                     if lia.keybind.stored[k] then
                         if isstring(v) then
                             local keyCode = KeybindKeys[string.lower(v)]

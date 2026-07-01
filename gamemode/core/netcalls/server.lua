@@ -390,8 +390,9 @@ net.Receive("liaCharChoose", function(_, client)
     if not lia.char.isLoaded(id) then
         if not table.HasValue(client.liaCharList or {}, id) then
             lia.db.selectOne("faction", "characters", "id = " .. id):next(function(result)
-                local allowStaffChar = result and result.faction == FACTION_STAFF and client:hasPrivilege("createStaffCharacter")
-                lia.debug("[Permissions]", "Permission Check for net.Receive liaCharacterChoose staff fallback", "dbResultExists=", tostring(result ~= nil), "targetFactionIsStaff=", tostring(result and result.faction == FACTION_STAFF), "hasPrivilege(createStaffCharacter)=", tostring(client:hasPrivilege("createStaffCharacter")), "finalResult=", tostring(allowStaffChar))
+                local isStaffFaction = result and (result.faction == "staff" or tonumber(result.faction) == FACTION_STAFF) or false
+                local allowStaffChar = isStaffFaction and client:hasPrivilege("createStaffCharacter")
+                lia.debug("[Permissions]", "Permission Check for net.Receive liaCharacterChoose staff fallback", "dbResultExists=", tostring(result ~= nil), "targetFactionIsStaff=", tostring(isStaffFaction), "hasPrivilege(createStaffCharacter)=", tostring(client:hasPrivilege("createStaffCharacter")), "finalResult=", tostring(allowStaffChar))
                 if not allowStaffChar then return response(false, "invalidChar") end
                 lia.char.loadSingleCharacter(id, client, function(character)
                     if not character then return response(false, "invalidChar") end

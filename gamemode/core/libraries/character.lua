@@ -1734,8 +1734,9 @@ if SERVER then
 
         if client and not table.HasValue(client.liaCharList or {}, charID) then
             lia.db.selectOne("faction", "characters", "id = " .. charID):next(function(result)
-                local canLoadStaffCharacter = result and result.faction == FACTION_STAFF and client:hasPrivilege("createStaffCharacter")
-                lia.debug("[Permissions]", "Permission Check for lia.char.getCharacter staff fallback", "dbResultExists=", tostring(result ~= nil), "targetFactionIsStaff=", tostring(result and result.faction == FACTION_STAFF), "hasPrivilege(createStaffCharacter)=", tostring(client:hasPrivilege("createStaffCharacter")), "finalResult=", tostring(canLoadStaffCharacter))
+                local isStaffFaction = result and (result.faction == "staff" or tonumber(result.faction) == FACTION_STAFF) or false
+                local canLoadStaffCharacter = isStaffFaction and client:hasPrivilege("createStaffCharacter")
+                lia.debug("[Permissions]", "Permission Check for lia.char.getCharacter staff fallback", "dbResultExists=", tostring(result ~= nil), "targetFactionIsStaff=", tostring(isStaffFaction), "hasPrivilege(createStaffCharacter)=", tostring(client:hasPrivilege("createStaffCharacter")), "finalResult=", tostring(canLoadStaffCharacter))
                 if not canLoadStaffCharacter then
                     if callback then callback(nil) end
                     return

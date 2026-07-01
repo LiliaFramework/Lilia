@@ -260,6 +260,7 @@ end
 function lia.db.loadTables()
     local function done()
         lia.db.addDatabaseFields()
+        lia.db.ensureIndexes()
         lia.db.tablesLoaded = true
         hook.Run("OnDatabaseLoaded")
         timer.Simple(0, function() lia.config.load() end)
@@ -838,6 +839,26 @@ function lia.db.addDatabaseFields()
     end
 
     lia.db.fieldExists("lia_warnings", "severity"):next(function(exists) if not exists then lia.db.query("ALTER TABLE lia_warnings ADD COLUMN severity TEXT DEFAULT 'Medium'") end end)
+end
+
+--[[
+    Purpose:
+        Creates indexes for the highest-traffic lookup paths used during player join and character switching.
+
+    Parameters:
+        None.
+
+    Returns:
+        nil
+
+    Realm:
+        Server
+]]
+function lia.db.ensureIndexes()
+    local queries = {"CREATE INDEX IF NOT EXISTS idx_lia_players_steamID ON lia_players(steamID)", "CREATE INDEX IF NOT EXISTS idx_lia_characters_steamID_schema ON lia_characters(steamID, schema)", "CREATE INDEX IF NOT EXISTS idx_lia_inventories_charID ON lia_inventories(charID)", "CREATE INDEX IF NOT EXISTS idx_lia_items_invID ON lia_items(invID)"}
+    for _, query in ipairs(queries) do
+        lia.db.query(query)
+    end
 end
 
 --[[

@@ -378,7 +378,7 @@ local ConditionalFiles = {
         path = "lilia/gamemode/core/libraries/compatibility/vmanip.lua",
         global = "VManip",
         name = "VManip",
-        realm = "client"
+        realm = "shared"
     },
 }
 
