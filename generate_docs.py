@@ -369,6 +369,27 @@ def normalize_doc_folder(folder: Optional[str]) -> Optional[str]:
     return folder_map.get(compact, normalized)
 
 
+def normalize_doc_filename(filename: Optional[str], is_library: bool=False) -> Optional[str]:
+    """Normalize Lua file directives to the generated docs filename scheme."""
+    if not filename:
+        return filename
+
+    normalized = filename.strip().replace('\\', '/').split('/')[-1]
+    stem = Path(normalized).stem
+    suffix = Path(normalized).suffix.lower()
+
+    # Doc headers occasionally still use Lua source filenames; convert them to docs filenames.
+    if suffix == '.lua':
+        normalized = f'{stem}.md'
+    elif suffix != '.md':
+        normalized = f'{normalized}.md'
+
+    if is_library and not Path(normalized).stem.lower().startswith('lia.'):
+        normalized = f'lia.{Path(normalized).stem}.md'
+
+    return normalized
+
+
 def format_lua_code(code_lines):
     if not code_lines:
         return code_lines
@@ -1188,6 +1209,7 @@ def generate_documentation_for_file(file_path, output_dir, is_library=False, bas
 
     custom_folder, custom_filename, append = parse_folder_directives(file_content)
     custom_folder = normalize_doc_folder(custom_folder)
+    custom_filename = normalize_doc_filename(custom_filename, is_library=is_library)
     # For module libraries prefer the main developer/libraries area (do not use developer/modules)
     if is_library and base_docs_dir and is_module_library_file(file_path, base_docs_dir.parent, file_content):
         if custom_folder == 'developer/modules/libraries':

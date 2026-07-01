@@ -104,7 +104,7 @@ The inventory library centralizes shared inventory behavior under `lia.inventory
 ---
 
 <details class="realm-server" id="function-liainventoryloadbyid">
-<summary><span class="summary-main"><a id="lia.inventory.loadByID"></a>lia.inventory.loadByID(id, noCache)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/inventory.lua#L230" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="lia.inventory.loadByID"></a>lia.inventory.loadByID(id, noCache)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/inventory.lua#L229" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="liainventoryloadbyid"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -141,7 +141,7 @@ The inventory library centralizes shared inventory behavior under `lia.inventory
 ---
 
 <details class="realm-server" id="function-liainventoryloadfromdefaultstorage">
-<summary><span class="summary-main"><a id="lia.inventory.loadFromDefaultStorage"></a>lia.inventory.loadFromDefaultStorage(id, noCache)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/inventory.lua#L275" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="lia.inventory.loadFromDefaultStorage"></a>lia.inventory.loadFromDefaultStorage(id, noCache)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/inventory.lua#L274" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="liainventoryloadfromdefaultstorage"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -178,7 +178,7 @@ The inventory library centralizes shared inventory behavior under `lia.inventory
 ---
 
 <details class="realm-server" id="function-liainventoryinstance">
-<summary><span class="summary-main"><a id="lia.inventory.instance"></a>lia.inventory.instance(typeID, initialData)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/inventory.lua#L334" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="lia.inventory.instance"></a>lia.inventory.instance(typeID, initialData)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/inventory.lua#L335" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="liainventoryinstance"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -215,7 +215,7 @@ The inventory library centralizes shared inventory behavior under `lia.inventory
 ---
 
 <details class="realm-server" id="function-liainventoryloadallfromcharid">
-<summary><span class="summary-main"><a id="lia.inventory.loadAllFromCharID"></a>lia.inventory.loadAllFromCharID(charID)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/inventory.lua#L384" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="lia.inventory.loadAllFromCharID"></a>lia.inventory.loadAllFromCharID(charID)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/inventory.lua#L385" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="liainventoryloadallfromcharid"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -253,7 +253,7 @@ The inventory library centralizes shared inventory behavior under `lia.inventory
 ---
 
 <details class="realm-server" id="function-liainventorydeletebyid">
-<summary><span class="summary-main"><a id="lia.inventory.deleteByID"></a>lia.inventory.deleteByID(id)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/inventory.lua#L421" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="lia.inventory.deleteByID"></a>lia.inventory.deleteByID(id)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/inventory.lua#L424" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="liainventorydeletebyid"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -287,7 +287,7 @@ The inventory library centralizes shared inventory behavior under `lia.inventory
 ---
 
 <details class="realm-server" id="function-liainventorycleanupforcharacter">
-<summary><span class="summary-main"><a id="lia.inventory.cleanUpForCharacter"></a>lia.inventory.cleanUpForCharacter(character)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/inventory.lua#L448" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="lia.inventory.cleanUpForCharacter"></a>lia.inventory.cleanUpForCharacter(character)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/inventory.lua#L451" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="liainventorycleanupforcharacter"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -321,7 +321,7 @@ The inventory library centralizes shared inventory behavior under `lia.inventory
 ---
 
 <details class="realm-server" id="function-liainventorycheckoverflow">
-<summary><span class="summary-main"><a id="lia.inventory.checkOverflow"></a>lia.inventory.checkOverflow(inv, character, oldW, oldH)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/inventory.lua#L485" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="lia.inventory.checkOverflow"></a>lia.inventory.checkOverflow(inv, character, oldW, oldH)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/inventory.lua#L488" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="liainventorycheckoverflow"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -360,7 +360,7 @@ The inventory library centralizes shared inventory behavior under `lia.inventory
 ---
 
 <details class="realm-server" id="function-liainventoryregisterstorage">
-<summary><span class="summary-main"><a id="lia.inventory.registerStorage"></a>lia.inventory.registerStorage(model, data)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/inventory.lua#L543" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="lia.inventory.registerStorage"></a>lia.inventory.registerStorage(model, data)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/inventory.lua#L546" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="liainventoryregisterstorage"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -399,7 +399,7 @@ The inventory library centralizes shared inventory behavior under `lia.inventory
 ---
 
 <details class="realm-server" id="function-liainventorygetstorage">
-<summary><span class="summary-main"><a id="lia.inventory.getStorage"></a>lia.inventory.getStorage(model)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/inventory.lua#L575" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="lia.inventory.getStorage"></a>lia.inventory.getStorage(model)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/inventory.lua#L578" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="liainventorygetstorage"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -433,7 +433,7 @@ The inventory library centralizes shared inventory behavior under `lia.inventory
 ---
 
 <details class="realm-server" id="function-liainventoryregistertrunk">
-<summary><span class="summary-main"><a id="lia.inventory.registerTrunk"></a>lia.inventory.registerTrunk(vehicleClass, data)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/inventory.lua#L607" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="lia.inventory.registerTrunk"></a>lia.inventory.registerTrunk(vehicleClass, data)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/inventory.lua#L610" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="liainventoryregistertrunk"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -472,7 +472,7 @@ The inventory library centralizes shared inventory behavior under `lia.inventory
 ---
 
 <details class="realm-server" id="function-liainventorygettrunk">
-<summary><span class="summary-main"><a id="lia.inventory.getTrunk"></a>lia.inventory.getTrunk(vehicleClass)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/inventory.lua#L643" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="lia.inventory.getTrunk"></a>lia.inventory.getTrunk(vehicleClass)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/inventory.lua#L646" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="liainventorygettrunk"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -506,7 +506,7 @@ The inventory library centralizes shared inventory behavior under `lia.inventory
 ---
 
 <details class="realm-server" id="function-liainventorygetalltrunks">
-<summary><span class="summary-main"><a id="lia.inventory.getAllTrunks"></a>lia.inventory.getAllTrunks()</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/inventory.lua#L668" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="lia.inventory.getAllTrunks"></a>lia.inventory.getAllTrunks()</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/inventory.lua#L671" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="liainventorygetalltrunks"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -535,7 +535,7 @@ The inventory library centralizes shared inventory behavior under `lia.inventory
 ---
 
 <details class="realm-server" id="function-liainventorygetallstorage">
-<summary><span class="summary-main"><a id="lia.inventory.getAllStorage"></a>lia.inventory.getAllStorage(includeTrunks)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/inventory.lua#L696" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="lia.inventory.getAllStorage"></a>lia.inventory.getAllStorage(includeTrunks)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/inventory.lua#L699" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="liainventorygetallstorage"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -569,7 +569,7 @@ The inventory library centralizes shared inventory behavior under `lia.inventory
 ---
 
 <details class="realm-client" id="function-liainventoryshow">
-<summary><span class="summary-main"><a id="lia.inventory.show"></a>lia.inventory.show(inventory, parent)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/inventory.lua#L731" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="lia.inventory.show"></a>lia.inventory.show(inventory, parent)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/inventory.lua#L734" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="liainventoryshow"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -604,7 +604,7 @@ The inventory library centralizes shared inventory behavior under `lia.inventory
 ---
 
 <details class="realm-client" id="function-liainventoryshowdual">
-<summary><span class="summary-main"><a id="lia.inventory.showDual"></a>lia.inventory.showDual(inventory1, inventory2, parent)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/inventory.lua#L772" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="lia.inventory.showDual"></a>lia.inventory.showDual(inventory1, inventory2, parent)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/inventory.lua#L775" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="liainventoryshowdual"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">

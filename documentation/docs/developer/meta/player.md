@@ -2376,3 +2376,166 @@ The player meta table extends Garry's Mod player entities with Lilia-specific he
 
 ---
 
+<details class="realm-shared no-icon" id="function-getparts">
+<summary><span class="summary-main"><a id="getParts"></a>getParts()</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/compatibility/pac.lua#L29" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<div class="details-content">
+<h3 style="margin-bottom: 5px; font-weight: 700;"><a id="getparts"></a>Purpose</h3>
+<div style="margin-left: 20px; margin-bottom: 20px;">
+  <p>Returns the PAC3 part registry tracked on the player through Lilia netvars.</p>
+</div>
+
+<h3 style="margin-bottom: 5px; font-weight: 700;">When Called</h3>
+<div style="margin-left: 20px; margin-bottom: 20px;">
+  <p>Requires PAC3 to be installed and the global `pac` table to be available. Use this to inspect which PAC-backed item parts are currently marked as active for the player.</p>
+</div>
+
+<h3 style="margin-bottom: 5px; font-weight: 700;">Realm</h3>
+<div style="margin-left: 20px; margin-bottom: 20px;">
+  <p>Shared</p>
+</div>
+
+<h3 style="margin-bottom: 5px; font-weight: 700;">Returns</h3>
+<div style="margin-left: 20px; margin-bottom: 20px;">
+<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#2.1">table</a></span> A table keyed by PAC part identifier with boolean active states.</p>
+</div>
+
+<h3 style="margin-bottom: 5px; font-weight: 700;">Example Usage</h3>
+<div style="margin-left: 20px; margin-bottom: 20px;">
+<pre><code class="language-lua">  local activeParts = client:getParts()
+  if activeParts["fancy_hat"] then
+      print("Hat part is active.")
+  end
+</code></pre>
+</div>
+
+</div>
+</details>
+
+---
+
+<details class="realm-server no-icon" id="function-syncparts">
+<summary><span class="summary-main"><a id="syncParts"></a>syncParts()</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/compatibility/pac.lua#L52" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<div class="details-content">
+<h3 style="margin-bottom: 5px; font-weight: 700;"><a id="syncparts"></a>Purpose</h3>
+<div style="margin-left: 20px; margin-bottom: 20px;">
+  <p>Sends the player's tracked PAC3 parts back to that player so the client can rebuild its attached PAC data.</p>
+</div>
+
+<h3 style="margin-bottom: 5px; font-weight: 700;">When Called</h3>
+<div style="margin-left: 20px; margin-bottom: 20px;">
+  <p>Requires PAC3 to be installed and the global `pac` table to be available. Call this after a player loads in or whenever the client's PAC attachments need to be refreshed from server state.</p>
+</div>
+
+<h3 style="margin-bottom: 5px; font-weight: 700;">Realm</h3>
+<div style="margin-left: 20px; margin-bottom: 20px;">
+  <p>Server</p>
+</div>
+
+<h3 style="margin-bottom: 5px; font-weight: 700;">Example Usage</h3>
+<div style="margin-left: 20px; margin-bottom: 20px;">
+<pre><code class="language-lua">  client:syncParts()
+</code></pre>
+</div>
+
+</div>
+</details>
+
+---
+
+<details class="realm-server no-icon" id="function-addpart">
+<summary><span class="summary-main"><a id="addPart"></a>addPart(partID)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/compatibility/pac.lua#L79" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<div class="details-content">
+<h3 style="margin-bottom: 5px; font-weight: 700;"><a id="addpart"></a>Purpose</h3>
+<div style="margin-left: 20px; margin-bottom: 20px;">
+  <p>Marks a PAC3 part as active for the player and broadcasts the attach request to clients.</p>
+</div>
+
+<h3 style="margin-bottom: 5px; font-weight: 700;">When Called</h3>
+<div style="margin-left: 20px; margin-bottom: 20px;">
+  <p>Requires PAC3 to be installed and the global `pac` table to be available. Commonly used when a PAC-backed item equips or when character state needs to reapply a cosmetic part.</p>
+</div>
+
+<h3 style="margin-bottom: 5px; font-weight: 700;">Realm</h3>
+<div style="margin-left: 20px; margin-bottom: 20px;">
+  <p>Server</p>
+</div>
+
+<h3 style="margin-bottom: 5px; font-weight: 700;">Parameters</h3>
+<div style="margin-left: 20px; margin-bottom: 20px;">
+<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#2.1">string</a></span> <span class="parameter">partID</span> The PAC part identifier to attach and track.</p>
+</div>
+
+<h3 style="margin-bottom: 5px; font-weight: 700;">Example Usage</h3>
+<div style="margin-left: 20px; margin-bottom: 20px;">
+<pre><code class="language-lua">  client:addPart("fancy_hat")
+</code></pre>
+</div>
+
+</div>
+</details>
+
+---
+
+<details class="realm-server no-icon" id="function-removepart">
+<summary><span class="summary-main"><a id="removePart"></a>removePart(partID)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/compatibility/pac.lua#L112" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<div class="details-content">
+<h3 style="margin-bottom: 5px; font-weight: 700;"><a id="removepart"></a>Purpose</h3>
+<div style="margin-left: 20px; margin-bottom: 20px;">
+  <p>Removes a tracked PAC3 part from the player and tells clients to detach it.</p>
+</div>
+
+<h3 style="margin-bottom: 5px; font-weight: 700;">When Called</h3>
+<div style="margin-left: 20px; margin-bottom: 20px;">
+  <p>Requires PAC3 to be installed and the global `pac` table to be available. Use this when a PAC-backed item is unequipped, dropped, or otherwise stops applying its visual attachment.</p>
+</div>
+
+<h3 style="margin-bottom: 5px; font-weight: 700;">Realm</h3>
+<div style="margin-left: 20px; margin-bottom: 20px;">
+  <p>Server</p>
+</div>
+
+<h3 style="margin-bottom: 5px; font-weight: 700;">Parameters</h3>
+<div style="margin-left: 20px; margin-bottom: 20px;">
+<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#2.1">string</a></span> <span class="parameter">partID</span> The PAC part identifier to remove.</p>
+</div>
+
+<h3 style="margin-bottom: 5px; font-weight: 700;">Example Usage</h3>
+<div style="margin-left: 20px; margin-bottom: 20px;">
+<pre><code class="language-lua">  client:removePart("fancy_hat")
+</code></pre>
+</div>
+
+</div>
+</details>
+
+---
+
+<details class="realm-server no-icon" id="function-resetparts">
+<summary><span class="summary-main"><a id="resetParts"></a>resetParts()</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/compatibility/pac.lua#L140" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<div class="details-content">
+<h3 style="margin-bottom: 5px; font-weight: 700;"><a id="resetparts"></a>Purpose</h3>
+<div style="margin-left: 20px; margin-bottom: 20px;">
+  <p>Clears every tracked PAC3 part from the player and broadcasts a full reset.</p>
+</div>
+
+<h3 style="margin-bottom: 5px; font-weight: 700;">When Called</h3>
+<div style="margin-left: 20px; margin-bottom: 20px;">
+  <p>Requires PAC3 to be installed and the global `pac` table to be available. This is useful before rebuilding the player's PAC state, such as during loadout changes or observer transitions.</p>
+</div>
+
+<h3 style="margin-bottom: 5px; font-weight: 700;">Realm</h3>
+<div style="margin-left: 20px; margin-bottom: 20px;">
+  <p>Server</p>
+</div>
+
+<h3 style="margin-bottom: 5px; font-weight: 700;">Example Usage</h3>
+<div style="margin-left: 20px; margin-bottom: 20px;">
+<pre><code class="language-lua">  client:resetParts()
+</code></pre>
+</div>
+
+</div>
+</details>
+
+---
+

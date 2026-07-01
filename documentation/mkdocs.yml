@@ -59,6 +59,7 @@ nav:
           - Overview: developer/libraries/index.md
           # AUTO-GENERATED: LIBRARIES START
           - Currency: developer/libraries/lia.currency.md
+          - Admin: developer/libraries/lia.admin.md
           - Attributes: developer/libraries/lia.attribs.md
           - Bar: developer/libraries/lia.bar.md
           - Camera: developer/libraries/lia.camera.md
@@ -91,6 +92,8 @@ nav:
           - Player Interactions: developer/libraries/lia.playerinteract.md
           - Time: developer/libraries/lia.time.md
           - Utility: developer/libraries/lia.util.md
+          - Vendor: developer/libraries/lia.vendor.md
+          - View: developer/libraries/lia.view.md
           - Web Image: developer/libraries/lia.webimage.md
           - WebSound: developer/libraries/lia.websound.md
           - Workshop: developer/libraries/lia.workshop.md
@@ -98,6 +101,7 @@ nav:
       - Hooks:
           - Overview: developer/hooks/index.md
           # AUTO-GENERATED: HOOKS START
+          - Admin: developer/hooks/administration.admin.md
           - Administration: developer/hooks/administration.md
           - Administration - Submodules/Adminstick: developer/hooks/administration.submodules-adminstick.md
           - Administration - Submodules/Logs: developer/hooks/administration.submodules-logs.md

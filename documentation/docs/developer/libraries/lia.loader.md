@@ -35,7 +35,7 @@ The loader library centralizes framework startup behavior under `lia.loader`. It
 ---
 
 <details class="realm-shared" id="function-lialoaderinclude">
-<summary><span class="summary-main"><a id="lia.loader.include"></a>lia.loader.include(path, realm)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/loader.lua#L404" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="lia.loader.include"></a>lia.loader.include(path, realm)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/loader.lua#L408" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="lialoaderinclude"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -66,7 +66,7 @@ The loader library centralizes framework startup behavior under `lia.loader`. It
 ---
 
 <details class="realm-shared" id="function-lialoaderincludedir">
-<summary><span class="summary-main"><a id="lia.loader.includeDir"></a>lia.loader.includeDir(dir, raw, deep, realm)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/loader.lua#L461" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="lia.loader.includeDir"></a>lia.loader.includeDir(dir, raw, deep, realm)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/loader.lua#L465" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="lialoaderincludedir"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -99,7 +99,7 @@ The loader library centralizes framework startup behavior under `lia.loader`. It
 ---
 
 <details class="realm-shared" id="function-lialoaderincludegroupeddir">
-<summary><span class="summary-main"><a id="lia.loader.includeGroupedDir"></a>lia.loader.includeGroupedDir(dir, raw, recursive, forceRealm)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/loader.lua#L501" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="lia.loader.includeGroupedDir"></a>lia.loader.includeGroupedDir(dir, raw, recursive, forceRealm)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/loader.lua#L505" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="lialoaderincludegroupeddir"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -132,7 +132,7 @@ The loader library centralizes framework startup behavior under `lia.loader`. It
 ---
 
 <details class="realm-shared" id="function-lialoadercheckforupdates">
-<summary><span class="summary-main"><a id="lia.loader.checkForUpdates"></a>lia.loader.checkForUpdates()</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/loader.lua#L587" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="lia.loader.checkForUpdates"></a>lia.loader.checkForUpdates()</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/loader.lua#L591" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="lialoadercheckforupdates"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -156,7 +156,7 @@ The loader library centralizes framework startup behavior under `lia.loader`. It
 ---
 
 <details class="realm-shared" id="function-liaerror">
-<summary><span class="summary-main"><a id="lia.error"></a>lia.error()</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/loader.lua#L709" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="lia.error"></a>lia.error()</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/loader.lua#L713" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="liaerror"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -180,7 +180,7 @@ The loader library centralizes framework startup behavior under `lia.loader`. It
 ---
 
 <details class="realm-shared" id="function-liawarning">
-<summary><span class="summary-main"><a id="lia.warning"></a>lia.warning()</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/loader.lua#L714" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="lia.warning"></a>lia.warning()</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/loader.lua#L718" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="liawarning"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -204,7 +204,7 @@ The loader library centralizes framework startup behavior under `lia.loader`. It
 ---
 
 <details class="realm-shared" id="function-liainformation">
-<summary><span class="summary-main"><a id="lia.information"></a>lia.information()</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/loader.lua#L719" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="lia.information"></a>lia.information()</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/loader.lua#L723" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="liainformation"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -228,7 +228,7 @@ The loader library centralizes framework startup behavior under `lia.loader`. It
 ---
 
 <details class="realm-shared" id="function-liabootstrap">
-<summary><span class="summary-main"><a id="lia.bootstrap"></a>lia.bootstrap()</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/loader.lua#L724" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="lia.bootstrap"></a>lia.bootstrap()</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/loader.lua#L728" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="liabootstrap"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -252,7 +252,7 @@ The loader library centralizes framework startup behavior under `lia.loader`. It
 ---
 
 <details class="realm-shared" id="function-liadebug">
-<summary><span class="summary-main"><a id="lia.debug"></a>lia.debug()</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/loader.lua#L731" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="lia.debug"></a>lia.debug()</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/loader.lua#L735" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="liadebug"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -276,7 +276,7 @@ The loader library centralizes framework startup behavior under `lia.loader`. It
 ---
 
 <details class="realm-shared" id="function-liarelaydiscordmessage">
-<summary><span class="summary-main"><a id="lia.relaydiscordMessage"></a>lia.relaydiscordMessage()</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/loader.lua#L782" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="lia.relaydiscordMessage"></a>lia.relaydiscordMessage()</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/loader.lua#L786" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="liarelaydiscordmessage"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -300,7 +300,7 @@ The loader library centralizes framework startup behavior under `lia.loader`. It
 ---
 
 <details class="realm-shared" id="function-lialoaderincludeentities">
-<summary><span class="summary-main"><a id="lia.loader.includeEntities"></a>lia.loader.includeEntities(path)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/loader.lua#L839" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="lia.loader.includeEntities"></a>lia.loader.includeEntities(path)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/loader.lua#L843" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="lialoaderincludeentities"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -330,7 +330,7 @@ The loader library centralizes framework startup behavior under `lia.loader`. It
 ---
 
 <details class="realm-shared" id="function-lialoaderinitializegamemode">
-<summary><span class="summary-main"><a id="lia.loader.initializeGamemode"></a>lia.loader.initializeGamemode(isReload)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/loader.lua#L976" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="lia.loader.initializeGamemode"></a>lia.loader.initializeGamemode(isReload)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/loader.lua#L980" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="lialoaderinitializegamemode"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">

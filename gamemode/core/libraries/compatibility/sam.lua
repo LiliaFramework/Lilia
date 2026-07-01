@@ -77,8 +77,8 @@ local function handleImmutableBaseGroupSAMSync(rankName, permission, value)
     if defaultValue == value then
         lia.debug("[Permissions]", "Skipping SAM sync for immutable base group", "rank=", tostring(rankName), "permission=", tostring(permission), "value=", tostring(value), "reason=matches-default")
     else
-        local action = value and "grant" or "revoke"
-        lia.warning(string.format("[Lilia] Ignoring SAM request to %s privilege '%s' on immutable base usergroup '%s'. Change does not match default MinAccess behavior.", action, tostring(permission), tostring(rankName)))
+        local warningKey = value and "samImmutableBaseGroupGrantIgnored" or "samImmutableBaseGroupRevokeIgnored"
+        lia.warning(L(warningKey, tostring(permission), tostring(rankName)))
     end
     return true
 end

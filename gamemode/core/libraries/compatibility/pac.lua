@@ -1,14 +1,81 @@
-﻿local playerMeta = FindMetaTable("Player")
+﻿--[[
+    Folder: Developer - Meta Tables
+    File: player.md
+    Append: true
+]]
+local playerMeta = FindMetaTable("Player")
+--[[
+    Purpose:
+        Returns the PAC3 part registry tracked on the player through Lilia netvars.
+
+    When Used:
+        Requires PAC3 to be installed and the global `pac` table to be available. Use this to inspect which PAC-backed item parts are currently marked as active for the player.
+
+    Returns:
+        table
+            A table keyed by PAC part identifier with boolean active states.
+
+    Example Usage:
+        ```lua
+        local activeParts = client:getParts()
+        if activeParts["fancy_hat"] then
+            print("Hat part is active.")
+        end
+        ```
+
+    Realm:
+        Shared
+]]
 function playerMeta:getParts()
     return self:getNetVar("parts", {})
 end
 
 if SERVER then
+    --[[
+        Purpose:
+            Sends the player's tracked PAC3 parts back to that player so the client can rebuild its attached PAC data.
+
+        When Used:
+            Requires PAC3 to be installed and the global `pac` table to be available. Call this after a player loads in or whenever the client's PAC attachments need to be refreshed from server state.
+
+        Returns:
+            nil
+
+        Example Usage:
+            ```lua
+            client:syncParts()
+            ```
+
+        Realm:
+            Server
+    ]]
     function playerMeta:syncParts()
         net.Start("liaPacSync")
         net.Send(self)
     end
 
+    --[[
+        Purpose:
+            Marks a PAC3 part as active for the player and broadcasts the attach request to clients.
+
+        Parameters:
+            partID (string)
+                The PAC part identifier to attach and track.
+
+        When Used:
+            Requires PAC3 to be installed and the global `pac` table to be available. Commonly used when a PAC-backed item equips or when character state needs to reapply a cosmetic part.
+
+        Returns:
+            nil
+
+        Example Usage:
+            ```lua
+            client:addPart("fancy_hat")
+            ```
+
+        Realm:
+            Server
+    ]]
     function playerMeta:addPart(partID)
         if self:getParts()[partID] then return end
         net.Start("liaPacPartAdd")
@@ -20,6 +87,28 @@ if SERVER then
         self:setNetVar("parts", parts)
     end
 
+    --[[
+        Purpose:
+            Removes a tracked PAC3 part from the player and tells clients to detach it.
+
+        Parameters:
+            partID (string)
+                The PAC part identifier to remove.
+
+        When Used:
+            Requires PAC3 to be installed and the global `pac` table to be available. Use this when a PAC-backed item is unequipped, dropped, or otherwise stops applying its visual attachment.
+
+        Returns:
+            nil
+
+        Example Usage:
+            ```lua
+            client:removePart("fancy_hat")
+            ```
+
+        Realm:
+            Server
+    ]]
     function playerMeta:removePart(partID)
         net.Start("liaPacPartRemove")
         net.WriteEntity(self)
@@ -30,6 +119,24 @@ if SERVER then
         self:setNetVar("parts", parts)
     end
 
+    --[[
+        Purpose:
+            Clears every tracked PAC3 part from the player and broadcasts a full reset.
+
+        When Used:
+            Requires PAC3 to be installed and the global `pac` table to be available. This is useful before rebuilding the player's PAC state, such as during loadout changes or observer transitions.
+
+        Returns:
+            nil
+
+        Example Usage:
+            ```lua
+            client:resetParts()
+            ```
+
+        Realm:
+            Server
+    ]]
     function playerMeta:resetParts()
         net.Start("liaPacPartReset")
         net.WriteEntity(self)
@@ -155,6 +262,10 @@ else
         for _, v in ipairs(events) do
             local eventObject = pac.CreateEvent(v.name, v.args)
             eventObject.Think = v.func
+            --[[
+                Realm:
+                    Shared
+            ]]
             function eventObject:IsAvailable()
                 return v.available()
             end

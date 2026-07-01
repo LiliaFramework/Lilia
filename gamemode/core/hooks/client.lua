@@ -1048,7 +1048,7 @@ function GM:CharLoaded(character)
 end
 
 function GM:PrePlayerDraw(client)
-    if lia.worldPreview and lia.worldPreview.shouldHidePlayer and lia.worldPreview.shouldHidePlayer(client) then
+    if lia.view and lia.view.shouldHidePlayer and lia.view.shouldHidePlayer(client) then
         client:DrawShadow(false)
         return true
     end

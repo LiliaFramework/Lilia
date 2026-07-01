@@ -26,6 +26,10 @@ details > summary .source-link-button--summary {
 Reference pages for documented Lilia libraries and module library helpers.
 
 <div class="card-grid">
+  <a href="./lia.admin/" class="card">
+    <h3>Admin</h3>
+    <p>Shared administration helpers for usergroup management, privilege registration, permission checks, CAMI synchronization, and admin UI support.</p>
+  </a>
   <a href="./lia.attribs/" class="card">
     <h3>Attributes</h3>
     <p>Attribute helpers for loading, registering, and setting up character attributes.</p>
@@ -157,6 +161,14 @@ Reference pages for documented Lilia libraries and module library helpers.
   <a href="./lia.util/" class="card">
     <h3>Utility</h3>
     <p>General-purpose helpers for Lilia bodygroups, player lookup, entity ownership queries, world-space placement, string formatting, cached materials, table UI handling, and clientside drawing utilities.</p>
+  </a>
+  <a href="./lia.vendor/" class="card">
+    <h3>Vendor</h3>
+    <p>Vendor helpers for shared preset registration, per-entity vendor property storage, synchronization, and vendor data snapshots.</p>
+  </a>
+  <a href="./lia.view/" class="card">
+    <h3>View</h3>
+    <p>Clientside view helpers for world-space model previews, preview camera control, and temporary entity hiding.</p>
   </a>
   <a href="./lia.webimage/" class="card">
     <h3>Web Image</h3>
