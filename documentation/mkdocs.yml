@@ -98,7 +98,6 @@ nav:
       - Hooks:
           - Overview: developer/hooks/index.md
           # AUTO-GENERATED: HOOKS START
-          - Admin: developer/hooks/administration.admin.md
           - Administration: developer/hooks/administration.md
           - Administration - Submodules/Adminstick: developer/hooks/administration.submodules-adminstick.md
           - Administration - Submodules/Logs: developer/hooks/administration.submodules-logs.md

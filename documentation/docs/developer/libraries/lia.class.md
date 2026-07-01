@@ -35,7 +35,7 @@ The class library centralizes shared character class behavior under `lia.class`.
 ---
 
 <details class="realm-shared" id="function-liaclassgetbodygroups">
-<summary><span class="summary-main"><a id="lia.class.getBodygroups"></a>lia.class.getBodygroups(class)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/modules/teams/classes.lua#L60" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="lia.class.getBodygroups"></a>lia.class.getBodygroups(class)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/classes.lua#L60" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="liaclassgetbodygroups"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -69,7 +69,7 @@ The class library centralizes shared character class behavior under `lia.class`.
 ---
 
 <details class="realm-shared" id="function-liaclassgetmergedbodygroups">
-<summary><span class="summary-main"><a id="lia.class.getMergedBodygroups"></a>lia.class.getMergedBodygroups(character)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/modules/teams/classes.lua#L86" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="lia.class.getMergedBodygroups"></a>lia.class.getMergedBodygroups(character)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/classes.lua#L86" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="liaclassgetmergedbodygroups"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -103,7 +103,7 @@ The class library centralizes shared character class behavior under `lia.class`.
 ---
 
 <details class="realm-shared" id="function-liaclassregister">
-<summary><span class="summary-main"><a id="lia.class.register"></a>lia.class.register(uniqueID, data)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/modules/teams/classes.lua#L131" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="lia.class.register"></a>lia.class.register(uniqueID, data)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/classes.lua#L131" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="liaclassregister"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -142,7 +142,7 @@ The class library centralizes shared character class behavior under `lia.class`.
 ---
 
 <details class="realm-shared" id="function-liaclassloadfromdir">
-<summary><span class="summary-main"><a id="lia.class.loadFromDir"></a>lia.class.loadFromDir(directory)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/modules/teams/classes.lua#L192" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="lia.class.loadFromDir"></a>lia.class.loadFromDir(directory)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/classes.lua#L192" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="liaclassloadfromdir"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -176,7 +176,7 @@ The class library centralizes shared character class behavior under `lia.class`.
 ---
 
 <details class="realm-shared" id="function-liaclasscanbe">
-<summary><span class="summary-main"><a id="lia.class.canBe"></a>lia.class.canBe(client, class)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/modules/teams/classes.lua#L257" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="lia.class.canBe"></a>lia.class.canBe(client, class)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/classes.lua#L257" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="liaclasscanbe"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -211,7 +211,7 @@ The class library centralizes shared character class behavior under `lia.class`.
 ---
 
 <details class="realm-shared" id="function-liaclassget">
-<summary><span class="summary-main"><a id="lia.class.get"></a>lia.class.get(identifier)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/modules/teams/classes.lua#L296" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="lia.class.get"></a>lia.class.get(identifier)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/classes.lua#L296" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="liaclassget"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -245,7 +245,7 @@ The class library centralizes shared character class behavior under `lia.class`.
 ---
 
 <details class="realm-shared" id="function-liaclassgetplayers">
-<summary><span class="summary-main"><a id="lia.class.getPlayers"></a>lia.class.getPlayers(class)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/modules/teams/classes.lua#L321" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="lia.class.getPlayers"></a>lia.class.getPlayers(class)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/classes.lua#L321" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="liaclassgetplayers"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -279,7 +279,7 @@ The class library centralizes shared character class behavior under `lia.class`.
 ---
 
 <details class="realm-shared" id="function-liaclassgetplayercount">
-<summary><span class="summary-main"><a id="lia.class.getPlayerCount"></a>lia.class.getPlayerCount(class)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/modules/teams/classes.lua#L351" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="lia.class.getPlayerCount"></a>lia.class.getPlayerCount(class)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/classes.lua#L351" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="liaclassgetplayercount"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -313,7 +313,7 @@ The class library centralizes shared character class behavior under `lia.class`.
 ---
 
 <details class="realm-shared" id="function-liaclassretrieveclass">
-<summary><span class="summary-main"><a id="lia.class.retrieveClass"></a>lia.class.retrieveClass(class)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/modules/teams/classes.lua#L381" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="lia.class.retrieveClass"></a>lia.class.retrieveClass(class)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/classes.lua#L381" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="liaclassretrieveclass"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -347,7 +347,7 @@ The class library centralizes shared character class behavior under `lia.class`.
 ---
 
 <details class="realm-shared" id="function-liaclasshaswhitelist">
-<summary><span class="summary-main"><a id="lia.class.hasWhitelist"></a>lia.class.hasWhitelist(class)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/modules/teams/classes.lua#L411" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="lia.class.hasWhitelist"></a>lia.class.hasWhitelist(class)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/classes.lua#L411" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="liaclasshaswhitelist"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -383,7 +383,7 @@ The class library centralizes shared character class behavior under `lia.class`.
 ---
 
 <details class="realm-shared" id="function-liaclassretrievejoinable">
-<summary><span class="summary-main"><a id="lia.class.retrieveJoinable"></a>lia.class.retrieveJoinable(client)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/modules/teams/classes.lua#L440" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="lia.class.retrieveJoinable"></a>lia.class.retrieveJoinable(client)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/classes.lua#L440" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="liaclassretrievejoinable"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -424,7 +424,7 @@ The class library centralizes shared character class behavior under `lia.class`.
 ---
 
 <details class="realm-shared" id="function-canplayerjoinclass">
-<summary><span class="summary-main"><a id="CanPlayerJoinClass"></a>CanPlayerJoinClass(client, class, classData)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/modules/teams/classes.lua#L14" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="CanPlayerJoinClass"></a>CanPlayerJoinClass(client, class, classData)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/classes.lua#L14" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="canplayerjoinclass"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">

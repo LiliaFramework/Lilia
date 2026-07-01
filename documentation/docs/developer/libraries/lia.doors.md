@@ -35,7 +35,7 @@ The door library centralizes shared and networked door metadata under `lia.doors
 ---
 
 <details class="realm-shared" id="function-liadoorsgetdoordefaultvalues">
-<summary><span class="summary-main"><a id="lia.doors.getDoorDefaultValues"></a>lia.doors.getDoorDefaultValues()</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/modules/doors/doors.lua#L62" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="lia.doors.getDoorDefaultValues"></a>lia.doors.getDoorDefaultValues()</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/doors.lua#L62" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="liadoorsgetdoordefaultvalues"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -65,7 +65,7 @@ The door library centralizes shared and networked door metadata under `lia.doors
 ---
 
 <details class="realm-server" id="function-liadoorssetcacheddata">
-<summary><span class="summary-main"><a id="lia.doors.setCachedData"></a>lia.doors.setCachedData(door, data)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/modules/doors/doors.lua#L98" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="lia.doors.setCachedData"></a>lia.doors.setCachedData(door, data)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/doors.lua#L98" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="liadoorssetcacheddata"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -98,7 +98,7 @@ The door library centralizes shared and networked door metadata under `lia.doors
 ---
 
 <details class="realm-server" id="function-liadoorsgetcacheddata">
-<summary><span class="summary-main"><a id="lia.doors.getCachedData"></a>lia.doors.getCachedData(door)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/modules/doors/doors.lua#L149" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="lia.doors.getCachedData"></a>lia.doors.getCachedData(door)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/doors.lua#L149" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="liadoorsgetcacheddata"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -133,7 +133,7 @@ The door library centralizes shared and networked door metadata under `lia.doors
 ---
 
 <details class="realm-server" id="function-liadoorssyncdoordata">
-<summary><span class="summary-main"><a id="lia.doors.syncDoorData"></a>lia.doors.syncDoorData(door)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/modules/doors/doors.lua#L188" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="lia.doors.syncDoorData"></a>lia.doors.syncDoorData(door)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/doors.lua#L188" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="liadoorssyncdoordata"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -162,7 +162,7 @@ The door library centralizes shared and networked door metadata under `lia.doors
 ---
 
 <details class="realm-server" id="function-liadoorssyncalldoorstoclient">
-<summary><span class="summary-main"><a id="lia.doors.syncAllDoorsToClient"></a>lia.doors.syncAllDoorsToClient(client)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/modules/doors/doors.lua#L223" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="lia.doors.syncAllDoorsToClient"></a>lia.doors.syncAllDoorsToClient(client)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/doors.lua#L223" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="liadoorssyncalldoorstoclient"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -191,7 +191,7 @@ The door library centralizes shared and networked door metadata under `lia.doors
 ---
 
 <details class="realm-server" id="function-liadoorssetdata">
-<summary><span class="summary-main"><a id="lia.doors.setData"></a>lia.doors.setData(door, data)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/modules/doors/doors.lua#L253" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="lia.doors.setData"></a>lia.doors.setData(door, data)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/doors.lua#L253" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="liadoorssetdata"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -224,7 +224,7 @@ The door library centralizes shared and networked door metadata under `lia.doors
 ---
 
 <details class="realm-server" id="function-liadoorsaddpreset">
-<summary><span class="summary-main"><a id="lia.doors.addPreset"></a>lia.doors.addPreset(mapName, presetData)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/modules/doors/doors.lua#L279" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="lia.doors.addPreset"></a>lia.doors.addPreset(mapName, presetData)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/doors.lua#L279" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="liadoorsaddpreset"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -254,7 +254,7 @@ The door library centralizes shared and networked door metadata under `lia.doors
 ---
 
 <details class="realm-server" id="function-liadoorsgetpreset">
-<summary><span class="summary-main"><a id="lia.doors.getPreset"></a>lia.doors.getPreset(mapName)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/modules/doors/doors.lua#L309" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="lia.doors.getPreset"></a>lia.doors.getPreset(mapName)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/doors.lua#L309" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="liadoorsgetpreset"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -288,7 +288,7 @@ The door library centralizes shared and networked door metadata under `lia.doors
 ---
 
 <details class="realm-server" id="function-liadoorsverifydatabaseschema">
-<summary><span class="summary-main"><a id="lia.doors.verifyDatabaseSchema"></a>lia.doors.verifyDatabaseSchema()</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/modules/doors/doors.lua#L331" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="lia.doors.verifyDatabaseSchema"></a>lia.doors.verifyDatabaseSchema()</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/doors.lua#L331" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="liadoorsverifydatabaseschema"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -312,7 +312,7 @@ The door library centralizes shared and networked door metadata under `lia.doors
 ---
 
 <details class="realm-server" id="function-liadoorscleanupcorrupteddata">
-<summary><span class="summary-main"><a id="lia.doors.cleanupCorruptedData"></a>lia.doors.cleanupCorruptedData()</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/modules/doors/doors.lua#L399" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="lia.doors.cleanupCorruptedData"></a>lia.doors.cleanupCorruptedData()</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/doors.lua#L399" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="liadoorscleanupcorrupteddata"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -336,7 +336,7 @@ The door library centralizes shared and networked door metadata under `lia.doors
 ---
 
 <details class="realm-shared" id="function-liadoorsgetdata">
-<summary><span class="summary-main"><a id="lia.doors.getData"></a>lia.doors.getData(door)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/modules/doors/doors.lua#L459" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="lia.doors.getData"></a>lia.doors.getData(door)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/doors.lua#L459" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="liadoorsgetdata"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -371,7 +371,7 @@ The door library centralizes shared and networked door metadata under `lia.doors
 ---
 
 <details class="realm-client" id="function-liadoorsgetcacheddata">
-<summary><span class="summary-main"><a id="lia.doors.getCachedData"></a>lia.doors.getCachedData(door)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/modules/doors/doors.lua#L490" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="lia.doors.getCachedData"></a>lia.doors.getCachedData(door)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/doors.lua#L490" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="liadoorsgetcacheddata"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -406,7 +406,7 @@ The door library centralizes shared and networked door metadata under `lia.doors
 ---
 
 <details class="realm-client" id="function-liadoorsupdatecacheddata">
-<summary><span class="summary-main"><a id="lia.doors.updateCachedData"></a>lia.doors.updateCachedData(doorID, data)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/modules/doors/doors.lua#L532" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="lia.doors.updateCachedData"></a>lia.doors.updateCachedData(doorID, data)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/doors.lua#L532" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="liadoorsupdatecacheddata"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">

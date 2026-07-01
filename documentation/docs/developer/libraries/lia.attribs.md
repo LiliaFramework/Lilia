@@ -35,7 +35,7 @@ The attributes library centralizes shared attribute behavior under `lia.attribs`
 ---
 
 <details class="realm-shared" id="function-liaattribsloadfromdir">
-<summary><span class="summary-main"><a id="lia.attribs.loadFromDir"></a>lia.attribs.loadFromDir(directory)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/modules/attributes/attributes.lua#L35" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="lia.attribs.loadFromDir"></a>lia.attribs.loadFromDir(directory)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/attributes.lua#L35" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="liaattribsloadfromdir"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -69,7 +69,7 @@ The attributes library centralizes shared attribute behavior under `lia.attribs`
 ---
 
 <details class="realm-shared" id="function-liaattribsregister">
-<summary><span class="summary-main"><a id="lia.attribs.register"></a>lia.attribs.register(uniqueID, data)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/modules/attributes/attributes.lua#L71" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="lia.attribs.register"></a>lia.attribs.register(uniqueID, data)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/attributes.lua#L71" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="liaattribsregister"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -107,7 +107,7 @@ The attributes library centralizes shared attribute behavior under `lia.attribs`
 ---
 
 <details class="realm-server" id="function-liaattribssetup">
-<summary><span class="summary-main"><a id="lia.attribs.setup"></a>lia.attribs.setup(client)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/modules/attributes/attributes.lua#L106" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="lia.attribs.setup"></a>lia.attribs.setup(client)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/attributes.lua#L106" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="liaattribssetup"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
