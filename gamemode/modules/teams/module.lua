@@ -5,6 +5,9 @@
     Purpose:
         Determines whether a character may be transferred to a different faction or class.
 
+    Category:
+        Teams
+
     Parameters:
         character (Character)
             The character being transferred.
@@ -29,6 +32,9 @@
     Purpose:
         Determines whether a player may invite another player to a class.
 
+    Category:
+        Teams
+
     Parameters:
         client (Player)
             The player sending the invite.
@@ -50,6 +56,9 @@
     Purpose:
         Determines whether a player may invite another player to a faction.
 
+    Category:
+        Teams
+
     Parameters:
         client (Player)
             The player sending the invite.
@@ -70,6 +79,9 @@
 
     Purpose:
         Determines whether a player may join a class during class eligibility checks.
+
+    Category:
+        Teams
 
     Parameters:
         client (Player)
@@ -95,6 +107,9 @@
     Purpose:
         Allows code to override faction population limit checks.
 
+    Category:
+        Teams
+
     Parameters:
         faction (number|string)
             The faction being checked.
@@ -119,6 +134,9 @@
     Purpose:
         Allows clientside code to override a faction description before display.
 
+    Category:
+        Teams
+
     Parameters:
         uniqueID (string)
             The faction unique ID or display identifier.
@@ -139,6 +157,9 @@
 
     Purpose:
         Allows clientside code to override whether faction model skins or bodygroups may be customized.
+
+    Category:
+        Teams
 
     Parameters:
         client (Player)
@@ -170,6 +191,9 @@
     Purpose:
         Allows clientside code to override the model list used for a faction.
 
+    Category:
+        Teams
+
     Parameters:
         uniqueID (string)
             The faction unique ID or display identifier.
@@ -191,6 +215,9 @@
     Purpose:
         Allows clientside code to override a faction name before display.
 
+    Category:
+        Teams
+
     Parameters:
         uniqueID (string)
             The faction unique ID or display identifier.
@@ -211,6 +238,9 @@
 
     Purpose:
         Allows clientside code to add extra options to the faction roster UI.
+
+    Category:
+        Teams
 
     Parameters:
         list (table)

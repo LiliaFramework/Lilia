@@ -18,6 +18,9 @@
     Purpose:
         Runs after a module's standard files, folders, entities, networking strings, and client web assets are included.
 
+    Category:
+        Modularity
+
     Parameters:
         path (string)
             The directory path of the module being loaded.
@@ -35,6 +38,9 @@
     Purpose:
         Runs after the active schema has been loaded and before preload, base, schema, and override modules are loaded.
 
+    Category:
+        Modularity
+
     Realm:
         Shared
 ]]
@@ -44,6 +50,9 @@
 
     Purpose:
         Runs after preload, base, schema, and override modules have been loaded.
+
+    Category:
+        Modularity
 
     Realm:
         Shared

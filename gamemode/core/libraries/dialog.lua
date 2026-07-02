@@ -18,6 +18,9 @@
     Purpose:
         Runs after a server resolves an NPC dialog type and before the sanitized dialog payload is sent to the client.
 
+    Category:
+        Dialog
+
     Parameters:
         client (Player)
             The player opening the NPC dialog.

@@ -18,6 +18,9 @@
     Purpose:
         Runs after a web image is successfully downloaded, saved, and built into a material.
 
+    Category:
+        Web Image
+
     Parameters:
         name (string)
             The registered image name or derived save name used by the web image cache.

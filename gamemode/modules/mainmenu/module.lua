@@ -5,6 +5,9 @@
     Purpose:
         Allows code to override which character ID should be treated as the player's main character.
 
+    Category:
+        Main Menu
+
     Parameters:
         None
 
@@ -22,6 +25,9 @@
     Purpose:
         Allows code to replace the default character menu panel creation.
 
+    Category:
+        Main Menu
+
     Parameters:
         None
 
@@ -38,6 +44,9 @@
 
     Purpose:
         Called whenever the third-person option is toggled through the main menu or option system.
+
+    Category:
+        Main Menu
 
     Parameters:
         enabled (boolean)

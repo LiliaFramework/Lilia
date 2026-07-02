@@ -5,6 +5,9 @@
     Purpose:
         Called after a bag item finishes creating or restoring its nested inventory.
 
+    Category:
+        Inventory - Grid
+
     Parameters:
         item (table)
             The bag item that owns the nested inventory.
@@ -25,6 +28,9 @@
     Purpose:
         Called when a bag item's nested inventory is removed.
 
+    Category:
+        Inventory - Grid
+
     Parameters:
         item (table)
             The bag item losing its nested inventory.
@@ -44,6 +50,9 @@
 
     Purpose:
         Allows clientside code to intercept clicks on a grid inventory item icon before default handling runs.
+
+    Category:
+        Inventory - Grid
 
     Parameters:
         panel (Panel)
@@ -69,6 +78,9 @@
     Purpose:
         Called after a grid inventory item icon panel is created.
 
+    Category:
+        Inventory - Grid
+
     Parameters:
         icon (Panel)
             The newly created item icon panel.
@@ -92,6 +104,9 @@
     Purpose:
         Called after a grid inventory panel is created.
 
+    Category:
+        Inventory - Grid
+
     Parameters:
         panel (Panel)
             The created inventory panel.
@@ -114,6 +129,9 @@
 
     Purpose:
         Allows code to handle combining one item with another before default transfer behavior continues.
+
+    Category:
+        Inventory - Grid
 
     Parameters:
         client (Player)
@@ -139,6 +157,9 @@
     Purpose:
         Called when the grid inventory stack restore flow fails to recover an item.
 
+    Category:
+        Inventory - Grid
+
     Parameters:
         itemTypeOrItem (string|table)
             The item type or item reference that could not be restored.
@@ -155,6 +176,9 @@
 
     Purpose:
         Called on the client when a grid inventory panel requests an item transfer.
+
+    Category:
+        Inventory - Grid
 
     Parameters:
         panel (Panel)
@@ -184,6 +208,9 @@
 
     Purpose:
         Allows code to configure access rules on a newly created bag inventory.
+
+    Category:
+        Inventory - Grid
 
     Parameters:
         inventory (table)

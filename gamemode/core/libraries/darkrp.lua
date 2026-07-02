@@ -18,6 +18,9 @@
     Purpose:
         Applies supported DarkRP door keyvalues to Lilia door data when map entities receive key-value pairs.
 
+    Category:
+        DarkRP
+
     Parameters:
         entity (Entity)
             The entity receiving the keyvalue.
@@ -40,6 +43,9 @@
 
     Purpose:
         Copies Lilia faction indices into `RPExtraTeams` and assigns each copied faction its DarkRP-compatible team index.
+
+    Category:
+        DarkRP
 
     Returns:
         nil

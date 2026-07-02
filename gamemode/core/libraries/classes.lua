@@ -18,6 +18,9 @@
     Purpose:
         Allows plugins or modules to block a player from joining a class during class eligibility checks.
 
+    Category:
+        Classes
+
     Parameters:
         client (Player)
             The player attempting to join the class.

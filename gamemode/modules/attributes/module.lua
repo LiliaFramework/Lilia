@@ -5,6 +5,9 @@
     Purpose:
         Allows code to adjust the computed stamina gain or drain before it is applied.
 
+    Category:
+        Attributes
+
     Parameters:
         client (Player)
             The player whose stamina value is being updated.

@@ -5,6 +5,9 @@
     Purpose:
         Allows code to provide a custom respawn location before the spawn module falls back to its normal selection logic.
 
+    Category:
+        Spawns
+
     Parameters:
         client (Player)
             The player who is respawning.
@@ -26,6 +29,9 @@
     Purpose:
         Allows code to provide a custom spawn location for normal character spawns.
 
+    Category:
+        Spawns
+
     Parameters:
         client (Player)
             The player who is spawning.
@@ -46,6 +52,9 @@
 
     Purpose:
         Called on the client when a key is pressed while the respawn screen is active.
+
+    Category:
+        Spawns
 
     Parameters:
         ply (Player)
@@ -77,6 +86,9 @@
     Purpose:
         Called after the spawn module selects a final spawn point for a player.
 
+    Category:
+        Spawns
+
     Parameters:
         client (Player)
             The player being placed at the spawn point.
@@ -99,6 +111,9 @@
 
     Purpose:
         Determines whether the clientside respawn screen should be shown.
+
+    Category:
+        Spawns
 
     Parameters:
         ply (Player)
@@ -126,6 +141,9 @@
 
     Purpose:
         Determines whether the spawn module should prefer map-defined spawn entities before its usual class or faction spawn logic.
+
+    Category:
+        Spawns
 
     Parameters:
         client (Player)

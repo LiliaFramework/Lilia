@@ -5,6 +5,9 @@
     Purpose:
         Allows code to add extra columns to the administration character list.
 
+    Category:
+        Administration
+
     Parameters:
         columns (table)
             The mutable list of character list column definitions.
@@ -21,6 +24,9 @@
 
     Purpose:
         Allows code to append extra values to a generated character list row before it is sent to clients.
+
+    Category:
+        Administration
 
     Parameters:
         entry (table)
@@ -41,6 +47,9 @@
 
     Purpose:
         Allows clientside code to override which entity should be treated as the admin ESP target.
+
+    Category:
+        Administration
 
     Parameters:
         ent (Entity)
@@ -63,6 +72,9 @@
     Purpose:
         Called after the administration system finishes loading usergroups and privileges.
 
+    Category:
+        Administration
+
     Parameters:
         groups (table)
             The registered administration groups.
@@ -83,6 +95,9 @@
     Purpose:
         Called after a new administration privilege is registered.
 
+    Category:
+        Administration
+
     Parameters:
         privilege (table)
             The registered privilege definition.
@@ -100,6 +115,9 @@
     Purpose:
         Called after an administration privilege is removed.
 
+    Category:
+        Administration
+
     Parameters:
         privilege (table)
             The privilege definition that was removed.
@@ -116,6 +134,9 @@
 
     Purpose:
         Called after the administration system changes a player's usergroup.
+
+    Category:
+        Administration
 
     Parameters:
         sid (string)
@@ -143,6 +164,9 @@
     Purpose:
         Called after a new administration usergroup is created.
 
+    Category:
+        Administration
+
     Parameters:
         groupName (string)
             The created usergroup name.
@@ -162,6 +186,9 @@
 
     Purpose:
         Called after a usergroup's permissions are changed.
+
+    Category:
+        Administration
 
     Parameters:
         groupName (string)
@@ -183,6 +210,9 @@
     Purpose:
         Called after an administration usergroup is removed.
 
+    Category:
+        Administration
+
     Parameters:
         groupName (string)
             The removed usergroup name.
@@ -199,6 +229,9 @@
 
     Purpose:
         Called after an administration usergroup is renamed.
+
+    Category:
+        Administration
 
     Parameters:
         oldName (string)
@@ -220,6 +253,9 @@
     Purpose:
         Called after a player is gagged.
 
+    Category:
+        Administration
+
     Parameters:
         target (Player)
             The player who was gagged.
@@ -239,6 +275,9 @@
 
     Purpose:
         Called after a player is muted.
+
+    Category:
+        Administration
 
     Parameters:
         target (Player)
@@ -260,6 +299,9 @@
     Purpose:
         Called after a player is ungagged.
 
+    Category:
+        Administration
+
     Parameters:
         target (Player)
             The player who was ungagged.
@@ -280,6 +322,9 @@
     Purpose:
         Called after a player is unmuted.
 
+    Category:
+        Administration
+
     Parameters:
         target (Player)
             The player who was unmuted.
@@ -299,6 +344,9 @@
 
     Purpose:
         Allows clientside code to handle an admin command before the chat-command fallback runs.
+
+    Category:
+        Administration
 
     Parameters:
         cmd (string)

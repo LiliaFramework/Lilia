@@ -18,6 +18,9 @@
     Purpose:
         Runs after a command has been registered with `lia.command.add`.
 
+    Category:
+        Commands
+
     Parameters:
         command (string)
             The command name that was registered.
@@ -34,6 +37,9 @@
 
     Purpose:
         Allows plugins or modules to override whether a player can use a command after normal privilege checks are prepared.
+
+    Category:
+        Commands
 
     Parameters:
         client (Player)
@@ -55,6 +61,9 @@
 
     Purpose:
         Runs after a command callback has executed.
+
+    Category:
+        Commands
 
     Parameters:
         client (Player)

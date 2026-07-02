@@ -18,6 +18,9 @@
     Purpose:
         Allows plugins or modules to override the icon path used for a usergroup in admin-related UI.
 
+    Category:
+        Administration
+
     Parameters:
         groupName (string)
             The normalized usergroup name being resolved.
@@ -42,6 +45,9 @@
     Purpose:
         Runs after the admin system finishes loading groups and privileges from storage.
 
+    Category:
+        Administration
+
     Parameters:
         groups (table)
             The normalized admin usergroup table.
@@ -61,6 +67,9 @@
 
     Purpose:
         Allows modules to add pages to the admin menu, including the usergroup management panel defined in this file.
+
+    Category:
+        Administration
 
     Parameters:
         pages (table)

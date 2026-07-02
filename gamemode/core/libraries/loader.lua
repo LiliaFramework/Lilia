@@ -18,6 +18,9 @@
     Purpose:
         Runs before a Discord relay embed is dispatched through the configured webhook.
 
+    Category:
+        Loader
+
     Parameters:
         embed (table)
             The embed payload being prepared for relay.
@@ -32,6 +35,9 @@
     Purpose:
         Runs when the Discord relay cannot use the CHTTP send path and falls back to the HTTP send path.
 
+    Category:
+        Loader
+
     Realm:
         Shared
 ]]
@@ -41,6 +47,9 @@
 
     Purpose:
         Runs after the Discord relay request has been dispatched.
+
+    Category:
+        Loader
 
     Parameters:
         embed (table)
@@ -56,6 +65,9 @@
     Purpose:
         Runs immediately before the server begins connecting to the configured database.
 
+    Category:
+        Loader
+
     Realm:
         Server
 ]]
@@ -66,6 +78,9 @@
     Purpose:
         Runs after the database connection succeeds and database tables are loaded.
 
+    Category:
+        Loader
+
     Realm:
         Server
 ]]
@@ -75,6 +90,9 @@
 
     Purpose:
         Runs before map cleanup when the `sbox_persist` console variable changes.
+
+    Category:
+        Loader
 
     Parameters:
         old (string)
@@ -89,6 +107,9 @@
 
     Purpose:
         Runs after map cleanup when the `sbox_persist` console variable changes to a non-empty value.
+
+    Category:
+        Loader
 
     Parameters:
         new (string)

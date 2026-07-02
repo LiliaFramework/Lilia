@@ -18,6 +18,9 @@
     Purpose:
         Runs after configuration values have been loaded on the server or received by the client.
 
+    Category:
+        Configuration
+
     Realm:
         Shared
 ]]
@@ -27,6 +30,9 @@
 
     Purpose:
         Runs whenever a configuration value is updated locally through `lia.config.set`, `lia.config.forceSet`, or a networked configuration update.
+
+    Category:
+        Configuration
 
     Parameters:
         key (string)
@@ -48,6 +54,9 @@
     Purpose:
         Allows plugins or modules to control whether a player may view or modify configuration values.
 
+    Category:
+        Configuration
+
     Parameters:
         client (Player)
             The player attempting to access or modify configuration values.
@@ -68,6 +77,9 @@
 
     Purpose:
         Runs on the server after a player successfully changes a configuration value.
+
+    Category:
+        Configuration
 
     Parameters:
         key (string)
@@ -92,6 +104,9 @@
     Purpose:
         Runs when the `IsVoiceEnabled` configuration value changes.
 
+    Category:
+        Configuration
+
     Parameters:
         enabled (boolean)
             True when voice chat is enabled, false when it is disabled.
@@ -106,6 +121,9 @@
     Purpose:
         Runs shortly after the `SalaryInterval` configuration value changes so salary timers can be rebuilt.
 
+    Category:
+        Configuration
+
     Realm:
         Server
 ]]
@@ -115,6 +133,9 @@
 
     Purpose:
         Runs when the `DermaSkin` configuration value changes.
+
+    Category:
+        Configuration
 
     Parameters:
         skin (string)
@@ -129,6 +150,9 @@
 
     Purpose:
         Allows menu tabs to be collected for the `DefaultMenuTab` configuration option.
+
+    Category:
+        Configuration
 
     Parameters:
         tabs (table)

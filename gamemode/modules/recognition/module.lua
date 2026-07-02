@@ -5,6 +5,9 @@
     Purpose:
         Called after the recognition system force-recognizes nearby players for a speaker.
 
+    Category:
+        Recognition
+
     Parameters:
         ply (Player)
             The player who triggered forced recognition.
@@ -25,6 +28,9 @@
     Purpose:
         Lets code mark additional chat types as recognized chat for unknown-name masking.
 
+    Category:
+        Recognition
+
     Parameters:
         chatType (string)
             The chat class unique ID being checked.
@@ -42,6 +48,9 @@
 
     Purpose:
         Called after a player recognizes another character through the recognition system.
+
+    Category:
+        Recognition
 
     Parameters:
         ply (Player)

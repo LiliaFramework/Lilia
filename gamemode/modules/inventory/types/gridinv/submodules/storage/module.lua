@@ -5,6 +5,9 @@
     Purpose:
         Determines whether a player may convert an entity into storage.
 
+    Category:
+        Inventory - Storage
+
     Parameters:
         client (Player)
             The player trying to create the storage entity.
@@ -29,6 +32,9 @@
     Purpose:
         Determines whether a storage entity's inventory data should be persisted.
 
+    Category:
+        Inventory - Storage
+
     Parameters:
         ent (Entity)
             The storage entity being saved.
@@ -50,6 +56,9 @@
     Purpose:
         Called when the storage system initializes a storage-capable entity.
 
+    Category:
+        Inventory - Storage
+
     Parameters:
         entity (Entity)
             The storage entity being initialized.
@@ -66,6 +75,9 @@
 
     Purpose:
         Called after the client creates the paired inventory panels for a storage UI.
+
+    Category:
+        Inventory - Storage
 
     Parameters:
         localInvPanel (Panel)
@@ -89,6 +101,9 @@
 
     Purpose:
         Determines whether a player may transfer a specific item through a storage interaction.
+
+    Category:
+        Inventory - Storage
 
     Parameters:
         client (Player)
@@ -114,6 +129,9 @@
     Purpose:
         Called when a storage entity is removed and its attached inventory is being cleaned up.
 
+    Category:
+        Inventory - Storage
+
     Parameters:
         entity (Entity)
             The storage entity being removed.
@@ -133,6 +151,9 @@
 
     Purpose:
         Called after a storage entity is assigned an inventory.
+
+    Category:
+        Inventory - Storage
 
     Parameters:
         entity (Entity)
@@ -157,6 +178,9 @@
     Purpose:
         Called after persisted storage data is restored onto an entity.
 
+    Category:
+        Inventory - Storage
+
     Parameters:
         ent (Entity)
             The storage entity that was restored.
@@ -176,6 +200,9 @@
 
     Purpose:
         Called on the client when a storage unlock prompt should be shown.
+
+    Category:
+        Inventory - Storage
 
     Parameters:
         entity (Entity)

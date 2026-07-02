@@ -5,6 +5,9 @@
     Purpose:
         Allows code to override the computed maximum carry weight for a weight inventory.
 
+    Category:
+        Inventory - Weight
+
     Parameters:
         inventory (table)
             The inventory whose maximum weight is being calculated.

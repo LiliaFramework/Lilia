@@ -18,6 +18,9 @@
     Purpose:
         Runs after an option is registered with `lia.option.add`.
 
+    Category:
+        Options
+
     Parameters:
         key (string)
             The unique option identifier.
@@ -34,6 +37,9 @@
 
     Purpose:
         Runs after `lia.option.set` changes a registered option value.
+
+    Category:
+        Options
 
     Parameters:
         key (string)
@@ -55,6 +61,9 @@
     Purpose:
         Runs on the server when a changed option is marked for networking.
 
+    Category:
+        Options
+
     Parameters:
         client (Player|nil)
             The player associated with the networked option change, or nil when triggered directly by `lia.option.set`.
@@ -75,6 +84,9 @@
     Purpose:
         Runs after saved option values are loaded, or after defaults are initialized and saved when no option file exists.
 
+    Category:
+        Options
+
     Realm:
         Shared
 ]]
@@ -84,6 +96,9 @@
 
     Purpose:
         Runs when the `thirdPersonEnabled` option changes.
+
+    Category:
+        Options
 
     Parameters:
         enabled (boolean)

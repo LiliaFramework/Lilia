@@ -18,6 +18,9 @@
     Purpose:
         Runs after a client changes their voice mode through a player interaction action.
 
+    Category:
+        Player Interaction
+
     Parameters:
         client (Player)
             The player whose voice mode changed.

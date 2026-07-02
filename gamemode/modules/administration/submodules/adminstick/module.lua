@@ -5,6 +5,9 @@
     Purpose:
         Allows clientside code to add extra model entries to the admin stick model picker.
 
+    Category:
+        Administration - Admin Stick
+
     Parameters:
         modList (table)
             The mutable list of model definitions shown by the admin stick UI.
@@ -22,6 +25,9 @@
     Purpose:
         Called after the admin stick menu closes.
 
+    Category:
+        Administration - Admin Stick
+
     Parameters:
         None
 
@@ -37,6 +43,9 @@
 
     Purpose:
         Called when the admin stick requests its management UI for a target entity.
+
+    Category:
+        Administration - Admin Stick
 
     Parameters:
         target (Entity)
@@ -54,6 +63,9 @@
 
     Purpose:
         Allows clientside code to add option groups to the admin stick menu for the current target.
+
+    Category:
+        Administration - Admin Stick
 
     Parameters:
         currentMenu (Panel)

@@ -18,6 +18,9 @@
     Purpose:
         Allows schemas, plugins, or modules to provide a default character name during character creation.
 
+    Category:
+        Character
+
     Parameters:
         client (Player)
             The player creating the character.
@@ -41,6 +44,9 @@
 
     Purpose:
         Allows schemas, plugins, or modules to provide a default character description during character creation.
+
+    Category:
+        Character
 
     Parameters:
         client (Player)
@@ -66,6 +72,9 @@
     Purpose:
         Runs after a networked character variable changes.
 
+    Category:
+        Character
+
     Parameters:
         character (Character)
             The character whose variable changed.
@@ -86,6 +95,9 @@
     Purpose:
         Runs after a character bodygroup update is applied.
 
+    Category:
+        Character
+
     Parameters:
         client (Player)
             The player associated with the character.
@@ -103,6 +115,9 @@
 
     Purpose:
         Allows schemas, plugins, or modules to override the maximum starting value for a specific attribute.
+
+    Category:
+        Character
 
     Parameters:
         client (Player)
@@ -124,6 +139,9 @@
     Purpose:
         Allows schemas, plugins, or modules to override the total starting attribute points available during character creation.
 
+    Category:
+        Character
+
     Parameters:
         client (Player)
             The player creating the character.
@@ -144,6 +162,9 @@
     Purpose:
         Creates the default inventory for a newly created or restored character when no inventories exist.
 
+    Category:
+        Character
+
     Parameters:
         character (Character)
             The character that needs a default inventory.
@@ -162,6 +183,9 @@
     Purpose:
         Runs after a character object is rebuilt from persistent data and before its inventories finish loading.
 
+    Category:
+        Character
+
     Parameters:
         character (Character)
             The restored character object.
@@ -176,6 +200,9 @@
     Purpose:
         Runs before a character is deleted from memory and persistent storage.
 
+    Category:
+        Character
+
     Parameters:
         id (number)
             The ID of the character being deleted.
@@ -189,6 +216,9 @@
 
     Purpose:
         Runs after a character record and its character data are deleted.
+
+    Category:
+        Character
 
     Parameters:
         client (Player)
@@ -206,6 +236,9 @@
     Purpose:
         Runs when a player whose character list contained a deleted character needs their character list synchronized.
 
+    Category:
+        Character
+
     Parameters:
         client (Player)
             The player whose character list should be synchronized.
@@ -219,6 +252,9 @@
 
     Purpose:
         Runs after a loaded character is saved, detached from inventories, and removed from the loaded character cache.
+
+    Category:
+        Character
 
     Parameters:
         character (Character)

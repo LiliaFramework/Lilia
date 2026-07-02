@@ -18,6 +18,9 @@
     Purpose:
         Allows plugins or modules to intercept incoming networked notices before a clientside notice panel is created.
 
+    Category:
+        Notices
+
     Parameters:
         message (string)
             The notice text that would be displayed.

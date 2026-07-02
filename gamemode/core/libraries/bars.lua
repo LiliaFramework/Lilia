@@ -18,6 +18,9 @@
     Purpose:
         Allows plugins or modules to hide all registered HUD bars before they are drawn.
 
+    Category:
+        Bars
+
     Parameters:
         None
 
@@ -34,6 +37,9 @@
 
     Purpose:
         Allows plugins or modules to force a specific registered HUD bar to draw even when it would not otherwise be visible.
+
+    Category:
+        Bars
 
     Parameters:
         bar (table)

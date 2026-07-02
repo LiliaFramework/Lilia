@@ -18,6 +18,9 @@
     Purpose:
         Runs after the base language files are loaded and the global localization helper has been assigned.
 
+    Category:
+        Languages
+
     Parameters:
         None.
 

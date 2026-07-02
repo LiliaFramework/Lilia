@@ -18,6 +18,9 @@
     Purpose:
         Runs after a web sound is freshly downloaded, validated, written to the local data cache, and counted in the web sound statistics.
 
+    Category:
+        Web Sound
+
     Parameters:
         name (string)
             The normalized web sound name or cache key used for the downloaded sound.

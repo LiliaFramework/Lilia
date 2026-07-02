@@ -5,6 +5,9 @@
     Purpose:
         Called whenever a server log entry is created through lia.log.add.
 
+    Category:
+        Administration - Logs
+
     Parameters:
         client (Player)
             The player associated with the log entry. May be invalid or nil for console/system logs.
@@ -31,6 +34,9 @@
     Purpose:
         Determines whether a player is allowed to receive and view server log entries.
 
+    Category:
+        Administration - Logs
+
     Parameters:
         client (Player)
             The player whose log-viewing permission should be checked.
@@ -48,6 +54,9 @@
 
     Purpose:
         Determines whether a player is allowed to see a specific translated log category.
+
+    Category:
+        Administration - Logs
 
     Parameters:
         client (Player)

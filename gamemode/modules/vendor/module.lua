@@ -5,6 +5,9 @@
     Purpose:
         Determines whether a player may open or continue using a vendor.
 
+    Category:
+        Vendor
+
     Parameters:
         client (Player)
             The player attempting to access the vendor.
@@ -25,6 +28,9 @@
 
     Purpose:
         Determines whether a player may buy or sell a specific item through a vendor.
+
+    Category:
+        Vendor
 
     Parameters:
         client (Player)
@@ -52,6 +58,9 @@
 
     Purpose:
         Allows code to override a vendor trade price for a player.
+
+    Category:
+        Vendor
 
     Parameters:
         client (Player)
@@ -82,6 +91,9 @@
 
     Purpose:
         Called after the vendor system processes a character trade attempt.
+
+    Category:
+        Vendor
 
     Parameters:
         client (Player)
@@ -118,6 +130,9 @@
     Purpose:
         Called on the client after the vendor UI is created.
 
+    Category:
+        Vendor
+
     Parameters:
         panelOwner (table)
             The vendor module instance opening the UI.
@@ -137,6 +152,9 @@
 
     Purpose:
         Called after a player edits a vendor setting on the server.
+
+    Category:
+        Vendor
 
     Parameters:
         client (Player)
@@ -161,6 +179,9 @@
     Purpose:
         Called after a player is granted access to a vendor and the open packets are sent.
 
+    Category:
+        Vendor
+
     Parameters:
         client (Player)
             The player opening the vendor.
@@ -180,6 +201,9 @@
 
     Purpose:
         Called on the client after a vendor class whitelist entry changes.
+
+    Category:
+        Vendor
 
     Parameters:
         vendor (Entity)
@@ -204,6 +228,9 @@
     Purpose:
         Called on the client after a vendor edit synchronization updates a field.
 
+    Category:
+        Vendor
+
     Parameters:
         vendor (Entity)
             The edited vendor.
@@ -224,6 +251,9 @@
     Purpose:
         Called on the client after the vendor UI is closed by a networked exit event.
 
+    Category:
+        Vendor
+
     Parameters:
         None
 
@@ -239,6 +269,9 @@
 
     Purpose:
         Called on the client after a faction buy scale changes for a vendor.
+
+    Category:
+        Vendor
 
     Parameters:
         vendor (Entity)
@@ -263,6 +296,9 @@
     Purpose:
         Called on the client after a faction sell scale changes for a vendor.
 
+    Category:
+        Vendor
+
     Parameters:
         vendor (Entity)
             The updated vendor.
@@ -285,6 +321,9 @@
 
     Purpose:
         Called on the client after a vendor faction whitelist entry changes.
+
+    Category:
+        Vendor
 
     Parameters:
         vendor (Entity)
@@ -309,6 +348,9 @@
     Purpose:
         Called on the client after a vendor item buy price changes.
 
+    Category:
+        Vendor
+
     Parameters:
         vendor (Entity)
             The updated vendor.
@@ -331,6 +373,9 @@
 
     Purpose:
         Called on the client after a vendor item max stock value changes.
+
+    Category:
+        Vendor
 
     Parameters:
         vendor (Entity)
@@ -355,6 +400,9 @@
     Purpose:
         Called on the client after a vendor item trade mode changes.
 
+    Category:
+        Vendor
+
     Parameters:
         vendor (Entity)
             The updated vendor.
@@ -377,6 +425,9 @@
 
     Purpose:
         Called on the client after a vendor item sell price changes.
+
+    Category:
+        Vendor
 
     Parameters:
         vendor (Entity)
@@ -401,6 +452,9 @@
     Purpose:
         Called on the client after a vendor item stock count changes.
 
+    Category:
+        Vendor
+
     Parameters:
         vendor (Entity)
             The updated vendor.
@@ -424,6 +478,9 @@
     Purpose:
         Called on the client after a vendor's message table is synchronized.
 
+    Category:
+        Vendor
+
     Parameters:
         vendor (Entity)
             The updated vendor.
@@ -441,6 +498,9 @@
     Purpose:
         Called on the client after vendor access opens the vendor UI.
 
+    Category:
+        Vendor
+
     Parameters:
         vendor (Entity)
             The vendor entity that was opened.
@@ -457,6 +517,9 @@
 
     Purpose:
         Called on the client after a synchronized vendor property changes.
+
+    Category:
+        Vendor
 
     Parameters:
         vendor (Entity)
@@ -481,6 +544,9 @@
     Purpose:
         Called on the client after a full vendor sync packet is applied.
 
+    Category:
+        Vendor
+
     Parameters:
         vendor (Entity)
             The vendor that was synchronized.
@@ -497,6 +563,9 @@
 
     Purpose:
         Called when the vendor system begins processing a buy or sell transaction.
+
+    Category:
+        Vendor
 
     Parameters:
         client (Player)

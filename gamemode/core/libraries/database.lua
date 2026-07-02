@@ -18,6 +18,9 @@
     Purpose:
         Runs after core database tables finish loading, database fields are checked, `lia.db.tablesLoaded` is set, and follow-up configuration, interaction, and item synchronization timers are scheduled.
 
+    Category:
+        Database
+
     Realm:
         Server
 ]]
@@ -27,6 +30,9 @@
 
     Purpose:
         Runs immediately after the core table creation query is submitted by `lia.db.loadTables`.
+
+    Category:
+        Database
 
     Realm:
         Server

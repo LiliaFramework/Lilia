@@ -18,6 +18,9 @@
     Purpose:
         Allows plugins or modules to override a faction's resolved display name while it is registered or loaded from disk.
 
+    Category:
+        Factions
+
     Parameters:
         uniqueID (string)
             The faction unique ID being registered or loaded.
@@ -38,6 +41,9 @@
 
     Purpose:
         Allows plugins or modules to override a faction's resolved description while it is registered or loaded from disk.
+
+    Category:
+        Factions
 
     Parameters:
         uniqueID (string)
@@ -60,6 +66,9 @@
     Purpose:
         Allows plugins or modules to override the model list assigned to a faction while it is registered or loaded from disk.
 
+    Category:
+        Factions
+
     Parameters:
         uniqueID (string)
             The faction unique ID being registered or loaded.
@@ -80,6 +89,9 @@
 
     Purpose:
         Allows plugins or modules to override whether skins and bodygroups can be customized for a faction model selection context.
+
+    Category:
+        Factions
 
     Parameters:
         client (Player)

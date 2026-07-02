@@ -18,6 +18,9 @@
     Purpose:
         Allows the clientside inventory interface to be created for a specific inventory.
 
+    Category:
+        Inventory
+
     Parameters:
         inventory (table)
             The inventory instance that needs a panel.
@@ -39,6 +42,9 @@
     Purpose:
         Called after an inventory panel has been created and opened.
 
+    Category:
+        Inventory
+
     Parameters:
         panel (Panel)
             The inventory panel that was opened.
@@ -59,6 +65,9 @@
     Purpose:
         Called when an inventory panel is removed or closed.
 
+    Category:
+        Inventory
+
     Parameters:
         panel (Panel)
             The inventory panel that was closed.
@@ -78,6 +87,9 @@
 
     Purpose:
         Called after two inventory panels have been created and positioned for a dual-inventory view.
+
+    Category:
+        Inventory
 
     Parameters:
         panel1 (Panel)

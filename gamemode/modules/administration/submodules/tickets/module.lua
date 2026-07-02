@@ -5,6 +5,9 @@
     Purpose:
         Called after a staff member claims a ticket.
 
+    Category:
+        Administration - Tickets
+
     Parameters:
         client (Player)
             The staff member who claimed the ticket.
@@ -27,6 +30,9 @@
 
     Purpose:
         Called after a staff member closes a ticket.
+
+    Category:
+        Administration - Tickets
 
     Parameters:
         client (Player)
@@ -51,6 +57,9 @@
     Purpose:
         Called after a player creates a new help ticket.
 
+    Category:
+        Administration - Tickets
+
     Parameters:
         client (Player)
             The player who opened the ticket.
@@ -70,6 +79,9 @@
 
     Purpose:
         Called when the ticket system processes a claim action and broadcasts the result.
+
+    Category:
+        Administration - Tickets
 
     Parameters:
         client (Player)
@@ -93,6 +105,9 @@
 
     Purpose:
         Called when the ticket system processes a close action and broadcasts the result.
+
+    Category:
+        Administration - Tickets
 
     Parameters:
         client (Player)

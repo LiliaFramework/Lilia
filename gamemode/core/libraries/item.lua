@@ -18,6 +18,9 @@
     Purpose:
         Runs after a player uses the default drop action and the item has been spawned into the world.
 
+    Category:
+        Items
+
     Parameters:
         client (Player)
             The player who dropped the item.
@@ -34,6 +37,9 @@
     Purpose:
         Runs after a player successfully takes a world item into their inventory.
 
+    Category:
+        Items
+
     Parameters:
         client (Player)
             The player who took the item.
@@ -49,6 +55,9 @@
 
     Purpose:
         Runs after a player rotates an inventory item using the default rotate action.
+
+    Category:
+        Items
 
     Parameters:
         client (Player)
@@ -67,6 +76,9 @@
 
     Purpose:
         Handles the actual transfer when a player gives an item forward to another player.
+
+    Category:
+        Items
 
     Parameters:
         client (Player)
@@ -94,6 +106,9 @@
     Purpose:
         Allows modules to inspect or modify the default item action table during item registration.
 
+    Category:
+        Items
+
     Parameters:
         functions (table)
             The mutable table of item action definitions.
@@ -107,6 +122,9 @@
 
     Purpose:
         Runs after an item definition or base item has been registered and localized.
+
+    Category:
+        Items
 
     Parameters:
         itemDef (Item)
@@ -122,6 +140,9 @@
     Purpose:
         Runs after item files have been loaded from the item directory.
 
+    Category:
+        Items
+
     Realm:
         Shared
 ]]
@@ -131,6 +152,9 @@
 
     Purpose:
         Runs after an item instance table is created from a registered item definition.
+
+    Category:
+        Items
 
     Parameters:
         item (Item)
@@ -145,6 +169,9 @@
 
     Purpose:
         Allows modules to provide a display name for automatically generated weapon items.
+
+    Category:
+        Items
 
     Parameters:
         weaponTable (table)
@@ -164,6 +191,9 @@
     Purpose:
         Runs after pending overrides have been applied to an item definition.
 
+    Category:
+        Items
+
     Parameters:
         itemDef (Item)
             The item definition that received overrides.
@@ -179,6 +209,9 @@
 
     Purpose:
         Controls whether the local player can see the generated weapon item configuration page.
+
+    Category:
+        Items
 
     Parameters:
         client (Player)

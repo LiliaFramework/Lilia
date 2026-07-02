@@ -5,6 +5,9 @@
     Purpose:
         Determines whether a player is allowed to manage the chat filter word list.
 
+    Category:
+        Chatbox
+
     Parameters:
         client (Player)
             The player whose chat filter management permission should be checked.
@@ -23,6 +26,9 @@
     Purpose:
         Called on the client after a new chat line is added to the chatbox.
 
+    Category:
+        Chatbox
+
     Parameters:
         ... (vararg)
             The formatted chatbox text arguments that were added.
@@ -39,6 +45,9 @@
 
     Purpose:
         Allows code to adjust a parsed chat message before it is dispatched.
+
+    Category:
+        Chatbox
 
     Parameters:
         client (Player)
@@ -67,6 +76,9 @@
     Purpose:
         Allows code to override the out-of-character chat cooldown for a player.
 
+    Category:
+        Chatbox
+
     Parameters:
         speaker (Player)
             The player attempting to send an OOC message.
@@ -84,6 +96,9 @@
 
     Purpose:
         Called after an out-of-character message is accepted for sending.
+
+    Category:
+        Chatbox
 
     Parameters:
         client (Player)
@@ -104,6 +119,9 @@
 
     Purpose:
         Allows code to adjust the final chat message text before recipients receive it.
+
+    Category:
+        Chatbox
 
     Parameters:
         client (Player)

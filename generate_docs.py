@@ -39,6 +39,7 @@ def parse_comment_block(comment_text):
     parsed = {
         'purpose': '',
         'when_called': '',
+        'category': '',
         'parameters': [],
         'returns': '',
         'realm': '',
@@ -60,6 +61,8 @@ def parse_comment_block(comment_text):
                 parsed['purpose'] = content
             elif current_section == 'when_called':
                 parsed['when_called'] = content
+            elif current_section == 'category':
+                parsed['category'] = content
             elif current_section == 'when_used':
                 parsed['when_used'] = content
             elif current_section == 'explanation':
@@ -93,6 +96,12 @@ def parse_comment_block(comment_text):
             finalize_current_section()
             current_section = 'when_used'
             inline_content = line[10:].strip()
+            if inline_content:
+                section_content.append(inline_content)
+        elif line.startswith('Category:'):
+            finalize_current_section()
+            current_section = 'category'
+            inline_content = line[len('Category:'):].strip()
             if inline_content:
                 section_content.append(inline_content)
         elif line.startswith('Parameters:'):
@@ -137,6 +146,19 @@ def parse_comment_block(comment_text):
                         pending_parameter = None
                     current_section = 'realm'
                     inline_content = line[6:].strip()
+                    if inline_content:
+                        section_content.append(inline_content)
+                elif line.startswith('Category:'):
+                    finalize_current_section()
+                    if pending_parameter:
+                        parsed['parameters'].append({
+                            'name': pending_parameter['name'],
+                            'type': pending_parameter['type'],
+                            'description': ''
+                        })
+                        pending_parameter = None
+                    current_section = 'category'
+                    inline_content = line[len('Category:'):].strip()
                     if inline_content:
                         section_content.append(inline_content)
                 elif line.startswith('Example Usage:'):
@@ -189,6 +211,12 @@ def parse_comment_block(comment_text):
                         inline_content = line[6:].strip()
                         if inline_content:
                             section_content.append(inline_content)
+                    elif line.startswith('Category:'):
+                        finalize_current_section()
+                        current_section = 'category'
+                        inline_content = line[len('Category:'):].strip()
+                        if inline_content:
+                            section_content.append(inline_content)
                     elif line.startswith('Example Usage:'):
                         current_section = 'examples'
                 if current_section == 'parameters':
@@ -225,6 +253,12 @@ def parse_comment_block(comment_text):
             inline_content = line[6:].strip()
             if inline_content:
                 section_content.append(inline_content)
+        elif line.startswith('Category:'):
+            finalize_current_section()
+            current_section = 'category'
+            inline_content = line[len('Category:'):].strip()
+            if inline_content:
+                section_content.append(inline_content)
         elif line.startswith('Explanation of Panel:'):
             finalize_current_section()
             current_section = 'explanation'
@@ -237,7 +271,7 @@ def parse_comment_block(comment_text):
         elif line.startswith('Example Item:') or line.startswith('Example Class:') or line.startswith('Example Faction:'):
             finalize_current_section()
             current_section = 'examples'
-        elif current_section in ['purpose', 'when_called', 'when_used', 'returns', 'realm', 'explanation']:
+        elif current_section in ['purpose', 'when_called', 'when_used', 'category', 'returns', 'realm', 'explanation']:
             if line.strip():
                 section_content.append(line)
         elif current_section == 'examples':
@@ -520,7 +554,7 @@ def find_functions_in_file(file_path, is_library=False):
         for comment_start, comment_end, comment_text in comments:
             comment_line = content[:comment_start].count('\n') + 1
             if comment_line < func_line and (preceding_comment is None or comment_line > preceding_comment[0]):
-                if any(header in comment_text for header in ['Purpose:', 'When Called:', 'When Used:', 'Parameters:', 'Returns:', 'Realm:', 'Explanation of Panel:', 'Example Usage:']):
+                if any(header in comment_text for header in ['Purpose:', 'When Called:', 'When Used:', 'Category:', 'Parameters:', 'Returns:', 'Realm:', 'Explanation of Panel:', 'Example Usage:']):
                     preceding_comment = (comment_line, comment_text)
 
         if preceding_comment:
@@ -736,6 +770,10 @@ def generate_markdown_for_function(function_name, parsed_comment, is_library=Fal
         md += f'<h3 style="margin-bottom: 5px; font-weight: 700;">When Called</h3>\n'
         md += f'<div style="margin-left: 20px; margin-bottom: 20px;">\n  <p>{parsed_comment["when_used"]}</p>\n</div>\n\n'
 
+    if parsed_comment.get('category'):
+        md += '<h3 style="margin-bottom: 5px; font-weight: 700;">Category</h3>\n'
+        md += f'<div style="margin-left: 20px; margin-bottom: 20px;">\n  <p>{parsed_comment["category"]}</p>\n</div>\n\n'
+
     if realm_text_raw and not no_realm:
         md += '<h3 style="margin-bottom: 5px; font-weight: 700;">Realm</h3>\n'
         md += f'<div style="margin-left: 20px; margin-bottom: 20px;">\n  <p>{realm_text_raw}</p>\n</div>\n\n'
@@ -810,7 +848,7 @@ def find_comment_blocks_in_file(file_path):
         comment_text = match.group(0)
         all_comment_blocks.append(comment_text)
 
-        if file_header is None and not any(header in comment_text for header in ['Purpose:', 'When Called:', 'Parameters:', 'Returns:', 'Realm:', 'Example Usage:', 'Overview:', 'Improvements Done:', 'Example Item:', 'Folder:', 'File:']):
+        if file_header is None and not any(header in comment_text for header in ['Purpose:', 'When Called:', 'When Used:', 'Category:', 'Parameters:', 'Returns:', 'Realm:', 'Example Usage:', 'Overview:', 'Improvements Done:', 'Example Item:', 'Folder:', 'File:']):
             file_header = comment_text
         elif ('Overview:' in comment_text or 'Improvements Done:' in comment_text) and overview_section is None:
             overview_section = comment_text
@@ -1841,7 +1879,7 @@ def sync_mkdocs_nav(mkdocs_path: Path, docs_dir: Path) -> None:
             'end_marker': '# AUTO-GENERATED: META TABLES END',
             'directory': docs_dir / 'developer' / 'meta',
             'indent': '          ',
-            'preferred_order': ['character', 'entity', 'inventory', 'item', 'panel', 'player'],
+            'preferred_order': [],
         },
         {
             'name': 'libraries',
@@ -1849,7 +1887,7 @@ def sync_mkdocs_nav(mkdocs_path: Path, docs_dir: Path) -> None:
             'end_marker': '# AUTO-GENERATED: LIBRARIES END',
             'directory': docs_dir / 'developer' / 'libraries',
             'indent': '          ',
-            'preferred_order': ['lia.currency'],
+            'preferred_order': [],
         },
         {
             'name': 'hooks',
@@ -1857,7 +1895,7 @@ def sync_mkdocs_nav(mkdocs_path: Path, docs_dir: Path) -> None:
             'end_marker': '# AUTO-GENERATED: HOOKS END',
             'directory': docs_dir / 'developer' / 'hooks',
             'indent': '          ',
-            'preferred_order': ['core'],
+            'preferred_order': [],
         },
         # Note: module libraries/hooks are merged into the main libraries/hooks directories
         {
@@ -1870,19 +1908,7 @@ def sync_mkdocs_nav(mkdocs_path: Path, docs_dir: Path) -> None:
                 '          - Overview: definitions/items/index.md',
                 '          - Item Base Field Reference: definitions/items/base-field-reference.md',
             ],
-            'preferred_order': [
-                'aid',
-                'ammo',
-                'arccw_att',
-                'books',
-                'entities',
-                'grenade',
-                'outfit',
-                'pacoutfit',
-                'stackable',
-                'url',
-                'weapons',
-            ],
+            'preferred_order': [],
         },
     ]
 
@@ -2328,9 +2354,9 @@ def generate_development_index(dev_dir: Path) -> None:
         f.write('<div class="card-grid">\n')
 
         sections = [
-            ('meta', 'Core objects', 'Meta Tables', 'Read what Character, Player, Entity, Item, Inventory, and Panel objects can do.'),
-            ('libraries', 'Helpers', 'Libraries', 'Find shared helper libraries for things like money, items, characters, and framework tools.'),
             ('hooks', 'Events', 'Hooks', 'See the events you can listen to when you want to change or react to game behavior.'),
+            ('libraries', 'Helpers', 'Libraries', 'Find shared helper libraries for things like money, items, characters, and framework tools.'),
+            ('meta', 'Core objects', 'Meta Tables', 'Read what Character, Player, Entity, Item, Inventory, and Panel objects can do.'),
         ]
 
         for dirname, kicker, title, summary in sections:
@@ -2362,8 +2388,8 @@ def generate_module_development_index(dev_modules_dir: Path) -> None:
         f.write('<div class="card-grid">\n')
 
         sections = [
-            ('libraries', 'Helpers', 'Libraries', 'Find module-owned helper libraries and library-local hooks documented on the same page.'),
             ('hooks', 'Events', 'Hooks', 'See hooks documented directly on module entry files, submodule entry files, or the uncategorized fallback page.'),
+            ('libraries', 'Helpers', 'Libraries', 'Find module-owned helper libraries and library-local hooks documented on the same page.'),
         ]
 
         for dirname, kicker, title, summary in sections:
@@ -2400,10 +2426,10 @@ def generate_pages_file(docs_dir: Path) -> None:
     if dev_pages_path.parent.exists():
         with open(dev_pages_path, 'w', encoding='utf-8') as f:
             f.write('title: Developer\narrange:\n')
-            f.write(' - meta\n')
-            f.write(' - libraries\n')
-            f.write(' - hooks\n')
             f.write(' - compatibility\n')
+            f.write(' - hooks\n')
+            f.write(' - libraries\n')
+            f.write(' - meta\n')
 
     # No separate developer/modules .pages file: modules are surfaced under libraries/hooks
 

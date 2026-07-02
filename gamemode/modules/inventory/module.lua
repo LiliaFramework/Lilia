@@ -5,6 +5,9 @@
     Purpose:
         Called after an inventory panel is closed.
 
+    Category:
+        Inventory
+
     Parameters:
         panel (Panel)
             The panel instance that was closed.
@@ -25,6 +28,9 @@
     Purpose:
         Called after an inventory panel is created and shown.
 
+    Category:
+        Inventory
+
     Parameters:
         panel (Panel)
             The panel instance that was opened.
@@ -44,6 +50,9 @@
 
     Purpose:
         Called after the framework creates a paired inventory view for two inventories.
+
+    Category:
+        Inventory
 
     Parameters:
         panel1 (Panel)

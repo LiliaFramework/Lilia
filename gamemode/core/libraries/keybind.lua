@@ -18,6 +18,9 @@
     Purpose:
         Allows plugins or modules to add extra reserved key codes before keybind choices are displayed.
 
+    Category:
+        Keybinds
+
     Parameters:
         reserved (table)
             Lookup table keyed by numeric key code. Set reserved[keyCode] to true to reserve a key.
@@ -31,6 +34,9 @@
 
     Purpose:
         Runs after saved keybinds are loaded, numeric key lookups are rebuilt, and reserved keys are generated.
+
+    Category:
+        Keybinds
 
     Realm:
         Client

@@ -18,6 +18,9 @@
     Purpose:
         Allows plugins or modules to disable the Lilia third-person camera override for a client.
 
+    Category:
+        Camera
+
     Parameters:
         client (Player)
             The player whose third-person camera availability is being checked.
@@ -35,6 +38,9 @@
 
     Purpose:
         Allows plugins or modules to prevent freelook input processing for the local player.
+
+    Category:
+        Camera
 
     Parameters:
         client (Player)
@@ -54,6 +60,9 @@
     Purpose:
         Runs before the freelook console command changes freelook state.
 
+    Category:
+        Camera
+
     Parameters:
         enabled (boolean)
             True when freelook is about to be enabled, false when it is about to be disabled.
@@ -72,6 +81,9 @@
     Purpose:
         Runs after the freelook console command changes freelook state.
 
+    Category:
+        Camera
+
     Parameters:
         enabled (boolean)
             True when freelook was enabled, false when it was disabled.
@@ -85,6 +97,9 @@
 
     Purpose:
         Runs after the F4 third-person toggle changes the third-person option.
+
+    Category:
+        Camera
 
     Parameters:
         enabled (boolean)

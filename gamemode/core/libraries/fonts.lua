@@ -18,6 +18,9 @@
     Purpose:
         Runs after `lia.font.registerFonts` finishes registering the standard font aliases and generated size variants.
 
+    Category:
+        Fonts
+
     Parameters:
         mainFont (string)
             The configured main interface font used for Lilia font aliases.
@@ -34,6 +37,9 @@
 
     Purpose:
         Runs when font-dependent UI should reload or repaint after font configuration is initialized or changed.
+
+    Category:
+        Fonts
 
     Realm:
         Client

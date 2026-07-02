@@ -18,6 +18,9 @@
     Purpose:
         Runs after a networked variable changes. This file triggers it for global networked variables with `entity` set to nil.
 
+    Category:
+        Networking
+
     Parameters:
         entity (Entity|nil)
             The entity whose networked variable changed, or nil when a global networked variable changed.

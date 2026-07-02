@@ -18,6 +18,9 @@
     Purpose:
         Runs after an interaction or action menu panel is created when hook emission is enabled.
 
+    Category:
+        Derma
+
     Parameters:
         panel (Panel)
             The menu or tooltip panel that was opened.
@@ -31,6 +34,9 @@
 
     Purpose:
         Runs when an interaction or action menu panel is removed when hook emission is enabled.
+
+    Category:
+        Derma
 
     Realm:
         Client

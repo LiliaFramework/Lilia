@@ -18,6 +18,9 @@
     Purpose:
         Called after a log string has been generated and before the entry is printed to the server console and inserted into the database.
 
+    Category:
+        Logging
+
     Parameters:
         client (Player|nil)
             The player associated with the log entry, if one exists.

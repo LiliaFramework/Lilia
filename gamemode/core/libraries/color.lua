@@ -18,6 +18,9 @@
     Purpose:
         Runs when a theme is applied or when a theme transition finishes.
 
+    Category:
+        Color
+
     Parameters:
         themeName (string)
             The theme identifier that was applied.

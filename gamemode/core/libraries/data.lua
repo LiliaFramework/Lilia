@@ -18,6 +18,9 @@
     Purpose:
         Runs after `lia.data.set` updates the cached value and writes the scoped data file.
 
+    Category:
+        Data
+
     Parameters:
         key (string)
             The data key that was stored.
@@ -41,6 +44,9 @@
     Purpose:
         Runs on the periodic data-save timer so modules and plugins can save their own data.
 
+    Category:
+        Data
+
     Parameters:
         This hook has no parameters.
 
@@ -53,6 +59,9 @@
 
     Purpose:
         Runs on the periodic data-save timer so modules and plugins can save persistent entities.
+
+    Category:
+        Data
 
     Parameters:
         This hook has no parameters.

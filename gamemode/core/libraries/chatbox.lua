@@ -18,6 +18,9 @@
     Purpose:
         Allows plugins or modules to override the display name used by the default chat output handler.
 
+    Category:
+        Chatbox
+
     Parameters:
         speaker (Player)
             The player whose display name is being requested.
@@ -38,6 +41,9 @@
 
     Purpose:
         Allows plugins or modules to adjust a parsed chat message before server dispatch occurs.
+
+    Category:
+        Chatbox
 
     Parameters:
         client (Player)
@@ -66,6 +72,9 @@
     Purpose:
         Called when a player sends an out-of-character chat message.
 
+    Category:
+        Chatbox
+
     Parameters:
         client (Player)
             The player who sent the OOC message.
@@ -85,6 +94,9 @@
 
     Purpose:
         Allows plugins or modules to modify chat message text before it is sent.
+
+    Category:
+        Chatbox
 
     Parameters:
         speaker (Player)

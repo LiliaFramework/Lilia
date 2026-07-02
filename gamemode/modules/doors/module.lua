@@ -5,6 +5,9 @@
     Purpose:
         Determines whether a player is allowed to start the key-based door or vehicle locking action.
 
+    Category:
+        Doors
+
     Parameters:
         client (Player)
             The player attempting to lock the target entity.
@@ -25,6 +28,9 @@
 
     Purpose:
         Determines whether a player is allowed to start the key-based door or vehicle unlocking action.
+
+    Category:
+        Doors
 
     Parameters:
         client (Player)
@@ -47,6 +53,9 @@
     Purpose:
         Determines whether a player may use a door before the module applies its default interaction handling.
 
+    Category:
+        Doors
+
     Parameters:
         client (Player)
             The player trying to use the door.
@@ -68,6 +77,9 @@
     Purpose:
         Allows plugins or modules to register additional door data fields before default door data is built.
 
+    Category:
+        Doors
+
     Parameters:
         fields (table)
             Mutable table that should be populated with custom field definitions. Each key should map to field information such as `default` and, when database-backed, `type`.
@@ -84,6 +96,9 @@
 
     Purpose:
         Called after a door or supported vehicle has been locked or unlocked through the keys system.
+
+    Category:
+        Doors
 
     Parameters:
         client (Player)
@@ -108,6 +123,9 @@
     Purpose:
         Lets clientside code adjust or filter the assembled door information list before it is rendered.
 
+    Category:
+        Doors
+
     Parameters:
         entity (Entity)
             The door entity currently being inspected.
@@ -130,6 +148,9 @@
 
     Purpose:
         Populates the clientside door information list that is shown when looking at a visible door.
+
+    Category:
+        Doors
 
     Parameters:
         entity (Entity)
@@ -154,6 +175,9 @@
     Purpose:
         Adds extra clientside admin-stick information lines for a targeted door.
 
+    Category:
+        Doors
+
     Parameters:
         target (Entity)
             The door entity currently targeted by the admin stick.
@@ -173,6 +197,9 @@
 
     Purpose:
         Called when the keys weapon requests a lock action for a targeted door or supported vehicle.
+
+    Category:
+        Doors
 
     Parameters:
         client (Player)
@@ -197,6 +224,9 @@
     Purpose:
         Called when the keys weapon requests an unlock action for a targeted door or supported vehicle.
 
+    Category:
+        Doors
+
     Parameters:
         client (Player)
             The player using the keys weapon.
@@ -220,6 +250,9 @@
     Purpose:
         Runs after door-use permission checks succeed, allowing modules to override the final use result.
 
+    Category:
+        Doors
+
     Parameters:
         client (Player)
             The player trying to use the door.
@@ -241,6 +274,9 @@
     Purpose:
         Called after persisted or preset door data is assembled, before it is cached on the entity.
 
+    Category:
+        Doors
+
     Parameters:
         ent (Entity)
             The door entity receiving the loaded data.
@@ -261,6 +297,9 @@
 
     Purpose:
         Called before cached door data is normalized and written back to persistent storage.
+
+    Category:
+        Doors
 
     Parameters:
         door (Entity)
