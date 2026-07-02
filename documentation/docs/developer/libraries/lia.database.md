@@ -35,7 +35,7 @@ The database library centralizes server-side persistence under `lia.db`. It init
 ---
 
 <details class="realm-server" id="function-liadbconnect">
-<summary><span class="summary-main"><a id="lia.db.connect"></a>lia.db.connect(callback, reconnect)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/database.lua#L179" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="lia.db.connect"></a>lia.db.connect(callback, reconnect)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/database.lua#L178" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="liadbconnect"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -67,7 +67,7 @@ The database library centralizes server-side persistence under `lia.db`. It init
 ---
 
 <details class="realm-server" id="function-liadbwipetables">
-<summary><span class="summary-main"><a id="lia.db.wipeTables"></a>lia.db.wipeTables(callback)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/database.lua#L222" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="lia.db.wipeTables"></a>lia.db.wipeTables(callback)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/database.lua#L221" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="liadbwipetables"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -98,7 +98,7 @@ The database library centralizes server-side persistence under `lia.db`. It init
 ---
 
 <details class="realm-server" id="function-liadbloadtables">
-<summary><span class="summary-main"><a id="lia.db.loadTables"></a>lia.db.loadTables()</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/database.lua#L267" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="lia.db.loadTables"></a>lia.db.loadTables()</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/database.lua#L266" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="liadbloadtables"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -122,7 +122,7 @@ The database library centralizes server-side persistence under `lia.db`. It init
 ---
 
 <details class="realm-server" id="function-liadbwaitfortablestoload">
-<summary><span class="summary-main"><a id="lia.db.waitForTablesToLoad"></a>lia.db.waitForTablesToLoad()</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/database.lua#L458" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="lia.db.waitForTablesToLoad"></a>lia.db.waitForTablesToLoad()</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/database.lua#L457" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="liadbwaitfortablestoload"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -153,7 +153,7 @@ The database library centralizes server-side persistence under `lia.db`. It init
 ---
 
 <details class="realm-server" id="function-liadbconvertdatatype">
-<summary><span class="summary-main"><a id="lia.db.convertDataType"></a>lia.db.convertDataType(value, noEscape)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/database.lua#L538" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="lia.db.convertDataType"></a>lia.db.convertDataType(value, noEscape)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/database.lua#L537" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="liadbconvertdatatype"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -188,7 +188,7 @@ The database library centralizes server-side persistence under `lia.db`. It init
 ---
 
 <details class="realm-server" id="function-liadbinserttable">
-<summary><span class="summary-main"><a id="lia.db.insertTable"></a>lia.db.insertTable(value, Key, Key, callback, dbTable)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/database.lua#L587" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="lia.db.insertTable"></a>lia.db.insertTable(value, Key, Key, callback, dbTable)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/database.lua#L586" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="liadbinserttable"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -226,7 +226,7 @@ The database library centralizes server-side persistence under `lia.db`. It init
 ---
 
 <details class="realm-server" id="function-liadbupdatetable">
-<summary><span class="summary-main"><a id="lia.db.updateTable"></a>lia.db.updateTable(value, Key, Key, callback, dbTable, condition)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/database.lua#L629" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="lia.db.updateTable"></a>lia.db.updateTable(value, Key, Key, callback, dbTable, condition)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/database.lua#L628" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="liadbupdatetable"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -265,7 +265,7 @@ The database library centralizes server-side persistence under `lia.db`. It init
 ---
 
 <details class="realm-server" id="function-liadbselect">
-<summary><span class="summary-main"><a id="lia.db.select"></a>lia.db.select(fields, dbTable, condition, limit)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/database.lua#L671" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="lia.db.select"></a>lia.db.select(fields, dbTable, condition, limit)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/database.lua#L670" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="liadbselect"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -302,7 +302,7 @@ The database library centralizes server-side persistence under `lia.db`. It init
 ---
 
 <details class="realm-server" id="function-liadbselectwithcondition">
-<summary><span class="summary-main"><a id="lia.db.selectWithCondition"></a>lia.db.selectWithCondition(fields, dbTable, conditions, limit, orderBy)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/database.lua#L724" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="lia.db.selectWithCondition"></a>lia.db.selectWithCondition(fields, dbTable, conditions, limit, orderBy)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/database.lua#L723" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="liadbselectwithcondition"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -340,7 +340,7 @@ The database library centralizes server-side persistence under `lia.db`. It init
 ---
 
 <details class="realm-server" id="function-liadbcount">
-<summary><span class="summary-main"><a id="lia.db.count"></a>lia.db.count(dbTable, condition)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/database.lua#L792" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="lia.db.count"></a>lia.db.count(dbTable, condition)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/database.lua#L791" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="liadbcount"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -377,7 +377,7 @@ The database library centralizes server-side persistence under `lia.db`. It init
 ---
 
 <details class="realm-server" id="function-liadbadddatabasefields">
-<summary><span class="summary-main"><a id="lia.db.addDatabaseFields"></a>lia.db.addDatabaseFields()</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/database.lua#L824" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="lia.db.addDatabaseFields"></a>lia.db.addDatabaseFields()</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/database.lua#L823" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="liadbadddatabasefields"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -401,7 +401,7 @@ The database library centralizes server-side persistence under `lia.db`. It init
 ---
 
 <details class="realm-server" id="function-liadbensureindexes">
-<summary><span class="summary-main"><a id="lia.db.ensureIndexes"></a>lia.db.ensureIndexes()</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/database.lua#L864" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="lia.db.ensureIndexes"></a>lia.db.ensureIndexes()</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/database.lua#L863" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="liadbensureindexes"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -419,7 +419,7 @@ The database library centralizes server-side persistence under `lia.db`. It init
 ---
 
 <details class="realm-server" id="function-liadbexists">
-<summary><span class="summary-main"><a id="lia.db.exists"></a>lia.db.exists(dbTable, condition)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/database.lua#L902" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="lia.db.exists"></a>lia.db.exists(dbTable, condition)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/database.lua#L895" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="liadbexists"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -456,7 +456,7 @@ The database library centralizes server-side persistence under `lia.db`. It init
 ---
 
 <details class="realm-server" id="function-liadbselectone">
-<summary><span class="summary-main"><a id="lia.db.selectOne"></a>lia.db.selectOne(fields, dbTable, condition)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/database.lua#L934" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="lia.db.selectOne"></a>lia.db.selectOne(fields, dbTable, condition)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/database.lua#L927" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="liadbselectone"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -494,7 +494,7 @@ The database library centralizes server-side persistence under `lia.db`. It init
 ---
 
 <details class="realm-server" id="function-liadbbulkinsert">
-<summary><span class="summary-main"><a id="lia.db.bulkInsert"></a>lia.db.bulkInsert(dbTable, rows)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/database.lua#L982" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="lia.db.bulkInsert"></a>lia.db.bulkInsert(dbTable, rows)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/database.lua#L975" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="liadbbulkinsert"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -532,7 +532,7 @@ The database library centralizes server-side persistence under `lia.db`. It init
 ---
 
 <details class="realm-server" id="function-liadbbulkupsert">
-<summary><span class="summary-main"><a id="lia.db.bulkUpsert"></a>lia.db.bulkUpsert(dbTable, rows)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/database.lua#L1033" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="lia.db.bulkUpsert"></a>lia.db.bulkUpsert(dbTable, rows)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/database.lua#L1026" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="liadbbulkupsert"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -570,7 +570,7 @@ The database library centralizes server-side persistence under `lia.db`. It init
 ---
 
 <details class="realm-server" id="function-liadbinsertorignore">
-<summary><span class="summary-main"><a id="lia.db.insertOrIgnore"></a>lia.db.insertOrIgnore(value, Key, Key, dbTable)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/database.lua#L1081" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="lia.db.insertOrIgnore"></a>lia.db.insertOrIgnore(value, Key, Key, dbTable)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/database.lua#L1074" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="liadbinsertorignore"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -607,7 +607,7 @@ The database library centralizes server-side persistence under `lia.db`. It init
 ---
 
 <details class="realm-server" id="function-liadbtableexists">
-<summary><span class="summary-main"><a id="lia.db.tableExists"></a>lia.db.tableExists(tbl)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/database.lua#L1123" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="lia.db.tableExists"></a>lia.db.tableExists(tbl)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/database.lua#L1116" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="liadbtableexists"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -643,7 +643,7 @@ The database library centralizes server-side persistence under `lia.db`. It init
 ---
 
 <details class="realm-server" id="function-liadbfieldexists">
-<summary><span class="summary-main"><a id="lia.db.fieldExists"></a>lia.db.fieldExists(tbl, field)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/database.lua#L1155" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="lia.db.fieldExists"></a>lia.db.fieldExists(tbl, field)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/database.lua#L1148" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="liadbfieldexists"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -680,7 +680,7 @@ The database library centralizes server-side persistence under `lia.db`. It init
 ---
 
 <details class="realm-server" id="function-liadbgettables">
-<summary><span class="summary-main"><a id="lia.db.getTables"></a>lia.db.getTables()</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/database.lua#L1188" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="lia.db.getTables"></a>lia.db.getTables()</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/database.lua#L1181" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="liadbgettables"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -711,7 +711,7 @@ The database library centralizes server-side persistence under `lia.db`. It init
 ---
 
 <details class="realm-server" id="function-liadbtransaction">
-<summary><span class="summary-main"><a id="lia.db.transaction"></a>lia.db.transaction(queries)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/database.lua#L1224" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="lia.db.transaction"></a>lia.db.transaction(queries)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/database.lua#L1217" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="liadbtransaction"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -748,7 +748,7 @@ The database library centralizes server-side persistence under `lia.db`. It init
 ---
 
 <details class="realm-server" id="function-liadbescapeidentifier">
-<summary><span class="summary-main"><a id="lia.db.escapeIdentifier"></a>lia.db.escapeIdentifier(id)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/database.lua#L1264" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="lia.db.escapeIdentifier"></a>lia.db.escapeIdentifier(id)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/database.lua#L1257" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="liadbescapeidentifier"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -782,7 +782,7 @@ The database library centralizes server-side persistence under `lia.db`. It init
 ---
 
 <details class="realm-server" id="function-liadbupsert">
-<summary><span class="summary-main"><a id="lia.db.upsert"></a>lia.db.upsert(value, Key, Key, dbTable)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/database.lua#L1291" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="lia.db.upsert"></a>lia.db.upsert(value, Key, Key, dbTable)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/database.lua#L1284" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="liadbupsert"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -819,7 +819,7 @@ The database library centralizes server-side persistence under `lia.db`. It init
 ---
 
 <details class="realm-server" id="function-liadbdelete">
-<summary><span class="summary-main"><a id="lia.db.delete"></a>lia.db.delete(dbTable, condition)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/database.lua#L1326" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="lia.db.delete"></a>lia.db.delete(dbTable, condition)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/database.lua#L1319" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="liadbdelete"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -854,7 +854,7 @@ The database library centralizes server-side persistence under `lia.db`. It init
 ---
 
 <details class="realm-server" id="function-liadbcreatetable">
-<summary><span class="summary-main"><a id="lia.db.createTable"></a>lia.db.createTable(dbName, primaryKey, schema)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/database.lua#L1368" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="lia.db.createTable"></a>lia.db.createTable(dbName, primaryKey, schema)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/database.lua#L1361" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="liadbcreatetable"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -893,7 +893,7 @@ The database library centralizes server-side persistence under `lia.db`. It init
 ---
 
 <details class="realm-server" id="function-liadbcreatecolumn">
-<summary><span class="summary-main"><a id="lia.db.createColumn"></a>lia.db.createColumn(tableName, columnName, columnType, defaultValue)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/database.lua#L1424" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="lia.db.createColumn"></a>lia.db.createColumn(tableName, columnName, columnType, defaultValue)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/database.lua#L1417" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="liadbcreatecolumn"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -930,7 +930,7 @@ The database library centralizes server-side persistence under `lia.db`. It init
 ---
 
 <details class="realm-server" id="function-liadbremovetable">
-<summary><span class="summary-main"><a id="lia.db.removeTable"></a>lia.db.removeTable(tableName)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/database.lua#L1471" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="lia.db.removeTable"></a>lia.db.removeTable(tableName)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/database.lua#L1464" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="liadbremovetable"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -964,7 +964,7 @@ The database library centralizes server-side persistence under `lia.db`. It init
 ---
 
 <details class="realm-server" id="function-liadbremovecolumn">
-<summary><span class="summary-main"><a id="lia.db.removeColumn"></a>lia.db.removeColumn(tableName, columnName)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/database.lua#L1509" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="lia.db.removeColumn"></a>lia.db.removeColumn(tableName, columnName)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/database.lua#L1502" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="liadbremovecolumn"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -999,7 +999,7 @@ The database library centralizes server-side persistence under `lia.db`. It init
 ---
 
 <details class="realm-server" id="function-liadbgetcharactertable">
-<summary><span class="summary-main"><a id="lia.db.getCharacterTable"></a>lia.db.getCharacterTable(callback)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/database.lua#L1579" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="lia.db.getCharacterTable"></a>lia.db.getCharacterTable(callback)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/database.lua#L1572" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="liadbgetcharactertable"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -1030,7 +1030,7 @@ The database library centralizes server-side persistence under `lia.db`. It init
 ---
 
 <details class="realm-server" id="function-liadbcreatesnapshot">
-<summary><span class="summary-main"><a id="lia.db.createSnapshot"></a>lia.db.createSnapshot(tableName)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/database.lua#L1614" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="lia.db.createSnapshot"></a>lia.db.createSnapshot(tableName)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/database.lua#L1607" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="liadbcreatesnapshot"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -1066,7 +1066,7 @@ The database library centralizes server-side persistence under `lia.db`. It init
 ---
 
 <details class="realm-server" id="function-liadbloadsnapshot">
-<summary><span class="summary-main"><a id="lia.db.loadSnapshot"></a>lia.db.loadSnapshot(fileName)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/database.lua#L1670" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="lia.db.loadSnapshot"></a>lia.db.loadSnapshot(fileName)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/database.lua#L1663" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="liadbloadsnapshot"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
