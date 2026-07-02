@@ -35,7 +35,7 @@ The faction library centralizes shared faction behavior under `lia.faction`. It 
 ---
 
 <details class="realm-shared" id="function-liafactionregister">
-<summary><span class="summary-main"><a id="lia.faction.register"></a>lia.faction.register(uniqueID, data)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/factions.lua#L139" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="lia.faction.register"></a>lia.faction.register(uniqueID, data)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/factions.lua#L151" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="liafactionregister"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -75,7 +75,7 @@ The faction library centralizes shared faction behavior under `lia.faction`. It 
 ---
 
 <details class="realm-shared" id="function-liafactioncachemodels">
-<summary><span class="summary-main"><a id="lia.faction.cacheModels"></a>lia.faction.cacheModels(models)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/factions.lua#L199" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="lia.faction.cacheModels"></a>lia.faction.cacheModels(models)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/factions.lua#L211" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="liafactioncachemodels"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -109,7 +109,7 @@ The faction library centralizes shared faction behavior under `lia.faction`. It 
 ---
 
 <details class="realm-shared" id="function-liafactionismodelusable">
-<summary><span class="summary-main"><a id="lia.faction.isModelUsable"></a>lia.faction.isModelUsable(modelPath)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/factions.lua#L228" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="lia.faction.isModelUsable"></a>lia.faction.isModelUsable(modelPath)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/factions.lua#L240" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="liafactionismodelusable"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -145,7 +145,7 @@ The faction library centralizes shared faction behavior under `lia.faction`. It 
 ---
 
 <details class="realm-shared" id="function-liafactionnormalizeskinvalue">
-<summary><span class="summary-main"><a id="lia.faction.normalizeSkinValue"></a>lia.faction.normalizeSkinValue(skin, fallback)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/factions.lua#L255" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="lia.faction.normalizeSkinValue"></a>lia.faction.normalizeSkinValue(skin, fallback)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/factions.lua#L267" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="liafactionnormalizeskinvalue"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -180,7 +180,7 @@ The faction library centralizes shared faction behavior under `lia.faction`. It 
 ---
 
 <details class="realm-shared" id="function-liafactiongetmodeldata">
-<summary><span class="summary-main"><a id="lia.faction.getModelData"></a>lia.faction.getModelData(modelKey, modelData)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/factions.lua#L293" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="lia.faction.getModelData"></a>lia.faction.getModelData(modelKey, modelData)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/factions.lua#L305" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="liafactiongetmodeldata"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -218,7 +218,7 @@ The faction library centralizes shared faction behavior under `lia.faction`. It 
 ---
 
 <details class="realm-shared" id="function-liafactionloadfromdir">
-<summary><span class="summary-main"><a id="lia.faction.loadFromDir"></a>lia.faction.loadFromDir(directory)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/factions.lua#L349" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="lia.faction.loadFromDir"></a>lia.faction.loadFromDir(directory)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/factions.lua#L361" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="liafactionloadfromdir"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -252,7 +252,7 @@ The faction library centralizes shared faction behavior under `lia.faction`. It 
 ---
 
 <details class="realm-shared" id="function-liafactiongetall">
-<summary><span class="summary-main"><a id="lia.faction.getAll"></a>lia.faction.getAll()</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/factions.lua#L416" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="lia.faction.getAll"></a>lia.faction.getAll()</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/factions.lua#L428" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="liafactiongetall"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -283,7 +283,7 @@ The faction library centralizes shared faction behavior under `lia.faction`. It 
 ---
 
 <details class="realm-shared" id="function-liafactionget">
-<summary><span class="summary-main"><a id="lia.faction.get"></a>lia.faction.get(identifier)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/factions.lua#L444" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="lia.faction.get"></a>lia.faction.get(identifier)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/factions.lua#L456" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="liafactionget"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -317,7 +317,7 @@ The faction library centralizes shared faction behavior under `lia.faction`. It 
 ---
 
 <details class="realm-shared" id="function-liafactiongetmodelcustomizationallowed">
-<summary><span class="summary-main"><a id="lia.faction.getModelCustomizationAllowed"></a>lia.faction.getModelCustomizationAllowed(client, faction, context)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/factions.lua#L474" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="lia.faction.getModelCustomizationAllowed"></a>lia.faction.getModelCustomizationAllowed(client, faction, context)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/factions.lua#L486" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="liafactiongetmodelcustomizationallowed"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -353,7 +353,7 @@ The faction library centralizes shared faction behavior under `lia.faction`. It 
 ---
 
 <details class="realm-shared" id="function-liafactiongetbodygroupnametoindex">
-<summary><span class="summary-main"><a id="lia.faction.getBodygroupNameToIndex"></a>lia.faction.getBodygroupNameToIndex(modelPath)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/factions.lua#L511" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="lia.faction.getBodygroupNameToIndex"></a>lia.faction.getBodygroupNameToIndex(modelPath)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/factions.lua#L523" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="liafactiongetbodygroupnametoindex"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -388,7 +388,7 @@ The faction library centralizes shared faction behavior under `lia.faction`. It 
 ---
 
 <details class="realm-shared" id="function-liafactiongetallowedskins">
-<summary><span class="summary-main"><a id="lia.faction.getAllowedSkins"></a>lia.faction.getAllowedSkins(faction, modelData, modelKey)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/factions.lua#L569" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="lia.faction.getAllowedSkins"></a>lia.faction.getAllowedSkins(faction, modelData, modelKey)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/factions.lua#L581" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="liafactiongetallowedskins"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -424,7 +424,7 @@ The faction library centralizes shared faction behavior under `lia.faction`. It 
 ---
 
 <details class="realm-shared" id="function-liafactiongetallowedbodygroups">
-<summary><span class="summary-main"><a id="lia.faction.getAllowedBodygroups"></a>lia.faction.getAllowedBodygroups(faction, modelData, modelKey)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/factions.lua#L602" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="lia.faction.getAllowedBodygroups"></a>lia.faction.getAllowedBodygroups(faction, modelData, modelKey)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/factions.lua#L614" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="liafactiongetallowedbodygroups"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -460,7 +460,7 @@ The faction library centralizes shared faction behavior under `lia.faction`. It 
 ---
 
 <details class="realm-shared" id="function-liafactionisskinallowedforfaction">
-<summary><span class="summary-main"><a id="lia.faction.isSkinAllowedForFaction"></a>lia.faction.isSkinAllowedForFaction(faction, skin, modelData, modelKey)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/factions.lua#L640" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="lia.faction.isSkinAllowedForFaction"></a>lia.faction.isSkinAllowedForFaction(faction, skin, modelData, modelKey)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/factions.lua#L652" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="liafactionisskinallowedforfaction"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -499,7 +499,7 @@ The faction library centralizes shared faction behavior under `lia.faction`. It 
 ---
 
 <details class="realm-shared" id="function-liafactiongetdefaultallowedskinforfaction">
-<summary><span class="summary-main"><a id="lia.faction.getDefaultAllowedSkinForFaction"></a>lia.faction.getDefaultAllowedSkinForFaction(faction, fallback, modelData, modelKey)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/factions.lua#L683" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="lia.faction.getDefaultAllowedSkinForFaction"></a>lia.faction.getDefaultAllowedSkinForFaction(faction, fallback, modelData, modelKey)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/factions.lua#L695" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="liafactiongetdefaultallowedskinforfaction"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -536,7 +536,7 @@ The faction library centralizes shared faction behavior under `lia.faction`. It 
 ---
 
 <details class="realm-shared" id="function-liafactiongetbodygroupwhitelistrule">
-<summary><span class="summary-main"><a id="lia.faction.getBodygroupWhitelistRule"></a>lia.faction.getBodygroupWhitelistRule(faction, modelPath, bodygroupIndex, bodygroupName, modelData, modelKey)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/factions.lua#L731" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="lia.faction.getBodygroupWhitelistRule"></a>lia.faction.getBodygroupWhitelistRule(faction, modelPath, bodygroupIndex, bodygroupName, modelData, modelKey)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/factions.lua#L743" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="liafactiongetbodygroupwhitelistrule"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -575,7 +575,7 @@ The faction library centralizes shared faction behavior under `lia.faction`. It 
 ---
 
 <details class="realm-shared" id="function-liafactionisbodygroupvalueallowed">
-<summary><span class="summary-main"><a id="lia.faction.isBodygroupValueAllowed"></a>lia.faction.isBodygroupValueAllowed(faction, modelPath, bodygroupIndex, value, bodygroupName, modelData, modelKey)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/factions.lua#L808" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="lia.faction.isBodygroupValueAllowed"></a>lia.faction.isBodygroupValueAllowed(faction, modelPath, bodygroupIndex, value, bodygroupName, modelData, modelKey)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/factions.lua#L820" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="liafactionisbodygroupvalueallowed"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -617,7 +617,7 @@ The faction library centralizes shared faction behavior under `lia.faction`. It 
 ---
 
 <details class="realm-shared" id="function-liafactiongetindex">
-<summary><span class="summary-main"><a id="lia.faction.getIndex"></a>lia.faction.getIndex(uniqueID)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/factions.lua#L844" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="lia.faction.getIndex"></a>lia.faction.getIndex(uniqueID)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/factions.lua#L856" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="liafactiongetindex"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -651,7 +651,7 @@ The faction library centralizes shared faction behavior under `lia.faction`. It 
 ---
 
 <details class="realm-shared" id="function-liafactiongetclasses">
-<summary><span class="summary-main"><a id="lia.faction.getClasses"></a>lia.faction.getClasses(faction)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/factions.lua#L868" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="lia.faction.getClasses"></a>lia.faction.getClasses(faction)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/factions.lua#L880" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="liafactiongetclasses"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -685,7 +685,7 @@ The faction library centralizes shared faction behavior under `lia.faction`. It 
 ---
 
 <details class="realm-shared" id="function-liafactiongetplayers">
-<summary><span class="summary-main"><a id="lia.faction.getPlayers"></a>lia.faction.getPlayers(faction)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/factions.lua#L898" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="lia.faction.getPlayers"></a>lia.faction.getPlayers(faction)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/factions.lua#L910" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="liafactiongetplayers"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -721,7 +721,7 @@ The faction library centralizes shared faction behavior under `lia.faction`. It 
 ---
 
 <details class="realm-shared" id="function-liafactiongetplayercount">
-<summary><span class="summary-main"><a id="lia.faction.getPlayerCount"></a>lia.faction.getPlayerCount(faction)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/factions.lua#L927" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="lia.faction.getPlayerCount"></a>lia.faction.getPlayerCount(faction)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/factions.lua#L939" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="liafactiongetplayercount"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -755,7 +755,7 @@ The faction library centralizes shared faction behavior under `lia.faction`. It 
 ---
 
 <details class="realm-shared" id="function-liafactionisfactioncategory">
-<summary><span class="summary-main"><a id="lia.faction.isFactionCategory"></a>lia.faction.isFactionCategory(faction, categoryFactions)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/factions.lua#L961" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="lia.faction.isFactionCategory"></a>lia.faction.isFactionCategory(faction, categoryFactions)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/factions.lua#L973" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="liafactionisfactioncategory"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -792,7 +792,7 @@ The faction library centralizes shared faction behavior under `lia.faction`. It 
 ---
 
 <details class="realm-shared" id="function-liafactiongetcharactercreationclass">
-<summary><span class="summary-main"><a id="lia.faction.getCharacterCreationClass"></a>lia.faction.getCharacterCreationClass(faction, class)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/factions.lua#L989" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="lia.faction.getCharacterCreationClass"></a>lia.faction.getCharacterCreationClass(faction, class)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/factions.lua#L1001" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="liafactiongetcharactercreationclass"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -827,7 +827,7 @@ The faction library centralizes shared faction behavior under `lia.faction`. It 
 ---
 
 <details class="realm-shared" id="function-liafactiongetcharactercreationmodelsource">
-<summary><span class="summary-main"><a id="lia.faction.getCharacterCreationModelSource"></a>lia.faction.getCharacterCreationModelSource(faction, class)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/factions.lua#L1021" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="lia.faction.getCharacterCreationModelSource"></a>lia.faction.getCharacterCreationModelSource(faction, class)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/factions.lua#L1033" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="liafactiongetcharactercreationmodelsource"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -862,7 +862,7 @@ The faction library centralizes shared faction behavior under `lia.faction`. It 
 ---
 
 <details class="realm-shared" id="function-liafactiongetcharactercreationmodelchoices">
-<summary><span class="summary-main"><a id="lia.faction.getCharacterCreationModelChoices"></a>lia.faction.getCharacterCreationModelChoices(faction, class)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/factions.lua#L1059" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="lia.faction.getCharacterCreationModelChoices"></a>lia.faction.getCharacterCreationModelChoices(faction, class)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/factions.lua#L1071" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="liafactiongetcharactercreationmodelchoices"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -897,7 +897,7 @@ The faction library centralizes shared faction behavior under `lia.faction`. It 
 ---
 
 <details class="realm-shared" id="function-liafactiongetcharactercreationmodelinfo">
-<summary><span class="summary-main"><a id="lia.faction.getCharacterCreationModelInfo"></a>lia.faction.getCharacterCreationModelInfo(faction, class, selectedModel)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/factions.lua#L1095" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="lia.faction.getCharacterCreationModelInfo"></a>lia.faction.getCharacterCreationModelInfo(faction, class, selectedModel)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/factions.lua#L1107" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="liafactiongetcharactercreationmodelinfo"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -933,7 +933,7 @@ The faction library centralizes shared faction behavior under `lia.faction`. It 
 ---
 
 <details class="realm-shared" id="function-liafactionjobgenerate">
-<summary><span class="summary-main"><a id="lia.faction.jobGenerate"></a>lia.faction.jobGenerate(index, name, color, default, models)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/factions.lua#L1134" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="lia.faction.jobGenerate"></a>lia.faction.jobGenerate(index, name, color, default, models)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/factions.lua#L1146" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="liafactionjobgenerate"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -971,7 +971,7 @@ The faction library centralizes shared faction behavior under `lia.faction`. It 
 ---
 
 <details class="realm-shared" id="function-liafactionformatmodeldata">
-<summary><span class="summary-main"><a id="lia.faction.formatModelData"></a>lia.faction.formatModelData()</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/factions.lua#L1239" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="lia.faction.formatModelData"></a>lia.faction.formatModelData()</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/factions.lua#L1251" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="liafactionformatmodeldata"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -1000,7 +1000,7 @@ The faction library centralizes shared faction behavior under `lia.faction`. It 
 ---
 
 <details class="realm-shared" id="function-liafactiongetcategories">
-<summary><span class="summary-main"><a id="lia.faction.getCategories"></a>lia.faction.getCategories(teamName)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/factions.lua#L1281" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="lia.faction.getCategories"></a>lia.faction.getCategories(teamName)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/factions.lua#L1293" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="liafactiongetcategories"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -1034,7 +1034,7 @@ The faction library centralizes shared faction behavior under `lia.faction`. It 
 ---
 
 <details class="realm-shared" id="function-liafactiongetmodelsfromcategory">
-<summary><span class="summary-main"><a id="lia.faction.getModelsFromCategory"></a>lia.faction.getModelsFromCategory(teamName, category)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/factions.lua#L1315" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="lia.faction.getModelsFromCategory"></a>lia.faction.getModelsFromCategory(teamName, category)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/factions.lua#L1327" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="liafactiongetmodelsfromcategory"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -1069,7 +1069,7 @@ The faction library centralizes shared faction behavior under `lia.faction`. It 
 ---
 
 <details class="realm-shared" id="function-liafactiongetdefaultclass">
-<summary><span class="summary-main"><a id="lia.faction.getDefaultClass"></a>lia.faction.getDefaultClass(id)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/factions.lua#L1346" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="lia.faction.getDefaultClass"></a>lia.faction.getDefaultClass(id)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/factions.lua#L1358" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="liafactiongetdefaultclass"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -1103,7 +1103,7 @@ The faction library centralizes shared faction behavior under `lia.faction`. It 
 ---
 
 <details class="realm-client" id="function-liafactionhaswhitelist">
-<summary><span class="summary-main"><a id="lia.faction.hasWhitelist"></a>lia.faction.hasWhitelist(faction)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/factions.lua#L1389" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="lia.faction.hasWhitelist"></a>lia.faction.hasWhitelist(faction)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/factions.lua#L1401" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="liafactionhaswhitelist"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -1139,7 +1139,7 @@ The faction library centralizes shared faction behavior under `lia.faction`. It 
 ---
 
 <details class="realm-server" id="function-liafactionhaswhitelist">
-<summary><span class="summary-main"><a id="lia.faction.hasWhitelist"></a>lia.faction.hasWhitelist(faction)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/factions.lua#L1426" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="lia.faction.hasWhitelist"></a>lia.faction.hasWhitelist(faction)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/factions.lua#L1438" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="liafactionhaswhitelist"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -1182,11 +1182,16 @@ The faction library centralizes shared faction behavior under `lia.faction`. It 
 ---
 
 <details class="realm-shared" id="function-overridefactiondesc">
-<summary><span class="summary-main"><a id="OverrideFactionDesc"></a>OverrideFactionDesc(uniqueID, desc)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/factions.lua#L35" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="OverrideFactionDesc"></a>OverrideFactionDesc(uniqueID, desc)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/factions.lua#L38" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="overridefactiondesc"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
   <p>Allows plugins or modules to override a faction's resolved description while it is registered or loaded from disk.</p>
+</div>
+
+<h3 style="margin-bottom: 5px; font-weight: 700;">Category</h3>
+<div style="margin-left: 20px; margin-bottom: 20px;">
+  <p>Factions</p>
 </div>
 
 <h3 style="margin-bottom: 5px; font-weight: 700;">Realm</h3>
@@ -1211,11 +1216,16 @@ The faction library centralizes shared faction behavior under `lia.faction`. It 
 ---
 
 <details class="realm-shared" id="function-overridefactionmodelcustomization">
-<summary><span class="summary-main"><a id="OverrideFactionModelCustomization"></a>OverrideFactionModelCustomization(client, faction, context, skinAllowed, bodygroupsAllowed)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/factions.lua#L77" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="OverrideFactionModelCustomization"></a>OverrideFactionModelCustomization(client, faction, context, skinAllowed, bodygroupsAllowed)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/factions.lua#L86" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="overridefactionmodelcustomization"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
   <p>Allows plugins or modules to override whether skins and bodygroups can be customized for a faction model selection context.</p>
+</div>
+
+<h3 style="margin-bottom: 5px; font-weight: 700;">Category</h3>
+<div style="margin-left: 20px; margin-bottom: 20px;">
+  <p>Factions</p>
 </div>
 
 <h3 style="margin-bottom: 5px; font-weight: 700;">Realm</h3>
@@ -1243,11 +1253,16 @@ The faction library centralizes shared faction behavior under `lia.faction`. It 
 ---
 
 <details class="realm-shared" id="function-overridefactionmodels">
-<summary><span class="summary-main"><a id="OverrideFactionModels"></a>OverrideFactionModels(uniqueID, models)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/factions.lua#L56" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="OverrideFactionModels"></a>OverrideFactionModels(uniqueID, models)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/factions.lua#L62" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="overridefactionmodels"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
   <p>Allows plugins or modules to override the model list assigned to a faction while it is registered or loaded from disk.</p>
+</div>
+
+<h3 style="margin-bottom: 5px; font-weight: 700;">Category</h3>
+<div style="margin-left: 20px; margin-bottom: 20px;">
+  <p>Factions</p>
 </div>
 
 <h3 style="margin-bottom: 5px; font-weight: 700;">Realm</h3>
@@ -1277,6 +1292,11 @@ The faction library centralizes shared faction behavior under `lia.faction`. It 
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="overridefactionname"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
   <p>Allows plugins or modules to override a faction's resolved display name while it is registered or loaded from disk.</p>
+</div>
+
+<h3 style="margin-bottom: 5px; font-weight: 700;">Category</h3>
+<div style="margin-left: 20px; margin-bottom: 20px;">
+  <p>Factions</p>
 </div>
 
 <h3 style="margin-bottom: 5px; font-weight: 700;">Realm</h3>

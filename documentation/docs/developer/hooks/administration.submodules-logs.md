@@ -28,11 +28,16 @@ This page documents the hooks defined by the submodules/logs submodule in the ad
 ---
 
 <details class="realm-shared" id="function-canplayerseelogcategory">
-<summary><span class="summary-main"><a id="CanPlayerSeeLogCategory"></a>CanPlayerSeeLogCategory(client, category)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/modules/administration/submodules/logs/module.lua#L45" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="CanPlayerSeeLogCategory"></a>CanPlayerSeeLogCategory(client, category)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/modules/administration/submodules/logs/module.lua#L51" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="canplayerseelogcategory"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
   <p>Determines whether a player is allowed to see a specific translated log category.</p>
+</div>
+
+<h3 style="margin-bottom: 5px; font-weight: 700;">Category</h3>
+<div style="margin-left: 20px; margin-bottom: 20px;">
+  <p>Administration - Logs</p>
 </div>
 
 <h3 style="margin-bottom: 5px; font-weight: 700;">Realm</h3>
@@ -57,11 +62,16 @@ This page documents the hooks defined by the submodules/logs submodule in the ad
 ---
 
 <details class="realm-server" id="function-canplayerseelogs">
-<summary><span class="summary-main"><a id="CanPlayerSeeLogs"></a>CanPlayerSeeLogs(client)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/modules/administration/submodules/logs/module.lua#L27" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="CanPlayerSeeLogs"></a>CanPlayerSeeLogs(client)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/modules/administration/submodules/logs/module.lua#L30" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="canplayerseelogs"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
   <p>Determines whether a player is allowed to receive and view server log entries.</p>
+</div>
+
+<h3 style="margin-bottom: 5px; font-weight: 700;">Category</h3>
+<div style="margin-left: 20px; margin-bottom: 20px;">
+  <p>Administration - Logs</p>
 </div>
 
 <h3 style="margin-bottom: 5px; font-weight: 700;">Realm</h3>
@@ -90,6 +100,11 @@ This page documents the hooks defined by the submodules/logs submodule in the ad
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="onserverlog"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
   <p>Called whenever a server log entry is created through lia.log.add.</p>
+</div>
+
+<h3 style="margin-bottom: 5px; font-weight: 700;">Category</h3>
+<div style="margin-left: 20px; margin-bottom: 20px;">
+  <p>Administration - Logs</p>
 </div>
 
 <h3 style="margin-bottom: 5px; font-weight: 700;">Realm</h3>

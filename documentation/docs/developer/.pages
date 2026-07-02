@@ -1,6 +1,6 @@
 title: Developer
 arrange:
- - meta
- - libraries
- - hooks
  - compatibility
+ - hooks
+ - libraries
+ - meta

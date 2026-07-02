@@ -35,7 +35,7 @@ The dialog library centralizes NPC dialog registration, generated dialog tree st
 ---
 
 <details class="realm-shared" id="function-liadialogistableequal">
-<summary><span class="summary-main"><a id="lia.dialog.isTableEqual"></a>lia.dialog.isTableEqual(tbl1, tbl2, checked)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/dialog.lua#L67" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="lia.dialog.isTableEqual"></a>lia.dialog.isTableEqual(tbl1, tbl2, checked)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/dialog.lua#L70" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="liadialogistableequal"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -71,7 +71,7 @@ The dialog library centralizes NPC dialog registration, generated dialog tree st
 ---
 
 <details class="realm-shared" id="function-liadialogregisterconfiguration">
-<summary><span class="summary-main"><a id="lia.dialog.registerConfiguration"></a>lia.dialog.registerConfiguration(uniqueID, data)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/dialog.lua#L125" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="lia.dialog.registerConfiguration"></a>lia.dialog.registerConfiguration(uniqueID, data)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/dialog.lua#L128" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="liadialogregisterconfiguration"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -109,7 +109,7 @@ The dialog library centralizes NPC dialog registration, generated dialog tree st
 ---
 
 <details class="realm-shared" id="function-liadialoggetconfiguration">
-<summary><span class="summary-main"><a id="lia.dialog.getConfiguration"></a>lia.dialog.getConfiguration(uniqueID)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/dialog.lua#L166" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="lia.dialog.getConfiguration"></a>lia.dialog.getConfiguration(uniqueID)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/dialog.lua#L169" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="liadialoggetconfiguration"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -143,7 +143,7 @@ The dialog library centralizes NPC dialog registration, generated dialog tree st
 ---
 
 <details class="realm-shared" id="function-liadialogresolvedialogtypeidentifier">
-<summary><span class="summary-main"><a id="lia.dialog.resolveDialogTypeIdentifier"></a>lia.dialog.resolveDialogTypeIdentifier(value)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/dialog.lua#L190" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="lia.dialog.resolveDialogTypeIdentifier"></a>lia.dialog.resolveDialogTypeIdentifier(value)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/dialog.lua#L193" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="liadialogresolvedialogtypeidentifier"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -177,7 +177,7 @@ The dialog library centralizes NPC dialog registration, generated dialog tree st
 ---
 
 <details class="realm-shared" id="function-liadialogisgenerateddialogselection">
-<summary><span class="summary-main"><a id="lia.dialog.isGeneratedDialogSelection"></a>lia.dialog.isGeneratedDialogSelection(value)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/dialog.lua#L222" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="lia.dialog.isGeneratedDialogSelection"></a>lia.dialog.isGeneratedDialogSelection(value)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/dialog.lua#L225" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="liadialogisgenerateddialogselection"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -211,7 +211,7 @@ The dialog library centralizes NPC dialog registration, generated dialog tree st
 ---
 
 <details class="realm-shared" id="function-liadialogisdialognpcentity">
-<summary><span class="summary-main"><a id="lia.dialog.isDialogNPCEntity"></a>lia.dialog.isDialogNPCEntity(npcOrClass)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/dialog.lua#L246" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="lia.dialog.isDialogNPCEntity"></a>lia.dialog.isDialogNPCEntity(npcOrClass)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/dialog.lua#L249" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="liadialogisdialognpcentity"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -245,7 +245,7 @@ The dialog library centralizes NPC dialog registration, generated dialog tree st
 ---
 
 <details class="realm-shared" id="function-liadialogentityusesgenerateddialog">
-<summary><span class="summary-main"><a id="lia.dialog.entityUsesGeneratedDialog"></a>lia.dialog.entityUsesGeneratedDialog(npc)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/dialog.lua#L275" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="lia.dialog.entityUsesGeneratedDialog"></a>lia.dialog.entityUsesGeneratedDialog(npc)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/dialog.lua#L278" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="liadialogentityusesgenerateddialog"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -279,7 +279,7 @@ The dialog library centralizes NPC dialog registration, generated dialog tree st
 ---
 
 <details class="realm-shared" id="function-liadialogisgenerateddialogdata">
-<summary><span class="summary-main"><a id="lia.dialog.isGeneratedDialogData"></a>lia.dialog.isGeneratedDialogData(data)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/dialog.lua#L303" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="lia.dialog.isGeneratedDialogData"></a>lia.dialog.isGeneratedDialogData(data)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/dialog.lua#L306" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="liadialogisgenerateddialogdata"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -313,7 +313,7 @@ The dialog library centralizes NPC dialog registration, generated dialog tree st
 ---
 
 <details class="realm-shared" id="function-liadialogisconversationdialogdata">
-<summary><span class="summary-main"><a id="lia.dialog.isConversationDialogData"></a>lia.dialog.isConversationDialogData(data)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/dialog.lua#L327" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="lia.dialog.isConversationDialogData"></a>lia.dialog.isConversationDialogData(data)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/dialog.lua#L330" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="liadialogisconversationdialogdata"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -347,7 +347,7 @@ The dialog library centralizes NPC dialog registration, generated dialog tree st
 ---
 
 <details class="realm-shared" id="function-liadialogisdialogcompatiblewithentity">
-<summary><span class="summary-main"><a id="lia.dialog.isDialogCompatibleWithEntity"></a>lia.dialog.isDialogCompatibleWithEntity(npc, data)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/dialog.lua#L354" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="lia.dialog.isDialogCompatibleWithEntity"></a>lia.dialog.isDialogCompatibleWithEntity(npc, data)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/dialog.lua#L357" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="liadialogisdialogcompatiblewithentity"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -382,7 +382,7 @@ The dialog library centralizes NPC dialog registration, generated dialog tree st
 ---
 
 <details class="realm-shared" id="function-liadialoggetcompatibledialogoptions">
-<summary><span class="summary-main"><a id="lia.dialog.getCompatibleDialogOptions"></a>lia.dialog.getCompatibleDialogOptions(npc)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/dialog.lua#L379" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="lia.dialog.getCompatibleDialogOptions"></a>lia.dialog.getCompatibleDialogOptions(npc)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/dialog.lua#L382" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="liadialoggetcompatibledialogoptions"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -416,7 +416,7 @@ The dialog library centralizes NPC dialog registration, generated dialog tree st
 ---
 
 <details class="realm-server" id="function-liadialoggetnpcdata">
-<summary><span class="summary-main"><a id="lia.dialog.getNPCData"></a>lia.dialog.getNPCData(npcID)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/dialog.lua#L816" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="lia.dialog.getNPCData"></a>lia.dialog.getNPCData(npcID)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/dialog.lua#L819" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="liadialoggetnpcdata"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -450,7 +450,7 @@ The dialog library centralizes NPC dialog registration, generated dialog tree st
 ---
 
 <details class="realm-server" id="function-liadialoggetoriginalnpcdata">
-<summary><span class="summary-main"><a id="lia.dialog.getOriginalNPCData"></a>lia.dialog.getOriginalNPCData(npcID)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/dialog.lua#L841" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="lia.dialog.getOriginalNPCData"></a>lia.dialog.getOriginalNPCData(npcID)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/dialog.lua#L844" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="liadialoggetoriginalnpcdata"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -484,7 +484,7 @@ The dialog library centralizes NPC dialog registration, generated dialog tree st
 ---
 
 <details class="realm-server" id="function-liadialogsavegenerateddialogs">
-<summary><span class="summary-main"><a id="lia.dialog.saveGeneratedDialogs"></a>lia.dialog.saveGeneratedDialogs()</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/dialog.lua#L878" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="lia.dialog.saveGeneratedDialogs"></a>lia.dialog.saveGeneratedDialogs()</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/dialog.lua#L881" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="liadialogsavegenerateddialogs"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -513,7 +513,7 @@ The dialog library centralizes NPC dialog registration, generated dialog tree st
 ---
 
 <details class="realm-server" id="function-liadialogloadgenerateddialogs">
-<summary><span class="summary-main"><a id="lia.dialog.loadGeneratedDialogs"></a>lia.dialog.loadGeneratedDialogs()</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/dialog.lua#L911" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="lia.dialog.loadGeneratedDialogs"></a>lia.dialog.loadGeneratedDialogs()</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/dialog.lua#L914" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="liadialogloadgenerateddialogs"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -542,7 +542,7 @@ The dialog library centralizes NPC dialog registration, generated dialog tree st
 ---
 
 <details class="realm-server" id="function-liadialogsynctoclients">
-<summary><span class="summary-main"><a id="lia.dialog.syncToClients"></a>lia.dialog.syncToClients(client)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/dialog.lua#L1072" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="lia.dialog.syncToClients"></a>lia.dialog.syncToClients(client)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/dialog.lua#L1075" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="liadialogsynctoclients"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -576,7 +576,7 @@ The dialog library centralizes NPC dialog registration, generated dialog tree st
 ---
 
 <details class="realm-server" id="function-liadialogsyncdialogs">
-<summary><span class="summary-main"><a id="lia.dialog.syncDialogs"></a>lia.dialog.syncDialogs()</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/dialog.lua#L1111" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="lia.dialog.syncDialogs"></a>lia.dialog.syncDialogs()</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/dialog.lua#L1114" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="liadialogsyncdialogs"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -605,7 +605,7 @@ The dialog library centralizes NPC dialog registration, generated dialog tree st
 ---
 
 <details class="realm-server" id="function-liadialogregisternpc">
-<summary><span class="summary-main"><a id="lia.dialog.registerNPC"></a>lia.dialog.registerNPC(uniqueID, data, shouldSync)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/dialog.lua#L1141" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="lia.dialog.registerNPC"></a>lia.dialog.registerNPC(uniqueID, data, shouldSync)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/dialog.lua#L1144" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="liadialogregisternpc"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -641,7 +641,7 @@ The dialog library centralizes NPC dialog registration, generated dialog tree st
 ---
 
 <details class="realm-server" id="function-liadialogopendialog">
-<summary><span class="summary-main"><a id="lia.dialog.openDialog"></a>lia.dialog.openDialog(client, npc, npcID)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/dialog.lua#L1225" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="lia.dialog.openDialog"></a>lia.dialog.openDialog(client, npc, npcID)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/dialog.lua#L1228" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="liadialogopendialog"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -677,7 +677,7 @@ The dialog library centralizes NPC dialog registration, generated dialog tree st
 ---
 
 <details class="realm-client" id="function-liadialoggetnpcdata">
-<summary><span class="summary-main"><a id="lia.dialog.getNPCData"></a>lia.dialog.getNPCData(npcID)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/dialog.lua#L1343" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="lia.dialog.getNPCData"></a>lia.dialog.getNPCData(npcID)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/dialog.lua#L1346" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="liadialoggetnpcdata"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -711,7 +711,7 @@ The dialog library centralizes NPC dialog registration, generated dialog tree st
 ---
 
 <details class="realm-client" id="function-liadialogsubmitconfiguration">
-<summary><span class="summary-main"><a id="lia.dialog.submitConfiguration"></a>lia.dialog.submitConfiguration(configID, npc, payload)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/dialog.lua#L1374" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="lia.dialog.submitConfiguration"></a>lia.dialog.submitConfiguration(configID, npc, payload)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/dialog.lua#L1377" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="liadialogsubmitconfiguration"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -747,7 +747,7 @@ The dialog library centralizes NPC dialog registration, generated dialog tree st
 ---
 
 <details class="realm-client" id="function-liadialogopencustomizationui">
-<summary><span class="summary-main"><a id="lia.dialog.openCustomizationUI"></a>lia.dialog.openCustomizationUI(npc, configID)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/dialog.lua#L1407" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="lia.dialog.openCustomizationUI"></a>lia.dialog.openCustomizationUI(npc, configID)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/dialog.lua#L1410" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="liadialogopencustomizationui"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -782,7 +782,7 @@ The dialog library centralizes NPC dialog registration, generated dialog tree st
 ---
 
 <details class="realm-client" id="function-liadialogopennodeeditor">
-<summary><span class="summary-main"><a id="lia.dialog.openNodeEditor"></a>lia.dialog.openNodeEditor(npc)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/dialog.lua#L1866" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="lia.dialog.openNodeEditor"></a>lia.dialog.openNodeEditor(npc)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/dialog.lua#L1869" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="liadialogopennodeeditor"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -816,7 +816,7 @@ The dialog library centralizes NPC dialog registration, generated dialog tree st
 ---
 
 <details class="realm-client" id="function-liadialoggetavailableconfigurations">
-<summary><span class="summary-main"><a id="lia.dialog.getAvailableConfigurations"></a>lia.dialog.getAvailableConfigurations(ply, npc, npcID)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/dialog.lua#L2481" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="lia.dialog.getAvailableConfigurations"></a>lia.dialog.getAvailableConfigurations(ply, npc, npcID)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/dialog.lua#L2484" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="liadialoggetavailableconfigurations"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -852,7 +852,7 @@ The dialog library centralizes NPC dialog registration, generated dialog tree st
 ---
 
 <details class="realm-client" id="function-liadialogopenconfigurationpicker">
-<summary><span class="summary-main"><a id="lia.dialog.openConfigurationPicker"></a>lia.dialog.openConfigurationPicker(npc, npcID)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/dialog.lua#L2521" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="lia.dialog.openConfigurationPicker"></a>lia.dialog.openConfigurationPicker(npc, npcID)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/dialog.lua#L2524" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="liadialogopenconfigurationpicker"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -899,6 +899,11 @@ The dialog library centralizes NPC dialog registration, generated dialog tree st
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="onnpctypeset"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
   <p>Runs after a server resolves an NPC dialog type and before the sanitized dialog payload is sent to the client.</p>
+</div>
+
+<h3 style="margin-bottom: 5px; font-weight: 700;">Category</h3>
+<div style="margin-left: 20px; margin-bottom: 20px;">
+  <p>Dialog</p>
 </div>
 
 <h3 style="margin-bottom: 5px; font-weight: 700;">Realm</h3>

@@ -45,6 +45,34 @@ garrysmod/gamemodes/[schema folder]/schema/definitions/sh_items.lua
       </div>
     </div>
 
+    <div class="generator-section">
+      <div class="form-grid-2">
+        <div class="input-group">
+          <label for="item-width">Inventory Width:</label>
+          <input type="number" id="item-width" min="1" step="1" value="1" oninput="generateURLItem()">
+        </div>
+
+        <div class="input-group">
+          <label for="item-height">Inventory Height:</label>
+          <input type="number" id="item-height" min="1" step="1" value="1" oninput="generateURLItem()">
+        </div>
+      </div>
+
+      <div class="form-grid-2">
+        <div class="input-group">
+          <label for="item-frame-width">Browser Width:</label>
+          <input type="number" id="item-frame-width" min="480" step="1" value="1100" oninput="generateURLItem()">
+          <small>Maximum window width before screen-based clamping</small>
+        </div>
+
+        <div class="input-group">
+          <label for="item-frame-tall">Browser Tall:</label>
+          <input type="number" id="item-frame-tall" min="360" step="1" value="800" oninput="generateURLItem()">
+          <small>Maximum window height before screen-based clamping</small>
+        </div>
+      </div>
+    </div>
+
     <div class="button-group">
       <button onclick="generateURLItem()" class="generate-btn">Generate URL Item Code</button>
       <button onclick="fillExampleURLItem()" class="generate-btn example-btn">Generate Example</button>
@@ -66,13 +94,21 @@ function generateURLItem() {
   const desc = (document.getElementById('item-desc').value || '').trim() || 'An item that opens a URL';
   const model = (document.getElementById('item-model').value || '').trim() || 'models/props_lab/clipboard.mdl';
   const url = (document.getElementById('item-url').value || '').trim() || 'https://example.com';
+  const width = Math.max(1, parseInt(document.getElementById('item-width').value, 10) || 1);
+  const height = Math.max(1, parseInt(document.getElementById('item-height').value, 10) || 1);
+  const frameWidth = Math.max(480, parseInt(document.getElementById('item-frame-width').value, 10) || 1100);
+  const frameTall = Math.max(360, parseInt(document.getElementById('item-frame-tall').value, 10) || 800);
 
   const lines = [
     `lia.item.registerItem(${JSON.stringify(uniqueId)}, "base_url", {`,
     `    name = ${JSON.stringify(name)},`,
     `    desc = ${JSON.stringify(desc)},`,
     `    model = ${JSON.stringify(model)},`,
+    `    width = ${width},`,
+    `    height = ${height},`,
     `    url = ${JSON.stringify(url)},`,
+    `    frameWidth = ${frameWidth},`,
+    `    frameTall = ${frameTall},`,
     '})'
   ];
 
@@ -86,6 +122,10 @@ function fillExampleURLItem() {
   document.getElementById('item-desc').value = 'Opens the server rules and onboarding page in the Steam overlay browser.';
   document.getElementById('item-model').value = 'models/props_lab/binderblue.mdl';
   document.getElementById('item-url').value = 'https://example.com/rules';
+  document.getElementById('item-width').value = '1';
+  document.getElementById('item-height').value = '1';
+  document.getElementById('item-frame-width').value = '1100';
+  document.getElementById('item-frame-tall').value = '800';
 
   generateURLItem();
 }

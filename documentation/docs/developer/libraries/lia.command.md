@@ -35,7 +35,7 @@ The command library centralizes shared command registration under `lia.command`,
 ---
 
 <details class="realm-shared" id="function-liacommandbuildsyntaxfromarguments">
-<summary><span class="summary-main"><a id="lia.command.buildSyntaxFromArguments"></a>lia.command.buildSyntaxFromArguments(args)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/commands.lua#L100" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="lia.command.buildSyntaxFromArguments"></a>lia.command.buildSyntaxFromArguments(args)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/commands.lua#L109" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="liacommandbuildsyntaxfromarguments"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -72,7 +72,7 @@ The command library centralizes shared command registration under `lia.command`,
 ---
 
 <details class="realm-shared" id="function-liacommandadd">
-<summary><span class="summary-main"><a id="lia.command.add"></a>lia.command.add(command, data)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/commands.lua#L148" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="lia.command.add"></a>lia.command.add(command, data)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/commands.lua#L157" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="liacommandadd"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -110,7 +110,7 @@ The command library centralizes shared command registration under `lia.command`,
 ---
 
 <details class="realm-shared" id="function-liacommandhasaccess">
-<summary><span class="summary-main"><a id="lia.command.hasAccess"></a>lia.command.hasAccess(client, command, data)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/commands.lua#L295" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="lia.command.hasAccess"></a>lia.command.hasAccess(client, command, data)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/commands.lua#L304" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="liacommandhasaccess"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -149,7 +149,7 @@ The command library centralizes shared command registration under `lia.command`,
 ---
 
 <details class="realm-shared" id="function-liacommandextractargs">
-<summary><span class="summary-main"><a id="lia.command.extractArgs"></a>lia.command.extractArgs(text)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/commands.lua#L353" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="lia.command.extractArgs"></a>lia.command.extractArgs(text)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/commands.lua#L362" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="liacommandextractargs"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -183,7 +183,7 @@ The command library centralizes shared command registration under `lia.command`,
 ---
 
 <details class="realm-server" id="function-liacommandrun">
-<summary><span class="summary-main"><a id="lia.command.run"></a>lia.command.run(client, command, arguments)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/commands.lua#L434" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="lia.command.run"></a>lia.command.run(client, command, arguments)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/commands.lua#L443" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="liacommandrun"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -214,7 +214,7 @@ The command library centralizes shared command registration under `lia.command`,
 ---
 
 <details class="realm-server" id="function-liacommandparse">
-<summary><span class="summary-main"><a id="lia.command.parse"></a>lia.command.parse(client, text, realCommand, arguments)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/commands.lua#L483" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="lia.command.parse"></a>lia.command.parse(client, text, realCommand, arguments)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/commands.lua#L492" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="liacommandparse"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -253,7 +253,7 @@ The command library centralizes shared command registration under `lia.command`,
 ---
 
 <details class="realm-client" id="function-liacommandopenargumentprompt">
-<summary><span class="summary-main"><a id="lia.command.openArgumentPrompt"></a>lia.command.openArgumentPrompt(cmdKey, missing, prefix, definitions)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/commands.lua#L567" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="lia.command.openArgumentPrompt"></a>lia.command.openArgumentPrompt(cmdKey, missing, prefix, definitions)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/commands.lua#L576" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="liacommandopenargumentprompt"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -285,7 +285,7 @@ The command library centralizes shared command registration under `lia.command`,
 ---
 
 <details class="realm-client" id="function-liacommandsend">
-<summary><span class="summary-main"><a id="lia.command.send"></a>lia.command.send(command)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/commands.lua#L822" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="lia.command.send"></a>lia.command.send(command)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/commands.lua#L831" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="liacommandsend"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -321,11 +321,16 @@ The command library centralizes shared command registration under `lia.command`,
 ---
 
 <details class="realm-shared" id="function-canplayerusecommand">
-<summary><span class="summary-main"><a id="CanPlayerUseCommand"></a>CanPlayerUseCommand(client, command)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/commands.lua#L31" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="CanPlayerUseCommand"></a>CanPlayerUseCommand(client, command)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/commands.lua#L34" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="canplayerusecommand"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
   <p>Allows plugins or modules to override whether a player can use a command after normal privilege checks are prepared.</p>
+</div>
+
+<h3 style="margin-bottom: 5px; font-weight: 700;">Category</h3>
+<div style="margin-left: 20px; margin-bottom: 20px;">
+  <p>Commands</p>
 </div>
 
 <h3 style="margin-bottom: 5px; font-weight: 700;">Realm</h3>
@@ -357,6 +362,11 @@ The command library centralizes shared command registration under `lia.command`,
   <p>Runs after a command has been registered with `lia.command.add`.</p>
 </div>
 
+<h3 style="margin-bottom: 5px; font-weight: 700;">Category</h3>
+<div style="margin-left: 20px; margin-bottom: 20px;">
+  <p>Commands</p>
+</div>
+
 <h3 style="margin-bottom: 5px; font-weight: 700;">Realm</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
   <p>Shared</p>
@@ -374,11 +384,16 @@ The command library centralizes shared command registration under `lia.command`,
 ---
 
 <details class="realm-server" id="function-commandran">
-<summary><span class="summary-main"><a id="CommandRan"></a>CommandRan(client, command, arguments, results)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/commands.lua#L52" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="CommandRan"></a>CommandRan(client, command, arguments, results)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/commands.lua#L58" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="commandran"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
   <p>Runs after a command callback has executed.</p>
+</div>
+
+<h3 style="margin-bottom: 5px; font-weight: 700;">Category</h3>
+<div style="margin-left: 20px; margin-bottom: 20px;">
+  <p>Commands</p>
 </div>
 
 <h3 style="margin-bottom: 5px; font-weight: 700;">Realm</h3>

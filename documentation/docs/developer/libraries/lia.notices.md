@@ -35,7 +35,7 @@ The notices library centralizes notification delivery under `lia.notices`. Serve
 ---
 
 <details class="realm-client" id="function-lianoticesreceivenotify">
-<summary><span class="summary-main"><a id="lia.notices.receiveNotify"></a>lia.notices.receiveNotify()</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/notice.lua#L55" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="lia.notices.receiveNotify"></a>lia.notices.receiveNotify()</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/notice.lua#L58" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="lianoticesreceivenotify"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -59,7 +59,7 @@ The notices library centralizes notification delivery under `lia.notices`. Serve
 ---
 
 <details class="realm-client" id="function-lianoticesreceivenotifyl">
-<summary><span class="summary-main"><a id="lia.notices.receiveNotifyL"></a>lia.notices.receiveNotifyL()</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/notice.lua#L95" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="lia.notices.receiveNotifyL"></a>lia.notices.receiveNotifyL()</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/notice.lua#L98" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="lianoticesreceivenotifyl"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -83,7 +83,7 @@ The notices library centralizes notification delivery under `lia.notices`. Serve
 ---
 
 <details class="realm-client" id="function-lianoticesnotifyinfolocalized">
-<summary><span class="summary-main"><a id="lia.notices.notifyInfoLocalized"></a>lia.notices.notifyInfoLocalized(client, key)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/notice.lua#L149" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="lia.notices.notifyInfoLocalized"></a>lia.notices.notifyInfoLocalized(client, key)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/notice.lua#L152" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="lianoticesnotifyinfolocalized"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -113,7 +113,7 @@ The notices library centralizes notification delivery under `lia.notices`. Serve
 ---
 
 <details class="realm-client" id="function-lianoticesnotifywarninglocalized">
-<summary><span class="summary-main"><a id="lia.notices.notifyWarningLocalized"></a>lia.notices.notifyWarningLocalized(client, key)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/notice.lua#L178" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="lia.notices.notifyWarningLocalized"></a>lia.notices.notifyWarningLocalized(client, key)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/notice.lua#L181" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="lianoticesnotifywarninglocalized"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -143,7 +143,7 @@ The notices library centralizes notification delivery under `lia.notices`. Serve
 ---
 
 <details class="realm-client" id="function-lianoticesnotifyerrorlocalized">
-<summary><span class="summary-main"><a id="lia.notices.notifyErrorLocalized"></a>lia.notices.notifyErrorLocalized(client, key)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/notice.lua#L207" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="lia.notices.notifyErrorLocalized"></a>lia.notices.notifyErrorLocalized(client, key)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/notice.lua#L210" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="lianoticesnotifyerrorlocalized"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -173,7 +173,7 @@ The notices library centralizes notification delivery under `lia.notices`. Serve
 ---
 
 <details class="realm-client" id="function-lianoticesnotifysuccesslocalized">
-<summary><span class="summary-main"><a id="lia.notices.notifySuccessLocalized"></a>lia.notices.notifySuccessLocalized(client, key)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/notice.lua#L236" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="lia.notices.notifySuccessLocalized"></a>lia.notices.notifySuccessLocalized(client, key)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/notice.lua#L239" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="lianoticesnotifysuccesslocalized"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -203,7 +203,7 @@ The notices library centralizes notification delivery under `lia.notices`. Serve
 ---
 
 <details class="realm-client" id="function-lianoticesnotifymoneylocalized">
-<summary><span class="summary-main"><a id="lia.notices.notifyMoneyLocalized"></a>lia.notices.notifyMoneyLocalized(client, key)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/notice.lua#L265" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="lia.notices.notifyMoneyLocalized"></a>lia.notices.notifyMoneyLocalized(client, key)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/notice.lua#L268" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="lianoticesnotifymoneylocalized"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -233,7 +233,7 @@ The notices library centralizes notification delivery under `lia.notices`. Serve
 ---
 
 <details class="realm-client" id="function-lianoticesnotifyadminlocalized">
-<summary><span class="summary-main"><a id="lia.notices.notifyAdminLocalized"></a>lia.notices.notifyAdminLocalized(client, key)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/notice.lua#L294" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="lia.notices.notifyAdminLocalized"></a>lia.notices.notifyAdminLocalized(client, key)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/notice.lua#L297" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="lianoticesnotifyadminlocalized"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -263,7 +263,7 @@ The notices library centralizes notification delivery under `lia.notices`. Serve
 ---
 
 <details class="realm-shared" id="function-lianoticesnotifylocalized">
-<summary><span class="summary-main"><a id="lia.notices.notifyLocalized"></a>lia.notices.notifyLocalized(client, key, notifType)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/notice.lua#L365" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="lia.notices.notifyLocalized"></a>lia.notices.notifyLocalized(client, key, notifType)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/notice.lua#L368" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="lianoticesnotifylocalized"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -295,7 +295,7 @@ The notices library centralizes notification delivery under `lia.notices`. Serve
 ---
 
 <details class="realm-shared" id="function-lianoticesnotify">
-<summary><span class="summary-main"><a id="lia.notices.notify"></a>lia.notices.notify(client, message, notifType)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/notice.lua#L417" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="lia.notices.notify"></a>lia.notices.notify(client, message, notifType)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/notice.lua#L420" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="lianoticesnotify"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -339,6 +339,11 @@ The notices library centralizes notification delivery under `lia.notices`. Serve
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="lilianoticeoverride"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
   <p>Allows plugins or modules to intercept incoming networked notices before a clientside notice panel is created.</p>
+</div>
+
+<h3 style="margin-bottom: 5px; font-weight: 700;">Category</h3>
+<div style="margin-left: 20px; margin-bottom: 20px;">
+  <p>Notices</p>
 </div>
 
 <h3 style="margin-bottom: 5px; font-weight: 700;">Realm</h3>

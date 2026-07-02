@@ -35,7 +35,7 @@ The font library centralizes registered font definitions under `lia.font`. It re
 ---
 
 <details class="realm-client" id="function-liafontloadfonts">
-<summary><span class="summary-main"><a id="lia.font.loadFonts"></a>lia.font.loadFonts()</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/fonts.lua#L61" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="lia.font.loadFonts"></a>lia.font.loadFonts()</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/fonts.lua#L67" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="liafontloadfonts"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -59,7 +59,7 @@ The font library centralizes registered font definitions under `lia.font`. It re
 ---
 
 <details class="realm-shared" id="function-liafontregister">
-<summary><span class="summary-main"><a id="lia.font.register"></a>lia.font.register(fontName, fontData)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/fonts.lua#L106" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="lia.font.register"></a>lia.font.register(fontName, fontData)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/fonts.lua#L112" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="liafontregister"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -100,7 +100,7 @@ The font library centralizes registered font definitions under `lia.font`. It re
 ---
 
 <details class="realm-shared" id="function-liafontgetavailablefonts">
-<summary><span class="summary-main"><a id="lia.font.getAvailableFonts"></a>lia.font.getAvailableFonts()</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/fonts.lua#L140" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="lia.font.getAvailableFonts"></a>lia.font.getAvailableFonts()</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/fonts.lua#L146" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="liafontgetavailablefonts"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -129,7 +129,7 @@ The font library centralizes registered font definitions under `lia.font`. It re
 ---
 
 <details class="realm-shared" id="function-liafontgetboldfontname">
-<summary><span class="summary-main"><a id="lia.font.getBoldFontName"></a>lia.font.getBoldFontName(fontName)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/fonts.lua#L177" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="lia.font.getBoldFontName"></a>lia.font.getBoldFontName(fontName)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/fonts.lua#L183" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="liafontgetboldfontname"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -163,7 +163,7 @@ The font library centralizes registered font definitions under `lia.font`. It re
 ---
 
 <details class="realm-shared" id="function-liafontregisterfonts">
-<summary><span class="summary-main"><a id="lia.font.registerFonts"></a>lia.font.registerFonts(fontName)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/fonts.lua#L204" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="lia.font.registerFonts"></a>lia.font.registerFonts(fontName)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/fonts.lua#L210" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="liafontregisterfonts"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -206,6 +206,11 @@ The font library centralizes registered font definitions under `lia.font`. It re
   <p>Runs after `lia.font.registerFonts` finishes registering the standard font aliases and generated size variants.</p>
 </div>
 
+<h3 style="margin-bottom: 5px; font-weight: 700;">Category</h3>
+<div style="margin-left: 20px; margin-bottom: 20px;">
+  <p>Fonts</p>
+</div>
+
 <h3 style="margin-bottom: 5px; font-weight: 700;">Realm</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
   <p>Shared</p>
@@ -223,11 +228,16 @@ The font library centralizes registered font definitions under `lia.font`. It re
 ---
 
 <details class="realm-client" id="function-refreshfonts">
-<summary><span class="summary-main"><a id="RefreshFonts"></a>RefreshFonts()</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/fonts.lua#L31" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="RefreshFonts"></a>RefreshFonts()</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/fonts.lua#L34" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="refreshfonts"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
   <p>Runs when font-dependent UI should reload or repaint after font configuration is initialized or changed.</p>
+</div>
+
+<h3 style="margin-bottom: 5px; font-weight: 700;">Category</h3>
+<div style="margin-left: 20px; margin-bottom: 20px;">
+  <p>Fonts</p>
 </div>
 
 <h3 style="margin-bottom: 5px; font-weight: 700;">Realm</h3>

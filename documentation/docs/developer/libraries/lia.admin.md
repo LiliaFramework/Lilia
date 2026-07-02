@@ -35,7 +35,7 @@ This module powers Lilia's admin permission system under `lia.admin`. It manages
 ---
 
 <details class="realm-shared" id="function-liaadminisvalidgroup">
-<summary><span class="summary-main"><a id="lia.admin.isValidGroup"></a>lia.admin.isValidGroup(groupName)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/admin.lua#L112" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="lia.admin.isValidGroup"></a>lia.admin.isValidGroup(groupName)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/admin.lua#L121" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="liaadminisvalidgroup"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -69,7 +69,7 @@ This module powers Lilia's admin permission system under `lia.admin`. It manages
 ---
 
 <details class="realm-shared" id="function-liaadmingetdefaultusergroup">
-<summary><span class="summary-main"><a id="lia.admin.getDefaultUserGroup"></a>lia.admin.getDefaultUserGroup()</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/admin.lua#L139" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="lia.admin.getDefaultUserGroup"></a>lia.admin.getDefaultUserGroup()</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/admin.lua#L148" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="liaadmingetdefaultusergroup"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -98,7 +98,7 @@ This module powers Lilia's admin permission system under `lia.admin`. It manages
 ---
 
 <details class="realm-shared" id="function-liaadminshouldshowusergroupicons">
-<summary><span class="summary-main"><a id="lia.admin.shouldShowUsergroupIcons"></a>lia.admin.shouldShowUsergroupIcons()</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/admin.lua#L167" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="lia.admin.shouldShowUsergroupIcons"></a>lia.admin.shouldShowUsergroupIcons()</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/admin.lua#L176" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="liaadminshouldshowusergroupicons"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -129,7 +129,7 @@ This module powers Lilia's admin permission system under `lia.admin`. It manages
 ---
 
 <details class="realm-shared" id="function-liaadmingetusergroupicon">
-<summary><span class="summary-main"><a id="lia.admin.getUsergroupIcon"></a>lia.admin.getUsergroupIcon(groupOrPlayer)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/admin.lua#L191" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="lia.admin.getUsergroupIcon"></a>lia.admin.getUsergroupIcon(groupOrPlayer)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/admin.lua#L200" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="liaadmingetusergroupicon"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -163,7 +163,7 @@ This module powers Lilia's admin permission system under `lia.admin`. It manages
 ---
 
 <details class="realm-shared" id="function-liaadminisprotectedstafftarget">
-<summary><span class="summary-main"><a id="lia.admin.isProtectedStaffTarget"></a>lia.admin.isProtectedStaffTarget(cmd, target)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/admin.lua#L616" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="lia.admin.isProtectedStaffTarget"></a>lia.admin.isProtectedStaffTarget(cmd, target)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/admin.lua#L625" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="liaadminisprotectedstafftarget"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -198,7 +198,7 @@ This module powers Lilia's admin permission system under `lia.admin`. It manages
 ---
 
 <details class="realm-shared" id="function-liaadminnotifyprotectedstafftarget">
-<summary><span class="summary-main"><a id="lia.admin.notifyProtectedStaffTarget"></a>lia.admin.notifyProtectedStaffTarget(admin)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/admin.lua#L645" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="lia.admin.notifyProtectedStaffTarget"></a>lia.admin.notifyProtectedStaffTarget(admin)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/admin.lua#L654" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="liaadminnotifyprotectedstafftarget"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -227,7 +227,7 @@ This module powers Lilia's admin permission system under `lia.admin`. It manages
 ---
 
 <details class="realm-shared" id="function-liaadmingetexternalprivilegename">
-<summary><span class="summary-main"><a id="lia.admin.getExternalPrivilegeName"></a>lia.admin.getExternalPrivilegeName(id)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/admin.lua#L792" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="lia.admin.getExternalPrivilegeName"></a>lia.admin.getExternalPrivilegeName(id)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/admin.lua#L801" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="liaadmingetexternalprivilegename"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -261,7 +261,7 @@ This module powers Lilia's admin permission system under `lia.admin`. It manages
 ---
 
 <details class="realm-shared" id="function-liaadminnormalizeprivilege">
-<summary><span class="summary-main"><a id="lia.admin.normalizePrivilege"></a>lia.admin.normalizePrivilege(privilege)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/admin.lua#L826" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="lia.admin.normalizePrivilege"></a>lia.admin.normalizePrivilege(privilege)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/admin.lua#L835" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="liaadminnormalizeprivilege"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -295,7 +295,7 @@ This module powers Lilia's admin permission system under `lia.admin`. It manages
 ---
 
 <details class="realm-shared" id="function-liaadmingetcommandprivilegeid">
-<summary><span class="summary-main"><a id="lia.admin.getCommandPrivilegeID"></a>lia.admin.getCommandPrivilegeID(cmd)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/admin.lua#L981" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="lia.admin.getCommandPrivilegeID"></a>lia.admin.getCommandPrivilegeID(cmd)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/admin.lua#L990" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="liaadmingetcommandprivilegeid"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -329,7 +329,7 @@ This module powers Lilia's admin permission system under `lia.admin`. It manages
 ---
 
 <details class="realm-shared" id="function-liaadminapplypunishment">
-<summary><span class="summary-main"><a id="lia.admin.applyPunishment"></a>lia.admin.applyPunishment(client, infraction, kick, ban, time, kickKey, banKey)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/admin.lua#L1238" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="lia.admin.applyPunishment"></a>lia.admin.applyPunishment(client, infraction, kick, ban, time, kickKey, banKey)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/admin.lua#L1247" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="liaadminapplypunishment"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -364,7 +364,7 @@ This module powers Lilia's admin permission system under `lia.admin`. It manages
 ---
 
 <details class="realm-shared" id="function-liaadminhasaccess">
-<summary><span class="summary-main"><a id="lia.admin.hasAccess"></a>lia.admin.hasAccess(ply, privilege)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/admin.lua#L1271" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="lia.admin.hasAccess"></a>lia.admin.hasAccess(ply, privilege)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/admin.lua#L1280" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="liaadminhasaccess"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -401,7 +401,7 @@ This module powers Lilia's admin permission system under `lia.admin`. It manages
 ---
 
 <details class="realm-shared" id="function-liaadminsave">
-<summary><span class="summary-main"><a id="lia.admin.save"></a>lia.admin.save(noNetwork)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/admin.lua#L1357" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="lia.admin.save"></a>lia.admin.save(noNetwork)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/admin.lua#L1366" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="liaadminsave"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -430,7 +430,7 @@ This module powers Lilia's admin permission system under `lia.admin`. It manages
 ---
 
 <details class="realm-shared" id="function-liaadminregisterprivilege">
-<summary><span class="summary-main"><a id="lia.admin.registerPrivilege"></a>lia.admin.registerPrivilege(priv)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/admin.lua#L1415" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="lia.admin.registerPrivilege"></a>lia.admin.registerPrivilege(priv)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/admin.lua#L1424" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="liaadminregisterprivilege"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -463,7 +463,7 @@ This module powers Lilia's admin permission system under `lia.admin`. It manages
 ---
 
 <details class="realm-shared" id="function-liaadminunregisterprivilege">
-<summary><span class="summary-main"><a id="lia.admin.unregisterPrivilege"></a>lia.admin.unregisterPrivilege(id)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/admin.lua#L1471" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="lia.admin.unregisterPrivilege"></a>lia.admin.unregisterPrivilege(id)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/admin.lua#L1480" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="liaadminunregisterprivilege"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -492,7 +492,7 @@ This module powers Lilia's admin permission system under `lia.admin`. It manages
 ---
 
 <details class="realm-shared" id="function-liaadminapplyinheritance">
-<summary><span class="summary-main"><a id="lia.admin.applyInheritance"></a>lia.admin.applyInheritance(groupName)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/admin.lua#L1522" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="lia.admin.applyInheritance"></a>lia.admin.applyInheritance(groupName)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/admin.lua#L1531" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="liaadminapplyinheritance"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -521,7 +521,7 @@ This module powers Lilia's admin permission system under `lia.admin`. It manages
 ---
 
 <details class="realm-shared" id="function-liaadminload">
-<summary><span class="summary-main"><a id="lia.admin.load"></a>lia.admin.load()</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/admin.lua#L1597" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="lia.admin.load"></a>lia.admin.load()</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/admin.lua#L1606" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="liaadminload"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -545,7 +545,7 @@ This module powers Lilia's admin permission system under `lia.admin`. It manages
 ---
 
 <details class="realm-shared" id="function-liaadmincreategroup">
-<summary><span class="summary-main"><a id="lia.admin.createGroup"></a>lia.admin.createGroup(groupName, info)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/admin.lua#L1695" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="lia.admin.createGroup"></a>lia.admin.createGroup(groupName, info)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/admin.lua#L1704" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="liaadmincreategroup"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -580,7 +580,7 @@ This module powers Lilia's admin permission system under `lia.admin`. It manages
 ---
 
 <details class="realm-shared" id="function-liaadminremovegroup">
-<summary><span class="summary-main"><a id="lia.admin.removeGroup"></a>lia.admin.removeGroup(groupName)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/admin.lua#L1735" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="lia.admin.removeGroup"></a>lia.admin.removeGroup(groupName)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/admin.lua#L1744" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="liaadminremovegroup"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -609,7 +609,7 @@ This module powers Lilia's admin permission system under `lia.admin`. It manages
 ---
 
 <details class="realm-shared" id="function-liaadminrenamegroup">
-<summary><span class="summary-main"><a id="lia.admin.renameGroup"></a>lia.admin.renameGroup(oldName, newName)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/admin.lua#L1775" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="lia.admin.renameGroup"></a>lia.admin.renameGroup(oldName, newName)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/admin.lua#L1784" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="liaadminrenamegroup"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -639,7 +639,7 @@ This module powers Lilia's admin permission system under `lia.admin`. It manages
 ---
 
 <details class="realm-server" id="function-liaadminnotifyadmin">
-<summary><span class="summary-main"><a id="lia.admin.notifyAdmin"></a>lia.admin.notifyAdmin(notification)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/admin.lua#L1824" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="lia.admin.notifyAdmin"></a>lia.admin.notifyAdmin(notification)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/admin.lua#L1833" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="liaadminnotifyadmin"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -668,7 +668,7 @@ This module powers Lilia's admin permission system under `lia.admin`. It manages
 ---
 
 <details class="realm-server" id="function-liaadminaddpermission">
-<summary><span class="summary-main"><a id="lia.admin.addPermission"></a>lia.admin.addPermission(groupName, permission, silent)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/admin.lua#L1856" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="lia.admin.addPermission"></a>lia.admin.addPermission(groupName, permission, silent)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/admin.lua#L1865" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="liaadminaddpermission"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -699,7 +699,7 @@ This module powers Lilia's admin permission system under `lia.admin`. It manages
 ---
 
 <details class="realm-server" id="function-liaadminremovepermission">
-<summary><span class="summary-main"><a id="lia.admin.removePermission"></a>lia.admin.removePermission(groupName, permission, silent)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/admin.lua#L1903" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="lia.admin.removePermission"></a>lia.admin.removePermission(groupName, permission, silent)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/admin.lua#L1912" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="liaadminremovepermission"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -730,7 +730,7 @@ This module powers Lilia's admin permission system under `lia.admin`. It manages
 ---
 
 <details class="realm-server" id="function-liaadminsync">
-<summary><span class="summary-main"><a id="lia.admin.sync"></a>lia.admin.sync(c)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/admin.lua#L1944" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="lia.admin.sync"></a>lia.admin.sync(c)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/admin.lua#L1953" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="liaadminsync"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -759,7 +759,7 @@ This module powers Lilia's admin permission system under `lia.admin`. It manages
 ---
 
 <details class="realm-server" id="function-liaadminhaschanges">
-<summary><span class="summary-main"><a id="lia.admin.hasChanges"></a>lia.admin.hasChanges()</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/admin.lua#L2024" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="lia.admin.hasChanges"></a>lia.admin.hasChanges()</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/admin.lua#L2033" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="liaadminhaschanges"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -788,7 +788,7 @@ This module powers Lilia's admin permission system under `lia.admin`. It manages
 ---
 
 <details class="realm-server" id="function-liaadminsetplayerusergroup">
-<summary><span class="summary-main"><a id="lia.admin.setPlayerUsergroup"></a>lia.admin.setPlayerUsergroup(ply, newGroup, source)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/admin.lua#L2055" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="lia.admin.setPlayerUsergroup"></a>lia.admin.setPlayerUsergroup(ply, newGroup, source)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/admin.lua#L2064" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="liaadminsetplayerusergroup"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -819,7 +819,7 @@ This module powers Lilia's admin permission system under `lia.admin`. It manages
 ---
 
 <details class="realm-server" id="function-liaadminsetsteamidusergroup">
-<summary><span class="summary-main"><a id="lia.admin.setSteamIDUsergroup"></a>lia.admin.setSteamIDUsergroup(steamId, newGroup, source)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/admin.lua#L2085" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="lia.admin.setSteamIDUsergroup"></a>lia.admin.setSteamIDUsergroup(steamId, newGroup, source)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/admin.lua#L2094" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="liaadminsetsteamidusergroup"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -850,7 +850,7 @@ This module powers Lilia's admin permission system under `lia.admin`. It manages
 ---
 
 <details class="realm-server" id="function-liaadminserverexeccommand">
-<summary><span class="summary-main"><a id="lia.admin.serverExecCommand"></a>lia.admin.serverExecCommand(cmd, victim, dur, reason, admin)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/admin.lua#L2132" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="lia.admin.serverExecCommand"></a>lia.admin.serverExecCommand(cmd, victim, dur, reason, admin)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/admin.lua#L2141" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="liaadminserverexeccommand"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -888,7 +888,7 @@ This module powers Lilia's admin permission system under `lia.admin`. It manages
 ---
 
 <details class="realm-client" id="function-liaadminexeccommand">
-<summary><span class="summary-main"><a id="lia.admin.execCommand"></a>lia.admin.execCommand(cmd, victim, dur, reason)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/admin.lua#L2596" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="lia.admin.execCommand"></a>lia.admin.execCommand(cmd, victim, dur, reason)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/admin.lua#L2605" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="liaadminexeccommand"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -939,6 +939,11 @@ This module powers Lilia's admin permission system under `lia.admin`. It manages
   <p>Allows plugins or modules to override the icon path used for a usergroup in admin-related UI.</p>
 </div>
 
+<h3 style="margin-bottom: 5px; font-weight: 700;">Category</h3>
+<div style="margin-left: 20px; margin-bottom: 20px;">
+  <p>Administration</p>
+</div>
+
 <h3 style="margin-bottom: 5px; font-weight: 700;">Realm</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
   <p>Shared</p>
@@ -962,11 +967,16 @@ This module powers Lilia's admin permission system under `lia.admin`. It manages
 ---
 
 <details class="realm-shared" id="function-onadminsystemloaded">
-<summary><span class="summary-main"><a id="OnAdminSystemLoaded"></a>OnAdminSystemLoaded(groups, privileges)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/admin.lua#L38" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="OnAdminSystemLoaded"></a>OnAdminSystemLoaded(groups, privileges)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/admin.lua#L41" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="onadminsystemloaded"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
   <p>Runs after the admin system finishes loading groups and privileges from storage.</p>
+</div>
+
+<h3 style="margin-bottom: 5px; font-weight: 700;">Category</h3>
+<div style="margin-left: 20px; margin-bottom: 20px;">
+  <p>Administration</p>
 </div>
 
 <h3 style="margin-bottom: 5px; font-weight: 700;">Realm</h3>
@@ -986,11 +996,16 @@ This module powers Lilia's admin permission system under `lia.admin`. It manages
 ---
 
 <details class="realm-client" id="function-populateadmintabs">
-<summary><span class="summary-main"><a id="PopulateAdminTabs"></a>PopulateAdminTabs(pages)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/admin.lua#L58" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="PopulateAdminTabs"></a>PopulateAdminTabs(pages)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/admin.lua#L64" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="populateadmintabs"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
   <p>Allows modules to add pages to the admin menu, including the usergroup management panel defined in this file.</p>
+</div>
+
+<h3 style="margin-bottom: 5px; font-weight: 700;">Category</h3>
+<div style="margin-left: 20px; margin-bottom: 20px;">
+  <p>Administration</p>
 </div>
 
 <h3 style="margin-bottom: 5px; font-weight: 700;">Realm</h3>

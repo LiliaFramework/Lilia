@@ -35,6 +35,11 @@ This page documents the hooks defined by the submodules/adminstick submodule in 
   <p>Allows clientside code to add extra model entries to the admin stick model picker.</p>
 </div>
 
+<h3 style="margin-bottom: 5px; font-weight: 700;">Category</h3>
+<div style="margin-left: 20px; margin-bottom: 20px;">
+  <p>Administration - Admin Stick</p>
+</div>
+
 <h3 style="margin-bottom: 5px; font-weight: 700;">Realm</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
   <p>Client</p>
@@ -51,11 +56,16 @@ This page documents the hooks defined by the submodules/adminstick submodule in 
 ---
 
 <details class="realm-client" id="function-onadminstickmenuclosed">
-<summary><span class="summary-main"><a id="OnAdminStickMenuClosed"></a>OnAdminStickMenuClosed()</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/modules/administration/submodules/adminstick/module.lua#L18" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="OnAdminStickMenuClosed"></a>OnAdminStickMenuClosed()</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/modules/administration/submodules/adminstick/module.lua#L21" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="onadminstickmenuclosed"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
   <p>Called after the admin stick menu closes.</p>
+</div>
+
+<h3 style="margin-bottom: 5px; font-weight: 700;">Category</h3>
+<div style="margin-left: 20px; margin-bottom: 20px;">
+  <p>Administration - Admin Stick</p>
 </div>
 
 <h3 style="margin-bottom: 5px; font-weight: 700;">Realm</h3>
@@ -69,11 +79,16 @@ This page documents the hooks defined by the submodules/adminstick submodule in 
 ---
 
 <details class="realm-client" id="function-openadminstickui">
-<summary><span class="summary-main"><a id="OpenAdminStickUI"></a>OpenAdminStickUI(target)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/modules/administration/submodules/adminstick/module.lua#L34" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="OpenAdminStickUI"></a>OpenAdminStickUI(target)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/modules/administration/submodules/adminstick/module.lua#L40" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="openadminstickui"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
   <p>Called when the admin stick requests its management UI for a target entity.</p>
+</div>
+
+<h3 style="margin-bottom: 5px; font-weight: 700;">Category</h3>
+<div style="margin-left: 20px; margin-bottom: 20px;">
+  <p>Administration - Admin Stick</p>
 </div>
 
 <h3 style="margin-bottom: 5px; font-weight: 700;">Realm</h3>
@@ -92,11 +107,16 @@ This page documents the hooks defined by the submodules/adminstick submodule in 
 ---
 
 <details class="realm-client" id="function-populateadminstick">
-<summary><span class="summary-main"><a id="PopulateAdminStick"></a>PopulateAdminStick(currentMenu, currentTarget, currentStores)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/modules/administration/submodules/adminstick/module.lua#L51" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="PopulateAdminStick"></a>PopulateAdminStick(currentMenu, currentTarget, currentStores)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/modules/administration/submodules/adminstick/module.lua#L60" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="populateadminstick"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
   <p>Allows clientside code to add option groups to the admin stick menu for the current target.</p>
+</div>
+
+<h3 style="margin-bottom: 5px; font-weight: 700;">Category</h3>
+<div style="margin-left: 20px; margin-bottom: 20px;">
+  <p>Administration - Admin Stick</p>
 </div>
 
 <h3 style="margin-bottom: 5px; font-weight: 700;">Realm</h3>

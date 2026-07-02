@@ -35,6 +35,11 @@ This page documents the hooks defined by the vendor module.
   <p>Determines whether a player may open or continue using a vendor.</p>
 </div>
 
+<h3 style="margin-bottom: 5px; font-weight: 700;">Category</h3>
+<div style="margin-left: 20px; margin-bottom: 20px;">
+  <p>Vendor</p>
+</div>
+
 <h3 style="margin-bottom: 5px; font-weight: 700;">Realm</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
   <p>Server</p>
@@ -57,11 +62,16 @@ This page documents the hooks defined by the vendor module.
 ---
 
 <details class="realm-server" id="function-canplayertradewithvendor">
-<summary><span class="summary-main"><a id="CanPlayerTradeWithVendor"></a>CanPlayerTradeWithVendor(client, vendor, itemType, isSellingToVendor)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/modules/vendor/module.lua#L22" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="CanPlayerTradeWithVendor"></a>CanPlayerTradeWithVendor(client, vendor, itemType, isSellingToVendor)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/modules/vendor/module.lua#L25" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="canplayertradewithvendor"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
   <p>Determines whether a player may buy or sell a specific item through a vendor.</p>
+</div>
+
+<h3 style="margin-bottom: 5px; font-weight: 700;">Category</h3>
+<div style="margin-left: 20px; margin-bottom: 20px;">
+  <p>Vendor</p>
 </div>
 
 <h3 style="margin-bottom: 5px; font-weight: 700;">Realm</h3>
@@ -88,11 +98,16 @@ This page documents the hooks defined by the vendor module.
 ---
 
 <details class="realm-shared" id="function-getpriceoverride">
-<summary><span class="summary-main"><a id="GetPriceOverride"></a>GetPriceOverride(client, vendor, uniqueID, price, isSellingToVendor)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/modules/vendor/module.lua#L49" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="GetPriceOverride"></a>GetPriceOverride(client, vendor, uniqueID, price, isSellingToVendor)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/modules/vendor/module.lua#L55" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="getpriceoverride"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
   <p>Allows code to override a vendor trade price for a player.</p>
+</div>
+
+<h3 style="margin-bottom: 5px; font-weight: 700;">Category</h3>
+<div style="margin-left: 20px; margin-bottom: 20px;">
+  <p>Vendor</p>
 </div>
 
 <h3 style="margin-bottom: 5px; font-weight: 700;">Realm</h3>
@@ -120,11 +135,16 @@ This page documents the hooks defined by the vendor module.
 ---
 
 <details class="realm-server" id="function-onchartradevendor">
-<summary><span class="summary-main"><a id="OnCharTradeVendor"></a>OnCharTradeVendor(client, vendor, item, isSellingToVendor, character, itemType, isFailed)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/modules/vendor/module.lua#L79" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="OnCharTradeVendor"></a>OnCharTradeVendor(client, vendor, item, isSellingToVendor, character, itemType, isFailed)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/modules/vendor/module.lua#L88" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="onchartradevendor"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
   <p>Called after the vendor system processes a character trade attempt.</p>
+</div>
+
+<h3 style="margin-bottom: 5px; font-weight: 700;">Category</h3>
+<div style="margin-left: 20px; margin-bottom: 20px;">
+  <p>Vendor</p>
 </div>
 
 <h3 style="margin-bottom: 5px; font-weight: 700;">Realm</h3>
@@ -149,11 +169,16 @@ This page documents the hooks defined by the vendor module.
 ---
 
 <details class="realm-client" id="function-onopenvendormenu">
-<summary><span class="summary-main"><a id="OnOpenVendorMenu"></a>OnOpenVendorMenu(panelOwner, vendor)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/modules/vendor/module.lua#L114" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="OnOpenVendorMenu"></a>OnOpenVendorMenu(panelOwner, vendor)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/modules/vendor/module.lua#L126" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="onopenvendormenu"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
   <p>Called on the client after the vendor UI is created.</p>
+</div>
+
+<h3 style="margin-bottom: 5px; font-weight: 700;">Category</h3>
+<div style="margin-left: 20px; margin-bottom: 20px;">
+  <p>Vendor</p>
 </div>
 
 <h3 style="margin-bottom: 5px; font-weight: 700;">Realm</h3>
@@ -173,11 +198,16 @@ This page documents the hooks defined by the vendor module.
 ---
 
 <details class="realm-server" id="function-onvendoredited">
-<summary><span class="summary-main"><a id="OnVendorEdited"></a>OnVendorEdited(client, vendor, key)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/modules/vendor/module.lua#L134" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="OnVendorEdited"></a>OnVendorEdited(client, vendor, key)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/modules/vendor/module.lua#L149" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="onvendoredited"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
   <p>Called after a player edits a vendor setting on the server.</p>
+</div>
+
+<h3 style="margin-bottom: 5px; font-weight: 700;">Category</h3>
+<div style="margin-left: 20px; margin-bottom: 20px;">
+  <p>Vendor</p>
 </div>
 
 <h3 style="margin-bottom: 5px; font-weight: 700;">Realm</h3>
@@ -198,11 +228,16 @@ This page documents the hooks defined by the vendor module.
 ---
 
 <details class="realm-server" id="function-playeraccessvendor">
-<summary><span class="summary-main"><a id="PlayerAccessVendor"></a>PlayerAccessVendor(client, vendor)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/modules/vendor/module.lua#L157" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="PlayerAccessVendor"></a>PlayerAccessVendor(client, vendor)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/modules/vendor/module.lua#L175" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="playeraccessvendor"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
   <p>Called after a player is granted access to a vendor and the open packets are sent.</p>
+</div>
+
+<h3 style="margin-bottom: 5px; font-weight: 700;">Category</h3>
+<div style="margin-left: 20px; margin-bottom: 20px;">
+  <p>Vendor</p>
 </div>
 
 <h3 style="margin-bottom: 5px; font-weight: 700;">Realm</h3>
@@ -222,11 +257,16 @@ This page documents the hooks defined by the vendor module.
 ---
 
 <details class="realm-client" id="function-vendorclassupdated">
-<summary><span class="summary-main"><a id="VendorClassUpdated"></a>VendorClassUpdated(vendor, id, allowed)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/modules/vendor/module.lua#L177" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="VendorClassUpdated"></a>VendorClassUpdated(vendor, id, allowed)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/modules/vendor/module.lua#L198" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="vendorclassupdated"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
   <p>Called on the client after a vendor class whitelist entry changes.</p>
+</div>
+
+<h3 style="margin-bottom: 5px; font-weight: 700;">Category</h3>
+<div style="margin-left: 20px; margin-bottom: 20px;">
+  <p>Vendor</p>
 </div>
 
 <h3 style="margin-bottom: 5px; font-weight: 700;">Realm</h3>
@@ -247,11 +287,16 @@ This page documents the hooks defined by the vendor module.
 ---
 
 <details class="realm-client" id="function-vendoredited">
-<summary><span class="summary-main"><a id="VendorEdited"></a>VendorEdited(vendor, key)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/modules/vendor/module.lua#L200" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="VendorEdited"></a>VendorEdited(vendor, key)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/modules/vendor/module.lua#L224" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="vendoredited"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
   <p>Called on the client after a vendor edit synchronization updates a field.</p>
+</div>
+
+<h3 style="margin-bottom: 5px; font-weight: 700;">Category</h3>
+<div style="margin-left: 20px; margin-bottom: 20px;">
+  <p>Vendor</p>
 </div>
 
 <h3 style="margin-bottom: 5px; font-weight: 700;">Realm</h3>
@@ -271,11 +316,16 @@ This page documents the hooks defined by the vendor module.
 ---
 
 <details class="realm-client" id="function-vendorexited">
-<summary><span class="summary-main"><a id="VendorExited"></a>VendorExited()</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/modules/vendor/module.lua#L220" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="VendorExited"></a>VendorExited()</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/modules/vendor/module.lua#L247" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="vendorexited"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
   <p>Called on the client after the vendor UI is closed by a networked exit event.</p>
+</div>
+
+<h3 style="margin-bottom: 5px; font-weight: 700;">Category</h3>
+<div style="margin-left: 20px; margin-bottom: 20px;">
+  <p>Vendor</p>
 </div>
 
 <h3 style="margin-bottom: 5px; font-weight: 700;">Realm</h3>
@@ -289,11 +339,16 @@ This page documents the hooks defined by the vendor module.
 ---
 
 <details class="realm-client" id="function-vendorfactionbuyscaleupdated">
-<summary><span class="summary-main"><a id="VendorFactionBuyScaleUpdated"></a>VendorFactionBuyScaleUpdated(vendor, factionID, scale)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/modules/vendor/module.lua#L236" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="VendorFactionBuyScaleUpdated"></a>VendorFactionBuyScaleUpdated(vendor, factionID, scale)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/modules/vendor/module.lua#L266" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="vendorfactionbuyscaleupdated"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
   <p>Called on the client after a faction buy scale changes for a vendor.</p>
+</div>
+
+<h3 style="margin-bottom: 5px; font-weight: 700;">Category</h3>
+<div style="margin-left: 20px; margin-bottom: 20px;">
+  <p>Vendor</p>
 </div>
 
 <h3 style="margin-bottom: 5px; font-weight: 700;">Realm</h3>
@@ -314,11 +369,16 @@ This page documents the hooks defined by the vendor module.
 ---
 
 <details class="realm-client" id="function-vendorfactionsellscaleupdated">
-<summary><span class="summary-main"><a id="VendorFactionSellScaleUpdated"></a>VendorFactionSellScaleUpdated(vendor, factionID, scale)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/modules/vendor/module.lua#L259" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="VendorFactionSellScaleUpdated"></a>VendorFactionSellScaleUpdated(vendor, factionID, scale)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/modules/vendor/module.lua#L292" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="vendorfactionsellscaleupdated"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
   <p>Called on the client after a faction sell scale changes for a vendor.</p>
+</div>
+
+<h3 style="margin-bottom: 5px; font-weight: 700;">Category</h3>
+<div style="margin-left: 20px; margin-bottom: 20px;">
+  <p>Vendor</p>
 </div>
 
 <h3 style="margin-bottom: 5px; font-weight: 700;">Realm</h3>
@@ -339,11 +399,16 @@ This page documents the hooks defined by the vendor module.
 ---
 
 <details class="realm-client" id="function-vendorfactionupdated">
-<summary><span class="summary-main"><a id="VendorFactionUpdated"></a>VendorFactionUpdated(vendor, id, allowed)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/modules/vendor/module.lua#L282" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="VendorFactionUpdated"></a>VendorFactionUpdated(vendor, id, allowed)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/modules/vendor/module.lua#L318" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="vendorfactionupdated"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
   <p>Called on the client after a vendor faction whitelist entry changes.</p>
+</div>
+
+<h3 style="margin-bottom: 5px; font-weight: 700;">Category</h3>
+<div style="margin-left: 20px; margin-bottom: 20px;">
+  <p>Vendor</p>
 </div>
 
 <h3 style="margin-bottom: 5px; font-weight: 700;">Realm</h3>
@@ -364,11 +429,16 @@ This page documents the hooks defined by the vendor module.
 ---
 
 <details class="realm-client" id="function-vendoritembuypriceupdated">
-<summary><span class="summary-main"><a id="VendorItemBuyPriceUpdated"></a>VendorItemBuyPriceUpdated(vendor, itemType, value)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/modules/vendor/module.lua#L305" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="VendorItemBuyPriceUpdated"></a>VendorItemBuyPriceUpdated(vendor, itemType, value)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/modules/vendor/module.lua#L344" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="vendoritembuypriceupdated"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
   <p>Called on the client after a vendor item buy price changes.</p>
+</div>
+
+<h3 style="margin-bottom: 5px; font-weight: 700;">Category</h3>
+<div style="margin-left: 20px; margin-bottom: 20px;">
+  <p>Vendor</p>
 </div>
 
 <h3 style="margin-bottom: 5px; font-weight: 700;">Realm</h3>
@@ -389,11 +459,16 @@ This page documents the hooks defined by the vendor module.
 ---
 
 <details class="realm-client" id="function-vendoritemmaxstockupdated">
-<summary><span class="summary-main"><a id="VendorItemMaxStockUpdated"></a>VendorItemMaxStockUpdated(vendor, itemType, value)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/modules/vendor/module.lua#L328" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="VendorItemMaxStockUpdated"></a>VendorItemMaxStockUpdated(vendor, itemType, value)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/modules/vendor/module.lua#L370" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="vendoritemmaxstockupdated"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
   <p>Called on the client after a vendor item max stock value changes.</p>
+</div>
+
+<h3 style="margin-bottom: 5px; font-weight: 700;">Category</h3>
+<div style="margin-left: 20px; margin-bottom: 20px;">
+  <p>Vendor</p>
 </div>
 
 <h3 style="margin-bottom: 5px; font-weight: 700;">Realm</h3>
@@ -414,11 +489,16 @@ This page documents the hooks defined by the vendor module.
 ---
 
 <details class="realm-client" id="function-vendoritemmodeupdated">
-<summary><span class="summary-main"><a id="VendorItemModeUpdated"></a>VendorItemModeUpdated(vendor, itemType, value)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/modules/vendor/module.lua#L351" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="VendorItemModeUpdated"></a>VendorItemModeUpdated(vendor, itemType, value)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/modules/vendor/module.lua#L396" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="vendoritemmodeupdated"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
   <p>Called on the client after a vendor item trade mode changes.</p>
+</div>
+
+<h3 style="margin-bottom: 5px; font-weight: 700;">Category</h3>
+<div style="margin-left: 20px; margin-bottom: 20px;">
+  <p>Vendor</p>
 </div>
 
 <h3 style="margin-bottom: 5px; font-weight: 700;">Realm</h3>
@@ -439,11 +519,16 @@ This page documents the hooks defined by the vendor module.
 ---
 
 <details class="realm-client" id="function-vendoritemsellpriceupdated">
-<summary><span class="summary-main"><a id="VendorItemSellPriceUpdated"></a>VendorItemSellPriceUpdated(vendor, itemType, value)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/modules/vendor/module.lua#L374" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="VendorItemSellPriceUpdated"></a>VendorItemSellPriceUpdated(vendor, itemType, value)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/modules/vendor/module.lua#L422" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="vendoritemsellpriceupdated"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
   <p>Called on the client after a vendor item sell price changes.</p>
+</div>
+
+<h3 style="margin-bottom: 5px; font-weight: 700;">Category</h3>
+<div style="margin-left: 20px; margin-bottom: 20px;">
+  <p>Vendor</p>
 </div>
 
 <h3 style="margin-bottom: 5px; font-weight: 700;">Realm</h3>
@@ -464,11 +549,16 @@ This page documents the hooks defined by the vendor module.
 ---
 
 <details class="realm-client" id="function-vendoritemstockupdated">
-<summary><span class="summary-main"><a id="VendorItemStockUpdated"></a>VendorItemStockUpdated(vendor, itemType, value)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/modules/vendor/module.lua#L397" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="VendorItemStockUpdated"></a>VendorItemStockUpdated(vendor, itemType, value)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/modules/vendor/module.lua#L448" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="vendoritemstockupdated"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
   <p>Called on the client after a vendor item stock count changes.</p>
+</div>
+
+<h3 style="margin-bottom: 5px; font-weight: 700;">Category</h3>
+<div style="margin-left: 20px; margin-bottom: 20px;">
+  <p>Vendor</p>
 </div>
 
 <h3 style="margin-bottom: 5px; font-weight: 700;">Realm</h3>
@@ -489,11 +579,16 @@ This page documents the hooks defined by the vendor module.
 ---
 
 <details class="realm-client" id="function-vendormessagesupdated">
-<summary><span class="summary-main"><a id="VendorMessagesUpdated"></a>VendorMessagesUpdated(vendor)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/modules/vendor/module.lua#L420" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="VendorMessagesUpdated"></a>VendorMessagesUpdated(vendor)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/modules/vendor/module.lua#L474" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="vendormessagesupdated"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
   <p>Called on the client after a vendor's message table is synchronized.</p>
+</div>
+
+<h3 style="margin-bottom: 5px; font-weight: 700;">Category</h3>
+<div style="margin-left: 20px; margin-bottom: 20px;">
+  <p>Vendor</p>
 </div>
 
 <h3 style="margin-bottom: 5px; font-weight: 700;">Realm</h3>
@@ -512,11 +607,16 @@ This page documents the hooks defined by the vendor module.
 ---
 
 <details class="realm-client" id="function-vendoropened">
-<summary><span class="summary-main"><a id="VendorOpened"></a>VendorOpened(vendor)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/modules/vendor/module.lua#L437" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="VendorOpened"></a>VendorOpened(vendor)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/modules/vendor/module.lua#L494" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="vendoropened"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
   <p>Called on the client after vendor access opens the vendor UI.</p>
+</div>
+
+<h3 style="margin-bottom: 5px; font-weight: 700;">Category</h3>
+<div style="margin-left: 20px; margin-bottom: 20px;">
+  <p>Vendor</p>
 </div>
 
 <h3 style="margin-bottom: 5px; font-weight: 700;">Realm</h3>
@@ -535,11 +635,16 @@ This page documents the hooks defined by the vendor module.
 ---
 
 <details class="realm-client" id="function-vendorpropertyupdated">
-<summary><span class="summary-main"><a id="VendorPropertyUpdated"></a>VendorPropertyUpdated(vendor, propertyName, propertyValue)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/modules/vendor/module.lua#L454" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="VendorPropertyUpdated"></a>VendorPropertyUpdated(vendor, propertyName, propertyValue)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/modules/vendor/module.lua#L514" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="vendorpropertyupdated"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
   <p>Called on the client after a synchronized vendor property changes.</p>
+</div>
+
+<h3 style="margin-bottom: 5px; font-weight: 700;">Category</h3>
+<div style="margin-left: 20px; margin-bottom: 20px;">
+  <p>Vendor</p>
 </div>
 
 <h3 style="margin-bottom: 5px; font-weight: 700;">Realm</h3>
@@ -560,11 +665,16 @@ This page documents the hooks defined by the vendor module.
 ---
 
 <details class="realm-client" id="function-vendorsynchronized">
-<summary><span class="summary-main"><a id="VendorSynchronized"></a>VendorSynchronized(vendor)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/modules/vendor/module.lua#L477" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="VendorSynchronized"></a>VendorSynchronized(vendor)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/modules/vendor/module.lua#L540" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="vendorsynchronized"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
   <p>Called on the client after a full vendor sync packet is applied.</p>
+</div>
+
+<h3 style="margin-bottom: 5px; font-weight: 700;">Category</h3>
+<div style="margin-left: 20px; margin-bottom: 20px;">
+  <p>Vendor</p>
 </div>
 
 <h3 style="margin-bottom: 5px; font-weight: 700;">Realm</h3>
@@ -583,11 +693,16 @@ This page documents the hooks defined by the vendor module.
 ---
 
 <details class="realm-server" id="function-vendortradeevent">
-<summary><span class="summary-main"><a id="VendorTradeEvent"></a>VendorTradeEvent(client, vendor, itemType, isSellingToVendor)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/modules/vendor/module.lua#L494" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="VendorTradeEvent"></a>VendorTradeEvent(client, vendor, itemType, isSellingToVendor)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/modules/vendor/module.lua#L560" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="vendortradeevent"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
   <p>Called when the vendor system begins processing a buy or sell transaction.</p>
+</div>
+
+<h3 style="margin-bottom: 5px; font-weight: 700;">Category</h3>
+<div style="margin-left: 20px; margin-bottom: 20px;">
+  <p>Vendor</p>
 </div>
 
 <h3 style="margin-bottom: 5px; font-weight: 700;">Realm</h3>

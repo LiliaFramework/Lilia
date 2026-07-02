@@ -35,6 +35,11 @@ This page documents the hooks defined by the types/weightinv submodule in the in
   <p>Allows code to override the computed maximum carry weight for a weight inventory.</p>
 </div>
 
+<h3 style="margin-bottom: 5px; font-weight: 700;">Category</h3>
+<div style="margin-left: 20px; margin-bottom: 20px;">
+  <p>Inventory - Weight</p>
+</div>
+
 <h3 style="margin-bottom: 5px; font-weight: 700;">Realm</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
   <p>Shared</p>

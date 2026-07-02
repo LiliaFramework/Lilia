@@ -35,6 +35,11 @@ This page documents the hooks defined by the spawns module.
   <p>Allows code to provide a custom respawn location before the spawn module falls back to its normal selection logic.</p>
 </div>
 
+<h3 style="margin-bottom: 5px; font-weight: 700;">Category</h3>
+<div style="margin-left: 20px; margin-bottom: 20px;">
+  <p>Spawns</p>
+</div>
+
 <h3 style="margin-bottom: 5px; font-weight: 700;">Realm</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
   <p>Server</p>
@@ -57,11 +62,16 @@ This page documents the hooks defined by the spawns module.
 ---
 
 <details class="realm-server" id="function-getplayerspawnlocation">
-<summary><span class="summary-main"><a id="GetPlayerSpawnLocation"></a>GetPlayerSpawnLocation(client, character)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/modules/spawns/module.lua#L22" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="GetPlayerSpawnLocation"></a>GetPlayerSpawnLocation(client, character)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/modules/spawns/module.lua#L25" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="getplayerspawnlocation"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
   <p>Allows code to provide a custom spawn location for normal character spawns.</p>
+</div>
+
+<h3 style="margin-bottom: 5px; font-weight: 700;">Category</h3>
+<div style="margin-left: 20px; margin-bottom: 20px;">
+  <p>Spawns</p>
 </div>
 
 <h3 style="margin-bottom: 5px; font-weight: 700;">Realm</h3>
@@ -86,11 +96,16 @@ This page documents the hooks defined by the spawns module.
 ---
 
 <details class="realm-client" id="function-onrespawnkeypressed">
-<summary><span class="summary-main"><a id="OnRespawnKeyPressed"></a>OnRespawnKeyPressed(ply, key, left, baseTime, lastDeath)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/modules/spawns/module.lua#L43" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="OnRespawnKeyPressed"></a>OnRespawnKeyPressed(ply, key, left, baseTime, lastDeath)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/modules/spawns/module.lua#L49" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="onrespawnkeypressed"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
   <p>Called on the client when a key is pressed while the respawn screen is active.</p>
+</div>
+
+<h3 style="margin-bottom: 5px; font-weight: 700;">Category</h3>
+<div style="margin-left: 20px; margin-bottom: 20px;">
+  <p>Spawns</p>
 </div>
 
 <h3 style="margin-bottom: 5px; font-weight: 700;">Realm</h3>
@@ -118,11 +133,16 @@ This page documents the hooks defined by the spawns module.
 ---
 
 <details class="realm-server" id="function-playerspawnpointselected">
-<summary><span class="summary-main"><a id="PlayerSpawnPointSelected"></a>PlayerSpawnPointSelected(client, position, angle)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/modules/spawns/module.lua#L73" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="PlayerSpawnPointSelected"></a>PlayerSpawnPointSelected(client, position, angle)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/modules/spawns/module.lua#L82" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="playerspawnpointselected"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
   <p>Called after the spawn module selects a final spawn point for a player.</p>
+</div>
+
+<h3 style="margin-bottom: 5px; font-weight: 700;">Category</h3>
+<div style="margin-left: 20px; margin-bottom: 20px;">
+  <p>Spawns</p>
 </div>
 
 <h3 style="margin-bottom: 5px; font-weight: 700;">Realm</h3>
@@ -143,11 +163,16 @@ This page documents the hooks defined by the spawns module.
 ---
 
 <details class="realm-client" id="function-shouldrespawnscreenappear">
-<summary><span class="summary-main"><a id="ShouldRespawnScreenAppear"></a>ShouldRespawnScreenAppear(ply, left, baseTime, lastDeath)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/modules/spawns/module.lua#L96" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="ShouldRespawnScreenAppear"></a>ShouldRespawnScreenAppear(ply, left, baseTime, lastDeath)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/modules/spawns/module.lua#L108" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="shouldrespawnscreenappear"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
   <p>Determines whether the clientside respawn screen should be shown.</p>
+</div>
+
+<h3 style="margin-bottom: 5px; font-weight: 700;">Category</h3>
+<div style="margin-left: 20px; margin-bottom: 20px;">
+  <p>Spawns</p>
 </div>
 
 <h3 style="margin-bottom: 5px; font-weight: 700;">Realm</h3>
@@ -174,11 +199,16 @@ This page documents the hooks defined by the spawns module.
 ---
 
 <details class="realm-server" id="function-shouldusemapspawns">
-<summary><span class="summary-main"><a id="ShouldUseMapSpawns"></a>ShouldUseMapSpawns(client, character, isRespawning)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/modules/spawns/module.lua#L123" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="ShouldUseMapSpawns"></a>ShouldUseMapSpawns(client, character, isRespawning)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/modules/spawns/module.lua#L138" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="shouldusemapspawns"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
   <p>Determines whether the spawn module should prefer map-defined spawn entities before its usual class or faction spawn logic.</p>
+</div>
+
+<h3 style="margin-bottom: 5px; font-weight: 700;">Category</h3>
+<div style="margin-left: 20px; margin-bottom: 20px;">
+  <p>Spawns</p>
 </div>
 
 <h3 style="margin-bottom: 5px; font-weight: 700;">Realm</h3>

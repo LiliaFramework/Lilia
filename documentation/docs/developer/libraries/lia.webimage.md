@@ -35,7 +35,7 @@ The web image library centralizes clientside image loading under `lia.webimage`.
 ---
 
 <details class="realm-client" id="function-liawebimagedownload">
-<summary><span class="summary-main"><a id="lia.webimage.download"></a>lia.webimage.download(n, u, cb, flags)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/webimage.lua#L109" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="lia.webimage.download"></a>lia.webimage.download(n, u, cb, flags)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/webimage.lua#L112" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="liawebimagedownload"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -61,7 +61,7 @@ The web image library centralizes clientside image loading under `lia.webimage`.
 ---
 
 <details class="realm-client" id="function-liawebimageregister">
-<summary><span class="summary-main"><a id="lia.webimage.register"></a>lia.webimage.register(n, u, cb, flags)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/webimage.lua#L213" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="lia.webimage.register"></a>lia.webimage.register(n, u, cb, flags)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/webimage.lua#L216" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="liawebimageregister"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -87,7 +87,7 @@ The web image library centralizes clientside image loading under `lia.webimage`.
 ---
 
 <details class="realm-client" id="function-liawebimageget">
-<summary><span class="summary-main"><a id="lia.webimage.get"></a>lia.webimage.get(n, flags)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/webimage.lua#L240" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="lia.webimage.get"></a>lia.webimage.get(n, flags)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/webimage.lua#L243" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="liawebimageget"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -116,7 +116,7 @@ The web image library centralizes clientside image loading under `lia.webimage`.
 ---
 
 <details class="realm-client" id="function-liawebimagegetstats">
-<summary><span class="summary-main"><a id="lia.webimage.getStats"></a>lia.webimage.getStats()</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/webimage.lua#L339" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="lia.webimage.getStats"></a>lia.webimage.getStats()</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/webimage.lua#L342" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="liawebimagegetstats"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -139,7 +139,7 @@ The web image library centralizes clientside image loading under `lia.webimage`.
 ---
 
 <details class="realm-client" id="function-liawebimageclearcache">
-<summary><span class="summary-main"><a id="lia.webimage.clearCache"></a>lia.webimage.clearCache(skipReRegister)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/webimage.lua#L362" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="lia.webimage.clearCache"></a>lia.webimage.clearCache(skipReRegister)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/webimage.lua#L365" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="liawebimageclearcache"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -174,6 +174,11 @@ The web image library centralizes clientside image loading under `lia.webimage`.
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="webimagedownloaded"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
   <p>Runs after a web image is successfully downloaded, saved, and built into a material.</p>
+</div>
+
+<h3 style="margin-bottom: 5px; font-weight: 700;">Category</h3>
+<div style="margin-left: 20px; margin-bottom: 20px;">
+  <p>Web Image</p>
 </div>
 
 <h3 style="margin-bottom: 5px; font-weight: 700;">Realm</h3>

@@ -35,7 +35,7 @@ The web sound library centralizes clientside handling for remote sound assets un
 ---
 
 <details class="realm-client" id="function-liawebsounddownload">
-<summary><span class="summary-main"><a id="lia.websound.download"></a>lia.websound.download(name, url, cb)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/websound.lua#L141" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="lia.websound.download"></a>lia.websound.download(name, url, cb)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/websound.lua#L144" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="liawebsounddownload"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -68,7 +68,7 @@ The web sound library centralizes clientside handling for remote sound assets un
 ---
 
 <details class="realm-client" id="function-liawebsoundregister">
-<summary><span class="summary-main"><a id="lia.websound.register"></a>lia.websound.register(name, url, cb)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/websound.lua#L246" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="lia.websound.register"></a>lia.websound.register(name, url, cb)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/websound.lua#L249" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="liawebsoundregister"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -99,7 +99,7 @@ The web sound library centralizes clientside handling for remote sound assets un
 ---
 
 <details class="realm-client" id="function-liawebsoundget">
-<summary><span class="summary-main"><a id="lia.websound.get"></a>lia.websound.get(name)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/websound.lua#L273" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="lia.websound.get"></a>lia.websound.get(name)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/websound.lua#L276" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="liawebsoundget"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -134,7 +134,7 @@ The web sound library centralizes clientside handling for remote sound assets un
 ---
 
 <details class="realm-client" id="function-liawebsoundgetstats">
-<summary><span class="summary-main"><a id="lia.websound.getStats"></a>lia.websound.getStats()</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/websound.lua#L513" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="lia.websound.getStats"></a>lia.websound.getStats()</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/websound.lua#L516" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="liawebsoundgetstats"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -164,7 +164,7 @@ The web sound library centralizes clientside handling for remote sound assets un
 ---
 
 <details class="realm-client" id="function-liawebsoundclearcache">
-<summary><span class="summary-main"><a id="lia.websound.clearCache"></a>lia.websound.clearCache(skipReRegister)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/websound.lua#L545" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="lia.websound.clearCache"></a>lia.websound.clearCache(skipReRegister)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/websound.lua#L548" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="liawebsoundclearcache"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -194,7 +194,7 @@ The web sound library centralizes clientside handling for remote sound assets un
 ---
 
 <details class="realm-client" id="function-liawebsoundplaybuttonsound">
-<summary><span class="summary-main"><a id="lia.websound.playButtonSound"></a>lia.websound.playButtonSound(customSound, callback)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/websound.lua#L597" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="lia.websound.playButtonSound"></a>lia.websound.playButtonSound(customSound, callback)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/websound.lua#L600" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="liawebsoundplaybuttonsound"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -239,6 +239,11 @@ The web sound library centralizes clientside handling for remote sound assets un
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="websounddownloaded"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
   <p>Runs after a web sound is freshly downloaded, validated, written to the local data cache, and counted in the web sound statistics.</p>
+</div>
+
+<h3 style="margin-bottom: 5px; font-weight: 700;">Category</h3>
+<div style="margin-left: 20px; margin-bottom: 20px;">
+  <p>Web Sound</p>
 </div>
 
 <h3 style="margin-bottom: 5px; font-weight: 700;">Realm</h3>

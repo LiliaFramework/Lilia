@@ -35,7 +35,7 @@ The net library centralizes shared networking helpers under `lia.net`. It provid
 ---
 
 <details class="realm-shared" id="function-lianetiscachehit">
-<summary><span class="summary-main"><a id="lia.net.isCacheHit"></a>lia.net.isCacheHit(name, args)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/net.lua#L121" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="lia.net.isCacheHit"></a>lia.net.isCacheHit(name, args)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/net.lua#L124" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="lianetiscachehit"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -72,7 +72,7 @@ The net library centralizes shared networking helpers under `lia.net`. It provid
 ---
 
 <details class="realm-shared" id="function-lianetaddtocache">
-<summary><span class="summary-main"><a id="lia.net.addToCache"></a>lia.net.addToCache(name, args)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/net.lua#L146" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="lia.net.addToCache"></a>lia.net.addToCache(name, args)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/net.lua#L149" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="lianetaddtocache"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -102,7 +102,7 @@ The net library centralizes shared networking helpers under `lia.net`. It provid
 ---
 
 <details class="realm-shared" id="function-lianetreadbigtable">
-<summary><span class="summary-main"><a id="lia.net.readBigTable"></a>lia.net.readBigTable(netStr, callback)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/net.lua#L176" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="lia.net.readBigTable"></a>lia.net.readBigTable(netStr, callback)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/net.lua#L179" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="lianetreadbigtable"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -134,7 +134,7 @@ The net library centralizes shared networking helpers under `lia.net`. It provid
 ---
 
 <details class="realm-server" id="function-lianetwritebigtable">
-<summary><span class="summary-main"><a id="lia.net.writeBigTable"></a>lia.net.writeBigTable(targets, netStr, tbl, chunkSize)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/net.lua#L293" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="lia.net.writeBigTable"></a>lia.net.writeBigTable(targets, netStr, tbl, chunkSize)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/net.lua#L296" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="lianetwritebigtable"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -167,7 +167,7 @@ The net library centralizes shared networking helpers under `lia.net`. It provid
 ---
 
 <details class="realm-server" id="function-lianetcheckbadtype">
-<summary><span class="summary-main"><a id="lia.net.checkBadType"></a>lia.net.checkBadType(name, object)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/net.lua#L363" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="lia.net.checkBadType"></a>lia.net.checkBadType(name, object)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/net.lua#L366" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="lianetcheckbadtype"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -202,7 +202,7 @@ The net library centralizes shared networking helpers under `lia.net`. It provid
 ---
 
 <details class="realm-server" id="function-lianetsetnetvar">
-<summary><span class="summary-main"><a id="lia.net.setNetVar"></a>lia.net.setNetVar(key, value, receiver)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/net.lua#L397" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="lia.net.setNetVar"></a>lia.net.setNetVar(key, value, receiver)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/net.lua#L400" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="lianetsetnetvar"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -234,7 +234,7 @@ The net library centralizes shared networking helpers under `lia.net`. It provid
 ---
 
 <details class="realm-shared" id="function-lianetgetnetvar">
-<summary><span class="summary-main"><a id="lia.net.getNetVar"></a>lia.net.getNetVar(key, default)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/net.lua#L443" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="lia.net.getNetVar"></a>lia.net.getNetVar(key, default)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/net.lua#L446" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="lianetgetnetvar"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -269,7 +269,7 @@ The net library centralizes shared networking helpers under `lia.net`. It provid
 ---
 
 <details class="realm-shared" id="function-lianetprofilerlog">
-<summary><span class="summary-main"><a id="lia.net.profiler.log"></a>lia.net.profiler.log(direction, messageName, size, sender, receiver)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/net.lua#L534" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="lia.net.profiler.log"></a>lia.net.profiler.log(direction, messageName, size, sender, receiver)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/net.lua#L537" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="lianetprofilerlog"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -314,6 +314,11 @@ The net library centralizes shared networking helpers under `lia.net`. It provid
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="netvarchanged"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
   <p>Runs after a networked variable changes. This file triggers it for global networked variables with `entity` set to nil.</p>
+</div>
+
+<h3 style="margin-bottom: 5px; font-weight: 700;">Category</h3>
+<div style="margin-left: 20px; margin-bottom: 20px;">
+  <p>Networking</p>
 </div>
 
 <h3 style="margin-bottom: 5px; font-weight: 700;">Realm</h3>

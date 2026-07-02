@@ -35,7 +35,7 @@ The bar library centralizes clientside HUD bar behavior under `lia.bar`. It mana
 ---
 
 <details class="realm-client" id="function-liabarget">
-<summary><span class="summary-main"><a id="lia.bar.get"></a>lia.bar.get(identifier)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/bars.lua#L81" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="lia.bar.get"></a>lia.bar.get(identifier)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/bars.lua#L87" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="liabarget"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -70,7 +70,7 @@ The bar library centralizes clientside HUD bar behavior under `lia.bar`. It mana
 ---
 
 <details class="realm-client" id="function-liabaradd">
-<summary><span class="summary-main"><a id="lia.bar.add"></a>lia.bar.add(getValue, color, priority, identifier)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/bars.lua#L115" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="lia.bar.add"></a>lia.bar.add(getValue, color, priority, identifier)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/bars.lua#L121" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="liabaradd"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -109,7 +109,7 @@ The bar library centralizes clientside HUD bar behavior under `lia.bar`. It mana
 ---
 
 <details class="realm-client" id="function-liabarremove">
-<summary><span class="summary-main"><a id="lia.bar.remove"></a>lia.bar.remove(identifier)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/bars.lua#L153" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="lia.bar.remove"></a>lia.bar.remove(identifier)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/bars.lua#L159" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="liabarremove"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -138,7 +138,7 @@ The bar library centralizes clientside HUD bar behavior under `lia.bar`. It mana
 ---
 
 <details class="realm-client" id="function-liabardrawbar">
-<summary><span class="summary-main"><a id="lia.bar.drawBar"></a>lia.bar.drawBar(x, y, w, h, pos, max, color)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/bars.lua#L193" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="lia.bar.drawBar"></a>lia.bar.drawBar(x, y, w, h, pos, max, color)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/bars.lua#L199" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="liabardrawbar"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -173,7 +173,7 @@ The bar library centralizes clientside HUD bar behavior under `lia.bar`. It mana
 ---
 
 <details class="realm-client" id="function-liabardrawaction">
-<summary><span class="summary-main"><a id="lia.bar.drawAction"></a>lia.bar.drawAction(text, duration)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/bars.lua#L222" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="lia.bar.drawAction"></a>lia.bar.drawAction(text, duration)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/bars.lua#L228" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="liabardrawaction"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -203,7 +203,7 @@ The bar library centralizes clientside HUD bar behavior under `lia.bar`. It mana
 ---
 
 <details class="realm-client" id="function-liabardrawall">
-<summary><span class="summary-main"><a id="lia.bar.drawAll"></a>lia.bar.drawAll()</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/bars.lua#L270" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="lia.bar.drawAll"></a>lia.bar.drawAll()</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/bars.lua#L276" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="liabardrawall"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -234,11 +234,16 @@ The bar library centralizes clientside HUD bar behavior under `lia.bar`. It mana
 ---
 
 <details class="realm-client" id="function-shouldbardraw">
-<summary><span class="summary-main"><a id="ShouldBarDraw"></a>ShouldBarDraw(bar)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/bars.lua#L31" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="ShouldBarDraw"></a>ShouldBarDraw(bar)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/bars.lua#L34" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="shouldbardraw"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
   <p>Allows plugins or modules to force a specific registered HUD bar to draw even when it would not otherwise be visible.</p>
+</div>
+
+<h3 style="margin-bottom: 5px; font-weight: 700;">Category</h3>
+<div style="margin-left: 20px; margin-bottom: 20px;">
+  <p>Bars</p>
 </div>
 
 <h3 style="margin-bottom: 5px; font-weight: 700;">Realm</h3>
@@ -267,6 +272,11 @@ The bar library centralizes clientside HUD bar behavior under `lia.bar`. It mana
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="shouldhidebars"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
   <p>Allows plugins or modules to hide all registered HUD bars before they are drawn.</p>
+</div>
+
+<h3 style="margin-bottom: 5px; font-weight: 700;">Category</h3>
+<div style="margin-left: 20px; margin-bottom: 20px;">
+  <p>Bars</p>
 </div>
 
 <h3 style="margin-bottom: 5px; font-weight: 700;">Realm</h3>

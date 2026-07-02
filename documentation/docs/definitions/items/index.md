@@ -148,7 +148,11 @@ This reference is derived only from the Lua item bases in `gamemode/items/base`.
 | `name` | `string` | Display name. | `"urlName"` |
 | `desc` | `string` | Short item description. | `"urlDesc"` |
 | `model` | `string` | World and inventory model. | `"models/props_interiors/pot01a.mdl"` |
+| `width` | `number` | Inventory width in slots. | `1` |
+| `height` | `number` | Inventory height in slots. | `1` |
 | `url` | `string` | URL opened by the item. | `""` |
+| `frameWidth` | `number` | Maximum browser window width before screen-based clamping. | `1100` |
+| `frameTall` | `number` | Maximum browser window height before screen-based clamping. | `800` |
 
 ## `base_weapons`
 

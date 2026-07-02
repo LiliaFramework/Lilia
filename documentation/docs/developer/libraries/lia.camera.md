@@ -35,7 +35,7 @@ The camera library centralizes clientside camera behavior under `lia.camera`. It
 ---
 
 <details class="realm-client" id="function-liacameraischaractermenuopen">
-<summary><span class="summary-main"><a id="lia.camera.isCharacterMenuOpen"></a>lia.camera.isCharacterMenuOpen()</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/camera.lua#L131" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="lia.camera.isCharacterMenuOpen"></a>lia.camera.isCharacterMenuOpen()</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/camera.lua#L146" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="liacameraischaractermenuopen"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -58,7 +58,7 @@ The camera library centralizes clientside camera behavior under `lia.camera`. It
 ---
 
 <details class="realm-client" id="function-liacameraisusingthirdpersoncamera">
-<summary><span class="summary-main"><a id="lia.camera.isUsingThirdPersonCamera"></a>lia.camera.isUsingThirdPersonCamera(client)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/camera.lua#L152" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="lia.camera.isUsingThirdPersonCamera"></a>lia.camera.isUsingThirdPersonCamera(client)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/camera.lua#L167" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="liacameraisusingthirdpersoncamera"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -86,7 +86,7 @@ The camera library centralizes clientside camera behavior under `lia.camera`. It
 ---
 
 <details class="realm-client" id="function-liacamerashouldsuppressrealisticview">
-<summary><span class="summary-main"><a id="lia.camera.shouldSuppressRealisticView"></a>lia.camera.shouldSuppressRealisticView(client)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/camera.lua#L174" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="lia.camera.shouldSuppressRealisticView"></a>lia.camera.shouldSuppressRealisticView(client)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/camera.lua#L189" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="liacamerashouldsuppressrealisticview"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -114,7 +114,7 @@ The camera library centralizes clientside camera behavior under `lia.camera`. It
 ---
 
 <details class="realm-client" id="function-liacameracanoverrideview">
-<summary><span class="summary-main"><a id="lia.camera.canOverrideView"></a>lia.camera.canOverrideView(client)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/camera.lua#L196" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="lia.camera.canOverrideView"></a>lia.camera.canOverrideView(client)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/camera.lua#L211" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="liacameracanoverrideview"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -142,7 +142,7 @@ The camera library centralizes clientside camera behavior under `lia.camera`. It
 ---
 
 <details class="realm-client" id="function-liacameracanuserealisticview">
-<summary><span class="summary-main"><a id="lia.camera.canUseRealisticView"></a>lia.camera.canUseRealisticView(client)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/camera.lua#L222" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="lia.camera.canUseRealisticView"></a>lia.camera.canUseRealisticView(client)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/camera.lua#L237" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="liacameracanuserealisticview"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -170,7 +170,7 @@ The camera library centralizes clientside camera behavior under `lia.camera`. It
 ---
 
 <details class="realm-client" id="function-liacameracanusefreelook">
-<summary><span class="summary-main"><a id="lia.camera.canUseFreelook"></a>lia.camera.canUseFreelook(client)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/camera.lua#L251" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="lia.camera.canUseFreelook"></a>lia.camera.canUseFreelook(client)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/camera.lua#L266" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="liacameracanusefreelook"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -198,7 +198,7 @@ The camera library centralizes clientside camera behavior under `lia.camera`. It
 ---
 
 <details class="realm-client" id="function-liacameraisinsights">
-<summary><span class="summary-main"><a id="lia.camera.isInSights"></a>lia.camera.isInSights(client)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/camera.lua#L278" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="lia.camera.isInSights"></a>lia.camera.isInSights(client)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/camera.lua#L293" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="liacameraisinsights"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -226,7 +226,7 @@ The camera library centralizes clientside camera behavior under `lia.camera`. It
 ---
 
 <details class="realm-client" id="function-liacameraisholdingfreelookbind">
-<summary><span class="summary-main"><a id="lia.camera.isHoldingFreelookBind"></a>lia.camera.isHoldingFreelookBind(client)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/camera.lua#L302" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="lia.camera.isHoldingFreelookBind"></a>lia.camera.isHoldingFreelookBind(client)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/camera.lua#L317" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="liacameraisholdingfreelookbind"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -254,7 +254,7 @@ The camera library centralizes clientside camera behavior under `lia.camera`. It
 ---
 
 <details class="realm-client" id="function-liacameraresetfreelookstate">
-<summary><span class="summary-main"><a id="lia.camera.resetFreelookState"></a>lia.camera.resetFreelookState()</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/camera.lua#L316" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="lia.camera.resetFreelookState"></a>lia.camera.resetFreelookState()</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/camera.lua#L331" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="liacameraresetfreelookstate"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -272,7 +272,7 @@ The camera library centralizes clientside camera behavior under `lia.camera`. It
 ---
 
 <details class="realm-client" id="function-liacamerabeginfreelook">
-<summary><span class="summary-main"><a id="lia.camera.beginFreelook"></a>lia.camera.beginFreelook(client)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/camera.lua#L335" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="lia.camera.beginFreelook"></a>lia.camera.beginFreelook(client)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/camera.lua#L350" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="liacamerabeginfreelook"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -295,7 +295,7 @@ The camera library centralizes clientside camera behavior under `lia.camera`. It
 ---
 
 <details class="realm-client" id="function-liacameraendfreelook">
-<summary><span class="summary-main"><a id="lia.camera.endFreelook"></a>lia.camera.endFreelook()</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/camera.lua#L350" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="lia.camera.endFreelook"></a>lia.camera.endFreelook()</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/camera.lua#L365" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="liacameraendfreelook"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -313,7 +313,7 @@ The camera library centralizes clientside camera behavior under `lia.camera`. It
 ---
 
 <details class="realm-client" id="function-liacamerashoulddrawbodyforfreelook">
-<summary><span class="summary-main"><a id="lia.camera.shouldDrawBodyForFreelook"></a>lia.camera.shouldDrawBodyForFreelook(client)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/camera.lua#L372" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="lia.camera.shouldDrawBodyForFreelook"></a>lia.camera.shouldDrawBodyForFreelook(client)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/camera.lua#L387" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="liacamerashoulddrawbodyforfreelook"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -341,7 +341,7 @@ The camera library centralizes clientside camera behavior under `lia.camera`. It
 ---
 
 <details class="realm-client" id="function-liacameragetfirstpersonheadbones">
-<summary><span class="summary-main"><a id="lia.camera.getFirstPersonHeadBones"></a>lia.camera.getFirstPersonHeadBones(client)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/camera.lua#L394" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="lia.camera.getFirstPersonHeadBones"></a>lia.camera.getFirstPersonHeadBones(client)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/camera.lua#L409" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="liacameragetfirstpersonheadbones"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -369,7 +369,7 @@ The camera library centralizes clientside camera behavior under `lia.camera`. It
 ---
 
 <details class="realm-client" id="function-liacameragetfirstpersonheadbonechildren">
-<summary><span class="summary-main"><a id="lia.camera.getFirstPersonHeadBoneChildren"></a>lia.camera.getFirstPersonHeadBoneChildren(client, rootBone)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/camera.lua#L445" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="lia.camera.getFirstPersonHeadBoneChildren"></a>lia.camera.getFirstPersonHeadBoneChildren(client, rootBone)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/camera.lua#L460" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="liacameragetfirstpersonheadbonechildren"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -398,7 +398,7 @@ The camera library centralizes clientside camera behavior under `lia.camera`. It
 ---
 
 <details class="realm-client" id="function-liacameragetparentattachmentnames">
-<summary><span class="summary-main"><a id="lia.camera.getParentAttachmentNames"></a>lia.camera.getParentAttachmentNames(client)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/camera.lua#L479" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="lia.camera.getParentAttachmentNames"></a>lia.camera.getParentAttachmentNames(client)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/camera.lua#L494" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="liacameragetparentattachmentnames"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -426,7 +426,7 @@ The camera library centralizes clientside camera behavior under `lia.camera`. It
 ---
 
 <details class="realm-client" id="function-liacameraisheadattachmentname">
-<summary><span class="summary-main"><a id="lia.camera.isHeadAttachmentName"></a>lia.camera.isHeadAttachmentName(name)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/camera.lua#L507" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="lia.camera.isHeadAttachmentName"></a>lia.camera.isHeadAttachmentName(name)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/camera.lua#L522" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="liacameraisheadattachmentname"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -454,7 +454,7 @@ The camera library centralizes clientside camera behavior under `lia.camera`. It
 ---
 
 <details class="realm-client" id="function-liacameraisheadwearmodel">
-<summary><span class="summary-main"><a id="lia.camera.isHeadwearModel"></a>lia.camera.isHeadwearModel(model)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/camera.lua#L529" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="lia.camera.isHeadwearModel"></a>lia.camera.isHeadwearModel(model)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/camera.lua#L544" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="liacameraisheadwearmodel"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -482,7 +482,7 @@ The camera library centralizes clientside camera behavior under `lia.camera`. It
 ---
 
 <details class="realm-client" id="function-liacameraisheadbodygroupname">
-<summary><span class="summary-main"><a id="lia.camera.isHeadBodygroupName"></a>lia.camera.isHeadBodygroupName(name)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/camera.lua#L552" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="lia.camera.isHeadBodygroupName"></a>lia.camera.isHeadBodygroupName(name)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/camera.lua#L567" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="liacameraisheadbodygroupname"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -510,7 +510,7 @@ The camera library centralizes clientside camera behavior under `lia.camera`. It
 ---
 
 <details class="realm-client" id="function-liacamerasetfirstpersonheadbodygroupshidden">
-<summary><span class="summary-main"><a id="lia.camera.setFirstPersonHeadBodygroupsHidden"></a>lia.camera.setFirstPersonHeadBodygroupsHidden(client, hidden)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/camera.lua#L574" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="lia.camera.setFirstPersonHeadBodygroupsHidden"></a>lia.camera.setFirstPersonHeadBodygroupsHidden(client, hidden)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/camera.lua#L589" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="liacamerasetfirstpersonheadbodygroupshidden"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -534,7 +534,7 @@ The camera library centralizes clientside camera behavior under `lia.camera`. It
 ---
 
 <details class="realm-client" id="function-liacamerashouldhidefirstpersonchildentity">
-<summary><span class="summary-main"><a id="lia.camera.shouldHideFirstPersonChildEntity"></a>lia.camera.shouldHideFirstPersonChildEntity(client, entity)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/camera.lua#L613" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="lia.camera.shouldHideFirstPersonChildEntity"></a>lia.camera.shouldHideFirstPersonChildEntity(client, entity)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/camera.lua#L628" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="liacamerashouldhidefirstpersonchildentity"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -563,7 +563,7 @@ The camera library centralizes clientside camera behavior under `lia.camera`. It
 ---
 
 <details class="realm-client" id="function-liacamerasetfirstpersonheadwearhidden">
-<summary><span class="summary-main"><a id="lia.camera.setFirstPersonHeadwearHidden"></a>lia.camera.setFirstPersonHeadwearHidden(client, hidden)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/camera.lua#L643" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="lia.camera.setFirstPersonHeadwearHidden"></a>lia.camera.setFirstPersonHeadwearHidden(client, hidden)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/camera.lua#L658" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="liacamerasetfirstpersonheadwearhidden"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -587,7 +587,7 @@ The camera library centralizes clientside camera behavior under `lia.camera`. It
 ---
 
 <details class="realm-client" id="function-liacamerasetfirstpersonheadhidden">
-<summary><span class="summary-main"><a id="lia.camera.setFirstPersonHeadHidden"></a>lia.camera.setFirstPersonHeadHidden(client, hidden)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/camera.lua#L678" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="lia.camera.setFirstPersonHeadHidden"></a>lia.camera.setFirstPersonHeadHidden(client, hidden)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/camera.lua#L693" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="liacamerasetfirstpersonheadhidden"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -611,7 +611,7 @@ The camera library centralizes clientside camera behavior under `lia.camera`. It
 ---
 
 <details class="realm-client" id="function-liacameraapplyfreelooktoangles">
-<summary><span class="summary-main"><a id="lia.camera.applyFreelookToAngles"></a>lia.camera.applyFreelookToAngles(client, angles)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/camera.lua#L719" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="lia.camera.applyFreelookToAngles"></a>lia.camera.applyFreelookToAngles(client, angles)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/camera.lua#L734" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="liacameraapplyfreelooktoangles"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -640,7 +640,7 @@ The camera library centralizes clientside camera behavior under `lia.camera`. It
 ---
 
 <details class="realm-client" id="function-liacamerabuildrealisticview">
-<summary><span class="summary-main"><a id="lia.camera.buildRealisticView"></a>lia.camera.buildRealisticView(client, origin, angles, fov)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/camera.lua#L764" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="lia.camera.buildRealisticView"></a>lia.camera.buildRealisticView(client, origin, angles, fov)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/camera.lua#L779" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="liacamerabuildrealisticview"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -671,7 +671,7 @@ The camera library centralizes clientside camera behavior under `lia.camera`. It
 ---
 
 <details class="realm-client" id="function-liacamerabuildfreelookbodyview">
-<summary><span class="summary-main"><a id="lia.camera.buildFreelookBodyView"></a>lia.camera.buildFreelookBodyView(client, pos, ang, fov)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/camera.lua#L811" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="lia.camera.buildFreelookBodyView"></a>lia.camera.buildFreelookBodyView(client, pos, ang, fov)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/camera.lua#L826" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="liacamerabuildfreelookbodyview"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -702,7 +702,7 @@ The camera library centralizes clientside camera behavior under `lia.camera`. It
 ---
 
 <details class="realm-client" id="function-liacameracalcview">
-<summary><span class="summary-main"><a id="lia.camera.calcView"></a>lia.camera.calcView(client, pos, ang, fov)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/camera.lua#L854" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="lia.camera.calcView"></a>lia.camera.calcView(client, pos, ang, fov)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/camera.lua#L869" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="liacameracalcview"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -746,11 +746,16 @@ The camera library centralizes clientside camera behavior under `lia.camera`. It
 ---
 
 <details class="realm-client" id="function-freelooktoggled">
-<summary><span class="summary-main"><a id="FreelookToggled"></a>FreelookToggled(enabled)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/camera.lua#L68" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="FreelookToggled"></a>FreelookToggled(enabled)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/camera.lua#L77" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="freelooktoggled"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
   <p>Runs after the freelook console command changes freelook state.</p>
+</div>
+
+<h3 style="margin-bottom: 5px; font-weight: 700;">Category</h3>
+<div style="margin-left: 20px; margin-bottom: 20px;">
+  <p>Camera</p>
 </div>
 
 <h3 style="margin-bottom: 5px; font-weight: 700;">Realm</h3>
@@ -769,11 +774,16 @@ The camera library centralizes clientside camera behavior under `lia.camera`. It
 ---
 
 <details class="realm-client" id="function-prefreelooktoggle">
-<summary><span class="summary-main"><a id="PreFreelookToggle"></a>PreFreelookToggle(enabled)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/camera.lua#L50" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="PreFreelookToggle"></a>PreFreelookToggle(enabled)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/camera.lua#L56" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="prefreelooktoggle"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
   <p>Runs before the freelook console command changes freelook state.</p>
+</div>
+
+<h3 style="margin-bottom: 5px; font-weight: 700;">Category</h3>
+<div style="margin-left: 20px; margin-bottom: 20px;">
+  <p>Camera</p>
 </div>
 
 <h3 style="margin-bottom: 5px; font-weight: 700;">Realm</h3>
@@ -804,6 +814,11 @@ The camera library centralizes clientside camera behavior under `lia.camera`. It
   <p>Allows plugins or modules to disable the Lilia third-person camera override for a client.</p>
 </div>
 
+<h3 style="margin-bottom: 5px; font-weight: 700;">Category</h3>
+<div style="margin-left: 20px; margin-bottom: 20px;">
+  <p>Camera</p>
+</div>
+
 <h3 style="margin-bottom: 5px; font-weight: 700;">Realm</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
   <p>Client</p>
@@ -825,11 +840,16 @@ The camera library centralizes clientside camera behavior under `lia.camera`. It
 ---
 
 <details class="realm-client" id="function-shouldusefreelook">
-<summary><span class="summary-main"><a id="ShouldUseFreelook"></a>ShouldUseFreelook(client)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/camera.lua#L32" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="ShouldUseFreelook"></a>ShouldUseFreelook(client)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/camera.lua#L35" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="shouldusefreelook"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
   <p>Allows plugins or modules to prevent freelook input processing for the local player.</p>
+</div>
+
+<h3 style="margin-bottom: 5px; font-weight: 700;">Category</h3>
+<div style="margin-left: 20px; margin-bottom: 20px;">
+  <p>Camera</p>
 </div>
 
 <h3 style="margin-bottom: 5px; font-weight: 700;">Realm</h3>
@@ -853,11 +873,16 @@ The camera library centralizes clientside camera behavior under `lia.camera`. It
 ---
 
 <details class="realm-client" id="function-thirdpersontoggled">
-<summary><span class="summary-main"><a id="ThirdPersonToggled"></a>ThirdPersonToggled(enabled)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/camera.lua#L82" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="ThirdPersonToggled"></a>ThirdPersonToggled(enabled)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/camera.lua#L94" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="thirdpersontoggled"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
   <p>Runs after the F4 third-person toggle changes the third-person option.</p>
+</div>
+
+<h3 style="margin-bottom: 5px; font-weight: 700;">Category</h3>
+<div style="margin-left: 20px; margin-bottom: 20px;">
+  <p>Camera</p>
 </div>
 
 <h3 style="margin-bottom: 5px; font-weight: 700;">Realm</h3>

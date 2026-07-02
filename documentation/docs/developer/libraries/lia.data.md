@@ -35,7 +35,7 @@ The data library centralizes persistent data under `lia.data`. It serializes vec
 ---
 
 <details class="realm-server" id="function-liadataencodetable">
-<summary><span class="summary-main"><a id="lia.data.encodetable"></a>lia.data.encodetable(value)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/data.lua#L88" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="lia.data.encodetable"></a>lia.data.encodetable(value)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/data.lua#L97" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="liadataencodetable"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -70,7 +70,7 @@ The data library centralizes persistent data under `lia.data`. It serializes vec
 ---
 
 <details class="realm-server" id="function-liadatadecode">
-<summary><span class="summary-main"><a id="lia.data.decode"></a>lia.data.decode(value)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/data.lua#L331" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="lia.data.decode"></a>lia.data.decode(value)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/data.lua#L340" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="liadatadecode"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -105,7 +105,7 @@ The data library centralizes persistent data under `lia.data`. It serializes vec
 ---
 
 <details class="realm-server" id="function-liadataserialize">
-<summary><span class="summary-main"><a id="lia.data.serialize"></a>lia.data.serialize(value)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/data.lua#L356" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="lia.data.serialize"></a>lia.data.serialize(value)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/data.lua#L365" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="liadataserialize"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -140,7 +140,7 @@ The data library centralizes persistent data under `lia.data`. It serializes vec
 ---
 
 <details class="realm-server" id="function-liadatadeserialize">
-<summary><span class="summary-main"><a id="lia.data.deserialize"></a>lia.data.deserialize(raw)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/data.lua#L388" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="lia.data.deserialize"></a>lia.data.deserialize(raw)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/data.lua#L397" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="liadatadeserialize"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -175,7 +175,7 @@ The data library centralizes persistent data under `lia.data`. It serializes vec
 ---
 
 <details class="realm-server" id="function-liadatadecodevector">
-<summary><span class="summary-main"><a id="lia.data.decodeVector"></a>lia.data.decodeVector(raw)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/data.lua#L429" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="lia.data.decodeVector"></a>lia.data.decodeVector(raw)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/data.lua#L438" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="liadatadecodevector"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -210,7 +210,7 @@ The data library centralizes persistent data under `lia.data`. It serializes vec
 ---
 
 <details class="realm-server" id="function-liadatadecodeangle">
-<summary><span class="summary-main"><a id="lia.data.decodeAngle"></a>lia.data.decodeAngle(raw)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/data.lua#L469" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="lia.data.decodeAngle"></a>lia.data.decodeAngle(raw)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/data.lua#L478" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="liadatadecodeangle"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -245,7 +245,7 @@ The data library centralizes persistent data under `lia.data`. It serializes vec
 ---
 
 <details class="realm-server" id="function-liadataset">
-<summary><span class="summary-main"><a id="lia.data.set"></a>lia.data.set(key, value, global, ignoreMap)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/data.lua#L565" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="lia.data.set"></a>lia.data.set(key, value, global, ignoreMap)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/data.lua#L574" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="liadataset"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -283,7 +283,7 @@ The data library centralizes persistent data under `lia.data`. It serializes vec
 ---
 
 <details class="realm-server" id="function-liadatadelete">
-<summary><span class="summary-main"><a id="lia.data.delete"></a>lia.data.delete(key, global, ignoreMap)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/data.lua#L608" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="lia.data.delete"></a>lia.data.delete(key, global, ignoreMap)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/data.lua#L617" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="liadatadelete"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -319,7 +319,7 @@ The data library centralizes persistent data under `lia.data`. It serializes vec
 ---
 
 <details class="realm-server" id="function-liadataloadtables">
-<summary><span class="summary-main"><a id="lia.data.loadTables"></a>lia.data.loadTables()</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/data.lua#L635" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="lia.data.loadTables"></a>lia.data.loadTables()</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/data.lua#L644" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="liadataloadtables"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -348,7 +348,7 @@ The data library centralizes persistent data under `lia.data`. It serializes vec
 ---
 
 <details class="realm-server" id="function-liadataloadpersistence">
-<summary><span class="summary-main"><a id="lia.data.loadPersistence"></a>lia.data.loadPersistence()</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/data.lua#L705" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="lia.data.loadPersistence"></a>lia.data.loadPersistence()</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/data.lua#L714" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="liadataloadpersistence"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -379,7 +379,7 @@ The data library centralizes persistent data under `lia.data`. It serializes vec
 ---
 
 <details class="realm-server" id="function-liadatasavepersistence">
-<summary><span class="summary-main"><a id="lia.data.savePersistence"></a>lia.data.savePersistence(entities)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/data.lua#L731" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="lia.data.savePersistence"></a>lia.data.savePersistence(entities)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/data.lua#L740" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="liadatasavepersistence"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -415,7 +415,7 @@ The data library centralizes persistent data under `lia.data`. It serializes vec
 ---
 
 <details class="realm-server" id="function-liadataloadpersistencedata">
-<summary><span class="summary-main"><a id="lia.data.loadPersistenceData"></a>lia.data.loadPersistenceData(callback)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/data.lua#L813" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="lia.data.loadPersistenceData"></a>lia.data.loadPersistenceData(callback)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/data.lua#L822" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="liadataloadpersistencedata"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -451,7 +451,7 @@ The data library centralizes persistent data under `lia.data`. It serializes vec
 ---
 
 <details class="realm-server" id="function-liadataget">
-<summary><span class="summary-main"><a id="lia.data.get"></a>lia.data.get(key, default)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/data.lua#L877" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="lia.data.get"></a>lia.data.get(key, default)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/data.lua#L886" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="liadataget"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -486,7 +486,7 @@ The data library centralizes persistent data under `lia.data`. It serializes vec
 ---
 
 <details class="realm-server" id="function-liadatagetpersistence">
-<summary><span class="summary-main"><a id="lia.data.getPersistence"></a>lia.data.getPersistence()</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/data.lua#L910" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="lia.data.getPersistence"></a>lia.data.getPersistence()</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/data.lua#L919" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="liadatagetpersistence"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -517,7 +517,7 @@ The data library centralizes persistent data under `lia.data`. It serializes vec
 ---
 
 <details class="realm-shared" id="function-liadataaddequivalencymap">
-<summary><span class="summary-main"><a id="lia.data.addEquivalencyMap"></a>lia.data.addEquivalencyMap(map1, map2)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/data.lua#L944" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="lia.data.addEquivalencyMap"></a>lia.data.addEquivalencyMap(map1, map2)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/data.lua#L953" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="liadataaddequivalencymap"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -552,7 +552,7 @@ The data library centralizes persistent data under `lia.data`. It serializes vec
 ---
 
 <details class="realm-shared" id="function-liadatagetequivalencymap">
-<summary><span class="summary-main"><a id="lia.data.getEquivalencyMap"></a>lia.data.getEquivalencyMap(map)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/data.lua#L969" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="lia.data.getEquivalencyMap"></a>lia.data.getEquivalencyMap(map)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/data.lua#L978" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="liadatagetequivalencymap"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -600,6 +600,11 @@ The data library centralizes persistent data under `lia.data`. It serializes vec
   <p>Runs after `lia.data.set` updates the cached value and writes the scoped data file.</p>
 </div>
 
+<h3 style="margin-bottom: 5px; font-weight: 700;">Category</h3>
+<div style="margin-left: 20px; margin-bottom: 20px;">
+  <p>Data</p>
+</div>
+
 <h3 style="margin-bottom: 5px; font-weight: 700;">Realm</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
   <p>Server</p>
@@ -619,11 +624,16 @@ The data library centralizes persistent data under `lia.data`. It serializes vec
 ---
 
 <details class="realm-server" id="function-persistencesave">
-<summary><span class="summary-main"><a id="PersistenceSave"></a>PersistenceSave()</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/data.lua#L50" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="PersistenceSave"></a>PersistenceSave()</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/data.lua#L56" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="persistencesave"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
   <p>Runs on the periodic data-save timer so modules and plugins can save persistent entities.</p>
+</div>
+
+<h3 style="margin-bottom: 5px; font-weight: 700;">Category</h3>
+<div style="margin-left: 20px; margin-bottom: 20px;">
+  <p>Data</p>
 </div>
 
 <h3 style="margin-bottom: 5px; font-weight: 700;">Realm</h3>
@@ -637,11 +647,16 @@ The data library centralizes persistent data under `lia.data`. It serializes vec
 ---
 
 <details class="realm-server" id="function-savedata">
-<summary><span class="summary-main"><a id="SaveData"></a>SaveData()</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/data.lua#L37" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="SaveData"></a>SaveData()</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/data.lua#L40" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="savedata"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
   <p>Runs on the periodic data-save timer so modules and plugins can save their own data.</p>
+</div>
+
+<h3 style="margin-bottom: 5px; font-weight: 700;">Category</h3>
+<div style="margin-left: 20px; margin-bottom: 20px;">
+  <p>Data</p>
 </div>
 
 <h3 style="margin-bottom: 5px; font-weight: 700;">Realm</h3>
