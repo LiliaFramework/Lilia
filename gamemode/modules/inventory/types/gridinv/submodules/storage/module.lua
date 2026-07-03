@@ -6,7 +6,7 @@
         Determines whether a player may convert an entity into storage.
 
     Category:
-        Inventory - Storage
+        Inventory
 
     Parameters:
         client (Player)
@@ -33,7 +33,7 @@
         Determines whether a storage entity's inventory data should be persisted.
 
     Category:
-        Inventory - Storage
+        Inventory
 
     Parameters:
         ent (Entity)
@@ -57,7 +57,7 @@
         Called when the storage system initializes a storage-capable entity.
 
     Category:
-        Inventory - Storage
+        Inventory
 
     Parameters:
         entity (Entity)
@@ -77,7 +77,7 @@
         Called after the client creates the paired inventory panels for a storage UI.
 
     Category:
-        Inventory - Storage
+        Inventory
 
     Parameters:
         localInvPanel (Panel)
@@ -103,7 +103,7 @@
         Determines whether a player may transfer a specific item through a storage interaction.
 
     Category:
-        Inventory - Storage
+        Inventory
 
     Parameters:
         client (Player)
@@ -130,7 +130,7 @@
         Called when a storage entity is removed and its attached inventory is being cleaned up.
 
     Category:
-        Inventory - Storage
+        Inventory
 
     Parameters:
         entity (Entity)
@@ -153,7 +153,7 @@
         Called after a storage entity is assigned an inventory.
 
     Category:
-        Inventory - Storage
+        Inventory
 
     Parameters:
         entity (Entity)
@@ -179,7 +179,7 @@
         Called after persisted storage data is restored onto an entity.
 
     Category:
-        Inventory - Storage
+        Inventory
 
     Parameters:
         ent (Entity)
@@ -202,7 +202,7 @@
         Called on the client when a storage unlock prompt should be shown.
 
     Category:
-        Inventory - Storage
+        Inventory
 
     Parameters:
         entity (Entity)

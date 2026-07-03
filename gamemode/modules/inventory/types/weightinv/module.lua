@@ -6,7 +6,7 @@
         Allows code to override the computed maximum carry weight for a weight inventory.
 
     Category:
-        Inventory - Weight
+        Inventory
 
     Parameters:
         inventory (table)

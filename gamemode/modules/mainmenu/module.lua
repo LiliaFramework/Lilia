@@ -58,6 +58,254 @@
     Realm:
         Client
 ]]
+--[[
+    Hooks:
+        CanPlayerCreateChar(client, data)
+
+    Purpose:
+        Determines whether a player is allowed to create a character with the supplied creation data.
+
+    Category:
+        Main Menu
+
+    Parameters:
+        client (Player)
+            The player attempting to create a character.
+
+        data (table)
+            The submitted character creation data.
+
+    Returns:
+        boolean|nil
+            Return false to block character creation.
+
+    Realm:
+        Shared
+]]
+--[[
+    Hooks:
+        ChooseCharacter(id)
+
+    Purpose:
+        Requests that the client load a specific character from the character list.
+
+    Category:
+        Main Menu
+
+    Parameters:
+        id (number)
+            The character ID to choose.
+
+    Returns:
+        Deferred
+            Resolves when the character is loaded or rejects with the server-provided error.
+
+    Realm:
+        Client
+]]
+--[[
+    Hooks:
+        CreateCharacter(data)
+
+    Purpose:
+        Validates and submits character-creation payload data to the server.
+
+    Category:
+        Main Menu
+
+    Parameters:
+        data (table)
+            The character field values to validate and send.
+
+    Returns:
+        Deferred
+            Resolves with the new character ID or rejects with the validation or server error.
+
+    Realm:
+        Client
+]]
+--[[
+    Hooks:
+        DeleteCharacter(id)
+
+    Purpose:
+        Requests deletion of a character by ID.
+
+    Category:
+        Main Menu
+
+    Parameters:
+        id (number)
+            The character ID to delete.
+
+    Returns:
+        nil
+
+    Realm:
+        Client
+]]
+--[[
+    Hooks:
+        LoadMainCharacter()
+
+    Purpose:
+        Loads the player's configured main character through the normal character-selection flow.
+
+    Category:
+        Main Menu
+
+    Parameters:
+        None
+
+    Returns:
+        Deferred|nil
+            Returns the character-load deferred when a main character is available.
+
+    Realm:
+        Client
+]]
+--[[
+    Hooks:
+        GetMaxPlayerChar(client)
+
+    Purpose:
+        Returns the total number of character slots available to a player.
+
+    Category:
+        Main Menu
+
+    Parameters:
+        client (Player)
+            The player whose character slot limit should be calculated.
+
+    Returns:
+        number
+            The maximum number of characters the player may have.
+
+    Realm:
+        Shared
+]]
+--[[
+    Hooks:
+        OpenCharacterMenu()
+
+    Purpose:
+        Opens the default character menu unless another hook overrides it.
+
+    Category:
+        Main Menu
+
+    Parameters:
+        None
+
+    Returns:
+        Panel|nil
+            The created character panel, when the default menu opens.
+
+    Realm:
+        Client
+]]
+--[[
+    Hooks:
+        ResetCharacterPanel()
+
+    Purpose:
+        Rebuilds the character panel when the current menu state no longer matches the player's session state.
+
+    Category:
+        Main Menu
+
+    Parameters:
+        None
+
+    Returns:
+        nil
+
+    Realm:
+        Client
+]]
+--[[
+    Hooks:
+        SetMainCharacter(charID)
+
+    Purpose:
+        Sends the selected character ID to the server as the player's main character.
+
+    Category:
+        Main Menu
+
+    Parameters:
+        charID (number)
+            The character ID to store as the player's main character.
+
+    Returns:
+        nil
+
+    Realm:
+        Client
+]]
+--[[
+    Hooks:
+        SyncCharList(client)
+
+    Purpose:
+        Sends the current character list to a client that is viewing character selection.
+
+    Category:
+        Main Menu
+
+    Parameters:
+        client (Player)
+            The player who should receive the synchronized character list.
+
+    Returns:
+        nil
+
+    Realm:
+        Server
+]]
+--[[
+    Hooks:
+        LiliaLoaded()
+
+    Purpose:
+        Opens the character menu after the framework has finished loading on the client.
+
+    Category:
+        Main Menu
+
+    Parameters:
+        None
+
+    Returns:
+        nil
+
+    Realm:
+        Client
+]]
+--[[
+    Hooks:
+        KickedFromChar(characterID, isCurrentChar)
+
+    Purpose:
+        Handles the clientside character menu state after the player is kicked from a character.
+
+    Category:
+        Main Menu
+
+    Parameters:
+        characterID (number)
+            The character ID the player was removed from.
+
+        isCurrentChar (boolean)
+            Whether the removed character was the player's currently loaded character.
+
+    Returns:
+        nil
+
+    Realm:
+        Client
+]]
 MODULE.name = "mainMenuModuleName"
 MODULE.author = "Samael"
 MODULE.discord = "@liliaplayer"

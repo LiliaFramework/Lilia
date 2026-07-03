@@ -23,7 +23,7 @@ details > summary .source-link-button--summary {
 
 # Doors
 
-This page documents the hooks defined by the doors module.
+This page documents hooks in the doors category.
 
 ---
 

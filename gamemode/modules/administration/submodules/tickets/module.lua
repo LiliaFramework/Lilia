@@ -1,4 +1,31 @@
-﻿--[[
+--[[
+    Hooks:
+        CreateTicketFrame(requester, message, claimed)
+
+    Purpose:
+        Creates the clientside ticket popup frame for a submitted help ticket.
+
+    Category:
+        Administration - Tickets
+
+    Parameters:
+        requester (Player)
+            The player who opened the ticket.
+
+        message (string)
+            The submitted ticket text to display.
+
+        claimed (Player)
+            The staff member currently assigned to the ticket, when one exists.
+
+    Returns:
+        Panel|nil
+            The created ticket frame when the requester is valid.
+
+    Realm:
+        Client
+]]
+--[[
     Hooks:
         OnTicketClaimed(client, requester, ticketMessage)
 
@@ -121,6 +148,26 @@
 
     Returns:
         nil
+
+    Realm:
+        Server
+]]
+--[[
+    Hooks:
+        GetAllCaseClaims()
+
+    Purpose:
+        Retrieves aggregated ticket-claim statistics for staff members.
+
+    Category:
+        Administration - Tickets
+
+    Parameters:
+        None
+
+    Returns:
+        Deferred
+            Resolves with a table keyed by admin SteamID containing claim totals and last-claim data.
 
     Realm:
         Server

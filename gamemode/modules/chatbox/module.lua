@@ -144,7 +144,89 @@
             Return replacement message text to override the final output.
 
     Realm:
-        Client / Server
+        Shared
+]]
+--[[
+    Hooks:
+        AddFilteredWord(word)
+
+    Purpose:
+        Adds a normalized word to the chat filter list when it is not already present.
+
+    Category:
+        Chatbox
+
+    Parameters:
+        word (string)
+            The word to normalize and add to the stored filter list.
+
+    Returns:
+        boolean, string
+            Returns whether the add succeeded and either the normalized word or an error tag.
+
+    Realm:
+        Server
+]]
+--[[
+    Hooks:
+        GetFilteredWords()
+
+    Purpose:
+        Returns the normalized chat filter word list currently used by the module.
+
+    Category:
+        Chatbox
+
+    Parameters:
+        None
+
+    Returns:
+        table
+            The sequential list of filtered words.
+
+    Realm:
+        Server
+]]
+--[[
+    Hooks:
+        RemoveFilteredWord(word)
+
+    Purpose:
+        Removes a normalized word from the chat filter list when it exists.
+
+    Category:
+        Chatbox
+
+    Parameters:
+        word (string)
+            The word to normalize and remove from the stored filter list.
+
+    Returns:
+        boolean, string
+            Returns whether the removal succeeded and either the normalized word or an error tag.
+
+    Realm:
+        Server
+]]
+--[[
+    Hooks:
+        SyncFilteredWords(targets)
+
+    Purpose:
+        Sends the current filtered-word list to one player, a list of players, or every eligible manager.
+
+    Category:
+        Chatbox
+
+    Parameters:
+        targets (Player|table|nil)
+            An optional recipient player, recipient list, or `nil` to broadcast to all eligible recipients.
+
+    Returns:
+        nil
+
+    Realm:
+        Server
 ]]
 MODULE.name = "@chatboxModuleName"
 MODULE.author = "Samael"

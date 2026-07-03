@@ -23,7 +23,7 @@ details > summary .source-link-button--summary {
 
 # Attributes
 
-This page documents the hooks defined by the attributes module.
+This page documents hooks in the attributes category.
 
 ---
 

@@ -60,7 +60,7 @@
         nil
 
     Realm:
-        Client / Server
+        Shared
 ]]
 MODULE.name = "@recognition"
 MODULE.author = "Samael"

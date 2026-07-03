@@ -162,6 +162,47 @@
     Realm:
         Server
 ]]
+--[[
+    Hooks:
+        FetchSpawns()
+
+    Purpose:
+        Loads the stored faction spawn table and normalizes saved entries into structured spawn data.
+
+    Category:
+        Spawns
+
+    Parameters:
+        None
+
+    Returns:
+        Deferred
+            Resolves with the normalized faction spawn table.
+
+    Realm:
+        Server
+]]
+--[[
+    Hooks:
+        StoreSpawns(spawns)
+
+    Purpose:
+        Saves the provided faction spawn table into persistent module data.
+
+    Category:
+        Spawns
+
+    Parameters:
+        spawns (table)
+            The faction spawn data to persist.
+
+    Returns:
+        Deferred
+            Resolves true after the spawn data is queued for persistence.
+
+    Realm:
+        Server
+]]
 MODULE.name = "@spawnsModuleName"
 MODULE.author = "Samael"
 MODULE.discord = "@liliaplayer"

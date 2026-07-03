@@ -1093,6 +1093,26 @@ def classify_hook_group(file_path: Path, base_dir: Path, file_content: str) -> D
     }
 
 
+def classify_hook_category_group(category_name: str) -> Dict[str, str]:
+    normalized_category = (category_name or '').strip()
+    if not normalized_category:
+        return {
+            'section': 'module',
+            'key': 'category:uncategorized',
+            'filename': 'uncategorized.md',
+            'title': 'Uncategorized',
+            'subtitle': 'This page documents hooks that do not declare a category.'
+        }
+
+    return {
+        'section': 'module',
+        'key': f'category:{normalized_category.lower()}',
+        'filename': f'{slugify_filename(normalized_category)}.md',
+        'title': normalized_category,
+        'subtitle': f'This page documents hooks in the {normalized_category.lower()} category.'
+    }
+
+
 def should_include_hook_file(file_path: Path, group_info: Dict[str, str], file_content: str) -> bool:
     custom_folder, custom_filename, _ = parse_folder_directives(file_content)
     if not custom_filename:
@@ -1188,6 +1208,48 @@ details > summary .source-link-button--summary {
     print(f" Generated {output_path.name}")
 
 
+def extract_generated_hook_category(markdown_text: str, hook_name: str) -> Optional[str]:
+    anchor = f'<a id="{hook_name}"></a>'
+    anchor_index = markdown_text.find(anchor)
+    if anchor_index == -1:
+        return None
+
+    category_header_index = markdown_text.find('>Category</h3>', anchor_index)
+    if category_header_index == -1:
+        return None
+
+    next_section_index = markdown_text.find('<h3', category_header_index + 1)
+    if next_section_index == -1:
+        next_section_index = len(markdown_text)
+    category_section = markdown_text[category_header_index:next_section_index]
+
+    match = re.search(r'<p>(.*?)</p>', category_section, re.DOTALL)
+    if not match:
+        return None
+    return match.group(1).strip()
+
+
+def validate_hook_group_categories(group: Dict[str, object], output_dir: Path) -> None:
+    output_path = output_dir / group['filename']
+    if not output_path.exists():
+        raise RuntimeError(f"Hook documentation page was not generated: {output_path}")
+
+    markdown_text = output_path.read_text(encoding='utf-8')
+    mismatches = []
+    for hook in group['hooks']:
+        parsed = parse_comment_block(hook['comment'])
+        expected_category = (parsed.get('category') or '').strip()
+        actual_category = extract_generated_hook_category(markdown_text, hook['name'])
+        if actual_category is None:
+            mismatches.append(f"{hook['name']}: missing generated category block")
+        elif actual_category != expected_category:
+            mismatches.append(f"{hook['name']}: expected '{expected_category}' but found '{actual_category}'")
+
+    if mismatches:
+        mismatch_text = '\n'.join(f" - {item}" for item in mismatches)
+        raise RuntimeError(f"Generated hook categories did not match source comments in {output_path}:\n{mismatch_text}")
+
+
 def generate_hook_documentation(core_output_dir: Path, module_output_dir: Path, base_dir: Path) -> None:
     gamemode_dir = base_dir / 'gamemode'
     grouped_hooks: Dict[str, Dict[str, object]] = {}
@@ -1202,23 +1264,31 @@ def generate_hook_documentation(core_output_dir: Path, module_output_dir: Path, 
             continue
         if not should_include_hook_file(file_path, group_info, file_content):
             continue
-        group = grouped_hooks.setdefault(group_info['key'], {
-            'key': group_info['key'],
-            'section': group_info['section'],
-            'filename': group_info['filename'],
-            'title': group_info['title'],
-            'subtitle': group_info['subtitle'],
-            'hooks': [],
-            'file_header': None,
-            'overview_section': None,
-        })
-
-        if group['key'] != 'module-uncategorized' and group['file_header'] is None and file_header:
-            group['file_header'] = file_header
-        if group['key'] != 'module-uncategorized' and group['overview_section'] is None and overview_section:
-            group['overview_section'] = overview_section
 
         for hook in hooks:
+            parsed = parse_comment_block(hook['comment'])
+            category_name = (parsed.get('category') or '').strip()
+            hook_group_info = classify_hook_category_group(category_name) if category_name else group_info
+            group = grouped_hooks.setdefault(hook_group_info['key'], {
+                'key': hook_group_info['key'],
+                'section': hook_group_info['section'],
+                'filename': hook_group_info['filename'],
+                'title': hook_group_info['title'],
+                'subtitle': hook_group_info['subtitle'],
+                'hooks': [],
+                'file_header': None,
+                'overview_section': None,
+            })
+
+            if category_name:
+                group['file_header'] = None
+                group['overview_section'] = None
+            else:
+                if group['key'] != 'module-uncategorized' and group['file_header'] is None and file_header:
+                    group['file_header'] = file_header
+                if group['key'] != 'module-uncategorized' and group['overview_section'] is None and overview_section:
+                    group['overview_section'] = overview_section
+
             group['hooks'].append({
                 'name': hook['name'],
                 'comment': hook['comment'],
@@ -1233,6 +1303,7 @@ def generate_hook_documentation(core_output_dir: Path, module_output_dir: Path, 
         group['hooks'].sort(key=lambda hook: hook['name'].lower())
         target_dir = module_output_dir if group['section'] == 'module' else core_output_dir
         write_hook_group_page(group, target_dir, base_dir)
+        validate_hook_group_categories(group, target_dir)
 
 
 def generate_documentation_for_file(file_path, output_dir, is_library=False, base_docs_dir=None, force=False, no_realm=False, no_icon=False):
@@ -1745,7 +1816,6 @@ def main():
 
     elif args.command == 'hooks':
         run_hooks_generation(base_dir, docs_dir)
-        should_sync_nav = False
 
     elif args.command == 'compatibility':
         run_compatibility_generation(base_dir, docs_dir, force)

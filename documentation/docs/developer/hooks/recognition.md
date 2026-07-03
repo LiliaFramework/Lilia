@@ -23,7 +23,7 @@ details > summary .source-link-button--summary {
 
 # Recognition
 
-This page documents the hooks defined by the recognition module.
+This page documents hooks in the recognition category.
 
 ---
 
@@ -104,7 +104,7 @@ This page documents the hooks defined by the recognition module.
 
 <h3 style="margin-bottom: 5px; font-weight: 700;">Realm</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
-  <p>Client / Server</p>
+  <p>Shared</p>
 </div>
 
 <h3 style="margin-bottom: 5px; font-weight: 700;">Parameters</h3>

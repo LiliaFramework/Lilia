@@ -6,7 +6,7 @@
         Allows clientside code to add extra model entries to the admin stick model picker.
 
     Category:
-        Administration - Admin Stick
+        Staffing
 
     Parameters:
         modList (table)
@@ -26,7 +26,7 @@
         Called after the admin stick menu closes.
 
     Category:
-        Administration - Admin Stick
+        Staffing
 
     Parameters:
         None
@@ -45,7 +45,7 @@
         Called when the admin stick requests its management UI for a target entity.
 
     Category:
-        Administration - Admin Stick
+        Staffing
 
     Parameters:
         target (Entity)
@@ -65,7 +65,7 @@
         Allows clientside code to add option groups to the admin stick menu for the current target.
 
     Category:
-        Administration - Admin Stick
+        Staffing
 
     Parameters:
         currentMenu (Panel)

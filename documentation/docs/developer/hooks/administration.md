@@ -23,7 +23,7 @@ details > summary .source-link-button--summary {
 
 # Administration
 
-This page documents the hooks defined by the administration module.
+This page documents hooks in the administration category.
 
 ---
 

@@ -1,4 +1,27 @@
-﻿--[[
+--[[
+    Hooks:
+        CreateLogsUI(panel, categories)
+
+    Purpose:
+        Builds or refreshes the clientside log viewer interface for the admin panel.
+
+    Category:
+        Administration - Logs
+
+    Parameters:
+        panel (Panel)
+            The parent panel that should contain the logs UI.
+
+        categories (table)
+            The ordered list of translated log categories to show as tabs.
+
+    Returns:
+        nil
+
+    Realm:
+        Client
+]]
+--[[
     Hooks:
         OnServerLog(Player client, string logType, string logString, string category)
 
@@ -70,7 +93,31 @@
             Return false to hide the category from the player.
 
     Realm:
-        Client / Server
+        Shared
+]]
+--[[
+    Hooks:
+        ReadLogEntries(category, page)
+
+    Purpose:
+        Loads a page of stored log rows for a translated log category.
+
+    Category:
+        Administration - Logs
+
+    Parameters:
+        category (string)
+            The translated log category to read from storage.
+
+        page (number)
+            The one-based page number to fetch.
+
+    Returns:
+        Deferred
+            Resolves with a table containing the page of log rows and pagination metadata.
+
+    Realm:
+        Server
 ]]
 MODULE.Name = "@logs"
 MODULE.author = "Samael"

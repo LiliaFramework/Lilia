@@ -23,7 +23,7 @@ details > summary .source-link-button--summary {
 
 # Teams
 
-This page documents the hooks defined by the teams module.
+This page documents hooks in the teams category.
 
 ---
 

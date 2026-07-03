@@ -23,7 +23,7 @@ details > summary .source-link-button--summary {
 
 # Vendor
 
-This page documents the hooks defined by the vendor module.
+This page documents hooks in the vendor category.
 
 ---
 

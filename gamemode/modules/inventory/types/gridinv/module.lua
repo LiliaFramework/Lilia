@@ -6,7 +6,7 @@
         Called after a bag item finishes creating or restoring its nested inventory.
 
     Category:
-        Inventory - Grid
+        Inventory
 
     Parameters:
         item (table)
@@ -29,7 +29,7 @@
         Called when a bag item's nested inventory is removed.
 
     Category:
-        Inventory - Grid
+        Inventory
 
     Parameters:
         item (table)
@@ -52,7 +52,7 @@
         Allows clientside code to intercept clicks on a grid inventory item icon before default handling runs.
 
     Category:
-        Inventory - Grid
+        Inventory
 
     Parameters:
         panel (Panel)
@@ -79,7 +79,7 @@
         Called after a grid inventory item icon panel is created.
 
     Category:
-        Inventory - Grid
+        Inventory
 
     Parameters:
         icon (Panel)
@@ -105,7 +105,7 @@
         Called after a grid inventory panel is created.
 
     Category:
-        Inventory - Grid
+        Inventory
 
     Parameters:
         panel (Panel)
@@ -131,7 +131,7 @@
         Allows code to handle combining one item with another before default transfer behavior continues.
 
     Category:
-        Inventory - Grid
+        Inventory
 
     Parameters:
         client (Player)
@@ -158,7 +158,7 @@
         Called when the grid inventory stack restore flow fails to recover an item.
 
     Category:
-        Inventory - Grid
+        Inventory
 
     Parameters:
         itemTypeOrItem (string|table)
@@ -178,7 +178,7 @@
         Called on the client when a grid inventory panel requests an item transfer.
 
     Category:
-        Inventory - Grid
+        Inventory
 
     Parameters:
         panel (Panel)
@@ -210,7 +210,7 @@
         Allows code to configure access rules on a newly created bag inventory.
 
     Category:
-        Inventory - Grid
+        Inventory
 
     Parameters:
         inventory (table)

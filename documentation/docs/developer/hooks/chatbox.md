@@ -23,7 +23,40 @@ details > summary .source-link-button--summary {
 
 # Chatbox
 
-This page documents the hooks defined by the chatbox module.
+This page documents hooks in the chatbox category.
+
+---
+
+<details class="realm-server" id="function-addfilteredword">
+<summary><span class="summary-main"><a id="AddFilteredWord"></a>AddFilteredWord(word)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/modules/chatbox/module.lua#L149" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<div class="details-content">
+<h3 style="margin-bottom: 5px; font-weight: 700;"><a id="addfilteredword"></a>Purpose</h3>
+<div style="margin-left: 20px; margin-bottom: 20px;">
+  <p>Adds a normalized word to the chat filter list when it is not already present.</p>
+</div>
+
+<h3 style="margin-bottom: 5px; font-weight: 700;">Category</h3>
+<div style="margin-left: 20px; margin-bottom: 20px;">
+  <p>Chatbox</p>
+</div>
+
+<h3 style="margin-bottom: 5px; font-weight: 700;">Realm</h3>
+<div style="margin-left: 20px; margin-bottom: 20px;">
+  <p>Server</p>
+</div>
+
+<h3 style="margin-bottom: 5px; font-weight: 700;">Parameters</h3>
+<div style="margin-left: 20px; margin-bottom: 20px;">
+<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#2.1">string</a></span> <span class="parameter">word</span> The word to normalize and add to the stored filter list.</p>
+</div>
+
+<h3 style="margin-bottom: 5px; font-weight: 700;">Returns</h3>
+<div style="margin-left: 20px; margin-bottom: 20px;">
+<p>boolean, string Returns whether the add succeeded and either the normalized word or an error tag.</p>
+</div>
+
+</div>
+</details>
 
 ---
 
@@ -119,6 +152,34 @@ This page documents the hooks defined by the chatbox module.
 
 ---
 
+<details class="realm-server" id="function-getfilteredwords">
+<summary><span class="summary-main"><a id="GetFilteredWords"></a>GetFilteredWords()</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/modules/chatbox/module.lua#L170" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<div class="details-content">
+<h3 style="margin-bottom: 5px; font-weight: 700;"><a id="getfilteredwords"></a>Purpose</h3>
+<div style="margin-left: 20px; margin-bottom: 20px;">
+  <p>Returns the normalized chat filter word list currently used by the module.</p>
+</div>
+
+<h3 style="margin-bottom: 5px; font-weight: 700;">Category</h3>
+<div style="margin-left: 20px; margin-bottom: 20px;">
+  <p>Chatbox</p>
+</div>
+
+<h3 style="margin-bottom: 5px; font-weight: 700;">Realm</h3>
+<div style="margin-left: 20px; margin-bottom: 20px;">
+  <p>Server</p>
+</div>
+
+<h3 style="margin-bottom: 5px; font-weight: 700;">Returns</h3>
+<div style="margin-left: 20px; margin-bottom: 20px;">
+<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#2.1">table</a></span> The sequential list of filtered words.</p>
+</div>
+
+</div>
+</details>
+
+---
+
 <details class="realm-shared" id="function-getoocdelay">
 <summary><span class="summary-main"><a id="GetOOCDelay"></a>GetOOCDelay(speaker)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/modules/chatbox/module.lua#L72" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
@@ -196,7 +257,7 @@ This page documents the hooks defined by the chatbox module.
 
 <h3 style="margin-bottom: 5px; font-weight: 700;">Realm</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
-  <p>Client / Server</p>
+  <p>Shared</p>
 </div>
 
 <h3 style="margin-bottom: 5px; font-weight: 700;">Parameters</h3>
@@ -211,6 +272,67 @@ This page documents the hooks defined by the chatbox module.
 <h3 style="margin-bottom: 5px; font-weight: 700;">Returns</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
 <p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#2.1">string|nil</a></span> Return replacement message text to override the final output.</p>
+</div>
+
+</div>
+</details>
+
+---
+
+<details class="realm-server" id="function-removefilteredword">
+<summary><span class="summary-main"><a id="RemoveFilteredWord"></a>RemoveFilteredWord(word)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/modules/chatbox/module.lua#L190" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<div class="details-content">
+<h3 style="margin-bottom: 5px; font-weight: 700;"><a id="removefilteredword"></a>Purpose</h3>
+<div style="margin-left: 20px; margin-bottom: 20px;">
+  <p>Removes a normalized word from the chat filter list when it exists.</p>
+</div>
+
+<h3 style="margin-bottom: 5px; font-weight: 700;">Category</h3>
+<div style="margin-left: 20px; margin-bottom: 20px;">
+  <p>Chatbox</p>
+</div>
+
+<h3 style="margin-bottom: 5px; font-weight: 700;">Realm</h3>
+<div style="margin-left: 20px; margin-bottom: 20px;">
+  <p>Server</p>
+</div>
+
+<h3 style="margin-bottom: 5px; font-weight: 700;">Parameters</h3>
+<div style="margin-left: 20px; margin-bottom: 20px;">
+<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#2.1">string</a></span> <span class="parameter">word</span> The word to normalize and remove from the stored filter list.</p>
+</div>
+
+<h3 style="margin-bottom: 5px; font-weight: 700;">Returns</h3>
+<div style="margin-left: 20px; margin-bottom: 20px;">
+<p>boolean, string Returns whether the removal succeeded and either the normalized word or an error tag.</p>
+</div>
+
+</div>
+</details>
+
+---
+
+<details class="realm-server" id="function-syncfilteredwords">
+<summary><span class="summary-main"><a id="SyncFilteredWords"></a>SyncFilteredWords(targets)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/modules/chatbox/module.lua#L211" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<div class="details-content">
+<h3 style="margin-bottom: 5px; font-weight: 700;"><a id="syncfilteredwords"></a>Purpose</h3>
+<div style="margin-left: 20px; margin-bottom: 20px;">
+  <p>Sends the current filtered-word list to one player, a list of players, or every eligible manager.</p>
+</div>
+
+<h3 style="margin-bottom: 5px; font-weight: 700;">Category</h3>
+<div style="margin-left: 20px; margin-bottom: 20px;">
+  <p>Chatbox</p>
+</div>
+
+<h3 style="margin-bottom: 5px; font-weight: 700;">Realm</h3>
+<div style="margin-left: 20px; margin-bottom: 20px;">
+  <p>Server</p>
+</div>
+
+<h3 style="margin-bottom: 5px; font-weight: 700;">Parameters</h3>
+<div style="margin-left: 20px; margin-bottom: 20px;">
+<p><span class="types"><a class="type" href="/developer/meta/player/">Player|table</a></span> <span class="parameter">targets</span> <span class="optional">optional</span> An optional recipient player, recipient list, or `nil` to broadcast to all eligible recipients.</p>
 </div>
 
 </div>

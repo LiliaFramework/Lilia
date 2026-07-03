@@ -21,9 +21,9 @@ details > summary .source-link-button--summary {
 }
 </style>
 
-# Administration - Submodules/Adminstick
+# Staffing
 
-This page documents the hooks defined by the submodules/adminstick submodule in the administration module.
+This page documents hooks in the staffing category.
 
 ---
 
@@ -37,7 +37,7 @@ This page documents the hooks defined by the submodules/adminstick submodule in 
 
 <h3 style="margin-bottom: 5px; font-weight: 700;">Category</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
-  <p>Administration - Admin Stick</p>
+  <p>Staffing</p>
 </div>
 
 <h3 style="margin-bottom: 5px; font-weight: 700;">Realm</h3>
@@ -65,7 +65,7 @@ This page documents the hooks defined by the submodules/adminstick submodule in 
 
 <h3 style="margin-bottom: 5px; font-weight: 700;">Category</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
-  <p>Administration - Admin Stick</p>
+  <p>Staffing</p>
 </div>
 
 <h3 style="margin-bottom: 5px; font-weight: 700;">Realm</h3>
@@ -88,7 +88,7 @@ This page documents the hooks defined by the submodules/adminstick submodule in 
 
 <h3 style="margin-bottom: 5px; font-weight: 700;">Category</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
-  <p>Administration - Admin Stick</p>
+  <p>Staffing</p>
 </div>
 
 <h3 style="margin-bottom: 5px; font-weight: 700;">Realm</h3>
@@ -116,7 +116,7 @@ This page documents the hooks defined by the submodules/adminstick submodule in 
 
 <h3 style="margin-bottom: 5px; font-weight: 700;">Category</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
-  <p>Administration - Admin Stick</p>
+  <p>Staffing</p>
 </div>
 
 <h3 style="margin-bottom: 5px; font-weight: 700;">Realm</h3>

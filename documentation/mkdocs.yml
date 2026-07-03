@@ -49,19 +49,18 @@ nav:
           - Overview: developer/hooks/index.md
           # AUTO-GENERATED: HOOKS START
           - Administration: developer/hooks/administration.md
-          - Administration - Submodules/Adminstick: developer/hooks/administration.submodules-adminstick.md
-          - Administration - Submodules/Logs: developer/hooks/administration.submodules-logs.md
-          - Administration - Submodules/Tickets: developer/hooks/administration.submodules-tickets.md
+          - Administration - Logs: developer/hooks/administration-logs.md
+          - Administration - Tickets: developer/hooks/administration-tickets.md
+          - Administration - Warnings: developer/hooks/administration-warnings.md
           - Attributes: developer/hooks/attributes.md
           - Chatbox: developer/hooks/chatbox.md
           - Doors: developer/hooks/doors.md
           - Inventory: developer/hooks/inventory.md
-          - Inventory - Types/Gridinv: developer/hooks/inventory.types-gridinv.md
-          - Inventory - Types/Gridinv/Submodules/Storage: developer/hooks/inventory.types-gridinv-submodules-storage.md
-          - Inventory - Types/Weightinv: developer/hooks/inventory.types-weightinv.md
-          - Mainmenu: developer/hooks/mainmenu.md
+          - Main Menu: developer/hooks/main-menu.md
+          - Protection: developer/hooks/protection.md
           - Recognition: developer/hooks/recognition.md
           - Spawns: developer/hooks/spawns.md
+          - Staffing: developer/hooks/staffing.md
           - Teams: developer/hooks/teams.md
           - Vendor: developer/hooks/vendor.md
           # AUTO-GENERATED: HOOKS END
