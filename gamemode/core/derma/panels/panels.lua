@@ -399,7 +399,7 @@ function QuickPanel:populateOptions()
     end
 
     table.sort(sortedCategories, function(a, b)
-        local localize = lia.option and lia.option.localizeValue or L
+        local localize = lia.option.localizeValue or L
         local unsorted = localize("unsorted")
         local aName = localize(a)
         local bName = localize(b)
@@ -426,7 +426,7 @@ function QuickPanel:populateOptions()
                 local typeA = getTypeOrder(a.opt.type)
                 local typeB = getTypeOrder(b.opt.type)
                 if typeA ~= typeB then return typeA < typeB end
-                local getName = lia.option and lia.option.getDisplayName
+                local getName = lia.option.getDisplayName
                 local nameA = getName and getName(a.key) or a.opt.name or a.key
                 local nameB = getName and getName(b.key) or b.opt.name or b.key
                 return tostring(nameA):lower() < tostring(nameB):lower()
@@ -443,7 +443,7 @@ function QuickPanel:populateOptions()
                 end
             end
 
-            local localize = lia.option and lia.option.localizeValue or L
+            local localize = lia.option.localizeValue or L
             local categoryHeader = self:addCategoryHeader(localize(categoryName), categoryColor)
             if categoryHeader then self.optionsCache[#self.optionsCache + 1] = categoryHeader end
             for j, info in ipairs(categoryOptions) do
@@ -451,8 +451,8 @@ function QuickPanel:populateOptions()
                 local opt = info.opt
                 local data = opt.data or {}
                 local val = lia.option.get(key, opt.default)
-                local getName = lia.option and lia.option.getDisplayName
-                local getDesc = lia.option and lia.option.getDisplayDesc
+                local getName = lia.option.getDisplayName
+                local getDesc = lia.option.getDisplayDesc
                 local displayName = getName and getName(key) or opt.name or key
                 local description = getDesc and getDesc(key) or opt.description or opt.desc
                 local item

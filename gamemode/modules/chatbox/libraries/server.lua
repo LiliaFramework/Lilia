@@ -1,7 +1,7 @@
 ﻿local MODULE = MODULE
 local FILTER_DATA_KEY = "chatbox_filtered_words"
 local function getWordFilterModule()
-    local wordFilterModule = lia.module and lia.module.get and lia.module.get("wordfilter")
+    local wordFilterModule = lia.module.get("wordfilter")
     if wordFilterModule == MODULE then return nil end
     return wordFilterModule
 end

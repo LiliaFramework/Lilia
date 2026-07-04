@@ -266,7 +266,7 @@ end
         Shared
 ]]
 function lia.lang.getLocalizedString(key, ...)
-    local lang = lia.config and lia.config.get("Language", "english") or "english"
+    local lang = lia.config.get("Language", "english") or "english"
     local cacheKey = lia.lang.generateCacheKey(lang, key, ...)
     if lia.lang.cache[cacheKey] then return lia.lang.cache[cacheKey] end
     local langTable = lia.lang.stored and lia.lang.stored[lang:lower()]

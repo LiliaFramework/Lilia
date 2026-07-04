@@ -1000,7 +1000,7 @@ end
 ]]
 function lia.faction.getCharacterCreationClass(faction, class)
     local factionData = istable(faction) and faction or lia.faction.get(faction)
-    local classData = istable(class) and class or lia.class and lia.class.get and lia.class.get(class)
+    local classData = istable(class) and class or lia.class.get(class)
     if not classData and factionData then classData = lia.faction.getDefaultClass(factionData.index) end
     if not classData then return nil end
     if factionData and classData.faction ~= factionData.index then return nil end

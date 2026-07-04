@@ -147,7 +147,7 @@ end
 ]]
 function lia.admin.getDefaultUserGroup()
     local fallbackGroup = "user"
-    local configuredGroup = string.Trim(tostring(lia.config and lia.config.get and lia.config.get("DefaultUserGroup", fallbackGroup) or fallbackGroup))
+    local configuredGroup = string.Trim(tostring(lia.config.get("DefaultUserGroup", fallbackGroup) or fallbackGroup))
     if lia.admin.isValidGroup(configuredGroup) then return configuredGroup end
     return fallbackGroup
 end
@@ -174,7 +174,7 @@ end
         Shared
 ]]
 function lia.admin.shouldShowUsergroupIcons()
-    return lia.config and lia.config.get and lia.config.get("ShowUsergroupIcons", true) or true
+    return lia.config.get("ShowUsergroupIcons", true) or true
 end
 
 --[[

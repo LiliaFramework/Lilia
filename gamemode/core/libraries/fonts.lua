@@ -397,8 +397,8 @@ if CLIENT then
     local oldSurfaceSetFont = surface.SetFont
     function surface.SetFont(font)
         if isstring(font) and not lia.font.stored[font] and #font <= 63 then
-            local mainFont = lia.config and lia.config.get("Font", "Montserrat Medium") or "Montserrat Medium"
-            local hudFont = lia.config and lia.config.get("HUDFont", "Montserrat Medium") or "Montserrat Medium"
+            local mainFont = lia.config.get("Font", "Montserrat Medium") or "Montserrat Medium"
+            local hudFont = lia.config.get("HUDFont", "Montserrat Medium") or "Montserrat Medium"
             local fontData = {
                 font = font,
                 size = 16,

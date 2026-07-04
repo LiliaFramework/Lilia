@@ -893,34 +893,29 @@ function PANEL:createStartButton()
         })
     end
 
-    if lia.workshop and lia.workshop.hasContentToDownload then
-        local needsDownload = lia.workshop.hasContentToDownload()
-        local tooltip = hook.Run("GetCharacterMountButtonTooltip", client)
-        if not tooltip or tooltip == "" then
-            if needsDownload then
-                tooltip = L("mountRequiredWorkshopContent")
+    local needsDownload = lia.workshop.hasContentToDownload()
+    local tooltip = hook.Run("GetCharacterMountButtonTooltip", client)
+    if not tooltip or tooltip == "" then
+        if needsDownload then
+            tooltip = L("mountRequiredWorkshopContent")
+        else
+            tooltip = L("remountWorkshopAddons")
+        end
+    end
+
+    table.insert(buttonsData, {
+        id = "mount",
+        text = needsDownload and L("mountContent") or L("remountWorkshopAddons"),
+        tooltip = tooltip,
+        doClick = function()
+            self:clickSound()
+            if not needsDownload then
+                lia.workshop.remountContent()
             else
-                tooltip = L("remountWorkshopAddons")
+                lia.workshop.mountContent()
             end
         end
-
-        table.insert(buttonsData, {
-            id = "mount",
-            text = needsDownload and L("mountContent") or L("remountWorkshopAddons"),
-            tooltip = tooltip,
-            doClick = function()
-                self:clickSound()
-                if not needsDownload and lia.workshop and lia.workshop.remountContent then
-                    lia.workshop.remountContent()
-                elseif lia.workshop and lia.workshop.mountContent then
-                    lia.workshop.mountContent()
-                else
-                    net.Start("liaWorkshopDownloaderRequest")
-                    net.SendToServer()
-                end
-            end
-        })
-    end
+    })
 
     local disconnectTooltip = hook.Run("GetCharacterDisconnectButtonTooltip", client)
     if not disconnectTooltip or disconnectTooltip == "" then disconnectTooltip = L("disconnectFromServer") end

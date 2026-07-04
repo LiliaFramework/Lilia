@@ -235,7 +235,7 @@ function ENT:loadPreset(name)
         return
     end
 
-    local preset = lia.vendor and lia.vendor.getPreset(name)
+    local preset = lia.vendor.getPreset(name)
     if not preset then return end
     self.items = {}
     for itemType, itemData in pairs(preset) do

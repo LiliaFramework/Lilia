@@ -173,7 +173,7 @@ local function runBackdoorCheck(ply, arg)
     })
 
     if not mode or mode == "" or mode == "schema" or mode == "current" then
-        if savelog and SERVER and lia.data and lia.data.set then lia.data.set("backdoorchecker.scan_schema_" .. os.date("%y-%m-%d_%H-%M-%S"), LogBuffer, true, true) end
+        if savelog and SERVER then lia.data.set("backdoorchecker.scan_schema_" .. os.date("%y-%m-%d_%H-%M-%S"), LogBuffer, true, true) end
     elseif mode == "all" then
         for anum, addon in pairs(addons) do
             if addon.title:lower() == "lilia" then continue end
@@ -181,7 +181,7 @@ local function runBackdoorCheck(ply, arg)
             ScanAddon(addon)
         end
 
-        if savelog and SERVER and lia.data and lia.data.set then lia.data.set("backdoorchecker.scan_all_" .. os.date("%y-%m-%d_%H-%M-%S"), LogBuffer, true, true) end
+        if savelog and SERVER then lia.data.set("backdoorchecker.scan_all_" .. os.date("%y-%m-%d_%H-%M-%S"), LogBuffer, true, true) end
     else
         print("Specific search for ID " .. mode .. "...")
         if IsValid(ply) then ply:PrintMessage(HUD_PRINTCONSOLE, "Specific search for ID " .. mode .. "...") end
@@ -202,7 +202,7 @@ local function runBackdoorCheck(ply, arg)
             end
         end
 
-        if savelog and SERVER and lia.data and lia.data.set then lia.data.set("backdoorchecker.scan_" .. (found and mode or "notfound") .. "_" .. os.date("%y-%m-%d_%H-%M-%S"), LogBuffer, true, true) end
+        if savelog and SERVER then lia.data.set("backdoorchecker.scan_" .. (found and mode or "notfound") .. "_" .. os.date("%y-%m-%d_%H-%M-%S"), LogBuffer, true, true) end
         if not found then
             MsgC(Color(255, 0, 0), "No addon with that ID installed.\n\n")
             if IsValid(ply) then ply:PrintMessage(HUD_PRINTCONSOLE, "No addon with that ID installed.") end

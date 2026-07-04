@@ -29,14 +29,12 @@ function serverguard.permission:Add(identifier, priv)
                     Category = "Lilia"
                 })
 
-                if lia.admin and lia.admin.registerPrivilege then
-                    lia.admin.registerPrivilege({
-                        Name = identifier,
-                        ID = identifier,
-                        MinAccess = "admin",
-                        Category = "Lilia"
-                    })
-                end
+                lia.admin.registerPrivilege({
+                    Name = identifier,
+                    ID = identifier,
+                    MinAccess = "admin",
+                    Category = "Lilia"
+                })
             end
         end
     elseif istable(identifier) then
@@ -49,7 +47,7 @@ end
 function serverguard.permission:Remove(identifier)
     if isstring(identifier) and self.stored[identifier] then
         self.stored[identifier] = nil
-        if lia.admin and lia.admin.unregisterPrivilege then lia.admin.unregisterPrivilege(identifier) end
+        lia.admin.unregisterPrivilege(identifier)
     end
 end
 

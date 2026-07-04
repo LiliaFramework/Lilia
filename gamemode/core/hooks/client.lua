@@ -650,7 +650,7 @@ end
 
 function GM:CalcView(client, origin, angles, fov)
     if IsValid(client:GetVehicle()) then return self.BaseClass:CalcView(client, origin, angles, fov) end
-    local view = lia.camera and lia.camera.calcView and lia.camera.calcView(client, origin, angles, fov) or self.BaseClass:CalcView(client, origin, angles, fov)
+    local view = lia.camera.calcView(client, origin, angles, fov) or self.BaseClass:CalcView(client, origin, angles, fov)
     local ragdoll = client:GetRagdollEntity()
     if not IsValid(client:GetVehicle()) and client:GetViewEntity() == client and not client:ShouldDrawLocalPlayer() and IsValid(ragdoll) then
         local idx = ragdoll:LookupAttachment("eyes")
@@ -1048,7 +1048,7 @@ function GM:CharLoaded(character)
 end
 
 function GM:PrePlayerDraw(client)
-    if lia.view and lia.view.shouldHidePlayer and lia.view.shouldHidePlayer(client) then
+    if lia.view.shouldHidePlayer(client) then
         client:DrawShadow(false)
         return true
     end

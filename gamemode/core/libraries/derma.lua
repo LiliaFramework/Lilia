@@ -195,7 +195,7 @@ function lia.derma.optionsMenu(rawOptions, config)
 
     if #visible == 0 then return end
     local optionsList
-    if mode ~= "custom" and lia.playerinteract and lia.playerinteract.getCategorizedOptions then
+    if mode ~= "custom" then
         optionsList = lia.playerinteract.getCategorizedOptions(visible)
     else
         optionsList = visible
@@ -497,7 +497,7 @@ function lia.derma.interactionTooltip(rawOptions, config)
 
     if #visible == 0 then return end
     local optionsList
-    if mode ~= "custom" and lia.playerinteract and lia.playerinteract.getCategorizedOptions then
+    if mode ~= "custom" then
         optionsList = lia.playerinteract.getCategorizedOptions(visible)
     else
         optionsList = visible
