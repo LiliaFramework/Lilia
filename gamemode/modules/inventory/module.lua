@@ -1,4 +1,4 @@
-﻿--[[
+--[[
     Hooks:
         InventoryClosed(panel, inventory)
 
@@ -14,6 +14,14 @@
 
         inventory (table)
             The inventory represented by the panel.
+
+    Example Usage:
+        ```lua
+        hook.Add("InventoryClosed", "liaExampleInventoryClosed", function(panel, inventory)
+            if not IsValid(panel) then return end
+            panel:SetTooltip("InventoryClosed handled by MyModule")
+        end)
+        ```
 
     Returns:
         nil
@@ -37,6 +45,14 @@
 
         inventory (table)
             The inventory represented by the panel.
+
+    Example Usage:
+        ```lua
+        hook.Add("InventoryOpened", "liaExampleInventoryOpened", function(panel, inventory)
+            if not IsValid(panel) then return end
+            panel:SetTooltip("InventoryOpened handled by MyModule")
+        end)
+        ```
 
     Returns:
         nil
@@ -66,6 +82,13 @@
 
         inventory2 (table)
             The second inventory object.
+
+    Example Usage:
+        ```lua
+        hook.Add("OnCreateDualInventoryPanels", "liaExampleOnCreateDualInventoryPanels", function(panel1, panel2, inventory1, inventory2)
+            print("[MyModule] handled OnCreateDualInventoryPanels")
+        end)
+        ```
 
     Returns:
         nil

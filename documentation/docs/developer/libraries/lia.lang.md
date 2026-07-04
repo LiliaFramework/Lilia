@@ -35,7 +35,7 @@ The language library centralizes localization behavior under `lia.lang`. It load
 ---
 
 <details class="realm-shared" id="function-lialangloadfromdir">
-<summary><span class="summary-main"><a id="lia.lang.loadFromDir"></a>lia.lang.loadFromDir(directory)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/languages.lua#L55" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="lia.lang.loadFromDir"></a>lia.lang.loadFromDir(directory)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/languages.lua#L62" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="lialangloadfromdir"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -64,7 +64,7 @@ The language library centralizes localization behavior under `lia.lang`. It load
 ---
 
 <details class="realm-shared" id="function-lialangaddtable">
-<summary><span class="summary-main"><a id="lia.lang.addTable"></a>lia.lang.addTable(name, tbl)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/languages.lua#L106" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="lia.lang.addTable"></a>lia.lang.addTable(name, tbl)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/languages.lua#L113" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="lialangaddtable"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -96,7 +96,7 @@ The language library centralizes localization behavior under `lia.lang`. It load
 ---
 
 <details class="realm-shared" id="function-lialanggetlanguages">
-<summary><span class="summary-main"><a id="lia.lang.getLanguages"></a>lia.lang.getLanguages()</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/languages.lua#L137" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="lia.lang.getLanguages"></a>lia.lang.getLanguages()</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/languages.lua#L144" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="lialanggetlanguages"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -127,7 +127,7 @@ The language library centralizes localization behavior under `lia.lang`. It load
 ---
 
 <details class="realm-shared" id="function-lialanggeneratecachekey">
-<summary><span class="summary-main"><a id="lia.lang.generateCacheKey"></a>lia.lang.generateCacheKey(lang, key)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/languages.lua#L174" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="lia.lang.generateCacheKey"></a>lia.lang.generateCacheKey(lang, key)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/languages.lua#L181" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="lialanggeneratecachekey"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -162,7 +162,7 @@ The language library centralizes localization behavior under `lia.lang`. It load
 ---
 
 <details class="realm-shared" id="function-lialangcleanupcache">
-<summary><span class="summary-main"><a id="lia.lang.cleanupCache"></a>lia.lang.cleanupCache()</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/languages.lua#L203" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="lia.lang.cleanupCache"></a>lia.lang.cleanupCache()</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/languages.lua#L210" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="lialangcleanupcache"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -186,7 +186,7 @@ The language library centralizes localization behavior under `lia.lang`. It load
 ---
 
 <details class="realm-shared" id="function-lialangclearcache">
-<summary><span class="summary-main"><a id="lia.lang.clearCache"></a>lia.lang.clearCache()</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/languages.lua#L237" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="lia.lang.clearCache"></a>lia.lang.clearCache()</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/languages.lua#L244" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="lialangclearcache"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -210,7 +210,7 @@ The language library centralizes localization behavior under `lia.lang`. It load
 ---
 
 <details class="realm-shared" id="function-lialanggetlocalizedstring">
-<summary><span class="summary-main"><a id="lia.lang.getLocalizedString"></a>lia.lang.getLocalizedString(key)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/languages.lua#L268" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="lia.lang.getLocalizedString"></a>lia.lang.getLocalizedString(key)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/languages.lua#L275" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="lialanggetlocalizedstring"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -245,7 +245,7 @@ The language library centralizes localization behavior under `lia.lang`. It load
 ---
 
 <details class="realm-shared" id="function-lialangresolvetoken">
-<summary><span class="summary-main"><a id="lia.lang.resolveToken"></a>lia.lang.resolveToken(value)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/languages.lua#L326" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="lia.lang.resolveToken"></a>lia.lang.resolveToken(value)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/languages.lua#L333" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="lialangresolvetoken"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -301,6 +301,14 @@ The language library centralizes localization behavior under `lia.lang`. It load
 <h3 style="margin-bottom: 5px; font-weight: 700;">Realm</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
   <p>Shared</p>
+</div>
+
+<h3 style="margin-bottom: 5px; font-weight: 700;">Example Usage</h3>
+<div style="margin-left: 20px; margin-bottom: 20px;">
+<pre><code class="language-lua">  hook.Add("OnLocalizationLoaded", "liaExampleOnLocalizationLoaded", function()
+      print("[MyModule] handled OnLocalizationLoaded")
+  end)
+</code></pre>
 </div>
 
 </div>

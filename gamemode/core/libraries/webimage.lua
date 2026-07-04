@@ -1,4 +1,4 @@
-﻿--[[
+--[[
     Folder: Developer - Libraries
     File: lia.webimage.md
 ]]
@@ -27,6 +27,13 @@
 
         path (string)
             The data material path for the downloaded image, prefixed with `data/`.
+
+    Example Usage:
+        ```lua
+        hook.Add("WebImageDownloaded", "liaExampleWebImageDownloaded", function(name, path)
+            print("[MyModule] handled WebImageDownloaded")
+        end)
+        ```
 
     Realm:
         Client
@@ -105,6 +112,17 @@ end
 
         flags (string|nil)
             Optional material flags used when building the cached material.
+
+    Example Usage:
+        ```lua
+        lia.webimage.download("schema_logo", "https://example.com/schema_logo.png", function(material, fromCache, err)
+            if material and not material:IsError() then
+                print(string.format("Loaded schema logo (from cache: %s)", tostring(fromCache)))
+            elseif err then
+                print("Schema logo failed to download:", err)
+            end
+        end, "smooth noclamp")
+        ```
 
     Realm:
         Client
@@ -210,6 +228,16 @@ end
         flags (string|nil)
             Optional material flags saved with the registered image and used when building its material.
 
+    Example Usage:
+        ```lua
+        lia.webimage.register("schema_logo", "https://example.com/schema_logo.png", function(material)
+            if material and not material:IsError() then
+                local icon = vgui.Create("DImage")
+                icon:SetImage("schema_logo")
+            end
+        end)
+        ```
+
     Realm:
         Client
 ]]
@@ -232,6 +260,15 @@ end
 
         flags (string|nil)
             Optional material flags used when building the material if it is not already cached.
+
+    Example Usage:
+        ```lua
+        local material = lia.webimage.get("schema_logo", "smooth noclamp")
+        if material and not material:IsError() then
+            surface.SetMaterial(material)
+            surface.DrawTexturedRect(32, 32, 128, 128)
+        end
+        ```
 
     Returns:
         IMaterial|nil
@@ -332,6 +369,14 @@ end
     Purpose:
         Returns runtime statistics for the web image cache.
 
+    Example Usage:
+        ```lua
+        local imageStats = lia.webimage.getStats()
+        if imageStats.stored > 0 then
+            PrintTable(imageStats)
+        end
+        ```
+
     Returns:
         table
             A table containing `downloaded`, `stored`, and `lastReset` values.
@@ -358,6 +403,13 @@ end
     Parameters:
         skipReRegister (boolean|nil)
             Whether to skip re-registering images from `lia.webimage.stored` after clearing cached files.
+
+    Example Usage:
+        ```lua
+        lia.webimage.clearCache(true)
+        lia.webimage.register("schema_logo", "https://example.com/schema_logo.png")
+        lia.webimage.register("schema_icon", "https://example.com/schema_icon.png")
+        ```
 
     Realm:
         Client

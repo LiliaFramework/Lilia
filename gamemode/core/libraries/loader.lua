@@ -1,4 +1,4 @@
-﻿--[[
+--[[
     Folder: Developer - Libraries
     File: lia.loader.md
 ]]
@@ -25,6 +25,13 @@
         embed (table)
             The embed payload being prepared for relay.
 
+    Example Usage:
+        ```lua
+        hook.Add("DiscordRelaySend", "liaExampleDiscordRelaySend", function(embed)
+            print("[MyModule] handled DiscordRelaySend")
+        end)
+        ```
+
     Realm:
         Shared
 ]]
@@ -37,6 +44,13 @@
 
     Category:
         Loader
+
+    Example Usage:
+        ```lua
+        hook.Add("DiscordRelayUnavailable", "liaExampleDiscordRelayUnavailable", function()
+            print("[MyModule] handled DiscordRelayUnavailable")
+        end)
+        ```
 
     Realm:
         Shared
@@ -55,6 +69,13 @@
         embed (table)
             The embed payload that was dispatched.
 
+    Example Usage:
+        ```lua
+        hook.Add("DiscordRelayed", "liaExampleDiscordRelayed", function(embed)
+            print("[MyModule] handled DiscordRelayed")
+        end)
+        ```
+
     Realm:
         Shared
 ]]
@@ -68,6 +89,13 @@
     Category:
         Loader
 
+    Example Usage:
+        ```lua
+        hook.Add("SetupDatabase", "liaExampleSetupDatabase", function()
+            print("[MyModule] handled SetupDatabase")
+        end)
+        ```
+
     Realm:
         Server
 ]]
@@ -80,6 +108,13 @@
 
     Category:
         Loader
+
+    Example Usage:
+        ```lua
+        hook.Add("DatabaseConnected", "liaExampleDatabaseConnected", function()
+            print("[MyModule] handled DatabaseConnected")
+        end)
+        ```
 
     Realm:
         Server
@@ -98,6 +133,13 @@
         old (string)
             The previous persistence value being saved.
 
+    Example Usage:
+        ```lua
+        hook.Add("PersistenceSave", "liaExamplePersistenceSave", function(old)
+            print("[MyModule] handled PersistenceSave")
+        end)
+        ```
+
     Realm:
         Server
 ]]
@@ -114,6 +156,13 @@
     Parameters:
         new (string)
             The new persistence value being loaded.
+
+    Example Usage:
+        ```lua
+        hook.Add("PersistenceLoad", "liaExamplePersistenceLoad", function(new)
+            print("[MyModule] handled PersistenceLoad")
+        end)
+        ```
 
     Realm:
         Server

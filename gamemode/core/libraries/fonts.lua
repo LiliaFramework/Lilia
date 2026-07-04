@@ -1,4 +1,4 @@
-﻿--[[
+--[[
     Folder: Developer - Libraries
     File: lia.font.md
 ]]
@@ -28,6 +28,13 @@
         fontName (string)
             The second font argument passed by this library. It currently receives the same value as `mainFont`.
 
+    Example Usage:
+        ```lua
+        hook.Add("PostLoadFonts", "liaExamplePostLoadFonts", function(mainFont, fontName)
+            print("[MyModule] handled PostLoadFonts")
+        end)
+        ```
+
     Realm:
         Shared
 ]]
@@ -40,6 +47,13 @@
 
     Category:
         Fonts
+
+    Example Usage:
+        ```lua
+        hook.Add("RefreshFonts", "liaExampleRefreshFonts", function()
+            print("[MyModule] handled RefreshFonts")
+        end)
+        ```
 
     Realm:
         Client

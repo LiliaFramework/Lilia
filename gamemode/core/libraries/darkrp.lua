@@ -1,4 +1,4 @@
-﻿--[[
+--[[
     Folder: Developer - Libraries
     File: lia.darkrp.md
 ]]
@@ -31,6 +31,13 @@
         value (string)
             The keyvalue value being applied.
 
+    Example Usage:
+        ```lua
+        hook.Add("EntityKeyValue", "liaExampleEntityKeyValue", function(entity, key, value)
+            print("[MyModule] handled EntityKeyValue")
+        end)
+        ```
+
     Returns:
         nil
 
@@ -46,6 +53,13 @@
 
     Category:
         DarkRP
+
+    Example Usage:
+        ```lua
+        hook.Add("InitializedModules", "liaExampleInitializedModules", function()
+            print("[MyModule] handled InitializedModules")
+        end)
+        ```
 
     Returns:
         nil

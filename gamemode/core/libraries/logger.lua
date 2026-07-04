@@ -1,4 +1,4 @@
-﻿--[[
+--[[
     Folder: Developer - Libraries
     File: lia.log.md
 ]]
@@ -33,6 +33,14 @@
 
         category (string)
             The resolved category name for the log entry.
+
+    Example Usage:
+        ```lua
+        hook.Add("OnServerLog", "liaExampleOnServerLog", function(client, logType, logString, category)
+            if not IsValid(client) or logString == "" then return end
+            print(string.format("[MyModule] %s: %s", client:Name(), logString))
+        end)
+        ```
 
     Returns:
         None

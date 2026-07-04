@@ -1,4 +1,4 @@
-﻿--[[
+--[[
     Folder: Developer - Libraries
     File: lia.item.md
 ]]
@@ -27,6 +27,14 @@
         itemEntity (Entity)
             The spawned world entity for the dropped item.
 
+    Example Usage:
+        ```lua
+        hook.Add("OnPlayerDroppedItem", "liaExampleOnPlayerDroppedItem", function(client, itemEntity)
+            if not IsValid(client) then return end
+            print(string.format("[MyModule] handled OnPlayerDroppedItem for %s", client:Name()))
+        end)
+        ```
+
     Realm:
         Server
 ]]
@@ -45,6 +53,14 @@
             The player who took the item.
         item (Item)
             The item instance that was added to the inventory.
+
+    Example Usage:
+        ```lua
+        hook.Add("OnPlayerTakeItem", "liaExampleOnPlayerTakeItem", function(client, item)
+            if not IsValid(client) then return end
+            print(string.format("[MyModule] handled OnPlayerTakeItem for %s", client:Name()))
+        end)
+        ```
 
     Realm:
         Server
@@ -66,6 +82,14 @@
             The item instance that was rotated.
         rotated (boolean)
             The new rotated state stored on the item.
+
+    Example Usage:
+        ```lua
+        hook.Add("OnPlayerRotateItem", "liaExampleOnPlayerRotateItem", function(client, item, rotated)
+            if not IsValid(client) then return end
+            print(string.format("[MyModule] handled OnPlayerRotateItem for %s", client:Name()))
+        end)
+        ```
 
     Realm:
         Server
@@ -92,6 +116,14 @@
         targetInvID (number)
             The inventory ID receiving the item.
 
+    Example Usage:
+        ```lua
+        hook.Add("HandleItemTransferRequest", "liaExampleHandleItemTransferRequest", function(client, itemID, x, y, targetInvID)
+            if not IsValid(client) then return end
+            print(string.format("[MyModule] handled HandleItemTransferRequest for %s", client:Name()))
+        end)
+        ```
+
     Returns:
         deferred|nil
             Return a deferred transfer result to continue the give-forward flow, or nil to stop handling.
@@ -113,6 +145,13 @@
         functions (table)
             The mutable table of item action definitions.
 
+    Example Usage:
+        ```lua
+        hook.Add("ItemDefaultFunctions", "liaExampleItemDefaultFunctions", function(functions)
+            print("[MyModule] handled ItemDefaultFunctions")
+        end)
+        ```
+
     Realm:
         Shared
 ]]
@@ -130,6 +169,13 @@
         itemDef (Item)
             The registered item definition table.
 
+    Example Usage:
+        ```lua
+        hook.Add("OnItemRegistered", "liaExampleOnItemRegistered", function(itemDef)
+            print("[MyModule] handled OnItemRegistered")
+        end)
+        ```
+
     Realm:
         Shared
 ]]
@@ -142,6 +188,13 @@
 
     Category:
         Items
+
+    Example Usage:
+        ```lua
+        hook.Add("InitializedItems", "liaExampleInitializedItems", function()
+            print("[MyModule] handled InitializedItems")
+        end)
+        ```
 
     Realm:
         Shared
@@ -160,6 +213,13 @@
         item (Item)
             The newly created item instance.
 
+    Example Usage:
+        ```lua
+        hook.Add("OnItemCreated", "liaExampleOnItemCreated", function(item)
+            print("[MyModule] handled OnItemCreated")
+        end)
+        ```
+
     Realm:
         Shared
 ]]
@@ -176,6 +236,13 @@
     Parameters:
         weaponTable (table)
             The weapon table being converted into an item definition.
+
+    Example Usage:
+        ```lua
+        hook.Add("GetWeaponName", "liaExampleGetWeaponName", function(weaponTable)
+            return "Example Value"
+        end)
+        ```
 
     Returns:
         string|nil
@@ -200,6 +267,13 @@
         overrides (table)
             The override table that was applied.
 
+    Example Usage:
+        ```lua
+        hook.Add("OnItemOverridden", "liaExampleOnItemOverridden", function(itemDef, overrides)
+            print("[MyModule] handled OnItemOverridden")
+        end)
+        ```
+
     Realm:
         Shared
 ]]
@@ -216,6 +290,13 @@
     Parameters:
         client (Player)
             The player opening the configuration interface.
+
+    Example Usage:
+        ```lua
+        hook.Add("CanPlayerModifyConfig", "liaExampleCanPlayerModifyConfig", function(client)
+            return true
+        end)
+        ```
 
     Returns:
         boolean|nil

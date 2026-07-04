@@ -1,4 +1,4 @@
-﻿--[[
+--[[
     Folder: Developer - Libraries
     File: lia.notices.md
 ]]
@@ -27,6 +27,15 @@
 
         noticeType (string)
             The notice type used to style the notice.
+
+    Example Usage:
+        ```lua
+        hook.Add("LiliaNoticeOverride", "liaExampleLiliaNoticeOverride", function(message, noticeType)
+            return {
+                {name = "Example", value = 1}
+            }
+        end)
+        ```
 
     Returns:
         boolean|table|nil

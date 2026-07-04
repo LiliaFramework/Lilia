@@ -1,4 +1,4 @@
-﻿--[[
+--[[
     Folder: Developer - Libraries
     File: admin.lua
 ]]
@@ -31,6 +31,13 @@
         groupOrPlayer (string|Player)
             The original argument passed into `lia.admin.getUsergroupIcon`.
 
+    Example Usage:
+        ```lua
+        hook.Add("GetUsergroupIcon", "liaExampleGetUsergroupIcon", function(groupName, groupData, groupOrPlayer)
+            return "Example Value"
+        end)
+        ```
+
     Returns:
         string|nil
             Return a string icon path to override the default icon resolution. Return nil to continue normal behavior.
@@ -55,6 +62,13 @@
         privileges (table)
             The rebuilt privilege minimum-access table.
 
+    Example Usage:
+        ```lua
+        hook.Add("OnAdminSystemLoaded", "liaExampleOnAdminSystemLoaded", function(groups, privileges)
+            print("[MyModule] handled OnAdminSystemLoaded")
+        end)
+        ```
+
     Returns:
         nil
 
@@ -74,6 +88,16 @@
     Parameters:
         pages (table)
             The mutable page definition array used to build the admin interface.
+
+    Example Usage:
+        ```lua
+        hook.Add("PopulateAdminTabs", "liaExamplePopulateAdminTabs", function(pages)
+            pages[#pages + 1] = {
+                name = "MyModule",
+                icon = "icon16/plugin.png"
+            }
+        end)
+        ```
 
     Returns:
         nil

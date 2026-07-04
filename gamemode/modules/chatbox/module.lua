@@ -1,4 +1,4 @@
-﻿--[[
+--[[
     Hooks:
         CanManageFilteredWords(client)
 
@@ -11,6 +11,13 @@
     Parameters:
         client (Player)
             The player whose chat filter management permission should be checked.
+
+    Example Usage:
+        ```lua
+        hook.Add("CanManageFilteredWords", "liaExampleCanManageFilteredWords", function(client)
+            return true
+        end)
+        ```
 
     Returns:
         boolean
@@ -32,6 +39,13 @@
     Parameters:
         ... (vararg)
             The formatted chatbox text arguments that were added.
+
+    Example Usage:
+        ```lua
+        hook.Add("ChatboxTextAdded", "liaExampleChatboxTextAdded", function()
+            print("[MyModule] handled ChatboxTextAdded")
+        end)
+        ```
 
     Returns:
         nil
@@ -62,6 +76,16 @@
         anonymous (boolean)
             Whether the message is currently treated as anonymous.
 
+    Example Usage:
+        ```lua
+        hook.Add("ChatParsed", "liaExampleChatParsed", function(client, chatType, message, anonymous)
+            if chatType == "ooc" and IsValid(client) then
+                local decorated = string.format("[Dispatch] %s", message)
+                return chatType, decorated, anonymous
+            end
+        end)
+        ```
+
     Returns:
         string|nil, string|nil, boolean|nil
             Return replacement values for the chat type, message, or anonymous state.
@@ -82,6 +106,13 @@
     Parameters:
         speaker (Player)
             The player attempting to send an OOC message.
+
+    Example Usage:
+        ```lua
+        hook.Add("GetOOCDelay", "liaExampleGetOOCDelay", function(speaker)
+            return 15
+        end)
+        ```
 
     Returns:
         number|nil
@@ -106,6 +137,14 @@
 
         message (string)
             The message text that was sent.
+
+    Example Usage:
+        ```lua
+        hook.Add("OnOOCMessageSent", "liaExampleOnOOCMessageSent", function(client, message)
+            if not IsValid(client) or message == "" then return end
+            print(string.format("[MyModule] %s: %s", client:Name(), message))
+        end)
+        ```
 
     Returns:
         nil
@@ -139,6 +178,15 @@
         receivers (table|nil)
             The resolved recipient list when available.
 
+    Example Usage:
+        ```lua
+        hook.Add("PlayerMessageSend", "liaExamplePlayerMessageSend", function(client, chatType, message, anonymous, receivers)
+            if chatType == "ooc" and #receivers > 10 then
+                return "[Broadcast] " .. message
+            end
+        end)
+        ```
+
     Returns:
         string|nil
             Return replacement message text to override the final output.
@@ -160,6 +208,15 @@
         word (string)
             The word to normalize and add to the stored filter list.
 
+    Example Usage:
+        ```lua
+        hook.Add("AddFilteredWord", "liaExampleAddFilteredWord", function(word)
+            local normalized = string.Trim(string.lower(word))
+            if normalized == "" then return false, "invalidWord" end
+            return true, normalized
+        end)
+        ```
+
     Returns:
         boolean, string
             Returns whether the add succeeded and either the normalized word or an error tag.
@@ -179,6 +236,15 @@
 
     Parameters:
         None
+
+    Example Usage:
+        ```lua
+        hook.Add("GetFilteredWords", "liaExampleGetFilteredWords", function()
+            return {
+                {name = "Example", value = 1}
+            }
+        end)
+        ```
 
     Returns:
         table
@@ -201,6 +267,15 @@
         word (string)
             The word to normalize and remove from the stored filter list.
 
+    Example Usage:
+        ```lua
+        hook.Add("RemoveFilteredWord", "liaExampleRemoveFilteredWord", function(word)
+            local normalized = string.Trim(string.lower(word))
+            if normalized == "" then return false, "invalidWord" end
+            return true, normalized
+        end)
+        ```
+
     Returns:
         boolean, string
             Returns whether the removal succeeded and either the normalized word or an error tag.
@@ -221,6 +296,13 @@
     Parameters:
         targets (Player|table|nil)
             An optional recipient player, recipient list, or `nil` to broadcast to all eligible recipients.
+
+    Example Usage:
+        ```lua
+        hook.Add("SyncFilteredWords", "liaExampleSyncFilteredWords", function(targets)
+            print("[MyModule] handled SyncFilteredWords")
+        end)
+        ```
 
     Returns:
         nil

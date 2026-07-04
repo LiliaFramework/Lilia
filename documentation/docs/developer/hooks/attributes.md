@@ -56,6 +56,14 @@ This page documents hooks in the attributes category.
 <p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#2.1">number|nil</a></span> Return a replacement stamina offset to override the default value, or nil to leave it unchanged.</p>
 </div>
 
+<h3 style="margin-bottom: 5px; font-weight: 700;">Example Usage</h3>
+<div style="margin-left: 20px; margin-bottom: 20px;">
+<pre><code class="language-lua">  hook.Add("AdjustStaminaOffset", "liaExampleAdjustStaminaOffset", function(client, offset)
+      return (offset or 0) + 5
+  end)
+</code></pre>
+</div>
+
 </div>
 </details>
 

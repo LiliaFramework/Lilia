@@ -1,4 +1,4 @@
-﻿--[[
+--[[
     Folder: Developer - Libraries
     File: lia.command.md
 ]]
@@ -28,6 +28,13 @@
         data (table)
             The command definition table stored in `lia.command.list`.
 
+    Example Usage:
+        ```lua
+        hook.Add("CommandAdded", "liaExampleCommandAdded", function(command, data)
+            print("[MyModule] handled CommandAdded")
+        end)
+        ```
+
     Realm:
         Shared
 ]]
@@ -47,6 +54,15 @@
 
         command (string)
             The command name being checked.
+
+    Example Usage:
+        ```lua
+        hook.Add("CanPlayerUseCommand", "liaExampleCanPlayerUseCommand", function(client, command)
+            if IsValid(client) and client:IsAdmin() then
+                return true
+            end
+        end)
+        ```
 
     Returns:
         boolean|nil
@@ -77,6 +93,14 @@
 
         results (table)
             The return values from the command callback.
+
+    Example Usage:
+        ```lua
+        hook.Add("CommandRan", "liaExampleCommandRan", function(client, command, arguments, results)
+            if not IsValid(client) then return end
+            print(string.format("[MyModule] handled CommandRan for %s", client:Name()))
+        end)
+        ```
 
     Realm:
         Server

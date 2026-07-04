@@ -1,4 +1,4 @@
-﻿--[[
+--[[
     Folder: Developer - Libraries
     File: lia.char.md
 ]]
@@ -29,6 +29,13 @@
         data (table)
             The submitted character creation data.
 
+    Example Usage:
+        ```lua
+        hook.Add("GetDefaultCharName", "liaExampleGetDefaultCharName", function(client, faction, data)
+            return "Example Value"
+        end)
+        ```
+
     Returns:
         string|nil
             The default name to use.
@@ -55,6 +62,13 @@
             The submitted faction value.
         data (table)
             The submitted character creation data.
+
+    Example Usage:
+        ```lua
+        hook.Add("GetDefaultCharDesc", "liaExampleGetDefaultCharDesc", function(client, faction, data)
+            return "Example Value"
+        end)
+        ```
 
     Returns:
         string|nil
@@ -85,6 +99,13 @@
         newValue (any)
             The new value.
 
+    Example Usage:
+        ```lua
+        hook.Add("OnCharVarChanged", "liaExampleOnCharVarChanged", function(character, key, oldValue, newValue)
+            print("[MyModule] handled OnCharVarChanged")
+        end)
+        ```
+
     Realm:
         Server
 ]]
@@ -106,6 +127,14 @@
         newBodygroups (table)
             The applied bodygroup table.
 
+    Example Usage:
+        ```lua
+        hook.Add("PlayerBodyGroupChanged", "liaExamplePlayerBodyGroupChanged", function(client, oldBodygroups, newBodygroups)
+            if not IsValid(client) then return end
+            print(string.format("[MyModule] handled PlayerBodyGroupChanged for %s", client:Name()))
+        end)
+        ```
+
     Realm:
         Server
 ]]
@@ -124,6 +153,13 @@
             The player creating the character.
         attributeKey (string)
             The attribute key being validated.
+
+    Example Usage:
+        ```lua
+        hook.Add("GetAttributeStartingMax", "liaExampleGetAttributeStartingMax", function(client, attributeKey)
+            return 15
+        end)
+        ```
 
     Returns:
         number|nil
@@ -148,6 +184,13 @@
         defaultPoints (number)
             The configured default starting attribute point amount.
 
+    Example Usage:
+        ```lua
+        hook.Add("GetMaxStartingAttributePoints", "liaExampleGetMaxStartingAttributePoints", function(client, defaultPoints)
+            return 15
+        end)
+        ```
+
     Returns:
         number|nil
             The maximum starting attribute points, or nil to use default behavior.
@@ -168,6 +211,13 @@
     Parameters:
         character (Character)
             The character that needs a default inventory.
+
+    Example Usage:
+        ```lua
+        hook.Add("CreateDefaultInventory", "liaExampleCreateDefaultInventory", function(character)
+            print("[MyModule] handled CreateDefaultInventory")
+        end)
+        ```
 
     Returns:
         Promise
@@ -190,6 +240,13 @@
         character (Character)
             The restored character object.
 
+    Example Usage:
+        ```lua
+        hook.Add("CharRestored", "liaExampleCharRestored", function(character)
+            print("[MyModule] handled CharRestored")
+        end)
+        ```
+
     Realm:
         Server
 ]]
@@ -206,6 +263,13 @@
     Parameters:
         id (number)
             The ID of the character being deleted.
+
+    Example Usage:
+        ```lua
+        hook.Add("PreCharDelete", "liaExamplePreCharDelete", function(id)
+            print("[MyModule] handled PreCharDelete")
+        end)
+        ```
 
     Realm:
         Server
@@ -226,6 +290,14 @@
         id (number)
             The ID of the deleted character.
 
+    Example Usage:
+        ```lua
+        hook.Add("OnCharDelete", "liaExampleOnCharDelete", function(client, id)
+            if not IsValid(client) then return end
+            print(string.format("[MyModule] handled OnCharDelete for %s", client:Name()))
+        end)
+        ```
+
     Realm:
         Server
 ]]
@@ -243,6 +315,14 @@
         client (Player)
             The player whose character list should be synchronized.
 
+    Example Usage:
+        ```lua
+        hook.Add("SyncCharList", "liaExampleSyncCharList", function(client)
+            if not IsValid(client) then return end
+            print(string.format("[MyModule] handled SyncCharList for %s", client:Name()))
+        end)
+        ```
+
     Realm:
         Server
 ]]
@@ -259,6 +339,13 @@
     Parameters:
         character (Character)
             The unloaded character.
+
+    Example Usage:
+        ```lua
+        hook.Add("CharCleanUp", "liaExampleCharCleanUp", function(character)
+            print("[MyModule] handled CharCleanUp")
+        end)
+        ```
 
     Realm:
         Server

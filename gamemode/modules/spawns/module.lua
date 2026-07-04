@@ -1,4 +1,4 @@
-﻿--[[
+--[[
     Hooks:
         GetPlayerRespawnLocation(client, character)
 
@@ -14,6 +14,15 @@
 
         character (Character)
             The player's active character.
+
+    Example Usage:
+        ```lua
+        hook.Add("GetPlayerRespawnLocation", "liaExampleGetPlayerRespawnLocation", function(client, character)
+            return {
+                {name = "Example", value = 1}
+            }
+        end)
+        ```
 
     Returns:
         table|nil
@@ -38,6 +47,15 @@
 
         character (Character)
             The player's active character.
+
+    Example Usage:
+        ```lua
+        hook.Add("GetPlayerSpawnLocation", "liaExampleGetPlayerSpawnLocation", function(client, character)
+            return {
+                {name = "Example", value = 1}
+            }
+        end)
+        ```
 
     Returns:
         table|nil
@@ -72,6 +90,15 @@
         lastDeath (number)
             The timestamp of the player's last death.
 
+    Example Usage:
+        ```lua
+        hook.Add("OnRespawnKeyPressed", "liaExampleOnRespawnKeyPressed", function(ply, key, left, baseTime, lastDeath)
+            if IsValid(ply) and ply:IsAdmin() then
+                return true
+            end
+        end)
+        ```
+
     Returns:
         boolean|nil
             Return false to block the default respawn-screen key handling.
@@ -98,6 +125,14 @@
 
         angle (Angle)
             The eye angle applied to the player at spawn.
+
+    Example Usage:
+        ```lua
+        hook.Add("PlayerSpawnPointSelected", "liaExamplePlayerSpawnPointSelected", function(client, position, angle)
+            if not IsValid(client) then return end
+            print(string.format("[MyModule] handled PlayerSpawnPointSelected for %s", client:Name()))
+        end)
+        ```
 
     Returns:
         nil
@@ -128,6 +163,15 @@
         lastDeath (number)
             The timestamp of the player's last death.
 
+    Example Usage:
+        ```lua
+        hook.Add("ShouldRespawnScreenAppear", "liaExampleShouldRespawnScreenAppear", function(ply, left, baseTime, lastDeath)
+            if IsValid(ply) and ply:IsAdmin() then
+                return true
+            end
+        end)
+        ```
+
     Returns:
         boolean|nil
             Return false to suppress the respawn screen.
@@ -155,6 +199,15 @@
         isRespawning (boolean)
             Whether this spawn is a respawn rather than an initial spawn.
 
+    Example Usage:
+        ```lua
+        hook.Add("ShouldUseMapSpawns", "liaExampleShouldUseMapSpawns", function(client, character, isRespawning)
+            if IsValid(client) and client:IsAdmin() then
+                return true
+            end
+        end)
+        ```
+
     Returns:
         boolean|nil
             Return true to force use of map spawn entities first.
@@ -174,6 +227,13 @@
 
     Parameters:
         None
+
+    Example Usage:
+        ```lua
+        hook.Add("FetchSpawns", "liaExampleFetchSpawns", function()
+            print("[MyModule] handled FetchSpawns")
+        end)
+        ```
 
     Returns:
         Deferred
@@ -195,6 +255,13 @@
     Parameters:
         spawns (table)
             The faction spawn data to persist.
+
+    Example Usage:
+        ```lua
+        hook.Add("StoreSpawns", "liaExampleStoreSpawns", function(spawns)
+            print("[MyModule] handled StoreSpawns")
+        end)
+        ```
 
     Returns:
         Deferred

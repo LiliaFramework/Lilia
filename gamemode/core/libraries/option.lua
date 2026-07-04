@@ -1,4 +1,4 @@
-﻿--[[
+--[[
     Folder: Developer - Libraries
     File: lia.option.md
 ]]
@@ -28,6 +28,13 @@
         option (table)
             The stored option data table created for the key.
 
+    Example Usage:
+        ```lua
+        hook.Add("OptionAdded", "liaExampleOptionAdded", function(key, option)
+            print("[MyModule] handled OptionAdded")
+        end)
+        ```
+
     Realm:
         Shared
 ]]
@@ -50,6 +57,13 @@
 
         newValue (any)
             The value after the change.
+
+    Example Usage:
+        ```lua
+        hook.Add("OptionChanged", "liaExampleOptionChanged", function(key, oldValue, newValue)
+            print("[MyModule] handled OptionChanged")
+        end)
+        ```
 
     Realm:
         Shared
@@ -74,6 +88,14 @@
         value (any)
             The networked option value.
 
+    Example Usage:
+        ```lua
+        hook.Add("OptionReceived", "liaExampleOptionReceived", function(client, key, value)
+            if not IsValid(client) then return end
+            print(string.format("[MyModule] handled OptionReceived for %s", client:Name()))
+        end)
+        ```
+
     Realm:
         Server
 ]]
@@ -86,6 +108,13 @@
 
     Category:
         Options
+
+    Example Usage:
+        ```lua
+        hook.Add("InitializedOptions", "liaExampleInitializedOptions", function()
+            print("[MyModule] handled InitializedOptions")
+        end)
+        ```
 
     Realm:
         Shared
@@ -103,6 +132,13 @@
     Parameters:
         enabled (boolean)
             True when third-person view was enabled, false when it was disabled.
+
+    Example Usage:
+        ```lua
+        hook.Add("ThirdPersonToggled", "liaExampleThirdPersonToggled", function(enabled)
+            print("[MyModule] handled ThirdPersonToggled")
+        end)
+        ```
 
     Realm:
         Client

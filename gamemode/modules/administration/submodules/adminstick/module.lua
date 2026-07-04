@@ -1,4 +1,4 @@
-﻿--[[
+--[[
     Hooks:
         AdminStickAddModels(modList)
 
@@ -11,6 +11,13 @@
     Parameters:
         modList (table)
             The mutable list of model definitions shown by the admin stick UI.
+
+    Example Usage:
+        ```lua
+        hook.Add("AdminStickAddModels", "liaExampleAdminStickAddModels", function(modList)
+            print("[MyModule] handled AdminStickAddModels")
+        end)
+        ```
 
     Returns:
         nil
@@ -31,6 +38,13 @@
     Parameters:
         None
 
+    Example Usage:
+        ```lua
+        hook.Add("OnAdminStickMenuClosed", "liaExampleOnAdminStickMenuClosed", function()
+            print("[MyModule] handled OnAdminStickMenuClosed")
+        end)
+        ```
+
     Returns:
         nil
 
@@ -50,6 +64,14 @@
     Parameters:
         target (Entity)
             The entity targeted by the admin stick.
+
+    Example Usage:
+        ```lua
+        hook.Add("OpenAdminStickUI", "liaExampleOpenAdminStickUI", function(target)
+            if not IsValid(target) then return end
+            print(string.format("[MyModule] handled OpenAdminStickUI for %s", target:Name()))
+        end)
+        ```
 
     Returns:
         nil
@@ -76,6 +98,14 @@
 
         currentStores (table)
             The mutable list of grouped admin stick menu entries.
+
+    Example Usage:
+        ```lua
+        hook.Add("PopulateAdminStick", "liaExamplePopulateAdminStick", function(currentMenu, currentTarget, currentStores)
+            if not IsValid(currentMenu) then return end
+            currentMenu:SetTooltip("PopulateAdminStick handled by MyModule")
+        end)
+        ```
 
     Returns:
         nil

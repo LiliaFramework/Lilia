@@ -35,7 +35,7 @@ The color library centralizes Lilia color storage under `lia.color`. It stores n
 ---
 
 <details class="realm-client" id="function-liacolorregister">
-<summary><span class="summary-main"><a id="lia.color.register"></a>lia.color.register(name, color)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/color.lua#L66" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="lia.color.register"></a>lia.color.register(name, color)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/color.lua#L73" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="liacolorregister"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -66,7 +66,7 @@ The color library centralizes Lilia color storage under `lia.color`. It stores n
 ---
 
 <details class="realm-client" id="function-liacoloradjust">
-<summary><span class="summary-main"><a id="lia.color.adjust"></a>lia.color.adjust(color, rOffset, gOffset, bOffset, aOffset)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/color.lua#L103" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="lia.color.adjust"></a>lia.color.adjust(color, rOffset, gOffset, bOffset, aOffset)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/color.lua#L110" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="liacoloradjust"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -105,7 +105,7 @@ The color library centralizes Lilia color storage under `lia.color`. It stores n
 ---
 
 <details class="realm-client" id="function-liacolordarken">
-<summary><span class="summary-main"><a id="lia.color.darken"></a>lia.color.darken(color, factor)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/color.lua#L130" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="lia.color.darken"></a>lia.color.darken(color, factor)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/color.lua#L137" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="liacolordarken"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -140,7 +140,7 @@ The color library centralizes Lilia color storage under `lia.color`. It stores n
 ---
 
 <details class="realm-client" id="function-liacolorgetcurrenttheme">
-<summary><span class="summary-main"><a id="lia.color.getCurrentTheme"></a>lia.color.getCurrentTheme()</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/color.lua#L152" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="lia.color.getCurrentTheme"></a>lia.color.getCurrentTheme()</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/color.lua#L159" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="liacolorgetcurrenttheme"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -169,7 +169,7 @@ The color library centralizes Lilia color storage under `lia.color`. It stores n
 ---
 
 <details class="realm-client" id="function-liacolorgetcurrentthemename">
-<summary><span class="summary-main"><a id="lia.color.getCurrentThemeName"></a>lia.color.getCurrentThemeName()</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/color.lua#L172" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="lia.color.getCurrentThemeName"></a>lia.color.getCurrentThemeName()</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/color.lua#L179" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="liacolorgetcurrentthemename"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -198,7 +198,7 @@ The color library centralizes Lilia color storage under `lia.color`. It stores n
 ---
 
 <details class="realm-client" id="function-liacolorgetmaincolor">
-<summary><span class="summary-main"><a id="lia.color.getMainColor"></a>lia.color.getMainColor()</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/color.lua#L192" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="lia.color.getMainColor"></a>lia.color.getMainColor()</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/color.lua#L199" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="liacolorgetmaincolor"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -227,7 +227,7 @@ The color library centralizes Lilia color storage under `lia.color`. It stores n
 ---
 
 <details class="realm-client" id="function-liacolorapplytheme">
-<summary><span class="summary-main"><a id="lia.color.applyTheme"></a>lia.color.applyTheme(themeName, useTransition)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/color.lua#L220" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="lia.color.applyTheme"></a>lia.color.applyTheme(themeName, useTransition)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/color.lua#L227" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="liacolorapplytheme"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -258,7 +258,7 @@ The color library centralizes Lilia color storage under `lia.color`. It stores n
 ---
 
 <details class="realm-client" id="function-liacoloristransitionactive">
-<summary><span class="summary-main"><a id="lia.color.isTransitionActive"></a>lia.color.isTransitionActive()</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/color.lua#L267" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="lia.color.isTransitionActive"></a>lia.color.isTransitionActive()</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/color.lua#L274" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="liacoloristransitionactive"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -287,7 +287,7 @@ The color library centralizes Lilia color storage under `lia.color`. It stores n
 ---
 
 <details class="realm-client" id="function-liacolortestthemetransition">
-<summary><span class="summary-main"><a id="lia.color.testThemeTransition"></a>lia.color.testThemeTransition(themeName)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/color.lua#L287" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="lia.color.testThemeTransition"></a>lia.color.testThemeTransition(themeName)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/color.lua#L294" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="liacolortestthemetransition"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -316,7 +316,7 @@ The color library centralizes Lilia color storage under `lia.color`. It stores n
 ---
 
 <details class="realm-client" id="function-liacolorstartthemetransition">
-<summary><span class="summary-main"><a id="lia.color.startThemeTransition"></a>lia.color.startThemeTransition(name)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/color.lua#L315" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="lia.color.startThemeTransition"></a>lia.color.startThemeTransition(name)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/color.lua#L322" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="liacolorstartthemetransition"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -345,7 +345,7 @@ The color library centralizes Lilia color storage under `lia.color`. It stores n
 ---
 
 <details class="realm-client" id="function-liacoloriscolor">
-<summary><span class="summary-main"><a id="lia.color.isColor"></a>lia.color.isColor(v)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/color.lua#L401" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="lia.color.isColor"></a>lia.color.isColor(v)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/color.lua#L408" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="liacoloriscolor"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -381,7 +381,7 @@ The color library centralizes Lilia color storage under `lia.color`. It stores n
 ---
 
 <details class="realm-client" id="function-liacolorcalculatenegativecolor">
-<summary><span class="summary-main"><a id="lia.color.calculateNegativeColor"></a>lia.color.calculateNegativeColor(mainColor)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/color.lua#L425" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="lia.color.calculateNegativeColor"></a>lia.color.calculateNegativeColor(mainColor)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/color.lua#L432" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="liacolorcalculatenegativecolor"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -415,7 +415,7 @@ The color library centralizes Lilia color storage under `lia.color`. It stores n
 ---
 
 <details class="realm-client" id="function-liacolorreturnmainadjustedcolors">
-<summary><span class="summary-main"><a id="lia.color.returnMainAdjustedColors"></a>lia.color.returnMainAdjustedColors()</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/color.lua#L463" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="lia.color.returnMainAdjustedColors"></a>lia.color.returnMainAdjustedColors()</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/color.lua#L470" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="liacolorreturnmainadjustedcolors"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -445,7 +445,7 @@ The color library centralizes Lilia color storage under `lia.color`. It stores n
 ---
 
 <details class="realm-client" id="function-liacolorlerp">
-<summary><span class="summary-main"><a id="lia.color.lerp"></a>lia.color.lerp(frac, col1, col2)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/color.lua#L507" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="lia.color.lerp"></a>lia.color.lerp(frac, col1, col2)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/color.lua#L514" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="liacolorlerp"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -481,7 +481,7 @@ The color library centralizes Lilia color storage under `lia.color`. It stores n
 ---
 
 <details class="realm-shared" id="function-liacolorregistertheme">
-<summary><span class="summary-main"><a id="lia.color.registerTheme"></a>lia.color.registerTheme(name, themeData)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/color.lua#L578" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="lia.color.registerTheme"></a>lia.color.registerTheme(name, themeData)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/color.lua#L585" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="liacolorregistertheme"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -515,7 +515,7 @@ The color library centralizes Lilia color storage under `lia.color`. It stores n
 ---
 
 <details class="realm-shared" id="function-liacolorgetallthemes">
-<summary><span class="summary-main"><a id="lia.color.getAllThemes"></a>lia.color.getAllThemes()</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/color.lua#L601" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="lia.color.getAllThemes"></a>lia.color.getAllThemes()</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/color.lua#L608" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="liacolorgetallthemes"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -574,6 +574,14 @@ The color library centralizes Lilia color storage under `lia.color`. It stores n
 <div style="margin-left: 20px; margin-bottom: 20px;">
 <p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#2.1">string</a></span> <span class="parameter">themeName</span> The theme identifier that was applied.</p>
 <p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#2.1">boolean</a></span> <span class="parameter">useTransition</span> True when the theme change was requested with transition behavior. False when applied directly or when a transition completes.</p>
+</div>
+
+<h3 style="margin-bottom: 5px; font-weight: 700;">Example Usage</h3>
+<div style="margin-left: 20px; margin-bottom: 20px;">
+<pre><code class="language-lua">  hook.Add("OnThemeChanged", "liaExampleOnThemeChanged", function(themeName, useTransition)
+      print("[MyModule] handled OnThemeChanged")
+  end)
+</code></pre>
 </div>
 
 </div>

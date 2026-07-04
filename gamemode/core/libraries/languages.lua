@@ -1,4 +1,4 @@
-﻿--[[
+--[[
     Folder: Developer - Libraries
     File: lia.lang.md
 ]]
@@ -23,6 +23,13 @@
 
     Parameters:
         None.
+
+    Example Usage:
+        ```lua
+        hook.Add("OnLocalizationLoaded", "liaExampleOnLocalizationLoaded", function()
+            print("[MyModule] handled OnLocalizationLoaded")
+        end)
+        ```
 
     Realm:
         Shared

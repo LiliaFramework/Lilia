@@ -1,4 +1,4 @@
-﻿--[[
+--[[
     Hooks:
         BagInventoryReady(item, inventory)
 
@@ -14,6 +14,13 @@
 
         inventory (table)
             The nested bag inventory that is now ready.
+
+    Example Usage:
+        ```lua
+        hook.Add("BagInventoryReady", "liaExampleBagInventoryReady", function(item, inventory)
+            print("[MyModule] handled BagInventoryReady")
+        end)
+        ```
 
     Returns:
         nil
@@ -37,6 +44,13 @@
 
         inventory (table)
             The nested inventory being removed.
+
+    Example Usage:
+        ```lua
+        hook.Add("BagInventoryRemoved", "liaExampleBagInventoryRemoved", function(item, inventory)
+            print("[MyModule] handled BagInventoryRemoved")
+        end)
+        ```
 
     Returns:
         nil
@@ -63,6 +77,13 @@
 
         keyCode (number)
             The mouse key or button code that was pressed.
+
+    Example Usage:
+        ```lua
+        hook.Add("InterceptClickItemIcon", "liaExampleInterceptClickItemIcon", function(panel, itemIcon, keyCode)
+            return true
+        end)
+        ```
 
     Returns:
         boolean|nil
@@ -91,6 +112,14 @@
         panel (Panel)
             The parent grid inventory panel.
 
+    Example Usage:
+        ```lua
+        hook.Add("InventoryItemIconCreated", "liaExampleInventoryItemIconCreated", function(icon, item, panel)
+            if not IsValid(panel) then return end
+            panel:SetTooltip("InventoryItemIconCreated handled by MyModule")
+        end)
+        ```
+
     Returns:
         nil
 
@@ -116,6 +145,14 @@
 
         parent (Panel|nil)
             The parent panel, if one was provided.
+
+    Example Usage:
+        ```lua
+        hook.Add("InventoryPanelCreated", "liaExampleInventoryPanelCreated", function(panel, inventory, parent)
+            if not IsValid(panel) then return end
+            panel:SetTooltip("InventoryPanelCreated handled by MyModule")
+        end)
+        ```
 
     Returns:
         nil
@@ -143,6 +180,15 @@
         target (table)
             The item being combined with.
 
+    Example Usage:
+        ```lua
+        hook.Add("ItemCombine", "liaExampleItemCombine", function(client, item, target)
+            if IsValid(client) and client:IsAdmin() then
+                return true
+            end
+        end)
+        ```
+
     Returns:
         boolean|nil
             Return true when the combine action was handled successfully.
@@ -163,6 +209,13 @@
     Parameters:
         itemTypeOrItem (string|table)
             The item type or item reference that could not be restored.
+
+    Example Usage:
+        ```lua
+        hook.Add("OnPlayerLostStackItem", "liaExampleOnPlayerLostStackItem", function(itemTypeOrItem)
+            print("[MyModule] handled OnPlayerLostStackItem")
+        end)
+        ```
 
     Returns:
         nil
@@ -196,6 +249,14 @@
         y (number)
             The requested destination Y slot.
 
+    Example Usage:
+        ```lua
+        hook.Add("OnRequestItemTransfer", "liaExampleOnRequestItemTransfer", function(panel, itemID, inventoryID, x, y)
+            if not IsValid(panel) then return end
+            panel:SetTooltip("OnRequestItemTransfer handled by MyModule")
+        end)
+        ```
+
     Returns:
         nil
 
@@ -215,6 +276,13 @@
     Parameters:
         inventory (table)
             The bag inventory being initialized.
+
+    Example Usage:
+        ```lua
+        hook.Add("SetupBagInventoryAccessRules", "liaExampleSetupBagInventoryAccessRules", function(inventory)
+            print("[MyModule] handled SetupBagInventoryAccessRules")
+        end)
+        ```
 
     Returns:
         nil

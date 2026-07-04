@@ -1,4 +1,4 @@
-﻿--[[
+--[[
     Hooks:
         CanCharBeTransfered(character, targetValue, previousValue)
 
@@ -17,6 +17,13 @@
 
         previousValue (number|string)
             The character's current faction or class identifier.
+
+    Example Usage:
+        ```lua
+        hook.Add("CanCharBeTransfered", "liaExampleCanCharBeTransfered", function(character, targetValue, previousValue)
+            return true
+        end)
+        ```
 
     Returns:
         boolean|nil
@@ -42,6 +49,15 @@
         target (Player)
             The player being invited.
 
+    Example Usage:
+        ```lua
+        hook.Add("CanInviteToClass", "liaExampleCanInviteToClass", function(client, target)
+            if IsValid(client) and client:IsAdmin() then
+                return true
+            end
+        end)
+        ```
+
     Returns:
         boolean|nil
             Return false to block the class invitation.
@@ -65,6 +81,15 @@
 
         target (Player)
             The player being invited.
+
+    Example Usage:
+        ```lua
+        hook.Add("CanInviteToFaction", "liaExampleCanInviteToFaction", function(client, target)
+            if IsValid(client) and client:IsAdmin() then
+                return true
+            end
+        end)
+        ```
 
     Returns:
         boolean|nil
@@ -93,6 +118,15 @@
         info (table)
             The registered class data for the class.
 
+    Example Usage:
+        ```lua
+        hook.Add("CanPlayerJoinClass", "liaExampleCanPlayerJoinClass", function(client, class, info)
+            if IsValid(client) and client:IsAdmin() then
+                return true
+            end
+        end)
+        ```
+
     Returns:
         boolean|nil
             Return false to block the class join attempt.
@@ -120,6 +154,15 @@
         client (Player)
             The player associated with the character.
 
+    Example Usage:
+        ```lua
+        hook.Add("CheckFactionLimitReached", "liaExampleCheckFactionLimitReached", function(faction, character, client)
+            if IsValid(client) and client:IsAdmin() then
+                return true
+            end
+        end)
+        ```
+
     Returns:
         boolean|nil
             Return true when the faction should be treated as full.
@@ -143,6 +186,13 @@
 
         desc (string)
             The current faction description text.
+
+    Example Usage:
+        ```lua
+        hook.Add("OverrideFactionDesc", "liaExampleOverrideFactionDesc", function(uniqueID, desc)
+            return "MyModule Override"
+        end)
+        ```
 
     Returns:
         string|nil
@@ -177,6 +227,15 @@
         bodygroupsAllowed (boolean)
             The current bodygroup customization permission.
 
+    Example Usage:
+        ```lua
+        hook.Add("OverrideFactionModelCustomization", "liaExampleOverrideFactionModelCustomization", function(client, faction, context, skinAllowed, bodygroupsAllowed)
+            if faction and faction.uniqueID == "staff" then
+                return false, true
+            end
+        end)
+        ```
+
     Returns:
         boolean|nil, boolean|nil
             Return replacement values for skin and bodygroup customization permissions.
@@ -200,6 +259,15 @@
 
         models (table)
             The current faction model list.
+
+    Example Usage:
+        ```lua
+        hook.Add("OverrideFactionModels", "liaExampleOverrideFactionModels", function(uniqueID, models)
+            return {
+                {name = "Example", value = 1}
+            }
+        end)
+        ```
 
     Returns:
         table|nil
@@ -225,6 +293,13 @@
         name (string)
             The current faction name.
 
+    Example Usage:
+        ```lua
+        hook.Add("OverrideFactionName", "liaExampleOverrideFactionName", function(uniqueID, name)
+            return "MyModule Override"
+        end)
+        ```
+
     Returns:
         string|nil
             Return replacement faction name text.
@@ -248,6 +323,14 @@
 
         members (table)
             The current roster member data.
+
+    Example Usage:
+        ```lua
+        hook.Add("PopulateFactionRosterOptions", "liaExamplePopulateFactionRosterOptions", function(list, members)
+            if not IsValid(list) then return end
+            list:SetTooltip("PopulateFactionRosterOptions handled by MyModule")
+        end)
+        ```
 
     Returns:
         nil

@@ -62,13 +62,21 @@ This page documents hooks in the administration - warnings category.
 <p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#2.1">string</a></span> The severity value stored for the warning.</p>
 </div>
 
+<h3 style="margin-bottom: 5px; font-weight: 700;">Example Usage</h3>
+<div style="margin-left: 20px; margin-bottom: 20px;">
+<pre><code class="language-lua">  hook.Add("AddWarning", "liaExampleAddWarning", function(charID, warned, warnedSteamID, timestamp, message, warner, warnerSteamID, severity)
+      return "[Reviewed] " .. message
+  end)
+</code></pre>
+</div>
+
 </div>
 </details>
 
 ---
 
 <details class="realm-server" id="function-getwarnings">
-<summary><span class="summary-main"><a id="GetWarnings"></a>GetWarnings(charID)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/modules/administration/submodules/warnings/module.lua#L43" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="GetWarnings"></a>GetWarnings(charID)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/modules/administration/submodules/warnings/module.lua#L50" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="getwarnings"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -95,13 +103,21 @@ This page documents hooks in the administration - warnings category.
 <p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#2.2">Deferred</a></span> Resolves with a sequential table of warning rows for the character.</p>
 </div>
 
+<h3 style="margin-bottom: 5px; font-weight: 700;">Example Usage</h3>
+<div style="margin-left: 20px; margin-bottom: 20px;">
+<pre><code class="language-lua">  hook.Add("GetWarnings", "liaExampleGetWarnings", function(charID)
+      print("[MyModule] handled GetWarnings")
+  end)
+</code></pre>
+</div>
+
 </div>
 </details>
 
 ---
 
 <details class="realm-server" id="function-removewarning">
-<summary><span class="summary-main"><a id="RemoveWarning"></a>RemoveWarning(charID, index)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/modules/administration/submodules/warnings/module.lua#L64" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="RemoveWarning"></a>RemoveWarning(charID, index)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/modules/administration/submodules/warnings/module.lua#L78" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="removewarning"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -129,13 +145,21 @@ This page documents hooks in the administration - warnings category.
 <p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#2.2">Deferred</a></span> Resolves with the removed warning row, or `nil` when the index is invalid.</p>
 </div>
 
+<h3 style="margin-bottom: 5px; font-weight: 700;">Example Usage</h3>
+<div style="margin-left: 20px; margin-bottom: 20px;">
+<pre><code class="language-lua">  hook.Add("RemoveWarning", "liaExampleRemoveWarning", function(charID, index)
+      print("[MyModule] handled RemoveWarning")
+  end)
+</code></pre>
+</div>
+
 </div>
 </details>
 
 ---
 
 <details class="realm-server" id="function-warningissued">
-<summary><span class="summary-main"><a id="WarningIssued"></a>WarningIssued(client, target, reason, severity, count, warnerSteamID, warnedSteamID)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/modules/administration/submodules/warnings/module.lua#L88" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="WarningIssued"></a>WarningIssued(client, target, reason, severity, count, warnerSteamID, warnedSteamID)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/modules/administration/submodules/warnings/module.lua#L109" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="warningissued"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -163,13 +187,22 @@ This page documents hooks in the administration - warnings category.
 <p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#2.1">string</a></span> <span class="parameter">warnedSteamID</span> The SteamID of the warned player.</p>
 </div>
 
+<h3 style="margin-bottom: 5px; font-weight: 700;">Example Usage</h3>
+<div style="margin-left: 20px; margin-bottom: 20px;">
+<pre><code class="language-lua">  hook.Add("WarningIssued", "liaExampleWarningIssued", function(client, target, reason, severity, count, warnerSteamID, warnedSteamID)
+      if not IsValid(client) or reason == "" then return end
+      print(string.format("[MyModule] %s: %s", client:Name(), reason))
+  end)
+</code></pre>
+</div>
+
 </div>
 </details>
 
 ---
 
 <details class="realm-server" id="function-warningremoved">
-<summary><span class="summary-main"><a id="WarningRemoved"></a>WarningRemoved(client, targetClient, warning, index)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/modules/administration/submodules/warnings/module.lua#L126" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="WarningRemoved"></a>WarningRemoved(client, targetClient, warning, index)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/modules/administration/submodules/warnings/module.lua#L155" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="warningremoved"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -192,6 +225,15 @@ This page documents hooks in the administration - warnings category.
 <p><span class="types"><a class="type" href="/developer/meta/player/">Player</a></span> <span class="parameter">targetClient</span> The player whose warning was removed.</p>
 <p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#2.1">table</a></span> <span class="parameter">warning</span> The removed warning data passed to listeners.</p>
 <p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#2.1">number</a></span> <span class="parameter">index</span> The one-based warning index that was removed.</p>
+</div>
+
+<h3 style="margin-bottom: 5px; font-weight: 700;">Example Usage</h3>
+<div style="margin-left: 20px; margin-bottom: 20px;">
+<pre><code class="language-lua">  hook.Add("WarningRemoved", "liaExampleWarningRemoved", function(client, targetClient, warning, index)
+      if not istable(warning) then return end
+      warning.exampleHandled = true
+  end)
+</code></pre>
 </div>
 
 </div>

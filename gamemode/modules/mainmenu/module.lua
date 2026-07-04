@@ -1,4 +1,4 @@
-﻿--[[
+--[[
     Hooks:
         GetMainCharacterID()
 
@@ -10,6 +10,13 @@
 
     Parameters:
         None
+
+    Example Usage:
+        ```lua
+        hook.Add("GetMainCharacterID", "liaExampleGetMainCharacterID", function()
+            return 15
+        end)
+        ```
 
     Returns:
         number|nil
@@ -31,6 +38,13 @@
     Parameters:
         None
 
+    Example Usage:
+        ```lua
+        hook.Add("OpenCharacterMenuOverride", "liaExampleOpenCharacterMenuOverride", function()
+            return true
+        end)
+        ```
+
     Returns:
         Panel|boolean|nil
             Return a panel to use instead of the default character menu, or any non-nil value to stop the default menu from opening.
@@ -51,6 +65,13 @@
     Parameters:
         enabled (boolean)
             The new third-person enabled state.
+
+    Example Usage:
+        ```lua
+        hook.Add("ThirdPersonToggled", "liaExampleThirdPersonToggled", function(enabled)
+            print("[MyModule] handled ThirdPersonToggled")
+        end)
+        ```
 
     Returns:
         nil
@@ -75,6 +96,15 @@
         data (table)
             The submitted character creation data.
 
+    Example Usage:
+        ```lua
+        hook.Add("CanPlayerCreateChar", "liaExampleCanPlayerCreateChar", function(client, data)
+            if IsValid(client) and client:IsAdmin() then
+                return true
+            end
+        end)
+        ```
+
     Returns:
         boolean|nil
             Return false to block character creation.
@@ -95,6 +125,13 @@
     Parameters:
         id (number)
             The character ID to choose.
+
+    Example Usage:
+        ```lua
+        hook.Add("ChooseCharacter", "liaExampleChooseCharacter", function(id)
+            print("[MyModule] handled ChooseCharacter")
+        end)
+        ```
 
     Returns:
         Deferred
@@ -117,6 +154,13 @@
         data (table)
             The character field values to validate and send.
 
+    Example Usage:
+        ```lua
+        hook.Add("CreateCharacter", "liaExampleCreateCharacter", function(data)
+            print("[MyModule] handled CreateCharacter")
+        end)
+        ```
+
     Returns:
         Deferred
             Resolves with the new character ID or rejects with the validation or server error.
@@ -138,6 +182,13 @@
         id (number)
             The character ID to delete.
 
+    Example Usage:
+        ```lua
+        hook.Add("DeleteCharacter", "liaExampleDeleteCharacter", function(id)
+            print("[MyModule] handled DeleteCharacter")
+        end)
+        ```
+
     Returns:
         nil
 
@@ -156,6 +207,13 @@
 
     Parameters:
         None
+
+    Example Usage:
+        ```lua
+        hook.Add("LoadMainCharacter", "liaExampleLoadMainCharacter", function()
+            print("[MyModule] handled LoadMainCharacter")
+        end)
+        ```
 
     Returns:
         Deferred|nil
@@ -178,6 +236,13 @@
         client (Player)
             The player whose character slot limit should be calculated.
 
+    Example Usage:
+        ```lua
+        hook.Add("GetMaxPlayerChar", "liaExampleGetMaxPlayerChar", function(client)
+            return 15
+        end)
+        ```
+
     Returns:
         number
             The maximum number of characters the player may have.
@@ -197,6 +262,13 @@
 
     Parameters:
         None
+
+    Example Usage:
+        ```lua
+        hook.Add("OpenCharacterMenu", "liaExampleOpenCharacterMenu", function()
+            print("[MyModule] handled OpenCharacterMenu")
+        end)
+        ```
 
     Returns:
         Panel|nil
@@ -218,6 +290,13 @@
     Parameters:
         None
 
+    Example Usage:
+        ```lua
+        hook.Add("ResetCharacterPanel", "liaExampleResetCharacterPanel", function()
+            print("[MyModule] handled ResetCharacterPanel")
+        end)
+        ```
+
     Returns:
         nil
 
@@ -237,6 +316,13 @@
     Parameters:
         charID (number)
             The character ID to store as the player's main character.
+
+    Example Usage:
+        ```lua
+        hook.Add("SetMainCharacter", "liaExampleSetMainCharacter", function(charID)
+            print("[MyModule] handled SetMainCharacter")
+        end)
+        ```
 
     Returns:
         nil
@@ -258,6 +344,14 @@
         client (Player)
             The player who should receive the synchronized character list.
 
+    Example Usage:
+        ```lua
+        hook.Add("SyncCharList", "liaExampleSyncCharList", function(client)
+            if not IsValid(client) then return end
+            print(string.format("[MyModule] handled SyncCharList for %s", client:Name()))
+        end)
+        ```
+
     Returns:
         nil
 
@@ -276,6 +370,13 @@
 
     Parameters:
         None
+
+    Example Usage:
+        ```lua
+        hook.Add("LiliaLoaded", "liaExampleLiliaLoaded", function()
+            print("[MyModule] handled LiliaLoaded")
+        end)
+        ```
 
     Returns:
         nil
@@ -299,6 +400,13 @@
 
         isCurrentChar (boolean)
             Whether the removed character was the player's currently loaded character.
+
+    Example Usage:
+        ```lua
+        hook.Add("KickedFromChar", "liaExampleKickedFromChar", function(characterID, isCurrentChar)
+            print("[MyModule] handled KickedFromChar")
+        end)
+        ```
 
     Returns:
         nil

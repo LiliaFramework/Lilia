@@ -35,7 +35,7 @@ The chat library centralizes shared chat class registration, message prefix pars
 ---
 
 <details class="realm-shared" id="function-liachattimestamp">
-<summary><span class="summary-main"><a id="lia.chat.timestamp"></a>lia.chat.timestamp(ooc)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/chatbox.lua#L146" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="lia.chat.timestamp"></a>lia.chat.timestamp(ooc)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/chatbox.lua#L180" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="liachattimestamp"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -69,7 +69,7 @@ The chat library centralizes shared chat class registration, message prefix pars
 ---
 
 <details class="realm-shared" id="function-liachatregister">
-<summary><span class="summary-main"><a id="lia.chat.register"></a>lia.chat.register(chatType, data)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/chatbox.lua#L176" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="lia.chat.register"></a>lia.chat.register(chatType, data)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/chatbox.lua#L210" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="liachatregister"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -108,7 +108,7 @@ The chat library centralizes shared chat class registration, message prefix pars
 ---
 
 <details class="realm-shared" id="function-liachatparse">
-<summary><span class="summary-main"><a id="lia.chat.parse"></a>lia.chat.parse(client, message, noSend)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/chatbox.lua#L285" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="lia.chat.parse"></a>lia.chat.parse(client, message, noSend)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/chatbox.lua#L319" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="liachatparse"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -144,7 +144,7 @@ The chat library centralizes shared chat class registration, message prefix pars
 ---
 
 <details class="realm-server" id="function-liachatsend">
-<summary><span class="summary-main"><a id="lia.chat.send"></a>lia.chat.send(speaker, chatType, text, anonymous, receivers)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/chatbox.lua#L357" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="lia.chat.send"></a>lia.chat.send(speaker, chatType, text, anonymous, receivers)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/chatbox.lua#L391" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="liachatsend"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -189,7 +189,7 @@ The chat library centralizes shared chat class registration, message prefix pars
 ---
 
 <details class="realm-shared" id="function-chatparsed">
-<summary><span class="summary-main"><a id="ChatParsed"></a>ChatParsed(client, chatType, message, anonymous)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/chatbox.lua#L38" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="ChatParsed"></a>ChatParsed(client, chatType, message, anonymous)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/chatbox.lua#L45" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="chatparsed"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -217,6 +217,17 @@ The chat library centralizes shared chat class registration, message prefix pars
 <h3 style="margin-bottom: 5px; font-weight: 700;">Returns</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
 <p>string|nil, string|nil, boolean|nil Return a new chat type, message, or anonymous state to override the parsed values. Return nil for any value that should remain unchanged.</p>
+</div>
+
+<h3 style="margin-bottom: 5px; font-weight: 700;">Example Usage</h3>
+<div style="margin-left: 20px; margin-bottom: 20px;">
+<pre><code class="language-lua">  hook.Add("ChatParsed", "liaExampleChatParsed", function(client, chatType, message, anonymous)
+      if chatType == "ooc" and IsValid(client) then
+          local decorated = string.format("[Dispatch] %s", message)
+          return chatType, decorated, anonymous
+      end
+  end)
+</code></pre>
 </div>
 
 </div>
@@ -253,13 +264,21 @@ The chat library centralizes shared chat class registration, message prefix pars
 <p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#2.1">string|nil</a></span> Return a string to use it as the displayed speaker name. Return nil to use the normal player name or console fallback.</p>
 </div>
 
+<h3 style="margin-bottom: 5px; font-weight: 700;">Example Usage</h3>
+<div style="margin-left: 20px; margin-bottom: 20px;">
+<pre><code class="language-lua">  hook.Add("GetDisplayedName", "liaExampleGetDisplayedName", function(speaker, chatType)
+      return "Example Value"
+  end)
+</code></pre>
+</div>
+
 </div>
 </details>
 
 ---
 
 <details class="realm-server" id="function-onoocmessagesent">
-<summary><span class="summary-main"><a id="OnOOCMessageSent"></a>OnOOCMessageSent(client, message)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/chatbox.lua#L68" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="OnOOCMessageSent"></a>OnOOCMessageSent(client, message)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/chatbox.lua#L85" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="onoocmessagesent"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -287,13 +306,22 @@ The chat library centralizes shared chat class registration, message prefix pars
 <p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#2.2">None</a></span></p>
 </div>
 
+<h3 style="margin-bottom: 5px; font-weight: 700;">Example Usage</h3>
+<div style="margin-left: 20px; margin-bottom: 20px;">
+<pre><code class="language-lua">  hook.Add("OnOOCMessageSent", "liaExampleOnOOCMessageSent", function(client, message)
+      if not IsValid(client) or message == "" then return end
+      print(string.format("[MyModule] %s: %s", client:Name(), message))
+  end)
+</code></pre>
+</div>
+
 </div>
 </details>
 
 ---
 
 <details class="realm-server" id="function-playermessagesend">
-<summary><span class="summary-main"><a id="PlayerMessageSend"></a>PlayerMessageSend(speaker, chatType, message, anonymous, receivers)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/chatbox.lua#L91" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="PlayerMessageSend"></a>PlayerMessageSend(speaker, chatType, message, anonymous, receivers)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/chatbox.lua#L116" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="playermessagesend"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -322,6 +350,16 @@ The chat library centralizes shared chat class registration, message prefix pars
 <h3 style="margin-bottom: 5px; font-weight: 700;">Returns</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
 <p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#2.1">string|nil</a></span> Return a string to replace the outgoing message text. Return nil to keep the existing text.</p>
+</div>
+
+<h3 style="margin-bottom: 5px; font-weight: 700;">Example Usage</h3>
+<div style="margin-left: 20px; margin-bottom: 20px;">
+<pre><code class="language-lua">  hook.Add("PlayerMessageSend", "liaExamplePlayerMessageSend", function(client, chatType, message, anonymous, receivers)
+      if chatType == "ooc" and #receivers &gt; 10 then
+          return "[Broadcast] " .. message
+      end
+  end)
+</code></pre>
 </div>
 
 </div>

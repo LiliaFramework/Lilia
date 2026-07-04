@@ -1,4 +1,4 @@
-﻿--[[
+--[[
     Hooks:
         AddWarning(charID, warned, warnedSteamID, timestamp, message, warner, warnerSteamID, severity)
 
@@ -33,6 +33,13 @@
         severity (string)
             The requested severity level, or `nil` to default to Medium.
 
+    Example Usage:
+        ```lua
+        hook.Add("AddWarning", "liaExampleAddWarning", function(charID, warned, warnedSteamID, timestamp, message, warner, warnerSteamID, severity)
+            return "[Reviewed] " .. message
+        end)
+        ```
+
     Returns:
         string
             The severity value stored for the warning.
@@ -53,6 +60,13 @@
     Parameters:
         charID (number|string)
             The character ID whose warning history should be fetched.
+
+    Example Usage:
+        ```lua
+        hook.Add("GetWarnings", "liaExampleGetWarnings", function(charID)
+            print("[MyModule] handled GetWarnings")
+        end)
+        ```
 
     Returns:
         Deferred
@@ -77,6 +91,13 @@
 
         index (number)
             The one-based warning index to remove from the fetched warning list.
+
+    Example Usage:
+        ```lua
+        hook.Add("RemoveWarning", "liaExampleRemoveWarning", function(charID, index)
+            print("[MyModule] handled RemoveWarning")
+        end)
+        ```
 
     Returns:
         Deferred
@@ -117,6 +138,14 @@
         warnedSteamID (string)
             The SteamID of the warned player.
 
+    Example Usage:
+        ```lua
+        hook.Add("WarningIssued", "liaExampleWarningIssued", function(client, target, reason, severity, count, warnerSteamID, warnedSteamID)
+            if not IsValid(client) or reason == "" then return end
+            print(string.format("[MyModule] %s: %s", client:Name(), reason))
+        end)
+        ```
+
     Returns:
         nil
 
@@ -145,6 +174,14 @@
 
         index (number)
             The one-based warning index that was removed.
+
+    Example Usage:
+        ```lua
+        hook.Add("WarningRemoved", "liaExampleWarningRemoved", function(client, targetClient, warning, index)
+            if not istable(warning) then return end
+            warning.exampleHandled = true
+        end)
+        ```
 
     Returns:
         nil

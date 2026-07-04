@@ -1,4 +1,4 @@
-﻿--[[
+--[[
     Folder: Developer - Libraries
     File: lia.database.md
 ]]
@@ -21,6 +21,15 @@
     Category:
         Database
 
+    Example Usage:
+        ```lua
+        hook.Add("OnDatabaseLoaded", "liaExampleOnDatabaseLoaded", function()
+            lia.db.selectOne("*", "players", nil, 1):next(function(row)
+                PrintTable(row or {})
+            end)
+        end)
+        ```
+
     Realm:
         Server
 ]]
@@ -33,6 +42,13 @@
 
     Category:
         Database
+
+    Example Usage:
+        ```lua
+        hook.Add("OnLoadTables", "liaExampleOnLoadTables", function()
+            print("Database table creation query was submitted.")
+        end)
+        ```
 
     Realm:
         Server
@@ -853,6 +869,13 @@ end
 
     Parameters:
         None.
+
+    Example Usage:
+        ```lua
+        lia.db.waitForTablesToLoad():next(function()
+            lia.db.ensureIndexes()
+        end)
+        ```
 
     Returns:
         nil

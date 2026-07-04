@@ -1,4 +1,4 @@
-﻿--[[
+--[[
     Hooks:
         CanPlayerSpawnStorage(client, entity, info)
 
@@ -17,6 +17,15 @@
 
         info (table)
             The requested storage configuration data.
+
+    Example Usage:
+        ```lua
+        hook.Add("CanPlayerSpawnStorage", "liaExampleCanPlayerSpawnStorage", function(client, entity, info)
+            if IsValid(client) and client:IsAdmin() then
+                return true
+            end
+        end)
+        ```
 
     Returns:
         boolean|nil
@@ -42,6 +51,13 @@
         inventory (table)
             The inventory attached to the storage entity.
 
+    Example Usage:
+        ```lua
+        hook.Add("CanSaveData", "liaExampleCanSaveData", function(ent, inventory)
+            return true
+        end)
+        ```
+
     Returns:
         boolean|nil
             Return false to skip saving this storage inventory.
@@ -62,6 +78,13 @@
     Parameters:
         entity (Entity)
             The storage entity being initialized.
+
+    Example Usage:
+        ```lua
+        hook.Add("InitializeStorage", "liaExampleInitializeStorage", function(entity)
+            print("[MyModule] handled InitializeStorage")
+        end)
+        ```
 
     Returns:
         nil
@@ -89,6 +112,13 @@
         storage (Entity)
             The storage entity being viewed.
 
+    Example Usage:
+        ```lua
+        hook.Add("OnCreateStoragePanel", "liaExampleOnCreateStoragePanel", function(localInvPanel, storageInvPanel, storage)
+            print("[MyModule] handled OnCreateStoragePanel")
+        end)
+        ```
+
     Returns:
         nil
 
@@ -115,6 +145,15 @@
         item (table)
             The item being moved.
 
+    Example Usage:
+        ```lua
+        hook.Add("StorageCanTransferItem", "liaExampleStorageCanTransferItem", function(client, storage, item)
+            if IsValid(client) and client:IsAdmin() then
+                return true
+            end
+        end)
+        ```
+
     Returns:
         boolean|nil
             Return false to block the item transfer.
@@ -138,6 +177,13 @@
 
         inventory (table)
             The inventory attached to the entity.
+
+    Example Usage:
+        ```lua
+        hook.Add("StorageEntityRemoved", "liaExampleStorageEntityRemoved", function(entity, inventory)
+            print("[MyModule] handled StorageEntityRemoved")
+        end)
+        ```
 
     Returns:
         nil
@@ -165,6 +211,13 @@
         isCar (boolean)
             Whether the storage entity is a vehicle trunk.
 
+    Example Usage:
+        ```lua
+        hook.Add("StorageInventorySet", "liaExampleStorageInventorySet", function(entity, inventory, isCar)
+            print("[MyModule] handled StorageInventorySet")
+        end)
+        ```
+
     Returns:
         nil
 
@@ -188,6 +241,13 @@
         inventory (table)
             The restored inventory.
 
+    Example Usage:
+        ```lua
+        hook.Add("StorageRestored", "liaExampleStorageRestored", function(ent, inventory)
+            print("[MyModule] handled StorageRestored")
+        end)
+        ```
+
     Returns:
         nil
 
@@ -207,6 +267,13 @@
     Parameters:
         entity (Entity)
             The locked storage entity requesting unlock input.
+
+    Example Usage:
+        ```lua
+        hook.Add("StorageUnlockPrompt", "liaExampleStorageUnlockPrompt", function(entity)
+            print("[MyModule] handled StorageUnlockPrompt")
+        end)
+        ```
 
     Returns:
         nil

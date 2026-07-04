@@ -35,7 +35,7 @@ The player interaction library centralizes menu-driven player interactions under
 ---
 
 <details class="realm-shared" id="function-liaplayerinteractiswithinrange">
-<summary><span class="summary-main"><a id="lia.playerinteract.isWithinRange"></a>lia.playerinteract.isWithinRange(client, entity, customRange)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/playerinteract.lua#L67" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="lia.playerinteract.isWithinRange"></a>lia.playerinteract.isWithinRange(client, entity, customRange)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/playerinteract.lua#L75" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="liaplayerinteractiswithinrange"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -73,7 +73,7 @@ The player interaction library centralizes menu-driven player interactions under
 ---
 
 <details class="realm-client" id="function-liaplayerinteractgetinteractions">
-<summary><span class="summary-main"><a id="lia.playerinteract.getInteractions"></a>lia.playerinteract.getInteractions(client)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/playerinteract.lua#L96" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="lia.playerinteract.getInteractions"></a>lia.playerinteract.getInteractions(client)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/playerinteract.lua#L104" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="liaplayerinteractgetinteractions"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -110,7 +110,7 @@ The player interaction library centralizes menu-driven player interactions under
 ---
 
 <details class="realm-client" id="function-liaplayerinteractgetactions">
-<summary><span class="summary-main"><a id="lia.playerinteract.getActions"></a>lia.playerinteract.getActions(client)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/playerinteract.lua#L135" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="lia.playerinteract.getActions"></a>lia.playerinteract.getActions(client)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/playerinteract.lua#L143" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="liaplayerinteractgetactions"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -147,7 +147,7 @@ The player interaction library centralizes menu-driven player interactions under
 ---
 
 <details class="realm-shared" id="function-liaplayerinteractgetcategorizedoptions">
-<summary><span class="summary-main"><a id="lia.playerinteract.getCategorizedOptions"></a>lia.playerinteract.getCategorizedOptions(options)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/playerinteract.lua#L168" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="lia.playerinteract.getCategorizedOptions"></a>lia.playerinteract.getCategorizedOptions(options)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/playerinteract.lua#L176" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="liaplayerinteractgetcategorizedoptions"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -184,7 +184,7 @@ The player interaction library centralizes menu-driven player interactions under
 ---
 
 <details class="realm-server" id="function-liaplayerinteractaddinteraction">
-<summary><span class="summary-main"><a id="lia.playerinteract.addInteraction"></a>lia.playerinteract.addInteraction(name, data)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/playerinteract.lua#L230" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="lia.playerinteract.addInteraction"></a>lia.playerinteract.addInteraction(name, data)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/playerinteract.lua#L238" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="liaplayerinteractaddinteraction"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -219,7 +219,7 @@ The player interaction library centralizes menu-driven player interactions under
 ---
 
 <details class="realm-server" id="function-liaplayerinteractaddaction">
-<summary><span class="summary-main"><a id="lia.playerinteract.addAction"></a>lia.playerinteract.addAction(name, data)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/playerinteract.lua#L280" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="lia.playerinteract.addAction"></a>lia.playerinteract.addAction(name, data)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/playerinteract.lua#L288" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="liaplayerinteractaddaction"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -253,7 +253,7 @@ The player interaction library centralizes menu-driven player interactions under
 ---
 
 <details class="realm-server" id="function-liaplayerinteractsync">
-<summary><span class="summary-main"><a id="lia.playerinteract.sync"></a>lia.playerinteract.sync(client)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/playerinteract.lua#L323" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="lia.playerinteract.sync"></a>lia.playerinteract.sync(client)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/playerinteract.lua#L331" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="liaplayerinteractsync"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -283,7 +283,7 @@ The player interaction library centralizes menu-driven player interactions under
 ---
 
 <details class="realm-server" id="function-liaplayerinteracthaschanges">
-<summary><span class="summary-main"><a id="lia.playerinteract.hasChanges"></a>lia.playerinteract.hasChanges()</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/playerinteract.lua#L386" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="lia.playerinteract.hasChanges"></a>lia.playerinteract.hasChanges()</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/playerinteract.lua#L394" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="liaplayerinteracthaschanges"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -314,7 +314,7 @@ The player interaction library centralizes menu-driven player interactions under
 ---
 
 <details class="realm-client" id="function-liaplayerinteractopenmenu">
-<summary><span class="summary-main"><a id="lia.playerinteract.openMenu"></a>lia.playerinteract.openMenu(options, isInteraction, titleText, closeKey, netMsg, preFiltered)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/playerinteract.lua#L502" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="lia.playerinteract.openMenu"></a>lia.playerinteract.openMenu(options, isInteraction, titleText, closeKey, netMsg, preFiltered)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/playerinteract.lua#L510" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="liaplayerinteractopenmenu"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -380,6 +380,15 @@ The player interaction library centralizes menu-driven player interactions under
 <h3 style="margin-bottom: 5px; font-weight: 700;">Parameters</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
 <p><span class="types"><a class="type" href="/developer/meta/player/">Player</a></span> <span class="parameter">client</span> The player whose voice mode changed.</p>
+</div>
+
+<h3 style="margin-bottom: 5px; font-weight: 700;">Example Usage</h3>
+<div style="margin-left: 20px; margin-bottom: 20px;">
+<pre><code class="language-lua">  hook.Add("OnVoiceTypeChanged", "liaExampleOnVoiceTypeChanged", function(client)
+      if not IsValid(client) then return end
+      print(string.format("[MyModule] handled OnVoiceTypeChanged for %s", client:Name()))
+  end)
+</code></pre>
 </div>
 
 </div>

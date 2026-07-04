@@ -1,4 +1,4 @@
-﻿--[[
+--[[
     Folder: Developer - Libraries
     File: lia.faction.md
 ]]
@@ -28,6 +28,13 @@
         name (string)
             The resolved faction name before the override is applied.
 
+    Example Usage:
+        ```lua
+        hook.Add("OverrideFactionName", "liaExampleOverrideFactionName", function(uniqueID, name)
+            return "MyModule Override"
+        end)
+        ```
+
     Returns:
         string|nil
             Return a string to replace the faction name. Return nil to keep the current name.
@@ -52,6 +59,13 @@
         desc (string)
             The resolved faction description before the override is applied.
 
+    Example Usage:
+        ```lua
+        hook.Add("OverrideFactionDesc", "liaExampleOverrideFactionDesc", function(uniqueID, desc)
+            return "MyModule Override"
+        end)
+        ```
+
     Returns:
         string|nil
             Return a string to replace the faction description. Return nil to keep the current description.
@@ -75,6 +89,15 @@
 
         models (table)
             The faction model table before the override is applied.
+
+    Example Usage:
+        ```lua
+        hook.Add("OverrideFactionModels", "liaExampleOverrideFactionModels", function(uniqueID, models)
+            return {
+                {name = "Example", value = 1}
+            }
+        end)
+        ```
 
     Returns:
         table|nil
@@ -108,6 +131,15 @@
 
         bodygroupsAllowed (boolean)
             Whether bodygroup customization is currently allowed by faction data.
+
+    Example Usage:
+        ```lua
+        hook.Add("OverrideFactionModelCustomization", "liaExampleOverrideFactionModelCustomization", function(client, faction, context, skinAllowed, bodygroupsAllowed)
+            if faction and faction.uniqueID == "staff" then
+                return false, true
+            end
+        end)
+        ```
 
     Returns:
         table|boolean|nil, boolean|nil

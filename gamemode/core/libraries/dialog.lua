@@ -1,4 +1,4 @@
-﻿--[[
+--[[
     Folder: Developer - Libraries
     File: lia.dialog.md
 ]]
@@ -33,6 +33,14 @@
 
         data (table)
             The filtered and sanitized dialog data being sent to the client.
+
+    Example Usage:
+        ```lua
+        hook.Add("OnNPCTypeSet", "liaExampleOnNPCTypeSet", function(client, npc, npcID, data)
+            if not IsValid(client) then return end
+            print(string.format("[MyModule] handled OnNPCTypeSet for %s", client:Name()))
+        end)
+        ```
 
     Realm:
         Server

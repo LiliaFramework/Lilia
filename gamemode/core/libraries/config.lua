@@ -1,4 +1,4 @@
-﻿--[[
+--[[
     Folder: Developer - Libraries
     File: lia.config.md
 ]]
@@ -20,6 +20,13 @@
 
     Category:
         Configuration
+
+    Example Usage:
+        ```lua
+        hook.Add("InitializedConfig", "liaExampleInitializedConfig", function()
+            print("[MyModule] handled InitializedConfig")
+        end)
+        ```
 
     Realm:
         Shared
@@ -44,6 +51,13 @@
         newValue (any)
             The new value for the configuration key.
 
+    Example Usage:
+        ```lua
+        hook.Add("OnConfigUpdated", "liaExampleOnConfigUpdated", function(key, oldValue, newValue)
+            print("[MyModule] handled OnConfigUpdated")
+        end)
+        ```
+
     Realm:
         Shared
 ]]
@@ -63,6 +77,15 @@
 
         key (string)
             The configuration key being modified. This argument is only provided during a configuration change.
+
+    Example Usage:
+        ```lua
+        hook.Add("CanPlayerModifyConfig", "liaExampleCanPlayerModifyConfig", function(client, key)
+            if IsValid(client) and client:IsAdmin() then
+                return true
+            end
+        end)
+        ```
 
     Returns:
         boolean|nil
@@ -94,6 +117,14 @@
         client (Player)
             The player who changed the configuration value.
 
+    Example Usage:
+        ```lua
+        hook.Add("ConfigChanged", "liaExampleConfigChanged", function(key, newValue, oldValue, client)
+            if not IsValid(client) then return end
+            print(string.format("[MyModule] handled ConfigChanged for %s", client:Name()))
+        end)
+        ```
+
     Realm:
         Server
 ]]
@@ -111,6 +142,13 @@
         enabled (boolean)
             True when voice chat is enabled, false when it is disabled.
 
+    Example Usage:
+        ```lua
+        hook.Add("VoiceToggled", "liaExampleVoiceToggled", function(enabled)
+            print("[MyModule] handled VoiceToggled")
+        end)
+        ```
+
     Realm:
         Shared
 ]]
@@ -123,6 +161,13 @@
 
     Category:
         Configuration
+
+    Example Usage:
+        ```lua
+        hook.Add("CreateSalaryTimers", "liaExampleCreateSalaryTimers", function()
+            print("[MyModule] handled CreateSalaryTimers")
+        end)
+        ```
 
     Realm:
         Server
@@ -141,6 +186,13 @@
         skin (string)
             The selected Derma skin name.
 
+    Example Usage:
+        ```lua
+        hook.Add("DermaSkinChanged", "liaExampleDermaSkinChanged", function(skin)
+            print("[MyModule] handled DermaSkinChanged")
+        end)
+        ```
+
     Realm:
         Shared
 ]]
@@ -157,6 +209,13 @@
     Parameters:
         tabs (table)
             A table that should be populated with menu tab definitions.
+
+    Example Usage:
+        ```lua
+        hook.Add("CreateMenuButtons", "liaExampleCreateMenuButtons", function(tabs)
+            print("[MyModule] handled CreateMenuButtons")
+        end)
+        ```
 
     Realm:
         Client

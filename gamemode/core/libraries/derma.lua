@@ -1,4 +1,4 @@
-﻿--[[
+--[[
     Folder: Developer - Libraries
     File: lia.derma.md
 ]]
@@ -25,6 +25,14 @@
         panel (Panel)
             The menu or tooltip panel that was opened.
 
+    Example Usage:
+        ```lua
+        hook.Add("InteractionMenuOpened", "liaExampleInteractionMenuOpened", function(panel)
+            if not IsValid(panel) then return end
+            panel:SetTooltip("InteractionMenuOpened handled by MyModule")
+        end)
+        ```
+
     Realm:
         Client
 ]]
@@ -37,6 +45,13 @@
 
     Category:
         Derma
+
+    Example Usage:
+        ```lua
+        hook.Add("InteractionMenuClosed", "liaExampleInteractionMenuClosed", function()
+            print("[MyModule] handled InteractionMenuClosed")
+        end)
+        ```
 
     Realm:
         Client

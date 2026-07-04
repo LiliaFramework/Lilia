@@ -1,4 +1,4 @@
-﻿--[[
+--[[
     Hooks:
         CreateTicketFrame(requester, message, claimed)
 
@@ -17,6 +17,14 @@
 
         claimed (Player)
             The staff member currently assigned to the ticket, when one exists.
+
+    Example Usage:
+        ```lua
+        hook.Add("CreateTicketFrame", "liaExampleCreateTicketFrame", function(requester, message, claimed)
+            if not IsValid(requester) or message == "" then return end
+            print(string.format("[MyModule] %s: %s", requester:Name(), message))
+        end)
+        ```
 
     Returns:
         Panel|nil
@@ -45,6 +53,14 @@
         ticketMessage (string)
             The ticket text that was claimed.
 
+    Example Usage:
+        ```lua
+        hook.Add("OnTicketClaimed", "liaExampleOnTicketClaimed", function(client, requester, ticketMessage)
+            if not IsValid(client) or ticketMessage == "" then return end
+            print(string.format("[MyModule] %s: %s", client:Name(), ticketMessage))
+        end)
+        ```
+
     Returns:
         nil
 
@@ -71,6 +87,14 @@
         ticketMessage (string)
             The ticket text that was closed.
 
+    Example Usage:
+        ```lua
+        hook.Add("OnTicketClosed", "liaExampleOnTicketClosed", function(client, requester, ticketMessage)
+            if not IsValid(client) or ticketMessage == "" then return end
+            print(string.format("[MyModule] %s: %s", client:Name(), ticketMessage))
+        end)
+        ```
+
     Returns:
         nil
 
@@ -93,6 +117,14 @@
 
         message (string)
             The submitted ticket text.
+
+    Example Usage:
+        ```lua
+        hook.Add("OnTicketCreated", "liaExampleOnTicketCreated", function(client, message)
+            if not IsValid(client) or message == "" then return end
+            print(string.format("[MyModule] %s: %s", client:Name(), message))
+        end)
+        ```
 
     Returns:
         nil
@@ -120,6 +152,14 @@
         ticketMessage (string)
             The ticket text being claimed.
 
+    Example Usage:
+        ```lua
+        hook.Add("TicketSystemClaim", "liaExampleTicketSystemClaim", function(client, requester, ticketMessage)
+            if not IsValid(client) or ticketMessage == "" then return end
+            print(string.format("[MyModule] %s: %s", client:Name(), ticketMessage))
+        end)
+        ```
+
     Returns:
         nil
 
@@ -146,6 +186,14 @@
         ticketMessage (string)
             The ticket text being closed.
 
+    Example Usage:
+        ```lua
+        hook.Add("TicketSystemClose", "liaExampleTicketSystemClose", function(client, requester, ticketMessage)
+            if not IsValid(client) or ticketMessage == "" then return end
+            print(string.format("[MyModule] %s: %s", client:Name(), ticketMessage))
+        end)
+        ```
+
     Returns:
         nil
 
@@ -164,6 +212,13 @@
 
     Parameters:
         None
+
+    Example Usage:
+        ```lua
+        hook.Add("GetAllCaseClaims", "liaExampleGetAllCaseClaims", function()
+            print("[MyModule] handled GetAllCaseClaims")
+        end)
+        ```
 
     Returns:
         Deferred

@@ -35,7 +35,7 @@ The configuration library centralizes runtime settings under `lia.config`. It st
 ---
 
 <details class="realm-shared" id="function-liaconfigadd">
-<summary><span class="summary-main"><a id="lia.config.add"></a>lia.config.add(key, name, value, callback, data)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/config.lua#L260" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="lia.config.add"></a>lia.config.add(key, name, value, callback, data)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/config.lua#L319" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="liaconfigadd"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -72,7 +72,7 @@ The configuration library centralizes runtime settings under `lia.config`. It st
 ---
 
 <details class="realm-shared" id="function-liaconfiggetdisplayname">
-<summary><span class="summary-main"><a id="lia.config.getDisplayName"></a>lia.config.getDisplayName(key)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/config.lua#L322" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="lia.config.getDisplayName"></a>lia.config.getDisplayName(key)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/config.lua#L381" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="liaconfiggetdisplayname"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -106,7 +106,7 @@ The configuration library centralizes runtime settings under `lia.config`. It st
 ---
 
 <details class="realm-shared" id="function-liaconfiggetdisplaydesc">
-<summary><span class="summary-main"><a id="lia.config.getDisplayDesc"></a>lia.config.getDisplayDesc(key)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/config.lua#L349" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="lia.config.getDisplayDesc"></a>lia.config.getDisplayDesc(key)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/config.lua#L408" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="liaconfiggetdisplaydesc"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -140,7 +140,7 @@ The configuration library centralizes runtime settings under `lia.config`. It st
 ---
 
 <details class="realm-shared" id="function-liaconfiggetdisplaycategory">
-<summary><span class="summary-main"><a id="lia.config.getDisplayCategory"></a>lia.config.getDisplayCategory(key)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/config.lua#L376" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="lia.config.getDisplayCategory"></a>lia.config.getDisplayCategory(key)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/config.lua#L435" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="liaconfiggetdisplaycategory"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -174,7 +174,7 @@ The configuration library centralizes runtime settings under `lia.config`. It st
 ---
 
 <details class="realm-shared" id="function-liaconfiggetoptions">
-<summary><span class="summary-main"><a id="lia.config.getOptions"></a>lia.config.getOptions(key)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/config.lua#L405" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="lia.config.getOptions"></a>lia.config.getOptions(key)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/config.lua#L464" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="liaconfiggetoptions"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -210,7 +210,7 @@ The configuration library centralizes runtime settings under `lia.config`. It st
 ---
 
 <details class="realm-shared" id="function-liaconfigsetdefault">
-<summary><span class="summary-main"><a id="lia.config.setDefault"></a>lia.config.setDefault(key, value)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/config.lua#L453" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="lia.config.setDefault"></a>lia.config.setDefault(key, value)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/config.lua#L512" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="liaconfigsetdefault"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -240,7 +240,7 @@ The configuration library centralizes runtime settings under `lia.config`. It st
 ---
 
 <details class="realm-shared" id="function-liaconfigforceset">
-<summary><span class="summary-main"><a id="lia.config.forceSet"></a>lia.config.forceSet(key, value, noSave)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/config.lua#L483" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="lia.config.forceSet"></a>lia.config.forceSet(key, value, noSave)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/config.lua#L542" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="liaconfigforceset"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -271,7 +271,7 @@ The configuration library centralizes runtime settings under `lia.config`. It st
 ---
 
 <details class="realm-shared" id="function-liaconfigset">
-<summary><span class="summary-main"><a id="lia.config.set"></a>lia.config.set(key, value)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/config.lua#L516" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="lia.config.set"></a>lia.config.set(key, value)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/config.lua#L575" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="liaconfigset"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -301,7 +301,7 @@ The configuration library centralizes runtime settings under `lia.config`. It st
 ---
 
 <details class="realm-shared" id="function-liaconfigget">
-<summary><span class="summary-main"><a id="lia.config.get"></a>lia.config.get(key, default)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/config.lua#L563" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="lia.config.get"></a>lia.config.get(key, default)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/config.lua#L622" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="liaconfigget"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -336,7 +336,7 @@ The configuration library centralizes runtime settings under `lia.config`. It st
 ---
 
 <details class="realm-server" id="function-liaconfigload">
-<summary><span class="summary-main"><a id="lia.config.load"></a>lia.config.load()</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/config.lua#L623" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="lia.config.load"></a>lia.config.load()</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/config.lua#L682" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="liaconfigload"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -360,7 +360,7 @@ The configuration library centralizes runtime settings under `lia.config`. It st
 ---
 
 <details class="realm-server" id="function-liaconfiggetchangedvalues">
-<summary><span class="summary-main"><a id="lia.config.getChangedValues"></a>lia.config.getChangedValues(includeDefaults)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/config.lua#L674" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="lia.config.getChangedValues"></a>lia.config.getChangedValues(includeDefaults)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/config.lua#L733" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="liaconfiggetchangedvalues"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -394,7 +394,7 @@ The configuration library centralizes runtime settings under `lia.config`. It st
 ---
 
 <details class="realm-server" id="function-liaconfigsend">
-<summary><span class="summary-main"><a id="lia.config.send"></a>lia.config.send(client)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/config.lua#L709" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="lia.config.send"></a>lia.config.send(client)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/config.lua#L768" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="liaconfigsend"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -424,7 +424,7 @@ The configuration library centralizes runtime settings under `lia.config`. It st
 ---
 
 <details class="realm-server" id="function-liaconfigsave">
-<summary><span class="summary-main"><a id="lia.config.save"></a>lia.config.save()</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/config.lua#L754" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="lia.config.save"></a>lia.config.save()</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/config.lua#L813" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="liaconfigsave"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -448,7 +448,7 @@ The configuration library centralizes runtime settings under `lia.config`. It st
 ---
 
 <details class="realm-server" id="function-liaconfigreset">
-<summary><span class="summary-main"><a id="lia.config.reset"></a>lia.config.reset()</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/config.lua#L778" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="lia.config.reset"></a>lia.config.reset()</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/config.lua#L837" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="liaconfigreset"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -479,7 +479,7 @@ The configuration library centralizes runtime settings under `lia.config`. It st
 ---
 
 <details class="realm-shared" id="function-canplayermodifyconfig">
-<summary><span class="summary-main"><a id="CanPlayerModifyConfig"></a>CanPlayerModifyConfig(client, key)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/config.lua#L50" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="CanPlayerModifyConfig"></a>CanPlayerModifyConfig(client, key)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/config.lua#L64" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="canplayermodifyconfig"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -507,13 +507,23 @@ The configuration library centralizes runtime settings under `lia.config`. It st
 <p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#2.1">boolean|nil</a></span> Return false to block access or modification. Return nil or true to allow it.</p>
 </div>
 
+<h3 style="margin-bottom: 5px; font-weight: 700;">Example Usage</h3>
+<div style="margin-left: 20px; margin-bottom: 20px;">
+<pre><code class="language-lua">  hook.Add("CanPlayerModifyConfig", "liaExampleCanPlayerModifyConfig", function(client, key)
+      if IsValid(client) and client:IsAdmin() then
+          return true
+      end
+  end)
+</code></pre>
+</div>
+
 </div>
 </details>
 
 ---
 
 <details class="realm-server" id="function-configchanged">
-<summary><span class="summary-main"><a id="ConfigChanged"></a>ConfigChanged(key, newValue, oldValue, client)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/config.lua#L74" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="ConfigChanged"></a>ConfigChanged(key, newValue, oldValue, client)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/config.lua#L97" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="configchanged"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -538,13 +548,22 @@ The configuration library centralizes runtime settings under `lia.config`. It st
 <p><span class="types"><a class="type" href="/developer/meta/player/">Player</a></span> <span class="parameter">client</span> The player who changed the configuration value.</p>
 </div>
 
+<h3 style="margin-bottom: 5px; font-weight: 700;">Example Usage</h3>
+<div style="margin-left: 20px; margin-bottom: 20px;">
+<pre><code class="language-lua">  hook.Add("ConfigChanged", "liaExampleConfigChanged", function(key, newValue, oldValue, client)
+      if not IsValid(client) then return end
+      print(string.format("[MyModule] handled ConfigChanged for %s", client:Name()))
+  end)
+</code></pre>
+</div>
+
 </div>
 </details>
 
 ---
 
 <details class="realm-client" id="function-createmenubuttons">
-<summary><span class="summary-main"><a id="CreateMenuButtons"></a>CreateMenuButtons(tabs)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/config.lua#L147" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="CreateMenuButtons"></a>CreateMenuButtons(tabs)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/config.lua#L199" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="createmenubuttons"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -566,13 +585,21 @@ The configuration library centralizes runtime settings under `lia.config`. It st
 <p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#2.1">table</a></span> <span class="parameter">tabs</span> A table that should be populated with menu tab definitions.</p>
 </div>
 
+<h3 style="margin-bottom: 5px; font-weight: 700;">Example Usage</h3>
+<div style="margin-left: 20px; margin-bottom: 20px;">
+<pre><code class="language-lua">  hook.Add("CreateMenuButtons", "liaExampleCreateMenuButtons", function(tabs)
+      print("[MyModule] handled CreateMenuButtons")
+  end)
+</code></pre>
+</div>
+
 </div>
 </details>
 
 ---
 
 <details class="realm-server" id="function-createsalarytimers">
-<summary><span class="summary-main"><a id="CreateSalaryTimers"></a>CreateSalaryTimers()</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/config.lua#L117" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="CreateSalaryTimers"></a>CreateSalaryTimers()</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/config.lua#L155" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="createsalarytimers"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -589,13 +616,21 @@ The configuration library centralizes runtime settings under `lia.config`. It st
   <p>Server</p>
 </div>
 
+<h3 style="margin-bottom: 5px; font-weight: 700;">Example Usage</h3>
+<div style="margin-left: 20px; margin-bottom: 20px;">
+<pre><code class="language-lua">  hook.Add("CreateSalaryTimers", "liaExampleCreateSalaryTimers", function()
+      print("[MyModule] handled CreateSalaryTimers")
+  end)
+</code></pre>
+</div>
+
 </div>
 </details>
 
 ---
 
 <details class="realm-shared" id="function-dermaskinchanged">
-<summary><span class="summary-main"><a id="DermaSkinChanged"></a>DermaSkinChanged(skin)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/config.lua#L130" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="DermaSkinChanged"></a>DermaSkinChanged(skin)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/config.lua#L175" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="dermaskinchanged"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -615,6 +650,14 @@ The configuration library centralizes runtime settings under `lia.config`. It st
 <h3 style="margin-bottom: 5px; font-weight: 700;">Parameters</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
 <p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#2.1">string</a></span> <span class="parameter">skin</span> The selected Derma skin name.</p>
+</div>
+
+<h3 style="margin-bottom: 5px; font-weight: 700;">Example Usage</h3>
+<div style="margin-left: 20px; margin-bottom: 20px;">
+<pre><code class="language-lua">  hook.Add("DermaSkinChanged", "liaExampleDermaSkinChanged", function(skin)
+      print("[MyModule] handled DermaSkinChanged")
+  end)
+</code></pre>
 </div>
 
 </div>
@@ -640,13 +683,21 @@ The configuration library centralizes runtime settings under `lia.config`. It st
   <p>Shared</p>
 </div>
 
+<h3 style="margin-bottom: 5px; font-weight: 700;">Example Usage</h3>
+<div style="margin-left: 20px; margin-bottom: 20px;">
+<pre><code class="language-lua">  hook.Add("InitializedConfig", "liaExampleInitializedConfig", function()
+      print("[MyModule] handled InitializedConfig")
+  end)
+</code></pre>
+</div>
+
 </div>
 </details>
 
 ---
 
 <details class="realm-shared" id="function-onconfigupdated">
-<summary><span class="summary-main"><a id="OnConfigUpdated"></a>OnConfigUpdated(key, oldValue, newValue)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/config.lua#L27" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="OnConfigUpdated"></a>OnConfigUpdated(key, oldValue, newValue)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/config.lua#L34" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="onconfigupdated"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -670,13 +721,21 @@ The configuration library centralizes runtime settings under `lia.config`. It st
 <p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#2.1">any</a></span> <span class="parameter">newValue</span> The new value for the configuration key.</p>
 </div>
 
+<h3 style="margin-bottom: 5px; font-weight: 700;">Example Usage</h3>
+<div style="margin-left: 20px; margin-bottom: 20px;">
+<pre><code class="language-lua">  hook.Add("OnConfigUpdated", "liaExampleOnConfigUpdated", function(key, oldValue, newValue)
+      print("[MyModule] handled OnConfigUpdated")
+  end)
+</code></pre>
+</div>
+
 </div>
 </details>
 
 ---
 
 <details class="realm-shared" id="function-voicetoggled">
-<summary><span class="summary-main"><a id="VoiceToggled"></a>VoiceToggled(enabled)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/config.lua#L100" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="VoiceToggled"></a>VoiceToggled(enabled)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/config.lua#L131" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="voicetoggled"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -696,6 +755,14 @@ The configuration library centralizes runtime settings under `lia.config`. It st
 <h3 style="margin-bottom: 5px; font-weight: 700;">Parameters</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
 <p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#2.1">boolean</a></span> <span class="parameter">enabled</span> True when voice chat is enabled, false when it is disabled.</p>
+</div>
+
+<h3 style="margin-bottom: 5px; font-weight: 700;">Example Usage</h3>
+<div style="margin-left: 20px; margin-bottom: 20px;">
+<pre><code class="language-lua">  hook.Add("VoiceToggled", "liaExampleVoiceToggled", function(enabled)
+      print("[MyModule] handled VoiceToggled")
+  end)
+</code></pre>
 </div>
 
 </div>

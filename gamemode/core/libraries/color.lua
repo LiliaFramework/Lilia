@@ -1,4 +1,4 @@
-﻿--[[
+--[[
     Folder: Developer - Libraries
     File: lia.color.md
 ]]
@@ -27,6 +27,13 @@
 
         useTransition (boolean)
             True when the theme change was requested with transition behavior. False when applied directly or when a transition completes.
+
+    Example Usage:
+        ```lua
+        hook.Add("OnThemeChanged", "liaExampleOnThemeChanged", function(themeName, useTransition)
+            print("[MyModule] handled OnThemeChanged")
+        end)
+        ```
 
     Realm:
         Client

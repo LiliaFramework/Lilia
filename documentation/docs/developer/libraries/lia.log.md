@@ -35,7 +35,7 @@ The log library centralizes server-side logging under `lia.log`. It stores regis
 ---
 
 <details class="realm-server" id="function-lialogaddtype">
-<summary><span class="summary-main"><a id="lia.log.addType"></a>lia.log.addType(logType, func, category)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/logger.lua#L312" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="lia.log.addType"></a>lia.log.addType(logType, func, category)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/logger.lua#L320" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="lialogaddtype"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -73,7 +73,7 @@ The log library centralizes server-side logging under `lia.log`. It stores regis
 ---
 
 <details class="realm-server" id="function-lialoggetstring">
-<summary><span class="summary-main"><a id="lia.log.getString"></a>lia.log.getString(client, logType)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/logger.lua#L348" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="lia.log.getString"></a>lia.log.getString(client, logType)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/logger.lua#L356" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="lialoggetstring"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -108,7 +108,7 @@ The log library centralizes server-side logging under `lia.log`. It stores regis
 ---
 
 <details class="realm-server" id="function-lialogadd">
-<summary><span class="summary-main"><a id="lia.log.add"></a>lia.log.add(client, logType)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/logger.lua#L382" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="lia.log.add"></a>lia.log.add(client, logType)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/logger.lua#L390" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="lialogadd"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -178,6 +178,15 @@ The log library centralizes server-side logging under `lia.log`. It stores regis
 <h3 style="margin-bottom: 5px; font-weight: 700;">Returns</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
 <p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#2.2">None</a></span></p>
+</div>
+
+<h3 style="margin-bottom: 5px; font-weight: 700;">Example Usage</h3>
+<div style="margin-left: 20px; margin-bottom: 20px;">
+<pre><code class="language-lua">  hook.Add("OnServerLog", "liaExampleOnServerLog", function(client, logType, logString, category)
+      if not IsValid(client) or logString == "" then return end
+      print(string.format("[MyModule] %s: %s", client:Name(), logString))
+  end)
+</code></pre>
 </div>
 
 </div>

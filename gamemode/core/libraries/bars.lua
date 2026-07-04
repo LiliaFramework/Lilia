@@ -1,4 +1,4 @@
-﻿--[[
+--[[
     Folder: Developer - Libraries
     File: lia.bar.md
 ]]
@@ -24,6 +24,13 @@
     Parameters:
         None
 
+    Example Usage:
+        ```lua
+        hook.Add("ShouldHideBars", "liaExampleShouldHideBars", function()
+            return true
+        end)
+        ```
+
     Returns:
         boolean|nil
             Return true to stop all HUD bars from drawing. Return nil or false to allow normal drawing checks to continue.
@@ -44,6 +51,13 @@
     Parameters:
         bar (table)
             The registered bar data currently being evaluated for drawing.
+
+    Example Usage:
+        ```lua
+        hook.Add("ShouldBarDraw", "liaExampleShouldBarDraw", function(bar)
+            return true
+        end)
+        ```
 
     Returns:
         boolean|nil

@@ -1,4 +1,4 @@
-﻿--[[
+--[[
     Folder: Developer - Libraries
     File: lia.camera.md
 ]]
@@ -25,6 +25,13 @@
         client (Player)
             The player whose third-person camera availability is being checked.
 
+    Example Usage:
+        ```lua
+        hook.Add("ShouldDisableThirdperson", "liaExampleShouldDisableThirdperson", function(client)
+            return true
+        end)
+        ```
+
     Returns:
         boolean|nil
             Return true to block third-person view. Return nil or false to allow normal camera checks to continue.
@@ -45,6 +52,13 @@
     Parameters:
         client (Player)
             The local player whose freelook availability is being checked.
+
+    Example Usage:
+        ```lua
+        hook.Add("ShouldUseFreelook", "liaExampleShouldUseFreelook", function(client)
+            return true
+        end)
+        ```
 
     Returns:
         boolean|nil
@@ -67,6 +81,13 @@
         enabled (boolean)
             True when freelook is about to be enabled, false when it is about to be disabled.
 
+    Example Usage:
+        ```lua
+        hook.Add("PreFreelookToggle", "liaExamplePreFreelookToggle", function(enabled)
+            return true
+        end)
+        ```
+
     Returns:
         boolean|nil
             Return false to block the freelook state change. Return nil or true to allow it.
@@ -88,6 +109,13 @@
         enabled (boolean)
             True when freelook was enabled, false when it was disabled.
 
+    Example Usage:
+        ```lua
+        hook.Add("FreelookToggled", "liaExampleFreelookToggled", function(enabled)
+            print("[MyModule] handled FreelookToggled")
+        end)
+        ```
+
     Realm:
         Client
 ]]
@@ -104,6 +132,13 @@
     Parameters:
         enabled (boolean)
             True when third-person view was enabled, false when it was disabled.
+
+    Example Usage:
+        ```lua
+        hook.Add("ThirdPersonToggled", "liaExampleThirdPersonToggled", function(enabled)
+            print("[MyModule] handled ThirdPersonToggled")
+        end)
+        ```
 
     Realm:
         Client
@@ -136,6 +171,14 @@ local maxValues = {
     Purpose:
         Checks whether any loading or character menu panel is currently open.
 
+    Example Usage:
+        ```lua
+        local allowed = lia.camera.isCharacterMenuOpen()
+        if allowed then
+            print("lia.camera.isCharacterMenuOpen returned true for the current context.")
+        end
+        ```
+
     Returns:
         boolean
             True when a character-related UI panel is open.
@@ -156,6 +199,14 @@ end
     Parameters:
         client (Player)
             The player whose view entity and camera eligibility should be checked.
+
+    Example Usage:
+        ```lua
+        local allowed = lia.camera.isUsingThirdPersonCamera()
+        if allowed then
+            print("lia.camera.isUsingThirdPersonCamera returned true for the current context.")
+        end
+        ```
 
     Returns:
         boolean
@@ -179,6 +230,14 @@ end
         client (Player)
             The player whose input state should be checked.
 
+    Example Usage:
+        ```lua
+        local allowed = lia.camera.shouldSuppressRealisticView()
+        if allowed then
+            print("lia.camera.shouldSuppressRealisticView returned true for the current context.")
+        end
+        ```
+
     Returns:
         boolean
             True when realistic view should be blocked for the current frame.
@@ -200,6 +259,14 @@ end
     Parameters:
         client (Player)
             The player whose camera state should be checked.
+
+    Example Usage:
+        ```lua
+        local allowed = lia.camera.canOverrideView()
+        if allowed then
+            print("lia.camera.canOverrideView returned true for the current context.")
+        end
+        ```
 
     Returns:
         boolean
@@ -226,6 +293,14 @@ end
     Parameters:
         client (Player)
             The local player being checked.
+
+    Example Usage:
+        ```lua
+        local allowed = lia.camera.canUseRealisticView()
+        if allowed then
+            print("lia.camera.canUseRealisticView returned true for the current context.")
+        end
+        ```
 
     Returns:
         boolean
@@ -256,6 +331,14 @@ end
         client (Player)
             The local player being checked.
 
+    Example Usage:
+        ```lua
+        local allowed = lia.camera.canUseFreelook()
+        if allowed then
+            print("lia.camera.canUseFreelook returned true for the current context.")
+        end
+        ```
+
     Returns:
         boolean
             True when freelook is enabled and available.
@@ -283,6 +366,14 @@ end
         client (Player)
             The player whose weapon and input state should be checked.
 
+    Example Usage:
+        ```lua
+        local allowed = lia.camera.isInSights()
+        if allowed then
+            print("lia.camera.isInSights returned true for the current context.")
+        end
+        ```
+
     Returns:
         boolean
             True when ADS blocking is enabled and the player is considered in sights.
@@ -307,6 +398,14 @@ end
         client (Player)
             The local player whose input state should be checked.
 
+    Example Usage:
+        ```lua
+        local allowed = lia.camera.isHoldingFreelookBind()
+        if allowed then
+            print("lia.camera.isHoldingFreelookBind returned true for the current context.")
+        end
+        ```
+
     Returns:
         boolean
             True when freelook input is currently being held.
@@ -324,6 +423,11 @@ end
 
     Purpose:
         Resets freelook offsets and smoothed freelook angles back to neutral.
+
+    Example Usage:
+        ```lua
+        lia.camera.resetFreelookState()
+        ```
 
     Realm:
         Client
@@ -344,6 +448,11 @@ end
         client (Player)
             The local player beginning freelook.
 
+    Example Usage:
+        ```lua
+        lia.camera.beginFreelook()
+        ```
+
     Realm:
         Client
 ]]
@@ -358,6 +467,11 @@ end
 
     Purpose:
         Ends active freelook and clears all freelook offsets.
+
+    Example Usage:
+        ```lua
+        lia.camera.endFreelook()
+        ```
 
     Realm:
         Client
@@ -376,6 +490,14 @@ end
     Parameters:
         client (Player)
             The local player being checked.
+
+    Example Usage:
+        ```lua
+        local allowed = lia.camera.shouldDrawBodyForFreelook()
+        if allowed then
+            print("lia.camera.shouldDrawBodyForFreelook returned true for the current context.")
+        end
+        ```
 
     Returns:
         boolean
@@ -398,6 +520,14 @@ end
     Parameters:
         client (Player)
             The player model whose bones should be inspected.
+
+    Example Usage:
+        ```lua
+        local result = lia.camera.getFirstPersonHeadBones()
+        if istable(result) then
+            PrintTable(result)
+        end
+        ```
 
     Returns:
         table
@@ -450,6 +580,14 @@ end
         rootBone (number)
             The root bone index used to find descendants.
 
+    Example Usage:
+        ```lua
+        local result = lia.camera.getFirstPersonHeadBoneChildren()
+        if istable(result) then
+            PrintTable(result)
+        end
+        ```
+
     Returns:
         table
             A list of child bone indexes under the given root bone.
@@ -484,6 +622,14 @@ end
         client (Player)
             The player model whose attachment names should be cached.
 
+    Example Usage:
+        ```lua
+        local result = lia.camera.getParentAttachmentNames()
+        if istable(result) then
+            PrintTable(result)
+        end
+        ```
+
     Returns:
         table
             A table keyed by attachment ID with lowercased attachment names.
@@ -512,6 +658,14 @@ end
         name (string)
             The lowercased attachment name to inspect.
 
+    Example Usage:
+        ```lua
+        local allowed = lia.camera.isHeadAttachmentName()
+        if allowed then
+            print("lia.camera.isHeadAttachmentName returned true for the current context.")
+        end
+        ```
+
     Returns:
         boolean
             True when the name matches a head, face, eye, mouth, or neck attachment.
@@ -533,6 +687,14 @@ end
     Parameters:
         model (string)
             The model path to inspect.
+
+    Example Usage:
+        ```lua
+        local allowed = lia.camera.isHeadwearModel()
+        if allowed then
+            print("lia.camera.isHeadwearModel returned true for the current context.")
+        end
+        ```
 
     Returns:
         boolean
@@ -556,6 +718,14 @@ end
     Parameters:
         name (string)
             The bodygroup name to inspect.
+
+    Example Usage:
+        ```lua
+        local allowed = lia.camera.isHeadBodygroupName()
+        if allowed then
+            print("lia.camera.isHeadBodygroupName returned true for the current context.")
+        end
+        ```
 
     Returns:
         boolean
@@ -582,6 +752,11 @@ end
 
         hidden (boolean)
             Whether matching bodygroups should be hidden or restored.
+
+    Example Usage:
+        ```lua
+        lia.camera.setFirstPersonHeadBodygroupsHidden()
+        ```
 
     Realm:
         Client
@@ -618,6 +793,14 @@ end
         entity (Entity)
             The child entity being checked.
 
+    Example Usage:
+        ```lua
+        local allowed = lia.camera.shouldHideFirstPersonChildEntity()
+        if allowed then
+            print("lia.camera.shouldHideFirstPersonChildEntity returned true for the current context.")
+        end
+        ```
+
     Returns:
         boolean
             True when the entity appears to be headwear, facewear, or nearby bonemerged head geometry.
@@ -651,6 +834,11 @@ end
 
         hidden (boolean)
             Whether matching child entities should be hidden or restored.
+
+    Example Usage:
+        ```lua
+        lia.camera.setFirstPersonHeadwearHidden()
+        ```
 
     Realm:
         Client
@@ -686,6 +874,11 @@ end
 
         hidden (boolean)
             Whether head-related geometry should be hidden.
+
+    Example Usage:
+        ```lua
+        lia.camera.setFirstPersonHeadHidden()
+        ```
 
     Realm:
         Client
@@ -723,6 +916,14 @@ end
 
         angles (Angle)
             The base camera angles.
+
+    Example Usage:
+        ```lua
+        local result = lia.camera.applyFreelookToAngles()
+        if result then
+            print(result)
+        end
+        ```
 
     Returns:
         Angle
@@ -768,6 +969,14 @@ end
 
         fov (number)
             The current field of view.
+
+    Example Usage:
+        ```lua
+        local result = lia.camera.buildRealisticView()
+        if istable(result) then
+            PrintTable(result)
+        end
+        ```
 
     Returns:
         table|nil
@@ -815,6 +1024,14 @@ end
 
         fov (number)
             The current field of view.
+
+    Example Usage:
+        ```lua
+        local result = lia.camera.buildFreelookBodyView()
+        if istable(result) then
+            PrintTable(result)
+        end
+        ```
 
     Returns:
         table|nil

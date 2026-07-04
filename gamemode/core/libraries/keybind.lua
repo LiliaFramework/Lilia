@@ -1,4 +1,4 @@
-﻿--[[
+--[[
     Folder: Developer - Libraries
     File: lia.keybind.md
 ]]
@@ -25,6 +25,13 @@
         reserved (table)
             Lookup table keyed by numeric key code. Set reserved[keyCode] to true to reserve a key.
 
+    Example Usage:
+        ```lua
+        hook.Add("AddReservedKeybinds", "liaExampleAddReservedKeybinds", function(reserved)
+            print("[MyModule] handled AddReservedKeybinds")
+        end)
+        ```
+
     Realm:
         Client
 ]]
@@ -37,6 +44,13 @@
 
     Category:
         Keybinds
+
+    Example Usage:
+        ```lua
+        hook.Add("InitializedKeybinds", "liaExampleInitializedKeybinds", function()
+            print("[MyModule] handled InitializedKeybinds")
+        end)
+        ```
 
     Realm:
         Client

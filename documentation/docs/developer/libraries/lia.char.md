@@ -35,7 +35,7 @@ The character library centralizes shared character state under `lia.char`. It st
 ---
 
 <details class="realm-shared" id="function-liachargetcharacter">
-<summary><span class="summary-main"><a id="lia.char.getCharacter"></a>lia.char.getCharacter(charID, client, callback)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/character.lua#L297" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="lia.char.getCharacter"></a>lia.char.getCharacter(charID, client, callback)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/character.lua#L384" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="liachargetcharacter"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -73,7 +73,7 @@ The character library centralizes shared character state under `lia.char`. It st
 ---
 
 <details class="realm-shared" id="function-liachargetall">
-<summary><span class="summary-main"><a id="lia.char.getAll"></a>lia.char.getAll()</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/character.lua#L343" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="lia.char.getAll"></a>lia.char.getAll()</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/character.lua#L430" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="liachargetall"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -104,7 +104,7 @@ The character library centralizes shared character state under `lia.char`. It st
 ---
 
 <details class="realm-shared" id="function-liacharisloaded">
-<summary><span class="summary-main"><a id="lia.char.isLoaded"></a>lia.char.isLoaded(charID)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/character.lua#L371" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="lia.char.isLoaded"></a>lia.char.isLoaded(charID)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/character.lua#L458" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="liacharisloaded"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -138,7 +138,7 @@ The character library centralizes shared character state under `lia.char`. It st
 ---
 
 <details class="realm-shared" id="function-liacharaddcharacter">
-<summary><span class="summary-main"><a id="lia.char.addCharacter"></a>lia.char.addCharacter(id, character)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/character.lua#L397" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="lia.char.addCharacter"></a>lia.char.addCharacter(id, character)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/character.lua#L484" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="liacharaddcharacter"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -173,7 +173,7 @@ The character library centralizes shared character state under `lia.char`. It st
 ---
 
 <details class="realm-shared" id="function-liacharremovecharacter">
-<summary><span class="summary-main"><a id="lia.char.removeCharacter"></a>lia.char.removeCharacter(id)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/character.lua#L425" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="lia.char.removeCharacter"></a>lia.char.removeCharacter(id)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/character.lua#L512" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="liacharremovecharacter"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -207,7 +207,7 @@ The character library centralizes shared character state under `lia.char`. It st
 ---
 
 <details class="realm-shared" id="function-liacharnew">
-<summary><span class="summary-main"><a id="lia.char.new"></a>lia.char.new(data, id, client, steamID)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/character.lua#L455" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="lia.char.new"></a>lia.char.new(data, id, client, steamID)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/character.lua#L542" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="liacharnew"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -244,7 +244,7 @@ The character library centralizes shared character state under `lia.char`. It st
 ---
 
 <details class="realm-shared" id="function-liacharhookvar">
-<summary><span class="summary-main"><a id="lia.char.hookVar"></a>lia.char.hookVar(varName, hookName, func)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/character.lua#L506" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="lia.char.hookVar"></a>lia.char.hookVar(varName, hookName, func)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/character.lua#L593" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="liacharhookvar"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -280,7 +280,7 @@ The character library centralizes shared character state under `lia.char`. It st
 ---
 
 <details class="realm-shared" id="function-liacharregistervar">
-<summary><span class="summary-main"><a id="lia.char.registerVar"></a>lia.char.registerVar(key, data)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/character.lua#L537" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="lia.char.registerVar"></a>lia.char.registerVar(key, data)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/character.lua#L624" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="liacharregistervar"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -319,7 +319,7 @@ The character library centralizes shared character state under `lia.char`. It st
 ---
 
 <details class="realm-server" id="function-liachargetchardata">
-<summary><span class="summary-main"><a id="lia.char.getCharData"></a>lia.char.getCharData(charID, key)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/character.lua#L1050" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="lia.char.getCharData"></a>lia.char.getCharData(charID, key)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/character.lua#L1137" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="liachargetchardata"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -355,7 +355,7 @@ The character library centralizes shared character state under `lia.char`. It st
 ---
 
 <details class="realm-server" id="function-liachargetchardataraw">
-<summary><span class="summary-main"><a id="lia.char.getCharDataRaw"></a>lia.char.getCharDataRaw(charID, key)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/character.lua#L1088" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="lia.char.getCharDataRaw"></a>lia.char.getCharDataRaw(charID, key)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/character.lua#L1175" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="liachargetchardataraw"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -390,7 +390,7 @@ The character library centralizes shared character state under `lia.char`. It st
 ---
 
 <details class="realm-shared" id="function-liachargetownerbyid">
-<summary><span class="summary-main"><a id="lia.char.getOwnerByID"></a>lia.char.getOwnerByID(ID)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/character.lua#L1129" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="lia.char.getOwnerByID"></a>lia.char.getOwnerByID(ID)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/character.lua#L1216" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="liachargetownerbyid"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -424,7 +424,7 @@ The character library centralizes shared character state under `lia.char`. It st
 ---
 
 <details class="realm-shared" id="function-liachargetbysteamid">
-<summary><span class="summary-main"><a id="lia.char.getBySteamID"></a>lia.char.getBySteamID(steamID)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/character.lua#L1156" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="lia.char.getBySteamID"></a>lia.char.getBySteamID(steamID)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/character.lua#L1243" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="liachargetbysteamid"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -458,7 +458,7 @@ The character library centralizes shared character state under `lia.char`. It st
 ---
 
 <details class="realm-shared" id="function-liachargetteamcolor">
-<summary><span class="summary-main"><a id="lia.char.getTeamColor"></a>lia.char.getTeamColor(client)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/character.lua#L1185" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="lia.char.getTeamColor"></a>lia.char.getTeamColor(client)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/character.lua#L1272" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="liachargetteamcolor"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -492,7 +492,7 @@ The character library centralizes shared character state under `lia.char`. It st
 ---
 
 <details class="realm-server" id="function-liacharcreate">
-<summary><span class="summary-main"><a id="lia.char.create"></a>lia.char.create(data, callback)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/character.lua#L1220" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="lia.char.create"></a>lia.char.create(data, callback)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/character.lua#L1307" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="liacharcreate"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -529,7 +529,7 @@ The character library centralizes shared character state under `lia.char`. It st
 ---
 
 <details class="realm-server" id="function-liacharrestore">
-<summary><span class="summary-main"><a id="lia.char.restore"></a>lia.char.restore(client, callback, id)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/character.lua#L1287" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="lia.char.restore"></a>lia.char.restore(client, callback, id)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/character.lua#L1374" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="liacharrestore"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -567,7 +567,7 @@ The character library centralizes shared character state under `lia.char`. It st
 ---
 
 <details class="realm-server" id="function-liacharcleanupforplayer">
-<summary><span class="summary-main"><a id="lia.char.cleanUpForPlayer"></a>lia.char.cleanUpForPlayer(client)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/character.lua#L1423" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="lia.char.cleanUpForPlayer"></a>lia.char.cleanUpForPlayer(client)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/character.lua#L1510" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="liacharcleanupforplayer"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -601,7 +601,7 @@ The character library centralizes shared character state under `lia.char`. It st
 ---
 
 <details class="realm-server" id="function-liachardelete">
-<summary><span class="summary-main"><a id="lia.char.delete"></a>lia.char.delete(id, client)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/character.lua#L1463" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="lia.char.delete"></a>lia.char.delete(id, client)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/character.lua#L1550" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="liachardelete"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -636,7 +636,7 @@ The character library centralizes shared character state under `lia.char`. It st
 ---
 
 <details class="realm-server" id="function-liachargetcharbanned">
-<summary><span class="summary-main"><a id="lia.char.getCharBanned"></a>lia.char.getCharBanned(charID)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/character.lua#L1534" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="lia.char.getCharBanned"></a>lia.char.getCharBanned(charID)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/character.lua#L1621" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="liachargetcharbanned"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -670,7 +670,7 @@ The character library centralizes shared character state under `lia.char`. It st
 ---
 
 <details class="realm-server" id="function-liacharsetchardatabase">
-<summary><span class="summary-main"><a id="lia.char.setCharDatabase"></a>lia.char.setCharDatabase(charID, field, value)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/character.lua#L1566" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="lia.char.setCharDatabase"></a>lia.char.setCharDatabase(charID, field, value)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/character.lua#L1653" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="liacharsetchardatabase"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -707,7 +707,7 @@ The character library centralizes shared character state under `lia.char`. It st
 ---
 
 <details class="realm-server" id="function-liacharunloadcharacter">
-<summary><span class="summary-main"><a id="lia.char.unloadCharacter"></a>lia.char.unloadCharacter(charID)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/character.lua#L1681" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="lia.char.unloadCharacter"></a>lia.char.unloadCharacter(charID)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/character.lua#L1768" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="liacharunloadcharacter"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -741,7 +741,7 @@ The character library centralizes shared character state under `lia.char`. It st
 ---
 
 <details class="realm-server" id="function-liacharunloadunusedcharacters">
-<summary><span class="summary-main"><a id="lia.char.unloadUnusedCharacters"></a>lia.char.unloadUnusedCharacters(client, activeCharID)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/character.lua#L1731" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="lia.char.unloadUnusedCharacters"></a>lia.char.unloadUnusedCharacters(client, activeCharID)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/character.lua#L1818" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="liacharunloadunusedcharacters"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -776,7 +776,7 @@ The character library centralizes shared character state under `lia.char`. It st
 ---
 
 <details class="realm-server" id="function-liacharloadsinglecharacter">
-<summary><span class="summary-main"><a id="lia.char.loadSingleCharacter"></a>lia.char.loadSingleCharacter(charID, client, callback)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/character.lua#L1765" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="lia.char.loadSingleCharacter"></a>lia.char.loadSingleCharacter(charID, client, callback)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/character.lua#L1852" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="liacharloadsinglecharacter"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -821,7 +821,7 @@ The character library centralizes shared character state under `lia.char`. It st
 ---
 
 <details class="realm-server" id="function-charcleanup">
-<summary><span class="summary-main"><a id="CharCleanUp"></a>CharCleanUp(character)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/character.lua#L249" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="CharCleanUp"></a>CharCleanUp(character)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/character.lua#L329" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="charcleanup"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -843,13 +843,21 @@ The character library centralizes shared character state under `lia.char`. It st
 <p><span class="types"><a class="type" href="/developer/libraries/char/">Character</a></span> <span class="parameter">character</span> The unloaded character.</p>
 </div>
 
+<h3 style="margin-bottom: 5px; font-weight: 700;">Example Usage</h3>
+<div style="margin-left: 20px; margin-bottom: 20px;">
+<pre><code class="language-lua">  hook.Add("CharCleanUp", "liaExampleCharCleanUp", function(character)
+      print("[MyModule] handled CharCleanUp")
+  end)
+</code></pre>
+</div>
+
 </div>
 </details>
 
 ---
 
 <details class="realm-server" id="function-charrestored">
-<summary><span class="summary-main"><a id="CharRestored"></a>CharRestored(character)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/character.lua#L179" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="CharRestored"></a>CharRestored(character)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/character.lua#L229" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="charrestored"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -871,13 +879,21 @@ The character library centralizes shared character state under `lia.char`. It st
 <p><span class="types"><a class="type" href="/developer/libraries/char/">Character</a></span> <span class="parameter">character</span> The restored character object.</p>
 </div>
 
+<h3 style="margin-bottom: 5px; font-weight: 700;">Example Usage</h3>
+<div style="margin-left: 20px; margin-bottom: 20px;">
+<pre><code class="language-lua">  hook.Add("CharRestored", "liaExampleCharRestored", function(character)
+      print("[MyModule] handled CharRestored")
+  end)
+</code></pre>
+</div>
+
 </div>
 </details>
 
 ---
 
 <details class="realm-server" id="function-createdefaultinventory">
-<summary><span class="summary-main"><a id="CreateDefaultInventory"></a>CreateDefaultInventory(character)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/character.lua#L158" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="CreateDefaultInventory"></a>CreateDefaultInventory(character)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/character.lua#L201" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="createdefaultinventory"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -904,13 +920,21 @@ The character library centralizes shared character state under `lia.char`. It st
 <p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#2.2">Promise</a></span> A promise that resolves with the created inventory.</p>
 </div>
 
+<h3 style="margin-bottom: 5px; font-weight: 700;">Example Usage</h3>
+<div style="margin-left: 20px; margin-bottom: 20px;">
+<pre><code class="language-lua">  hook.Add("CreateDefaultInventory", "liaExampleCreateDefaultInventory", function(character)
+      print("[MyModule] handled CreateDefaultInventory")
+  end)
+</code></pre>
+</div>
+
 </div>
 </details>
 
 ---
 
 <details class="realm-shared" id="function-getattributestartingmax">
-<summary><span class="summary-main"><a id="GetAttributeStartingMax"></a>GetAttributeStartingMax(client, attributeKey)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/character.lua#L112" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="GetAttributeStartingMax"></a>GetAttributeStartingMax(client, attributeKey)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/character.lua#L141" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="getattributestartingmax"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -938,13 +962,21 @@ The character library centralizes shared character state under `lia.char`. It st
 <p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#2.1">number|nil</a></span> The maximum allowed starting value for the attribute, or nil to use default behavior.</p>
 </div>
 
+<h3 style="margin-bottom: 5px; font-weight: 700;">Example Usage</h3>
+<div style="margin-left: 20px; margin-bottom: 20px;">
+<pre><code class="language-lua">  hook.Add("GetAttributeStartingMax", "liaExampleGetAttributeStartingMax", function(client, attributeKey)
+      return 15
+  end)
+</code></pre>
+</div>
+
 </div>
 </details>
 
 ---
 
 <details class="realm-shared" id="function-getdefaultchardesc">
-<summary><span class="summary-main"><a id="GetDefaultCharDesc"></a>GetDefaultCharDesc(client, faction, data)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/character.lua#L41" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="GetDefaultCharDesc"></a>GetDefaultCharDesc(client, faction, data)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/character.lua#L48" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="getdefaultchardesc"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -971,6 +1003,14 @@ The character library centralizes shared character state under `lia.char`. It st
 <h3 style="margin-bottom: 5px; font-weight: 700;">Returns</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
 <p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#2.1">string|nil</a></span> The default description to use. boolean|nil Return true as the second value to force the returned description and bypass normal description validation.</p>
+</div>
+
+<h3 style="margin-bottom: 5px; font-weight: 700;">Example Usage</h3>
+<div style="margin-left: 20px; margin-bottom: 20px;">
+<pre><code class="language-lua">  hook.Add("GetDefaultCharDesc", "liaExampleGetDefaultCharDesc", function(client, faction, data)
+      return "Example Value"
+  end)
+</code></pre>
 </div>
 
 </div>
@@ -1008,13 +1048,21 @@ The character library centralizes shared character state under `lia.char`. It st
 <p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#2.1">string|nil</a></span> The default name to use. boolean|nil Return true as the second value to force the returned name and bypass normal name validation.</p>
 </div>
 
+<h3 style="margin-bottom: 5px; font-weight: 700;">Example Usage</h3>
+<div style="margin-left: 20px; margin-bottom: 20px;">
+<pre><code class="language-lua">  hook.Add("GetDefaultCharName", "liaExampleGetDefaultCharName", function(client, faction, data)
+      return "Example Value"
+  end)
+</code></pre>
+</div>
+
 </div>
 </details>
 
 ---
 
 <details class="realm-shared" id="function-getmaxstartingattributepoints">
-<summary><span class="summary-main"><a id="GetMaxStartingAttributePoints"></a>GetMaxStartingAttributePoints(client, defaultPoints)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/character.lua#L135" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="GetMaxStartingAttributePoints"></a>GetMaxStartingAttributePoints(client, defaultPoints)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/character.lua#L171" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="getmaxstartingattributepoints"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -1042,13 +1090,21 @@ The character library centralizes shared character state under `lia.char`. It st
 <p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#2.1">number|nil</a></span> The maximum starting attribute points, or nil to use default behavior.</p>
 </div>
 
+<h3 style="margin-bottom: 5px; font-weight: 700;">Example Usage</h3>
+<div style="margin-left: 20px; margin-bottom: 20px;">
+<pre><code class="language-lua">  hook.Add("GetMaxStartingAttributePoints", "liaExampleGetMaxStartingAttributePoints", function(client, defaultPoints)
+      return 15
+  end)
+</code></pre>
+</div>
+
 </div>
 </details>
 
 ---
 
 <details class="realm-server" id="function-onchardelete">
-<summary><span class="summary-main"><a id="OnCharDelete"></a>OnCharDelete(client, id)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/character.lua#L213" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="OnCharDelete"></a>OnCharDelete(client, id)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/character.lua#L277" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="onchardelete"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -1071,13 +1127,22 @@ The character library centralizes shared character state under `lia.char`. It st
 <p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#2.1">number</a></span> <span class="parameter">id</span> The ID of the deleted character.</p>
 </div>
 
+<h3 style="margin-bottom: 5px; font-weight: 700;">Example Usage</h3>
+<div style="margin-left: 20px; margin-bottom: 20px;">
+<pre><code class="language-lua">  hook.Add("OnCharDelete", "liaExampleOnCharDelete", function(client, id)
+      if not IsValid(client) then return end
+      print(string.format("[MyModule] handled OnCharDelete for %s", client:Name()))
+  end)
+</code></pre>
+</div>
+
 </div>
 </details>
 
 ---
 
 <details class="realm-server" id="function-oncharvarchanged">
-<summary><span class="summary-main"><a id="OnCharVarChanged"></a>OnCharVarChanged(character, key, oldValue, newValue)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/character.lua#L68" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="OnCharVarChanged"></a>OnCharVarChanged(character, key, oldValue, newValue)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/character.lua#L82" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="oncharvarchanged"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -1102,13 +1167,21 @@ The character library centralizes shared character state under `lia.char`. It st
 <p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#2.1">any</a></span> <span class="parameter">newValue</span> The new value.</p>
 </div>
 
+<h3 style="margin-bottom: 5px; font-weight: 700;">Example Usage</h3>
+<div style="margin-left: 20px; margin-bottom: 20px;">
+<pre><code class="language-lua">  hook.Add("OnCharVarChanged", "liaExampleOnCharVarChanged", function(character, key, oldValue, newValue)
+      print("[MyModule] handled OnCharVarChanged")
+  end)
+</code></pre>
+</div>
+
 </div>
 </details>
 
 ---
 
 <details class="realm-server" id="function-playerbodygroupchanged">
-<summary><span class="summary-main"><a id="PlayerBodyGroupChanged"></a>PlayerBodyGroupChanged(client, oldBodygroups, newBodygroups)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/character.lua#L91" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="PlayerBodyGroupChanged"></a>PlayerBodyGroupChanged(client, oldBodygroups, newBodygroups)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/character.lua#L112" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="playerbodygroupchanged"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -1132,13 +1205,22 @@ The character library centralizes shared character state under `lia.char`. It st
 <p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#2.1">table</a></span> <span class="parameter">newBodygroups</span> The applied bodygroup table.</p>
 </div>
 
+<h3 style="margin-bottom: 5px; font-weight: 700;">Example Usage</h3>
+<div style="margin-left: 20px; margin-bottom: 20px;">
+<pre><code class="language-lua">  hook.Add("PlayerBodyGroupChanged", "liaExamplePlayerBodyGroupChanged", function(client, oldBodygroups, newBodygroups)
+      if not IsValid(client) then return end
+      print(string.format("[MyModule] handled PlayerBodyGroupChanged for %s", client:Name()))
+  end)
+</code></pre>
+</div>
+
 </div>
 </details>
 
 ---
 
 <details class="realm-server" id="function-prechardelete">
-<summary><span class="summary-main"><a id="PreCharDelete"></a>PreCharDelete(id)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/character.lua#L196" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="PreCharDelete"></a>PreCharDelete(id)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/character.lua#L253" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="prechardelete"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -1160,13 +1242,21 @@ The character library centralizes shared character state under `lia.char`. It st
 <p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#2.1">number</a></span> <span class="parameter">id</span> The ID of the character being deleted.</p>
 </div>
 
+<h3 style="margin-bottom: 5px; font-weight: 700;">Example Usage</h3>
+<div style="margin-left: 20px; margin-bottom: 20px;">
+<pre><code class="language-lua">  hook.Add("PreCharDelete", "liaExamplePreCharDelete", function(id)
+      print("[MyModule] handled PreCharDelete")
+  end)
+</code></pre>
+</div>
+
 </div>
 </details>
 
 ---
 
 <details class="realm-server" id="function-synccharlist">
-<summary><span class="summary-main"><a id="SyncCharList"></a>SyncCharList(client)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/character.lua#L232" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="SyncCharList"></a>SyncCharList(client)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/character.lua#L304" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="synccharlist"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -1186,6 +1276,15 @@ The character library centralizes shared character state under `lia.char`. It st
 <h3 style="margin-bottom: 5px; font-weight: 700;">Parameters</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
 <p><span class="types"><a class="type" href="/developer/meta/player/">Player</a></span> <span class="parameter">client</span> The player whose character list should be synchronized.</p>
+</div>
+
+<h3 style="margin-bottom: 5px; font-weight: 700;">Example Usage</h3>
+<div style="margin-left: 20px; margin-bottom: 20px;">
+<pre><code class="language-lua">  hook.Add("SyncCharList", "liaExampleSyncCharList", function(client)
+      if not IsValid(client) then return end
+      print(string.format("[MyModule] handled SyncCharList for %s", client:Name()))
+  end)
+</code></pre>
 </div>
 
 </div>

@@ -35,7 +35,7 @@ The workshop library centralizes Workshop collection under `lia.workshop`. It re
 ---
 
 <details class="realm-server" id="function-liaworkshopaddworkshop">
-<summary><span class="summary-main"><a id="lia.workshop.addWorkshop"></a>lia.workshop.addWorkshop(id)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/workshop.lua#L29" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="lia.workshop.addWorkshop"></a>lia.workshop.addWorkshop(id)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/workshop.lua#L35" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="liaworkshopaddworkshop"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -52,13 +52,20 @@ The workshop library centralizes Workshop collection under `lia.workshop`. It re
 <p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#2.1">string|number</a></span> <span class="parameter">id</span> The Steam Workshop file ID to register.</p>
 </div>
 
+<h3 style="margin-bottom: 5px; font-weight: 700;">Example Usage</h3>
+<div style="margin-left: 20px; margin-bottom: 20px;">
+<pre><code class="language-lua">  lia.workshop.addWorkshop("3527535922")
+  lia.workshop.addWorkshop("3527535923")
+</code></pre>
+</div>
+
 </div>
 </details>
 
 ---
 
 <details class="realm-server" id="function-liaworkshopgather">
-<summary><span class="summary-main"><a id="lia.workshop.gather"></a>lia.workshop.gather()</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/workshop.lua#L56" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="lia.workshop.gather"></a>lia.workshop.gather()</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/workshop.lua#L70" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="liaworkshopgather"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -75,13 +82,22 @@ The workshop library centralizes Workshop collection under `lia.workshop`. It re
 <p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#2.1">table</a></span> A table keyed by Workshop ID strings with true values for each required addon.</p>
 </div>
 
+<h3 style="margin-bottom: 5px; font-weight: 700;">Example Usage</h3>
+<div style="margin-left: 20px; margin-bottom: 20px;">
+<pre><code class="language-lua">  local workshopIDs = lia.workshop.gather()
+  for id in pairs(workshopIDs) do
+      print("Server workshop content includes:", id)
+  end
+</code></pre>
+</div>
+
 </div>
 </details>
 
 ---
 
 <details class="realm-server" id="function-liaworkshopsend">
-<summary><span class="summary-main"><a id="lia.workshop.send"></a>lia.workshop.send(ply)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/workshop.lua#L93" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="lia.workshop.send"></a>lia.workshop.send(ply)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/workshop.lua#L116" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="liaworkshopsend"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -98,13 +114,23 @@ The workshop library centralizes Workshop collection under `lia.workshop`. It re
 <p><span class="types"><a class="type" href="/developer/meta/player/">Player</a></span> <span class="parameter">ply</span> The player receiving the cached Workshop content list.</p>
 </div>
 
+<h3 style="margin-bottom: 5px; font-weight: 700;">Example Usage</h3>
+<div style="margin-left: 20px; margin-bottom: 20px;">
+<pre><code class="language-lua">  local client = player.GetHumans()[1]
+  if IsValid(client) then
+      lia.workshop.cache = lia.workshop.cache or lia.workshop.gather()
+      lia.workshop.send(client)
+  end
+</code></pre>
+</div>
+
 </div>
 </details>
 
 ---
 
 <details class="realm-client" id="function-liaworkshophascontenttodownload">
-<summary><span class="summary-main"><a id="lia.workshop.hasContentToDownload"></a>lia.workshop.hasContentToDownload()</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/workshop.lua#L162" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="lia.workshop.hasContentToDownload"></a>lia.workshop.hasContentToDownload()</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/workshop.lua#L192" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="liaworkshophascontenttodownload"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -121,13 +147,21 @@ The workshop library centralizes Workshop collection under `lia.workshop`. It re
 <p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#2.1">boolean</a></span> True when at least one required Workshop addon still needs to be downloaded or mounted, otherwise false.</p>
 </div>
 
+<h3 style="margin-bottom: 5px; font-weight: 700;">Example Usage</h3>
+<div style="margin-left: 20px; margin-bottom: 20px;">
+<pre><code class="language-lua">  if lia.workshop.hasContentToDownload() then
+      chat.AddText(Color(255, 200, 0), "This server has workshop content ready to mount.")
+  end
+</code></pre>
+</div>
+
 </div>
 </details>
 
 ---
 
 <details class="realm-client" id="function-liaworkshopmountcontent">
-<summary><span class="summary-main"><a id="lia.workshop.mountContent"></a>lia.workshop.mountContent()</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/workshop.lua#L176" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="lia.workshop.mountContent"></a>lia.workshop.mountContent()</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/workshop.lua#L213" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="liaworkshopmountcontent"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -137,6 +171,14 @@ The workshop library centralizes Workshop collection under `lia.workshop`. It re
 <h3 style="margin-bottom: 5px; font-weight: 700;">Realm</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
   <p>Client</p>
+</div>
+
+<h3 style="margin-bottom: 5px; font-weight: 700;">Example Usage</h3>
+<div style="margin-left: 20px; margin-bottom: 20px;">
+<pre><code class="language-lua">  if lia.workshop.hasContentToDownload() then
+      lia.workshop.mountContent()
+  end
+</code></pre>
 </div>
 
 </div>

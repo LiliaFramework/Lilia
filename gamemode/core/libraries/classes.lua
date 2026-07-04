@@ -1,4 +1,4 @@
-﻿--[[
+--[[
     Folder: Developer - Libraries
     File: lia.class.md
 ]]
@@ -30,6 +30,15 @@
 
         classData (table)
             The registered class data for the class being checked.
+
+    Example Usage:
+        ```lua
+        hook.Add("CanPlayerJoinClass", "liaExampleCanPlayerJoinClass", function(client, class, classData)
+            if IsValid(client) and client:IsAdmin() then
+                return true
+            end
+        end)
+        ```
 
     Returns:
         boolean|nil

@@ -1,4 +1,4 @@
-﻿--[[
+--[[
     Hooks:
         CharForceRecognized(ply, range)
 
@@ -14,6 +14,14 @@
 
         range (string)
             The recognition range key that was used, such as `whisper`, `normal`, `talk`, or `yell`.
+
+    Example Usage:
+        ```lua
+        hook.Add("CharForceRecognized", "liaExampleCharForceRecognized", function(ply, range)
+            if not IsValid(ply) then return end
+            print(string.format("[MyModule] handled CharForceRecognized for %s", ply:Name()))
+        end)
+        ```
 
     Returns:
         nil
@@ -35,6 +43,13 @@
         chatType (string)
             The chat class unique ID being checked.
 
+    Example Usage:
+        ```lua
+        hook.Add("IsRecognizedChatType", "liaExampleIsRecognizedChatType", function(chatType)
+            return true
+        end)
+        ```
+
     Returns:
         boolean|nil
             Return true to treat the chat type as recognition-sensitive.
@@ -55,6 +70,14 @@
     Parameters:
         ply (Player)
             The player whose recognition data was updated.
+
+    Example Usage:
+        ```lua
+        hook.Add("OnCharRecognized", "liaExampleOnCharRecognized", function(ply)
+            if not IsValid(ply) then return end
+            print(string.format("[MyModule] handled OnCharRecognized for %s", ply:Name()))
+        end)
+        ```
 
     Returns:
         nil

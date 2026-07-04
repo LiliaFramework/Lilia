@@ -1,4 +1,4 @@
-﻿--[[
+--[[
     Folder: Developer - Libraries
     File: lia.workshop.md
 ]]
@@ -23,6 +23,12 @@ if SERVER then
         id (string|number)
             The Steam Workshop file ID to register.
 
+    Example Usage:
+        ```lua
+        lia.workshop.addWorkshop("3527535922")
+        lia.workshop.addWorkshop("3527535923")
+        ```
+
     Realm:
         Server
 ]]
@@ -45,6 +51,14 @@ if SERVER then
     --[[
     Purpose:
         Collects all known server Workshop IDs from registered resources, mounted addons, and loaded module WorkshopContent definitions.
+
+    Example Usage:
+        ```lua
+        local workshopIDs = lia.workshop.gather()
+        for id in pairs(workshopIDs) do
+            print("Server workshop content includes:", id)
+        end
+        ```
 
     Returns:
         table
@@ -86,6 +100,15 @@ if SERVER then
     Parameters:
         ply (Player)
             The player receiving the cached Workshop content list.
+
+    Example Usage:
+        ```lua
+        local client = player.GetHumans()[1]
+        if IsValid(client) then
+            lia.workshop.cache = lia.workshop.cache or lia.workshop.gather()
+            lia.workshop.send(client)
+        end
+        ```
 
     Realm:
         Server
@@ -152,6 +175,13 @@ else
     Purpose:
         Checks whether the client is missing any server-required Workshop content that is not already mounted locally.
 
+    Example Usage:
+        ```lua
+        if lia.workshop.hasContentToDownload() then
+            chat.AddText(Color(255, 200, 0), "This server has workshop content ready to mount.")
+        end
+        ```
+
     Returns:
         boolean
             True when at least one required Workshop addon still needs to be downloaded or mounted, otherwise false.
@@ -169,6 +199,13 @@ else
     --[[
     Purpose:
         Prompts the client to download and mount missing server-required Workshop content after calculating the total download size.
+
+    Example Usage:
+        ```lua
+        if lia.workshop.hasContentToDownload() then
+            lia.workshop.mountContent()
+        end
+        ```
 
     Realm:
         Client

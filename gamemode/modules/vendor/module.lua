@@ -1,4 +1,4 @@
-﻿--[[
+--[[
     Hooks:
         CanPlayerAccessVendor(client, vendor)
 
@@ -14,6 +14,15 @@
 
         vendor (Entity)
             The vendor entity being accessed.
+
+    Example Usage:
+        ```lua
+        hook.Add("CanPlayerAccessVendor", "liaExampleCanPlayerAccessVendor", function(client, vendor)
+            if IsValid(client) and client:IsAdmin() then
+                return true
+            end
+        end)
+        ```
 
     Returns:
         boolean|nil
@@ -44,6 +53,15 @@
 
         isSellingToVendor (boolean)
             Whether the player is selling the item to the vendor instead of buying it.
+
+    Example Usage:
+        ```lua
+        hook.Add("CanPlayerTradeWithVendor", "liaExampleCanPlayerTradeWithVendor", function(client, vendor, itemType, isSellingToVendor)
+            if itemType == "restricted_crate" and not isSellingToVendor then
+                return false, "vendorDoesNotHaveItem"
+            end
+        end)
+        ```
 
     Returns:
         boolean|nil, string|nil, any
@@ -77,6 +95,13 @@
 
         isSellingToVendor (boolean)
             Whether the player is selling to the vendor.
+
+    Example Usage:
+        ```lua
+        hook.Add("GetPriceOverride", "liaExampleGetPriceOverride", function(client, vendor, uniqueID, price, isSellingToVendor)
+            return (price or 0) + 5
+        end)
+        ```
 
     Returns:
         number|nil
@@ -117,6 +142,14 @@
         isFailed (boolean|nil)
             Whether the trade attempt failed after validation.
 
+    Example Usage:
+        ```lua
+        hook.Add("OnCharTradeVendor", "liaExampleOnCharTradeVendor", function(client, vendor, item, isSellingToVendor, character, itemType, isFailed)
+            if not IsValid(client) then return end
+            print(string.format("[MyModule] handled OnCharTradeVendor for %s", client:Name()))
+        end)
+        ```
+
     Returns:
         nil
 
@@ -139,6 +172,14 @@
 
         vendor (Entity)
             The vendor entity being shown.
+
+    Example Usage:
+        ```lua
+        hook.Add("OnOpenVendorMenu", "liaExampleOnOpenVendorMenu", function(panelOwner, vendor)
+            if not IsValid(panelOwner) then return end
+            panelOwner:SetTooltip("OnOpenVendorMenu handled by MyModule")
+        end)
+        ```
 
     Returns:
         nil
@@ -166,6 +207,14 @@
         key (string)
             The edited property key.
 
+    Example Usage:
+        ```lua
+        hook.Add("OnVendorEdited", "liaExampleOnVendorEdited", function(client, vendor, key)
+            if not IsValid(client) then return end
+            print(string.format("[MyModule] handled OnVendorEdited for %s", client:Name()))
+        end)
+        ```
+
     Returns:
         nil
 
@@ -188,6 +237,14 @@
 
         vendor (Entity)
             The vendor entity being opened.
+
+    Example Usage:
+        ```lua
+        hook.Add("PlayerAccessVendor", "liaExamplePlayerAccessVendor", function(client, vendor)
+            if not IsValid(client) then return end
+            print(string.format("[MyModule] handled PlayerAccessVendor for %s", client:Name()))
+        end)
+        ```
 
     Returns:
         nil
@@ -215,6 +272,13 @@
         allowed (boolean)
             Whether the class is now allowed.
 
+    Example Usage:
+        ```lua
+        hook.Add("VendorClassUpdated", "liaExampleVendorClassUpdated", function(vendor, id, allowed)
+            print("[MyModule] handled VendorClassUpdated")
+        end)
+        ```
+
     Returns:
         nil
 
@@ -238,6 +302,13 @@
         key (string)
             The property key that changed.
 
+    Example Usage:
+        ```lua
+        hook.Add("VendorEdited", "liaExampleVendorEdited", function(vendor, key)
+            print("[MyModule] handled VendorEdited")
+        end)
+        ```
+
     Returns:
         nil
 
@@ -256,6 +327,13 @@
 
     Parameters:
         None
+
+    Example Usage:
+        ```lua
+        hook.Add("VendorExited", "liaExampleVendorExited", function()
+            print("[MyModule] handled VendorExited")
+        end)
+        ```
 
     Returns:
         nil
@@ -283,6 +361,13 @@
         scale (number)
             The new buy scale value.
 
+    Example Usage:
+        ```lua
+        hook.Add("VendorFactionBuyScaleUpdated", "liaExampleVendorFactionBuyScaleUpdated", function(vendor, factionID, scale)
+            print("[MyModule] handled VendorFactionBuyScaleUpdated")
+        end)
+        ```
+
     Returns:
         nil
 
@@ -308,6 +393,13 @@
 
         scale (number)
             The new sell scale value.
+
+    Example Usage:
+        ```lua
+        hook.Add("VendorFactionSellScaleUpdated", "liaExampleVendorFactionSellScaleUpdated", function(vendor, factionID, scale)
+            print("[MyModule] handled VendorFactionSellScaleUpdated")
+        end)
+        ```
 
     Returns:
         nil
@@ -335,6 +427,13 @@
         allowed (boolean)
             Whether the faction is now allowed.
 
+    Example Usage:
+        ```lua
+        hook.Add("VendorFactionUpdated", "liaExampleVendorFactionUpdated", function(vendor, id, allowed)
+            print("[MyModule] handled VendorFactionUpdated")
+        end)
+        ```
+
     Returns:
         nil
 
@@ -360,6 +459,13 @@
 
         value (number)
             The new buy price.
+
+    Example Usage:
+        ```lua
+        hook.Add("VendorItemBuyPriceUpdated", "liaExampleVendorItemBuyPriceUpdated", function(vendor, itemType, value)
+            print("[MyModule] handled VendorItemBuyPriceUpdated")
+        end)
+        ```
 
     Returns:
         nil
@@ -387,6 +493,13 @@
         value (number)
             The new max stock value.
 
+    Example Usage:
+        ```lua
+        hook.Add("VendorItemMaxStockUpdated", "liaExampleVendorItemMaxStockUpdated", function(vendor, itemType, value)
+            print("[MyModule] handled VendorItemMaxStockUpdated")
+        end)
+        ```
+
     Returns:
         nil
 
@@ -412,6 +525,13 @@
 
         value (number)
             The new vendor trade mode.
+
+    Example Usage:
+        ```lua
+        hook.Add("VendorItemModeUpdated", "liaExampleVendorItemModeUpdated", function(vendor, itemType, value)
+            print("[MyModule] handled VendorItemModeUpdated")
+        end)
+        ```
 
     Returns:
         nil
@@ -439,6 +559,13 @@
         value (number)
             The new sell price.
 
+    Example Usage:
+        ```lua
+        hook.Add("VendorItemSellPriceUpdated", "liaExampleVendorItemSellPriceUpdated", function(vendor, itemType, value)
+            print("[MyModule] handled VendorItemSellPriceUpdated")
+        end)
+        ```
+
     Returns:
         nil
 
@@ -465,6 +592,13 @@
         value (number)
             The new stock count.
 
+    Example Usage:
+        ```lua
+        hook.Add("VendorItemStockUpdated", "liaExampleVendorItemStockUpdated", function(vendor, itemType, value)
+            print("[MyModule] handled VendorItemStockUpdated")
+        end)
+        ```
+
     Returns:
         nil
 
@@ -485,6 +619,13 @@
         vendor (Entity)
             The updated vendor.
 
+    Example Usage:
+        ```lua
+        hook.Add("VendorMessagesUpdated", "liaExampleVendorMessagesUpdated", function(vendor)
+            print("[MyModule] handled VendorMessagesUpdated")
+        end)
+        ```
+
     Returns:
         nil
 
@@ -504,6 +645,13 @@
     Parameters:
         vendor (Entity)
             The vendor entity that was opened.
+
+    Example Usage:
+        ```lua
+        hook.Add("VendorOpened", "liaExampleVendorOpened", function(vendor)
+            print("[MyModule] handled VendorOpened")
+        end)
+        ```
 
     Returns:
         nil
@@ -531,6 +679,13 @@
         propertyValue (any)
             The synchronized property value.
 
+    Example Usage:
+        ```lua
+        hook.Add("VendorPropertyUpdated", "liaExampleVendorPropertyUpdated", function(vendor, propertyName, propertyValue)
+            print("[MyModule] handled VendorPropertyUpdated")
+        end)
+        ```
+
     Returns:
         nil
 
@@ -550,6 +705,13 @@
     Parameters:
         vendor (Entity)
             The vendor that was synchronized.
+
+    Example Usage:
+        ```lua
+        hook.Add("VendorSynchronized", "liaExampleVendorSynchronized", function(vendor)
+            print("[MyModule] handled VendorSynchronized")
+        end)
+        ```
 
     Returns:
         nil
@@ -579,6 +741,14 @@
 
         isSellingToVendor (boolean)
             Whether the player is selling to the vendor.
+
+    Example Usage:
+        ```lua
+        hook.Add("VendorTradeEvent", "liaExampleVendorTradeEvent", function(client, vendor, itemType, isSellingToVendor)
+            if not IsValid(client) then return end
+            print(string.format("[MyModule] handled VendorTradeEvent for %s", client:Name()))
+        end)
+        ```
 
     Returns:
         nil

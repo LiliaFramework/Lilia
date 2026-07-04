@@ -1,4 +1,4 @@
-﻿--[[
+--[[
     Hooks:
         CreateLogsUI(panel, categories)
 
@@ -14,6 +14,16 @@
 
         categories (table)
             The ordered list of translated log categories to show as tabs.
+
+    Example Usage:
+        ```lua
+        hook.Add("CreateLogsUI", "liaExampleCreateLogsUI", function(panel, categories)
+            categories[#categories + 1] = {
+                category = "custom",
+                name = "Custom Logs"
+            }
+        end)
+        ```
 
     Returns:
         nil
@@ -44,6 +54,14 @@
         category (string)
             The translated category name assigned to the log entry.
 
+    Example Usage:
+        ```lua
+        hook.Add("OnServerLog", "liaExampleOnServerLog", function(client, logType, logString, category)
+            if not IsValid(client) or logString == "" then return end
+            print(string.format("[MyModule] %s: %s", client:Name(), logString))
+        end)
+        ```
+
     Returns:
         nil
 
@@ -63,6 +81,13 @@
     Parameters:
         client (Player)
             The player whose log-viewing permission should be checked.
+
+    Example Usage:
+        ```lua
+        hook.Add("CanPlayerSeeLogs", "liaExampleCanPlayerSeeLogs", function(client)
+            return true
+        end)
+        ```
 
     Returns:
         boolean
@@ -88,6 +113,15 @@
         category (string)
             The translated log category name being evaluated.
 
+    Example Usage:
+        ```lua
+        hook.Add("CanPlayerSeeLogCategory", "liaExampleCanPlayerSeeLogCategory", function(client, category)
+            if IsValid(client) and client:IsAdmin() then
+                return true
+            end
+        end)
+        ```
+
     Returns:
         boolean|nil
             Return false to hide the category from the player.
@@ -111,6 +145,13 @@
 
         page (number)
             The one-based page number to fetch.
+
+    Example Usage:
+        ```lua
+        hook.Add("ReadLogEntries", "liaExampleReadLogEntries", function(category, page)
+            print("[MyModule] handled ReadLogEntries")
+        end)
+        ```
 
     Returns:
         Deferred

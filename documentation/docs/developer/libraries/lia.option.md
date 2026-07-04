@@ -35,7 +35,7 @@ The option library centralizes user-facing settings under `lia.option`. It store
 ---
 
 <details class="realm-shared" id="function-liaoptionadd">
-<summary><span class="summary-main"><a id="lia.option.add"></a>lia.option.add(key, name, desc, default, callback, data)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/option.lua#L217" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="lia.option.add"></a>lia.option.add(key, name, desc, default, callback, data)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/option.lua#L253" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="liaoptionadd"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -72,7 +72,7 @@ The option library centralizes user-facing settings under `lia.option`. It store
 ---
 
 <details class="realm-shared" id="function-liaoptiongetdisplayname">
-<summary><span class="summary-main"><a id="lia.option.getDisplayName"></a>lia.option.getDisplayName(key)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/option.lua#L281" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="lia.option.getDisplayName"></a>lia.option.getDisplayName(key)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/option.lua#L317" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="liaoptiongetdisplayname"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -106,7 +106,7 @@ The option library centralizes user-facing settings under `lia.option`. It store
 ---
 
 <details class="realm-shared" id="function-liaoptiongetdisplaydesc">
-<summary><span class="summary-main"><a id="lia.option.getDisplayDesc"></a>lia.option.getDisplayDesc(key)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/option.lua#L308" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="lia.option.getDisplayDesc"></a>lia.option.getDisplayDesc(key)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/option.lua#L344" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="liaoptiongetdisplaydesc"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -140,7 +140,7 @@ The option library centralizes user-facing settings under `lia.option`. It store
 ---
 
 <details class="realm-shared" id="function-liaoptiongetdisplaycategory">
-<summary><span class="summary-main"><a id="lia.option.getDisplayCategory"></a>lia.option.getDisplayCategory(key)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/option.lua#L335" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="lia.option.getDisplayCategory"></a>lia.option.getDisplayCategory(key)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/option.lua#L371" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="liaoptiongetdisplaycategory"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -174,7 +174,7 @@ The option library centralizes user-facing settings under `lia.option`. It store
 ---
 
 <details class="realm-shared" id="function-liaoptiongetoptions">
-<summary><span class="summary-main"><a id="lia.option.getOptions"></a>lia.option.getOptions(key)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/option.lua#L363" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="lia.option.getOptions"></a>lia.option.getOptions(key)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/option.lua#L399" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="liaoptiongetoptions"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -208,7 +208,7 @@ The option library centralizes user-facing settings under `lia.option`. It store
 ---
 
 <details class="realm-shared" id="function-liaoptionset">
-<summary><span class="summary-main"><a id="lia.option.set"></a>lia.option.set(key, value)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/option.lua#L411" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="lia.option.set"></a>lia.option.set(key, value)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/option.lua#L447" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="liaoptionset"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -238,7 +238,7 @@ The option library centralizes user-facing settings under `lia.option`. It store
 ---
 
 <details class="realm-shared" id="function-liaoptionget">
-<summary><span class="summary-main"><a id="lia.option.get"></a>lia.option.get(key, default)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/option.lua#L445" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="lia.option.get"></a>lia.option.get(key, default)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/option.lua#L481" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="liaoptionget"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -273,7 +273,7 @@ The option library centralizes user-facing settings under `lia.option`. It store
 ---
 
 <details class="realm-shared" id="function-liaoptionsave">
-<summary><span class="summary-main"><a id="lia.option.save"></a>lia.option.save()</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/option.lua#L472" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="lia.option.save"></a>lia.option.save()</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/option.lua#L508" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="liaoptionsave"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -297,7 +297,7 @@ The option library centralizes user-facing settings under `lia.option`. It store
 ---
 
 <details class="realm-shared" id="function-liaoptionload">
-<summary><span class="summary-main"><a id="lia.option.load"></a>lia.option.load()</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/option.lua#L501" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="lia.option.load"></a>lia.option.load()</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/option.lua#L537" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="liaoptionload"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -328,7 +328,7 @@ The option library centralizes user-facing settings under `lia.option`. It store
 ---
 
 <details class="realm-shared" id="function-initializedoptions">
-<summary><span class="summary-main"><a id="InitializedOptions"></a>InitializedOptions()</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/option.lua#L80" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="InitializedOptions"></a>InitializedOptions()</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/option.lua#L102" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="initializedoptions"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -343,6 +343,14 @@ The option library centralizes user-facing settings under `lia.option`. It store
 <h3 style="margin-bottom: 5px; font-weight: 700;">Realm</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
   <p>Shared</p>
+</div>
+
+<h3 style="margin-bottom: 5px; font-weight: 700;">Example Usage</h3>
+<div style="margin-left: 20px; margin-bottom: 20px;">
+<pre><code class="language-lua">  hook.Add("InitializedOptions", "liaExampleInitializedOptions", function()
+      print("[MyModule] handled InitializedOptions")
+  end)
+</code></pre>
 </div>
 
 </div>
@@ -374,13 +382,21 @@ The option library centralizes user-facing settings under `lia.option`. It store
 <p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#2.1">table</a></span> <span class="parameter">option</span> The stored option data table created for the key.</p>
 </div>
 
+<h3 style="margin-bottom: 5px; font-weight: 700;">Example Usage</h3>
+<div style="margin-left: 20px; margin-bottom: 20px;">
+<pre><code class="language-lua">  hook.Add("OptionAdded", "liaExampleOptionAdded", function(key, option)
+      print("[MyModule] handled OptionAdded")
+  end)
+</code></pre>
+</div>
+
 </div>
 </details>
 
 ---
 
 <details class="realm-shared" id="function-optionchanged">
-<summary><span class="summary-main"><a id="OptionChanged"></a>OptionChanged(key, oldValue, newValue)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/option.lua#L34" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="OptionChanged"></a>OptionChanged(key, oldValue, newValue)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/option.lua#L41" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="optionchanged"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -404,13 +420,21 @@ The option library centralizes user-facing settings under `lia.option`. It store
 <p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#2.1">any</a></span> <span class="parameter">newValue</span> The value after the change.</p>
 </div>
 
+<h3 style="margin-bottom: 5px; font-weight: 700;">Example Usage</h3>
+<div style="margin-left: 20px; margin-bottom: 20px;">
+<pre><code class="language-lua">  hook.Add("OptionChanged", "liaExampleOptionChanged", function(key, oldValue, newValue)
+      print("[MyModule] handled OptionChanged")
+  end)
+</code></pre>
+</div>
+
 </div>
 </details>
 
 ---
 
 <details class="realm-server" id="function-optionreceived">
-<summary><span class="summary-main"><a id="OptionReceived"></a>OptionReceived(client, key, value)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/option.lua#L57" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="OptionReceived"></a>OptionReceived(client, key, value)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/option.lua#L71" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="optionreceived"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -434,13 +458,22 @@ The option library centralizes user-facing settings under `lia.option`. It store
 <p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#2.1">any</a></span> <span class="parameter">value</span> The networked option value.</p>
 </div>
 
+<h3 style="margin-bottom: 5px; font-weight: 700;">Example Usage</h3>
+<div style="margin-left: 20px; margin-bottom: 20px;">
+<pre><code class="language-lua">  hook.Add("OptionReceived", "liaExampleOptionReceived", function(client, key, value)
+      if not IsValid(client) then return end
+      print(string.format("[MyModule] handled OptionReceived for %s", client:Name()))
+  end)
+</code></pre>
+</div>
+
 </div>
 </details>
 
 ---
 
 <details class="realm-client" id="function-thirdpersontoggled">
-<summary><span class="summary-main"><a id="ThirdPersonToggled"></a>ThirdPersonToggled(enabled)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/option.lua#L93" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="ThirdPersonToggled"></a>ThirdPersonToggled(enabled)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/option.lua#L122" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="thirdpersontoggled"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -460,6 +493,14 @@ The option library centralizes user-facing settings under `lia.option`. It store
 <h3 style="margin-bottom: 5px; font-weight: 700;">Parameters</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
 <p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#2.1">boolean</a></span> <span class="parameter">enabled</span> True when third-person view was enabled, false when it was disabled.</p>
+</div>
+
+<h3 style="margin-bottom: 5px; font-weight: 700;">Example Usage</h3>
+<div style="margin-left: 20px; margin-bottom: 20px;">
+<pre><code class="language-lua">  hook.Add("ThirdPersonToggled", "liaExampleThirdPersonToggled", function(enabled)
+      print("[MyModule] handled ThirdPersonToggled")
+  end)
+</code></pre>
 </div>
 
 </div>

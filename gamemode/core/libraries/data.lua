@@ -1,4 +1,4 @@
-﻿--[[
+--[[
     Folder: Developer - Libraries
     File: lia.data.md
 ]]
@@ -34,6 +34,13 @@
         map (string)
             The resolved map scope used for the write.
 
+    Example Usage:
+        ```lua
+        hook.Add("OnDataSet", "liaExampleOnDataSet", function(key, value, gamemode, map)
+            print("[MyModule] handled OnDataSet")
+        end)
+        ```
+
     Realm:
         Server
 ]]
@@ -50,6 +57,13 @@
     Parameters:
         This hook has no parameters.
 
+    Example Usage:
+        ```lua
+        hook.Add("SaveData", "liaExampleSaveData", function()
+            print("[MyModule] handled SaveData")
+        end)
+        ```
+
     Realm:
         Server
 ]]
@@ -65,6 +79,13 @@
 
     Parameters:
         This hook has no parameters.
+
+    Example Usage:
+        ```lua
+        hook.Add("PersistenceSave", "liaExamplePersistenceSave", function()
+            print("[MyModule] handled PersistenceSave")
+        end)
+        ```
 
     Realm:
         Server

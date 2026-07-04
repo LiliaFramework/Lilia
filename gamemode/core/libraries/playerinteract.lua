@@ -1,4 +1,4 @@
-﻿--[[
+--[[
     Folder: Developer - Libraries
     File: lia.playerinteract.md
 ]]
@@ -24,6 +24,14 @@
     Parameters:
         client (Player)
             The player whose voice mode changed.
+
+    Example Usage:
+        ```lua
+        hook.Add("OnVoiceTypeChanged", "liaExampleOnVoiceTypeChanged", function(client)
+            if not IsValid(client) then return end
+            print(string.format("[MyModule] handled OnVoiceTypeChanged for %s", client:Name()))
+        end)
+        ```
 
     Realm:
         Server

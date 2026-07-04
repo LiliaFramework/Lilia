@@ -28,7 +28,7 @@ This page documents hooks in the administration - logs category.
 ---
 
 <details class="realm-shared" id="function-canplayerseelogcategory">
-<summary><span class="summary-main"><a id="CanPlayerSeeLogCategory"></a>CanPlayerSeeLogCategory(client, category)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/modules/administration/submodules/logs/module.lua#L74" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="CanPlayerSeeLogCategory"></a>CanPlayerSeeLogCategory(client, category)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/modules/administration/submodules/logs/module.lua#L99" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="canplayerseelogcategory"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -56,13 +56,23 @@ This page documents hooks in the administration - logs category.
 <p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#2.1">boolean|nil</a></span> Return false to hide the category from the player.</p>
 </div>
 
+<h3 style="margin-bottom: 5px; font-weight: 700;">Example Usage</h3>
+<div style="margin-left: 20px; margin-bottom: 20px;">
+<pre><code class="language-lua">  hook.Add("CanPlayerSeeLogCategory", "liaExampleCanPlayerSeeLogCategory", function(client, category)
+      if IsValid(client) and client:IsAdmin() then
+          return true
+      end
+  end)
+</code></pre>
+</div>
+
 </div>
 </details>
 
 ---
 
 <details class="realm-server" id="function-canplayerseelogs">
-<summary><span class="summary-main"><a id="CanPlayerSeeLogs"></a>CanPlayerSeeLogs(client)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/modules/administration/submodules/logs/module.lua#L53" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="CanPlayerSeeLogs"></a>CanPlayerSeeLogs(client)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/modules/administration/submodules/logs/module.lua#L71" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="canplayerseelogs"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -87,6 +97,14 @@ This page documents hooks in the administration - logs category.
 <h3 style="margin-bottom: 5px; font-weight: 700;">Returns</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
 <p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#2.1">boolean</a></span> True if admin console log networking is enabled and the player has the canSeeLogs privilege.</p>
+</div>
+
+<h3 style="margin-bottom: 5px; font-weight: 700;">Example Usage</h3>
+<div style="margin-left: 20px; margin-bottom: 20px;">
+<pre><code class="language-lua">  hook.Add("CanPlayerSeeLogs", "liaExampleCanPlayerSeeLogs", function(client)
+      return true
+  end)
+</code></pre>
 </div>
 
 </div>
@@ -118,13 +136,24 @@ This page documents hooks in the administration - logs category.
 <p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#2.1">table</a></span> <span class="parameter">categories</span> The ordered list of translated log categories to show as tabs.</p>
 </div>
 
+<h3 style="margin-bottom: 5px; font-weight: 700;">Example Usage</h3>
+<div style="margin-left: 20px; margin-bottom: 20px;">
+<pre><code class="language-lua">  hook.Add("CreateLogsUI", "liaExampleCreateLogsUI", function(panel, categories)
+      categories[#categories + 1] = {
+          category = "custom",
+          name = "Custom Logs"
+      }
+  end)
+</code></pre>
+</div>
+
 </div>
 </details>
 
 ---
 
 <details class="realm-server" id="function-onserverlog">
-<summary><span class="summary-main"><a id="OnServerLog"></a>OnServerLog(client, logType, logString, category)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/modules/administration/submodules/logs/module.lua#L24" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="OnServerLog"></a>OnServerLog(client, logType, logString, category)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/modules/administration/submodules/logs/module.lua#L34" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="onserverlog"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -149,13 +178,22 @@ This page documents hooks in the administration - logs category.
 <p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#2.1">string</a></span> <span class="parameter">category</span> The translated category name assigned to the log entry.</p>
 </div>
 
+<h3 style="margin-bottom: 5px; font-weight: 700;">Example Usage</h3>
+<div style="margin-left: 20px; margin-bottom: 20px;">
+<pre><code class="language-lua">  hook.Add("OnServerLog", "liaExampleOnServerLog", function(client, logType, logString, category)
+      if not IsValid(client) or logString == "" then return end
+      print(string.format("[MyModule] %s: %s", client:Name(), logString))
+  end)
+</code></pre>
+</div>
+
 </div>
 </details>
 
 ---
 
 <details class="realm-server" id="function-readlogentries">
-<summary><span class="summary-main"><a id="ReadLogEntries"></a>ReadLogEntries(category, page)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/modules/administration/submodules/logs/module.lua#L98" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="ReadLogEntries"></a>ReadLogEntries(category, page)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/modules/administration/submodules/logs/module.lua#L132" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="readlogentries"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -181,6 +219,14 @@ This page documents hooks in the administration - logs category.
 <h3 style="margin-bottom: 5px; font-weight: 700;">Returns</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
 <p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#2.2">Deferred</a></span> Resolves with a table containing the page of log rows and pagination metadata.</p>
+</div>
+
+<h3 style="margin-bottom: 5px; font-weight: 700;">Example Usage</h3>
+<div style="margin-left: 20px; margin-bottom: 20px;">
+<pre><code class="language-lua">  hook.Add("ReadLogEntries", "liaExampleReadLogEntries", function(category, page)
+      print("[MyModule] handled ReadLogEntries")
+  end)
+</code></pre>
 </div>
 
 </div>

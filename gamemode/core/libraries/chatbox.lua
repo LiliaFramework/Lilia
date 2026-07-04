@@ -1,4 +1,4 @@
-﻿--[[
+--[[
     Folder: Developer - Libraries
     File: lia.chat.md
 ]]
@@ -27,6 +27,13 @@
 
         chatType (string)
             The chat class currently being displayed.
+
+    Example Usage:
+        ```lua
+        hook.Add("GetDisplayedName", "liaExampleGetDisplayedName", function(speaker, chatType)
+            return "Example Value"
+        end)
+        ```
 
     Returns:
         string|nil
@@ -58,6 +65,16 @@
         anonymous (boolean)
             Whether the message is currently marked as anonymous.
 
+    Example Usage:
+        ```lua
+        hook.Add("ChatParsed", "liaExampleChatParsed", function(client, chatType, message, anonymous)
+            if chatType == "ooc" and IsValid(client) then
+                local decorated = string.format("[Dispatch] %s", message)
+                return chatType, decorated, anonymous
+            end
+        end)
+        ```
+
     Returns:
         string|nil, string|nil, boolean|nil
             Return a new chat type, message, or anonymous state to override the parsed values. Return nil for any value that should remain unchanged.
@@ -81,6 +98,14 @@
 
         message (string)
             The OOC message text.
+
+    Example Usage:
+        ```lua
+        hook.Add("OnOOCMessageSent", "liaExampleOnOOCMessageSent", function(client, message)
+            if not IsValid(client) or message == "" then return end
+            print(string.format("[MyModule] %s: %s", client:Name(), message))
+        end)
+        ```
 
     Returns:
         None
@@ -113,6 +138,15 @@
 
         receivers (table|nil)
             The resolved recipient list when available.
+
+    Example Usage:
+        ```lua
+        hook.Add("PlayerMessageSend", "liaExamplePlayerMessageSend", function(client, chatType, message, anonymous, receivers)
+            if chatType == "ooc" and #receivers > 10 then
+                return "[Broadcast] " .. message
+            end
+        end)
+        ```
 
     Returns:
         string|nil

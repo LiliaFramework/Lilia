@@ -28,7 +28,7 @@ This page documents hooks in the main menu category.
 ---
 
 <details class="realm-shared" id="function-canplayercreatechar">
-<summary><span class="summary-main"><a id="CanPlayerCreateChar"></a>CanPlayerCreateChar(client, data)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/modules/mainmenu/module.lua#L61" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="CanPlayerCreateChar"></a>CanPlayerCreateChar(client, data)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/modules/mainmenu/module.lua#L82" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="canplayercreatechar"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -56,13 +56,23 @@ This page documents hooks in the main menu category.
 <p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#2.1">boolean|nil</a></span> Return false to block character creation.</p>
 </div>
 
+<h3 style="margin-bottom: 5px; font-weight: 700;">Example Usage</h3>
+<div style="margin-left: 20px; margin-bottom: 20px;">
+<pre><code class="language-lua">  hook.Add("CanPlayerCreateChar", "liaExampleCanPlayerCreateChar", function(client, data)
+      if IsValid(client) and client:IsAdmin() then
+          return true
+      end
+  end)
+</code></pre>
+</div>
+
 </div>
 </details>
 
 ---
 
 <details class="realm-client" id="function-choosecharacter">
-<summary><span class="summary-main"><a id="ChooseCharacter"></a>ChooseCharacter(id)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/modules/mainmenu/module.lua#L85" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="ChooseCharacter"></a>ChooseCharacter(id)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/modules/mainmenu/module.lua#L115" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="choosecharacter"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -89,13 +99,21 @@ This page documents hooks in the main menu category.
 <p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#2.2">Deferred</a></span> Resolves when the character is loaded or rejects with the server-provided error.</p>
 </div>
 
+<h3 style="margin-bottom: 5px; font-weight: 700;">Example Usage</h3>
+<div style="margin-left: 20px; margin-bottom: 20px;">
+<pre><code class="language-lua">  hook.Add("ChooseCharacter", "liaExampleChooseCharacter", function(id)
+      print("[MyModule] handled ChooseCharacter")
+  end)
+</code></pre>
+</div>
+
 </div>
 </details>
 
 ---
 
 <details class="realm-client" id="function-createcharacter">
-<summary><span class="summary-main"><a id="CreateCharacter"></a>CreateCharacter(data)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/modules/mainmenu/module.lua#L106" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="CreateCharacter"></a>CreateCharacter(data)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/modules/mainmenu/module.lua#L143" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="createcharacter"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -122,13 +140,21 @@ This page documents hooks in the main menu category.
 <p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#2.2">Deferred</a></span> Resolves with the new character ID or rejects with the validation or server error.</p>
 </div>
 
+<h3 style="margin-bottom: 5px; font-weight: 700;">Example Usage</h3>
+<div style="margin-left: 20px; margin-bottom: 20px;">
+<pre><code class="language-lua">  hook.Add("CreateCharacter", "liaExampleCreateCharacter", function(data)
+      print("[MyModule] handled CreateCharacter")
+  end)
+</code></pre>
+</div>
+
 </div>
 </details>
 
 ---
 
 <details class="realm-client" id="function-deletecharacter">
-<summary><span class="summary-main"><a id="DeleteCharacter"></a>DeleteCharacter(id)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/modules/mainmenu/module.lua#L127" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="DeleteCharacter"></a>DeleteCharacter(id)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/modules/mainmenu/module.lua#L171" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="deletecharacter"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -148,6 +174,14 @@ This page documents hooks in the main menu category.
 <h3 style="margin-bottom: 5px; font-weight: 700;">Parameters</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
 <p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#2.1">number</a></span> <span class="parameter">id</span> The character ID to delete.</p>
+</div>
+
+<h3 style="margin-bottom: 5px; font-weight: 700;">Example Usage</h3>
+<div style="margin-left: 20px; margin-bottom: 20px;">
+<pre><code class="language-lua">  hook.Add("DeleteCharacter", "liaExampleDeleteCharacter", function(id)
+      print("[MyModule] handled DeleteCharacter")
+  end)
+</code></pre>
 </div>
 
 </div>
@@ -178,13 +212,21 @@ This page documents hooks in the main menu category.
 <p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#2.1">number|nil</a></span> Return the character ID that should be loaded as the main character.</p>
 </div>
 
+<h3 style="margin-bottom: 5px; font-weight: 700;">Example Usage</h3>
+<div style="margin-left: 20px; margin-bottom: 20px;">
+<pre><code class="language-lua">  hook.Add("GetMainCharacterID", "liaExampleGetMainCharacterID", function()
+      return 15
+  end)
+</code></pre>
+</div>
+
 </div>
 </details>
 
 ---
 
 <details class="realm-shared" id="function-getmaxplayerchar">
-<summary><span class="summary-main"><a id="GetMaxPlayerChar"></a>GetMaxPlayerChar(client)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/modules/mainmenu/module.lua#L167" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="GetMaxPlayerChar"></a>GetMaxPlayerChar(client)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/modules/mainmenu/module.lua#L225" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="getmaxplayerchar"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -211,13 +253,21 @@ This page documents hooks in the main menu category.
 <p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#2.1">number</a></span> The maximum number of characters the player may have.</p>
 </div>
 
+<h3 style="margin-bottom: 5px; font-weight: 700;">Example Usage</h3>
+<div style="margin-left: 20px; margin-bottom: 20px;">
+<pre><code class="language-lua">  hook.Add("GetMaxPlayerChar", "liaExampleGetMaxPlayerChar", function(client)
+      return 15
+  end)
+</code></pre>
+</div>
+
 </div>
 </details>
 
 ---
 
 <details class="realm-client" id="function-kickedfromchar">
-<summary><span class="summary-main"><a id="KickedFromChar"></a>KickedFromChar(characterID, isCurrentChar)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/modules/mainmenu/module.lua#L286" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="KickedFromChar"></a>KickedFromChar(characterID, isCurrentChar)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/modules/mainmenu/module.lua#L387" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="kickedfromchar"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -240,13 +290,21 @@ This page documents hooks in the main menu category.
 <p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#2.1">boolean</a></span> <span class="parameter">isCurrentChar</span> Whether the removed character was the player's currently loaded character.</p>
 </div>
 
+<h3 style="margin-bottom: 5px; font-weight: 700;">Example Usage</h3>
+<div style="margin-left: 20px; margin-bottom: 20px;">
+<pre><code class="language-lua">  hook.Add("KickedFromChar", "liaExampleKickedFromChar", function(characterID, isCurrentChar)
+      print("[MyModule] handled KickedFromChar")
+  end)
+</code></pre>
+</div>
+
 </div>
 </details>
 
 ---
 
 <details class="realm-client" id="function-lilialoaded">
-<summary><span class="summary-main"><a id="LiliaLoaded"></a>LiliaLoaded()</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/modules/mainmenu/module.lua#L267" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="LiliaLoaded"></a>LiliaLoaded()</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/modules/mainmenu/module.lua#L361" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="lilialoaded"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -263,13 +321,21 @@ This page documents hooks in the main menu category.
   <p>Client</p>
 </div>
 
+<h3 style="margin-bottom: 5px; font-weight: 700;">Example Usage</h3>
+<div style="margin-left: 20px; margin-bottom: 20px;">
+<pre><code class="language-lua">  hook.Add("LiliaLoaded", "liaExampleLiliaLoaded", function()
+      print("[MyModule] handled LiliaLoaded")
+  end)
+</code></pre>
+</div>
+
 </div>
 </details>
 
 ---
 
 <details class="realm-client" id="function-loadmaincharacter">
-<summary><span class="summary-main"><a id="LoadMainCharacter"></a>LoadMainCharacter()</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/modules/mainmenu/module.lua#L147" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="LoadMainCharacter"></a>LoadMainCharacter()</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/modules/mainmenu/module.lua#L198" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="loadmaincharacter"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -291,13 +357,21 @@ This page documents hooks in the main menu category.
 <p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#2.2">Deferred|nil</a></span> Returns the character-load deferred when a main character is available.</p>
 </div>
 
+<h3 style="margin-bottom: 5px; font-weight: 700;">Example Usage</h3>
+<div style="margin-left: 20px; margin-bottom: 20px;">
+<pre><code class="language-lua">  hook.Add("LoadMainCharacter", "liaExampleLoadMainCharacter", function()
+      print("[MyModule] handled LoadMainCharacter")
+  end)
+</code></pre>
+</div>
+
 </div>
 </details>
 
 ---
 
 <details class="realm-client" id="function-opencharactermenu">
-<summary><span class="summary-main"><a id="OpenCharacterMenu"></a>OpenCharacterMenu()</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/modules/mainmenu/module.lua#L188" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="OpenCharacterMenu"></a>OpenCharacterMenu()</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/modules/mainmenu/module.lua#L253" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="opencharactermenu"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -319,13 +393,21 @@ This page documents hooks in the main menu category.
 <p><span class="types"><a class="type" href="/developer/meta/panel/">Panel|nil</a></span> The created character panel, when the default menu opens.</p>
 </div>
 
+<h3 style="margin-bottom: 5px; font-weight: 700;">Example Usage</h3>
+<div style="margin-left: 20px; margin-bottom: 20px;">
+<pre><code class="language-lua">  hook.Add("OpenCharacterMenu", "liaExampleOpenCharacterMenu", function()
+      print("[MyModule] handled OpenCharacterMenu")
+  end)
+</code></pre>
+</div>
+
 </div>
 </details>
 
 ---
 
 <details class="realm-client" id="function-opencharactermenuoverride">
-<summary><span class="summary-main"><a id="OpenCharacterMenuOverride"></a>OpenCharacterMenuOverride()</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/modules/mainmenu/module.lua#L21" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="OpenCharacterMenuOverride"></a>OpenCharacterMenuOverride()</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/modules/mainmenu/module.lua#L28" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="opencharactermenuoverride"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -347,13 +429,21 @@ This page documents hooks in the main menu category.
 <p><span class="types"><a class="type" href="/developer/meta/panel/">Panel|boolean|nil</a></span> Return a panel to use instead of the default character menu, or any non-nil value to stop the default menu from opening.</p>
 </div>
 
+<h3 style="margin-bottom: 5px; font-weight: 700;">Example Usage</h3>
+<div style="margin-left: 20px; margin-bottom: 20px;">
+<pre><code class="language-lua">  hook.Add("OpenCharacterMenuOverride", "liaExampleOpenCharacterMenuOverride", function()
+      return true
+  end)
+</code></pre>
+</div>
+
 </div>
 </details>
 
 ---
 
 <details class="realm-client" id="function-resetcharacterpanel">
-<summary><span class="summary-main"><a id="ResetCharacterPanel"></a>ResetCharacterPanel()</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/modules/mainmenu/module.lua#L208" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="ResetCharacterPanel"></a>ResetCharacterPanel()</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/modules/mainmenu/module.lua#L280" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="resetcharacterpanel"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -370,13 +460,21 @@ This page documents hooks in the main menu category.
   <p>Client</p>
 </div>
 
+<h3 style="margin-bottom: 5px; font-weight: 700;">Example Usage</h3>
+<div style="margin-left: 20px; margin-bottom: 20px;">
+<pre><code class="language-lua">  hook.Add("ResetCharacterPanel", "liaExampleResetCharacterPanel", function()
+      print("[MyModule] handled ResetCharacterPanel")
+  end)
+</code></pre>
+</div>
+
 </div>
 </details>
 
 ---
 
 <details class="realm-client" id="function-setmaincharacter">
-<summary><span class="summary-main"><a id="SetMainCharacter"></a>SetMainCharacter(charID)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/modules/mainmenu/module.lua#L227" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="SetMainCharacter"></a>SetMainCharacter(charID)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/modules/mainmenu/module.lua#L306" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="setmaincharacter"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -398,13 +496,21 @@ This page documents hooks in the main menu category.
 <p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#2.1">number</a></span> <span class="parameter">charID</span> The character ID to store as the player's main character.</p>
 </div>
 
+<h3 style="margin-bottom: 5px; font-weight: 700;">Example Usage</h3>
+<div style="margin-left: 20px; margin-bottom: 20px;">
+<pre><code class="language-lua">  hook.Add("SetMainCharacter", "liaExampleSetMainCharacter", function(charID)
+      print("[MyModule] handled SetMainCharacter")
+  end)
+</code></pre>
+</div>
+
 </div>
 </details>
 
 ---
 
 <details class="realm-server" id="function-synccharlist">
-<summary><span class="summary-main"><a id="SyncCharList"></a>SyncCharList(client)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/modules/mainmenu/module.lua#L247" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="SyncCharList"></a>SyncCharList(client)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/modules/mainmenu/module.lua#L333" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="synccharlist"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -426,13 +532,22 @@ This page documents hooks in the main menu category.
 <p><span class="types"><a class="type" href="/developer/meta/player/">Player</a></span> <span class="parameter">client</span> The player who should receive the synchronized character list.</p>
 </div>
 
+<h3 style="margin-bottom: 5px; font-weight: 700;">Example Usage</h3>
+<div style="margin-left: 20px; margin-bottom: 20px;">
+<pre><code class="language-lua">  hook.Add("SyncCharList", "liaExampleSyncCharList", function(client)
+      if not IsValid(client) then return end
+      print(string.format("[MyModule] handled SyncCharList for %s", client:Name()))
+  end)
+</code></pre>
+</div>
+
 </div>
 </details>
 
 ---
 
 <details class="realm-client" id="function-thirdpersontoggled">
-<summary><span class="summary-main"><a id="ThirdPersonToggled"></a>ThirdPersonToggled(enabled)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/modules/mainmenu/module.lua#L41" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="ThirdPersonToggled"></a>ThirdPersonToggled(enabled)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/modules/mainmenu/module.lua#L55" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="thirdpersontoggled"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -452,6 +567,14 @@ This page documents hooks in the main menu category.
 <h3 style="margin-bottom: 5px; font-weight: 700;">Parameters</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
 <p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#2.1">boolean</a></span> <span class="parameter">enabled</span> The new third-person enabled state.</p>
+</div>
+
+<h3 style="margin-bottom: 5px; font-weight: 700;">Example Usage</h3>
+<div style="margin-left: 20px; margin-bottom: 20px;">
+<pre><code class="language-lua">  hook.Add("ThirdPersonToggled", "liaExampleThirdPersonToggled", function(enabled)
+      print("[MyModule] handled ThirdPersonToggled")
+  end)
+</code></pre>
 </div>
 
 </div>

@@ -1,4 +1,4 @@
-﻿--[[
+--[[
     Hooks:
         GetInventoryMaxWeight(inventory, maxWeight)
 
@@ -14,6 +14,13 @@
 
         maxWeight (number)
             The default maximum weight before overrides are applied.
+
+    Example Usage:
+        ```lua
+        hook.Add("GetInventoryMaxWeight", "liaExampleGetInventoryMaxWeight", function(inventory, maxWeight)
+            return (maxWeight or 0) + 5
+        end)
+        ```
 
     Returns:
         number|nil

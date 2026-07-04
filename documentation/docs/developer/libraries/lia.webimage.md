@@ -35,7 +35,7 @@ The web image library centralizes clientside image loading under `lia.webimage`.
 ---
 
 <details class="realm-client" id="function-liawebimagedownload">
-<summary><span class="summary-main"><a id="lia.webimage.download"></a>lia.webimage.download(n, u, cb, flags)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/webimage.lua#L112" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="lia.webimage.download"></a>lia.webimage.download(n, u, cb, flags)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/webimage.lua#L130" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="liawebimagedownload"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -55,13 +55,25 @@ The web image library centralizes clientside image loading under `lia.webimage`.
 <p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#2.1">string</a></span> <span class="parameter">flags</span> <span class="optional">optional</span> Optional material flags used when building the cached material.</p>
 </div>
 
+<h3 style="margin-bottom: 5px; font-weight: 700;">Example Usage</h3>
+<div style="margin-left: 20px; margin-bottom: 20px;">
+<pre><code class="language-lua">  lia.webimage.download("schema_logo", "https://example.com/schema_logo.png", function(material, fromCache, err)
+      if material and not material:IsError() then
+          print(string.format("Loaded schema logo (from cache: %s)", tostring(fromCache)))
+      elseif err then
+          print("Schema logo failed to download:", err)
+      end
+  end, "smooth noclamp")
+</code></pre>
+</div>
+
 </div>
 </details>
 
 ---
 
 <details class="realm-client" id="function-liawebimageregister">
-<summary><span class="summary-main"><a id="lia.webimage.register"></a>lia.webimage.register(n, u, cb, flags)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/webimage.lua#L216" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="lia.webimage.register"></a>lia.webimage.register(n, u, cb, flags)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/webimage.lua#L244" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="liawebimageregister"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -81,13 +93,24 @@ The web image library centralizes clientside image loading under `lia.webimage`.
 <p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#2.1">string</a></span> <span class="parameter">flags</span> <span class="optional">optional</span> Optional material flags saved with the registered image and used when building its material.</p>
 </div>
 
+<h3 style="margin-bottom: 5px; font-weight: 700;">Example Usage</h3>
+<div style="margin-left: 20px; margin-bottom: 20px;">
+<pre><code class="language-lua">  lia.webimage.register("schema_logo", "https://example.com/schema_logo.png", function(material)
+      if material and not material:IsError() then
+          local icon = vgui.Create("DImage")
+          icon:SetImage("schema_logo")
+      end
+  end)
+</code></pre>
+</div>
+
 </div>
 </details>
 
 ---
 
 <details class="realm-client" id="function-liawebimageget">
-<summary><span class="summary-main"><a id="lia.webimage.get"></a>lia.webimage.get(n, flags)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/webimage.lua#L243" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="lia.webimage.get"></a>lia.webimage.get(n, flags)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/webimage.lua#L280" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="liawebimageget"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -110,13 +133,23 @@ The web image library centralizes clientside image loading under `lia.webimage`.
 <p><span class="types"><a class="type" href="https://wiki.facepunch.com/gmod/IMaterial">IMaterial|nil</a></span> The cached or newly built material when the saved image exists, otherwise nil.</p>
 </div>
 
+<h3 style="margin-bottom: 5px; font-weight: 700;">Example Usage</h3>
+<div style="margin-left: 20px; margin-bottom: 20px;">
+<pre><code class="language-lua">  local material = lia.webimage.get("schema_logo", "smooth noclamp")
+  if material and not material:IsError() then
+      surface.SetMaterial(material)
+      surface.DrawTexturedRect(32, 32, 128, 128)
+  end
+</code></pre>
+</div>
+
 </div>
 </details>
 
 ---
 
 <details class="realm-client" id="function-liawebimagegetstats">
-<summary><span class="summary-main"><a id="lia.webimage.getStats"></a>lia.webimage.getStats()</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/webimage.lua#L342" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="lia.webimage.getStats"></a>lia.webimage.getStats()</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/webimage.lua#L387" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="liawebimagegetstats"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -133,13 +166,22 @@ The web image library centralizes clientside image loading under `lia.webimage`.
 <p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#2.1">table</a></span> A table containing `downloaded`, `stored`, and `lastReset` values.</p>
 </div>
 
+<h3 style="margin-bottom: 5px; font-weight: 700;">Example Usage</h3>
+<div style="margin-left: 20px; margin-bottom: 20px;">
+<pre><code class="language-lua">  local imageStats = lia.webimage.getStats()
+  if imageStats.stored &gt; 0 then
+      PrintTable(imageStats)
+  end
+</code></pre>
+</div>
+
 </div>
 </details>
 
 ---
 
 <details class="realm-client" id="function-liawebimageclearcache">
-<summary><span class="summary-main"><a id="lia.webimage.clearCache"></a>lia.webimage.clearCache(skipReRegister)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/webimage.lua#L365" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="lia.webimage.clearCache"></a>lia.webimage.clearCache(skipReRegister)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/webimage.lua#L417" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="liawebimageclearcache"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -154,6 +196,14 @@ The web image library centralizes clientside image loading under `lia.webimage`.
 <h3 style="margin-bottom: 5px; font-weight: 700;">Parameters</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
 <p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#2.1">boolean</a></span> <span class="parameter">skipReRegister</span> <span class="optional">optional</span> Whether to skip re-registering images from `lia.webimage.stored` after clearing cached files.</p>
+</div>
+
+<h3 style="margin-bottom: 5px; font-weight: 700;">Example Usage</h3>
+<div style="margin-left: 20px; margin-bottom: 20px;">
+<pre><code class="language-lua">  lia.webimage.clearCache(true)
+  lia.webimage.register("schema_logo", "https://example.com/schema_logo.png")
+  lia.webimage.register("schema_icon", "https://example.com/schema_icon.png")
+</code></pre>
 </div>
 
 </div>
@@ -190,6 +240,14 @@ The web image library centralizes clientside image loading under `lia.webimage`.
 <div style="margin-left: 20px; margin-bottom: 20px;">
 <p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#2.1">string</a></span> <span class="parameter">name</span> The registered image name or derived save name used by the web image cache.</p>
 <p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#2.1">string</a></span> <span class="parameter">path</span> The data material path for the downloaded image, prefixed with `data/`.</p>
+</div>
+
+<h3 style="margin-bottom: 5px; font-weight: 700;">Example Usage</h3>
+<div style="margin-left: 20px; margin-bottom: 20px;">
+<pre><code class="language-lua">  hook.Add("WebImageDownloaded", "liaExampleWebImageDownloaded", function(name, path)
+      print("[MyModule] handled WebImageDownloaded")
+  end)
+</code></pre>
 </div>
 
 </div>

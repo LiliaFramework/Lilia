@@ -35,7 +35,7 @@ The DarkRP compatibility library provides shim functions and tables expected by 
 ---
 
 <details class="realm-server" id="function-liadarkrpisempty">
-<summary><span class="summary-main"><a id="lia.darkrp.isEmpty"></a>lia.darkrp.isEmpty(position, entitiesToIgnore)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/darkrp.lua#L85" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="lia.darkrp.isEmpty"></a>lia.darkrp.isEmpty(position, entitiesToIgnore)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/darkrp.lua#L99" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="liadarkrpisempty"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -71,7 +71,7 @@ The DarkRP compatibility library provides shim functions and tables expected by 
 ---
 
 <details class="realm-server" id="function-liadarkrpfindemptypos">
-<summary><span class="summary-main"><a id="lia.darkrp.findEmptyPos"></a>lia.darkrp.findEmptyPos(startPos, entitiesToIgnore, maxDistance, searchStep, checkArea)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/darkrp.lua#L133" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="lia.darkrp.findEmptyPos"></a>lia.darkrp.findEmptyPos(startPos, entitiesToIgnore, maxDistance, searchStep, checkArea)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/darkrp.lua#L147" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="liadarkrpfindemptypos"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -110,7 +110,7 @@ The DarkRP compatibility library provides shim functions and tables expected by 
 ---
 
 <details class="realm-server" id="function-liadarkrpnotify">
-<summary><span class="summary-main"><a id="lia.darkrp.notify"></a>lia.darkrp.notify(client, notifyType, duration, message)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/darkrp.lua#L174" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="lia.darkrp.notify"></a>lia.darkrp.notify(client, notifyType, duration, message)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/darkrp.lua#L188" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="liadarkrpnotify"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -142,7 +142,7 @@ The DarkRP compatibility library provides shim functions and tables expected by 
 ---
 
 <details class="realm-client" id="function-liadarkrptextwrap">
-<summary><span class="summary-main"><a id="lia.darkrp.textWrap"></a>lia.darkrp.textWrap(text, fontName, maxLineWidth)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/darkrp.lua#L219" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="lia.darkrp.textWrap"></a>lia.darkrp.textWrap(text, fontName, maxLineWidth)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/darkrp.lua#L233" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="liadarkrptextwrap"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -179,7 +179,7 @@ The DarkRP compatibility library provides shim functions and tables expected by 
 ---
 
 <details class="realm-shared" id="function-liadarkrpformatmoney">
-<summary><span class="summary-main"><a id="lia.darkrp.formatMoney"></a>lia.darkrp.formatMoney(amount)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/darkrp.lua#L269" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="lia.darkrp.formatMoney"></a>lia.darkrp.formatMoney(amount)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/darkrp.lua#L283" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="liadarkrpformatmoney"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -214,7 +214,7 @@ The DarkRP compatibility library provides shim functions and tables expected by 
 ---
 
 <details class="realm-shared" id="function-liadarkrpcreateentity">
-<summary><span class="summary-main"><a id="lia.darkrp.createEntity"></a>lia.darkrp.createEntity(name, data)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/darkrp.lua#L317" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="lia.darkrp.createEntity"></a>lia.darkrp.createEntity(name, data)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/darkrp.lua#L331" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="liadarkrpcreateentity"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -248,7 +248,7 @@ The DarkRP compatibility library provides shim functions and tables expected by 
 ---
 
 <details class="realm-shared" id="function-liadarkrpcreatecategory">
-<summary><span class="summary-main"><a id="lia.darkrp.createCategory"></a>lia.darkrp.createCategory()</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/darkrp.lua#L344" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="lia.darkrp.createCategory"></a>lia.darkrp.createCategory()</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/darkrp.lua#L358" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="liadarkrpcreatecategory"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -303,13 +303,21 @@ The DarkRP compatibility library provides shim functions and tables expected by 
 <p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#2.1">string</a></span> <span class="parameter">value</span> The keyvalue value being applied.</p>
 </div>
 
+<h3 style="margin-bottom: 5px; font-weight: 700;">Example Usage</h3>
+<div style="margin-left: 20px; margin-bottom: 20px;">
+<pre><code class="language-lua">  hook.Add("EntityKeyValue", "liaExampleEntityKeyValue", function(entity, key, value)
+      print("[MyModule] handled EntityKeyValue")
+  end)
+</code></pre>
+</div>
+
 </div>
 </details>
 
 ---
 
 <details class="realm-shared" id="function-initializedmodules">
-<summary><span class="summary-main"><a id="InitializedModules"></a>InitializedModules()</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/darkrp.lua#L40" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="InitializedModules"></a>InitializedModules()</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/darkrp.lua#L47" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="initializedmodules"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -324,6 +332,14 @@ The DarkRP compatibility library provides shim functions and tables expected by 
 <h3 style="margin-bottom: 5px; font-weight: 700;">Realm</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
   <p>Shared</p>
+</div>
+
+<h3 style="margin-bottom: 5px; font-weight: 700;">Example Usage</h3>
+<div style="margin-left: 20px; margin-bottom: 20px;">
+<pre><code class="language-lua">  hook.Add("InitializedModules", "liaExampleInitializedModules", function()
+      print("[MyModule] handled InitializedModules")
+  end)
+</code></pre>
 </div>
 
 </div>

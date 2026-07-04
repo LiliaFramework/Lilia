@@ -51,13 +51,22 @@ This page documents hooks in the recognition category.
 <p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#2.1">string</a></span> <span class="parameter">range</span> The recognition range key that was used, such as `whisper`, `normal`, `talk`, or `yell`.</p>
 </div>
 
+<h3 style="margin-bottom: 5px; font-weight: 700;">Example Usage</h3>
+<div style="margin-left: 20px; margin-bottom: 20px;">
+<pre><code class="language-lua">  hook.Add("CharForceRecognized", "liaExampleCharForceRecognized", function(ply, range)
+      if not IsValid(ply) then return end
+      print(string.format("[MyModule] handled CharForceRecognized for %s", ply:Name()))
+  end)
+</code></pre>
+</div>
+
 </div>
 </details>
 
 ---
 
 <details class="realm-client" id="function-isrecognizedchattype">
-<summary><span class="summary-main"><a id="IsRecognizedChatType"></a>IsRecognizedChatType(chatType)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/modules/recognition/module.lua#L24" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="IsRecognizedChatType"></a>IsRecognizedChatType(chatType)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/modules/recognition/module.lua#L32" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="isrecognizedchattype"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -84,13 +93,21 @@ This page documents hooks in the recognition category.
 <p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#2.1">boolean|nil</a></span> Return true to treat the chat type as recognition-sensitive.</p>
 </div>
 
+<h3 style="margin-bottom: 5px; font-weight: 700;">Example Usage</h3>
+<div style="margin-left: 20px; margin-bottom: 20px;">
+<pre><code class="language-lua">  hook.Add("IsRecognizedChatType", "liaExampleIsRecognizedChatType", function(chatType)
+      return true
+  end)
+</code></pre>
+</div>
+
 </div>
 </details>
 
 ---
 
 <details class="realm-shared" id="function-oncharrecognized">
-<summary><span class="summary-main"><a id="OnCharRecognized"></a>OnCharRecognized(ply)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/modules/recognition/module.lua#L45" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="OnCharRecognized"></a>OnCharRecognized(ply)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/modules/recognition/module.lua#L60" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="oncharrecognized"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -110,6 +127,15 @@ This page documents hooks in the recognition category.
 <h3 style="margin-bottom: 5px; font-weight: 700;">Parameters</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
 <p><span class="types"><a class="type" href="/developer/meta/player/">Player</a></span> <span class="parameter">ply</span> The player whose recognition data was updated.</p>
+</div>
+
+<h3 style="margin-bottom: 5px; font-weight: 700;">Example Usage</h3>
+<div style="margin-left: 20px; margin-bottom: 20px;">
+<pre><code class="language-lua">  hook.Add("OnCharRecognized", "liaExampleOnCharRecognized", function(ply)
+      if not IsValid(ply) then return end
+      print(string.format("[MyModule] handled OnCharRecognized for %s", ply:Name()))
+  end)
+</code></pre>
 </div>
 
 </div>

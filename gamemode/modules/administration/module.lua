@@ -1,4 +1,4 @@
-﻿--[[
+--[[
     Hooks:
         CharListColumns(columns)
 
@@ -11,6 +11,16 @@
     Parameters:
         columns (table)
             The mutable list of character list column definitions.
+
+    Example Usage:
+        ```lua
+        hook.Add("CharListColumns", "liaExampleCharListColumns", function(columns)
+            columns[#columns + 1] = {
+                name = "SteamID",
+                field = "steamID"
+            }
+        end)
+        ```
 
     Returns:
         nil
@@ -35,6 +45,14 @@
         row (table)
             The mutable row data that will be sent to the client.
 
+    Example Usage:
+        ```lua
+        hook.Add("CharListEntry", "liaExampleCharListEntry", function(entry, row)
+            if not istable(entry) then return end
+            entry.exampleHandled = true
+        end)
+        ```
+
     Returns:
         nil
 
@@ -57,6 +75,14 @@
 
         client (Player)
             The local player drawing admin ESP.
+
+    Example Usage:
+        ```lua
+        hook.Add("GetAdminESPTarget", "liaExampleGetAdminESPTarget", function(ent, client)
+            if not IsValid(client) then return end
+            print(string.format("[MyModule] handled GetAdminESPTarget for %s", client:Name()))
+        end)
+        ```
 
     Returns:
         Entity|false|nil
@@ -82,6 +108,13 @@
         privileges (table)
             The registered privilege definitions.
 
+    Example Usage:
+        ```lua
+        hook.Add("OnAdminSystemLoaded", "liaExampleOnAdminSystemLoaded", function(groups, privileges)
+            print("[MyModule] handled OnAdminSystemLoaded")
+        end)
+        ```
+
     Returns:
         nil
 
@@ -102,6 +135,13 @@
         privilege (table)
             The registered privilege definition.
 
+    Example Usage:
+        ```lua
+        hook.Add("OnPrivilegeRegistered", "liaExampleOnPrivilegeRegistered", function(privilege)
+            print("[MyModule] handled OnPrivilegeRegistered")
+        end)
+        ```
+
     Returns:
         nil
 
@@ -121,6 +161,13 @@
     Parameters:
         privilege (table)
             The privilege definition that was removed.
+
+    Example Usage:
+        ```lua
+        hook.Add("OnPrivilegeUnregistered", "liaExampleOnPrivilegeUnregistered", function(privilege)
+            print("[MyModule] handled OnPrivilegeUnregistered")
+        end)
+        ```
 
     Returns:
         nil
@@ -151,6 +198,13 @@
         player (Player|nil)
             The online player object, if available.
 
+    Example Usage:
+        ```lua
+        hook.Add("OnSetUsergroup", "liaExampleOnSetUsergroup", function(sid, newGroup, source, player)
+            print("[MyModule] handled OnSetUsergroup")
+        end)
+        ```
+
     Returns:
         nil
 
@@ -173,6 +227,14 @@
 
         groupData (table)
             The stored usergroup definition.
+
+    Example Usage:
+        ```lua
+        hook.Add("OnUsergroupCreated", "liaExampleOnUsergroupCreated", function(groupName, groupData)
+            if not istable(groupData) then return end
+            groupData.exampleHandled = true
+        end)
+        ```
 
     Returns:
         nil
@@ -197,6 +259,14 @@
         groupData (table)
             The updated usergroup definition.
 
+    Example Usage:
+        ```lua
+        hook.Add("OnUsergroupPermissionsChanged", "liaExampleOnUsergroupPermissionsChanged", function(groupName, groupData)
+            if not istable(groupData) then return end
+            groupData.exampleHandled = true
+        end)
+        ```
+
     Returns:
         nil
 
@@ -216,6 +286,13 @@
     Parameters:
         groupName (string)
             The removed usergroup name.
+
+    Example Usage:
+        ```lua
+        hook.Add("OnUsergroupRemoved", "liaExampleOnUsergroupRemoved", function(groupName)
+            print("[MyModule] handled OnUsergroupRemoved")
+        end)
+        ```
 
     Returns:
         nil
@@ -240,6 +317,13 @@
         newName (string)
             The new usergroup name.
 
+    Example Usage:
+        ```lua
+        hook.Add("OnUsergroupRenamed", "liaExampleOnUsergroupRenamed", function(oldName, newName)
+            print("[MyModule] handled OnUsergroupRenamed")
+        end)
+        ```
+
     Returns:
         nil
 
@@ -262,6 +346,14 @@
 
         admin (Player)
             The admin who applied the gag.
+
+    Example Usage:
+        ```lua
+        hook.Add("PlayerGagged", "liaExamplePlayerGagged", function(target, admin)
+            if not IsValid(target) then return end
+            print(string.format("[MyModule] handled PlayerGagged for %s", target:Name()))
+        end)
+        ```
 
     Returns:
         nil
@@ -286,6 +378,14 @@
         admin (Player)
             The admin who applied the mute.
 
+    Example Usage:
+        ```lua
+        hook.Add("PlayerMuted", "liaExamplePlayerMuted", function(target, admin)
+            if not IsValid(target) then return end
+            print(string.format("[MyModule] handled PlayerMuted for %s", target:Name()))
+        end)
+        ```
+
     Returns:
         nil
 
@@ -309,6 +409,14 @@
         admin (Player)
             The admin who removed the gag.
 
+    Example Usage:
+        ```lua
+        hook.Add("PlayerUngagged", "liaExamplePlayerUngagged", function(target, admin)
+            if not IsValid(target) then return end
+            print(string.format("[MyModule] handled PlayerUngagged for %s", target:Name()))
+        end)
+        ```
+
     Returns:
         nil
 
@@ -331,6 +439,14 @@
 
         admin (Player)
             The admin who removed the mute.
+
+    Example Usage:
+        ```lua
+        hook.Add("PlayerUnmuted", "liaExamplePlayerUnmuted", function(target, admin)
+            if not IsValid(target) then return end
+            print(string.format("[MyModule] handled PlayerUnmuted for %s", target:Name()))
+        end)
+        ```
 
     Returns:
         nil
@@ -360,6 +476,17 @@
 
         reason (string|nil)
             The optional reason text supplied with the command.
+
+    Example Usage:
+        ```lua
+        hook.Add("RunAdminSystemCommand", "liaExampleRunAdminSystemCommand", function(cmd, victim, dur, reason)
+            if cmd == "goto" and victim then
+                return true, function()
+                    chat.AddText(Color(255, 200, 0), "Opening a custom goto confirmation for ", tostring(victim))
+                end
+            end
+        end)
+        ```
 
     Returns:
         boolean|nil, function|nil

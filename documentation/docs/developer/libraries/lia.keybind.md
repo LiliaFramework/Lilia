@@ -35,7 +35,7 @@ The keybind library centralizes shared and clientside keybind behavior under `li
 ---
 
 <details class="realm-shared" id="function-liakeybindadd">
-<summary><span class="summary-main"><a id="lia.keybind.add"></a>lia.keybind.add(k, d, desc, cb)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/keybind.lua#L207" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="lia.keybind.add"></a>lia.keybind.add(k, d, desc, cb)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/keybind.lua#L221" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="liakeybindadd"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -74,7 +74,7 @@ The keybind library centralizes shared and clientside keybind behavior under `li
 ---
 
 <details class="realm-shared" id="function-liakeybindgetdisplaydescription">
-<summary><span class="summary-main"><a id="lia.keybind.getDisplayDescription"></a>lia.keybind.getDisplayDescription(action)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/keybind.lua#L269" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="lia.keybind.getDisplayDescription"></a>lia.keybind.getDisplayDescription(action)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/keybind.lua#L283" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="liakeybindgetdisplaydescription"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -108,7 +108,7 @@ The keybind library centralizes shared and clientside keybind behavior under `li
 ---
 
 <details class="realm-shared" id="function-liakeybindgetdisplaycategory">
-<summary><span class="summary-main"><a id="lia.keybind.getDisplayCategory"></a>lia.keybind.getDisplayCategory(action)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/keybind.lua#L296" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="lia.keybind.getDisplayCategory"></a>lia.keybind.getDisplayCategory(action)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/keybind.lua#L310" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="liakeybindgetdisplaycategory"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -142,7 +142,7 @@ The keybind library centralizes shared and clientside keybind behavior under `li
 ---
 
 <details class="realm-client" id="function-liakeybindbuildreservedkeys">
-<summary><span class="summary-main"><a id="lia.keybind.buildReservedKeys"></a>lia.keybind.buildReservedKeys()</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/keybind.lua#L481" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="lia.keybind.buildReservedKeys"></a>lia.keybind.buildReservedKeys()</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/keybind.lua#L495" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="liakeybindbuildreservedkeys"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -166,7 +166,7 @@ The keybind library centralizes shared and clientside keybind behavior under `li
 ---
 
 <details class="realm-client" id="function-liakeybindiskeyreserved">
-<summary><span class="summary-main"><a id="lia.keybind.isKeyReserved"></a>lia.keybind.isKeyReserved(keyCode)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/keybind.lua#L515" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="lia.keybind.isKeyReserved"></a>lia.keybind.isKeyReserved(keyCode)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/keybind.lua#L529" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="liakeybindiskeyreserved"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -200,7 +200,7 @@ The keybind library centralizes shared and clientside keybind behavior under `li
 ---
 
 <details class="realm-client" id="function-liakeybindget">
-<summary><span class="summary-main"><a id="lia.keybind.get"></a>lia.keybind.get(a, df)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/keybind.lua#L578" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="lia.keybind.get"></a>lia.keybind.get(a, df)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/keybind.lua#L592" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="liakeybindget"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -235,7 +235,7 @@ The keybind library centralizes shared and clientside keybind behavior under `li
 ---
 
 <details class="realm-client" id="function-liakeybindsave">
-<summary><span class="summary-main"><a id="lia.keybind.save"></a>lia.keybind.save()</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/keybind.lua#L602" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="lia.keybind.save"></a>lia.keybind.save()</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/keybind.lua#L616" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="liakeybindsave"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -259,7 +259,7 @@ The keybind library centralizes shared and clientside keybind behavior under `li
 ---
 
 <details class="realm-client" id="function-liakeybindload">
-<summary><span class="summary-main"><a id="lia.keybind.load"></a>lia.keybind.load()</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/keybind.lua#L634" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="lia.keybind.load"></a>lia.keybind.load()</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/keybind.lua#L648" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="liakeybindload"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -312,13 +312,21 @@ The keybind library centralizes shared and clientside keybind behavior under `li
 <p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#2.1">table</a></span> <span class="parameter">reserved</span> Lookup table keyed by numeric key code. Set reserved[keyCode] to true to reserve a key.</p>
 </div>
 
+<h3 style="margin-bottom: 5px; font-weight: 700;">Example Usage</h3>
+<div style="margin-left: 20px; margin-bottom: 20px;">
+<pre><code class="language-lua">  hook.Add("AddReservedKeybinds", "liaExampleAddReservedKeybinds", function(reserved)
+      print("[MyModule] handled AddReservedKeybinds")
+  end)
+</code></pre>
+</div>
+
 </div>
 </details>
 
 ---
 
 <details class="realm-client" id="function-initializedkeybinds">
-<summary><span class="summary-main"><a id="InitializedKeybinds"></a>InitializedKeybinds()</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/keybind.lua#L31" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="InitializedKeybinds"></a>InitializedKeybinds()</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/keybind.lua#L38" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="initializedkeybinds"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -333,6 +341,14 @@ The keybind library centralizes shared and clientside keybind behavior under `li
 <h3 style="margin-bottom: 5px; font-weight: 700;">Realm</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
   <p>Client</p>
+</div>
+
+<h3 style="margin-bottom: 5px; font-weight: 700;">Example Usage</h3>
+<div style="margin-left: 20px; margin-bottom: 20px;">
+<pre><code class="language-lua">  hook.Add("InitializedKeybinds", "liaExampleInitializedKeybinds", function()
+      print("[MyModule] handled InitializedKeybinds")
+  end)
+</code></pre>
 </div>
 
 </div>

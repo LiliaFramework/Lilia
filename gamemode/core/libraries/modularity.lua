@@ -1,4 +1,4 @@
-﻿--[[
+--[[
     Folder: Developer - Libraries
     File: lia.module.md
 ]]
@@ -28,6 +28,13 @@
         module (table)
             The active module table for the module being loaded.
 
+    Example Usage:
+        ```lua
+        hook.Add("DoModuleIncludes", "liaExampleDoModuleIncludes", function(path, module)
+            print("[MyModule] handled DoModuleIncludes")
+        end)
+        ```
+
     Realm:
         Shared
 ]]
@@ -41,6 +48,13 @@
     Category:
         Modularity
 
+    Example Usage:
+        ```lua
+        hook.Add("InitializedSchema", "liaExampleInitializedSchema", function()
+            print("[MyModule] handled InitializedSchema")
+        end)
+        ```
+
     Realm:
         Shared
 ]]
@@ -53,6 +67,13 @@
 
     Category:
         Modularity
+
+    Example Usage:
+        ```lua
+        hook.Add("InitializedModules", "liaExampleInitializedModules", function()
+            print("[MyModule] handled InitializedModules")
+        end)
+        ```
 
     Realm:
         Shared

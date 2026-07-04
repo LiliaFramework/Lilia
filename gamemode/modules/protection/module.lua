@@ -1,4 +1,4 @@
-﻿--[[
+--[[
     Hooks:
         CanDeleteChar(client, character)
 
@@ -14,6 +14,15 @@
 
         character (table|Character)
             The target character data being evaluated for deletion.
+
+    Example Usage:
+        ```lua
+        hook.Add("CanDeleteChar", "liaExampleCanDeleteChar", function(client, character)
+            if IsValid(client) and client:IsAdmin() then
+                return true
+            end
+        end)
+        ```
 
     Returns:
         boolean|nil
@@ -42,6 +51,15 @@
         newCharacter (Character)
             The character the player wants to switch to.
 
+    Example Usage:
+        ```lua
+        hook.Add("CanPlayerSwitchChar", "liaExampleCanPlayerSwitchChar", function(client, character, newCharacter)
+            if character == newCharacter then
+                return false, "You are already using that character."
+            end
+        end)
+        ```
+
     Returns:
         boolean, string|nil
             Return false and an optional denial message to block the switch.
@@ -63,6 +81,14 @@
         client (Player)
             The player flagged by the anti-cheat flow.
 
+    Example Usage:
+        ```lua
+        hook.Add("OnCheaterCaught", "liaExampleOnCheaterCaught", function(client)
+            if not IsValid(client) then return end
+            print(string.format("[MyModule] handled OnCheaterCaught for %s", client:Name()))
+        end)
+        ```
+
     Returns:
         nil
 
@@ -83,6 +109,14 @@
         client (Player)
             The player detected by the anti-cheat system.
 
+    Example Usage:
+        ```lua
+        hook.Add("PlayerCheatDetected", "liaExamplePlayerCheatDetected", function(client)
+            if not IsValid(client) then return end
+            print(string.format("[MyModule] handled PlayerCheatDetected for %s", client:Name()))
+        end)
+        ```
+
     Returns:
         nil
 
@@ -101,6 +135,13 @@
 
     Parameters:
         None
+
+    Example Usage:
+        ```lua
+        hook.Add("VerifyCheats", "liaExampleVerifyCheats", function()
+            print("[MyModule] handled VerifyCheats")
+        end)
+        ```
 
     Returns:
         nil

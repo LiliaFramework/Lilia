@@ -1,4 +1,4 @@
-﻿--[[
+--[[
     Hooks:
         AdjustStaminaOffset(client, offset)
 
@@ -14,6 +14,13 @@
 
         offset (number)
             The pending stamina change for this tick. Negative values drain stamina and positive values regenerate it.
+
+    Example Usage:
+        ```lua
+        hook.Add("AdjustStaminaOffset", "liaExampleAdjustStaminaOffset", function(client, offset)
+            return (offset or 0) + 5
+        end)
+        ```
 
     Returns:
         number|nil

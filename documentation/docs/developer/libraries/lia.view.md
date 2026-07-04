@@ -35,7 +35,7 @@ The view library centralizes world-space preview behavior under `lia.view`. It c
 ---
 
 <details class="realm-client" id="function-liaviewshouldhideplayer">
-<summary><span class="summary-main"><a id="lia.view.shouldHidePlayer"></a>lia.view.shouldHidePlayer(player)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/view.lua#L101" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="lia.view.shouldHidePlayer"></a>lia.view.shouldHidePlayer(player)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/view.lua#L109" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="liaviewshouldhideplayer"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -57,13 +57,22 @@ The view library centralizes world-space preview behavior under `lia.view`. It c
 <p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#2.1">boolean</a></span> True when the player is part of the active preview's hidden player set.</p>
 </div>
 
+<h3 style="margin-bottom: 5px; font-weight: 700;">Example Usage</h3>
+<div style="margin-left: 20px; margin-bottom: 20px;">
+<pre><code class="language-lua">  local previewOwner = lia.view.activeOwner
+  if IsValid(previewOwner) and lia.view.shouldHidePlayer(LocalPlayer()) then
+      chat.AddText(Color(255, 200, 0), "The active preview is hiding the local player.")
+  end
+</code></pre>
+</div>
+
 </div>
 </details>
 
 ---
 
 <details class="realm-client" id="function-liaviewclose">
-<summary><span class="summary-main"><a id="lia.view.close"></a>lia.view.close(owner)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/view.lua#L120" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="lia.view.close"></a>lia.view.close(owner)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/view.lua#L135" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="liaviewclose"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -80,13 +89,21 @@ The view library centralizes world-space preview behavior under `lia.view`. It c
 <p><span class="types"><a class="type" href="/developer/meta/panel/">Panel</a></span> <span class="parameter">owner</span> The panel or owner object that started the preview session.</p>
 </div>
 
+<h3 style="margin-bottom: 5px; font-weight: 700;">Example Usage</h3>
+<div style="margin-left: 20px; margin-bottom: 20px;">
+<pre><code class="language-lua">  local panel = vgui.Create("EditablePanel")
+  lia.view.begin(panel, {hideEntities = {LocalPlayer()}})
+  lia.view.close(panel)
+</code></pre>
+</div>
+
 </div>
 </details>
 
 ---
 
 <details class="realm-client" id="function-liaviewbegin">
-<summary><span class="summary-main"><a id="lia.view.begin"></a>lia.view.begin(owner, config)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/view.lua#L167" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="lia.view.begin"></a>lia.view.begin(owner, config)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/view.lua#L192" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="liaviewbegin"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -104,13 +121,24 @@ The view library centralizes world-space preview behavior under `lia.view`. It c
 <p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#2.1">table</a></span> <span class="parameter">config</span> Preview configuration such as hidden entities, camera offsets, preview position, and context data.</p>
 </div>
 
+<h3 style="margin-bottom: 5px; font-weight: 700;">Example Usage</h3>
+<div style="margin-left: 20px; margin-bottom: 20px;">
+<pre><code class="language-lua">  local panel = vgui.Create("EditablePanel")
+  lia.view.begin(panel, {
+      hideEntities = {LocalPlayer()},
+      position = LocalPlayer():GetPos() + Vector(64, 0, 8),
+      angle = Angle(0, LocalPlayer():EyeAngles().y + 180, 0)
+  })
+</code></pre>
+</div>
+
 </div>
 </details>
 
 ---
 
 <details class="realm-client" id="function-liaviewsetmodel">
-<summary><span class="summary-main"><a id="lia.view.setModel"></a>lia.view.setModel(owner, modelPath, options)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/view.lua#L287" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="lia.view.setModel"></a>lia.view.setModel(owner, modelPath, options)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/view.lua#L322" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="liaviewsetmodel"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -129,13 +157,24 @@ The view library centralizes world-space preview behavior under `lia.view`. It c
 <p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#2.1">table</a></span> <span class="parameter">options</span> Appearance and context options such as skin, bodygroups, angle, position, and hidden entities.</p>
 </div>
 
+<h3 style="margin-bottom: 5px; font-weight: 700;">Example Usage</h3>
+<div style="margin-left: 20px; margin-bottom: 20px;">
+<pre><code class="language-lua">  local panel = vgui.Create("EditablePanel")
+  lia.view.setModel(panel, LocalPlayer():GetModel(), {
+      position = LocalPlayer():GetPos() + Vector(64, 0, 8),
+      bodygroups = {[1] = 0}
+  })
+  lia.view.rotate(panel, 30)
+</code></pre>
+</div>
+
 </div>
 </details>
 
 ---
 
 <details class="realm-client" id="function-liaviewgetentity">
-<summary><span class="summary-main"><a id="lia.view.getEntity"></a>lia.view.getEntity(owner)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/view.lua#L329" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="lia.view.getEntity"></a>lia.view.getEntity(owner)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/view.lua#L374" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="liaviewgetentity"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -157,13 +196,24 @@ The view library centralizes world-space preview behavior under `lia.view`. It c
 <p><span class="types"><a class="type" href="/developer/meta/entity/">Entity|nil</a></span> The active clientside preview model, or nil when no preview is active.</p>
 </div>
 
+<h3 style="margin-bottom: 5px; font-weight: 700;">Example Usage</h3>
+<div style="margin-left: 20px; margin-bottom: 20px;">
+<pre><code class="language-lua">  local panel = vgui.Create("EditablePanel")
+  local previewEntity = lia.view.getEntity(panel)
+  if IsValid(previewEntity) then
+      previewEntity:SetSkin(1)
+      previewEntity:SetCycle(0)
+  end
+</code></pre>
+</div>
+
 </div>
 </details>
 
 ---
 
 <details class="realm-client" id="function-liaviewrotate">
-<summary><span class="summary-main"><a id="lia.view.rotate"></a>lia.view.rotate(owner, deltaYaw)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/view.lua#L349" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="lia.view.rotate"></a>lia.view.rotate(owner, deltaYaw)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/view.lua#L401" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="liaviewrotate"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -179,6 +229,14 @@ The view library centralizes world-space preview behavior under `lia.view`. It c
 <div style="margin-left: 20px; margin-bottom: 20px;">
 <p><span class="types"><a class="type" href="/developer/meta/panel/">Panel</a></span> <span class="parameter">owner</span> The panel or owner object that owns the preview session.</p>
 <p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#2.1">number</a></span> <span class="parameter">deltaYaw</span> The yaw delta to apply in degrees.</p>
+</div>
+
+<h3 style="margin-bottom: 5px; font-weight: 700;">Example Usage</h3>
+<div style="margin-left: 20px; margin-bottom: 20px;">
+<pre><code class="language-lua">  local panel = vgui.Create("EditablePanel")
+  lia.view.rotate(panel, 15)
+  lia.view.rotate(panel, 15)
+</code></pre>
 </div>
 
 </div>
