@@ -1250,6 +1250,36 @@ def validate_hook_group_categories(group: Dict[str, object], output_dir: Path) -
         raise RuntimeError(f"Generated hook categories did not match source comments in {output_path}:\n{mismatch_text}")
 
 
+def validate_no_duplicate_documented_hooks(grouped_hooks: Dict[str, Dict[str, object]], base_dir: Path) -> None:
+    hooks_by_name: Dict[str, List[Dict[str, object]]] = {}
+
+    for group in grouped_hooks.values():
+        for hook in group['hooks']:
+            hooks_by_name.setdefault(hook['name'], []).append(hook)
+
+    duplicates = []
+    for hook_name, entries in sorted(hooks_by_name.items(), key=lambda item: item[0].lower()):
+        if len(entries) < 2:
+            continue
+
+        locations = []
+        for entry in sorted(entries, key=lambda item: (str(item['file_path']).lower(), item['line'])):
+            try:
+                relative_path = entry['file_path'].resolve().relative_to(base_dir.resolve())
+            except ValueError:
+                relative_path = entry['file_path']
+            locations.append(f"{relative_path}:{entry['line']}")
+
+        duplicates.append(f" - {hook_name}\n   " + "\n   ".join(locations))
+
+    if duplicates:
+        duplicate_text = '\n'.join(duplicates)
+        raise RuntimeError(
+            "Duplicate documented hooks were found. Each documented hook should only appear once:\n"
+            f"{duplicate_text}"
+        )
+
+
 def generate_hook_documentation(core_output_dir: Path, module_output_dir: Path, base_dir: Path) -> None:
     gamemode_dir = base_dir / 'gamemode'
     grouped_hooks: Dict[str, Dict[str, object]] = {}
@@ -1295,6 +1325,8 @@ def generate_hook_documentation(core_output_dir: Path, module_output_dir: Path, 
                 'line': hook['line'],
                 'file_path': file_path
             })
+
+    validate_no_duplicate_documented_hooks(grouped_hooks, base_dir)
 
     clear_generated_markdown(core_output_dir)
     clear_generated_markdown(module_output_dir)
