@@ -1,4 +1,4 @@
---[[
+﻿--[[
     Hooks:
         AddWarning(charID, warned, warnedSteamID, timestamp, message, warner, warnerSteamID, severity)
 

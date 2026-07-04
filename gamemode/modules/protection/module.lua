@@ -1,4 +1,4 @@
---[[
+﻿--[[
     Hooks:
         CanDeleteChar(client, character)
 

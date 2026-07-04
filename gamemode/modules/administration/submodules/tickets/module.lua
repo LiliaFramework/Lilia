@@ -1,4 +1,4 @@
---[[
+﻿--[[
     Hooks:
         CreateTicketFrame(requester, message, claimed)
 
