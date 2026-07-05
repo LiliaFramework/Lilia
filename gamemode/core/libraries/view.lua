@@ -1,4 +1,4 @@
---[[
+﻿--[[
     Folder: Developer - Libraries
     File: lia.view.md
 ]]
@@ -10,6 +10,66 @@
 --[[
     Overview:
         The view library centralizes world-space preview behavior under `lia.view`. It can start and stop a preview session for a panel owner, spawn and manage a clientside model, rotate that model, expose the active preview entity, and temporarily hide players or entities while the preview is active.
+]]
+--[[
+    Hooks:
+        SetupPlayerModel(Entity entity, Character|nil character)
+
+    Purpose:
+        Allows code to configure a clientside player preview model after it is spawned but before character-specific appearance tweaks are applied.
+
+    Category:
+        Main Menu
+
+    Parameters:
+        entity (Entity)
+            The clientside model entity being prepared for preview.
+
+        character (Character|nil)
+            An optional loaded character when the preview is built from character selection data.
+
+    Example Usage:
+        ```lua
+        hook.Add("SetupPlayerModel", "liaExampleSetupPlayerModel", function(entity, character)
+            entity:SetCycle(0)
+        end)
+        ```
+
+    Returns:
+        nil
+
+    Realm:
+        Client
+]]
+--[[
+    Hooks:
+        ModifyCharacterModel(Entity entity, table|Character|nil contextOrCharacter)
+
+    Purpose:
+        Allows code to adjust a preview model after its base model, skin, and bodygroups have been applied for character creation or character selection scenes.
+
+    Category:
+        Main Menu
+
+    Parameters:
+        entity (Entity)
+            The clientside model entity being displayed.
+
+        contextOrCharacter (table|Character|nil)
+            Either the creation context table, the loaded character being previewed, or nil when no extra context is supplied.
+
+    Example Usage:
+        ```lua
+        hook.Add("ModifyCharacterModel", "liaExampleModifyCharacterModel", function(entity, contextOrCharacter)
+            entity:SetAngles(Angle(0, 180, 0))
+        end)
+        ```
+
+    Returns:
+        nil
+
+    Realm:
+        Client
 ]]
 lia.view = lia.view or {}
 local function getPreviewAngle(client)

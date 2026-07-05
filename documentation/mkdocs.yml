@@ -53,16 +53,44 @@ nav:
           - Administration - Tickets: developer/hooks/administration-tickets.md
           - Administration - Warnings: developer/hooks/administration-warnings.md
           - Attributes: developer/hooks/attributes.md
+          - Camera: developer/hooks/camera.md
+          - Character: developer/hooks/character.md
+          - Chat: developer/hooks/chat.md
           - Chatbox: developer/hooks/chatbox.md
+          - Color: developer/hooks/color.md
+          - Combat: developer/hooks/combat.md
+          - Compatibility: developer/hooks/compatibility.md
+          - Configuration: developer/hooks/configuration.md
+          - DarkRP: developer/hooks/darkrp.md
+          - Data: developer/hooks/data.md
+          - Database: developer/hooks/database.md
+          - Derma: developer/hooks/derma.md
+          - Dialog: developer/hooks/dialog.md
           - Doors: developer/hooks/doors.md
+          - Economy: developer/hooks/economy.md
+          - HUD: developer/hooks/hud.md
+          - Initialization: developer/hooks/initialization.md
+          - Interaction: developer/hooks/interaction.md
           - Inventory: developer/hooks/inventory.md
+          - Items: developer/hooks/items.md
+          - Keybinds: developer/hooks/keybinds.md
+          - Loader: developer/hooks/loader.md
           - Main Menu: developer/hooks/main-menu.md
+          - Networking: developer/hooks/networking.md
+          - Options: developer/hooks/options.md
+          - Persistence: developer/hooks/persistence.md
+          - Player Interaction: developer/hooks/player-interaction.md
           - Protection: developer/hooks/protection.md
           - Recognition: developer/hooks/recognition.md
+          - Salary: developer/hooks/salary.md
+          - Scoreboard: developer/hooks/scoreboard.md
           - Spawns: developer/hooks/spawns.md
-          - Staffing: developer/hooks/staffing.md
           - Teams: developer/hooks/teams.md
+          - UI: developer/hooks/ui.md
           - Vendor: developer/hooks/vendor.md
+          - Voice: developer/hooks/voice.md
+          - Web Image: developer/hooks/web-image.md
+          - Web Sound: developer/hooks/web-sound.md
           # AUTO-GENERATED: HOOKS END
       - Libraries:
           - Overview: developer/libraries/index.md

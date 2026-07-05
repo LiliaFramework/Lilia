@@ -1,4 +1,205 @@
-﻿local MODULE = MODULE
+﻿--[[
+    Hooks:
+        GetAdminStickLists(Entity target, table lists)
+
+    Purpose:
+        Allows modules to contribute structured submenu definitions for the admin stick based on the current target entity.
+
+    Category:
+        Administration
+
+    Parameters:
+        target (Entity)
+            The entity currently selected or hovered by the admin stick.
+
+        lists (table)
+            The mutable array that receives generated list definitions with categories, subcategories, and items.
+
+    Example Usage:
+        ```lua
+        hook.Add("GetAdminStickLists", "liaExampleGetAdminStickLists", function(target, lists)
+            if IsValid(target) and target:isDoor() then
+                lists[#lists + 1] = {
+                    name = "Example",
+                    category = "doorManagement",
+                    subcategory = "example",
+                    items = {
+                        {
+                            name = "Print Door ID",
+                            callback = function(currentTarget)
+                                print(currentTarget:MapCreationID())
+                            end
+                        }
+                    }
+                }
+            end
+        end)
+        ```
+
+    Returns:
+        nil
+
+    Realm:
+        Client
+]]
+--[[
+    Hooks:
+        AddToAdminStickHUD(Player client, Entity target, table information)
+
+    Purpose:
+        Allows modules to append extra text lines to the admin stick HUD for the currently traced target.
+
+    Category:
+        Administration
+
+    Parameters:
+        client (Player)
+            The local player viewing the admin stick HUD.
+
+        target (Entity)
+            The current entity or player targeted by the admin stick.
+
+        information (table)
+            The mutable array of text lines that will be rendered in the HUD panel.
+
+    Example Usage:
+        ```lua
+        hook.Add("AddToAdminStickHUD", "liaExampleAddToAdminStickHUD", function(client, target, information)
+            if IsValid(target) and target:isDoor() then
+                information[#information + 1] = "Door ID: " .. target:MapCreationID()
+            end
+        end)
+        ```
+
+    Returns:
+        nil
+
+    Realm:
+        Client
+]]
+--[[
+    Hooks:
+        OpenAdminStickUI(Entity target)
+
+    Purpose:
+        Runs when the admin stick requests its management UI for a traced target and the client should build or replace the active admin stick menu.
+
+    Category:
+        Administration
+
+    Parameters:
+        target (Entity)
+            The targeted entity that the admin stick is attempting to manage.
+
+    Example Usage:
+        ```lua
+        hook.Add("OpenAdminStickUI", "liaExampleOpenAdminStickUI", function(target)
+            if IsValid(target) then
+                print("Opening admin stick UI for:", target:GetClass())
+            end
+        end)
+        ```
+
+    Returns:
+        nil
+
+    Realm:
+        Client
+]]
+--[[
+    Hooks:
+        PopulateAdminStick(Panel currentMenu, Entity currentTarget, table currentStores)
+
+    Purpose:
+        Runs while the admin stick menu is being populated so modules can add menu options and submenu groups for the current target.
+
+    Category:
+        Administration
+
+    Parameters:
+        currentMenu (Panel)
+            The active admin stick context menu being populated.
+
+        currentTarget (Entity)
+            The entity currently targeted by the admin stick.
+
+        currentStores (table)
+            The mutable store table used to cache created category and subcategory menus.
+
+    Example Usage:
+        ```lua
+        hook.Add("PopulateAdminStick", "liaExamplePopulateAdminStick", function(currentMenu, currentTarget, currentStores)
+            if IsValid(currentMenu) and IsValid(currentTarget) and currentTarget:isDoor() then
+                currentMenu:AddOption("Print Door ID", function()
+                    print(currentTarget:MapCreationID())
+                end):SetIcon("icon16/information.png")
+            end
+        end)
+        ```
+
+    Returns:
+        nil
+
+    Realm:
+        Client
+]]
+--[[
+    Hooks:
+        OnAdminStickMenuClosed()
+
+    Purpose:
+        Runs after the admin stick menu closes so clientside state tied to the active menu can be cleared.
+
+    Category:
+        Administration
+
+    Parameters:
+        None
+
+    Example Usage:
+        ```lua
+        hook.Add("OnAdminStickMenuClosed", "liaExampleOnAdminStickMenuClosed", function()
+            print("Admin stick menu closed")
+        end)
+        ```
+
+    Returns:
+        nil
+
+    Realm:
+        Client
+]]
+--[[
+    Hooks:
+        AdminStickAddModels(table modList)
+
+    Purpose:
+        Allows clientside code to add extra model definitions to the admin stick model picker before they are displayed.
+
+    Category:
+        Administration
+
+    Parameters:
+        modList (table)
+            The mutable array of model definitions with `name` and `mdl` fields.
+
+    Example Usage:
+        ```lua
+        hook.Add("AdminStickAddModels", "liaExampleAdminStickAddModels", function(modList)
+            modList[#modList + 1] = {
+                name = "Citizen Male",
+                mdl = "models/Humans/Group01/male_01.mdl"
+            }
+        end)
+        ```
+
+    Returns:
+        nil
+
+    Realm:
+        Client
+]]
+local MODULE = MODULE
 AdminStickIsOpen = false
 AdminStickMenu = nil
 AdminStickWarnings = {}

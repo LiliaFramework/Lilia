@@ -1,149 +1,273 @@
-﻿--[[
-    Folder: Developer - Meta Tables
-    File: player.md
-    Append: true
-]]
-local playerMeta = FindMetaTable("Player")
 --[[
-    Purpose:
-        Returns the PAC3 part registry tracked on the player through Lilia netvars.
+    Hooks:
+        AdjustPACPartData(wearer, id, data)
 
-    When Used:
-        Requires PAC3 to be installed and the global `pac` table to be available. Use this to inspect which PAC-backed item parts are currently marked as active for the player.
+    Purpose:
+        Allows plugins or modules to modify a PAC part data table before it is attached to a wearer.
+
+    Category:
+        Compatibility
+
+    Parameters:
+        wearer (Player)
+            The player who will receive the PAC part.
+
+        id (string)
+            The PAC part identifier being adjusted.
+
+        data (table)
+            The mutable PAC part data table.
 
     Returns:
-        table
-            A table keyed by PAC part identifier with boolean active states.
+        table|nil
+            Return a replacement PAC part data table to override the adjusted result. Returning nil allows the default behavior to continue.
 
     Example Usage:
         ```lua
-        local activeParts = client:getParts()
-        if activeParts["fancy_hat"] then
-            print("Hat part is active.")
-        end
+        hook.Add("AdjustPACPartData", "liaExampleAdjustPACPartData", function(wearer, id, data)
+            data.selfillum = 1
+            return data
+        end)
         ```
 
     Realm:
-        Shared
+        Client
 ]]
-function playerMeta:getParts()
-    return self:getNetVar("parts", {})
-end
+--[[
+    Hooks:
+        GetAdjustedPartData(wearer, id)
 
+    Purpose:
+        Allows plugins or modules to provide the final PAC part data table used for attachment.
+
+    Category:
+        Compatibility
+
+    Parameters:
+        wearer (Player)
+            The player who will receive the PAC part.
+
+        id (string)
+            The PAC part identifier being resolved.
+
+    Returns:
+        table|nil
+            Return a PAC part data table to override the attachment payload. Returning nil allows the default behavior to continue.
+
+    Example Usage:
+        ```lua
+        hook.Add("GetAdjustedPartData", "liaExampleGetAdjustedPartData", function(wearer, id)
+            if id == "visor" then
+                return {
+                    classname = "model",
+                    model = "models/props_junk/TrafficCone001a.mdl"
+                }
+            end
+        end)
+        ```
+
+    Realm:
+        Client
+]]
+--[[
+    Hooks:
+        AttachPart(client, id)
+
+    Purpose:
+        Runs when a tracked PAC part should be attached to a player clientside.
+
+    Category:
+        Compatibility
+
+    Parameters:
+        client (Player)
+            The player receiving the PAC part.
+
+        id (string)
+            The PAC part identifier being attached.
+
+    Returns:
+        nil
+
+    Example Usage:
+        ```lua
+        hook.Add("AttachPart", "liaExampleAttachPart", function(client, id)
+            print("Attaching PAC part", id, "to", client)
+        end)
+        ```
+
+    Realm:
+        Client
+]]
+--[[
+    Hooks:
+        RemovePart(client, id)
+
+    Purpose:
+        Runs when a tracked PAC part should be detached from a player clientside.
+
+    Category:
+        Compatibility
+
+    Parameters:
+        client (Player)
+            The player losing the PAC part.
+
+        id (string)
+            The PAC part identifier being removed.
+
+    Returns:
+        nil
+
+    Example Usage:
+        ```lua
+        hook.Add("RemovePart", "liaExampleRemovePart", function(client, id)
+            print("Removing PAC part", id, "from", client)
+        end)
+        ```
+
+    Realm:
+        Client
+]]
+--[[
+    Hooks:
+        DrawPlayerRagdoll(entity)
+
+    Purpose:
+        Runs during ragdoll rendering so PAC outfits can be transferred from players to their ragdolls.
+
+    Category:
+        Compatibility
+
+    Parameters:
+        entity (Entity)
+            The ragdoll entity being drawn.
+
+    Returns:
+        nil
+
+    Example Usage:
+        ```lua
+        hook.Add("DrawPlayerRagdoll", "liaExampleDrawPlayerRagdoll", function(entity)
+            entity:SetRenderMode(RENDERMODE_NORMAL)
+        end)
+        ```
+
+    Realm:
+        Client
+]]
+--[[
+    Hooks:
+        OnPAC3PartTransfered(part)
+
+    Purpose:
+        Runs before an active PAC part is transferred from a player to that player's ragdoll.
+
+    Category:
+        Compatibility
+
+    Parameters:
+        part (table)
+            The PAC part object being transferred.
+
+    Returns:
+        nil
+
+    Example Usage:
+        ```lua
+        hook.Add("OnPAC3PartTransfered", "liaExampleOnPAC3PartTransfered", function(part)
+            print("Transferred PAC part", part.ClassName or "unknown")
+        end)
+        ```
+
+    Realm:
+        Client
+]]
+--[[
+    Hooks:
+        OnPlayerObserve(client, state)
+
+    Purpose:
+        Runs when a player enters or leaves observer mode so PAC parts can be reset or rebuilt.
+
+    Category:
+        Compatibility
+
+    Parameters:
+        client (Player)
+            The player whose observer state changed.
+
+        state (boolean)
+            Whether the player entered observer mode.
+
+    Returns:
+        nil
+
+    Example Usage:
+        ```lua
+        hook.Add("OnPlayerObserve", "liaExampleOnPlayerObservePAC", function(client, state)
+            print("Observer state changed", state)
+        end)
+        ```
+
+    Realm:
+        Client
+]]
+--[[
+    Hooks:
+        TryViewModel(entity)
+
+    Purpose:
+        Allows plugins or modules to replace the entity used by PAC event checks that inspect the local view model.
+
+    Category:
+        Compatibility
+
+    Parameters:
+        entity (Entity)
+            The entity being evaluated for PAC event processing.
+
+    Returns:
+        Entity|nil
+            Return an entity to override the PAC event target. Returning nil allows the default behavior to continue.
+
+    Example Usage:
+        ```lua
+        hook.Add("TryViewModel", "liaExampleTryViewModel", function(entity)
+            return entity
+        end)
+        ```
+
+    Realm:
+        Client
+]]
+--[[
+    Hooks:
+        SetupPACDataFromItems()
+
+    Purpose:
+        Runs after modules initialize so PAC item definitions can register their attachment data.
+
+    Category:
+        Compatibility
+
+    Parameters:
+        None
+
+    Returns:
+        nil
+
+    Example Usage:
+        ```lua
+        hook.Add("SetupPACDataFromItems", "liaExampleSetupPACDataFromItems", function()
+            print("PAC item data setup requested")
+        end)
+        ```
+
+    Realm:
+        Client
+]]
 if SERVER then
-    --[[
-        Purpose:
-            Sends the player's tracked PAC3 parts back to that player so the client can rebuild its attached PAC data.
-
-        When Used:
-            Requires PAC3 to be installed and the global `pac` table to be available. Call this after a player loads in or whenever the client's PAC attachments need to be refreshed from server state.
-
-        Returns:
-            nil
-
-        Example Usage:
-            ```lua
-            client:syncParts()
-            ```
-
-        Realm:
-            Server
-    ]]
-    function playerMeta:syncParts()
-        net.Start("liaPacSync")
-        net.Send(self)
-    end
-
-    --[[
-        Purpose:
-            Marks a PAC3 part as active for the player and broadcasts the attach request to clients.
-
-        Parameters:
-            partID (string)
-                The PAC part identifier to attach and track.
-
-        When Used:
-            Requires PAC3 to be installed and the global `pac` table to be available. Commonly used when a PAC-backed item equips or when character state needs to reapply a cosmetic part.
-
-        Returns:
-            nil
-
-        Example Usage:
-            ```lua
-            client:addPart("fancy_hat")
-            ```
-
-        Realm:
-            Server
-    ]]
-    function playerMeta:addPart(partID)
-        if self:getParts()[partID] then return end
-        net.Start("liaPacPartAdd")
-        net.WriteEntity(self)
-        net.WriteString(partID)
-        net.Broadcast()
-        local parts = self:getParts()
-        parts[partID] = true
-        self:setNetVar("parts", parts)
-    end
-
-    --[[
-        Purpose:
-            Removes a tracked PAC3 part from the player and tells clients to detach it.
-
-        Parameters:
-            partID (string)
-                The PAC part identifier to remove.
-
-        When Used:
-            Requires PAC3 to be installed and the global `pac` table to be available. Use this when a PAC-backed item is unequipped, dropped, or otherwise stops applying its visual attachment.
-
-        Returns:
-            nil
-
-        Example Usage:
-            ```lua
-            client:removePart("fancy_hat")
-            ```
-
-        Realm:
-            Server
-    ]]
-    function playerMeta:removePart(partID)
-        net.Start("liaPacPartRemove")
-        net.WriteEntity(self)
-        net.WriteString(partID)
-        net.Broadcast()
-        local parts = self:getParts()
-        parts[partID] = nil
-        self:setNetVar("parts", parts)
-    end
-
-    --[[
-        Purpose:
-            Clears every tracked PAC3 part from the player and broadcasts a full reset.
-
-        When Used:
-            Requires PAC3 to be installed and the global `pac` table to be available. This is useful before rebuilding the player's PAC state, such as during loadout changes or observer transitions.
-
-        Returns:
-            nil
-
-        Example Usage:
-            ```lua
-            client:resetParts()
-            ```
-
-        Realm:
-            Server
-    ]]
-    function playerMeta:resetParts()
-        net.Start("liaPacPartReset")
-        net.WriteEntity(self)
-        net.Broadcast()
-        self:setNetVar("parts", {})
-    end
-
     hook.Add("PostPlayerInitialSpawn", "liaPAC", function(client) timer.Simple(1, function() client:syncParts() end) end)
     hook.Add("PlayerLoadout", "liaPAC", function(client) client:resetParts() end)
     game.ConsoleCommand("sv_pac_webcontent_limit 35840\n")

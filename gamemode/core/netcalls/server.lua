@@ -1,4 +1,311 @@
-﻿net.Receive("liaPlayerRespawn", function(_, client)
+﻿--[[
+    Hooks:
+        OnDialogNPCTypeSet(Player client, Entity npc)
+
+    Purpose:
+        Runs after a player finishes assigning a dialog NPC type so modules can react to the updated NPC.
+
+    Category:
+        Dialog
+
+    Parameters:
+        client (Player)
+            The player who updated the NPC.
+
+        npc (Entity)
+            The NPC entity whose dialog type was changed.
+
+    Example Usage:
+        ```lua
+        hook.Add("OnDialogNPCTypeSet", "liaExampleDialogTypeSet", function(client, npc)
+            print(client:Nick(), npc:GetClass())
+        end)
+        ```
+
+    Returns:
+        nil
+
+    Realm:
+        Server
+]]
+--[[
+    Hooks:
+        CanPlayerRespawn(Player client, number|nil timePassed, number baseTime, number|nil lastDeath)
+
+    Purpose:
+        Allows modules to override or block a dead player's manual respawn request before the default spawn timer check runs.
+
+    Category:
+        Character
+
+    Parameters:
+        client (Player)
+            The dead player requesting a respawn.
+
+        timePassed (number|nil)
+            The number of seconds since the player's recorded death time, or nil when no death time was stored yet.
+
+        baseTime (number)
+            The configured respawn delay after any `OverrideSpawnTime` adjustments.
+
+        lastDeath (number|nil)
+            The raw Unix timestamp stored in the player's `lastDeathTime` local var, if one exists.
+
+    Example Usage:
+        ```lua
+        hook.Add("CanPlayerRespawn", "liaExampleCanPlayerRespawn", function(client, timePassed, baseTime, lastDeath)
+            if client:getChar() and client:getChar():getData("permakilled") then return false end
+            if timePassed and timePassed >= math.max(baseTime, 10) then return true end
+        end)
+        ```
+
+    Returns:
+        boolean|nil
+            Return false to block the respawn request. Return true to force an immediate respawn. Return nil to let the default timer-based logic continue.
+
+    Realm:
+        Server
+]]
+--[[
+    Hooks:
+        CanPlayerUseChar(Player client, Character character)
+
+    Purpose:
+        Validates whether a player is allowed to load or switch to a specific character before setup begins.
+
+    Category:
+        Character
+
+    Parameters:
+        client (Player)
+            The player attempting to use the character.
+
+        character (Character)
+            The character object that is about to be loaded for the player.
+
+    Example Usage:
+        ```lua
+        hook.Add("CanPlayerUseChar", "liaExampleCanPlayerUseChar", function(client, character)
+            if character:isBanned() then return false, L("permaKilledCharacter") end
+            if character:getFaction() == FACTION_STAFF and not client:hasPrivilege("createStaffCharacter") then
+                return false, L("invalidChar")
+            end
+        end)
+        ```
+
+    Returns:
+        boolean|nil, string|nil
+            Return false and an optional localized reason string to deny using the character. Return nil or true to allow loading to continue.
+
+    Realm:
+        Server
+]]
+--[[
+    Hooks:
+        AdjustCreationData(Player client, table data, table newData, table originalData)
+
+    Purpose:
+        Allows modules to inject or override sanitized character creation values after validation but before the final character record is created.
+
+    Category:
+        Character
+
+    Parameters:
+        client (Player)
+            The player creating a new character.
+
+        data (table)
+            The validated creation payload after unsupported character vars have been removed.
+
+        newData (table)
+            A mutable table for additional values that will be merged into `data`.
+
+        originalData (table)
+            A copy of the raw creation payload as it was originally received from the client before cleanup.
+
+    Example Usage:
+        ```lua
+        hook.Add("AdjustCreationData", "liaExampleAdjustCreationData", function(client, data, newData, originalData)
+            if originalData.name and originalData.name ~= "" then
+                newData.name = string.Trim(originalData.name)
+            end
+        end)
+        ```
+
+    Returns:
+        nil
+
+    Realm:
+        Server
+]]
+--[[
+    Hooks:
+        OnCharCreated(Player client, Character character, table originalData)
+
+    Purpose:
+        Runs after a new character has been created, synced to its owner, and added to that player's character list, but before the character is set up as active.
+
+    Category:
+        Character
+
+    Parameters:
+        client (Player)
+            The player who created the character.
+
+        character (Character)
+            The newly created character object.
+
+        originalData (table)
+            The original character creation payload captured before validation and adjustment removed unsupported fields.
+
+    Example Usage:
+        ```lua
+        hook.Add("OnCharCreated", "liaExampleOnCharCreated", function(client, character, originalData)
+            if originalData.model then
+                lia.log.add(client, "charCreate", character:getName(), originalData.model)
+            end
+        end)
+        ```
+
+    Returns:
+        nil
+
+    Realm:
+        Server
+]]
+--[[
+    Hooks:
+        CharDeleted(Player client, Character character)
+
+    Purpose:
+        Runs immediately before a player's owned character is deleted from memory and storage through the character deletion net message.
+
+    Category:
+        Character
+
+    Parameters:
+        client (Player)
+            The player requesting the deletion.
+
+        character (Character)
+            The loaded character object that is about to be deleted.
+
+    Example Usage:
+        ```lua
+        hook.Add("CharDeleted", "liaExampleCharDeleted", function(client, character)
+            lia.log.add(client, "charDelete", character:getID())
+        end)
+        ```
+
+    Returns:
+        nil
+
+    Realm:
+        Server
+]]
+--[[
+    Hooks:
+        OverrideSpawnTime(Player ply, number baseTime)
+
+    Purpose:
+        Allows modules to override the respawn delay value used by both the respawn HUD and the server-side respawn gate.
+
+    Category:
+        Character
+
+    Parameters:
+        ply (Player)
+            The player whose respawn delay is being queried.
+
+        baseTime (number)
+            The configured default respawn delay before overrides are applied.
+
+    Example Usage:
+        ```lua
+        hook.Add("OverrideSpawnTime", "liaExampleOverrideSpawnTime", function(ply, baseTime)
+            if ply:hasPrivilege("noDeathCooldown") then return 0 end
+            return baseTime
+        end)
+        ```
+
+    Returns:
+        number|nil
+            Return a number to replace the respawn delay. Return nil to keep the configured default.
+
+    Realm:
+        Shared
+]]
+--[[
+    Hooks:
+        PlayerLoadedChar(Player client, Character character, Character|nil currentChar)
+
+    Purpose:
+        Runs after the new character has been set up so modules can apply loadout, inventory, stamina, class, and other post-load state.
+
+    Category:
+        Character
+
+    Parameters:
+        client (Player)
+            The player who just loaded the character.
+
+        character (Character)
+            The character that has just been set up as active.
+
+        currentChar (Character|nil)
+            The player's previous active character before the load occurred, if one existed.
+
+    Example Usage:
+        ```lua
+        hook.Add("PlayerLoadedChar", "liaExamplePlayerLoadedChar", function(client, character, currentChar)
+            if currentChar and currentChar:getID() ~= character:getID() then
+                lia.log.add(client, "charLoad", character:getName(), character:getID())
+            end
+        end)
+        ```
+
+    Returns:
+        nil
+
+    Realm:
+        Server
+]]
+--[[
+    Hooks:
+        PostPlayerLoadedChar(Player client, Character character, Character|nil currentChar)
+
+    Purpose:
+        Runs after the character load response has been sent and the main character setup hooks have finished.
+
+    Category:
+        Character
+
+    Parameters:
+        client (Player)
+            The player who just loaded the character.
+
+        character (Character)
+            The character that is now active.
+
+        currentChar (Character|nil)
+            The player's previous active character before the load occurred, if one existed.
+
+    Example Usage:
+        ```lua
+        hook.Add("PostPlayerLoadedChar", "liaExamplePostPlayerLoadedChar", function(client, character, currentChar)
+            if currentChar and currentChar:getID() ~= character:getID() then
+                client:notifySuccessLocalized("charLoaded", character:getName())
+            end
+        end)
+        ```
+
+    Returns:
+        nil
+
+    Realm:
+        Server
+]]
+net.Receive("liaPlayerRespawn", function(_, client)
     if not IsValid(client) or client:Alive() then return end
     local char = client:getChar()
     if not char then return end

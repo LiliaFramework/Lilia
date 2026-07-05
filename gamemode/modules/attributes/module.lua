@@ -1,4 +1,4 @@
---[[
+﻿--[[
     Hooks:
         AdjustStaminaOffset(client, offset)
 

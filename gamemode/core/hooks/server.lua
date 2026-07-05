@@ -1,4 +1,1530 @@
-﻿local GM = GM or GAMEMODE
+﻿--[[
+    Hooks:
+        OnPickupMoney(Player client, Entity moneyEntity)
+
+    Purpose:
+        Runs after a player successfully picks up a money entity so server systems can notify or log the transaction.
+
+    Category:
+        Economy
+
+    Parameters:
+        client (Player)
+            The player who picked up the money.
+
+        moneyEntity (Entity)
+            The money entity that was consumed.
+
+    Example Usage:
+        ```lua
+        hook.Add("OnPickupMoney", "liaExampleServerPickupMoney", function(client, moneyEntity)
+            print(client:Nick(), moneyEntity:getAmount())
+        end)
+        ```
+
+    Returns:
+        nil
+
+    Realm:
+        Server
+]]
+--[[
+    Hooks:
+        PostPlayerInitialSpawn(client)
+
+    Purpose:
+        Runs after a player initially spawns so PAC part state can be synchronized to that client.
+
+    Category:
+        Character
+
+    Parameters:
+        client (Player)
+            The player whose PAC part state is being synchronized.
+
+    Returns:
+        nil
+
+    Example Usage:
+        ```lua
+        hook.Add("PostPlayerInitialSpawn", "liaExamplePostPlayerInitialSpawnPAC", function(client)
+            if client:hasPrivilege("canUsePAC3") then
+                client:ChatPrint("PAC sync queued")
+            end
+        end)
+        ```
+
+    Realm:
+        Server
+]]
+--[[
+    Hooks:
+        CanItemBeTransfered(Item item, Inventory curInv, Inventory inventory, Player|nil client)
+
+    Purpose:
+        Determines whether an item transfer between inventories should be allowed before the move is completed.
+
+    Category:
+        Inventory
+
+    Parameters:
+        item (Item)
+            The item being transferred.
+
+        curInv (Inventory)
+            The source inventory that currently owns the item.
+
+        inventory (Inventory)
+            The destination inventory for the transfer.
+
+        client (Player|nil)
+            The player initiating the transfer, when available.
+
+    Example Usage:
+        ```lua
+        hook.Add("CanItemBeTransfered", "liaExampleTransferCheck", function(item, curInv, inventory, client)
+            if item and item.lockedToInventory then return false end
+        end)
+        ```
+
+    Returns:
+        boolean|nil
+            Return false to block the transfer. Returning nil allows the default behavior to continue.
+
+    Realm:
+        Server
+]]
+--[[
+    Hooks:
+        PreScaleDamage(number hitgroup, CTakeDamageInfo dmgInfo, number damageScale)
+
+    Purpose:
+        Runs immediately before scaled hitgroup damage is applied so modules can adjust the damage info or scale.
+
+    Category:
+        Combat
+
+    Parameters:
+        hitgroup (number)
+            The hitgroup being processed.
+
+        dmgInfo (CTakeDamageInfo)
+            The mutable damage information object.
+
+        damageScale (number)
+            The scale that is about to be applied.
+
+    Example Usage:
+        ```lua
+        hook.Add("PreScaleDamage", "liaExamplePreScaleDamage", function(hitgroup, dmgInfo, damageScale)
+            if hitgroup == HITGROUP_HEAD then dmgInfo:ScaleDamage(0.9) end
+        end)
+        ```
+
+    Returns:
+        nil
+
+    Realm:
+        Server
+]]
+--[[
+    Hooks:
+        PostPlayerLoadout(Player client)
+
+    Purpose:
+        Runs after a player's loadout finishes so modules can perform final setup work.
+
+    Category:
+        Character
+
+    Parameters:
+        client (Player)
+            The player whose loadout just finished.
+
+    Example Usage:
+        ```lua
+        hook.Add("PostPlayerLoadout", "liaExampleCorePostLoadout", function(client)
+            print(client:Nick())
+        end)
+        ```
+
+    Returns:
+        nil
+
+    Realm:
+        Server
+]]
+--[[
+    Hooks:
+        LoadData()
+
+    Purpose:
+        Runs when persistent gamemode data should be loaded from storage.
+
+    Category:
+        Persistence
+
+    Parameters:
+        None
+
+    Example Usage:
+        ```lua
+        hook.Add("LoadData", "liaExampleCoreLoadData", function()
+            print("Loading saved world data")
+        end)
+        ```
+
+    Returns:
+        nil
+
+    Realm:
+        Server
+]]
+--[[
+    Hooks:
+        PostLoadData()
+
+    Purpose:
+        Runs after persistent gamemode data finishes loading so modules can perform post-load setup.
+
+    Category:
+        Persistence
+
+    Parameters:
+        None
+
+    Example Usage:
+        ```lua
+        hook.Add("PostLoadData", "liaExampleCorePostLoadData", function()
+            print("Finished loading saved world data")
+        end)
+        ```
+
+    Returns:
+        nil
+
+    Realm:
+        Server
+]]
+--[[
+    Hooks:
+        GetDefaultInventoryType(Character|nil character)
+
+    Purpose:
+        Allows modules to override which inventory type new characters should receive by default.
+
+    Category:
+        Inventory
+
+    Parameters:
+        character (Character|nil)
+            The character being initialized, when available.
+
+    Example Usage:
+        ```lua
+        hook.Add("GetDefaultInventoryType", "liaExampleInventoryType", function(character)
+            return "GridInv"
+        end)
+        ```
+
+    Returns:
+        string|nil
+            Return an inventory type identifier to override the default inventory type. Returning nil allows the default behavior to continue.
+
+    Realm:
+        Server
+]]
+--[[
+    Hooks:
+        GetEntitySaveData(Entity ent)
+
+    Purpose:
+        Allows modules to append extra data when a persistent entity is serialized.
+
+    Category:
+        Persistence
+
+    Parameters:
+        ent (Entity)
+            The entity being serialized.
+
+    Example Usage:
+        ```lua
+        hook.Add("GetEntitySaveData", "liaExampleCoreEntitySaveData", function(ent)
+            if IsValid(ent) then return {customClass = ent:GetClass()} end
+        end)
+        ```
+
+    Returns:
+        table|nil
+            Return a table of extra save data to merge into the entity record. Returning nil leaves the save payload unchanged.
+
+    Realm:
+        Server
+]]
+--[[
+    Hooks:
+        OnEntityLoaded(Entity ent, table data)
+
+    Purpose:
+        Runs after a persistent entity is recreated so modules can restore extra state from the saved data.
+
+    Category:
+        Persistence
+
+    Parameters:
+        ent (Entity)
+            The entity that was loaded.
+
+        data (table)
+            The decoded save data for the entity.
+
+    Example Usage:
+        ```lua
+        hook.Add("OnEntityLoaded", "liaExampleCoreEntityLoaded", function(ent, data)
+            if IsValid(ent) and data.customClass then print(data.customClass) end
+        end)
+        ```
+
+    Returns:
+        nil
+
+    Realm:
+        Server
+]]
+--[[
+    Hooks:
+        ShouldPlayDeathSound(Player client, string|nil deathSound)
+
+    Purpose:
+        Allows plugins or modules to block player death sound selection or the final death sound playback.
+
+    Category:
+        Voice
+
+    Parameters:
+        client (Player)
+            The player whose death sound is being processed.
+
+        deathSound (string|nil)
+            The resolved sound that is about to be emitted. This is nil during the earlier selection check in `GetPlayerDeathSound`.
+
+    Returns:
+        boolean|nil
+            Return false to stop the death sound flow at the current stage. Returning nil allows the default behavior to continue.
+
+    Example Usage:
+        ```lua
+        hook.Add("ShouldPlayDeathSound", "liaExampleShouldPlayDeathSound", function(client, deathSound)
+            if client:isStaffOnDuty() then
+                return false
+            end
+        end)
+        ```
+
+    Realm:
+        Server
+]]
+--[[
+    Hooks:
+        ShouldPlayPainSound(Player client, string painContextOrSound)
+
+    Purpose:
+        Allows plugins or modules to block player pain sound selection or the final pain sound playback.
+
+    Category:
+        Voice
+
+    Parameters:
+        client (Player)
+            The player whose pain sound is being processed.
+
+        painContextOrSound (string)
+            Either the requested pain context such as `hurt` or `drown`, or the resolved sound path that is about to be emitted.
+
+    Returns:
+        boolean|nil
+            Return false to stop the pain sound flow at the current stage. Returning nil allows the default behavior to continue.
+
+    Example Usage:
+        ```lua
+        hook.Add("ShouldPlayPainSound", "liaExampleShouldPlayPainSound", function(client, painContextOrSound)
+            if painContextOrSound == "drown" then
+                return false
+            end
+        end)
+        ```
+
+    Realm:
+        Server
+]]
+--[[
+    Hooks:
+        CharPreSave(Character character)
+
+    Purpose:
+        Runs before a character row is written to the database so modules can update transient state or cancel the save.
+
+    Category:
+        Character
+
+    Parameters:
+        character (Character)
+            The character that is about to be saved.
+
+    Returns:
+        boolean|nil
+            Return false to stop the character save. Returning nil allows the save to continue.
+
+    Example Usage:
+        ```lua
+        hook.Add("CharPreSave", "liaExampleCharPreSave", function(character)
+            if character:getData("savingLocked") then
+                return false
+            end
+        end)
+        ```
+
+    Realm:
+        Server
+]]
+--[[
+    Hooks:
+        CanPlayerInteractItem(Player client, string action, Item item, table|nil data)
+
+    Purpose:
+        Determines whether a player may run an item interaction through the standard item action flow.
+
+    Category:
+        Inventory
+
+    Parameters:
+        client (Player)
+            The player attempting the item interaction.
+
+        action (string)
+            The lowercased action identifier such as `drop`, `take`, `equip`, `unequip`, or `combine`.
+
+        item (Item)
+            The item being interacted with.
+
+        data (table|nil)
+            Optional extra action data forwarded by the caller, such as combine context.
+
+    Returns:
+        boolean|string|nil
+            Return false to block the interaction. A second return value may provide the failure reason used by callers. Returning nil allows the default behavior to continue.
+
+    Example Usage:
+        ```lua
+        hook.Add("CanPlayerInteractItem", "liaExampleCanPlayerInteractItem", function(client, action, item, data)
+            if action == "drop" and item.uniqueID == "radio" then
+                return false, L("forbiddenActionStorage")
+            end
+        end)
+        ```
+
+    Realm:
+        Server
+]]
+--[[
+    Hooks:
+        CanPlayerHoldObject(Player client, Entity entity)
+
+    Purpose:
+        Determines whether the hands weapon may pick up and hold a traced entity.
+
+    Category:
+        Interaction
+
+    Parameters:
+        client (Player)
+            The player attempting to hold the entity.
+
+        entity (Entity)
+            The entity the player is trying to pick up.
+
+    Returns:
+        boolean|nil
+            Return true to explicitly allow holding or false to block it. Returning nil allows the default class and holdable checks to continue.
+
+    Example Usage:
+        ```lua
+        hook.Add("CanPlayerHoldObject", "liaExampleCanPlayerHoldObject", function(client, entity)
+            if entity:GetClass() == "prop_ragdoll" then
+                return false
+            end
+        end)
+        ```
+
+    Realm:
+        Server
+]]
+--[[
+    Hooks:
+        ShouldDataBeSaved()
+
+    Purpose:
+        Determines whether the server shutdown routine should save Lilia data, config, characters, and admin state.
+
+    Category:
+        Persistence
+
+    Parameters:
+        None
+
+    Returns:
+        boolean|nil
+            Return false to skip the shutdown save routine. Returning nil allows the default behavior to continue.
+
+    Example Usage:
+        ```lua
+        hook.Add("ShouldDataBeSaved", "liaExampleShouldDataBeSaved", function()
+            if lia.shuttingDown then
+                return true
+            end
+        end)
+        ```
+
+    Realm:
+        Server
+]]
+--[[
+    Hooks:
+        SetupBotPlayer(Player client)
+
+    Purpose:
+        Runs when a bot joins so modules can replace or extend the default bot character setup flow.
+
+    Category:
+        Character
+
+    Parameters:
+        client (Player)
+            The bot player that is being initialized.
+
+    Returns:
+        nil
+
+    Example Usage:
+        ```lua
+        hook.Add("SetupBotPlayer", "liaExampleSetupBotPlayer", function(client)
+            print("Preparing bot:", client:Nick())
+        end)
+        ```
+
+    Realm:
+        Server
+]]
+--[[
+    Hooks:
+        ShouldEntitySave(Entity entity)
+
+    Purpose:
+        Determines whether a persistent entity should be included in Lilia's persistence save, create, and update routines.
+
+    Category:
+        Persistence
+
+    Parameters:
+        entity (Entity)
+            The live entity being evaluated for persistence.
+
+    Returns:
+        boolean|nil
+            Return false to exclude the entity from persistence. Returning nil allows the default behavior to continue.
+
+    Example Usage:
+        ```lua
+        hook.Add("ShouldEntitySave", "liaExampleShouldEntitySave", function(entity)
+            if entity:GetClass() == "prop_ragdoll" then
+                return false
+            end
+        end)
+        ```
+
+    Realm:
+        Server
+]]
+--[[
+    Hooks:
+        ShouldEntityLoad(table entityData)
+
+    Purpose:
+        Determines whether a persisted entity entry should be restored during data loading.
+
+    Category:
+        Persistence
+
+    Parameters:
+        entityData (table)
+            The saved persistence row containing class, position, angles, model, and optional custom data.
+
+    Returns:
+        boolean|nil
+            Return false to skip restoring that saved entity. Returning nil allows the default behavior to continue.
+
+    Example Usage:
+        ```lua
+        hook.Add("ShouldEntityLoad", "liaExampleShouldEntityLoad", function(entityData)
+            if entityData.class == "prop_ragdoll" then
+                return false
+            end
+        end)
+        ```
+
+    Realm:
+        Server
+]]
+--[[
+    Hooks:
+        ShouldDeleteSavedItems()
+
+    Purpose:
+        Determines whether saved world items should be deleted from storage instead of being respawned during data loading.
+
+    Category:
+        Persistence
+
+    Parameters:
+        None
+
+    Returns:
+        boolean|nil
+            Return true to delete the saved item records instead of restoring them. Returning nil or false allows normal item restoration.
+
+    Example Usage:
+        ```lua
+        hook.Add("ShouldDeleteSavedItems", "liaExampleShouldDeleteSavedItems", function()
+            return false
+        end)
+        ```
+
+    Realm:
+        Server
+]]
+--[[
+    Hooks:
+        UpdateEntityPersistence(Entity entity)
+
+    Purpose:
+        Runs when a persistent entity should refresh its saved position, model, angles, and custom persistence data.
+
+    Category:
+        Persistence
+
+    Parameters:
+        entity (Entity)
+            The live persistent entity whose saved record should be updated.
+
+    Returns:
+        nil
+
+    Example Usage:
+        ```lua
+        hook.Add("UpdateEntityPersistence", "liaExampleUpdateEntityPersistence", function(entity)
+            if entity.IsPersistent then
+                print("Refreshing persistence for", entity:GetClass())
+            end
+        end)
+        ```
+
+    Realm:
+        Server
+]]
+--[[
+    Hooks:
+        ShouldOverrideSalaryTimers()
+
+    Purpose:
+        Determines whether Lilia should skip creating its default salary interval timers.
+
+    Category:
+        Economy
+
+    Parameters:
+        None
+
+    Returns:
+        boolean|nil
+            Return true to prevent the default salary timers from being created. Returning nil or false allows the normal timer setup.
+
+    Example Usage:
+        ```lua
+        hook.Add("ShouldOverrideSalaryTimers", "liaExampleShouldOverrideSalaryTimers", function()
+            return false
+        end)
+        ```
+
+    Realm:
+        Server
+]]
+--[[
+    Hooks:
+        ShouldSpawnClientRagdoll(Player client)
+
+    Purpose:
+        Determines whether a player death should create the default client ragdoll.
+
+    Category:
+        Character
+
+    Parameters:
+        client (Player)
+            The player who has just died.
+
+    Returns:
+        boolean|nil
+            Return false to block ragdoll creation. Returning nil allows the default behavior to continue.
+
+    Example Usage:
+        ```lua
+        hook.Add("ShouldSpawnClientRagdoll", "liaExampleShouldSpawnClientRagdoll", function(client)
+            if client:isStaffOnDuty() then
+                return false
+            end
+        end)
+        ```
+
+    Realm:
+        Server
+]]
+--[[
+    Hooks:
+        GetPlayerDeathSound(client, isFemale)
+
+    Purpose:
+        Allows plugins or modules to override the death sound selected for a player.
+
+    Category:
+        Voice
+
+    Parameters:
+        client (Player)
+            The player whose death sound is being resolved.
+
+        isFemale (boolean)
+            Whether the player should use the female sound set.
+
+    Returns:
+        string|nil
+            Return a sound path or sound object to override the death sound. Returning nil allows the default behavior to continue.
+
+    Example Usage:
+        ```lua
+        hook.Add("GetPlayerDeathSound", "liaExampleGetPlayerDeathSound", function(client, isFemale)
+            if client:isStaffOnDuty() then
+                return "vo/npc/male01/pain07.wav"
+            end
+        end)
+        ```
+
+    Realm:
+        Server
+]]
+--[[
+    Hooks:
+        GetPlayerPainSound(client, paintype, isFemale)
+
+    Purpose:
+        Allows plugins or modules to override the pain sound selected for a player.
+
+    Category:
+        Voice
+
+    Parameters:
+        client (Player)
+            The player whose pain sound is being resolved.
+
+        paintype (string)
+            The pain context being resolved, such as `hurt` or `drown`.
+
+        isFemale (boolean)
+            Whether the player should use the female sound set.
+
+    Returns:
+        string|nil
+            Return a sound path or sound object to override the pain sound. Returning nil allows the default behavior to continue.
+
+    Example Usage:
+        ```lua
+        hook.Add("GetPlayerPainSound", "liaExampleGetPlayerPainSound", function(client, paintype, isFemale)
+            if paintype == "drown" then
+                return "player/pl_drown1.wav"
+            end
+        end)
+        ```
+
+    Realm:
+        Server
+]]
+--[[
+    Hooks:
+        GetDamageScale(hitgroup, dmgInfo, damageScale)
+
+    Purpose:
+        Allows plugins or modules to override the damage multiplier before scaled damage is applied.
+
+    Category:
+        Combat
+
+    Parameters:
+        hitgroup (number)
+            The Garry's Mod hitgroup being processed.
+
+        dmgInfo (CTakeDamageInfo)
+            The damage information object being scaled.
+
+        damageScale (number)
+            The current damage multiplier after Lilia's head and limb checks.
+
+    Returns:
+        number|nil
+            Return a numeric multiplier to replace the current damage scale. Returning nil allows the default behavior to continue.
+
+    Example Usage:
+        ```lua
+        hook.Add("GetDamageScale", "liaExampleGetDamageScale", function(hitgroup, dmgInfo, damageScale)
+            if hitgroup == HITGROUP_HEAD then
+                return damageScale * 0.75
+            end
+        end)
+        ```
+
+    Realm:
+        Server
+]]
+--[[
+    Hooks:
+        PostScaleDamage(hitgroup, dmgInfo, damageScale)
+
+    Purpose:
+        Runs after the current damage scale has been applied to the damage info object.
+
+    Category:
+        Combat
+
+    Parameters:
+        hitgroup (number)
+            The Garry's Mod hitgroup that was processed.
+
+        dmgInfo (CTakeDamageInfo)
+            The scaled damage information object.
+
+        damageScale (number)
+            The multiplier that was applied to the damage.
+
+    Returns:
+        nil
+
+    Example Usage:
+        ```lua
+        hook.Add("PostScaleDamage", "liaExamplePostScaleDamage", function(hitgroup, dmgInfo, damageScale)
+            print("[Damage] Applied scale:", damageScale)
+        end)
+        ```
+
+    Realm:
+        Server
+]]
+--[[
+    Hooks:
+        OverrideVoiceHearingStatus(listener, speaker, canHear)
+
+    Purpose:
+        Allows plugins or modules to override cached voice hearing checks for a listener and speaker pair.
+
+    Category:
+        Voice
+
+    Parameters:
+        listener (Player)
+            The player whose hearing result is being computed.
+
+        speaker (Player)
+            The speaking player being checked.
+
+        canHear (boolean)
+            The current range-based hearing result.
+
+    Returns:
+        boolean|nil
+            Return true or false to override whether the listener can hear the speaker. Returning nil allows the default behavior to continue.
+
+    Example Usage:
+        ```lua
+        hook.Add("OverrideVoiceHearingStatus", "liaExampleOverrideVoiceHearingStatus", function(listener, speaker, canHear)
+            if listener:isStaffOnDuty() then
+                return true
+            end
+        end)
+        ```
+
+    Realm:
+        Server
+]]
+--[[
+    Hooks:
+        OnDeathSoundPlayed(client, deathSound)
+
+    Purpose:
+        Runs after a death sound has been emitted for a player.
+
+    Category:
+        Voice
+
+    Parameters:
+        client (Player)
+            The player who emitted the death sound.
+
+        deathSound (string)
+            The sound that was played.
+
+    Returns:
+        nil
+
+    Example Usage:
+        ```lua
+        hook.Add("OnDeathSoundPlayed", "liaExampleOnDeathSoundPlayed", function(client, deathSound)
+            lia.log.add(client, "deathSoundPlayed", deathSound)
+        end)
+        ```
+
+    Realm:
+        Server
+]]
+--[[
+    Hooks:
+        PrePlayerLoadedChar(client)
+
+    Purpose:
+        Runs immediately before the player's bodygroups, skin, and movement state are reset for character loading.
+
+    Category:
+        Character
+
+    Parameters:
+        client (Player)
+            The player who is about to load a character.
+
+    Returns:
+        nil
+
+    Example Usage:
+        ```lua
+        hook.Add("PrePlayerLoadedChar", "liaExamplePrePlayerLoadedChar", function(client)
+            client:SetDSP(1, false)
+        end)
+        ```
+
+    Realm:
+        Server
+]]
+--[[
+    Hooks:
+        CanPlayerDropItem(client, item)
+
+    Purpose:
+        Determines whether a player may drop an item through the standard item interaction flow.
+
+    Category:
+        Inventory
+
+    Parameters:
+        client (Player)
+            The player attempting to drop the item.
+
+        item (Item)
+            The item being dropped.
+
+    Returns:
+        boolean|nil
+            Return false to block the drop action. Returning nil allows the default behavior to continue.
+
+    Example Usage:
+        ```lua
+        hook.Add("CanPlayerDropItem", "liaExampleCanPlayerDropItem", function(client, item)
+            if item.uniqueID == "radio" then
+                return false
+            end
+        end)
+        ```
+
+    Realm:
+        Server
+]]
+--[[
+    Hooks:
+        CanPlayerTakeItem(client, item)
+
+    Purpose:
+        Determines whether a player may take an item through the standard item interaction flow.
+
+    Category:
+        Inventory
+
+    Parameters:
+        client (Player)
+            The player attempting to take the item.
+
+        item (Item)
+            The item being taken.
+
+    Returns:
+        boolean|nil
+            Return false to block the take action. Returning nil allows the default behavior to continue.
+
+    Example Usage:
+        ```lua
+        hook.Add("CanPlayerTakeItem", "liaExampleCanPlayerTakeItem", function(client, item)
+            if client:getNetVar("jailed") then
+                return false
+            end
+        end)
+        ```
+
+    Realm:
+        Server
+]]
+--[[
+    Hooks:
+        CanPlayerEquipItem(client, item)
+
+    Purpose:
+        Determines whether a player may equip an item through the standard item interaction flow.
+
+    Category:
+        Inventory
+
+    Parameters:
+        client (Player)
+            The player attempting to equip the item.
+
+        item (Item)
+            The item being equipped.
+
+    Returns:
+        boolean|nil
+            Return false to block the equip action. Returning nil allows the default behavior to continue.
+
+    Example Usage:
+        ```lua
+        hook.Add("CanPlayerEquipItem", "liaExampleCanPlayerEquipItem", function(client, item)
+            if item.uniqueID == "heavyarmor" and client:Crouching() then
+                return false
+            end
+        end)
+        ```
+
+    Realm:
+        Server
+]]
+--[[
+    Hooks:
+        CanPlayerUnequipItem(client, item)
+
+    Purpose:
+        Determines whether a player may unequip an item through the standard item interaction flow.
+
+    Category:
+        Inventory
+
+    Parameters:
+        client (Player)
+            The player attempting to unequip the item.
+
+        item (Item)
+            The item being unequipped.
+
+    Returns:
+        boolean|nil
+            Return false to block the unequip action. Returning nil allows the default behavior to continue.
+
+    Example Usage:
+        ```lua
+        hook.Add("CanPlayerUnequipItem", "liaExampleCanPlayerUnequipItem", function(client, item)
+            if client:getNetVar("restricted") then
+                return false
+            end
+        end)
+        ```
+
+    Realm:
+        Server
+]]
+--[[
+    Hooks:
+        CanPlayerRotateItem(client, item)
+
+    Purpose:
+        Determines whether a player may rotate an item through the standard item interaction flow.
+
+    Category:
+        Inventory
+
+    Parameters:
+        client (Player)
+            The player attempting to rotate the item.
+
+        item (Item)
+            The item being rotated.
+
+    Returns:
+        boolean|nil
+            Return false to block item rotation. Returning nil allows the default behavior to continue.
+
+    Example Usage:
+        ```lua
+        hook.Add("CanPlayerRotateItem", "liaExampleCanPlayerRotateItem", function(client, item)
+            if item.isBag then
+                return false
+            end
+        end)
+        ```
+
+    Realm:
+        Server
+]]
+--[[
+    Hooks:
+        PostPlayerSay(client, message, chatType, anonymous)
+
+    Purpose:
+        Runs after the parsed chat message has been sent through the active chat class.
+
+    Category:
+        Chatbox
+
+    Parameters:
+        client (Player)
+            The player who sent the message.
+
+        message (string)
+            The parsed message text that was sent.
+
+        chatType (string)
+            The resolved chat class identifier.
+
+        anonymous (boolean)
+            Whether the message was sent anonymously.
+
+    Returns:
+        nil
+
+    Example Usage:
+        ```lua
+        hook.Add("PostPlayerSay", "liaExamplePostPlayerSay", function(client, message, chatType, anonymous)
+            print(client:Nick(), chatType, message)
+        end)
+        ```
+
+    Realm:
+        Server
+]]
+--[[
+    Hooks:
+        OnPainSoundPlayed(entity, painSound)
+
+    Purpose:
+        Runs after a pain sound has been emitted for a player.
+
+    Category:
+        Voice
+
+    Parameters:
+        entity (Player)
+            The player who emitted the pain sound.
+
+        painSound (string)
+            The sound that was played.
+
+    Returns:
+        nil
+
+    Example Usage:
+        ```lua
+        hook.Add("OnPainSoundPlayed", "liaExampleOnPainSoundPlayed", function(entity, painSound)
+            lia.log.add(entity, "painSoundPlayed", painSound)
+        end)
+        ```
+
+    Realm:
+        Server
+]]
+--[[
+    Hooks:
+        GetBotModel(client, faction)
+
+    Purpose:
+        Allows plugins or modules to override the model used when the framework creates a bot character.
+
+    Category:
+        Character
+
+    Parameters:
+        client (Player)
+            The bot player being configured.
+
+        faction (table)
+            The default faction selected for the bot.
+
+    Returns:
+        string|nil
+            Return a player model path to override the default bot model. Returning nil allows the default behavior to continue.
+
+    Example Usage:
+        ```lua
+        hook.Add("GetBotModel", "liaExampleGetBotModel", function(client, faction)
+            if faction and faction.uniqueID == "combine" then
+                return "models/player/police.mdl"
+            end
+        end)
+        ```
+
+    Realm:
+        Server
+]]
+--[[
+    Hooks:
+        PostBotSetup(client, character, inventory)
+
+    Purpose:
+        Runs after a bot player, character, and inventory have been created and spawned.
+
+    Category:
+        Character
+
+    Parameters:
+        client (Player)
+            The bot player that was configured.
+
+        character (Character)
+            The newly created bot character.
+
+        inventory (Inventory)
+            The bot's newly created inventory instance.
+
+    Returns:
+        nil
+
+    Example Usage:
+        ```lua
+        hook.Add("PostBotSetup", "liaExamplePostBotSetup", function(client, character, inventory)
+            character:giveMoney(500)
+        end)
+        ```
+
+    Realm:
+        Server
+]]
+--[[
+    Hooks:
+        OnEntityPersisted(ent, entData)
+
+    Purpose:
+        Runs after a persistent entity snapshot has been written into the persistence data set.
+
+    Category:
+        Persistence
+
+    Parameters:
+        ent (Entity)
+            The entity that was saved.
+
+        entData (table)
+            The serialized persistence payload stored for the entity.
+
+    Returns:
+        nil
+
+    Example Usage:
+        ```lua
+        hook.Add("OnEntityPersisted", "liaExampleOnEntityPersisted", function(ent, entData)
+            print("[Persistence] Saved", entData.class)
+        end)
+        ```
+
+    Realm:
+        Server
+]]
+--[[
+    Hooks:
+        OnSavedItemLoaded(loadedItems)
+
+    Purpose:
+        Runs after saved world items have been restored from database rows.
+
+    Category:
+        Persistence
+
+    Parameters:
+        loadedItems (table)
+            An array containing the restored item instances.
+
+    Returns:
+        nil
+
+    Example Usage:
+        ```lua
+        hook.Add("OnSavedItemLoaded", "liaExampleOnSavedItemLoaded", function(loadedItems)
+            print("[Persistence] Restored items:", #loadedItems)
+        end)
+        ```
+
+    Realm:
+        Server
+]]
+--[[
+    Hooks:
+        OnEntityPersistUpdated(ent, data)
+
+    Purpose:
+        Runs after an existing persistent entity entry has been updated in the saved persistence data.
+
+    Category:
+        Persistence
+
+    Parameters:
+        ent (Entity)
+            The entity whose saved record was updated.
+
+        data (table)
+            The updated persistence data entry.
+
+    Returns:
+        nil
+
+    Example Usage:
+        ```lua
+        hook.Add("OnEntityPersistUpdated", "liaExampleOnEntityPersistUpdated", function(ent, data)
+            print("[Persistence] Updated", data.class)
+        end)
+        ```
+
+    Realm:
+        Server
+]]
+--[[
+    Hooks:
+        CanPlayerEarnSalary(client)
+
+    Purpose:
+        Determines whether a player should receive salary checks when the salary timers fire.
+
+    Category:
+        Salary
+
+    Parameters:
+        client (Player)
+            The player being considered for salary payment.
+
+    Returns:
+        boolean|nil
+            Return false to skip salary payment for the player. Returning nil allows the default behavior to continue.
+
+    Example Usage:
+        ```lua
+        hook.Add("CanPlayerEarnSalary", "liaExampleCanPlayerEarnSalary", function(client)
+            if client:getNetVar("jailed") then
+                return false
+            end
+        end)
+        ```
+
+    Realm:
+        Server
+]]
+--[[
+    Hooks:
+        GetSalaryAmount(client, charFaction, class)
+
+    Purpose:
+        Allows plugins or modules to override the base salary amount before bonuses and final adjustments are applied.
+
+    Category:
+        Salary
+
+    Parameters:
+        client (Player)
+            The player receiving salary.
+
+        charFaction (table)
+            The faction data for the player's character.
+
+        class (table|nil)
+            The class data for the player's character, if any.
+
+    Returns:
+        number|nil
+            Return a numeric salary amount to override the base pay. Returning nil allows the default behavior to continue.
+
+    Example Usage:
+        ```lua
+        hook.Add("GetSalaryAmount", "liaExampleGetSalaryAmount", function(client, charFaction, class)
+            if class and class.uniqueID == "chief" then
+                return 250
+            end
+        end)
+        ```
+
+    Realm:
+        Server
+]]
+--[[
+    Hooks:
+        OnSalaryAdjust(client)
+
+    Purpose:
+        Allows plugins or modules to replace the current salary amount before prestige bonuses are applied.
+
+    Category:
+        Salary
+
+    Parameters:
+        client (Player)
+            The player receiving salary.
+
+    Returns:
+        number|nil
+            Return a numeric salary amount to replace the current pay value. Returning nil allows the default behavior to continue.
+
+    Example Usage:
+        ```lua
+        hook.Add("OnSalaryAdjust", "liaExampleOnSalaryAdjust", function(client)
+            if client:hasPrivilege("salaryBonus") then
+                return 300
+            end
+        end)
+        ```
+
+    Realm:
+        Server
+]]
+--[[
+    Hooks:
+        GetPrestigePayBonus(client, char, pay, charFaction, class)
+
+    Purpose:
+        Allows plugins or modules to add an extra prestige-style bonus on top of the current salary amount.
+
+    Category:
+        Salary
+
+    Parameters:
+        client (Player)
+            The player receiving salary.
+
+        char (Character)
+            The player's current character.
+
+        pay (number)
+            The current salary value before the prestige bonus is added.
+
+        charFaction (table)
+            The faction data for the player's character.
+
+        class (table|nil)
+            The class data for the player's character, if any.
+
+    Returns:
+        number|nil
+            Return a numeric bonus to add to the current pay. Returning nil allows the default behavior to continue.
+
+    Example Usage:
+        ```lua
+        hook.Add("GetPrestigePayBonus", "liaExampleGetPrestigePayBonus", function(client, char, pay, charFaction, class)
+            if char:getData("prestige", 0) > 0 then
+                return 50
+            end
+        end)
+        ```
+
+    Realm:
+        Server
+]]
+--[[
+    Hooks:
+        PreSalaryGive(client, char, pay, charFaction, class)
+
+    Purpose:
+        Runs before the framework gives salary money to the character.
+
+    Category:
+        Salary
+
+    Parameters:
+        client (Player)
+            The player receiving salary.
+
+        char (Character)
+            The player's current character.
+
+        pay (number)
+            The current salary amount.
+
+        charFaction (table)
+            The faction data for the player's character.
+
+        class (table|nil)
+            The class data for the player's character, if any.
+
+    Returns:
+        boolean|nil
+            Return true to mark salary handling as fully handled and suppress the default payout. Returning nil allows the default behavior to continue.
+
+    Example Usage:
+        ```lua
+        hook.Add("PreSalaryGive", "liaExamplePreSalaryGive", function(client, char, pay, charFaction, class)
+            if pay <= 0 then
+                return true
+            end
+        end)
+        ```
+
+    Realm:
+        Server
+]]
+--[[
+    Hooks:
+        OnSalaryGiven(client, char, pay, charFaction, class)
+
+    Purpose:
+        Allows plugins or modules to override the final salary amount immediately before money is awarded.
+
+    Category:
+        Salary
+
+    Parameters:
+        client (Player)
+            The player receiving salary.
+
+        char (Character)
+            The player's current character.
+
+        pay (number)
+            The current salary amount.
+
+        charFaction (table)
+            The faction data for the player's character.
+
+        class (table|nil)
+            The class data for the player's character, if any.
+
+    Returns:
+        number|nil
+            Return a numeric value to replace the final salary payout. Returning nil allows the default behavior to continue.
+
+    Example Usage:
+        ```lua
+        hook.Add("OnSalaryGiven", "liaExampleOnSalaryGiven", function(client, char, pay, charFaction, class)
+            return math.max(pay, 25)
+        end)
+        ```
+
+    Realm:
+        Server
+]]
+local GM = GM or GAMEMODE
 local VOICE_WHISPERING = "whispering"
 local VOICE_TALKING = "talking"
 local VOICE_YELLING = "yelling"
@@ -112,6 +1638,42 @@ local function CacheVoiceHearing()
     end
 end
 
+--[[
+    Hooks:
+        PlayerShouldPermaKill(Player client, Entity inflictor, Entity attacker)
+
+    Purpose:
+        Determines whether a player death caused by another player should permanently kill the victim's character.
+
+    Category:
+        Character
+
+    Parameters:
+        client (Player)
+            The player who died.
+
+        inflictor (Entity)
+            The inflictor responsible for the death.
+
+        attacker (Entity)
+            The attacker responsible for the death.
+
+    Returns:
+        boolean|nil
+            Return true to permanently kill the victim's character. Returning nil or false allows the default death flow to continue without a perma-kill.
+
+    Example Usage:
+        ```lua
+        hook.Add("PlayerShouldPermaKill", "liaExamplePlayerShouldPermaKill", function(client, inflictor, attacker)
+            if IsValid(attacker) and attacker:IsPlayer() and attacker:isStaffOnDuty() then
+                return true
+            end
+        end)
+        ```
+
+    Realm:
+        Server
+]]
 function GM:PlayerDeath(client, inflictor, attacker)
     if lia.config.get("DeathSoundEnabled") then
         local deathSound = hook.Run("GetPlayerDeathSound", client, client:isFemale())
@@ -645,6 +2207,35 @@ function GM:PlayerDisconnected(client)
     end
 end
 
+--[[
+    Hooks:
+        PlayerLiliaDataLoaded(Player client)
+
+    Purpose:
+        Runs after a player's stored Lilia data finishes loading so modules can continue initialization work that depends on that data.
+
+    Category:
+        Character
+
+    Parameters:
+        client (Player)
+            The player whose Lilia data has just finished loading.
+
+    Returns:
+        nil
+
+    Example Usage:
+        ```lua
+        hook.Add("PlayerLiliaDataLoaded", "liaExamplePlayerLiliaDataLoaded", function(client)
+            if IsValid(client) then
+                print("Loaded Lilia data for", client:Nick())
+            end
+        end)
+        ```
+
+    Realm:
+        Server
+]]
 function GM:PlayerInitialSpawn(client)
     if client:IsBot() then
         hook.Run("SetupBotPlayer", client)

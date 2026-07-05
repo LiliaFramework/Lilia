@@ -1,4 +1,34 @@
-﻿local MODULE = MODULE
+﻿--[[
+    Hooks:
+        OnCharDisconnect(Player client, Character character)
+
+    Purpose:
+        Runs when a player disconnects while a character is loaded so spawn-related character state can be persisted.
+
+    Category:
+        Character
+
+    Parameters:
+        client (Player)
+            The disconnecting player.
+
+        character (Character)
+            The character that was loaded for the player.
+
+    Example Usage:
+        ```lua
+        hook.Add("OnCharDisconnect", "liaExampleSpawnDisconnect", function(client, character)
+            print(character:getName())
+        end)
+        ```
+
+    Returns:
+        nil
+
+    Realm:
+        Server
+]]
+local MODULE = MODULE
 local MAP_SPAWN_CLASSES = {"info_player_start", "info_player_deathmatch", "info_player_counterterrorist", "info_player_terrorist", "info_player_combine", "info_player_rebel", "gmod_player_start", "info_player_axis", "info_player_allies"}
 local function getMapSpawnLocation()
     local spawns = {}

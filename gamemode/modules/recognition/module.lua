@@ -1,4 +1,4 @@
---[[
+﻿--[[
     Hooks:
         CharForceRecognized(ply, range)
 

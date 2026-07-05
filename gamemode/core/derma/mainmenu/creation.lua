@@ -1,4 +1,59 @@
-﻿local PANEL = {}
+﻿--[[
+    Hooks:
+        ConfigureCharacterCreationSteps(Panel self)
+
+    Purpose:
+        Allows modules to insert additional creation-step panels into the default character creation flow before the summary step is appended.
+
+    Category:
+        Main Menu
+
+    Parameters:
+        self (Panel)
+            The active `liaCharacterCreation` panel that owns the step list.
+
+    Example Usage:
+        ```lua
+        hook.Add("ConfigureCharacterCreationSteps", "liaExampleConfigureCharacterCreationSteps", function(self)
+            self:addStep(vgui.Create("liaCharacterSummary"), 1)
+        end)
+        ```
+
+    Returns:
+        nil
+
+    Realm:
+        Client
+]]
+--[[
+    Hooks:
+        ShouldMenuButtonShow(string buttonID)
+
+    Purpose:
+        Allows code to block the default character creation button before the menu enters the creation flow.
+
+    Category:
+        Main Menu
+
+    Parameters:
+        buttonID (string)
+            The menu action identifier being checked. This flow currently passes `"create"`.
+
+    Example Usage:
+        ```lua
+        hook.Add("ShouldMenuButtonShow", "liaExampleShouldMenuButtonShow", function(buttonID)
+            if buttonID == "create" then return false, "Creation disabled" end
+        end)
+        ```
+
+    Returns:
+        boolean|string|nil
+            Return false to block the button. A second return value may provide the reason shown by the caller.
+
+    Realm:
+        Client
+]]
+local PANEL = {}
 function PANEL:configureSteps()
     self:addStep(vgui.Create("liaCharacterBiography"))
     self:addStep(vgui.Create("liaCharacterModel"))

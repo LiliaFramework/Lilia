@@ -1,4 +1,4 @@
---[[
+﻿--[[
     Hooks:
         GetPlayerRespawnLocation(client, character)
 

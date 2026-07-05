@@ -1,4 +1,4 @@
---[[
+﻿--[[
     Hooks:
         GetInventoryMaxWeight(inventory, maxWeight)
 

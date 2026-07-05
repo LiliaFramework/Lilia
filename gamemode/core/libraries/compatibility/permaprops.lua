@@ -1,6 +1,36 @@
 ﻿local spawnedPositions = {}
 local radiusSqr = 16
 local lastSaver
+--[[
+    Hooks:
+        CanPersistEntity(Entity entity)
+
+    Purpose:
+        Determines whether an entity should remain protected from PermaProps persistence tools when it matches Lilia's built-in persistent entity checks.
+
+    Category:
+        Persistence
+
+    Parameters:
+        entity (Entity)
+            The entity being evaluated for PermaProps persistence.
+
+    Returns:
+        boolean|nil
+            Return false to let PermaProps treat the entity as eligible even if it matches the default protected classes. Returning true or nil keeps the normal protection behavior.
+
+    Example Usage:
+        ```lua
+        hook.Add("CanPersistEntity", "liaExampleCanPersistEntity", function(entity)
+            if IsValid(entity) and entity:GetClass() == "lia_vendor" then
+                return true
+            end
+        end)
+        ```
+
+    Realm:
+        Server
+]]
 hook.Add("CanTool", "liaPermaProps", function(ply, trace, tool)
     local entity = trace.Entity
     if not IsValid(entity) then return end

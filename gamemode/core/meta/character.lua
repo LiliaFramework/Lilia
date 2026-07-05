@@ -1,4 +1,265 @@
 ﻿--[[
+    Hooks:
+        OnPlayerSwitchClass(client, class, oldClass)
+
+    Purpose:
+        Runs after a character switches from one class to another through `joinClass`.
+
+    Category:
+        Character
+
+    Parameters:
+        client (Player)
+            The player whose character switched classes.
+
+        class (number|string)
+            The new class identifier assigned to the character.
+
+        oldClass (number|string)
+            The previous class identifier.
+
+    Returns:
+        nil
+
+    Example Usage:
+        ```lua
+        hook.Add("OnPlayerSwitchClass", "liaExampleOnPlayerSwitchClass", function(client, class, oldClass)
+            print(client:Nick(), oldClass, class)
+        end)
+        ```
+
+    Realm:
+        Server
+]]
+--[[
+    Hooks:
+        OnCharAttribUpdated(client, self, key, value)
+
+    Purpose:
+        Runs after a character attribute has been updated and synced to the owning client.
+
+    Category:
+        Character
+
+    Parameters:
+        client (Player)
+            The player who owns the character.
+
+        self (Character)
+            The character whose attribute changed.
+
+        key (string)
+            The attribute identifier that changed.
+
+        value (number)
+            The new attribute value.
+
+    Returns:
+        nil
+
+    Example Usage:
+        ```lua
+        hook.Add("OnCharAttribUpdated", "liaExampleOnCharAttribUpdated", function(client, self, key, value)
+            print("Attribute updated:", key, value)
+        end)
+        ```
+
+    Realm:
+        Server
+]]
+--[[
+    Hooks:
+        OnCharAttribBoosted(client, self, attribID, boostID, boostAmount)
+
+    Purpose:
+        Runs after an attribute boost has been added, removed, or cleared.
+
+    Category:
+        Character
+
+    Parameters:
+        client (Player)
+            The player who owns the character, if valid.
+
+        self (Character)
+            The character whose boost data changed.
+
+        attribID (string)
+            The boosted attribute identifier.
+
+        boostID (string)
+            The boost source identifier.
+
+        boostAmount (number|boolean)
+            The applied boost amount, or `true` when a boost was removed.
+
+    Returns:
+        nil
+
+    Example Usage:
+        ```lua
+        hook.Add("OnCharAttribBoosted", "liaExampleOnCharAttribBoosted", function(client, self, attribID, boostID, boostAmount)
+            print("Boost changed:", attribID, boostID)
+        end)
+        ```
+
+    Realm:
+        Server
+]]
+--[[
+    Hooks:
+        OnCharFlagsGiven(ply, self, addedFlags)
+
+    Purpose:
+        Runs after new flags have been granted to a character.
+
+    Category:
+        Character
+
+    Parameters:
+        ply (Player)
+            The player who owns the character.
+
+        self (Character)
+            The character that received new flags.
+
+        addedFlags (string)
+            The flag characters that were added.
+
+    Returns:
+        nil
+
+    Example Usage:
+        ```lua
+        hook.Add("OnCharFlagsGiven", "liaExampleOnCharFlagsGiven", function(ply, self, addedFlags)
+            print("Flags granted:", addedFlags)
+        end)
+        ```
+
+    Realm:
+        Server
+]]
+--[[
+    Hooks:
+        OnCharFlagsTaken(ply, self, removedFlags)
+
+    Purpose:
+        Runs after flags have been removed from a character.
+
+    Category:
+        Character
+
+    Parameters:
+        ply (Player)
+            The player who owns the character.
+
+        self (Character)
+            The character that lost flags.
+
+        removedFlags (string)
+            The flag characters that were removed.
+
+    Returns:
+        nil
+
+    Example Usage:
+        ```lua
+        hook.Add("OnCharFlagsTaken", "liaExampleOnCharFlagsTaken", function(ply, self, removedFlags)
+            print("Flags removed:", removedFlags)
+        end)
+        ```
+
+    Realm:
+        Server
+]]
+--[[
+    Hooks:
+        CharPostSave(self)
+
+    Purpose:
+        Runs after a character's field-backed variables have been persisted to the database.
+
+    Category:
+        Character
+
+    Parameters:
+        self (Character)
+            The character that was saved.
+
+    Returns:
+        nil
+
+    Example Usage:
+        ```lua
+        hook.Add("CharPostSave", "liaExampleCharPostSave", function(self)
+            print("Saved character", self:getID())
+        end)
+        ```
+
+    Realm:
+        Server
+]]
+--[[
+    Hooks:
+        OnCharKick(self, client)
+
+    Purpose:
+        Runs after a character has been kicked back to character selection.
+
+    Category:
+        Character
+
+    Parameters:
+        self (Character)
+            The character that was kicked.
+
+        client (Player)
+            The player removed from the character.
+
+    Returns:
+        nil
+
+    Example Usage:
+        ```lua
+        hook.Add("OnCharKick", "liaExampleOnCharKick", function(self, client)
+            print("Kicked character", self:getID())
+        end)
+        ```
+
+    Realm:
+        Server
+]]
+--[[
+    Hooks:
+        OnCharPermakilled(self, time)
+
+    Purpose:
+        Runs after a character has been banned by `ban`, including permanent bans.
+
+    Category:
+        Character
+
+    Parameters:
+        self (Character)
+            The character that was banned.
+
+        time (number|nil)
+            The temporary ban duration passed to `ban`, or nil for a permanent ban.
+
+    Returns:
+        nil
+
+    Example Usage:
+        ```lua
+        hook.Add("OnCharPermakilled", "liaExampleOnCharPermakilled", function(self, time)
+            print("Character banned", self:getID(), time)
+        end)
+        ```
+
+    Realm:
+        Server
+]]
+--[[
     Folder: Developer - Meta Tables
     File: character.md
 ]]

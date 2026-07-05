@@ -1,4 +1,4 @@
---[[
+﻿--[[
     Folder: Developer - Libraries
     File: lia.command.md
 ]]
@@ -10,6 +10,213 @@
 --[[
     Overview:
         The command library centralizes shared command registration under `lia.command`, normalizes command argument metadata, manages command aliases and privilege checks, parses chat commands on the server, opens clientside argument prompts for missing required arguments, and sends command payloads from the client to the server.
+]]
+--[[
+    Hooks:
+        CharListExtraDetails(client, entry, stored)
+
+    Purpose:
+        temp
+
+    Category:
+        temp
+
+    Parameters:
+        temp
+
+    Example Usage:
+        ```lua
+        hook.Add("CharListExtraDetails", "liaExampleCharListExtraDetails", function(client, entry, stored)
+            temp
+        end)
+        ```
+
+    Realm:
+        temp
+]]
+--[[
+    Hooks:
+        DoorEnabledToggled(client, door, newState)
+
+    Purpose:
+        temp
+
+    Category:
+        temp
+
+    Parameters:
+        temp
+
+    Example Usage:
+        ```lua
+        hook.Add("DoorEnabledToggled", "liaExampleDoorEnabledToggled", function(client, door, newState)
+            temp
+        end)
+        ```
+
+    Realm:
+        temp
+]]
+--[[
+    Hooks:
+        DoorHiddenToggled(client, entity, newState)
+
+    Purpose:
+        temp
+
+    Category:
+        temp
+
+    Parameters:
+        temp
+
+    Example Usage:
+        ```lua
+        hook.Add("DoorHiddenToggled", "liaExampleDoorHiddenToggled", function(client, entity, newState)
+            temp
+        end)
+        ```
+
+    Realm:
+        temp
+]]
+--[[
+    Hooks:
+        DoorOwnableToggled(client, door, newState)
+
+    Purpose:
+        temp
+
+    Category:
+        temp
+
+    Parameters:
+        temp
+
+    Example Usage:
+        ```lua
+        hook.Add("DoorOwnableToggled", "liaExampleDoorOwnableToggled", function(client, door, newState)
+            temp
+        end)
+        ```
+
+    Realm:
+        temp
+]]
+--[[
+    Hooks:
+        DoorPriceSet(client, door, price)
+
+    Purpose:
+        temp
+
+    Category:
+        temp
+
+    Parameters:
+        temp
+
+    Example Usage:
+        ```lua
+        hook.Add("DoorPriceSet", "liaExampleDoorPriceSet", function(client, door, price)
+            temp
+        end)
+        ```
+
+    Realm:
+        temp
+]]
+--[[
+    Hooks:
+        DoorTitleSet(client, door, name)
+
+    Purpose:
+        temp
+
+    Category:
+        temp
+
+    Parameters:
+        temp
+
+    Example Usage:
+        ```lua
+        hook.Add("DoorTitleSet", "liaExampleDoorTitleSet", function(client, door, name)
+            temp
+        end)
+        ```
+
+    Realm:
+        temp
+]]
+--[[
+    Hooks:
+        ForceRecognizeRange(ply, range, fakeName)
+
+    Purpose:
+        temp
+
+    Category:
+        temp
+
+    Parameters:
+        temp
+
+    Example Usage:
+        ```lua
+        hook.Add("ForceRecognizeRange", "liaExampleForceRecognizeRange", function(ply, range, fakeName)
+            temp
+        end)
+        ```
+
+    Realm:
+        temp
+]]
+--[[
+    Hooks:
+        OnPlayerPurchaseDoor(client, door, arg3)
+
+    Purpose:
+        temp
+
+    Category:
+        temp
+
+    Parameters:
+        temp
+
+    Example Usage:
+        ```lua
+        hook.Add("OnPlayerPurchaseDoor", "liaExampleOnPlayerPurchaseDoor", function(client, door, arg3)
+            temp
+        end)
+        ```
+
+    Realm:
+        temp
+]]
+--[[
+    Hooks:
+        OnTransferred(target)
+
+    Purpose:
+        temp
+
+    Category:
+        temp
+
+    Parameters:
+        temp
+
+    Example Usage:
+        ```lua
+        hook.Add("OnTransferred", "liaExampleOnTransferred", function(target)
+            temp
+        end)
+        ```
+
+    Realm:
+        temp
 ]]
 --[[
     Hooks:
@@ -3093,6 +3300,38 @@ lia.command.add("forcefallover", {
     end
 })
 
+--[[
+    Hooks:
+        OnCharGetup(Player target, Entity entity)
+
+    Purpose:
+        Runs just before a ragdolled character gets up and their ragdoll entity is removed.
+
+    Category:
+        Character
+
+    Parameters:
+        target (Player)
+            The player getting up from ragdoll state.
+
+        entity (Entity)
+            The ragdoll entity that is about to be removed.
+
+    Returns:
+        nil
+
+    Example Usage:
+        ```lua
+        hook.Add("OnCharGetup", "liaExampleOnCharGetup", function(target, entity)
+            if IsValid(target) then
+                print(target:Nick(), "got up")
+            end
+        end)
+        ```
+
+    Realm:
+        Server
+]]
 lia.command.add("forcegetup", {
     adminOnly = true,
     desc = "@forceGetUpDesc",

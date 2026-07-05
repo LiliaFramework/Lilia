@@ -35,7 +35,7 @@ The character meta table wraps a loaded character instance and exposes helpers f
 ---
 
 <details class="realm-shared" id="function-getid">
-<summary><span class="summary-main"><a id="getID"></a>getID()</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/meta/character.lua#L35" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="getID"></a>getID()</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/meta/character.lua#L296" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="getid"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -65,7 +65,7 @@ The character meta table wraps a loaded character instance and exposes helpers f
 ---
 
 <details class="realm-shared" id="function-getplayer">
-<summary><span class="summary-main"><a id="getPlayer"></a>getPlayer()</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/meta/character.lua#L56" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="getPlayer"></a>getPlayer()</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/meta/character.lua#L317" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="getplayer"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -95,7 +95,7 @@ The character meta table wraps a loaded character instance and exposes helpers f
 ---
 
 <details class="realm-shared" id="function-getdisplayedname">
-<summary><span class="summary-main"><a id="getDisplayedName"></a>getDisplayedName(client)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/meta/character.lua#L95" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="getDisplayedName"></a>getDisplayedName(client)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/meta/character.lua#L356" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="getdisplayedname"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -130,7 +130,7 @@ The character meta table wraps a loaded character instance and exposes helpers f
 ---
 
 <details class="realm-shared" id="function-hasmoney">
-<summary><span class="summary-main"><a id="hasMoney"></a>hasMoney(amount)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/meta/character.lua#L131" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="hasMoney"></a>hasMoney(amount)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/meta/character.lua#L392" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="hasmoney"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -166,7 +166,7 @@ The character meta table wraps a loaded character instance and exposes helpers f
 ---
 
 <details class="realm-shared" id="function-hasflags">
-<summary><span class="summary-main"><a id="hasFlags"></a>hasFlags(flagStr)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/meta/character.lua#L159" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="hasFlags"></a>hasFlags(flagStr)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/meta/character.lua#L420" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="hasflags"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -202,7 +202,7 @@ The character meta table wraps a loaded character instance and exposes helpers f
 ---
 
 <details class="realm-shared" id="function-getattrib">
-<summary><span class="summary-main"><a id="getAttrib"></a>getAttrib(key, default)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/meta/character.lua#L191" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="getAttrib"></a>getAttrib(key, default)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/meta/character.lua#L452" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="getattrib"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -238,7 +238,7 @@ The character meta table wraps a loaded character instance and exposes helpers f
 ---
 
 <details class="realm-shared" id="function-doesrecognize">
-<summary><span class="summary-main"><a id="doesRecognize"></a>doesRecognize(id)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/meta/character.lua#L224" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="doesRecognize"></a>doesRecognize(id)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/meta/character.lua#L485" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="doesrecognize"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -274,7 +274,7 @@ The character meta table wraps a loaded character instance and exposes helpers f
 ---
 
 <details class="realm-shared" id="function-doesfakerecognize">
-<summary><span class="summary-main"><a id="doesFakeRecognize"></a>doesFakeRecognize(id)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/meta/character.lua#L251" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="doesFakeRecognize"></a>doesFakeRecognize(id)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/meta/character.lua#L512" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="doesfakerecognize"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -310,7 +310,7 @@ The character meta table wraps a loaded character instance and exposes helpers f
 ---
 
 <details class="realm-shared" id="function-setdata">
-<summary><span class="summary-main"><a id="setData"></a>setData(k, v, noReplication, receiver)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/meta/character.lua#L285" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="setData"></a>setData(k, v, noReplication, receiver)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/meta/character.lua#L546" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="setdata"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -346,7 +346,7 @@ The character meta table wraps a loaded character instance and exposes helpers f
 ---
 
 <details class="realm-shared" id="function-getdata">
-<summary><span class="summary-main"><a id="getData"></a>getData(key, default)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/meta/character.lua#L367" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="getData"></a>getData(key, default)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/meta/character.lua#L628" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="getdata"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -382,7 +382,7 @@ The character meta table wraps a loaded character instance and exposes helpers f
 ---
 
 <details class="realm-shared" id="function-isbanned">
-<summary><span class="summary-main"><a id="isBanned"></a>isBanned()</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/meta/character.lua#L405" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="isBanned"></a>isBanned()</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/meta/character.lua#L666" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="isbanned"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -413,7 +413,7 @@ The character meta table wraps a loaded character instance and exposes helpers f
 ---
 
 <details class="realm-server" id="function-recognize">
-<summary><span class="summary-main"><a id="recognize"></a>recognize(character, name)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/meta/character.lua#L434" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="recognize"></a>recognize(character, name)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/meta/character.lua#L695" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="recognize"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -449,7 +449,7 @@ The character meta table wraps a loaded character instance and exposes helpers f
 ---
 
 <details class="realm-server" id="function-joinclass">
-<summary><span class="summary-main"><a id="joinClass"></a>joinClass(class, isForced)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/meta/character.lua#L476" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="joinClass"></a>joinClass(class, isForced)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/meta/character.lua#L737" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="joinclass"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -485,7 +485,7 @@ The character meta table wraps a loaded character instance and exposes helpers f
 ---
 
 <details class="realm-server" id="function-kickclass">
-<summary><span class="summary-main"><a id="kickClass"></a>kickClass()</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/meta/character.lua#L519" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="kickClass"></a>kickClass()</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/meta/character.lua#L780" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="kickclass"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -509,7 +509,7 @@ The character meta table wraps a loaded character instance and exposes helpers f
 ---
 
 <details class="realm-server" id="function-updateattrib">
-<summary><span class="summary-main"><a id="updateAttrib"></a>updateAttrib(key, value)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/meta/character.lua#L559" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="updateAttrib"></a>updateAttrib(key, value)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/meta/character.lua#L820" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="updateattrib"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -539,7 +539,7 @@ The character meta table wraps a loaded character instance and exposes helpers f
 ---
 
 <details class="realm-server" id="function-setattrib">
-<summary><span class="summary-main"><a id="setAttrib"></a>setAttrib(key, value)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/meta/character.lua#L598" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="setAttrib"></a>setAttrib(key, value)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/meta/character.lua#L859" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="setattrib"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -569,7 +569,7 @@ The character meta table wraps a loaded character instance and exposes helpers f
 ---
 
 <details class="realm-server" id="function-addboost">
-<summary><span class="summary-main"><a id="addBoost"></a>addBoost(boostID, attribID, boostAmount)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/meta/character.lua#L639" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="addBoost"></a>addBoost(boostID, attribID, boostAmount)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/meta/character.lua#L900" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="addboost"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -605,7 +605,7 @@ The character meta table wraps a loaded character instance and exposes helpers f
 ---
 
 <details class="realm-server" id="function-removeboost">
-<summary><span class="summary-main"><a id="removeBoost"></a>removeBoost(boostID, attribID)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/meta/character.lua#L669" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="removeBoost"></a>removeBoost(boostID, attribID)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/meta/character.lua#L930" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="removeboost"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -640,7 +640,7 @@ The character meta table wraps a loaded character instance and exposes helpers f
 ---
 
 <details class="realm-server" id="function-clearallboosts">
-<summary><span class="summary-main"><a id="clearAllBoosts"></a>clearAllBoosts()</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/meta/character.lua#L693" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="clearAllBoosts"></a>clearAllBoosts()</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/meta/character.lua#L954" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="clearallboosts"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -669,7 +669,7 @@ The character meta table wraps a loaded character instance and exposes helpers f
 ---
 
 <details class="realm-server" id="function-setflags">
-<summary><span class="summary-main"><a id="setFlags"></a>setFlags(flags)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/meta/character.lua#L723" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="setFlags"></a>setFlags(flags)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/meta/character.lua#L984" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="setflags"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -698,7 +698,7 @@ The character meta table wraps a loaded character instance and exposes helpers f
 ---
 
 <details class="realm-server" id="function-giveflags">
-<summary><span class="summary-main"><a id="giveFlags"></a>giveFlags(flags)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/meta/character.lua#L770" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="giveFlags"></a>giveFlags(flags)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/meta/character.lua#L1031" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="giveflags"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -727,7 +727,7 @@ The character meta table wraps a loaded character instance and exposes helpers f
 ---
 
 <details class="realm-server" id="function-takeflags">
-<summary><span class="summary-main"><a id="takeFlags"></a>takeFlags(flags)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/meta/character.lua#L807" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="takeFlags"></a>takeFlags(flags)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/meta/character.lua#L1068" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="takeflags"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -756,7 +756,7 @@ The character meta table wraps a loaded character instance and exposes helpers f
 ---
 
 <details class="realm-server" id="function-save">
-<summary><span class="summary-main"><a id="save"></a>save(callback)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/meta/character.lua#L847" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="save"></a>save(callback)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/meta/character.lua#L1108" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="save"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -787,7 +787,7 @@ The character meta table wraps a loaded character instance and exposes helpers f
 ---
 
 <details class="realm-server" id="function-sync">
-<summary><span class="summary-main"><a id="sync"></a>sync(receiver)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/meta/character.lua#L883" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="sync"></a>sync(receiver)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/meta/character.lua#L1144" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="sync"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -817,7 +817,7 @@ The character meta table wraps a loaded character instance and exposes helpers f
 ---
 
 <details class="realm-server" id="function-setup">
-<summary><span class="summary-main"><a id="setup"></a>setup(noNetworking)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/meta/character.lua#L953" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="setup"></a>setup(noNetworking)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/meta/character.lua#L1214" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="setup"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -846,7 +846,7 @@ The character meta table wraps a loaded character instance and exposes helpers f
 ---
 
 <details class="realm-server" id="function-kick">
-<summary><span class="summary-main"><a id="kick"></a>kick()</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/meta/character.lua#L996" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="kick"></a>kick()</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/meta/character.lua#L1257" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="kick"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -870,7 +870,7 @@ The character meta table wraps a loaded character instance and exposes helpers f
 ---
 
 <details class="realm-server" id="function-ban">
-<summary><span class="summary-main"><a id="ban"></a>ban(time)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/meta/character.lua#L1040" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="ban"></a>ban(time)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/meta/character.lua#L1301" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="ban"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -900,7 +900,7 @@ The character meta table wraps a loaded character instance and exposes helpers f
 ---
 
 <details class="realm-server" id="function-delete">
-<summary><span class="summary-main"><a id="delete"></a>delete()</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/meta/character.lua#L1070" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="delete"></a>delete()</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/meta/character.lua#L1331" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="delete"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -924,7 +924,7 @@ The character meta table wraps a loaded character instance and exposes helpers f
 ---
 
 <details class="realm-server" id="function-destroy">
-<summary><span class="summary-main"><a id="destroy"></a>destroy()</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/meta/character.lua#L1089" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="destroy"></a>destroy()</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/meta/character.lua#L1350" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="destroy"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -948,7 +948,7 @@ The character meta table wraps a loaded character instance and exposes helpers f
 ---
 
 <details class="realm-server" id="function-givemoney">
-<summary><span class="summary-main"><a id="giveMoney"></a>giveMoney(amount)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/meta/character.lua#L1114" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="giveMoney"></a>giveMoney(amount)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/meta/character.lua#L1375" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="givemoney"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -982,7 +982,7 @@ The character meta table wraps a loaded character instance and exposes helpers f
 ---
 
 <details class="realm-server" id="function-takemoney">
-<summary><span class="summary-main"><a id="takeMoney"></a>takeMoney(amount)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/meta/character.lua#L1140" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="takeMoney"></a>takeMoney(amount)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/meta/character.lua#L1401" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="takemoney"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -1016,7 +1016,7 @@ The character meta table wraps a loaded character instance and exposes helpers f
 ---
 
 <details class="realm-server" id="function-ismaincharacter">
-<summary><span class="summary-main"><a id="isMainCharacter"></a>isMainCharacter()</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/meta/character.lua#L1165" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="isMainCharacter"></a>isMainCharacter()</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/meta/character.lua#L1426" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="ismaincharacter"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">

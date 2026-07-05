@@ -1,4 +1,33 @@
-﻿local cacheKeys, cache, len = {}, {}, 0
+﻿--[[
+    Hooks:
+        SetupQuickMenu(Panel menu)
+
+    Purpose:
+        Allows modules to populate the quick settings menu before it is sized and shown.
+
+    Category:
+        UI
+
+    Parameters:
+        menu (Panel)
+            The quick menu panel instance that exposes helper methods like `addButton`, `addCheck`, and `addSpacer`.
+
+    Returns:
+        nil
+
+    Example Usage:
+        ```lua
+        hook.Add("SetupQuickMenu", "liaExampleSetupQuickMenu", function(menu)
+            menu:addButton("Example Action", function()
+                LocalPlayer():ChatPrint("Example clicked.")
+            end, "Runs an example quick action.")
+        end)
+        ```
+
+    Realm:
+        Client
+]]
+local cacheKeys, cache, len = {}, {}, 0
 local function PaintPanel(_, w, h)
     local radius = 6
     local shadowIntensity = 8
@@ -14,7 +43,7 @@ local function PaintFrame(pnl, w, h)
             btn:SetPos(w - 26, 4)
             btn:SetSize(24, 24)
             btn:SetFont("Marlett")
-            btn:SetText("✕")
+            btn:SetText("âœ•")
             btn:SetTextColor(Color(255, 255, 255))
             btn:PerformLayout()
         end

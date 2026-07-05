@@ -1,4 +1,88 @@
-﻿function MODULE:CalcStaminaChange(client)
+﻿--[[
+    Hooks:
+        PlayerStaminaLost(Player client)
+
+    Purpose:
+        Runs when a player's stamina is drained to zero and the breathing slowdown state is enabled.
+
+    Category:
+        Attributes
+
+    Parameters:
+        client (Player)
+            The player whose stamina was exhausted.
+
+    Returns:
+        nil
+
+    Example Usage:
+        ```lua
+        hook.Add("PlayerStaminaLost", "liaExamplePlayerStaminaLost", function(client)
+            client:ChatPrint("You're exhausted.")
+        end)
+        ```
+
+    Realm:
+        Server
+]]
+--[[
+    Hooks:
+        PlayerStaminaGained(Player client)
+
+    Purpose:
+        Runs when a player's stamina recovers enough to clear the breathing slowdown state.
+
+    Category:
+        Attributes
+
+    Parameters:
+        client (Player)
+            The player whose stamina recovered.
+
+    Returns:
+        nil
+
+    Example Usage:
+        ```lua
+        hook.Add("PlayerStaminaGained", "liaExamplePlayerStaminaGained", function(client)
+            client:ChatPrint("You caught your breath.")
+        end)
+        ```
+
+    Realm:
+        Server
+]]
+--[[
+    Hooks:
+        CanPlayerThrowPunch(Player client)
+
+    Purpose:
+        Determines whether a player may throw a punch with the hands weapon before cooldown and attack logic proceeds.
+
+    Category:
+        Combat
+
+    Parameters:
+        client (Player)
+            The player attempting to punch.
+
+    Returns:
+        boolean|string|nil
+            Return false to block the punch. A second return value may provide the localized error key shown to the player. Returning nil allows the default behavior to continue.
+
+    Example Usage:
+        ```lua
+        hook.Add("CanPlayerThrowPunch", "liaExampleCanPlayerThrowPunch", function(client)
+            if client:getNetVar("noPunching") then
+                return false, "needMorePlaytimeBeforePunch"
+            end
+        end)
+        ```
+
+    Realm:
+        Shared
+]]
+function MODULE:CalcStaminaChange(client)
     local char = client:getChar()
     if not char then return 0 end
     local walkSpeed = lia.config.get("WalkSpeed", 100)

@@ -1,4 +1,118 @@
-﻿local index = index or 1
+﻿--[[
+    Hooks:
+        ShouldDrawWepSelect(client)
+
+    Purpose:
+        Determines whether the custom weapon selector HUD should be shown for the local player.
+
+    Category:
+        HUD
+
+    Parameters:
+        client (Player)
+            The local player whose weapon selector visibility is being evaluated.
+
+    Returns:
+        boolean|nil
+            Return false to hide the weapon selector. Returning nil allows the default behavior to continue.
+
+    Example Usage:
+        ```lua
+        hook.Add("ShouldDrawWepSelect", "liaExampleShouldDrawWepSelect", function(client)
+            if IsValid(lia.gui.character) then
+                return false
+            end
+        end)
+        ```
+
+    Realm:
+        Client
+]]
+--[[
+    Hooks:
+        WeaponCycleSound()
+
+    Purpose:
+        Allows plugins or modules to override the sound played when cycling through weapons in the selector.
+
+    Category:
+        HUD
+
+    Parameters:
+        None
+
+    Returns:
+        string|nil, number|nil
+            Return a sound path and optional pitch to override the cycle sound. Returning nil values allows the default behavior to continue.
+
+    Example Usage:
+        ```lua
+        hook.Add("WeaponCycleSound", "liaExampleWeaponCycleSound", function()
+            return "buttons/lightswitch2.wav", 120
+        end)
+        ```
+
+    Realm:
+        Client
+]]
+--[[
+    Hooks:
+        CanPlayerChooseWeapon(weapon)
+
+    Purpose:
+        Determines whether the current active weapon may open and use the custom weapon selector.
+
+    Category:
+        HUD
+
+    Parameters:
+        weapon (Weapon)
+            The player's current active weapon.
+
+    Returns:
+        boolean|nil
+            Return false to block weapon selection from opening or choosing a new weapon. Returning nil allows the default behavior to continue.
+
+    Example Usage:
+        ```lua
+        hook.Add("CanPlayerChooseWeapon", "liaExampleCanPlayerChooseWeapon", function(weapon)
+            if IsValid(weapon) and weapon:GetClass() == "weapon_physgun" then
+                return false
+            end
+        end)
+        ```
+
+    Realm:
+        Client
+]]
+--[[
+    Hooks:
+        WeaponSelectSound()
+
+    Purpose:
+        Allows plugins or modules to override the sound played when the selected weapon is confirmed.
+
+    Category:
+        HUD
+
+    Parameters:
+        None
+
+    Returns:
+        string|nil, number|nil
+            Return a sound path and optional pitch to override the selection sound. Returning nil values allows the default behavior to continue.
+
+    Example Usage:
+        ```lua
+        hook.Add("WeaponSelectSound", "liaExampleWeaponSelectSound", function()
+            return "buttons/button14.wav", 105
+        end)
+        ```
+
+    Realm:
+        Client
+]]
+local index = index or 1
 local deltaIndex = deltaIndex or index
 local alpha = alpha or 0
 local alphaDelta = alphaDelta or alpha

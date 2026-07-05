@@ -35,7 +35,7 @@ The view library centralizes world-space preview behavior under `lia.view`. It c
 ---
 
 <details class="realm-client" id="function-liaviewshouldhideplayer">
-<summary><span class="summary-main"><a id="lia.view.shouldHidePlayer"></a>lia.view.shouldHidePlayer(player)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/view.lua#L109" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="lia.view.shouldHidePlayer"></a>lia.view.shouldHidePlayer(player)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/view.lua#L169" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="liaviewshouldhideplayer"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -72,7 +72,7 @@ The view library centralizes world-space preview behavior under `lia.view`. It c
 ---
 
 <details class="realm-client" id="function-liaviewclose">
-<summary><span class="summary-main"><a id="lia.view.close"></a>lia.view.close(owner)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/view.lua#L135" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="lia.view.close"></a>lia.view.close(owner)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/view.lua#L195" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="liaviewclose"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -103,7 +103,7 @@ The view library centralizes world-space preview behavior under `lia.view`. It c
 ---
 
 <details class="realm-client" id="function-liaviewbegin">
-<summary><span class="summary-main"><a id="lia.view.begin"></a>lia.view.begin(owner, config)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/view.lua#L192" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="lia.view.begin"></a>lia.view.begin(owner, config)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/view.lua#L252" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="liaviewbegin"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -138,7 +138,7 @@ The view library centralizes world-space preview behavior under `lia.view`. It c
 ---
 
 <details class="realm-client" id="function-liaviewsetmodel">
-<summary><span class="summary-main"><a id="lia.view.setModel"></a>lia.view.setModel(owner, modelPath, options)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/view.lua#L322" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="lia.view.setModel"></a>lia.view.setModel(owner, modelPath, options)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/view.lua#L382" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="liaviewsetmodel"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -174,7 +174,7 @@ The view library centralizes world-space preview behavior under `lia.view`. It c
 ---
 
 <details class="realm-client" id="function-liaviewgetentity">
-<summary><span class="summary-main"><a id="lia.view.getEntity"></a>lia.view.getEntity(owner)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/view.lua#L374" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="lia.view.getEntity"></a>lia.view.getEntity(owner)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/view.lua#L434" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="liaviewgetentity"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -213,7 +213,7 @@ The view library centralizes world-space preview behavior under `lia.view`. It c
 ---
 
 <details class="realm-client" id="function-liaviewrotate">
-<summary><span class="summary-main"><a id="lia.view.rotate"></a>lia.view.rotate(owner, deltaYaw)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/view.lua#L401" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="lia.view.rotate"></a>lia.view.rotate(owner, deltaYaw)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/view.lua#L461" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="liaviewrotate"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -236,6 +236,87 @@ The view library centralizes world-space preview behavior under `lia.view`. It c
 <pre><code class="language-lua">  local panel = vgui.Create("EditablePanel")
   lia.view.rotate(panel, 15)
   lia.view.rotate(panel, 15)
+</code></pre>
+</div>
+
+</div>
+</details>
+
+---
+
+<h2 style="margin-bottom: 5px;">Hooks</h2>
+<div style="margin-left: 20px; margin-bottom: 20px;">
+<p>Library-specific hooks documented for this library.</p>
+</div>
+
+---
+
+<details class="realm-client" id="function-modifycharactermodel">
+<summary><span class="summary-main"><a id="ModifyCharacterModel"></a>ModifyCharacterModel(entity, contextOrCharacter)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/view.lua#L44" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<div class="details-content">
+<h3 style="margin-bottom: 5px; font-weight: 700;"><a id="modifycharactermodel"></a>Purpose</h3>
+<div style="margin-left: 20px; margin-bottom: 20px;">
+  <p>Allows code to adjust a preview model after its base model, skin, and bodygroups have been applied for character creation or character selection scenes.</p>
+</div>
+
+<h3 style="margin-bottom: 5px; font-weight: 700;">Category</h3>
+<div style="margin-left: 20px; margin-bottom: 20px;">
+  <p>Main Menu</p>
+</div>
+
+<h3 style="margin-bottom: 5px; font-weight: 700;">Realm</h3>
+<div style="margin-left: 20px; margin-bottom: 20px;">
+  <p>Client</p>
+</div>
+
+<h3 style="margin-bottom: 5px; font-weight: 700;">Parameters</h3>
+<div style="margin-left: 20px; margin-bottom: 20px;">
+<p><span class="types"><a class="type" href="/developer/meta/entity/">Entity</a></span> <span class="parameter">entity</span> The clientside model entity being displayed.</p>
+<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#2.1">table|Character</a></span> <span class="parameter">contextOrCharacter</span> <span class="optional">optional</span> Either the creation context table, the loaded character being previewed, or nil when no extra context is supplied.</p>
+</div>
+
+<h3 style="margin-bottom: 5px; font-weight: 700;">Example Usage</h3>
+<div style="margin-left: 20px; margin-bottom: 20px;">
+<pre><code class="language-lua">  hook.Add("ModifyCharacterModel", "liaExampleModifyCharacterModel", function(entity, contextOrCharacter)
+      entity:SetAngles(Angle(0, 180, 0))
+  end)
+</code></pre>
+</div>
+
+</div>
+</details>
+
+---
+
+<details class="realm-client" id="function-setupplayermodel">
+<summary><span class="summary-main"><a id="SetupPlayerModel"></a>SetupPlayerModel(entity, character)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/view.lua#L14" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<div class="details-content">
+<h3 style="margin-bottom: 5px; font-weight: 700;"><a id="setupplayermodel"></a>Purpose</h3>
+<div style="margin-left: 20px; margin-bottom: 20px;">
+  <p>Allows code to configure a clientside player preview model after it is spawned but before character-specific appearance tweaks are applied.</p>
+</div>
+
+<h3 style="margin-bottom: 5px; font-weight: 700;">Category</h3>
+<div style="margin-left: 20px; margin-bottom: 20px;">
+  <p>Main Menu</p>
+</div>
+
+<h3 style="margin-bottom: 5px; font-weight: 700;">Realm</h3>
+<div style="margin-left: 20px; margin-bottom: 20px;">
+  <p>Client</p>
+</div>
+
+<h3 style="margin-bottom: 5px; font-weight: 700;">Parameters</h3>
+<div style="margin-left: 20px; margin-bottom: 20px;">
+<p><span class="types"><a class="type" href="/developer/meta/entity/">Entity</a></span> <span class="parameter">entity</span> The clientside model entity being prepared for preview.</p>
+<p><span class="types"><a class="type" href="/developer/libraries/char/">Character</a></span> <span class="parameter">character</span> <span class="optional">optional</span> An optional loaded character when the preview is built from character selection data.</p>
+</div>
+
+<h3 style="margin-bottom: 5px; font-weight: 700;">Example Usage</h3>
+<div style="margin-left: 20px; margin-bottom: 20px;">
+<pre><code class="language-lua">  hook.Add("SetupPlayerModel", "liaExampleSetupPlayerModel", function(entity, character)
+      entity:SetCycle(0)
+  end)
 </code></pre>
 </div>
 

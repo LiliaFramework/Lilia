@@ -1,4 +1,120 @@
-﻿function MODULE:CreateInventoryPanel(inventory, parent)
+﻿--[[
+    Hooks:
+        StorageOpen(storage)
+
+    Purpose:
+        Runs when a weight-inventory storage container should open its clientside storage panel.
+
+    Category:
+        Inventory
+
+    Parameters:
+        storage (Inventory)
+            The storage inventory being opened.
+
+    Returns:
+        nil
+
+    Example Usage:
+        ```lua
+        hook.Add("StorageOpen", "liaExampleStorageOpenWeightInv", function(storage)
+            print("Opened storage", storage:getID())
+        end)
+        ```
+
+    Realm:
+        Client
+]]
+--[[
+    Hooks:
+        CanPlayerViewInventory()
+
+    Purpose:
+        Determines whether the inventory menu button should be available for the local player.
+
+    Category:
+        Inventory
+
+    Parameters:
+        None
+
+    Returns:
+        boolean|nil
+            Return false to hide the inventory menu button. Returning nil allows the default behavior to continue.
+
+    Example Usage:
+        ```lua
+        hook.Add("CanPlayerViewInventory", "liaExampleCanPlayerViewInventory", function()
+            if IsValid(lia.gui.character) then
+                return false
+            end
+        end)
+        ```
+
+    Realm:
+        Client
+]]
+--[[
+    Hooks:
+        CanOpenBagPanel(item)
+
+    Purpose:
+        Determines whether a bag inventory panel should be opened alongside the main weight inventory.
+
+    Category:
+        Inventory
+
+    Parameters:
+        item (Item)
+            The bag item whose inventory panel is being considered.
+
+    Returns:
+        boolean|nil
+            Return false to suppress opening the bag panel. Returning nil allows the default behavior to continue.
+
+    Example Usage:
+        ```lua
+        hook.Add("CanOpenBagPanel", "liaExampleCanOpenBagPanel", function(item)
+            if item.uniqueID == "hiddenbag" then
+                return false
+            end
+        end)
+        ```
+
+    Realm:
+        Client
+]]
+--[[
+    Hooks:
+        PostDrawInventory(mainPanel, parentPanel)
+
+    Purpose:
+        Runs after the weight inventory panels have been laid out and VGUI finished rendering for the frame.
+
+    Category:
+        Inventory
+
+    Parameters:
+        mainPanel (Panel)
+            The primary inventory panel created for the player's inventory.
+
+        parentPanel (Panel)
+            The parent panel that hosted the inventory layout.
+
+    Returns:
+        nil
+
+    Example Usage:
+        ```lua
+        hook.Add("PostDrawInventory", "liaExamplePostDrawInventory", function(mainPanel, parentPanel)
+            surface.SetDrawColor(255, 255, 255, 10)
+        end)
+        ```
+
+    Realm:
+        Client
+]]
+function MODULE:CreateInventoryPanel(inventory, parent)
     if inventory.typeID ~= "WeightInv" then return end
     local panel = parent:Add("liaListInventory")
     panel:setInventory(inventory)

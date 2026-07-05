@@ -1,4 +1,34 @@
 ﻿ITEM.name = "outfit"
+--[[
+    Hooks:
+        CanOutfitChangeModel(Item item)
+
+    Purpose:
+        Determines whether equipping or unequipping an outfit may change the character's model, skin, and bodygroups.
+
+    Category:
+        Items
+
+    Parameters:
+        item (Item)
+            The outfit item being equipped or removed.
+
+    Returns:
+        boolean|nil
+            Return false to stop the outfit from changing the player's appearance data. Returning nil allows the default behavior to continue.
+
+    Example Usage:
+        ```lua
+        hook.Add("CanOutfitChangeModel", "liaExampleCanOutfitChangeModel", function(item)
+            if item.outfitCategory == "uniform" then
+                return true
+            end
+        end)
+        ```
+
+    Realm:
+        Server
+]]
 ITEM.desc = "outfitDesc"
 ITEM.category = "outfit"
 ITEM.model = "models/props_c17/BriefCase001a.mdl"

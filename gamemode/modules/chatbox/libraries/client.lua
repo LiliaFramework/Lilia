@@ -1,4 +1,57 @@
-﻿local MODULE = MODULE
+﻿--[[
+    Hooks:
+        CreateChatboxPanel()
+
+    Purpose:
+        Ensures the custom chatbox panel exists so persisted messages, message-mode input, and chat synchronization can target a live UI panel.
+
+    Category:
+        Chat
+
+    Parameters:
+        None
+
+    Example Usage:
+        ```lua
+        hook.Add("CreateChatboxPanel", "liaExampleCreateChatboxPanel", function()
+            print("Chatbox creation requested")
+        end)
+        ```
+
+    Returns:
+        nil
+
+    Realm:
+        Client
+]]
+--[[
+    Hooks:
+        ChatboxPanelCreated(Panel panel)
+
+    Purpose:
+        Runs immediately after the custom chatbox panel is created so modules can attach post-creation behavior before persisted messages are replayed.
+
+    Category:
+        Chat
+
+    Parameters:
+        panel (Panel)
+            The newly created `liaChatBox` panel instance.
+
+    Example Usage:
+        ```lua
+        hook.Add("ChatboxPanelCreated", "liaExampleChatboxPanelCreated", function(panel)
+            panel:SetAlpha(255)
+        end)
+        ```
+
+    Returns:
+        nil
+
+    Realm:
+        Client
+]]
+local MODULE = MODULE
 lia.chat = lia.chat or {}
 lia.chat.persistedMessages = lia.chat.persistedMessages or {}
 chat.liaAddText = chat.liaAddText or chat.AddText

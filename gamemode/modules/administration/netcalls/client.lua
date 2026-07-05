@@ -1,4 +1,31 @@
-﻿lia.mapConfigurerState = lia.mapConfigurerState or {
+﻿--[[
+    Hooks:
+        OnlineStaffDataReceived(table staffData)
+
+    Purpose:
+        Runs after the online-staff summary payload arrives on the client so UI code can refresh with the latest staff data.
+
+    Category:
+        Administration
+
+    Parameters:
+        staffData (table)
+            The decoded online-staff summary array received from the server.
+
+    Example Usage:
+        ```lua
+        hook.Add("OnlineStaffDataReceived", "liaExampleOnlineStaffDataReceived", function(staffData)
+            print("Online staff entries:", #staffData)
+        end)
+        ```
+
+    Returns:
+        nil
+
+    Realm:
+        Client
+]]
+lia.mapConfigurerState = lia.mapConfigurerState or {
     modeIndex = 1,
     cachedPositions = {},
     cacheType = nil,

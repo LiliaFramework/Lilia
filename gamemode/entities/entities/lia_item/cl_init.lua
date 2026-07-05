@@ -1,4 +1,45 @@
-﻿function ENT:computeDescMarkup(description)
+﻿--[[
+    Hooks:
+        DrawItemEntityInfo(Entity itemEntity, Item item, table infoTable, number alpha)
+
+    Purpose:
+        Allows modules to append extra lines to the floating world-item information display before it is drawn.
+
+    Category:
+        Items
+
+    Parameters:
+        itemEntity (Entity)
+            The world item entity being drawn.
+
+        item (Item)
+            The item instance represented by the entity.
+
+        infoTable (table)
+            The mutable list of info entries to draw. Append tables containing fields such as `text` and `yOffset`.
+
+        alpha (number)
+            The current text alpha used for the entity info display.
+
+    Returns:
+        nil
+
+    Example Usage:
+        ```lua
+        hook.Add("DrawItemEntityInfo", "liaExampleDrawItemEntityInfo", function(itemEntity, item, infoTable, alpha)
+            if item and item:getData("rarity") then
+                infoTable[#infoTable + 1] = {
+                    text = "Rarity: " .. tostring(item:getData("rarity")),
+                    yOffset = 0
+                }
+            end
+        end)
+        ```
+
+    Realm:
+        Client
+]]
+function ENT:computeDescMarkup(description)
     if self.desc ~= description then
         self.desc = description
         self.markup = lia.markup.parse("<font=LiliaFont.16>" .. description .. "</font>", ScrW() * 0.5)

@@ -5,6 +5,39 @@
     return false
 end
 
+--[[
+    Hooks:
+        IsCharRecognized(Character character, number id)
+
+    Purpose:
+        Allows modules to override whether one character should fully recognize another character.
+
+    Category:
+        Recognition
+
+    Parameters:
+        character (Character)
+            The character whose recognition list is being checked.
+
+        id (number)
+            The target character ID being tested.
+
+    Returns:
+        boolean|nil
+            Return true to force recognition or false to deny it. Returning nil allows the default recognition rules to continue.
+
+    Example Usage:
+        ```lua
+        hook.Add("IsCharRecognized", "liaExampleIsCharRecognized", function(character, id)
+            if character and character:getID() == id then
+                return true
+            end
+        end)
+        ```
+
+    Realm:
+        Shared
+]]
 function MODULE:IsCharRecognized(character, id)
     if not lia.config.get("RecognitionEnabled", true) then return true end
     if not character or not isfunction(character.getPlayer) then return false end
@@ -34,6 +67,39 @@ function MODULE:IsCharRecognized(character, id)
     return false
 end
 
+--[[
+    Hooks:
+        IsCharFakeRecognized(Character character, number id)
+
+    Purpose:
+        Allows modules to override whether one character should see a fake recognized name for another character.
+
+    Category:
+        Recognition
+
+    Parameters:
+        character (Character)
+            The character whose fake recognition table is being checked.
+
+        id (number)
+            The target character ID being tested.
+
+    Returns:
+        boolean|nil
+            Return true to force fake recognition or false to block it. Returning nil allows the default fake-name checks to continue.
+
+    Example Usage:
+        ```lua
+        hook.Add("IsCharFakeRecognized", "liaExampleIsCharFakeRecognized", function(character, id)
+            if character and character:getData("alwaysFakeRecognize") then
+                return true
+            end
+        end)
+        ```
+
+    Realm:
+        Shared
+]]
 function MODULE:IsCharFakeRecognized(character, id)
     if not character or not character.getPlayer then return false end
     local other = lia.char.getCharacter(id, character:getPlayer())

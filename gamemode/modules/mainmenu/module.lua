@@ -1,4 +1,4 @@
---[[
+﻿--[[
     Hooks:
         GetMainCharacterID()
 
@@ -48,33 +48,6 @@
     Returns:
         Panel|boolean|nil
             Return a panel to use instead of the default character menu, or any non-nil value to stop the default menu from opening.
-
-    Realm:
-        Client
-]]
---[[
-    Hooks:
-        ThirdPersonToggled(enabled)
-
-    Purpose:
-        Called whenever the third-person option is toggled through the main menu or option system.
-
-    Category:
-        Main Menu
-
-    Parameters:
-        enabled (boolean)
-            The new third-person enabled state.
-
-    Example Usage:
-        ```lua
-        hook.Add("ThirdPersonToggled", "liaExampleThirdPersonToggled", function(enabled)
-            print("[MyModule] handled ThirdPersonToggled")
-        end)
-        ```
-
-    Returns:
-        nil
 
     Realm:
         Client
@@ -410,6 +383,88 @@
 
     Returns:
         nil
+
+    Realm:
+        Client
+]]
+--[[
+    Hooks:
+        IsCharacterCreationOverridden()
+
+    Purpose:
+        Allows a module or schema to suppress the default character creation flow and supply its own interface.
+
+    Category:
+        Main Menu
+
+    Parameters:
+        None
+
+    Example Usage:
+        ```lua
+        hook.Add("IsCharacterCreationOverridden", "liaExampleIsCharacterCreationOverridden", function()
+            return true
+        end)
+        ```
+
+    Returns:
+        boolean|nil
+            Return true to prevent the default character creation UI from opening. Return nil or false to keep the built-in flow.
+
+    Realm:
+        Client
+]]
+--[[
+    Hooks:
+        CharLoaded(Character character)
+
+    Purpose:
+        Runs after the client successfully loads a chosen character through the normal character selection flow.
+
+    Category:
+        Main Menu
+
+    Parameters:
+        character (Character)
+            The character object that finished loading on the client.
+
+    Example Usage:
+        ```lua
+        hook.Add("CharLoaded", "liaExampleCharLoaded", function(character)
+            print("[Characters] Loaded:", character:getName())
+        end)
+        ```
+
+    Returns:
+        nil
+
+    Realm:
+        Client
+]]
+--[[
+    Hooks:
+        ShouldShowCharVarInCreation(string key)
+
+    Purpose:
+        Allows code to hide specific character variable fields from the default creation flow while preserving fallback defaults in the outgoing payload.
+
+    Category:
+        Main Menu
+
+    Parameters:
+        key (string)
+            The character variable key being considered for the creation interface.
+
+    Example Usage:
+        ```lua
+        hook.Add("ShouldShowCharVarInCreation", "liaExampleShouldShowCharVarInCreation", function(key)
+            if key == "desc" then return false end
+        end)
+        ```
+
+    Returns:
+        boolean|nil
+            Return false to hide the field from the default creation UI. Return nil or true to leave the field available.
 
     Realm:
         Client

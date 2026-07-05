@@ -1,4 +1,4 @@
---[[
+﻿--[[
     Hooks:
         CanPlayerAccessVendor(client, vendor)
 
@@ -158,37 +158,6 @@
 ]]
 --[[
     Hooks:
-        OnOpenVendorMenu(panelOwner, vendor)
-
-    Purpose:
-        Called on the client after the vendor UI is created.
-
-    Category:
-        Vendor
-
-    Parameters:
-        panelOwner (table)
-            The vendor module instance opening the UI.
-
-        vendor (Entity)
-            The vendor entity being shown.
-
-    Example Usage:
-        ```lua
-        hook.Add("OnOpenVendorMenu", "liaExampleOnOpenVendorMenu", function(panelOwner, vendor)
-            if not IsValid(panelOwner) then return end
-            panelOwner:SetTooltip("OnOpenVendorMenu handled by MyModule")
-        end)
-        ```
-
-    Returns:
-        nil
-
-    Realm:
-        Client
-]]
---[[
-    Hooks:
         OnVendorEdited(client, vendor, key)
 
     Purpose:
@@ -306,32 +275,6 @@
         ```lua
         hook.Add("VendorEdited", "liaExampleVendorEdited", function(vendor, key)
             print("[MyModule] handled VendorEdited")
-        end)
-        ```
-
-    Returns:
-        nil
-
-    Realm:
-        Client
-]]
---[[
-    Hooks:
-        VendorExited()
-
-    Purpose:
-        Called on the client after the vendor UI is closed by a networked exit event.
-
-    Category:
-        Vendor
-
-    Parameters:
-        None
-
-    Example Usage:
-        ```lua
-        hook.Add("VendorExited", "liaExampleVendorExited", function()
-            print("[MyModule] handled VendorExited")
         end)
         ```
 
@@ -623,33 +566,6 @@
         ```lua
         hook.Add("VendorMessagesUpdated", "liaExampleVendorMessagesUpdated", function(vendor)
             print("[MyModule] handled VendorMessagesUpdated")
-        end)
-        ```
-
-    Returns:
-        nil
-
-    Realm:
-        Client
-]]
---[[
-    Hooks:
-        VendorOpened(vendor)
-
-    Purpose:
-        Called on the client after vendor access opens the vendor UI.
-
-    Category:
-        Vendor
-
-    Parameters:
-        vendor (Entity)
-            The vendor entity that was opened.
-
-    Example Usage:
-        ```lua
-        hook.Add("VendorOpened", "liaExampleVendorOpened", function(vendor)
-            print("[MyModule] handled VendorOpened")
         end)
         ```
 

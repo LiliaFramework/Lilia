@@ -6,6 +6,7 @@ import sys
 import argparse
 import urllib.request
 import json
+import shutil
 from pathlib import Path
 from io import StringIO
 from typing import List, Dict, Tuple, Optional
@@ -397,7 +398,6 @@ def normalize_doc_folder(folder: Optional[str]) -> Optional[str]:
         'library': 'developer/libraries',
         'core libraries': 'developer/libraries',
         'hooks': 'developer/hooks',
-        'compatibility': 'developer/compatibility',
     }
 
     return folder_map.get(compact, normalized)
@@ -555,6 +555,9 @@ def find_functions_in_file(file_path, is_library=False):
             comment_line = content[:comment_start].count('\n') + 1
             if comment_line < func_line and (preceding_comment is None or comment_line > preceding_comment[0]):
                 if any(header in comment_text for header in ['Purpose:', 'When Called:', 'When Used:', 'Category:', 'Parameters:', 'Returns:', 'Realm:', 'Explanation of Panel:', 'Example Usage:']):
+                    gap_text = content[comment_end:match.start()]
+                    if gap_text.strip():
+                        continue
                     preceding_comment = (comment_line, comment_text)
 
         if preceding_comment:
@@ -900,6 +903,26 @@ def find_top_comment_blocks_in_file(file_path: Path):
     return content, blocks
 
 
+def find_all_comment_blocks_in_file(file_path: Path):
+    try:
+        with open(file_path, 'r', encoding='utf-8-sig') as f:
+            content = f.read()
+    except UnicodeDecodeError:
+        print(f"Warning: Could not read {file_path} due to encoding issues")
+        return '', []
+
+    comment_pattern = re.compile(r'--\[\[.*?\]\]', re.DOTALL)
+    blocks = []
+
+    for match in comment_pattern.finditer(content):
+        blocks.append({
+            'text': match.group(0),
+            'line': content[:match.start()].count('\n') + 1
+        })
+
+    return content, blocks
+
+
 def extract_hook_name_from_block(comment_text: str) -> Optional[str]:
     lines = comment_text.splitlines()
     in_hooks = False
@@ -929,10 +952,11 @@ def extract_hook_name_from_block(comment_text: str) -> Optional[str]:
 
 
 def find_hook_docs_in_file(file_path: Path):
-    file_content, top_blocks = find_top_comment_blocks_in_file(file_path)
-    if not top_blocks:
+    file_content, all_blocks = find_all_comment_blocks_in_file(file_path)
+    if not all_blocks:
         return file_content, None, None, []
 
+    _, top_blocks = find_top_comment_blocks_in_file(file_path)
     file_header = None
     overview_section = None
     hooks = []
@@ -946,16 +970,24 @@ def find_hook_docs_in_file(file_path: Path):
                 overview_section = comment_text
             continue
         if 'Hooks:' in comment_text:
-            hook_name = extract_hook_name_from_block(comment_text)
-            if hook_name:
-                hooks.append({
-                    'name': hook_name,
-                    'comment': comment_text,
-                    'line': block['line']
-                })
             continue
         if file_header is None:
             file_header = comment_text
+
+    for block in all_blocks:
+        comment_text = block['text']
+        if 'Folder:' in comment_text or 'File:' in comment_text or 'Append:' in comment_text:
+            continue
+        if 'Hooks:' not in comment_text:
+            continue
+
+        hook_name = extract_hook_name_from_block(comment_text)
+        if hook_name:
+            hooks.append({
+                'name': hook_name,
+                'comment': comment_text,
+                'line': block['line']
+            })
 
     return file_content, file_header, overview_section, hooks
 
@@ -1136,6 +1168,13 @@ def clear_generated_markdown(output_dir: Path) -> None:
             md_file.unlink()
 
 
+def remove_legacy_generated_docs(docs_dir: Path) -> None:
+    legacy_modules_dir = docs_dir / 'developer' / 'modules'
+    if legacy_modules_dir.exists():
+        shutil.rmtree(legacy_modules_dir)
+        print(" Removed legacy developer/modules docs")
+
+
 def get_documented_output_filename(file_path: Path, file_content: str) -> str:
     _, custom_filename, _ = parse_folder_directives(file_content)
     return custom_filename or f'{file_path.stem}.md'
@@ -1290,8 +1329,6 @@ def generate_hook_documentation(core_output_dir: Path, module_output_dir: Path, 
             continue
 
         group_info = classify_hook_group(file_path, base_dir, file_content)
-        if is_library_hook_group(group_info):
-            continue
         if not should_include_hook_file(file_path, group_info, file_content):
             continue
 
@@ -1781,15 +1818,6 @@ def run_hooks_generation(base_dir: Path, docs_dir: Path) -> None:
     generate_index_file(core_output_dir, 'hooks')
 
 
-def run_compatibility_generation(base_dir: Path, docs_dir: Path, force: bool) -> None:
-    comp_dir = base_dir / 'gamemode' / 'core' / 'libraries' / 'compatibility'
-    output_dir = docs_dir / 'developer' / 'compatibility'
-    if comp_dir.exists():
-        for file_path in comp_dir.rglob('*.lua'):
-            generate_documentation_for_file(file_path, output_dir, is_library=False, base_docs_dir=docs_dir, force=force, no_realm=False, no_icon=True)
-    generate_index_file(output_dir, 'compatibility')
-
-
 def run_generators_generation(docs_dir: Path) -> None:
     output_dir = docs_dir / 'generators'
     generate_index_file(output_dir, 'generators')
@@ -1817,10 +1845,6 @@ def main():
     hooks_parser = subparsers.add_parser('hooks', help='Generate hooks documentation')
     hooks_parser.add_argument('--force', action='store_true', help='Force regeneration of existing files')
 
-    # Compatibility command
-    compatibility_parser = subparsers.add_parser('compatibility', help='Generate compatibility documentation')
-    compatibility_parser.add_argument('--force', action='store_true', help='Force regeneration of existing files')
-
     # Generators command
     generators_parser = subparsers.add_parser('generators', help='Generate generators index')
     generators_parser.add_argument('--force', action='store_true', help='Force regeneration')
@@ -1840,6 +1864,8 @@ def main():
     should_sync_nav = True
     force = getattr(args, 'force', False)
 
+    remove_legacy_generated_docs(docs_dir)
+
     if args.command == 'meta':
         run_meta_generation(base_dir, docs_dir, force)
 
@@ -1848,9 +1874,6 @@ def main():
 
     elif args.command == 'hooks':
         run_hooks_generation(base_dir, docs_dir)
-
-    elif args.command == 'compatibility':
-        run_compatibility_generation(base_dir, docs_dir, force)
 
     elif args.command == 'generators':
         run_generators_generation(docs_dir)
@@ -1862,7 +1885,6 @@ def main():
         run_meta_generation(base_dir, docs_dir, force)
         run_library_generation(base_dir, docs_dir, force)
         run_hooks_generation(base_dir, docs_dir)
-        run_compatibility_generation(base_dir, docs_dir, force)
         run_generators_generation(docs_dir)
         run_about_generation(docs_dir, force)
 
@@ -2130,7 +2152,6 @@ GENERATOR_TITLES = {
 TITLE_MAP = {
     'meta': 'Meta Tables',
     'library': 'Libraries',
-    'compatibility': 'Compatibility',
     'hooks': 'Hooks',
     'guides': 'Guides',
     'generators': 'Generators',

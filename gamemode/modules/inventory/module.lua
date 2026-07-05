@@ -1,100 +1,39 @@
---[[
+﻿--[[
     Hooks:
-        InventoryClosed(panel, inventory)
+        GetDefaultInventorySize(Player client, Character char)
 
     Purpose:
-        Called after an inventory panel is closed.
+        Allows modules to override the default dimensions assigned to a character inventory.
+        For weight inventories, this changes the inventory panel width and height only.
+        Use GetInventoryMaxWeight to override the carry weight limit.
 
     Category:
         Inventory
 
     Parameters:
-        panel (Panel)
-            The panel instance that was closed.
+        client (Player)
+            The player whose character inventory is being sized.
 
-        inventory (table)
-            The inventory represented by the panel.
+        char (Character)
+            The character whose inventory dimensions are being resolved.
+
+    Returns:
+        number|nil, number|nil
+            Return width and height values to override the configured defaults.
+            In weight inventories, these values affect the UI dimensions rather than max carry weight.
+            Returning nil values allows the normal inventory size config to continue.
 
     Example Usage:
         ```lua
-        hook.Add("InventoryClosed", "liaExampleInventoryClosed", function(panel, inventory)
-            if not IsValid(panel) then return end
-            panel:SetTooltip("InventoryClosed handled by MyModule")
+        hook.Add("GetDefaultInventorySize", "liaExampleGetDefaultInventorySize", function(client, char)
+            if char and char:getFaction() == FACTION_STAFF then
+                return 8, 5
+            end
         end)
         ```
 
-    Returns:
-        nil
-
     Realm:
-        Client
-]]
---[[
-    Hooks:
-        InventoryOpened(panel, inventory)
-
-    Purpose:
-        Called after an inventory panel is created and shown.
-
-    Category:
-        Inventory
-
-    Parameters:
-        panel (Panel)
-            The panel instance that was opened.
-
-        inventory (table)
-            The inventory represented by the panel.
-
-    Example Usage:
-        ```lua
-        hook.Add("InventoryOpened", "liaExampleInventoryOpened", function(panel, inventory)
-            if not IsValid(panel) then return end
-            panel:SetTooltip("InventoryOpened handled by MyModule")
-        end)
-        ```
-
-    Returns:
-        nil
-
-    Realm:
-        Client
-]]
---[[
-    Hooks:
-        OnCreateDualInventoryPanels(panel1, panel2, inventory1, inventory2)
-
-    Purpose:
-        Called after the framework creates a paired inventory view for two inventories.
-
-    Category:
-        Inventory
-
-    Parameters:
-        panel1 (Panel)
-            The panel for the first inventory.
-
-        panel2 (Panel)
-            The panel for the second inventory.
-
-        inventory1 (table)
-            The first inventory object.
-
-        inventory2 (table)
-            The second inventory object.
-
-    Example Usage:
-        ```lua
-        hook.Add("OnCreateDualInventoryPanels", "liaExampleOnCreateDualInventoryPanels", function(panel1, panel2, inventory1, inventory2)
-            print("[MyModule] handled OnCreateDualInventoryPanels")
-        end)
-        ```
-
-    Returns:
-        nil
-
-    Realm:
-        Client
+        Server
 ]]
 MODULE.name = "@inv"
 MODULE.author = "Samael"

@@ -1,4 +1,560 @@
-﻿net.Receive("liaSetWaypoint", function()
+﻿--[[
+    Hooks:
+        OnWeaponOverridesBulkSynced(overrides)
+
+    Purpose:
+        Runs after the full static weapon override table has been synchronized to the client.
+
+    Category:
+        Items
+
+    Parameters:
+        overrides (table)
+            The full weapon override table keyed by weapon class name.
+
+    Returns:
+        nil
+
+    Example Usage:
+        ```lua
+        hook.Add("OnWeaponOverridesBulkSynced", "liaExampleOnWeaponOverridesBulkSynced", function(overrides)
+            print("[Weapons] Synced static overrides:", table.Count(overrides))
+        end)
+        ```
+
+    Realm:
+        Client
+]]
+--[[
+    Hooks:
+        OnWeaponOverrideUpdated(className, key, value)
+
+    Purpose:
+        Runs after a single static weapon override field has been updated on the client.
+
+    Category:
+        Items
+
+    Parameters:
+        className (string)
+            The weapon class whose override changed.
+
+        key (string)
+            The item definition field that was updated.
+
+        value (any)
+            The new override value.
+
+    Returns:
+        nil
+
+    Example Usage:
+        ```lua
+        hook.Add("OnWeaponOverrideUpdated", "liaExampleOnWeaponOverrideUpdated", function(className, key, value)
+            print("[Weapons] Updated", className, key)
+        end)
+        ```
+
+    Realm:
+        Client
+]]
+--[[
+    Hooks:
+        OnWeaponRuntimeOverridesBulkSynced(overrides)
+
+    Purpose:
+        Runs after the full runtime weapon override table has been synchronized to the client.
+
+    Category:
+        Items
+
+    Parameters:
+        overrides (table)
+            The full runtime override table keyed by weapon class name and dot path.
+
+    Returns:
+        nil
+
+    Example Usage:
+        ```lua
+        hook.Add("OnWeaponRuntimeOverridesBulkSynced", "liaExampleOnWeaponRuntimeOverridesBulkSynced", function(overrides)
+            print("[Weapons] Synced runtime overrides:", table.Count(overrides))
+        end)
+        ```
+
+    Realm:
+        Client
+]]
+--[[
+    Hooks:
+        OnWeaponRuntimeOverrideUpdated(className, dotPath, value)
+
+    Purpose:
+        Runs after a single runtime weapon override path has been updated on the client.
+
+    Category:
+        Items
+
+    Parameters:
+        className (string)
+            The weapon class whose runtime override changed.
+
+        dotPath (string)
+            The nested runtime path that was updated.
+
+        value (any)
+            The new runtime override value.
+
+    Returns:
+        nil
+
+    Example Usage:
+        ```lua
+        hook.Add("OnWeaponRuntimeOverrideUpdated", "liaExampleOnWeaponRuntimeOverrideUpdated", function(className, dotPath, value)
+            print("[Weapons] Runtime update", className, dotPath)
+        end)
+        ```
+
+    Realm:
+        Client
+]]
+--[[
+    Hooks:
+        CharListUpdated(oldCharList, newCharList)
+
+    Purpose:
+        Runs after the client receives a replacement character ID list for an already initialized character menu session.
+
+    Category:
+        Character
+
+    Parameters:
+        oldCharList (table)
+            The previous array of character IDs stored clientside.
+
+        newCharList (table)
+            The newly received array of character IDs.
+
+    Returns:
+        nil
+
+    Example Usage:
+        ```lua
+        hook.Add("CharListUpdated", "liaExampleCharListUpdated", function(oldCharList, newCharList)
+            print("[Characters] Updated list size:", #newCharList)
+        end)
+        ```
+
+    Realm:
+        Client
+]]
+--[[
+    Hooks:
+        InventoryDataChanged(instance, key, oldValue, value)
+
+    Purpose:
+        Runs after an inventory data field has been updated from a network message.
+
+    Category:
+        Inventory
+
+    Parameters:
+        instance (Inventory)
+            The inventory instance whose data changed.
+
+        key (string)
+            The inventory data key that was updated.
+
+        oldValue (any)
+            The previous stored value.
+
+        value (any)
+            The new value assigned to the inventory.
+
+    Returns:
+        nil
+
+    Example Usage:
+        ```lua
+        hook.Add("InventoryDataChanged", "liaExampleInventoryDataChanged", function(instance, key, oldValue, value)
+            print("[Inventory] Data changed:", key)
+        end)
+        ```
+
+    Realm:
+        Client
+]]
+--[[
+    Hooks:
+        ItemInitialized(item)
+
+    Purpose:
+        Runs after a clientside item instance has been created or refreshed from networked item data.
+
+    Category:
+        Inventory
+
+    Parameters:
+        item (Item)
+            The item instance that was initialized.
+
+    Returns:
+        nil
+
+    Example Usage:
+        ```lua
+        hook.Add("ItemInitialized", "liaExampleItemInitialized", function(item)
+            print("[Inventory] Initialized item:", item.uniqueID)
+        end)
+        ```
+
+    Realm:
+        Client
+]]
+--[[
+    Hooks:
+        InventoryInitialized(instance)
+
+    Purpose:
+        Runs after a clientside inventory instance and all of its current items have been initialized.
+
+    Category:
+        Inventory
+
+    Parameters:
+        instance (Inventory)
+            The inventory instance that was initialized.
+
+    Returns:
+        nil
+
+    Example Usage:
+        ```lua
+        hook.Add("InventoryInitialized", "liaExampleInventoryInitialized", function(instance)
+            print("[Inventory] Ready:", instance:getID())
+        end)
+        ```
+
+    Realm:
+        Client
+]]
+--[[
+    Hooks:
+        InventoryDeleted(instance)
+
+    Purpose:
+        Runs immediately before a clientside inventory instance is removed from the inventory cache.
+
+    Category:
+        Inventory
+
+    Parameters:
+        instance (Inventory)
+            The inventory instance that is being deleted.
+
+    Returns:
+        nil
+
+    Example Usage:
+        ```lua
+        hook.Add("InventoryDeleted", "liaExampleInventoryDeleted", function(instance)
+            print("[Inventory] Deleted:", instance:getID())
+        end)
+        ```
+
+    Realm:
+        Client
+]]
+--[[
+    Hooks:
+        ItemDeleted(instance)
+
+    Purpose:
+        Runs after a clientside item instance has been removed from its inventory and instance cache.
+
+    Category:
+        Inventory
+
+    Parameters:
+        instance (Item)
+            The item instance that was deleted.
+
+    Returns:
+        nil
+
+    Example Usage:
+        ```lua
+        hook.Add("ItemDeleted", "liaExampleItemDeleted", function(instance)
+            if instance then
+                print("[Inventory] Deleted item:", instance.uniqueID)
+            end
+        end)
+        ```
+
+    Realm:
+        Client
+]]
+--[[
+    Hooks:
+        OnCharNetVarChanged(character, key, oldVar, value)
+
+    Purpose:
+        Runs after a networked character variable has been updated on the client.
+
+    Category:
+        Character
+
+    Parameters:
+        character (Character)
+            The character whose networked variable changed.
+
+        key (string)
+            The networked variable key that changed.
+
+        oldVar (any)
+            The previous stored value.
+
+        value (any)
+            The new networked value.
+
+    Returns:
+        nil
+
+    Example Usage:
+        ```lua
+        hook.Add("OnCharNetVarChanged", "liaExampleOnCharNetVarChanged", function(character, key, oldVar, value)
+            print("[Character] Net var changed:", key)
+        end)
+        ```
+
+    Realm:
+        Client
+]]
+--[[
+    Hooks:
+        ItemQuantityChanged(item, oldValue, quantity)
+
+    Purpose:
+        Runs after a stackable item quantity has been updated from the server.
+
+    Category:
+        Inventory
+
+    Parameters:
+        item (Item)
+            The item whose quantity changed.
+
+        oldValue (number)
+            The previous quantity.
+
+        quantity (number)
+            The new quantity.
+
+    Returns:
+        nil
+
+    Example Usage:
+        ```lua
+        hook.Add("ItemQuantityChanged", "liaExampleItemQuantityChanged", function(item, oldValue, quantity)
+            print("[Inventory] Quantity changed:", oldValue, quantity)
+        end)
+        ```
+
+    Realm:
+        Client
+]]
+--[[
+    Hooks:
+        GetNPCDialogOptions(client, npc, canCustomize)
+
+    Purpose:
+        Allows plugins or modules to add extra dialog options before an NPC conversation menu is displayed.
+
+    Category:
+        Dialog
+
+    Parameters:
+        client (Player)
+            The local player opening the dialog.
+
+        npc (Entity)
+            The NPC entity that opened the dialog, if valid.
+
+        canCustomize (boolean)
+            Whether the dialog session allows customization options.
+
+    Returns:
+        table|nil
+            Return a table of extra conversation options to merge into the NPC dialog. Returning nil allows the default behavior to continue.
+
+    Example Usage:
+        ```lua
+        hook.Add("GetNPCDialogOptions", "liaExampleGetNPCDialogOptions", function(client, npc, canCustomize)
+            return {
+                AskForWork = {
+                    statement = "Any work available?"
+                }
+            }
+        end)
+        ```
+
+    Realm:
+        Client
+]]
+--[[
+    Hooks:
+        DoorDataReceived(door, syncData)
+
+    Purpose:
+        Runs after door data has been synchronized to a clientside door entity.
+
+    Category:
+        Doors
+
+    Parameters:
+        door (Entity)
+            The door entity that received synchronized data.
+
+        syncData (table)
+            The synchronized door data table.
+
+    Returns:
+        nil
+
+    Example Usage:
+        ```lua
+        hook.Add("DoorDataReceived", "liaExampleDoorDataReceived", function(door, syncData)
+            print("[Doors] Received data for", door)
+        end)
+        ```
+
+    Realm:
+        Client
+]]
+--[[
+    Hooks:
+        CharListLoaded(table newCharList)
+
+    Purpose:
+        Runs the first time the client receives its available character ID list during a menu session.
+
+    Category:
+        Character
+
+    Parameters:
+        newCharList (table)
+            The newly received sequential array of character IDs available to the client.
+
+    Example Usage:
+        ```lua
+        hook.Add("CharListLoaded", "liaExampleCharListLoaded", function(newCharList)
+            print("[Characters] Loaded list size:", #newCharList)
+        end)
+        ```
+
+    Returns:
+        nil
+
+    Realm:
+        Client
+]]
+--[[
+    Hooks:
+        InventoryItemAdded(Inventory inventory, Item item)
+
+    Purpose:
+        Runs after an initialized item instance is inserted into a clientside inventory cache.
+
+    Category:
+        Inventory
+
+    Parameters:
+        inventory (Inventory)
+            The inventory instance that received the item.
+
+        item (Item)
+            The item instance that was added to the inventory.
+
+    Example Usage:
+        ```lua
+        hook.Add("InventoryItemAdded", "liaExampleInventoryItemAdded", function(inventory, item)
+            print("[Inventory] Added", item.uniqueID, "to", inventory:getID())
+        end)
+        ```
+
+    Returns:
+        nil
+
+    Realm:
+        Client
+]]
+--[[
+    Hooks:
+        InventoryItemRemoved(Inventory inventory, Item item)
+
+    Purpose:
+        Runs after an item instance is removed from a clientside inventory cache through inventory sync or item deletion.
+
+    Category:
+        Inventory
+
+    Parameters:
+        inventory (Inventory)
+            The inventory instance the item was removed from.
+
+        item (Item)
+            The item instance that was removed.
+
+    Example Usage:
+        ```lua
+        hook.Add("InventoryItemRemoved", "liaExampleInventoryItemRemoved", function(inventory, item)
+            print("[Inventory] Removed", item.uniqueID, "from", inventory:getID())
+        end)
+        ```
+
+    Returns:
+        nil
+
+    Realm:
+        Client
+]]
+--[[
+    Hooks:
+        ItemDataChanged(Item item, string key, any oldValue, any newValue)
+
+    Purpose:
+        Runs after a clientside item data field has been updated from a networked item data sync.
+
+    Category:
+        Inventory
+
+    Parameters:
+        item (Item)
+            The item instance whose data changed.
+
+        key (string)
+            The item data key that was updated.
+
+        oldValue (any)
+            The previous stored value for the item data key.
+
+        newValue (any)
+            The new value assigned to the item data key.
+
+    Example Usage:
+        ```lua
+        hook.Add("ItemDataChanged", "liaExampleItemDataChanged", function(item, key, oldValue, newValue)
+            print("[Item] Data changed:", item.uniqueID, key)
+        end)
+        ```
+
+    Returns:
+        nil
+
+    Realm:
+        Client
+]]
+net.Receive("liaSetWaypoint", function()
     local name = net.ReadString()
     local pos = net.ReadVector()
     local logo = net.ReadString()

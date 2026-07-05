@@ -1,4 +1,4 @@
---[[
+﻿--[[
     Folder: Developer - Libraries
     File: lia.option.md
 ]]
@@ -118,30 +118,6 @@
 
     Realm:
         Shared
-]]
---[[
-    Hooks:
-        ThirdPersonToggled(boolean enabled)
-
-    Purpose:
-        Runs when the `thirdPersonEnabled` option changes.
-
-    Category:
-        Options
-
-    Parameters:
-        enabled (boolean)
-            True when third-person view was enabled, false when it was disabled.
-
-    Example Usage:
-        ```lua
-        hook.Add("ThirdPersonToggled", "liaExampleThirdPersonToggled", function(enabled)
-            print("[MyModule] handled ThirdPersonToggled")
-        end)
-        ```
-
-    Realm:
-        Client
 ]]
 lia.option = lia.option or {}
 lia.option.stored = lia.option.stored or {}

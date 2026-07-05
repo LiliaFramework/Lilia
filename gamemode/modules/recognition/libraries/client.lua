@@ -1,10 +1,76 @@
-﻿local ChatIsRecognized = {
+﻿--[[
+    Hooks:
+        ShouldAllowScoreboardOverride(Player client, string var)
+
+    Purpose:
+        Determines whether scoreboard and voice UI should use recognition-safe replacements for a player's visible data.
+
+    Category:
+        Recognition
+
+    Parameters:
+        client (Player)
+            The player whose displayed information is being evaluated.
+
+        var (string)
+            The specific field being checked, such as `name`, `model`, `desc`, or `classlogo`.
+
+    Returns:
+        boolean|nil
+            Return true to use the recognition override for that field, or false to keep the original value.
+
+    Example Usage:
+        ```lua
+        hook.Add("ShouldAllowScoreboardOverride", "liaExampleShouldAllowScoreboardOverride", function(client, var)
+            if var == "name" and client == LocalPlayer() then
+                return false
+            end
+        end)
+        ```
+
+    Realm:
+        Client
+]]
+local ChatIsRecognized = {
     ic = true,
     y = true,
     w = true,
     me = true,
 }
 
+--[[
+    Hooks:
+        GetDisplayedDescription(Player client, boolean isHUD)
+
+    Purpose:
+        Allows modules to override the description shown for a player when recognition rules hide their normal description.
+
+    Category:
+        Recognition
+
+    Parameters:
+        client (Player)
+            The player whose description is being displayed.
+
+        isHUD (boolean)
+            Whether the description is being requested for a HUD or world display instead of the scoreboard.
+
+    Returns:
+        string|nil
+            Return a replacement description string. Returning nil allows the default recognition-aware description logic to continue.
+
+    Example Usage:
+        ```lua
+        hook.Add("GetDisplayedDescription", "liaExampleGetDisplayedDescription", function(client, isHUD)
+            if isHUD and IsValid(client) and client:isStaffOnDuty() then
+                return "Staff member"
+            end
+        end)
+        ```
+
+    Realm:
+        Client
+]]
 function MODULE:GetDisplayedDescription(client, isHUD)
     local lp = LocalPlayer()
     if not IsValid(client) or not IsValid(lp) then return L("unknown") end

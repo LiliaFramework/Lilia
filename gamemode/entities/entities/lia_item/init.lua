@@ -1,4 +1,127 @@
-﻿function ENT:Initialize()
+﻿--[[
+    Hooks:
+        OnItemSpawned(Entity itemEntity)
+
+    Purpose:
+        Runs after a world item entity initializes so modules can apply extra setup to the spawned entity.
+
+    Category:
+        Items
+
+    Parameters:
+        itemEntity (Entity)
+            The newly initialized `lia_item` entity.
+
+    Returns:
+        nil
+
+    Example Usage:
+        ```lua
+        hook.Add("OnItemSpawned", "liaExampleOnItemSpawned", function(itemEntity)
+            itemEntity:SetColor(color_white)
+        end)
+        ```
+
+    Realm:
+        Server
+]]
+--[[
+    Hooks:
+        GetItemDropModel(Item itemTable, Entity itemEntity)
+
+    Purpose:
+        Allows modules to override the model used by a dropped item entity before fallback item models are applied.
+
+    Category:
+        Items
+
+    Parameters:
+        itemTable (Item)
+            The item instance being represented in the world.
+
+        itemEntity (Entity)
+            The `lia_item` entity receiving the model.
+
+    Returns:
+        string|nil
+            Return a model path to override the dropped item model. Returning nil allows the item definition defaults to continue.
+
+    Example Usage:
+        ```lua
+        hook.Add("GetItemDropModel", "liaExampleGetItemDropModel", function(itemTable, itemEntity)
+            if itemTable.uniqueID == "moneybag" then
+                return "models/props_lab/box01a.mdl"
+            end
+        end)
+        ```
+
+    Realm:
+        Server
+]]
+--[[
+    Hooks:
+        PaintItem(Item itemTable)
+
+    Purpose:
+        Allows modules to override the material used for item world entities and inventory icon model previews.
+
+    Category:
+        Items
+
+    Parameters:
+        itemTable (Item)
+            The item instance whose visual material is being resolved.
+
+    Returns:
+        string|IMaterial|nil
+            Return a material path or material object to override the item's rendered material. Returning nil allows the item's stored material to continue.
+
+    Example Usage:
+        ```lua
+        hook.Add("PaintItem", "liaExamplePaintItem", function(itemTable)
+            if itemTable:getData("glowing") then
+                return "models/debug/debugwhite"
+            end
+        end)
+        ```
+
+    Realm:
+        Shared
+]]
+--[[
+    Hooks:
+        ShouldSaveItem(Item itemTable, Entity itemEntity)
+
+    Purpose:
+        Determines whether a dropped item entity should be written to the saved world-item table.
+
+    Category:
+        Persistence
+
+    Parameters:
+        itemTable (Item)
+            The item instance being considered for persistence.
+
+        itemEntity (Entity)
+            The world entity representing the item.
+
+    Returns:
+        boolean|nil
+            Return false to skip saving the dropped item. Returning nil allows the default persistence behavior to continue.
+
+    Example Usage:
+        ```lua
+        hook.Add("ShouldSaveItem", "liaExampleShouldSaveItem", function(itemTable, itemEntity)
+            if itemTable.temp then
+                return false
+            end
+        end)
+        ```
+
+    Realm:
+        Server
+]]
+function ENT:Initialize()
     self:SetModel("models/props_junk/cardboard_box002b.mdl")
     self:SetSolid(SOLID_VPHYSICS)
     self:PhysicsInit(SOLID_VPHYSICS)

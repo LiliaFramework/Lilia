@@ -1,4 +1,4 @@
---[[
+﻿--[[
     Folder: Developer - Libraries
     File: lia.keybind.md
 ]]
@@ -34,6 +34,42 @@
 
     Realm:
         Client
+]]
+--[[
+    Hooks:
+        CanTakeEntity(Player client, Entity targetEntity, string itemUniqueID)
+
+    Purpose:
+        Determines whether the convert-entity keybind may turn a traced world entity into an inventory item.
+
+    Category:
+        Inventory
+
+    Parameters:
+        client (Player)
+            The player attempting the conversion.
+
+        targetEntity (Entity)
+            The traced entity that would be removed and converted.
+
+        itemUniqueID (string)
+            The item unique ID mapped from the entity class.
+
+    Returns:
+        boolean|nil
+            Return false to block the conversion. Returning nil allows the default behavior to continue.
+
+    Example Usage:
+        ```lua
+        hook.Add("CanTakeEntity", "liaExampleCanTakeEntity", function(client, targetEntity, itemUniqueID)
+            if targetEntity:IsOnFire() then
+                return false
+            end
+        end)
+        ```
+
+    Realm:
+        Server
 ]]
 --[[
     Hooks:

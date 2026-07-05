@@ -1,4 +1,63 @@
 ﻿local PANEL = {}
+--[[
+    Hooks:
+        OnModelPanelSetup(Panel panel)
+
+    Purpose:
+        Runs after a Lilia model panel chooses an idle sequence so modules can finish configuring the panel before rendering.
+
+    Category:
+        HUD
+
+    Parameters:
+        panel (Panel)
+            The `liaModelPanel` instance that just set up its entity.
+
+    Returns:
+        nil
+
+    Example Usage:
+        ```lua
+        hook.Add("OnModelPanelSetup", "liaExampleOnModelPanelSetup", function(panel)
+            panel.enableHook = true
+        end)
+        ```
+
+    Realm:
+        Client
+]]
+--[[
+    Hooks:
+        LiliaModelPanelPostDrawModel(Panel panel, Entity ent)
+
+    Purpose:
+        Runs after a Lilia model panel finishes drawing its entity so modules can perform cleanup or post-draw effects.
+
+    Category:
+        HUD
+
+    Parameters:
+        panel (Panel)
+            The `liaModelPanel` instance that rendered the entity.
+
+        ent (Entity)
+            The clientside entity drawn by the panel.
+
+    Returns:
+        nil
+
+    Example Usage:
+        ```lua
+        hook.Add("LiliaModelPanelPostDrawModel", "liaExampleLiliaModelPanelPostDrawModel", function(panel, ent)
+            if IsValid(ent) then
+                ent:SetNoDraw(false)
+            end
+        end)
+        ```
+
+    Realm:
+        Client
+]]
 function PANEL:Init()
     self.brightness = 1
     self:SetCursor("none")

@@ -1,4 +1,4 @@
---[[
+﻿--[[
     Folder: Developer - Libraries
     File: lia.item.md
 ]]
@@ -276,34 +276,6 @@
 
     Realm:
         Shared
-]]
---[[
-    Hooks:
-        CanPlayerModifyConfig(Player client)
-
-    Purpose:
-        Controls whether the local player can see the generated weapon item configuration page.
-
-    Category:
-        Items
-
-    Parameters:
-        client (Player)
-            The player opening the configuration interface.
-
-    Example Usage:
-        ```lua
-        hook.Add("CanPlayerModifyConfig", "liaExampleCanPlayerModifyConfig", function(client)
-            return true
-        end)
-        ```
-
-    Returns:
-        boolean|nil
-            Return false to hide the configuration page. Return nil or true to allow it.
-
-    Realm:
-        Client
 ]]
 lia.item = lia.item or {}
 lia.item.base = lia.item.base or {}

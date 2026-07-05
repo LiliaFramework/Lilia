@@ -1,4 +1,16 @@
 ﻿local PANEL = {}
+function PANEL:EnsurePanels()
+    if not IsValid(self.panel_tabs) then
+        self.panel_tabs = vgui.Create("Panel", self)
+        self.panel_tabs.Paint = nil
+    end
+
+    if not IsValid(self.content) then
+        self.content = vgui.Create("Panel", self)
+        self.content.Paint = nil
+    end
+end
+
 function PANEL:Init()
     self.tabs = {}
     self.active_id = 1
@@ -7,10 +19,6 @@ function PANEL:Init()
     self.tab_style = "modern"
     self.indicator_height = 2
     self._tabButtons = {}
-    self.panel_tabs = vgui.Create("Panel", self)
-    self.panel_tabs.Paint = nil
-    self.content = vgui.Create("Panel", self)
-    self.content.Paint = nil
     self.scroll_offset = 0
     self.max_visible_tabs = 5
     self.nav_button_size = 24
@@ -18,6 +26,7 @@ function PANEL:Init()
     self.btn_right = nil
     self.needs_navigation = false
     self.tab_order = {}
+    self:EnsurePanels()
 end
 
 function PANEL:SetTabStyle(style)
@@ -44,16 +53,7 @@ function PANEL:AddTab(name, pan, icon, callback)
         callback = callback
     }
 
-    if not IsValid(self.panel_tabs) then
-        self.panel_tabs = vgui.Create("Panel", self)
-        self.panel_tabs.Paint = nil
-    end
-
-    if not IsValid(self.content) then
-        self.content = vgui.Create("Panel", self)
-        self.content.Paint = nil
-    end
-
+    self:EnsurePanels()
     self.tabs[newId].pan:SetParent(self.content)
     self.tabs[newId].pan:Dock(FILL)
     self.tabs[newId].pan:SetVisible(newId == 1 and true or false)
@@ -65,18 +65,18 @@ function PANEL:AddSheet(label, panel, material)
     local newId = #self.tabs + 1
     self:AddTab(label, panel, material)
     return {
-        Button = self.panel_tabs:GetChildren()[newId],
+        Button = IsValid(self.panel_tabs) and self.panel_tabs:GetChildren()[newId] or nil,
         Panel = panel
     }
 end
 
 function PANEL:CreateNavigationButtons()
-    if self.btn_left then
-        self.btn_left:Remove()
-        self.btn_right:Remove()
-    end
-
+    if IsValid(self.btn_left) then self.btn_left:Remove() end
+    if IsValid(self.btn_right) then self.btn_right:Remove() end
+    self.btn_left = nil
+    self.btn_right = nil
     if not self.needs_navigation then return end
+    self:EnsurePanels()
     self.btn_left = vgui.Create("Button", self.panel_tabs)
     self.btn_left:Dock(LEFT)
     self.btn_left:SetWide(self.nav_button_size)
@@ -142,26 +142,17 @@ function PANEL:OnSizeChanged()
 end
 
 function PANEL:Rebuild()
-    if not IsValid(self.panel_tabs) then
-        self.panel_tabs = vgui.Create("Panel", self)
-        self.panel_tabs.Paint = nil
-        self.panel_tabs:Dock(TOP)
-        self.panel_tabs:DockMargin(0, 0, 0, 4)
-        self.panel_tabs:SetTall(self.tab_height)
-    else
-        local children = self.panel_tabs:GetChildren()
-        for _, child in ipairs(children) do
-            if child ~= self.btn_left and child ~= self.btn_right then child:Remove() end
-        end
+    self:EnsurePanels()
+    self.panel_tabs:Dock(TOP)
+    self.panel_tabs:DockMargin(0, 0, 0, 4)
+    self.panel_tabs:SetTall(self.tab_height)
+    local children = self.panel_tabs:GetChildren()
+    for _, child in ipairs(children) do
+        if child ~= self.btn_left and child ~= self.btn_right then child:Remove() end
     end
 
     self._tabButtons = {}
-    if not IsValid(self.content) then
-        self.content = vgui.Create("Panel", self)
-        self.content.Paint = nil
-        self.content:Dock(FILL)
-    end
-
+    self.content:Dock(FILL)
     if self.tab_style == "modern" then
         local tabWidths = {}
         local baseMargin = 6
@@ -211,6 +202,7 @@ function PANEL:Rebuild()
 end
 
 function PANEL:PerformLayout()
+    self:EnsurePanels()
     if self.tab_style == "modern" then
         self.panel_tabs:Dock(TOP)
         self.panel_tabs:DockMargin(0, 0, 0, 4)
@@ -235,10 +227,10 @@ function PANEL:PerformLayout()
             local visibleTabs = math.min(maxVisibleTabs, math.max(#self.tabs - self.scroll_offset, 0))
             local startIndex = self.scroll_offset + 1
             local endIndex = math.min(self.scroll_offset + visibleTabs, #self.tabs)
-            local children = self.panel_tabs:GetChildren()
-            local tab_children = {}
-            for _, child in ipairs(children) do
-                if child ~= self.btn_left and child ~= self.btn_right then table.insert(tab_children, child) end
+            local panelTabs = self.panel_tabs
+            local tabChildren = {}
+            for _, child in ipairs(panelTabs:GetChildren()) do
+                if child ~= self.btn_left and child ~= self.btn_right then table.insert(tabChildren, child) end
             end
 
             local visibleMargins = self._baseMargin * (visibleTabs - 1)
@@ -249,7 +241,7 @@ function PANEL:PerformLayout()
 
             local visibleAvailable = math.max(availableWidth - visibleMargins, 0)
             local visibleExtraSpace = visibleAvailable - visibleMinWidth
-            for i, child in ipairs(tab_children) do
+            for i, child in ipairs(tabChildren) do
                 local baseWidth = self._tabWidths[i] or 80
                 local finalWidth = baseWidth
                 if i >= startIndex and i <= endIndex then
@@ -323,7 +315,8 @@ function PANEL:SetActiveTab(tab)
         if self.tabs[tab] and self.tabs[tab].callback then self.tabs[tab].callback() end
     else
         for searchId, data in ipairs(self.tabs) do
-            if data.pan == tab or self.panel_tabs:GetChild(searchId) == tab then
+            local tabButton = IsValid(self.panel_tabs) and self.panel_tabs:GetChild(searchId) or nil
+            if data.pan == tab or tabButton == tab then
                 self:SetActiveTab(searchId)
                 break
             end
@@ -341,7 +334,8 @@ function PANEL:CloseTab(tab)
         id = tab
     else
         for k, data in ipairs(self.tabs) do
-            if data.pan == tab or self.panel_tabs:GetChild(k) == tab then
+            local tabButton = IsValid(self.panel_tabs) and self.panel_tabs:GetChild(k) or nil
+            if data.pan == tab or tabButton == tab then
                 id = k
                 break
             end
@@ -408,6 +402,9 @@ function PANEL:Clear()
     self.active_id = 1
     self.scroll_offset = 0
     self.needs_navigation = false
+    self._tabButtons = {}
+    self.btn_left = nil
+    self.btn_right = nil
     if self.BaseClass and self.BaseClass.Clear then
         self.BaseClass.Clear(self)
     else
@@ -415,6 +412,10 @@ function PANEL:Clear()
             child:Remove()
         end
     end
+
+    self.panel_tabs = nil
+    self.content = nil
+    self:EnsurePanels()
 end
 
 vgui.Register("liaTabs", PANEL, "Panel")

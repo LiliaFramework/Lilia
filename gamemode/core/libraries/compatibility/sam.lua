@@ -1,4 +1,32 @@
-﻿hook.Remove("PostGamemodeLoaded", "SAM.DarkRP")
+﻿--[[
+    Hooks:
+        GetPlayTime(Player client)
+
+    Purpose:
+        Allows compatibility layers to provide playtime values from external admin systems.
+
+    Category:
+        Compatibility
+
+    Parameters:
+        client (Player)
+            The player whose playtime is being queried.
+
+    Example Usage:
+        ```lua
+        hook.Add("GetPlayTime", "liaExampleGetPlayTime", function(client)
+            return 3600
+        end)
+        ```
+
+    Returns:
+        number|nil
+            Return the player's playtime in seconds to override the default lookup. Returning nil allows the default behavior to continue.
+
+    Realm:
+        Server
+]]
+hook.Remove("PostGamemodeLoaded", "SAM.DarkRP")
 local function getGroupLevelForPermissionSummary(groupName, visited)
     visited = visited or {}
     if visited[groupName] then return 1 end

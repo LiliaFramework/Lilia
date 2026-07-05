@@ -121,30 +121,6 @@
 ]]
 --[[
     Hooks:
-        PersistenceSave(string old)
-
-    Purpose:
-        Runs before map cleanup when the `sbox_persist` console variable changes.
-
-    Category:
-        Loader
-
-    Parameters:
-        old (string)
-            The previous persistence value being saved.
-
-    Example Usage:
-        ```lua
-        hook.Add("PersistenceSave", "liaExamplePersistenceSave", function(old)
-            print("[MyModule] handled PersistenceSave")
-        end)
-        ```
-
-    Realm:
-        Server
-]]
---[[
-    Hooks:
         PersistenceLoad(string new)
 
     Purpose:
@@ -323,6 +299,10 @@ local FilesToLoad = {
     },
     {
         path = "lilia/gamemode/core/meta/player.lua",
+        realm = "shared"
+    },
+    {
+        path = "lilia/gamemode/core/meta/player_pac.lua",
         realm = "shared"
     },
     {
@@ -780,21 +760,87 @@ lia.loader.include("lilia/gamemode/core/libraries/derma.lua", "client")
 lia.loader.includeDir("lilia/gamemode/core/derma", true, true, "client")
 lia.loader.include("lilia/gamemode/core/libraries/database.lua", "server")
 lia.loader.include("lilia/gamemode/core/libraries/data.lua", "shared")
+--[[
+    Purpose:
+        Prints a formatted error message to the console with the standard Lilia prefix.
+
+    Parameters:
+        msg (any)
+            The value to display in the error message.
+
+    Example Usage:
+        ```lua
+        lia.error("Failed to load character data")
+        ```
+
+    Realm:
+        Shared
+]]
 function lia.error(msg)
     MsgC(Color(83, 143, 239), "[Lilia] ", "[" .. L("logError") .. "] ")
     MsgC(Color(255, 0, 0), tostring(msg), "\n")
 end
 
+--[[
+    Purpose:
+        Prints a formatted warning message to the console with the standard Lilia prefix.
+
+    Parameters:
+        msg (any)
+            The value to display in the warning message.
+
+    Example Usage:
+        ```lua
+        lia.warning("Using fallback inventory configuration")
+        ```
+
+    Realm:
+        Shared
+]]
 function lia.warning(msg)
     MsgC(Color(83, 143, 239), "[Lilia] ", "[" .. L("warning") .. "] ")
     MsgC(Color(255, 255, 0), tostring(msg), "\n")
 end
 
+--[[
+    Purpose:
+        Prints a formatted informational message to the console with the standard Lilia prefix.
+
+    Parameters:
+        msg (any)
+            The value to display in the informational message.
+
+    Example Usage:
+        ```lua
+        lia.information("Module initialization completed")
+        ```
+
+    Realm:
+        Shared
+]]
 function lia.information(msg)
     MsgC(Color(83, 143, 239), "[Lilia] ", "[" .. L("information") .. "] ")
     MsgC(Color(83, 143, 239), tostring(msg), "\n")
 end
 
+--[[
+    Purpose:
+        Prints a bootstrap-stage message unless a hot reload is suppressing non-reload bootstrap output.
+
+    Parameters:
+        section (string)
+            The bootstrap section label shown in the message.
+        msg (any)
+            The value to display for the bootstrap message.
+
+    Example Usage:
+        ```lua
+        lia.bootstrap("Modules", "Finished loading public modules")
+        ```
+
+    Realm:
+        Shared
+]]
 function lia.bootstrap(section, msg)
     if lia.isReloading and section ~= "HotReload" then return end
     MsgC(Color(83, 143, 239), "[Lilia] ", "[" .. L("logBootstrap") .. "] ")
@@ -802,6 +848,22 @@ function lia.bootstrap(section, msg)
     MsgC(Color(255, 255, 255), tostring(msg), "\n")
 end
 
+--[[
+    Purpose:
+        Prints developer-focused debug output when `lia.DevMode` is enabled.
+
+    Parameters:
+        ... (any)
+            Values to print. When the first argument is a bracketed section token such as `[Permissions]`, it is highlighted as a debug section label.
+
+    Example Usage:
+        ```lua
+        lia.debug("[Permissions]", "Vendor preset save", "allowed=", tostring(client:hasPrivilege("canCreateVendorPresets")))
+        ```
+
+    Realm:
+        Shared
+]]
 function lia.debug(...)
     if not lia.DevMode then return end
     local args = {...}
@@ -853,6 +915,25 @@ function lia.debug(...)
     MsgC(textColor, "\n")
 end
 
+--[[
+    Purpose:
+        Sends a Discord webhook embed through the configured relay endpoint and fires relay lifecycle hooks.
+
+    Parameters:
+        embed (table)
+            The Discord embed payload to send. Default title, color, timestamp, and footer values are filled in when omitted.
+
+    Example Usage:
+        ```lua
+        lia.relaydiscordMessage({
+            title = "Character Created",
+            description = "A new character joined the server."
+        })
+        ```
+
+    Realm:
+        Shared
+]]
 function lia.relaydiscordMessage(embed)
     if not lia.discordWebhook or not istable(embed) then return end
     local ForceHTTPMode = not util.IsBinaryModuleInstalled("chttp")

@@ -1,4 +1,80 @@
-﻿local PANEL = {}
+﻿--[[
+    Hooks:
+        GetCharacterCreationSummary(Player client, table context, table summary, Panel panel)
+
+    Purpose:
+        Allows code to replace the summary entry list shown on the final character creation step.
+
+    Category:
+        Main Menu
+
+    Parameters:
+        client (Player)
+            The local player viewing the summary step.
+
+        context (table)
+            The accumulated character creation context gathered from prior steps.
+
+        summary (table)
+            The default summary entry array built before external overrides run.
+
+        panel (Panel)
+            The active `liaCharacterSummary` panel.
+
+    Example Usage:
+        ```lua
+        hook.Add("GetCharacterCreationSummary", "liaExampleGetCharacterCreationSummary", function(client, context, summary, panel)
+            return summary
+        end)
+        ```
+
+    Returns:
+        table|nil
+            Return a replacement sequential summary table to override the default entries. Return nil to keep the generated summary.
+
+    Realm:
+        Client
+]]
+--[[
+    Hooks:
+        ModifyCharacterCreationSummary(Player client, table context, table summary, Panel panel)
+
+    Purpose:
+        Allows code to mutate the final character creation summary entries in place after any replacement summary has been resolved.
+
+    Category:
+        Main Menu
+
+    Parameters:
+        client (Player)
+            The local player viewing the summary step.
+
+        context (table)
+            The accumulated character creation context gathered from prior steps.
+
+        summary (table)
+            The mutable summary entry array that will be rendered.
+
+        panel (Panel)
+            The active `liaCharacterSummary` panel.
+
+    Example Usage:
+        ```lua
+        hook.Add("ModifyCharacterCreationSummary", "liaExampleModifyCharacterCreationSummary", function(client, context, summary, panel)
+            summary[#summary + 1] = {
+                title = "Preview",
+                value = tostring(context.model or "")
+            }
+        end)
+        ```
+
+    Returns:
+        nil
+
+    Realm:
+        Client
+]]
+local PANEL = {}
 function PANEL:Init()
     self.title = self:Add("liaHeaderPanel")
     self.title:Dock(TOP)

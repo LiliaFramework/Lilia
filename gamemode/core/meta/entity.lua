@@ -201,6 +201,42 @@ end
     Realm:
         Shared
 ]]
+--[[
+    Hooks:
+        CanPlayerAccessDoor(Player client, Entity door, number access)
+
+    Purpose:
+        Allows modules to explicitly grant door access before the normal Lilia door access table is checked.
+
+    Category:
+        Doors
+
+    Parameters:
+        client (Player)
+            The player attempting to access the door.
+
+        door (Entity)
+            The door entity being checked.
+
+        access (number)
+            The required access level, such as `DOOR_GUEST` or `DOOR_TENANT`.
+
+    Returns:
+        boolean|nil
+            Return true to grant access immediately. Returning nil allows the default door access checks to continue.
+
+    Example Usage:
+        ```lua
+        hook.Add("CanPlayerAccessDoor", "liaExampleCanPlayerAccessDoor", function(client, door, access)
+            if access == DOOR_TENANT and client:IsAdmin() then
+                return true
+            end
+        end)
+        ```
+
+    Realm:
+        Shared
+]]
 function entityMeta:checkDoorAccess(client, access)
     if not IsValid(self) then return false end
     if not self:isDoor() then return false end

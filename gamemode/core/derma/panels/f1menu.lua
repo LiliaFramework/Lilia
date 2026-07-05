@@ -1,4 +1,298 @@
-﻿local PANEL = {}
+﻿--[[
+    Hooks:
+        F1MenuOpened(Panel self)
+
+    Purpose:
+        Runs after the F1 menu panel is created and registered as the active menu interface.
+
+    Category:
+        UI
+
+    Parameters:
+        self (Panel)
+            The newly created F1 menu panel.
+
+    Example Usage:
+        ```lua
+        hook.Add("F1MenuOpened", "liaExampleF1MenuOpened", function(self)
+            self:SetAlpha(255)
+        end)
+        ```
+
+    Returns:
+        nil
+
+    Realm:
+        Client
+]]
+--[[
+    Hooks:
+        F1MenuClosed()
+
+    Purpose:
+        Runs when the active F1 menu panel is being removed and its UI state is shutting down.
+
+    Category:
+        UI
+
+    Parameters:
+        None
+
+    Example Usage:
+        ```lua
+        hook.Add("F1MenuClosed", "liaExampleF1MenuClosed", function()
+            print("F1 menu closed")
+        end)
+        ```
+
+    Returns:
+        nil
+
+    Realm:
+        Client
+]]
+--[[
+    Hooks:
+        LoadCharInformation()
+
+    Purpose:
+        Runs while the F1 character information panel is being initialized so modules can register sections and fields before the UI is generated.
+
+    Category:
+        UI
+
+    Parameters:
+        None
+
+    Example Usage:
+        ```lua
+        hook.Add("LoadCharInformation", "liaExampleLoadCharInformation", function()
+            hook.Run("AddSection", "Example", Color(255, 255, 255), 10, 1)
+            hook.Run("AddTextField", "Example", "exampleField", "Example Field", function()
+                return "Example Value"
+            end)
+        end)
+        ```
+
+    Returns:
+        nil
+
+    Realm:
+        Client
+]]
+--[[
+    Hooks:
+        AddSection(string sectionName, Color|nil color, number|nil priority, number|nil location)
+
+    Purpose:
+        Registers or updates a character information section in the F1 menu before fields are inserted into it.
+
+    Category:
+        UI
+
+    Parameters:
+        sectionName (string)
+            The section identifier or localized display name used as the section key.
+
+        color (Color|nil)
+            The color stored with the section data.
+
+        priority (number|nil)
+            The sort priority used when the F1 menu orders sections.
+
+        location (number|nil)
+            The stored location value for the section entry.
+
+    Example Usage:
+        ```lua
+        hook.Add("AddSection", "liaExampleAddSection", function(sectionName, color, priority, location)
+            if sectionName == "Example" then
+                print(sectionName, priority, location)
+            end
+        end)
+        ```
+
+    Returns:
+        nil
+
+    Realm:
+        Client
+]]
+--[[
+    Hooks:
+        AddTextField(string sectionName, string fieldName, string labelText, function valueFunc)
+
+    Purpose:
+        Adds a text field definition to an existing F1 character information section when that field name has not already been registered.
+
+    Category:
+        UI
+
+    Parameters:
+        sectionName (string)
+            The section identifier or localized display name that should receive the field.
+
+        fieldName (string)
+            The unique field key stored on the section definition.
+
+        labelText (string)
+            The label shown beside the text entry.
+
+        valueFunc (function)
+            A callback that returns the current string value for the field.
+
+    Example Usage:
+        ```lua
+        hook.Add("AddTextField", "liaExampleAddTextField", function(sectionName, fieldName, labelText, valueFunc)
+            if sectionName == L("generalInfo") and fieldName == "name" then
+                print(labelText, valueFunc())
+            end
+        end)
+        ```
+
+    Returns:
+        nil
+
+    Realm:
+        Client
+]]
+--[[
+    Hooks:
+        AddBarField(string sectionName, string fieldName, string labelText, function|number|nil minFunc, function|number|nil maxFunc, function|number|nil valueFunc)
+
+    Purpose:
+        Adds a progress-bar field definition to an existing F1 character information section when that field name has not already been registered.
+
+    Category:
+        UI
+
+    Parameters:
+        sectionName (string)
+            The section identifier or localized display name that should receive the bar field.
+
+        fieldName (string)
+            The unique field key stored on the section definition.
+
+        labelText (string)
+            The label shown beside the progress bar.
+
+        minFunc (function|number|nil)
+            A callback or numeric value that supplies the bar minimum.
+
+        maxFunc (function|number|nil)
+            A callback or numeric value that supplies the bar maximum.
+
+        valueFunc (function|number|nil)
+            A callback or numeric value that supplies the current bar value.
+
+    Example Usage:
+        ```lua
+        hook.Add("AddBarField", "liaExampleAddBarField", function(sectionName, fieldName, labelText, minFunc, maxFunc, valueFunc)
+            if sectionName == L("attributesModuleName") and fieldName == "stm" then
+                print(labelText, minFunc(), maxFunc(), valueFunc())
+            end
+        end)
+        ```
+
+    Returns:
+        nil
+
+    Realm:
+        Client
+]]
+--[[
+    Hooks:
+        CreateInformationButtons(table pages)
+
+    Purpose:
+        Allows modules to register information-tab pages for the F1 menu before they are filtered, sorted, and rendered.
+
+    Category:
+        UI
+
+    Parameters:
+        pages (table)
+            The mutable array of page definitions consumed by the information tab builder.
+
+    Example Usage:
+        ```lua
+        hook.Add("CreateInformationButtons", "liaExampleCreateInformationButtons", function(pages)
+            pages[#pages + 1] = {
+                name = "exampleInfo",
+                drawFunc = function(parent)
+                    parent:Clear()
+                end
+            }
+        end)
+        ```
+
+    Returns:
+        nil
+
+    Realm:
+        Client
+]]
+--[[
+    Hooks:
+        PopulateConfigurationButtons(table pages)
+
+    Purpose:
+        Allows modules to register settings pages for the F1 configuration tab before the menu filters, sorts, and renders them.
+
+    Category:
+        UI
+
+    Parameters:
+        pages (table)
+            The mutable array of configuration page definitions that the settings tab consumes.
+
+    Example Usage:
+        ```lua
+        hook.Add("PopulateConfigurationButtons", "liaExamplePopulateConfigurationButtons", function(pages)
+            pages[#pages + 1] = {
+                name = "Example Settings",
+                drawFunc = function(parent)
+                    parent:Clear()
+                end
+            }
+        end)
+        ```
+
+    Returns:
+        nil
+
+    Realm:
+        Client
+]]
+--[[
+    Hooks:
+        CanDisplayCharInfo(string name)
+
+    Purpose:
+        Allows the F1 character information panel to veto specific character information fields before they are shown.
+
+    Category:
+        UI
+
+    Parameters:
+        name (string)
+            The field identifier being considered for display.
+
+    Example Usage:
+        ```lua
+        hook.Add("CanDisplayCharInfo", "liaExampleCanDisplayCharInfo", function(name)
+            if name == "class" then return false end
+        end)
+        ```
+
+    Returns:
+        boolean|nil
+            Return false to hide the named field. Return nil or true to leave the field available.
+
+    Realm:
+        Client
+]]
+local PANEL = {}
 local function localizeMenuLabel(value, ...)
     if not isstring(value) then return value end
     local resolved = lia.lang.resolveToken(value, ...)

@@ -1,4 +1,136 @@
 ﻿--[[
+    Hooks:
+        CanPerformVendorEdit(self, vendor)
+
+    Purpose:
+        Determines whether a player may edit a vendor through the player meta vendor-editing flow.
+
+    Category:
+        Vendor
+
+    Parameters:
+        self (Player)
+            The player attempting to edit the vendor.
+
+        vendor (Entity)
+            The vendor entity being edited.
+
+    Returns:
+        boolean|nil
+            Return false to block vendor editing. Returning nil allows the default behavior to continue.
+
+    Example Usage:
+        ```lua
+        hook.Add("CanPerformVendorEdit", "liaExampleCanPerformVendorEdit", function(self, vendor)
+            if not self:isStaffOnDuty() then
+                return false
+            end
+        end)
+        ```
+
+    Realm:
+        Server
+]]
+--[[
+    Hooks:
+        CharHasFlags(self, flags)
+
+    Purpose:
+        Allows plugins or modules to override player-side flag checks performed through `hasFlags`.
+
+    Category:
+        Character
+
+    Parameters:
+        self (Player)
+            The player whose active character flags are being checked.
+
+        flags (string)
+            The flag characters being queried.
+
+    Returns:
+        boolean|nil
+            Return true or false to override the flag check. Returning nil allows the default behavior to continue.
+
+    Example Usage:
+        ```lua
+        hook.Add("CharHasFlags", "liaExampleCharHasFlags", function(self, flags)
+            if self:isStaffOnDuty() and flags == "P" then
+                return true
+            end
+        end)
+        ```
+
+    Realm:
+        Shared
+]]
+--[[
+    Hooks:
+        GetRagdollTime(self, time)
+
+    Purpose:
+        Allows plugins or modules to override how long a player should stay ragdolled.
+
+    Category:
+        Character
+
+    Parameters:
+        self (Player)
+            The player being ragdolled.
+
+        time (number)
+            The current ragdoll duration in seconds.
+
+    Returns:
+        number|nil
+            Return a numeric duration to override the ragdoll time. Returning nil allows the default behavior to continue.
+
+    Example Usage:
+        ```lua
+        hook.Add("GetRagdollTime", "liaExampleGetRagdollTime", function(self, time)
+            if self:Crouching() then
+                return time * 0.5
+            end
+        end)
+        ```
+
+    Realm:
+        Server
+]]
+--[[
+    Hooks:
+        OnCharFallover(self, entity, state)
+
+    Purpose:
+        Runs when a player's character enters or leaves the ragdolled fallover state.
+
+    Category:
+        Character
+
+    Parameters:
+        self (Player)
+            The player whose character changed fallover state.
+
+        entity (Entity)
+            The ragdoll entity involved in the state change.
+
+        state (boolean)
+            True when the player entered fallover, false when they recovered.
+
+    Returns:
+        nil
+
+    Example Usage:
+        ```lua
+        hook.Add("OnCharFallover", "liaExampleOnCharFallover", function(self, entity, state)
+            print("Fallover state:", state)
+        end)
+        ```
+
+    Realm:
+        Server
+]]
+--[[
     Folder: Developer - Meta Tables
     File: player.md
 ]]
@@ -2009,7 +2141,170 @@ function playerMeta:requestDropdown(title, subTitle, options, callback)
     end
 end
 
+--[[
+    Purpose:
+        Returns the PAC3 part registry tracked on the player through Lilia netvars.
+
+    When Used:
+        Requires PAC3 to be installed and the global `pac` table to be available. Use this to inspect which PAC-backed item parts are currently marked as active for the player.
+
+    Returns:
+        table
+            A table keyed by PAC part identifier with boolean active states.
+
+    Example Usage:
+        ```lua
+        local activeParts = client:getParts()
+        if activeParts["fancy_hat"] then
+            print("Hat part is active.")
+        end
+        ```
+
+    Realm:
+        Shared
+]]
+function playerMeta:getParts()
+    if not pac then
+        print("PAC3 is not installed or the global 'pac' table is unavailable. Ensure PAC3 is present for proper functionality.")
+        return
+    end
+    return self:getNetVar("parts", {})
+end
+
 if SERVER then
+    --[[
+        Purpose:
+            Sends the player's tracked PAC3 parts back to that player so the client can rebuild its attached PAC data.
+
+        When Used:
+            Requires PAC3 to be installed and the global `pac` table to be available. Call this after a player loads in or whenever the client's PAC attachments need to be refreshed from server state.
+
+        Returns:
+            nil
+
+        Example Usage:
+            ```lua
+            client:syncParts()
+            ```
+
+        Realm:
+            Server
+    ]]
+    function playerMeta:syncParts()
+        if not pac then
+            print("PAC3 is not installed or the global 'pac' table is unavailable. Ensure PAC3 is present for proper functionality.")
+            return
+        end
+
+        net.Start("liaPacSync")
+        net.Send(self)
+    end
+
+    --[[
+        Purpose:
+            Marks a PAC3 part as active for the player and broadcasts the attach request to clients.
+
+        Parameters:
+            partID (string)
+                The PAC part identifier to attach and track.
+
+        When Used:
+            Requires PAC3 to be installed and the global `pac` table to be available. Commonly used when a PAC-backed item equips or when character state needs to reapply a cosmetic part.
+
+        Returns:
+            nil
+
+        Example Usage:
+            ```lua
+            client:addPart("fancy_hat")
+            ```
+
+        Realm:
+            Server
+    ]]
+    function playerMeta:addPart(partID)
+        if not pac then
+            print("PAC3 is not installed or the global 'pac' table is unavailable. Ensure PAC3 is present for proper functionality.")
+            return
+        end
+
+        if self:getParts()[partID] then return end
+        net.Start("liaPacPartAdd")
+        net.WriteEntity(self)
+        net.WriteString(partID)
+        net.Broadcast()
+        local parts = self:getParts()
+        parts[partID] = true
+        self:setNetVar("parts", parts)
+    end
+
+    --[[
+        Purpose:
+            Removes a tracked PAC3 part from the player and tells clients to detach it.
+
+        Parameters:
+            partID (string)
+                The PAC part identifier to remove.
+
+        When Used:
+            Requires PAC3 to be installed and the global `pac` table to be available. Use this when a PAC-backed item is unequipped, dropped, or otherwise stops applying its visual attachment.
+
+        Returns:
+            nil
+
+        Example Usage:
+            ```lua
+            client:removePart("fancy_hat")
+            ```
+
+        Realm:
+            Server
+    ]]
+    function playerMeta:removePart(partID)
+        if not pac then
+            print("PAC3 is not installed or the global 'pac' table is unavailable. Ensure PAC3 is present for proper functionality.")
+            return
+        end
+
+        net.Start("liaPacPartRemove")
+        net.WriteEntity(self)
+        net.WriteString(partID)
+        net.Broadcast()
+        local parts = self:getParts()
+        parts[partID] = nil
+        self:setNetVar("parts", parts)
+    end
+
+    --[[
+        Purpose:
+            Clears every tracked PAC3 part from the player and broadcasts a full reset.
+
+        When Used:
+            Requires PAC3 to be installed and the global `pac` table to be available. This is useful before rebuilding the player's PAC state, such as during loadout changes or observer transitions.
+
+        Returns:
+            nil
+
+        Example Usage:
+            ```lua
+            client:resetParts()
+            ```
+
+        Realm:
+            Server
+    ]]
+    function playerMeta:resetParts()
+        if not pac then
+            print("PAC3 is not installed or the global 'pac' table is unavailable. Ensure PAC3 is present for proper functionality.")
+            return
+        end
+
+        net.Start("liaPacPartReset")
+        net.WriteEntity(self)
+        net.Broadcast()
+        self:setNetVar("parts", {})
+    end
+
     --[[
         Purpose:
             Restores stamina up to the character's maximum and clears the breathing flag when recovery is sufficient.

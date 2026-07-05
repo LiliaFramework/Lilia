@@ -1,4 +1,115 @@
 ﻿--[[
+    Hooks:
+        ItemFunctionCalled(Item self, string method, Player client, Entity entity, any results)
+
+    Purpose:
+        Runs after an item function is executed so modules can inspect the action and its outcome.
+
+    Category:
+        Items
+
+    Parameters:
+        self (Item)
+            The item whose function ran.
+
+        method (string)
+            The function or action identifier that was executed.
+
+        client (Player)
+            The player who triggered the action.
+
+        entity (Entity)
+            The related entity argument, when one was supplied.
+
+        results (any)
+            The result returned by the item function.
+
+    Example Usage:
+        ```lua
+        hook.Add("ItemFunctionCalled", "liaExampleItemFunctionCalled", function(self, method, client, entity, results)
+            print(method, self:getName())
+        end)
+        ```
+
+    Returns:
+        nil
+
+    Realm:
+        Server
+]]
+--[[
+    Hooks:
+        PrePlayerInteractItem(Player client, string action, Item self)
+
+    Purpose:
+        Runs just before a player interacts with an item so modules can react before the action result is known.
+
+    Category:
+        Items
+
+    Parameters:
+        client (Player)
+            The player starting the item interaction.
+
+        action (string)
+            The item action being attempted.
+
+        self (Item)
+            The item being interacted with.
+
+    Example Usage:
+        ```lua
+        hook.Add("PrePlayerInteractItem", "liaExamplePreInteractItem", function(client, action, self)
+            print(client:Nick(), action, self:getName())
+        end)
+        ```
+
+    Returns:
+        nil
+
+    Realm:
+        Server
+]]
+--[[
+    Hooks:
+        OnPlayerInteractItem(Player client, string action, Item self, any result, table data)
+
+    Purpose:
+        Runs after a player interacts with an item so modules can inspect the completed action and returned data.
+
+    Category:
+        Items
+
+    Parameters:
+        client (Player)
+            The player who completed the item interaction.
+
+        action (string)
+            The action that was attempted.
+
+        self (Item)
+            The item involved in the interaction.
+
+        result (any)
+            The return value from the item interaction.
+
+        data (table)
+            Additional interaction context passed through the item system.
+
+    Example Usage:
+        ```lua
+        hook.Add("OnPlayerInteractItem", "liaExampleInteractItem", function(client, action, self, result, data)
+            print(client:Nick(), action, tostring(result))
+        end)
+        ```
+
+    Returns:
+        nil
+
+    Realm:
+        Server
+]]
+--[[
     Folder: Developer - Meta Tables
     File: item.md
 ]]

@@ -1,4 +1,109 @@
-﻿function MODULE:GetDoorInfo(entity, doorData, doorInfo)
+﻿--[[
+    Hooks:
+        GetDoorInfo(Entity entity, table doorData, table doorInfo)
+
+    Purpose:
+        Populates the mutable clientside door information list that is shown when the player looks at a visible door.
+
+    Category:
+        Doors
+
+    Parameters:
+        entity (Entity)
+            The door entity currently being inspected.
+
+        doorData (table)
+            The cached door data resolved for the entity.
+
+        doorInfo (table)
+            The mutable list that receives formatted entries with `text` and optional `color` fields.
+
+    Example Usage:
+        ```lua
+        hook.Add("GetDoorInfo", "liaExampleGetDoorInfo", function(entity, doorData, doorInfo)
+            if IsValid(entity) and doorData.title and doorData.title ~= "" then
+                doorInfo[#doorInfo + 1] = {
+                    text = "Internal title: " .. doorData.title
+                }
+            end
+        end)
+        ```
+
+    Returns:
+        nil
+
+    Realm:
+        Client
+]]
+--[[
+    Hooks:
+        FilterDoorInfo(Entity entity, table doorData, table doorInfo)
+
+    Purpose:
+        Runs after door information entries are assembled so client code can adjust the final list before it is rendered.
+
+    Category:
+        Doors
+
+    Parameters:
+        entity (Entity)
+            The door entity currently being inspected.
+
+        doorData (table)
+            The cached door data resolved for the entity.
+
+        doorInfo (table)
+            The mutable list of formatted door information entries that will be rendered.
+
+    Example Usage:
+        ```lua
+        hook.Add("FilterDoorInfo", "liaExampleFilterDoorInfo", function(entity, doorData, doorInfo)
+            if not (doorData.hidden and doorInfo[1]) then return end
+            doorInfo[#doorInfo + 1] = {
+                text = "Hidden door"
+            }
+        end)
+        ```
+
+    Returns:
+        nil
+
+    Realm:
+        Client
+]]
+--[[
+    Hooks:
+        GetDoorInfoForAdminStick(Entity target, table extraInfo)
+
+    Purpose:
+        Allows clientside code to append extra door-specific text lines to the admin stick HUD output.
+
+    Category:
+        Doors
+
+    Parameters:
+        target (Entity)
+            The door entity currently targeted by the admin stick.
+
+        extraInfo (table)
+            The mutable array of additional text lines that will be appended to the admin stick HUD.
+
+    Example Usage:
+        ```lua
+        hook.Add("GetDoorInfoForAdminStick", "liaExampleGetDoorInfoForAdminStick", function(target, extraInfo)
+            if IsValid(target) and target:isDoor() then
+                extraInfo[#extraInfo + 1] = "Map ID: " .. target:MapCreationID()
+            end
+        end)
+        ```
+
+    Returns:
+        nil
+
+    Realm:
+        Client
+]]
+function MODULE:GetDoorInfo(entity, doorData, doorInfo)
     local owner = entity:GetDTEntity(0)
     local classes = doorData.classes or {}
     local factions = doorData.factions or {}

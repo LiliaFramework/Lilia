@@ -1,4 +1,693 @@
-﻿local GM = GM or GAMEMODE
+﻿--[[
+    Hooks:
+        ShouldDrawAmmo(wpn)
+
+    Purpose:
+        Determines whether the custom ammo HUD should be drawn for the active weapon.
+
+    Category:
+        HUD
+
+    Parameters:
+        wpn (Weapon)
+            The active weapon being evaluated for ammo drawing.
+
+    Returns:
+        boolean|nil
+            Return true or false to override the ammo HUD decision. Returning nil allows the default behavior to continue.
+
+    Example Usage:
+        ```lua
+        hook.Add("ShouldDrawAmmo", "liaExampleShouldDrawAmmo", function(wpn)
+            if wpn:GetClass() == "weapon_physgun" then
+                return false
+            end
+        end)
+        ```
+
+    Realm:
+        Client
+]]
+--[[
+    Hooks:
+        ShouldDrawCrosshair(client, wpn)
+
+    Purpose:
+        Determines whether the custom crosshair should be drawn for the local player.
+
+    Category:
+        HUD
+
+    Parameters:
+        client (Player)
+            The local player whose crosshair is being evaluated.
+
+        wpn (Weapon)
+            The active weapon being checked.
+
+    Returns:
+        boolean|nil
+            Return true or false to override the crosshair decision. Returning nil allows the default behavior to continue.
+
+    Example Usage:
+        ```lua
+        hook.Add("ShouldDrawCrosshair", "liaExampleShouldDrawCrosshair", function(client, wpn)
+            if client:Crouching() and wpn:GetClass() == "weapon_pistol" then
+                return false
+            end
+        end)
+        ```
+
+    Realm:
+        Client
+]]
+--[[
+    Hooks:
+        ShouldDrawEntityInfo(e)
+
+    Purpose:
+        Determines whether the hovered entity should start rendering hover information.
+
+    Category:
+        HUD
+
+    Parameters:
+        e (Entity)
+            The entity currently being considered for hover info drawing.
+
+    Returns:
+        boolean|nil
+            Return true or false to override entity info visibility. Returning nil allows the default behavior to continue.
+
+    Example Usage:
+        ```lua
+        hook.Add("ShouldDrawEntityInfo", "liaExampleShouldDrawEntityInfo", function(e)
+            if e:GetClass() == "prop_ragdoll" then
+                return false
+            end
+        end)
+        ```
+
+    Realm:
+        Client
+]]
+--[[
+    Hooks:
+        CanDrawEntityHoverInfo(e, category)
+
+    Purpose:
+        Determines whether hover information should be drawn after the entity category has been resolved.
+
+    Category:
+        HUD
+
+    Parameters:
+        e (Entity)
+            The entity being evaluated.
+
+        category (string)
+            The resolved hover-info category for the entity.
+
+    Returns:
+        boolean|nil
+            Return true or false to override the hover info decision. Returning nil allows the default behavior to continue.
+
+    Example Usage:
+        ```lua
+        hook.Add("CanDrawEntityHoverInfo", "liaExampleCanDrawEntityHoverInfo", function(e, category)
+            if category == "items" and e:getNetVar("hidden") then
+                return false
+            end
+        end)
+        ```
+
+    Realm:
+        Client
+]]
+--[[
+    Hooks:
+        GetInjuredText(c)
+
+    Purpose:
+        Allows plugins or modules to override the injury text tuple added to character info panels.
+
+    Category:
+        HUD
+
+    Parameters:
+        c (Player)
+            The player whose health text is being resolved.
+
+    Returns:
+        table|nil
+            Return a table containing the localized text key and color to display. Returning nil allows the default behavior to continue.
+
+    Example Usage:
+        ```lua
+        hook.Add("GetInjuredText", "liaExampleGetInjuredText", function(c)
+            if c:Health() > c:GetMaxHealth() * 0.9 then
+                return {"healthyStatus", Color(46, 204, 113)}
+            end
+        end)
+        ```
+
+    Realm:
+        Client
+]]
+--[[
+    Hooks:
+        ShouldDrawPlayerInfo(e)
+
+    Purpose:
+        Determines whether character hover info should be drawn for a player entity.
+
+    Category:
+        HUD
+
+    Parameters:
+        e (Player)
+            The player whose hover info is being evaluated.
+
+    Returns:
+        boolean|nil
+            Return false to hide the player info panel. Returning nil allows the default behavior to continue.
+
+    Example Usage:
+        ```lua
+        hook.Add("ShouldDrawPlayerInfo", "liaExampleShouldDrawPlayerInfo", function(e)
+            if e == LocalPlayer() then
+                return false
+            end
+        end)
+        ```
+
+    Realm:
+        Client
+]]
+--[[
+    Hooks:
+        DrawPlayerInfoBackground(e, panelX, panelY, panelWidth, panelHeight, a)
+
+    Purpose:
+        Allows plugins or modules to override the background drawing pass for player hover info panels.
+
+    Category:
+        HUD
+
+    Parameters:
+        e (Player)
+            The player whose info panel is being drawn.
+
+        panelX (number)
+            The left coordinate of the info panel.
+
+        panelY (number)
+            The top coordinate of the info panel.
+
+        panelWidth (number)
+            The width of the info panel.
+
+        panelHeight (number)
+            The height of the info panel.
+
+        a (number)
+            The current alpha value used for the panel fade.
+
+    Returns:
+        boolean|nil
+            Return false to suppress the default background drawing. Returning nil allows the default behavior to continue.
+
+    Example Usage:
+        ```lua
+        hook.Add("DrawPlayerInfoBackground", "liaExampleDrawPlayerInfoBackground", function(e, panelX, panelY, panelWidth, panelHeight, a)
+            if e:isStaffOnDuty() then
+                surface.SetDrawColor(0, 0, 0, a)
+                surface.DrawOutlinedRect(panelX, panelY, panelWidth, panelHeight)
+                return false
+            end
+        end)
+        ```
+
+    Realm:
+        Client
+]]
+--[[
+    Hooks:
+        ModifyVoiceIndicatorText(client, voiceText, voiceType)
+
+    Purpose:
+        Allows plugins or modules to replace the text shown on the local voice indicator.
+
+    Category:
+        Voice
+
+    Parameters:
+        client (Player)
+            The local speaking player.
+
+        voiceText (string)
+            The text that will be drawn on the voice indicator.
+
+        voiceType (string)
+            The current voice range mode.
+
+    Returns:
+        string|nil
+            Return a replacement string to override the indicator text. Returning nil allows the default text to be used.
+
+    Example Usage:
+        ```lua
+        hook.Add("ModifyVoiceIndicatorText", "liaExampleModifyVoiceIndicatorText", function(client, voiceText, voiceType)
+            if voiceType == "yelling" then
+                return voiceText .. " [Broadcast]"
+            end
+        end)
+        ```
+
+    Realm:
+        Client
+]]
+--[[
+    Hooks:
+        TooltipInitialize(var, panel)
+
+    Purpose:
+        Runs when the custom tooltip panel is initialized for an item tooltip.
+
+    Category:
+        UI
+
+    Parameters:
+        var (Panel)
+            The tooltip panel being initialized.
+
+        panel (Panel)
+            The source panel that requested the tooltip.
+
+    Returns:
+        nil
+
+    Example Usage:
+        ```lua
+        hook.Add("TooltipInitialize", "liaExampleTooltipInitialize", function(var, panel)
+            var:SetMouseInputEnabled(false)
+        end)
+        ```
+
+    Realm:
+        Client
+]]
+--[[
+    Hooks:
+        TooltipPaint(var, w, h)
+
+    Purpose:
+        Allows plugins or modules to override the tooltip paint pass for item tooltips.
+
+    Category:
+        UI
+
+    Parameters:
+        var (Panel)
+            The tooltip panel being painted.
+
+        w (number)
+            The current tooltip width.
+
+        h (number)
+            The current tooltip height.
+
+    Returns:
+        boolean|nil
+            Return true to signal that the tooltip paint was handled. Returning nil allows the default behavior to continue.
+
+    Example Usage:
+        ```lua
+        hook.Add("TooltipPaint", "liaExampleTooltipPaint", function(var, w, h)
+            if var.isItemTooltip then
+                surface.SetDrawColor(255, 255, 255, 10)
+                surface.DrawOutlinedRect(0, 0, w, h)
+            end
+        end)
+        ```
+
+    Realm:
+        Client
+]]
+--[[
+    Hooks:
+        TooltipLayout(var)
+
+    Purpose:
+        Allows plugins or modules to signal that a tooltip should use the custom item-tooltip layout path.
+
+    Category:
+        UI
+
+    Parameters:
+        var (Panel)
+            The tooltip panel being laid out.
+
+    Returns:
+        boolean|nil
+            Return true to use the custom layout handling. Returning nil allows the default behavior to continue.
+
+    Example Usage:
+        ```lua
+        hook.Add("TooltipLayout", "liaExampleTooltipLayout", function(var)
+            if var.isItemTooltip then
+                return true
+            end
+        end)
+        ```
+
+    Realm:
+        Client
+]]
+--[[
+    Hooks:
+        DrawLiliaModelView(client, entity)
+
+    Purpose:
+        Runs during the custom model panel draw pass so plugins or modules can render extra clientside attachments.
+
+    Category:
+        UI
+
+    Parameters:
+        client (Panel)
+            The model panel requesting the draw pass.
+
+        entity (Entity)
+            The clientside model entity being rendered.
+
+    Returns:
+        nil
+
+    Example Usage:
+        ```lua
+        hook.Add("DrawLiliaModelView", "liaExampleDrawLiliaModelView", function(client, entity)
+            if IsValid(entity.weapon) then
+                entity.weapon:SetNoDraw(false)
+            end
+        end)
+        ```
+
+    Realm:
+        Client
+]]
+--[[
+    Hooks:
+        OnChatReceived(client, chatType, text, anonymous)
+
+    Purpose:
+        Allows plugins or modules to adjust incoming chat text before it is added to the local chatbox.
+
+    Category:
+        Chatbox
+
+    Parameters:
+        client (Player)
+            The player who sent the message.
+
+        chatType (string)
+            The resolved chat class for the message.
+
+        text (string)
+            The parsed chat text about to be displayed.
+
+        anonymous (boolean)
+            Whether the message is being shown anonymously.
+
+    Returns:
+        string|nil
+            Return a replacement string to override the displayed message text. Returning nil allows the default text to continue.
+
+    Example Usage:
+        ```lua
+        hook.Add("OnChatReceived", "liaExampleOnChatReceived", function(client, chatType, text, anonymous)
+            if chatType == "radio" then
+                return "[Encrypted] " .. text
+            end
+        end)
+        ```
+
+    Realm:
+        Client
+]]
+--[[
+    Hooks:
+        ItemShowEntityMenu(entity)
+
+    Purpose:
+        Runs when the local player opens the entity interaction menu for a world item.
+
+    Category:
+        Inventory
+
+    Parameters:
+        entity (Entity)
+            The item entity that triggered the menu.
+
+    Returns:
+        nil
+
+    Example Usage:
+        ```lua
+        hook.Add("ItemShowEntityMenu", "liaExampleItemShowEntityMenu", function(entity)
+            if entity:isItem() then
+                surface.PlaySound("buttons/button14.wav")
+            end
+        end)
+        ```
+
+    Realm:
+        Client
+]]
+--[[
+    Hooks:
+        CanRunItemAction(tempItem, key)
+
+    Purpose:
+        Determines whether a specific item action should be included in the entity interaction menu.
+
+    Category:
+        Inventory
+
+    Parameters:
+        tempItem (table)
+            The temporary item table prepared for menu action checks.
+
+        key (string)
+            The item function key being evaluated.
+
+    Returns:
+        boolean|nil
+            Return false to suppress the item action. Returning nil allows the default behavior to continue.
+
+    Example Usage:
+        ```lua
+        hook.Add("CanRunItemAction", "liaExampleCanRunItemAction", function(tempItem, key)
+            if key == "drop" and tempItem.player:Crouching() then
+                return false
+            end
+        end)
+        ```
+
+    Realm:
+        Client
+]]
+--[[
+    Hooks:
+        ShouldShowQuickMenu()
+
+    Purpose:
+        Determines whether the context-menu quick menu should open.
+
+    Category:
+        UI
+
+    Parameters:
+        None
+
+    Returns:
+        boolean|nil
+            Return false to block the quick menu from opening. Returning nil allows the default behavior to continue.
+
+    Example Usage:
+        ```lua
+        hook.Add("ShouldShowQuickMenu", "liaExampleShouldShowQuickMenu", function()
+            if IsValid(lia.gui.character) then
+                return false
+            end
+        end)
+        ```
+
+    Realm:
+        Client
+]]
+--[[
+    Hooks:
+        PreLiliaLoaded()
+
+    Purpose:
+        Runs just before clientside options are loaded and the `LiliaLoaded` hook is fired.
+
+    Category:
+        Initialization
+
+    Parameters:
+        None
+
+    Returns:
+        nil
+
+    Example Usage:
+        ```lua
+        hook.Add("PreLiliaLoaded", "liaExamplePreLiliaLoaded", function()
+            print("[MyModule] preparing client state")
+        end)
+        ```
+
+    Realm:
+        Client
+]]
+--[[
+    Hooks:
+        GetMainMenuPosition(character)
+
+    Purpose:
+        Allows plugins or modules to provide an override position and angle for the character main menu scene.
+
+    Category:
+        Main Menu
+
+    Parameters:
+        character (Character)
+            The character whose main menu position is being resolved.
+
+    Returns:
+        Vector|nil, Angle|nil
+            Return a position and angle to override the default main menu placement. Returning nil values allows the default behavior to continue.
+
+    Example Usage:
+        ```lua
+        hook.Add("GetMainMenuPosition", "liaExampleGetMainMenuPosition", function(character)
+            if character and character:getFaction() == FACTION_CITIZEN then
+                return Vector(0, 0, 0), Angle(0, 90, 0)
+            end
+        end)
+        ```
+
+    Realm:
+        Client
+]]
+--[[
+    Hooks:
+        DrawCharInfo(Player c, Character character, table info)
+
+    Purpose:
+        Allows modules to append additional formatted lines to the hover-info panel for a player's active character.
+
+    Category:
+        HUD
+
+    Parameters:
+        c (Player)
+            The player whose hover information is being assembled.
+
+        character (Character)
+            The player's active character object.
+
+        info (table)
+            The mutable array of line entries that will be rendered in the hover-info panel.
+
+    Example Usage:
+        ```lua
+        hook.Add("DrawCharInfo", "liaExampleDrawCharInfo", function(c, character, info)
+            info[#info + 1] = {character:getFaction() or "Unknown", Color(200, 200, 255)}
+        end)
+        ```
+
+    Returns:
+        nil
+
+    Realm:
+        Client
+]]
+--[[
+    Hooks:
+        DrawEntityInfo(Entity e, number a, table|nil pos)
+
+    Purpose:
+        Draws hover information for entities or player ragdolls after the core hover system has decided they should be shown.
+
+    Category:
+        HUD
+
+    Parameters:
+        e (Entity)
+            The entity whose hover information is being drawn. This may be a player when a ragdoll resolves back to its owner.
+
+        a (number)
+            The current fade alpha used for the hover info.
+
+        pos (table|nil)
+            An optional screen-position table with `x` and `y` fields. When nil, the hook should derive its own position from the entity.
+
+    Example Usage:
+        ```lua
+        hook.Add("DrawEntityInfo", "liaExampleDrawEntityInfo", function(e, a, pos)
+            if e:isDoor() then
+                local screenPos = pos or e:GetPos():ToScreen()
+                draw.SimpleText("Door", "DermaDefault", screenPos.x, screenPos.y, Color(255, 255, 255, a), TEXT_ALIGN_CENTER, TEXT_ALIGN_BOTTOM)
+            end
+        end)
+        ```
+
+    Returns:
+        nil
+
+    Realm:
+        Client
+]]
+--[[
+    Hooks:
+        DisplayPlayerHUDInformation(Player client, table hudInfos)
+
+    Purpose:
+        Allows modules to append structured HUD panels for the local player during the main HUD paint pass.
+
+    Category:
+        HUD
+
+    Parameters:
+        client (Player)
+            The local player whose HUD is being drawn.
+
+        hudInfos (table)
+            The mutable array of HUD panel definitions that the renderer will draw after this hook finishes.
+
+    Example Usage:
+        ```lua
+        hook.Add("DisplayPlayerHUDInformation", "liaExampleDisplayPlayerHUDInformation", function(client, hudInfos)
+            hudInfos[#hudInfos + 1] = {
+                text = "Example HUD",
+                position = {
+                    x = ScrW() * 0.5,
+                    y = 40
+                }
+            }
+        end)
+        ```
+
+    Returns:
+        nil
+
+    Realm:
+        Client
+]]
+local GM = GM or GAMEMODE
 local RealTime, FrameTime = RealTime, FrameTime
 local mathApproach = math.Approach
 local IsValid = IsValid

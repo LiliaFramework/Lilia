@@ -1,4 +1,4 @@
---[[
+﻿--[[
     Folder: Developer - Libraries
     File: admin.lua
 ]]
@@ -96,6 +96,34 @@
                 name = "MyModule",
                 icon = "icon16/plugin.png"
             }
+        end)
+        ```
+
+    Returns:
+        nil
+
+    Realm:
+        Client
+]]
+--[[
+    Hooks:
+        AdminPrivilegesUpdated()
+
+    Purpose:
+        Runs after the client receives a refreshed admin privilege table from the admin system sync.
+
+    Category:
+        Administration
+
+    Parameters:
+        None
+
+    Example Usage:
+        ```lua
+        hook.Add("AdminPrivilegesUpdated", "liaExampleAdminPrivilegesUpdated", function()
+            if IsValid(lia.gui.character) then
+                lia.gui.character:createStartButton()
+            end
         end)
         ```
 
@@ -2739,9 +2767,11 @@ else
         local groupsChanged = false
         local currentGroupsTable = {}
         for groupName, groupData in pairs(groups or {}) do
-            currentGroupsTable[groupName] = {}
-            for permName, hasPerm in pairs(groupData or {}) do
-                if permName ~= "_info" then currentGroupsTable[groupName][permName] = hasPerm end
+            if isstring(groupName) and istable(groupData) then
+                currentGroupsTable[groupName] = {}
+                for permName, hasPerm in pairs(groupData) do
+                    if isstring(permName) and permName ~= "_info" then currentGroupsTable[groupName][permName] = hasPerm end
+                end
             end
         end
 
@@ -2785,16 +2815,18 @@ else
         lastCacheGroups = currentGroupsTable
         local cats, labels, seen = {}, {}, {}
         for name in pairs(lia.admin.privileges or {}) do
-            local c = tostring(getPrivilegeCategory(name))
-            local key = c:lower()
-            labels[key] = labels[key] or c
-            cats[key] = cats[key] or {}
-            cats[key][#cats[key] + 1], seen[name] = name, true
+            if isstring(name) then
+                local c = tostring(getPrivilegeCategory(name))
+                local key = c:lower()
+                labels[key] = labels[key] or c
+                cats[key] = cats[key] or {}
+                cats[key][#cats[key] + 1], seen[name] = name, true
+            end
         end
 
         for _, data in pairs(groups or {}) do
             for name in pairs(data or {}) do
-                if name ~= "_info" and not seen[name] then
+                if isstring(name) and name ~= "_info" and not seen[name] then
                     local c = tostring(getPrivilegeCategory(name))
                     local key = c:lower()
                     labels[key] = labels[key] or c
@@ -2809,9 +2841,9 @@ else
             keys[#keys + 1] = k
         end
 
-        table.sort(keys, function(a, b) return a < b end)
+        table.sort(keys, function(a, b) return tostring(a) < tostring(b) end)
         for _, k in ipairs(keys) do
-            table.sort(cats[k], function(a, b) return a:lower() < b:lower() end)
+            table.sort(cats[k], function(a, b) return tostring(a):lower() < tostring(b):lower() end)
         end
 
         categoryMapCache = {}

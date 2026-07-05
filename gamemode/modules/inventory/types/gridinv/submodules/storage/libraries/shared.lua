@@ -1,4 +1,34 @@
-﻿function MODULE:IsSuitableForTrunk(ent)
+﻿--[[
+    Hooks:
+        IsSuitableForTrunk(Entity ent)
+
+    Purpose:
+        Allows modules to decide whether an entity should be treated as a valid trunk-capable storage target.
+
+    Category:
+        Inventory
+
+    Parameters:
+        ent (Entity)
+            The entity being checked for trunk storage support.
+
+    Returns:
+        boolean|nil
+            Return true to mark the entity as trunk-capable or false to reject it. Returning nil allows the default vehicle and storage checks to continue.
+
+    Example Usage:
+        ```lua
+        hook.Add("IsSuitableForTrunk", "liaExampleIsSuitableForTrunk", function(ent)
+            if IsValid(ent) and ent:GetClass() == "prop_vehicle_jeep" then
+                return true
+            end
+        end)
+        ```
+
+    Realm:
+        Shared
+]]
+function MODULE:IsSuitableForTrunk(ent)
     if IsValid(ent) and ((ent.isSimfphysCar and ent:isSimfphysCar()) or (ent:IsVehicle() and ent:getNetVar("hasStorage", false))) then return true end
 end
 

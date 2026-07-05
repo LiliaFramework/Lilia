@@ -1,5 +1,172 @@
 ﻿SWEP.PrintName = L("handsWeaponName")
 SWEP.Slot = 0
+--[[
+    Hooks:
+        CanPlayerKnock(Player client, Entity door)
+
+    Purpose:
+        Determines whether the hands weapon may perform its door-knock action on the traced door.
+
+    Category:
+        Interaction
+
+    Parameters:
+        client (Player)
+            The player attempting to knock.
+
+        door (Entity)
+            The door entity being targeted by the knock action.
+
+    Returns:
+        boolean|nil
+            Return false to block the knock. Returning nil allows the default behavior to continue.
+
+    Example Usage:
+        ```lua
+        hook.Add("CanPlayerKnock", "liaExampleCanPlayerKnock", function(client, door)
+            if client:getNetVar("restrictedKnock") then
+                return false
+            end
+        end)
+        ```
+
+    Realm:
+        Server
+]]
+--[[
+    Hooks:
+        GetHandsAttackSpeed(Player client, number defaultDelay)
+
+    Purpose:
+        Allows modules to override the primary attack delay used by the hands weapon when punching.
+
+    Category:
+        Combat
+
+    Parameters:
+        client (Player)
+            The player performing the punch.
+
+        defaultDelay (number)
+            The base primary attack delay defined on the hands weapon.
+
+    Returns:
+        number|nil
+            Return a numeric delay to override the default punch cooldown. Returning nil allows the default behavior to continue.
+
+    Example Usage:
+        ```lua
+        hook.Add("GetHandsAttackSpeed", "liaExampleGetHandsAttackSpeed", function(client, defaultDelay)
+            if client:Crouching() then
+                return defaultDelay * 0.9
+            end
+        end)
+        ```
+
+    Realm:
+        Shared
+]]
+--[[
+    Hooks:
+        GetPlayerPunchDamage(Player client, number damage, table context)
+
+    Purpose:
+        Allows modules to override or mutate the damage dealt by a hands-weapon punch before the trace attack is applied.
+
+    Category:
+        Combat
+
+    Parameters:
+        client (Player)
+            The player performing the punch.
+
+        damage (number)
+            The current punch damage value.
+
+        context (table)
+            Mutable context data containing the current `damage` field.
+
+    Returns:
+        number|nil
+            Return a numeric damage value to override the punch damage. Returning nil allows the current context damage to be used.
+
+    Example Usage:
+        ```lua
+        hook.Add("GetPlayerPunchDamage", "liaExampleGetPlayerPunchDamage", function(client, damage, context)
+            if client:InVehicle() then
+                return 0
+            end
+        end)
+        ```
+
+    Realm:
+        Shared
+]]
+--[[
+    Hooks:
+        GetPlayerPunchRagdollTime(Player client, Player target)
+
+    Purpose:
+        Allows modules to override how long a player stays ragdolled when a non-lethal punch would otherwise knock them out.
+
+    Category:
+        Combat
+
+    Parameters:
+        client (Player)
+            The player who threw the punch.
+
+        target (Player)
+            The player who is about to be ragdolled by the punch.
+
+    Returns:
+        number|nil
+            Return a numeric ragdoll duration in seconds to override the configured default. Returning nil allows the default behavior to continue.
+
+    Example Usage:
+        ```lua
+        hook.Add("GetPlayerPunchRagdollTime", "liaExampleGetPlayerPunchRagdollTime", function(client, target)
+            if target:isStaffOnDuty() then
+                return 5
+            end
+        end)
+        ```
+
+    Realm:
+        Shared
+]]
+--[[
+    Hooks:
+        PlayerThrowPunch(Player client, table trace)
+
+    Purpose:
+        Runs after the hands weapon resolves its punch trace and applies any resulting damage or ragdoll effect.
+
+    Category:
+        Combat
+
+    Parameters:
+        client (Player)
+            The player who threw the punch.
+
+        trace (table)
+            The trace result table used to resolve the punch hit.
+
+    Returns:
+        nil
+
+    Example Usage:
+        ```lua
+        hook.Add("PlayerThrowPunch", "liaExamplePlayerThrowPunch", function(client, trace)
+            if trace.Hit and IsValid(trace.Entity) then
+                print(client:Nick(), "punched", trace.Entity:GetClass())
+            end
+        end)
+        ```
+
+    Realm:
+        Server
+]]
 SWEP.SlotPos = 1
 SWEP.DrawAmmo = false
 SWEP.DrawCrosshair = true

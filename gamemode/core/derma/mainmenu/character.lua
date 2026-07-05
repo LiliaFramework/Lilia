@@ -1,4 +1,358 @@
-﻿local PANEL = {}
+﻿--[[
+    Hooks:
+        CharMenuOpened(self)
+
+    Purpose:
+        Runs after the main character menu panel has been created and registered as the active character UI.
+
+    Category:
+        Main Menu
+
+    Parameters:
+        self (Panel)
+            The character menu panel instance that was opened.
+
+    Returns:
+        nil
+
+    Example Usage:
+        ```lua
+        hook.Add("CharMenuOpened", "liaExampleCharMenuOpened", function(self)
+            self:SetAlpha(255)
+        end)
+        ```
+
+    Realm:
+        Client
+]]
+--[[
+    Hooks:
+        GetCharacterCreateButtonTooltip(client, currentChars, maxChars)
+
+    Purpose:
+        Allows plugins or modules to override the tooltip shown on the create-character button.
+
+    Category:
+        Main Menu
+
+    Parameters:
+        client (Player)
+            The local player viewing the menu.
+
+        currentChars (number)
+            The number of characters currently available to the player.
+
+        maxChars (number)
+            The maximum number of character slots available to the player.
+
+    Returns:
+        string|nil
+            Return a string to override the tooltip text. Returning nil allows the default behavior to continue.
+
+    Example Usage:
+        ```lua
+        hook.Add("GetCharacterCreateButtonTooltip", "liaExampleGetCharacterCreateButtonTooltip", function(client, currentChars, maxChars)
+            if currentChars >= maxChars then
+                return "No free character slots"
+            end
+        end)
+        ```
+
+    Realm:
+        Client
+]]
+--[[
+    Hooks:
+        GetCharacterLoadButtonTooltip(client)
+
+    Purpose:
+        Allows plugins or modules to override the tooltip shown on the load-character button.
+
+    Category:
+        Main Menu
+
+    Parameters:
+        client (Player)
+            The local player viewing the menu.
+
+    Returns:
+        string|nil
+            Return a string to override the tooltip text. Returning nil allows the default behavior to continue.
+
+    Example Usage:
+        ```lua
+        hook.Add("GetCharacterLoadButtonTooltip", "liaExampleGetCharacterLoadButtonTooltip", function(client)
+            return "Browse your available characters"
+        end)
+        ```
+
+    Realm:
+        Client
+]]
+--[[
+    Hooks:
+        GetCharacterLoadMainButtonTooltip(client)
+
+    Purpose:
+        Allows plugins or modules to override the tooltip shown on the load-main-character button.
+
+    Category:
+        Main Menu
+
+    Parameters:
+        client (Player)
+            The local player viewing the menu.
+
+    Returns:
+        string|nil
+            Return a string to override the tooltip text. Returning nil allows the default behavior to continue.
+
+    Example Usage:
+        ```lua
+        hook.Add("GetCharacterLoadMainButtonTooltip", "liaExampleGetCharacterLoadMainButtonTooltip", function(client)
+            return "Load your configured main character"
+        end)
+        ```
+
+    Realm:
+        Client
+]]
+--[[
+    Hooks:
+        GetCharacterStaffButtonTooltip(client, hasStaffChar)
+
+    Purpose:
+        Allows plugins or modules to override the tooltip shown on the staff-character button.
+
+    Category:
+        Main Menu
+
+    Parameters:
+        client (Player)
+            The local player viewing the menu.
+
+        hasStaffChar (boolean)
+            Whether the player already has a staff character available.
+
+    Returns:
+        string|nil
+            Return a string to override the tooltip text. Returning nil allows the default behavior to continue.
+
+    Example Usage:
+        ```lua
+        hook.Add("GetCharacterStaffButtonTooltip", "liaExampleGetCharacterStaffButtonTooltip", function(client, hasStaffChar)
+            if hasStaffChar then
+                return "Open your staff character"
+            end
+        end)
+        ```
+
+    Realm:
+        Client
+]]
+--[[
+    Hooks:
+        GetCharacterDiscordButtonTooltip(client, discordURL)
+
+    Purpose:
+        Allows plugins or modules to override the tooltip shown on the Discord button.
+
+    Category:
+        Main Menu
+
+    Parameters:
+        client (Player)
+            The local player viewing the menu.
+
+        discordURL (string)
+            The configured Discord URL.
+
+    Returns:
+        string|nil
+            Return a string to override the tooltip text. Returning nil allows the default behavior to continue.
+
+    Example Usage:
+        ```lua
+        hook.Add("GetCharacterDiscordButtonTooltip", "liaExampleGetCharacterDiscordButtonTooltip", function(client, discordURL)
+            return "Join the community Discord"
+        end)
+        ```
+
+    Realm:
+        Client
+]]
+--[[
+    Hooks:
+        GetCharacterWorkshopButtonTooltip(client, workshopURL)
+
+    Purpose:
+        Allows plugins or modules to override the tooltip shown on the Workshop button.
+
+    Category:
+        Main Menu
+
+    Parameters:
+        client (Player)
+            The local player viewing the menu.
+
+        workshopURL (string)
+            The configured Workshop URL.
+
+    Returns:
+        string|nil
+            Return a string to override the tooltip text. Returning nil allows the default behavior to continue.
+
+    Example Usage:
+        ```lua
+        hook.Add("GetCharacterWorkshopButtonTooltip", "liaExampleGetCharacterWorkshopButtonTooltip", function(client, workshopURL)
+            return "Open the server Workshop collection"
+        end)
+        ```
+
+    Realm:
+        Client
+]]
+--[[
+    Hooks:
+        GetCharacterMountButtonTooltip(client)
+
+    Purpose:
+        Allows plugins or modules to override the tooltip shown on the Workshop mount button.
+
+    Category:
+        Main Menu
+
+    Parameters:
+        client (Player)
+            The local player viewing the menu.
+
+    Returns:
+        string|nil
+            Return a string to override the tooltip text. Returning nil allows the default behavior to continue.
+
+    Example Usage:
+        ```lua
+        hook.Add("GetCharacterMountButtonTooltip", "liaExampleGetCharacterMountButtonTooltip", function(client)
+            return "Mount installed Workshop content"
+        end)
+        ```
+
+    Realm:
+        Client
+]]
+--[[
+    Hooks:
+        GetCharacterDisconnectButtonTooltip(client)
+
+    Purpose:
+        Allows plugins or modules to override the tooltip shown on the disconnect button.
+
+    Category:
+        Main Menu
+
+    Parameters:
+        client (Player)
+            The local player viewing the menu.
+
+    Returns:
+        string|nil
+            Return a string to override the tooltip text. Returning nil allows the default behavior to continue.
+
+    Example Usage:
+        ```lua
+        hook.Add("GetCharacterDisconnectButtonTooltip", "liaExampleGetCharacterDisconnectButtonTooltip", function(client)
+            return "Disconnect from the server"
+        end)
+        ```
+
+    Realm:
+        Client
+]]
+--[[
+    Hooks:
+        GetCharacterReturnButtonTooltip(client)
+
+    Purpose:
+        Allows plugins or modules to override the tooltip shown on the return button while browsing characters.
+
+    Category:
+        Main Menu
+
+    Parameters:
+        client (Player)
+            The local player viewing the menu.
+
+    Returns:
+        string|nil
+            Return a string to override the tooltip text. Returning nil allows the default behavior to continue.
+
+    Example Usage:
+        ```lua
+        hook.Add("GetCharacterReturnButtonTooltip", "liaExampleGetCharacterReturnButtonTooltip", function(client)
+            return "Return to the main character menu"
+        end)
+        ```
+
+    Realm:
+        Client
+]]
+--[[
+    Hooks:
+        LoadMainMenuInformation(info, character)
+
+    Purpose:
+        Allows plugins or modules to append extra information rows to the selected-character info panel.
+
+    Category:
+        Main Menu
+
+    Parameters:
+        info (table)
+            The mutable array of text rows shown in the info panel.
+
+        character (Character)
+            The character currently being previewed.
+
+    Returns:
+        nil
+
+    Example Usage:
+        ```lua
+        hook.Add("LoadMainMenuInformation", "liaExampleLoadMainMenuInformation", function(info, character)
+            info[#info + 1] = "Steam Name: " .. LocalPlayer():Nick()
+        end)
+        ```
+
+    Realm:
+        Client
+]]
+--[[
+    Hooks:
+        CharMenuClosed()
+
+    Purpose:
+        Runs after the active character menu has been removed.
+
+    Category:
+        Main Menu
+
+    Parameters:
+        None
+
+    Returns:
+        nil
+
+    Example Usage:
+        ```lua
+        hook.Add("CharMenuClosed", "liaExampleCharMenuClosed", function()
+            print("[MainMenu] Character menu closed")
+        end)
+        ```
+
+    Realm:
+        Client
+]]
+local PANEL = {}
 function PANEL:Init()
     if hook.Run("IsCharacterCreationOverridden") == true then
         self:SetVisible(false)

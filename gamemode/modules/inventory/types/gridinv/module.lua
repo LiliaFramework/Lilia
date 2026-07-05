@@ -1,4 +1,4 @@
---[[
+﻿--[[
     Hooks:
         BagInventoryReady(item, inventory)
 

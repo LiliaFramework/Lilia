@@ -14,6 +14,41 @@
     net.Broadcast()
 end
 
+--[[
+    Hooks:
+        OnPlayerJoinClass(Player client, number class, number|nil oldClass)
+
+    Purpose:
+        Runs after a player is assigned to a class so modules can react to the new class and any transferred state.
+
+    Category:
+        Teams
+
+    Parameters:
+        client (Player)
+            The player joining the class.
+
+        class (number)
+            The class index the player has just joined.
+
+        oldClass (number|nil)
+            The previous class index when the player switched from another class.
+
+    Returns:
+        nil
+
+    Example Usage:
+        ```lua
+        hook.Add("OnPlayerJoinClass", "liaExampleOnPlayerJoinClass", function(client, class, oldClass)
+            if IsValid(client) then
+                print(client:Nick(), "joined class", class, "from", oldClass)
+            end
+        end)
+        ```
+
+    Realm:
+        Server
+]]
 function MODULE:OnTransferred(client)
     local char = client:getChar()
     if char then

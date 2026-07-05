@@ -1,4 +1,272 @@
-﻿local PANEL = {}
+﻿--[[
+    Hooks:
+        ScoreboardOpened(self)
+
+    Purpose:
+        Runs when the Lilia scoreboard panel is created or shown again after being hidden.
+
+    Category:
+        Scoreboard
+
+    Parameters:
+        self (Panel)
+            The scoreboard panel instance that was opened.
+
+    Returns:
+        nil
+
+    Example Usage:
+        ```lua
+        hook.Add("ScoreboardOpened", "liaExampleScoreboardOpened", function(self)
+            self:SetCenterTitle("Community Scoreboard")
+        end)
+        ```
+
+    Realm:
+        Client
+]]
+--[[
+    Hooks:
+        ShouldShowClassOnScoreboard(clsData)
+
+    Purpose:
+        Determines whether a class section or class logo should be shown while the scoreboard is being built or refreshed.
+
+    Category:
+        Scoreboard
+
+    Parameters:
+        clsData (table)
+            The class data table being evaluated for display.
+
+    Returns:
+        boolean|nil
+            Return false to hide the class entry. Returning nil allows the default scoreboard behavior to continue.
+
+    Example Usage:
+        ```lua
+        hook.Add("ShouldShowClassOnScoreboard", "liaExampleShouldShowClassOnScoreboard", function(clsData)
+            if clsData.uniqueID == "recruit" then
+                return false
+            end
+        end)
+        ```
+
+    Realm:
+        Client
+]]
+--[[
+    Hooks:
+        ShouldShowPlayerOnScoreboard(ply)
+
+    Purpose:
+        Determines whether an individual player should be listed on the scoreboard.
+
+    Category:
+        Scoreboard
+
+    Parameters:
+        ply (Player)
+            The player being considered for a scoreboard row.
+
+    Returns:
+        boolean|nil
+            Return false to hide the player from the scoreboard. Returning nil allows the default behavior to continue.
+
+    Example Usage:
+        ```lua
+        hook.Add("ShouldShowPlayerOnScoreboard", "liaExampleShouldShowPlayerOnScoreboard", function(ply)
+            if not ply:getChar() then
+                return false
+            end
+        end)
+        ```
+
+    Realm:
+        Client
+]]
+--[[
+    Hooks:
+        ShouldShowFactionOnScoreboard(ply)
+
+    Purpose:
+        Determines whether the faction group for a player should remain visible on the scoreboard.
+
+    Category:
+        Scoreboard
+
+    Parameters:
+        ply (Player)
+            The player whose faction grouping is being evaluated.
+
+    Returns:
+        boolean|nil
+            Return false to hide the player's faction entry. Returning nil allows the default behavior to continue.
+
+    Example Usage:
+        ```lua
+        hook.Add("ShouldShowFactionOnScoreboard", "liaExampleShouldShowFactionOnScoreboard", function(ply)
+            if ply:isStaffOnDuty() then
+                return false
+            end
+        end)
+        ```
+
+    Realm:
+        Client
+]]
+--[[
+    Hooks:
+        ModifyScoreboardModel(entity, ply)
+
+    Purpose:
+        Allows plugins or modules to adjust the scoreboard model panel entity after the player's appearance data has been applied.
+
+    Category:
+        Scoreboard
+
+    Parameters:
+        entity (Entity)
+            The clientside model entity rendered inside the scoreboard row.
+
+        ply (Player)
+            The player whose row owns the model preview.
+
+    Returns:
+        nil
+
+    Example Usage:
+        ```lua
+        hook.Add("ModifyScoreboardModel", "liaExampleModifyScoreboardModel", function(entity, ply)
+            if ply:isStaffOnDuty() then
+                entity:SetSequence(entity:LookupSequence("pose_standing_01"))
+            end
+        end)
+        ```
+
+    Realm:
+        Client
+]]
+--[[
+    Hooks:
+        ScoreboardRowRemoved(self, ply)
+
+    Purpose:
+        Runs before a scoreboard row is removed because the player became invalid or their loaded character changed.
+
+    Category:
+        Scoreboard
+
+    Parameters:
+        self (Panel)
+            The scoreboard row panel that is about to be removed.
+
+        ply (Player)
+            The player previously represented by the row.
+
+    Returns:
+        nil
+
+    Example Usage:
+        ```lua
+        hook.Add("ScoreboardRowRemoved", "liaExampleScoreboardRowRemoved", function(self, ply)
+            if IsValid(ply) then
+                print("[Scoreboard] Removed row for", ply:Nick())
+            end
+        end)
+        ```
+
+    Realm:
+        Client
+]]
+--[[
+    Hooks:
+        ScoreboardRowCreated(slot, ply)
+
+    Purpose:
+        Runs after a new scoreboard row has been created for a player.
+
+    Category:
+        Scoreboard
+
+    Parameters:
+        slot (Panel)
+            The newly created scoreboard row panel.
+
+        ply (Player)
+            The player represented by the row.
+
+    Returns:
+        nil
+
+    Example Usage:
+        ```lua
+        hook.Add("ScoreboardRowCreated", "liaExampleScoreboardRowCreated", function(slot, ply)
+            slot:SetTooltip(ply:SteamID())
+        end)
+        ```
+
+    Realm:
+        Client
+]]
+--[[
+    Hooks:
+        ScoreboardClosed(self)
+
+    Purpose:
+        Runs when the scoreboard panel is removed or hidden.
+
+    Category:
+        Scoreboard
+
+    Parameters:
+        self (Panel)
+            The scoreboard panel instance that was closed.
+
+    Returns:
+        nil
+
+    Example Usage:
+        ```lua
+        hook.Add("ScoreboardClosed", "liaExampleScoreboardClosed", function(self)
+            CloseDermaMenus()
+        end)
+        ```
+
+    Realm:
+        Client
+]]
+--[[
+    Hooks:
+        CanPlayerOpenScoreboard(client)
+
+    Purpose:
+        Determines whether the local player may open the scoreboard before the panel is created or shown.
+
+    Category:
+        Scoreboard
+
+    Parameters:
+        client (Player)
+            The local player attempting to open the scoreboard.
+
+    Returns:
+        boolean|nil
+            Return false to block the scoreboard from opening. Returning nil allows the default behavior to continue.
+
+    Example Usage:
+        ```lua
+        hook.Add("CanPlayerOpenScoreboard", "liaExampleCanPlayerOpenScoreboard", function(client)
+            if IsValid(client:GetVehicle()) then
+                return false
+            end
+        end)
+        ```
+
+    Realm:
+        Client
+]]
+local PANEL = {}
 local rowPaint = {
     [0] = function(_, w, h)
         surface.SetDrawColor(0, 0, 0, 120)

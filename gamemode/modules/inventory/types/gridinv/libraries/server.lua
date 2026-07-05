@@ -1,4 +1,64 @@
-﻿local function CanAccessIfPlayerHasAccessToBag(inventory, action, context)
+﻿--[[
+    Hooks:
+        ItemDraggedOutOfInventory(Player client, Item item)
+
+    Purpose:
+        Runs when a player drags an item out of an inventory UI and no destination inventory is provided.
+
+    Category:
+        Inventory
+
+    Parameters:
+        client (Player)
+            The player dragging the item out of the inventory.
+
+        item (Item)
+            The item being dragged out.
+
+    Returns:
+        any
+            Returns the first non-nil value from registered hook handlers.
+
+    Example Usage:
+        ```lua
+        hook.Add("ItemDraggedOutOfInventory", "liaExampleItemDraggedOutOfInventory", function(client, item)
+            if IsValid(client) then
+                return item:interact("drop", client)
+            end
+        end)
+        ```
+
+    Realm:
+        Server
+]]
+--[[
+    Hooks:
+        ItemTransfered(table context)
+
+    Purpose:
+        Runs after an item transfer between inventories succeeds.
+
+    Category:
+        Inventory
+
+    Parameters:
+        context (table)
+            A transfer context table containing `client`, `item`, `from`, and `to`.
+
+    Returns:
+        nil
+
+    Example Usage:
+        ```lua
+        hook.Add("ItemTransfered", "liaExampleItemTransfered", function(context)
+            print("Transferred item", context.item:getName())
+        end)
+        ```
+
+    Realm:
+        Server
+]]
+local function CanAccessIfPlayerHasAccessToBag(inventory, action, context)
     local bagItemID = inventory:getData("item")
     if not bagItemID then return end
     local bagItem = lia.item.instances[bagItemID]

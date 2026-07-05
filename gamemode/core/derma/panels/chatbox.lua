@@ -1,4 +1,35 @@
-﻿local PANEL = {}
+﻿--[[
+    Hooks:
+        ChatAddText(string text, ...)
+
+    Purpose:
+        Allows modules to adjust the opening markup prefix used when the custom chatbox builds a rendered message from chat arguments.
+
+    Category:
+        Chat
+
+    Parameters:
+        text (string)
+            The current opening markup prefix that will be prepended before chat arguments are converted into markup.
+
+        ... (any)
+            The original chat arguments that will be rendered into the chatbox message.
+
+    Example Usage:
+        ```lua
+        hook.Add("ChatAddText", "liaExampleChatAddText", function(text, ...)
+            return "<font=LiliaFont.24>"
+        end)
+        ```
+
+    Returns:
+        string|nil
+            Return a markup prefix string to replace the default opening markup. Return nil to keep the current prefix.
+
+    Realm:
+        Client
+]]
+local PANEL = {}
 local function paintChatMarkupText(chatbox, text, font, x, y, color, halign, valign, alpha)
     alpha = alpha or color.a or 255
     surface.SetFont(font)

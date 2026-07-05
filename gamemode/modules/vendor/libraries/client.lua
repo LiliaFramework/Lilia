@@ -1,4 +1,93 @@
-﻿function MODULE:VendorOpened(vendor)
+﻿--[[
+    Hooks:
+        VendorOpened(Entity vendor)
+
+    Purpose:
+        Runs on the client when vendor access succeeds and the vendor interface is about to be shown for the received vendor entity.
+
+    Category:
+        Vendor
+
+    Parameters:
+        vendor (Entity)
+            The vendor entity whose menu is being opened.
+
+    Example Usage:
+        ```lua
+        hook.Add("VendorOpened", "liaExampleVendorOpened", function(vendor)
+            if IsValid(vendor) then
+                print("Opened vendor:", vendor:getNetVar("name", vendor:GetClass()))
+            end
+        end)
+        ```
+
+    Returns:
+        nil
+
+    Realm:
+        Client
+]]
+--[[
+    Hooks:
+        OnOpenVendorMenu(table moduleTable, Entity vendor)
+
+    Purpose:
+        Runs after the vendor menu panel is created and assigned to the received vendor so client code can adjust the active UI.
+
+    Category:
+        Vendor
+
+    Parameters:
+        moduleTable (table)
+            The vendor module table that opened the menu and dispatched the hook.
+
+        vendor (Entity)
+            The vendor entity assigned to the active vendor panel.
+
+    Example Usage:
+        ```lua
+        hook.Add("OnOpenVendorMenu", "liaExampleOnOpenVendorMenu", function(moduleTable, vendor)
+            if moduleTable == MODULE and IsValid(lia.gui.vendor) and IsValid(vendor) then
+                lia.gui.vendor:Center()
+            end
+        end)
+        ```
+
+    Returns:
+        nil
+
+    Realm:
+        Client
+]]
+--[[
+    Hooks:
+        VendorExited()
+
+    Purpose:
+        Runs on the client when the vendor session ends and the active vendor panel should be removed.
+
+    Category:
+        Vendor
+
+    Parameters:
+        None
+
+    Example Usage:
+        ```lua
+        hook.Add("VendorExited", "liaExampleVendorExited", function()
+            if IsValid(lia.gui.vendor) then
+                lia.gui.vendor:Remove()
+            end
+        end)
+        ```
+
+    Returns:
+        nil
+
+    Realm:
+        Client
+]]
+function MODULE:VendorOpened(vendor)
     local vendorUI = vgui.Create("liaVendor")
     vendorUI.vendor = vendor
     hook.Run("OnOpenVendorMenu", self, vendor)

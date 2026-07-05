@@ -35,7 +35,7 @@ The loader library centralizes framework startup behavior under `lia.loader`. It
 ---
 
 <details class="realm-shared" id="function-lialoaderinclude">
-<summary><span class="summary-main"><a id="lia.loader.include"></a>lia.loader.include(path, realm)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/loader.lua#L478" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="lia.loader.include"></a>lia.loader.include(path, realm)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/loader.lua#L458" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="lialoaderinclude"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -66,7 +66,7 @@ The loader library centralizes framework startup behavior under `lia.loader`. It
 ---
 
 <details class="realm-shared" id="function-lialoaderincludedir">
-<summary><span class="summary-main"><a id="lia.loader.includeDir"></a>lia.loader.includeDir(dir, raw, deep, realm)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/loader.lua#L535" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="lia.loader.includeDir"></a>lia.loader.includeDir(dir, raw, deep, realm)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/loader.lua#L515" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="lialoaderincludedir"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -99,7 +99,7 @@ The loader library centralizes framework startup behavior under `lia.loader`. It
 ---
 
 <details class="realm-shared" id="function-lialoaderincludegroupeddir">
-<summary><span class="summary-main"><a id="lia.loader.includeGroupedDir"></a>lia.loader.includeGroupedDir(dir, raw, recursive, forceRealm)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/loader.lua#L575" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="lia.loader.includeGroupedDir"></a>lia.loader.includeGroupedDir(dir, raw, recursive, forceRealm)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/loader.lua#L555" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="lialoaderincludegroupeddir"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -132,7 +132,7 @@ The loader library centralizes framework startup behavior under `lia.loader`. It
 ---
 
 <details class="realm-shared" id="function-lialoadercheckforupdates">
-<summary><span class="summary-main"><a id="lia.loader.checkForUpdates"></a>lia.loader.checkForUpdates()</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/loader.lua#L661" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="lia.loader.checkForUpdates"></a>lia.loader.checkForUpdates()</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/loader.lua#L641" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="lialoadercheckforupdates"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -156,11 +156,11 @@ The loader library centralizes framework startup behavior under `lia.loader`. It
 ---
 
 <details class="realm-shared" id="function-liaerror">
-<summary><span class="summary-main"><a id="lia.error"></a>lia.error()</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/loader.lua#L783" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="lia.error"></a>lia.error(msg)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/loader.lua#L779" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="liaerror"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
-  <p>Checks public modules, private modules, and the framework version against remote version manifests, then logs any outdated or missing version data.</p>
+  <p>Prints a formatted error message to the console with the standard Lilia prefix.</p>
 </div>
 
 <h3 style="margin-bottom: 5px; font-weight: 700;">Realm</h3>
@@ -168,9 +168,14 @@ The loader library centralizes framework startup behavior under `lia.loader`. It
   <p>Shared</p>
 </div>
 
+<h3 style="margin-bottom: 5px; font-weight: 700;">Parameters</h3>
+<div style="margin-left: 20px; margin-bottom: 20px;">
+<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#2.1">any</a></span> <span class="parameter">msg</span> The value to display in the error message.</p>
+</div>
+
 <h3 style="margin-bottom: 5px; font-weight: 700;">Example Usage</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
-<pre><code class="language-lua">  lia.loader.checkForUpdates()
+<pre><code class="language-lua">  lia.error("Failed to load character data")
 </code></pre>
 </div>
 
@@ -180,11 +185,11 @@ The loader library centralizes framework startup behavior under `lia.loader`. It
 ---
 
 <details class="realm-shared" id="function-liawarning">
-<summary><span class="summary-main"><a id="lia.warning"></a>lia.warning()</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/loader.lua#L788" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="lia.warning"></a>lia.warning(msg)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/loader.lua#L800" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="liawarning"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
-  <p>Checks public modules, private modules, and the framework version against remote version manifests, then logs any outdated or missing version data.</p>
+  <p>Prints a formatted warning message to the console with the standard Lilia prefix.</p>
 </div>
 
 <h3 style="margin-bottom: 5px; font-weight: 700;">Realm</h3>
@@ -192,9 +197,14 @@ The loader library centralizes framework startup behavior under `lia.loader`. It
   <p>Shared</p>
 </div>
 
+<h3 style="margin-bottom: 5px; font-weight: 700;">Parameters</h3>
+<div style="margin-left: 20px; margin-bottom: 20px;">
+<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#2.1">any</a></span> <span class="parameter">msg</span> The value to display in the warning message.</p>
+</div>
+
 <h3 style="margin-bottom: 5px; font-weight: 700;">Example Usage</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
-<pre><code class="language-lua">  lia.loader.checkForUpdates()
+<pre><code class="language-lua">  lia.warning("Using fallback inventory configuration")
 </code></pre>
 </div>
 
@@ -204,11 +214,11 @@ The loader library centralizes framework startup behavior under `lia.loader`. It
 ---
 
 <details class="realm-shared" id="function-liainformation">
-<summary><span class="summary-main"><a id="lia.information"></a>lia.information()</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/loader.lua#L793" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="lia.information"></a>lia.information(msg)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/loader.lua#L821" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="liainformation"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
-  <p>Checks public modules, private modules, and the framework version against remote version manifests, then logs any outdated or missing version data.</p>
+  <p>Prints a formatted informational message to the console with the standard Lilia prefix.</p>
 </div>
 
 <h3 style="margin-bottom: 5px; font-weight: 700;">Realm</h3>
@@ -216,9 +226,14 @@ The loader library centralizes framework startup behavior under `lia.loader`. It
   <p>Shared</p>
 </div>
 
+<h3 style="margin-bottom: 5px; font-weight: 700;">Parameters</h3>
+<div style="margin-left: 20px; margin-bottom: 20px;">
+<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#2.1">any</a></span> <span class="parameter">msg</span> The value to display in the informational message.</p>
+</div>
+
 <h3 style="margin-bottom: 5px; font-weight: 700;">Example Usage</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
-<pre><code class="language-lua">  lia.loader.checkForUpdates()
+<pre><code class="language-lua">  lia.information("Module initialization completed")
 </code></pre>
 </div>
 
@@ -228,11 +243,11 @@ The loader library centralizes framework startup behavior under `lia.loader`. It
 ---
 
 <details class="realm-shared" id="function-liabootstrap">
-<summary><span class="summary-main"><a id="lia.bootstrap"></a>lia.bootstrap()</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/loader.lua#L798" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="lia.bootstrap"></a>lia.bootstrap(section, msg)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/loader.lua#L844" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="liabootstrap"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
-  <p>Checks public modules, private modules, and the framework version against remote version manifests, then logs any outdated or missing version data.</p>
+  <p>Prints a bootstrap-stage message unless a hot reload is suppressing non-reload bootstrap output.</p>
 </div>
 
 <h3 style="margin-bottom: 5px; font-weight: 700;">Realm</h3>
@@ -240,9 +255,15 @@ The loader library centralizes framework startup behavior under `lia.loader`. It
   <p>Shared</p>
 </div>
 
+<h3 style="margin-bottom: 5px; font-weight: 700;">Parameters</h3>
+<div style="margin-left: 20px; margin-bottom: 20px;">
+<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#2.1">string</a></span> <span class="parameter">section</span> The bootstrap section label shown in the message.</p>
+<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#2.1">any</a></span> <span class="parameter">msg</span> The value to display for the bootstrap message.</p>
+</div>
+
 <h3 style="margin-bottom: 5px; font-weight: 700;">Example Usage</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
-<pre><code class="language-lua">  lia.loader.checkForUpdates()
+<pre><code class="language-lua">  lia.bootstrap("Modules", "Finished loading public modules")
 </code></pre>
 </div>
 
@@ -252,11 +273,11 @@ The loader library centralizes framework startup behavior under `lia.loader`. It
 ---
 
 <details class="realm-shared" id="function-liadebug">
-<summary><span class="summary-main"><a id="lia.debug"></a>lia.debug()</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/loader.lua#L805" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="lia.debug"></a>lia.debug()</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/loader.lua#L867" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="liadebug"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
-  <p>Checks public modules, private modules, and the framework version against remote version manifests, then logs any outdated or missing version data.</p>
+  <p>Prints developer-focused debug output when `lia.DevMode` is enabled.</p>
 </div>
 
 <h3 style="margin-bottom: 5px; font-weight: 700;">Realm</h3>
@@ -266,7 +287,7 @@ The loader library centralizes framework startup behavior under `lia.loader`. It
 
 <h3 style="margin-bottom: 5px; font-weight: 700;">Example Usage</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
-<pre><code class="language-lua">  lia.loader.checkForUpdates()
+<pre><code class="language-lua">  lia.debug("[Permissions]", "Vendor preset save", "allowed=", tostring(client:hasPrivilege("canCreateVendorPresets")))
 </code></pre>
 </div>
 
@@ -276,11 +297,11 @@ The loader library centralizes framework startup behavior under `lia.loader`. It
 ---
 
 <details class="realm-shared" id="function-liarelaydiscordmessage">
-<summary><span class="summary-main"><a id="lia.relaydiscordMessage"></a>lia.relaydiscordMessage()</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/loader.lua#L856" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="lia.relaydiscordMessage"></a>lia.relaydiscordMessage(embed)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/loader.lua#L937" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="liarelaydiscordmessage"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
-  <p>Checks public modules, private modules, and the framework version against remote version manifests, then logs any outdated or missing version data.</p>
+  <p>Sends a Discord webhook embed through the configured relay endpoint and fires relay lifecycle hooks.</p>
 </div>
 
 <h3 style="margin-bottom: 5px; font-weight: 700;">Realm</h3>
@@ -288,9 +309,17 @@ The loader library centralizes framework startup behavior under `lia.loader`. It
   <p>Shared</p>
 </div>
 
+<h3 style="margin-bottom: 5px; font-weight: 700;">Parameters</h3>
+<div style="margin-left: 20px; margin-bottom: 20px;">
+<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#2.1">table</a></span> <span class="parameter">embed</span> The Discord embed payload to send. Default title, color, timestamp, and footer values are filled in when omitted.</p>
+</div>
+
 <h3 style="margin-bottom: 5px; font-weight: 700;">Example Usage</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
-<pre><code class="language-lua">  lia.loader.checkForUpdates()
+<pre><code class="language-lua">  lia.relaydiscordMessage({
+      title = "Character Created",
+      description = "A new character joined the server."
+  })
 </code></pre>
 </div>
 
@@ -300,7 +329,7 @@ The loader library centralizes framework startup behavior under `lia.loader`. It
 ---
 
 <details class="realm-shared" id="function-lialoaderincludeentities">
-<summary><span class="summary-main"><a id="lia.loader.includeEntities"></a>lia.loader.includeEntities(path)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/loader.lua#L913" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="lia.loader.includeEntities"></a>lia.loader.includeEntities(path)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/loader.lua#L994" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="lialoaderincludeentities"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -330,7 +359,7 @@ The loader library centralizes framework startup behavior under `lia.loader`. It
 ---
 
 <details class="realm-shared" id="function-lialoaderinitializegamemode">
-<summary><span class="summary-main"><a id="lia.loader.initializeGamemode"></a>lia.loader.initializeGamemode(isReload)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/loader.lua#L1050" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="lia.loader.initializeGamemode"></a>lia.loader.initializeGamemode(isReload)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/loader.lua#L1131" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="lialoaderinitializegamemode"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -501,7 +530,7 @@ The loader library centralizes framework startup behavior under `lia.loader`. It
 ---
 
 <details class="realm-server" id="function-persistenceload">
-<summary><span class="summary-main"><a id="PersistenceLoad"></a>PersistenceLoad(new)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/loader.lua#L146" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="PersistenceLoad"></a>PersistenceLoad(new)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/loader.lua#L122" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="persistenceload"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -527,42 +556,6 @@ The loader library centralizes framework startup behavior under `lia.loader`. It
 <div style="margin-left: 20px; margin-bottom: 20px;">
 <pre><code class="language-lua">  hook.Add("PersistenceLoad", "liaExamplePersistenceLoad", function(new)
       print("[MyModule] handled PersistenceLoad")
-  end)
-</code></pre>
-</div>
-
-</div>
-</details>
-
----
-
-<details class="realm-server" id="function-persistencesave">
-<summary><span class="summary-main"><a id="PersistenceSave"></a>PersistenceSave(old)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/loader.lua#L122" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
-<div class="details-content">
-<h3 style="margin-bottom: 5px; font-weight: 700;"><a id="persistencesave"></a>Purpose</h3>
-<div style="margin-left: 20px; margin-bottom: 20px;">
-  <p>Runs before map cleanup when the `sbox_persist` console variable changes.</p>
-</div>
-
-<h3 style="margin-bottom: 5px; font-weight: 700;">Category</h3>
-<div style="margin-left: 20px; margin-bottom: 20px;">
-  <p>Loader</p>
-</div>
-
-<h3 style="margin-bottom: 5px; font-weight: 700;">Realm</h3>
-<div style="margin-left: 20px; margin-bottom: 20px;">
-  <p>Server</p>
-</div>
-
-<h3 style="margin-bottom: 5px; font-weight: 700;">Parameters</h3>
-<div style="margin-left: 20px; margin-bottom: 20px;">
-<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#2.1">string</a></span> <span class="parameter">old</span> The previous persistence value being saved.</p>
-</div>
-
-<h3 style="margin-bottom: 5px; font-weight: 700;">Example Usage</h3>
-<div style="margin-left: 20px; margin-bottom: 20px;">
-<pre><code class="language-lua">  hook.Add("PersistenceSave", "liaExamplePersistenceSave", function(old)
-      print("[MyModule] handled PersistenceSave")
   end)
 </code></pre>
 </div>
