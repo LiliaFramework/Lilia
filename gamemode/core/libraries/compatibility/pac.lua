@@ -1,4 +1,4 @@
---[[
+﻿--[[
     Hooks:
         AdjustPACPartData(wearer, id, data)
 
