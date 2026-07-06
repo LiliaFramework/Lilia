@@ -1818,6 +1818,11 @@ def run_hooks_generation(base_dir: Path, docs_dir: Path) -> None:
     generate_index_file(core_output_dir, 'hooks')
 
 
+def run_compatibility_generation(base_dir: Path, docs_dir: Path) -> None:
+    """Legacy alias for compatibility hook docs generation."""
+    run_hooks_generation(base_dir, docs_dir)
+
+
 def run_generators_generation(docs_dir: Path) -> None:
     output_dir = docs_dir / 'generators'
     generate_index_file(output_dir, 'generators')
@@ -1844,6 +1849,10 @@ def main():
     # Hooks command
     hooks_parser = subparsers.add_parser('hooks', help='Generate hooks documentation')
     hooks_parser.add_argument('--force', action='store_true', help='Force regeneration of existing files')
+
+    # Compatibility command
+    compatibility_parser = subparsers.add_parser('compatibility', help='Generate compatibility documentation (legacy alias for hook category pages)')
+    compatibility_parser.add_argument('--force', action='store_true', help='Force regeneration of existing files')
 
     # Generators command
     generators_parser = subparsers.add_parser('generators', help='Generate generators index')
@@ -1874,6 +1883,9 @@ def main():
 
     elif args.command == 'hooks':
         run_hooks_generation(base_dir, docs_dir)
+
+    elif args.command == 'compatibility':
+        run_compatibility_generation(base_dir, docs_dir)
 
     elif args.command == 'generators':
         run_generators_generation(docs_dir)
