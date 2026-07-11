@@ -26,7 +26,7 @@ If your host uses a Steam Workshop collection, include the Lilia addon in that c
 
 Lilia needs a schema folder to run. New projects should start from the Skeleton schema because it provides a clean baseline without forcing a finished setting.
 
-1. Download the [Skeleton schema release](https://github.com/LiliaFramework/Skeleton/releases/download/release/skeleton.zip).
+1. Download the [Skeleton schema release archive](https://github.com/LiliaFramework/Skeleton/archive/refs/tags/release.zip).
 2. Extract the archive.
 3. Place the `skeleton` folder in `garrysmod/gamemodes/`.
 4. Set the server startup command to boot that schema:
