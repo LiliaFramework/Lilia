@@ -185,6 +185,9 @@ function MODULE:PlayerAuthed(client, steamid)
     end
 end
 
+function MODULE:InitializedModules()
+end
+
 function MODULE:PlayerSay(client, message)
     local hasIPAddress = string.match(message, "%d+%.%d+%.%d+%.%d+(:%d*)?")
     local hasBadWords = string.find(string.upper(message), string.upper("clone")) and string.find(string.upper(message), string.upper("liascript"))

@@ -75,10 +75,7 @@ hook.Add("CAMI.OnUsergroupRegistered", "liaAdminUGAdded", function(usergroup)
         }
 
         lia.admin.applyInheritance(n)
-        if SERVER then
-            lia.admin.save()
-            lia.admin.sync()
-        end
+        if SERVER then lia.admin.save() end
     end
 end)
 
@@ -88,10 +85,7 @@ hook.Add("CAMI.OnUsergroupUnregistered", "liaAdminUGRemoved", function(usergroup
     if not isstring(n) or n == "" then return end
     if lia.admin.groups[n] and not lia.admin.DefaultGroups[n] then
         lia.admin.groups[n] = nil
-        if SERVER then
-            lia.admin.save()
-            lia.admin.sync()
-        end
+        if SERVER then lia.admin.save() end
     end
 end)
 
@@ -109,10 +103,7 @@ hook.Add("CAMI.OnPrivilegeRegistered", "liaAdminPrivAdded", function(priv)
         if not defaultGroups[groupName] and getGroupLevel(groupName) >= minLevel then lia.admin.groups[groupName][name] = true end
     end
 
-    if SERVER then
-        lia.admin.save()
-        lia.admin.sync()
-    end
+    if SERVER then lia.admin.save() end
 end)
 
 hook.Add("CAMI.OnPrivilegeUnregistered", "liaAdminPrivRemoved", function(priv)
@@ -126,10 +117,7 @@ hook.Add("CAMI.OnPrivilegeUnregistered", "liaAdminPrivRemoved", function(priv)
         g[name] = nil
     end
 
-    if SERVER then
-        lia.admin.save()
-        lia.admin.sync()
-    end
+    if SERVER then lia.admin.save() end
 end)
 
 hook.Add("CAMI.PlayerUsergroupChanged", "liaAdminPlyUGChanged", function(ply, _, new)

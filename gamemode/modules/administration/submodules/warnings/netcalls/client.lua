@@ -1,5 +1,6 @@
 ﻿net.Receive("liaAllWarnings", function()
     local warnings = net.ReadTable() or {}
+    if MODULE and isfunction(MODULE.HandleStaffCasesPayload) and MODULE:HandleStaffCasesPayload("warnings", warnings) then return end
     if not IsValid(panelRef) then return end
     panelRef:Clear()
     panelRef:DockPadding(6, 6, 6, 6)

@@ -36,11 +36,7 @@
     client.invTransferTransactionTimeout = RealTime()
     local function fail(err)
         client.invTransferTransaction = nil
-        if err then
-            lia.error(err)
-            debug.Trace()
-        end
-
+        if err then lia.error(err) end
         if IsValid(client) then lia.log.add(client, "itemTransferFailed", item:getName(), oldInventory:getID(), newInventory and newInventory:getID() or 0) end
         if IsValid(client) then client:notifyInfoLocalized("itemOnGround") end
         item:spawn(dropPos)

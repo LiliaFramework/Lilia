@@ -41,6 +41,15 @@ net.Receive("liaTicketSystemClaim", function(_, client)
             t.admin = client:SteamID()
         end
 
+        lia.db.insertTable({
+            timestamp = os.time(),
+            requester = requester:Nick(),
+            requesterSteamID = requester:SteamID(),
+            admin = client:Nick(),
+            adminSteamID = client:SteamID(),
+            message = ticketMessage
+        }, nil, "ticketclaims")
+
         hook.Run("TicketSystemClaim", client, requester, ticketMessage)
         hook.Run("OnTicketClaimed", client, requester, ticketMessage)
         requester.CaseClaimed = client

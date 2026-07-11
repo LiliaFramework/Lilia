@@ -641,6 +641,7 @@ else
     function MODULE:CreateMenuButtons(tabs)
         tabs["characters"] = {
             name = "characters",
+            icon = "icon16/user.png",
             func = function()
                 if isInThirdPerson() then
                     lia.option.set("thirdPersonEnabled", false)

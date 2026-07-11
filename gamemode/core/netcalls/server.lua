@@ -540,6 +540,7 @@ net.Receive("liaKickCharacter", function(_, client)
             local oldFactionData = lia.faction.indices[oldFaction]
             if oldFactionData and oldFactionData.isDefault then return end
             target:notifyWarningLocalized("kickedFromFaction")
+            hook.Run("TrackFactionTransfer", targetChar, oldFaction, defaultFaction, client, "kickToBase")
             targetChar.vars.faction = defaultFaction.uniqueID
             targetChar:setFaction(defaultFaction.index)
             hook.Run("OnTransferred", target)
@@ -555,6 +556,7 @@ net.Receive("liaKickCharacter", function(_, client)
             local oldFactionID = data[1].faction
             local oldFactionData = lia.faction.teams[oldFactionID]
             if oldFactionData and oldFactionData.isDefault then return end
+            hook.Run("TrackOfflineFactionTransfer", characterID, oldFactionID, defaultFaction, client, "kickToBase")
             lia.db.updateTable({
                 faction = defaultFaction.uniqueID
             }, nil, "characters", "id = " .. characterID):next(function() lia.char.setCharDatabase(characterID, "factionKickWarn", true) end):catch(function(err) lia.error(L("failedToUpdateCharacterFaction") .. " " .. tostring(err)) end)
@@ -1174,7 +1176,9 @@ net.Receive("liaTransferItem", function(_, client)
     local x = net.ReadUInt(32)
     local y = net.ReadUInt(32)
     local invID = net.ReadType()
-    hook.Run("HandleItemTransferRequest", client, itemID, x, y, invID)
+    local hasRotatedOverride = net.ReadBool()
+    local rotated = hasRotatedOverride and net.ReadBool() or nil
+    hook.Run("HandleItemTransferRequest", client, itemID, x, y, invID, rotated)
 end)
 
 net.Receive("liaInvAct", function(_, client)

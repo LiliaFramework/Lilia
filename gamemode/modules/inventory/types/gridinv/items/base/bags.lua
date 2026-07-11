@@ -57,6 +57,24 @@ function ITEM:onSync(recipient)
     if inventory then inventory:sync(recipient) end
 end
 
+local function tryOpenEmbeddedBag(item)
+    if not CLIENT or not item then return false end
+    local function tryPanel(panel)
+        if not IsValid(panel) or not panel.isMenuInventory or not isfunction(panel.openBagInventory) then return false end
+        local ok, opened = pcall(panel.openBagInventory, panel, item)
+        return ok and opened == true
+    end
+
+    if lia.gui then
+        if tryPanel(lia.gui.gridInventoryMenu) then return true end
+        for _, panel in pairs(lia.gui) do
+            if tryPanel(panel) then return true end
+        end
+    end
+    return false
+end
+
+lia.inventory = lia.inventory or {}
 ITEM.functions.Open = {
     tip = "@openTip",
     icon = "icon16/briefcase.png",
@@ -74,6 +92,9 @@ ITEM.functions.Open = {
         if SERVER then
             inventory:sync(client)
         else
+            local opened = tryOpenEmbeddedBag(item)
+            if opened then return false end
+            if IsValid(lia.gui and lia.gui.menu) then return false end
             local myInv = LocalPlayer():getChar():getInv()
             lia.inventory.showDual(myInv, inventory)
         end

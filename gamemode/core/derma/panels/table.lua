@@ -525,8 +525,8 @@ function PANEL:CreateRow(rowIndex, rowData)
     row:SetZPos(100)
     row.Paint = function(s, w, h)
         local colors = lia.color.theme
-        local accent = colors.accent or colors.theme or Color(116, 185, 255)
-        local bgColor = Color(255, 255, 255, 4)
+        local accent = rowData.__accent or colors.accent or colors.theme or Color(116, 185, 255)
+        local bgColor = rowData.__background or Color(255, 255, 255, 4)
         if self.selectedRow == rowIndex then bgColor = ColorAlpha(accent, 80) end
         lia.derma.rect(0, 0, w, h):Color(bgColor):Shape(lia.derma.SHAPE_IOS):Draw()
         if self.selectedRow == rowIndex then lia.derma.rect(0, 0, 2, h):Color(accent):Draw() end
@@ -573,7 +573,7 @@ function PANEL:CreateRow(rowIndex, rowData)
         cellPanel:SetPos(xPos, 0)
         cellPanel:SetMouseInputEnabled(false)
         cellPanel.Paint = function(s, w, h)
-            local textColor = lia.color.theme.text
+            local textColor = rowData.__textColor or lia.color.theme.text
             local text = tostring(rowData[i] or "")
             local align = column.align or 0
             local x = w / 2

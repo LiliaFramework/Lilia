@@ -59,15 +59,15 @@ function MODULE:InventoryItemAdded(inventory)
 end
 
 local PROHIBITED_ACTIONS = {
-    [L("equip")] = true,
-    [L("unequip")] = true,
-    [L("use")] = true,
-    [L("drop")] = true,
+    equip = true,
+    unequip = true,
+    use = true,
+    drop = true,
 }
 
 function MODULE:CanPlayerInteractItem(_, action, itemObject)
     local inventory = lia.inventory.instances[itemObject.invID]
-    if inventory and inventory.isStorage and PROHIBITED_ACTIONS[action] then return false, "forbiddenActionStorage" end
+    if inventory and inventory.isStorage and PROHIBITED_ACTIONS[string.lower(action)] then return false, "forbiddenActionStorage" end
 end
 
 function MODULE:EntityRemoved(entity)

@@ -162,6 +162,7 @@ if CLIENT then
         net.WriteUInt(0, 32)
         net.WriteUInt(0, 32)
         net.WriteType(destinationID)
+        net.WriteBool(false)
         net.SendToServer()
     end
 end

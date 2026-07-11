@@ -176,6 +176,7 @@ end)
 
 net.Receive("liaAllPks", function()
     local cases = net.ReadTable() or {}
+    if MODULE and isfunction(MODULE.HandleStaffCasesPayload) and MODULE:HandleStaffCasesPayload("pks", cases) then return end
     if not IsValid(panelRef) then return end
     panelRef:Clear()
     panelRef:DockPadding(6, 6, 6, 6)
@@ -286,13 +287,21 @@ net.Receive("liaAllPks", function()
     populate("")
 end)
 
-net.Receive("liaCharDeleted", function()
-    if IsValid(panelRef) and isfunction(panelRef.buildSheets) then
-        net.Start("liaRequestFullCharList")
-        net.SendToServer()
-    end
+lia.net.readBigTable("liaStaffCasesSnapshot", function(payload)
+    payload = payload or {}
+    local adminModule = lia.module.get("administration")
+    if not adminModule then return end
+    adminModule.staffCasesPayload = {
+        tickets = payload.tickets or {},
+        warnings = payload.warnings or {},
+        pks = payload.pks or {}
+    }
+
+    local panel = adminModule.staffCasesPanel
+    if IsValid(panel) and isfunction(panel.RefreshData) then panel:RefreshData() end
 end)
 
+net.Receive("liaCharDeleted", function() if IsValid(panelRef) and isfunction(panelRef.buildSheets) and MODULE and isfunction(MODULE.startFullCharListRequest) then MODULE:startFullCharListRequest(panelRef) end end)
 net.Receive("liaOnlineStaffData", function()
     local staffData = net.ReadTable() or {}
     hook.Run("OnlineStaffDataReceived", staffData)

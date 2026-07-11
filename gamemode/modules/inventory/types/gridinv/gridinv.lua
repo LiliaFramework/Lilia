@@ -350,7 +350,7 @@ if SERVER then
         return d
     end
 else
-    function GridInv:requestTransfer(itemID, destinationID, x, y)
+    function GridInv:requestTransfer(itemID, destinationID, x, y, rotated)
         local inventory = lia.inventory.instances[destinationID]
         local item
         if not destinationID then
@@ -360,13 +360,19 @@ else
             item = inventory.items[itemID]
         end
 
-        if item and item:getData("x") == x and item:getData("y") == y then return end
-        if item and inventory and (x > inventory:getWidth() or y > inventory:getHeight() or x + item:getWidth() - 1 < 1 or y + item:getHeight() - 1 < 1) then destinationID = nil end
+        local rotatedState = rotated
+        if item and rotatedState == nil then rotatedState = item:getData("rotated", false) end
+        local itemWidth = item and (rotatedState and (item.height or 1) or item.width or 1) or 1
+        local itemHeight = item and (rotatedState and (item.width or 1) or item.height or 1) or 1
+        if item and item:getData("x") == x and item:getData("y") == y and item:getData("rotated", false) == rotatedState then return end
+        if item and inventory and (x > inventory:getWidth() or y > inventory:getHeight() or x + itemWidth - 1 < 1 or y + itemHeight - 1 < 1) then destinationID = nil end
         net.Start("liaTransferItem")
         net.WriteUInt(itemID, 32)
         net.WriteUInt(x, 32)
         net.WriteUInt(y, 32)
         net.WriteType(destinationID)
+        net.WriteBool(rotated ~= nil)
+        if rotated ~= nil then net.WriteBool(rotated) end
         net.SendToServer()
     end
 end

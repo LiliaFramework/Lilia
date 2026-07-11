@@ -289,64 +289,193 @@ net.Receive("liaRequestPksCount", function(_, client)
     end)
 end)
 
-net.Receive("liaRequestFullCharList", function(_, client)
-    lia.debug("[Permissions]", "Permission Check for net.Receive liaRequestFullCharList", "isValidPlayer=", tostring(IsValid(client)), "hasPrivilege(listCharacters)=", tostring(IsValid(client) and client:hasPrivilege("listCharacters") or false), "finalResult=", tostring(IsValid(client) and client:hasPrivilege("listCharacters") or false))
-    if not IsValid(client) or not client:hasPrivilege("listCharacters") then return end
-    lia.db.query([[SELECT c.id, c.name, c.`desc`, c.faction, c.steamID, c.lastJoinTime, c.banned, c.playtime, c.money, d.value AS charBanInfo
-FROM lia_characters AS c
-LEFT JOIN lia_chardata AS d ON d.charID = c.id AND d.key = 'charBanInfo']], function(data)
-        local payload = {
-            all = {},
-            players = {}
-        }
+net.Receive("liaRequestStaffCases", function(_, client)
+    local canSeeTickets = client:hasPrivilege("alwaysSeeTickets") or client:isStaffOnDuty()
+    local canSeeWarnings = client:hasPrivilege("viewPlayerWarnings")
+    local canSeePks = client:hasPrivilege("manageCharacters")
+    if not (canSeeTickets or canSeeWarnings or canSeePks) then return end
+    local payload = {
+        tickets = {},
+        warnings = {},
+        pks = {}
+    }
 
-        for _, row in ipairs(data or {}) do
-            local stored = lia.char.getCharacter(row.id)
-            local bannedVal = tonumber(row.banned) or 0
-            local isBanned = bannedVal ~= 0 and (bannedVal == -1 or bannedVal > os.time())
-            local steamID = tostring(row.steamID)
-            local playTime = tonumber(row.playtime) or 0
-            if stored then
-                local loginTime = stored:getLoginTime() or os.time()
-                playTime = stored:getPlayTime() + os.time() - loginTime
+    local pendingFetches = 0
+    local hasSentPayload = false
+    local function finishFetch()
+        pendingFetches = pendingFetches - 1
+        if pendingFetches <= 0 and not hasSentPayload then
+            hasSentPayload = true
+            lia.net.writeBigTable(client, "liaStaffCasesSnapshot", payload)
+        end
+    end
+
+    if canSeeTickets then
+        local ticketsModule = lia.module.get("tickets")
+        local activeTickets = ticketsModule and ticketsModule.ActiveTickets or {}
+        for steamID, ticket in pairs(activeTickets or {}) do
+            payload.tickets[#payload.tickets + 1] = {
+                requester = ticket.requester or steamID,
+                requesterSteamID = steamID,
+                timestamp = ticket.timestamp or os.time(),
+                admin = "",
+                adminSteamID = ticket.admin,
+                message = ticket.message,
+                live = true
+            }
+        end
+
+        pendingFetches = pendingFetches + 1
+        lia.db.select({"timestamp", "requester", "requesterSteamID", "admin", "adminSteamID", "message"}, "ticketclaims"):next(function(res)
+            for _, row in ipairs(res.results or {}) do
+                payload.tickets[#payload.tickets + 1] = {
+                    requester = row.requester,
+                    requesterSteamID = row.requesterSteamID,
+                    timestamp = isnumber(row.timestamp) and row.timestamp or os.time(lia.time.toNumber(row.timestamp)),
+                    admin = row.admin,
+                    adminSteamID = row.adminSteamID,
+                    message = row.message,
+                    live = false
+                }
             end
 
-            local entry = {
-                ID = row.id,
-                Name = row.name,
-                Desc = row.desc,
-                Faction = row.faction,
-                SteamID = steamID,
-                LastUsed = stored and L("onlineNow") or row.lastJoinTime,
-                Banned = isBanned,
-                PlayTime = playTime,
-                Money = tonumber(row.money) or 0
+            table.sort(payload.tickets, function(a, b) return (a.timestamp or 0) > (b.timestamp or 0) end)
+            finishFetch()
+        end)
+    end
+
+    if canSeePks then
+        pendingFetches = pendingFetches + 1
+        lia.db.query("SELECT * FROM lia_permakills", function(data)
+            payload.pks = data or {}
+            finishFetch()
+        end)
+    end
+
+    if canSeeWarnings then
+        pendingFetches = pendingFetches + 1
+        lia.db.select({"id", "charID", "timestamp", "warned", "warnedSteamID", "warner", "warnerSteamID", "message", "severity"}, "warnings"):next(function(res)
+            payload.warnings = res.results or {}
+            finishFetch()
+        end)
+    end
+
+    if pendingFetches == 0 then lia.net.writeBigTable(client, "liaStaffCasesSnapshot", payload) end
+end)
+
+local function buildFullCharListPage(client, requestID, offset, limit)
+    lia.db.count("characters"):next(function(total)
+        total = tonumber(total) or 0
+        if total <= 0 then
+            lia.net.writeBigTable(client, "liaFullCharListPage", {
+                requestID = requestID,
+                total = 0,
+                offset = offset,
+                limit = limit,
+                count = 0,
+                done = true,
+                players = {}
+            })
+            return
+        end
+
+        local safeOffset = math.max(0, math.min(offset, math.max(total - 1, 0)))
+        local safeLimit = math.Clamp(limit, 25, 250)
+        local query = string.format([[SELECT c.id, c.name, c.`desc`, c.faction, c.steamID, c.lastJoinTime, c.banned, c.playtime, c.money, COALESCE(c.charflags, '') AS flags, d.value AS charBanInfo, f.value AS chardataFlags
+FROM lia_characters AS c
+LEFT JOIN lia_chardata AS d ON d.charID = c.id AND d.key = 'charBanInfo'
+LEFT JOIN lia_chardata AS f ON f.charID = c.id AND f.key = 'flags'
+ORDER BY c.steamID ASC, c.id ASC
+LIMIT %d OFFSET %d]], safeLimit, safeOffset)
+        lia.db.query(query, function(data)
+            local payload = {
+                requestID = requestID,
+                total = total,
+                offset = safeOffset,
+                limit = safeLimit,
+                count = 0,
+                done = false,
+                players = {}
             }
 
-            if isBanned then
-                local banInfo = {}
-                if row.charBanInfo and row.charBanInfo ~= "" then
-                    local ok, decoded = pcall(pon.decode, row.charBanInfo)
-                    if ok then
-                        banInfo = decoded and decoded[1] or {}
+            for _, row in ipairs(data or {}) do
+                local stored = lia.char.getCharacter(row.id)
+                local bannedVal = tonumber(row.banned) or 0
+                local isBanned = bannedVal ~= 0 and (bannedVal == -1 or bannedVal > os.time())
+                local steamID = tostring(row.steamID)
+                local playTime = tonumber(row.playtime) or 0
+                local flags = row.flags or ""
+                if flags == "" and row.chardataFlags and row.chardataFlags ~= "" then
+                    local ok, decoded = pcall(pon.decode, row.chardataFlags)
+                    if ok and decoded then
+                        flags = decoded[1] or ""
                     else
-                        banInfo = util.JSONToTable(row.charBanInfo) or {}
+                        local jsonDecoded = util.JSONToTable(row.chardataFlags)
+                        if jsonDecoded then flags = jsonDecoded[1] or jsonDecoded.flags or "" end
                     end
                 end
 
-                entry.BanningAdminName = banInfo.name or ""
-                entry.BanningAdminSteamID = banInfo.steamID or ""
-                entry.BanningAdminRank = banInfo.rank or ""
+                if stored then
+                    local loginTime = stored:getLoginTime() or os.time()
+                    playTime = stored:getPlayTime() + os.time() - loginTime
+                    local memoryFlags = stored:getFlags() or ""
+                    if memoryFlags ~= "" then flags = memoryFlags end
+                end
+
+                local entry = {
+                    ID = row.id,
+                    Name = row.name,
+                    Desc = row.desc,
+                    Faction = row.faction,
+                    SteamID = steamID,
+                    LastUsed = stored and L("onlineNow") or row.lastJoinTime,
+                    Banned = isBanned,
+                    PlayTime = playTime,
+                    Money = tonumber(row.money) or 0,
+                    Flags = flags
+                }
+
+                if isBanned then
+                    local banInfo = {}
+                    if row.charBanInfo and row.charBanInfo ~= "" then
+                        local ok, decoded = pcall(pon.decode, row.charBanInfo)
+                        if ok then
+                            banInfo = decoded and decoded[1] or {}
+                        else
+                            banInfo = util.JSONToTable(row.charBanInfo) or {}
+                        end
+                    end
+
+                    entry.BanningAdminName = banInfo.name or ""
+                    entry.BanningAdminSteamID = banInfo.steamID or ""
+                    entry.BanningAdminRank = banInfo.rank or ""
+                end
+
+                hook.Run("CharListEntry", entry, row)
+                payload.count = payload.count + 1
+                payload.players[steamID] = payload.players[steamID] or {}
+                payload.players[steamID][#payload.players[steamID] + 1] = entry
             end
 
-            hook.Run("CharListEntry", entry, row)
-            payload.all[#payload.all + 1] = entry
-            payload.players[steamID] = payload.players[steamID] or {}
-            table.insert(payload.players[steamID], entry)
-        end
-
-        lia.net.writeBigTable(client, "liaFullCharList", payload)
+            payload.done = safeOffset + payload.count >= total
+            lia.net.writeBigTable(client, "liaFullCharListPage", payload)
+        end)
     end)
+end
+
+net.Receive("liaRequestFullCharList", function(_, client)
+    lia.debug("[Permissions]", "Permission Check for net.Receive liaRequestFullCharList", "isValidPlayer=", tostring(IsValid(client)), "hasPrivilege(listCharacters)=", tostring(IsValid(client) and client:hasPrivilege("listCharacters") or false), "finalResult=", tostring(IsValid(client) and client:hasPrivilege("listCharacters") or false))
+    if not IsValid(client) or not client:hasPrivilege("listCharacters") then return end
+    buildFullCharListPage(client, 0, 0, 100)
+end)
+
+net.Receive("liaRequestFullCharListPage", function(_, client)
+    lia.debug("[Permissions]", "Permission Check for net.Receive liaRequestFullCharListPage", "isValidPlayer=", tostring(IsValid(client)), "hasPrivilege(listCharacters)=", tostring(IsValid(client) and client:hasPrivilege("listCharacters") or false), "finalResult=", tostring(IsValid(client) and client:hasPrivilege("listCharacters") or false))
+    if not IsValid(client) or not client:hasPrivilege("listCharacters") then return end
+    local requestID = net.ReadUInt(16)
+    local offset = net.ReadUInt(32)
+    local limit = net.ReadUInt(16)
+    buildFullCharListPage(client, requestID, offset, limit)
 end)
 
 net.Receive("liaRequestAllFlags", function(_, client)
@@ -415,6 +544,34 @@ net.Receive("liaModifyFlags", function(_, client)
         local charName = data[1].name
         lia.char.setCharDatabase(charID, "flags", flags)
         client:notifySuccessLocalized("flagSet", client:Name(), charName, flags)
+    end)
+end)
+
+net.Receive("liaModifyCharacterFlags", function(_, client)
+    lia.debug("[Permissions]", "Permission Check for net.Receive liaModifyCharacterFlags", "hasPrivilege(manageFlags)=", tostring(client:hasPrivilege("manageFlags")), "finalResult=", tostring(client:hasPrivilege("manageFlags")))
+    if not client:hasPrivilege("manageFlags") then return end
+    local charID = tonumber(net.ReadUInt(32))
+    local flags = string.gsub(net.ReadString() or "", "%s", "")
+    if not charID or charID <= 0 then
+        client:notifyErrorLocalized("charIDMustBeNumber")
+        return
+    end
+
+    local loadedChar = lia.char.loaded[charID]
+    if loadedChar then
+        loadedChar:setFlags(flags)
+        client:notifySuccessLocalized("flagSet", client:Name(), loadedChar:getName(), flags)
+        return
+    end
+
+    lia.db.query("SELECT name FROM lia_characters WHERE id = " .. lia.db.convertDataType(charID) .. " LIMIT 1", function(data)
+        if not data or not data[1] then
+            client:notifyLocalized("playerNotFound")
+            return
+        end
+
+        lia.char.setCharDatabase(charID, "flags", flags)
+        client:notifySuccessLocalized("flagSet", client:Name(), data[1].name or tostring(charID), flags)
     end)
 end)
 
@@ -574,6 +731,8 @@ end)
 net.Receive("liaRequestOnlineStaffData", function(_, client)
     local d = deferred.new()
     local staffData = {}
+    local canViewStaffManagement = IsValid(client) and client:hasPrivilege("viewStaffManagement")
+    local steamIDLookup = {}
     for _, ply in player.Iterator() do
         if IsValid(ply) and ply:isStaff() then
             local char = ply:getChar()
@@ -582,16 +741,26 @@ net.Receive("liaRequestOnlineStaffData", function(_, client)
             local usergroup = ply:GetUserGroup()
             local isStaffOnDuty = ply:isStaffOnDuty()
             local characterName = char and char:getName() or "N/A"
+            local steamName = ply:IsBot() and ply:Name() or ply:SteamName()
             staffData[#staffData + 1] = {
                 steamID = steamID,
                 charID = charID,
-                name = ply:Nick(),
+                name = steamName,
                 usergroup = usergroup,
                 isStaffOnDuty = isStaffOnDuty,
                 characterName = characterName,
                 tickets = 0,
-                warnings = 0
+                warnings = 0,
+                kicks = 0,
+                kills = 0,
+                respawns = 0,
+                blinds = 0,
+                mutes = 0,
+                jails = 0,
+                strips = 0
             }
+
+            steamIDLookup[steamID] = staffData[#staffData]
         end
     end
 
@@ -602,30 +771,59 @@ net.Receive("liaRequestOnlineStaffData", function(_, client)
         return
     end
 
-    local completedQueries = 0
-    local totalQueries = #staffData * 2
-    for i, staffInfo in ipairs(staffData) do
-        local charID = staffInfo.charID
-        local steamID = staffInfo.steamID
-        if charID and charID > 0 then
-            lia.db.count("warnings", "charID = " .. lia.db.convertDataType(charID)):next(function(count)
-                staffData[i].warnings = count or 0
-                completedQueries = completedQueries + 1
-                if completedQueries >= totalQueries then d:resolve(staffData) end
-            end)
-        else
-            completedQueries = completedQueries + 1
-        end
+    local steamIDs = {}
+    for _, staffInfo in ipairs(staffData) do
+        if staffInfo.steamID and staffInfo.steamID ~= "" then steamIDs[#steamIDs + 1] = lia.db.convertDataType(staffInfo.steamID) end
+    end
 
-        if steamID and steamID ~= "" then
-            lia.db.count("ticketclaims", "requesterSteamID = " .. lia.db.convertDataType(steamID)):next(function(count)
-                staffData[i].tickets = count or 0
-                completedQueries = completedQueries + 1
-                if completedQueries >= totalQueries then d:resolve(staffData) end
-            end)
-        else
-            completedQueries = completedQueries + 1
-        end
+    local completedQueries = 0
+    local totalQueries = 3
+    local actionFieldMap = {
+        plykick = "kicks",
+        plykill = "kills",
+        plyrespawn = "respawns",
+        plyblind = "blinds",
+        plymute = "mutes",
+        plyjail = "jails",
+        plystrip = "strips"
+    }
+
+    local function finishQuery()
+        completedQueries = completedQueries + 1
+        if completedQueries >= totalQueries then d:resolve(staffData) end
+    end
+
+    if not canViewStaffManagement or #steamIDs == 0 then
+        d:resolve(staffData)
+    else
+        local steamIDFilter = table.concat(steamIDs, ", ")
+        lia.db.query("SELECT warnerSteamID AS steamID, COUNT(*) AS count FROM lia_warnings WHERE warnerSteamID IN (" .. steamIDFilter .. ") GROUP BY warnerSteamID", function(rows)
+            for _, row in ipairs(rows or {}) do
+                local entry = steamIDLookup[row.steamID]
+                if entry then entry.warnings = tonumber(row.count) or 0 end
+            end
+
+            finishQuery()
+        end)
+
+        lia.db.query("SELECT adminSteamID AS steamID, COUNT(*) AS count FROM lia_ticketclaims WHERE adminSteamID IN (" .. steamIDFilter .. ") GROUP BY adminSteamID", function(rows)
+            for _, row in ipairs(rows or {}) do
+                local entry = steamIDLookup[row.steamID]
+                if entry then entry.tickets = tonumber(row.count) or 0 end
+            end
+
+            finishQuery()
+        end)
+
+        lia.db.query("SELECT staffSteamID AS steamID, action, COUNT(*) AS count FROM lia_staffactions WHERE staffSteamID IN (" .. steamIDFilter .. ") GROUP BY staffSteamID, action", function(rows)
+            for _, row in ipairs(rows or {}) do
+                local entry = steamIDLookup[row.steamID]
+                local field = actionFieldMap[row.action]
+                if entry and field then entry[field] = tonumber(row.count) or 0 end
+            end
+
+            finishQuery()
+        end)
     end
 
     d:next(function(data)

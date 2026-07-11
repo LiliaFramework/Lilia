@@ -1,4 +1,21 @@
 ﻿local PANEL = {}
+local gradientL = Material("vgui/gradient-l")
+local gradientR = Material("vgui/gradient-r")
+local gradientU = Material("vgui/gradient-u")
+local function resolveColor(value, fallback)
+    if IsColor(value) then return value end
+    if istable(value) and IsColor(value[1]) then return value[1] end
+    return fallback
+end
+
+local function mixColor(from, to, fraction, alpha)
+    return Color(Lerp(fraction, from.r, to.r), Lerp(fraction, from.g, to.g), Lerp(fraction, from.b, to.b), alpha or Lerp(fraction, from.a, to.a))
+end
+
+local function alphaColor(color, alpha)
+    return Color(color.r, color.g, color.b, alpha)
+end
+
 function PANEL:Init()
     self.bool_alpha = true
     self.bool_lite = false
@@ -249,18 +266,43 @@ end
 
 function PANEL:Paint(w, h)
     if self.backgroundBlur then Derma_DrawBackgroundBlur(self, self.backgroundBlurTime) end
-    local bgColor = Color(25, 28, 35, 250)
-    lia.derma.rect(0, 0, w, h):Rad(12):Color(bgColor):Shape(lia.derma.SHAPE_IOS):Draw()
+    local theme = lia.color.theme or {}
+    local panelColor = resolveColor(theme.panel, self.panelColor or Color(34, 62, 62))
+    local themeColor = resolveColor(theme.theme, panelColor)
+    local focusColor = resolveColor(theme.focus_panel, themeColor)
+    local backgroundColor = mixColor(panelColor, color_black, 0.72, 248)
+    local bodyOverlay = mixColor(panelColor, color_black, 0.88, 75)
+    local borderColor = mixColor(panelColor, themeColor, 0.35, 230)
+    local innerBorderColor = mixColor(panelColor, focusColor, 0.6, 42)
+    local highlightColor = mixColor(themeColor, color_white, 0.15, 24)
+    lia.derma.rect(0, 0, w, h):Rad(12):Color(backgroundColor):Shape(lia.derma.SHAPE_IOS):Draw()
+    surface.SetMaterial(gradientL)
+    surface.SetDrawColor(alphaColor(themeColor, 30))
+    surface.DrawTexturedRect(1, 1, w - 2, h - 2)
+    surface.SetMaterial(gradientR)
+    surface.SetDrawColor(alphaColor(focusColor, 20))
+    surface.DrawTexturedRect(1, 1, w - 2, h - 2)
+    surface.SetMaterial(gradientU)
+    surface.SetDrawColor(alphaColor(panelColor, 16))
+    surface.DrawTexturedRect(1, 1, w - 2, h - 2)
+    surface.SetDrawColor(bodyOverlay)
+    surface.DrawRect(1, 30, w - 2, h - 31)
+    surface.SetDrawColor(borderColor)
+    surface.DrawOutlinedRect(0, 0, w, h, 1)
+    surface.SetDrawColor(innerBorderColor)
+    surface.DrawOutlinedRect(1, 1, w - 2, h - 2, 1)
+    surface.SetDrawColor(highlightColor)
+    surface.DrawRect(2, 1, w - 4, 1)
     if not self.bool_lite then
         if self.iconMat then
             surface.SetMaterial(self.iconMat)
-            surface.SetDrawColor(lia.color.theme.header_text or color_white)
+            surface.SetDrawColor(theme.header_text or color_white)
             surface.DrawTexturedRect(6, 10, 16, 16)
         end
 
-        if self.center_title ~= "" then draw.SimpleText(self.center_title, "LiliaFont.16", w * 0.5, 18, lia.color.theme.header_text or color_white, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER) end
+        if self.center_title ~= "" then draw.SimpleText(self.center_title, "LiliaFont.16", w * 0.5, 18, theme.header_text or color_white, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER) end
         local titleOffset = self.iconMat and 26 or 6
-        draw.SimpleText(self.title, "LiliaFont.16", titleOffset, 10, lia.color.theme.header_text or color_white)
+        draw.SimpleText(self.title, "LiliaFont.16", titleOffset, 10, theme.header_text or color_white)
     end
 end
 

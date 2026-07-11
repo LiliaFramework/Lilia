@@ -150,7 +150,7 @@ function MODULE:OnCharCreated(client, character)
     applyInventorySize(client, character)
 end
 
-function MODULE:HandleItemTransferRequest(client, itemID, x, y, invID)
+function MODULE:HandleItemTransferRequest(client, itemID, x, y, invID, rotated)
     local newInventory = lia.inventory.instances[invID]
     local item = lia.item.instances[itemID]
     if not item then return end
@@ -183,17 +183,16 @@ function MODULE:HandleItemTransferRequest(client, itemID, x, y, invID)
     end
 
     local oldX, oldY = item:getData("x"), item:getData("y")
+    local oldRotated = item:getData("rotated", false)
+    local targetRotated = rotated
+    if targetRotated == nil then targetRotated = oldRotated end
     local dropPos = client:getItemDropPos()
     if client.invTransferTransaction and client.invTransferTransactionTimeout > RealTime() then return end
     client.invTransferTransaction = true
     client.invTransferTransactionTimeout = RealTime()
     local function fail(err)
         client.invTransferTransaction = nil
-        if err then
-            lia.error(err)
-            debug.Trace()
-        end
-
+        if err then lia.error(err) end
         if IsValid(client) then lia.log.add(client, "itemTransferFailed", item:getName(), oldInventory:getID(), newInventory and newInventory:getID() or 0) end
         if IsValid(client) then client:notifyInfoLocalized("itemOnGround") end
         item:spawn(dropPos)
@@ -201,10 +200,14 @@ function MODULE:HandleItemTransferRequest(client, itemID, x, y, invID)
 
     local tryCombineWith
     local originalAddResult
-    return oldInventory:removeItem(itemID, true):next(function() return newInventory:add(item, x, y) end):next(function(res)
+    return oldInventory:removeItem(itemID, true):next(function()
+        if targetRotated ~= oldRotated then item:setData("rotated", targetRotated, nil, nil, true) end
+        return newInventory:add(item, x, y)
+    end):next(function(res)
         if not res or not res.error then return end
         if istable(res.error) then tryCombineWith = res.error.item end
         originalAddResult = res
+        if targetRotated ~= oldRotated then item:setData("rotated", oldRotated, nil, nil, true) end
         return oldInventory:add(item, oldX, oldY)
     end):next(function(res)
         if res and res.error then return res end
@@ -214,6 +217,7 @@ function MODULE:HandleItemTransferRequest(client, itemID, x, y, invID)
         if res and res.error then
             fail()
         else
+            if targetRotated ~= oldRotated then hook.Run("OnPlayerRotateItem", client, item, targetRotated) end
             hook.Run("ItemTransfered", context)
         end
         return originalAddResult

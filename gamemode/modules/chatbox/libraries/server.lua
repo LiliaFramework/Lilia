@@ -1,4 +1,21 @@
 ﻿local MODULE = MODULE
+local LEGACY_FILTERED_WORDS_KEY = "chatbox_filtered_words"
+local FILTERED_WORDS_DATA_DIR = "lilia/global/global"
+local FILTERED_WORDS_DATA_FILE = FILTERED_WORDS_DATA_DIR .. "/chatbox.json"
+local LEGACY_FILTERED_WORDS_DATA_FILE = FILTERED_WORDS_DATA_DIR .. "/chatbox_filtered_words.json"
+local function readFilteredWordsFile(path)
+    if not file.Exists(path, "DATA") then return nil end
+    local raw = file.Read(path, "DATA")
+    if not raw or raw == "" then return nil end
+    local decoded = lia.data.deserialize(raw)
+    if istable(decoded) then return decoded end
+end
+
+local function writeFilteredWordsFile(words)
+    file.CreateDir(FILTERED_WORDS_DATA_DIR)
+    file.Write(FILTERED_WORDS_DATA_FILE, lia.data.serialize(words or {}))
+end
+
 local function normalizeFilteredWord(word)
     word = string.Trim(tostring(word or "")):lower()
     if word == "" then return nil end
@@ -32,13 +49,33 @@ function MODULE:GetFilteredWords()
 end
 
 function MODULE:LoadData()
-    self.FilteredWords = lia.data.get("chatbox_filtered_words", {})
-    self:SaveData()
+    local storedWords = self:getData({})
+    if not istable(storedWords) or table.IsEmpty(storedWords) then storedWords = lia.data.get(LEGACY_FILTERED_WORDS_KEY, {}) end
+    if not istable(storedWords) or table.IsEmpty(storedWords) then storedWords = readFilteredWordsFile(FILTERED_WORDS_DATA_FILE) end
+    if not istable(storedWords) or table.IsEmpty(storedWords) then storedWords = readFilteredWordsFile(LEGACY_FILTERED_WORDS_DATA_FILE) end
+    self.FilteredWords = buildNormalizedWordList(storedWords)
+    self:setData(self.FilteredWords, true, true)
+    writeFilteredWordsFile(self.FilteredWords)
+end
+
+function MODULE:InitializedModules()
+    if not SERVER or not lia.reloadInProgress then return end
+    self:LoadData()
+    timer.Simple(0, function()
+        if not MODULE then return end
+        MODULE:SyncFilteredWords()
+    end)
+end
+
+function MODULE:PlayerLoadedCharacter(client)
+    if not self:CanManageFilteredWords(client) then return end
+    self:SyncFilteredWords(client)
 end
 
 function MODULE:SaveData()
     self.FilteredWords = buildNormalizedWordList(self.FilteredWords or {})
-    lia.data.set("chatbox_filtered_words", self.FilteredWords)
+    self:setData(self.FilteredWords, true, true)
+    writeFilteredWordsFile(self.FilteredWords)
 end
 
 function MODULE:AddFilteredWord(word)

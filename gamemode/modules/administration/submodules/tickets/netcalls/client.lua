@@ -1,6 +1,7 @@
 ﻿local MODULE = MODULE
 net.Receive("liaActiveTickets", function()
     local tickets = net.ReadTable() or {}
+    if MODULE and isfunction(MODULE.HandleStaffCasesPayload) and MODULE:HandleStaffCasesPayload("tickets", tickets) then return end
     if not IsValid(ticketPanel) then return end
     ticketPanel:Clear()
     ticketPanel:DockPadding(6, 6, 6, 6)

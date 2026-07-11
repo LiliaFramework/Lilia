@@ -1,46 +1,18 @@
-﻿net.Receive("liaRequestFactionMembers", function(_, client)
-    lia.debug("[Permissions]", "Permission Check for net.Receive liaRequestFactionMembers", "hasPrivilege(listCharacters)=", tostring(client:hasPrivilege("listCharacters")), "finalResult=", tostring(client:hasPrivilege("listCharacters")))
-    if not client:hasPrivilege("listCharacters") then return end
+﻿local MODULE = MODULE
+net.Receive("liaRequestFactionMembers", function(_, client)
     local factionUniqueID = net.ReadString()
     if not factionUniqueID or factionUniqueID == "" then return end
-    local faction = lia.faction.get(factionUniqueID)
-    if not faction then return end
-    local gamemode = SCHEMA and SCHEMA.folder or engine.ActiveGamemode()
-    local query = string.format([[
-        SELECT c.id, c.name, c.lastJoinTime, c.steamID
-        FROM lia_characters AS c
-        WHERE c.faction = %s AND c.schema = %s
-        ORDER BY c.lastJoinTime DESC
-    ]], lia.db.convertDataType(factionUniqueID), lia.db.convertDataType(gamemode))
-    lia.db.query(query, function(data)
-        local members = {}
-        for _, row in ipairs(data or {}) do
-            local lastOnlineText
-            local owner = lia.char.getOwnerByID(row.id)
-            if not IsValid(owner) and row.steamID then
-                local ply = player.GetBySteamID(tostring(row.steamID))
-                if IsValid(ply) and ply:getChar() and ply:getChar():getID() == row.id then owner = ply end
-            end
+    lia.debug("[Permissions]", "Permission Check for net.Receive liaRequestFactionMembers", "hasFactionRosterAccess=", tostring(MODULE:CanAccessFactionRoster(client, factionUniqueID)))
+    if not MODULE:CanAccessFactionRoster(client, factionUniqueID) then return end
+    MODULE:SendFactionMembers(client, factionUniqueID)
+end)
 
-            if IsValid(owner) and owner:getChar() and owner:getChar():getID() == row.id then
-                lastOnlineText = L("onlineNow")
-            else
-                lastOnlineText = row.lastJoinTime or L("unknown")
-            end
-
-            table.insert(members, {
-                name = row.name or L("unknown"),
-                lastOnline = lastOnlineText,
-                charID = row.id,
-                steamID = row.steamID
-            })
-        end
-
-        lia.net.writeBigTable(client, "liaFactionMembers", {
-            faction = factionUniqueID,
-            members = members
-        })
-    end)
+net.Receive("liaRequestFactionMemberDetails", function(_, client)
+    local factionUniqueID = net.ReadString()
+    local charID = net.ReadUInt(32)
+    if not factionUniqueID or factionUniqueID == "" or not charID or charID == 0 then return end
+    if not MODULE:CanAccessFactionRoster(client, factionUniqueID) then return end
+    MODULE:SendFactionMemberDetails(client, factionUniqueID, charID)
 end)
 
 net.Receive("liaKickCharacterToBase", function(_, client)
@@ -88,6 +60,7 @@ net.Receive("liaKickCharacterToBase", function(_, client)
 
             if hook.Run("CanCharBeTransfered", targetChar, defaultFaction, oldFaction) == false then return end
             target:notifyWarningLocalized("kickedFromFaction")
+            MODULE:TrackFactionTransfer(targetChar, oldFaction, defaultFaction, client, "kickToBase")
             targetChar.vars.faction = defaultFaction.uniqueID
             targetChar:setFaction(defaultFaction.index)
             hook.Run("OnTransferred", target)
@@ -113,6 +86,7 @@ net.Receive("liaKickCharacterToBase", function(_, client)
                 return
             end
 
+            MODULE:TrackOfflineFactionTransfer(characterID, currentFaction, defaultFaction, client, "kickToBase")
             lia.db.updateTable({
                 faction = defaultFaction.uniqueID
             }, nil, "characters", "id = " .. characterID)
@@ -121,4 +95,57 @@ net.Receive("liaKickCharacterToBase", function(_, client)
             lia.log.add(client, "kickToBaseFaction", L("character"), currentFactionData and currentFactionData.name or tostring(currentFaction), defaultFaction.name)
         end)
     end
+end)
+
+net.Receive("liaSaveFactionNote", function(_, client)
+    local charID = tonumber(net.ReadUInt(32))
+    local factionUniqueID = net.ReadString()
+    local noteText = string.Trim(net.ReadString() or "")
+    if not charID or not factionUniqueID or factionUniqueID == "" then return end
+    if not MODULE:CanEditFactionNotes(client, factionUniqueID) then return end
+    if #noteText > 4096 then noteText = noteText:sub(1, 4096) end
+    local faction = lia.faction.get(factionUniqueID)
+    if not faction then return end
+    local loadedCharacter = lia.char.loaded[charID]
+    local function saveNote()
+        local noteData = noteText ~= "" and {
+            text = noteText,
+            updatedAt = os.time(),
+            updatedBy = client:Name(),
+            updatedBySteamID = client:SteamID()
+        } or nil
+
+        if loadedCharacter then
+            local notesByFaction = loadedCharacter:getData("factionNotes", {})
+            if not istable(notesByFaction) then notesByFaction = {} end
+            notesByFaction[factionUniqueID] = noteData
+            if noteData == nil and table.IsEmpty(notesByFaction) then
+                loadedCharacter:setData("factionNotes", nil)
+            else
+                loadedCharacter:setData("factionNotes", notesByFaction)
+            end
+        else
+            local notesByFaction = lia.char.getCharData(charID, "factionNotes")
+            if not istable(notesByFaction) then notesByFaction = {} end
+            notesByFaction[factionUniqueID] = noteData
+            if noteData == nil and table.IsEmpty(notesByFaction) then
+                lia.char.setCharDatabase(charID, "factionNotes", nil)
+            else
+                lia.char.setCharDatabase(charID, "factionNotes", notesByFaction)
+            end
+        end
+
+        MODULE:SendFactionMemberDetails(client, factionUniqueID, charID)
+    end
+
+    if loadedCharacter then
+        if loadedCharacter:getFaction() ~= faction.index then return end
+        saveNote()
+        return
+    end
+
+    lia.db.query("SELECT faction FROM lia_characters WHERE id = " .. charID, function(data)
+        if not data or not data[1] or data[1].faction ~= faction.uniqueID then return end
+        saveNote()
+    end)
 end)

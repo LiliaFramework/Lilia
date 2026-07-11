@@ -755,7 +755,7 @@ function PANEL:createTitle()
 end
 
 function PANEL:createChangelogDisplay()
-    if not SCHEMA or not SCHEMA.Changelog then return end
+    if not SCHEMA or not (SCHEMA.changelog or SCHEMA.Changelog) then return end
     self.changelogPanel = self:Add("DPanel")
     self.changelogPanel:SetPos(32, 32)
     self.changelogPanel:SetSize(ScrW() * 0.25, ScrH() * 0.4)
@@ -785,14 +785,108 @@ function PANEL:createChangelogDisplay()
     scroll:SetPos(padding, contentY)
     scroll:SetSize(self.changelogPanel:GetWide() - padding * 2, self.changelogPanel:GetTall() - contentY - padding)
     scroll:InvalidateLayout(true)
-    local changelogContent = SCHEMA.Changelog or SCHEMA.Changelog
+    local function addSpacer(height)
+        local spacer = scroll:Add("DPanel")
+        spacer:SetTall(height or 15)
+        spacer:Dock(TOP)
+        spacer.Paint = function() end
+    end
+
+    local function addTextLabel(text, font, color, indent, marginBottom)
+        local label = scroll:Add("DLabel")
+        label:SetFont(font)
+        label:SetTextColor(color)
+        label:SetText(tostring(text or ""))
+        label:SetWrap(true)
+        label:SetAutoStretchVertical(true)
+        label:SetWide(scroll:GetWide() - padding * 2)
+        label:Dock(TOP)
+        label:DockMargin(indent or 0, 0, 0, marginBottom or 8)
+        return label
+    end
+
+    local function addVersionLabel(text)
+        local versionLabel = scroll:Add("DLabel")
+        versionLabel:SetFont("LiliaFont.22")
+        versionLabel:SetTextColor(accentColor)
+        versionLabel:SetText(tostring(text or ""))
+        versionLabel:SetContentAlignment(5)
+        versionLabel:SetWide(scroll:GetWide() - padding * 2)
+        versionLabel:SetTall(30)
+        versionLabel:Dock(TOP)
+        versionLabel:DockMargin(0, 0, 0, 5)
+        versionLabel:SetExpensiveShadow(1, Color(0, 0, 0, 150))
+        return versionLabel
+    end
+
+    local function addDateLabel(text)
+        local dateLabel = scroll:Add("DLabel")
+        dateLabel:SetFont("LiliaFont.16")
+        dateLabel:SetTextColor(Color(180, 180, 180))
+        dateLabel:SetText(tostring(text or ""))
+        dateLabel:SetContentAlignment(5)
+        dateLabel:SetWide(scroll:GetWide() - padding * 2)
+        dateLabel:SetTall(20)
+        dateLabel:Dock(TOP)
+        dateLabel:DockMargin(0, 0, 0, 10)
+        return dateLabel
+    end
+
+    local function extractChangeText(change)
+        if isstring(change) then return change end
+        if not istable(change) then return tostring(change or "") end
+        local text = change.text or change.message or change.description or change.title or change.label or change.name or change.change or change[1]
+        if not text then return "" end
+        local category = change.type or change.category or change.tag or change.kind
+        if isstring(category) and category ~= "" then text = "[" .. category .. "] " .. tostring(text) end
+        return tostring(text)
+    end
+
+    local function renderChanges(changes)
+        if isstring(changes) then
+            addTextLabel(changes, "LiliaFont.18", Color(220, 220, 220), 0, 8)
+            return
+        end
+
+        if not istable(changes) then return end
+        for _, change in ipairs(changes) do
+            local text = extractChangeText(change)
+            if text ~= "" then addTextLabel("• " .. text, "LiliaFont.18", Color(220, 220, 220), 10, 8) end
+        end
+    end
+
+    local function versionSortValue(version)
+        local parts = {}
+        for piece in tostring(version):gmatch("(%d+)") do
+            parts[#parts + 1] = tonumber(piece) or 0
+        end
+        return parts
+    end
+
+    local function versionSorter(a, b)
+        local aParts = versionSortValue(a)
+        local bParts = versionSortValue(b)
+        local count = math.max(#aParts, #bParts)
+        for i = 1, count do
+            local aPart = aParts[i] or 0
+            local bPart = bParts[i] or 0
+            if aPart ~= bPart then return aPart > bPart end
+        end
+        return tostring(a) > tostring(b)
+    end
+
+    local changelogContent = SCHEMA.changelog or SCHEMA.Changelog
+    if istable(changelogContent) then changelogContent = changelogContent.entries or changelogContent.releases or changelogContent.versions or changelogContent.items or changelogContent.list or changelogContent end
     if istable(changelogContent) then
         local isKeyedFormat = false
+        local isSimpleList = true
         for k, v in pairs(changelogContent) do
-            if isstring(k) and istable(v) then
+            if isstring(k) and (istable(v) or isstring(v)) then
                 isKeyedFormat = true
                 break
             end
+
+            if not isnumber(k) or not isstring(v) then isSimpleList = false end
         end
 
         if isKeyedFormat then
@@ -801,112 +895,42 @@ function PANEL:createChangelogDisplay()
                 table.insert(sortedVersions, version)
             end
 
-            table.sort(sortedVersions, function(a, b)
-                local aMajor, aMinor = a:match("^(%d+)%.(%d+)")
-                local bMajor, bMinor = b:match("^(%d+)%.(%d+)")
-                aMajor, aMinor = tonumber(aMajor) or 0, tonumber(aMinor) or 0
-                bMajor, bMinor = tonumber(bMajor) or 0, tonumber(bMinor) or 0
-                if aMajor ~= bMajor then
-                    return aMajor > bMajor
-                else
-                    return aMinor > bMinor
-                end
-            end)
-
+            table.sort(sortedVersions, versionSorter)
             for _, version in ipairs(sortedVersions) do
-                local changes = changelogContent[version]
-                if istable(changes) then
-                    local versionLabel = scroll:Add("DLabel")
-                    versionLabel:SetFont("LiliaFont.22")
-                    versionLabel:SetTextColor(accentColor)
-                    versionLabel:SetText(L("versionNumber", version))
-                    versionLabel:SetContentAlignment(5)
-                    versionLabel:SetWide(scroll:GetWide() - padding * 2)
-                    versionLabel:SetTall(30)
-                    versionLabel:Dock(TOP)
-                    versionLabel:DockMargin(0, 0, 0, 5)
-                    versionLabel:SetExpensiveShadow(1, Color(0, 0, 0, 150))
-                    for _, change in ipairs(changes) do
-                        local changeLabel = scroll:Add("DLabel")
-                        changeLabel:SetFont("LiliaFont.18")
-                        changeLabel:SetTextColor(Color(220, 220, 220))
-                        changeLabel:SetText("• " .. (tostring(change) or ""))
-                        changeLabel:SetWrap(true)
-                        changeLabel:SetAutoStretchVertical(true)
-                        changeLabel:SetWide(scroll:GetWide() - padding * 2)
-                        changeLabel:Dock(TOP)
-                        changeLabel:DockMargin(10, 0, 0, 8)
-                    end
-
-                    local spacer = scroll:Add("DPanel")
-                    spacer:SetTall(15)
-                    spacer:Dock(TOP)
-                    spacer.Paint = function() end
+                local entry = changelogContent[version]
+                local versionText = L("versionNumber", version)
+                local dateText
+                local changes = entry
+                if istable(entry) and (entry.changes or entry.notes or entry.entries or entry.items or entry.text or entry.message or entry.title or entry.label or entry.date or entry.released or entry.releaseDate) then
+                    versionText = entry.version or entry.title or entry.label or versionText
+                    dateText = entry.date or entry.released or entry.releaseDate
+                    changes = entry.changes or entry.notes or entry.entries or entry.items or entry.text or entry.message or (#entry > 0 and entry or nil)
                 end
+
+                addVersionLabel(versionText)
+                if dateText then addDateLabel(dateText) end
+                renderChanges(changes)
+                addSpacer()
             end
+        elseif isSimpleList then
+            renderChanges(changelogContent)
         else
             for i, entry in ipairs(changelogContent) do
-                local versionLabel = scroll:Add("DLabel")
-                versionLabel:SetFont("LiliaFont.22")
-                versionLabel:SetTextColor(accentColor)
-                versionLabel:SetText(entry.version or L("versionNumber", i))
-                versionLabel:SetContentAlignment(5)
-                versionLabel:SetWide(scroll:GetWide() - padding * 2)
-                versionLabel:SetTall(30)
-                versionLabel:Dock(TOP)
-                versionLabel:DockMargin(0, 0, 0, 5)
-                versionLabel:SetExpensiveShadow(1, Color(0, 0, 0, 150))
-                if entry.date then
-                    local dateLabel = scroll:Add("DLabel")
-                    dateLabel:SetFont("LiliaFont.16")
-                    dateLabel:SetTextColor(Color(180, 180, 180))
-                    dateLabel:SetText(entry.date)
-                    dateLabel:SetContentAlignment(5)
-                    dateLabel:SetWide(scroll:GetWide() - padding * 2)
-                    dateLabel:SetTall(20)
-                    dateLabel:Dock(TOP)
-                    dateLabel:DockMargin(0, 0, 0, 10)
+                if isstring(entry) then
+                    renderChanges({entry})
+                elseif istable(entry) then
+                    local versionText = entry.version or entry.title or entry.label or L("versionNumber", i)
+                    local dateText = entry.date or entry.released or entry.releaseDate
+                    local changes = entry.changes or entry.notes or entry.entries or entry.items or entry.text or entry.message or (#entry > 0 and entry or nil)
+                    addVersionLabel(versionText)
+                    if dateText then addDateLabel(dateText) end
+                    renderChanges(changes)
+                    addSpacer()
                 end
-
-                if entry.changes and istable(entry.changes) then
-                    for _, change in ipairs(entry.changes) do
-                        local changeLabel = scroll:Add("DLabel")
-                        changeLabel:SetFont("LiliaFont.18")
-                        changeLabel:SetTextColor(Color(220, 220, 220))
-                        changeLabel:SetText("• " .. (tostring(change) or ""))
-                        changeLabel:SetWrap(true)
-                        changeLabel:SetAutoStretchVertical(true)
-                        changeLabel:SetWide(scroll:GetWide() - padding * 2)
-                        changeLabel:Dock(TOP)
-                        changeLabel:DockMargin(10, 0, 0, 8)
-                    end
-                elseif isstring(entry.changes) then
-                    local changeLabel = scroll:Add("DLabel")
-                    changeLabel:SetFont("LiliaFont.18")
-                    changeLabel:SetTextColor(Color(220, 220, 220))
-                    changeLabel:SetText(entry.changes)
-                    changeLabel:SetWrap(true)
-                    changeLabel:SetAutoStretchVertical(true)
-                    changeLabel:SetWide(scroll:GetWide() - padding * 2)
-                    changeLabel:Dock(TOP)
-                    changeLabel:DockMargin(0, 0, 0, 8)
-                end
-
-                local spacer = scroll:Add("DPanel")
-                spacer:SetTall(15)
-                spacer:Dock(TOP)
-                spacer.Paint = function() end
             end
         end
     elseif isstring(changelogContent) then
-        local contentLabel = scroll:Add("DLabel")
-        contentLabel:SetFont("LiliaFont.18")
-        contentLabel:SetTextColor(Color(220, 220, 220))
-        contentLabel:SetText(changelogContent)
-        contentLabel:SetWrap(true)
-        contentLabel:SetAutoStretchVertical(true)
-        contentLabel:SetWide(scroll:GetWide() - padding * 2)
-        contentLabel:Dock(TOP)
+        addTextLabel(changelogContent, "LiliaFont.18", Color(220, 220, 220), 0, 8)
     end
 end
 

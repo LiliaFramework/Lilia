@@ -2128,13 +2128,10 @@ net.Receive("liaGroupPermChanged", function()
 
     local effectiveValue = lia.admin.hasAccess(group, privilege)
     lia.debug("[Permissions UI]", "Received live permission change", "group=", tostring(group), "privilege=", tostring(privilege), "explicitValue=", tostring(value), "effectiveValue=", tostring(effectiveValue), "localPlayerUserGroup=", tostring(IsValid(LocalPlayer()) and LocalPlayer():GetUserGroup() or "unknown"))
-    if IsValid(lia.gui.usergroups) and lia.gui.usergroups.groupsList then
-        for _, v in ipairs(lia.gui.usergroups.groupsList:GetLines()) do
-            if v.groupName == group and lia.gui.usergroups.checks and lia.gui.usergroups.checks[group] and lia.gui.usergroups.checks[group][privilege] then
-                lia.gui.usergroups.checks[group][privilege]:SetChecked(effectiveValue)
-                break
-            end
-        end
+    if IsValid(lia.gui.usergroups) then
+        local checks = lia.gui.usergroups.checks
+        local row = checks and checks[group] and checks[group][privilege] or nil
+        if IsValid(row) then row:InvalidateLayout(true) end
     end
 end)
 

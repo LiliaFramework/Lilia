@@ -1067,64 +1067,394 @@ else
     end
 end
 
-hook.Add("CreateInformationButtons", "liaInformationCommandsUnified", function(pages)
-    local client = LocalPlayer()
-    table.insert(pages, {
-        name = "commands",
-        shouldShow = function() return true end,
-        drawFunc = function(parent)
-            parent:Clear()
-            local sheet = vgui.Create("liaSheet", parent)
-            sheet:Dock(FILL)
-            sheet:SetPlaceholderText(L("searchCommands"))
-            local useList = false
-            if useList then
-                local data = {}
-                for cmdName, cmdData in SortedPairs(lia.command.list) do
-                    if not isnumber(cmdName) then
-                        local hasAccess = lia.command.hasAccess(client, cmdName, cmdData)
-                        if hasAccess then
-                            local text = "/" .. cmdName
-                            if cmdData.syntax and cmdData.syntax ~= "" then text = text .. " " .. cmdData.syntax end
-                            local desc = cmdData.desc ~= "" and cmdData.desc or ""
-                            local priv = cmdData.privilege and L(cmdData.privilege) or ""
-                            data[#data + 1] = {text, desc, priv}
-                        end
-                    end
+if CLIENT then
+    local function getCommandThemeColors()
+        local theme = lia.color and lia.color.theme or {}
+        local accent = theme.accent or theme.theme
+        if not IsColor(accent) and lia.config and lia.config.get then accent = lia.config.get("Color") end
+        if not IsColor(accent) then accent = Color(45, 190, 170) end
+        local textColor = theme.text
+        if not IsColor(textColor) then textColor = Color(225, 238, 238) end
+        return accent, textColor
+    end
+
+    local function drawCommandPanel(x, y, w, h, radius, color, outline)
+        draw.RoundedBox(radius, x, y, w, h, color)
+        if outline then
+            surface.SetDrawColor(outline)
+            surface.DrawOutlinedRect(x, y, w, h, 1)
+        end
+    end
+
+    local function createCommandButton(parent, label, accented, callback)
+        local button = parent:Add("DButton")
+        button:SetText("")
+        button.Paint = function(self, w, h)
+            local accent, textColor = getCommandThemeColors()
+            local hovered = self:IsHovered() and self:IsEnabled()
+            local background
+            local outline
+            if accented then
+                background = Color(accent.r, accent.g, accent.b, hovered and 32 or 16)
+                outline = Color(accent.r, accent.g, accent.b, hovered and 185 or 120)
+            else
+                background = hovered and Color(255, 255, 255, 10) or Color(4, 17, 22, 210)
+                outline = Color(160, 190, 192, hovered and 90 or 48)
+            end
+
+            if not self:IsEnabled() then
+                background = Color(255, 255, 255, 5)
+                outline = Color(255, 255, 255, 22)
+            end
+
+            drawCommandPanel(0, 0, w, h, 5, background, outline)
+            local color = self:IsEnabled() and (accented and accent or textColor) or Color(115, 135, 136)
+            draw.SimpleText(label, "LiliaFont.17", w * 0.5, h * 0.5, color, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
+        end
+
+        button.DoClick = function(self)
+            if not self:IsEnabled() then return end
+            lia.websound.playButtonSound()
+            callback()
+        end
+        return button
+    end
+
+    local function addCommandInfoRow(parent, label, value, valueColor)
+        local row = parent:Add("DPanel")
+        row:Dock(TOP)
+        row:SetTall(46)
+        row.Paint = function(_, w, h)
+            surface.SetDrawColor(130, 160, 162, 35)
+            surface.DrawRect(0, h - 1, w, 1)
+            draw.SimpleText(label, "LiliaFont.16", 14, h * 0.5, Color(165, 187, 188), TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)
+            draw.SimpleText(value or "", "LiliaFont.16", w - 14, h * 0.5, valueColor or Color(224, 235, 235), TEXT_ALIGN_RIGHT, TEXT_ALIGN_CENTER)
+        end
+        return row
+    end
+
+    hook.Add("CreateInformationButtons", "liaInformationCommandsUnified", function(pages)
+        table.insert(pages, {
+            name = "commands",
+            shouldShow = function() return true end,
+            drawFunc = function(parent)
+                parent:Clear()
+                local client = LocalPlayer()
+                local root = parent:Add("DPanel")
+                root:Dock(FILL)
+                root.Paint = function() end
+                local listPanel = root:Add("DPanel")
+                listPanel:Dock(LEFT)
+                listPanel:SetWide(math.Clamp(ScrW() * 0.245, 360, 440))
+                listPanel:DockMargin(0, 0, 12, 0)
+                listPanel:DockPadding(12, 12, 12, 12)
+                listPanel.Paint = function(_, w, h)
+                    local accent = getCommandThemeColors()
+                    drawCommandPanel(0, 0, w, h, 7, Color(5, 18, 23, 215), Color(accent.r, accent.g, accent.b, 58))
                 end
 
-                sheet:AddListViewRow({
-                    columns = {L("command"), L("desc"), L("privilege")},
-                    data = data,
-                    height = 300
-                })
-            else
+                local detailPanel = root:Add("DPanel")
+                detailPanel:Dock(FILL)
+                detailPanel.Paint = function() end
+                local controls = listPanel:Add("DPanel")
+                controls:Dock(TOP)
+                controls:SetTall(46)
+                controls:DockMargin(0, 0, 0, 12)
+                controls.Paint = function() end
+                local filter = controls:Add("DComboBox")
+                filter:Dock(RIGHT)
+                filter:SetWide(136)
+                filter:DockMargin(8, 0, 0, 0)
+                filter:SetValue("All Commands")
+                filter:AddChoice("All Commands", "all")
+                filter:AddChoice("General", "general")
+                filter:AddChoice("Privileged", "privileged")
+                filter:SetFont("LiliaFont.16")
+                filter:SetTextColor(Color(0, 0, 0, 0))
+                filter.Paint = function(self, w, h)
+                    local accent = getCommandThemeColors()
+                    drawCommandPanel(0, 0, w, h, 5, Color(6, 20, 26, 225), Color(accent.r, accent.g, accent.b, 60))
+                    draw.SimpleText(self:GetValue(), "LiliaFont.16", 12, h * 0.5, Color(215, 229, 229), TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)
+                    draw.SimpleText("▼", "LiliaFont.15", w - 14, h * 0.5, Color(175, 197, 198), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
+                end
+
+                local searchPanel = controls:Add("DPanel")
+                searchPanel:Dock(FILL)
+                searchPanel:DockPadding(12, 0, 8, 0)
+                searchPanel.Paint = function(_, w, h)
+                    local accent = getCommandThemeColors()
+                    drawCommandPanel(0, 0, w, h, 5, Color(6, 20, 26, 225), Color(accent.r, accent.g, accent.b, 60))
+                end
+
+                local searchEntry = searchPanel:Add("DTextEntry")
+                searchEntry:Dock(FILL)
+                searchEntry:SetFont("LiliaFont.16")
+                searchEntry:SetTextColor(Color(225, 236, 236))
+                searchEntry:SetCursorColor(getCommandThemeColors())
+                searchEntry:SetPlaceholderText(L("searchCommands"))
+                searchEntry:SetDrawBackground(false)
+                searchEntry:SetPaintBackground(false)
+                searchEntry:SetPaintBorderEnabled(false)
+                local sectionLabel = listPanel:Add("DLabel")
+                sectionLabel:Dock(TOP)
+                sectionLabel:SetTall(34)
+                sectionLabel:SetText("AVAILABLE COMMANDS")
+                sectionLabel:SetFont("LiliaFont.17")
+                sectionLabel:SetTextColor(getCommandThemeColors())
+                sectionLabel:SetContentAlignment(4)
+                local countLabel = listPanel:Add("DLabel")
+                countLabel:Dock(BOTTOM)
+                countLabel:SetTall(28)
+                countLabel:SetFont("LiliaFont.15")
+                countLabel:SetTextColor(Color(145, 169, 170))
+                countLabel:SetContentAlignment(4)
+                local listScroll = listPanel:Add("liaScrollPanel")
+                listScroll:Dock(FILL)
+                listScroll.Paint = function() end
+                local listCanvas = listScroll:GetCanvas()
+                if IsValid(listCanvas) then
+                    listCanvas:DockPadding(0, 0, 4, 0)
+                    listCanvas.Paint = function() end
+                else
+                    listCanvas = listScroll
+                end
+
+                local records = {}
+                local selectedRecord
+                local selectedCard
+                local selectedFilter = "all"
+                local function updateCount()
+                    local visible = 0
+                    for _, record in ipairs(records) do
+                        if IsValid(record.card) and record.card:IsVisible() then visible = visible + 1 end
+                    end
+
+                    countLabel:SetText(string.format("%d %s", visible, visible == 1 and "command" or "commands"))
+                end
+
+                local function matchesFilter(record)
+                    if selectedFilter == "general" then return not record.privileged end
+                    if selectedFilter == "privileged" then return record.privileged end
+                    return true
+                end
+
+                local function applyFilters()
+                    local query = string.Trim(searchEntry:GetValue() or ""):lower()
+                    for _, record in ipairs(records) do
+                        local visible = matchesFilter(record) and (query == "" or record.searchText:find(query, 1, true) ~= nil)
+                        if IsValid(record.card) then record.card:SetVisible(visible) end
+                    end
+
+                    if IsValid(listCanvas) then listCanvas:InvalidateLayout(true) end
+                    updateCount()
+                end
+
+                local function formatArguments(arguments)
+                    if not arguments or #arguments == 0 then return "None" end
+                    local names = {}
+                    for _, argument in ipairs(arguments) do
+                        local name = tostring(argument.name or argument.type or "argument")
+                        if argument.optional then name = name .. " (optional)" end
+                        names[#names + 1] = name
+                    end
+                    return table.concat(names, ", ")
+                end
+
+                local function formatAliases(commandData)
+                    local alias = commandData.alias
+                    if not alias then return "None" end
+                    if istable(alias) then return table.concat(alias, ", ") end
+                    return tostring(alias)
+                end
+
+                local function rebuildDetail(record)
+                    selectedRecord = record
+                    detailPanel:Clear()
+                    local accent, textColor = getCommandThemeColors()
+                    local header = detailPanel:Add("DPanel")
+                    header:Dock(TOP)
+                    header:SetTall(140)
+                    header:DockMargin(0, 0, 0, 12)
+                    header.Paint = function(_, w, h)
+                        drawCommandPanel(0, 0, w, h, 7, Color(5, 18, 23, 218), Color(accent.r, accent.g, accent.b, 58))
+                        draw.SimpleText("/" .. record.name, "LiliaFont.26", 28, 24, textColor, TEXT_ALIGN_LEFT, TEXT_ALIGN_TOP)
+                        draw.SimpleText(record.syntax ~= "" and record.syntax or "No arguments required", "LiliaFont.16", 28, 60, Color(165, 187, 188), TEXT_ALIGN_LEFT, TEXT_ALIGN_TOP)
+                        local accessColor = record.privileged and accent or Color(60, 225, 160)
+                        draw.SimpleText(record.access, "LiliaFont.16", 28, 102, accessColor, TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)
+                    end
+
+                    local copyButton = createCommandButton(header, "COPY COMMAND", false, function()
+                        local text = "/" .. record.name
+                        if record.syntax ~= "" then text = text .. " " .. record.syntax end
+                        SetClipboardText(text)
+                    end)
+
+                    copyButton:SetSize(160, 42)
+                    local runButton = createCommandButton(header, "RUN COMMAND", true, function()
+                        local arguments = record.data.arguments or {}
+                        if #arguments > 0 then
+                            local missing = {}
+                            for _, argument in ipairs(arguments) do
+                                missing[#missing + 1] = argument.name
+                            end
+
+                            lia.command.openArgumentPrompt(record.name, missing, {}, arguments)
+                        else
+                            lia.command.send(record.name)
+                        end
+                    end)
+
+                    runButton:SetSize(154, 42)
+                    header.PerformLayout = function(_, w)
+                        runButton:SetPos(w - 170, 49)
+                        copyButton:SetPos(w - 340, 49)
+                    end
+
+                    local scroll = detailPanel:Add("liaScrollPanel")
+                    scroll:Dock(FILL)
+                    scroll.Paint = function() end
+                    local canvas = scroll:GetCanvas()
+                    if IsValid(canvas) then
+                        canvas:DockPadding(0, 0, 4, 0)
+                        canvas.Paint = function() end
+                    else
+                        canvas = scroll
+                    end
+
+                    local infoSection = canvas:Add("DPanel")
+                    infoSection:Dock(TOP)
+                    infoSection:DockMargin(0, 0, 0, 12)
+                    infoSection:DockPadding(14, 48, 14, 14)
+                    infoSection.Paint = function(_, w, h)
+                        drawCommandPanel(0, 0, w, h, 7, Color(5, 18, 23, 205), Color(accent.r, accent.g, accent.b, 52))
+                        draw.SimpleText("COMMAND INFORMATION", "LiliaFont.17", 14, 16, accent, TEXT_ALIGN_LEFT, TEXT_ALIGN_TOP)
+                        surface.SetDrawColor(accent.r, accent.g, accent.b, 45)
+                        surface.DrawRect(14, 39, w - 28, 1)
+                    end
+
+                    addCommandInfoRow(infoSection, "Command", "/" .. record.name)
+                    addCommandInfoRow(infoSection, "Syntax", record.syntax ~= "" and record.syntax or "None")
+                    addCommandInfoRow(infoSection, "Access", record.access, record.privileged and accent or Color(60, 225, 160))
+                    addCommandInfoRow(infoSection, "Arguments", formatArguments(record.data.arguments))
+                    addCommandInfoRow(infoSection, "Aliases", formatAliases(record.data))
+                    infoSection.PerformLayout = function(self) self:SetTall(48 + 46 * 5 + 14) end
+                    local descriptionSection = canvas:Add("DPanel")
+                    descriptionSection:Dock(TOP)
+                    descriptionSection:SetTall(170)
+                    descriptionSection:DockMargin(0, 0, 0, 12)
+                    descriptionSection:DockPadding(14, 50, 14, 14)
+                    descriptionSection.Paint = function(_, w, h)
+                        drawCommandPanel(0, 0, w, h, 7, Color(5, 18, 23, 205), Color(accent.r, accent.g, accent.b, 52))
+                        draw.SimpleText("DESCRIPTION", "LiliaFont.17", 14, 16, accent, TEXT_ALIGN_LEFT, TEXT_ALIGN_TOP)
+                        surface.SetDrawColor(accent.r, accent.g, accent.b, 45)
+                        surface.DrawRect(14, 39, w - 28, 1)
+                    end
+
+                    local description = descriptionSection:Add("DLabel")
+                    description:Dock(FILL)
+                    description:SetWrap(true)
+                    description:SetAutoStretchVertical(true)
+                    description:SetFont("LiliaFont.17")
+                    description:SetTextColor(Color(205, 220, 220))
+                    description:SetText(record.description ~= "" and record.description or "No description available.")
+                    description:SetContentAlignment(7)
+                end
+
+                local function selectRecord(record)
+                    if selectedRecord == record then return end
+                    if IsValid(selectedCard) then selectedCard.selected = false end
+                    selectedRecord = record
+                    selectedCard = record.card
+                    if IsValid(selectedCard) then selectedCard.selected = true end
+                    rebuildDetail(record)
+                end
+
                 for cmdName, cmdData in SortedPairs(lia.command.list) do
                     if not isnumber(cmdName) then
                         local hasAccess, privilege = lia.command.hasAccess(client, cmdName, cmdData)
                         if hasAccess then
-                            local text = "/" .. cmdName
-                            if cmdData.syntax and cmdData.syntax ~= "" then text = text .. " " .. cmdData.syntax end
-                            local desc = cmdData.desc ~= "" and cmdData.desc or ""
-                            local right = privilege and privilege ~= L("globalAccess") and privilege or ""
-                            local row = sheet:AddTextRow({
-                                title = text,
-                                desc = desc,
-                                right = right
-                            })
+                            local syntax = cmdData.syntax and tostring(cmdData.syntax) or ""
+                            local description = cmdData.desc and tostring(cmdData.desc) or ""
+                            local access = privilege and tostring(privilege) or L("globalAccess")
+                            local privileged = access ~= L("globalAccess")
+                            local record = {
+                                name = tostring(cmdName),
+                                data = cmdData,
+                                syntax = syntax,
+                                description = description,
+                                access = access,
+                                privileged = privileged
+                            }
 
-                            row.filterText = (cmdName .. " " .. (cmdData.syntax or "") .. " " .. desc .. " " .. right):lower()
+                            record.searchText = table.concat({record.name, record.syntax, record.description, record.access, formatAliases(record.data)}, " "):lower()
+                            local card = listCanvas:Add("DButton")
+                            card:Dock(TOP)
+                            card:SetTall(82)
+                            card:DockMargin(0, 0, 0, 8)
+                            card:SetText("")
+                            card.selected = false
+                            card.Paint = function(self, w, h)
+                                local cardAccent = getCommandThemeColors()
+                                local active = self.selected
+                                local hovered = self:IsHovered()
+                                local background = active and Color(cardAccent.r, cardAccent.g, cardAccent.b, 18) or hovered and Color(255, 255, 255, 7) or Color(6, 20, 25, 205)
+                                local outline = active and Color(cardAccent.r, cardAccent.g, cardAccent.b, 125) or Color(cardAccent.r, cardAccent.g, cardAccent.b, 42)
+                                drawCommandPanel(0, 0, w, h, 5, background, outline)
+                                if active then
+                                    surface.SetDrawColor(cardAccent.r, cardAccent.g, cardAccent.b, 235)
+                                    surface.DrawRect(0, 8, 3, h - 16)
+                                end
+
+                                draw.SimpleText("/" .. record.name, "LiliaFont.18", 16, 17, active and Color(245, 249, 249) or Color(220, 231, 231), TEXT_ALIGN_LEFT, TEXT_ALIGN_TOP)
+                                local subtitle = record.syntax ~= "" and record.syntax or "No arguments"
+                                draw.SimpleText(subtitle, "LiliaFont.15", 16, 48, Color(145, 169, 170), TEXT_ALIGN_LEFT, TEXT_ALIGN_TOP)
+                            end
+
+                            card.DoClick = function()
+                                lia.websound.playButtonSound()
+                                selectRecord(record)
+                            end
+
+                            record.card = card
+                            records[#records + 1] = record
                         end
                     end
                 end
-            end
 
-            sheet:Refresh()
-            parent.refreshSheet = function() if IsValid(sheet) then sheet:Refresh() end end
-        end,
-        onSelect = function(pnl) if pnl.refreshSheet then pnl.refreshSheet() end end
-    })
-end)
+                if #records == 0 then
+                    countLabel:SetText("0 commands")
+                    local empty = listCanvas:Add("DLabel")
+                    empty:Dock(TOP)
+                    empty:SetTall(80)
+                    empty:SetText("No commands available.")
+                    empty:SetContentAlignment(5)
+                    empty:SetTextColor(Color(150, 170, 170))
+                    empty:SetFont("LiliaFont.18")
+                    detailPanel.Paint = function(_, w, h)
+                        local accent = getCommandThemeColors()
+                        drawCommandPanel(0, 0, w, h, 7, Color(5, 18, 23, 190), Color(accent.r, accent.g, accent.b, 45))
+                        draw.SimpleText("No commands available.", "LiliaFont.20", w * 0.5, h * 0.5, Color(150, 170, 170), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
+                    end
+                    return
+                end
+
+                searchEntry.OnChange = applyFilters
+                filter.OnSelect = function(_, _, _, data)
+                    selectedFilter = data or "all"
+                    applyFilters()
+                end
+
+                selectRecord(records[1])
+                applyFilters()
+                parent.refreshCommands = function()
+                    if not IsValid(parent) then return end
+                    applyFilters()
+                end
+            end,
+            onSelect = function(panel) if panel.refreshCommands then panel.refreshCommands() end end
+        })
+    end)
+end
 
 lia.command.findPlayer = lia.util.findPlayer
 if SERVER then
@@ -1612,6 +1942,11 @@ if SERVER then
     end)
 else
     concommand.Add("weighpoint_stop", function() hook.Remove("HUDPaint", "WeighPoint") end)
+    concommand.Add("lia_scoreboard_reload", function()
+        if IsValid(lia.gui.score) then lia.gui.score:Remove() end
+        vgui.Create("liaScoreboard")
+    end)
+
     concommand.Add("lia_vgui_cleanup", function()
         for _, v in pairs(vgui.GetWorldPanel():GetChildren()) do
             if not (v.Init and debug.getinfo(v.Init, "Sln").short_src:find("chatbox")) then v:Remove() end
@@ -3714,6 +4049,28 @@ lia.command.add("cleanprops", {
         end
 
         client:notifySuccessLocalized("cleaningFinished", L("props"), count)
+    end
+})
+
+lia.command.add("cleanragdolls", {
+    superAdminOnly = true,
+    desc = "Remove all ragdoll entities from the map except active player ragdolls.",
+    onRun = function(client)
+        local count = 0
+        local protectedRagdolls = {}
+        for _, ply in player.Iterator() do
+            local ragdoll = ply:getRagdoll()
+            if IsValid(ragdoll) then protectedRagdolls[ragdoll] = true end
+        end
+
+        for _, entity in ipairs(ents.FindByClass("prop_ragdoll")) do
+            if IsValid(entity) and not protectedRagdolls[entity] then
+                count = count + 1
+                SafeRemoveEntity(entity)
+            end
+        end
+
+        client:notifySuccess("You cleaned up ragdolls: " .. count .. " entities removed.")
     end
 })
 
@@ -6858,6 +7215,7 @@ lia.command.add("plytransfer", {
         if hook.Run("CanCharBeTransfered", targetChar, faction, targetPlayer:Team()) == false then return end
         local oldFaction = targetChar:getFaction()
         local oldFactionName = lia.faction.indices[oldFaction] and lia.faction.indices[oldFaction].name or oldFaction
+        hook.Run("TrackFactionTransfer", targetChar, oldFaction, faction, client, "commandTransfer")
         targetChar.vars.faction = faction.uniqueID
         targetChar:setFaction(faction.index)
         hook.Run("OnTransferred", targetPlayer)
@@ -7134,7 +7492,7 @@ lia.command.add("setclass", {
             if target:Team() == classData.faction then
                 target:getChar():joinClass(classID, true)
                 lia.log.add(client, "setClass", target:Name(), classData.name)
-                target:notifyInfoLocalized("classSet", classData.name, client:GetName())
+                target:notifyInfoLocalized("classSet", classData.name)
                 if client ~= target then client:notifySuccessLocalized("classSetOther", target:GetName(), classData.name) end
                 hook.Run("PlayerLoadout", target)
             else
@@ -7851,7 +8209,7 @@ lia.command.add("viewwarns", {
     arguments = {
         {
             name = "target",
-            type = "player"
+            type = "string"
         },
     },
     AdminStick = {
@@ -7861,15 +8219,29 @@ lia.command.add("viewwarns", {
         Icon = "icon16/eye.png"
     },
     onRun = function(client, arguments)
-        local target = lia.util.findPlayer(client, arguments[1])
-        if not target or not IsValid(target) then
+        local targetName = arguments[1]
+        if not targetName then
             client:notifyErrorLocalized("targetNotFound")
             return
         end
 
-        lia.module.get("administration"):GetWarnings(target:getChar():getID()):next(function(warns)
+        local target = lia.util.findPlayer(client, targetName)
+        local lookupSteamID, displayName = targetName, targetName
+        local warningsPromise
+        if IsValid(target) then
+            displayName = target:Nick()
+            warningsPromise = lia.db.select({"id", "timestamp", "message", "warner", "warnerSteamID", "severity"}, "warnings", "charID = " .. lia.db.convertDataType(target:getChar():getID())):next(function(res) return res.results or {} end)
+        else
+            warningsPromise = lia.db.select({"id", "timestamp", "message", "warner", "warnerSteamID", "severity", "warned"}, "warnings", "warnedSteamID = " .. lia.db.convertDataType(lookupSteamID)):next(function(res)
+                local rows = res.results or {}
+                if #rows > 0 then displayName = rows[1].warned or displayName end
+                return rows
+            end)
+        end
+
+        warningsPromise:next(function(warns)
             if #warns == 0 then
-                client:notifyInfoLocalized("noWarnings", target:Nick())
+                client:notifyInfoLocalized("noWarnings", displayName)
                 return
             end
 
@@ -7884,7 +8256,7 @@ lia.command.add("viewwarns", {
                 })
             end
 
-            lia.util.sendTableUI(client, L("playerWarningsTitle", target:Nick()), {
+            lia.util.sendTableUI(client, L("playerWarningsTitle", displayName), {
                 {
                     name = "id",
                     field = "index"

@@ -68,10 +68,38 @@ function PANEL:Init()
     self:SetDraggable(true)
     self:SetSizable(false)
     self:SetVisible(true)
+    local chatIcon = Material("icon16/comments.png")
     self.Paint = function(s, w, h)
         if not s.active then return end
-        local originalPaint = s.BaseClass.Paint
-        if originalPaint then originalPaint(s, w, h) end
+        local theme = lia.color.theme or {}
+        local accent = theme.accent or theme.header or theme.theme or Color(184, 132, 74)
+        local textColor = theme.text or Color(230, 238, 236)
+        lia.derma.rect(0, 0, w, h):Rad(9):Color(Color(2, 13, 18, 248)):Shape(lia.derma.SHAPE_IOS):Draw()
+        lia.derma.rect(1, 1, w - 2, h - 2):Rad(8):Color(Color(5, 21, 27, 245)):Shape(lia.derma.SHAPE_IOS):Draw()
+        lia.derma.rect(0, 0, w, h):Rad(9):Color(Color(accent.r, accent.g, accent.b, 155)):Shape(lia.derma.SHAPE_IOS):Outline(1):Draw()
+        lia.derma.rect(1, 1, w - 2, 40):Radii(8, 8, 0, 0):Color(Color(2, 14, 18, 252)):Draw()
+        surface.SetDrawColor(accent.r, accent.g, accent.b, 105)
+        surface.DrawRect(12, 40, w - 24, 1)
+        if not chatIcon:IsError() then
+            surface.SetMaterial(chatIcon)
+            surface.SetDrawColor(accent.r, accent.g, accent.b, 230)
+            surface.DrawTexturedRect(14, 12, 16, 16)
+        end
+
+        draw.SimpleText("Chat", "LiliaFont.18", 38, 20, textColor, TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)
+    end
+
+    if IsValid(self.btnClose) then
+        self.btnClose:SetText("")
+        self.btnClose:SetSize(28, 28)
+        self.btnClose.Paint = function(button, w, h)
+            local theme = lia.color.theme or {}
+            local accent = theme.accent or theme.header or theme.theme or Color(184, 132, 74)
+            local color = button:IsHovered() and Color(235, 110, 95) or Color(accent.r, accent.g, accent.b, 220)
+            surface.SetDrawColor(color)
+            surface.DrawLine(9, 9, w - 9, h - 9)
+            surface.DrawLine(w - 9, 9, 9, h - 9)
+        end
     end
 
     self.HitTest = function(s, x, y)
@@ -87,19 +115,35 @@ function PANEL:Init()
         s:SetDraggable(s.active)
         s:SetMouseInputEnabled(s.active)
         s:SetKeyboardInputEnabled(s.active)
+        if IsValid(s.sendButton) and IsValid(s.entry) then
+            s.sendButton:SetSize(42, s.entry:GetTall())
+            s.sendButton:SetPos(s:GetWide() - 54, s.entry:GetY())
+        end
     end
 
     self.scroll = self:Add("liaScrollPanel")
     self.scroll:Dock(FILL)
-    self.scroll:DockMargin(4, 4, 4, 36)
+    self.scroll:DockMargin(12, 46, 12, 6)
     self.scroll:GetVBar():SetWide(8)
     self.scrollbarShouldBeVisible = false
     self:setScrollbarVisible(false)
     self.scroll:SetVisible(true)
     local vbar = self.scroll:GetVBar()
     if IsValid(vbar) then
-        local originalPaint = vbar.Paint
-        vbar.Paint = function(s, w, h) if self.scrollbarShouldBeVisible and originalPaint then originalPaint(s, w, h) end end
+        vbar:SetHideButtons(true)
+        vbar.Paint = function(_, w, h)
+            if not self.scrollbarShouldBeVisible then return end
+            surface.SetDrawColor(255, 255, 255, 5)
+            surface.DrawRect(math.floor(w * 0.5) - 1, 0, 2, h)
+        end
+
+        vbar.btnGrip.Paint = function(button, w, h)
+            if not self.scrollbarShouldBeVisible then return end
+            local theme = lia.color.theme or {}
+            local accent = theme.accent or theme.header or theme.theme or Color(184, 132, 74)
+            local alpha = button.Depressed and 230 or button:IsHovered() and 205 or 165
+            lia.derma.rect(1, 0, w - 2, h):Rad(4):Color(Color(accent.r, accent.g, accent.b, alpha)):Shape(lia.derma.SHAPE_IOS):Draw()
+        end
     end
 
     self.lastY = 0
@@ -144,8 +188,43 @@ function PANEL:setActive(state)
 
         self.entry = self:Add("liaEntry")
         self.entry:Dock(BOTTOM)
-        self.entry:SetTall(28)
+        self.entry:DockMargin(12, 0, 62, 10)
+        self.entry:SetTall(38)
+        self.entry:SetFont("LiliaFont.17")
+        self.entry:SetPlaceholderText("Enter text...")
         self.entry.OnRemove = function() hook.Run("FinishChat") end
+        local textEntry = self.entry.textEntry
+        textEntry.PaintOver = function(s, w, h)
+            local theme = lia.color.theme or {}
+            local accent = theme.accent or theme.header or theme.theme or Color(184, 132, 74)
+            local textColor = theme.text or Color(230, 238, 236)
+            local focused = s:IsEditing() or s:HasFocus()
+            lia.derma.rect(0, 0, w, h):Rad(6):Color(Color(5, 18, 23, 252)):Shape(lia.derma.SHAPE_IOS):Draw()
+            lia.derma.rect(0, 0, w, h):Rad(6):Color(Color(accent.r, accent.g, accent.b, focused and 180 or 95)):Shape(lia.derma.SHAPE_IOS):Outline(1):Draw()
+            if s:GetText() == "" then draw.SimpleText("Enter text...", "LiliaFont.17", 12, h * 0.5, Color(160, 170, 170, 125), TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER) end
+            s:DrawTextEntryText(textColor, Color(accent.r, accent.g, accent.b, 70), Color(accent.r, accent.g, accent.b, 255))
+        end
+
+        self.sendButton = self:Add("DButton")
+        self.sendButton:SetText("")
+        self.sendButton:SetSize(42, 38)
+        self.sendButton.Paint = function(button, w, h)
+            local theme = lia.color.theme or {}
+            local accent = theme.accent or theme.header or theme.theme or Color(184, 132, 74)
+            local fillAlpha = button.Depressed and 42 or button:IsHovered() and 28 or 10
+            local borderAlpha = button.Depressed and 220 or button:IsHovered() and 190 or 125
+            local centerX = math.floor(w * 0.5)
+            local centerY = math.floor(h * 0.5)
+            lia.derma.rect(0, 0, w, h):Rad(6):Color(Color(accent.r, accent.g, accent.b, fillAlpha)):Shape(lia.derma.SHAPE_IOS):Draw()
+            lia.derma.rect(0, 0, w, h):Rad(6):Color(Color(accent.r, accent.g, accent.b, borderAlpha)):Shape(lia.derma.SHAPE_IOS):Outline(1):Draw()
+            surface.SetDrawColor(accent.r, accent.g, accent.b, 235)
+            surface.DrawLine(centerX - 7, centerY - 8, centerX + 6, centerY)
+            surface.DrawLine(centerX + 6, centerY, centerX - 7, centerY + 8)
+            surface.DrawLine(centerX - 7, centerY - 8, centerX - 3, centerY)
+            surface.DrawLine(centerX - 3, centerY, centerX - 7, centerY + 8)
+        end
+
+        self.sendButton.DoClick = function() if IsValid(self.text) and self.text.OnEnter then self.text:OnEnter() end end
         lia.chat.history = lia.chat.history or {}
         self.text = self.entry.textEntry
         self.text.History = lia.chat.history
@@ -175,6 +254,11 @@ function PANEL:setActive(state)
                         self.commandListCreateTime = nil
                     end
 
+                    if IsValid(self.sendButton) then
+                        self.sendButton:Remove()
+                        self.sendButton = nil
+                    end
+
                     if IsValid(self.entry) then self.entry:Remove() end
                     self.entry = nil
                     if IsValid(self.text) then self.text:KillFocus() end
@@ -197,6 +281,11 @@ function PANEL:setActive(state)
                     self.commandList:Remove()
                     self.commandList = nil
                     self.commandListCreateTime = nil
+                end
+
+                if IsValid(self.sendButton) then
+                    self.sendButton:Remove()
+                    self.sendButton = nil
                 end
 
                 if IsValid(self.entry) then self.entry:Remove() end
@@ -340,6 +429,11 @@ function PANEL:setActive(state)
                 self:SetMouseInputEnabled(false)
                 self:SetKeyboardInputEnabled(false)
                 gui.EnableScreenClicker(false)
+                if IsValid(self.sendButton) then
+                    self.sendButton:Remove()
+                    self.sendButton = nil
+                end
+
                 if IsValid(self.entry) then self.entry:Remove() end
                 self.entry = nil
                 if IsValid(self.text) then self.text:KillFocus() end
@@ -492,6 +586,11 @@ function PANEL:Think()
             self.commandList:Remove()
             self.commandList = nil
             self.commandListCreateTime = nil
+        end
+
+        if IsValid(self.sendButton) then
+            self.sendButton:Remove()
+            self.sendButton = nil
         end
 
         if IsValid(self.entry) then self.entry:Remove() end

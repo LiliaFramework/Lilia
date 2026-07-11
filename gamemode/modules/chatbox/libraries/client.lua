@@ -199,18 +199,46 @@ local function openAddFilteredWordPrompt()
     end)
 end
 
-local function chatFilterShade(color, amount, alpha)
-    return Color(math.Clamp((color.r or 0) + amount, 0, 255), math.Clamp((color.g or 0) + amount, 0, 255), math.Clamp((color.b or 0) + amount, 0, 255), alpha or color.a or 255)
-end
-
 local function buildFilteredWordsAdminPanel(panel)
     MODULE.filteredWordAdminPanel = panel
     panel:Clear()
     panel:DockPadding(12, 12, 12, 12)
     panel.Paint = nil
     local theme = lia.color.theme or {}
-    local background = theme.background or Color(18, 20, 24)
-    local accent = theme.accent or theme.primary or Color(60, 180, 190)
+    local accent = theme.accent or theme.header or theme.theme or Color(184, 132, 74)
+    local panelColor = Color(4, 18, 23, 245)
+    local panelColorAlt = Color(7, 24, 29, 245)
+    local selectedColor = Color(24, 31, 31, 250)
+    local borderColor = Color(47, 59, 57, 220)
+    local textColor = Color(230, 236, 235)
+    local mutedTextColor = Color(145, 160, 158)
+    local selectedWord
+    local wordButtons = {}
+    local sourceWords = {}
+    local syncingSearch = false
+    local function drawPanel(x, y, w, h, radius, color, outline)
+        draw.RoundedBox(radius, x, y, w, h, color)
+        if outline then
+            surface.SetDrawColor(outline)
+            surface.DrawOutlinedRect(x, y, w, h, 1)
+        end
+    end
+
+    local function styleScrollBar(scrollPanel)
+        if not IsValid(scrollPanel) then return end
+        local vbar = scrollPanel:GetVBar()
+        if not IsValid(vbar) then return end
+        vbar:SetWide(7)
+        vbar.Paint = function(_, w, h)
+            surface.SetDrawColor(255, 255, 255, 4)
+            surface.DrawRect(0, 0, w, h)
+        end
+
+        vbar.btnUp.Paint = function() end
+        vbar.btnDown.Paint = function() end
+        vbar.btnGrip.Paint = function(_, w, h) draw.RoundedBox(4, 1, 0, w - 2, h, Color(accent.r, accent.g, accent.b, 145)) end
+    end
+
     local function removeFilteredWord(word)
         word = string.Trim(tostring(word or ""))
         if word == "" or word == L("chatFilterEmpty") then return end
@@ -219,112 +247,327 @@ local function buildFilteredWordsAdminPanel(panel)
         net.SendToServer()
     end
 
+    local function createSearchEntry(parent, placeholder)
+        local wrap = parent:Add("DPanel")
+        wrap.Paint = function(_, w, h) drawPanel(0, 0, w, h, 5, Color(7, 22, 27, 245), Color(accent.r, accent.g, accent.b, 55)) end
+        local entry = wrap:Add("DTextEntry")
+        entry:Dock(FILL)
+        entry:DockMargin(14, 4, 14, 4)
+        entry:SetFont("LiliaFont.16")
+        entry:SetTextColor(textColor)
+        entry:SetCursorColor(accent)
+        entry:SetPlaceholderText(placeholder)
+        entry:SetPlaceholderColor(Color(115, 132, 132))
+        entry:SetDrawBackground(false)
+        entry:SetPaintBackground(false)
+        entry:SetPaintBorderEnabled(false)
+        return wrap, entry
+    end
+
     local controls = panel:Add("DPanel")
     controls:Dock(TOP)
-    controls:SetTall(42)
-    controls:DockMargin(0, 0, 0, 10)
+    controls:SetTall(46)
+    controls:DockMargin(0, 0, 0, 14)
     controls.Paint = nil
-    local searchWrap = controls:Add("DPanel")
-    searchWrap:Dock(FILL)
-    searchWrap:DockMargin(0, 0, 8, 0)
-    searchWrap.Paint = function(_, w, h)
-        draw.RoundedBox(8, 0, 0, w, h, chatFilterShade(background, 8, 235))
-        draw.RoundedBox(8, 1, 1, w - 2, h - 2, chatFilterShade(background, 14, 235))
-    end
-
-    local search = searchWrap:Add("liaEntry")
-    search:Dock(FILL)
-    search:DockMargin(12, 5, 12, 5)
-    search:SetFont("LiliaFont.17")
-    search:SetPlaceholderText(L("chatFilterSearch"))
-    search:SetTextColor(Color(220, 220, 220))
-    search.Paint = search.Paint
-    local addButton = controls:Add("liaButton")
+    local topSearchWrap, topSearch = createSearchEntry(controls, L("chatFilterSearch"))
+    topSearchWrap:Dock(FILL)
+    topSearchWrap:DockMargin(0, 0, 12, 0)
+    local addButton = controls:Add("DButton")
     addButton:Dock(RIGHT)
-    addButton:SetWide(142)
-    addButton:SetText(L("chatFilterAddWord"))
-    addButton.DoClick = openAddFilteredWordPrompt
-    local scroll = panel:Add("DScrollPanel")
-    scroll:Dock(FILL)
-    scroll.empty = false
-    scroll.Paint = function(_, w, h)
-        draw.RoundedBox(10, 0, 0, w, h, chatFilterShade(background, 4, 235))
-        if scroll.empty then draw.SimpleText(L("chatFilterEmpty"), "LiliaFont.20", w * 0.5, h * 0.5, Color(150, 150, 150), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER) end
+    addButton:SetWide(154)
+    addButton:SetText("")
+    addButton.Paint = function(self, w, h)
+        local hovered = self:IsHovered()
+        drawPanel(0, 0, w, h, 5, hovered and Color(accent.r, accent.g, accent.b, 28) or Color(8, 23, 27, 245), Color(accent.r, accent.g, accent.b, hovered and 190 or 130))
+        draw.SimpleText("+  " .. string.upper(L("chatFilterAddWord")), "LiliaFont.16", w * 0.5, h * 0.5, hovered and Color(245, 245, 240) or textColor, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
     end
 
-    local vbar = scroll:GetVBar()
-    vbar:SetWide(6)
-    vbar.Paint = nil
-    vbar.btnUp.Paint = nil
-    vbar.btnDown.Paint = nil
-    vbar.btnGrip.Paint = function(_, w, h) draw.RoundedBox(4, 0, 0, w, h, Color(accent.r, accent.g, accent.b, 150)) end
-    local layout = scroll:Add("DIconLayout")
-    layout:Dock(TOP)
-    layout:DockMargin(12, 12, 12, 12)
-    layout:SetSpaceX(10)
-    layout:SetSpaceY(10)
-    local function addWordCard(word)
-        local card = layout:Add("DPanel")
-        card:SetSize(220, 58)
-        card.word = word
-        card.Paint = function(this, w, h)
-            local hovered = this:IsHovered() or this.copyButton:IsHovered() or this.removeButton:IsHovered()
-            local border = hovered and Color(accent.r, accent.g, accent.b, 165) or chatFilterShade(background, 34, 210)
-            local fill = hovered and chatFilterShade(background, 22, 248) or chatFilterShade(background, 14, 240)
-            draw.RoundedBox(10, 0, 0, w, h, border)
-            draw.RoundedBox(10, 1, 1, w - 2, h - 2, fill)
-            draw.SimpleText(this.word, "LiliaFont.17", 14, 18, Color(230, 230, 230), TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)
-            draw.SimpleText(L("chatFilterWordLabel"), "LiliaFont.15", 14, 40, Color(145, 145, 145), TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)
+    addButton.DoClick = function()
+        lia.websound.playButtonSound()
+        openAddFilteredWordPrompt()
+    end
+
+    local body = panel:Add("DPanel")
+    body:Dock(FILL)
+    body.Paint = nil
+    local listPanel = body:Add("DPanel")
+    listPanel:Dock(LEFT)
+    listPanel:SetWide(470)
+    listPanel:DockMargin(0, 0, 12, 0)
+    listPanel:DockPadding(14, 14, 14, 14)
+    listPanel.Paint = function(_, w, h) drawPanel(0, 0, w, h, 7, panelColor, borderColor) end
+    local listHeader = listPanel:Add("DPanel")
+    listHeader:Dock(TOP)
+    listHeader:SetTall(34)
+    listHeader.Paint = nil
+    local listTitle = listHeader:Add("DLabel")
+    listTitle:Dock(LEFT)
+    listTitle:SetWide(180)
+    listTitle:SetFont("LiliaFont.18")
+    listTitle:SetText("FILTERED WORDS")
+    listTitle:SetTextColor(textColor)
+    listTitle:SetContentAlignment(4)
+    local countLabel = listHeader:Add("DLabel")
+    countLabel:Dock(LEFT)
+    countLabel:SetWide(90)
+    countLabel:SetFont("LiliaFont.15")
+    countLabel:SetTextColor(accent)
+    countLabel:SetContentAlignment(4)
+    local listSearchWrap, listSearch = createSearchEntry(listPanel, L("search"))
+    listSearchWrap:Dock(TOP)
+    listSearchWrap:SetTall(42)
+    listSearchWrap:DockMargin(0, 4, 0, 14)
+    local listScroll = listPanel:Add("DScrollPanel")
+    listScroll:Dock(FILL)
+    listScroll.Paint = function() end
+    styleScrollBar(listScroll)
+    local listCanvas = listScroll:GetCanvas()
+    listCanvas:DockPadding(0, 0, 8, 0)
+    listCanvas.Paint = function() end
+    local emptyLabel = listCanvas:Add("DLabel")
+    emptyLabel:Dock(TOP)
+    emptyLabel:SetTall(72)
+    emptyLabel:SetFont("LiliaFont.17")
+    emptyLabel:SetTextColor(mutedTextColor)
+    emptyLabel:SetContentAlignment(5)
+    emptyLabel:SetWrap(true)
+    emptyLabel:SetText(L("chatFilterEmpty"))
+    emptyLabel:SetVisible(false)
+    local detailPanel = body:Add("DPanel")
+    detailPanel:Dock(FILL)
+    detailPanel:DockPadding(20, 18, 20, 18)
+    detailPanel.Paint = function(_, w, h) drawPanel(0, 0, w, h, 7, panelColor, borderColor) end
+    local emptyState = body:Add("DPanel")
+    emptyState:Dock(FILL)
+    emptyState:SetVisible(false)
+    emptyState.Paint = function(_, w, h)
+        drawPanel(0, 0, w, h, 7, panelColor, borderColor)
+        local centerY = h * 0.5 - 48
+        draw.SimpleText("No filtered words", "LiliaFont.30", w * 0.5, centerY, textColor, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
+        draw.SimpleText("The server chat filter is currently empty.", "LiliaFont.18", w * 0.5, centerY + 42, mutedTextColor, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
+        draw.SimpleText("Add a word to start blocking it from chat.", "LiliaFont.16", w * 0.5, centerY + 70, Color(125, 145, 144), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
+    end
+
+    local emptyAddButton = emptyState:Add("DButton")
+    emptyAddButton:SetText("")
+    emptyAddButton.Paint = function(self, w, h)
+        local hovered = self:IsHovered()
+        drawPanel(0, 0, w, h, 5, hovered and Color(accent.r, accent.g, accent.b, 28) or Color(8, 23, 27, 245), Color(accent.r, accent.g, accent.b, hovered and 210 or 145))
+        draw.SimpleText("+  ADD FIRST WORD", "LiliaFont.16", w * 0.5, h * 0.5, hovered and Color(245, 245, 240) or textColor, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
+    end
+
+    emptyAddButton.DoClick = function()
+        lia.websound.playButtonSound()
+        openAddFilteredWordPrompt()
+    end
+
+    emptyState.PerformLayout = function(_, w, h)
+        emptyAddButton:SetSize(190, 46)
+        emptyAddButton:SetPos(math.floor((w - 190) * 0.5), math.floor(h * 0.5 + 48))
+    end
+
+    local detailContent = detailPanel:Add("DPanel")
+    detailContent:Dock(FILL)
+    detailContent.Paint = function(_, w, h)
+        if not selectedWord then
+            draw.SimpleText("No word selected", "LiliaFont.24", w * 0.5, h * 0.5 - 12, textColor, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
+            draw.SimpleText("Select a filtered word from the list to inspect it.", "LiliaFont.16", w * 0.5, h * 0.5 + 22, mutedTextColor, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
+            return
         end
 
-        local copyButton = card:Add("DButton")
-        copyButton:Dock(FILL)
-        copyButton:SetText("")
-        copyButton.Paint = nil
-        copyButton.DoClick = function() SetClipboardText(word) end
-        copyButton.DoRightClick = function()
+        draw.SimpleText(selectedWord, "LiliaFont.30", 10, 8, textColor, TEXT_ALIGN_LEFT, TEXT_ALIGN_TOP)
+        draw.SimpleText(L("chatFilterWordLabel"), "LiliaFont.17", 10, 48, mutedTextColor, TEXT_ALIGN_LEFT, TEXT_ALIGN_TOP)
+        local sectionY = 112
+        draw.SimpleText("GENERAL", "LiliaFont.17", 10, sectionY, accent, TEXT_ALIGN_LEFT, TEXT_ALIGN_TOP)
+        surface.SetDrawColor(accent.r, accent.g, accent.b, 70)
+        surface.DrawRect(10, sectionY + 30, w - 20, 1)
+        local rows = {{"Word", selectedWord, textColor}, {"Status", "ACTIVE", Color(78, 205, 116)}, {"Type", "Filtered word", textColor}}
+        local rowY = sectionY + 38
+        for _, row in ipairs(rows) do
+            draw.SimpleText(row[1], "LiliaFont.16", 22, rowY + 14, Color(190, 205, 204), TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)
+            draw.SimpleText(row[2], "LiliaFont.16", w - 22, rowY + 14, row[3], TEXT_ALIGN_RIGHT, TEXT_ALIGN_CENTER)
+            surface.SetDrawColor(255, 255, 255, 14)
+            surface.DrawRect(10, rowY + 30, w - 20, 1)
+            rowY = rowY + 42
+        end
+
+        local actionY = rowY + 26
+        draw.SimpleText("ACTIONS", "LiliaFont.17", 10, actionY, accent, TEXT_ALIGN_LEFT, TEXT_ALIGN_TOP)
+        surface.SetDrawColor(accent.r, accent.g, accent.b, 70)
+        surface.DrawRect(10, actionY + 30, w - 20, 1)
+    end
+
+    local copyButton = detailContent:Add("DButton")
+    copyButton:SetText("")
+    copyButton.Paint = function(self, w, h)
+        local hovered = self:IsHovered() and selectedWord ~= nil
+        drawPanel(0, 0, w, h, 5, hovered and Color(255, 255, 255, 8) or panelColorAlt, hovered and Color(accent.r, accent.g, accent.b, 100) or borderColor)
+        draw.SimpleText("COPY WORD", "LiliaFont.16", w * 0.5, h * 0.5, selectedWord and textColor or mutedTextColor, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
+    end
+
+    copyButton.DoClick = function()
+        if not selectedWord then return end
+        lia.websound.playButtonSound()
+        SetClipboardText(selectedWord)
+    end
+
+    local removeButton = detailContent:Add("DButton")
+    removeButton:SetText("")
+    removeButton.Paint = function(self, w, h)
+        local hovered = self:IsHovered() and selectedWord ~= nil
+        local danger = Color(210, 72, 72)
+        drawPanel(0, 0, w, h, 5, hovered and Color(danger.r, danger.g, danger.b, 24) or Color(32, 18, 20, 245), Color(danger.r, danger.g, danger.b, hovered and 210 or 145))
+        draw.SimpleText("REMOVE WORD", "LiliaFont.16", w * 0.5, h * 0.5, selectedWord and danger or mutedTextColor, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
+    end
+
+    removeButton.DoClick = function()
+        if not selectedWord then return end
+        lia.websound.playButtonSound()
+        removeFilteredWord(selectedWord)
+    end
+
+    local noticePanel = detailContent:Add("DPanel")
+    noticePanel.Paint = function(_, w, h)
+        if not selectedWord then return end
+        drawPanel(0, 0, w, h, 5, Color(255, 255, 255, 5), Color(255, 255, 255, 15))
+        draw.SimpleText("This word is blocked by the server chat filter.", "LiliaFont.15", 14, h * 0.5, Color(175, 190, 188), TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)
+    end
+
+    detailContent.PerformLayout = function(_, w)
+        local actionY = 112 + 38 + 42 * 3 + 26 + 42
+        local buttonW = math.Clamp(math.floor((w - 32) * 0.28), 140, 190)
+        copyButton:SetPos(10, actionY)
+        copyButton:SetSize(buttonW, 46)
+        removeButton:SetPos(20 + buttonW, actionY)
+        removeButton:SetSize(buttonW, 46)
+        noticePanel:SetPos(10, actionY + 68)
+        noticePanel:SetSize(math.max(w - 20, 1), 48)
+    end
+
+    body.PerformLayout = function(_, w) listPanel:SetWide(math.Clamp(math.floor(w * 0.42), 330, 520)) end
+    local function refreshSelection()
+        for _, button in ipairs(wordButtons) do
+            if IsValid(button) then button:InvalidateLayout(true) end
+        end
+
+        detailContent:InvalidateLayout(true)
+    end
+
+    local function selectWord(word)
+        selectedWord = word
+        refreshSelection()
+    end
+
+    local function currentFilter()
+        return string.lower(string.Trim(topSearch:GetValue() or ""))
+    end
+
+    local function addWordButton(word)
+        local button = listCanvas:Add("DButton")
+        button:Dock(TOP)
+        button:SetTall(66)
+        button:DockMargin(0, 0, 0, 8)
+        button:SetText("")
+        button.word = word
+        button.Paint = function(self, w, h)
+            local selected = selectedWord == self.word
+            local hovered = self:IsHovered()
+            local fill = selected and selectedColor or hovered and panelColorAlt or Color(5, 19, 24, 240)
+            local outline = selected and Color(accent.r, accent.g, accent.b, 150) or hovered and Color(accent.r, accent.g, accent.b, 65) or borderColor
+            drawPanel(0, 0, w, h, 6, fill, outline)
+            if selected then
+                surface.SetDrawColor(accent.r, accent.g, accent.b, 235)
+                surface.DrawRect(0, 6, 3, h - 12)
+            end
+
+            draw.SimpleText(self.word, "LiliaFont.20", 18, 13, textColor, TEXT_ALIGN_LEFT, TEXT_ALIGN_TOP)
+            draw.SimpleText(L("chatFilterWordLabel"), "LiliaFont.15", 18, 40, mutedTextColor, TEXT_ALIGN_LEFT, TEXT_ALIGN_TOP)
+        end
+
+        button.DoClick = function(self)
+            lia.websound.playButtonSound()
+            selectWord(self.word)
+        end
+
+        button.DoRightClick = function(self)
             local menu = DermaMenu()
-            menu:AddOption(L("copyRow"), function() SetClipboardText(word) end):SetIcon("icon16/page_copy.png")
-            menu:AddOption(L("chatFilterRemoveWord"), function() removeFilteredWord(word) end):SetIcon("icon16/delete.png")
+            menu:AddOption(L("copyRow"), function() SetClipboardText(self.word) end)
+            menu:AddOption(L("chatFilterRemoveWord"), function() removeFilteredWord(self.word) end)
             menu:Open()
         end
 
-        card.copyButton = copyButton
-        local remove = card:Add("liaButton")
-        remove:Dock(RIGHT)
-        remove:DockMargin(0, 10, 10, 10)
-        remove:SetWide(72)
-        remove:SetText(L("remove"))
-        remove.DoClick = function() removeFilteredWord(word) end
-        card.removeButton = remove
+        wordButtons[#wordButtons + 1] = button
     end
 
-    function panel:populateFilteredWords(words)
-        local searchText = string.lower(string.Trim(search:GetValue() or ""))
-        local filteredWords = {}
-        layout:Clear()
-        for _, word in ipairs(words or MODULE.filteredWords or {}) do
-            word = tostring(word)
-            filteredWords[#filteredWords + 1] = word
+    local function refreshList()
+        local query = currentFilter()
+        for _, button in ipairs(wordButtons) do
+            if IsValid(button) then button:Remove() end
         end
 
-        table.sort(filteredWords, function(a, b) return a:lower() < b:lower() end)
-        MODULE.filteredWordCount = #filteredWords
-        local added = 0
-        for _, word in ipairs(filteredWords) do
-            if searchText == "" or word:lower():find(searchText, 1, true) then
-                addWordCard(word)
-                added = added + 1
+        wordButtons = {}
+        local visibleWords = {}
+        for _, word in ipairs(sourceWords) do
+            if query == "" or word:lower():find(query, 1, true) then visibleWords[#visibleWords + 1] = word end
+        end
+
+        for _, word in ipairs(visibleWords) do
+            addWordButton(word)
+        end
+
+        local total = #sourceWords
+        countLabel:SetText(string.format("%d %s", total, total == 1 and "word" or "words"))
+        local hasWords = total > 0
+        listPanel:SetVisible(hasWords)
+        detailPanel:SetVisible(hasWords)
+        emptyState:SetVisible(not hasWords)
+        emptyLabel:SetVisible(hasWords and #visibleWords == 0)
+        if hasWords and #visibleWords == 0 then
+            emptyLabel:SetText("No filtered words match your search.")
+        else
+            emptyLabel:SetText(L("chatFilterEmpty"))
+        end
+
+        local selectionStillVisible = false
+        for _, word in ipairs(visibleWords) do
+            if word == selectedWord then
+                selectionStillVisible = true
+                break
             end
         end
 
-        scroll.empty = added == 0
-        layout:InvalidateLayout(true)
-        layout:SizeToChildren(false, true)
-        scroll:InvalidateLayout(true)
+        if not selectionStillVisible then selectedWord = visibleWords[1] end
+        refreshSelection()
+        listCanvas:InvalidateLayout(true)
+        listCanvas:SizeToChildren(false, true)
+        listScroll:InvalidateLayout(true)
     end
 
-    search.OnTextChanged = function() panel:populateFilteredWords(MODULE.filteredWords or {}) end
+    local function synchronizeSearch(value, source)
+        if syncingSearch then return end
+        syncingSearch = true
+        local target = source == topSearch and listSearch or topSearch
+        if IsValid(target) and target:GetValue() ~= value then target:SetText(value) end
+        syncingSearch = false
+        refreshList()
+    end
+
+    topSearch.OnChange = function(self) synchronizeSearch(self:GetValue() or "", self) end
+    listSearch.OnChange = function(self) synchronizeSearch(self:GetValue() or "", self) end
+    function panel:populateFilteredWords(words)
+        local sortedWords = {}
+        for _, word in ipairs(words or MODULE.filteredWords or {}) do
+            word = string.Trim(tostring(word or ""))
+            if word ~= "" then sortedWords[#sortedWords + 1] = word end
+        end
+
+        table.sort(sortedWords, function(a, b) return a:lower() < b:lower() end)
+        sourceWords = sortedWords
+        MODULE.filteredWords = table.Copy(sortedWords)
+        MODULE.filteredWordCount = #sortedWords
+        refreshList()
+    end
+
     panel:populateFilteredWords(MODULE.filteredWords or {})
 end
 

@@ -872,6 +872,7 @@ local function canDrawCrosshair()
     if not client:getChar() or not IsValid(wpn) then return false end
     local hookResult = hook.Run("ShouldDrawCrosshair", client, wpn)
     if hookResult ~= nil then return hookResult end
+    if not lia.config.get("CrosshairEnabled", true) then return false end
     local cl = wpn:GetClass()
     if cl == "gmod_tool" or string.find(cl, "lia_") or string.find(cl, "detector_") then return true end
     if NoDrawCrosshairWeapon[cl] then return false end
@@ -879,7 +880,7 @@ local function canDrawCrosshair()
     if IsValid(rag) then return false end
     if g_ContextMenu:IsVisible() then return false end
     if IsValid(lia.gui.character) and lia.gui.character:IsVisible() then return false end
-    return lia.config.get("CrosshairEnabled", true)
+    return true
 end
 
 local function drawCrosshair()
@@ -1554,20 +1555,8 @@ end
 
 local lastRKeyState = false
 function GM:Think()
-    local itemIcon, itemTable
-    if IsValid(lia.item.held) and lia.item.held.itemTable then
-        itemIcon = lia.item.held
-        itemTable = lia.item.held.itemTable
-    else
-        for _, panel in ipairs(vgui.GetAll()) do
-            if panel:GetName() == "liaGridInventoryPanel" and IsValid(panel.hoveredItem) then
-                itemIcon = panel.hoveredItem
-                itemTable = panel.hoveredItem.itemTable
-                break
-            end
-        end
-    end
-
+    local itemIcon = IsValid(lia.item.held) and lia.item.held or nil
+    local itemTable = itemIcon and itemIcon.itemTable or nil
     if not itemTable then return end
     local rKeyPressed = input.IsKeyDown(KEY_R)
     if rKeyPressed and not lastRKeyState then

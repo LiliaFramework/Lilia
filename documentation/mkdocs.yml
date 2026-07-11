@@ -153,6 +153,7 @@ nav:
           - Classes: definitions/class.md
           - Factions: definitions/faction.md
           - Modules: definitions/module.md
+          - Schema: definitions/schema.md
       - Items:
           # AUTO-GENERATED: ITEM DEFINITIONS START
           - Overview: definitions/items/index.md

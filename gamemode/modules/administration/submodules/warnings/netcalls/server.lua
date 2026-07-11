@@ -43,7 +43,7 @@ end)
 net.Receive("liaRequestAllWarnings", function(_, client)
     lia.debug("[Permissions]", "Permission Check for net.Receive liaRequestAllWarnings", "hasPrivilege(viewPlayerWarnings)=", tostring(client:hasPrivilege("viewPlayerWarnings")), "finalResult=", tostring(client:hasPrivilege("viewPlayerWarnings")))
     if not client:hasPrivilege("viewPlayerWarnings") then return end
-    lia.db.select({"timestamp", "warned", "warnedSteamID", "warner", "warnerSteamID", "message", "severity"}, "warnings"):next(function(res)
+    lia.db.select({"id", "charID", "timestamp", "warned", "warnedSteamID", "warner", "warnerSteamID", "message", "severity"}, "warnings"):next(function(res)
         net.Start("liaAllWarnings")
         net.WriteTable(res.results or {})
         net.Send(client)

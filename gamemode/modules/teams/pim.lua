@@ -38,6 +38,7 @@
 
             if hook.Run("CanCharBeTransfered", tChar, faction, tChar:getFaction()) == false then return end
             local oldFaction = tChar:getFaction()
+            MODULE:TrackFactionTransfer(tChar, oldFaction, faction, client, "inviteToFaction")
             tChar.vars.faction = faction.uniqueID
             tChar:setFaction(faction.index)
             hook.Run("OnTransferred", target)

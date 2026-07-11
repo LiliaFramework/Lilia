@@ -409,106 +409,67 @@ end
 
 if CLIENT then
     local oldSurfaceSetFont = surface.SetFont
-    function surface.SetFont(font)
-        if isstring(font) and not lia.font.stored[font] and #font <= 63 then
-            local mainFont = lia.config.get("Font", "Montserrat Medium") or "Montserrat Medium"
-            local hudFont = lia.config.get("HUDFont", "Montserrat Medium") or "Montserrat Medium"
-            local fontData = {
-                font = font,
-                size = 16,
-                extended = true,
-                antialias = true,
-                weight = 500
-            }
-
-            if font == "LiliaFont" then
-                fontData.font = mainFont
-                fontData.size = 16
-            elseif font == "HUDFont" or font == "LiliaHUDFont" then
-                fontData.font = hudFont
-                fontData.size = 16
-            else
-                local baseFont, sizeStr = font:match("^([^%.]+)%.(%d+)$")
-                if baseFont and sizeStr then
-                    if baseFont == "LiliaFont" then
-                        fontData.font = mainFont
-                    elseif baseFont == "HUDFont" or baseFont == "LiliaHUDFont" then
-                        fontData.font = hudFont
-                    else
-                        fontData.font = baseFont
-                    end
-
-                    fontData.size = tonumber(sizeStr) or 16
-                end
-            end
-
-            local boldMatch = font:match("^(.-)(%d+)b$")
-            if boldMatch then
-                if string.match(boldMatch, "^LiliaFont") then
-                    fontData.font = lia.font.getBoldFontName(mainFont)
-                elseif string.match(boldMatch, "^HUDFont") or string.match(boldMatch, "^LiliaHUDFont") then
-                    fontData.font = lia.font.getBoldFontName(hudFont)
-                else
-                    fontData.font = boldMatch
-                end
-
-                fontData.weight = 700
-            end
-
-            local italicMatch = font:match("^(.-)(%d+)i$")
-            if italicMatch then fontData.italic = true end
-            local shadowMatch = font:match("^(.-)(%d+)s$")
-            if shadowMatch then fontData.shadow = true end
-            local boldItalicMatch = font:match("^(.-)(%d+)bi$")
-            if boldItalicMatch then
-                if string.match(boldItalicMatch, "^LiliaFont") then
-                    fontData.font = lia.font.getBoldFontName(mainFont)
-                elseif string.match(boldItalicMatch, "^HUDFont") or string.match(boldItalicMatch, "^LiliaHUDFont") then
-                    fontData.font = lia.font.getBoldFontName(hudFont)
-                else
-                    fontData.font = boldItalicMatch
-                end
-
-                fontData.weight = 700
-                fontData.italic = true
-            end
-
-            local boldShadowMatch = font:match("^(.-)(%d+)bs$")
-            if boldShadowMatch then
-                if string.match(boldShadowMatch, "^LiliaFont") then
-                    fontData.font = lia.font.getBoldFontName(mainFont)
-                elseif string.match(boldShadowMatch, "^HUDFont") or string.match(boldShadowMatch, "^LiliaHUDFont") then
-                    fontData.font = lia.font.getBoldFontName(hudFont)
-                else
-                    fontData.font = boldShadowMatch
-                end
-
-                fontData.weight = 700
-                fontData.shadow = true
-            end
-
-            lia.font.register(font, fontData)
+    local function getManagedFontData(fontName)
+        if not isstring(fontName) or #fontName > 63 then return end
+        local mainFont = lia.config.get("Font", "Montserrat Medium") or "Montserrat Medium"
+        local hudFont = lia.config.get("HUDFont", "Montserrat Medium") or "Montserrat Medium"
+        local baseName
+        local size = 16
+        local suffix = ""
+        if fontName == "LiliaFont" then
+            baseName = "LiliaFont"
+        elseif fontName == "LiliaHUDFont" then
+            baseName = "LiliaHUDFont"
+        elseif fontName == "HUDFont" then
+            baseName = "HUDFont"
+        else
+            local sizeString
+            baseName, sizeString, suffix = fontName:match("^(LiliaFont)%.(%d+)([bis]*)$")
+            if not baseName then baseName, sizeString, suffix = fontName:match("^(LiliaHUDFont)%.(%d+)([bis]*)$") end
+            if not baseName then baseName, sizeString, suffix = fontName:match("^(HUDFont)%.(%d+)([bis]*)$") end
+            if not baseName then return end
+            size = tonumber(sizeString)
+            if not size or size < 1 then return end
         end
-        return oldSurfaceSetFont(font)
+
+        local fontFace = baseName == "LiliaFont" and mainFont or hudFont
+        local bold = suffix:find("b", 1, true) ~= nil
+        local italic = suffix:find("i", 1, true) ~= nil
+        local shadow = suffix:find("s", 1, true) ~= nil
+        if bold then fontFace = lia.font.getBoldFontName(fontFace) end
+        return {
+            font = fontFace,
+            size = size,
+            extended = true,
+            antialias = true,
+            weight = bold and 700 or 500,
+            italic = italic,
+            shadow = shadow
+        }
+    end
+
+    function surface.SetFont(fontName)
+        if isstring(fontName) and not lia.font.stored[fontName] then
+            local fontData = getManagedFontData(fontName)
+            if fontData then lia.font.register(fontName, fontData) end
+        end
+        return oldSurfaceSetFont(fontName)
     end
 
     hook.Add("InitializedConfig", "liaFontsOnConfigLoad", function()
-        if not lia.config.stored or not lia.config.stored.Font then
-            timer.Simple(0.1, function()
-                local fontName = lia.config.get("Font", "Montserrat Medium")
-                lia.font.registerFonts(fontName)
-                timer.Simple(0.2, function()
-                    lia.font.loadFonts()
-                    hook.Run("RefreshFonts")
-                end)
-            end)
-        else
+        local function initializeFonts()
             local fontName = lia.config.get("Font", "Montserrat Medium")
             lia.font.registerFonts(fontName)
             timer.Simple(0.2, function()
                 lia.font.loadFonts()
                 hook.Run("RefreshFonts")
             end)
+        end
+
+        if not lia.config.stored or not lia.config.stored.Font then
+            timer.Simple(0.1, initializeFonts)
+        else
+            initializeFonts()
         end
     end)
 end
@@ -528,7 +489,7 @@ end, {
 
 hook.Add("OnConfigUpdated", "liaFontsOnConfigUpdate", function(key, oldValue, newValue)
     if not CLIENT or oldValue == newValue or key ~= "Font" then return end
-    lia.font.registerFonts(newValue or "Montserrat Medium")()
+    lia.font.registerFonts(newValue or "Montserrat Medium")
     timer.Simple(0.1, function()
         lia.font.loadFonts()
         hook.Run("RefreshFonts")

@@ -789,14 +789,34 @@ if CLIENT then
             local description = lia.keybind.getDisplayDescription(action)
             SetStyledTooltip(p, description)
             local l = p:Add("DLabel")
-            l:Dock(LEFT)
-            l:DockMargin(15, 0, 0, 0)
-            l:SetWidth(250)
+            l:Dock(FILL)
+            l:DockMargin(15, 8, 15, 8)
             l:SetText(localizeKeybindLabel(action))
             l:SetFont("LiliaFont.18")
             l:SetTextColor(lia.color.theme.text or color_white)
-            l:SetContentAlignment(4)
+            l:SetWrap(true)
+            l:SetAutoStretchVertical(true)
+            l:SetContentAlignment(7)
             SetStyledTooltip(l, description)
+            local control
+            local function updateRowHeight()
+                if not IsValid(p) or not IsValid(l) then return end
+                local minHeight = 45
+                local labelHeight = select(2, l:GetContentSize())
+                local controlHeight = IsValid(control) and control:GetTall() + 16 or minHeight
+                p:SetTall(math.max(minHeight, labelHeight + 16, controlHeight))
+            end
+
+            p.PerformLayout = function(_, w, h)
+                if IsValid(l) then
+                    local controlWidth = IsValid(control) and control:GetWide() + 30 or 30
+                    l:SetWide(math.max(120, w - controlWidth))
+                    l:InvalidateLayout(true)
+                end
+
+                updateRowHeight()
+            end
+
             local currentKey = lia.keybind.get(action, KEY_NONE)
             if allowEdit then
                 local combo = p:Add("liaComboBox")
@@ -869,6 +889,8 @@ if CLIENT then
                     local client = LocalPlayer()
                     if IsValid(client) then client:notifySuccess(L("keybindChanged", localizeKeybindLabel(action), getDisplayKeyName(newKey))) end
                 end
+
+                control = combo
             else
                 local lKey = p:Add("DLabel")
                 lKey:Dock(RIGHT)
@@ -879,7 +901,10 @@ if CLIENT then
                 lKey:SetTextColor(lia.color.theme.text)
                 lKey:SetContentAlignment(6)
                 SetStyledTooltip(lKey, description)
+                control = lKey
             end
+
+            timer.Simple(0, function() if IsValid(p) then p:InvalidateLayout(true) end end)
         end
 
         pages[#pages + 1] = {
