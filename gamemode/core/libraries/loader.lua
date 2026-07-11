@@ -302,10 +302,6 @@ local FilesToLoad = {
         realm = "shared"
     },
     {
-        path = "lilia/gamemode/core/meta/player_pac.lua",
-        realm = "shared"
-    },
-    {
         path = "lilia/gamemode/core/meta/panel.lua",
         realm = "client"
     },
@@ -1195,6 +1191,13 @@ end
 
 function GM:OnReloaded()
     lia.loader.initializeGamemode(true)
+    if CLIENT then
+        hook.Run("PreLiliaLoaded")
+        lia.option.load()
+        lia.keybind.load()
+        hook.Run("LiliaLoaded")
+    end
+
     if SERVER then CreateCharacterSaveTimer() end
 end
 
