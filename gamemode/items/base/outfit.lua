@@ -102,8 +102,10 @@ end
 if CLIENT then
     function ITEM:paintOver(item, w, h)
         if item:getData("equip") then
-            surface.SetDrawColor(110, 255, 110, 100)
-            surface.DrawRect(w - 14, h - 14, 8, 8)
+            local markerY = h - 10
+            local markerW = math.max(w - 12, 10)
+            draw.RoundedBox(2, 6, markerY, markerW, 4, Color(105, 231, 170, 235))
+            draw.RoundedBox(2, 6, markerY - 4, markerW, 2, Color(105, 231, 170, 90))
         end
     end
 else
