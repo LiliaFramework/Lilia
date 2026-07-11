@@ -28,7 +28,7 @@
         Shared
 ]]
 GM.Name = "Lilia"
-GM.version = 7.539
+GM.version = 7.549
 GM.Author = "Samael"
 GM.Website = "https://discord.gg/esCRH5ckbQ"
 include("core/libraries/loader.lua")

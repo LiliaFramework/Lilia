@@ -28,7 +28,7 @@ This page documents hooks in the ui category.
 ---
 
 <details class="realm-client" id="function-addbarfield">
-<summary><span class="summary-main"><a id="AddBarField"></a>AddBarField(sectionName, fieldName, labelText, minFunc, maxFunc, valueFunc)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/derma/panels/f1menu.lua#L159" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="AddBarField"></a>AddBarField(sectionName, fieldName, labelText, minFunc, maxFunc, valueFunc, icon)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/derma/panels/f1menu.lua#L162" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="addbarfield"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -53,11 +53,12 @@ This page documents hooks in the ui category.
 <p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#2.1">function|number</a></span> <span class="parameter">minFunc</span> <span class="optional">optional</span> A callback or numeric value that supplies the bar minimum.</p>
 <p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#2.1">function|number</a></span> <span class="parameter">maxFunc</span> <span class="optional">optional</span> A callback or numeric value that supplies the bar maximum.</p>
 <p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#2.1">function|number</a></span> <span class="parameter">valueFunc</span> <span class="optional">optional</span> A callback or numeric value that supplies the current bar value.</p>
+<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#2.1">string|IMaterial</a></span> <span class="parameter">icon</span> <span class="optional">optional</span> Optional material path or material displayed beside the bar. No icon is drawn when omitted.</p>
 </div>
 
 <h3 style="margin-bottom: 5px; font-weight: 700;">Example Usage</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
-<pre><code class="language-lua">  hook.Add("AddBarField", "liaExampleAddBarField", function(sectionName, fieldName, labelText, minFunc, maxFunc, valueFunc)
+<pre><code class="language-lua">  hook.Add("AddBarField", "liaExampleAddBarField", function(sectionName, fieldName, labelText, minFunc, maxFunc, valueFunc, icon)
       if sectionName == L("attributesModuleName") and fieldName == "stm" then
           print(labelText, minFunc(), maxFunc(), valueFunc())
       end
@@ -112,7 +113,7 @@ This page documents hooks in the ui category.
 ---
 
 <details class="realm-client" id="function-addtextfield">
-<summary><span class="summary-main"><a id="AddTextField"></a>AddTextField(sectionName, fieldName, labelText, valueFunc)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/derma/panels/f1menu.lua#L121" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="AddTextField"></a>AddTextField(sectionName, fieldName, labelText, valueFunc, icon)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/derma/panels/f1menu.lua#L121" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="addtextfield"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -135,11 +136,12 @@ This page documents hooks in the ui category.
 <p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#2.1">string</a></span> <span class="parameter">fieldName</span> The unique field key stored on the section definition.</p>
 <p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#2.1">string</a></span> <span class="parameter">labelText</span> The label shown beside the text entry.</p>
 <p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#2.1">function</a></span> <span class="parameter">valueFunc</span> A callback that returns the current string value for the field.</p>
+<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#2.1">string|IMaterial</a></span> <span class="parameter">icon</span> <span class="optional">optional</span> Optional material path or material displayed beside the field. No icon is drawn when omitted.</p>
 </div>
 
 <h3 style="margin-bottom: 5px; font-weight: 700;">Example Usage</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
-<pre><code class="language-lua">  hook.Add("AddTextField", "liaExampleAddTextField", function(sectionName, fieldName, labelText, valueFunc)
+<pre><code class="language-lua">  hook.Add("AddTextField", "liaExampleAddTextField", function(sectionName, fieldName, labelText, valueFunc, icon)
       if sectionName == L("generalInfo") and fieldName == "name" then
           print(labelText, valueFunc())
       end
@@ -153,7 +155,7 @@ This page documents hooks in the ui category.
 ---
 
 <details class="realm-client" id="function-candisplaycharinfo">
-<summary><span class="summary-main"><a id="CanDisplayCharInfo"></a>CanDisplayCharInfo(name)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/derma/panels/f1menu.lua#L267" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="CanDisplayCharInfo"></a>CanDisplayCharInfo(name)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/derma/panels/f1menu.lua#L273" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="candisplaycharinfo"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -194,7 +196,7 @@ This page documents hooks in the ui category.
 ---
 
 <details class="realm-client" id="function-createinformationbuttons">
-<summary><span class="summary-main"><a id="CreateInformationButtons"></a>CreateInformationButtons(pages)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/derma/panels/f1menu.lua#L203" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="CreateInformationButtons"></a>CreateInformationButtons(pages)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/derma/panels/f1menu.lua#L209" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="createinformationbuttons"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -375,7 +377,7 @@ This page documents hooks in the ui category.
 ---
 
 <details class="realm-client" id="function-populateconfigurationbuttons">
-<summary><span class="summary-main"><a id="PopulateConfigurationButtons"></a>PopulateConfigurationButtons(pages)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/derma/panels/f1menu.lua#L235" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="PopulateConfigurationButtons"></a>PopulateConfigurationButtons(pages)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/derma/panels/f1menu.lua#L241" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="populateconfigurationbuttons"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">

@@ -166,10 +166,6 @@ Reference pages for documented Lilia hooks.
     <h3>Salary</h3>
     <p>This page documents hooks in the salary category.</p>
   </a>
-  <a href="./scoreboard/" class="card">
-    <h3>Scoreboard</h3>
-    <p>This page documents hooks in the scoreboard category.</p>
-  </a>
   <a href="./spawns/" class="card">
     <h3>Spawns</h3>
     <p>This page documents hooks in the spawns category.</p>

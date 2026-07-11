@@ -1785,9 +1785,7 @@ function MODULE:PopulateAdminTabs(pages)
 
                                 button.DoRightClick = function() openCharacterActions(row, selectedAccount) end
                                 characterButtons[#characterButtons + 1] = button
-                                if not firstVisibleRow then
-                                    firstVisibleRow = row
-                                end
+                                if not firstVisibleRow then firstVisibleRow = row end
                             end
                         end
 

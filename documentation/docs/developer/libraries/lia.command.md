@@ -659,7 +659,7 @@ The command library centralizes shared command registration under `lia.command`,
 ---
 
 <details class="realm-server" id="function-onchargetup">
-<summary><span class="summary-main"><a id="OnCharGetup"></a>OnCharGetup(target, entity)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/commands.lua#L3303" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="OnCharGetup"></a>OnCharGetup(target, entity)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/commands.lua#L3638" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="onchargetup"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">

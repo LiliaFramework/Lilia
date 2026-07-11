@@ -22,7 +22,7 @@ Comprehensive collection of official and community-built modules for the Lilia f
   <p>Lets players pay to send a server-wide advert.</p>
 </div>
 
-<h3 style="margin-bottom: 5px; font-weight: 700;">changelog</h3>
+<h3 style="margin-bottom: 5px; font-weight: 700;">Changelog</h3>
 <div style="margin-left: 20px;">
   <details class="realm-shared no-icon" id="changelog-advertisements-1-0">
     <summary>Version 1.0</summary>
@@ -53,7 +53,7 @@ Comprehensive collection of official and community-built modules for the Lilia f
   <p>Marks inactive players as AFK and helps protect them.</p>
 </div>
 
-<h3 style="margin-bottom: 5px; font-weight: 700;">changelog</h3>
+<h3 style="margin-bottom: 5px; font-weight: 700;">Changelog</h3>
 <div style="margin-left: 20px;">
   <details class="realm-shared no-icon" id="changelog-afk-protection-1-0">
     <summary>Version 1.0</summary>
@@ -84,7 +84,7 @@ Comprehensive collection of official and community-built modules for the Lilia f
   <p>Lets players drink alcohol and get drunk over time.</p>
 </div>
 
-<h3 style="margin-bottom: 5px; font-weight: 700;">changelog</h3>
+<h3 style="margin-bottom: 5px; font-weight: 700;">Changelog</h3>
 <div style="margin-left: 20px;">
   <details class="realm-shared no-icon" id="changelog-alcoholism-1-0">
     <summary>Version 1.0</summary>
@@ -134,7 +134,7 @@ Comprehensive collection of official and community-built modules for the Lilia f
   <p>Lets players send anonymous rumours.</p>
 </div>
 
-<h3 style="margin-bottom: 5px; font-weight: 700;">changelog</h3>
+<h3 style="margin-bottom: 5px; font-weight: 700;">Changelog</h3>
 <div style="margin-left: 20px;">
   <details class="realm-shared no-icon" id="changelog-anonymous-rumors-1-0">
     <summary>Version 1.0</summary>
@@ -165,7 +165,7 @@ Comprehensive collection of official and community-built modules for the Lilia f
   <p>Restarts the server on a timer with a warning countdown.</p>
 </div>
 
-<h3 style="margin-bottom: 5px; font-weight: 700;">changelog</h3>
+<h3 style="margin-bottom: 5px; font-weight: 700;">Changelog</h3>
 <div style="margin-left: 20px;">
   <details class="realm-shared no-icon" id="changelog-auto-restarter-1-0">
     <summary>Version 1.0</summary>
@@ -196,7 +196,7 @@ Comprehensive collection of official and community-built modules for the Lilia f
   <p>Lets staff send messages to specific factions or classes.</p>
 </div>
 
-<h3 style="margin-bottom: 5px; font-weight: 700;">changelog</h3>
+<h3 style="margin-bottom: 5px; font-weight: 700;">Changelog</h3>
 <div style="margin-left: 20px;">
   <details class="realm-shared no-icon" id="changelog-broadcasts-1-0">
     <summary>Version 1.0</summary>
@@ -227,7 +227,7 @@ Comprehensive collection of official and community-built modules for the Lilia f
   <p>Shows timed captions on screen for events and scenes.</p>
 </div>
 
-<h3 style="margin-bottom: 5px; font-weight: 700;">changelog</h3>
+<h3 style="margin-bottom: 5px; font-weight: 700;">Changelog</h3>
 <div style="margin-left: 20px;">
   <details class="realm-shared no-icon" id="changelog-captions-1-0">
     <summary>Version 1.0</summary>
@@ -258,7 +258,7 @@ Comprehensive collection of official and community-built modules for the Lilia f
   <p>Adds a simple deck of cards players can draw from.</p>
 </div>
 
-<h3 style="margin-bottom: 5px; font-weight: 700;">changelog</h3>
+<h3 style="margin-bottom: 5px; font-weight: 700;">Changelog</h3>
 <div style="margin-left: 20px;">
   <details class="realm-shared no-icon" id="changelog-cards-1-0">
     <summary>Version 1.0</summary>
@@ -289,7 +289,7 @@ Comprehensive collection of official and community-built modules for the Lilia f
   <p>Posts automatic chat messages on a timer.</p>
 </div>
 
-<h3 style="margin-bottom: 5px; font-weight: 700;">changelog</h3>
+<h3 style="margin-bottom: 5px; font-weight: 700;">Changelog</h3>
 <div style="margin-left: 20px;">
   <details class="realm-shared no-icon" id="changelog-chat-messages-1-0">
     <summary>Version 1.0</summary>
@@ -320,7 +320,7 @@ Comprehensive collection of official and community-built modules for the Lilia f
   <p>Shows large cinematic text on screen for dramatic moments.</p>
 </div>
 
-<h3 style="margin-bottom: 5px; font-weight: 700;">changelog</h3>
+<h3 style="margin-bottom: 5px; font-weight: 700;">Changelog</h3>
 <div style="margin-left: 20px;">
   <details class="realm-shared no-icon" id="changelog-cinematic-text-1-0">
     <summary>Version 1.0</summary>
@@ -351,7 +351,7 @@ Comprehensive collection of official and community-built modules for the Lilia f
   <p>Lets players climb up ledges.</p>
 </div>
 
-<h3 style="margin-bottom: 5px; font-weight: 700;">changelog</h3>
+<h3 style="margin-bottom: 5px; font-weight: 700;">Changelog</h3>
 <div style="margin-left: 20px;">
   <details class="realm-shared no-icon" id="changelog-climbing-1-0">
     <summary>Version 1.0</summary>
@@ -401,7 +401,7 @@ Comprehensive collection of official and community-built modules for the Lilia f
   <p>Adds chat commands for community links like Discord or Workshop pages.</p>
 </div>
 
-<h3 style="margin-bottom: 5px; font-weight: 700;">changelog</h3>
+<h3 style="margin-bottom: 5px; font-weight: 700;">Changelog</h3>
 <div style="margin-left: 20px;">
   <details class="realm-shared no-icon" id="changelog-community-commands-1-0">
     <summary>Version 1.0</summary>
@@ -432,7 +432,7 @@ Comprehensive collection of official and community-built modules for the Lilia f
   <p>Adds a simple tweakable cursor.</p>
 </div>
 
-<h3 style="margin-bottom: 5px; font-weight: 700;">changelog</h3>
+<h3 style="margin-bottom: 5px; font-weight: 700;">Changelog</h3>
 <div style="margin-left: 20px;">
   <details class="realm-shared no-icon" id="changelog-cursor-1-0">
     <summary>Version 1.0</summary>
@@ -463,7 +463,7 @@ Comprehensive collection of official and community-built modules for the Lilia f
   <p>Plays simple cutscenes with synced camera movement.</p>
 </div>
 
-<h3 style="margin-bottom: 5px; font-weight: 700;">changelog</h3>
+<h3 style="margin-bottom: 5px; font-weight: 700;">Changelog</h3>
 <div style="margin-left: 20px;">
   <details class="realm-shared no-icon" id="changelog-cutscenes-1-0">
     <summary>Version 1.0</summary>
@@ -494,7 +494,7 @@ Comprehensive collection of official and community-built modules for the Lilia f
   <p>Shows floating damage numbers when players or NPCs are hit.</p>
 </div>
 
-<h3 style="margin-bottom: 5px; font-weight: 700;">changelog</h3>
+<h3 style="margin-bottom: 5px; font-weight: 700;">Changelog</h3>
 <div style="margin-left: 20px;">
   <details class="realm-shared no-icon" id="changelog-damage-numbers-1-0">
     <summary>Version 1.0</summary>
@@ -525,7 +525,7 @@ Comprehensive collection of official and community-built modules for the Lilia f
   <p>Manages donor perks and extra character slots.</p>
 </div>
 
-<h3 style="margin-bottom: 5px; font-weight: 700;">changelog</h3>
+<h3 style="margin-bottom: 5px; font-weight: 700;">Changelog</h3>
 <div style="margin-left: 20px;">
   <details class="realm-shared no-icon" id="changelog-donator-1-0">
     <summary>Version 1.0</summary>
@@ -556,7 +556,7 @@ Comprehensive collection of official and community-built modules for the Lilia f
   <p>Lets players kick doors open.</p>
 </div>
 
-<h3 style="margin-bottom: 5px; font-weight: 700;">changelog</h3>
+<h3 style="margin-bottom: 5px; font-weight: 700;">Changelog</h3>
 <div style="margin-left: 20px;">
   <details class="realm-shared no-icon" id="changelog-door-kick-1-0">
     <summary>Version 1.0</summary>
@@ -587,7 +587,7 @@ Comprehensive collection of official and community-built modules for the Lilia f
   <p>Lets items have longer and easier to read descriptions.</p>
 </div>
 
-<h3 style="margin-bottom: 5px; font-weight: 700;">changelog</h3>
+<h3 style="margin-bottom: 5px; font-weight: 700;">Changelog</h3>
 <div style="margin-left: 20px;">
   <details class="realm-shared no-icon" id="changelog-extended-descriptions-1-0">
     <summary>Version 1.0</summary>
@@ -618,7 +618,7 @@ Comprehensive collection of official and community-built modules for the Lilia f
   <p>Adds an improved flashlight with dynamic light.</p>
 </div>
 
-<h3 style="margin-bottom: 5px; font-weight: 700;">changelog</h3>
+<h3 style="margin-bottom: 5px; font-weight: 700;">Changelog</h3>
 <div style="margin-left: 20px;">
   <details class="realm-shared no-icon" id="changelog-flashlight-1-0">
     <summary>Version 1.0</summary>
@@ -649,7 +649,7 @@ Comprehensive collection of official and community-built modules for the Lilia f
   <p>Lets game masters save and use teleport points.</p>
 </div>
 
-<h3 style="margin-bottom: 5px; font-weight: 700;">changelog</h3>
+<h3 style="margin-bottom: 5px; font-weight: 700;">Changelog</h3>
 <div style="margin-left: 20px;">
   <details class="realm-shared no-icon" id="changelog-gamemaster-points-1-0">
     <summary>Version 1.0</summary>
@@ -680,7 +680,7 @@ Comprehensive collection of official and community-built modules for the Lilia f
   <p>Respawns players at hospital spawn points.</p>
 </div>
 
-<h3 style="margin-bottom: 5px; font-weight: 700;">changelog</h3>
+<h3 style="margin-bottom: 5px; font-weight: 700;">Changelog</h3>
 <div style="margin-left: 20px;">
   <details class="realm-shared no-icon" id="changelog-hospitals-1-0">
     <summary>Version 1.0</summary>
@@ -711,7 +711,7 @@ Comprehensive collection of official and community-built modules for the Lilia f
   <p>Adds extra HUD elements like an FPS counter.</p>
 </div>
 
-<h3 style="margin-bottom: 5px; font-weight: 700;">changelog</h3>
+<h3 style="margin-bottom: 5px; font-weight: 700;">Changelog</h3>
 <div style="margin-left: 20px;">
   <details class="realm-shared no-icon" id="changelog-hud-extras-1-0">
     <summary>Version 1.0</summary>
@@ -742,7 +742,7 @@ Comprehensive collection of official and community-built modules for the Lilia f
   <p>Announces when players join or leave the server.</p>
 </div>
 
-<h3 style="margin-bottom: 5px; font-weight: 700;">changelog</h3>
+<h3 style="margin-bottom: 5px; font-weight: 700;">Changelog</h3>
 <div style="margin-left: 20px;">
   <details class="realm-shared no-icon" id="changelog-join-leave-messages-1-0">
     <summary>Version 1.0</summary>
@@ -773,7 +773,7 @@ Comprehensive collection of official and community-built modules for the Lilia f
   <p>Shows custom messages when players load into a character.</p>
 </div>
 
-<h3 style="margin-bottom: 5px; font-weight: 700;">changelog</h3>
+<h3 style="margin-bottom: 5px; font-weight: 700;">Changelog</h3>
 <div style="margin-left: 20px;">
   <details class="realm-shared no-icon" id="changelog-load-messages-1-0">
     <summary>Version 1.0</summary>
@@ -804,7 +804,7 @@ Comprehensive collection of official and community-built modules for the Lilia f
   <p>Adds a loyalty tier system for players.</p>
 </div>
 
-<h3 style="margin-bottom: 5px; font-weight: 700;">changelog</h3>
+<h3 style="margin-bottom: 5px; font-weight: 700;">Changelog</h3>
 <div style="margin-left: 20px;">
   <details class="realm-shared no-icon" id="changelog-loyalism-1-0">
     <summary>Version 1.0</summary>
@@ -835,7 +835,7 @@ Comprehensive collection of official and community-built modules for the Lilia f
   <p>Cleans up map debris and loose entities on a timer.</p>
 </div>
 
-<h3 style="margin-bottom: 5px; font-weight: 700;">changelog</h3>
+<h3 style="margin-bottom: 5px; font-weight: 700;">Changelog</h3>
 <div style="margin-left: 20px;">
   <details class="realm-shared no-icon" id="changelog-map-cleaner-1-0">
     <summary>Version 1.0</summary>
@@ -866,7 +866,7 @@ Comprehensive collection of official and community-built modules for the Lilia f
   <p>Pays players based on the model they are using.</p>
 </div>
 
-<h3 style="margin-bottom: 5px; font-weight: 700;">changelog</h3>
+<h3 style="margin-bottom: 5px; font-weight: 700;">Changelog</h3>
 <div style="margin-left: 20px;">
   <details class="realm-shared no-icon" id="changelog-model-pay-1-0">
     <summary>Version 1.0</summary>
@@ -897,7 +897,7 @@ Comprehensive collection of official and community-built modules for the Lilia f
   <p>Makes NPCs drop items when they die.</p>
 </div>
 
-<h3 style="margin-bottom: 5px; font-weight: 700;">changelog</h3>
+<h3 style="margin-bottom: 5px; font-weight: 700;">Changelog</h3>
 <div style="margin-left: 20px;">
   <details class="realm-shared no-icon" id="changelog-npc-drop-1-0">
     <summary>Version 1.0</summary>
@@ -928,7 +928,7 @@ Comprehensive collection of official and community-built modules for the Lilia f
   <p>Gives players money for killing NPCs.</p>
 </div>
 
-<h3 style="margin-bottom: 5px; font-weight: 700;">changelog</h3>
+<h3 style="margin-bottom: 5px; font-weight: 700;">Changelog</h3>
 <div style="margin-left: 20px;">
   <details class="realm-shared no-icon" id="changelog-npc-money-1-0">
     <summary>Version 1.0</summary>
@@ -959,7 +959,7 @@ Comprehensive collection of official and community-built modules for the Lilia f
   <p>Spawns NPCs automatically at set points.</p>
 </div>
 
-<h3 style="margin-bottom: 5px; font-weight: 700;">changelog</h3>
+<h3 style="margin-bottom: 5px; font-weight: 700;">Changelog</h3>
 <div style="margin-left: 20px;">
   <details class="realm-shared no-icon" id="changelog-npc-spawner-1-0">
     <summary>Version 1.0</summary>
@@ -990,7 +990,7 @@ Comprehensive collection of official and community-built modules for the Lilia f
   <p>Adds handheld radios and radio chat.</p>
 </div>
 
-<h3 style="margin-bottom: 5px; font-weight: 700;">changelog</h3>
+<h3 style="margin-bottom: 5px; font-weight: 700;">Changelog</h3>
 <div style="margin-left: 20px;">
   <details class="realm-shared no-icon" id="changelog-radio-1-0">
     <summary>Version 1.0</summary>
@@ -1021,7 +1021,7 @@ Comprehensive collection of official and community-built modules for the Lilia f
   <p>Lowers weapons while running and lets players raise them when needed.</p>
 </div>
 
-<h3 style="margin-bottom: 5px; font-weight: 700;">changelog</h3>
+<h3 style="margin-bottom: 5px; font-weight: 700;">Changelog</h3>
 <div style="margin-left: 20px;">
   <details class="realm-shared no-icon" id="changelog-raised-weapons-1-0">
     <summary>Version 1.0</summary>
@@ -1052,7 +1052,7 @@ Comprehensive collection of official and community-built modules for the Lilia f
   <p>Lets players shoot door locks open.</p>
 </div>
 
-<h3 style="margin-bottom: 5px; font-weight: 700;">changelog</h3>
+<h3 style="margin-bottom: 5px; font-weight: 700;">Changelog</h3>
 <div style="margin-left: 20px;">
   <details class="realm-shared no-icon" id="changelog-shoot-lock-1-0">
     <summary>Version 1.0</summary>
@@ -1083,7 +1083,7 @@ Comprehensive collection of official and community-built modules for the Lilia f
   <p>Adds a simple lockpicking system for doors.</p>
 </div>
 
-<h3 style="margin-bottom: 5px; font-weight: 700;">changelog</h3>
+<h3 style="margin-bottom: 5px; font-weight: 700;">Changelog</h3>
 <div style="margin-left: 20px;">
   <details class="realm-shared no-icon" id="changelog-simple-lockpicking-1-0">
     <summary>Version 1.0</summary>
@@ -1114,7 +1114,7 @@ Comprehensive collection of official and community-built modules for the Lilia f
   <p>Adds a slot machine players can use.</p>
 </div>
 
-<h3 style="margin-bottom: 5px; font-weight: 700;">changelog</h3>
+<h3 style="margin-bottom: 5px; font-weight: 700;">Changelog</h3>
 <div style="margin-left: 20px;">
   <details class="realm-shared no-icon" id="changelog-slot-machine-1-0">
     <summary>Version 1.0</summary>
@@ -1145,7 +1145,7 @@ Comprehensive collection of official and community-built modules for the Lilia f
   <p>Slows players down when holding heavy weapons.</p>
 </div>
 
-<h3 style="margin-bottom: 5px; font-weight: 700;">changelog</h3>
+<h3 style="margin-bottom: 5px; font-weight: 700;">Changelog</h3>
 <div style="margin-left: 20px;">
   <details class="realm-shared no-icon" id="changelog-slow-weapons-1-0">
     <summary>Version 1.0</summary>
@@ -1176,7 +1176,7 @@ Comprehensive collection of official and community-built modules for the Lilia f
   <p>Rewards players for joining your Steam group.</p>
 </div>
 
-<h3 style="margin-bottom: 5px; font-weight: 700;">changelog</h3>
+<h3 style="margin-bottom: 5px; font-weight: 700;">Changelog</h3>
 <div style="margin-left: 20px;">
   <details class="realm-shared no-icon" id="changelog-steam-group-rewards-1-0">
     <summary>Version 1.0</summary>
@@ -1207,7 +1207,7 @@ Comprehensive collection of official and community-built modules for the Lilia f
   <p>Adds an interactive war table for planning.</p>
 </div>
 
-<h3 style="margin-bottom: 5px; font-weight: 700;">changelog</h3>
+<h3 style="margin-bottom: 5px; font-weight: 700;">Changelog</h3>
 <div style="margin-left: 20px;">
   <details class="realm-shared no-icon" id="changelog-war-table-1-0">
     <summary>Version 1.0</summary>
