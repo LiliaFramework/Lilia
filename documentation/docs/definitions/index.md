@@ -26,6 +26,11 @@ Use this section when you want to know what information belongs in a Lilia defin
     <h3>Module Metadata</h3>
     <p>See the fields used to describe a module, what it depends on, and how it should load.</p>
   </a>
+  <a href="schema/" class="home-card">
+    <span class="card-kicker">Schema Core</span>
+    <h3>SCHEMA</h3>
+    <p>Learn which fields live on the active schema table and where schema-wide metadata belongs.</p>
+  </a>
 </div>
 
 ## Items
