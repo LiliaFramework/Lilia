@@ -352,16 +352,17 @@ local DefaultFunctions = {
     rotate = {
         tip = "rotateTip",
         icon = "icon16/arrow_rotate_clockwise.png",
-        onRun = function(item)
+        onRun = function(item, data)
             local inv = lia.item.getInv(item.invID)
             local x, y = item:getData("x"), item:getData("y")
             local newRot = not item:getData("rotated", false)
+            local showNoFitNotice = istable(data) and data.placementAttempt == true
             if inv and x and y then
                 local w = newRot and (item.height or 1) or item.width or 1
                 local h = newRot and (item.width or 1) or item.height or 1
                 local invW, invH = inv:getSize()
                 if x < 1 or y < 1 or x + w - 1 > invW or y + h - 1 > invH then
-                    item.player:notifyErrorLocalized("itemNoFit", w, h)
+                    if showNoFitNotice and IsValid(item.player) then item.player:notifyErrorLocalized("itemNoFit", w, h) end
                     return false
                 end
 
@@ -374,7 +375,7 @@ local DefaultFunctions = {
                             local x2 = x + w - 1
                             local y2 = y + h - 1
                             if x <= ix2 and ix <= x2 and y <= iy2 and iy <= y2 then
-                                item.player:notifyErrorLocalized("itemNoFit", w, h)
+                                if showNoFitNotice and IsValid(item.player) then item.player:notifyErrorLocalized("itemNoFit", w, h) end
                                 return false
                             end
                         end
@@ -2018,6 +2019,17 @@ lia.item.registerItem("lia_ammobox", "base_entities", {
     width = 1,
     height = 1,
     entityid = "lia_ammobox"
+})
+
+lia.item.registerItem("lia_backpack", "base_bags", {
+    name = "Backpack",
+    desc = "A medium-sized backpack with enough space for extra supplies.",
+    model = "models/props_c17/SuitCase_Passenger_Physics.mdl",
+    category = "storage",
+    width = 2,
+    height = 2,
+    invWidth = 4,
+    invHeight = 4
 })
 
 local RUNTIME_SNAPSHOT_PATHS = {"Primary.Damage", "Primary.NumShots", "Primary.Recoil", "Primary.Cone", "Primary.Delay", "Primary.ClipSize", "Secondary.Damage", "Secondary.NumShots", "Secondary.Recoil", "Secondary.Cone", "Secondary.Delay",}
