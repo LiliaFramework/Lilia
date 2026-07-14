@@ -904,7 +904,7 @@ The item library manages registered item definitions and base items under `lia.i
 ---
 
 <details class="realm-server" id="function-liaitemdeletebyid">
-<summary><span class="summary-main"><a id="lia.item.deleteByID"></a>lia.item.deleteByID(id)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/item.lua#L1480" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="lia.item.deleteByID"></a>lia.item.deleteByID(id)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/item.lua#L1477" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="liaitemdeletebyid"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -938,7 +938,7 @@ The item library manages registered item definitions and base items under `lia.i
 ---
 
 <details class="realm-server" id="function-liaitemloaditembyid">
-<summary><span class="summary-main"><a id="lia.item.loadItemByID"></a>lia.item.loadItemByID(itemIndex)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/item.lua#L1509" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="lia.item.loadItemByID"></a>lia.item.loadItemByID(itemIndex)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/item.lua#L1506" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="liaitemloaditembyid"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -973,7 +973,7 @@ The item library manages registered item definitions and base items under `lia.i
 ---
 
 <details class="realm-server" id="function-liaitemspawn">
-<summary><span class="summary-main"><a id="lia.item.spawn"></a>lia.item.spawn(uniqueID, position, callback, angles, data)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/item.lua#L1568" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="lia.item.spawn"></a>lia.item.spawn(uniqueID, position, callback, angles, data)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/item.lua#L1565" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="liaitemspawn"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -1013,7 +1013,7 @@ The item library manages registered item definitions and base items under `lia.i
 ---
 
 <details class="realm-server" id="function-liaitemrestoreinv">
-<summary><span class="summary-main"><a id="lia.item.restoreInv"></a>lia.item.restoreInv(invID, w, h, callback)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/item.lua#L1625" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="lia.item.restoreInv"></a>lia.item.restoreInv(invID, w, h, callback)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/item.lua#L1622" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="liaitemrestoreinv"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -1052,7 +1052,7 @@ The item library manages registered item definitions and base items under `lia.i
 ---
 
 <details class="realm-server" id="function-liaitemloadweaponoverrides">
-<summary><span class="summary-main"><a id="lia.item.loadWeaponOverrides"></a>lia.item.loadWeaponOverrides()</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/item.lua#L1797" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="lia.item.loadWeaponOverrides"></a>lia.item.loadWeaponOverrides()</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/item.lua#L1794" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="liaitemloadweaponoverrides"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -1081,7 +1081,7 @@ The item library manages registered item definitions and base items under `lia.i
 ---
 
 <details class="realm-server" id="function-liaitemloadweaponruntimeoverrides">
-<summary><span class="summary-main"><a id="lia.item.loadWeaponRuntimeOverrides"></a>lia.item.loadWeaponRuntimeOverrides()</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/item.lua#L1826" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="lia.item.loadWeaponRuntimeOverrides"></a>lia.item.loadWeaponRuntimeOverrides()</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/item.lua#L1823" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="liaitemloadweaponruntimeoverrides"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
