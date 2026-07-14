@@ -1,4 +1,4 @@
-local function LooksLikeSQLi(value)
+﻿local function LooksLikeSQLi(value)
     local lowerValue = string.lower(value or "")
     return lowerValue:find("'%s*;") or lowerValue:find("%-%-") or lowerValue:find("%f[%a]update%f[%A]") or lowerValue:find("%f[%a]insert%f[%A]") or lowerValue:find("%f[%a]delete%f[%A]") or lowerValue:find("%f[%a]drop%f[%A]") or lowerValue:find("%f[%a]union%f[%A]") or lowerValue:find("%f[%a]select%f[%A]")
 end
