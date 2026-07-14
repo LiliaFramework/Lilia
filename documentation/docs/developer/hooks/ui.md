@@ -417,44 +417,6 @@ This page documents hooks in the ui category.
 
 ---
 
-<details class="realm-client" id="function-setupquickmenu">
-<summary><span class="summary-main"><a id="SetupQuickMenu"></a>SetupQuickMenu(menu)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/derma/panels/panels.lua#L1" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
-<div class="details-content">
-<h3 style="margin-bottom: 5px; font-weight: 700;"><a id="setupquickmenu"></a>Purpose</h3>
-<div style="margin-left: 20px; margin-bottom: 20px;">
-  <p>Allows modules to populate the quick settings menu before it is sized and shown.</p>
-</div>
-
-<h3 style="margin-bottom: 5px; font-weight: 700;">Category</h3>
-<div style="margin-left: 20px; margin-bottom: 20px;">
-  <p>UI</p>
-</div>
-
-<h3 style="margin-bottom: 5px; font-weight: 700;">Realm</h3>
-<div style="margin-left: 20px; margin-bottom: 20px;">
-  <p>Client</p>
-</div>
-
-<h3 style="margin-bottom: 5px; font-weight: 700;">Parameters</h3>
-<div style="margin-left: 20px; margin-bottom: 20px;">
-<p><span class="types"><a class="type" href="/developer/meta/panel/">Panel</a></span> <span class="parameter">menu</span> The quick menu panel instance that exposes helper methods like `addButton`, `addCheck`, and `addSpacer`.</p>
-</div>
-
-<h3 style="margin-bottom: 5px; font-weight: 700;">Example Usage</h3>
-<div style="margin-left: 20px; margin-bottom: 20px;">
-<pre><code class="language-lua">  hook.Add("SetupQuickMenu", "liaExampleSetupQuickMenu", function(menu)
-      menu:addButton("Example Action", function()
-          LocalPlayer():ChatPrint("Example clicked.")
-      end, "Runs an example quick action.")
-  end)
-</code></pre>
-</div>
-
-</div>
-</details>
-
----
-
 <details class="realm-client" id="function-shouldshowquickmenu">
 <summary><span class="summary-main"><a id="ShouldShowQuickMenu"></a>ShouldShowQuickMenu()</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/hooks/client.lua#L500" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">

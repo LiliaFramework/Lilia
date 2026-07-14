@@ -268,6 +268,7 @@ local function HUDPaint()
         drawEntry(client, data.weapon, i, index, x, cursorY, panelW, data.h, data.lines, data.lineHeight, fraction, accent)
         cursorY = cursorY + data.h + gap
     end
+
     if fadeTime < CurTime() and alpha > 0 then alpha = 0 end
 end
 

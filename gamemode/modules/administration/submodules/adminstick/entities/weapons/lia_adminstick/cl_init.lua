@@ -29,7 +29,6 @@ local function getAdminStickHUDTitle(target)
         local name = target:GetName()
         if name and name ~= "" then return name end
     end
-
     return target.PrintName or target:GetClass() or L("unknown")
 end
 

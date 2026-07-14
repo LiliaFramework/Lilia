@@ -1,4 +1,4 @@
---[[
+﻿--[[
     Folder: Developer - Libraries
     File: lia.command.md
 ]]
@@ -1902,7 +1902,6 @@ if SERVER then
         local ang = client:GetAngles()
         MsgC(Color(83, 143, 239), "[Lilia] ", Color(255, 255, 255), "Angle: " .. tostring(ang) .. "\n")
     end)
-
 
     concommand.Add("lia_snapshot", function(client, _, args)
         if IsValid(client) then

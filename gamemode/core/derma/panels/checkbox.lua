@@ -122,7 +122,6 @@ PANEL.__newindex = function(self, key, value)
 end
 
 vgui.Register("liaCheckbox", PANEL, "Panel")
-
 local SIMPLE_CHECKBOX_PANEL = {}
 function SIMPLE_CHECKBOX_PANEL:Init()
     self:SetText("")

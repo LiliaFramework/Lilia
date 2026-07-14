@@ -1,8 +1,7 @@
-local PANEL = {}
+﻿local PANEL = {}
 local PADDING = 2
 local WEIGHT_PANEL_HEIGHT = 32
 local SHADOW_COLOR = Color(0, 0, 0, 100)
-
 local function getThemeColors()
     local theme = lia.color and lia.color.theme or {}
     local accent = theme.accent or theme.theme or lia.config.get("Color") or Color(45, 190, 170)

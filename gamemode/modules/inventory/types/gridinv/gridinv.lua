@@ -201,6 +201,7 @@ if SERVER then
                 end
             end
         end
+
         local targetInventory = self
         if not targetInventory:canAdd(itemTypeOrItem) then return d:reject(L("noSpaceForItem")) end
         if not x or not y then

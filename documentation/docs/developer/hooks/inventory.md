@@ -1794,7 +1794,7 @@ Use GetInventoryMaxWeight to override the carry weight limit.</p>
 ---
 
 <details class="realm-server" id="function-onitemadded">
-<summary><span class="summary-main"><a id="OnItemAdded"></a>OnItemAdded(owner, item)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/meta/inventory.lua#L466" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="OnItemAdded"></a>OnItemAdded(owner, item)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/meta/inventory.lua#L470" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="onitemadded"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">

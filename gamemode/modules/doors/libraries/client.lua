@@ -104,7 +104,6 @@
         Client
 ]]
 local appendDoorAdminFallbackRows
-
 function MODULE:GetDoorInfo(entity, doorData, doorInfo)
     local owner = entity:GetDTEntity(0)
     local classes = doorData.classes or {}
@@ -300,7 +299,6 @@ end
 local function buildDoorDisplayData(entity)
     if not IsValid(entity) then return end
     if not entity:isDoor() then return end
-
     local doorData = lia.doors.getData(entity)
     local title = doorData.title or doorData.name or entity:getNetVar("doorTitle", "")
     if isstring(title) then title = string.Trim(title) end
@@ -314,10 +312,7 @@ local function buildDoorDisplayData(entity)
 
     local doorInfo = {}
     local doorsModule = lia.module.get("doors")
-    if doorsModule and isfunction(doorsModule.GetDoorInfo) then
-        doorsModule:GetDoorInfo(entity, doorData, doorInfo)
-    end
-
+    if doorsModule and isfunction(doorsModule.GetDoorInfo) then doorsModule:GetDoorInfo(entity, doorData, doorInfo) end
     hook.Run("FilterDoorInfo", entity, doorData, doorInfo)
     local infoRows = normalizeDoorInfoRows(doorInfo)
     local owner = entity:GetDTEntity(0)
@@ -364,7 +359,6 @@ local function buildDoorDisplayData(entity)
             rows = infoRows
         }
     end
-
 end
 
 function MODULE:DrawEntityInfo(entity, alpha)
@@ -382,10 +376,8 @@ function MODULE:HUDPaint()
     if not entity:isDoor() then return end
     local distance = client:GetShootPos():Distance(trace.HitPos)
     if distance > 256 then return end
-
     local displayData = buildDoorDisplayData(entity)
     if not displayData then return end
-
     if displayData.disabled then
         lia.util.drawEntText(entity, L("doorDisabled"), 0, 255)
         return

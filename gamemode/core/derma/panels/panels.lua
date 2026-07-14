@@ -144,7 +144,6 @@ local quickPaletteDefaults = {
 }
 
 local quickPalette = table.Copy(quickPaletteDefaults)
-
 local function setQuickPaletteColor(name, value)
     local fallback = quickPaletteDefaults[name] or color_white
     quickPalette[name] = IsColor(value) and Color(value.r, value.g, value.b, value.a or 255) or Color(fallback.r, fallback.g, fallback.b, fallback.a or 255)
@@ -629,6 +628,7 @@ function QuickPanel:RefreshTheme()
         self.search:SetTextColor(quickPalette.text)
         self.search:SetCursorColor(quickPalette.accent)
     end
+
     self:RebuildContent()
     self:InvalidateLayout(true)
 end

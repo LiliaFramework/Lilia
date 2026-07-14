@@ -1,4 +1,4 @@
-local PANEL = {}
+﻿local PANEL = {}
 local function getButtonColors()
     local theme = lia.color.theme or {}
     local accent = theme.accent or theme.theme or lia.config.get("Color") or Color(45, 190, 170)
@@ -217,14 +217,8 @@ local function RegisterButton(name, defaultFont, useBase)
         local outline = Color(colors.accent.r, colors.accent.g, colors.accent.b, outlineAlpha)
         if self.Base == false then background = Color(0, 0, 0, 0) end
         lia.derma.rect(0, 0, w, h):Rad(12):Color(background):Shape(lia.derma.SHAPE_IOS):Draw()
-        if self.Base ~= false then
-            lia.derma.rect(0, 0, w, h):Rad(12):Color(tint):Shape(lia.derma.SHAPE_IOS):Draw()
-        end
-
-        if self.Base ~= false then
-            lia.derma.rect(0, 0, w, h):Rad(12):Color(outline):Shape(lia.derma.SHAPE_IOS):Outline(2):Draw()
-        end
-
+        if self.Base ~= false then lia.derma.rect(0, 0, w, h):Rad(12):Color(tint):Shape(lia.derma.SHAPE_IOS):Draw() end
+        if self.Base ~= false then lia.derma.rect(0, 0, w, h):Rad(12):Color(outline):Shape(lia.derma.SHAPE_IOS):Outline(2):Draw() end
         if selected and self:GetShowLine() then
             surface.SetDrawColor(colors.accent.r, colors.accent.g, colors.accent.b, 240)
             surface.DrawRect(0, 7, 3, h - 14)

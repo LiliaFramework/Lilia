@@ -1305,7 +1305,7 @@ The utility library centralizes common helpers under `lia.util`. Shared helpers 
 ---
 
 <details class="realm-client" id="function-liautildrawenttext">
-<summary><span class="summary-main"><a id="lia.util.drawEntText"></a>lia.util.drawEntText(ent, text, posY, alphaOverride)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/util.lua#L1753" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="lia.util.drawEntText"></a>lia.util.drawEntText(ent, text, posY, alphaOverride)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/util.lua#L1819" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="liautildrawenttext"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -1342,7 +1342,7 @@ The utility library centralizes common helpers under `lia.util`. Shared helpers 
 ---
 
 <details class="realm-client" id="function-liautildrawlooktext">
-<summary><span class="summary-main"><a id="lia.util.drawLookText"></a>lia.util.drawLookText(text, posY, alphaOverride, maxDist)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/util.lua#L1834" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="lia.util.drawLookText"></a>lia.util.drawLookText(text, posY, alphaOverride, maxDist)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/util.lua#L1954" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="liautildrawlooktext"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -1379,7 +1379,7 @@ The utility library centralizes common helpers under `lia.util`. Shared helpers 
 ---
 
 <details class="realm-client" id="function-liautilsetfeatureposition">
-<summary><span class="summary-main"><a id="lia.util.setFeaturePosition"></a>lia.util.setFeaturePosition(pos, typeId)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/util.lua#L1903" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="lia.util.setFeaturePosition"></a>lia.util.setFeaturePosition(pos, typeId)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/util.lua#L2023" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="liautilsetfeatureposition"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -1414,7 +1414,7 @@ The utility library centralizes common helpers under `lia.util`. Shared helpers 
 ---
 
 <details class="realm-client" id="function-liautildrawlooktext">
-<summary><span class="summary-main"><a id="lia.util.drawLookText"></a>lia.util.drawLookText(text, posY, alphaOverride, maxDist)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/util.lua#L1932" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="lia.util.drawLookText"></a>lia.util.drawLookText(text, posY, alphaOverride, maxDist)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/util.lua#L2052" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="liautildrawlooktext"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -1451,7 +1451,7 @@ The utility library centralizes common helpers under `lia.util`. Shared helpers 
 ---
 
 <details class="realm-client" id="function-liautilsetfeatureposition">
-<summary><span class="summary-main"><a id="lia.util.setFeaturePosition"></a>lia.util.setFeaturePosition(pos, typeId)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/util.lua#L2001" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="lia.util.setFeaturePosition"></a>lia.util.setFeaturePosition(pos, typeId)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/util.lua#L2121" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="liautilsetfeatureposition"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -1486,7 +1486,7 @@ The utility library centralizes common helpers under `lia.util`. Shared helpers 
 ---
 
 <details class="realm-client" id="function-liautilremovefeatureposition">
-<summary><span class="summary-main"><a id="lia.util.removeFeaturePosition"></a>lia.util.removeFeaturePosition(pos, typeId)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/util.lua#L2036" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="lia.util.removeFeaturePosition"></a>lia.util.removeFeaturePosition(pos, typeId)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/util.lua#L2156" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="liautilremovefeatureposition"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -1521,7 +1521,7 @@ The utility library centralizes common helpers under `lia.util`. Shared helpers 
 ---
 
 <details class="realm-client" id="function-liautildrawespstyledtext">
-<summary><span class="summary-main"><a id="lia.util.drawESPStyledText"></a>lia.util.drawESPStyledText(text, x, y, espColor, font, fadeAlpha)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/util.lua#L2082" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="lia.util.drawESPStyledText"></a>lia.util.drawESPStyledText(text, x, y, espColor, font, fadeAlpha)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/util.lua#L2202" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="liautildrawespstyledtext"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">

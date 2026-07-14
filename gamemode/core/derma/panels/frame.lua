@@ -67,6 +67,7 @@ function PANEL:Init()
         local colors = getFrameColors()
         draw.SimpleText("X", "LiliaFont.18", w * 0.5, h * 0.5, colors.text, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
     end
+
     self.cls.DoClick = function()
         lia.websound.playButtonSound()
         if self.deleteOnClose then

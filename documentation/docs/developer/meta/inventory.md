@@ -445,7 +445,7 @@ The inventory meta table wraps inventory instances and inventory type definition
 ---
 
 <details class="realm-shared" id="function-getfirstitemoftype">
-<summary><span class="summary-main"><a id="getFirstItemOfType"></a>getFirstItemOfType(itemType)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/meta/inventory.lua#L360" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="getFirstItemOfType"></a>getFirstItemOfType(itemType)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/meta/inventory.lua#L361" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="getfirstitemoftype"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -479,7 +479,7 @@ The inventory meta table wraps inventory instances and inventory type definition
 ---
 
 <details class="realm-shared" id="function-hasitem">
-<summary><span class="summary-main"><a id="hasItem"></a>hasItem(itemType)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/meta/inventory.lua#L388" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="hasItem"></a>hasItem(itemType)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/meta/inventory.lua#L390" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="hasitem"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -515,7 +515,7 @@ The inventory meta table wraps inventory instances and inventory type definition
 ---
 
 <details class="realm-shared" id="function-getitemcount">
-<summary><span class="summary-main"><a id="getItemCount"></a>getItemCount(itemType)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/meta/inventory.lua#L415" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="getItemCount"></a>getItemCount(itemType)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/meta/inventory.lua#L418" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="getitemcount"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -549,7 +549,7 @@ The inventory meta table wraps inventory instances and inventory type definition
 ---
 
 <details class="realm-shared" id="function-getid">
-<summary><span class="summary-main"><a id="getID"></a>getID()</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/meta/inventory.lua#L439" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="getID"></a>getID()</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/meta/inventory.lua#L443" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="getid"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -578,7 +578,7 @@ The inventory meta table wraps inventory instances and inventory type definition
 ---
 
 <details class="realm-server" id="function-additem">
-<summary><span class="summary-main"><a id="addItem"></a>addItem(owner, item)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/meta/inventory.lua#L498" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="addItem"></a>addItem(owner, item)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/meta/inventory.lua#L502" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="additem"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -617,7 +617,7 @@ The inventory meta table wraps inventory instances and inventory type definition
 ---
 
 <details class="realm-server" id="function-add">
-<summary><span class="summary-main"><a id="add"></a>add(item)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/meta/inventory.lua#L532" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="add"></a>add(item)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/meta/inventory.lua#L536" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="add"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -651,7 +651,7 @@ The inventory meta table wraps inventory instances and inventory type definition
 ---
 
 <details class="realm-server" id="function-syncitemadded">
-<summary><span class="summary-main"><a id="syncItemAdded"></a>syncItemAdded(item)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/meta/inventory.lua#L555" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="syncItemAdded"></a>syncItemAdded(item)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/meta/inventory.lua#L559" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="syncitemadded"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -680,7 +680,7 @@ The inventory meta table wraps inventory instances and inventory type definition
 ---
 
 <details class="realm-server" id="function-initializestorage">
-<summary><span class="summary-main"><a id="initializeStorage"></a>initializeStorage(initialData)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/meta/inventory.lua#L589" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="initializeStorage"></a>initializeStorage(initialData)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/meta/inventory.lua#L593" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="initializestorage"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -717,7 +717,7 @@ The inventory meta table wraps inventory instances and inventory type definition
 ---
 
 <details class="realm-server" id="function-restorefromstorage">
-<summary><span class="summary-main"><a id="restoreFromStorage"></a>restoreFromStorage()</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/meta/inventory.lua#L624" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="restoreFromStorage"></a>restoreFromStorage()</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/meta/inventory.lua#L628" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="restorefromstorage"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -743,7 +743,7 @@ The inventory meta table wraps inventory instances and inventory type definition
 ---
 
 <details class="realm-server" id="function-restorefromstorage">
-<summary><span class="summary-main"><a id="restoreFromStorage"></a>restoreFromStorage()</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/meta/inventory.lua#L632" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="restoreFromStorage"></a>restoreFromStorage()</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/meta/inventory.lua#L636" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="restorefromstorage"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -769,7 +769,7 @@ The inventory meta table wraps inventory instances and inventory type definition
 ---
 
 <details class="realm-server" id="function-removeitem">
-<summary><span class="summary-main"><a id="removeItem"></a>removeItem(itemID, preserveItem)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/meta/inventory.lua#L657" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="removeItem"></a>removeItem(itemID, preserveItem)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/meta/inventory.lua#L661" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="removeitem"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -804,7 +804,7 @@ The inventory meta table wraps inventory instances and inventory type definition
 ---
 
 <details class="realm-server" id="function-remove">
-<summary><span class="summary-main"><a id="remove"></a>remove(itemID)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/meta/inventory.lua#L702" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="remove"></a>remove(itemID)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/meta/inventory.lua#L706" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="remove"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -838,7 +838,7 @@ The inventory meta table wraps inventory instances and inventory type definition
 ---
 
 <details class="realm-server" id="function-setdata">
-<summary><span class="summary-main"><a id="setData"></a>setData(key, value)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/meta/inventory.lua#L728" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="setData"></a>setData(key, value)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/meta/inventory.lua#L732" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="setdata"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -873,7 +873,7 @@ The inventory meta table wraps inventory instances and inventory type definition
 ---
 
 <details class="realm-server" id="function-canaccess">
-<summary><span class="summary-main"><a id="canAccess"></a>canAccess(action, context)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/meta/inventory.lua#L779" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="canAccess"></a>canAccess(action, context)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/meta/inventory.lua#L783" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="canaccess"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -910,7 +910,7 @@ The inventory meta table wraps inventory instances and inventory type definition
 ---
 
 <details class="realm-server" id="function-addaccessrule">
-<summary><span class="summary-main"><a id="addAccessRule"></a>addAccessRule(rule, priority)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/meta/inventory.lua#L814" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="addAccessRule"></a>addAccessRule(rule, priority)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/meta/inventory.lua#L818" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="addaccessrule"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -949,7 +949,7 @@ The inventory meta table wraps inventory instances and inventory type definition
 ---
 
 <details class="realm-server" id="function-removeaccessrule">
-<summary><span class="summary-main"><a id="removeAccessRule"></a>removeAccessRule(rule)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/meta/inventory.lua#L843" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="removeAccessRule"></a>removeAccessRule(rule)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/meta/inventory.lua#L847" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="removeaccessrule"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -983,7 +983,7 @@ The inventory meta table wraps inventory instances and inventory type definition
 ---
 
 <details class="realm-server" id="function-getrecipients">
-<summary><span class="summary-main"><a id="getRecipients"></a>getRecipients()</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/meta/inventory.lua#L864" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="getRecipients"></a>getRecipients()</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/meta/inventory.lua#L868" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="getrecipients"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -1012,7 +1012,7 @@ The inventory meta table wraps inventory instances and inventory type definition
 ---
 
 <details class="realm-server" id="function-oninstanced">
-<summary><span class="summary-main"><a id="onInstanced"></a>onInstanced()</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/meta/inventory.lua#L885" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="onInstanced"></a>onInstanced()</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/meta/inventory.lua#L889" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="oninstanced"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -1038,7 +1038,7 @@ The inventory meta table wraps inventory instances and inventory type definition
 ---
 
 <details class="realm-server" id="function-oninstanced">
-<summary><span class="summary-main"><a id="onInstanced"></a>onInstanced()</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/meta/inventory.lua#L893" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="onInstanced"></a>onInstanced()</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/meta/inventory.lua#L897" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="oninstanced"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -1064,7 +1064,7 @@ The inventory meta table wraps inventory instances and inventory type definition
 ---
 
 <details class="realm-server" id="function-onloaded">
-<summary><span class="summary-main"><a id="onLoaded"></a>onLoaded()</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/meta/inventory.lua#L905" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="onLoaded"></a>onLoaded()</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/meta/inventory.lua#L909" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="onloaded"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -1090,7 +1090,7 @@ The inventory meta table wraps inventory instances and inventory type definition
 ---
 
 <details class="realm-server" id="function-onloaded">
-<summary><span class="summary-main"><a id="onLoaded"></a>onLoaded()</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/meta/inventory.lua#L913" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="onLoaded"></a>onLoaded()</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/meta/inventory.lua#L917" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="onloaded"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -1116,7 +1116,7 @@ The inventory meta table wraps inventory instances and inventory type definition
 ---
 
 <details class="realm-server" id="function-loaditems">
-<summary><span class="summary-main"><a id="loadItems"></a>loadItems()</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/meta/inventory.lua#L936" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="loadItems"></a>loadItems()</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/meta/inventory.lua#L940" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="loaditems"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -1147,7 +1147,7 @@ The inventory meta table wraps inventory instances and inventory type definition
 ---
 
 <details class="realm-server" id="function-onitemsloaded">
-<summary><span class="summary-main"><a id="onItemsLoaded"></a>onItemsLoaded(items)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/meta/inventory.lua#L987" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="onItemsLoaded"></a>onItemsLoaded(items)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/meta/inventory.lua#L991" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="onitemsloaded"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -1178,7 +1178,7 @@ The inventory meta table wraps inventory instances and inventory type definition
 ---
 
 <details class="realm-server" id="function-onitemsloaded">
-<summary><span class="summary-main"><a id="onItemsLoaded"></a>onItemsLoaded(items)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/meta/inventory.lua#L995" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="onItemsLoaded"></a>onItemsLoaded(items)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/meta/inventory.lua#L999" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="onitemsloaded"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -1209,7 +1209,7 @@ The inventory meta table wraps inventory instances and inventory type definition
 ---
 
 <details class="realm-server" id="function-instance">
-<summary><span class="summary-main"><a id="instance"></a>instance(initialData)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/meta/inventory.lua#L1020" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="instance"></a>instance(initialData)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/meta/inventory.lua#L1024" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="instance"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -1245,7 +1245,7 @@ The inventory meta table wraps inventory instances and inventory type definition
 ---
 
 <details class="realm-server" id="function-syncdata">
-<summary><span class="summary-main"><a id="syncData"></a>syncData(key, recipients)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/meta/inventory.lua#L1045" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="syncData"></a>syncData(key, recipients)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/meta/inventory.lua#L1049" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="syncdata"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -1275,7 +1275,7 @@ The inventory meta table wraps inventory instances and inventory type definition
 ---
 
 <details class="realm-server" id="function-sync">
-<summary><span class="summary-main"><a id="sync"></a>sync(recipients)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/meta/inventory.lua#L1073" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="sync"></a>sync(recipients)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/meta/inventory.lua#L1077" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="sync"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -1304,7 +1304,7 @@ The inventory meta table wraps inventory instances and inventory type definition
 ---
 
 <details class="realm-server" id="function-delete">
-<summary><span class="summary-main"><a id="delete"></a>delete()</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/meta/inventory.lua#L1116" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="delete"></a>delete()</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/meta/inventory.lua#L1120" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="delete"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -1328,7 +1328,7 @@ The inventory meta table wraps inventory instances and inventory type definition
 ---
 
 <details class="realm-server" id="function-destroy">
-<summary><span class="summary-main"><a id="destroy"></a>destroy()</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/meta/inventory.lua#L1135" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="destroy"></a>destroy()</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/meta/inventory.lua#L1139" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="destroy"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -1352,7 +1352,7 @@ The inventory meta table wraps inventory instances and inventory type definition
 ---
 
 <details class="realm-client" id="function-show">
-<summary><span class="summary-main"><a id="show"></a>show(parent)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/meta/inventory.lua#L1166" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="show"></a>show(parent)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/meta/inventory.lua#L1170" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="show"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">

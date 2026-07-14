@@ -21,6 +21,7 @@ function MODULE:DrawCharInfo(client, character, info)
         info[#info + 1] = {
             section = "Role"
         }
+
         info[#info + 1] = {
             label = "Class",
             value = charClass.name or L("undefinedClass")

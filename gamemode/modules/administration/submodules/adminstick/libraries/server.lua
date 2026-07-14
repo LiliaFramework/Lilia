@@ -1,4 +1,4 @@
-function MODULE:PostPlayerLoadout(client)
+﻿function MODULE:PostPlayerLoadout(client)
     local hasAlwaysSpawnAdminStick = client:hasPrivilege("alwaysSpawnAdminStick")
     local isStaffOnDuty = client:isStaffOnDuty()
     local shouldGiveAdminStick = hasAlwaysSpawnAdminStick or isStaffOnDuty

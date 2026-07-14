@@ -1,4 +1,4 @@
-function ENT:onDrawEntityInfo(alpha)
+﻿function ENT:onDrawEntityInfo(alpha)
     local uniqueID = self:getNetVar("uniqueID", "")
     local npcName = self:getNetVar("NPCName", self.PrintName or "NPC")
     if uniqueID == "" or uniqueID == nil then npcName = L("unconfiguredNPC") end
