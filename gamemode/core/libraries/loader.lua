@@ -353,6 +353,12 @@ local ConditionalFiles = {
         realm = "server"
     },
     {
+        path = "lilia/gamemode/core/libraries/compatibility/mediaplayer.lua",
+        global = "MediaPlayer",
+        name = "Media Player",
+        realm = "shared"
+    },
+    {
         path = "lilia/gamemode/core/libraries/compatibility/pac.lua",
         global = "pac",
         name = "PAC3",
