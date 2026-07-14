@@ -37,7 +37,14 @@ function WeightInv:doesFitInventory(item)
 end
 
 function WeightInv:getItems(noRecurse)
-    return self.items
+    local items = self.items
+    if noRecurse then return items end
+    local allItems = {}
+    for id, item in pairs(items) do
+        allItems[id] = item
+        if item.getInv and item:getInv() then allItems = table.Merge(allItems, item:getInv():getItems()) end
+    end
+    return allItems
 end
 
 if SERVER then
@@ -132,9 +139,10 @@ if SERVER then
 end
 
 function WeightInv:getItemsOfType(itemType)
+    local itemID = isstring(itemType) and itemType or itemType and (itemType.uniqueID or lia.item.instances[itemType] and lia.item.instances[itemType].uniqueID)
     local items = {}
-    for _, item in pairs(self.items) do
-        if item.uniqueID == itemType then items[#items + 1] = item end
+    for _, item in pairs(self:getItems()) do
+        if item.uniqueID == itemID then items[#items + 1] = item end
     end
     return items
 end

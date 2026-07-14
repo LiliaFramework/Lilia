@@ -5,92 +5,243 @@ local function isGeneratedCloseNode(node)
     return nodeID == "goodbye" or nodeID == "bye" or nodeID == "farewell" or nodeID == "close"
 end
 
+local function resolveThemeColor(value, fallback)
+    if IsColor(value) then return value end
+    if istable(value) and IsColor(value[1]) then return value[1] end
+    return fallback
+end
+
+local function getThemeColors()
+    local theme = lia.color.theme or {}
+    local configured = lia.config and lia.config.get and lia.config.get("Color") or nil
+    local accent = resolveThemeColor(theme.accent or theme.theme or configured, Color(45, 190, 170))
+    local text = resolveThemeColor(theme.text, Color(225, 238, 238))
+    return accent, text
+end
+
+local function drawPanel(x, y, w, h, radius, color, outline)
+    if lia.derma and lia.derma.rect and lia.derma.SHAPE_IOS then
+        lia.derma.rect(x, y, w, h):Rad(radius):Color(color):Shape(lia.derma.SHAPE_IOS):Draw()
+        if outline then lia.derma.rect(x, y, w, h):Rad(radius):Color(outline):Shape(lia.derma.SHAPE_IOS):Outline(1):Draw() end
+        return
+    end
+
+    draw.RoundedBox(radius, x, y, w, h, color)
+    if outline then
+        surface.SetDrawColor(outline)
+        surface.DrawOutlinedRect(x, y, w, h, 1)
+    end
+end
+
+local function drawIcon(material, x, y, size, color)
+    if not material or material:IsError() then return end
+    surface.SetMaterial(material)
+    surface.SetDrawColor(color or color_white)
+    surface.DrawTexturedRect(x, y, size, size)
+end
+
+local historyNPCIcon = Material("icon16/comments.png", "smooth")
+local historyPlayerIcon = Material("icon16/user.png", "smooth")
 function PANEL:Init()
     if IsValid(lia.dialog.vgui) then lia.dialog.vgui:Remove() end
-    lia.dialog.vgui = self
-    self:SetTitle(L("dialog"))
-    self:SetSize(ScrW() * 0.4, ScrH() * 0.45)
-    self:Center()
-    self:ShowCloseButton(true)
-    self:MakePopup()
-    self:SetDraggable(true)
-    self:SetMouseInputEnabled(true)
     if IsValid(lia.dialog.historyFrame) then lia.dialog.historyFrame:Remove() end
-    self.dialogHistoryFrame = vgui.Create("liaFrame")
-    self.dialogHistoryFrame:SetTitle(L("history"))
-    self.dialogHistoryFrame:ShowCloseButton(false)
-    local historyW = ScrW() * 0.2
-    self.dialogHistoryFrame:SetSize(historyW, ScrH() * 0.45)
+    if IsValid(lia.dialog.backdrop) then lia.dialog.backdrop:Remove() end
+    lia.dialog.vgui = self
+    self.npcDisplayName = L("dialog")
+    self.lastResponseText = ""
+    self.pendingResponse = false
+    self.hasHistoryMessage = false
+    self.conversationStack = {}
+    self.dialogGap = math.Clamp(ScrW() * 0.009, 10, 16)
+    self.historyWidth = math.Clamp(ScrW() * 0.19, 240, 360)
+    local dialogWidth = math.Clamp(ScrW() * 0.4, 440, 760)
+    local availableWidth = math.max(ScrW() - 24, 480)
+    if self.historyWidth + self.dialogGap + dialogWidth > availableWidth then
+        self.historyWidth = math.Clamp(math.floor(availableWidth * 0.31), 200, 320)
+        dialogWidth = math.max(availableWidth - self.historyWidth - self.dialogGap, 280)
+    end
+
+    local dialogHeight = math.Clamp(ScrH() * 0.5, 360, math.max(ScrH() - 24, 360))
+    local totalWidth = self.historyWidth + self.dialogGap + dialogWidth
+    local startX = math.max(math.floor((ScrW() - totalWidth) * 0.5), 12)
+    local startY = math.max(math.floor((ScrH() - dialogHeight) * 0.5), 12)
+    self:SetSize(dialogWidth, dialogHeight)
+    self:SetPos(startX + self.historyWidth + self.dialogGap, startY)
+    self:SetMouseInputEnabled(true)
+    self:SetKeyboardInputEnabled(true)
+    self:SetAlpha(0)
+    self.Paint = function(_, w, h)
+        local accent = getThemeColors()
+        drawPanel(0, 0, w, h, 8, Color(4, 16, 21, 246), Color(accent.r, accent.g, accent.b, 145))
+    end
+
+    self.backdrop = vgui.Create("DPanel")
+    self.backdrop:SetSize(ScrW(), ScrH())
+    self.backdrop:SetPos(0, 0)
+    self.backdrop:SetMouseInputEnabled(false)
+    self.backdrop:SetKeyboardInputEnabled(false)
+    self.backdrop:SetAlpha(0)
+    self.backdrop.Paint = function(panel, w, h)
+        if lia.util and lia.util.drawBlackBlur then lia.util.drawBlackBlur(panel, 1, 4, 255, 155) end
+        surface.SetDrawColor(0, 8, 10, 72)
+        surface.DrawRect(0, 0, w, h)
+    end
+
+    self.backdrop:MoveToBack()
+    self.backdrop:AlphaTo(255, 0.2, 0)
+    lia.dialog.backdrop = self.backdrop
+    self.dialogHistoryFrame = vgui.Create("EditablePanel")
+    self.dialogHistoryFrame:SetSize(self.historyWidth, dialogHeight)
+    self.dialogHistoryFrame:SetPos(startX, startY)
+    self.dialogHistoryFrame:SetMouseInputEnabled(true)
+    self.dialogHistoryFrame:SetKeyboardInputEnabled(false)
+    self.dialogHistoryFrame:SetAlpha(0)
+    self.dialogHistoryFrame.Paint = function(_, w, h)
+        local accent = getThemeColors()
+        drawPanel(0, 0, w, h, 8, Color(4, 16, 21, 246), Color(accent.r, accent.g, accent.b, 145))
+    end
+
     lia.dialog.historyFrame = self.dialogHistoryFrame
-    self.dialogHistoryFrame:MakePopup()
-    timer.Simple(0, function()
-        if not IsValid(self) or not IsValid(self.dialogHistoryFrame) then return end
-        local _, dialogY = self:GetPos()
-        local dialogW = self:GetWide()
-        local historyWidth = ScrW() * 0.2
-        local totalW = historyWidth + 6 + dialogW
-        local startX = (ScrW() - totalW) / 2
-        local y = dialogY
-        self.dialogHistoryFrame:SetPos(startX, y)
-        self:SetPos(startX + historyWidth + 6, y)
-    end)
+    self.historyHeader = self.dialogHistoryFrame:Add("DPanel")
+    self.historyHeader:Dock(TOP)
+    self.historyHeader:SetTall(58)
+    self.historyHeader.Paint = function(_, w, h)
+        local accent = getThemeColors()
+        draw.SimpleText(string.upper(L("history")), "LiliaFont.18", 18, 20, accent, TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)
+        surface.SetDrawColor(accent.r, accent.g, accent.b, 78)
+        surface.DrawRect(16, h - 1, w - 32, 1)
+    end
 
     self.dialogHistoryScroll = self.dialogHistoryFrame:Add("liaScrollPanel")
     self.dialogHistoryScroll:Dock(FILL)
-    self.dialogHistoryScroll:DockMargin(6, 6, 6, 6)
-    self.dialogHistoryScroll:DockPadding(2, 10, 2, 2)
+    self.dialogHistoryScroll:DockMargin(14, 12, 10, 14)
+    self.dialogHistoryScroll:DockPadding(0, 0, 4, 0)
+    self.dialogHistoryScroll.Paint = function() end
     self.dialogHistoryList = self.dialogHistoryScroll:Add("DListLayout")
     self.dialogHistoryList:Dock(TOP)
+    self.header = self:Add("DPanel")
+    self.header:Dock(TOP)
+    self.header:SetMouseInputEnabled(true)
+    self.header:SetTall(58)
+    self.header.Paint = function(_, w, h)
+        local accent = getThemeColors()
+        draw.SimpleText(string.upper(tostring(self.npcDisplayName or L("dialog"))), "LiliaFont.18", 18, 20, accent, TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)
+        surface.SetDrawColor(accent.r, accent.g, accent.b, 78)
+        surface.DrawRect(16, h - 1, w - 32, 1)
+    end
+
+    self.closeButton = self.header:Add("DButton")
+    self.closeButton:Dock(RIGHT)
+    self.closeButton:SetWide(52)
+    self.closeButton:SetText("")
+    self.closeButton.Paint = function(button, w, h)
+        local accent = getThemeColors()
+        local hovered = button:IsHovered()
+        if hovered then drawPanel(6, 8, w - 12, h - 16, 5, Color(accent.r, accent.g, accent.b, 24), Color(accent.r, accent.g, accent.b, 72)) end
+        draw.SimpleText("X", "LiliaFont.20", w * 0.5, h * 0.5, hovered and Color(244, 248, 248) or Color(170, 192, 193), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
+    end
+
+    self.closeButton.DoClick = function() self:Remove() end
+    self.header.OnMousePressed = function(header, code)
+        if code ~= MOUSE_LEFT then return end
+        local x, y = self:LocalCursorPos()
+        self.dragging = true
+        self.dragOffsetX = x
+        self.dragOffsetY = y
+        header:MouseCapture(true)
+    end
+
+    self.header.OnMouseReleased = function(header, code)
+        if code ~= MOUSE_LEFT then return end
+        self.dragging = false
+        header:MouseCapture(false)
+    end
+
+    self.header.Think = function(header)
+        if not self.dragging then return end
+        if not input.IsMouseDown(MOUSE_LEFT) then
+            self.dragging = false
+            header:MouseCapture(false)
+            return
+        end
+
+        local mouseX, mouseY = gui.MousePos()
+        local x = math.Clamp(mouseX - self.dragOffsetX, self.historyWidth + self.dialogGap + 12, ScrW() - self:GetWide() - 12)
+        local y = math.Clamp(mouseY - self.dragOffsetY, 12, ScrH() - self:GetTall() - 12)
+        self:SetPos(x, y)
+        self:SyncHistoryFrame()
+    end
+
     self.content = self:Add("DPanel")
     self.content:Dock(FILL)
-    self.content:SetZPos(2)
-    self.content:DockMargin(6, 6, 6, 6)
-    self.content:DockPadding(6, 6, 6, 6)
-    self.content:SetPaintBackground(false)
+    self.content:DockMargin(16, 14, 16, 16)
+    self.content.Paint = function() end
     self.dialogOptions = self.content:Add("liaScrollPanel")
     self.dialogOptions:Dock(BOTTOM)
     self.dialogOptions:SetTall(0)
     self.dialogOptions:SetZPos(4)
-    self.dialogOptions:DockMargin(0, 0, 0, 0)
-    self.dialogOptions:DockPadding(2, 2, 2, 2)
+    self.dialogOptions:DockPadding(8, 0, 8, 0)
+    self.dialogOptions.Paint = function() end
     self.responseScroll = self.content:Add("liaScrollPanel")
     self.responseScroll:Dock(FILL)
-    self.responseScroll:DockMargin(0, 0, 0, 8)
-    self.responseScroll:DockPadding(2, 2, 2, 2)
+    self.responseScroll:DockMargin(8, 8, 8, 16)
+    self.responseScroll:DockPadding(0, 0, 4, 0)
+    self.responseScroll.Paint = function() end
     local canvas = self.dialogOptions:GetCanvas()
-    if IsValid(canvas) and canvas.SizeToChildren then
+    if IsValid(canvas) then
+        canvas.Paint = function() end
         canvas.PerformLayout = function(canvasPanel)
             if canvasPanel.BaseClass and canvasPanel.BaseClass.PerformLayout then canvasPanel.BaseClass.PerformLayout(canvasPanel) end
             canvasPanel:SizeToChildren(false, true)
         end
     end
 
+    local responseCanvas = self.responseScroll:GetCanvas()
+    if IsValid(responseCanvas) then responseCanvas.Paint = function() end end
     self.responseText = self.responseScroll:Add("DLabel")
     self.responseText:Dock(TOP)
     self.responseText:SetWrap(true)
     self.responseText:SetAutoStretchVertical(true)
-    self.responseText:SetFont("LiliaFont.28")
+    self.responseText:SetFont("LiliaFont.30")
     self.responseText:SetTextColor(self:GetSpeakerColor(false))
     self.responseText:SetText("")
-    self.responseText:SetTall(0)
-    self.responseText:SetContentAlignment(4)
+    self.responseText:SetContentAlignment(7)
     self.responseText.PerformLayout = function(label)
         if IsValid(label:GetParent()) then
-            local parentW = label:GetParent():GetWide()
-            if parentW > 0 and label:GetWide() ~= parentW then label:SetWide(parentW) end
+            local width = math.max(label:GetParent():GetWide() - 8, 1)
+            if label:GetWide() ~= width then label:SetWide(width) end
         end
 
         if label.BaseClass and label.BaseClass.PerformLayout then label.BaseClass.PerformLayout(label) end
     end
 
-    self.npcDisplayName = L("dialog")
-    self.lastResponseText = ""
-    self.pendingResponse = false
-    self.hasHistoryMessage = false
-    self.conversationStack = {}
+    hook.Add("OnThemeChanged", self, self.OnThemeChanged)
+    self.dialogHistoryFrame:MakePopup()
+    self:MakePopup()
+    self.dialogHistoryFrame:SetKeyboardInputEnabled(false)
+    self:AlphaTo(255, 0.2, 0)
+    self.dialogHistoryFrame:AlphaTo(255, 0.2, 0)
 end
 
 function PANEL:Think()
+    if IsValid(self.backdrop) then if self.backdrop:GetWide() ~= ScrW() or self.backdrop:GetTall() ~= ScrH() then self.backdrop:SetSize(ScrW(), ScrH()) end end
+end
+
+function PANEL:SyncHistoryFrame()
+    if not IsValid(self.dialogHistoryFrame) then return end
+    local x, y = self:GetPos()
+    self.dialogHistoryFrame:SetSize(self.historyWidth, self:GetTall())
+    self.dialogHistoryFrame:SetPos(x - self.historyWidth - self.dialogGap, y)
+end
+
+function PANEL:OnThemeChanged()
+    if IsValid(self.header) then self.header:InvalidateLayout(true) end
+    if IsValid(self.historyHeader) then self.historyHeader:InvalidateLayout(true) end
+    if IsValid(self.responseText) then self.responseText:SetTextColor(self:GetSpeakerColor(false)) end
+end
+
+function PANEL:OnKeyCodePressed(key)
+    if key == KEY_ESCAPE then self:Remove() end
 end
 
 function PANEL:SetDialogText(text)
@@ -98,9 +249,8 @@ function PANEL:SetDialogText(text)
 end
 
 function PANEL:SetDialogTitle(title)
-    local resolved = title or L("dialog")
-    self.npcDisplayName = resolved
-    self:SetTitle(resolved)
+    self.npcDisplayName = title or L("dialog")
+    if IsValid(self.header) then self.header:InvalidateLayout(true) end
 end
 
 function PANEL:ClearDialogOptions()
@@ -114,16 +264,8 @@ function PANEL:ClearDialogOptions()
 end
 
 function PANEL:GetSpeakerColor(isPlayer)
-    local theme = lia.color.theme or {}
-    if isPlayer then
-        local accent = theme.accent
-        if istable(accent) then return accent[1] end
-        return accent or Color(180, 210, 255)
-    end
-
-    local textColor = theme.text
-    if istable(textColor) then return textColor[1] end
-    return textColor or color_white
+    local accent, text = getThemeColors()
+    return isPlayer and accent or text
 end
 
 function PANEL:ScrollHistoryToBottom()
@@ -135,107 +277,52 @@ end
 
 function PANEL:AppendDialogLine(text, isPlayer, skipResponseUpdate)
     if not text or text == "" or not IsValid(self.dialogHistoryList) then return end
-    local prefix
-    if isPlayer then
-        local ply = LocalPlayer()
-        prefix = (IsValid(ply) and ply:Name()) or L("you")
-    else
-        prefix = self.npcDisplayName or self:GetTitle()
-    end
-
-    local formatted = prefix and prefix ~= "" and (prefix .. ": " .. text) or text
+    local speaker = isPlayer and L("you") or self.npcDisplayName or L("dialog")
+    local accent = getThemeColors()
     local isFirstMessage = not self.hasHistoryMessage
     self.hasHistoryMessage = true
     local container = self.dialogHistoryList:Add("DPanel")
-    container:SetPaintBackground(false)
-    container:SetTall(0)
     container:Dock(TOP)
-    container:DockMargin(0, isFirstMessage and 4 or 2, 0, 2)
-    container.dialogHistoryScroll = self.dialogHistoryScroll
-    container.dialogHistoryList = self.dialogHistoryList
-    function container:PerformLayout()
-        if IsValid(self.dialogHistoryScroll) then
-            local scrollW = self.dialogHistoryScroll:GetWide()
-            if scrollW > 0 then
-                local scrollBar = self.dialogHistoryScroll:GetVBar()
-                local actualW = scrollW
-                if IsValid(scrollBar) and scrollBar:IsVisible() then actualW = scrollW - scrollBar:GetWide() end
-                actualW = actualW - 12
-                if actualW > 0 and self:GetWide() ~= actualW then self:SetWide(actualW) end
-            end
-        end
-    end
-
-    local label = container:Add("DLabel")
-    label:Dock(TOP)
-    label:SetWrap(true)
-    label:SetAutoStretchVertical(true)
-    label:SetFont("LiliaFont.20")
-    label:SetTextColor(self:GetSpeakerColor(isPlayer))
-    label:SetText(formatted)
-    label:SetContentAlignment(4)
-    function label:PerformLayout()
-        if IsValid(self:GetParent()) then
-            local parentW = self:GetParent():GetWide()
-            if parentW > 0 and self:GetWide() ~= parentW then self:SetWide(parentW) end
-        end
-    end
-
-    if IsValid(self.dialogHistoryScroll) then
-        local scrollW = self.dialogHistoryScroll:GetWide()
-        if scrollW > 0 then
-            local scrollBar = self.dialogHistoryScroll:GetVBar()
-            local actualW = scrollW
-            if IsValid(scrollBar) and scrollBar:IsVisible() then actualW = scrollW - scrollBar:GetWide() end
-            actualW = actualW - 12
-            if actualW > 0 then
-                container:SetWide(actualW)
-                label:SetWide(actualW)
-            end
-        end
+    container:DockMargin(0, isFirstMessage and 2 or 0, 4, 14)
+    container:SetTall(54)
+    container.Paint = function() end
+    local icon = container:Add("DPanel")
+    icon:SetSize(24, 24)
+    icon.Paint = function(_, w, h) drawIcon(isPlayer and historyPlayerIcon or historyNPCIcon, 0, 0, math.min(w, h), isPlayer and accent or Color(190, 207, 207)) end
+    local speakerLabel = container:Add("DLabel")
+    speakerLabel:SetFont("LiliaFont.18")
+    speakerLabel:SetTextColor(accent)
+    speakerLabel:SetText(speaker)
+    speakerLabel:SetContentAlignment(4)
+    local messageLabel = container:Add("DLabel")
+    messageLabel:SetFont("LiliaFont.17")
+    messageLabel:SetTextColor(Color(195, 211, 212))
+    messageLabel:SetText(tostring(text))
+    messageLabel:SetWrap(true)
+    messageLabel:SetAutoStretchVertical(true)
+    messageLabel:SetContentAlignment(7)
+    container.PerformLayout = function(panel, w)
+        local width = math.max(w, panel:GetParent():GetWide())
+        local textWidth = math.max(width - 38, 80)
+        icon:SetPos(0, 4)
+        speakerLabel:SetPos(38, 0)
+        speakerLabel:SetSize(textWidth, 22)
+        messageLabel:SetPos(38, 24)
+        messageLabel:SetWide(textWidth)
+        messageLabel:InvalidateLayout(true)
+        messageLabel:SizeToContentsY()
+        panel:SetTall(math.max(54, messageLabel:GetTall() + 28))
     end
 
     container:InvalidateLayout(true)
-    container:SizeToChildren(false, true)
     timer.Simple(0, function()
-        if IsValid(container) and IsValid(label) and IsValid(self.dialogHistoryScroll) then
-            local scrollW = self.dialogHistoryScroll:GetWide()
-            if scrollW > 0 then
-                local scrollBar = self.dialogHistoryScroll:GetVBar()
-                local actualW = scrollW
-                if IsValid(scrollBar) and scrollBar:IsVisible() then actualW = scrollW - scrollBar:GetWide() end
-                actualW = actualW - 12
-                if actualW > 0 then
-                    container:SetWide(actualW)
-                    label:SetWide(actualW)
-                    container:InvalidateLayout(true)
-                    container:SizeToChildren(false, true)
-                    label:InvalidateLayout(true)
-                end
-            end
-        end
+        if not IsValid(container) or not IsValid(self.dialogHistoryList) then return end
+        container:SetWide(math.max(self.dialogHistoryList:GetWide() - 4, 1))
+        container:InvalidateLayout(true)
+        self.dialogHistoryList:InvalidateLayout(true)
+        self:ScrollHistoryToBottom()
     end)
 
-    timer.Simple(0.1, function()
-        if IsValid(container) and IsValid(label) and IsValid(self.dialogHistoryScroll) then
-            local scrollW = self.dialogHistoryScroll:GetWide()
-            if scrollW > 0 then
-                local scrollBar = self.dialogHistoryScroll:GetVBar()
-                local actualW = scrollW
-                if IsValid(scrollBar) and scrollBar:IsVisible() then actualW = scrollW - scrollBar:GetWide() end
-                actualW = actualW - 12
-                if actualW > 0 and label:GetWide() ~= actualW then
-                    container:SetWide(actualW)
-                    label:SetWide(actualW)
-                    container:InvalidateLayout(true)
-                    container:SizeToChildren(false, true)
-                    label:InvalidateLayout(true)
-                end
-            end
-        end
-    end)
-
-    self:ScrollHistoryToBottom()
     if not isPlayer and not skipResponseUpdate then
         self.lastResponseText = text
         self:UpdateResponseText(text)
@@ -261,16 +348,6 @@ function PANEL:UpdateResponseText(text)
     if IsValid(self.responseScroll) then
         local scrollBar = self.responseScroll:GetVBar()
         if IsValid(scrollBar) then scrollBar:SetScroll(0) end
-        timer.Simple(0.01, function()
-            if IsValid(self) and IsValid(self.responseScroll) and IsValid(self.responseText) and IsValid(self.content) then
-                local textHeight = self.responseText:GetTall()
-                local contentH = self.content:GetTall()
-                local maxHeight = math.max(contentH * 0.7, 150)
-                local minHeight = 50
-                local targetHeight = math.min(math.max(textHeight + 8, minHeight), maxHeight)
-                if self.responseScroll:GetTall() ~= targetHeight then self.responseScroll:SetTall(targetHeight) end
-            end
-        end)
     end
 end
 
@@ -337,43 +414,29 @@ function PANEL:DisplayServerResponse(responses)
 end
 
 function PANEL:PerformLayout(w, h)
-    self.BaseClass.PerformLayout(self, w, h)
     if IsValid(self.content) and IsValid(self.dialogOptions) then
-        local contentH = self.content:GetTall()
         local canvas = self.dialogOptions:GetCanvas()
-        local buttonsContentHeight = 0
+        local buttonsHeight = 0
         if IsValid(canvas) then
             canvas:SizeToChildren(false, true)
-            buttonsContentHeight = canvas:GetTall()
+            buttonsHeight = canvas:GetTall()
         end
 
-        local minButtonsHeight = 100
-        local maxButtonsHeight = math.max(contentH * 0.5, minButtonsHeight)
-        local targetButtonsHeight = math.Clamp(buttonsContentHeight + 4, minButtonsHeight, maxButtonsHeight)
-        local minTextHeight = math.max(contentH * 0.3, 150)
-        local availableForButtons = contentH - minTextHeight - 8
-        targetButtonsHeight = math.min(targetButtonsHeight, math.max(availableForButtons, minButtonsHeight))
-        if self.dialogOptions:GetTall() ~= targetButtonsHeight then self.dialogOptions:SetTall(targetButtonsHeight) end
+        local maximumHeight = math.max(math.floor(self.content:GetTall() * 0.55), 64)
+        local targetHeight = buttonsHeight > 0 and math.Clamp(buttonsHeight + 4, 64, maximumHeight) or 0
+        if self.dialogOptions:GetTall() ~= targetHeight then self.dialogOptions:SetTall(targetHeight) end
     end
 
-    if IsValid(self.dialogHistoryFrame) then
-        local dialogX, y = self:GetPos()
-        local historyW = ScrW() * 0.2
-        self.dialogHistoryFrame:SetSize(historyW, h)
-        local historyX = dialogX - historyW - 6
-        if historyX < 6 then
-            historyX = 6
-            self:SetPos(historyX + historyW + 6, y)
-        end
-
-        self.dialogHistoryFrame:SetPos(historyX, y)
-        self.dialogHistoryFrame:SetTall(h)
-    end
+    self:SyncHistoryFrame()
 end
 
 function PANEL:OnRemove()
+    hook.Remove("OnThemeChanged", self)
     if IsValid(self.dialogHistoryFrame) then self.dialogHistoryFrame:Remove() end
+    if IsValid(self.backdrop) then self.backdrop:Remove() end
     if lia.dialog.historyFrame == self.dialogHistoryFrame then lia.dialog.historyFrame = nil end
+    if lia.dialog.backdrop == self.backdrop then lia.dialog.backdrop = nil end
+    if lia.dialog.vgui == self then lia.dialog.vgui = nil end
 end
 
 function PANEL:BuildGeneratedOptions(nodeOptions)
@@ -479,13 +542,29 @@ function PANEL:AddDialogOptions(options, npc, skipBackButton)
     for _, option in ipairs(validOptions) do
         local label = option.label
         local info = option.info
-        local choiceBtn = self.dialogOptions:Add("liaButton")
+        local choiceBtn = self.dialogOptions:Add("DButton")
         choiceBtn:Dock(TOP)
-        choiceBtn:DockMargin(6, 8, 6, 0)
-        choiceBtn:SetTall(45)
-        choiceBtn:SetText(label)
-        choiceBtn:SetFont("LiliaFont.32")
+        choiceBtn:DockMargin(0, 0, 0, 10)
+        choiceBtn:SetTall(56)
+        choiceBtn:SetText("")
+        choiceBtn:SetCursor("hand")
+        choiceBtn.Paint = function(button, w, h)
+            local accent = getThemeColors()
+            local hovered = button:IsHovered()
+            local pressed = button:IsDown()
+            local background = pressed and Color(18, 39, 45, 248) or hovered and Color(14, 34, 40, 246) or Color(8, 25, 30, 238)
+            local outlineAlpha = pressed and 185 or hovered and 145 or 76
+            drawPanel(0, 0, w, h, 6, background, Color(accent.r, accent.g, accent.b, outlineAlpha))
+            if hovered or pressed then
+                surface.SetDrawColor(accent.r, accent.g, accent.b, pressed and 255 or 210)
+                surface.DrawRect(0, 7, 3, h - 14)
+            end
+
+            draw.SimpleText(label, "LiliaFont.22", w * 0.5, h * 0.5, Color(238, 245, 245), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
+        end
+
         choiceBtn.DoClick = function()
+            if lia.websound and lia.websound.playButtonSound then lia.websound.playButtonSound() end
             if info.nodeID and self.generatedDialog then
                 self:AppendDialogLine(label, true)
                 self.pendingResponse = true
@@ -592,4 +671,4 @@ function PANEL:LoadNPCDialog(convoSettings, npc)
     end
 end
 
-vgui.Register("liaDialogMenu", PANEL, "liaFrame")
+vgui.Register("liaDialogMenu", PANEL, "EditablePanel")

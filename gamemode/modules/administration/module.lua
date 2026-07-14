@@ -532,7 +532,8 @@ MODULE.Privileges = {
         Category = "bodygroups",
     },
     ["changeBodygroups"] = {
-        Name = "@changeBodygroups",
+        Name = "@changeBodygroupsPrivilege",
+        Description = "@changeBodygroupsPrivilegeDesc",
         MinAccess = "admin",
         Category = "bodygroups",
     },

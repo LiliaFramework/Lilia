@@ -721,6 +721,7 @@ local VoiceRanges = {
     [VOICE_YELLING] = 600,
 }
 
+local getEntityInfoMaxDistance
 local falloverBlackoutAlpha = 0
 local lastEntity
 local nextUpdate = 0
@@ -771,6 +772,152 @@ local function formatDevHUDVector(vec)
     return string.format("%.2f, %.2f, %.2f", vec.x, vec.y, vec.z)
 end
 
+local function easeOutQuint(fraction)
+    fraction = math.Clamp(fraction or 0, 0, 1)
+    return 1 - (1 - fraction) ^ 5
+end
+
+local function appendPlayerInfoRow(rows, entry)
+    if entry == nil then return end
+    if istable(entry) then
+        if entry.divider then
+            rows[#rows + 1] = {
+                divider = true
+            }
+            return
+        end
+
+        if entry.section or entry.category then
+            rows[#rows + 1] = {
+                section = entry.section or entry.category
+            }
+            return
+        end
+
+        local label = entry.label or entry.name or entry.key
+        local value = entry.value or entry[2]
+        local text = entry.text or entry[1]
+        if label and value ~= nil then
+            rows[#rows + 1] = {
+                label = tostring(label),
+                value = tostring(value)
+            }
+        elseif text ~= nil and tostring(text) ~= "" then
+            rows[#rows + 1] = {
+                text = tostring(text)
+            }
+        end
+        return
+    end
+
+    local text = tostring(entry)
+    if text ~= "" then
+        rows[#rows + 1] = {
+            text = text
+        }
+    end
+end
+
+local function getPlayerInfoMeasureText(entry)
+    if not istable(entry) then return tostring(entry or "") end
+    if entry.divider then return "" end
+    if entry.section or entry.category then return tostring(entry.section or entry.category or "") end
+    if entry.label and entry.value ~= nil then return tostring(entry.label) .. " " .. tostring(entry.value) end
+    if entry.text ~= nil then return tostring(entry.text) end
+    if entry[1] ~= nil and entry[2] ~= nil then return tostring(entry[1]) .. " " .. tostring(entry[2]) end
+    return tostring(entry[1] or "")
+end
+
+local function trimPlayerInfoText(value)
+    return tostring(value or ""):gsub("^%s+", ""):gsub("%s+$", "")
+end
+
+local function hasVisiblePlayerInfoRows(rows)
+    if not istable(rows) then return false end
+    for i = 1, #rows do
+        local row = rows[i]
+        if istable(row) then
+            if row.divider then return true end
+            if trimPlayerInfoText(row.text) ~= "" or trimPlayerInfoText(row.label) ~= "" or trimPlayerInfoText(row.value) ~= "" then return true end
+        elseif trimPlayerInfoText(row) ~= "" then
+            return true
+        end
+    end
+    return false
+end
+
+local function estimatePlayerInfoTooltipHeight(title, sections, titleFont, sectionFont, rowHeight, padding, sectionGap)
+    surface.SetFont(titleFont)
+    local _, titleHeight = 0, 0
+    local titleText = trimPlayerInfoText(title)
+    if titleText ~= "" then _, titleHeight = surface.GetTextSize(string.upper(titleText)) end
+    local totalHeight = padding
+    if titleText ~= "" then totalHeight = totalHeight + math.max(titleHeight, 18) + 14 end
+    for i = 1, #sections do
+        local section = sections[i]
+        local sectionHeight = 0
+        local sectionTitle = trimPlayerInfoText(section.title)
+        if sectionTitle ~= "" then
+            surface.SetFont(sectionFont)
+            local _, sectionTextHeight = surface.GetTextSize(string.upper(sectionTitle))
+            sectionHeight = sectionHeight + math.max(sectionTextHeight, 16) + 10
+        end
+
+        for j = 1, #(section.rows or {}) do
+            local row = section.rows[j]
+            if istable(row) and row.divider then
+                sectionHeight = sectionHeight + 10
+            else
+                sectionHeight = sectionHeight + rowHeight
+            end
+        end
+
+        totalHeight = totalHeight + sectionHeight
+        if i < #sections then totalHeight = totalHeight + sectionGap end
+    end
+    return totalHeight + padding
+end
+
+local function buildPlayerInfoSections(descriptionRows, infoRows, defaultInfoTitle)
+    local sections = {}
+    if hasVisiblePlayerInfoRows(descriptionRows) then
+        sections[#sections + 1] = {
+            title = "Description",
+            rows = descriptionRows
+        }
+    end
+
+    local currentInfoSection
+    local function pushCurrentInfoSection()
+        if currentInfoSection and hasVisiblePlayerInfoRows(currentInfoSection.rows) then sections[#sections + 1] = currentInfoSection end
+    end
+
+    if istable(infoRows) then
+        for i = 1, #infoRows do
+            local row = infoRows[i]
+            if istable(row) and (row.section or row.category) then
+                pushCurrentInfoSection()
+                currentInfoSection = {
+                    title = trimPlayerInfoText(row.section or row.category),
+                    rows = {}
+                }
+            else
+                if not currentInfoSection then
+                    currentInfoSection = {
+                        title = defaultInfoTitle or "Information",
+                        rows = {}
+                    }
+                end
+
+                currentInfoSection.rows[#currentInfoSection.rows + 1] = row
+            end
+        end
+    end
+
+    pushCurrentInfoSection()
+    return sections
+end
+
 local function hasOpenTicketFrame()
     local worldPanel = vgui.GetWorldPanel()
     if not IsValid(worldPanel) then return false end
@@ -781,6 +928,7 @@ local function hasOpenTicketFrame()
 end
 
 local function drawDevelopmentOverlay(client)
+    if not client:getChar() then return end
     if not lia.option.get("drawDevelopmentHUD", true) then return end
     if hasOpenTicketFrame() then return end
     local canDrawDevHUD = client:hasPrivilege("developmentHUD")
@@ -804,12 +952,12 @@ local function drawDevelopmentOverlay(client)
 
     if #lines == 0 then return end
     lia.derma.drawBoxWithText(table.concat(lines, "\n"), 24, 24, {
+        richText = false,
         font = getHUDFont(18),
         textColor = lia.color.theme.text or color_white,
         backgroundColor = Color(25, 28, 35, 235),
         borderRadius = 12,
         padding = 18,
-        lineSpacing = 8,
         textAlignX = TEXT_ALIGN_LEFT,
         textAlignY = TEXT_ALIGN_TOP,
         blur = {
@@ -899,23 +1047,30 @@ end
 
 local function RenderEntities()
     local client = LocalPlayer()
-    if isToolgunHUDHidden(client) then
-        table.Empty(paintedEntitiesCache)
-        return
-    end
-
     if client:getChar() then
         local ft = FrameTime()
         local rt = RealTime()
         if nextUpdate < rt then
             nextUpdate = rt + 0.5
-            lastTrace.start = client:GetShootPos()
-            lastTrace.endpos = lastTrace.start + client:GetAimVector() * 160
-            lastTrace.filter = client
-            lastTrace.mins = Vector(-4, -4, -4)
-            lastTrace.maxs = Vector(4, 4, 4)
-            lastTrace.mask = MASK_SHOT_HULL
-            lastEntity = util.TraceHull(lastTrace).Entity
+            local hoverTrace = client:GetEyeTraceNoCursor()
+            local hoveredEntity = IsValid(hoverTrace.Entity) and hoverTrace.Entity or nil
+            local hoverDistance = hoveredEntity and client:GetShootPos():Distance(hoverTrace.HitPos) or math.huge
+            if IsValid(hoveredEntity) and hoverDistance > getEntityInfoMaxDistance(hoveredEntity) then hoveredEntity = nil end
+            if not hoveredEntity or hoverDistance > 380 then
+                lastTrace.start = client:GetShootPos()
+                lastTrace.endpos = lastTrace.start + client:GetAimVector() * 380
+                lastTrace.filter = client
+                lastTrace.mins = Vector(-4, -4, -4)
+                lastTrace.maxs = Vector(4, 4, 4)
+                lastTrace.mask = MASK_SHOT_HULL
+                hoveredEntity = util.TraceHull(lastTrace).Entity
+                if IsValid(hoveredEntity) then
+                    local hitPosition = hoveredEntity:NearestPoint(client:GetShootPos())
+                    if client:GetShootPos():Distance(hitPosition) > getEntityInfoMaxDistance(hoveredEntity) then hoveredEntity = nil end
+                end
+            end
+
+            lastEntity = hoveredEntity
             if IsValid(lastEntity) then
                 local shouldDraw = hook.Run("ShouldDrawEntityInfo", lastEntity)
                 if shouldDraw then paintedEntitiesCache[lastEntity] = true end
@@ -925,7 +1080,8 @@ local function RenderEntities()
         for ent, drawing in pairs(paintedEntitiesCache) do
             if IsValid(ent) then
                 local goal = drawing and 255 or 0
-                local a = mathApproach(ent.liaAlpha or 0, goal, ft * 1000)
+                local fadeSpeed = drawing and 255 or 180
+                local a = mathApproach(ent.liaAlpha or 0, goal, ft * fadeSpeed)
                 if lastEntity ~= ent then paintedEntitiesCache[ent] = false end
                 if a > 0 then
                     local netPlayer
@@ -975,6 +1131,17 @@ local entityInfoOptionByCategory = {
     items = "drawItemHoverInfo",
     entities = "drawEntityHoverInfo"
 }
+
+local entityInfoMaxDistanceByCategory = {
+    players = 192,
+    items = 380,
+    entities = 380
+}
+
+getEntityInfoMaxDistance = function(entity)
+    local category = getEntityInfoCategory(entity)
+    return entityInfoMaxDistanceByCategory[category] or 380
+end
 
 function GM:PostDrawOpaqueRenderables()
     if not lia.option.get("voiceRange", false) then return end
@@ -1037,16 +1204,23 @@ end
 
 function GM:DrawCharInfo(c, character, info)
     local injured = hook.Run("GetInjuredText", c)
-    if injured then info[#info + 1] = {L(injured[1]), injured[2]} end
+    if injured then
+        info[#info + 1] = {
+            section = "Status"
+        }
+
+        info[#info + 1] = {
+            label = "Condition",
+            value = L(injured[1])
+        }
+    end
 end
 
 function GM:DrawEntityInfo(e, a, pos)
     if not e:IsPlayer() or hook.Run("ShouldDrawPlayerInfo", e) == false or IsValid(lia.gui.character) or IsValid(lia.gui.info) then return end
     local ch = e:getChar()
     if not ch then return end
-    pos = pos or toScreen(e:GetPos() + (e:Crouching() and Vector(0, 0, 48) or Vector(0, 0, 80)))
-    local x, y = pos.x, pos.y
-    local charInfo = {}
+    pos = pos or toScreen(e:GetPos() + (e:Crouching() and Vector(0, 0, 44) or Vector(0, 0, 72)))
     local width = lia.config.get("descriptionWidth", 0.5)
     if e.widthCache ~= width then
         e.widthCache = width
@@ -1061,10 +1235,6 @@ function GM:DrawEntityInfo(e, a, pos)
         e.liaNameLines = lia.util.wrapText(name, ScrW() * width, getHUDFont(17))
     end
 
-    for i = 1, #e.liaNameLines do
-        charInfo[#charInfo + 1] = {e.liaNameLines[i], color_white}
-    end
-
     local desc = hook.Run("GetDisplayedDescription", e, true) or ch and ch.getDesc(ch) or L("noChar")
     if desc ~= e.liaDescCache then
         e.liaDescCache = desc
@@ -1072,22 +1242,32 @@ function GM:DrawEntityInfo(e, a, pos)
         e.liaDescLines = lia.util.wrapText(desc, ScrW() * width, getHUDFont(17))
     end
 
+    local extraInfo = {}
+    if ch then hook.Run("DrawCharInfo", e, ch, extraInfo) end
+    local charInfo = {}
+    for i = 1, #e.liaNameLines do
+        charInfo[#charInfo + 1] = {e.liaNameLines[i], color_white}
+    end
+
     for i = 1, #e.liaDescLines do
         charInfo[#charInfo + 1] = {e.liaDescLines[i]}
     end
 
-    if ch then hook.Run("DrawCharInfo", e, ch, charInfo) end
+    for i = 1, #extraInfo do
+        charInfo[#charInfo + 1] = extraInfo[i]
+    end
+
     if #charInfo > 0 then
+        local fadeFraction = easeOutQuint(math.Clamp(tonumber(a) or 255, 0, 255) / 255)
+        local fadeAlpha = math.floor(255 * fadeFraction)
         surface.SetFont(getHUDFont(17))
         local maxWidth = 0
         local totalHeight = 0
-        local lineHeights = {}
         for i = 1, #charInfo do
             local info = charInfo[i]
-            local text = info[1]:gsub("#", "\226\128\139#")
+            local text = getPlayerInfoMeasureText(info):gsub("#", "\226\128\139#")
             local tw, th = surface.GetTextSize(text)
             maxWidth = math.max(maxWidth, tw)
-            lineHeights[i] = th
             if i == 1 then
                 totalHeight = th
             else
@@ -1098,123 +1278,90 @@ function GM:DrawEntityInfo(e, a, pos)
         local padding = 12
         local panelWidth = maxWidth + padding * 2
         local panelHeight = totalHeight + padding * 2
-        local panelX = x - panelWidth / 2
-        local panelY = y - panelHeight / 2
-        if hook.Run("DrawPlayerInfoBackground", e, panelX, panelY, panelWidth, panelHeight, a) ~= false then
-            lia.util.drawBlurAt(panelX, panelY, panelWidth, panelHeight, 4, 2, 0.3 * (a / 255))
-            lia.derma.rect(panelX, panelY, panelWidth, panelHeight):Color(ColorAlpha(Color(25, 28, 35, 250), a)):Rad(8):Draw()
-            lia.derma.rect(panelX, panelY, panelWidth, panelHeight):Color(ColorAlpha(lia.color.theme.theme or lia.color.theme.accent, a)):Rad(8):Outline(2):Draw()
-        end
-
-        local currentY = panelY + padding
-        for i = 1, #charInfo do
-            local info = charInfo[i]
-            local text = info[1]:gsub("#", "\226\128\139#")
-            local textColor = ColorAlpha(info[2] or color_white, a)
-            lia.util.drawText(text, x, currentY, textColor, 1, 1, getHUDFont(17))
-            currentY = currentY + lineHeights[i] + 2
-        end
-    end
-end
-
-local voiceIndicatorPanel = nil
-local function clearLegacyVoiceIndicatorPanels()
-    local world = vgui.GetWorldPanel()
-    if not IsValid(world) then return end
-    for _, child in ipairs(world:GetChildren()) do
-        if child:GetName() == "liaVoiceIndicatorPanel" then child:Remove() end
-    end
-end
-
-clearLegacyVoiceIndicatorPanels()
-local function updateVoiceIndicator()
-    local client = LocalPlayer()
-    if not IsValid(client) then
-        if IsValid(voiceIndicatorPanel) then
-            voiceIndicatorPanel:Remove()
-            voiceIndicatorPanel = nil
-        end
-        return
-    end
-
-    if isToolgunHUDHidden(client) then
-        if IsValid(voiceIndicatorPanel) then
-            voiceIndicatorPanel:Remove()
-            voiceIndicatorPanel = nil
-        end
-        return
-    end
-
-    local isSpeaking = client:IsSpeaking()
-    if not isSpeaking then
-        if IsValid(voiceIndicatorPanel) then
-            voiceIndicatorPanel:Remove()
-            voiceIndicatorPanel = nil
-        end
-        return
-    end
-
-    if not IsValid(voiceIndicatorPanel) then
-        clearLegacyVoiceIndicatorPanels()
-        voiceIndicatorPanel = vgui.Create("DPanel")
-        voiceIndicatorPanel:SetName("liaVoiceIndicatorPanel")
-        voiceIndicatorPanel:SetSize(300, 40)
-        voiceIndicatorPanel:SetPos(ScrW() / 2 - 150, 50)
-        voiceIndicatorPanel:SetDrawOnTop(true)
-        voiceIndicatorPanel:SetMouseInputEnabled(false)
-        voiceIndicatorPanel:SetKeyboardInputEnabled(false)
-        voiceIndicatorPanel:ParentToHUD()
-    end
-
-    local voiceType = client:getLocalVar("VoiceType", VOICE_TALKING)
-    local voiceText = L("youAre") .. " " .. L(voiceType)
-    local tooltipLines = {}
-    if lia.option.get("voiceRange", false) then
-        local radius = VoiceRanges[voiceType] or VoiceRanges[VOICE_TALKING]
-        local clientPos = client:GetPos()
-        local count = 0
-        for _, ply in player.Iterator() do
-            if ply ~= client and IsValid(ply) and ply:getChar() and ply:Alive() then
-                local distance = clientPos:Distance(ply:GetPos())
-                if distance <= radius then count = count + 1 end
+        local panelX = pos.x - panelWidth / 2
+        local panelY = pos.y - panelHeight / 2
+        if hook.Run("DrawPlayerInfoBackground", e, panelX, panelY, panelWidth, panelHeight, a) == false then return end
+        local accent = lia.color.theme.accent or lia.color.theme.theme or color_white
+        local boxWidth = math.Clamp(math.max(360, panelWidth + 40), math.min(320, ScrW() * width), math.min(520, ScrW() * 0.45))
+        local boundMin, boundMax = e:GetRotatedAABB(e:OBBMins() * 0.5, e:OBBMaxs() * 0.5)
+        local boundMinX = e:LocalToWorld(boundMin):ToScreen().x
+        local boundMaxX = e:LocalToWorld(boundMax):ToScreen().x
+        local tooltipAnchorX = math.max(boundMinX, boundMaxX) + 12
+        local tooltipX = math.Clamp(tooltipAnchorX, ScrW() * 0.5 + 24, ScrW() - boxWidth)
+        local descriptionRows = {}
+        for i = 1, #e.liaDescLines do
+            local line = trimPlayerInfoText(e.liaDescLines[i])
+            if line ~= "" then
+                descriptionRows[#descriptionRows + 1] = {
+                    text = line:gsub("#", "\226\128\139#")
+                }
             end
         end
 
-        if count > 0 then
-            local canHearKey = count == 1 and "voiceOnePersonCanHearYou" or "voicePeopleCanHearYou"
-            local canHearText = L(canHearKey, count)
-            voiceText = voiceText .. " - " .. canHearText
-            tooltipLines[#tooltipLines + 1] = "<font=" .. getHUDFont(16) .. ">" .. canHearText .. "</font>"
+        local informationRows = {}
+        for i = 2, #e.liaNameLines do
+            local line = trimPlayerInfoText(e.liaNameLines[i])
+            if line ~= "" then
+                informationRows[#informationRows + 1] = {
+                    text = line:gsub("#", "\226\128\139#")
+                }
+            end
         end
-    end
 
-    local modifiedText = hook.Run("ModifyVoiceIndicatorText", client, voiceText, voiceType)
-    if modifiedText then voiceText = modifiedText end
-    table.insert(tooltipLines, "<font=" .. getHUDFont(16, "b") .. ">" .. voiceText .. "</font>")
-    table.insert(tooltipLines, "<font=" .. getHUDFont(16) .. ">" .. L("voiceRange") .. ": " .. (VoiceRanges[voiceType] or VoiceRanges[VOICE_TALKING]) .. " units</font>")
-    voiceIndicatorPanel:SetTooltip(table.concat(tooltipLines, "\n"))
-    voiceIndicatorPanel.Paint = function(pnl, w, h)
-        lia.util.drawBlur(pnl, 4, 2)
-        lia.derma.rect(0, 0, w, h):Rad(8):Color(Color(0, 0, 0, 150)):Draw()
-        lia.derma.rect(0, 0, w, h):Rad(8):Color(lia.color.theme.theme):Outline(2):Draw()
-        draw.SimpleText(voiceText, getHUDFont(18), w / 2, h / 2, Color(255, 255, 255), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
-    end
-end
+        if #extraInfo > 0 then
+            for i = 1, #extraInfo do
+                local countBefore = #informationRows
+                appendPlayerInfoRow(informationRows, extraInfo[i])
+                local appended = informationRows[#informationRows]
+                if appended and #informationRows > countBefore then
+                    if appended.text then appended.text = appended.text:gsub("#", "\226\128\139#") end
+                    if appended.label then appended.label = appended.label:gsub("#", "\226\128\139#") end
+                    if appended.value then appended.value = appended.value:gsub("#", "\226\128\139#") end
+                end
+            end
+        end
 
-local function drawVoiceIndicator()
-    updateVoiceIndicator()
+        local sections = buildPlayerInfoSections(descriptionRows, informationRows, "Information")
+        local boxHeight = estimatePlayerInfoTooltipHeight(e.liaNameLines[1] or name, sections, "LiliaFont.17", "LiliaFont.15", 18, 12, 6)
+        local tooltipY = math.Clamp(ScrH() * 0.5 - boxHeight * 0.5, 0, ScrH() - boxHeight)
+        lia.derma.drawBoxWithText(nil, tooltipX, tooltipY, {
+            title = e.liaNameLines[1] or name,
+            sections = sections,
+            textAlignX = TEXT_ALIGN_LEFT,
+            textAlignY = TEXT_ALIGN_TOP,
+            width = boxWidth,
+            minWidth = math.min(320, ScrW() * width),
+            maxWidth = math.min(520, ScrW() * 0.45),
+            padding = 12,
+            rowHeight = 18,
+            sectionGap = 6,
+            columnGap = 18,
+            backgroundColor = Color(3, 18, 22, math.floor(232 * (fadeAlpha / 255))),
+            borderColor = Color(accent.r, accent.g, accent.b, math.floor(110 * (fadeAlpha / 255))),
+            textColor = Color(235, 240, 242, fadeAlpha),
+            mutedTextColor = Color(160, 178, 180, fadeAlpha),
+            accentColor = Color(accent.r, accent.g, accent.b, fadeAlpha),
+            accentAlpha = math.floor(210 * (fadeAlpha / 255)),
+            shadow = {
+                enabled = true,
+                color = Color(0, 0, 0, math.floor(125 * (fadeAlpha / 255))),
+                offsetX = 8,
+                offsetY = 14
+            },
+            blur = {
+                enabled = true,
+                amount = 2,
+                passes = 2,
+                alpha = 0.65 * (fadeAlpha / 255)
+            },
+            overlapMargin = 4
+        })
+    end
 end
 
 function GM:HUDPaint()
     local client = LocalPlayer()
-    if isToolgunHUDHidden(client) then
-        if IsValid(voiceIndicatorPanel) then
-            voiceIndicatorPanel:Remove()
-            voiceIndicatorPanel = nil
-        end
-        return
-    end
-
+    if isToolgunHUDHidden(client) then return end
     if client:Alive() and client:getChar() then
         local wpn = client:GetActiveWeapon()
         if canDrawAmmo(wpn) then drawAmmo(wpn) end
@@ -1223,7 +1370,7 @@ function GM:HUDPaint()
         hook.Run("DisplayPlayerHUDInformation", client, hudInfos)
         if #hudInfos > 0 then
             for _, info in ipairs(hudInfos) do
-                if info.text and info.position then
+                if (info.text or info.rows) and info.position then
                     local drawOptions = {
                         textColor = info.color or Color(180, 180, 180),
                         font = info.font or getHUDFont(16),
@@ -1266,17 +1413,27 @@ function GM:HUDPaint()
                     if info.autoSize ~= nil then drawOptions.autoSize = info.autoSize end
                     if info.width then drawOptions.width = info.width end
                     if info.height then drawOptions.height = info.height end
+                    if info.title then drawOptions.title = info.title end
+                    if info.rows then drawOptions.rows = info.rows end
+                    if info.contentAlign then drawOptions.contentAlign = info.contentAlign end
+                    if info.rowHeight then drawOptions.rowHeight = info.rowHeight end
+                    if info.rowDividers ~= nil then drawOptions.rowDividers = info.rowDividers end
+                    if info.richText ~= nil then
+                        drawOptions.richText = info.richText
+                    else
+                        drawOptions.richText = info.rows ~= nil
+                    end
+
                     if info.blur then drawOptions.blur = info.blur end
                     if info.shadow then drawOptions.shadow = info.shadow end
                     if info.accentBorder then drawOptions.accentBorder = info.accentBorder end
-                    lia.derma.drawBoxWithText(info.text, info.position.x, info.position.y, drawOptions)
+                    lia.derma.drawBoxWithText(info.rows and nil or info.text, info.position.x, info.position.y, drawOptions)
                 end
             end
         end
     end
 
     drawDevelopmentOverlay(client)
-    drawVoiceIndicator()
 end
 
 function GM:TooltipInitialize(var, panel)
@@ -1490,46 +1647,9 @@ function GM:HUDShouldDraw(element)
     return not hidden[element]
 end
 
-function GM:PlayerStartVoice(client)
-    if not IsValid(g_VoicePanelList) or not lia.config.get("IsVoiceEnabled", true) then return end
-    hook.Run("PlayerEndVoice", client)
-    local pnl = VoicePanels[client]
-    if IsValid(pnl) then
-        if pnl.fadeAnim then
-            pnl.fadeAnim:Stop()
-            pnl.fadeAnim = nil
-        end
-
-        pnl:SetAlpha(255)
-        return
-    end
-
-    if not IsValid(client) then return end
-    pnl = g_VoicePanelList:Add("liaVoicePanel")
-    pnl:Setup(client)
-    VoicePanels[client] = pnl
-end
-
-function GM:PlayerEndVoice(client)
-    local pnl = VoicePanels[client]
-    if IsValid(pnl) and not pnl.fadeAnim then
-        pnl.fadeAnim = Derma_Anim("FadeOut", pnl, pnl.FadeOut)
-        pnl.fadeAnim:Start(2)
-    end
-end
-
-function GM:VoiceToggled(enabled)
-    if not IsValid(g_VoicePanelList) then return end
-    if not enabled then
-        for client, pnl in pairs(VoicePanels) do
-            if IsValid(pnl) then pnl:Remove() end
-            VoicePanels[client] = nil
-        end
-    end
-end
-
 function GM:SpawnMenuOpen()
     local client = LocalPlayer()
+    if not IsValid(client) or not client:getChar() then return end
     local limitEnabled = lia.config.get("SpawnMenuLimit", false)
     local hasFlag = client:hasFlags("pet")
     local isStaff = client:isStaffOnDuty()

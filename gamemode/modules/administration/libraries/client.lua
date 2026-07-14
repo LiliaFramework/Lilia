@@ -467,8 +467,8 @@ function MODULE:OpenStaffCases(panel)
     local borderColor = Color(47, 59, 57, 220)
     local textColor = Color(230, 238, 236)
     local mutedTextColor = Color(150, 168, 166)
-    local goodColor = Color(82, 205, 120)
-    local badColor = Color(220, 86, 86)
+    local goodColor = Color(75, 205, 130)
+    local badColor = Color(220, 95, 95)
     local warningColor = Color(230, 164, 70)
     local infoColor = Color(90, 170, 235)
     self.staffCasesPanel = panel
@@ -671,8 +671,8 @@ function MODULE:OpenStaffCases(panel)
             button.Paint = function(this, w, h)
                 local active = self.caseState.mode == info.id
                 local hovered = this:IsHovered() and not this.Disabled
-                local background = active and selectedColor or hovered and panelColorHovered or Color(255, 255, 255, 5)
-                local outline = active and Color(accent.r, accent.g, accent.b, 140) or Color(255, 255, 255, 8)
+                local background = active and selectedColor or hovered and panelColorHovered or panelColorSoft
+                local outline = active and Color(accent.r, accent.g, accent.b, 170) or Color(borderColor.r, borderColor.g, borderColor.b, 180)
                 drawPanel(0, 0, w, h, 5, background, outline)
                 draw.SimpleText(info.label, "LiliaFont.16", w * 0.5, h * 0.5, this.Disabled and Color(100, 108, 112) or textColor, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
             end
@@ -1024,11 +1024,12 @@ function MODULE:OpenStaffCases(panel)
         row.caseData = caseData
         row.Paint = function(this, w, h)
             local selected = self.caseState.selectedID == caseData.caseID
-            local background = selected and selectedColor or this:IsHovered() and panelColorHovered or Color(255, 255, 255, 2)
-            surface.SetDrawColor(background.r, background.g, background.b, background.a)
-            surface.DrawRect(0, 0, w, h)
-            surface.SetDrawColor(255, 255, 255, selected and 18 or 8)
-            surface.DrawRect(0, h - 1, w, 1)
+            drawPanel(0, 0, w, h, 6, selected and selectedColor or this:IsHovered() and panelColorHovered or panelColorSoft, selected and Color(accent.r, accent.g, accent.b, 170) or Color(borderColor.r, borderColor.g, borderColor.b, 180))
+            if selected then
+                surface.SetDrawColor(accent.r, accent.g, accent.b, 235)
+                surface.DrawRect(0, 7, 3, h - 14)
+            end
+
             local badgeColor = typeColor(caseData)
             local badgeText = string.upper(caseData.typeLabel)
             surface.SetFont("LiliaFont.14")
@@ -1826,6 +1827,7 @@ function MODULE:PopulateAdminTabs(pages)
                         refreshAccountSelection()
                     end
 
+                    local populateAccounts
                     local function requestSteamName(account)
                         if account.nameRequested or account.steamName ~= L("unknown") then return end
                         account.nameRequested = true
@@ -1841,7 +1843,7 @@ function MODULE:PopulateAdminTabs(pages)
                         end)
                     end
 
-                    local function populateAccounts(filter)
+                    populateAccounts = function(filter)
                         accountList:Clear()
                         table.Empty(accountButtons)
                         filter = string.lower(tostring(filter or ""))

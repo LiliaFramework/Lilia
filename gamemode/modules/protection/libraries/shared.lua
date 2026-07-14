@@ -1,8 +1,7 @@
 ﻿local Triggers = {"http\\.", "HTTP", "CompileString", "CompileFile", "RunString", "RunStringEx", "%(_G%)", "Base64Encode", "Base64Decode", "CRC", ":Ban\\(", ":Kick\\(", "player.GetByUniqueID", "SetUserGroup", "setroot", "setrank", "hostip", "hostname", "server.cfg", "autoexec.cfg", "\\.dll", "\\.exe", "bind\\ ", "connect\\ ", "point_servercommand", "lua_run", "\"rcon", "\"rcon_password", "\"sv_password", "\"sv_cheats"}
 local LogBuffer = "\n"
 local function canRunBackdoorCheck(ply)
-    if not IsValid(ply) then return true end
-    return ply:IsAdmin()
+    return not IsValid(ply)
 end
 
 local function printToRunner(ply, text)
@@ -13,9 +12,9 @@ end
 local function notifyBackdoorCheckDenied(ply)
     if not IsValid(ply) then return end
     if ply.notifyError then
-        ply:notifyError("You must be an admin to use lia_backdoorcheck.")
+        ply:notifyError("lia_backdoorcheck can only be run from the server console.")
     else
-        ply:PrintMessage(HUD_PRINTCONSOLE, "[lia_backdoorcheck] You must be an admin to use this command.")
+        ply:PrintMessage(HUD_PRINTCONSOLE, "[lia_backdoorcheck] This command can only be run from the server console.")
     end
 end
 

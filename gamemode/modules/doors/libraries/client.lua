@@ -103,6 +103,8 @@
     Realm:
         Client
 ]]
+local appendDoorAdminFallbackRows
+
 function MODULE:GetDoorInfo(entity, doorData, doorInfo)
     local owner = entity:GetDTEntity(0)
     local classes = doorData.classes or {}
@@ -176,98 +178,220 @@ function MODULE:GetDoorInfo(entity, doorData, doorInfo)
     end
 end
 
-local function DrawDoorInfoBox(entity, infoTexts, alphaOverride)
-    if not (IsValid(entity) and infoTexts and #infoTexts > 0) then return end
+local function normalizeDoorInfoRows(infoEntries)
+    local rows = {}
+    for _, entry in ipairs(infoEntries or {}) do
+        if istable(entry) then
+            if entry.divider then
+                rows[#rows + 1] = {
+                    divider = true
+                }
+            else
+                local row = table.Copy(entry)
+                local text = isstring(row.text) and string.Trim(row.text) or ""
+                if text ~= "" and not row.label and not row.value then
+                    local label, value = text:match("^([^:]+):%s*(.+)$")
+                    if label and value then
+                        row.label = string.Trim(label)
+                        row.value = string.Trim(value)
+                        row.text = nil
+                    elseif text:sub(-1) == ":" then
+                        row.section = string.Trim(text:sub(1, -2))
+                        row.text = nil
+                    else
+                        row.text = text
+                    end
+                end
+
+                if row.label or row.value or row.text or row.section then rows[#rows + 1] = row end
+            end
+        elseif isstring(entry) then
+            local text = string.Trim(entry)
+            if text == "" then
+                rows[#rows + 1] = {
+                    divider = true
+                }
+            else
+                local label, value = text:match("^([^:]+):%s*(.+)$")
+                if label and value then
+                    rows[#rows + 1] = {
+                        label = string.Trim(label),
+                        value = string.Trim(value)
+                    }
+                elseif text:sub(-1) == ":" then
+                    rows[#rows + 1] = {
+                        section = string.Trim(text:sub(1, -2))
+                    }
+                else
+                    rows[#rows + 1] = {
+                        text = text
+                    }
+                end
+            end
+        end
+    end
+    return rows
+end
+
+local function DrawDoorInfoBox(entity, title, infoRows, alphaOverride)
+    if not (IsValid(entity) and ((title and title ~= "") or (infoRows and #infoRows > 0))) then return end
     local distSqr = EyePos():DistToSqr(entity:GetPos())
-    local maxDist = 380
+    local maxDist = 256
     if distSqr > maxDist * maxDist then return end
     local dist = math.sqrt(distSqr)
     local minDist = 20
-    local idx = entity:EntIndex()
-    local prev = lia.util.entsScales[idx] or 0
     local normalized = math.Clamp((maxDist - dist) / math.max(1, maxDist - minDist), 0, 1)
     local appearThreshold = 0.8
     local disappearThreshold = 0.01
-    local target
+    local fadeAlpha
     if normalized <= disappearThreshold then
-        target = 0
+        fadeAlpha = 0
     elseif normalized >= appearThreshold then
-        target = 1
+        fadeAlpha = 1
     else
-        target = (normalized - disappearThreshold) / (appearThreshold - disappearThreshold)
+        fadeAlpha = (normalized - disappearThreshold) / (appearThreshold - disappearThreshold)
     end
 
-    local dt = FrameTime() or 0.016
-    local appearSpeed = 18
-    local disappearSpeed = 12
-    local speed = (target > prev) and appearSpeed or disappearSpeed
-    local cur = lia.util.approachExp(prev, target, speed, dt)
-    if math.abs(cur - target) < 0.0005 then cur = target end
-    if cur == 0 and target == 0 then
-        lia.util.entsScales[idx] = nil
-        return
-    end
-
-    lia.util.entsScales[idx] = cur
-    local eased = lia.util.easeInOutCubic(cur)
-    if eased <= 0 then return end
-    local fade = eased
     if alphaOverride then
         if alphaOverride > 1 then
-            fade = fade * math.Clamp(alphaOverride / 255, 0, 1)
+            fadeAlpha = math.Clamp(alphaOverride / 255, 0, 1)
         else
-            fade = fade * math.Clamp(alphaOverride, 0, 1)
+            fadeAlpha = math.Clamp(alphaOverride, 0, 1)
         end
     end
 
-    if fade <= 0 then return end
-    local fadeAlpha = math.Clamp(fade, 0, 1)
-    local screenX = ScrW() / 2
-    local screenY = IsValid(lia.gui and lia.gui.actionCircle) and (ScrH() - 150) or (ScrH() - 50)
-    lia.derma.drawBoxWithText(infoTexts, screenX, screenY, {
-        font = "LiliaFont.18",
-        textColor = Color(255, 255, 255, math.floor(255 * fadeAlpha)),
-        backgroundColor = Color(0, 0, 0, math.floor(150 * fadeAlpha)),
-        borderColor = Color(lia.color.theme.theme.r, lia.color.theme.theme.g, lia.color.theme.theme.b, math.floor(255 * fadeAlpha)),
-        borderRadius = 8,
-        borderThickness = 2,
-        padding = 20,
-        textAlignX = TEXT_ALIGN_CENTER,
-        textAlignY = TEXT_ALIGN_BOTTOM,
-        lineSpacing = 4,
-        autoSize = true,
+    if fadeAlpha <= 0 then return end
+    local worldPosition = entity.WorldSpaceCenter and entity:WorldSpaceCenter() or entity:GetPos()
+    local screenPosition = worldPosition:ToScreen()
+    if screenPosition.visible == false then return end
+    local accent = lia.color.theme.accent or lia.color.theme.theme or color_white
+    lia.derma.drawBoxWithText(nil, screenPosition.x + 24, screenPosition.y, {
+        title = title,
+        rows = infoRows,
+        textAlignX = TEXT_ALIGN_LEFT,
+        textAlignY = TEXT_ALIGN_CENTER,
+        minWidth = 320,
+        maxWidth = 520,
+        padding = 12,
+        rowHeight = 18,
+        sectionGap = 6,
+        columnGap = 18,
+        backgroundColor = Color(3, 18, 22, math.floor(232 * fadeAlpha)),
+        borderColor = Color(accent.r, accent.g, accent.b, math.floor(110 * fadeAlpha)),
+        textColor = Color(235, 240, 242, math.floor(255 * fadeAlpha)),
+        mutedTextColor = Color(160, 178, 180, math.floor(255 * fadeAlpha)),
+        accentColor = Color(accent.r, accent.g, accent.b, math.floor(255 * fadeAlpha)),
+        accentAlpha = math.floor(210 * fadeAlpha),
+        shadow = {
+            enabled = true,
+            color = Color(0, 0, 0, math.floor(125 * fadeAlpha)),
+            offsetX = 8,
+            offsetY = 14
+        },
         blur = {
             enabled = true,
-            amount = 3,
-            passes = 3,
-            alpha = fadeAlpha * 0.9
+            amount = 2,
+            passes = 2,
+            alpha = 0.65 * fadeAlpha
         }
     })
 end
 
-function MODULE:DrawEntityInfo(entity, alpha)
-    local client = LocalPlayer()
-    local activeWeapon = client:GetActiveWeapon()
-    if IsValid(client) and IsValid(activeWeapon) and activeWeapon:GetClass() == "lia_adminstick" then return end
-    if entity:isDoor() then
-        local doorData = lia.doors.getData(entity)
-        if not (doorData.hidden or false) then
-            if doorData.disabled then
-                lia.util.drawEntText(entity, L("doorDisabled"), 0, alpha)
-                return
+local function buildDoorDisplayData(entity)
+    if not IsValid(entity) then return end
+    if not entity:isDoor() then return end
+
+    local doorData = lia.doors.getData(entity)
+    local title = doorData.title or doorData.name or entity:getNetVar("doorTitle", "")
+    if isstring(title) then title = string.Trim(title) end
+    if doorData.disabled then
+        return {
+            disabled = true,
+            entity = entity,
+            title = title
+        }
+    end
+
+    local doorInfo = {}
+    local doorsModule = lia.module.get("doors")
+    if doorsModule and isfunction(doorsModule.GetDoorInfo) then
+        doorsModule:GetDoorInfo(entity, doorData, doorInfo)
+    end
+
+    hook.Run("FilterDoorInfo", entity, doorData, doorInfo)
+    local infoRows = normalizeDoorInfoRows(doorInfo)
+    local owner = entity:GetDTEntity(0)
+    local hasFactions = istable(doorData.factions) and #doorData.factions > 0
+    local hasClasses = istable(doorData.classes) and #doorData.classes > 0
+    local ownable = not (doorData.noSell or hasFactions or hasClasses)
+    if title and title ~= "" and infoRows[1] and infoRows[1].text == title then table.remove(infoRows, 1) end
+    if (not title or title == "") and #infoRows == 0 then
+        local client = LocalPlayer()
+        local canSeeAdminData = IsValid(client) and (client:hasPrivilege("manageDoors") or client:isStaffOnDuty())
+        if canSeeAdminData then
+            title = L("doorInformation")
+            appendDoorAdminFallbackRows(entity, doorData, infoRows)
+        elseif IsValid(owner) then
+            title = L("doorTitleOwned")
+            infoRows[#infoRows + 1] = {
+                text = L("doorOwnedBy", owner:Name())
+            }
+        elseif ownable then
+            title = L("doorTitle")
+            infoRows[#infoRows + 1] = {
+                text = L("doorIsOwnable")
+            }
+        elseif hasFactions or hasClasses then
+            title = L("doorInformation")
+            if hasFactions then
+                infoRows[#infoRows + 1] = {
+                    text = L("allowedFactions")
+                }
             end
 
-            local doorInfo = {}
-            hook.Run("GetDoorInfo", entity, doorData, doorInfo)
-            hook.Run("FilterDoorInfo", entity, doorData, doorInfo)
-            local infoTexts = {}
-            for _, info in ipairs(doorInfo) do
-                if info.text and info.text ~= "" then table.insert(infoTexts, info.text) end
+            if hasClasses then
+                infoRows[#infoRows + 1] = {
+                    text = L("allowedClasses")
+                }
             end
-
-            if #infoTexts > 0 then DrawDoorInfoBox(entity, infoTexts, alpha) end
         end
     end
+
+    if (title and title ~= "") or #infoRows > 0 then
+        return {
+            entity = entity,
+            title = title,
+            rows = infoRows
+        }
+    end
+
+end
+
+function MODULE:DrawEntityInfo(entity, alpha)
+    return
+end
+
+function MODULE:HUDPaint()
+    local client = LocalPlayer()
+    if not (IsValid(client) and client:getChar()) then return end
+    local activeWeapon = client:GetActiveWeapon()
+    if IsValid(activeWeapon) and activeWeapon:GetClass() == "lia_adminstick" then return end
+    local trace = client:GetEyeTraceNoCursor()
+    local entity = trace.Entity
+    if not IsValid(entity) then return end
+    if not entity:isDoor() then return end
+    local distance = client:GetShootPos():Distance(trace.HitPos)
+    if distance > 256 then return end
+
+    local displayData = buildDoorDisplayData(entity)
+    if not displayData then return end
+
+    if displayData.disabled then
+        lia.util.drawEntText(entity, L("doorDisabled"), 0, 255)
+        return
+    end
+
+    DrawDoorInfoBox(entity, displayData.title, displayData.rows, 255)
 end
 
 function MODULE:GetAdminStickLists(tgt, lists)
@@ -381,6 +505,70 @@ function MODULE:GetAdminStickLists(tgt, lists)
             subSubcategory = "removeClasses",
             items = removeClassItems
         })
+    end
+end
+
+appendDoorAdminFallbackRows = function(entity, doorData, infoRows)
+    local owner = entity:GetDTEntity(0)
+    if IsValid(owner) then
+        infoRows[#infoRows + 1] = {
+            text = L("doorOwnedBy", owner:Name())
+        }
+    end
+
+    if (doorData.price or 0) > 0 then
+        infoRows[#infoRows + 1] = {
+            label = L("price"),
+            value = lia.currency.get(doorData.price)
+        }
+    end
+
+    infoRows[#infoRows + 1] = {
+        label = L("doorCanBeSold"),
+        value = doorData.noSell and L("no") or L("yes")
+    }
+
+    infoRows[#infoRows + 1] = {
+        label = L("hidden"),
+        value = doorData.hidden and L("yes") or L("no")
+    }
+
+    infoRows[#infoRows + 1] = {
+        label = L("locked"),
+        value = doorData.locked and L("yes") or L("no")
+    }
+
+    local factions = doorData.factions or {}
+    if #factions > 0 then
+        infoRows[#infoRows + 1] = {
+            section = L("allowedFactions")
+        }
+
+        for _, id in ipairs(factions) do
+            local faction = lia.faction.get(id)
+            if faction then
+                infoRows[#infoRows + 1] = {
+                    text = "- " .. faction.name
+                }
+            end
+        end
+    end
+
+    local classes = doorData.classes or {}
+    if #classes > 0 then
+        infoRows[#infoRows + 1] = {
+            section = L("allowedClasses")
+        }
+
+        for _, uid in ipairs(classes) do
+            local index = lia.class.retrieveClass(uid)
+            local classInfo = lia.class.list[index]
+            if classInfo then
+                infoRows[#infoRows + 1] = {
+                    text = "- " .. classInfo.name
+                }
+            end
+        end
     end
 end
 

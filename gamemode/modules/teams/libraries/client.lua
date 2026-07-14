@@ -18,8 +18,13 @@ function MODULE:DrawCharInfo(client, character, info)
     if not lia.config.get("ClassDisplay", true) then return end
     local charClass = client:getClassData()
     if charClass then
-        local classColor = charClass.color or Color(255, 255, 255)
-        info[#info + 1] = {charClass.name or L("undefinedClass"), classColor}
+        info[#info + 1] = {
+            section = "Role"
+        }
+        info[#info + 1] = {
+            label = "Class",
+            value = charClass.name or L("undefinedClass")
+        }
     end
 end
 

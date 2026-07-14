@@ -330,9 +330,10 @@ end
         Shared
 ]]
 function Inventory:getItemsOfType(itemType)
+    local itemID = isstring(itemType) and itemType or itemType and (itemType.uniqueID or lia.item.instances[itemType] and lia.item.instances[itemType].uniqueID)
     local items = {}
     for _, item in pairs(self:getItems()) do
-        if item.uniqueID == itemType then items[#items + 1] = item end
+        if item.uniqueID == itemID then items[#items + 1] = item end
     end
     return items
 end
@@ -358,8 +359,9 @@ end
         Shared
 ]]
 function Inventory:getFirstItemOfType(itemType)
+    local itemID = isstring(itemType) and itemType or itemType and (itemType.uniqueID or lia.item.instances[itemType] and lia.item.instances[itemType].uniqueID)
     for _, item in pairs(self:getItems()) do
-        if item.uniqueID == itemType then return item end
+        if item.uniqueID == itemID then return item end
     end
 end
 
@@ -386,8 +388,9 @@ end
         Shared
 ]]
 function Inventory:hasItem(itemType)
+    local itemID = isstring(itemType) and itemType or itemType and (itemType.uniqueID or lia.item.instances[itemType] and lia.item.instances[itemType].uniqueID)
     for _, item in pairs(self:getItems()) do
-        if item.uniqueID == itemType then return true end
+        if item.uniqueID == itemID then return true end
     end
     return false
 end
@@ -413,9 +416,10 @@ end
         Shared
 ]]
 function Inventory:getItemCount(itemType)
+    local itemID = isstring(itemType) and itemType or itemType and (itemType.uniqueID or lia.item.instances[itemType] and lia.item.instances[itemType].uniqueID)
     local count = 0
     for _, item in pairs(self:getItems()) do
-        if itemType == nil or item.uniqueID == itemType then count = count + item:getQuantity() end
+        if itemID == nil or item.uniqueID == itemID then count = count + item:getQuantity() end
     end
     return count
 end

@@ -1629,10 +1629,12 @@ function PANEL:createSelectedCharacterInfoPanel(character)
     end
 
     self.infoFrame.Paint = function(s, w, h)
-        local bgColor = Color(25, 28, 35, 250)
-        lia.derma.rect(0, 0, w, h):Rad(12):Color(Color(0, 0, 0, 180)):Shadow(15, 20):Shape(lia.derma.SHAPE_IOS):Draw()
-        lia.derma.rect(0, 0, w, h):Rad(12):Color(bgColor):Shape(lia.derma.SHAPE_IOS):Draw()
-        lia.derma.rect(0, 0, w, 5):Radii(12, 12, 0, 0):Color(lia.color.theme and lia.color.theme.theme or Color(255, 255, 255)):Draw()
+        local theme = lia.color.theme or {}
+        local accent = theme.accent or theme.theme or lia.config.get("Color") or Color(45, 190, 170)
+        lia.derma.rect(0, 0, w, h):Rad(12):Color(Color(8, 18, 24, 232)):Shape(lia.derma.SHAPE_IOS):Draw()
+        lia.derma.rect(0, 0, w, h):Rad(12):Color(Color(accent.r, accent.g, accent.b, 18)):Shape(lia.derma.SHAPE_IOS):Draw()
+        lia.derma.rect(0, 0, w, h):Rad(12):Color(Color(accent.r, accent.g, accent.b, 108)):Shape(lia.derma.SHAPE_IOS):Outline(2):Draw()
+        lia.derma.rect(0, 0, w, 4):Radii(12, 12, 0, 0):Color(Color(accent.r, accent.g, accent.b, 190)):Draw()
     end
 
     local scroll = vgui.Create("liaScrollPanel", self.infoFrame)

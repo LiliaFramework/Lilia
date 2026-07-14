@@ -1723,6 +1723,72 @@ else
         return bh
     end
 
+    local function DrawEntityInfoBoxAt(x, y, title, rows, fade, xOffset)
+        local theme = lia.color.theme or defaultTheme
+        local fadeAlpha = math.Clamp(fade, 0, 1)
+        local accent = theme.accent or theme.theme or defaultTheme.accent or color_white
+        local titleText = string.Trim(tostring(title or ""))
+        local cleanRows = {}
+        for i = 1, #(rows or {}) do
+            local row = rows[i]
+            if istable(row) then
+                if row.divider then
+                    cleanRows[#cleanRows + 1] = {
+                        divider = true
+                    }
+                else
+                    local preparedRow = table.Copy(row)
+                    if isstring(preparedRow.text) then preparedRow.text = string.Trim(preparedRow.text) end
+                    if isstring(preparedRow.label) then preparedRow.label = string.Trim(preparedRow.label) end
+                    if isstring(preparedRow.value) then preparedRow.value = string.Trim(preparedRow.value) end
+                    if isstring(preparedRow.section) then preparedRow.section = string.Trim(preparedRow.section) end
+                    if preparedRow.section and preparedRow.section ~= "" then
+                        cleanRows[#cleanRows + 1] = {
+                            section = preparedRow.section
+                        }
+                    elseif (preparedRow.text and preparedRow.text ~= "") or (preparedRow.label and preparedRow.label ~= "") or (preparedRow.value and preparedRow.value ~= "") then
+                        cleanRows[#cleanRows + 1] = preparedRow
+                    end
+                end
+            else
+                local textRow = string.Trim(tostring(row or ""))
+                if textRow ~= "" then cleanRows[#cleanRows + 1] = textRow end
+            end
+        end
+
+        if titleText == "" and #cleanRows == 0 then return end
+        return lia.derma.drawBoxWithText(nil, math.Round(x + (xOffset or 28)), math.Round(y), {
+            title = titleText ~= "" and titleText or nil,
+            rows = cleanRows,
+            font = "LiliaFont.18",
+            textAlignX = TEXT_ALIGN_LEFT,
+            textAlignY = TEXT_ALIGN_TOP,
+            padding = 12,
+            rowHeight = 18,
+            autoSize = true,
+            richText = false,
+            backgroundColor = Color(3, 18, 22, math.floor(232 * fadeAlpha)),
+            borderColor = Color(accent.r, accent.g, accent.b, math.floor(110 * fadeAlpha)),
+            textColor = scaleColorAlpha(theme.text or defaultTheme.text, fadeAlpha),
+            mutedTextColor = scaleColorAlpha(theme.mutedText or theme.text or defaultTheme.text, fadeAlpha),
+            accentColor = Color(accent.r, accent.g, accent.b, math.floor(255 * fadeAlpha)),
+            accentAlpha = math.floor(210 * fadeAlpha),
+            shadow = {
+                enabled = true,
+                color = Color(0, 0, 0, math.floor(125 * fadeAlpha)),
+                offsetX = 8,
+                offsetY = 14
+            },
+            blur = {
+                enabled = true,
+                amount = 2,
+                passes = 2,
+                alpha = 0.65 * fadeAlpha
+            },
+            overlapMargin = 4
+        })
+    end
+
     lia.util.entsScales = lia.util.entsScales or {}
     --[[
     Purpose:
@@ -1803,6 +1869,60 @@ else
         local screenPos = toScreen(center)
         if screenPos.visible == false then return end
         EntText(text, screenPos.x, screenPos.y + posY, fade)
+    end
+
+    function lia.util.drawEntInfoBox(ent, data, alphaOverride)
+        if not (IsValid(ent) and istable(data)) then return end
+        local distSqr = EyePos():DistToSqr(ent:GetPos())
+        local maxDist = 380
+        if distSqr > maxDist * maxDist then return end
+        local dist = math.sqrt(distSqr)
+        local minDist = 20
+        local idx = ent:EntIndex()
+        local prev = lia.util.entsScales[idx] or 0
+        local normalized = math.Clamp((maxDist - dist) / math.max(1, maxDist - minDist), 0, 1)
+        local appearThreshold = 0.8
+        local disappearThreshold = 0.01
+        local target
+        if normalized <= disappearThreshold then
+            target = 0
+        elseif normalized >= appearThreshold then
+            target = 1
+        else
+            target = (normalized - disappearThreshold) / (appearThreshold - disappearThreshold)
+        end
+
+        local dt = FrameTime() or 0.016
+        local appearSpeed = 18
+        local disappearSpeed = 12
+        local speed = (target > prev) and appearSpeed or disappearSpeed
+        local cur = lia.util.approachExp(prev, target, speed, dt)
+        if math.abs(cur - target) < 0.0005 then cur = target end
+        if cur == 0 and target == 0 then
+            lia.util.entsScales[idx] = nil
+            return
+        end
+
+        lia.util.entsScales[idx] = cur
+        local eased = lia.util.easeInOutCubic(cur)
+        if eased <= 0 then return end
+        local fade = eased
+        if alphaOverride then
+            if alphaOverride > 1 then
+                fade = fade * math.Clamp(alphaOverride / 255, 0, 1)
+            else
+                fade = fade * math.Clamp(alphaOverride, 0, 1)
+            end
+        end
+
+        if fade <= 0 then return end
+        local mins, maxs = ent:OBBMins(), ent:OBBMaxs()
+        local _, rotatedMax = ent:GetRotatedAABB(mins, maxs)
+        local bob = math.sin(CurTime() + idx) / 3 + 0.5
+        local center = ent:LocalToWorld(ent:OBBCenter()) + Vector(0, 0, math.abs(rotatedMax.z / 2) + 12 + bob)
+        local screenPos = toScreen(center)
+        if screenPos.visible == false then return end
+        DrawEntityInfoBoxAt(screenPos.x, screenPos.y + (data.posY or 0), data.title, data.rows, fade, data.xOffset)
     end
 
     --[[

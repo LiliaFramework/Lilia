@@ -13,10 +13,8 @@ function PANEL:SetLineWidth(width)
 end
 
 function PANEL:Paint(w, h)
-    local bgColor = Color(25, 28, 35, 250)
-    lia.derma.rect(0, 0, w, h):Rad(12):Color(bgColor):Shape(lia.derma.SHAPE_IOS):Draw()
     surface.SetDrawColor(self.lineColor)
-    surface.DrawRect(0, 0, w, self.lineWidth)
+    surface.DrawRect(4, h - self.lineWidth, math.max(w - 8, 0), self.lineWidth)
 end
 
 vgui.Register("liaHeaderPanel", PANEL, "Panel")

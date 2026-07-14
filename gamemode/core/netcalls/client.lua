@@ -2111,6 +2111,12 @@ net.Receive("liaWorkshopDownloaderStart", function()
     start()
 end)
 
+concommand.Add("workshop_force_redownload", function()
+    table.Empty(queue)
+    buildQueue(true)
+    start()
+end)
+
 net.Receive("liaNotificationData", lia.notices.receiveNotify)
 net.Receive("liaNotifyLocal", lia.notices.receiveNotifyL)
 net.Receive("liaWorkshopDownloaderInfo", function() refresh(net.ReadTable()) end)

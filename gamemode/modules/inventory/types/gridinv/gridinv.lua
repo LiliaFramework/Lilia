@@ -169,15 +169,7 @@ if SERVER then
         local x, y, data
         local isStackCommand = isstring(itemTypeOrItem) and isnumber(xOrQuantity)
         if istable(yOrData) then
-            local quantity = tonumber(xOrQuantity) or 1
             data = yOrData
-            if quantity > 1 then
-                local items = {}
-                for i = 1, quantity do
-                    items[i] = self:add(itemTypeOrItem, 1, data, noReplicate)
-                end
-                return deferred.all(items)
-            end
         else
             x = tonumber(xOrQuantity)
             y = tonumber(yOrData)
@@ -193,6 +185,22 @@ if SERVER then
         end
 
         if not item then return d:reject(L("invalidItemTypeOrID", item and item.name or tostring(itemTypeOrItem))) end
+        if data then
+            local quantity = tonumber(xOrQuantity) or 1
+            if quantity > 1 then
+                if item.isStackable then
+                    data = table.Copy(data)
+                    data.quantity = tonumber(data.quantity) or quantity
+                    xOrQuantity = data.quantity
+                else
+                    local items = {}
+                    for i = 1, quantity do
+                        items[i] = self:add(itemTypeOrItem, 1, data, noReplicate)
+                    end
+                    return deferred.all(items)
+                end
+            end
+        end
         local targetInventory = self
         if not targetInventory:canAdd(itemTypeOrItem) then return d:reject(L("noSpaceForItem")) end
         if not x or not y then

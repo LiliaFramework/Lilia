@@ -206,22 +206,20 @@ local function buildFilteredWordsAdminPanel(panel)
     panel.Paint = nil
     local theme = lia.color.theme or {}
     local accent = theme.accent or theme.header or theme.theme or Color(184, 132, 74)
-    local panelColor = Color(4, 18, 23, 245)
-    local panelColorAlt = Color(7, 24, 29, 245)
-    local selectedColor = Color(24, 31, 31, 250)
+    local panelColor = Color(4, 18, 23, 242)
+    local panelColorSoft = Color(7, 24, 29, 238)
+    local panelColorHovered = Color(12, 31, 36, 244)
+    local selectedColor = Color(22, 31, 32, 250)
     local borderColor = Color(47, 59, 57, 220)
-    local textColor = Color(230, 236, 235)
-    local mutedTextColor = Color(145, 160, 158)
+    local textColor = Color(230, 238, 236)
+    local mutedTextColor = Color(150, 168, 166)
     local selectedWord
     local wordButtons = {}
     local sourceWords = {}
     local syncingSearch = false
     local function drawPanel(x, y, w, h, radius, color, outline)
-        draw.RoundedBox(radius, x, y, w, h, color)
-        if outline then
-            surface.SetDrawColor(outline)
-            surface.DrawOutlinedRect(x, y, w, h, 1)
-        end
+        lia.derma.rect(x, y, w, h):Rad(radius):Color(color):Shape(lia.derma.SHAPE_IOS):Draw()
+        if outline then lia.derma.rect(x, y, w, h):Rad(radius):Color(outline):Shape(lia.derma.SHAPE_IOS):Outline(1):Draw() end
     end
 
     local function styleScrollBar(scrollPanel)
@@ -236,7 +234,7 @@ local function buildFilteredWordsAdminPanel(panel)
 
         vbar.btnUp.Paint = function() end
         vbar.btnDown.Paint = function() end
-        vbar.btnGrip.Paint = function(_, w, h) draw.RoundedBox(4, 1, 0, w - 2, h, Color(accent.r, accent.g, accent.b, 145)) end
+        vbar.btnGrip.Paint = function(_, w, h) drawPanel(1, 0, w - 2, h, 4, Color(accent.r, accent.g, accent.b, 145)) end
     end
 
     local function removeFilteredWord(word)
@@ -249,7 +247,7 @@ local function buildFilteredWordsAdminPanel(panel)
 
     local function createSearchEntry(parent, placeholder)
         local wrap = parent:Add("DPanel")
-        wrap.Paint = function(_, w, h) drawPanel(0, 0, w, h, 5, Color(7, 22, 27, 245), Color(accent.r, accent.g, accent.b, 55)) end
+        wrap.Paint = function(_, w, h) drawPanel(0, 0, w, h, 5, panelColorSoft, Color(accent.r, accent.g, accent.b, 60)) end
         local entry = wrap:Add("DTextEntry")
         entry:Dock(FILL)
         entry:DockMargin(14, 4, 14, 4)
@@ -278,7 +276,7 @@ local function buildFilteredWordsAdminPanel(panel)
     addButton:SetText("")
     addButton.Paint = function(self, w, h)
         local hovered = self:IsHovered()
-        drawPanel(0, 0, w, h, 5, hovered and Color(accent.r, accent.g, accent.b, 28) or Color(8, 23, 27, 245), Color(accent.r, accent.g, accent.b, hovered and 190 or 130))
+        drawPanel(0, 0, w, h, 5, hovered and panelColorHovered or panelColorSoft, Color(accent.r, accent.g, accent.b, hovered and 105 or 60))
         draw.SimpleText("+  " .. string.upper(L("chatFilterAddWord")), "LiliaFont.16", w * 0.5, h * 0.5, hovered and Color(245, 245, 240) or textColor, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
     end
 
@@ -305,7 +303,7 @@ local function buildFilteredWordsAdminPanel(panel)
     listTitle:SetWide(180)
     listTitle:SetFont("LiliaFont.18")
     listTitle:SetText("FILTERED WORDS")
-    listTitle:SetTextColor(textColor)
+    listTitle:SetTextColor(accent)
     listTitle:SetContentAlignment(4)
     local countLabel = listHeader:Add("DLabel")
     countLabel:Dock(LEFT)
@@ -345,14 +343,14 @@ local function buildFilteredWordsAdminPanel(panel)
         local centerY = h * 0.5 - 48
         draw.SimpleText("No filtered words", "LiliaFont.30", w * 0.5, centerY, textColor, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
         draw.SimpleText("The server chat filter is currently empty.", "LiliaFont.18", w * 0.5, centerY + 42, mutedTextColor, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
-        draw.SimpleText("Add a word to start blocking it from chat.", "LiliaFont.16", w * 0.5, centerY + 70, Color(125, 145, 144), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
+        draw.SimpleText("Add a word to start blocking it from chat.", "LiliaFont.16", w * 0.5, centerY + 70, mutedTextColor, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
     end
 
     local emptyAddButton = emptyState:Add("DButton")
     emptyAddButton:SetText("")
     emptyAddButton.Paint = function(self, w, h)
         local hovered = self:IsHovered()
-        drawPanel(0, 0, w, h, 5, hovered and Color(accent.r, accent.g, accent.b, 28) or Color(8, 23, 27, 245), Color(accent.r, accent.g, accent.b, hovered and 210 or 145))
+        drawPanel(0, 0, w, h, 5, hovered and panelColorHovered or panelColorSoft, Color(accent.r, accent.g, accent.b, hovered and 115 or 70))
         draw.SimpleText("+  ADD FIRST WORD", "LiliaFont.16", w * 0.5, h * 0.5, hovered and Color(245, 245, 240) or textColor, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
     end
 
@@ -401,7 +399,7 @@ local function buildFilteredWordsAdminPanel(panel)
     copyButton:SetText("")
     copyButton.Paint = function(self, w, h)
         local hovered = self:IsHovered() and selectedWord ~= nil
-        drawPanel(0, 0, w, h, 5, hovered and Color(255, 255, 255, 8) or panelColorAlt, hovered and Color(accent.r, accent.g, accent.b, 100) or borderColor)
+        drawPanel(0, 0, w, h, 5, hovered and panelColorHovered or panelColorSoft, Color(accent.r, accent.g, accent.b, hovered and 115 or 70))
         draw.SimpleText("COPY WORD", "LiliaFont.16", w * 0.5, h * 0.5, selectedWord and textColor or mutedTextColor, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
     end
 
@@ -429,8 +427,8 @@ local function buildFilteredWordsAdminPanel(panel)
     local noticePanel = detailContent:Add("DPanel")
     noticePanel.Paint = function(_, w, h)
         if not selectedWord then return end
-        drawPanel(0, 0, w, h, 5, Color(255, 255, 255, 5), Color(255, 255, 255, 15))
-        draw.SimpleText("This word is blocked by the server chat filter.", "LiliaFont.15", 14, h * 0.5, Color(175, 190, 188), TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)
+        drawPanel(0, 0, w, h, 5, panelColorSoft, Color(borderColor.r, borderColor.g, borderColor.b, 120))
+        draw.SimpleText("This word is blocked by the server chat filter.", "LiliaFont.15", 14, h * 0.5, mutedTextColor, TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)
     end
 
     detailContent.PerformLayout = function(_, w)
@@ -472,8 +470,8 @@ local function buildFilteredWordsAdminPanel(panel)
         button.Paint = function(self, w, h)
             local selected = selectedWord == self.word
             local hovered = self:IsHovered()
-            local fill = selected and selectedColor or hovered and panelColorAlt or Color(5, 19, 24, 240)
-            local outline = selected and Color(accent.r, accent.g, accent.b, 150) or hovered and Color(accent.r, accent.g, accent.b, 65) or borderColor
+            local fill = selected and selectedColor or hovered and panelColorHovered or panelColorSoft
+            local outline = selected and Color(accent.r, accent.g, accent.b, 170) or Color(borderColor.r, borderColor.g, borderColor.b, 180)
             drawPanel(0, 0, w, h, 6, fill, outline)
             if selected then
                 surface.SetDrawColor(accent.r, accent.g, accent.b, 235)

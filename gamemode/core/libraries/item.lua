@@ -1426,6 +1426,11 @@ if SERVER then
             itemData.y = nil
         end
 
+        local defaultQuantity = tonumber(itemData.quantity)
+        if not defaultQuantity then
+            defaultQuantity = itemTable.isStackable and 1 or itemTable.maxQuantity or 1
+        end
+
         local function onItemCreated(_, itemID)
             local item = lia.item.new(uniqueID, itemID)
             if item then
@@ -1433,7 +1438,7 @@ if SERVER then
                 item.invID = index
                 item.data.x = x
                 item.data.y = y
-                item.quantity = itemTable.maxQuantity
+                item.quantity = defaultQuantity
                 if callback then callback(item) end
                 d:resolve(item)
                 item:onInstanced(index, x, y, item)
@@ -1447,7 +1452,7 @@ if SERVER then
             data = itemData,
             x = x,
             y = y,
-            quantity = itemTable.maxQuantity or 1
+            quantity = defaultQuantity
         }, onItemCreated, "items")
         return d
     end
@@ -1831,149 +1836,105 @@ if SERVER then
         end
     end
 else
-    local function CreateEntry(scroll, className, weaponTable, overrideData)
-        local container = scroll:Add("DPanel")
-        container:SetTall(50)
-        container:Dock(TOP)
-        container:DockMargin(5, 0, 0, 3)
-        local expanded = false
-        local expandedHeight = 660
-        local header = container:Add("DPanel")
-        header:Dock(TOP)
-        header:SetTall(50)
-        header.Paint = function(s, w, h)
-            local theme = lia.color.theme
-            local accent = theme.accent or theme.theme or Color(116, 185, 255)
-            local headerBase = (theme and theme.button_hovered) or (theme and theme.button) or Color(60, 70, 85)
-            lia.derma.rect(0, 0, w, h):Rad(6):Color(ColorAlpha(headerBase, 170)):Shape(lia.derma.SHAPE_IOS):Draw()
-            lia.derma.rect(0, h - 2, w, 2):Color(ColorAlpha(accent, 150)):Draw()
-            if s:IsHovered() then lia.derma.rect(0, 0, w, h):Rad(6):Color(Color(255, 255, 255, 10)):Draw() end
+    local function GetWeaponConfigTheme()
+        local theme = lia.color and lia.color.theme or {}
+        local accent = theme.accent or theme.theme or lia.config.get("Color") or Color(185, 125, 55)
+        local text = theme.text or Color(225, 238, 238)
+        return accent, text
+    end
+
+    local function DrawWeaponConfigPanel(x, y, w, h, radius, color, outline)
+        if lia.derma and lia.derma.rect then
+            lia.derma.rect(x, y, w, h):Rad(radius or 6):Color(color):Shape(lia.derma.SHAPE_IOS):Draw()
+            if outline then lia.derma.rect(x, y, w, h):Rad(radius or 6):Color(outline):Shape(lia.derma.SHAPE_IOS):Outline(1):Draw() end
+            return
         end
 
-        header:SetCursor("hand")
-        local nameLabel = header:Add("DLabel")
-        nameLabel:Dock(LEFT)
-        nameLabel:DockMargin(15, 0, 0, 0)
-        nameLabel:SetFont("LiliaFont.25")
-        nameLabel:SetText(L(weaponTable.PrintName or className))
-        nameLabel:SizeToContents()
-        nameLabel:SetTextColor(lia.color.theme.text)
-        local expandBtn = header:Add("DLabel")
-        expandBtn:Dock(RIGHT)
-        expandBtn:DockMargin(0, 0, 15, 0)
-        expandBtn:SetFont("LiliaFont.25")
-        expandBtn:SetText("+")
-        expandBtn:SizeToContents()
-        expandBtn:SetTextColor(lia.color.theme.text)
-        local content = container:Add("DPanel")
-        content:Dock(FILL)
-        content:DockMargin(10, 5, 10, 5)
-        content:SetVisible(false)
-        content.Paint = function() end
-        header.OnMousePressed = function()
-            expanded = not expanded
-            container:SetTall(expanded and expandedHeight or 50)
-            content:SetVisible(expanded)
-            expandBtn:SetText(expanded and "-" or "+")
-            scroll:InvalidateLayout(true)
+        draw.RoundedBox(radius or 6, x, y, w, h, color)
+        if outline then
+            surface.SetDrawColor(outline)
+            surface.DrawOutlinedRect(x, y, w, h, 1)
         end
+    end
 
-        local function AddField(label, key, default, isNum)
-            local p = content:Add("DPanel")
-            p:Dock(TOP)
-            p:SetTall(35)
-            p:DockMargin(0, 3, 0, 0)
-            p.Paint = function() end
-            local l = p:Add("DLabel")
-            l:Dock(LEFT)
-            l:SetWidth(100)
-            l:SetText(label)
-            l:SetFont("LiliaFont.18")
-            l:SetTextColor(lia.color.theme.text)
-            local entry = p:Add("liaEntry")
-            entry:Dock(FILL)
-            local val = overrideData[key] or default
-            if val then entry:SetValue(tostring(val)) end
-            entry.textEntry.OnEnter = function(s)
-                local newValue = s:GetValue()
-                if isNum then newValue = tonumber(newValue) end
-                net.Start("liaWeaponOverrideUpdate")
-                net.WriteString(className)
-                net.WriteString(key)
-                net.WriteType(newValue)
-                net.SendToServer()
-                overrideData[key] = newValue
+    local function GetWeaponDisplayName(className, weaponTable, overrideData)
+        local value = overrideData and overrideData.name or weaponTable.PrintName or className
+        return tostring(L(value))
+    end
+
+    local function GetWeaponItemCategory(weaponTable, overrideData)
+        return tostring(overrideData and overrideData.category or weaponTable.Category or L("weapons"))
+    end
+
+    local function NormalizeFilter(value)
+        return string.Trim(tostring(value or "")):lower()
+    end
+
+    local function ApplyTextEntryStyle(entry, numeric)
+        local accent = GetWeaponConfigTheme()
+        entry:SetFont("LiliaFont.18")
+        entry:SetTextColor(Color(230, 239, 239))
+        entry:SetCursorColor(accent)
+        entry:SetDrawBackground(false)
+        entry:SetPaintBackground(false)
+        entry:SetPaintBorderEnabled(false)
+        if numeric then entry:SetNumeric(true) end
+        entry.Paint = function(s, w, h)
+            local activeAccent = GetWeaponConfigTheme()
+            local borderAlpha = s:HasFocus() and 110 or s:IsHovered() and 80 or 48
+            local fill = s:HasFocus() and Color(12, 30, 35, 240) or Color(9, 24, 29, 235)
+            DrawWeaponConfigPanel(0, 0, w, h, 5, fill, Color(activeAccent.r, activeAccent.g, activeAccent.b, borderAlpha))
+            s:DrawTextEntryText(Color(230, 239, 239), activeAccent, Color(230, 239, 239))
+        end
+    end
+
+    local function ApplyButtonStyle(button, danger, active)
+        button:SetText("")
+        button.Paint = function(s, w, h)
+            local accent, textColor = GetWeaponConfigTheme()
+            local color = danger and Color(210, 60, 60) or accent
+            local hovered = s:IsHovered()
+            local fill
+            if danger then
+                fill = hovered and Color(70, 18, 20, 220) or Color(30, 10, 12, 205)
+            elseif active then
+                fill = Color(accent.r, accent.g, accent.b, hovered and 48 or 34)
+            else
+                fill = hovered and Color(16, 34, 40, 230) or Color(9, 24, 29, 225)
             end
-        end
 
-        local defWidth = 2
-        local defHeight = 1
-        AddField(L("name"), "name", weaponTable.PrintName or className, false)
-        AddField(L("desc"), "desc", L("weaponsDesc"), false)
-        AddField(L("model"), "model", weaponTable.WorldModel or "models/props_c17/BriefCase001a.mdl", false)
-        AddField(L("weaponItemWidth"), "width", defWidth, true)
-        AddField(L("weaponItemHeight"), "height", defHeight, true)
-        AddField(L("price"), "price", 500, true)
-        AddField(L("Category"), "category", L("weapons"), false)
-        local runtimeFields = {{"Primary.Damage", "Pri.Damage", true}, {"Primary.NumShots", "Pri.Shots", true}, {"Primary.Recoil", "Pri.Recoil", true}, {"Primary.Cone", "Pri.Cone", true}, {"Primary.Delay", "Pri.Delay", true}, {"Secondary.Damage", "Sec.Damage", true},}
-        local sepPanel = content:Add("DPanel")
-        sepPanel:Dock(TOP)
-        sepPanel:SetTall(26)
-        sepPanel:DockMargin(0, 8, 0, 4)
-        sepPanel.Paint = function(s, w, h)
-            draw.SimpleText("Runtime SWEP Stats", "LiliaFont.18b", 0, h * 0.5, lia.color.theme.text, TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)
-            local accent = lia.color.theme.accent or lia.color.theme.theme or Color(116, 185, 255)
-            surface.SetDrawColor(accent)
-            surface.DrawLine(0, h - 1, w, h - 1)
+            DrawWeaponConfigPanel(0, 0, w, h, 6, fill, Color(color.r, color.g, color.b, hovered and 150 or 90))
+            draw.SimpleText(s._label or "", "LiliaFont.18", w * 0.5, h * 0.5, danger and Color(255, 95, 95) or textColor, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
         end
+    end
 
-        local livewep = weapons.Get(className)
-        local runtimeOverrides = lia.item.WeaponRuntimeOverrides[className] or {}
-        local function AddRuntimeField(dotPath, label)
-            local default = livewep and lia.item.getRuntimeValue(livewep, dotPath)
-            local current = runtimeOverrides[dotPath] ~= nil and runtimeOverrides[dotPath] or default
-            local p = content:Add("DPanel")
-            p:Dock(TOP)
-            p:SetTall(35)
-            p:DockMargin(0, 3, 0, 0)
-            p.Paint = function() end
-            local l = p:Add("DLabel")
-            l:Dock(LEFT)
-            l:SetWidth(100)
-            l:SetText(label)
-            l:SetFont("LiliaFont.18")
-            l:SetTextColor(lia.color.theme.text)
-            local entry = p:Add("liaEntry")
-            entry:Dock(FILL)
-            if current ~= nil then entry:SetValue(tostring(current)) end
-            entry.textEntry.OnEnter = function(s)
-                local raw = s:GetValue()
-                net.Start("liaWeaponRuntimeOverrideUpdate")
-                net.WriteString(className)
-                net.WriteString(dotPath)
-                net.WriteString(raw)
-                net.SendToServer()
-                lia.item.WeaponRuntimeOverrides[className] = lia.item.WeaponRuntimeOverrides[className] or {}
-                lia.item.WeaponRuntimeOverrides[className][dotPath] = raw
-            end
-        end
+    local function CreateSearchBox(parent, placeholder)
+        local box = parent:Add("DTextEntry")
+        box:SetTall(42)
+        if box.SetPlaceholderText then box:SetPlaceholderText(placeholder or "") end
+        box:SetUpdateOnType(true)
+        ApplyTextEntryStyle(box)
+        return box
+    end
 
-        for _, rf in ipairs(runtimeFields) do
-            AddRuntimeField(rf[1], rf[2])
-        end
+    local function CommitWeaponOverride(className, key, value)
+        net.Start("liaWeaponOverrideUpdate")
+        net.WriteString(className)
+        net.WriteString(key)
+        net.WriteType(value)
+        net.SendToServer()
+        lia.item.WeaponOverrides[className] = lia.item.WeaponOverrides[className] or {}
+        lia.item.WeaponOverrides[className][key] = value
+    end
 
-        local resetBtn = content:Add("DButton")
-        resetBtn:Dock(TOP)
-        resetBtn:SetTall(30)
-        resetBtn:DockMargin(0, 8, 0, 0)
-        resetBtn:SetText("Reset Runtime Overrides")
-        resetBtn:SetFont("LiliaFont.18")
-        resetBtn.DoClick = function()
-            net.Start("liaWeaponRuntimeOverrideReset")
-            net.WriteString(className)
-            net.SendToServer()
-            lia.item.WeaponRuntimeOverrides[className] = nil
-        end
+    local function CommitRuntimeOverride(className, dotPath, value)
+        net.Start("liaWeaponRuntimeOverrideUpdate")
+        net.WriteString(className)
+        net.WriteString(dotPath)
+        net.WriteString(value)
+        net.SendToServer()
+        lia.item.WeaponRuntimeOverrides[className] = lia.item.WeaponRuntimeOverrides[className] or {}
+        lia.item.WeaponRuntimeOverrides[className][dotPath] = value
     end
 
     hook.Add("PopulateConfigurationButtons", "liaWeaponItemsConfig", function(pages)
@@ -1982,30 +1943,619 @@ else
             shouldShow = function() return hook.Run("CanPlayerModifyConfig", LocalPlayer()) ~= false end,
             drawFunc = function(parent)
                 parent:Clear()
-                local searchBar = parent:Add("liaEntry")
-                searchBar:Dock(TOP)
-                searchBar:DockMargin(10, 10, 10, 10)
-                searchBar:SetTall(35)
-                searchBar:SetPlaceholderText(L("searchWeapons"))
-                local scroll = parent:Add("liaScrollPanel")
-                scroll:Dock(FILL)
-                local function Populate(filter)
-                    scroll:Clear()
-                    filter = filter and filter:lower() or ""
-                    local weaponsList = weapons.GetList()
-                    table.sort(weaponsList, function(a, b) return (a.PrintName or a.ClassName) < (b.PrintName or b.ClassName) end)
-                    for _, wep in ipairs(weaponsList) do
+                parent:DockPadding(0, 0, 0, 0)
+                local state = {
+                    selectedClass = nil,
+                    selectedWeapon = nil,
+                    listButtons = {},
+                    itemFields = {},
+                    runtimeFields = {},
+                    dirtyItem = {},
+                    dirtyRuntime = {},
+                    category = "__all"
+                }
+
+                local function GetDirtyCount()
+                    local count = 0
+                    for _ in pairs(state.dirtyItem) do
+                        count = count + 1
+                    end
+
+                    for _ in pairs(state.dirtyRuntime) do
+                        count = count + 1
+                    end
+                    return count
+                end
+
+                local function MarkItemDirty(key)
+                    state.dirtyItem[key] = true
+                end
+
+                local function MarkRuntimeDirty(key)
+                    state.dirtyRuntime[key] = true
+                end
+
+                local function RegisterItemField(key, getter, numeric)
+                    state.itemFields[key] = {
+                        getValue = getter,
+                        numeric = numeric
+                    }
+                end
+
+                local function RegisterRuntimeField(key, getter)
+                    state.runtimeFields[key] = {
+                        getValue = getter
+                    }
+                end
+
+                local shell = parent:Add("DPanel")
+                shell:Dock(FILL)
+                shell.Paint = function() end
+                local header = shell:Add("DPanel")
+                header:Dock(TOP)
+                header:SetTall(76)
+                header.Paint = function(_, w)
+                    local _, textColor = GetWeaponConfigTheme()
+                    draw.SimpleText(L("weaponItemsConfig"), "LiliaFont.30", 8, 4, textColor, TEXT_ALIGN_LEFT, TEXT_ALIGN_TOP)
+                    draw.SimpleText("Manage generated weapon items and runtime SWEP overrides.", "LiliaFont.17", 8, 43, Color(155, 178, 179), TEXT_ALIGN_LEFT, TEXT_ALIGN_TOP)
+                    local accent = GetWeaponConfigTheme()
+                    surface.SetDrawColor(accent.r, accent.g, accent.b, 60)
+                    surface.DrawRect(8, 72, w - 16, 1)
+                end
+
+                local toolbar = shell:Add("DPanel")
+                toolbar:Dock(TOP)
+                toolbar:SetTall(42)
+                toolbar:DockMargin(0, 0, 0, 12)
+                toolbar.Paint = function() end
+                local dirtyBadge = toolbar:Add("DPanel")
+                dirtyBadge:Dock(RIGHT)
+                dirtyBadge:SetWide(150)
+                dirtyBadge.Paint = function(_, w, h)
+                    local accent, textColor = GetWeaponConfigTheme()
+                    local dirtyCount = GetDirtyCount()
+                    DrawWeaponConfigPanel(0, 0, w, h, 5, Color(9, 24, 29, 235), Color(accent.r, accent.g, accent.b, dirtyCount > 0 and 95 or 55))
+                    local dotColor = dirtyCount > 0 and accent or Color(120, 136, 140)
+                    draw.RoundedBox(4, 12, math.floor(h * 0.5) - 4, 8, 8, Color(dotColor.r, dotColor.g, dotColor.b, 255))
+                    draw.SimpleText(dirtyCount > 0 and dirtyCount .. " Modified" or "No Changes", "LiliaFont.18", w * 0.5 + 8, h * 0.5, textColor, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
+                end
+
+                local categoryFilter = toolbar:Add("DComboBox")
+                categoryFilter:Dock(RIGHT)
+                categoryFilter:SetWide(164)
+                categoryFilter:DockMargin(10, 0, 10, 0)
+                categoryFilter:SetValue("All Categories")
+                categoryFilter:SetFont("LiliaFont.18")
+                categoryFilter:SetTextColor(Color(230, 239, 239))
+                categoryFilter.Paint = function(s, w, h)
+                    local accent = GetWeaponConfigTheme()
+                    DrawWeaponConfigPanel(0, 0, w, h, 5, Color(9, 24, 29, 235), Color(accent.r, accent.g, accent.b, s:IsHovered() and 86 or 50))
+                    draw.SimpleText(s:GetValue(), "LiliaFont.18", 14, h * 0.5, Color(230, 239, 239), TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)
+                    draw.SimpleText("▾", "LiliaFont.18", w - 18, h * 0.5, accent, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
+                end
+
+                categoryFilter:AddChoice("All Categories", "__all", true)
+                local searchBar = CreateSearchBox(toolbar, L("searchWeapons"))
+                searchBar:Dock(FILL)
+                local body = shell:Add("DPanel")
+                body:Dock(FILL)
+                body.Paint = function() end
+                local left = body:Add("DPanel")
+                left:Dock(LEFT)
+                left:SetWide(math.Clamp(ScrW() * 0.18, 272, 330))
+                left:DockMargin(0, 0, 12, 0)
+                left:DockPadding(8, 8, 8, 8)
+                left.Paint = function(_, w, h)
+                    local accent = GetWeaponConfigTheme()
+                    DrawWeaponConfigPanel(0, 0, w, h, 7, Color(5, 18, 23, 218), Color(accent.r, accent.g, accent.b, 65))
+                end
+
+                local weaponList = left:Add("liaScrollPanel")
+                weaponList:Dock(FILL)
+                weaponList.Paint = function() end
+                local right = body:Add("DPanel")
+                right:Dock(FILL)
+                right:DockPadding(0, 0, 0, 0)
+                right.Paint = function(_, w, h)
+                    local accent = GetWeaponConfigTheme()
+                    DrawWeaponConfigPanel(0, 0, w, h, 7, Color(5, 18, 23, 218), Color(accent.r, accent.g, accent.b, 65))
+                end
+
+                local editorHeader = right:Add("DPanel")
+                editorHeader:Dock(TOP)
+                editorHeader:SetTall(84)
+                editorHeader:DockMargin(12, 12, 12, 0)
+                editorHeader.Paint = function(_, w, h)
+                    local accent, textColor = GetWeaponConfigTheme()
+                    local className = state.selectedClass or ""
+                    local weaponTable = state.selectedWeapon or {}
+                    local overrideData = lia.item.WeaponOverrides[className] or {}
+                    local title = className ~= "" and GetWeaponDisplayName(className, weaponTable, overrideData) or "No Weapon Selected"
+                    local category = className ~= "" and GetWeaponItemCategory(weaponTable, overrideData) or ""
+                    draw.SimpleText(title, "LiliaFont.28", 12, 10, textColor, TEXT_ALIGN_LEFT, TEXT_ALIGN_TOP)
+                    draw.SimpleText(className ~= "" and className or "Select a weapon from the list.", "LiliaFont.17", 12, 43, Color(155, 178, 179), TEXT_ALIGN_LEFT, TEXT_ALIGN_TOP)
+                    if category ~= "" then
+                        local tw = select(1, surface.GetTextSize(title))
+                        draw.SimpleText(category, "LiliaFont.16", 20 + tw, 16, accent, TEXT_ALIGN_LEFT, TEXT_ALIGN_TOP)
+                    end
+
+                    surface.SetDrawColor(accent.r, accent.g, accent.b, 58)
+                    surface.DrawRect(0, h - 1, w, 1)
+                end
+
+                local editorScroll = right:Add("liaScrollPanel")
+                editorScroll:Dock(FILL)
+                editorScroll:DockMargin(12, 8, 12, 0)
+                editorScroll.Paint = function() end
+                local footer = right:Add("DPanel")
+                footer:Dock(BOTTOM)
+                footer:SetTall(58)
+                footer:DockMargin(12, 10, 12, 12)
+                footer.Paint = function(_, w, h)
+                    local accent = GetWeaponConfigTheme()
+                    surface.SetDrawColor(accent.r, accent.g, accent.b, 40)
+                    surface.DrawRect(0, 0, w, 1)
+                    local dirtyCount = GetDirtyCount()
+                    local statusText = dirtyCount > 0 and dirtyCount .. " modified" or "No changes"
+                    draw.SimpleText(statusText .. "  |  Changes save when you press Save Changes.", "LiliaFont.17", 0, h * 0.5, Color(155, 178, 179), TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)
+                end
+
+                local saveButton = footer:Add("DButton")
+                saveButton:Dock(RIGHT)
+                saveButton:SetWide(170)
+                saveButton:DockMargin(10, 10, 0, 10)
+                saveButton._label = "Save Changes"
+                ApplyButtonStyle(saveButton, false, true)
+                local cancelButton = footer:Add("DButton")
+                cancelButton:Dock(RIGHT)
+                cancelButton:SetWide(118)
+                cancelButton:DockMargin(10, 10, 0, 10)
+                cancelButton._label = "Reset View"
+                ApplyButtonStyle(cancelButton)
+                local resetButton = footer:Add("DButton")
+                resetButton:Dock(RIGHT)
+                resetButton:SetWide(176)
+                resetButton:DockMargin(10, 10, 0, 10)
+                resetButton._label = "Reset Runtime"
+                ApplyButtonStyle(resetButton)
+                local function CreateSectionHeader(parentPanel, title)
+                    local headerPanel = parentPanel:Add("DPanel")
+                    headerPanel:Dock(TOP)
+                    headerPanel:SetTall(26)
+                    headerPanel:DockMargin(0, 0, 0, 0)
+                    headerPanel.Paint = function(_, w, h)
+                        local accent = GetWeaponConfigTheme()
+                        draw.SimpleText(string.upper(title), "LiliaFont.17", 12, h * 0.5, accent, TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)
+                        surface.SetDrawColor(accent.r, accent.g, accent.b, 78)
+                        surface.DrawRect(0, h - 1, w, 1)
+                    end
+                    return headerPanel
+                end
+
+                local function CreateSectionBlock(parentPanel, title)
+                    local block = parentPanel:Add("DPanel")
+                    block:Dock(TOP)
+                    block:DockMargin(0, 0, 0, 14)
+                    block.Paint = function(_, w, h)
+                        local accent = GetWeaponConfigTheme()
+                        DrawWeaponConfigPanel(0, 0, w, h, 6, Color(6, 17, 22, 205), Color(accent.r, accent.g, accent.b, 36))
+                    end
+
+                    local container = block:Add("DPanel")
+                    container:Dock(FILL)
+                    container:DockPadding(12, 12, 12, 8)
+                    container.Paint = function() end
+                    CreateSectionHeader(container, title)
+                    local list = container:Add("DPanel")
+                    list:Dock(FILL)
+                    list.Paint = function() end
+                    block.list = list
+                    block.PerformLayout = function(s, w)
+                        local y = 0
+                        for _, child in ipairs(list:GetChildren()) do
+                            local _, ch = child:GetSize()
+                            y = y + ch
+                        end
+
+                        local paddingTop = 12 + 26
+                        local paddingBottom = 8
+                        s:SetTall(paddingTop + paddingBottom + y)
+                    end
+                    return block
+                end
+
+                local function CreateSwitch(parentPanel, value, onChanged)
+                    local button = parentPanel:Add("DButton")
+                    button:SetText("")
+                    button:SetSize(44, 24)
+                    button._value = tobool(value)
+                    button.Paint = function(s, w, h)
+                        local accent = GetWeaponConfigTheme()
+                        local fill = s._value and Color(accent.r, accent.g, accent.b, 180) or Color(45, 60, 68, 220)
+                        draw.RoundedBox(h * 0.5, 0, 0, w, h, fill)
+                        local knobSize = h - 6
+                        local knobX = s._value and w - knobSize - 3 or 3
+                        draw.RoundedBox(knobSize * 0.5, knobX, 3, knobSize, knobSize, Color(235, 240, 240))
+                    end
+
+                    button.DoClick = function(s)
+                        s._value = not s._value
+                        onChanged(s._value)
+                    end
+                    return button
+                end
+
+                local function CreateValueEntry(parentPanel, value, width, numeric, onChanged)
+                    local entry = parentPanel:Add("DTextEntry")
+                    entry:SetWide(width or 280)
+                    entry:SetTall(30)
+                    entry:SetUpdateOnType(true)
+                    ApplyTextEntryStyle(entry, numeric)
+                    if value ~= nil then entry:SetValue(tostring(value)) end
+                    entry.OnValueChange = function(s, val) onChanged(val, s) end
+                    return entry
+                end
+
+                local function CreateValueCombo(parentPanel, value, choices, onChanged)
+                    local combo = parentPanel:Add("DComboBox")
+                    combo:SetWide(220)
+                    combo:SetTall(30)
+                    combo:SetFont("LiliaFont.18")
+                    combo:SetTextColor(Color(230, 239, 239))
+                    combo:SetValue(tostring(value or ""))
+                    combo.Paint = function(s, w, h)
+                        local accent = GetWeaponConfigTheme()
+                        DrawWeaponConfigPanel(0, 0, w, h, 5, Color(9, 24, 29, 235), Color(accent.r, accent.g, accent.b, s:IsHovered() and 86 or 50))
+                        draw.SimpleText(s:GetValue(), "LiliaFont.18", 12, h * 0.5, Color(230, 239, 239), TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)
+                        draw.SimpleText("▾", "LiliaFont.18", w - 16, h * 0.5, accent, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
+                    end
+
+                    local seen = {}
+                    for _, choice in ipairs(choices or {}) do
+                        if isstring(choice) and choice ~= "" and not seen[choice] then
+                            seen[choice] = true
+                            combo:AddChoice(choice, choice, choice == value)
+                        end
+                    end
+
+                    if isstring(value) and value ~= "" and not seen[value] then combo:AddChoice(value, value, true) end
+                    combo.OnSelect = function(_, _, selected, data)
+                        combo:SetValue(selected)
+                        onChanged(data or selected)
+                    end
+                    return combo
+                end
+
+                local function CreateSettingRow(parentPanel, title, description, builder)
+                    local row = parentPanel:Add("DPanel")
+                    row:Dock(TOP)
+                    row:SetTall(52)
+                    row.Paint = function(_, w, h)
+                        surface.SetDrawColor(255, 255, 255, 10)
+                        surface.DrawRect(0, h - 1, w, 1)
+                        draw.SimpleText(title, "LiliaFont.18", 12, 10, Color(228, 239, 239), TEXT_ALIGN_LEFT, TEXT_ALIGN_TOP)
+                        draw.SimpleText(description, "LiliaFont.16", 12, 30, Color(145, 166, 168), TEXT_ALIGN_LEFT, TEXT_ALIGN_TOP)
+                    end
+
+                    local controlWrap = row:Add("DPanel")
+                    controlWrap:Dock(RIGHT)
+                    controlWrap:SetWide(390)
+                    controlWrap.Paint = function() end
+                    row.PerformLayout = function(_, w, h) controlWrap:SetWide(math.min(390, math.floor(w * 0.42))) end
+                    local control = builder(controlWrap)
+                    controlWrap.PerformLayout = function(s, w, h)
+                        if not IsValid(control) then return end
+                        local cw, ch = control:GetSize()
+                        control:SetPos(w - cw, math.floor((h - ch) * 0.5))
+                    end
+                    return row, controlWrap
+                end
+
+                local allWeapons = {}
+                local categories = {}
+                local BuildEditor, SelectWeapon, PopulateWeaponList
+                local function BuildWeaponCache()
+                    allWeapons = {}
+                    categories = {}
+                    for _, wep in ipairs(weapons.GetList()) do
                         local className = wep.ClassName
-                        if not className or className:find("_base") or (lia.item.WeaponsBlackList and lia.item.WeaponsBlackList[className]) then continue end
-                        local name = wep.PrintName or className
-                        if filter ~= "" and not name:lower():find(filter, 1, true) and not className:lower():find(filter, 1, true) then continue end
-                        local overrides = lia.item.WeaponOverrides[className] or {}
-                        CreateEntry(scroll, className, wep, overrides)
+                        if not className or className:find("_base") or lia.item.WeaponsBlackList and lia.item.WeaponsBlackList[className] then continue end
+                        local overrideData = lia.item.WeaponOverrides[className] or {}
+                        local category = GetWeaponItemCategory(wep, overrideData)
+                        categories[category] = true
+                        allWeapons[#allWeapons + 1] = {
+                            className = className,
+                            weapon = wep,
+                            name = GetWeaponDisplayName(className, wep, overrideData),
+                            category = category
+                        }
+                    end
+
+                    table.sort(allWeapons, function(a, b) return a.name:lower() < b.name:lower() end)
+                end
+
+                local function RebuildCategoryFilter()
+                    local selectedValue = state.category or "__all"
+                    categoryFilter:Clear()
+                    categoryFilter:AddChoice("All Categories", "__all", selectedValue == "__all")
+                    local sorted = {}
+                    for category in pairs(categories) do
+                        sorted[#sorted + 1] = category
+                    end
+
+                    table.sort(sorted)
+                    for _, category in ipairs(sorted) do
+                        categoryFilter:AddChoice(category, category, selectedValue == category)
+                    end
+
+                    categoryFilter:SetValue(selectedValue == "__all" and "All Categories" or selectedValue)
+                end
+
+                local function SaveCurrent()
+                    if not state.selectedClass then return end
+                    for key, data in pairs(state.itemFields) do
+                        if state.dirtyItem[key] and isfunction(data.getValue) then
+                            local value = data.getValue()
+                            if data.numeric then value = tonumber(value) end
+                            CommitWeaponOverride(state.selectedClass, key, value)
+                        end
+                    end
+
+                    for dotPath, data in pairs(state.runtimeFields) do
+                        if state.dirtyRuntime[dotPath] and isfunction(data.getValue) then CommitRuntimeOverride(state.selectedClass, dotPath, tostring(data.getValue() or "")) end
+                    end
+
+                    state.dirtyItem = {}
+                    state.dirtyRuntime = {}
+                    BuildWeaponCache()
+                    RebuildCategoryFilter()
+                    BuildEditor()
+                    PopulateWeaponList()
+                end
+
+                BuildEditor = function()
+                    editorScroll:Clear()
+                    state.itemFields = {}
+                    state.runtimeFields = {}
+                    state.dirtyItem = {}
+                    state.dirtyRuntime = {}
+                    if not state.selectedClass or not state.selectedWeapon then
+                        local empty = editorScroll:Add("DPanel")
+                        empty:Dock(TOP)
+                        empty:SetTall(120)
+                        empty.Paint = function(_, w, h) draw.SimpleText("Select a weapon from the list to edit its item settings.", "LiliaFont.20", w * 0.5, h * 0.5, Color(155, 178, 179), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER) end
+                        return
+                    end
+
+                    local className = state.selectedClass
+                    local weaponTable = state.selectedWeapon
+                    local overrideData = lia.item.WeaponOverrides[className] or {}
+                    local runtimeOverrides = lia.item.WeaponRuntimeOverrides[className] or {}
+                    local liveWeapon = weapons.GetStored(className) or weaponTable
+                    local categoryChoices = {}
+                    for category in pairs(categories) do
+                        categoryChoices[#categoryChoices + 1] = category
+                    end
+
+                    table.sort(categoryChoices)
+                    local function RuntimeValue(dotPath)
+                        local default = liveWeapon and lia.item.getRuntimeValue(liveWeapon, dotPath)
+                        return runtimeOverrides[dotPath] ~= nil and runtimeOverrides[dotPath] or default
+                    end
+
+                    local overview = CreateSectionBlock(editorScroll, "Item Settings")
+                    CreateSettingRow(overview.list, "Name", "Display name shown in the weapon item list.", function(parentPanel)
+                        local entry = CreateValueEntry(parentPanel, overrideData.name or weaponTable.PrintName or className, 300, false, function(value) MarkItemDirty("name") end)
+                        RegisterItemField("name", function() return entry:GetValue() end)
+                        return entry
+                    end)
+
+                    CreateSettingRow(overview.list, "Description", "Description shown when viewing the item.", function(parentPanel)
+                        local entry = CreateValueEntry(parentPanel, overrideData.desc or overrideData.description or weaponTable.Instructions or "A Weapon.", 300, false, function(value) MarkItemDirty("desc") end)
+                        RegisterItemField("desc", function() return entry:GetValue() end)
+                        return entry
+                    end)
+
+                    CreateSettingRow(overview.list, "Category", "Item category used by the generated item.", function(parentPanel)
+                        local combo = CreateValueCombo(parentPanel, overrideData.category or GetWeaponItemCategory(weaponTable, overrideData), categoryChoices, function(value) MarkItemDirty("category") end)
+                        RegisterItemField("category", function() return combo:GetValue() end)
+                        return combo
+                    end)
+
+                    CreateSettingRow(overview.list, "Price", "Purchase price used by vendors or stores.", function(parentPanel)
+                        local entry = CreateValueEntry(parentPanel, overrideData.price or 0, 160, true, function(value) MarkItemDirty("price") end)
+                        RegisterItemField("price", function() return entry:GetValue() end, true)
+                        return entry
+                    end)
+
+                    CreateSettingRow(overview.list, "Width", "Inventory width of the generated item.", function(parentPanel)
+                        local entry = CreateValueEntry(parentPanel, overrideData.width or 2, 120, true, function(value) MarkItemDirty("width") end)
+                        RegisterItemField("width", function() return entry:GetValue() end, true)
+                        return entry
+                    end)
+
+                    CreateSettingRow(overview.list, "Height", "Inventory height of the generated item.", function(parentPanel)
+                        local entry = CreateValueEntry(parentPanel, overrideData.height or 1, 120, true, function(value) MarkItemDirty("height") end)
+                        RegisterItemField("height", function() return entry:GetValue() end, true)
+                        return entry
+                    end)
+
+                    local models = CreateSectionBlock(editorScroll, "Model / Appearance")
+                    CreateSettingRow(models.list, "World Model", "Model shown when the item is dropped or displayed.", function(parentPanel)
+                        local entry = CreateValueEntry(parentPanel, overrideData.model or weaponTable.WorldModel or "", 360, false, function(value) MarkItemDirty("model") end)
+                        RegisterItemField("model", function() return entry:GetValue() end)
+                        return entry
+                    end)
+
+                    CreateSettingRow(models.list, "View Model", "Optional first-person view model reference.", function(parentPanel)
+                        local entry = CreateValueEntry(parentPanel, overrideData.viewModel or weaponTable.ViewModel or "", 360, false, function(value) MarkItemDirty("viewModel") end)
+                        RegisterItemField("viewModel", function() return entry:GetValue() end)
+                        return entry
+                    end)
+
+                    CreateSettingRow(models.list, "Model Scale", "Scale multiplier for the generated item model.", function(parentPanel)
+                        local entry = CreateValueEntry(parentPanel, overrideData.modelScale or 1, 120, true, function(value) MarkItemDirty("modelScale") end)
+                        RegisterItemField("modelScale", function() return entry:GetValue() end, true)
+                        return entry
+                    end)
+
+                    CreateSettingRow(models.list, "Weapon Category", "SWEP category shown for this weapon.", function(parentPanel)
+                        local entry = CreateValueEntry(parentPanel, overrideData.weaponCategory or weaponTable.Category or "", 260, false, function(value) MarkItemDirty("weaponCategory") end)
+                        RegisterItemField("weaponCategory", function() return entry:GetValue() end)
+                        return entry
+                    end)
+
+                    local runtime = CreateSectionBlock(editorScroll, "Runtime SWEP Stats")
+                    local runtimeRows = {{"Primary Damage", "Primary.Damage", "Primary damage value applied at runtime."}, {"Primary Shots", "Primary.NumShots", "Primary shot count fired each attack."}, {"Primary Recoil", "Primary.Recoil", "Primary recoil value used by the weapon."}, {"Primary Cone", "Primary.Cone", "Primary spread cone value."}, {"Primary Delay", "Primary.Delay", "Primary fire delay between shots."}, {"Secondary Damage", "Secondary.Damage", "Secondary damage value applied at runtime."}, {"Secondary Shots", "Secondary.NumShots", "Secondary shot count fired each attack."}, {"Secondary Delay", "Secondary.Delay", "Secondary fire delay between shots."}}
+                    for _, rowData in ipairs(runtimeRows) do
+                        local label, dotPath, desc = rowData[1], rowData[2], rowData[3]
+                        CreateSettingRow(runtime.list, label, desc, function(parentPanel)
+                            local entry = CreateValueEntry(parentPanel, RuntimeValue(dotPath) or "", 180, true, function(value) MarkRuntimeDirty(dotPath) end)
+                            RegisterRuntimeField(dotPath, function() return entry:GetValue() end)
+                            return entry
+                        end)
+                    end
+
+                    local advanced = CreateSectionBlock(editorScroll, "Advanced")
+                    CreateSettingRow(advanced.list, "Base", "Optional base item override for this weapon item.", function(parentPanel)
+                        local entry = CreateValueEntry(parentPanel, overrideData.base or "", 220, false, function(value) MarkItemDirty("base") end)
+                        RegisterItemField("base", function() return entry:GetValue() end)
+                        return entry
+                    end)
+
+                    CreateSettingRow(advanced.list, "Hold Type", "SWEP hold type override.", function(parentPanel)
+                        local entry = CreateValueEntry(parentPanel, overrideData.holdType or weaponTable.HoldType or "", 180, false, function(value) MarkItemDirty("holdType") end)
+                        RegisterItemField("holdType", function() return entry:GetValue() end)
+                        return entry
+                    end)
+
+                    CreateSettingRow(advanced.list, "Clip Size", "Primary clip size stored on the item definition.", function(parentPanel)
+                        local entry = CreateValueEntry(parentPanel, overrideData.clipSize or RuntimeValue("Primary.ClipSize") or "", 120, true, function(value) MarkItemDirty("clipSize") end)
+                        RegisterItemField("clipSize", function() return entry:GetValue() end, true)
+                        return entry
+                    end)
+
+                    CreateSettingRow(advanced.list, "Default Ammo", "Default ammo amount given with the item.", function(parentPanel)
+                        local entry = CreateValueEntry(parentPanel, overrideData.defaultAmmo or weaponTable.Primary and weaponTable.Primary.DefaultClip or "", 120, true, function(value) MarkItemDirty("defaultAmmo") end)
+                        RegisterItemField("defaultAmmo", function() return entry:GetValue() end, true)
+                        return entry
+                    end)
+
+                    CreateSettingRow(advanced.list, "Auto Equip", "Automatically equips the weapon after use.", function(parentPanel)
+                        local switch = CreateSwitch(parentPanel, overrideData.autoEquip == nil and false or overrideData.autoEquip, function(value) MarkItemDirty("autoEquip") end)
+                        RegisterItemField("autoEquip", function() return switch._value end)
+                        return switch
+                    end)
+
+                    CreateSettingRow(advanced.list, "Allow Drop", "Whether the generated item can be dropped.", function(parentPanel)
+                        local switch = CreateSwitch(parentPanel, overrideData.allowDrop == nil and true or overrideData.allowDrop, function(value) MarkItemDirty("allowDrop") end)
+                        RegisterItemField("allowDrop", function() return switch._value end)
+                        return switch
+                    end)
+
+                    CreateSettingRow(advanced.list, "Allow Trade", "Whether the generated item can be traded.", function(parentPanel)
+                        local switch = CreateSwitch(parentPanel, overrideData.allowTrade == nil and true or overrideData.allowTrade, function(value) MarkItemDirty("allowTrade") end)
+                        RegisterItemField("allowTrade", function() return switch._value end)
+                        return switch
+                    end)
+
+                    CreateSettingRow(advanced.list, "Is Unique", "Prevents multiple copies from stacking logically.", function(parentPanel)
+                        local switch = CreateSwitch(parentPanel, overrideData.isUnique == nil and false or overrideData.isUnique, function(value) MarkItemDirty("isUnique") end)
+                        RegisterItemField("isUnique", function() return switch._value end)
+                        return switch
+                    end)
+                end
+
+                SelectWeapon = function(className, weaponTable)
+                    state.selectedClass = className
+                    state.selectedWeapon = weaponTable
+                    for key, button in pairs(state.listButtons) do
+                        if IsValid(button) then button._selected = key == className end
+                    end
+
+                    BuildEditor()
+                end
+
+                PopulateWeaponList = function()
+                    weaponList:Clear()
+                    state.listButtons = {}
+                    local filter = NormalizeFilter(searchBar:GetValue())
+                    local filtered = {}
+                    for _, item in ipairs(allWeapons) do
+                        if state.category ~= "__all" and item.category ~= state.category then continue end
+                        local haystack = (item.name .. " " .. item.className .. " " .. item.category):lower()
+                        if filter ~= "" and not haystack:find(filter, 1, true) then continue end
+                        filtered[#filtered + 1] = item
+                    end
+
+                    local totalVisible = #filtered
+                    local summary = weaponList:Add("DPanel")
+                    summary:Dock(TOP)
+                    summary:SetTall(56)
+                    summary:DockMargin(0, 0, 0, 8)
+                    summary.Paint = function(_, w, h)
+                        local accent, textColor = GetWeaponConfigTheme()
+                        DrawWeaponConfigPanel(0, 0, w, h, 5, Color(7, 21, 26, 228), Color(accent.r, accent.g, accent.b, 46))
+                        draw.SimpleText("All Weapons", "LiliaFont.20", 14, 12, textColor, TEXT_ALIGN_LEFT, TEXT_ALIGN_TOP)
+                        draw.SimpleText(totalVisible .. " weapon" .. (totalVisible == 1 and "" or "s"), "LiliaFont.16", 14, 34, Color(145, 166, 168), TEXT_ALIGN_LEFT, TEXT_ALIGN_TOP)
+                    end
+
+                    local firstMatch
+                    local selectedVisible = false
+                    for _, item in ipairs(filtered) do
+                        firstMatch = firstMatch or item
+                        if item.className == state.selectedClass then selectedVisible = true end
+                        local row = weaponList:Add("DButton")
+                        row:Dock(TOP)
+                        row:SetTall(60)
+                        row:DockMargin(0, 0, 0, 6)
+                        row:SetText("")
+                        row._selected = item.className == state.selectedClass
+                        row.Paint = function(s, w, h)
+                            local accent, textColor = GetWeaponConfigTheme()
+                            local hovered = s:IsHovered()
+                            local fill = s._selected and Color(accent.r, accent.g, accent.b, 35) or hovered and Color(12, 30, 35, 225) or Color(7, 21, 26, 225)
+                            DrawWeaponConfigPanel(0, 0, w, h, 5, fill, Color(accent.r, accent.g, accent.b, s._selected and 125 or hovered and 68 or 38))
+                            draw.SimpleText(item.name, "LiliaFont.19", 14, 12, textColor, TEXT_ALIGN_LEFT, TEXT_ALIGN_TOP)
+                            draw.SimpleText(item.category, "LiliaFont.16", 14, 34, Color(145, 166, 168), TEXT_ALIGN_LEFT, TEXT_ALIGN_TOP)
+                        end
+
+                        row.DoClick = function() SelectWeapon(item.className, item.weapon) end
+                        state.listButtons[item.className] = row
+                    end
+
+                    if not selectedVisible and firstMatch then SelectWeapon(firstMatch.className, firstMatch.weapon) end
+                    if not firstMatch then
+                        state.selectedClass = nil
+                        state.selectedWeapon = nil
+                        BuildEditor()
+                        local empty = weaponList:Add("DPanel")
+                        empty:Dock(TOP)
+                        empty:SetTall(72)
+                        empty.Paint = function(_, w, h) draw.SimpleText("No weapons found.", "LiliaFont.18", w * 0.5, h * 0.5, Color(155, 178, 179), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER) end
                     end
                 end
 
-                searchBar.OnTextChanged = function(s) Populate(s:GetValue()) end
-                Populate()
+                saveButton.DoClick = SaveCurrent
+                cancelButton.DoClick = function() BuildEditor() end
+                resetButton.DoClick = function()
+                    if not state.selectedClass then return end
+                    net.Start("liaWeaponRuntimeOverrideReset")
+                    net.WriteString(state.selectedClass)
+                    net.SendToServer()
+                    lia.item.WeaponRuntimeOverrides[state.selectedClass] = nil
+                    BuildEditor()
+                end
+
+                searchBar.OnValueChange = function() PopulateWeaponList() end
+                categoryFilter.OnSelect = function(_, _, _, data)
+                    state.category = data or "__all"
+                    PopulateWeaponList()
+                end
+
+                BuildWeaponCache()
+                RebuildCategoryFilter()
+                PopulateWeaponList()
             end
         }
     end)

@@ -13,6 +13,83 @@ local function openAdminStickTarget(client, target)
     hook.Run("OpenAdminStickUI", target)
 end
 
+local function getAdminStickHUDTitle(target)
+    if not IsValid(target) then return L("adminStick") end
+    if target:IsPlayer() then
+        local character = target.getChar and target:getChar()
+        return character and character:getName() or target:Nick()
+    end
+
+    if target.IsVendor and target.getName then
+        local vendorName = target:getName()
+        if vendorName and vendorName ~= "" then return vendorName end
+    end
+
+    if target.GetName then
+        local name = target:GetName()
+        if name and name ~= "" then return name end
+    end
+
+    return target.PrintName or target:GetClass() or L("unknown")
+end
+
+local function normalizeAdminStickHUDRows(information)
+    local rows = {}
+    for _, entry in ipairs(information or {}) do
+        if istable(entry) then
+            rows[#rows + 1] = table.Copy(entry)
+        elseif isstring(entry) then
+            local text = string.Trim(entry)
+            if text == "" then
+                rows[#rows + 1] = {
+                    divider = true
+                }
+            else
+                local label, value = text:match("^([^:]+):%s*(.+)$")
+                if label and value then
+                    rows[#rows + 1] = {
+                        label = string.Trim(label),
+                        value = string.Trim(value)
+                    }
+                else
+                    rows[#rows + 1] = {
+                        text = text
+                    }
+                end
+            end
+        end
+    end
+    return rows
+end
+
+local function buildAdminStickHUDRows(client, target)
+    local information = {}
+    hook.Run("AddToAdminStickHUD", client, target, information)
+    return normalizeAdminStickHUDRows(information)
+end
+
+function SWEP:DrawHUD()
+    local client = LocalPlayer()
+    if not IsValid(client) or client:GetActiveWeapon() ~= self then return end
+    local target = self:GetTarget()
+    if not IsValid(target) then return end
+    if target:IsPlayer() then return end
+    local rows = buildAdminStickHUDRows(client, target)
+    if #rows == 0 then return end
+    local worldPosition = target.WorldSpaceCenter and target:WorldSpaceCenter() or target:GetPos()
+    local screenPosition = worldPosition:ToScreen()
+    if not screenPosition.visible then return end
+    lia.derma.drawBoxWithText(nil, screenPosition.x + 24, screenPosition.y, {
+        title = getAdminStickHUDTitle(target),
+        rows = rows,
+        textAlignX = TEXT_ALIGN_LEFT,
+        textAlignY = TEXT_ALIGN_CENTER,
+        minWidth = 320,
+        maxWidth = 520,
+        rowDividers = false
+    })
+end
+
 function SWEP:PrimaryAttack()
     local client = LocalPlayer()
     if not IsFirstTimePredicted() then return end

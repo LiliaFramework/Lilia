@@ -518,41 +518,52 @@ function lia.derma.interactionTooltip(rawOptions, config)
         optionsList = visible
     end
 
-    local maxWidth = 350
-    local lineHeight = 20
-    local padding = 16
-    local iconSize = 32
-    local titleHeight = 28
-    local sectionSpacing = 8
-    local contentHeight = titleHeight + sectionSpacing
+    local padding = config.padding or 16
+    local headerHeight = config.headerHeight or 48
+    local rowHeight = config.entryH or 36
+    local categoryHeight = config.categoryHeight or 28
+    local rowGap = config.rowGap or 4
+    local sectionSpacing = config.sectionSpacing or 10
+    local tooltipWidth = config.width or config.tooltipWidth or 440
+    local contentHeight = 0
     local currentCategory = nil
     for _, entry in ipairs(optionsList) do
         if entry.isCategory then
             if currentCategory then contentHeight = contentHeight + sectionSpacing end
-            contentHeight = contentHeight + 24
+            contentHeight = contentHeight + categoryHeight + 4
             currentCategory = entry.name
         else
-            contentHeight = contentHeight + lineHeight + 2
+            contentHeight = contentHeight + rowHeight + rowGap
         end
     end
 
-    local tooltipWidth = maxWidth
-    local tooltipHeight = math.min(contentHeight + padding * 2, ScrH() * 0.7)
+    local maxHeight = config.maxHeight or ScrH() * 0.72
+    local minHeight = math.min(maxHeight, headerHeight + padding * 2 + rowHeight)
+    local tooltipHeight = math.max(minHeight, math.min(headerHeight + padding * 2 + contentHeight, maxHeight))
     local screenW, screenH = ScrW(), ScrH()
-    local tooltipX = screenW - tooltipWidth - 20
-    local tooltipY = math.max(80, (screenH - tooltipHeight) / 2)
+    local tooltipX = config.x or screenW - tooltipWidth - (config.screenPadding or 28)
+    local tooltipY = config.y or math.max(80, (screenH - tooltipHeight) / 2)
+    tooltipX = math.Clamp(tooltipX, 8, math.max(8, screenW - tooltipWidth - 8))
+    tooltipY = math.Clamp(tooltipY, 8, math.max(8, screenH - tooltipHeight - 8))
     local tooltip = vgui.Create("DPanel")
     tooltip:SetSize(tooltipWidth, tooltipHeight)
-    tooltip:SetPos(tooltipX, tooltipY)
+    tooltip:SetPos(tooltipX + 8, tooltipY)
     tooltip:MakePopup()
     tooltip:SetDrawOnTop(true)
     tooltip:SetZPos(10000)
     tooltip:SetAlpha(0)
-    tooltip:AlphaTo(255, 0.1)
+    tooltip:AlphaTo(255, config.fadeSpeed or 0.1)
+    tooltip:MoveTo(tooltipX, tooltipY, config.slideSpeed or 0.12, 0, -1)
     function tooltip:Paint(w, h)
-        local theme = lia.color.theme
-        local bgColor = Color(25, 28, 35, 250)
-        lia.derma.rect(0, 0, w, h):Rad(12):Color(bgColor):Shape(lia.derma.SHAPE_IOS):Draw()
+        local theme = lia.color.theme or {}
+        local accent = config.accentColor or theme.theme or theme.accent or Color(164, 106, 54)
+        local bgColor = config.backgroundColor or Color(3, 18, 22, 242)
+        local borderColor = config.borderColor or Color(accent.r, accent.g, accent.b, 115)
+        lia.derma.rect(0, 0, w, h):Rad(8):Color(Color(0, 0, 0, 150)):Shadow(8, 18):Shape(lia.derma.SHAPE_IOS):Draw()
+        lia.derma.rect(0, 0, w, h):Rad(8):Color(bgColor):Shape(lia.derma.SHAPE_IOS):Draw()
+        lia.derma.rect(0, 0, w, h):Rad(8):Color(borderColor):Shape(lia.derma.SHAPE_IOS):Outline(1):Draw()
+        surface.SetDrawColor(accent.r, accent.g, accent.b, 185)
+        surface.DrawRect(0, 0, w, 2)
         local titleText = config.title
         if not titleText then
             if mode == "interaction" then
@@ -564,10 +575,10 @@ function lia.derma.interactionTooltip(rawOptions, config)
             end
         end
 
-        draw.SimpleText(titleText, "LiliaFont.20", w * 0.5, (titleHeight + padding) * 0.5, theme.header_text or color_white, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
-        local accent = theme.theme or color_white
-        surface.SetDrawColor(accent.r, accent.g, accent.b, 20)
-        surface.DrawRect(padding, titleHeight + padding - 2, w - padding * 2, 1)
+        titleText = string.upper(tostring(titleText or ""))
+        draw.SimpleText(titleText, "LiliaFont.20", padding, headerHeight * 0.5, theme.header_text or color_white, TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)
+        surface.SetDrawColor(accent.r, accent.g, accent.b, 45)
+        surface.DrawRect(padding, headerHeight - 1, w - padding * 2, 1)
     end
 
     if emitHooks then hook.Run("InteractionMenuOpened", tooltip) end
@@ -593,9 +604,11 @@ function lia.derma.interactionTooltip(rawOptions, config)
         timer.Create(timerName, autoCloseDelay, 1, function() if IsValid(tooltip) then tooltip:Remove() end end)
     end
 
+    local scrollY = headerHeight + padding
     local scroll = tooltip:Add("liaScrollPanel")
-    scroll:SetPos(0, titleHeight + padding)
-    scroll:SetSize(tooltipWidth, tooltipHeight - titleHeight - padding * 2)
+    scroll:SetPos(0, scrollY)
+    scroll:SetSize(tooltipWidth, tooltipHeight - scrollY - padding)
+    scroll.Paint = function() end
     local layout = vgui.Create("DListLayout", scroll)
     layout:Dock(FILL)
     currentCategory = nil
@@ -609,35 +622,32 @@ function lia.derma.interactionTooltip(rawOptions, config)
             end
 
             local categoryPanel = vgui.Create("DPanel", layout)
-            categoryPanel:SetTall(20)
+            categoryPanel:SetTall(categoryHeight)
             categoryPanel:Dock(TOP)
             categoryPanel:DockMargin(padding, 0, padding, 4)
             categoryPanel:SetPaintBackground(false)
             function categoryPanel:Paint(w, h)
-                local theme = lia.color.theme
-                local categoryColor = entry.color or (theme and theme.category_accent or Color(100, 150, 200, 255))
-                local bgColor = Color(categoryColor.r, categoryColor.g, categoryColor.b, 15)
-                local textColor = theme and theme.text or color_white
-                lia.derma.rect(0, 0, w, h):Rad(4):Color(bgColor):Shape(lia.derma.SHAPE_IOS):Draw()
-                local accent = theme.theme or color_white
-                surface.SetDrawColor(accent.r, accent.g, accent.b, 60)
-                surface.DrawRect(0, 0, 3, h)
+                local theme = lia.color.theme or {}
+                local accent = entry.color or config.accentColor or theme.theme or theme.accent or Color(164, 106, 54)
                 local displayText = entry.name or ""
                 if L then
                     local localized = L(displayText)
                     if localized and localized ~= "" then displayText = localized end
                 end
 
-                draw.SimpleText(displayText, "LiliaFont.17", 8, h / 2, textColor, TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)
+                displayText = string.upper(tostring(displayText))
+                draw.SimpleText(displayText, "LiliaFont.16", 0, h * 0.5, accent, TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)
+                surface.SetDrawColor(accent.r, accent.g, accent.b, 45)
+                surface.DrawRect(0, h - 2, w, 1)
             end
 
             layout:Add(categoryPanel)
             currentCategory = entry.name
         else
             local btn = vgui.Create("DButton", layout)
-            btn:SetTall(lineHeight)
+            btn:SetTall(rowHeight)
             btn:Dock(TOP)
-            btn:DockMargin(padding + iconSize + 8, 0, padding, 2)
+            btn:DockMargin(padding, 0, padding, rowGap)
             btn:SetText("")
             btn:SetPaintBackground(false)
             btn:SetCursor("hand")
@@ -647,31 +657,33 @@ function lia.derma.interactionTooltip(rawOptions, config)
                 if localized and localized ~= "" then displayText = localized end
             end
 
-            function btn:Paint(w, h)
-                local theme = lia.color.theme
-                local accent = theme.accent or theme.header or theme.theme or Color(100, 150, 200)
-                local isHovered = self:IsHovered()
-                if isHovered then
-                    local hoverColor = Color(accent.r, accent.g, accent.b, 20)
-                    lia.derma.rect(0, 0, w, h):Rad(4):Color(hoverColor):Shape(lia.derma.SHAPE_IOS):Draw()
-                end
-
-                local textColor = entry.opt and entry.opt.textColor or theme.text or color_white
-                if isHovered then textColor = Color(255, 255, 255) end
-                draw.SimpleText(displayText, "LiliaFont.17", 4, h / 2, textColor, TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)
+            local description = entry.opt and (entry.opt.description or entry.opt.desc)
+            if isstring(description) and description ~= "" then
+                if entry.opt.localizedDescription ~= false and L then description = L(description) end
+                btn:SetTooltip(description)
             end
 
-            local iconMat = entry.opt and entry.opt.icon
-            if iconMat then
-                function btn:PaintOver(w, h)
-                    surface.SetDrawColor(255, 255, 255, 200)
-                    surface.SetMaterial(iconMat)
-                    surface.DrawTexturedRect(-iconSize - 8, (h - iconSize) / 2, iconSize, iconSize)
+            function btn:Paint(w, h)
+                local theme = lia.color.theme or {}
+                local accent = entry.opt and entry.opt.accentColor or config.accentColor or theme.theme or theme.accent or Color(164, 106, 54)
+                local isHovered = self:IsHovered()
+                local rowColor = isHovered and Color(255, 255, 255, 22) or Color(255, 255, 255, 7)
+                lia.derma.rect(0, 0, w, h):Rad(4):Color(rowColor):Shape(lia.derma.SHAPE_IOS):Draw()
+                if isHovered then
+                    surface.SetDrawColor(accent.r, accent.g, accent.b, 210)
+                    surface.DrawRect(0, 0, 3, h)
+                    lia.derma.rect(0, 0, w, h):Rad(4):Color(Color(accent.r, accent.g, accent.b, 18)):Shape(lia.derma.SHAPE_IOS):Draw()
                 end
+
+                surface.SetDrawColor(255, 255, 255, isHovered and 18 or 10)
+                surface.DrawRect(10, h - 1, w - 20, 1)
+                local textColor = entry.opt and entry.opt.textColor or theme.text or Color(235, 240, 242)
+                if isHovered then textColor = color_white end
+                draw.SimpleText(displayText, "LiliaFont.17", 12, h * 0.5, textColor, TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)
             end
 
             btn.DoClick = function()
-                tooltip:AlphaTo(0, 0.1, 0, function() if IsValid(tooltip) then tooltip:Remove() end end)
+                tooltip:AlphaTo(0, config.fadeSpeed or 0.1, 0, function() if IsValid(tooltip) then tooltip:Remove() end end)
                 local optionData = entry.opt or {}
                 local callback = optionData.callback or optionData.onRun
                 if callback and not optionData.serverOnly then
@@ -713,12 +725,6 @@ function lia.derma.interactionTooltip(rawOptions, config)
                 end
 
                 if isfunction(optionData.onSelect) then optionData.onSelect(client, ent, entry, tooltip) end
-            end
-
-            local description = entry.opt and (entry.opt.description or entry.opt.desc)
-            if isstring(description) and description ~= "" then
-                if entry.opt.localizedDescription ~= false and L then description = L(description) end
-                btn:SetTooltip(description)
             end
 
             layout:Add(btn)
@@ -2349,7 +2355,18 @@ end
 
     Example Usage:
         ```lua
-        local boxW, boxH = lia.derma.drawBoxWithText({"Line one", "Line two"}, x, y, {textAlignX = TEXT_ALIGN_CENTER})
+        local boxW, boxH = lia.derma.drawBoxWithText(nil, x, y, {
+            rows = {
+                {
+                    label = "Line one",
+                    value = "Example value"
+                },
+                {
+                    text = "Line two"
+                }
+            },
+            textAlignX = TEXT_ALIGN_CENTER
+        })
         ```
 
     Realm:
@@ -2357,64 +2374,473 @@ end
 ]]
 function lia.derma.drawBoxWithText(text, x, y, options)
     options = options or {}
-    local font = options.font or "LiliaFont.16"
-    local textColor = options.textColor or Color(255, 255, 255)
-    local backgroundColor = options.backgroundColor or Color(25, 28, 35, 250)
-    local borderColor = options.borderColor or lia.color.theme.theme
-    local borderRadius = options.borderRadius or 12
-    local borderThickness = options.borderThickness or 0
-    local padding = options.padding or 20
-    local blur = options.blur or {
-        enabled = true,
-        amount = 3,
-        passes = 3,
-        alpha = 0.9
-    }
+    local function trim(value)
+        return tostring(value or ""):gsub("^%s+", ""):gsub("%s+$", "")
+    end
 
-    local textAlignX = options.textAlignX or TEXT_ALIGN_CENTER
-    local textAlignY = options.textAlignY or TEXT_ALIGN_CENTER
-    local autoSize = options.autoSize ~= false
-    local lineSpacing = options.lineSpacing or 4
-    local overlapMargin = options.overlapMargin or 8
-    local textLines = splitBoxTextLines(text)
-    surface.SetFont(font)
-    local _, defaultLineHeight = surface.GetTextSize("W")
-    local maxWidth, totalHeight = 0, 0
-    local lineHeights = {}
-    for i, line in ipairs(textLines) do
-        local measureText = line ~= "" and line or " "
-        local t_w, t_h = surface.GetTextSize(measureText)
-        if line == "" then t_w = 0 end
-        lineHeights[i] = math.max(t_h, defaultLineHeight)
-        maxWidth = math.max(maxWidth, t_w)
-        if i == 1 then
-            totalHeight = lineHeights[i]
-        else
-            totalHeight = totalHeight + lineHeights[i] + lineSpacing
+    local function resolveText(value)
+        if value == nil then return "" end
+        if isstring(value) and L then
+            local ok, localized = pcall(L, value)
+            if ok and localized and localized ~= "" then return tostring(localized) end
+        end
+        return tostring(value)
+    end
+
+    local function resolveAccent()
+        local theme = lia.color and lia.color.theme or {}
+        return options.accentColor or theme.accent or theme.theme or lia.config and lia.config.get and lia.config.get("Color") or Color(164, 106, 54)
+    end
+
+    local function drawBlurAt(px, py, pw, ph, blurData)
+        if not blurData or blurData.enabled == false then return end
+        local amount = blurData.amount or 3
+        local passes = blurData.passes or 3
+        local alpha = blurData.alpha or 0.9
+        if lia.util and lia.util.drawBlurAt then
+            lia.util.drawBlurAt(px, py, pw, ph, amount, passes, alpha)
+        elseif lia.derma.drawBlurAt then
+            lia.derma.drawBlurAt(px, py, pw, ph, amount, passes, alpha)
         end
     end
 
-    local boxWidth, boxHeight
-    if autoSize then
-        boxWidth = maxWidth + padding
-        boxHeight = totalHeight + padding
+    local function parseDebugText(raw)
+        if not isstring(raw) then return end
+        if not raw:find("SteamID", 1, true) and not raw:find("FrameTime", 1, true) then return end
+        local values = {}
+        local loose = {}
+        local normalized = raw:gsub("\r\n", "\n"):gsub("\r", "\n")
+        for line in normalized:gmatch("[^\n]+") do
+            for part in line:gmatch("[^|]+") do
+                local item = trim(part)
+                if item ~= "" then
+                    local key, value = item:match("^([^:]+):%s*(.+)$")
+                    if key and value then
+                        values[key:lower():gsub("[^%w]", "")] = trim(value)
+                    else
+                        loose[#loose + 1] = item
+                    end
+                end
+            end
+        end
+
+        local dateText, timeText
+        for _, item in ipairs(loose) do
+            if not dateText and item:match("^%d%d/%d%d/%d%d%d%d$") then dateText = item end
+            if not timeText and item:match("^%d%d:%d%d:%d%d$") then timeText = item end
+        end
+
+        local function getValue(...)
+            for _, key in ipairs({...}) do
+                local value = values[key]
+                if value and value ~= "" then return value end
+            end
+        end
+
+        local sections = {}
+        local sessionRows = {}
+        local steamID64 = getValue("steamid64")
+        local steamID = getValue("steamid")
+        if steamID64 then
+            sessionRows[#sessionRows + 1] = {
+                label = "SteamID64",
+                value = steamID64
+            }
+        end
+
+        if steamID then
+            sessionRows[#sessionRows + 1] = {
+                label = "SteamID",
+                value = steamID
+            }
+        end
+
+        if dateText or timeText then
+            sessionRows[#sessionRows + 1] = {
+                label = "Date / Time",
+                value = trim((dateText or "") .. " " .. (timeText or ""))
+            }
+        end
+
+        if #sessionRows > 0 then
+            sections[#sections + 1] = {
+                rows = sessionRows
+            }
+        end
+
+        local positionRows = {}
+        local pos = getValue("pos")
+        local ang = getValue("ang")
+        local tracePos = getValue("tracepos")
+        local traceDist = getValue("tracedist")
+        if pos then
+            positionRows[#positionRows + 1] = {
+                label = "Pos",
+                value = pos
+            }
+        end
+
+        if ang then
+            positionRows[#positionRows + 1] = {
+                label = "Ang",
+                value = ang
+            }
+        end
+
+        if tracePos then
+            positionRows[#positionRows + 1] = {
+                label = "Trace Pos",
+                value = tracePos
+            }
+        end
+
+        if traceDist then
+            positionRows[#positionRows + 1] = {
+                label = "Trace Dist",
+                value = traceDist
+            }
+        end
+
+        if #positionRows > 0 then
+            sections[#sections + 1] = {
+                title = "Position",
+                rows = positionRows
+            }
+        end
+
+        local performanceRows = {}
+        local health = getValue("health")
+        local ping = getValue("ping")
+        local fps = getValue("fps")
+        local frameTime = getValue("frametime")
+        if health then
+            performanceRows[#performanceRows + 1] = {
+                label = "Health",
+                value = health
+            }
+        end
+
+        if ping then
+            performanceRows[#performanceRows + 1] = {
+                label = "Ping",
+                value = ping
+            }
+        end
+
+        if fps then
+            performanceRows[#performanceRows + 1] = {
+                label = "FPS",
+                value = fps
+            }
+        end
+
+        if frameTime then
+            performanceRows[#performanceRows + 1] = {
+                label = "Frame Time",
+                value = frameTime
+            }
+        end
+
+        if #performanceRows > 0 then
+            sections[#sections + 1] = {
+                title = "Performance",
+                rows = performanceRows
+            }
+        end
+
+        if #sections == 0 then return end
+        return {
+            title = "Debug Session",
+            sections = sections
+        }
+    end
+
+    local debugLayout
+    local structured = istable(options.sections) or istable(options.rows) or options.title ~= nil
+    if not structured and options.autoFormatDebug ~= false then
+        debugLayout = parseDebugText(text)
+        structured = debugLayout ~= nil
+    end
+
+    if not structured then
+        local font = options.font or "LiliaFont.16"
+        local textColor = options.textColor or Color(255, 255, 255)
+        local backgroundColor = options.backgroundColor or Color(25, 28, 35, 250)
+        local borderColor = options.borderColor or lia.color.theme.theme
+        local borderRadius = options.borderRadius or 12
+        local borderThickness = options.borderThickness or 0
+        local padding = options.padding or 20
+        local blur = options.blur or {
+            enabled = true,
+            amount = 3,
+            passes = 3,
+            alpha = 0.9
+        }
+
+        local textAlignX = options.textAlignX or TEXT_ALIGN_CENTER
+        local textAlignY = options.textAlignY or TEXT_ALIGN_CENTER
+        local autoSize = options.autoSize ~= false
+        local lineSpacing = options.lineSpacing or 4
+        local overlapMargin = options.overlapMargin or 8
+        local textLines = splitBoxTextLines(text)
+        surface.SetFont(font)
+        local _, defaultLineHeight = surface.GetTextSize("W")
+        local maxWidth, totalHeight = 0, 0
+        local lineHeights = {}
+        for i, line in ipairs(textLines) do
+            local measureText = line ~= "" and line or " "
+            local textWidth, textHeight = surface.GetTextSize(measureText)
+            if line == "" then textWidth = 0 end
+            lineHeights[i] = math.max(textHeight, defaultLineHeight)
+            maxWidth = math.max(maxWidth, textWidth)
+            if i == 1 then
+                totalHeight = lineHeights[i]
+            else
+                totalHeight = totalHeight + lineHeights[i] + lineSpacing
+            end
+        end
+
+        local boxWidth, boxHeight
+        if autoSize then
+            boxWidth = maxWidth + padding
+            boxHeight = totalHeight + padding
+        else
+            boxWidth = options.width or maxWidth + padding
+            boxHeight = options.height or totalHeight + padding
+        end
+
+        local boxX = x
+        if textAlignX == TEXT_ALIGN_RIGHT then
+            boxX = x - boxWidth
+        elseif textAlignX == TEXT_ALIGN_CENTER then
+            boxX = x - boxWidth / 2
+        end
+
+        local boxY = y
+        if textAlignY == TEXT_ALIGN_BOTTOM then
+            boxY = y - boxHeight
+        elseif textAlignY == TEXT_ALIGN_CENTER then
+            boxY = y - boxHeight / 2
+        end
+
+        if drawBoxFrame ~= FrameNumber() then
+            drawBoxOverlaps = {}
+            drawBoxFrame = FrameNumber()
+        end
+
+        local screenW, screenH = ScrW(), ScrH()
+        local function intersects(cx, cy)
+            for _, rect in ipairs(drawBoxOverlaps) do
+                if cx < rect.x + rect.w + overlapMargin and cx + boxWidth + overlapMargin > rect.x and cy < rect.y + rect.h + overlapMargin and cy + boxHeight + overlapMargin > rect.y then return rect end
+            end
+        end
+
+        boxX = math.Clamp(boxX, 0, screenW - boxWidth)
+        boxY = math.Clamp(boxY, 0, screenH - boxHeight)
+        local overlap = intersects(boxX, boxY)
+        local attempts = 0
+        while overlap and attempts < 8 do
+            local down = overlap.y + overlap.h + overlapMargin
+            local up = overlap.y - boxHeight - overlapMargin
+            local nextY = down + boxHeight <= screenH and down or math.max(0, up)
+            boxY = math.Clamp(nextY, 0, screenH - boxHeight)
+            overlap = intersects(boxX, boxY)
+            attempts = attempts + 1
+        end
+
+        local shadow = options.shadow or {
+            enabled = true,
+            color = Color(0, 0, 0, 180),
+            offsetX = 15,
+            offsetY = 20
+        }
+
+        boxWidth = math.max(boxWidth, 1)
+        boxHeight = math.max(boxHeight, 1)
+        if shadow.enabled then lia.derma.rect(boxX, boxY, boxWidth, boxHeight):Rad(borderRadius):Color(shadow.color or Color(0, 0, 0, 180)):Shadow(shadow.offsetX or 15, shadow.offsetY or 20):Shape(lia.derma.SHAPE_IOS):Draw() end
+        drawBlurAt(boxX, boxY, boxWidth, boxHeight, blur)
+        lia.derma.rect(boxX, boxY, boxWidth, boxHeight):Color(backgroundColor):Rad(borderRadius):Shape(lia.derma.SHAPE_IOS):Draw()
+        if borderThickness > 0 then lia.derma.rect(boxX, boxY, boxWidth, boxHeight):Color(borderColor):Rad(borderRadius):Shape(lia.derma.SHAPE_IOS):Outline(borderThickness):Draw() end
+        local accentBorder = options.accentBorder or {
+            enabled = false
+        }
+
+        if accentBorder.enabled then
+            local accent = accentBorder.color or lia.color.theme.theme or color_white
+            surface.SetDrawColor(accent.r, accent.g, accent.b, accent.a or 255)
+            surface.DrawRect(boxX, boxY, boxWidth, accentBorder.height or 2)
+        end
+
+        local startY = boxY + padding / 2
+        if textAlignY == TEXT_ALIGN_CENTER then
+            startY = boxY + (boxHeight - totalHeight) / 2
+        elseif textAlignY == TEXT_ALIGN_BOTTOM then
+            startY = boxY + boxHeight - padding / 2 - totalHeight
+        end
+
+        local currentY = startY
+        for i, line in ipairs(textLines) do
+            local textX
+            if textAlignX == TEXT_ALIGN_CENTER then
+                textX = boxX + boxWidth / 2
+            elseif textAlignX == TEXT_ALIGN_LEFT then
+                textX = boxX + padding / 2
+            else
+                textX = boxX + boxWidth - padding / 2
+            end
+
+            if line ~= "" then lia.derma.drawText(line, textX, currentY, textColor, textAlignX, TEXT_ALIGN_TOP, font) end
+            if i < #textLines then currentY = currentY + lineHeights[i] + lineSpacing end
+        end
+
+        drawBoxOverlaps[#drawBoxOverlaps + 1] = {
+            x = boxX,
+            y = boxY,
+            w = boxWidth,
+            h = boxHeight
+        }
+        return boxWidth, boxHeight
+    end
+
+    local accent = resolveAccent()
+    local theme = lia.color and lia.color.theme or {}
+    local textColor = options.textColor or theme.text or Color(235, 240, 242)
+    local mutedTextColor = options.mutedTextColor or theme.gray or Color(160, 178, 180)
+    local titleFont = options.titleFont or "LiliaFont.17"
+    local sectionFont = options.sectionFont or "LiliaFont.15"
+    local rowFont = options.font or "LiliaFont.15"
+    local valueFont = options.valueFont or rowFont
+    local backgroundColor = options.backgroundColor or Color(3, 18, 22, 232)
+    local borderColor = options.borderColor or Color(accent.r, accent.g, accent.b, 110)
+    local borderRadius = options.borderRadius or 8
+    local borderThickness = options.borderThickness or 1
+    local padding = options.padding or 16
+    local rowHeight = options.rowHeight or 24
+    local sectionGap = options.sectionGap or 12
+    local columnGap = options.columnGap or 28
+    local minWidth = options.minWidth or 280
+    local maxWidth = options.maxWidth or 520
+    local overlapMargin = options.overlapMargin or 8
+    local textAlignX = options.textAlignX or TEXT_ALIGN_LEFT
+    local textAlignY = options.textAlignY or TEXT_ALIGN_TOP
+    local titleText = resolveText(options.title or debugLayout and debugLayout.title)
+    local sourceSections = {}
+    if debugLayout then
+        sourceSections = debugLayout.sections
+    elseif istable(options.sections) then
+        for _, section in ipairs(options.sections) do
+            if istable(section) then
+                sourceSections[#sourceSections + 1] = {
+                    title = section.title or section.name,
+                    rows = section.rows or section.items or {}
+                }
+            end
+        end
+    elseif istable(options.rows) then
+        local current = {
+            title = options.sectionTitle,
+            rows = {}
+        }
+
+        for _, row in ipairs(options.rows) do
+            if istable(row) and (row.section or row.category) then
+                if current.title or #current.rows > 0 then sourceSections[#sourceSections + 1] = current end
+                current = {
+                    title = row.section or row.category,
+                    rows = {}
+                }
+            else
+                current.rows[#current.rows + 1] = row
+            end
+        end
+
+        if current.title or #current.rows > 0 then sourceSections[#sourceSections + 1] = current end
     else
-        boxWidth = options.width or maxWidth + padding
-        boxHeight = options.height or totalHeight + padding
+        sourceSections[#sourceSections + 1] = {
+            rows = splitBoxTextLines(text)
+        }
     end
 
-    local boxX = x
+    surface.SetFont(titleFont)
+    local titleWidth, titleHeight = 0, 0
+    if titleText ~= "" then titleWidth, titleHeight = surface.GetTextSize(string.upper(titleText)) end
+    local measuredWidth = titleWidth + padding * 2 + 24
+    local totalHeight = padding
+    if titleText ~= "" then totalHeight = totalHeight + math.max(titleHeight, 18) + 14 end
+    local preparedSections = {}
+    for _, section in ipairs(sourceSections) do
+        local preparedRows = {}
+        local sectionTitle = resolveText(section.title)
+        local sectionHeight = 0
+        if sectionTitle ~= "" then
+            surface.SetFont(sectionFont)
+            local sectionWidth, sectionTextHeight = surface.GetTextSize(string.upper(sectionTitle))
+            measuredWidth = math.max(measuredWidth, sectionWidth + padding * 2 + 120)
+            sectionHeight = sectionHeight + math.max(sectionTextHeight, 16) + 10
+        end
+
+        for _, row in ipairs(section.rows or {}) do
+            local prepared = {}
+            if istable(row) then
+                if row.divider then
+                    prepared.type = "divider"
+                    sectionHeight = sectionHeight + 10
+                    preparedRows[#preparedRows + 1] = prepared
+                else
+                    prepared.label = resolveText(row.label or row.name or row.key or row[1])
+                    prepared.value = resolveText(row.value or row[2])
+                    prepared.text = resolveText(row.text)
+                    if prepared.text == "" and prepared.label ~= "" and prepared.value == "" and not row.value and not row[2] then
+                        prepared.text = prepared.label
+                        prepared.label = ""
+                    end
+
+                    surface.SetFont(rowFont)
+                    local labelWidth = prepared.label ~= "" and surface.GetTextSize(prepared.label) or 0
+                    local textWidth = prepared.text ~= "" and surface.GetTextSize(prepared.text) or 0
+                    surface.SetFont(valueFont)
+                    local valueWidth = prepared.value ~= "" and surface.GetTextSize(prepared.value) or 0
+                    measuredWidth = math.max(measuredWidth, labelWidth + valueWidth + padding * 2 + columnGap, textWidth + padding * 2)
+                    sectionHeight = sectionHeight + rowHeight
+                    preparedRows[#preparedRows + 1] = prepared
+                end
+            else
+                prepared.text = resolveText(row)
+                surface.SetFont(rowFont)
+                local textWidth = surface.GetTextSize(prepared.text)
+                measuredWidth = math.max(measuredWidth, textWidth + padding * 2)
+                sectionHeight = sectionHeight + rowHeight
+                preparedRows[#preparedRows + 1] = prepared
+            end
+        end
+
+        preparedSections[#preparedSections + 1] = {
+            title = sectionTitle,
+            rows = preparedRows,
+            height = sectionHeight
+        }
+
+        totalHeight = totalHeight + sectionHeight + sectionGap
+    end
+
+    if #preparedSections > 0 then totalHeight = totalHeight - sectionGap end
+    totalHeight = totalHeight + padding
+    local defaultWidth = debugLayout and 430 or 360
+    local boxWidth = options.width or math.Clamp(math.max(defaultWidth, measuredWidth), minWidth, maxWidth)
+    if options.autoSize == false and options.width then boxWidth = options.width end
+    local boxHeight = options.height or totalHeight
+    local boxX = x or 0
     if textAlignX == TEXT_ALIGN_RIGHT then
-        boxX = x - boxWidth
+        boxX = boxX - boxWidth
     elseif textAlignX == TEXT_ALIGN_CENTER then
-        boxX = x - boxWidth / 2
+        boxX = boxX - boxWidth * 0.5
     end
 
-    local boxY = y
+    local boxY = y or 0
     if textAlignY == TEXT_ALIGN_BOTTOM then
-        boxY = y - boxHeight
+        boxY = boxY - boxHeight
     elseif textAlignY == TEXT_ALIGN_CENTER then
-        boxY = y - boxHeight / 2
+        boxY = boxY - boxHeight * 0.5
     end
 
     if drawBoxFrame ~= FrameNumber() then
@@ -2429,67 +2855,75 @@ function lia.derma.drawBoxWithText(text, x, y, options)
         end
     end
 
-    boxX = math.Clamp(boxX, 0, screenW - boxWidth)
-    boxY = math.Clamp(boxY, 0, screenH - boxHeight)
+    boxX = math.Clamp(boxX, 0, math.max(0, screenW - boxWidth))
+    boxY = math.Clamp(boxY, 0, math.max(0, screenH - boxHeight))
     local overlap = intersects(boxX, boxY)
     local attempts = 0
     while overlap and attempts < 8 do
         local down = overlap.y + overlap.h + overlapMargin
         local up = overlap.y - boxHeight - overlapMargin
-        local nextY
-        if down + boxHeight <= screenH then
-            nextY = down
-        else
-            nextY = math.max(0, up)
-        end
-
-        boxY = math.Clamp(nextY, 0, screenH - boxHeight)
+        local nextY = down + boxHeight <= screenH and down or math.max(0, up)
+        boxY = math.Clamp(nextY, 0, math.max(0, screenH - boxHeight))
         overlap = intersects(boxX, boxY)
         attempts = attempts + 1
     end
 
     local shadow = options.shadow or {
         enabled = true,
-        color = Color(0, 0, 0, 180),
-        offsetX = 15,
-        offsetY = 20
+        color = Color(0, 0, 0, 125),
+        offsetX = 8,
+        offsetY = 14
     }
 
-    boxWidth = math.max(boxWidth, 1)
-    boxHeight = math.max(boxHeight, 1)
-    if shadow.enabled then lia.derma.rect(boxX, boxY, boxWidth, boxHeight):Rad(borderRadius):Color(shadow.color or Color(0, 0, 0, 180)):Shadow(shadow.offsetX or 15, shadow.offsetY or 20):Shape(lia.derma.SHAPE_IOS):Draw() end
-    if blur.enabled then lia.util.drawBlurAt(boxX, boxY, boxWidth, boxHeight, blur.amount, blur.passes, blur.alpha) end
-    lia.derma.rect(boxX, boxY, boxWidth, boxHeight):Color(backgroundColor):Rad(borderRadius):Shape(lia.derma.SHAPE_IOS):Draw()
-    if borderThickness > 0 then lia.derma.rect(boxX, boxY, boxWidth, boxHeight):Color(borderColor):Rad(borderRadius):Shape(lia.derma.SHAPE_IOS):Outline(borderThickness):Draw() end
-    local accentBorder = options.accentBorder or {
-        enabled = false
+    local blur = options.blur or {
+        enabled = true,
+        amount = 2,
+        passes = 2,
+        alpha = 0.65
     }
 
-    if accentBorder.enabled then
-        surface.SetDrawColor((accentBorder.color or lia.color.theme.theme):Unpack())
-        surface.DrawRect(boxX, boxY, boxWidth, accentBorder.height or 2)
+    if shadow.enabled then lia.derma.rect(boxX, boxY, boxWidth, boxHeight):Rad(borderRadius):Color(shadow.color or Color(0, 0, 0, 125)):Shadow(shadow.offsetX or 8, shadow.offsetY or 14):Shape(lia.derma.SHAPE_IOS):Draw() end
+    drawBlurAt(boxX, boxY, boxWidth, boxHeight, blur)
+    lia.derma.rect(boxX, boxY, boxWidth, boxHeight):Rad(borderRadius):Color(backgroundColor):Shape(lia.derma.SHAPE_IOS):Draw()
+    if borderThickness > 0 then lia.derma.rect(boxX, boxY, boxWidth, boxHeight):Rad(borderRadius):Color(borderColor):Shape(lia.derma.SHAPE_IOS):Outline(borderThickness):Draw() end
+    surface.SetDrawColor(accent.r, accent.g, accent.b, options.accentAlpha or 210)
+    surface.DrawRect(boxX, boxY + 1, 3, math.min(22, boxHeight - 2))
+    local currentY = boxY + padding
+    if titleText ~= "" then
+        draw.SimpleText(string.upper(titleText), titleFont, boxX + padding + 14, currentY, accent, TEXT_ALIGN_LEFT, TEXT_ALIGN_TOP)
+        surface.SetDrawColor(255, 255, 255, 18)
+        surface.SetFont(titleFont)
+        local headerWidth = surface.GetTextSize(string.upper(titleText))
+        surface.DrawRect(boxX + padding + headerWidth + 18, currentY + 9, math.max(0, boxWidth - padding * 2 - headerWidth - 18), 1)
+        currentY = currentY + math.max(titleHeight, 18) + 14
     end
 
-    local startY = boxY + padding / 2
-    if textAlignY == TEXT_ALIGN_CENTER then
-        startY = boxY + (boxHeight - totalHeight) / 2
-    elseif textAlignY == TEXT_ALIGN_BOTTOM then
-        startY = boxY + boxHeight - padding / 2 - totalHeight
-    end
-
-    local currentY = startY
-    for i, line in ipairs(textLines) do
-        local textX
-        if textAlignX == TEXT_ALIGN_CENTER then
-            textX = boxX + boxWidth / 2
-        elseif textAlignX == TEXT_ALIGN_LEFT then
-            textX = boxX + padding / 2
-        else
-            textX = boxX + boxWidth - padding / 2
+    for sectionIndex, section in ipairs(preparedSections) do
+        if section.title ~= "" then
+            draw.SimpleText(string.upper(section.title), sectionFont, boxX + padding, currentY, accent, TEXT_ALIGN_LEFT, TEXT_ALIGN_TOP)
+            surface.SetFont(sectionFont)
+            local sectionWidth = surface.GetTextSize(string.upper(section.title))
+            surface.SetDrawColor(accent.r, accent.g, accent.b, 35)
+            surface.DrawRect(boxX + padding + sectionWidth + 14, currentY + 8, math.max(0, boxWidth - padding * 2 - sectionWidth - 14), 1)
+            currentY = currentY + 26
         end
 
-        if line ~= "" then lia.derma.drawText(line, textX, currentY, textColor, textAlignX, TEXT_ALIGN_TOP, font) end
-        if i < #textLines then currentY = currentY + lineHeights[i] + lineSpacing end
+        for _, row in ipairs(section.rows) do
+            if row.type == "divider" then
+                surface.SetDrawColor(255, 255, 255, 14)
+                surface.DrawRect(boxX + padding, currentY + 5, boxWidth - padding * 2, 1)
+                currentY = currentY + 10
+            elseif row.text ~= "" then
+                draw.SimpleText(row.text, rowFont, boxX + padding, currentY + math.floor(rowHeight * 0.5), textColor, TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)
+                currentY = currentY + rowHeight
+            else
+                draw.SimpleText(row.label, rowFont, boxX + padding, currentY + math.floor(rowHeight * 0.5), mutedTextColor, TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)
+                draw.SimpleText(row.value, valueFont, boxX + boxWidth - padding, currentY + math.floor(rowHeight * 0.5), textColor, TEXT_ALIGN_RIGHT, TEXT_ALIGN_CENTER)
+                currentY = currentY + rowHeight
+            end
+        end
+
+        if sectionIndex < #preparedSections then currentY = currentY + sectionGap end
     end
 
     drawBoxOverlaps[#drawBoxOverlaps + 1] = {
@@ -3497,57 +3931,233 @@ end
 ]]
 function lia.derma.openOptionsMenu(title, options)
     if not istable(options) then return end
+    lia.gui = lia.gui or {}
     if IsValid(lia.gui.menuOpenOptions) then lia.gui.menuOpenOptions:Remove() end
-    local entries = {}
-    if options[1] then
-        for _, opt in ipairs(options) do
-            if isstring(opt.name) and isfunction(opt.callback) then entries[#entries + 1] = opt end
+    local config = istable(options._config) and options._config or {}
+    local function resolveText(value)
+        if value == nil then return "" end
+        if isstring(value) and L then
+            local ok, localized = pcall(L, value)
+            if ok and localized and localized ~= "" then return tostring(localized) end
         end
-    else
-        for name, callback in pairs(options) do
-            if isfunction(callback) then
-                entries[#entries + 1] = {
-                    name = name,
-                    callback = callback
-                }
+        return tostring(value)
+    end
+
+    local function shouldShowOption(option)
+        if not istable(option) or not option.shouldShow then return true end
+        local ok, result = pcall(option.shouldShow, LocalPlayer())
+        return ok and result ~= false
+    end
+
+    local entries = {}
+    local sequential = options[1] ~= nil
+    if sequential then
+        for _, opt in ipairs(options) do
+            if istable(opt) then
+                local callback = opt.callback or opt.onRun
+                if isfunction(callback) and shouldShowOption(opt) then
+                    entries[#entries + 1] = {
+                        name = opt.name or opt.label or opt.title or opt.id,
+                        category = opt.category or opt.group or opt.section or config.defaultCategory or "actions",
+                        icon = opt.icon,
+                        callback = callback,
+                        tooltip = opt.tooltip or opt.description or opt.desc,
+                        textColor = opt.textColor,
+                        accentColor = opt.accentColor,
+                        closeOnSelect = opt.closeOnSelect,
+                        passContext = opt.passContext
+                    }
+                end
             end
         end
+    else
+        for name, value in pairs(options) do
+            if name ~= "_config" then
+                if isfunction(value) then
+                    entries[#entries + 1] = {
+                        name = name,
+                        category = config.defaultCategory or "actions",
+                        callback = value
+                    }
+                elseif istable(value) then
+                    local callback = value.callback or value.onRun
+                    if isfunction(callback) and shouldShowOption(value) then
+                        entries[#entries + 1] = {
+                            name = value.name or value.label or value.title or name,
+                            category = value.category or value.group or value.section or config.defaultCategory or "actions",
+                            icon = value.icon,
+                            callback = callback,
+                            tooltip = value.tooltip or value.description or value.desc,
+                            textColor = value.textColor,
+                            accentColor = value.accentColor,
+                            closeOnSelect = value.closeOnSelect,
+                            passContext = value.passContext
+                        }
+                    end
+                end
+            end
+        end
+
+        table.sort(entries, function(a, b) return resolveText(a.name):lower() < resolveText(b.name):lower() end)
     end
 
     if #entries == 0 then return end
-    local frameW, entryH = 300, 30
-    local frameH = entryH * #entries + 50
-    local frame = vgui.Create("liaFrame")
-    lia.gui.menuOpenOptions = frame
-    frame:SetSize(frameW, frameH)
-    frame:Center()
-    frame:MakePopup()
-    frame:SetTitle("")
-    frame:ShowCloseButton(true)
-    frame.Paint = function(self, w, h)
-        lia.derma.drawBlur(self, 4)
-        draw.RoundedBox(0, 0, 0, w, h, Color(20, 20, 20, 120))
+    local theme = lia.color and lia.color.theme or {}
+    local accent = config.accentColor or theme.accent or theme.theme or lia.config and lia.config.get and lia.config.get("Color") or Color(164, 106, 54)
+    local backgroundColor = config.backgroundColor or Color(3, 18, 22, 242)
+    local borderColor = config.borderColor or Color(accent.r, accent.g, accent.b, 115)
+    local textColor = config.textColor or theme.text or Color(235, 240, 242)
+    local mutedTextColor = config.mutedTextColor or theme.gray or Color(150, 170, 172)
+    local frameW = config.width or config.frameW or 420
+    local padding = config.padding or 16
+    local headerH = config.headerHeight or 54
+    local rowH = config.rowHeight or config.entryH or 38
+    local rowGap = config.rowGap or 4
+    local categoryH = config.categoryHeight or 28
+    local sectionGap = config.sectionGap or 10
+    local categoryOrder = {}
+    local categorized = {}
+    for _, entry in ipairs(entries) do
+        local category = resolveText(entry.category)
+        if category == "" then category = resolveText(config.defaultCategory or "actions") end
+        if not categorized[category] then
+            categorized[category] = {}
+            categoryOrder[#categoryOrder + 1] = category
+        end
+
+        categorized[category][#categorized[category] + 1] = entry
     end
 
-    local titleLabel = frame:Add("DLabel")
-    titleLabel:SetPos(0, 8)
-    titleLabel:SetSize(frameW, 20)
-    titleLabel:SetText(L(title or "options"))
-    titleLabel:SetFont("LiliaFont.17")
-    titleLabel:SetColor(Color(255, 255, 255))
-    titleLabel:SetContentAlignment(5)
-    local layout = frame:Add("DListLayout")
+    local contentH = 0
+    for _, category in ipairs(categoryOrder) do
+        contentH = contentH + categoryH + 4
+        contentH = contentH + #categorized[category] * (rowH + rowGap)
+        contentH = contentH + sectionGap
+    end
+
+    if #categoryOrder > 0 then contentH = contentH - sectionGap end
+    local maxHeight = config.maxHeight or ScrH() * 0.72
+    local frameH = math.Clamp(headerH + padding + contentH + padding, config.minHeight or 160, maxHeight)
+    local frameX = config.x or ScrW() - frameW - (config.screenPadding or 28)
+    local frameY = config.y or math.max(80, (ScrH() - frameH) * 0.5)
+    frameX = math.Clamp(frameX, 8, math.max(8, ScrW() - frameW - 8))
+    frameY = math.Clamp(frameY, 8, math.max(8, ScrH() - frameH - 8))
+    local frame = vgui.Create("DPanel")
+    lia.gui.menuOpenOptions = frame
+    frame:SetSize(frameW, frameH)
+    frame:SetPos(frameX + 10, frameY)
+    frame:SetDrawOnTop(true)
+    frame:SetZPos(config.zPos or 10000)
+    frame:SetAlpha(0)
+    frame:MakePopup()
+    frame:AlphaTo(255, config.fadeSpeed or 0.1)
+    frame:MoveTo(frameX, frameY, config.slideSpeed or 0.12, 0, -1)
+    frame.Paint = function(_, w, h)
+        lia.derma.rect(0, 0, w, h):Rad(8):Color(Color(0, 0, 0, 150)):Shadow(8, 18):Shape(lia.derma.SHAPE_IOS):Draw()
+        lia.derma.rect(0, 0, w, h):Rad(8):Color(backgroundColor):Shape(lia.derma.SHAPE_IOS):Draw()
+        lia.derma.rect(0, 0, w, h):Rad(8):Color(borderColor):Shape(lia.derma.SHAPE_IOS):Outline(1):Draw()
+        surface.SetDrawColor(accent.r, accent.g, accent.b, 190)
+        surface.DrawRect(0, 0, w, 2)
+        surface.DrawRect(padding, 18, 3, 20)
+        draw.SimpleText(string.upper(resolveText(title or "options")), config.titleFont or "LiliaFont.20", padding + 16, headerH * 0.5, textColor, TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)
+        surface.SetDrawColor(accent.r, accent.g, accent.b, 45)
+        surface.DrawRect(padding, headerH - 1, w - padding * 2, 1)
+    end
+
+    local closeButton = frame:Add("DButton")
+    closeButton:SetSize(34, 34)
+    closeButton:SetPos(frameW - padding - 34, 10)
+    closeButton:SetText("")
+    closeButton.Paint = function(self, w, h)
+        local hovered = self:IsHovered()
+        if hovered then lia.derma.rect(0, 0, w, h):Rad(6):Color(Color(255, 255, 255, 12)):Shape(lia.derma.SHAPE_IOS):Draw() end
+        draw.SimpleText("×", "LiliaFont.25", w * 0.5, h * 0.5 - 1, hovered and color_white or mutedTextColor, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
+    end
+
+    closeButton.DoClick = function()
+        if lia.websound and lia.websound.playButtonSound then lia.websound.playButtonSound() end
+        frame:AlphaTo(0, config.fadeSpeed or 0.1, 0, function() if IsValid(frame) then frame:Remove() end end)
+    end
+
+    local scroll = frame:Add("liaScrollPanel")
+    scroll:SetPos(0, headerH + padding)
+    scroll:SetSize(frameW, frameH - headerH - padding * 2)
+    scroll.Paint = function() end
+    local layout = vgui.Create("DListLayout", scroll)
     layout:Dock(FILL)
-    layout:DockMargin(10, 32, 10, 10)
-    for _, opt in ipairs(entries) do
-        local btn = layout:Add("liaCustomFontButton")
-        btn:SetTall(entryH)
-        btn:Dock(TOP)
-        btn:DockMargin(0, 0, 0, 5)
-        btn:SetText(L(opt.name))
-        btn.DoClick = function()
-            frame:Remove()
-            opt.callback()
+    local function resolveMaterial(icon)
+        if type(icon) == "IMaterial" then return icon end
+        if isstring(icon) and icon ~= "" then return Material(icon, "smooth") end
+        if config.showFallbackIcons == false then return end
+        return Material(config.fallbackIcon or "icon16/bullet_white.png", "smooth")
+    end
+
+    local function drawOptionIcon(icon, xPos, yPos, size, color)
+        local material = resolveMaterial(icon)
+        if not material or material:IsError() then return end
+        surface.SetMaterial(material)
+        surface.SetDrawColor(color.r, color.g, color.b, color.a or 255)
+        surface.DrawTexturedRect(xPos, yPos, size, size)
+    end
+
+    for categoryIndex, category in ipairs(categoryOrder) do
+        local categoryPanel = vgui.Create("DPanel", layout)
+        categoryPanel:SetTall(categoryH)
+        categoryPanel:Dock(TOP)
+        categoryPanel:DockMargin(padding, categoryIndex == 1 and 0 or sectionGap, padding, 4)
+        categoryPanel.Paint = function(_, w, h)
+            local categoryText = string.upper(category)
+            draw.SimpleText(categoryText, config.categoryFont or "LiliaFont.16", 0, h * 0.5, accent, TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)
+            surface.SetFont(config.categoryFont or "LiliaFont.16")
+            local categoryWidth = surface.GetTextSize(categoryText)
+            surface.SetDrawColor(accent.r, accent.g, accent.b, 45)
+            surface.DrawRect(categoryWidth + 14, h * 0.5, math.max(0, w - categoryWidth - 14), 1)
+        end
+
+        layout:Add(categoryPanel)
+        for _, entry in ipairs(categorized[category]) do
+            local button = vgui.Create("DButton", layout)
+            button:SetTall(rowH)
+            button:Dock(TOP)
+            button:DockMargin(padding, 0, padding, rowGap)
+            button:SetText("")
+            button:SetCursor("hand")
+            button.Paint = function(self, w, h)
+                local hovered = self:IsHovered()
+                local entryAccent = entry.accentColor or accent
+                local rowColor = hovered and Color(255, 255, 255, 22) or Color(255, 255, 255, 7)
+                lia.derma.rect(0, 0, w, h):Rad(4):Color(rowColor):Shape(lia.derma.SHAPE_IOS):Draw()
+                if hovered then
+                    surface.SetDrawColor(entryAccent.r, entryAccent.g, entryAccent.b, 210)
+                    surface.DrawRect(0, 0, 3, h)
+                    lia.derma.rect(0, 0, w, h):Rad(4):Color(Color(entryAccent.r, entryAccent.g, entryAccent.b, 18)):Shape(lia.derma.SHAPE_IOS):Draw()
+                end
+
+                surface.SetDrawColor(255, 255, 255, hovered and 18 or 10)
+                surface.DrawRect(10, h - 1, w - 20, 1)
+                local drawColor = hovered and color_white or entry.textColor or textColor
+                local iconColor = hovered and drawColor or mutedTextColor
+                drawOptionIcon(entry.icon, 12, math.floor((h - 18) * 0.5), 18, iconColor)
+                draw.SimpleText(resolveText(entry.name), config.buttonFont or "LiliaFont.17", 42, h * 0.5, drawColor, TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)
+            end
+
+            if entry.tooltip and entry.tooltip ~= "" then button:SetTooltip(resolveText(entry.tooltip)) end
+            button.DoClick = function()
+                if lia.websound and lia.websound.playButtonSound then lia.websound.playButtonSound() end
+                if entry.closeOnSelect ~= false then frame:AlphaTo(0, config.fadeSpeed or 0.1, 0, function() if IsValid(frame) then frame:Remove() end end) end
+                local ok, err
+                if entry.passContext == true then
+                    ok, err = pcall(entry.callback, LocalPlayer(), frame, entry)
+                elseif istable(entry.passContext) then
+                    ok, err = pcall(entry.callback, unpack(entry.passContext))
+                else
+                    ok, err = pcall(entry.callback)
+                end
+
+                if not ok and ErrorNoHalt then ErrorNoHalt("[lia.derma.openOptionsMenu] " .. tostring(err) .. "\n") end
+            end
+
+            layout:Add(button)
         end
     end
 

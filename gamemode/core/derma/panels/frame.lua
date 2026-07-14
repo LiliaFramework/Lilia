@@ -1,19 +1,18 @@
 ﻿local PANEL = {}
-local gradientL = Material("vgui/gradient-l")
-local gradientR = Material("vgui/gradient-r")
-local gradientU = Material("vgui/gradient-u")
-local function resolveColor(value, fallback)
-    if IsColor(value) then return value end
-    if istable(value) and IsColor(value[1]) then return value[1] end
-    return fallback
+local function getFrameColors()
+    local theme = lia.color.theme or {}
+    local accent = theme.accent or theme.theme or lia.config.get("Color") or Color(45, 190, 170)
+    return {
+        accent = accent,
+        text = theme.text or Color(225, 238, 238),
+        muted = Color(155, 178, 179),
+        surface = Color(6, 18, 23, 226)
+    }
 end
 
-local function mixColor(from, to, fraction, alpha)
-    return Color(Lerp(fraction, from.r, to.r), Lerp(fraction, from.g, to.g), Lerp(fraction, from.b, to.b), alpha or Lerp(fraction, from.a, to.a))
-end
-
-local function alphaColor(color, alpha)
-    return Color(color.r, color.g, color.b, alpha)
+local function drawFramePanel(x, y, w, h, radius, color, outline)
+    lia.derma.rect(x, y, w, h):Rad(radius):Color(color):Shape(lia.derma.SHAPE_IOS):Draw()
+    if outline then lia.derma.rect(x, y, w, h):Rad(radius):Color(outline):Shape(lia.derma.SHAPE_IOS):Outline(1):Draw() end
 end
 
 function PANEL:Init()
@@ -33,7 +32,7 @@ function PANEL:Init()
     self.minHeight = 80
     self.iconMat = nil
     self.panelColor = lia.color.theme and lia.color.theme.panel and lia.color.theme.panel[1] or Color(34, 62, 62)
-    self:DockPadding(6, 30, 6, 6)
+    self:DockPadding(14, 46, 14, 14)
     self.top_panel = vgui.Create("DButton", self)
     self.top_panel:SetText("")
     self.top_panel:SetCursor("sizeall")
@@ -64,7 +63,10 @@ function PANEL:Init()
 
     self.cls = vgui.Create("Button", self)
     self.cls:SetText("")
-    self.cls.Paint = function(_, w, h) draw.SimpleText("✕", "LiliaFont.18", w * 0.5, h * 0.5, lia.color.theme.text, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER) end
+    self.cls.Paint = function(_, w, h)
+        local colors = getFrameColors()
+        draw.SimpleText("X", "LiliaFont.18", w * 0.5, h * 0.5, colors.text, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
+    end
     self.cls.DoClick = function()
         lia.websound.playButtonSound()
         if self.deleteOnClose then
@@ -192,7 +194,7 @@ end
 
 function PANEL:LiteMode()
     self.bool_lite = true
-    self:DockPadding(6, 6, 6, 6)
+    self:DockPadding(14, 14, 14, 14)
     self.cls:SetZPos(2)
 end
 
@@ -266,50 +268,27 @@ end
 
 function PANEL:Paint(w, h)
     if self.backgroundBlur then Derma_DrawBackgroundBlur(self, self.backgroundBlurTime) end
-    local theme = lia.color.theme or {}
-    local panelColor = resolveColor(theme.panel, self.panelColor or Color(34, 62, 62))
-    local themeColor = resolveColor(theme.theme, panelColor)
-    local focusColor = resolveColor(theme.focus_panel, themeColor)
-    local backgroundColor = mixColor(panelColor, color_black, 0.72, 248)
-    local bodyOverlay = mixColor(panelColor, color_black, 0.88, 75)
-    local borderColor = mixColor(panelColor, themeColor, 0.35, 230)
-    local innerBorderColor = mixColor(panelColor, focusColor, 0.6, 42)
-    local highlightColor = mixColor(themeColor, color_white, 0.15, 24)
-    lia.derma.rect(0, 0, w, h):Rad(12):Color(backgroundColor):Shape(lia.derma.SHAPE_IOS):Draw()
-    surface.SetMaterial(gradientL)
-    surface.SetDrawColor(alphaColor(themeColor, 30))
-    surface.DrawTexturedRect(1, 1, w - 2, h - 2)
-    surface.SetMaterial(gradientR)
-    surface.SetDrawColor(alphaColor(focusColor, 20))
-    surface.DrawTexturedRect(1, 1, w - 2, h - 2)
-    surface.SetMaterial(gradientU)
-    surface.SetDrawColor(alphaColor(panelColor, 16))
-    surface.DrawTexturedRect(1, 1, w - 2, h - 2)
-    surface.SetDrawColor(bodyOverlay)
-    surface.DrawRect(1, 30, w - 2, h - 31)
-    surface.SetDrawColor(borderColor)
-    surface.DrawOutlinedRect(0, 0, w, h, 1)
-    surface.SetDrawColor(innerBorderColor)
-    surface.DrawOutlinedRect(1, 1, w - 2, h - 2, 1)
-    surface.SetDrawColor(highlightColor)
-    surface.DrawRect(2, 1, w - 4, 1)
+    local colors = getFrameColors()
+    drawFramePanel(0, 0, w, h, 10, colors.surface, Color(colors.accent.r, colors.accent.g, colors.accent.b, 72))
     if not self.bool_lite then
         if self.iconMat then
             surface.SetMaterial(self.iconMat)
-            surface.SetDrawColor(theme.header_text or color_white)
-            surface.DrawTexturedRect(6, 10, 16, 16)
+            surface.SetDrawColor(colors.text)
+            surface.DrawTexturedRect(16, 13, 16, 16)
         end
 
-        if self.center_title ~= "" then draw.SimpleText(self.center_title, "LiliaFont.16", w * 0.5, 18, theme.header_text or color_white, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER) end
-        local titleOffset = self.iconMat and 26 or 6
-        draw.SimpleText(self.title, "LiliaFont.16", titleOffset, 10, theme.header_text or color_white)
+        if self.center_title ~= "" then draw.SimpleText(self.center_title, "LiliaFont.16", w * 0.5, 21, colors.muted, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER) end
+        local titleOffset = self.iconMat and 36 or 16
+        draw.SimpleText(self.title, "LiliaFont.18", titleOffset, 21, colors.text, TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)
+        surface.SetDrawColor(colors.accent.r, colors.accent.g, colors.accent.b, 28)
+        surface.DrawRect(16, 42, math.max(w - 32, 0), 1)
     end
 end
 
 function PANEL:PerformLayout(w, h)
-    self.top_panel:SetSize(w, 24)
-    self.cls:SetSize(20, 20)
-    self.cls:SetPos(w - 22, 2)
+    self.top_panel:SetSize(w, 42)
+    self.cls:SetSize(24, 24)
+    self.cls:SetPos(w - 34, 10)
     if IsValid(self.resizer) then
         self.resizer:SetSize(14, 14)
         self.resizer:SetPos(w - 14, h - 14)

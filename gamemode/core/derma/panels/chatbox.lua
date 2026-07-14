@@ -166,6 +166,17 @@ function PANEL:setScrollbarVisible(visible)
     end
 end
 
+function PANEL:updateCommandListLayout()
+    if not IsValid(self.commandList) then return end
+    local listHeight = math.min(math.max(self:GetTall() * 0.55, 176), 240)
+    local listWidth = self:GetWide() - 16
+    local chatX, chatY = self:LocalToScreen(0, 0)
+    local listX = chatX + 4
+    local listY = math.max(8, chatY - listHeight - 6)
+    self.commandList:SetSize(listWidth, listHeight)
+    self.commandList:SetPos(listX, listY)
+end
+
 function PANEL:setActive(state)
     self.active = state
     lia.chat.wasActive = state
@@ -251,6 +262,7 @@ function PANEL:setActive(state)
                     if IsValid(self.commandList) then
                         self.commandList:Remove()
                         self.commandList = nil
+                        self.commandScroll = nil
                         self.commandListCreateTime = nil
                     end
 
@@ -280,6 +292,7 @@ function PANEL:setActive(state)
                 if IsValid(self.commandList) then
                     self.commandList:Remove()
                     self.commandList = nil
+                    self.commandScroll = nil
                     self.commandListCreateTime = nil
                 end
 
@@ -302,61 +315,100 @@ function PANEL:setActive(state)
                 if IsValid(self.commandList) then
                     self.commandList:Remove()
                     self.commandList = nil
+                    self.commandScroll = nil
                     self.commandListCreateTime = nil
                 end
 
-                self.commandList = vgui.Create("liaScrollPanel")
-                local listHeight = math.min(self:GetTall() - 66, 200)
-                local listWidth = self:GetWide() - 16
-                local chatX, chatY = self:LocalToScreen(0, 0)
-                local listY = chatY - listHeight - 4
-                if listY < 0 then listY = chatY + self:GetTall() + 4 end
-                self.commandList:SetPos(chatX + 4, listY)
-                self.commandList:SetSize(listWidth, listHeight)
-                self.commandList:GetVBar():SetWide(8)
+                self.commandList = vgui.Create("DPanel")
+                self:updateCommandListLayout()
                 self.commandList:MakePopup()
                 self.commandList:SetKeyboardInputEnabled(false)
                 self.commandListCreateTime = CurTime()
-                self.commandList.Paint = function(s, w, h)
-                    local theme = lia.color.theme
-                    local accent = theme.accent or theme.header or theme.theme or Color(100, 150, 200)
-                    local bgColor = Color(25, 28, 35, 250)
-                    lia.derma.rect(0, 0, w, h):Rad(8):Color(bgColor):Shape(lia.derma.SHAPE_IOS):Draw()
-                    lia.derma.rect(0, 0, w, 3):Radii(8, 8, 0, 0):Color(accent):Draw()
-                    local glowColor = Color(accent.r, accent.g, accent.b, 8)
-                    lia.derma.rect(1, 1, w - 2, h - 2):Rad(7):Color(glowColor):Outline(1):Draw()
+                self.commandList.Paint = function(_, w, h)
+                    local theme = lia.color.theme or {}
+                    local accent = theme.accent or theme.header or theme.theme or Color(184, 132, 74)
+                    lia.derma.rect(0, 0, w, h):Rad(8):Color(Color(2, 13, 18, 248)):Shape(lia.derma.SHAPE_IOS):Draw()
+                    lia.derma.rect(1, 1, w - 2, h - 2):Rad(7):Color(Color(5, 21, 27, 245)):Shape(lia.derma.SHAPE_IOS):Draw()
+                    lia.derma.rect(0, 0, w, h):Rad(8):Color(Color(accent.r, accent.g, accent.b, 125)):Shape(lia.derma.SHAPE_IOS):Outline(1):Draw()
+                    lia.derma.rect(1, 1, w - 2, 42):Radii(7, 7, 0, 0):Color(Color(2, 14, 18, 252)):Draw()
+                    draw.SimpleText("COMMANDS", "LiliaFont.18", 18, 22, Color(accent.r, accent.g, accent.b, 235), TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)
+                    surface.SetDrawColor(accent.r, accent.g, accent.b, 90)
+                    surface.DrawRect(14, 42, w - 28, 1)
+                    surface.SetDrawColor(accent.r, accent.g, accent.b, 190)
+                    surface.DrawRect(18, 43, 74, 1)
+                end
+
+                self.commandScroll = self.commandList:Add("liaScrollPanel")
+                self.commandScroll:Dock(FILL)
+                self.commandScroll:DockMargin(12, 50, 12, 12)
+                self.commandScroll:GetVBar():SetWide(8)
+                local commandVBar = self.commandScroll:GetVBar()
+                if IsValid(commandVBar) then
+                    commandVBar:SetHideButtons(true)
+                    commandVBar.Paint = function(_, w, h)
+                        surface.SetDrawColor(255, 255, 255, 7)
+                        surface.DrawRect(math.floor(w * 0.5) - 1, 0, 2, h)
+                    end
+
+                    commandVBar.btnGrip.Paint = function(button, w, h)
+                        local theme = lia.color.theme or {}
+                        local accent = theme.accent or theme.header or theme.theme or Color(184, 132, 74)
+                        local alpha = button.Depressed and 230 or button:IsHovered() and 205 or 165
+                        lia.derma.rect(1, 0, w - 2, h):Rad(4):Color(Color(accent.r, accent.g, accent.b, alpha)):Shape(lia.derma.SHAPE_IOS):Draw()
+                    end
+                end
+
+                local commandCount = 0
+                local function addCommandRow(commandLabel, descriptionText, onClick)
+                    commandCount = commandCount + 1
+                    local btn = self.commandScroll:Add("DButton")
+                    btn:SetText("")
+                    btn.commandLabel = commandLabel
+                    btn.descriptionText = descriptionText
+                    btn.isSelected = false
+                    btn:Dock(TOP)
+                    btn:DockMargin(0, 0, 0, 2)
+                    btn:SetTall(28)
+                    btn.DoClick = onClick
+                    btn.Paint = function(s, w, h)
+                        local theme = lia.color.theme or {}
+                        local accent = theme.accent or theme.header or theme.theme or Color(184, 132, 74)
+                        local textColor = theme.text or Color(230, 238, 236)
+                        local selected = s.isSelected
+                        local hovered = s:IsHovered()
+                        if selected or hovered then
+                            lia.derma.rect(0, 0, w, h):Rad(4):Color(Color(accent.r, accent.g, accent.b, selected and 42 or 24)):Shape(lia.derma.SHAPE_IOS):Draw()
+                            lia.derma.rect(0, 0, w, h):Rad(4):Color(Color(accent.r, accent.g, accent.b, selected and 140 or 85)):Shape(lia.derma.SHAPE_IOS):Outline(1):Draw()
+                        end
+
+                        local commandColumn = math.max(82, math.min(126, w * 0.24))
+                        surface.SetDrawColor(accent.r, accent.g, accent.b, 45)
+                        surface.DrawRect(0, h - 1, w, 1)
+                        surface.SetDrawColor(accent.r, accent.g, accent.b, 110)
+                        surface.DrawRect(commandColumn, 7, 1, h - 14)
+                        draw.SimpleText(s.commandLabel, "LiliaFont.17", 10, h * 0.5, Color(accent.r, accent.g, accent.b, selected and 255 or 225), TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)
+                        draw.SimpleText(s.descriptionText, "LiliaFont.17", commandColumn + 14, h * 0.5, selected and color_white or textColor, TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)
+                    end
+                    return btn
+                end
+
+                local function closeCommandList()
+                    if IsValid(self.commandList) then self.commandList:Remove() end
+                    self.commandList = nil
+                    self.commandScroll = nil
+                    self.commandListCreateTime = nil
+                    self.commandIndex = 0
                 end
 
                 for cmdName, cmdInfo in SortedPairs(self.commands) do
                     if not cmdName:lower():StartWith(input:sub(2):lower()) then continue end
-                    local btn = self.commandList:Add("liaButton")
-                    btn:SetText("/" .. cmdName .. " - " .. (cmdInfo.desc ~= "" and cmdInfo.desc or L("noDesc")))
-                    btn:Dock(TOP)
-                    btn:DockMargin(0, 0, 0, 2)
-                    btn:SetTall(20)
-                    btn.isSelected = false
-                    btn.DoClick = function()
+                    local descriptionText = cmdInfo.desc ~= "" and cmdInfo.desc or L("noDesc")
+                    addCommandRow("/" .. cmdName, descriptionText, function()
                         local syntax = cmdInfo.syntax or ""
                         self.text:SetText("/" .. cmdName .. " " .. syntax)
                         self.text:RequestFocus()
-                        self.commandList:Remove()
-                        self.commandList = nil
-                        self.commandListCreateTime = nil
-                    end
-
-                    btn:SetTextColor(lia.color.theme.text or Color(255, 255, 255))
-                    btn.Paint = function(s, w, h)
-                        local theme = lia.color.theme
-                        local accent = theme.accent or theme.header or theme.theme or Color(100, 150, 200)
-                        local isSelected = s.isSelected
-                        if isSelected then
-                            local hoverColor = Color(accent.r, accent.g, accent.b, 40)
-                            lia.derma.rect(0, 0, w, h):Rad(4):Color(hoverColor):Shape(lia.derma.SHAPE_IOS):Draw()
-                        end
-
-                        local textColor = isSelected and color_white or theme.text or Color(200, 200, 200)
-                        draw.SimpleText(s:GetText(), "LiliaFont.17", 8, h * 0.5, textColor, TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)
-                    end
+                        closeCommandList()
+                    end)
                 end
 
                 for _, chatInfo in SortedPairs(lia.chat.classes) do
@@ -365,44 +417,25 @@ function PANEL:setActive(state)
                         if prefix:sub(1, 1) == "/" then
                             local cmd = prefix:gsub("^/", ""):lower()
                             if cmd ~= "" and not self.commands[cmd] and cmd:StartWith(input:sub(2):lower()) then
-                                local btn = self.commandList:Add("liaButton")
-                                btn:SetText(prefix .. " - " .. (chatInfo.desc ~= "" and chatInfo.desc or L("noDesc")))
-                                btn:Dock(TOP)
-                                btn:DockMargin(0, 0, 0, 2)
-                                btn:SetTall(20)
-                                btn.isSelected = false
-                                btn.DoClick = function()
+                                local descriptionText = chatInfo.desc ~= "" and chatInfo.desc or L("noDesc")
+                                addCommandRow(prefix, descriptionText, function()
                                     local syntax = chatInfo.syntax or ""
                                     self.text:SetText(prefix .. " " .. syntax)
                                     self.text:RequestFocus()
-                                    self.commandList:Remove()
-                                    self.commandList = nil
-                                    self.commandListCreateTime = nil
-                                end
-
-                                btn:SetTextColor(lia.color.theme.text or Color(255, 255, 255))
-                                btn.Paint = function(s, w, h)
-                                    local theme = lia.color.theme
-                                    local accent = theme.accent or theme.header or theme.theme or Color(100, 150, 200)
-                                    local isSelected = s.isSelected
-                                    if isSelected then
-                                        local hoverColor = Color(accent.r, accent.g, accent.b, 40)
-                                        lia.derma.rect(0, 0, w, h):Rad(4):Color(hoverColor):Shape(lia.derma.SHAPE_IOS):Draw()
-                                    end
-
-                                    local textColor = isSelected and color_white or theme.text or Color(200, 200, 200)
-                                    draw.SimpleText(s:GetText(), "LiliaFont.17", 8, h * 0.5, textColor, TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)
-                                end
+                                    closeCommandList()
+                                end)
                             end
                         end
                     end
                 end
 
+                if commandCount == 0 then addCommandRow("/", "No matching commands.", function() if IsValid(self.text) then self.text:RequestFocus() end end) end
                 self.arguments = lia.command.extractArgs(input:sub(2))
             else
                 if IsValid(self.commandList) then
                     self.commandList:Remove()
                     self.commandList = nil
+                    self.commandScroll = nil
                     self.commandListCreateTime = nil
                 end
 
@@ -418,6 +451,7 @@ function PANEL:setActive(state)
                 if IsValid(self.commandList) then
                     self.commandList:Remove()
                     self.commandList = nil
+                    self.commandScroll = nil
                     self.commandListCreateTime = nil
                 end
 
@@ -442,7 +476,7 @@ function PANEL:setActive(state)
             end
 
             if entry:GetText():sub(1, 1) == "/" and key == KEY_TAB and IsValid(self.commandList) then
-                local canvas = self.commandList:GetCanvas()
+                local canvas = IsValid(self.commandScroll) and self.commandScroll:GetCanvas() or nil
                 if not IsValid(canvas) then return true end
                 local canvasChildren = canvas:GetChildren()
                 if #canvasChildren == 0 then return true end
@@ -455,13 +489,13 @@ function PANEL:setActive(state)
                 local selected = canvasChildren[self.commandIndex]
                 if not IsValid(selected) then return true end
                 selected.isSelected = true
-                local selName = selected:GetText():match("^/([^ ]+)")
+                local selName = (selected.commandLabel or selected:GetText()):match("^/([^%s]+)")
                 if selName then
                     self.text:SetText("/" .. selName)
                     self.text:SetCaretPos(#self.text:GetText())
                 end
 
-                self.commandList:ScrollToChild(selected)
+                if IsValid(self.commandScroll) then self.commandScroll:ScrollToChild(selected) end
                 self.text:RequestFocus()
                 return true
             end
@@ -476,6 +510,7 @@ function PANEL:setActive(state)
                 if not isTypingCommand and timeSinceCreation > 0.5 then
                     self.commandList:Remove()
                     self.commandList = nil
+                    self.commandScroll = nil
                     self.commandListCreateTime = nil
                 end
             end
@@ -585,6 +620,7 @@ function PANEL:Think()
         if IsValid(self.commandList) then
             self.commandList:Remove()
             self.commandList = nil
+            self.commandScroll = nil
             self.commandListCreateTime = nil
         end
 
@@ -600,6 +636,7 @@ function PANEL:Think()
     end
 
     if not self.active then self:setScrollbarVisible(false) end
+    if self.active and IsValid(self.commandList) then self:updateCommandListLayout() end
     if self.active and IsValid(self.text) and IsValid(self.commandList) then
         local textHasFocus = self.text:HasFocus()
         local currentText = self.text:GetText()
@@ -608,6 +645,7 @@ function PANEL:Think()
         if not textHasFocus and not isTypingCommand and timeSinceCreation > 0.1 then
             self.commandList:Remove()
             self.commandList = nil
+            self.commandScroll = nil
             self.commandListCreateTime = nil
         end
     end
@@ -616,7 +654,7 @@ end
 function PANEL:OnThemeChanged()
     if not IsValid(self) then return end
     if IsValid(self.commandList) then
-        local canvas = self.commandList:GetCanvas()
+        local canvas = IsValid(self.commandScroll) and self.commandScroll:GetCanvas() or nil
         if IsValid(canvas) then
             for _, child in ipairs(canvas:GetChildren()) do
                 if IsValid(child) and child.SetTextColor then child:SetTextColor(lia.color.theme.text or Color(255, 255, 255)) end
@@ -677,6 +715,7 @@ function PANEL:OnRemove()
     if IsValid(self.commandList) then
         self.commandList:Remove()
         self.commandList = nil
+        self.commandScroll = nil
     end
 
     self:SetDraggable(false)

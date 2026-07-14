@@ -646,22 +646,29 @@ function net.Receive(messageName, callback)
     end
 end
 
-concommand.Add("lia_net_profiler", function(ply, cmd, args)
-    local mode = string.lower(tostring(args[1] or "on"))
-    local shouldDisable = mode == "0" or mode == "false" or mode == "off" or mode == "disable" or mode == "stop"
-    local wasActive = lia.net.profiler.active
-    lia.net.profiler.active = not shouldDisable
-    if lia.net.profiler.active then
-        if not wasActive then
-            lia.net.profiler.messageCounts = {}
-            lia.net.profiler.loggedMessages = {}
+if SERVER then
+    concommand.Add("lia_net_profiler", function(ply, cmd, args)
+        if IsValid(ply) then
+            ply:notifyErrorLocalized("commandConsoleOnly")
+            return
         end
 
-        startProfilerSnapshots()
-        writeProfilerSnapshot()
-        lia.debug(string.format("[Net Profiler] Enabled - snapshots will be written every %d seconds", lia.net.profiler.snapshotInterval))
-    else
-        stopProfilerSnapshots()
-        lia.debug("[Net Profiler] Disabled")
-    end
-end)
+        local mode = string.lower(tostring(args[1] or "on"))
+        local shouldDisable = mode == "0" or mode == "false" or mode == "off" or mode == "disable" or mode == "stop"
+        local wasActive = lia.net.profiler.active
+        lia.net.profiler.active = not shouldDisable
+        if lia.net.profiler.active then
+            if not wasActive then
+                lia.net.profiler.messageCounts = {}
+                lia.net.profiler.loggedMessages = {}
+            end
+
+            startProfilerSnapshots()
+            writeProfilerSnapshot()
+            lia.debug(string.format("[Net Profiler] Enabled - snapshots will be written every %d seconds", lia.net.profiler.snapshotInterval))
+        else
+            stopProfilerSnapshots()
+            lia.debug("[Net Profiler] Disabled")
+        end
+    end)
+end
