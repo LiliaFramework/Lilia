@@ -1087,7 +1087,13 @@ The derma library centralizes reusable clientside interface helpers under `lia.d
 
 <h3 style="margin-bottom: 5px; font-weight: 700;">Example Usage</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
-<pre><code class="language-lua">  local boxW, boxH = lia.derma.drawBoxWithText({"Line one", "Line two"}, x, y, {textAlignX = TEXT_ALIGN_CENTER})
+<pre><code class="language-lua">  local boxW, boxH = lia.derma.drawBoxWithText(nil, x, y, {
+    rows = {
+      {label = "Line one", value = "Example value"},
+      {text = "Line two"}
+    },
+    textAlignX = TEXT_ALIGN_CENTER
+  })
 </code></pre>
 </div>
 

@@ -87,7 +87,7 @@ The command library centralizes shared command registration under `lia.command`,
 <h3 style="margin-bottom: 5px; font-weight: 700;">Parameters</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
 <p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#2.1">string</a></span> <span class="parameter">command</span> The command name to register.</p>
-<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#2.1">table</a></span> <span class="parameter">data</span> The command definition. Expected fields include `onRun`, and may include `arguments`, `syntax`, `desc`, `alias`, `adminOnly`, `superAdminOnly`, `privilege`, `privilegeName`, `AdminStick`, and `onCheckAccess`.</p>
+<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#2.1">table</a></span> <span class="parameter">data</span> The command definition. Expected fields include `onRun`, and may include `arguments`, `syntax`, `desc`, `alias`, `adminOnly`, `superAdminOnly`, `privilege`, `privilegeName`, `AdminStick`, and `onCheckAccess`. When `AdminStick` is present, `AdminStick.ButtonText` can be used to override just the admin stick button label while keeping `AdminStick.Name` unchanged for the command display name.</p>
 </div>
 
 <h3 style="margin-bottom: 5px; font-weight: 700;">Example Usage</h3>
@@ -96,6 +96,10 @@ The command library centralizes shared command registration under `lia.command`,
       desc = "@exampleDesc",
       arguments = {
           {name = "target", type = "player"}
+      },
+      AdminStick = {
+          Name = "@adminStickAdminDoorSellName",
+          ButtonText = "Force Sell This Door"
       },
       onRun = function(client, arguments)
           client:notifyInfo("Example command ran.")
