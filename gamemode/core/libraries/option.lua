@@ -534,6 +534,81 @@ function lia.option.load()
 end
 
 hook.Add("PopulateConfigurationButtons", "liaOptionsPopulate", function(pages)
+    local uiColors = {
+        bg = Color(5, 18, 23, 220),
+        bgSoft = Color(7, 20, 25, 237),
+        row = Color(10, 25, 30, 232),
+        rowAlt = Color(9, 24, 29, 238),
+        rowHover = Color(16, 34, 40, 235),
+        selected = Color(13, 30, 35, 225),
+        border = Color(45, 190, 170, 78),
+        text = Color(242, 247, 247),
+        muted = Color(155, 178, 179),
+        dim = Color(100, 120, 122),
+        accent = Color(45, 190, 170),
+        accentSoft = Color(45, 190, 170, 28),
+        success = Color(93, 203, 140)
+    }
+
+    local preferredCategories = {"Core", "HUD", "ESP", "Third Person", "Camera", "Performance", "Interface", "Gameplay", "Misc"}
+    local function getAccent(alpha)
+        local theme = lia.color and lia.color.theme or {}
+        local color = theme.accent or theme.theme or lia.config and lia.config.get and lia.config.get("Color") or uiColors.accent
+        if istable(color) and color.r and color.g and color.b then return Color(color.r, color.g, color.b, alpha or color.a or 255) end
+        return Color(uiColors.accent.r, uiColors.accent.g, uiColors.accent.b, alpha or uiColors.accent.a or 255)
+    end
+
+    local function getTextColor(alpha)
+        local theme = lia.color and lia.color.theme or {}
+        local color = theme.text or uiColors.text
+        if istable(color) and color.r and color.g and color.b then return Color(color.r, color.g, color.b, alpha or color.a or 255) end
+        return Color(uiColors.text.r, uiColors.text.g, uiColors.text.b, alpha or uiColors.text.a or 255)
+    end
+
+    local function rounded(x, y, w, h, r, color)
+        if lia.derma and lia.derma.rect and lia.derma.SHAPE_IOS then
+            lia.derma.rect(x, y, w, h):Rad(r or 0):Color(color):Shape(lia.derma.SHAPE_IOS):Draw()
+            return
+        end
+
+        draw.RoundedBox(r or 0, x, y, w, h, color)
+    end
+
+    local function outline(x, y, w, h, color)
+        if lia.derma and lia.derma.rect and lia.derma.SHAPE_IOS then
+            lia.derma.rect(x, y, w, h):Rad(6):Color(color):Shape(lia.derma.SHAPE_IOS):Outline(1):Draw()
+            return
+        end
+
+        surface.SetDrawColor(color)
+        surface.DrawOutlinedRect(x, y, w, h)
+    end
+
+    local function normalizeValue(value)
+        if IsColor(value) then
+            return {
+                r = value.r,
+                g = value.g,
+                b = value.b,
+                a = value.a
+            }
+        end
+        return value
+    end
+
+    local function valuesEqual(a, b)
+        a = normalizeValue(a)
+        b = normalizeValue(b)
+        if istable(a) and istable(b) then return util.TableToJSON(a) == util.TableToJSON(b) end
+        return a == b
+    end
+
+    local function formatValue(value)
+        if IsColor(value) then return string.format("%d, %d, %d", value.r, value.g, value.b) end
+        if istable(value) and value.r and value.g and value.b then return string.format("%d, %d, %d", value.r, value.g, value.b) end
+        return tostring(value or "")
+    end
+
     local function SetStyledTooltip(panel, text)
         if not text or text == "" then return end
         panel:SetTooltip(text)
@@ -545,135 +620,292 @@ hook.Add("PopulateConfigurationButtons", "liaOptionsPopulate", function(pages)
                 local tooltip = vgui.GetTooltipPanel()
                 if IsValid(tooltip) and not tooltip.LiliaStyled then
                     tooltip.LiliaStyled = true
+                    tooltip:SetTextColor(uiColors.text)
                     function tooltip:Paint(w, h)
-                        local bgColor = Color(25, 28, 35, 250)
-                        lia.derma.rect(0, 0, w, h):Rad(8):Color(bgColor):Shape(lia.derma.SHAPE_IOS):Draw()
+                        rounded(0, 0, w, h, 8, Color(7, 18, 24, 245))
+                        outline(0, 0, w, h, Color(getAccent().r, getAccent().g, getAccent().b, 135))
                     end
                 end
             end)
         end
     end
 
-    local function AddHeader(scroll, text)
-        local header = scroll:Add("DPanel")
-        header:Dock(TOP)
-        header:SetTall(35)
-        header:DockMargin(0, 5, 0, 5)
-        header.Paint = function(me, w, h)
-            local accent = lia.color.theme.accent or lia.config.get("Color") or Color(0, 150, 255)
-            surface.SetDrawColor(accent)
-            surface.DrawRect(0, h - 2, w, 2)
+    local function isOptionVisible(option)
+        if not option then return false end
+        if option.visible == nil then return true end
+        if isfunction(option.visible) then
+            local success, result = pcall(option.visible)
+            return success and result ~= false
         end
-
-        local label = header:Add("DLabel")
-        label:Dock(LEFT)
-        label:SetText(localizeMenuLabel(text))
-        label:SetFont("LiliaFont.22")
-        label:SetTextColor(lia.color.theme.text or color_white)
-        label:SizeToContents()
-        label:DockMargin(5, 0, 0, 0)
+        return option.visible ~= false
     end
 
-    local function AddField(scroll, key, name, option)
-        local p = scroll:Add("DPanel")
-        p:Dock(TOP)
-        p:SetTall(45)
-        p:DockMargin(0, 0, 0, 5)
-        p.Paint = function(s, w, h) lia.derma.rect(0, 0, w, h):Rad(6):Color(Color(35, 38, 45, 180)):Shape(lia.derma.SHAPE_IOS):Draw() end
-        local description = lia.option.getDisplayDesc(key)
-        SetStyledTooltip(p, description)
-        local l = p:Add("DLabel")
-        l:Dock(FILL)
-        l:DockMargin(15, 8, 15, 8)
-        l:SetText(name)
-        l:SetFont("LiliaFont.18")
-        l:SetTextColor(lia.color.theme.text or color_white)
-        l:SetWrap(true)
-        l:SetAutoStretchVertical(true)
-        l:SetContentAlignment(7)
-        SetStyledTooltip(l, description)
-        local control
-        local function updateRowHeight()
-            if not IsValid(p) or not IsValid(l) then return end
-            local minHeight = 45
-            local labelHeight = select(2, l:GetContentSize())
-            local controlHeight = IsValid(control) and control:GetTall() + 16 or minHeight
-            p:SetTall(math.max(minHeight, labelHeight + 16, controlHeight))
-        end
+    local function getRawCategory(option)
+        local data = option.data or {}
+        return data.rawCategory or data.category or "misc"
+    end
 
-        p.PerformLayout = function(_, w, h)
-            if IsValid(l) then
-                local controlWidth = IsValid(control) and control:GetWide() + 30 or 30
-                l:SetWide(math.max(120, w - controlWidth))
-                l:InvalidateLayout(true)
+    local function getVisualCategory(key, option)
+        local raw = tostring(getRawCategory(option) or "misc")
+        local localized = tostring(localizeMenuLabel(raw) or raw)
+        local lowerRaw = raw:lower()
+        local lowerCategory = localized:lower()
+        local lowerKey = tostring(key or ""):lower()
+        if lowerRaw:find("categoryesp", 1, true) or lowerCategory:find("esp", 1, true) or lowerKey:find("esp", 1, true) then return "ESP" end
+        if lowerRaw:find("third", 1, true) or lowerCategory:find("third", 1, true) or lowerKey:find("thirdperson", 1, true) then return "Third Person" end
+        if lowerRaw:find("camera", 1, true) or lowerCategory:find("camera", 1, true) or lowerKey:find("freelook", 1, true) or lowerKey:find("realisticview", 1, true) then return "Camera" end
+        if lowerRaw:find("performance", 1, true) or lowerCategory:find("performance", 1, true) or lowerKey:find("shadow", 1, true) or lowerKey:find("lighting", 1, true) or lowerKey:find("blur", 1, true) or lowerKey:find("decal", 1, true) or lowerKey:find("smoothing", 1, true) or lowerKey:find("water", 1, true) or lowerKey:find("gib", 1, true) then return "Performance" end
+        if lowerRaw:find("hud", 1, true) or lowerCategory:find("hud", 1, true) or lowerKey:find("hud", 1, true) or lowerKey:find("hover", 1, true) or lowerKey:find("bars", 1, true) or lowerKey:find("chat", 1, true) or lowerKey:find("weaponselector", 1, true) then return "HUD" end
+        if lowerKey:find("view", 1, true) or lowerKey:find("camera", 1, true) or lowerKey:find("scroll", 1, true) or lowerKey:find("voice", 1, true) then return "Interface" end
+        if lowerRaw == "@core" or lowerCategory == "core" then return "Core" end
+        if lowerCategory == "misc" or lowerRaw == "misc" then return "Misc" end
+        return localized ~= "" and localized or "Misc"
+    end
+
+    local function sortCategories(categories)
+        local sorted = {}
+        local exists = {}
+        for _, category in ipairs(preferredCategories) do
+            if categories[category] then
+                sorted[#sorted + 1] = category
+                exists[category] = true
             end
-
-            updateRowHeight()
         end
 
+        local remaining = {}
+        for category in pairs(categories) do
+            if not exists[category] then remaining[#remaining + 1] = category end
+        end
+
+        table.sort(remaining, function(a, b) return tostring(a):lower() < tostring(b):lower() end)
+        for _, category in ipairs(remaining) do
+            sorted[#sorted + 1] = category
+        end
+        return sorted
+    end
+
+    local function styleScroll(scroll)
+        local bar = scroll:GetVBar()
+        if not IsValid(bar) then return end
+        bar:SetWide(6)
+        bar.Paint = function(_, w, h) rounded(2, 0, w - 2, h, 4, Color(0, 0, 0, 70)) end
+        bar.btnGrip.Paint = function(_, w, h) rounded(1, 0, w - 1, h, 4, Color(getAccent().r, getAccent().g, getAccent().b, 185)) end
+        bar.btnUp.Paint = function() end
+        bar.btnDown.Paint = function() end
+    end
+
+    local function makeButton(parent, text, width, primary)
+        local button = parent:Add("DButton")
+        button:SetText(text)
+        button:SetWide(width)
+        button:SetFont("LiliaFont.18")
+        button:SetTextColor(primary and color_white or uiColors.muted)
+        button.Paint = function(me, w, h)
+            local accent = getAccent(primary and 210 or 95)
+            local bg = primary and Color(accent.r, accent.g, accent.b, me:IsHovered() and 225 or 185) or Color(9, 21, 29, me:IsHovered() and 235 or 205)
+            rounded(0, 0, w, h, 4, bg)
+            outline(0, 0, w, h, Color(accent.r, accent.g, accent.b, primary and 150 or 100))
+        end
+        return button
+    end
+
+    local function makeToggle(parent, enabled, onChanged)
+        local toggle = parent:Add("DButton")
+        toggle:SetText("")
+        toggle:SetSize(48, 24)
+        toggle.value = enabled == true
+        toggle.Paint = function(me, w, h)
+            local active = me.value == true
+            local accent = getAccent(active and 235 or 0)
+            local bg = active and Color(accent.r, accent.g, accent.b, me:IsHovered() and 245 or 205) or Color(65, 83, 86, me:IsHovered() and 230 or 195)
+            rounded(0, 0, w, h, 12, bg)
+            rounded(active and w - 21 or 3, 3, 18, 18, 9, Color(238, 244, 244, 245))
+        end
+
+        toggle.DoClick = function(me)
+            me.value = not me.value
+            if onChanged then onChanged(me.value) end
+        end
+        return toggle
+    end
+
+    local function normalizeOptionValue(value, optionType, option)
+        if optionType == "Int" or optionType == "Float" or optionType == "Number" then
+            local numeric = tonumber(value)
+            if numeric == nil then return nil end
+            local data = option.data or {}
+            if optionType == "Int" then numeric = math.Round(numeric) end
+            if isnumber(data.min) then numeric = math.max(data.min, numeric) end
+            if isnumber(data.max) then numeric = math.min(data.max, numeric) end
+            if isnumber(data.decimals) and data.decimals >= 0 then
+                local mult = 10 ^ data.decimals
+                numeric = math.Round(numeric * mult) / mult
+            end
+            return numeric
+        end
+
+        if optionType == "Generic" then return tostring(value or "") end
+        return value
+    end
+
+    local function collectOptions()
+        local categories = {}
+        local total = 0
+        for key, option in pairs(lia.option.stored) do
+            if isOptionVisible(option) then
+                total = total + 1
+                local category = getVisualCategory(key, option)
+                categories[category] = categories[category] or {}
+                categories[category][#categories[category] + 1] = {
+                    key = key,
+                    name = tostring(lia.option.getDisplayName(key) or key),
+                    desc = tostring(lia.option.getDisplayDesc(key) or ""),
+                    option = option,
+                    category = category
+                }
+            end
+        end
+
+        for _, items in pairs(categories) do
+            table.sort(items, function(a, b) return tostring(a.name or ""):lower() < tostring(b.name or ""):lower() end)
+        end
+        return categories, sortCategories(categories), total
+    end
+
+    local function getModifiedCount()
+        local count = 0
+        for _, option in pairs(lia.option.stored) do
+            if isOptionVisible(option) and not valuesEqual(option.value, option.default) then count = count + 1 end
+        end
+        return count
+    end
+
+    local function drawSectionHeader(scroll, category, count)
+        local header = scroll:Add("DPanel")
+        header:Dock(TOP)
+        header:SetTall(34)
+        header:DockMargin(0, 8, 0, 0)
+        header.Paint = function(_, w, h)
+            local accent = getAccent(210)
+            surface.SetDrawColor(accent)
+            surface.DrawRect(0, h - 2, w, 2)
+            draw.SimpleText(string.upper(tostring(category)), "LiliaFont.18", 8, h * 0.5, accent, TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)
+            draw.SimpleText(tostring(count or 0), "LiliaFont.18", w - 10, h * 0.5, uiColors.dim, TEXT_ALIGN_RIGHT, TEXT_ALIGN_CENTER)
+        end
+    end
+
+    local function addOptionField(scroll, item, refreshFooter, repopulate)
+        local key = item.key
+        local option = item.option
         local optionType = option.type or "Generic"
+        local description = item.desc or ""
+        local currentValue = lia.option.get(key, option.value)
+        local modified = not valuesEqual(currentValue, option.default)
+        local row = scroll:Add("DPanel")
+        row:Dock(TOP)
+        row:SetTall(58)
+        row:DockMargin(0, 0, 0, 4)
+        row.Paint = function(me, w, h)
+            local accent = getAccent(modified and 215 or 70)
+            rounded(0, 0, w, h, 3, me:IsHovered() and uiColors.rowHover or uiColors.row)
+            outline(0, 0, w, h, modified and Color(accent.r, accent.g, accent.b, 135) or Color(getAccent().r, getAccent().g, getAccent().b, 78))
+            if modified then
+                surface.SetDrawColor(accent)
+                surface.DrawRect(0, 0, 2, h)
+            end
+        end
+
+        SetStyledTooltip(row, description)
+        local controlDock = row:Add("DPanel")
+        controlDock:Dock(RIGHT)
+        controlDock:SetWide(230)
+        controlDock:DockMargin(8, 9, 14, 9)
+        controlDock.Paint = function() end
+        local textDock = row:Add("DPanel")
+        textDock:Dock(FILL)
+        textDock:DockMargin(14, 7, 8, 7)
+        textDock.Paint = function() end
+        local title = textDock:Add("DLabel")
+        title:Dock(TOP)
+        title:SetTall(21)
+        title:SetFont("LiliaFont.18")
+        title:SetText(item.name)
+        title:SetTextColor(getTextColor())
+        title:SetContentAlignment(4)
+        SetStyledTooltip(title, description)
+        local desc = textDock:Add("DLabel")
+        desc:Dock(FILL)
+        desc:SetFont("LiliaFont.18")
+        desc:SetText(description ~= "" and description or key)
+        desc:SetTextColor(uiColors.muted)
+        desc:SetWrap(true)
+        desc:SetContentAlignment(7)
+        SetStyledTooltip(desc, description)
+        local function commit(value)
+            local normalized = normalizeOptionValue(value, optionType, option)
+            if normalized == nil then return end
+            lia.option.set(key, normalized)
+            if refreshFooter then refreshFooter() end
+            if repopulate then timer.Simple(0, repopulate) end
+        end
+
         if optionType == "Boolean" then
-            local checkbox = p:Add("liaCheckbox")
-            checkbox:Dock(RIGHT)
-            checkbox:DockMargin(0, 10, 15, 10)
-            checkbox:SetWidth(25)
-            checkbox:SetChecked(lia.option.get(key, option.value))
-            SetStyledTooltip(checkbox, description)
-            checkbox.OnChange = function(s, val) lia.option.set(key, val) end
-            control = checkbox
+            controlDock:SetWide(72)
+            local toggle = makeToggle(controlDock, currentValue == true, commit)
+            toggle:SetPos(12, 8)
         elseif optionType == "Int" or optionType == "Float" or optionType == "Number" or optionType == "Generic" then
-            local entry = p:Add("liaEntry")
-            entry:Dock(RIGHT)
-            entry:SetWidth(200)
-            entry:DockMargin(0, 8, 15, 8)
-            entry:SetValue(tostring(lia.option.get(key, option.value)))
+            local entry = controlDock:Add("liaEntry")
+            entry:Dock(FILL)
+            entry:SetValue(formatValue(currentValue))
             entry:SetFont("LiliaFont.18")
             SetStyledTooltip(entry, description)
-            entry.textEntry.OnEnter = function(s)
+            local function submitEntry()
                 local value = entry:GetValue()
-                local numValue = tonumber(value)
-                if (optionType == "Int" or optionType == "Float" or optionType == "Number") and numValue ~= nil then
-                    if optionType == "Int" then numValue = math.Round(numValue) end
-                    lia.option.set(key, numValue)
-                elseif optionType == "Generic" then
-                    lia.option.set(key, value)
-                else
-                    entry:SetValue(tostring(lia.option.get(key, option.value)))
+                local normalized = normalizeOptionValue(value, optionType, option)
+                if normalized == nil then
+                    entry:SetValue(formatValue(lia.option.get(key, option.value)))
+                    return
                 end
+
+                lia.option.set(key, normalized)
+                entry:SetValue(formatValue(normalized))
+                if refreshFooter then refreshFooter() end
+                if repopulate then timer.Simple(0, repopulate) end
             end
 
-            control = entry
+            if IsValid(entry.textEntry) then
+                entry.textEntry.OnEnter = submitEntry
+                entry.textEntry.OnLoseFocus = submitEntry
+            else
+                entry.OnEnter = submitEntry
+                entry.OnLoseFocus = submitEntry
+            end
         elseif optionType == "Color" then
-            local button = p:Add("liaButton")
-            button:Dock(RIGHT)
-            button:SetWidth(200)
-            button:DockMargin(0, 8, 15, 8)
+            local button = controlDock:Add("DButton")
+            button:Dock(FILL)
             button:SetText("")
             SetStyledTooltip(button, description)
-            button.Paint = function(s, w, h)
+            button.Paint = function(_, w, h)
                 local c = lia.option.get(key, option.value)
                 if istable(c) and c.r and c.g and c.b then
-                    c = Color(c.r, c.g, c.b, c.a)
+                    c = Color(c.r, c.g, c.b, c.a or 255)
                 elseif not IsColor(c) then
                     c = color_white
                 end
 
-                lia.derma.rect(0, 0, w, h):Rad(6):Color(c):Shape(lia.derma.SHAPE_IOS):Draw()
-                draw.RoundedBox(0, 0, 0, w, h, Color(0, 0, 0, 50))
+                rounded(0, 0, w, h, 4, Color(6, 18, 23, 225))
+                outline(0, 0, w, h, Color(getAccent().r, getAccent().g, getAccent().b, 95))
+                rounded(8, 7, w - 16, h - 14, 3, c)
             end
 
             button.DoClick = function()
                 local c = lia.option.get(key, option.value)
-                if not IsColor(c) and istable(c) then c = Color(c.r, c.g, c.b, c.a) end
-                lia.derma.requestColorPicker(function(color) lia.option.set(key, color) end, c)
+                if not IsColor(c) and istable(c) then c = Color(c.r, c.g, c.b, c.a or 255) end
+                lia.derma.requestColorPicker(function(color) commit(color) end, c)
             end
-
-            control = button
         elseif optionType == "Table" then
-            local combo = p:Add("liaComboBox")
-            combo:Dock(RIGHT)
-            combo:SetWidth(200)
-            combo:DockMargin(0, 8, 15, 8)
+            local combo = controlDock:Add("liaComboBox")
+            combo:Dock(FILL)
             combo:SetFont("LiliaFont.18")
             SetStyledTooltip(combo, description)
             local options = lia.option.getOptions(key)
@@ -683,92 +915,247 @@ hook.Add("PopulateConfigurationButtons", "liaOptionsPopulate", function(pages)
                 combo:AddChoice(optionEntry.label, optionEntry.value)
             end
 
-            combo.OnSelect = function(_, _, v) lia.option.set(key, v) end
-            control = combo
+            combo.OnSelect = function(_, _, _, value) commit(value) end
+        else
+            local label = controlDock:Add("DLabel")
+            label:Dock(FILL)
+            label:SetFont("LiliaFont.18")
+            label:SetText(formatValue(currentValue))
+            label:SetTextColor(uiColors.muted)
+            label:SetContentAlignment(6)
+        end
+    end
+
+    local function drawOptionsPage(parent)
+        parent:Clear()
+        parent:DockPadding(0, 0, 0, 0)
+        local categories, sortedCategories, totalOptions = collectOptions()
+        local selectedCategory = categories.Core and "Core" or sortedCategories[1]
+        local filterText = ""
+        local categoryRail
+        local optionScroll
+        local categoryCombo
+        local footerStatus
+        local populate
+        local rebuildRail
+        local refreshFooter
+        local root = parent:Add("DPanel")
+        root:Dock(FILL)
+        root:DockMargin(0, 0, 0, 0)
+        root.Paint = function(_, w, h)
+            rounded(0, 0, w, h, 8, uiColors.bg)
+            outline(0, 0, w, h, Color(getAccent().r, getAccent().g, getAccent().b, 55))
         end
 
-        timer.Simple(0, function() if IsValid(p) then p:InvalidateLayout(true) end end)
+        local header = root:Add("DPanel")
+        header:Dock(TOP)
+        header:SetTall(72)
+        header:DockMargin(14, 12, 14, 0)
+        header.Paint = function() end
+        local title = header:Add("DLabel")
+        title:Dock(TOP)
+        title:SetTall(32)
+        title:SetText("Options")
+        title:SetFont("LiliaFont.22")
+        title:SetTextColor(getTextColor())
+        title:SetContentAlignment(4)
+        local subtitle = header:Add("DLabel")
+        subtitle:Dock(TOP)
+        subtitle:SetTall(24)
+        subtitle:SetText("Manage local client preferences, visual settings, quick toggles, and performance options.")
+        subtitle:SetFont("LiliaFont.18")
+        subtitle:SetTextColor(uiColors.muted)
+        subtitle:SetContentAlignment(4)
+        local toolbar = root:Add("DPanel")
+        toolbar:Dock(TOP)
+        toolbar:SetTall(42)
+        toolbar:DockMargin(14, 0, 14, 10)
+        toolbar.Paint = function() end
+        local status = toolbar:Add("DPanel")
+        status:Dock(RIGHT)
+        status:SetWide(160)
+        status:DockMargin(10, 3, 0, 3)
+        status.Paint = function(_, w, h)
+            local accent = getAccent()
+            rounded(0, 0, w, h, 6, Color(13, 30, 35, 225))
+            outline(0, 0, w, h, Color(accent.r, accent.g, accent.b, 95))
+            draw.SimpleText("Instant Save", "LiliaFont.18", w * 0.5, h * 0.5, getTextColor(), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
+        end
+
+        categoryCombo = toolbar:Add("liaComboBox")
+        categoryCombo:Dock(RIGHT)
+        categoryCombo:SetWide(190)
+        categoryCombo:DockMargin(0, 3, 0, 3)
+        categoryCombo:SetFont("LiliaFont.18")
+        categoryCombo:AddChoice("All Categories", "__all")
+        for _, category in ipairs(sortedCategories) do
+            categoryCombo:AddChoice(category, category)
+        end
+
+        categoryCombo:SetValue(selectedCategory or "All Categories")
+        local searchEntry = toolbar:Add("liaEntry")
+        searchEntry:Dock(FILL)
+        searchEntry:DockMargin(0, 3, 10, 3)
+        searchEntry:SetPlaceholderText(L("searchOptions") or "Search options...")
+        searchEntry:SetFont("LiliaFont.18")
+        local body = root:Add("DPanel")
+        body:Dock(FILL)
+        body:DockMargin(14, 0, 14, 0)
+        body.Paint = function() end
+        local railPanel = body:Add("DPanel")
+        railPanel:Dock(LEFT)
+        railPanel:SetWide(255)
+        railPanel:DockMargin(0, 0, 12, 0)
+        railPanel.Paint = function(_, w, h)
+            rounded(0, 0, w, h, 6, uiColors.bgSoft)
+            outline(0, 0, w, h, Color(getAccent().r, getAccent().g, getAccent().b, 78))
+        end
+
+        categoryRail = railPanel:Add("liaScrollPanel")
+        categoryRail:Dock(FILL)
+        categoryRail:DockMargin(8, 8, 8, 8)
+        categoryRail:GetCanvas():DockPadding(0, 0, 0, 0)
+        styleScroll(categoryRail)
+        optionScroll = body:Add("liaScrollPanel")
+        optionScroll:Dock(FILL)
+        optionScroll:GetCanvas():DockPadding(0, 0, 0, 0)
+        styleScroll(optionScroll)
+        local footer = root:Add("DPanel")
+        footer:Dock(BOTTOM)
+        footer:SetTall(54)
+        footer:DockMargin(14, 8, 14, 14)
+        footer.Paint = function(_, w, h)
+            surface.SetDrawColor(Color(getAccent().r, getAccent().g, getAccent().b, 78))
+            surface.DrawRect(0, 0, w, 1)
+        end
+
+        footerStatus = footer:Add("DLabel")
+        footerStatus:Dock(LEFT)
+        footerStatus:SetWide(560)
+        footerStatus:SetFont("LiliaFont.18")
+        footerStatus:SetTextColor(uiColors.muted)
+        footerStatus:SetContentAlignment(4)
+        local resetButton = makeButton(footer, "Reset", 135, false)
+        resetButton:Dock(RIGHT)
+        resetButton:DockMargin(8, 9, 0, 8)
+        refreshFooter = function()
+            if not IsValid(footerStatus) then return end
+            footerStatus:SetText(totalOptions .. " options    |    " .. getModifiedCount() .. " modified    |    Saved to data/lilia/options.json")
+            if IsValid(status) then status:InvalidateLayout(true) end
+            if IsValid(resetButton) then resetButton:InvalidateLayout(true) end
+        end
+
+        local function addRailButton(label, value)
+            local button = categoryRail:Add("DButton")
+            button:Dock(TOP)
+            button:SetTall(48)
+            button:DockMargin(0, 0, 0, 6)
+            button:SetText("")
+            button:SetCursor("hand")
+            button.Paint = function(s, w, h)
+                local active = selectedCategory == value or (not selectedCategory and value == nil)
+                local accent = getAccent()
+                rounded(0, 0, w, h, 5, active and Color(accent.r, accent.g, accent.b, 35) or s:IsHovered() and Color(16, 34, 40, 235) or Color(10, 25, 30, 210))
+                outline(0, 0, w, h, active and Color(accent.r, accent.g, accent.b, 160) or Color(getAccent().r, getAccent().g, getAccent().b, 62))
+                if active then
+                    surface.SetDrawColor(accent.r, accent.g, accent.b, 235)
+                    surface.DrawRect(0, 0, 3, h)
+                end
+
+                local count = value and categories[value] and #categories[value] or totalOptions
+                draw.SimpleText(label, "LiliaFont.18", 16, h * 0.38, active and getTextColor() or Color(230, 239, 239), TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)
+                draw.SimpleText(count .. " options", "LiliaFont.16", 16, h * 0.68, uiColors.muted, TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)
+            end
+
+            button.DoClick = function()
+                selectedCategory = value
+                if IsValid(categoryCombo) then categoryCombo:SetValue(value or "All Categories") end
+                rebuildRail()
+                populate(filterText)
+            end
+        end
+
+        rebuildRail = function()
+            if not IsValid(categoryRail) then return end
+            categories, sortedCategories, totalOptions = collectOptions()
+            categoryRail:Clear()
+            addRailButton("All Options", nil)
+            for _, category in ipairs(sortedCategories) do
+                addRailButton(category, category)
+            end
+        end
+
+        populate = function(filter)
+            if not IsValid(optionScroll) then return end
+            filterText = filter or ""
+            categories, sortedCategories, totalOptions = collectOptions()
+            optionScroll:Clear()
+            local hasAny = false
+            local categoriesToDraw = selectedCategory and {selectedCategory} or sortedCategories
+            for _, category in ipairs(categoriesToDraw) do
+                local visibleItems = {}
+                for _, item in ipairs(categories[category] or {}) do
+                    local name = tostring(item.name or ""):lower()
+                    local desc = tostring(item.desc or ""):lower()
+                    local cat = tostring(category or ""):lower()
+                    local loweredFilter = filterText ~= "" and filterText:lower() or nil
+                    if not loweredFilter or name:find(loweredFilter, 1, true) or desc:find(loweredFilter, 1, true) or cat:find(loweredFilter, 1, true) then visibleItems[#visibleItems + 1] = item end
+                end
+
+                if #visibleItems > 0 then
+                    hasAny = true
+                    drawSectionHeader(optionScroll, category, #visibleItems)
+                    for _, item in ipairs(visibleItems) do
+                        addOptionField(optionScroll, item, refreshFooter, function()
+                            rebuildRail()
+                            populate(filterText)
+                            refreshFooter()
+                        end)
+                    end
+                end
+            end
+
+            if not hasAny then
+                local empty = optionScroll:Add("DPanel")
+                empty:Dock(TOP)
+                empty:SetTall(90)
+                empty.Paint = function(_, w, h)
+                    rounded(0, 0, w, h, 6, Color(8, 22, 28, 185))
+                    outline(0, 0, w, h, Color(getAccent().r, getAccent().g, getAccent().b, 78))
+                    draw.SimpleText("No options match your search.", "LiliaFont.18", w * 0.5, h * 0.5, uiColors.muted, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
+                end
+            end
+
+            refreshFooter()
+        end
+
+        categoryCombo.OnSelect = function(_, _, _, value)
+            selectedCategory = value == "__all" and nil or value
+            rebuildRail()
+            populate(filterText)
+        end
+
+        searchEntry:SetUpdateOnType(true)
+        searchEntry.OnTextChanged = function(me, text) populate(text or me:GetValue()) end
+        resetButton.DoClick = function()
+            for key, option in pairs(lia.option.stored) do
+                if isOptionVisible(option) and not valuesEqual(option.value, option.default) then lia.option.set(key, option.default) end
+            end
+
+            rebuildRail()
+            populate(filterText)
+            refreshFooter()
+        end
+
+        rebuildRail()
+        populate(nil)
+        refreshFooter()
     end
 
     pages[#pages + 1] = {
         name = "options",
         shouldShow = function() return true end,
-        drawFunc = function(parent)
-            parent:Clear()
-            local searchEntry = parent:Add("liaEntry")
-            searchEntry:Dock(TOP)
-            searchEntry:SetTall(35)
-            searchEntry:DockMargin(10, 10, 10, 10)
-            searchEntry:SetPlaceholderText(L("searchOptions"))
-            searchEntry:SetFont("LiliaFont.18")
-            local scroll = parent:Add("liaScrollPanel")
-            scroll:Dock(FILL)
-            scroll:GetCanvas():DockPadding(10, 10, 10, 10)
-            local function populate(filter)
-                scroll:Clear()
-                filter = filter and filter:len() > 0 and filter:lower() or nil
-                local categories = {}
-                local keys = {}
-                for k in pairs(lia.option.stored) do
-                    keys[#keys + 1] = k
-                end
-
-                table.sort(keys, function(a, b)
-                    local aName = tostring(lia.option.getDisplayName(a) or a):lower()
-                    local bName = tostring(lia.option.getDisplayName(b) or b):lower()
-                    return aName < bName
-                end)
-
-                for _, k in ipairs(keys) do
-                    local opt = lia.option.stored[k]
-                    if not opt.visible or isfunction(opt.visible) and opt.visible() then
-                        local data = opt.data or {}
-                        local cat = data.rawCategory or data.category or "misc"
-                        categories[cat] = categories[cat] or {}
-                        table.insert(categories[cat], {
-                            key = k,
-                            name = lia.option.getDisplayName(k),
-                            desc = lia.option.getDisplayDesc(k),
-                            option = opt
-                        })
-                    end
-                end
-
-                local sortedCategories = {}
-                for cat in pairs(categories) do
-                    table.insert(sortedCategories, cat)
-                end
-
-                table.sort(sortedCategories, function(a, b)
-                    local aName = tostring(localizeMenuLabel(a)):lower()
-                    local bName = tostring(localizeMenuLabel(b)):lower()
-                    return aName < bName
-                end)
-
-                for _, cat in ipairs(sortedCategories) do
-                    local items = categories[cat]
-                    table.sort(items, function(a, b) return tostring(a.name or ""):lower() < tostring(b.name or ""):lower() end)
-                    local visibleItems = {}
-                    local localizedCategory = tostring(localizeMenuLabel(cat))
-                    for _, item in ipairs(items) do
-                        local localizedName = tostring(item.name or ""):lower()
-                        local localizedDesc = tostring(item.desc or ""):lower()
-                        if not filter or localizedName:find(filter, 1, true) or localizedDesc:find(filter, 1, true) or localizedCategory:lower():find(filter, 1, true) then table.insert(visibleItems, item) end
-                    end
-
-                    if #visibleItems > 0 then
-                        AddHeader(scroll, localizedCategory)
-                        for _, item in ipairs(visibleItems) do
-                            AddField(scroll, item.key, item.name, item.option)
-                        end
-                    end
-                end
-            end
-
-            searchEntry:SetUpdateOnType(true)
-            searchEntry.OnTextChanged = function(me, text) populate(text) end
-            populate(nil)
-        end
+        drawFunc = function(parent) drawOptionsPage(parent) end
     }
 end)
 
@@ -1172,7 +1559,7 @@ lia.option.add("voiceRange", "@voiceRange", "@voiceRangeDesc", false, nil, {
     type = "Boolean"
 })
 
-lia.option.add("weaponSelectorPosition", "@weaponSelectorPosition", "@weaponSelectorPositionDesc", "left", nil, {
+lia.option.add("weaponSelectorPosition", "@weaponSelectorPosition", "@weaponSelectorPositionDesc", "right", nil, {
     category = "@core",
     type = "Table",
     options = {
