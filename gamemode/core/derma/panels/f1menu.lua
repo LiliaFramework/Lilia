@@ -862,7 +862,7 @@ function PANEL:Init()
     self.topBar:Dock(TOP)
     self.topBar:SetTall(74)
     local schemaIconMat = SCHEMA and SCHEMA.icon and Material(SCHEMA.icon, "smooth") or Material("lilia.png", "smooth")
-    local schemaName = SCHEMA and SCHEMA.name or "Mojave Reborn"
+    local schemaName = SCHEMA and SCHEMA.name
     self.topBar.Paint = function(_, w, h)
         local accent = getThemeColors()
         surface.SetDrawColor(4, 13, 17, 250)
@@ -2190,12 +2190,10 @@ hook.Add("CreateMenuButtons", "liaF1MenuCreateMenuButtons", function(tabs)
         name = "@settings",
         icon = "icon16/cog.png",
         func = function(settingsPanel)
-            local frame = settingsPanel:Add("liaFrame")
+            settingsPanel:Clear()
+            local frame = settingsPanel:Add("EditablePanel")
             frame:Dock(FILL)
-            frame:DockMargin(10, 10, 10, 10)
-            frame:SetTitle(L("settings"))
-            frame:LiteMode()
-            frame:DisableCloseBtn()
+            frame.Paint = function() end
             local pages = {}
             hook.Run("PopulateConfigurationButtons", pages)
             if not pages then return end
@@ -2209,94 +2207,116 @@ hook.Add("CreateMenuButtons", "liaF1MenuCreateMenuButtons", function(tabs)
                 return an < bn
             end)
 
-            local tabContainer = vgui.Create("DPanel", frame)
+            local header = frame:Add("DPanel")
+            header:Dock(TOP)
+            header:SetTall(76)
+            header.Paint = function()
+                local _, textColor = getThemeColors()
+                draw.SimpleText(L("settings"), "LiliaFont.30", 8, 4, textColor, TEXT_ALIGN_LEFT, TEXT_ALIGN_TOP)
+                draw.SimpleText("Manage configuration options and preferences.", "LiliaFont.17", 8, 43, Color(155, 178, 179), TEXT_ALIGN_LEFT, TEXT_ALIGN_TOP)
+            end
+
+            if #pages == 0 then
+                local empty = frame:Add("DPanel")
+                empty:Dock(FILL)
+                empty.Paint = function(_, w, h)
+                    local accent = getThemeColors()
+                    drawPanel(0, 0, w, h, 8, Color(5, 18, 23, 220), Color(accent.r, accent.g, accent.b, 80))
+                    draw.SimpleText(L("noDesc"), "LiliaFont.20", w * 0.5, h * 0.5, Color(165, 187, 188), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
+                end
+                return
+            end
+
+            local tabContainer = frame:Add("DPanel")
             tabContainer:Dock(TOP)
-            tabContainer:SetTall(40)
-            tabContainer.Paint = function() end
-            local contentArea = vgui.Create("liaScrollPanel", frame)
+            tabContainer:SetTall(54)
+            tabContainer:DockMargin(0, 0, 0, 12)
+            tabContainer:DockPadding(8, 8, 8, 8)
+            tabContainer.Paint = function(_, w, h)
+                local accent = getThemeColors()
+                drawPanel(0, 0, w, h, 7, Color(5, 18, 23, 220), Color(accent.r, accent.g, accent.b, 54))
+            end
+
+            local contentArea = frame:Add("DPanel")
             contentArea:Dock(FILL)
+            contentArea.Paint = function() end
             local activeTab = 1
             local tabButtons = {}
             local tabPanels = {}
-            local baseTabWidths = {}
-            local baseMargin = 8
-            for i, page in ipairs(pages) do
-                surface.SetFont("LiliaFont.18")
-                local textWidth = surface.GetTextSize(localizeMenuLabel(page.name))
-                local iconWidth = 0
-                local padding = 20
-                local minWidth = 80
-                local btnWidth = math.max(minWidth, padding + iconWidth + textWidth + padding)
-                baseTabWidths[i] = btnWidth
+            local function drawPage(index)
+                local pageData = pages[index]
+                local panel = tabPanels[index]
+                if not pageData or not IsValid(panel) or panel._drawn then return end
+                panel._drawn = true
+                if pageData.drawFunc then pageData.drawFunc(panel) end
             end
 
             for i, page in ipairs(pages) do
-                local tabButton = vgui.Create("liaTabButton", tabContainer)
-                tabButton:Dock(LEFT)
-                tabButton:DockMargin(i == 1 and 0 or baseMargin, 0, 0, 0)
-                tabButton:SetTall(36)
-                tabButton:SetText(localizeMenuLabel(page.name))
-                tabButton:SetActive(i == 1)
-                tabButton:SetWide(baseTabWidths[i] or 80)
-                tabButton:SetDoClick(function()
-                    if activeTab == i then return end
+                local index = i
+                local pageData = page
+                local tabButton = tabContainer:Add("DButton")
+                tabButton:SetText("")
+                tabButton._label = tostring(localizeMenuLabel(pageData.name))
+                tabButton.Paint = function(s, w, h)
+                    local accent, textColor = getThemeColors()
+                    local active = activeTab == index
+                    local hovered = s:IsHovered()
+                    if active or hovered then
+                        local background = active and Color(accent.r, accent.g, accent.b, 22) or Color(255, 255, 255, 6)
+                        drawPanel(0, 0, w, h, 5, background, active and Color(accent.r, accent.g, accent.b, 70) or nil)
+                    end
+
+                    if active then
+                        surface.SetDrawColor(accent.r, accent.g, accent.b, 235)
+                        surface.DrawRect(0, h - 3, w, 3)
+                    end
+
+                    local color = active and textColor or hovered and Color(215, 229, 229) or Color(165, 188, 189)
+                    draw.SimpleText(string.upper(s._label), "LiliaFont.18", w * 0.5, h * 0.5, color, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
+                end
+
+                tabButton.DoClick = function()
+                    if activeTab == index then return end
                     lia.websound.playButtonSound()
-                    if tabPanels[activeTab] then tabPanels[activeTab]:SetVisible(false) end
-                    activeTab = i
-                    tabPanels[i]:SetVisible(true)
-                    for j, btn in ipairs(tabButtons) do
-                        if IsValid(btn) then btn:SetActive(j == i) end
+                    if IsValid(tabPanels[activeTab]) then tabPanels[activeTab]:SetVisible(false) end
+                    activeTab = index
+                    if IsValid(tabPanels[index]) then
+                        tabPanels[index]:SetVisible(true)
+                        drawPage(index)
                     end
-
-                    if page.drawFunc then page.drawFunc(tabPanels[i]) end
-                end)
-
-                tabButtons[i] = tabButton
-                local contentPanel = vgui.Create("DPanel", contentArea)
-                contentPanel:Dock(TOP)
-                contentPanel:SetVisible(i == 1)
-                contentPanel.Paint = function() end
-                contentPanel.PerformLayout = function(s) if IsValid(frame) and IsValid(tabContainer) then s:SetTall(frame:GetTall() - tabContainer:GetTall() - 20) end end
-                tabPanels[i] = contentPanel
-            end
-
-            local function AdjustTabWidths()
-                if not IsValid(tabContainer) then return end
-                local totalTabsWidth = 0
-                for _, width in pairs(baseTabWidths) do
-                    totalTabsWidth = totalTabsWidth + width
                 end
 
-                local availableWidth = tabContainer:GetWide()
-                local totalMargins = baseMargin * (#pages - 1)
-                local extraSpace = availableWidth - totalTabsWidth - totalMargins
-                if extraSpace > 0 then
-                    local extraPerTab = math.floor(extraSpace / #pages)
-                    local adjustedWidths = {}
-                    for tabId, baseWidth in pairs(baseTabWidths) do
-                        adjustedWidths[tabId] = baseWidth + extraPerTab
-                    end
+                tabButtons[index] = tabButton
+                local contentPanel = contentArea:Add("DPanel")
+                contentPanel:Dock(FILL)
+                contentPanel:DockPadding(14, 14, 14, 14)
+                contentPanel:SetVisible(index == 1)
+                contentPanel.Paint = function(_, w, h)
+                    local accent = getThemeColors()
+                    drawPanel(0, 0, w, h, 8, Color(5, 18, 23, 220), Color(accent.r, accent.g, accent.b, 80))
+                end
 
-                    local remainder = extraSpace % #pages
-                    if remainder > 0 then
-                        for remainderId = 1, math.min(remainder, #pages) do
-                            adjustedWidths[remainderId] = adjustedWidths[remainderId] + 1
-                        end
-                    end
+                tabPanels[index] = contentPanel
+            end
 
-                    for childId, child in ipairs(tabContainer:GetChildren()) do
-                        if adjustedWidths[childId] and IsValid(child) then child:SetWide(adjustedWidths[childId]) end
-                    end
+            tabContainer.PerformLayout = function(_, w, h)
+                local gap = 8
+                local count = #tabButtons
+                local innerX = 8
+                local innerW = math.max(w - 16, 1)
+                local innerH = math.max(h - 16, 1)
+                local available = innerW - gap * math.max(count - 1, 0)
+                local width = count > 0 and math.floor(available / count) or available
+                local x = innerX
+                for index, button in ipairs(tabButtons) do
+                    local buttonWidth = index == count and innerX + innerW - x or width
+                    button:SetPos(x, 8)
+                    button:SetSize(buttonWidth, innerH)
+                    x = x + buttonWidth + gap
                 end
             end
 
-            local originalPerformLayout = tabContainer.PerformLayout
-            tabContainer.PerformLayout = function(s, w, h)
-                if originalPerformLayout then originalPerformLayout(s, w, h) end
-                timer.Simple(0, function() if IsValid(s) then AdjustTabWidths() end end)
-            end
-
-            if pages[1] and pages[1].drawFunc and IsValid(tabPanels[1]) then pages[1].drawFunc(tabPanels[1]) end
+            drawPage(1)
         end
     }
 

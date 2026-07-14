@@ -868,6 +868,95 @@ if SERVER then
     end)
 else
     hook.Add("PopulateConfigurationButtons", "liaConfigPopulate", function(pages)
+        local uiColors = {
+            bg = Color(5, 18, 23, 220),
+            bgSoft = Color(7, 20, 25, 237),
+            row = Color(10, 25, 30, 232),
+            rowAlt = Color(9, 24, 29, 238),
+            rowHover = Color(16, 34, 40, 235),
+            selected = Color(13, 30, 35, 225),
+            border = Color(45, 190, 170, 78),
+            text = Color(242, 247, 247),
+            muted = Color(155, 178, 179),
+            dim = Color(100, 120, 122),
+            accent = Color(45, 190, 170),
+            accentSoft = Color(45, 190, 170, 28),
+            danger = Color(215, 70, 70)
+        }
+
+        local preferredCategories = {"Core", "Gameplay", "Character", "Vehicles", "Admin", "Items", "Chat", "UI / Time", "Performance", "Fonts", "Experimental"}
+        local categoryIcons = {}
+        local function getAccent(alpha)
+            local theme = lia.color and lia.color.theme or {}
+            local color = theme.accent or theme.theme or lia.config and lia.config.get and lia.config.get("Color") or uiColors.accent
+            if istable(color) and color.r and color.g and color.b then return Color(color.r, color.g, color.b, alpha or color.a or 255) end
+            return Color(uiColors.accent.r, uiColors.accent.g, uiColors.accent.b, alpha or uiColors.accent.a or 255)
+        end
+
+        local function getTextColor(alpha)
+            local theme = lia.color and lia.color.theme or {}
+            local color = theme.text or uiColors.text
+            if istable(color) and color.r and color.g and color.b then return Color(color.r, color.g, color.b, alpha or color.a or 255) end
+            return Color(uiColors.text.r, uiColors.text.g, uiColors.text.b, alpha or uiColors.text.a or 255)
+        end
+
+        local function rounded(x, y, w, h, r, color)
+            if lia.derma and lia.derma.rect and lia.derma.SHAPE_IOS then
+                lia.derma.rect(x, y, w, h):Rad(r or 0):Color(color):Shape(lia.derma.SHAPE_IOS):Draw()
+                return
+            end
+
+            draw.RoundedBox(r or 0, x, y, w, h, color)
+        end
+
+        local function outline(x, y, w, h, color)
+            if lia.derma and lia.derma.rect and lia.derma.SHAPE_IOS then
+                lia.derma.rect(x, y, w, h):Rad(6):Color(color):Shape(lia.derma.SHAPE_IOS):Outline(1):Draw()
+                return
+            end
+
+            surface.SetDrawColor(color)
+            surface.DrawOutlinedRect(x, y, w, h)
+        end
+
+        local function tableSize(t)
+            local count = 0
+            for _ in pairs(t or {}) do
+                count = count + 1
+            end
+            return count
+        end
+
+        local function sendConfigValue(key, name, value)
+            net.Start("liaCfgSet")
+            net.WriteString(key)
+            net.WriteString(name)
+            net.WriteType(value)
+            net.SendToServer()
+        end
+
+        local function normalizeConfigValue(value, configType, config)
+            if configType == "Number" or configType == "Int" or configType == "Float" then
+                local numeric = tonumber(value)
+                if numeric == nil then return nil end
+                if configType == "Int" then numeric = math.floor(numeric) end
+                if config.data then
+                    if isnumber(config.data.min) then numeric = math.max(config.data.min, numeric) end
+                    if isnumber(config.data.max) then numeric = math.min(config.data.max, numeric) end
+                end
+                return numeric
+            end
+
+            if configType == "Generic" then return tostring(value or "") end
+            return value
+        end
+
+        local function displayValue(value)
+            if IsColor(value) then return string.format("%d, %d, %d", value.r, value.g, value.b) end
+            if istable(value) and value.r and value.g and value.b then return string.format("%d, %d, %d", value.r, value.g, value.b) end
+            return tostring(value or "")
+        end
+
         local function SetStyledTooltip(panel, text)
             if not text or text == "" then return end
             panel:SetTooltip(text)
@@ -879,136 +968,192 @@ else
                     local tooltip = vgui.GetTooltipPanel()
                     if IsValid(tooltip) and not tooltip.LiliaStyled then
                         tooltip.LiliaStyled = true
+                        tooltip:SetTextColor(uiColors.text)
                         function tooltip:Paint(w, h)
-                            local bgColor = Color(25, 28, 35, 250)
-                            lia.derma.rect(0, 0, w, h):Rad(8):Color(bgColor):Shape(lia.derma.SHAPE_IOS):Draw()
+                            rounded(0, 0, w, h, 8, Color(7, 18, 24, 245))
+                            outline(0, 0, w, h, Color(getAccent().r, getAccent().g, getAccent().b, 135))
                         end
                     end
                 end)
             end
         end
 
-        local function AddHeader(scroll, text)
-            local header = scroll:Add("DPanel")
-            header:Dock(TOP)
-            header:SetTall(35)
-            header:DockMargin(0, 5, 0, 5)
-            header.Paint = function(me, w, h)
-                local accent = lia.color.theme.accent or lia.config.get("Color") or Color(0, 150, 255)
-                surface.SetDrawColor(accent)
-                surface.DrawRect(0, h - 2, w, 2)
-            end
-
-            local label = header:Add("DLabel")
-            label:Dock(LEFT)
-            label:SetText(cfgLocalizeLabel(text))
-            label:SetFont("LiliaFont.22")
-            label:SetTextColor(lia.color.theme.text or color_white)
-            label:SizeToContents()
-            label:DockMargin(5, 0, 0, 0)
+        local function getRawCategory(config)
+            return config.rawCategory or (config.data and config.data.rawCategory) or config.category or "Core"
         end
 
-        local function AddField(scroll, key, name, config)
-            local p = scroll:Add("DPanel")
-            p:Dock(TOP)
-            p:SetTall(45)
-            p:DockMargin(0, 0, 0, 5)
-            p.Paint = function(s, w, h) lia.derma.rect(0, 0, w, h):Rad(6):Color(Color(35, 38, 45, 180)):Shape(lia.derma.SHAPE_IOS):Draw() end
-            local description = lia.config.getDisplayDesc(key)
-            SetStyledTooltip(p, description)
-            local l = p:Add("DLabel")
-            l:Dock(LEFT)
-            l:DockMargin(15, 0, 0, 0)
-            l:SetWidth(250)
-            l:SetText(name)
-            l:SetFont("LiliaFont.18")
-            l:SetTextColor(lia.color.theme.text or color_white)
-            l:SetContentAlignment(4)
-            SetStyledTooltip(l, description)
-            local configType = config.data and config.data.type or config.type or "Generic"
-            if configType == "Boolean" then
-                local checkbox = p:Add("liaCheckbox")
-                checkbox:Dock(RIGHT)
-                checkbox:DockMargin(0, 10, 15, 10)
-                checkbox:SetWidth(25)
-                checkbox:SetChecked(lia.config.get(key, config.value))
-                SetStyledTooltip(checkbox, description)
-                checkbox.OnChange = function(s, val)
-                    net.Start("liaCfgSet")
-                    net.WriteString(key)
-                    net.WriteString(name)
-                    net.WriteType(val)
-                    net.SendToServer()
+        local function getVisualCategory(key, config)
+            local raw = tostring(getRawCategory(config) or "Core")
+            local localized = tostring(cfgLocalizeLabel(raw) or raw)
+            local lowerKey = tostring(key or ""):lower()
+            local lowerCategory = localized:lower()
+            if lowerCategory:find("performance", 1, true) then return "Performance" end
+            if lowerCategory:find("font", 1, true) then return "Fonts" end
+            if lowerCategory:find("gameplay", 1, true) then return "Gameplay" end
+            if lowerCategory:find("experimental", 1, true) then return "Experimental" end
+            if lowerKey:find("admin", 1, true) or lowerKey:find("staff", 1, true) or lowerKey:find("log", 1, true) or lowerKey:find("lua", 1, true) then return "Admin" end
+            if lowerKey:find("vehicle", 1, true) or lowerKey:find("car", 1, true) then return "Vehicles" end
+            if lowerKey:find("chat", 1, true) or lowerKey:find("ooc", 1, true) or lowerKey:find("looc", 1, true) or lowerKey:find("talk", 1, true) or lowerKey:find("whisper", 1, true) or lowerKey:find("yell", 1, true) or lowerKey:find("voice", 1, true) then return "Chat" end
+            if lowerKey:find("char", 1, true) or lowerKey:find("recognition", 1, true) or lowerKey:find("fake", 1, true) or lowerKey:find("description", 1, true) or lowerKey:find("attribute", 1, true) then return "Character" end
+            if lowerKey:find("item", 1, true) or lowerKey:find("ammo", 1, true) or lowerKey:find("weapon", 1, true) or lowerKey:find("equip", 1, true) or lowerKey:find("drop", 1, true) or lowerKey:find("vendor", 1, true) or lowerKey:find("money", 1, true) or lowerKey:find("currency", 1, true) or lowerKey:find("door", 1, true) or lowerKey:find("hold", 1, true) or lowerKey:find("throw", 1, true) then return "Items" end
+            if lowerKey:find("time", 1, true) or lowerKey:find("timestamp", 1, true) or lowerKey:find("menu", 1, true) or lowerKey:find("hud", 1, true) or lowerKey:find("font", 1, true) or lowerKey:find("color", 1, true) or lowerKey:find("skin", 1, true) or lowerKey:find("scoreboard", 1, true) or lowerKey:find("background", 1, true) or lowerKey:find("logo", 1, true) or lowerKey:find("music", 1, true) or lowerKey:find("language", 1, true) then return "UI / Time" end
+            if lowerKey:find("stamina", 1, true) or lowerKey:find("punch", 1, true) or lowerKey:find("damage", 1, true) or lowerKey:find("speed", 1, true) or lowerKey:find("spawn", 1, true) or lowerKey:find("death", 1, true) or lowerKey:find("pain", 1, true) or lowerKey:find("ragdoll", 1, true) or lowerKey:find("crosshair", 1, true) then return "Gameplay" end
+            if lowerCategory == "core" or raw == "@core" then return "Core" end
+            return localized ~= "" and localized or "Core"
+        end
+
+        local function sortCategories(categories)
+            local sorted = {}
+            local exists = {}
+            for _, category in ipairs(preferredCategories) do
+                if categories[category] then
+                    sorted[#sorted + 1] = category
+                    exists[category] = true
                 end
-            elseif configType == "Number" or configType == "Int" or configType == "Float" or configType == "Generic" then
-                local entry = p:Add("liaEntry")
+            end
+
+            local remaining = {}
+            for category in pairs(categories) do
+                if not exists[category] then remaining[#remaining + 1] = category end
+            end
+
+            table.sort(remaining, function(a, b) return tostring(a):lower() < tostring(b):lower() end)
+            for _, category in ipairs(remaining) do
+                sorted[#sorted + 1] = category
+            end
+            return sorted
+        end
+
+        local function styleScroll(scroll)
+            local bar = scroll:GetVBar()
+            if not IsValid(bar) then return end
+            bar:SetWide(6)
+            bar.Paint = function(_, w, h) rounded(2, 0, w - 2, h, 4, Color(0, 0, 0, 70)) end
+            bar.btnGrip.Paint = function(_, w, h) rounded(1, 0, w - 1, h, 4, Color(getAccent().r, getAccent().g, getAccent().b, 185)) end
+            bar.btnUp.Paint = function() end
+            bar.btnDown.Paint = function() end
+        end
+
+        local function makeButton(parent, text, width, primary)
+            local button = parent:Add("DButton")
+            button:SetText("")
+            button:SetWide(width or 140)
+            button:SetCursor("hand")
+            button.Paint = function(s, w, h)
+                local accent = getAccent(primary and 205 or 105)
+                local fill = primary and Color(accent.r, accent.g, accent.b, s:IsHovered() and 230 or 190) or Color(7, 21, 28, s:IsHovered() and 235 or 190)
+                rounded(0, 0, w, h, 6, fill)
+                outline(0, 0, w, h, Color(accent.r, accent.g, accent.b, s:IsHovered() and 185 or 105))
+                draw.SimpleText(text, "LiliaFont.18", w * 0.5, h * 0.5, getTextColor(), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
+            end
+            return button
+        end
+
+        local function makeSection(parent, text, icon)
+            local header = parent:Add("DPanel")
+            header:Dock(TOP)
+            header:SetTall(32)
+            header:DockMargin(0, 8, 0, 0)
+            header.Paint = function(_, w, h)
+                local accent = getAccent()
+                draw.SimpleText(string.upper(tostring(text or "")), "LiliaFont.18", 10, h * 0.52, Color(accent.r, accent.g, accent.b, 245), TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)
+                surface.SetDrawColor(accent.r, accent.g, accent.b, 165)
+                surface.DrawRect(0, h - 2, w, 1)
+            end
+            return header
+        end
+
+        local function makeToggle(parent, key, name, value, setValue, description)
+            local button = parent:Add("DButton")
+            button:Dock(RIGHT)
+            button:SetWide(48)
+            button:DockMargin(0, 12, 14, 12)
+            button:SetText("")
+            button:SetCursor("hand")
+            SetStyledTooltip(button, description)
+            button.Paint = function(_, w, h)
+                local state = tobool(value())
+                local accent = getAccent()
+                local bg = state and Color(accent.r, accent.g, accent.b, 218) or Color(70, 84, 89, 210)
+                local knob = state and w - h + 4 or 4
+                rounded(0, 0, w, h, h * 0.5, bg)
+                rounded(knob, 4, h - 8, h - 8, h * 0.5, Color(235, 242, 242, 255))
+            end
+
+            button.DoClick = function() setValue(not tobool(value())) end
+        end
+
+        local function makeValueEditor(parent, key, name, config, configType, getValue, setValue, description)
+            if configType == "Boolean" then
+                makeToggle(parent, key, name, getValue, setValue, description)
+                return
+            end
+
+            if configType == "Number" or configType == "Int" or configType == "Float" or configType == "Generic" then
+                local entry = parent:Add("liaEntry")
                 entry:Dock(RIGHT)
-                entry:SetWidth(200)
-                entry:DockMargin(0, 8, 15, 8)
-                entry:SetValue(tostring(lia.config.get(key, config.value)))
+                entry:SetWidth(configType == "Generic" and 245 or 130)
+                entry:DockMargin(0, 9, 14, 9)
+                entry:SetValue(displayValue(getValue()))
                 entry:SetFont("LiliaFont.18")
                 SetStyledTooltip(entry, description)
                 local function submitEntry()
-                    local value = entry:GetValue()
-                    local numValue = tonumber(value)
-                    if (configType == "Number" or configType == "Int" or configType == "Float") and numValue ~= nil then
-                        net.Start("liaCfgSet")
-                        net.WriteString(key)
-                        net.WriteString(name)
-                        net.WriteType(numValue)
-                        net.SendToServer()
-                    elseif configType == "Generic" then
-                        net.Start("liaCfgSet")
-                        net.WriteString(key)
-                        net.WriteString(name)
-                        net.WriteType(value)
-                        net.SendToServer()
-                    else
-                        entry:SetValue(tostring(lia.config.get(key, config.value)))
+                    if not IsValid(entry) then return end
+                    local value = normalizeConfigValue(entry:GetValue(), configType, config)
+                    if value == nil then
+                        entry:SetValue(displayValue(getValue()))
+                        return
                     end
+
+                    setValue(value)
+                    entry:SetValue(displayValue(value))
                 end
 
-                entry.textEntry.OnEnter = submitEntry
-                entry.textEntry.OnLoseFocus = submitEntry
-            elseif configType == "Color" then
-                local button = p:Add("liaButton")
-                button:Dock(RIGHT)
-                button:SetWidth(200)
-                button:DockMargin(0, 8, 15, 8)
-                button:SetText("")
-                SetStyledTooltip(button, description)
-                button.Paint = function(s, w, h)
-                    local c = lia.config.get(key, config.value)
-                    if istable(c) and c.r and c.g and c.b then
-                        c = Color(c.r, c.g, c.b, c.a)
-                    elseif not IsColor(c) then
-                        c = color_white
-                    end
+                if entry.textEntry then
+                    entry.textEntry.OnEnter = submitEntry
+                    entry.textEntry.OnLoseFocus = submitEntry
+                else
+                    entry.OnEnter = submitEntry
+                    entry.OnLoseFocus = submitEntry
+                end
+                return
+            end
 
-                    lia.derma.rect(0, 0, w, h):Rad(6):Color(c):Shape(lia.derma.SHAPE_IOS):Draw()
-                    draw.RoundedBox(0, 0, 0, w, h, Color(0, 0, 0, 50))
+            if configType == "Color" then
+                local button = parent:Add("DButton")
+                button:Dock(RIGHT)
+                button:SetWidth(150)
+                button:DockMargin(0, 9, 14, 9)
+                button:SetText("")
+                button:SetCursor("hand")
+                SetStyledTooltip(button, description)
+                button.Paint = function(_, w, h)
+                    local c = getValue()
+                    if istable(c) and c.r and c.g and c.b and not IsColor(c) then c = Color(c.r, c.g, c.b, c.a or 255) end
+                    if not IsColor(c) then c = color_white end
+                    rounded(0, 0, w, h, 5, Color(5, 16, 22, 230))
+                    outline(0, 0, w, h, Color(getAccent().r, getAccent().g, getAccent().b, 130))
+                    rounded(8, 6, w - 16, h - 12, 4, c)
                 end
 
                 button.DoClick = function()
-                    local c = lia.config.get(key, config.value)
-                    if not IsColor(c) and istable(c) then c = Color(c.r, c.g, c.b, c.a) end
-                    lia.derma.requestColorPicker(function(color)
-                        net.Start("liaCfgSet")
-                        net.WriteString(key)
-                        net.WriteString(name)
-                        net.WriteType(color)
-                        net.SendToServer()
-                    end, c)
+                    local c = getValue()
+                    if not IsColor(c) and istable(c) then c = Color(c.r, c.g, c.b, c.a or 255) end
+                    if not IsColor(c) then c = color_white end
+                    lia.derma.requestColorPicker(function(color) setValue(color) end, c)
                 end
-            elseif configType == "Table" then
-                local combo = p:Add("liaComboBox")
+                return
+            end
+
+            if configType == "Table" then
+                local combo = parent:Add("liaComboBox")
                 combo:Dock(RIGHT)
-                combo:SetWidth(200)
-                combo:DockMargin(0, 8, 15, 8)
+                combo:SetWidth(210)
+                combo:DockMargin(0, 9, 14, 9)
                 combo:SetFont("LiliaFont.18")
                 SetStyledTooltip(combo, description)
                 local options = lia.config.getOptions(key)
-                local selectedValue = lia.config.get(key, config.value)
+                local selectedValue = getValue()
                 local selectedLabel = selectedValue
                 for _, optionEntry in pairs(options) do
                     combo:AddChoice(optionEntry.label, optionEntry.value)
@@ -1016,14 +1161,336 @@ else
                 end
 
                 combo:SetValue(tostring(selectedLabel))
-                combo.OnSelect = function(_, _, _, v)
-                    net.Start("liaCfgSet")
-                    net.WriteString(key)
-                    net.WriteString(name)
-                    net.WriteType(v)
-                    net.SendToServer()
+                combo.OnSelect = function(_, _, _, v) setValue(v) end
+            end
+        end
+
+        local function AddField(scroll, key, name, config, pendingChanges, onPendingChanged)
+            local configType = config.data and config.data.type or config.type or "Generic"
+            local description = tostring(lia.config.getDisplayDesc(key) or "")
+            local row = scroll:Add("DPanel")
+            row:Dock(TOP)
+            row:SetTall(52)
+            row:DockMargin(0, 0, 0, 2)
+            SetStyledTooltip(row, description)
+            local function currentValue()
+                if pendingChanges and pendingChanges[key] ~= nil then return pendingChanges[key] end
+                return lia.config.get(key, config.value)
+            end
+
+            local function setValue(value)
+                if pendingChanges then
+                    local original = lia.config.get(key, config.value)
+                    if cfgValuesEqual(original, value) then
+                        pendingChanges[key] = nil
+                    else
+                        pendingChanges[key] = value
+                    end
+
+                    if onPendingChanged then onPendingChanged() end
+                    row:InvalidateLayout(true)
+                else
+                    sendConfigValue(key, name, value)
                 end
             end
+
+            row.Paint = function(s, w, h)
+                local hovered = s:IsHovered()
+                local changed = pendingChanges and pendingChanges[key] ~= nil
+                rounded(0, 0, w, h, 0, changed and Color(getAccent().r, getAccent().g, getAccent().b, 28) or hovered and uiColors.rowHover or uiColors.row)
+                surface.SetDrawColor(Color(getAccent().r, getAccent().g, getAccent().b, 78))
+                surface.DrawRect(0, h - 1, w, 1)
+                if changed then
+                    local accent = getAccent()
+                    surface.SetDrawColor(accent.r, accent.g, accent.b, 220)
+                    surface.DrawRect(0, 0, 3, h)
+                end
+            end
+
+            local labels = row:Add("DPanel")
+            labels:Dock(FILL)
+            labels:DockMargin(14, 5, 18, 5)
+            labels.Paint = function() end
+            local title = labels:Add("DLabel")
+            title:Dock(TOP)
+            title:SetTall(21)
+            title:SetText(name)
+            title:SetFont("LiliaFont.18")
+            title:SetTextColor(getTextColor())
+            title:SetContentAlignment(4)
+            SetStyledTooltip(title, description)
+            local desc = labels:Add("DLabel")
+            desc:Dock(FILL)
+            desc:SetText(description)
+            desc:SetFont("LiliaFont.16")
+            desc:SetTextColor(uiColors.muted)
+            desc:SetContentAlignment(4)
+            desc:SetWrap(false)
+            SetStyledTooltip(desc, description)
+            makeValueEditor(row, key, name, config, configType, currentValue, setValue, description)
+        end
+
+        local function collectConfigItems(configs)
+            local categories = {}
+            local total = 0
+            for key, config in pairs(configs) do
+                local category = getVisualCategory(key, config)
+                categories[category] = categories[category] or {}
+                categories[category][#categories[category] + 1] = {
+                    key = key,
+                    name = tostring(lia.config.getDisplayName(key) or key),
+                    desc = tostring(lia.config.getDisplayDesc(key) or ""),
+                    config = config
+                }
+
+                total = total + 1
+            end
+
+            for _, items in pairs(categories) do
+                table.sort(items, function(a, b) return tostring(a.name or ""):lower() < tostring(b.name or ""):lower() end)
+            end
+            return categories, total
+        end
+
+        local function itemMatches(item, category, filter)
+            if not filter or filter == "" then return true end
+            local needle = filter:lower()
+            return tostring(item.name or ""):lower():find(needle, 1, true) or tostring(item.desc or ""):lower():find(needle, 1, true) or tostring(item.key or ""):lower():find(needle, 1, true) or tostring(category or ""):lower():find(needle, 1, true)
+        end
+
+        local function drawConfigPage(parent, configs, titleText, subtitleText, usePending)
+            parent:Clear()
+            parent:DockPadding(0, 0, 0, 0)
+            local categories, total = collectConfigItems(configs)
+            local sortedCategories = sortCategories(categories)
+            local selectedCategory = categories.Core and "Core" or sortedCategories[1]
+            local filterText = ""
+            local pendingChanges = usePending and {} or nil
+            local root = parent:Add("DPanel")
+            root:Dock(FILL)
+            root:DockMargin(0, 0, 0, 0)
+            root.Paint = function(_, w, h)
+                rounded(0, 0, w, h, 8, uiColors.bg)
+                outline(0, 0, w, h, Color(getAccent().r, getAccent().g, getAccent().b, 80))
+            end
+
+            local header = root:Add("DPanel")
+            header:Dock(TOP)
+            header:SetTall(72)
+            header:DockMargin(14, 12, 14, 0)
+            header.Paint = function() end
+            local title = header:Add("DLabel")
+            title:Dock(TOP)
+            title:SetTall(32)
+            title:SetText(titleText)
+            title:SetFont("LiliaFont.22")
+            title:SetTextColor(getTextColor())
+            title:SetContentAlignment(4)
+            local subtitle = header:Add("DLabel")
+            subtitle:Dock(TOP)
+            subtitle:SetTall(24)
+            subtitle:SetText(subtitleText)
+            subtitle:SetFont("LiliaFont.18")
+            subtitle:SetTextColor(uiColors.muted)
+            subtitle:SetContentAlignment(4)
+            local toolbar = root:Add("DPanel")
+            toolbar:Dock(TOP)
+            toolbar:SetTall(42)
+            toolbar:DockMargin(14, 0, 14, 10)
+            toolbar.Paint = function() end
+            local status = toolbar:Add("DPanel")
+            status:Dock(RIGHT)
+            status:SetWide(usePending and 170 or 0)
+            status:DockMargin(10, 3, 0, 3)
+            status.Paint = function(_, w, h)
+                if not usePending then return end
+                local count = tableSize(pendingChanges)
+                local accent = getAccent()
+                rounded(0, 0, w, h, 6, Color(13, 30, 35, 225))
+                outline(0, 0, w, h, Color(accent.r, accent.g, accent.b, count > 0 and 135 or 65))
+                draw.SimpleText(count > 0 and "Unsaved Changes" or "No Changes", "LiliaFont.18", w * 0.5, h * 0.5, count > 0 and getTextColor() or uiColors.dim, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
+            end
+
+            local categoryCombo = toolbar:Add("liaComboBox")
+            categoryCombo:Dock(RIGHT)
+            categoryCombo:SetWide(190)
+            categoryCombo:DockMargin(0, 3, 0, 3)
+            categoryCombo:SetFont("LiliaFont.18")
+            categoryCombo:AddChoice("All Categories", "__all")
+            for _, category in ipairs(sortedCategories) do
+                categoryCombo:AddChoice(category, category)
+            end
+
+            categoryCombo:SetValue(selectedCategory or "All Categories")
+            local searchEntry = toolbar:Add("liaEntry")
+            searchEntry:Dock(FILL)
+            searchEntry:DockMargin(0, 3, 10, 3)
+            searchEntry:SetPlaceholderText(L("searchConfigs") or "Search settings...")
+            searchEntry:SetFont("LiliaFont.18")
+            local body = root:Add("DPanel")
+            body:Dock(FILL)
+            body:DockMargin(14, 0, 14, usePending and 0 or 14)
+            body.Paint = function() end
+            local rail = body:Add("DPanel")
+            rail:Dock(LEFT)
+            rail:SetWide(255)
+            rail:DockMargin(0, 0, 12, 0)
+            rail.Paint = function(_, w, h)
+                rounded(0, 0, w, h, 8, uiColors.bgSoft)
+                outline(0, 0, w, h, Color(getAccent().r, getAccent().g, getAccent().b, 78))
+            end
+
+            local railScroll = rail:Add("liaScrollPanel")
+            railScroll:Dock(FILL)
+            railScroll:DockMargin(8, 8, 8, 8)
+            styleScroll(railScroll)
+            local scroll = body:Add("liaScrollPanel")
+            scroll:Dock(FILL)
+            scroll:GetCanvas():DockPadding(0, 0, 0, 0)
+            styleScroll(scroll)
+            local footer
+            local footerStatus
+            local saveButton
+            local resetButton
+            local refreshFooter
+            local populate
+            local rebuildRail
+            rebuildRail = function()
+                railScroll:Clear()
+                local function addRailButton(label, value)
+                    local button = railScroll:Add("DButton")
+                    button:Dock(TOP)
+                    button:SetTall(48)
+                    button:DockMargin(0, 0, 0, 6)
+                    button:SetText("")
+                    button:SetCursor("hand")
+                    button.Paint = function(s, w, h)
+                        local active = selectedCategory == value or (not selectedCategory and value == nil)
+                        local accent = getAccent()
+                        rounded(0, 0, w, h, 5, active and Color(accent.r, accent.g, accent.b, 35) or s:IsHovered() and Color(16, 34, 40, 235) or Color(10, 25, 30, 210))
+                        outline(0, 0, w, h, active and Color(accent.r, accent.g, accent.b, 160) or Color(getAccent().r, getAccent().g, getAccent().b, 62))
+                        if active then
+                            surface.SetDrawColor(accent.r, accent.g, accent.b, 235)
+                            surface.DrawRect(0, 0, 3, h)
+                        end
+
+                        local count = value and categories[value] and #categories[value] or total
+                        draw.SimpleText(label, "LiliaFont.18", 16, h * 0.38, active and getTextColor() or Color(230, 239, 239), TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)
+                        draw.SimpleText(count .. " settings", "LiliaFont.16", 16, h * 0.68, uiColors.muted, TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)
+                    end
+
+                    button.DoClick = function()
+                        selectedCategory = value
+                        if IsValid(categoryCombo) then categoryCombo:SetValue(value or "All Categories") end
+                        rebuildRail()
+                        populate(filterText)
+                    end
+                end
+
+                addRailButton("All Settings", nil)
+                for _, category in ipairs(sortedCategories) do
+                    addRailButton(category, category)
+                end
+            end
+
+            populate = function(filter)
+                if not IsValid(scroll) then return end
+                scroll:Clear()
+                filterText = filter or ""
+                local hasAny = false
+                local categoriesToDraw = selectedCategory and {selectedCategory} or sortedCategories
+                for _, category in ipairs(categoriesToDraw) do
+                    local items = categories[category]
+                    local visible = {}
+                    if items then
+                        for _, item in ipairs(items) do
+                            if itemMatches(item, category, filterText) then visible[#visible + 1] = item end
+                        end
+                    end
+
+                    if #visible > 0 then
+                        hasAny = true
+                        makeSection(scroll, category, categoryIcons[category])
+                        for _, item in ipairs(visible) do
+                            AddField(scroll, item.key, item.name, item.config, pendingChanges, refreshFooter)
+                        end
+                    end
+                end
+
+                if not hasAny then
+                    local empty = scroll:Add("DPanel")
+                    empty:Dock(TOP)
+                    empty:SetTall(90)
+                    empty.Paint = function(_, w, h)
+                        rounded(0, 0, w, h, 6, Color(8, 22, 28, 185))
+                        outline(0, 0, w, h, Color(getAccent().r, getAccent().g, getAccent().b, 78))
+                        draw.SimpleText("No settings match your search.", "LiliaFont.18", w * 0.5, h * 0.5, uiColors.muted, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
+                    end
+                end
+            end
+
+            if usePending then
+                footer = root:Add("DPanel")
+                footer:Dock(BOTTOM)
+                footer:SetTall(54)
+                footer:DockMargin(14, 8, 14, 14)
+                footer.Paint = function(_, w, h)
+                    surface.SetDrawColor(Color(getAccent().r, getAccent().g, getAccent().b, 78))
+                    surface.DrawRect(0, 0, w, 1)
+                end
+
+                footerStatus = footer:Add("DLabel")
+                footerStatus:Dock(LEFT)
+                footerStatus:SetWide(520)
+                footerStatus:SetFont("LiliaFont.18")
+                footerStatus:SetTextColor(uiColors.muted)
+                footerStatus:SetContentAlignment(4)
+                saveButton = makeButton(footer, "Save Changes", 165, true)
+                saveButton:Dock(RIGHT)
+                saveButton:DockMargin(8, 9, 0, 8)
+                resetButton = makeButton(footer, "Reset", 135, false)
+                resetButton:Dock(RIGHT)
+                resetButton:DockMargin(8, 9, 0, 8)
+                refreshFooter = function()
+                    if not IsValid(footerStatus) then return end
+                    local count = tableSize(pendingChanges)
+                    footerStatus:SetText(total .. " settings    |    " .. count .. " modified    |    Changes save when you press Save Changes")
+                    if IsValid(status) then status:InvalidateLayout(true) end
+                    if IsValid(saveButton) then saveButton:InvalidateLayout(true) end
+                    if IsValid(resetButton) then resetButton:InvalidateLayout(true) end
+                end
+
+                resetButton.DoClick = function()
+                    table.Empty(pendingChanges)
+                    refreshFooter()
+                    populate(filterText)
+                end
+
+                saveButton.DoClick = function()
+                    if tableSize(pendingChanges) <= 0 then return end
+                    for key, value in pairs(pendingChanges) do
+                        sendConfigValue(key, tostring(lia.config.getDisplayName(key) or key), value)
+                    end
+
+                    table.Empty(pendingChanges)
+                    refreshFooter()
+                    timer.Simple(0.2, function() if IsValid(parent) then populate(filterText) end end)
+                end
+            else
+                refreshFooter = function() end
+            end
+
+            searchEntry:SetUpdateOnType(true)
+            searchEntry.OnTextChanged = function(_, text) populate(text) end
+            categoryCombo.OnSelect = function(_, _, _, value)
+                selectedCategory = value == "__all" and nil or value
+                rebuildRail()
+                populate(filterText)
+            end
+
+            rebuildRail()
+            populate(nil)
+            refreshFooter()
         end
 
         if hook.Run("CanPlayerModifyConfig", LocalPlayer()) ~= false then
@@ -1043,12 +1510,10 @@ else
 
             local categoryPages = {}
             for key, config in pairs(uniqueTabConfigs) do
-                local category = config.rawCategory or (config.data and config.data.rawCategory) or config.category or "Core"
-                if not categoryPages[category] then
-                    categoryPages[category] = {
-                        configs = {}
-                    }
-                end
+                local category = getRawCategory(config)
+                categoryPages[category] = categoryPages[category] or {
+                    configs = {}
+                }
 
                 table.insert(categoryPages[category].configs, {
                     key = key,
@@ -1057,86 +1522,22 @@ else
             end
 
             for category, pageData in pairs(categoryPages) do
+                local pageConfigs = {}
+                for _, configInfo in ipairs(pageData.configs) do
+                    pageConfigs[configInfo.key] = configInfo.config
+                end
+
                 pages[#pages + 1] = {
                     name = category,
                     shouldShow = function() return hook.Run("CanPlayerModifyConfig", LocalPlayer()) ~= false end,
-                    drawFunc = function(parent)
-                        parent:Clear()
-                        parent:DockPadding(10, 10, 10, 10)
-                        local scroll = parent:Add("liaScrollPanel")
-                        scroll:Dock(FILL)
-                        scroll:GetCanvas():DockPadding(0, 0, 0, 0)
-                        for _, configInfo in ipairs(pageData.configs) do
-                            AddField(scroll, configInfo.key, lia.config.getDisplayName(configInfo.key), configInfo.config)
-                        end
-                    end
+                    drawFunc = function(parent) drawConfigPage(parent, pageConfigs, tostring(cfgLocalizeLabel(category) or category), "Manage this configuration section.", false) end
                 }
             end
 
             pages[#pages + 1] = {
                 name = "configuration",
                 shouldShow = function() return hook.Run("CanPlayerModifyConfig", LocalPlayer()) ~= false end,
-                drawFunc = function(parent)
-                    parent:Clear()
-                    local searchEntry = parent:Add("liaEntry")
-                    searchEntry:Dock(TOP)
-                    searchEntry:SetTall(35)
-                    searchEntry:DockMargin(10, 10, 10, 10)
-                    searchEntry:SetPlaceholderText(L("searchConfigs") or "Search configurations...")
-                    searchEntry:SetFont("LiliaFont.18")
-                    local scroll = parent:Add("liaScrollPanel")
-                    scroll:Dock(FILL)
-                    scroll:GetCanvas():DockPadding(10, 10, 10, 10)
-                    local function populate(filter)
-                        scroll:Clear()
-                        filter = filter and filter:len() > 0 and filter:lower() or nil
-                        local categories = {}
-                        for k, v in pairs(regularConfigs) do
-                            local cat = v.rawCategory or (v.data and v.data.rawCategory) or v.category or "Core"
-                            categories[cat] = categories[cat] or {}
-                            table.insert(categories[cat], {
-                                key = k,
-                                name = tostring(lia.config.getDisplayName(k) or k),
-                                desc = tostring(lia.config.getDisplayDesc(k) or ""),
-                                config = v
-                            })
-                        end
-
-                        local sortedCategories = {}
-                        for cat, items in pairs(categories) do
-                            table.insert(sortedCategories, cat)
-                        end
-
-                        table.sort(sortedCategories, function(a, b)
-                            local aName = tostring(cfgLocalizeLabel(a)):lower()
-                            local bName = tostring(cfgLocalizeLabel(b)):lower()
-                            return aName < bName
-                        end)
-
-                        for _, cat in ipairs(sortedCategories) do
-                            local items = categories[cat]
-                            table.sort(items, function(a, b) return tostring(a.name or ""):lower() < tostring(b.name or ""):lower() end)
-                            local visibleItems = {}
-                            local localizedCategory = tostring(cfgLocalizeLabel(cat) or cat)
-                            for _, item in ipairs(items) do
-                                local localizedName = tostring(item.name or ""):lower()
-                                local localizedDesc = tostring(item.desc or ""):lower()
-                                if not filter or localizedName:find(filter, 1, true) or localizedDesc:find(filter, 1, true) or localizedCategory:lower():find(filter, 1, true) then table.insert(visibleItems, item) end
-                            end
-
-                            if #visibleItems > 0 then
-                                AddHeader(scroll, localizedCategory)
-                                for _, item in ipairs(visibleItems) do
-                                    AddField(scroll, item.key, item.name, item.config)
-                                end
-                            end
-                        end
-                    end
-
-                    searchEntry:SetUpdateOnType(true)
-                    searchEntry.OnTextChanged = function(me, text) populate(text) end
-                    populate(nil)
-                end
+                drawFunc = function(parent) drawConfigPage(parent, regularConfigs, "Configuration", "Manage core server settings, keybinds, options, and item configuration.", true) end
             }
         end
     end)
