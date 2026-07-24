@@ -759,6 +759,14 @@ local NoDrawCrosshairWeapon = {
     weapon_bugbait = true
 }
 
+local ForceDrawCrosshairWeapon = {
+    gmod_tool = true,
+    lia_adminstick = true,
+    lia_keys = true,
+    weapon_physgun = true,
+    weapon_physcannon = true
+}
+
 local function getHUDFont(size, suffix)
     return "HUDFont." .. tostring(size) .. (suffix or "")
 end
@@ -766,10 +774,6 @@ end
 local function isToolgunHUDHidden(client)
     local weapon = IsValid(client) and client:GetActiveWeapon() or nil
     return IsValid(weapon) and weapon:GetClass() == "gmod_tool"
-end
-
-local function formatDevHUDVector(vec)
-    return string.format("%.2f, %.2f, %.2f", vec.x, vec.y, vec.z)
 end
 
 local function easeOutQuint(fraction)
@@ -918,68 +922,6 @@ local function buildPlayerInfoSections(descriptionRows, infoRows, defaultInfoTit
     return sections
 end
 
-local function hasOpenTicketFrame()
-    local worldPanel = vgui.GetWorldPanel()
-    if not IsValid(worldPanel) then return false end
-    for _, panel in ipairs(worldPanel:GetChildren()) do
-        if IsValid(panel) and panel.requesterSteamID then return true end
-    end
-    return false
-end
-
-local function drawDevelopmentOverlay(client)
-    if not client:getChar() then return end
-    if not lia.option.get("drawDevelopmentHUD", true) then return end
-    if hasOpenTicketFrame() then return end
-    local canDrawDevHUD = client:hasPrivilege("developmentHUD")
-    local canDrawStaffHUD = client:hasPrivilege("staffHUD")
-    if not canDrawDevHUD and not canDrawStaffHUD then return end
-    local lines = {}
-    if canDrawDevHUD then
-        lines[#lines + 1] = string.format("SteamID64: %s | SteamID: %s", client:SteamID64(), client:SteamID())
-        lines[#lines + 1] = os.date("%m/%d/%Y | %X", os.time())
-    end
-
-    if canDrawStaffHUD then
-        local trace = client:GetEyeTraceNoCursor()
-        local hitPos = trace.HitPos
-        local ent = trace.Entity
-        lines[#lines + 1] = string.format("Pos: %s | Ang: %s", formatDevHUDVector(client:GetPos()), formatDevHUDVector(client:EyeAngles()))
-        lines[#lines + 1] = string.format("Trace Pos: %s | Trace Dist: %.2f", formatDevHUDVector(hitPos), client:GetPos():Distance(hitPos))
-        lines[#lines + 1] = string.format("Health: %d | Ping: %d | FPS: %d | FrameTime: %.4f", client:Health(), client:Ping(), math.Round(1 / FrameTime(), 0), FrameTime())
-        if IsValid(ent) then lines[#lines + 1] = string.format("Trace Ent: %s | Model: %s", ent:GetClass(), ent.GetModel and ent:GetModel() or "N/A") end
-    end
-
-    if #lines == 0 then return end
-    lia.derma.drawBoxWithText(table.concat(lines, "\n"), 24, 24, {
-        richText = false,
-        font = getHUDFont(18),
-        textColor = lia.color.theme.text or color_white,
-        backgroundColor = Color(25, 28, 35, 235),
-        borderRadius = 12,
-        padding = 18,
-        textAlignX = TEXT_ALIGN_LEFT,
-        textAlignY = TEXT_ALIGN_TOP,
-        blur = {
-            enabled = true,
-            amount = 4,
-            passes = 1,
-            alpha = 200
-        },
-        shadow = {
-            enabled = true,
-            offsetX = 12,
-            offsetY = 12,
-            color = Color(0, 0, 0, 170)
-        },
-        accentBorder = {
-            enabled = true,
-            height = 2,
-            color = lia.color.theme.accent or lia.color.theme.header or lia.color.theme.theme
-        }
-    })
-end
-
 local function canDrawAmmo(wpn)
     if not IsValid(wpn) or wpn.DrawAmmo == false then return false end
     local hookResult = hook.Run("ShouldDrawAmmo", wpn)
@@ -1020,6 +962,7 @@ local function canDrawCrosshair()
     if not client:getChar() or not IsValid(wpn) then return false end
     local hookResult = hook.Run("ShouldDrawCrosshair", client, wpn)
     if hookResult ~= nil then return hookResult end
+    if ForceDrawCrosshairWeapon[wpn:GetClass()] then return true end
     if not lia.config.get("CrosshairEnabled", true) then return false end
     local cl = wpn:GetClass()
     if cl == "gmod_tool" or string.find(cl, "lia_") or string.find(cl, "detector_") then return true end
@@ -1432,8 +1375,6 @@ function GM:HUDPaint()
             end
         end
     end
-
-    drawDevelopmentOverlay(client)
 end
 
 function GM:TooltipInitialize(var, panel)

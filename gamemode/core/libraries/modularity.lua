@@ -89,7 +89,8 @@ local function loadPermissions(Privileges)
             Name = privilegeName,
             ID = privID,
             MinAccess = privilegeData.MinAccess or "admin",
-            Category = privilegeCategory
+            Category = privilegeCategory,
+            Description = privilegeData.Description or privilegeData.Desc or privilegeData.description or privilegeData.desc or privilegeData.Help or privilegeData.help or privilegeData.Tooltip or privilegeData.tooltip
         })
     end
 end

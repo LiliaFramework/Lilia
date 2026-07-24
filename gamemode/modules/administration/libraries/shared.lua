@@ -4,12 +4,20 @@
     return hasPrivilege
 end
 
+function lia.admin.canUseDebugProperties(client)
+    if not CLIENT then return false end
+    client = client or LocalPlayer()
+    if not IsValid(client) then return false end
+    local weapon = client:GetActiveWeapon()
+    return IsValid(weapon) and weapon:GetClass() == "lia_adminstick" and weapon.GetActiveMode and weapon:GetActiveMode() == "debug"
+end
+
 properties.Add("TogglePropBlacklist", {
     MenuLabel = L("togglePropBlacklist"),
     Order = 900,
     MenuIcon = "icon16/link.png",
     Filter = function(_, ent, ply)
-        local permission = IsValid(ent) and ent:GetClass() == "prop_physics" and ply:hasPrivilege("managePropBlacklist")
+        local permission = lia.admin.canUseDebugProperties(ply) and IsValid(ent) and ent:GetClass() == "prop_physics" and ply:hasPrivilege("managePropBlacklist")
         lia.debug("[Permissions]", "Permission Check for property TogglePropBlacklist Filter", "entityValid=", tostring(IsValid(ent)), "entityIsPropPhysics=", tostring(IsValid(ent) and ent:GetClass() == "prop_physics" or false), "hasPrivilege(managePropBlacklist)=", tostring(ply:hasPrivilege("managePropBlacklist")), "finalResult=", tostring(permission))
         return permission
     end,
@@ -68,7 +76,7 @@ properties.Add("ToggleCarBlacklist", {
     Order = 901,
     MenuIcon = "icon16/link.png",
     Filter = function(_, ent, ply)
-        local permission = IsValid(ent) and (ent:IsVehicle() or ent:isSimfphysCar()) and ply:hasPrivilege("manageVehicleBlacklist")
+        local permission = lia.admin.canUseDebugProperties(ply) and IsValid(ent) and (ent:IsVehicle() or ent:isSimfphysCar()) and ply:hasPrivilege("manageVehicleBlacklist")
         lia.debug("[Permissions]", "Permission Check for property ToggleCarBlacklist Filter", "entityValid=", tostring(IsValid(ent)), "entityIsVehicle=", tostring(IsValid(ent) and ent:IsVehicle() or false), "entityIsSimfphysCar=", tostring(IsValid(ent) and ent.isSimfphysCar and ent:isSimfphysCar() or false), "hasPrivilege(manageVehicleBlacklist)=", tostring(ply:hasPrivilege("manageVehicleBlacklist")), "finalResult=", tostring(permission))
         return permission
     end,
@@ -100,7 +108,7 @@ properties.Add("copytoclipboard", {
     Filter = function(_, ent)
         if ent == nil then return false end
         if not IsValid(ent) then return false end
-        return true
+        return lia.admin.canUseDebugProperties(LocalPlayer())
     end,
     Action = function(self, ent)
         self:MsgStart()
@@ -117,7 +125,7 @@ properties.Add("CopyBodygroupsByName", {
     Filter = function(_, ent)
         if ent == nil then return false end
         if not IsValid(ent) then return false end
-        return true
+        return lia.admin.canUseDebugProperties(LocalPlayer())
     end,
     Action = function(self, ent)
         self:MsgStart()
@@ -140,7 +148,7 @@ properties.Add("CopyBodygroupsByID", {
     Filter = function(_, ent)
         if ent == nil then return false end
         if not IsValid(ent) then return false end
-        return true
+        return lia.admin.canUseDebugProperties(LocalPlayer())
     end,
     Action = function(self, ent)
         self:MsgStart()
@@ -163,7 +171,7 @@ properties.Add("CopySkin", {
     Filter = function(_, ent)
         if ent == nil then return false end
         if not IsValid(ent) then return false end
-        return true
+        return lia.admin.canUseDebugProperties(LocalPlayer())
     end,
     Action = function(self, ent)
         self:MsgStart()
@@ -176,6 +184,7 @@ lia.util.setPositionCallback(L("factionSpawnAdderTitle"), {
     onRun = function(pos, client, typeId)
         if SERVER then
             local factionID = net.ReadString()
+            local radius = math.Clamp(net.ReadFloat(), 0, 2048)
             if not factionID or factionID == "" then return end
             local factionInfo = lia.faction.teams[factionID] or lia.util.findFaction(client, factionID)
             if not factionInfo then return end
@@ -184,7 +193,8 @@ lia.util.setPositionCallback(L("factionSpawnAdderTitle"), {
                 table.insert(spawns[factionInfo.uniqueID], {
                     pos = pos,
                     ang = angle_zero,
-                    map = lia.data.getEquivalencyMap(game.GetMap())
+                    map = lia.data.getEquivalencyMap(game.GetMap()),
+                    radius = radius
                 })
 
                 lia.module.get("spawns"):StoreSpawns(spawns):next(function()
@@ -209,11 +219,15 @@ lia.util.setPositionCallback(L("factionSpawnAdderTitle"), {
                 if not selection or selection == false then return end
                 local factionID = idByDisplay[selection]
                 if not factionID then return end
-                net.Start("liaSetFeaturePosition")
-                net.WriteString("faction_spawn_adder")
-                net.WriteVector(pos)
-                net.WriteString(factionID)
-                net.SendToServer()
+                lia.derma.requestString("Radius", "0 disables the radius.", function(value)
+                    if value == false then return end
+                    net.Start("liaSetFeaturePosition")
+                    net.WriteString("faction_spawn_adder")
+                    net.WriteVector(pos)
+                    net.WriteString(factionID)
+                    net.WriteFloat(math.Clamp(tonumber(value) or 0, 0, 2048))
+                    net.SendToServer()
+                end, "0")
             end)
         end
     end,
@@ -233,7 +247,8 @@ lia.util.setPositionCallback(L("factionSpawnAdderTitle"), {
                             if not map or map == curMap then
                                 list[#list + 1] = {
                                     pos = pos,
-                                    label = label
+                                    label = label,
+                                    radius = data.radius
                                 }
                             end
                         end
@@ -276,6 +291,7 @@ lia.util.setPositionCallback(L("classSpawnAdderTitle"), {
     onRun = function(pos, client, typeId)
         if SERVER then
             local classID = net.ReadString()
+            local radius = math.Clamp(net.ReadFloat(), 0, 2048)
             if not classID or classID == "" then return end
             local classIDNum = tonumber(classID) or lia.class.retrieveClass(classID)
             local classData = lia.class.get(classIDNum)
@@ -287,7 +303,8 @@ lia.util.setPositionCallback(L("classSpawnAdderTitle"), {
             table.insert(data.classes[classIDNum], {
                 pos = pos,
                 ang = angle_zero,
-                map = lia.data.getEquivalencyMap(game.GetMap())
+                map = lia.data.getEquivalencyMap(game.GetMap()),
+                radius = radius
             })
 
             lia.data.set("spawns", data)
@@ -312,11 +329,15 @@ lia.util.setPositionCallback(L("classSpawnAdderTitle"), {
                 if not selection or selection == false then return end
                 local classID = idByDisplay[selection]
                 if not classID then return end
-                net.Start("liaSetFeaturePosition")
-                net.WriteString("class_spawn_adder")
-                net.WriteVector(pos)
-                net.WriteString(classID)
-                net.SendToServer()
+                lia.derma.requestString("Radius", "0 disables the radius.", function(value)
+                    if value == false then return end
+                    net.Start("liaSetFeaturePosition")
+                    net.WriteString("class_spawn_adder")
+                    net.WriteVector(pos)
+                    net.WriteString(classID)
+                    net.WriteFloat(math.Clamp(tonumber(value) or 0, 0, 2048))
+                    net.SendToServer()
+                end, "0")
             end)
         end
     end,
@@ -338,7 +359,8 @@ lia.util.setPositionCallback(L("classSpawnAdderTitle"), {
                         if not map or map == curMap then
                             list[#list + 1] = {
                                 pos = pos,
-                                label = label
+                                label = label,
+                                radius = spawnData.radius
                             }
                         end
                     end

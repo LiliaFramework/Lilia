@@ -2750,7 +2750,7 @@ else
         MenuIcon = "icon16/wrench.png",
         Filter = function(_, ent, ply)
             if not IsValid(ent) or not lia.dialog.isDialogNPCEntity(ent) then return false end
-            return canAccessNPCConfigurations(ply)
+            return lia.admin.canUseDebugProperties(ply) and canAccessNPCConfigurations(ply)
         end,
         Action = function(_, ent) lia.dialog.openConfigurationPicker(ent) end
     })

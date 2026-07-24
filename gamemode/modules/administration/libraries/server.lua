@@ -1,4 +1,18 @@
 ﻿local MODULE = MODULE
+function MODULE:PlayerLoadedChar(client, character)
+    if not IsValid(client) or not character or not client:isStaffOnDuty() then return end
+    local configuredFlags = lia.staffCharacterFlags or lia.data.get("staffCharacterFlags", {})
+    local missing = ""
+    for flag, enabled in pairs(configuredFlags) do
+        if enabled and lia.flag.list[flag] and not character:hasFlags(flag) then missing = missing .. flag end
+    end
+
+    if missing == "" then return end
+    character:giveFlags(missing)
+    character:save()
+    lia.debug("[Permissions]", "Staff character flags applied", "player=", tostring(client), "flags=", missing, "finalResult=", "saved")
+end
+
 function MODULE:PlayerSay(client, text)
     if text and string.sub(text, 1, 1) == "@" then return end
     if client:getLiliaData("liaMuted", false) then
@@ -13,15 +27,6 @@ end
 function MODULE:PlayerSpawn(client)
     if IsValid(client) and client:IsPlayer() then client:ConCommand("spawnmenu_reload") end
     lia.log.add(client, "playerSpawn")
-end
-
-function MODULE:PostPlayerLoadout(client)
-    local hasAlwaysSpawnAdminStick = client:hasPrivilege("alwaysSpawnAdminStick")
-    local isStaffOnDuty = client:isStaffOnDuty()
-    local hasUsePositionTool = client:hasPrivilege("usePositionTool")
-    local shouldGiveMapConfigurer = hasUsePositionTool or hasAlwaysSpawnAdminStick or isStaffOnDuty
-    lia.debug("[Permissions]", "Permission Check for function MODULE:PostPlayerLoadout map configurer", "hasPrivilege(usePositionTool)=", tostring(hasUsePositionTool), "hasPrivilege(alwaysSpawnAdminStick)=", tostring(hasAlwaysSpawnAdminStick), "isStaffOnDuty=", tostring(isStaffOnDuty), "finalResult=", tostring(shouldGiveMapConfigurer))
-    if shouldGiveMapConfigurer then client:Give("lia_mapconfigurer") end
 end
 
 function MODULE:PlayerShouldPermaKill(client)
@@ -308,6 +313,16 @@ local DisallowedTools = {
     stacker = true
 }
 
+local function getToolPermissionTier(tool)
+    tool = string.lower(tostring(tool or ""))
+    local tiers = lia.data.get("toolPermissionTiers", {})
+    local tier = istable(tiers) and tiers[tool] or nil
+    if tier == "disabled" or tier == "staff" or tier == "basic" then return tier end
+    if DisallowedTools[tool] then return "disabled" end
+    if tool == "remover" then return "basic" end
+    return "staff"
+end
+
 hook.Add("CanTool", "Lilia.CanTool", function(client, trace, tool)
     if client:InVehicle() then
         client:notifyErrorLocalized("cmdVehicle")
@@ -328,24 +343,27 @@ hook.Add("CanTool", "Lilia.CanTool", function(client, trace, tool)
         return true
     end
 
+    local hasToolgunFlag = client:hasFlags("t")
+    local isStaffWithToolgunFlag = client:isStaffOnDuty() and hasToolgunFlag
+    local hasToolPrivilege = client:hasPrivilege("tool_" .. tool)
     local hasUseDisallowedTools = client:hasPrivilege("useDisallowedTools")
-    lia.debug("[Permissions]", "Permission Check for hook CanTool disallowed tools", "tool=", tostring(tool), "toolIsDisallowed=", tostring(DisallowedTools[tool] == true), "hasPrivilege(useDisallowedTools)=", tostring(hasUseDisallowedTools), "finalResult=", tostring(not DisallowedTools[tool] or hasUseDisallowedTools))
-    if DisallowedTools[tool] and not hasUseDisallowedTools then
-        lia.log.add(client, "toolDenied", tool)
-        client:notifyErrorLocalized("toolNotAllowed", tool)
-        return false
-    end
-
-    local formattedTool = tool:gsub("^%l", string.upper)
-    local isStaffOrFlagged = client:isStaffOnDuty() or client:hasFlags("t")
-    local hasPriv = client:hasPrivilege("tool_" .. tool)
-    lia.debug("[Permissions]", "Permission Check for hook CanTool tool privilege", "tool=", tostring(tool), "isStaffOnDuty=", tostring(client:isStaffOnDuty()), "hasFlags(t)=", tostring(client:hasFlags("t")), "hasPrivilege(tool_" .. tool .. ")=", tostring(hasPriv), "finalResult=", tostring(isStaffOrFlagged and hasPriv))
-    if not (isStaffOrFlagged and hasPriv) then
+    local tier = getToolPermissionTier(tool)
+    local permitted = hasToolPrivilege or tier == "basic" and hasToolgunFlag or tier == "staff" and isStaffWithToolgunFlag or tier == "disabled" and hasToolgunFlag and hasUseDisallowedTools
+    lia.debug("[Permissions]", "Permission Check for hook CanTool tier", "tool=", tostring(tool), "tier=", tier, "hasToolgunFlag=", tostring(hasToolgunFlag), "isStaffWithToolgunFlag=", tostring(isStaffWithToolgunFlag), "hasToolPrivilege=", tostring(hasToolPrivilege), "hasUseDisallowedTools=", tostring(hasUseDisallowedTools), "finalResult=", tostring(permitted))
+    if not permitted then
         local reasons = {}
-        if not isStaffOrFlagged then table.insert(reasons, L("onDutyStaffOrFlagT")) end
-        if not hasPriv then table.insert(reasons, L("privilege") .. " '" .. L("accessToolPrivilege", formattedTool) .. "'") end
+        if tier == "disabled" then
+            if not hasUseDisallowedTools then table.insert(reasons, L("privilege") .. " '" .. L("useDisallowedTools") .. "'") end
+            if not hasToolgunFlag then table.insert(reasons, "flag 't'") end
+        elseif tier == "staff" then
+            if not client:isStaffOnDuty() then table.insert(reasons, "on-duty staff") end
+            if not hasToolgunFlag then table.insert(reasons, "flag 't'") end
+        elseif tier == "basic" and not hasToolgunFlag then
+            table.insert(reasons, "flag 't'")
+        end
+
         lia.log.add(client, "toolDenied", tool)
-        client:notifyErrorLocalized("toolNoPermission", tool, table.concat(reasons, ", "))
+        client:notifyErrorLocalized(tier == "disabled" and "toolNoPermission" or "toolNotAllowed", tool, table.concat(reasons, ", "))
         return false
     end
 

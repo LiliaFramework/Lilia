@@ -7659,6 +7659,11 @@ lia.command.add("spawnadd", {
                 end
                 return options
             end
+        },
+        {
+            name = "radius",
+            type = "string",
+            optional = true
         }
     },
     onRun = function(client, arguments)
@@ -7675,7 +7680,8 @@ lia.command.add("spawnadd", {
                 local newSpawn = {
                     pos = client:GetPos(),
                     ang = client:EyeAngles(),
-                    map = lia.data.getEquivalencyMap(game.GetMap())
+                    map = lia.data.getEquivalencyMap(game.GetMap()),
+                    radius = math.Clamp(tonumber(arguments[2]) or 0, 0, 2048)
                 }
 
                 table.insert(spawns[factionInfo.uniqueID], newSpawn)

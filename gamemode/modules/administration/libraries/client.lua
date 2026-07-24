@@ -1962,6 +1962,26 @@ function MODULE:PopulateAdminTabs(pages)
     end
 end
 
+local function getInventoryItemName(itemData, uniqueID)
+    local name = itemData and isfunction(itemData.getName) and itemData:getName() or nil
+    return name or itemData and itemData.name or uniqueID
+end
+
+local function getInventoryItemDesc(itemData)
+    local desc = itemData and isfunction(itemData.getDesc) and itemData:getDesc() or nil
+    return desc or itemData and itemData.desc or ""
+end
+
+local function getInventoryItemCategory(itemData)
+    local category = itemData and isfunction(itemData.getCategory) and itemData:getCategory() or nil
+    return category or itemData and itemData.category or lia.lang.resolveToken("@misc")
+end
+
+local function getInventoryItemRarity(itemData)
+    local rarity = itemData and isfunction(itemData.getData) and itemData:getData("rarity") or nil
+    return rarity or itemData and itemData.rarity
+end
+
 spawnmenu.AddContentType("inventoryitem", function(container, data)
     local client = LocalPlayer()
     local canUseItemSpawner = client:hasPrivilege("canUseItemSpawner")
@@ -1984,7 +2004,7 @@ spawnmenu.AddContentType("inventoryitem", function(container, data)
 
     icon:SetColor(Color(205, 92, 92, 255))
     icon.PaintOver = function(_, w, h)
-        local name = itemData:getName()
+        local name = getInventoryItemName(itemData, data.id)
         surface.SetFont("LiliaFont.18")
         local textW, textH = surface.GetTextSize(name)
         surface.SetDrawColor(0, 0, 0, 200)
@@ -1995,8 +2015,8 @@ spawnmenu.AddContentType("inventoryitem", function(container, data)
     end
 
     local lines = {}
-    lines[#lines + 1] = "<font=LiliaFont.16>" .. itemData:getName() .. "</font>"
-    local rarity = itemData:getData("rarity") or itemData.rarity
+    lines[#lines + 1] = "<font=LiliaFont.16>" .. getInventoryItemName(itemData, data.id) .. "</font>"
+    local rarity = getInventoryItemRarity(itemData)
     if rarity and rarity ~= "" then
         local rarityText = rarity
         local rarityColors = lia.item and lia.item.rarities
@@ -2005,7 +2025,7 @@ spawnmenu.AddContentType("inventoryitem", function(container, data)
         lines[#lines + 1] = "<font=LiliaFont.16>" .. rarityText .. "</font>"
     end
 
-    lines[#lines + 1] = "<font=LiliaFont.16>" .. itemData:getDesc() .. "</font>"
+    lines[#lines + 1] = "<font=LiliaFont.16>" .. getInventoryItemDesc(itemData) .. "</font>"
     icon:SetTooltip(table.concat(lines, "\n"))
     icon.lastSpawnTime = 0
     icon.DoClick = function(self)
@@ -2039,11 +2059,12 @@ function MODULE:PopulateInventoryItems(pnlContent, tree)
 
     tree:Clear()
     for uniqueID, itemData in pairs(allItems) do
-        local category = itemData:getCategory()
+        local category = getInventoryItemCategory(itemData)
+        local name = getInventoryItemName(itemData, uniqueID)
         categorized[category] = categorized[category] or {}
         table.insert(categorized[category], {
             id = uniqueID,
-            name = itemData:getName()
+            name = name
         })
     end
 
@@ -2089,9 +2110,9 @@ search.AddProvider(function(str)
     if not str or str == "" then return results end
     local query = string.lower(str)
     for uniqueID, itemData in pairs(lia.item.list or {}) do
-        local name = tostring(itemData:getName() or "")
-        local desc = tostring(itemData:getDesc() or "")
-        local category = tostring((itemData.getCategory and itemData:getCategory()) or "")
+        local name = tostring(getInventoryItemName(itemData, uniqueID) or "")
+        local desc = tostring(getInventoryItemDesc(itemData) or "")
+        local category = tostring(getInventoryItemCategory(itemData) or "")
         if string.find(string.lower(name), query, 1, true) or string.find(string.lower(desc), query, 1, true) or string.find(string.lower(category), query, 1, true) or string.find(string.lower(uniqueID), query, 1, true) then
             local icon = spawnmenu.CreateContentIcon("inventoryitem", g_SpawnMenu and g_SpawnMenu.SearchPropPanel or nil, {
                 name = name ~= "" and name or uniqueID,
@@ -2417,14 +2438,15 @@ function MODULE:PostDrawTranslucentRenderables()
     local client = LocalPlayer()
     if not IsValid(client) then return end
     local wep = client:GetActiveWeapon()
-    if not IsValid(wep) or wep:GetClass() ~= "lia_mapconfigurer" then return end
-    if not wep.CanUseTool or not wep:CanUseTool() then return end
+    if not IsValid(wep) or wep:GetClass() ~= "lia_adminstick" or not wep.CanUseTool or not wep:CanUseTool() then return end
     local typeInfo = wep.GetPositionToolMode and wep:GetPositionToolMode()
     local cacheType = wep.GetCacheType and wep:GetCacheType()
     local cachedPositions = wep.GetCachedPositions and wep:GetCachedPositions() or {}
     if not typeInfo or cacheType ~= typeInfo.id or #cachedPositions == 0 then return end
     local col = typeInfo.color or Color(255, 255, 255)
     local eyePos = client:EyePos()
+    local markerSegments = 24
+    local markerRadius = 18
     cam.Start3D()
     for i = 1, #cachedPositions do
         local entry = cachedPositions[i]
@@ -2442,6 +2464,27 @@ function MODULE:PostDrawTranslucentRenderables()
         else
             render.DrawLine(eyePos, pos, Color(col.r, col.g, col.b, 120))
         end
+
+        local markerColor = Color(col.r, col.g, col.b, 220)
+        local spawnRadius = math.max(0, tonumber(entry.radius) or 0)
+        for segment = 1, markerSegments do
+            local startAngle = math.rad((segment - 1) / markerSegments * 360)
+            local endAngle = math.rad(segment / markerSegments * 360)
+            local startPos = pos + Vector(math.cos(startAngle) * markerRadius, math.sin(startAngle) * markerRadius, 2)
+            local endPos = pos + Vector(math.cos(endAngle) * markerRadius, math.sin(endAngle) * markerRadius, 2)
+            render.DrawLine(startPos, endPos, markerColor)
+        end
+
+        if spawnRadius > 0 then
+            local radiusColor = Color(col.r, col.g, col.b, 150)
+            for segment = 1, markerSegments do
+                local startAngle = math.rad((segment - 1) / markerSegments * 360)
+                local endAngle = math.rad(segment / markerSegments * 360)
+                local startPos = pos + Vector(math.cos(startAngle) * spawnRadius, math.sin(startAngle) * spawnRadius, 2)
+                local endPos = pos + Vector(math.cos(endAngle) * spawnRadius, math.sin(endAngle) * spawnRadius, 2)
+                render.DrawLine(startPos, endPos, radiusColor)
+            end
+        end
     end
 
     cam.End3D()
@@ -2454,7 +2497,7 @@ function MODULE:HUDPaint()
     local hudFontSmall = "HUDFont.16"
     local wep = client:GetActiveWeapon()
     if IsValid(wep) and wep:GetClass() == "gmod_tool" then return end
-    if IsValid(wep) and wep:GetClass() == "lia_mapconfigurer" and wep.CanUseTool and wep:CanUseTool() then
+    if IsValid(wep) and wep:GetClass() == "lia_adminstick" and wep.CanUseTool and wep:CanUseTool() then
         local typeInfo = wep.GetPositionToolMode and wep:GetPositionToolMode()
         local cacheType = wep.GetCacheType and wep:GetCacheType()
         local cachedPositions = wep.GetCachedPositions and wep:GetCachedPositions() or {}
@@ -2560,40 +2603,70 @@ function MODULE:HUDPaint()
     end
 end
 
-local function DisplayPositionToolHUD(client, hudInfos, weapon)
-    local instructions = {L("positionToolInstructionSetAim"), L("positionToolInstructionUseCurrentPosition"), L("positionToolInstructionCycleMode"), L("positionToolInstructionOpenRemovalMenu")}
-    local typeInfo = weapon.GetPositionToolMode and weapon:GetPositionToolMode()
-    if typeInfo and typeInfo.name then table.insert(instructions, 1, L("positionToolCurrentMode", typeInfo.name)) end
+local function AddAdminStickToolHUD(hudInfos, title, rows)
     table.insert(hudInfos, {
-        text = instructions,
+        title = title,
+        rows = rows,
         font = "HUDFont.18",
-        color = Color(180, 180, 180),
+        color = lia.color.theme.text or Color(235, 240, 242),
         position = {
-            x = ScrW() - 20,
-            y = 20
+            x = ScrW() - 24,
+            y = 24
         },
         textAlignX = TEXT_ALIGN_RIGHT,
         textAlignY = TEXT_ALIGN_TOP,
-        backgroundColor = Color(25, 28, 35, 250),
-        borderRadius = 6,
-        borderThickness = 0,
-        padding = 12,
+        backgroundColor = Color(25, 28, 35, 235),
+        borderRadius = 12,
+        padding = 18,
         blur = {
             enabled = true,
-            amount = 1,
+            amount = 4,
             passes = 1,
-            alpha = 1.0
+            alpha = 200
         },
         shadow = {
             enabled = true,
-            offsetX = 8,
+            offsetX = 12,
             offsetY = 12,
-            color = lia.color.theme.window_shadow or Color(0, 0, 0, 50)
+            color = Color(0, 0, 0, 170)
         },
         accentBorder = {
             enabled = true,
             height = 2,
             color = lia.color.theme.accent or lia.color.theme.header or lia.color.theme.theme
+        }
+    })
+end
+
+local function DisplayPositionToolHUD(client, hudInfos, weapon)
+    local typeInfo = weapon.GetPositionToolMode and weapon:GetPositionToolMode()
+    AddAdminStickToolHUD(hudInfos, L("worldConfigurationMode"), {
+        {
+            label = L("adminStickHUDMode"),
+            value = typeInfo and typeInfo.name or L("unknown")
+        },
+        {
+            section = L("adminStickHUDControls")
+        },
+        {
+            label = L("adminStickHUDLeftClick"),
+            value = L("positionToolInstructionSetAim"):gsub("^.-:%s*", "")
+        },
+        {
+            label = L("adminStickHUDRightClick"),
+            value = L("positionToolInstructionUseCurrentPosition"):gsub("^.-:%s*", "")
+        },
+        {
+            label = "Shift + Reload",
+            value = L("positionToolInstructionCycleMode"):gsub("^.-:%s*", "")
+        },
+        {
+            label = "Shift + E",
+            value = L("positionToolInstructionOpenRemovalMenu"):gsub("^.-:%s*", "")
+        },
+        {
+            label = L("adminStickHUDReload"),
+            value = L("adminStickInstructionSwitchMode"):gsub("^.-:%s*", "")
         }
     })
 end
@@ -2720,9 +2793,1279 @@ function MODULE:DisplayPlayerHUDInformation(client, hudInfos)
     if not client:getChar() then return end
     local weapon = client:GetActiveWeapon()
     if not IsValid(weapon) then return end
-    if weapon:GetClass() == "lia_mapconfigurer" then
-        DisplayPositionToolHUD(client, hudInfos, weapon)
+    if weapon:GetClass() == "lia_adminstick" then
+        local mode = weapon:GetActiveMode()
+        if mode == "map_configurer" and weapon:CanUseTool() then DisplayPositionToolHUD(client, hudInfos, weapon) end
     elseif weapon:GetClass() == "lia_distance" then
         DisplayDistanceToolHUD(client, hudInfos, weapon)
     end
 end
+
+local toolPermissionTierData = {
+    tools = {},
+    tiers = {}
+}
+
+local toolPermissionTierRefresh
+local toolPermissionLegacyDisabled = {
+    rope = true,
+    light = true,
+    lamp = true,
+    dynamite = true,
+    physprop = true,
+    faceposer = true,
+    stacker = true
+}
+
+local toolPermissionDefinitions = {
+    disabled = {
+        title = "Disabled",
+        description = "Requires the t flag and Use Disallowed Tools. The tool privilege bypasses this.",
+        color = Color(220, 72, 72)
+    },
+    staff = {
+        title = "Staff",
+        description = "Requires on-duty staff and the t flag. The tool privilege bypasses this.",
+        color = Color(74, 158, 225)
+    },
+    basic = {
+        title = "Basic",
+        description = "Requires the t flag. The tool privilege bypasses this.",
+        color = Color(65, 196, 116)
+    }
+}
+
+local toolPermissionTierOrder = {"disabled", "staff", "basic"}
+local function getDefaultToolPermissionTier(toolName)
+    if toolPermissionLegacyDisabled[toolName] then return "disabled" end
+    return toolName == "remover" and "basic" or "staff"
+end
+
+local function getToolPermissionTier(toolName)
+    local tier = toolPermissionTierData.tiers and toolPermissionTierData.tiers[toolName] or nil
+    if toolPermissionDefinitions[tier] then return tier end
+    return getDefaultToolPermissionTier(toolName)
+end
+
+local function resolveToolPhrase(value)
+    if not isstring(value) or value == "" then return nil end
+    local key = value:sub(1, 1) == "#" and value:sub(2) or value
+    local translated = language.GetPhrase(key)
+    if translated and translated ~= "" and translated ~= key then return translated end
+    if value:sub(1, 1) ~= "#" and not value:find("^tool%.") then return value end
+end
+
+local function formatToolName(toolName)
+    local formatted = tostring(toolName or ""):gsub("[_%-]+", " ")
+    return formatted:gsub("(%a)([%w']*)", function(first, rest) return first:upper() .. rest:lower() end)
+end
+
+local function shortenToolText(value, limit)
+    value = tostring(value or ""):gsub("[%c]+", " "):gsub("%s+", " ")
+    if #value <= limit then return value end
+    return value:sub(1, math.max(limit - 3, 1)) .. "..."
+end
+
+local function getToolPermissionMetadata()
+    local registeredTools = {}
+    for _, weapon in ipairs(weapons.GetList()) do
+        if weapon.ClassName == "gmod_tool" and istable(weapon.Tool) then
+            for toolName, toolData in pairs(weapon.Tool) do
+                registeredTools[string.lower(tostring(toolName))] = istable(toolData) and toolData or {}
+            end
+        end
+    end
+
+    local metadata = {}
+    for _, rawTool in ipairs(toolPermissionTierData.tools or {}) do
+        local toolName = string.lower(tostring(istable(rawTool) and rawTool.id or rawTool))
+        if toolName == "" then continue end
+        local toolData = registeredTools[toolName] or {}
+        local displayName = resolveToolPhrase(toolData.Name) or resolveToolPhrase("tool." .. toolName .. ".name") or formatToolName(toolName)
+        local category = resolveToolPhrase(toolData.Category) or "Other"
+        local description = resolveToolPhrase(toolData.Description) or resolveToolPhrase(toolData.Desc) or resolveToolPhrase("tool." .. toolName .. ".desc") or "Controls access to the " .. displayName .. " tool."
+        metadata[#metadata + 1] = {
+            id = toolName,
+            name = displayName,
+            category = category,
+            description = description
+        }
+    end
+
+    table.sort(metadata, function(a, b)
+        local an = a.name:lower()
+        local bn = b.name:lower()
+        if an == bn then return a.id < b.id end
+        return an < bn
+    end)
+    return metadata
+end
+
+local function paintToolPermissionPanel(w, h, background, border, radius)
+    lia.derma.rect(0, 0, w, h):Rad(radius or 6):Color(background):Shape(lia.derma.SHAPE_IOS):Draw()
+    if border then lia.derma.rect(0, 0, w, h):Rad(radius or 6):Color(border):Shape(lia.derma.SHAPE_IOS):Outline(1):Draw() end
+end
+
+net.Receive("liaToolPermissionTiers", function()
+    toolPermissionTierData = net.ReadTable() or {
+        tools = {},
+        tiers = {}
+    }
+
+    if toolPermissionTierRefresh then toolPermissionTierRefresh() end
+end)
+
+local staffCharacterConfiguration = {
+    permissions = {},
+    flags = {},
+    privileges = {},
+    flagDefinitions = {}
+}
+
+local staffCharacterConfigurationRefresh
+local staffCharacterConfigurationPending = 0
+local staffCharacterConfigurationOperations = {}
+net.Receive("liaStaffCharacterConfiguration", function()
+    staffCharacterConfiguration = net.ReadTable() or staffCharacterConfiguration
+    staffCharacterConfiguration.permissions = staffCharacterConfiguration.permissions or {}
+    staffCharacterConfiguration.flags = staffCharacterConfiguration.flags or {}
+    staffCharacterConfiguration.privileges = staffCharacterConfiguration.privileges or {}
+    staffCharacterConfiguration.flagDefinitions = staffCharacterConfiguration.flagDefinitions or {}
+    if #staffCharacterConfigurationOperations > 0 then table.remove(staffCharacterConfigurationOperations, 1) end
+    for _, operation in ipairs(staffCharacterConfigurationOperations) do
+        if operation.kind == "permission" then
+            staffCharacterConfiguration.permissions[operation.id] = operation.enabled and true or nil
+        elseif operation.kind == "flag" then
+            staffCharacterConfiguration.flags[operation.id] = operation.enabled and true or nil
+        elseif operation.kind == "reset" then
+            staffCharacterConfiguration.permissions = {}
+            staffCharacterConfiguration.flags = {}
+        end
+    end
+
+    staffCharacterConfigurationPending = #staffCharacterConfigurationOperations
+    lia.staffCharacterPermissions = staffCharacterConfiguration.permissions or {}
+    lia.staffCharacterFlags = staffCharacterConfiguration.flags or {}
+    if staffCharacterConfigurationRefresh then staffCharacterConfigurationRefresh(true) end
+end)
+
+local function staffConfigurationPanel(parent, title, subtitle)
+    local panel = parent:Add("DPanel")
+    panel:Dock(TOP)
+    panel:DockMargin(0, 0, 0, 12)
+    panel:SetTall(76)
+    panel.Paint = function(_, w, h)
+        local accent = lia.color.theme.accent or Color(45, 190, 170)
+        paintToolPermissionPanel(w, h, Color(4, 18, 23, 242), Color(accent.r, accent.g, accent.b, 90), 7)
+        surface.SetDrawColor(accent.r, accent.g, accent.b, 230)
+        surface.DrawRect(0, 0, 3, h)
+        draw.SimpleText(title, "LiliaFont.19", 18, 16, Color(230, 238, 236), TEXT_ALIGN_LEFT, TEXT_ALIGN_TOP)
+        draw.SimpleText(subtitle, "LiliaFont.16", 18, 43, Color(160, 178, 176), TEXT_ALIGN_LEFT, TEXT_ALIGN_TOP)
+    end
+    return panel
+end
+
+hook.Add("PopulateAdminTabs", "liaStaffCharacterPermissions", function(pages)
+    local client = LocalPlayer()
+    if not IsValid(client) or not lia.admin.hasAccess(client, "manageUsergroups") then return end
+    pages[#pages + 1] = {
+        name = "Staff Character Permissions",
+        icon = "icon16/shield.png",
+        drawFunc = function(panel)
+            panel:Clear()
+            panel:DockPadding(12, 12, 12, 12)
+            panel.Paint = nil
+            local panelColor = Color(4, 18, 23, 242)
+            local panelColorHovered = Color(11, 29, 34, 244)
+            local textColor = Color(230, 238, 236)
+            local mutedTextColor = Color(150, 168, 166)
+            local searchEntry
+            local typeCombo
+            local categoryCombo
+            local contentScroll
+            local footer
+            local clearButton
+            local typeFilter = "all"
+            local categoryFilter = "all"
+            local categorySignature = ""
+            local lastServerUpdate = 0
+            local function getAccent()
+                return lia.color.theme.accent or Color(45, 190, 170)
+            end
+
+            local function styleScrollBar(scrollPanel)
+                if not IsValid(scrollPanel) or not IsValid(scrollPanel.VBar) then return end
+                local vbar = scrollPanel.VBar
+                vbar:SetWide(8)
+                vbar.Paint = function(_, w, h)
+                    surface.SetDrawColor(255, 255, 255, 4)
+                    surface.DrawRect(0, 0, w, h)
+                end
+
+                vbar.btnUp.Paint = function() end
+                vbar.btnDown.Paint = function() end
+                vbar.btnGrip.Paint = function(_, w, h)
+                    local accent = getAccent()
+                    lia.derma.rect(1, 0, w - 2, h):Rad(4):Color(Color(accent.r, accent.g, accent.b, 150)):Shape(lia.derma.SHAPE_IOS):Draw()
+                end
+            end
+
+            local function styleCombo(combo)
+                combo:SetFont("LiliaFont.17")
+                combo:SetTextColor(Color(205, 220, 220))
+                combo:SetContentAlignment(4)
+                combo.Paint = function(_, w, h)
+                    local accent = getAccent()
+                    paintToolPermissionPanel(w, h, panelColor, Color(accent.r, accent.g, accent.b, 82), 6)
+                end
+
+                if IsValid(combo.DropButton) then
+                    combo.DropButton:SetWide(32)
+                    combo.DropButton.Paint = function(_, w, h) draw.SimpleText("▼", "LiliaFont.16", w * 0.5, h * 0.5, Color(175, 195, 195), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER) end
+                end
+            end
+
+            local function countEnabled(values)
+                local count = 0
+                for _, enabled in pairs(values or {}) do
+                    if enabled == true then count = count + 1 end
+                end
+                return count
+            end
+
+            local function countEntries(values)
+                local count = 0
+                for _ in pairs(values or {}) do
+                    count = count + 1
+                end
+                return count
+            end
+
+            local function hasConfiguration()
+                return next(staffCharacterConfiguration.permissions or {}) ~= nil or next(staffCharacterConfiguration.flags or {}) ~= nil
+            end
+
+            local function updateFooter()
+                if IsValid(footer) then footer:InvalidateLayout(true) end
+                if IsValid(clearButton) then clearButton:SetEnabled(hasConfiguration() and staffCharacterConfigurationPending == 0) end
+            end
+
+            local function markSaving(operation)
+                staffCharacterConfigurationOperations[#staffCharacterConfigurationOperations + 1] = operation
+                staffCharacterConfigurationPending = #staffCharacterConfigurationOperations
+                updateFooter()
+            end
+
+            staffConfigurationPanel(panel, "Default Staff Character Access", "Privileges apply only while using a staff character. Normal user-group privileges remain active on every character.")
+            local toolbar = panel:Add("DPanel")
+            toolbar:Dock(TOP)
+            toolbar:SetTall(48)
+            toolbar:DockMargin(0, 0, 0, 12)
+            toolbar.Paint = function() end
+            categoryCombo = toolbar:Add("DComboBox")
+            categoryCombo:Dock(RIGHT)
+            categoryCombo:SetWide(220)
+            categoryCombo:DockMargin(10, 0, 0, 0)
+            categoryCombo:SetValue("All Categories")
+            categoryCombo:AddChoice("All Categories", "all")
+            styleCombo(categoryCombo)
+            typeCombo = toolbar:Add("DComboBox")
+            typeCombo:Dock(RIGHT)
+            typeCombo:SetWide(190)
+            typeCombo:DockMargin(10, 0, 0, 0)
+            typeCombo:SetValue("All Types")
+            typeCombo:AddChoice("All Types", "all")
+            typeCombo:AddChoice("Privileges", "permissions")
+            typeCombo:AddChoice("Character Flags", "flags")
+            styleCombo(typeCombo)
+            local searchWrap = toolbar:Add("DPanel")
+            searchWrap:Dock(FILL)
+            searchWrap:DockPadding(42, 0, 10, 0)
+            searchWrap.Paint = function(_, w, h)
+                local accent = getAccent()
+                paintToolPermissionPanel(w, h, panelColor, Color(accent.r, accent.g, accent.b, 82), 6)
+                surface.SetDrawColor(155, 181, 182)
+                surface.DrawCircle(18, math.floor(h * 0.5) - 2, 6, 155, 181, 182, 255)
+                surface.DrawLine(23, math.floor(h * 0.5) + 3, 29, math.floor(h * 0.5) + 9)
+            end
+
+            searchEntry = searchWrap:Add("DTextEntry")
+            searchEntry:Dock(FILL)
+            searchEntry:SetFont("LiliaFont.17")
+            searchEntry:SetTextColor(Color(225, 236, 236))
+            searchEntry:SetCursorColor(getAccent())
+            searchEntry:SetPlaceholderText("Search permissions and flags...")
+            searchEntry:SetDrawBackground(false)
+            searchEntry:SetPaintBackground(false)
+            searchEntry:SetPaintBorderEnabled(false)
+            searchEntry:SetUpdateOnType(true)
+            footer = panel:Add("DPanel")
+            footer:Dock(BOTTOM)
+            footer:SetTall(58)
+            footer:DockMargin(0, 10, 0, 0)
+            footer.Paint = function(_, w, h)
+                local accent = getAccent()
+                paintToolPermissionPanel(w, h, panelColor, Color(accent.r, accent.g, accent.b, 70), 7)
+                local saving = staffCharacterConfigurationPending > 0
+                local statusText = saving and "Saving changes..." or "Changes are saved automatically"
+                local statusColor = saving and Color(225, 190, 100) or Color(185, 205, 202)
+                draw.RoundedBox(7, 18, math.floor(h * 0.5) - 7, 14, 14, saving and Color(225, 190, 100) or Color(65, 190, 135))
+                if not saving then draw.SimpleText("✓", "LiliaFont.15", 25, h * 0.5, Color(245, 250, 250), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER) end
+                draw.SimpleText(statusText, "LiliaFont.17", 44, h * 0.5, statusColor, TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)
+                if not saving and lastServerUpdate > 0 then
+                    surface.SetFont("LiliaFont.17")
+                    local statusWidth = select(1, surface.GetTextSize(statusText))
+                    draw.SimpleText("Saved", "LiliaFont.16", 58 + statusWidth, h * 0.5, Color(65, 190, 135), TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)
+                end
+            end
+
+            clearButton = footer:Add("DButton")
+            clearButton:SetSize(248, 38)
+            clearButton:SetText("")
+            clearButton.Paint = function(button, w, h)
+                local enabled = button:IsEnabled()
+                local hovered = enabled and button:IsHovered()
+                local background = hovered and Color(75, 25, 28, 210) or Color(35, 18, 21, 205)
+                local border = enabled and Color(205, 70, 75, hovered and 210 or 145) or Color(95, 55, 58, 65)
+                paintToolPermissionPanel(w, h, background, border, 6)
+                draw.SimpleText("Clear Configuration", "LiliaFont.17", w * 0.5, h * 0.5, enabled and Color(235, 105, 110) or Color(105, 85, 86), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
+            end
+
+            clearButton.DoClick = function()
+                Derma_Query("Disable all staff-character fallback privileges and future automatic flag grants? Flags already granted to characters will not be removed.", "Clear Staff Character Configuration", "Clear Configuration", function()
+                    staffCharacterConfiguration.permissions = {}
+                    staffCharacterConfiguration.flags = {}
+                    markSaving({
+                        kind = "reset"
+                    })
+
+                    if staffCharacterConfigurationRefresh then staffCharacterConfigurationRefresh(false) end
+                    net.Start("liaResetStaffCharacterConfiguration")
+                    net.SendToServer()
+                end, "Cancel")
+            end
+
+            footer.PerformLayout = function(_, w, h) clearButton:SetPos(w - clearButton:GetWide() - 10, math.floor((h - clearButton:GetTall()) * 0.5)) end
+            contentScroll = panel:Add("liaScrollPanel")
+            contentScroll:Dock(FILL)
+            contentScroll.Paint = function() end
+            styleScrollBar(contentScroll)
+            local contentCanvas = contentScroll:GetCanvas()
+            if IsValid(contentCanvas) then
+                contentCanvas:DockPadding(0, 0, 4, 0)
+                contentCanvas.Paint = function() end
+            end
+
+            local function addSettingRow(section, data)
+                local rowHeight = 62
+                local row = section:Add("DButton")
+                row:Dock(TOP)
+                row:SetTall(rowHeight)
+                row:DockMargin(10, 0, 10, 7)
+                row:SetText("")
+                row:SetTooltip(data.name .. "\n" .. data.description)
+                local nameLabel = row:Add("DLabel")
+                nameLabel:SetFont("LiliaFont.17")
+                nameLabel:SetText(data.name)
+                nameLabel:SetTextColor(textColor)
+                nameLabel:SetContentAlignment(4)
+                local descriptionLabel = row:Add("DLabel")
+                descriptionLabel:SetFont("LiliaFont.15")
+                descriptionLabel:SetText(data.description)
+                descriptionLabel:SetTextColor(mutedTextColor)
+                descriptionLabel:SetContentAlignment(4)
+                row.Paint = function(button, w, h)
+                    local accent = getAccent()
+                    local hovered = button:IsHovered()
+                    local background = data.enabled and Color(accent.r, accent.g, accent.b, hovered and 26 or 17) or hovered and panelColorHovered or Color(7, 23, 28, 225)
+                    local border = data.enabled and Color(accent.r, accent.g, accent.b, hovered and 160 or 110) or Color(accent.r, accent.g, accent.b, hovered and 78 or 38)
+                    paintToolPermissionPanel(w, h, background, border, 6)
+                    if data.enabled then
+                        surface.SetDrawColor(accent.r, accent.g, accent.b, 235)
+                        surface.DrawRect(0, 7, 3, h - 14)
+                    end
+
+                    local switchW = 42
+                    local switchH = 22
+                    local switchX = w - switchW - 18
+                    local switchY = math.floor((h - switchH) * 0.5)
+                    draw.RoundedBox(11, switchX, switchY, switchW, switchH, data.enabled and Color(accent.r, accent.g, accent.b, 220) or Color(75, 92, 96, 235))
+                    draw.RoundedBox(9, data.enabled and switchX + switchW - 20 or switchX + 2, switchY + 2, 18, 18, Color(238, 245, 245))
+                end
+
+                row.PerformLayout = function(_, w)
+                    local rightReserve = 92
+                    local textWidth = math.max(w - rightReserve - 18, 80)
+                    nameLabel:SetPos(16, 8)
+                    nameLabel:SetSize(textWidth, 22)
+                    descriptionLabel:SetPos(16, 31)
+                    descriptionLabel:SetSize(textWidth, 20)
+                end
+
+                row.DoClick = data.onToggle
+                return rowHeight + 7
+            end
+
+            local function addSection(title, enabledCount, totalCount, note, rows)
+                local accent = getAccent()
+                local headerHeight = note and 62 or 45
+                local sectionHeight = headerHeight + 10
+                local section = contentScroll:Add("DPanel")
+                section:Dock(TOP)
+                section:DockMargin(0, 0, 0, 12)
+                section.Paint = function(_, w, h)
+                    paintToolPermissionPanel(w, h, panelColor, Color(accent.r, accent.g, accent.b, 70), 7)
+                    surface.SetDrawColor(accent.r, accent.g, accent.b, 32)
+                    surface.DrawRect(10, headerHeight - 1, w - 20, 1)
+                    draw.SimpleText(string.upper(title), "LiliaFont.17", 14, 13, Color(accent.r, accent.g, accent.b), TEXT_ALIGN_LEFT, TEXT_ALIGN_TOP)
+                    local countText = enabledCount .. " / " .. totalCount
+                    surface.SetFont("LiliaFont.15")
+                    local countW = select(1, surface.GetTextSize(countText)) + 18
+                    local countX = w - countW - 14
+                    lia.derma.rect(countX, 10, countW, 24):Rad(5):Color(Color(2, 14, 18, 190)):Shape(lia.derma.SHAPE_IOS):Draw()
+                    lia.derma.rect(countX, 10, countW, 24):Rad(5):Color(Color(accent.r, accent.g, accent.b, 65)):Shape(lia.derma.SHAPE_IOS):Outline(1):Draw()
+                    surface.SetTextColor(Color(175, 195, 195))
+                    surface.SetTextPos(countX + 9, 14)
+                    surface.DrawText(countText)
+                    if note then draw.SimpleText(note, "LiliaFont.14", 14, 38, Color(205, 165, 80), TEXT_ALIGN_LEFT, TEXT_ALIGN_TOP) end
+                end
+
+                if #rows == 0 then
+                    local empty = section:Add("DPanel")
+                    empty:Dock(TOP)
+                    empty:SetTall(54)
+                    empty:DockMargin(10, 0, 10, 8)
+                    empty.Paint = function(_, w, h)
+                        paintToolPermissionPanel(w, h, Color(7, 23, 28, 190), Color(accent.r, accent.g, accent.b, 35), 6)
+                        draw.SimpleText("No settings match the current filters.", "LiliaFont.16", 16, h * 0.5, mutedTextColor, TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)
+                    end
+
+                    sectionHeight = sectionHeight + 62
+                else
+                    for _, rowData in ipairs(rows) do
+                        sectionHeight = sectionHeight + addSettingRow(section, rowData)
+                    end
+                end
+
+                section:SetTall(sectionHeight)
+                section:DockPadding(0, headerHeight, 0, 0)
+            end
+
+            local function resolvePrivilegeCategory(permissionID)
+                if isfunction(getPrivilegeCategory) then
+                    local category = getPrivilegeCategory(permissionID)
+                    if category and category ~= "" then return tostring(category) end
+                end
+
+                local category = lia.admin.privilegeCategories and lia.admin.privilegeCategories[permissionID]
+                if category and category ~= "" then return tostring(lia.lang.resolveToken(category)) end
+                for _, module in pairs(lia.module.list or {}) do
+                    if istable(module.Privileges) and istable(module.Privileges[permissionID]) then
+                        local privilege = module.Privileges[permissionID]
+                        return tostring(lia.lang.resolveToken(privilege.Category or module.name or "@unassigned"))
+                    end
+                end
+
+                if CAMI then
+                    local privilege = CAMI.GetPrivilege(permissionID)
+                    if privilege and privilege.Category then return tostring(lia.lang.resolveToken(privilege.Category)) end
+                end
+                return tostring(lia.lang.resolveToken("@unassigned"))
+            end
+
+            local function resolvePrivilegeDescription(permissionID, name)
+                local rawDescription = lia.admin.privilegeDescriptions and lia.admin.privilegeDescriptions[permissionID] or nil
+                if rawDescription ~= nil then
+                    local description = string.Trim(tostring(lia.lang.resolveToken(rawDescription) or ""))
+                    if description ~= "" and description ~= permissionID then return description end
+                end
+
+                for _, module in pairs(lia.module.list or {}) do
+                    local privilege = istable(module.Privileges) and module.Privileges[permissionID] or nil
+                    local description = privilege and (privilege.Description or privilege.Desc or privilege.description or privilege.desc or privilege.Help or privilege.help or privilege.Tooltip or privilege.tooltip) or nil
+                    if description ~= nil then
+                        description = string.Trim(tostring(lia.lang.resolveToken(description) or ""))
+                        if description ~= "" and description ~= permissionID then return description end
+                    end
+                end
+                return "Allows access to " .. name .. "."
+            end
+
+            local function rebuildCategoryChoices(categories)
+                if not IsValid(categoryCombo) then return end
+                local names = {}
+                for category in pairs(categories) do
+                    names[#names + 1] = category
+                end
+
+                table.sort(names, function(a, b) return a:lower() < b:lower() end)
+                local signature = table.concat(names, "\n")
+                if signature == categorySignature then return end
+                categorySignature = signature
+                local previous = categoryFilter
+                local foundPrevious = previous == "all"
+                categoryCombo:Clear()
+                categoryCombo:AddChoice("All Categories", "all")
+                for _, category in ipairs(names) do
+                    categoryCombo:AddChoice(category, category)
+                    if category == previous then foundPrevious = true end
+                end
+
+                if not foundPrevious then categoryFilter = "all" end
+                categoryCombo:SetValue(categoryFilter == "all" and "All Categories" or categoryFilter)
+            end
+
+            local function refresh(fromServer)
+                if not IsValid(contentScroll) or not IsValid(searchEntry) then return end
+                if fromServer then lastServerUpdate = RealTime() end
+                local oldScroll = IsValid(contentScroll.VBar) and contentScroll.VBar:GetScroll() or 0
+                contentScroll:Clear()
+                local search = string.Trim(searchEntry:GetValue() or ""):lower()
+                local permissionRows = {}
+                local flagRows = {}
+                local privileges = {}
+                local flags = {}
+                local categories = {}
+                for id in pairs(staffCharacterConfiguration.privileges or {}) do
+                    privileges[#privileges + 1] = id
+                end
+
+                table.sort(privileges, function(a, b) return tostring(lia.admin.privilegeNames[a] or a):lower() < tostring(lia.admin.privilegeNames[b] or b):lower() end)
+                for _, id in ipairs(privileges) do
+                    local permissionID = id
+                    local name = tostring(lia.admin.privilegeNames[permissionID] or permissionID)
+                    local description = resolvePrivilegeDescription(permissionID, name)
+                    local category = resolvePrivilegeCategory(permissionID)
+                    local enabled = staffCharacterConfiguration.permissions[permissionID] == true
+                    local searchable = (name .. " " .. permissionID .. " " .. description .. " " .. category):lower()
+                    categories[category] = true
+                    if (search == "" or searchable:find(search, 1, true)) and (categoryFilter == "all" or category == categoryFilter) then
+                        permissionRows[#permissionRows + 1] = {
+                            kind = "permission",
+                            id = permissionID,
+                            name = name,
+                            description = description,
+                            category = category,
+                            enabled = enabled,
+                            onToggle = function()
+                                local nextEnabled = not enabled
+                                staffCharacterConfiguration.permissions[permissionID] = nextEnabled and true or nil
+                                lia.staffCharacterPermissions = staffCharacterConfiguration.permissions
+                                markSaving({
+                                    kind = "permission",
+                                    id = permissionID,
+                                    enabled = nextEnabled
+                                })
+
+                                refresh(false)
+                                net.Start("liaSetStaffCharacterPermission")
+                                net.WriteString(permissionID)
+                                net.WriteBool(nextEnabled)
+                                net.SendToServer()
+                            end
+                        }
+                    end
+                end
+
+                rebuildCategoryChoices(categories)
+                for id in pairs(staffCharacterConfiguration.flagDefinitions or {}) do
+                    flags[#flags + 1] = id
+                end
+
+                table.sort(flags)
+                for _, id in ipairs(flags) do
+                    local flagID = id
+                    local description = tostring(staffCharacterConfiguration.flagDefinitions[flagID] or flagID)
+                    local enabled = staffCharacterConfiguration.flags[flagID] == true
+                    local searchable = (flagID .. " " .. description):lower()
+                    if categoryFilter == "all" and (search == "" or searchable:find(search, 1, true)) then
+                        flagRows[#flagRows + 1] = {
+                            kind = "flag",
+                            id = flagID,
+                            name = "Flag " .. flagID,
+                            description = description,
+                            enabled = enabled,
+                            onToggle = function()
+                                local nextEnabled = not enabled
+                                staffCharacterConfiguration.flags[flagID] = nextEnabled and true or nil
+                                lia.staffCharacterFlags = staffCharacterConfiguration.flags
+                                markSaving({
+                                    kind = "flag",
+                                    id = flagID,
+                                    enabled = nextEnabled
+                                })
+
+                                refresh(false)
+                                net.Start("liaSetStaffCharacterFlag")
+                                net.WriteString(flagID)
+                                net.WriteBool(nextEnabled)
+                                net.SendToServer()
+                            end
+                        }
+                    end
+                end
+
+                local shownSections = 0
+                if typeFilter == "all" or typeFilter == "permissions" then
+                    addSection("Privileges", countEnabled(staffCharacterConfiguration.permissions), countEntries(staffCharacterConfiguration.privileges), nil, permissionRows)
+                    shownSections = shownSections + 1
+                end
+
+                if categoryFilter == "all" and (typeFilter == "all" or typeFilter == "flags") then
+                    addSection("Character Flags", countEnabled(staffCharacterConfiguration.flags), countEntries(staffCharacterConfiguration.flagDefinitions), "Disabling a flag only stops future grants; flags already granted are never removed.", flagRows)
+                    shownSections = shownSections + 1
+                end
+
+                if shownSections == 0 then
+                    local empty = contentScroll:Add("DPanel")
+                    empty:Dock(TOP)
+                    empty:SetTall(90)
+                    empty.Paint = function(_, w, h)
+                        local accent = getAccent()
+                        paintToolPermissionPanel(w, h, panelColor, Color(accent.r, accent.g, accent.b, 70), 7)
+                        draw.SimpleText("No settings match the current filters.", "LiliaFont.17", w * 0.5, h * 0.5, mutedTextColor, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
+                    end
+                end
+
+                updateFooter()
+                timer.Simple(0, function()
+                    if not IsValid(contentScroll) or not IsValid(contentScroll.VBar) then return end
+                    contentScroll.VBar:SetScroll(math.min(oldScroll, contentScroll.VBar.CanvasSize or oldScroll))
+                end)
+            end
+
+            searchEntry.OnChange = function() refresh(false) end
+            typeCombo.OnSelect = function(_, _, _, data)
+                typeFilter = data or "all"
+                if typeFilter == "flags" and categoryFilter ~= "all" then
+                    categoryFilter = "all"
+                    categoryCombo:SetValue("All Categories")
+                end
+
+                categoryCombo:SetEnabled(typeFilter ~= "flags")
+                refresh(false)
+            end
+
+            categoryCombo.OnSelect = function(_, _, _, data)
+                categoryFilter = data or "all"
+                refresh(false)
+            end
+
+            staffCharacterConfigurationRefresh = refresh
+            local oldOnRemove = panel.OnRemove
+            panel.OnRemove = function(self)
+                if oldOnRemove then oldOnRemove(self) end
+                if staffCharacterConfigurationRefresh == refresh then staffCharacterConfigurationRefresh = nil end
+            end
+
+            refresh(false)
+            net.Start("liaRequestStaffCharacterConfiguration")
+            net.SendToServer()
+        end
+    }
+end)
+
+hook.Add("PopulateAdminTabs", "liaToolPermissionTiers", function(pages)
+    local client = LocalPlayer()
+    if not IsValid(client) or not client:hasPrivilege("manageUsergroups") then return end
+    pages[#pages + 1] = {
+        name = "Tool Permissions",
+        icon = "icon16/wrench.png",
+        drawFunc = function(panel)
+            panel:Clear()
+            panel:DockPadding(12, 12, 12, 12)
+            panel.Paint = nil
+            local accent = lia.color.theme.accent or Color(45, 190, 170)
+            local panelColor = Color(4, 18, 23, 242)
+            local panelColorHovered = Color(12, 31, 36, 244)
+            local borderColor = Color(accent.r, accent.g, accent.b, 78)
+            local textColor = Color(230, 238, 236)
+            local mutedTextColor = Color(150, 168, 166)
+            local allTools = {}
+            local filteredTools = {}
+            local selectedTools = {}
+            local rowPanels = {}
+            local categoryFilter = "all"
+            local accessFilter = "all"
+            local changedOnly = false
+            local saveState = "saved"
+            local pendingOperation
+            local toolSignature = ""
+            local categorySignature = ""
+            local searchEntry
+            local categoryCombo
+            local accessCombo
+            local changedButton
+            local summary
+            local accessGuide
+            local rowsScroll
+            local footer
+            local resetButton
+            local selectAllButton
+            local bulkButtons = {}
+            local function styleScrollBar(scrollPanel)
+                if not IsValid(scrollPanel) or not IsValid(scrollPanel.VBar) then return end
+                local vbar = scrollPanel.VBar
+                vbar:SetWide(8)
+                vbar.Paint = function(_, w, h)
+                    surface.SetDrawColor(255, 255, 255, 4)
+                    surface.DrawRect(0, 0, w, h)
+                end
+
+                vbar.btnUp.Paint = function() end
+                vbar.btnDown.Paint = function() end
+                vbar.btnGrip.Paint = function(_, w, h) lia.derma.rect(1, 0, w - 2, h):Rad(4):Color(Color(accent.r, accent.g, accent.b, 145)):Shape(lia.derma.SHAPE_IOS):Draw() end
+            end
+
+            local function styleCombo(combo)
+                combo:SetFont("LiliaFont.17")
+                combo:SetTextColor(Color(205, 220, 220))
+                combo:SetContentAlignment(4)
+                combo.Paint = function(_, w, h) paintToolPermissionPanel(w, h, panelColor, borderColor, 6) end
+                if IsValid(combo.DropButton) then
+                    combo.DropButton:SetWide(32)
+                    combo.DropButton.Paint = function(_, w, h) draw.SimpleText("▼", "LiliaFont.16", w * 0.5, h * 0.5, Color(175, 195, 195), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER) end
+                end
+            end
+
+            local function getCounts()
+                local counts = {
+                    disabled = 0,
+                    staff = 0,
+                    basic = 0,
+                    total = #allTools
+                }
+
+                for _, toolData in ipairs(allTools) do
+                    local tier = getToolPermissionTier(toolData.id)
+                    counts[tier] = (counts[tier] or 0) + 1
+                end
+                return counts
+            end
+
+            local function getSelectedCount()
+                local count = 0
+                for _ in pairs(selectedTools) do
+                    count = count + 1
+                end
+                return count
+            end
+
+            local function getColumnLayout(width)
+                local toolX = 56
+                local categoryWidth = math.Clamp(math.floor(width * 0.17), 155, 225)
+                local accessWidth = math.Clamp(math.floor(width * 0.34), 330, 440)
+                local toolWidth = math.max(width - toolX - categoryWidth - accessWidth, 260)
+                local categoryX = toolX + toolWidth
+                local accessX = categoryX + categoryWidth
+                return toolX, toolWidth, categoryX, categoryWidth, accessX, math.max(width - accessX, 1)
+            end
+
+            local function updateFooter()
+                local selectedCount = getSelectedCount()
+                for _, button in pairs(bulkButtons) do
+                    if IsValid(button) then button:SetEnabled(selectedCount > 0) end
+                end
+
+                if IsValid(resetButton) then resetButton:SetEnabled(next(toolPermissionTierData.tiers or {}) ~= nil and saveState ~= "saving") end
+                if IsValid(selectAllButton) then selectAllButton:InvalidateLayout(true) end
+                if IsValid(footer) then footer:InvalidateLayout(true) end
+            end
+
+            local function updateVisualState()
+                for _, row in pairs(rowPanels) do
+                    if IsValid(row) then row:InvalidateLayout(true) end
+                end
+
+                if IsValid(summary) then summary:InvalidateLayout(true) end
+                updateFooter()
+            end
+
+            local function markSaving(operation)
+                saveState = "saving"
+                pendingOperation = operation
+                updateFooter()
+            end
+
+            local refreshRows
+            local function sendTier(toolName, tier)
+                if not toolPermissionDefinitions[tier] or getToolPermissionTier(toolName) == tier then return end
+                toolPermissionTierData.tiers = toolPermissionTierData.tiers or {}
+                toolPermissionTierData.tiers[toolName] = tier
+                markSaving("single")
+                net.Start("liaSetToolPermissionTier")
+                net.WriteString(toolName)
+                net.WriteString(tier)
+                net.SendToServer()
+                if accessFilter ~= "all" or changedOnly then
+                    timer.Simple(0, function() if IsValid(panel) and refreshRows then refreshRows() end end)
+                else
+                    updateVisualState()
+                end
+            end
+
+            local function sendBatch(tier)
+                if not toolPermissionDefinitions[tier] then return end
+                local changes = {}
+                for toolName in pairs(selectedTools) do
+                    if getToolPermissionTier(toolName) ~= tier then
+                        changes[#changes + 1] = toolName
+                        toolPermissionTierData.tiers = toolPermissionTierData.tiers or {}
+                        toolPermissionTierData.tiers[toolName] = tier
+                    end
+                end
+
+                if #changes == 0 then return end
+                markSaving("batch")
+                net.Start("liaSetToolPermissionTiersBatch")
+                net.WriteUInt(math.min(#changes, 4095), 12)
+                for index = 1, math.min(#changes, 4095) do
+                    net.WriteString(changes[index])
+                    net.WriteString(tier)
+                end
+
+                net.SendToServer()
+                selectedTools = {}
+                refreshRows()
+            end
+
+            local function resetAll()
+                Derma_Query("Reset every tool to its default access level?", "Reset Tool Permissions", "Reset All", function()
+                    toolPermissionTierData.tiers = {}
+                    selectedTools = {}
+                    markSaving("reset")
+                    net.Start("liaResetToolPermissionTiers")
+                    net.SendToServer()
+                    refreshRows()
+                end, "Cancel")
+            end
+
+            summary = panel:Add("DPanel")
+            summary:Dock(TOP)
+            summary:SetTall(78)
+            summary:DockMargin(0, 0, 0, 12)
+            summary.Paint = function(_, w, h)
+                local counts = getCounts()
+                paintToolPermissionPanel(w, h, panelColor, borderColor, 7)
+                draw.SimpleText("Control which characters can access each Tool Gun tool.", "LiliaFont.18", 18, 18, textColor, TEXT_ALIGN_LEFT, TEXT_ALIGN_TOP)
+                draw.SimpleText("Changes are saved immediately.", "LiliaFont.16", 18, 45, mutedTextColor, TEXT_ALIGN_LEFT, TEXT_ALIGN_TOP)
+                local statStart = math.max(math.floor(w * 0.45), 520)
+                local statWidth = math.max(math.floor((w - statStart) / 4), 110)
+                local stats = {
+                    {
+                        value = counts.disabled,
+                        label = "Disabled",
+                        color = toolPermissionDefinitions.disabled.color
+                    },
+                    {
+                        value = counts.staff,
+                        label = "Staff",
+                        color = toolPermissionDefinitions.staff.color
+                    },
+                    {
+                        value = counts.basic,
+                        label = "Basic",
+                        color = toolPermissionDefinitions.basic.color
+                    },
+                    {
+                        value = counts.total,
+                        label = "Total Tools",
+                        color = textColor
+                    }
+                }
+
+                for index, data in ipairs(stats) do
+                    local x = statStart + (index - 1) * statWidth
+                    surface.SetDrawColor(255, 255, 255, 16)
+                    surface.DrawRect(x, 13, 1, h - 26)
+                    draw.SimpleText(tostring(data.value), "LiliaFont.24", x + 18, 15, textColor, TEXT_ALIGN_LEFT, TEXT_ALIGN_TOP)
+                    draw.SimpleText(data.label, "LiliaFont.15", x + 18, 46, data.color, TEXT_ALIGN_LEFT, TEXT_ALIGN_TOP)
+                end
+            end
+
+            accessGuide = panel:Add("DPanel")
+            accessGuide:Dock(TOP)
+            accessGuide:SetTall(88)
+            accessGuide:DockMargin(0, 0, 0, 12)
+            accessGuide:DockPadding(12, 10, 12, 10)
+            accessGuide.Paint = function(_, w, h) paintToolPermissionPanel(w, h, panelColor, borderColor, 7) end
+            accessGuide.cards = {}
+            for _, tier in ipairs(toolPermissionTierOrder) do
+                local definition = toolPermissionDefinitions[tier]
+                local card = accessGuide:Add("DPanel")
+                card.Paint = function(_, w, h) paintToolPermissionPanel(w, h, Color(2, 14, 18, 165), Color(definition.color.r, definition.color.g, definition.color.b, 90), 6) end
+                local title = card:Add("DLabel")
+                title:SetFont("LiliaFont.18")
+                title:SetText(definition.title)
+                title:SetTextColor(definition.color)
+                title:SetPos(14, 10)
+                title:SetTall(24)
+                local description = card:Add("DLabel")
+                description:SetFont("LiliaFont.15")
+                description:SetText(definition.description)
+                description:SetTextColor(mutedTextColor)
+                description:SetPos(14, 36)
+                description:SetWrap(true)
+                description:SetContentAlignment(7)
+                card.PerformLayout = function(_, w, h)
+                    title:SetWide(math.max(w - 28, 1))
+                    description:SetSize(math.max(w - 28, 1), math.max(h - 42, 1))
+                end
+
+                accessGuide.cards[#accessGuide.cards + 1] = card
+            end
+
+            accessGuide.PerformLayout = function(_, w, h)
+                local gap = 10
+                local paddingX = 12
+                local paddingY = 10
+                local cardWidth = math.floor((w - paddingX * 2 - gap * 2) / 3)
+                local cardHeight = math.max(h - paddingY * 2, 1)
+                for index, card in ipairs(accessGuide.cards) do
+                    card:SetPos(paddingX + (index - 1) * (cardWidth + gap), paddingY)
+                    card:SetSize(cardWidth, cardHeight)
+                end
+            end
+
+            local toolbar = panel:Add("DPanel")
+            toolbar:Dock(TOP)
+            toolbar:SetTall(52)
+            toolbar:DockMargin(0, 0, 0, 10)
+            toolbar.Paint = function() end
+            changedButton = toolbar:Add("DButton")
+            changedButton:Dock(RIGHT)
+            changedButton:SetWide(188)
+            changedButton:DockMargin(10, 0, 0, 0)
+            changedButton:SetText("")
+            changedButton.Paint = function(button, w, h)
+                paintToolPermissionPanel(w, h, button:IsHovered() and panelColorHovered or panelColor, borderColor, 6)
+                draw.SimpleText("Changed Only", "LiliaFont.17", 14, h * 0.5, Color(205, 220, 220), TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)
+                local switchW = 38
+                local switchH = 20
+                local switchX = w - switchW - 13
+                local switchY = math.floor((h - switchH) * 0.5)
+                draw.RoundedBox(10, switchX, switchY, switchW, switchH, changedOnly and Color(accent.r, accent.g, accent.b, 210) or Color(82, 101, 105, 220))
+                draw.RoundedBox(8, changedOnly and switchX + switchW - 18 or switchX + 2, switchY + 2, 16, 16, Color(235, 243, 243))
+            end
+
+            changedButton.DoClick = function()
+                changedOnly = not changedOnly
+                refreshRows()
+            end
+
+            accessCombo = toolbar:Add("DComboBox")
+            accessCombo:Dock(RIGHT)
+            accessCombo:SetWide(230)
+            accessCombo:DockMargin(10, 0, 0, 0)
+            accessCombo:SetValue("All Access Levels")
+            accessCombo:AddChoice("All Access Levels", "all")
+            accessCombo:AddChoice("Disabled", "disabled")
+            accessCombo:AddChoice("Staff", "staff")
+            accessCombo:AddChoice("Basic", "basic")
+            styleCombo(accessCombo)
+            accessCombo.OnSelect = function(_, _, _, data)
+                accessFilter = data or "all"
+                refreshRows()
+            end
+
+            categoryCombo = toolbar:Add("DComboBox")
+            categoryCombo:Dock(RIGHT)
+            categoryCombo:SetWide(220)
+            categoryCombo:DockMargin(10, 0, 0, 0)
+            categoryCombo:SetValue("All Categories")
+            styleCombo(categoryCombo)
+            categoryCombo.OnSelect = function(_, _, _, data)
+                categoryFilter = data or "all"
+                refreshRows()
+            end
+
+            local searchWrap = toolbar:Add("DPanel")
+            searchWrap:Dock(FILL)
+            searchWrap:DockPadding(14, 0, 10, 0)
+            searchWrap.Paint = function(_, w, h) paintToolPermissionPanel(w, h, panelColor, borderColor, 6) end
+            searchEntry = searchWrap:Add("DTextEntry")
+            searchEntry:Dock(FILL)
+            searchEntry:SetFont("LiliaFont.17")
+            searchEntry:SetTextColor(Color(225, 236, 236))
+            searchEntry:SetCursorColor(accent)
+            searchEntry:SetPlaceholderText("Search tools...")
+            searchEntry:SetDrawBackground(false)
+            searchEntry:SetPaintBackground(false)
+            searchEntry:SetPaintBorderEnabled(false)
+            searchEntry:SetUpdateOnType(true)
+            searchEntry.OnChange = function() refreshRows() end
+            footer = panel:Add("DPanel")
+            footer:Dock(BOTTOM)
+            footer:SetTall(58)
+            footer:DockMargin(0, 10, 0, 0)
+            footer.Paint = function(_, w, h)
+                paintToolPermissionPanel(w, h, panelColor, borderColor, 6)
+                draw.SimpleText(getSelectedCount() .. " selected", "LiliaFont.17", 48, h * 0.5, Color(210, 225, 225), TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)
+                draw.SimpleText("Bulk Set Access:", "LiliaFont.16", 158, h * 0.5, mutedTextColor, TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)
+                local statusText = saveState == "saving" and "Saving changes..." or "All changes saved"
+                local statusColor = saveState == "saving" and Color(225, 190, 100) or mutedTextColor
+                draw.SimpleText(statusText, "LiliaFont.16", w - 22, h * 0.5, statusColor, TEXT_ALIGN_RIGHT, TEXT_ALIGN_CENTER)
+            end
+
+            selectAllButton = footer:Add("DButton")
+            selectAllButton:SetSize(22, 22)
+            selectAllButton:SetText("")
+            selectAllButton.Paint = function(button, w, h)
+                local allSelected = #filteredTools > 0
+                if allSelected then
+                    for _, toolData in ipairs(filteredTools) do
+                        if not selectedTools[toolData.id] then
+                            allSelected = false
+                            break
+                        end
+                    end
+                end
+
+                paintToolPermissionPanel(w, h, allSelected and Color(accent.r, accent.g, accent.b, 180) or button:IsHovered() and Color(255, 255, 255, 12) or Color(2, 14, 18, 200), Color(accent.r, accent.g, accent.b, allSelected and 210 or 90), 4)
+                if allSelected then draw.SimpleText("✓", "LiliaFont.17", w * 0.5, h * 0.5, color_white, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER) end
+            end
+
+            selectAllButton.DoClick = function()
+                local allSelected = #filteredTools > 0
+                if allSelected then
+                    for _, toolData in ipairs(filteredTools) do
+                        if not selectedTools[toolData.id] then
+                            allSelected = false
+                            break
+                        end
+                    end
+                end
+
+                for _, toolData in ipairs(filteredTools) do
+                    selectedTools[toolData.id] = allSelected and nil or true
+                end
+
+                updateVisualState()
+            end
+
+            for _, tier in ipairs(toolPermissionTierOrder) do
+                local definition = toolPermissionDefinitions[tier]
+                local button = footer:Add("DButton")
+                button:SetSize(96, 34)
+                button:SetText("")
+                button:SetTooltip(definition.description)
+                button.Paint = function(buttonSelf, w, h)
+                    local enabled = buttonSelf:IsEnabled()
+                    local background = enabled and buttonSelf:IsHovered() and Color(definition.color.r, definition.color.g, definition.color.b, 32) or Color(2, 14, 18, 180)
+                    paintToolPermissionPanel(w, h, background, Color(definition.color.r, definition.color.g, definition.color.b, enabled and 150 or 40), 5)
+                    draw.SimpleText(definition.title, "LiliaFont.16", w * 0.5, h * 0.5, enabled and definition.color or Color(90, 105, 106), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
+                end
+
+                button.DoClick = function() sendBatch(tier) end
+                bulkButtons[tier] = button
+            end
+
+            resetButton = footer:Add("DButton")
+            resetButton:SetSize(124, 36)
+            resetButton:SetText("")
+            resetButton.Paint = function(button, w, h)
+                local enabled = button:IsEnabled()
+                paintToolPermissionPanel(w, h, enabled and button:IsHovered() and Color(255, 255, 255, 10) or Color(2, 14, 18, 180), Color(accent.r, accent.g, accent.b, enabled and 90 or 35), 5)
+                draw.SimpleText("Reset All", "LiliaFont.16", w * 0.5, h * 0.5, enabled and Color(210, 225, 225) or Color(90, 105, 106), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
+            end
+
+            resetButton.DoClick = resetAll
+            footer.PerformLayout = function(_, w, h)
+                selectAllButton:SetPos(18, math.floor((h - selectAllButton:GetTall()) * 0.5))
+                local x = 284
+                for _, tier in ipairs(toolPermissionTierOrder) do
+                    bulkButtons[tier]:SetPos(x, math.floor((h - bulkButtons[tier]:GetTall()) * 0.5))
+                    x = x + 106
+                end
+
+                resetButton:SetPos(w - 330, math.floor((h - resetButton:GetTall()) * 0.5))
+            end
+
+            local tablePanel = panel:Add("DPanel")
+            tablePanel:Dock(FILL)
+            tablePanel.Paint = function(_, w, h) paintToolPermissionPanel(w, h, panelColor, borderColor, 6) end
+            local tableHeader = tablePanel:Add("DPanel")
+            tableHeader:Dock(TOP)
+            tableHeader:SetTall(48)
+            tableHeader.Paint = function(_, w, h)
+                local toolX, _, categoryX, _, accessX = getColumnLayout(w)
+                surface.SetDrawColor(accent.r, accent.g, accent.b, 38)
+                surface.DrawRect(0, h - 1, w, 1)
+                draw.SimpleText("TOOL", "LiliaFont.15", toolX, h * 0.5, Color(175, 195, 195), TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)
+                draw.SimpleText("CATEGORY", "LiliaFont.15", categoryX, h * 0.5, Color(175, 195, 195), TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)
+                draw.SimpleText("ACCESS LEVEL", "LiliaFont.15", accessX + 16, h * 0.5, Color(175, 195, 195), TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)
+            end
+
+            rowsScroll = tablePanel:Add("liaScrollPanel")
+            rowsScroll:Dock(FILL)
+            rowsScroll.Paint = function() end
+            styleScrollBar(rowsScroll)
+            local rowsCanvas = rowsScroll:GetCanvas()
+            if IsValid(rowsCanvas) then
+                rowsCanvas:DockPadding(0, 0, 4, 0)
+                rowsCanvas.Paint = function() end
+            end
+
+            local function createTierButton(row, toolData, tier)
+                local definition = toolPermissionDefinitions[tier]
+                local button = row:Add("DButton")
+                button:SetText("")
+                button:SetTooltip(definition.description)
+                button.Paint = function(buttonSelf, w, h)
+                    local active = getToolPermissionTier(toolData.id) == tier
+                    local hovered = buttonSelf:IsHovered()
+                    local background = active and Color(definition.color.r, definition.color.g, definition.color.b, 188) or hovered and Color(definition.color.r, definition.color.g, definition.color.b, 26) or Color(2, 14, 18, 175)
+                    local borderAlpha = active and 225 or hovered and 160 or 95
+                    paintToolPermissionPanel(w, h, background, Color(definition.color.r, definition.color.g, definition.color.b, borderAlpha), 5)
+                    draw.SimpleText(definition.title, "LiliaFont.16", w * 0.5, h * 0.5, active and color_white or definition.color, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
+                end
+
+                button.DoClick = function() sendTier(toolData.id, tier) end
+                return button
+            end
+
+            refreshRows = function()
+                if not IsValid(rowsScroll) then return end
+                rowsScroll:Clear()
+                rowPanels = {}
+                filteredTools = {}
+                local search = IsValid(searchEntry) and string.Trim(searchEntry:GetValue() or ""):lower() or ""
+                for _, toolData in ipairs(allTools) do
+                    local tier = getToolPermissionTier(toolData.id)
+                    local changed = tier ~= getDefaultToolPermissionTier(toolData.id)
+                    local searchable = (toolData.name .. " " .. toolData.id .. " " .. toolData.category .. " " .. toolData.description):lower()
+                    local matchesSearch = search == "" or searchable:find(search, 1, true) ~= nil
+                    local matchesCategory = categoryFilter == "all" or toolData.category == categoryFilter
+                    local matchesAccess = accessFilter == "all" or tier == accessFilter
+                    if matchesSearch and matchesCategory and matchesAccess and (not changedOnly or changed) then filteredTools[#filteredTools + 1] = toolData end
+                end
+
+                if #filteredTools == 0 then
+                    local empty = rowsScroll:Add("DPanel")
+                    empty:Dock(TOP)
+                    empty:SetTall(96)
+                    empty.Paint = function(_, w, h) draw.SimpleText("No tools match the current filters.", "LiliaFont.18", w * 0.5, h * 0.5, mutedTextColor, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER) end
+                end
+
+                for _, toolData in ipairs(filteredTools) do
+                    local row = rowsScroll:Add("DPanel")
+                    row:Dock(TOP)
+                    row:SetTall(68)
+                    row.Paint = function(rowSelf, w, h)
+                        local toolX, toolWidth, categoryX = getColumnLayout(w)
+                        local selected = selectedTools[toolData.id]
+                        local background = selected and Color(accent.r, accent.g, accent.b, 18) or rowSelf:IsHovered() and Color(255, 255, 255, 4) or Color(0, 0, 0, 0)
+                        surface.SetDrawColor(background)
+                        surface.DrawRect(0, 0, w, h)
+                        surface.SetDrawColor(accent.r, accent.g, accent.b, 24)
+                        surface.DrawRect(0, h - 1, w, 1)
+                        draw.SimpleText(shortenToolText(toolData.name, 52), "LiliaFont.19", toolX, 12, textColor, TEXT_ALIGN_LEFT, TEXT_ALIGN_TOP)
+                        draw.SimpleText(shortenToolText(toolData.description, math.max(math.floor(toolWidth / 7), 44)), "LiliaFont.16", toolX, 39, mutedTextColor, TEXT_ALIGN_LEFT, TEXT_ALIGN_TOP)
+                        draw.SimpleText(shortenToolText(toolData.category, 26), "LiliaFont.17", categoryX, h * 0.5, Color(205, 220, 220), TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)
+                    end
+
+                    local checkbox = row:Add("DButton")
+                    checkbox:SetSize(22, 22)
+                    checkbox:SetText("")
+                    checkbox.Paint = function(button, w, h)
+                        local checked = selectedTools[toolData.id]
+                        local background = checked and Color(accent.r, accent.g, accent.b, 180) or button:IsHovered() and Color(255, 255, 255, 12) or Color(2, 14, 18, 200)
+                        paintToolPermissionPanel(w, h, background, Color(accent.r, accent.g, accent.b, checked and 210 or 90), 4)
+                        if checked then draw.SimpleText("✓", "LiliaFont.17", w * 0.5, h * 0.5, color_white, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER) end
+                    end
+
+                    checkbox.DoClick = function()
+                        selectedTools[toolData.id] = selectedTools[toolData.id] and nil or true
+                        updateVisualState()
+                    end
+
+                    local tierButtons = {}
+                    for _, tier in ipairs(toolPermissionTierOrder) do
+                        tierButtons[tier] = createTierButton(row, toolData, tier)
+                    end
+
+                    row.PerformLayout = function(_, w, h)
+                        local _, _, _, _, accessX, accessWidth = getColumnLayout(w)
+                        checkbox:SetPos(17, math.floor((h - checkbox:GetTall()) * 0.5))
+                        local gap = 9
+                        local padding = 16
+                        local buttonWidth = math.max(math.floor((accessWidth - padding * 2 - gap * 2) / 3), 84)
+                        local x = accessX + padding
+                        for _, tier in ipairs(toolPermissionTierOrder) do
+                            tierButtons[tier]:SetPos(x, math.floor((h - 36) * 0.5))
+                            tierButtons[tier]:SetSize(buttonWidth, 36)
+                            x = x + buttonWidth + gap
+                        end
+                    end
+
+                    rowPanels[toolData.id] = row
+                end
+
+                updateVisualState()
+            end
+
+            local function rebuildCategoryChoices()
+                if not IsValid(categoryCombo) then return end
+                local categories = {}
+                for _, toolData in ipairs(allTools) do
+                    categories[toolData.category] = true
+                end
+
+                local names = {}
+                for name in pairs(categories) do
+                    names[#names + 1] = name
+                end
+
+                table.sort(names, function(a, b) return a:lower() < b:lower() end)
+                local signature = table.concat(names, "\31")
+                if signature == categorySignature then return end
+                categorySignature = signature
+                local previous = categoryFilter
+                categoryCombo:Clear()
+                categoryCombo:AddChoice("All Categories", "all")
+                local foundPrevious = previous == "all"
+                for _, name in ipairs(names) do
+                    categoryCombo:AddChoice(name, name)
+                    if name == previous then foundPrevious = true end
+                end
+
+                if not foundPrevious then categoryFilter = "all" end
+                categoryCombo:SetValue(categoryFilter == "all" and "All Categories" or categoryFilter)
+            end
+
+            local function refreshData()
+                if not IsValid(panel) then return end
+                local previousSignature = toolSignature
+                allTools = getToolPermissionMetadata()
+                local ids = {}
+                for _, toolData in ipairs(allTools) do
+                    ids[#ids + 1] = toolData.id
+                end
+
+                toolSignature = table.concat(ids, "\31")
+                rebuildCategoryChoices()
+                saveState = "saved"
+                local requiresRebuild = previousSignature ~= toolSignature or pendingOperation == "batch" or pendingOperation == "reset" or accessFilter ~= "all" or changedOnly
+                pendingOperation = nil
+                if requiresRebuild then
+                    refreshRows()
+                else
+                    updateVisualState()
+                end
+            end
+
+            toolPermissionTierRefresh = refreshData
+            allTools = getToolPermissionMetadata()
+            local initialIds = {}
+            for _, toolData in ipairs(allTools) do
+                initialIds[#initialIds + 1] = toolData.id
+            end
+
+            toolSignature = table.concat(initialIds, "\31")
+            rebuildCategoryChoices()
+            refreshRows()
+            net.Start("liaRequestToolPermissionTiers")
+            net.SendToServer()
+        end
+    }
+end)
