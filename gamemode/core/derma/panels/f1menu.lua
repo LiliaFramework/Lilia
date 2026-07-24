@@ -2341,8 +2341,9 @@ hook.Add("CreateMenuButtons", "liaF1MenuCreateMenuButtons", function(tabs)
                 header.Paint = function()
                     local _, textColor = getThemeColors()
                     local pageName = adminPanel._activeAdminPageName or L("admin")
+                    local pageDescription = adminPanel._activeAdminPageDescription or "Manage server administration tools and staff information."
                     draw.SimpleText(pageName, "LiliaFont.30", 8, 4, textColor, TEXT_ALIGN_LEFT, TEXT_ALIGN_TOP)
-                    draw.SimpleText("Manage server administration tools and staff information.", "LiliaFont.17", 8, 43, Color(155, 178, 179), TEXT_ALIGN_LEFT, TEXT_ALIGN_TOP)
+                    draw.SimpleText(pageDescription, "LiliaFont.17", 8, 43, Color(155, 178, 179), TEXT_ALIGN_LEFT, TEXT_ALIGN_TOP)
                 end
 
                 local content = frame:Add("DPanel")
@@ -2647,7 +2648,20 @@ hook.Add("CreateMenuButtons", "liaF1MenuCreateMenuButtons", function(tabs)
                     local page = pages[index]
                     if not page then return end
                     activePageIndex = index
-                    adminPanel._activeAdminPageName = tostring(localizeMenuLabel(page.name))
+                    local pageName = tostring(localizeMenuLabel(page.name))
+                    local tabDescriptions = {
+                        ["Online Staff"] = "See staff currently online, their availability, and their active staff character details.",
+                        ["Character List"] = "Browse player accounts and inspect, manage, or moderate their characters.",
+                        ["Faction Management"] = "Configure factions and review the characters assigned to each faction.",
+                        ["Player Entities"] = "Review entities placed by players and use the available entity-management actions.",
+                        ["Chat Filter"] = "Manage the words and phrases filtered from in-game chat.",
+                        ["Staff Cases"] = "Review staff tickets, warnings, and PK cases, then take the appropriate action.",
+                        ["Staff Character Permissions"] = "Choose the default privileges and character flags granted while staff use staff characters.",
+                        ["Tool Permissions"] = "Set which tools are disabled, available to staff, or available with basic tool access.",
+                        ["User Groups"] = "Create and manage user groups, including their permissions and inheritance."
+                    }
+                    adminPanel._activeAdminPageName = pageName
+                    adminPanel._activeAdminPageDescription = page.description or tabDescriptions[pageName] or "Manage settings and information for " .. pageName .. "."
                     adminPanel.activeAdminPageIndex = index
                     adminPanel.pendingAdminPageIndex = nil
                     if IsValid(lia.gui.menu) then
