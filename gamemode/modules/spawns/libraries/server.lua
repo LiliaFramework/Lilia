@@ -30,6 +30,56 @@
 ]]
 local MODULE = MODULE
 local MAP_SPAWN_CLASSES = {"info_player_start", "info_player_deathmatch", "info_player_counterterrorist", "info_player_terrorist", "info_player_combine", "info_player_rebel", "gmod_player_start", "info_player_axis", "info_player_allies"}
+local SPAWN_HEIGHT_OFFSET = Vector(0, 0, 16)
+local SPAWN_PATH_HEIGHT = Vector(0, 0, 36)
+local SPAWN_TRACE_HEIGHT = Vector(0, 0, 72)
+local function getSpawnPosition(client, basePos, radius)
+    local fallback = basePos + SPAWN_HEIGHT_OFFSET
+    radius = math.max(0, tonumber(radius) or 0)
+    if radius <= 0 then return fallback end
+    local hullMins, hullMaxs = client:GetHull()
+    for _ = 1, 16 do
+        local distance = math.sqrt(math.Rand(0, radius * radius))
+        local direction = math.Rand(0, math.pi * 2)
+        local candidate = basePos + Vector(math.cos(direction) * distance, math.sin(direction) * distance, 0)
+        local pathTrace = util.TraceLine({
+            start = basePos + SPAWN_PATH_HEIGHT,
+            endpos = candidate + SPAWN_PATH_HEIGHT,
+            mask = MASK_PLAYERSOLID_BRUSHONLY
+        })
+
+        if not pathTrace.Hit then
+            local groundTrace = util.TraceLine({
+                start = candidate + SPAWN_TRACE_HEIGHT,
+                endpos = candidate - Vector(0, 0, 128),
+                mask = MASK_PLAYERSOLID_BRUSHONLY
+            })
+
+            if groundTrace.Hit and groundTrace.HitNormal.z >= 0.7 then
+                local pos = groundTrace.HitPos + Vector(0, 0, 1)
+                local fitTrace = util.TraceHull({
+                    start = pos,
+                    endpos = pos,
+                    mins = hullMins,
+                    maxs = hullMaxs,
+                    mask = MASK_PLAYERSOLID,
+                    filter = client
+                })
+
+                if not fitTrace.Hit and not fitTrace.StartSolid then return pos end
+            end
+        end
+    end
+    return fallback
+end
+
+local function placeAtSpawn(client, basePos, ang, radius)
+    local pos = getSpawnPosition(client, basePos, radius)
+    client:SetPos(pos)
+    if isangle(ang) then client:SetEyeAngles(ang) end
+    hook.Run("PlayerSpawnPointSelected", client, pos, isangle(ang) and ang or angle_zero)
+end
+
 local function getMapSpawnLocation()
     local spawns = {}
     for _, className in ipairs(MAP_SPAWN_CLASSES) do
@@ -94,12 +144,10 @@ local function DoSpawnLogic(client, isRespawning)
             local pos = spawnLocation.pos
             local ang = spawnLocation.ang
             if isvector(pos) then
-                pos = pos + Vector(0, 0, 16)
-                client:SetPos(pos)
+                placeAtSpawn(client, pos, ang, spawnLocation.radius)
+            else
+                hook.Run("PlayerSpawnPointSelected", client, Vector(0, 0, 16), ang or angle_zero)
             end
-
-            if isangle(ang) then client:SetEyeAngles(ang) end
-            hook.Run("PlayerSpawnPointSelected", client, pos or Vector(0, 0, 16), ang or angle_zero)
             return
         end
     end
@@ -110,12 +158,10 @@ local function DoSpawnLogic(client, isRespawning)
             local pos = respawnLocation.pos or respawnLocation.position
             local ang = respawnLocation.ang or respawnLocation.angle
             if isvector(pos) then
-                pos = pos + Vector(0, 0, 16)
-                client:SetPos(pos)
+                placeAtSpawn(client, pos, ang, respawnLocation.radius)
+            else
+                hook.Run("PlayerSpawnPointSelected", client, Vector(0, 0, 16), ang or angle_zero)
             end
-
-            if isangle(ang) then client:SetEyeAngles(ang) end
-            hook.Run("PlayerSpawnPointSelected", client, pos or Vector(0, 0, 16), ang or angle_zero)
             return
         end
     end
@@ -125,12 +171,10 @@ local function DoSpawnLogic(client, isRespawning)
         local pos = overrideLocation.pos or overrideLocation.position
         local ang = overrideLocation.ang or overrideLocation.angle
         if isvector(pos) then
-            pos = pos + Vector(0, 0, 16)
-            client:SetPos(pos)
+            placeAtSpawn(client, pos, ang, overrideLocation.radius)
+        else
+            hook.Run("PlayerSpawnPointSelected", client, Vector(0, 0, 16), ang or angle_zero)
         end
-
-        if isangle(ang) then client:SetEyeAngles(ang) end
-        hook.Run("PlayerSpawnPointSelected", client, pos or Vector(0, 0, 16), ang or angle_zero)
         return
     end
 
@@ -151,12 +195,10 @@ local function DoSpawnLogic(client, isRespawning)
                 local pos = data.pos or data.position
                 local ang = data.ang or data.angle
                 if isvector(pos) then
-                    pos = pos + Vector(0, 0, 16)
-                    client:SetPos(pos)
+                    placeAtSpawn(client, pos, ang, data.radius)
+                else
+                    hook.Run("PlayerSpawnPointSelected", client, Vector(0, 0, 16), ang or angle_zero)
                 end
-
-                if isangle(ang) then client:SetEyeAngles(ang) end
-                hook.Run("PlayerSpawnPointSelected", client, pos or Vector(0, 0, 16), ang or angle_zero)
                 return
             end
         end
@@ -181,12 +223,10 @@ local function DoSpawnLogic(client, isRespawning)
                     local pos = data.position or data.pos
                     local ang = data.angle or data.ang
                     if isvector(pos) then
-                        pos = pos + Vector(0, 0, 16)
-                        client:SetPos(pos)
+                        placeAtSpawn(client, pos, ang, data.radius)
+                    else
+                        hook.Run("PlayerSpawnPointSelected", client, Vector(0, 0, 16), ang or angle_zero)
                     end
-
-                    if isangle(ang) then client:SetEyeAngles(ang) end
-                    hook.Run("PlayerSpawnPointSelected", client, pos or Vector(0, 0, 16), ang or angle_zero)
                     return
                 end
             end
@@ -209,7 +249,6 @@ local function DoSpawnLogic(client, isRespawning)
                     end
 
                     if not isvector(basePos) then basePos = Vector(0, 0, 0) end
-                    local pos = basePos + Vector(0, 0, 16)
                     local ang = data.ang
                     if not isangle(ang) then
                         local parsedAng = lia.data.decodeAngle(ang)
@@ -220,9 +259,7 @@ local function DoSpawnLogic(client, isRespawning)
                         end
                     end
 
-                    client:SetPos(pos)
-                    client:SetEyeAngles(ang)
-                    hook.Run("PlayerSpawnPointSelected", client, pos, ang)
+                    placeAtSpawn(client, basePos, ang, data.radius)
                 end
             end
         end)
@@ -395,14 +432,13 @@ function MODULE:PostPlayerLoadout(client)
             local pos = respawnLocation.pos or respawnLocation.position
             local ang = respawnLocation.ang or respawnLocation.angle
             if isvector(pos) then
-                pos = pos + Vector(0, 0, 16)
-                client:SetPos(pos)
+                placeAtSpawn(client, pos, ang, respawnLocation.radius)
+            else
+                hook.Run("PlayerSpawnPointSelected", client, Vector(0, 0, 16), ang or angle_zero)
             end
 
-            if isangle(ang) then client:SetEyeAngles(ang) end
             client.liaIsRespawning = nil
             client.liaSpawnHandled = true
-            hook.Run("PlayerSpawnPointSelected", client, pos or Vector(0, 0, 16), ang or angle_zero)
             return
         end
     end
