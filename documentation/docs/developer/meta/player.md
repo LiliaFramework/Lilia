@@ -282,7 +282,7 @@ The player meta table extends Garry's Mod player entities with Lilia-specific he
 ---
 
 <details class="realm-server" id="function-removeragdoll">
-<summary><span class="summary-main"><a id="removeRagdoll"></a>removeRagdoll()</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/meta/player.lua#L439" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="removeRagdoll"></a>removeRagdoll()</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/meta/player.lua#L450" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="removeragdoll"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -306,7 +306,7 @@ The player meta table extends Garry's Mod player entities with Lilia-specific he
 ---
 
 <details class="realm-shared" id="function-getitemweapon">
-<summary><span class="summary-main"><a id="getItemWeapon"></a>getItemWeapon()</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/meta/player.lua#L466" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="getItemWeapon"></a>getItemWeapon()</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/meta/player.lua#L477" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="getitemweapon"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -336,7 +336,7 @@ The player meta table extends Garry's Mod player entities with Lilia-specific he
 ---
 
 <details class="realm-shared" id="function-isfamilysharedaccount">
-<summary><span class="summary-main"><a id="isFamilySharedAccount"></a>isFamilySharedAccount()</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/meta/player.lua#L501" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="isFamilySharedAccount"></a>isFamilySharedAccount()</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/meta/player.lua#L512" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="isfamilysharedaccount"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -367,7 +367,7 @@ The player meta table extends Garry's Mod player entities with Lilia-specific he
 ---
 
 <details class="realm-shared" id="function-getitemdroppos">
-<summary><span class="summary-main"><a id="getItemDropPos"></a>getItemDropPos()</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/meta/player.lua#L521" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="getItemDropPos"></a>getItemDropPos()</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/meta/player.lua#L532" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="getitemdroppos"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -396,7 +396,7 @@ The player meta table extends Garry's Mod player entities with Lilia-specific he
 ---
 
 <details class="realm-shared" id="function-getitems">
-<summary><span class="summary-main"><a id="getItems"></a>getItems()</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/meta/player.lua#L551" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="getItems"></a>getItems()</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/meta/player.lua#L562" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="getitems"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -426,7 +426,7 @@ The player meta table extends Garry's Mod player entities with Lilia-specific he
 ---
 
 <details class="realm-shared" id="function-gettracedentity">
-<summary><span class="summary-main"><a id="getTracedEntity"></a>getTracedEntity(distance)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/meta/player.lua#L579" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="getTracedEntity"></a>getTracedEntity(distance)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/meta/player.lua#L590" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="gettracedentity"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -460,7 +460,7 @@ The player meta table extends Garry's Mod player entities with Lilia-specific he
 ---
 
 <details class="realm-shared" id="function-notify">
-<summary><span class="summary-main"><a id="notify"></a>notify(message, notifType)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/meta/player.lua#L610" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="notify"></a>notify(message, notifType)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/meta/player.lua#L621" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="notify"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -490,7 +490,7 @@ The player meta table extends Garry's Mod player entities with Lilia-specific he
 ---
 
 <details class="realm-shared" id="function-notifylocalized">
-<summary><span class="summary-main"><a id="notifyLocalized"></a>notifyLocalized(message, notifType)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/meta/player.lua#L641" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="notifyLocalized"></a>notifyLocalized(message, notifType)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/meta/player.lua#L652" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="notifylocalized"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -520,7 +520,7 @@ The player meta table extends Garry's Mod player entities with Lilia-specific he
 ---
 
 <details class="realm-shared" id="function-notifyerror">
-<summary><span class="summary-main"><a id="notifyError"></a>notifyError(message)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/meta/player.lua#L668" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="notifyError"></a>notifyError(message)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/meta/player.lua#L679" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="notifyerror"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -549,7 +549,7 @@ The player meta table extends Garry's Mod player entities with Lilia-specific he
 ---
 
 <details class="realm-shared" id="function-notifywarning">
-<summary><span class="summary-main"><a id="notifyWarning"></a>notifyWarning(message)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/meta/player.lua#L695" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="notifyWarning"></a>notifyWarning(message)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/meta/player.lua#L706" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="notifywarning"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -578,7 +578,7 @@ The player meta table extends Garry's Mod player entities with Lilia-specific he
 ---
 
 <details class="realm-shared" id="function-notifyinfo">
-<summary><span class="summary-main"><a id="notifyInfo"></a>notifyInfo(message)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/meta/player.lua#L722" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="notifyInfo"></a>notifyInfo(message)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/meta/player.lua#L733" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="notifyinfo"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -607,7 +607,7 @@ The player meta table extends Garry's Mod player entities with Lilia-specific he
 ---
 
 <details class="realm-shared" id="function-notifysuccess">
-<summary><span class="summary-main"><a id="notifySuccess"></a>notifySuccess(message)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/meta/player.lua#L749" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="notifySuccess"></a>notifySuccess(message)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/meta/player.lua#L760" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="notifysuccess"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -636,7 +636,7 @@ The player meta table extends Garry's Mod player entities with Lilia-specific he
 ---
 
 <details class="realm-shared" id="function-notifymoney">
-<summary><span class="summary-main"><a id="notifyMoney"></a>notifyMoney(message)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/meta/player.lua#L776" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="notifyMoney"></a>notifyMoney(message)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/meta/player.lua#L787" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="notifymoney"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -665,7 +665,7 @@ The player meta table extends Garry's Mod player entities with Lilia-specific he
 ---
 
 <details class="realm-shared" id="function-notifyadmin">
-<summary><span class="summary-main"><a id="notifyAdmin"></a>notifyAdmin(message)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/meta/player.lua#L803" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="notifyAdmin"></a>notifyAdmin(message)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/meta/player.lua#L814" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="notifyadmin"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -694,7 +694,7 @@ The player meta table extends Garry's Mod player entities with Lilia-specific he
 ---
 
 <details class="realm-shared" id="function-notifyerrorlocalized">
-<summary><span class="summary-main"><a id="notifyErrorLocalized"></a>notifyErrorLocalized(key)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/meta/player.lua#L832" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="notifyErrorLocalized"></a>notifyErrorLocalized(key)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/meta/player.lua#L843" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="notifyerrorlocalized"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -723,7 +723,7 @@ The player meta table extends Garry's Mod player entities with Lilia-specific he
 ---
 
 <details class="realm-shared" id="function-notifywarninglocalized">
-<summary><span class="summary-main"><a id="notifyWarningLocalized"></a>notifyWarningLocalized(key)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/meta/player.lua#L861" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="notifyWarningLocalized"></a>notifyWarningLocalized(key)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/meta/player.lua#L872" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="notifywarninglocalized"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -752,7 +752,7 @@ The player meta table extends Garry's Mod player entities with Lilia-specific he
 ---
 
 <details class="realm-shared" id="function-notifyinfolocalized">
-<summary><span class="summary-main"><a id="notifyInfoLocalized"></a>notifyInfoLocalized(key)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/meta/player.lua#L890" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="notifyInfoLocalized"></a>notifyInfoLocalized(key)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/meta/player.lua#L901" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="notifyinfolocalized"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -781,7 +781,7 @@ The player meta table extends Garry's Mod player entities with Lilia-specific he
 ---
 
 <details class="realm-shared" id="function-notifysuccesslocalized">
-<summary><span class="summary-main"><a id="notifySuccessLocalized"></a>notifySuccessLocalized(key)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/meta/player.lua#L919" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="notifySuccessLocalized"></a>notifySuccessLocalized(key)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/meta/player.lua#L930" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="notifysuccesslocalized"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -810,7 +810,7 @@ The player meta table extends Garry's Mod player entities with Lilia-specific he
 ---
 
 <details class="realm-shared" id="function-notifymoneylocalized">
-<summary><span class="summary-main"><a id="notifyMoneyLocalized"></a>notifyMoneyLocalized(key)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/meta/player.lua#L948" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="notifyMoneyLocalized"></a>notifyMoneyLocalized(key)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/meta/player.lua#L959" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="notifymoneylocalized"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -839,7 +839,7 @@ The player meta table extends Garry's Mod player entities with Lilia-specific he
 ---
 
 <details class="realm-shared" id="function-notifyadminlocalized">
-<summary><span class="summary-main"><a id="notifyAdminLocalized"></a>notifyAdminLocalized(key)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/meta/player.lua#L977" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="notifyAdminLocalized"></a>notifyAdminLocalized(key)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/meta/player.lua#L988" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="notifyadminlocalized"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -868,7 +868,7 @@ The player meta table extends Garry's Mod player entities with Lilia-specific he
 ---
 
 <details class="realm-shared" id="function-caneditvendor">
-<summary><span class="summary-main"><a id="canEditVendor"></a>canEditVendor(vendor)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/meta/player.lua#L1007" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="canEditVendor"></a>canEditVendor(vendor)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/meta/player.lua#L1018" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="caneditvendor"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -904,7 +904,7 @@ The player meta table extends Garry's Mod player entities with Lilia-specific he
 ---
 
 <details class="realm-shared" id="function-isstaff">
-<summary><span class="summary-main"><a id="isStaff"></a>isStaff()</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/meta/player.lua#L1047" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="isStaff"></a>isStaff()</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/meta/player.lua#L1058" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="isstaff"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -933,7 +933,7 @@ The player meta table extends Garry's Mod player entities with Lilia-specific he
 ---
 
 <details class="realm-shared" id="function-isstaffonduty">
-<summary><span class="summary-main"><a id="isStaffOnDuty"></a>isStaffOnDuty()</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/meta/player.lua#L1067" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="isStaffOnDuty"></a>isStaffOnDuty()</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/meta/player.lua#L1078" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="isstaffonduty"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -962,7 +962,7 @@ The player meta table extends Garry's Mod player entities with Lilia-specific he
 ---
 
 <details class="realm-shared" id="function-haswhitelist">
-<summary><span class="summary-main"><a id="hasWhitelist"></a>hasWhitelist(faction)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/meta/player.lua#L1093" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="hasWhitelist"></a>hasWhitelist(faction)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/meta/player.lua#L1104" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="haswhitelist"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -998,7 +998,7 @@ The player meta table extends Garry's Mod player entities with Lilia-specific he
 ---
 
 <details class="realm-shared" id="function-getclassdata">
-<summary><span class="summary-main"><a id="getClassData"></a>getClassData()</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/meta/player.lua#L1121" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="getClassData"></a>getClassData()</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/meta/player.lua#L1132" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="getclassdata"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -1028,7 +1028,7 @@ The player meta table extends Garry's Mod player entities with Lilia-specific he
 ---
 
 <details class="realm-shared" id="function-getdarkrpvar">
-<summary><span class="summary-main"><a id="getDarkRPVar"></a>getDarkRPVar(var)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/meta/player.lua#L1152" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="getDarkRPVar"></a>getDarkRPVar(var)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/meta/player.lua#L1163" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="getdarkrpvar"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -1062,7 +1062,7 @@ The player meta table extends Garry's Mod player entities with Lilia-specific he
 ---
 
 <details class="realm-shared" id="function-getmoney">
-<summary><span class="summary-main"><a id="getMoney"></a>getMoney()</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/meta/player.lua#L1174" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="getMoney"></a>getMoney()</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/meta/player.lua#L1185" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="getmoney"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -1091,7 +1091,7 @@ The player meta table extends Garry's Mod player entities with Lilia-specific he
 ---
 
 <details class="realm-shared" id="function-canafford">
-<summary><span class="summary-main"><a id="canAfford"></a>canAfford(amount)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/meta/player.lua#L1201" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="canAfford"></a>canAfford(amount)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/meta/player.lua#L1212" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="canafford"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -1127,7 +1127,7 @@ The player meta table extends Garry's Mod player entities with Lilia-specific he
 ---
 
 <details class="realm-shared" id="function-hasskilllevel">
-<summary><span class="summary-main"><a id="hasSkillLevel"></a>hasSkillLevel(skill, level)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/meta/player.lua#L1230" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="hasSkillLevel"></a>hasSkillLevel(skill, level)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/meta/player.lua#L1241" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="hasskilllevel"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -1164,7 +1164,7 @@ The player meta table extends Garry's Mod player entities with Lilia-specific he
 ---
 
 <details class="realm-shared" id="function-meetsrequiredskills">
-<summary><span class="summary-main"><a id="meetsRequiredSkills"></a>meetsRequiredSkills(requiredSkillLevels)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/meta/player.lua#L1257" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="meetsRequiredSkills"></a>meetsRequiredSkills(requiredSkillLevels)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/meta/player.lua#L1268" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="meetsrequiredskills"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -1200,7 +1200,7 @@ The player meta table extends Garry's Mod player entities with Lilia-specific he
 ---
 
 <details class="realm-shared" id="function-getflags">
-<summary><span class="summary-main"><a id="getFlags"></a>getFlags()</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/meta/player.lua#L1281" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="getFlags"></a>getFlags()</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/meta/player.lua#L1292" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="getflags"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -1229,7 +1229,7 @@ The player meta table extends Garry's Mod player entities with Lilia-specific he
 ---
 
 <details class="realm-shared" id="function-giveflags">
-<summary><span class="summary-main"><a id="giveFlags"></a>giveFlags(flags)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/meta/player.lua#L1305" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="giveFlags"></a>giveFlags(flags)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/meta/player.lua#L1316" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="giveflags"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -1258,7 +1258,7 @@ The player meta table extends Garry's Mod player entities with Lilia-specific he
 ---
 
 <details class="realm-shared" id="function-takeflags">
-<summary><span class="summary-main"><a id="takeFlags"></a>takeFlags(flags)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/meta/player.lua#L1329" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="takeFlags"></a>takeFlags(flags)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/meta/player.lua#L1340" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="takeflags"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -1287,7 +1287,7 @@ The player meta table extends Garry's Mod player entities with Lilia-specific he
 ---
 
 <details class="realm-shared" id="function-networkanimation">
-<summary><span class="summary-main"><a id="networkAnimation"></a>networkAnimation(active, boneData)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/meta/player.lua#L1357" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="networkAnimation"></a>networkAnimation(active, boneData)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/meta/player.lua#L1368" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="networkanimation"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -1319,7 +1319,7 @@ The player meta table extends Garry's Mod player entities with Lilia-specific he
 ---
 
 <details class="realm-shared" id="function-getallliliadata">
-<summary><span class="summary-main"><a id="getAllLiliaData"></a>getAllLiliaData()</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/meta/player.lua#L1402" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="getAllLiliaData"></a>getAllLiliaData()</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/meta/player.lua#L1413" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="getallliliadata"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -1348,7 +1348,7 @@ The player meta table extends Garry's Mod player entities with Lilia-specific he
 ---
 
 <details class="realm-shared" id="function-setwaypoint">
-<summary><span class="summary-main"><a id="setWaypoint"></a>setWaypoint(name, vector, logo, onReach)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/meta/player.lua#L1437" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="setWaypoint"></a>setWaypoint(name, vector, logo, onReach)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/meta/player.lua#L1448" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="setwaypoint"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -1380,7 +1380,7 @@ The player meta table extends Garry's Mod player entities with Lilia-specific he
 ---
 
 <details class="realm-shared" id="function-getliliadata">
-<summary><span class="summary-main"><a id="getLiliaData"></a>getLiliaData(key, default)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/meta/player.lua#L1539" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="getLiliaData"></a>getLiliaData(key, default)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/meta/player.lua#L1550" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="getliliadata"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -1415,7 +1415,7 @@ The player meta table extends Garry's Mod player entities with Lilia-specific he
 ---
 
 <details class="realm-shared" id="function-getmaincharacter">
-<summary><span class="summary-main"><a id="getMainCharacter"></a>getMainCharacter()</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/meta/player.lua#L1570" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="getMainCharacter"></a>getMainCharacter()</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/meta/player.lua#L1581" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="getmaincharacter"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -1444,7 +1444,7 @@ The player meta table extends Garry's Mod player entities with Lilia-specific he
 ---
 
 <details class="realm-shared" id="function-setmaincharacter">
-<summary><span class="summary-main"><a id="setMainCharacter"></a>setMainCharacter(charID)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/meta/player.lua#L1605" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="setMainCharacter"></a>setMainCharacter(charID)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/meta/player.lua#L1616" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="setmaincharacter"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -1478,7 +1478,7 @@ The player meta table extends Garry's Mod player entities with Lilia-specific he
 ---
 
 <details class="realm-shared" id="function-hasflags">
-<summary><span class="summary-main"><a id="hasFlags"></a>hasFlags(flags)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/meta/player.lua#L1674" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="hasFlags"></a>hasFlags(flags)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/meta/player.lua#L1685" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="hasflags"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -1514,7 +1514,7 @@ The player meta table extends Garry's Mod player entities with Lilia-specific he
 ---
 
 <details class="realm-shared" id="function-playtimegreaterthan">
-<summary><span class="summary-main"><a id="playTimeGreaterThan"></a>playTimeGreaterThan(time)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/meta/player.lua#L1704" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="playTimeGreaterThan"></a>playTimeGreaterThan(time)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/meta/player.lua#L1715" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="playtimegreaterthan"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -1550,7 +1550,7 @@ The player meta table extends Garry's Mod player entities with Lilia-specific he
 ---
 
 <details class="realm-shared" id="function-requestoptions">
-<summary><span class="summary-main"><a id="requestOptions"></a>requestOptions(title, subTitle, options, limit, callback, onCancel, Client, Client)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/meta/player.lua#L1754" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="requestOptions"></a>requestOptions(title, subTitle, options, limit, callback, onCancel, Client, Client)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/meta/player.lua#L1765" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="requestoptions"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -1588,7 +1588,7 @@ The player meta table extends Garry's Mod player entities with Lilia-specific he
 ---
 
 <details class="realm-shared" id="function-requeststring">
-<summary><span class="summary-main"><a id="requestString"></a>requestString(title, subTitle, callback, default)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/meta/player.lua#L1803" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="requestString"></a>requestString(title, subTitle, callback, default)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/meta/player.lua#L1814" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="requeststring"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -1627,7 +1627,7 @@ The player meta table extends Garry's Mod player entities with Lilia-specific he
 ---
 
 <details class="realm-shared" id="function-requestarguments">
-<summary><span class="summary-main"><a id="requestArguments"></a>requestArguments(title, argTypes, callback)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/meta/player.lua#L1856" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="requestArguments"></a>requestArguments(title, argTypes, callback)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/meta/player.lua#L1867" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="requestarguments"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -1668,7 +1668,7 @@ The player meta table extends Garry's Mod player entities with Lilia-specific he
 ---
 
 <details class="realm-shared" id="function-requestbinaryquestion">
-<summary><span class="summary-main"><a id="requestBinaryQuestion"></a>requestBinaryQuestion(question, option1, option2, manualDismiss, callback)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/meta/player.lua#L1911" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="requestBinaryQuestion"></a>requestBinaryQuestion(question, option1, option2, manualDismiss, callback)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/meta/player.lua#L1922" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="requestbinaryquestion"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -1703,7 +1703,7 @@ The player meta table extends Garry's Mod player entities with Lilia-specific he
 ---
 
 <details class="realm-shared" id="function-requestpopupquestion">
-<summary><span class="summary-main"><a id="requestPopupQuestion"></a>requestPopupQuestion(question, buttons)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/meta/player.lua#L1962" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="requestPopupQuestion"></a>requestPopupQuestion(question, buttons)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/meta/player.lua#L1973" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="requestpopupquestion"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -1736,7 +1736,7 @@ The player meta table extends Garry's Mod player entities with Lilia-specific he
 ---
 
 <details class="realm-shared" id="function-getragdoll">
-<summary><span class="summary-main"><a id="getRagdoll"></a>getRagdoll()</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/meta/player.lua#L2002" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="getRagdoll"></a>getRagdoll()</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/meta/player.lua#L2013" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="getragdoll"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -1765,7 +1765,7 @@ The player meta table extends Garry's Mod player entities with Lilia-specific he
 ---
 
 <details class="realm-shared" id="function-requestbuttons">
-<summary><span class="summary-main"><a id="requestButtons"></a>requestButtons(title, buttons)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/meta/player.lua#L2049" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="requestButtons"></a>requestButtons(title, buttons)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/meta/player.lua#L2060" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="requestbuttons"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -1798,7 +1798,7 @@ The player meta table extends Garry's Mod player entities with Lilia-specific he
 ---
 
 <details class="realm-shared" id="function-isstuck">
-<summary><span class="summary-main"><a id="isStuck"></a>isStuck()</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/meta/player.lua#L2090" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="isStuck"></a>isStuck()</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/meta/player.lua#L2101" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="isstuck"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -1827,7 +1827,7 @@ The player meta table extends Garry's Mod player entities with Lilia-specific he
 ---
 
 <details class="realm-shared" id="function-requestdropdown">
-<summary><span class="summary-main"><a id="requestDropdown"></a>requestDropdown(title, subTitle, options, callback)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/meta/player.lua#L2125" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="requestDropdown"></a>requestDropdown(title, subTitle, options, callback)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/meta/player.lua#L2136" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="requestdropdown"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -1861,7 +1861,7 @@ The player meta table extends Garry's Mod player entities with Lilia-specific he
 ---
 
 <details class="realm-shared" id="function-getparts">
-<summary><span class="summary-main"><a id="getParts"></a>getParts()</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/meta/player.lua#L2166" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="getParts"></a>getParts()</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/meta/player.lua#L2177" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="getparts"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -1898,7 +1898,7 @@ The player meta table extends Garry's Mod player entities with Lilia-specific he
 ---
 
 <details class="realm-server" id="function-syncparts">
-<summary><span class="summary-main"><a id="syncParts"></a>syncParts()</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/meta/player.lua#L2193" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="syncParts"></a>syncParts()</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/meta/player.lua#L2204" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="syncparts"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -1927,7 +1927,7 @@ The player meta table extends Garry's Mod player entities with Lilia-specific he
 ---
 
 <details class="realm-server" id="function-addpart">
-<summary><span class="summary-main"><a id="addPart"></a>addPart(partID)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/meta/player.lua#L2225" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="addPart"></a>addPart(partID)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/meta/player.lua#L2236" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="addpart"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -1961,7 +1961,7 @@ The player meta table extends Garry's Mod player entities with Lilia-specific he
 ---
 
 <details class="realm-server" id="function-removepart">
-<summary><span class="summary-main"><a id="removePart"></a>removePart(partID)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/meta/player.lua#L2263" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="removePart"></a>removePart(partID)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/meta/player.lua#L2274" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="removepart"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -1995,7 +1995,7 @@ The player meta table extends Garry's Mod player entities with Lilia-specific he
 ---
 
 <details class="realm-server" id="function-resetparts">
-<summary><span class="summary-main"><a id="resetParts"></a>resetParts()</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/meta/player.lua#L2296" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="resetParts"></a>resetParts()</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/meta/player.lua#L2307" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="resetparts"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -2024,7 +2024,7 @@ The player meta table extends Garry's Mod player entities with Lilia-specific he
 ---
 
 <details class="realm-server" id="function-restorestamina">
-<summary><span class="summary-main"><a id="restoreStamina"></a>restoreStamina(amount)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/meta/player.lua#L2327" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="restoreStamina"></a>restoreStamina(amount)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/meta/player.lua#L2338" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="restorestamina"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -2053,7 +2053,7 @@ The player meta table extends Garry's Mod player entities with Lilia-specific he
 ---
 
 <details class="realm-server" id="function-consumestamina">
-<summary><span class="summary-main"><a id="consumeStamina"></a>consumeStamina(amount)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/meta/player.lua#L2358" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="consumeStamina"></a>consumeStamina(amount)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/meta/player.lua#L2369" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="consumestamina"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -2082,7 +2082,7 @@ The player meta table extends Garry's Mod player entities with Lilia-specific he
 ---
 
 <details class="realm-server" id="function-addmoney">
-<summary><span class="summary-main"><a id="addMoney"></a>addMoney(amount)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/meta/player.lua#L2392" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="addMoney"></a>addMoney(amount)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/meta/player.lua#L2403" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="addmoney"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -2116,7 +2116,7 @@ The player meta table extends Garry's Mod player entities with Lilia-specific he
 ---
 
 <details class="realm-server" id="function-takemoney">
-<summary><span class="summary-main"><a id="takeMoney"></a>takeMoney(amount)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/meta/player.lua#L2421" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="takeMoney"></a>takeMoney(amount)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/meta/player.lua#L2432" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="takemoney"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -2145,7 +2145,7 @@ The player meta table extends Garry's Mod player entities with Lilia-specific he
 ---
 
 <details class="realm-server" id="function-loadliliadata">
-<summary><span class="summary-main"><a id="loadLiliaData"></a>loadLiliaData(callback)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/meta/player.lua#L2447" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="loadLiliaData"></a>loadLiliaData(callback)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/meta/player.lua#L2458" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="loadliliadata"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -2176,7 +2176,7 @@ The player meta table extends Garry's Mod player entities with Lilia-specific he
 ---
 
 <details class="realm-server" id="function-saveliliadata">
-<summary><span class="summary-main"><a id="saveLiliaData"></a>saveLiliaData()</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/meta/player.lua#L2499" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="saveLiliaData"></a>saveLiliaData()</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/meta/player.lua#L2510" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="saveliliadata"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -2200,7 +2200,7 @@ The player meta table extends Garry's Mod player entities with Lilia-specific he
 ---
 
 <details class="realm-server" id="function-setliliadata">
-<summary><span class="summary-main"><a id="setLiliaData"></a>setLiliaData(key, value, noNetworking, noSave)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/meta/player.lua#L2544" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="setLiliaData"></a>setLiliaData(key, value, noNetworking, noSave)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/meta/player.lua#L2555" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="setliliadata"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -2232,7 +2232,7 @@ The player meta table extends Garry's Mod player entities with Lilia-specific he
 ---
 
 <details class="realm-server" id="function-banplayer">
-<summary><span class="summary-main"><a id="banPlayer"></a>banPlayer(reason, duration, banner)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/meta/player.lua#L2580" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="banPlayer"></a>banPlayer(reason, duration, banner)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/meta/player.lua#L2591" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="banplayer"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -2263,7 +2263,7 @@ The player meta table extends Garry's Mod player entities with Lilia-specific he
 ---
 
 <details class="realm-server" id="function-getplaytime">
-<summary><span class="summary-main"><a id="getPlayTime"></a>getPlayTime()</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/meta/player.lua#L2611" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="getPlayTime"></a>getPlayTime()</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/meta/player.lua#L2622" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="getplaytime"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -2292,7 +2292,7 @@ The player meta table extends Garry's Mod player entities with Lilia-specific he
 ---
 
 <details class="realm-server" id="function-createragdoll">
-<summary><span class="summary-main"><a id="createRagdoll"></a>createRagdoll(freeze)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/meta/player.lua#L2644" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="createRagdoll"></a>createRagdoll(freeze)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/meta/player.lua#L2655" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="createragdoll"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -2326,7 +2326,7 @@ The player meta table extends Garry's Mod player entities with Lilia-specific he
 ---
 
 <details class="realm-server" id="function-setragdolled">
-<summary><span class="summary-main"><a id="setRagdolled"></a>setRagdolled(state, time, getUpGrace)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/meta/player.lua#L2697" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="setRagdolled"></a>setRagdolled(state, time, getUpGrace)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/meta/player.lua#L2708" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="setragdolled"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -2357,7 +2357,7 @@ The player meta table extends Garry's Mod player entities with Lilia-specific he
 ---
 
 <details class="realm-server" id="function-syncvars">
-<summary><span class="summary-main"><a id="syncVars"></a>syncVars()</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/meta/player.lua#L2836" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="syncVars"></a>syncVars()</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/meta/player.lua#L2847" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="syncvars"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -2381,7 +2381,7 @@ The player meta table extends Garry's Mod player entities with Lilia-specific he
 ---
 
 <details class="realm-server" id="function-setnetvar">
-<summary><span class="summary-main"><a id="setNetVar"></a>setNetVar(key, value)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/meta/player.lua#L2887" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="setNetVar"></a>setNetVar(key, value)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/meta/player.lua#L2898" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="setnetvar"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -2411,7 +2411,7 @@ The player meta table extends Garry's Mod player entities with Lilia-specific he
 ---
 
 <details class="realm-server" id="function-setlocalvar">
-<summary><span class="summary-main"><a id="setLocalVar"></a>setLocalVar(key, value)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/meta/player.lua#L2929" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="setLocalVar"></a>setLocalVar(key, value)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/meta/player.lua#L2940" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="setlocalvar"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -2441,7 +2441,7 @@ The player meta table extends Garry's Mod player entities with Lilia-specific he
 ---
 
 <details class="realm-server" id="function-getlocalvar">
-<summary><span class="summary-main"><a id="getLocalVar"></a>getLocalVar(key, default)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/meta/player.lua#L2968" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="getLocalVar"></a>getLocalVar(key, default)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/meta/player.lua#L2979" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="getlocalvar"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -2476,7 +2476,7 @@ The player meta table extends Garry's Mod player entities with Lilia-specific he
 ---
 
 <details class="realm-client" id="function-getlocalvar">
-<summary><span class="summary-main"><a id="getLocalVar"></a>getLocalVar(key, default)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/meta/player.lua#L2996" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="getLocalVar"></a>getLocalVar(key, default)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/meta/player.lua#L3007" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="getlocalvar"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -2511,7 +2511,7 @@ The player meta table extends Garry's Mod player entities with Lilia-specific he
 ---
 
 <details class="realm-client" id="function-getplaytime">
-<summary><span class="summary-main"><a id="getPlayTime"></a>getPlayTime()</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/meta/player.lua#L3019" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="getPlayTime"></a>getPlayTime()</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/meta/player.lua#L3030" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="getplaytime"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">

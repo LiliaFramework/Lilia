@@ -2660,6 +2660,7 @@ hook.Add("CreateMenuButtons", "liaF1MenuCreateMenuButtons", function(tabs)
                         ["Tool Permissions"] = "Set which tools are disabled, available to staff, or available with basic tool access.",
                         ["User Groups"] = "Create and manage user groups, including their permissions and inheritance."
                     }
+
                     adminPanel._activeAdminPageName = pageName
                     adminPanel._activeAdminPageDescription = page.description or tabDescriptions[pageName] or "Manage settings and information for " .. pageName .. "."
                     adminPanel.activeAdminPageIndex = index

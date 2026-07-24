@@ -35,7 +35,7 @@ The module library centralizes module discovery and loading under `lia.module`. 
 ---
 
 <details class="realm-shared" id="function-liamoduleload">
-<summary><span class="summary-main"><a id="lia.module.load"></a>lia.module.load(uniqueID, path, variable, skipSubmodules)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/modularity.lua#L238" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="lia.module.load"></a>lia.module.load(uniqueID, path, variable, skipSubmodules)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/modularity.lua#L239" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="liamoduleload"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -68,7 +68,7 @@ The module library centralizes module discovery and loading under `lia.module`. 
 ---
 
 <details class="realm-shared" id="function-liamoduleinitialize">
-<summary><span class="summary-main"><a id="lia.module.initialize"></a>lia.module.initialize()</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/modularity.lua#L345" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="lia.module.initialize"></a>lia.module.initialize()</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/modularity.lua#L346" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="liamoduleinitialize"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -92,7 +92,7 @@ The module library centralizes module discovery and loading under `lia.module`. 
 ---
 
 <details class="realm-shared" id="function-liamoduleloadfromdir">
-<summary><span class="summary-main"><a id="lia.module.loadFromDir"></a>lia.module.loadFromDir(directory, group, skip)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/modularity.lua#L408" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="lia.module.loadFromDir"></a>lia.module.loadFromDir(directory, group, skip)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/modularity.lua#L409" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="liamoduleloadfromdir"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -124,7 +124,7 @@ The module library centralizes module discovery and loading under `lia.module`. 
 ---
 
 <details class="realm-shared" id="function-liamoduleget">
-<summary><span class="summary-main"><a id="lia.module.get"></a>lia.module.get(identifier)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/modularity.lua#L437" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="lia.module.get"></a>lia.module.get(identifier)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/modularity.lua#L438" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="liamoduleget"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
