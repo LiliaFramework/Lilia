@@ -1,4 +1,152 @@
 ﻿local spawnCooldowns = {}
+local validToolTiers = {
+    disabled = true,
+    staff = true,
+    basic = true
+}
+
+lia.staffCharacterPermissions = lia.data.get("staffCharacterPermissions", {})
+lia.staffCharacterFlags = lia.data.get("staffCharacterFlags", {})
+local function hasStaffCharacterConfigurationAccess(client)
+    return IsValid(client) and lia.admin.hasAccess(client, "manageUsergroups")
+end
+
+local function getStaffCharacterConfiguration()
+    local privileges, flags = {}, {}
+    for id in pairs(lia.admin.privilegeNames or {}) do
+        privileges[id] = true
+    end
+
+    for id in pairs(lia.admin.privileges or {}) do
+        privileges[id] = true
+    end
+
+    for id, data in pairs(lia.flag.list or {}) do
+        flags[id] = data.desc or data.description or id
+    end
+    return {
+        permissions = lia.staffCharacterPermissions or {},
+        flags = lia.staffCharacterFlags or {},
+        privileges = privileges,
+        flagDefinitions = flags
+    }
+end
+
+local function sendStaffCharacterConfiguration(client)
+    net.Start("liaStaffCharacterConfiguration")
+    net.WriteTable(getStaffCharacterConfiguration())
+    net.Send(client)
+end
+
+net.Receive("liaRequestStaffCharacterConfiguration", function(_, client) if hasStaffCharacterConfigurationAccess(client) then sendStaffCharacterConfiguration(client) end end)
+net.Receive("liaSetStaffCharacterPermission", function(_, client)
+    if not hasStaffCharacterConfigurationAccess(client) then return end
+    local permission, enabled = lia.admin.normalizePrivilege(string.Trim(net.ReadString() or "")), net.ReadBool()
+    if permission == "" or not (lia.admin.privilegeNames[permission] or lia.admin.privileges[permission]) then return end
+    lia.staffCharacterPermissions[permission] = enabled and true or nil
+    lia.data.set("staffCharacterPermissions", lia.staffCharacterPermissions, true, true)
+    lia.log.add(client, "permissionChanged", "staff character " .. permission .. " -> " .. tostring(enabled))
+    sendStaffCharacterConfiguration(client)
+end)
+
+net.Receive("liaSetStaffCharacterFlag", function(_, client)
+    if not hasStaffCharacterConfigurationAccess(client) then return end
+    local flag, enabled = net.ReadString(), net.ReadBool()
+    if #flag ~= 1 or not lia.flag.list[flag] then return end
+    lia.staffCharacterFlags[flag] = enabled and true or nil
+    lia.data.set("staffCharacterFlags", lia.staffCharacterFlags, true, true)
+    lia.log.add(client, "permissionChanged", "staff character flag " .. flag .. " -> " .. tostring(enabled))
+    sendStaffCharacterConfiguration(client)
+end)
+
+net.Receive("liaResetStaffCharacterConfiguration", function(_, client)
+    if not hasStaffCharacterConfigurationAccess(client) then return end
+    lia.staffCharacterPermissions, lia.staffCharacterFlags = {}, {}
+    lia.data.set("staffCharacterPermissions", {}, true, true)
+    lia.data.set("staffCharacterFlags", {}, true, true)
+    lia.log.add(client, "permissionChanged", "staff character permissions and flags reset")
+    sendStaffCharacterConfiguration(client)
+end)
+
+local function getToolNames()
+    local names, seen = {}, {}
+    for _, weapon in ipairs(weapons.GetList()) do
+        if weapon.ClassName == "gmod_tool" and istable(weapon.Tool) then
+            for toolName in pairs(weapon.Tool) do
+                toolName = string.lower(tostring(toolName))
+                if not seen[toolName] then
+                    seen[toolName] = true
+                    names[#names + 1] = toolName
+                end
+            end
+        end
+    end
+
+    table.sort(names)
+    return names
+end
+
+local function sendToolPermissionTiers(client)
+    net.Start("liaToolPermissionTiers")
+    net.WriteTable({
+        tools = getToolNames(),
+        tiers = lia.data.get("toolPermissionTiers", {})
+    })
+
+    net.Send(client)
+end
+
+net.Receive("liaRequestToolPermissionTiers", function(_, client)
+    if not IsValid(client) or not client:hasPrivilege("manageUsergroups") then return end
+    sendToolPermissionTiers(client)
+end)
+
+net.Receive("liaSetToolPermissionTier", function(_, client)
+    if not IsValid(client) or not client:hasPrivilege("manageUsergroups") then return end
+    local toolName = string.lower(string.Trim(net.ReadString() or ""))
+    local tier = net.ReadString()
+    if toolName == "" or not validToolTiers[tier] or not table.HasValue(getToolNames(), toolName) then return end
+    local tiers = lia.data.get("toolPermissionTiers", {})
+    tiers[toolName] = tier
+    lia.data.set("toolPermissionTiers", tiers, true, true)
+    lia.log.add(client, "permissionChanged", "tool_" .. toolName .. " -> " .. tier)
+    sendToolPermissionTiers(client)
+end)
+
+net.Receive("liaSetToolPermissionTiersBatch", function(_, client)
+    if not IsValid(client) or not client:hasPrivilege("manageUsergroups") then return end
+    local count = math.min(net.ReadUInt(12), 4095)
+    local validTools = {}
+    for _, toolName in ipairs(getToolNames()) do
+        validTools[toolName] = true
+    end
+
+    local tiers = lia.data.get("toolPermissionTiers", {})
+    local changed = 0
+    for _ = 1, count do
+        local toolName = string.lower(string.Trim(net.ReadString() or ""))
+        local tier = net.ReadString()
+        if validTools[toolName] and validToolTiers[tier] and tiers[toolName] ~= tier then
+            tiers[toolName] = tier
+            changed = changed + 1
+        end
+    end
+
+    if changed > 0 then
+        lia.data.set("toolPermissionTiers", tiers, true, true)
+        lia.log.add(client, "permissionChanged", changed .. " tool permission tiers updated")
+    end
+
+    sendToolPermissionTiers(client)
+end)
+
+net.Receive("liaResetToolPermissionTiers", function(_, client)
+    if not IsValid(client) or not client:hasPrivilege("manageUsergroups") then return end
+    lia.data.set("toolPermissionTiers", {}, true, true)
+    lia.log.add(client, "permissionChanged", "all tool permission tiers reset")
+    sendToolPermissionTiers(client)
+end)
+
 net.Receive("liaAdminSetCharProperty", function(_, client)
     lia.debug("[Permissions]", "Permission Check for net.Receive liaAdminSetCharProperty", "hasPrivilege(listCharacters)=", tostring(client:hasPrivilege("listCharacters")), "finalResult=", tostring(client:hasPrivilege("listCharacters")))
     if not client:hasPrivilege("listCharacters") then return end
@@ -179,6 +327,13 @@ net.Receive("liaManagesitroomsAction", function(_, client)
     end
 end)
 
+local function writeFeaturePositionRadii(positions)
+    net.WriteUInt(#positions, 16)
+    for i = 1, #positions do
+        net.WriteFloat(math.max(0, tonumber(positions[i].radius) or 0))
+    end
+end
+
 net.Receive("liaFeaturePositionsRequest", function(_, client)
     local hasAlwaysSpawnAdminStick = client:hasPrivilege("alwaysSpawnAdminStick")
     local isStaffOnDuty = client:isStaffOnDuty()
@@ -197,12 +352,14 @@ net.Receive("liaFeaturePositionsRequest", function(_, client)
                 net.WriteString(positions[j].label or "")
             end
 
+            writeFeaturePositionRadii(positions)
             net.Send(client)
         end)
     else
         net.Start("liaFeaturePositions")
         net.WriteString(typeId)
         net.WriteUInt(0, 16)
+        writeFeaturePositionRadii({})
         net.Send(client)
     end
 end)
@@ -231,6 +388,7 @@ net.Receive("liaSetFeaturePosition", function(_, client)
                         net.WriteString(positions[j].label or "")
                     end
 
+                    writeFeaturePositionRadii(positions)
                     net.Send(client)
                 end)
             end
@@ -262,6 +420,7 @@ net.Receive("liaRemoveFeaturePosition", function(_, client)
                         net.WriteString(positions[j].label or "")
                     end
 
+                    writeFeaturePositionRadii(positions)
                     net.Send(client)
                 end)
             end

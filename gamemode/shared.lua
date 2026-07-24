@@ -1,33 +1,4 @@
-﻿--[[
-    Hooks:
-        SuppressHint(string hint)
-
-    Purpose:
-        Runs during shared initialization for each default Source hint name so modules can suppress built-in HUD hints.
-
-    Category:
-        UI
-
-    Parameters:
-        hint (string)
-            The engine hint identifier being suppressed, such as `PhysgunFreeze` or `VehicleView`.
-
-    Returns:
-        nil
-
-    Example Usage:
-        ```lua
-        hook.Add("SuppressHint", "liaExampleSuppressHint", function(hint)
-            if hint == "PhysgunFreeze" then
-                print("Suppressing hint:", hint)
-            end
-        end)
-        ```
-
-    Realm:
-        Shared
-]]
-GM.Name = "Lilia"
+﻿GM.Name = "Lilia"
 GM.version = 7.565
 GM.Author = "Samael"
 GM.Website = "https://discord.gg/esCRH5ckbQ"
