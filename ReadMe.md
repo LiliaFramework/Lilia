@@ -25,6 +25,8 @@
 
 <h1 align="center">Lilia Framework</h1>
 
+---
+
 ## Quick Start
 
 <p align="center">
