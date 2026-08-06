@@ -1,4 +1,60 @@
 ﻿local MODULE = MODULE
+local function getEntityOwner(entity)
+    if not IsValid(entity) then return nil end
+    if entity.GetOwner then
+        local owner = entity:GetOwner()
+        if IsValid(owner) and owner:IsPlayer() then return owner end
+    end
+
+    if entity.GetCreator then
+        local creator = entity:GetCreator()
+        if IsValid(creator) and creator:IsPlayer() then return creator end
+    end
+
+    if entity.CPPIGetOwner then
+        local owner = entity:CPPIGetOwner()
+        if IsValid(owner) and owner:IsPlayer() then return owner end
+    end
+end
+
+net.Receive("liaRequestEntityTabData", function(_, client)
+    local hasPrivilege = IsValid(client) and client:hasPrivilege("viewEntityTab") or false
+    lia.debug("[Permissions]", "Permission Check for net.Receive liaRequestEntityTabData", "hasPrivilege(viewEntityTab)=", tostring(hasPrivilege), "finalResult=", tostring(hasPrivilege))
+    if not hasPrivilege then return end
+    local grouped = {}
+    local totalEntities = 0
+    for _, entity in ents.Iterator() do
+        if IsValid(entity) then
+            local owner = getEntityOwner(entity)
+            if IsValid(owner) then
+                local ownerName = owner:Nick()
+                grouped[ownerName] = grouped[ownerName] or {}
+                grouped[ownerName][#grouped[ownerName] + 1] = {
+                    entIndex = entity:EntIndex(),
+                    class = entity:GetClass(),
+                    model = entity:GetModel() or "models/error.mdl",
+                    displayName = entity.PrintName or entity:GetClass(),
+                    position = entity:GetPos()
+                }
+                totalEntities = totalEntities + 1
+            end
+        end
+    end
+
+    local owners = {}
+    for ownerName, entities in SortedPairs(grouped) do
+        owners[#owners + 1] = {
+            owner = ownerName,
+            entities = entities
+        }
+    end
+    lia.debug("[Entity Tab Debug]", "Sending server entity tab payload", "owners=", tostring(#owners), "totalEntities=", tostring(totalEntities))
+    lia.net.writeBigTable(client, "liaEntityTabData", {
+        owners = owners,
+        totalEntities = totalEntities
+    })
+end)
+
 function MODULE:CanPlayerSwitchChar(client, character, newCharacter)
     local isStaffOnDuty = client:isStaffOnDuty()
     lia.debug("[Permissions]", "Permission Check for function MODULE:CanPlayerSwitchChar staff bypass", "isStaffOnDuty=", tostring(isStaffOnDuty), "finalResult=", tostring(isStaffOnDuty))

@@ -3103,22 +3103,46 @@ function MODULE:InitPostEntity()
     end
 end
 
-function MODULE:PopulateAdminTabs(pages)
+function MODULE:requestEntityTabData(force)
+    if self.entityTabRequestPending and not force then return end
+    if not force and self.entityTabLastRequest and self.entityTabLastRequest > CurTime() - 2 then return end
+    self.entityTabRequestPending = true
+    self.entityTabLastRequest = CurTime()
+    lia.debug("[Entity Tab Debug]", "Requesting server entity tab payload")
+    net.Start("liaRequestEntityTabData")
+    net.SendToServer()
+end
+
+function MODULE:populateEntityTabPanel(entPanel)
+    if not IsValid(entPanel) then return end
     local client = LocalPlayer()
-    local entitiesByCreator = {}
-    local nonPlayerEntities = {}
-    for _, ent in ents.Iterator() do
-        if IsValid(ent) then
-            if ent.GetCreator and IsValid(ent:GetCreator()) then
-                local owner = ent:GetCreator():Nick()
-                entitiesByCreator[owner] = entitiesByCreator[owner] or {}
-                table.insert(entitiesByCreator[owner], ent)
-            else
-                table.insert(nonPlayerEntities, ent)
-            end
-        end
+    local entityData = self.entityTabData or {
+        owners = {},
+        totalEntities = 0
+    }
+    local owners = istable(entityData.owners) and entityData.owners or {}
+    entPanel:Clear()
+    entPanel:DockPadding(6, 6, 6, 6)
+    entPanel.Paint = nil
+    if #owners == 0 then
+        local message = self.entityTabRequestPending and L("loading") or "No tracked player-created entities found."
+        local label = vgui.Create("DLabel", entPanel)
+        label:Dock(TOP)
+        label:SetTall(32)
+        label:SetFont("LiliaFont.25")
+        label:SetTextColor(color_white)
+        label:SetText(message)
+        local refresh = vgui.Create("liaButton", entPanel)
+        refresh:Dock(TOP)
+        refresh:SetTall(36)
+        refresh:SetText("Refresh Entity Data")
+        refresh.DoClick = function() self:requestEntityTabData(true) end
+        return
     end
 
+    lia.debug("[Entity Tab Debug]", "Drawing entity tab", "owners=", tostring(#owners), "totalEntities=", tostring(entityData.totalEntities or 0))
+    local sheetContainer = vgui.Create("liaTabs", entPanel)
+    sheetContainer:Dock(FILL)
     local function startSpectateView(ent, originalThirdPerson)
         local yaw = client:EyeAngles().yaw
         local camZOffset = 50
@@ -3154,95 +3178,122 @@ function MODULE:PopulateAdminTabs(pages)
         end)
     end
 
+    for _, ownerData in ipairs(owners) do
+        local owner = tostring(ownerData.owner or "Unknown")
+        local list = istable(ownerData.entities) and ownerData.entities or {}
+        lia.debug("[Entity Tab Debug]", "Owner bucket", "owner=", tostring(owner), "entityCount=", tostring(#list))
+        local ownerPanel = vgui.Create("DPanel")
+        ownerPanel:Dock(FILL)
+        ownerPanel.Paint = function() end
+        local searchSheet = vgui.Create("liaSheet", ownerPanel)
+        searchSheet:Dock(FILL)
+        searchSheet:SetPlaceholderText(L("searchEntities"))
+        for _, entry in ipairs(list) do
+            local ent = Entity(entry.entIndex or -1)
+            local entValid = IsValid(ent)
+            local displayName = entValid and getEntityDisplayName(ent) or entry.displayName or entry.class or "Unknown Entity"
+            local itemPanel = vgui.Create("DPanel")
+            itemPanel:SetTall(100)
+            itemPanel.Paint = function(pnl, w, h)
+                derma.SkinHook("Paint", "Panel", pnl, w, h)
+                draw.SimpleText(displayName, "LiliaFont.25", w / 2, h / 2, color_white, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
+            end
+
+            local icon = vgui.Create("liaSpawnIcon", itemPanel)
+            icon:Dock(LEFT)
+            icon:SetWide(64)
+            icon:SetTall(64)
+            icon:DockMargin(5, 5, 0, 0)
+            icon:SetModel(entry.model and entry.model ~= "" and entry.model or "models/error.mdl", entValid and ent:GetSkin() or 0)
+            local btnContainer = vgui.Create("DPanel", itemPanel)
+            btnContainer:Dock(RIGHT)
+            btnContainer:SetWide(380)
+            btnContainer:DockMargin(-250, 5, 5, 0)
+            btnContainer.Paint = function() end
+            local btnLayout = vgui.Create("DIconLayout", btnContainer)
+            btnLayout:Dock(FILL)
+            btnLayout:SetSpaceX(10)
+            btnLayout:SetSpaceY(0)
+            btnLayout:DockMargin(0, 5, 0, 0)
+            local function makeBtn(key, func, enabled)
+                local btn = btnLayout:Add("liaButton")
+                btn:SetWide(120)
+                btn:SetTall(60)
+                btn:SetText(L(key))
+                btn:SetEnabled(enabled ~= false)
+                btn.DoClick = func
+            end
+
+            makeBtn("view", function()
+                if not IsValid(ent) then return end
+                if IsValid(lia.gui.menu) then lia.gui.menu:remove() end
+                local prevTP = lia.option.get("thirdPersonEnabled", false)
+                lia.option.set("thirdPersonEnabled", false)
+                startSpectateView(ent, prevTP)
+            end, entValid)
+
+            local canTeleportToEntity = client:hasPrivilege("teleportToEntity")
+            if canTeleportToEntity then
+                makeBtn("teleport", function()
+                    if not IsValid(ent) then return end
+                    if IsValid(lia.gui.menu) then lia.gui.menu:remove() end
+                    net.Start("liaTeleportToEntity")
+                    net.WriteEntity(ent)
+                    net.SendToServer()
+                end, entValid)
+            end
+
+            if client.previousPosition then
+                makeBtn("return", function()
+                    if IsValid(lia.gui.menu) then lia.gui.menu:remove() end
+                    net.Start("liaReturnFromEntity")
+                    net.SendToServer()
+                end)
+            end
+
+            makeBtn("placeWaypoint", function()
+                if IsValid(ent) then
+                    client:setWaypoint(displayName, ent:GetPos())
+                elseif isvector(entry.position) then
+                    client:setWaypoint(displayName, entry.position)
+                end
+            end, entValid or isvector(entry.position))
+            searchSheet:AddPanelRow(itemPanel, {
+                height = 100,
+                filterText = displayName:lower()
+            })
+        end
+
+        searchSheet:Refresh()
+        sheetContainer:AddSheet(owner .. " - " .. #list .. " " .. L("entities"), ownerPanel)
+    end
+end
+
+function MODULE:PopulateAdminTabs(pages)
+    local client = LocalPlayer()
     local canViewEntityTab = client:hasPrivilege("viewEntityTab")
-    if not table.IsEmpty(entitiesByCreator) and canViewEntityTab then
+    local entityTabData = self.entityTabData or {
+        owners = {},
+        totalEntities = 0
+    }
+    lia.debug(
+        "[Entity Tab Debug]",
+        "player=", tostring(IsValid(client) and client:Nick() or "unknown"),
+        "usergroup=", tostring(IsValid(client) and client:GetUserGroup() or "unknown"),
+        "hasPrivilege(viewEntityTab)=", tostring(canViewEntityTab),
+        "cachedOwners=", tostring(istable(entityTabData.owners) and #entityTabData.owners or 0),
+        "cachedEntities=", tostring(entityTabData.totalEntities or 0),
+        "requestPending=", tostring(self.entityTabRequestPending or false),
+        "shouldAddTab=", tostring(canViewEntityTab)
+    )
+    if canViewEntityTab then
+        self:requestEntityTabData()
         pages[#pages + 1] = {
             name = "@playerEntities",
             icon = "icon16/bricks.png",
             drawFunc = function(entPanel)
-                entPanel:Clear()
-                entPanel:DockPadding(6, 6, 6, 6)
-                entPanel.Paint = nil
-                local sheetContainer = vgui.Create("liaTabs", entPanel)
-                sheetContainer:Dock(FILL)
-                for owner, list in SortedPairs(entitiesByCreator) do
-                    local ownerPanel = vgui.Create("DPanel")
-                    ownerPanel:Dock(FILL)
-                    ownerPanel.Paint = function() end
-                    local searchSheet = vgui.Create("liaSheet", ownerPanel)
-                    searchSheet:Dock(FILL)
-                    searchSheet:SetPlaceholderText(L("searchEntities"))
-                    for _, ent in ipairs(list) do
-                        if not IsValid(ent) then continue end
-                        local displayName = getEntityDisplayName(ent)
-                        local itemPanel = vgui.Create("DPanel")
-                        itemPanel:SetTall(100)
-                        itemPanel.Paint = function(pnl, w, h)
-                            derma.SkinHook("Paint", "Panel", pnl, w, h)
-                            draw.SimpleText(displayName, "LiliaFont.25", w / 2, h / 2, color_white, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
-                        end
-
-                        local icon = vgui.Create("liaSpawnIcon", itemPanel)
-                        icon:Dock(LEFT)
-                        icon:SetWide(64)
-                        icon:SetTall(64)
-                        icon:DockMargin(5, 5, 0, 0)
-                        local modelPath = ent:GetModel()
-                        if not modelPath or modelPath == "" then modelPath = "models/error.mdl" end
-                        icon:SetModel(modelPath, ent:GetSkin() or 0)
-                        local btnContainer = vgui.Create("DPanel", itemPanel)
-                        btnContainer:Dock(RIGHT)
-                        btnContainer:SetWide(380)
-                        btnContainer:DockMargin(-250, 5, 5, 0)
-                        btnContainer.Paint = function() end
-                        local btnLayout = vgui.Create("DIconLayout", btnContainer)
-                        btnLayout:Dock(FILL)
-                        btnLayout:SetSpaceX(10)
-                        btnLayout:SetSpaceY(0)
-                        btnLayout:DockMargin(0, 5, 0, 0)
-                        local function makeBtn(key, func)
-                            local btn = btnLayout:Add("liaButton")
-                            btn:SetWide(120)
-                            btn:SetTall(60)
-                            btn:SetText(L(key))
-                            btn.DoClick = func
-                        end
-
-                        makeBtn("view", function()
-                            if IsValid(lia.gui.menu) then lia.gui.menu:remove() end
-                            local prevTP = lia.option.get("thirdPersonEnabled", false)
-                            lia.option.set("thirdPersonEnabled", false)
-                            startSpectateView(ent, prevTP)
-                        end)
-
-                        local canTeleportToEntity = client:hasPrivilege("teleportToEntity")
-                        if canTeleportToEntity then
-                            makeBtn("teleport", function()
-                                if IsValid(lia.gui.menu) then lia.gui.menu:remove() end
-                                net.Start("liaTeleportToEntity")
-                                net.WriteEntity(ent)
-                                net.SendToServer()
-                            end)
-                        end
-
-                        if client.previousPosition then
-                            makeBtn("return", function()
-                                if IsValid(lia.gui.menu) then lia.gui.menu:remove() end
-                                net.Start("liaReturnFromEntity")
-                                net.SendToServer()
-                            end)
-                        end
-
-                        makeBtn("placeWaypoint", function() client:setWaypoint(getEntityDisplayName(ent), ent:GetPos()) end)
-                        searchSheet:AddPanelRow(itemPanel, {
-                            height = 100,
-                            filterText = displayName:lower()
-                        })
-                    end
-
-                    searchSheet:Refresh()
-                    sheetContainer:AddSheet(owner .. " - " .. #list .. " " .. L("entities"), ownerPanel)
-                end
+                self.entityTabPanel = entPanel
+                self:populateEntityTabPanel(entPanel)
             end
         }
     end
