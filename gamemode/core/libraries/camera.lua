@@ -149,7 +149,6 @@ local clmp = math.Clamp
 crouchFactor = 0
 local diff, fm, sm
 local freelooking = false
-local automaticFreelooking = false
 local freelookX = 0
 local freelookY = 0
 local freelookInitialAngles = Angle()
@@ -528,7 +527,6 @@ end
         Client
 ]]
 function lia.camera.resetFreelookState()
-    automaticFreelooking = false
     freelookX = 0
     freelookY = 0
     freelookCurrentAngles = zeroAngle
@@ -559,7 +557,6 @@ function lia.camera.beginFreelook(client, automatic)
     freelookInitialAngles = client:EyeAngles()
     freelookInitialAngles.r = 0
     freelookWasHolding = true
-    automaticFreelooking = automatic == true
 end
 
 --[[
