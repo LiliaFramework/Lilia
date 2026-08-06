@@ -243,6 +243,42 @@ else
         end
     end
 
+    --[[
+    Purpose:
+        Attempts to remount already-downloaded server Workshop addons from the local data cache, falling back to the normal download flow if anything is missing.
+
+    Example Usage:
+        ```lua
+        lia.workshop.remountContent()
+        ```
+
+    Realm:
+        Client
+]]
+    function lia.workshop.remountContent()
+        local ids = lia.workshop.serverIds or {}
+        local hasMissingContent = false
+        local remountedAny = false
+        for id in pairs(ids) do
+            if id ~= FORCE_ID and not mounted(id) then
+                if mountLocal(id) then
+                    remountedAny = true
+                else
+                    hasMissingContent = true
+                end
+            end
+        end
+
+        if hasMissingContent then
+            lia.workshop.mountContent()
+            return
+        end
+
+        if remountedAny or not lia.workshop.hasContentToDownload() then
+            lia.bootstrap(L("workshopDownloader"), L("workshopAllInstalled"))
+        end
+    end
+
     local workshopSearchIcon = Material("icon16/magnifier.png", "smooth")
     local workshopLinkIcon = Material("icon16/world_go.png", "smooth")
     local workshopMountIcon = Material("icon16/drive_disk.png", "smooth")

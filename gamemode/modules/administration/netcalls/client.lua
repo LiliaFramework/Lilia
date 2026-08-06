@@ -294,6 +294,15 @@ net.Receive("liaAllPks", function()
     populate("")
 end)
 
+lia.net.readBigTable("liaMapEntities", function(entities)
+    local adminModule = lia.module.get("administration")
+    if not adminModule then return end
+    adminModule.playerEntityData = istable(entities) and entities or {}
+    if isfunction(adminModule.ReconcilePlayerEntityWaypoints) then adminModule:ReconcilePlayerEntityWaypoints(adminModule:BuildPlayerEntityData(adminModule.playerEntityData)) end
+    local panel = adminModule.playerEntityPanel
+    if IsValid(panel) and isfunction(panel.SetEntities) then panel:SetEntities(adminModule.playerEntityData) end
+end)
+
 lia.net.readBigTable("liaStaffCasesSnapshot", function(payload)
     payload = payload or {}
     local adminModule = lia.module.get("administration")

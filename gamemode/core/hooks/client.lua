@@ -922,6 +922,57 @@ local function buildPlayerInfoSections(descriptionRows, infoRows, defaultInfoTit
     return sections
 end
 
+local function fitDescriptionLine(text, maxWidth, font, suffix)
+    surface.SetFont(font)
+    local trimmed = string.Trim(text or "")
+    local candidate = trimmed .. (suffix or "")
+    while trimmed ~= "" and surface.GetTextSize(candidate) > maxWidth do
+        trimmed = string.Trim(trimmed:sub(1, -2))
+        candidate = trimmed .. (suffix or "")
+    end
+    return candidate ~= "" and candidate or (suffix or "")
+end
+
+local function wrapPlayerDescription(text, maxWidth, font, maxLines)
+    local source = string.Trim(tostring(text or ""):gsub("%s+", " "))
+    if source == "" then return {""} end
+    surface.SetFont(font)
+    local lines = {}
+    local remaining = source
+    local truncated = false
+    while remaining ~= "" and #lines < maxLines do
+        if surface.GetTextSize(remaining) <= maxWidth then
+            lines[#lines + 1] = remaining
+            remaining = ""
+            break
+        end
+
+        local lastFitIndex, lastSpaceIndex
+        for i = 1, #remaining do
+            local chunk = remaining:sub(1, i)
+            if surface.GetTextSize(chunk) <= maxWidth then
+                lastFitIndex = i
+                if chunk:sub(-1):match("%s") then lastSpaceIndex = i end
+            else
+                break
+            end
+        end
+
+        if not lastFitIndex then
+            lines[#lines + 1] = fitDescriptionLine(remaining:sub(1, 1), maxWidth, font)
+            remaining = remaining:sub(2):gsub("^%s+", "")
+        else
+            local splitIndex = lastSpaceIndex or lastFitIndex
+            lines[#lines + 1] = string.Trim(remaining:sub(1, splitIndex))
+            remaining = remaining:sub(splitIndex + 1):gsub("^%s+", "")
+        end
+    end
+
+    if remaining ~= "" then truncated = true end
+    if truncated and #lines > 0 then lines[#lines] = fitDescriptionLine(lines[#lines], maxWidth, font, "(...)") end
+    return lines
+end
+
 local function canDrawAmmo(wpn)
     if not IsValid(wpn) or wpn.DrawAmmo == false then return false end
     local hookResult = hook.Run("ShouldDrawAmmo", wpn)
@@ -1023,7 +1074,7 @@ local function RenderEntities()
         for ent, drawing in pairs(paintedEntitiesCache) do
             if IsValid(ent) then
                 local goal = drawing and 255 or 0
-                local fadeSpeed = drawing and 255 or 180
+                local fadeSpeed = drawing and 255 or 360
                 local a = mathApproach(ent.liaAlpha or 0, goal, ft * fadeSpeed)
                 if lastEntity ~= ent then paintedEntitiesCache[ent] = false end
                 if a > 0 then
@@ -1181,12 +1232,22 @@ function GM:DrawEntityInfo(e, a, pos)
     local desc = hook.Run("GetDisplayedDescription", e, true) or ch and ch.getDesc(ch) or L("noChar")
     if desc ~= e.liaDescCache then
         e.liaDescCache = desc
-        if #desc > 250 then desc = desc:sub(1, 250) .. "..." end
-        e.liaDescLines = lia.util.wrapText(desc, ScrW() * width, getHUDFont(17))
+        e.liaDescLines = nil
+        e.liaDescWrapWidth = nil
     end
 
     local extraInfo = {}
     if ch then hook.Run("DrawCharInfo", e, ch, extraInfo) end
+    local minTooltipWidth = math.min(280, ScrW() * width)
+    local maxTooltipWidth = math.min(420, ScrW() * 0.34)
+    local descriptionWrapWidth = math.max(1, maxTooltipWidth - 24)
+    if e.liaDescLines == nil or e.liaDescWrapWidth ~= descriptionWrapWidth then
+        local wrappedDesc = e.liaDescCache or desc
+        if #wrappedDesc > 250 then wrappedDesc = wrappedDesc:sub(1, 250) .. "..." end
+        e.liaDescLines = wrapPlayerDescription(wrappedDesc, descriptionWrapWidth, getHUDFont(17), 3)
+        e.liaDescWrapWidth = descriptionWrapWidth
+    end
+
     local charInfo = {}
     for i = 1, #e.liaNameLines do
         charInfo[#charInfo + 1] = {e.liaNameLines[i], color_white}
@@ -1225,7 +1286,7 @@ function GM:DrawEntityInfo(e, a, pos)
         local panelY = pos.y - panelHeight / 2
         if hook.Run("DrawPlayerInfoBackground", e, panelX, panelY, panelWidth, panelHeight, a) == false then return end
         local accent = lia.color.theme.accent or lia.color.theme.theme or color_white
-        local boxWidth = math.Clamp(math.max(360, panelWidth + 40), math.min(320, ScrW() * width), math.min(520, ScrW() * 0.45))
+        local boxWidth = math.Clamp(math.max(320, panelWidth + 32), minTooltipWidth, maxTooltipWidth)
         local boundMin, boundMax = e:GetRotatedAABB(e:OBBMins() * 0.5, e:OBBMaxs() * 0.5)
         local boundMinX = e:LocalToWorld(boundMin):ToScreen().x
         local boundMaxX = e:LocalToWorld(boundMax):ToScreen().x
@@ -1273,12 +1334,16 @@ function GM:DrawEntityInfo(e, a, pos)
             textAlignX = TEXT_ALIGN_LEFT,
             textAlignY = TEXT_ALIGN_TOP,
             width = boxWidth,
-            minWidth = math.min(320, ScrW() * width),
-            maxWidth = math.min(520, ScrW() * 0.45),
+            minWidth = minTooltipWidth,
+            maxWidth = maxTooltipWidth,
             padding = 12,
             rowHeight = 18,
             sectionGap = 6,
             columnGap = 18,
+            truncateTextRows = true,
+            textRowSuffix = "(...)",
+            textRowRightPadding = 0,
+            titleInset = 0,
             backgroundColor = Color(3, 18, 22, math.floor(232 * (fadeAlpha / 255))),
             borderColor = Color(accent.r, accent.g, accent.b, math.floor(110 * (fadeAlpha / 255))),
             textColor = Color(235, 240, 242, fadeAlpha),

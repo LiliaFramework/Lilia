@@ -1,4 +1,4 @@
-﻿--[[
+--[[
     Hooks:
         ShowPlayerOptions(Player target, table options)
 
@@ -1245,9 +1245,2571 @@ function MODULE:OpenStaffCases(panel)
     panel:RequestData()
 end
 
+local function playerEntityVector(data)
+    if isvector(data) then return data end
+    if not istable(data) then return vector_origin end
+    return Vector(tonumber(data.x) or 0, tonumber(data.y) or 0, tonumber(data.z) or 0)
+end
+
+local function playerEntityAngle(data)
+    if isangle(data) then return data end
+    if not istable(data) then return angle_zero end
+    return Angle(tonumber(data.p) or 0, tonumber(data.y) or 0, tonumber(data.r) or 0)
+end
+
+local function playerEntityTheme()
+    local theme = lia.color.theme or {}
+    return theme.accent or theme.header or theme.theme or Color(55, 180, 175), Color(231, 239, 239), Color(151, 174, 175)
+end
+
+local function playerEntityDrawPanel(x, y, w, h, radius, color, outline)
+    lia.derma.rect(x, y, w, h):Rad(radius):Color(color):Shape(lia.derma.SHAPE_IOS):Draw()
+    if outline then lia.derma.rect(x, y, w, h):Rad(radius):Color(outline):Shape(lia.derma.SHAPE_IOS):Outline(1):Draw() end
+end
+
+local function playerEntityDrawIcon(material, x, y, size, color)
+    if not material or material:IsError() then return end
+    surface.SetMaterial(material)
+    surface.SetDrawColor(color or color_white)
+    surface.DrawTexturedRect(x, y, size, size)
+end
+
+local playerEntityTypeIcons = {
+    Vehicle = Material("icon16/car.png", "smooth"),
+    NPC = Material("icon16/user_red.png", "smooth"),
+    Door = Material("icon16/door.png", "smooth"),
+    Prop = Material("icon16/bricks.png", "smooth"),
+    Entity = Material("icon16/cube.png", "smooth")
+}
+
+local ignoredPlayerEntityClasses = {
+    viewmodel = true,
+    predicted_viewmodel = true,
+    gmod_hands = true,
+    physgun_beam = true
+}
+
+local playerEntityViewStopKey = KEY_SPACE
+local function removeLegacyPlayerEntityTab()
+    local protectionModule = lia.module and lia.module.get and lia.module.get("protection")
+    if protectionModule then hook.Remove("PopulateAdminTabs", protectionModule) end
+end
+
+hook.Add("InitializedModules", "liaAdministrationRemoveLegacyPlayerEntityTab", removeLegacyPlayerEntityTab)
+timer.Simple(0, removeLegacyPlayerEntityTab)
+local function isIgnoredPlayerEntity(entity)
+    if not IsValid(entity) or entity:IsWorld() or entity:IsPlayer() or entity:IsWeapon() then return true end
+    return ignoredPlayerEntityClasses[entity:GetClass()] == true
+end
+
+local function getPlayerEntityKey(data)
+    if not data then return "" end
+    if data.clientSided then return tostring(data.entityKey or "") end
+    return "server:" .. tostring(data.entityIndex or "")
+end
+
+local function getPlayerEntityLiveEntity(data)
+    if data and data.clientSided then
+        local entity = data.entity
+        return IsValid(entity) and entity or NULL
+    end
+
+    local entityIndex = tonumber(data and data.entityIndex)
+    if not entityIndex then return NULL end
+    return Entity(entityIndex)
+end
+
+local function getStoredPlayerEntity(target)
+    if not target then return NULL end
+    if IsValid(target.entity) then return target.entity end
+    local entityIndex = tonumber(target.entityIndex)
+    if not entityIndex then return NULL end
+    return Entity(entityIndex)
+end
+
+local function getPlayerEntityDistance(data)
+    local client = LocalPlayer()
+    if not IsValid(client) then return math.huge end
+    local entity = getPlayerEntityLiveEntity(data)
+    local position = IsValid(entity) and entity:GetPos() or playerEntityVector(data.position)
+    return client:GetPos():Distance(position)
+end
+
+local function getPlayerEntityOwnerLabel(data)
+    local name = tostring(data.ownerCharacter or "")
+    if name == "" then name = tostring(data.ownerName or L("unknown")) end
+    local group = tostring(data.ownerUserGroup or "")
+    if group == "" or group == "user" then return name end
+    group = group:gsub("_", " "):gsub("(%a)([%w']*)", function(first, rest) return string.upper(first) .. string.lower(rest) end)
+    return group .. " - " .. name
+end
+
+local function getPlayerEntityDisplayName(data)
+    local name = tostring(data.name or "")
+    if name ~= "" then return name end
+    local class = tostring(data.class or "")
+    if class ~= "" then return class end
+    return L("unknown")
+end
+
+local function getPlayerEntityStatus(data)
+    return IsValid(getPlayerEntityLiveEntity(data)) and "Valid" or "Invalid"
+end
+
+local function getClientsidePlayerEntityOwner(entity)
+    if isfunction(entity.GetOwner) then
+        local owner = entity:GetOwner()
+        if IsValid(owner) and owner:IsPlayer() then return owner end
+    end
+
+    if isfunction(entity.GetParent) then
+        local parent = entity:GetParent()
+        if IsValid(parent) and parent:IsPlayer() then return parent end
+    end
+    return LocalPlayer()
+end
+
+local function getClientsidePlayerEntityType(entity)
+    if entity:IsVehicle() then return "Vehicle" end
+    if entity:IsNPC() then return "NPC" end
+    if isfunction(entity.isDoor) and entity:isDoor() then return "Door" end
+    if isfunction(entity.isProp) and entity:isProp() then return "Prop" end
+    return "Entity"
+end
+
+local function getClientsidePlayerEntityName(entity)
+    local name = isfunction(entity.GetName) and entity:GetName() or ""
+    if isstring(name) and name ~= "" then return name end
+    local class = isfunction(entity.GetClass) and entity:GetClass() or ""
+    if class ~= "" then
+        local stored = scripted_ents.GetStored(class)
+        if stored and stored.t and isstring(stored.t.PrintName) and stored.t.PrintName ~= "" then return stored.t.PrintName end
+    end
+
+    if isstring(entity.PrintName) and entity.PrintName ~= "" then return entity.PrintName end
+    if class ~= "" then return class:gsub("_", " "):gsub("(%a)([%w']*)", function(first, rest) return string.upper(first) .. string.lower(rest) end) end
+    return "Entity"
+end
+
+function MODULE:GetClientsidePlayerEntities()
+    local client = LocalPlayer()
+    if not IsValid(client) then return {} end
+    self.playerEntityClientKeys = self.playerEntityClientKeys or setmetatable({}, {
+        __mode = "k"
+    })
+
+    self.playerEntityClientKeyCounter = self.playerEntityClientKeyCounter or 0
+    local entities = {}
+    for _, entity in ipairs(ents.GetAll()) do
+        if entity:EntIndex() ~= -1 or isIgnoredPlayerEntity(entity) then continue end
+        if isfunction(entity.GetNoDraw) and entity:GetNoDraw() then continue end
+        local key = self.playerEntityClientKeys[entity]
+        if not key then
+            self.playerEntityClientKeyCounter = self.playerEntityClientKeyCounter + 1
+            key = "client:" .. self.playerEntityClientKeyCounter
+            self.playerEntityClientKeys[entity] = key
+        end
+
+        local owner = getClientsidePlayerEntityOwner(entity)
+        local character = IsValid(owner) and owner:getChar() or nil
+        local color = entity:GetColor()
+        local isDoor = isfunction(entity.isDoor) and entity:isDoor() or false
+        local isProp = isfunction(entity.isProp) and entity:isProp() or false
+        local creationTime = isfunction(entity.GetCreationTime) and entity:GetCreationTime() or CurTime()
+        entities[#entities + 1] = {
+            entity = entity,
+            entityKey = key,
+            entityIndex = -1,
+            clientSided = true,
+            class = entity:GetClass(),
+            model = isstring(entity:GetModel()) and entity:GetModel() or "",
+            name = getClientsidePlayerEntityName(entity),
+            type = getClientsidePlayerEntityType(entity),
+            position = playerEntityVector(entity:GetPos()),
+            angles = playerEntityAngle(entity:GetAngles()),
+            mapCreated = false,
+            isDoor = isDoor,
+            isProp = isProp,
+            health = entity:Health(),
+            maxHealth = entity:GetMaxHealth(),
+            material = entity:GetMaterial() or "",
+            skin = entity:GetSkin() or 0,
+            color = {
+                r = color.r,
+                g = color.g,
+                b = color.b,
+                a = color.a
+            },
+            creationTime = creationTime,
+            ownerName = IsValid(owner) and owner:Name() or client:Name(),
+            ownerCharacter = character and character:getName() or "",
+            ownerSteamID = IsValid(owner) and owner:SteamID() or client:SteamID(),
+            ownerSteamID64 = IsValid(owner) and owner:SteamID64() or client:SteamID64(),
+            ownerUserGroup = IsValid(owner) and owner:GetUserGroup() or client:GetUserGroup(),
+            removable = false
+        }
+    end
+    return entities
+end
+
+function MODULE:BuildPlayerEntityData(serverEntities)
+    local entities = {}
+    for _, data in ipairs(serverEntities or {}) do
+        local typeName = string.lower(tostring(data.type or ""))
+        local class = string.lower(tostring(data.class or ""))
+        if typeName == "weapon" or typeName == "viewmodel" or typeName == "hands" or ignoredPlayerEntityClasses[class] then continue end
+        local copy = table.Copy(data)
+        copy.clientSided = false
+        entities[#entities + 1] = copy
+    end
+
+    for _, data in ipairs(self:GetClientsidePlayerEntities()) do
+        entities[#entities + 1] = data
+    end
+    return entities
+end
+
+local function copyPlayerEntityValue(value)
+    value = tostring(value or "")
+    if value == "" then return end
+    SetClipboardText(value)
+    LocalPlayer():notifySuccess("Copied to clipboard.")
+end
+
+function MODULE:StopPlayerEntityFocus()
+    self.playerEntityFocus = nil
+end
+
+function MODULE:ClearPlayerEntityWaypoint(key)
+    if not isstring(key) or key == "" then return false end
+    local waypoints = self.playerEntityWaypoints
+    local waypoint = waypoints and waypoints[key]
+    if not waypoint then return false end
+    waypoints[key] = nil
+    local commands = concommand.GetTable()
+    if waypoint.command and commands and commands[waypoint.command] then
+        RunConsoleCommand(waypoint.command)
+    elseif waypoint.hookID then
+        hook.Remove("HUDPaint", waypoint.hookID)
+    end
+    return true
+end
+
+function MODULE:ReconcilePlayerEntityWaypoints(entities)
+    local activeKeys = {}
+    for _, data in ipairs(entities or {}) do
+        local key = getPlayerEntityKey(data)
+        if key ~= "" then activeKeys[key] = true end
+    end
+
+    for key in pairs(self.playerEntityWaypoints or {}) do
+        if not activeKeys[key] then self:ClearPlayerEntityWaypoint(key) end
+    end
+
+    local focus = self.playerEntityFocus
+    if focus and focus.key and not activeKeys[focus.key] then self:StopPlayerEntityFocus() end
+end
+
+function MODULE:FocusPlayerEntity(data)
+    local client = LocalPlayer()
+    local entity = getPlayerEntityLiveEntity(data)
+    if not IsValid(client) or not IsValid(entity) then
+        if IsValid(client) then client:notifyError("The selected entity is no longer available.") end
+        return
+    end
+
+    local center = entity:WorldSpaceCenter()
+    local direction = client:EyePos() - center
+    if direction:LengthSqr() <= 1 then direction = -entity:GetForward() end
+    direction = direction:GetNormalized()
+    self.playerEntityFocus = {
+        key = getPlayerEntityKey(data),
+        entity = entity,
+        entityIndex = entity:EntIndex(),
+        direction = direction
+    }
+
+    if IsValid(lia.gui.menu) and isfunction(lia.gui.menu.remove) then lia.gui.menu:remove() end
+end
+
+function MODULE:SetPlayerEntityWaypoint(data)
+    local client = LocalPlayer()
+    local entity = getPlayerEntityLiveEntity(data)
+    if not IsValid(client) or not IsValid(entity) then
+        if IsValid(client) then client:notifyError("The selected entity is no longer available.") end
+        return
+    end
+
+    if not isfunction(client.setWaypoint) then
+        client:notifyError("The waypoint system is unavailable.")
+        return
+    end
+
+    local key = getPlayerEntityKey(data)
+    if key == "" then return end
+    self.playerEntityWaypoints = self.playerEntityWaypoints or {}
+    self:ClearPlayerEntityWaypoint(key)
+    local existingHooks = {}
+    for identifier in pairs(hook.GetTable().HUDPaint or {}) do
+        existingHooks[identifier] = true
+    end
+
+    local name = getPlayerEntityDisplayName(data)
+    local token = {}
+    client:setWaypoint(name, entity:WorldSpaceCenter(), nil, function()
+        local module = lia.module.get("administration")
+        local waypoint = module and module.playerEntityWaypoints and module.playerEntityWaypoints[key]
+        if waypoint and waypoint.token == token then module.playerEntityWaypoints[key] = nil end
+    end)
+
+    local prefix = "Waypoint_" .. tostring(client:SteamID64()) .. "_"
+    local waypointID
+    for identifier in pairs(hook.GetTable().HUDPaint or {}) do
+        if not existingHooks[identifier] and string.StartWith(identifier, prefix) then
+            waypointID = identifier
+            break
+        end
+    end
+
+    if not waypointID then
+        client:notifyError("The waypoint could not be tracked.")
+        return
+    end
+
+    self.playerEntityWaypoints[key] = {
+        token = token,
+        entity = entity,
+        entityIndex = entity:EntIndex(),
+        hookID = waypointID,
+        command = "waypoint_stop_" .. waypointID
+    }
+
+    client:notifySuccess("Entity waypoint placed.")
+end
+
+function MODULE:RunPlayerEntityAction(data, action)
+    if data and data.clientSided then
+        LocalPlayer():notifyWarning("This entity is clientside. Server-side actions are unavailable.")
+        return
+    end
+
+    local entityIndex = tonumber(data and data.entityIndex)
+    if not entityIndex or entityIndex < 1 then return end
+    net.Start("liaMapEntityAction")
+    net.WriteUInt(action, 2)
+    net.WriteUInt(entityIndex, 16)
+    net.SendToServer()
+end
+
+hook.Add("CalcView", "liaPlayerEntityView", function(client, origin, _, fov)
+    local module = lia.module.get("administration")
+    local focus = module and module.playerEntityFocus
+    if not focus then return end
+    local entity = getStoredPlayerEntity(focus)
+    if not IsValid(entity) then
+        module.playerEntityFocus = nil
+        return
+    end
+
+    local center = entity:WorldSpaceCenter()
+    local direction = isvector(focus.direction) and focus.direction or origin - center
+    if direction:LengthSqr() <= 1 then direction = -entity:GetForward() end
+    direction = direction:GetNormalized()
+    local radius = math.Clamp(entity:BoundingRadius(), 24, 180)
+    local targetOrigin = center + direction * math.max(radius * 2.5, 96) + Vector(0, 0, math.Clamp(radius * 0.35, 12, 48))
+    local trace = util.TraceHull({
+        start = center,
+        endpos = targetOrigin,
+        mins = Vector(-4, -4, -4),
+        maxs = Vector(4, 4, 4),
+        filter = {client, entity},
+        mask = MASK_SOLID
+    })
+
+    local cameraOrigin = trace.Hit and trace.HitPos + trace.HitNormal * 6 or targetOrigin
+    focus.cameraOrigin = LerpVector(math.Clamp(FrameTime() * 10, 0, 1), focus.cameraOrigin or cameraOrigin, cameraOrigin)
+    return {
+        origin = focus.cameraOrigin,
+        angles = (center - focus.cameraOrigin):Angle(),
+        fov = fov,
+        drawviewer = true
+    }
+end)
+
+hook.Add("PreDrawHalos", "liaPlayerEntityHighlights", function()
+    local module = lia.module.get("administration")
+    if not module then return end
+    local focus = module.playerEntityFocus
+    if not focus then return end
+    local entity = getStoredPlayerEntity(focus)
+    if not IsValid(entity) then
+        module.playerEntityFocus = nil
+        return
+    end
+
+    local accent = playerEntityTheme()
+    halo.Add({entity}, accent, 3, 3, 2, true, true)
+end)
+
+hook.Add("PlayerButtonDown", "liaPlayerEntityViewStop", function(client, button)
+    if client ~= LocalPlayer() or button ~= playerEntityViewStopKey then return end
+    local module = lia.module.get("administration")
+    if module and module.playerEntityFocus then module:StopPlayerEntityFocus() end
+end)
+
+hook.Add("HUDPaint", "liaPlayerEntityViewStopHint", function()
+    local module = lia.module.get("administration")
+    if not module or not module.playerEntityFocus then return end
+    local text = "Press SPACE to stop viewing"
+    surface.SetFont("LiliaFont.17")
+    local textWidth, textHeight = surface.GetTextSize(text)
+    local width = textWidth + 28
+    local height = textHeight + 16
+    local x = math.floor((ScrW() - width) * 0.5)
+    local y = ScrH() - height - 72
+    draw.RoundedBox(6, x, y, width, height, Color(3, 14, 18, 225))
+    draw.SimpleText(text, "LiliaFont.17", x + width * 0.5, y + height * 0.5, Color(232, 240, 240), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
+end)
+
+hook.Add("EntityRemoved", "liaPlayerEntityRemoved", function(entity)
+    local module = lia.module.get("administration")
+    if not module then return end
+    local entityIndex = entity:EntIndex()
+    local focus = module.playerEntityFocus
+    if focus and (getStoredPlayerEntity(focus) == entity or entityIndex > 0 and tonumber(focus.entityIndex) == entityIndex) then module:StopPlayerEntityFocus() end
+    local waypointKeys = {}
+    for key, waypoint in pairs(module.playerEntityWaypoints or {}) do
+        if waypoint.entity == entity or entityIndex > 0 and tonumber(waypoint.entityIndex) == entityIndex then waypointKeys[#waypointKeys + 1] = key end
+    end
+
+    for _, key in ipairs(waypointKeys) do
+        module:ClearPlayerEntityWaypoint(key)
+    end
+
+    local removed = false
+    for i = #(module.playerEntityData or {}), 1, -1 do
+        if tonumber(module.playerEntityData[i].entityIndex) == entityIndex then
+            table.remove(module.playerEntityData, i)
+            removed = true
+        end
+    end
+
+    if not removed and entityIndex ~= -1 then return end
+    timer.Simple(0, function()
+        local panel = module.playerEntityPanel
+        if IsValid(panel) and isfunction(panel.SetEntities) then panel:SetEntities(module.playerEntityData or {}) end
+    end)
+end)
+
+function MODULE:OpenPlayerEntities(panel)
+    if not IsValid(panel) then return end
+    local module = self
+    self.playerEntityPanel = panel
+    panel:Clear()
+    panel:DockPadding(6, 6, 6, 6)
+    panel.Paint = nil
+    local accent, textColor, mutedTextColor = playerEntityTheme()
+    local panelColor = Color(4, 18, 23, 242)
+    local panelColorSoft = Color(7, 24, 29, 238)
+    local panelColorHover = Color(12, 31, 36, 244)
+    local borderColor = Color(47, 65, 65, 205)
+    local validColor = Color(82, 203, 132)
+    local invalidColor = Color(224, 82, 82)
+    local warningColor = Color(214, 143, 46)
+    local state = {
+        entities = self:BuildPlayerEntityData(self.playerEntityData or {}),
+        owner = "all",
+        type = "all",
+        status = "all",
+        sort = "distance",
+        search = "",
+        includeClientside = false,
+        page = 1,
+        perPage = 7,
+        selectedKey = nil,
+        lastClientsideNoticeKey = nil
+    }
+
+    panel.entityState = state
+    local function styleScrollBar(scrollPanel)
+        if not IsValid(scrollPanel) or not IsValid(scrollPanel.VBar) then return end
+        local vbar = scrollPanel.VBar
+        vbar:SetWide(8)
+        vbar.Paint = function(_, w, h)
+            surface.SetDrawColor(255, 255, 255, 4)
+            surface.DrawRect(0, 0, w, h)
+        end
+
+        vbar.btnUp.Paint = function() end
+        vbar.btnDown.Paint = function() end
+        vbar.btnGrip.Paint = function(_, w, h) playerEntityDrawPanel(1, 0, w - 2, h, 4, Color(accent.r, accent.g, accent.b, 145)) end
+    end
+
+    local function styleCombo(combo)
+        combo:SetFont("LiliaFont.16")
+        combo:SetTextColor(Color(210, 224, 224))
+        combo:SetContentAlignment(4)
+        combo.Paint = function(_, w, h) playerEntityDrawPanel(0, 0, w, h, 5, Color(5, 18, 23, 235), Color(accent.r, accent.g, accent.b, 92)) end
+        if IsValid(combo.DropButton) then
+            combo.DropButton:SetWide(28)
+            combo.DropButton.Paint = function(_, w, h) draw.SimpleText("▼", "LiliaFont.15", w * 0.5, h * 0.5, Color(190, 210, 210), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER) end
+        end
+    end
+
+    local function createButton(parent, label, icon, primary, danger)
+        local button = parent:Add("DButton")
+        button:SetText("")
+        button._label = label
+        button._icon = Material(icon, "smooth")
+        button.Paint = function(s, w, h)
+            local hovered = s:IsHovered()
+            local enabled = s:IsEnabled()
+            local base
+            local outline
+            if not enabled then
+                base = Color(8, 20, 24, 205)
+                outline = Color(75, 91, 92, 90)
+            elseif danger then
+                base = hovered and Color(112, 29, 29, 235) or Color(73, 22, 24, 225)
+                outline = Color(210, 66, 66, hovered and 220 or 145)
+            elseif primary then
+                base = hovered and Color(accent.r, accent.g, accent.b, 225) or Color(accent.r, accent.g, accent.b, 190)
+                outline = Color(accent.r, accent.g, accent.b, 245)
+            else
+                base = hovered and panelColorHover or Color(8, 25, 30, 235)
+                outline = Color(accent.r, accent.g, accent.b, hovered and 115 or 65)
+            end
+
+            playerEntityDrawPanel(0, 0, w, h, 6, base, outline)
+            local iconColor = not enabled and Color(105, 124, 125) or primary and Color(248, 252, 252) or danger and Color(247, 190, 190) or Color(205, 220, 220)
+            playerEntityDrawIcon(s._icon, 14, math.floor((h - 18) * 0.5), 18, iconColor)
+            draw.SimpleText(s._label, "LiliaFont.16", 42, h * 0.5, iconColor, TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)
+        end
+        return button
+    end
+
+    local toolbar = panel:Add("DPanel")
+    toolbar:Dock(TOP)
+    toolbar:SetTall(48)
+    toolbar:DockMargin(0, 0, 0, 12)
+    toolbar.Paint = function() end
+    local ownerCombo = toolbar:Add("DComboBox")
+    ownerCombo:Dock(LEFT)
+    ownerCombo:SetWide(230)
+    ownerCombo:DockMargin(0, 0, 10, 0)
+    styleCombo(ownerCombo)
+    local refreshButton = createButton(toolbar, "Refresh", "icon16/arrow_refresh.png")
+    refreshButton:Dock(RIGHT)
+    refreshButton:SetWide(126)
+    refreshButton:DockMargin(10, 0, 0, 0)
+    local clientsideToggle = toolbar:Add("DButton")
+    clientsideToggle:Dock(RIGHT)
+    clientsideToggle:SetWide(178)
+    clientsideToggle:DockMargin(10, 0, 0, 0)
+    clientsideToggle:SetText("")
+    clientsideToggle:SetTooltip("Include clientside-only entities in the list.")
+    clientsideToggle.Paint = function(s, w, h)
+        local hovered = s:IsHovered()
+        playerEntityDrawPanel(0, 0, w, h, 5, hovered and panelColorHover or Color(5, 18, 23, 235), Color(accent.r, accent.g, accent.b, state.includeClientside and 140 or 72))
+        playerEntityDrawPanel(12, math.floor((h - 20) * 0.5), 20, 20, 4, state.includeClientside and Color(accent.r, accent.g, accent.b, 190) or Color(9, 25, 30, 235), Color(accent.r, accent.g, accent.b, state.includeClientside and 220 or 90))
+        if state.includeClientside then draw.SimpleText("✓", "LiliaFont.16", 22, h * 0.5, Color(245, 250, 250), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER) end
+        draw.SimpleText("Clientside", "LiliaFont.16", 42, h * 0.5, state.includeClientside and textColor or mutedTextColor, TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)
+        draw.SimpleText(state.includeClientside and "ON" or "OFF", "LiliaFont.13", w - 12, h * 0.5, state.includeClientside and accent or mutedTextColor, TEXT_ALIGN_RIGHT, TEXT_ALIGN_CENTER)
+    end
+
+    local sortCombo = toolbar:Add("DComboBox")
+    sortCombo:Dock(RIGHT)
+    sortCombo:SetWide(176)
+    sortCombo:DockMargin(10, 0, 0, 0)
+    styleCombo(sortCombo)
+    sortCombo:AddChoice("Sort by Distance", "distance", true)
+    sortCombo:AddChoice("Sort by Name", "name")
+    sortCombo:AddChoice("Sort by Type", "type")
+    sortCombo:AddChoice("Sort by Newest", "newest")
+    local statusCombo = toolbar:Add("DComboBox")
+    statusCombo:Dock(RIGHT)
+    statusCombo:SetWide(146)
+    statusCombo:DockMargin(10, 0, 0, 0)
+    styleCombo(statusCombo)
+    statusCombo:AddChoice("All Status", "all", true)
+    statusCombo:AddChoice("Valid", "valid")
+    statusCombo:AddChoice("Invalid", "invalid")
+    local typeCombo = toolbar:Add("DComboBox")
+    typeCombo:Dock(RIGHT)
+    typeCombo:SetWide(146)
+    typeCombo:DockMargin(10, 0, 0, 0)
+    styleCombo(typeCombo)
+    typeCombo:AddChoice("All Types", "all", true)
+    local searchWrap = toolbar:Add("DPanel")
+    searchWrap:Dock(FILL)
+    searchWrap:DockPadding(42, 0, 8, 0)
+    searchWrap.Paint = function(_, w, h)
+        playerEntityDrawPanel(0, 0, w, h, 5, Color(5, 18, 23, 235), Color(accent.r, accent.g, accent.b, 92))
+        playerEntityDrawIcon(Material("icon16/magnifier.png", "smooth"), 14, math.floor((h - 16) * 0.5), 16, Color(155, 181, 182))
+    end
+
+    local searchEntry = searchWrap:Add("DTextEntry")
+    searchEntry:Dock(FILL)
+    searchEntry:SetFont("LiliaFont.16")
+    searchEntry:SetTextColor(Color(225, 236, 236))
+    searchEntry:SetCursorColor(accent)
+    searchEntry:SetPlaceholderText("Search entities...")
+    searchEntry:SetDrawBackground(false)
+    searchEntry:SetPaintBackground(false)
+    searchEntry:SetPaintBorderEnabled(false)
+    local content = panel:Add("DPanel")
+    content:Dock(FILL)
+    content.Paint = function() end
+    local listPanel = content:Add("DPanel")
+    listPanel:Dock(LEFT)
+    listPanel:DockMargin(0, 0, 12, 0)
+    listPanel:DockPadding(10, 10, 10, 10)
+    listPanel.Paint = function(_, w, h) playerEntityDrawPanel(0, 0, w, h, 8, panelColor, borderColor) end
+    local detailPanel = content:Add("DPanel")
+    detailPanel:Dock(FILL)
+    detailPanel:DockPadding(10, 10, 10, 10)
+    detailPanel.Paint = function(_, w, h) playerEntityDrawPanel(0, 0, w, h, 8, panelColor, borderColor) end
+    content.PerformLayout = function(_, w) listPanel:SetWide(math.Clamp(math.floor(w * 0.405), 430, 600)) end
+    local summary = listPanel:Add("DPanel")
+    summary:Dock(TOP)
+    summary:SetTall(34)
+    summary:DockMargin(0, 0, 0, 8)
+    summary.Paint = function() end
+    local listScroll = listPanel:Add("liaScrollPanel")
+    listScroll:Dock(FILL)
+    listScroll.Paint = function() end
+    styleScrollBar(listScroll)
+    local listCanvas = listScroll:GetCanvas()
+    if IsValid(listCanvas) then
+        listCanvas:DockPadding(0, 0, 4, 0)
+        listCanvas.Paint = function() end
+    end
+
+    local footer = listPanel:Add("DPanel")
+    footer:Dock(BOTTOM)
+    footer:SetTall(48)
+    footer:DockMargin(0, 8, 0, 0)
+    footer.Paint = function(_, w, h)
+        surface.SetDrawColor(borderColor)
+        surface.DrawRect(0, 0, w, 1)
+    end
+
+    local pageLabel = footer:Add("DLabel")
+    pageLabel:Dock(FILL)
+    pageLabel:SetFont("LiliaFont.15")
+    pageLabel:SetTextColor(mutedTextColor)
+    pageLabel:SetContentAlignment(4)
+    local nextButton = footer:Add("DButton")
+    nextButton:Dock(RIGHT)
+    nextButton:SetWide(42)
+    nextButton:DockMargin(8, 8, 0, 0)
+    nextButton:SetText("")
+    nextButton.Paint = function(s, w, h)
+        playerEntityDrawPanel(0, 0, w, h, 5, s:IsHovered() and panelColorHover or panelColorSoft, Color(accent.r, accent.g, accent.b, 70))
+        draw.SimpleText("›", "LiliaFont.24", w * 0.5, h * 0.5, textColor, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
+    end
+
+    local currentPageButton = footer:Add("DPanel")
+    currentPageButton:Dock(RIGHT)
+    currentPageButton:SetWide(42)
+    currentPageButton:DockMargin(8, 8, 0, 0)
+    currentPageButton.Paint = function(_, w, h)
+        playerEntityDrawPanel(0, 0, w, h, 5, Color(accent.r, accent.g, accent.b, 45), Color(accent.r, accent.g, accent.b, 120))
+        draw.SimpleText(tostring(state.page), "LiliaFont.16", w * 0.5, h * 0.5, textColor, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
+    end
+
+    local previousButton = footer:Add("DButton")
+    previousButton:Dock(RIGHT)
+    previousButton:SetWide(42)
+    previousButton:DockMargin(8, 8, 0, 0)
+    previousButton:SetText("")
+    previousButton.Paint = function(s, w, h)
+        playerEntityDrawPanel(0, 0, w, h, 5, s:IsHovered() and panelColorHover or panelColorSoft, Color(accent.r, accent.g, accent.b, 70))
+        draw.SimpleText("‹", "LiliaFont.24", w * 0.5, h * 0.5, textColor, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
+    end
+
+    local function getFilteredEntities()
+        local filtered = {}
+        local search = string.lower(string.Trim(state.search or ""))
+        for _, data in ipairs(state.entities or {}) do
+            local realmMatch = not data.clientSided or state.includeClientside
+            local ownerMatch = state.owner == "all" or tostring(data.ownerSteamID or "") == state.owner
+            local typeMatch = state.type == "all" or string.lower(tostring(data.type or "Entity")) == state.type
+            local status = string.lower(getPlayerEntityStatus(data))
+            local statusMatch = state.status == "all" or status == state.status
+            local haystack = table.concat({getPlayerEntityDisplayName(data), tostring(data.class or ""), tostring(data.model or ""), tostring(data.entityIndex or ""), tostring(data.ownerName or ""), tostring(data.ownerCharacter or ""), tostring(data.ownerSteamID or "")}, " "):lower()
+            local searchMatch = search == "" or haystack:find(search, 1, true)
+            if realmMatch and ownerMatch and typeMatch and statusMatch and searchMatch then filtered[#filtered + 1] = data end
+        end
+
+        table.sort(filtered, function(a, b)
+            if state.sort == "name" then
+                local aName = string.lower(getPlayerEntityDisplayName(a))
+                local bName = string.lower(getPlayerEntityDisplayName(b))
+                if aName == bName then return getPlayerEntityKey(a) < getPlayerEntityKey(b) end
+                return aName < bName
+            elseif state.sort == "type" then
+                local aType = string.lower(tostring(a.type or "Entity"))
+                local bType = string.lower(tostring(b.type or "Entity"))
+                if aType == bType then return string.lower(getPlayerEntityDisplayName(a)) < string.lower(getPlayerEntityDisplayName(b)) end
+                return aType < bType
+            elseif state.sort == "newest" then
+                return tonumber(a.creationTime or 0) > tonumber(b.creationTime or 0)
+            end
+            return getPlayerEntityDistance(a) < getPlayerEntityDistance(b)
+        end)
+        return filtered
+    end
+
+    local function createCopyButton(parent, valueFunc)
+        local button = parent:Add("DButton")
+        button:SetSize(26, 26)
+        button:SetText("")
+        button:SetTooltip("Copy")
+        button.Paint = function(s, w, h)
+            if s:IsHovered() then playerEntityDrawPanel(0, 0, w, h, 4, Color(255, 255, 255, 7)) end
+            playerEntityDrawIcon(Material("icon16/page_copy.png", "smooth"), 5, 5, 16, Color(165, 187, 188))
+        end
+
+        button.DoClick = function() copyPlayerEntityValue(valueFunc()) end
+        return button
+    end
+
+    local function addDetailGridSection(parent, title, description, rows, expanded)
+        local section = parent:Add("DPanel")
+        section:Dock(TOP)
+        section:DockMargin(0, 0, 0, 10)
+        section._expanded = expanded
+        section.Paint = function(_, w, h) playerEntityDrawPanel(0, 0, w, h, 6, Color(5, 20, 25, 225), borderColor) end
+        local headerButton = section:Add("DButton")
+        headerButton:Dock(TOP)
+        headerButton:SetTall(46)
+        headerButton:SetText("")
+        headerButton.Paint = function(_, w, h)
+            draw.SimpleText(string.upper(title), "LiliaFont.16", 14, h * 0.5, accent, TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)
+            if description and description ~= "" then draw.SimpleText(description, "LiliaFont.15", 120, h * 0.5, mutedTextColor, TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER) end
+            draw.SimpleText(section._expanded and "⌃" or "⌄", "LiliaFont.18", w - 16, h * 0.5, mutedTextColor, TEXT_ALIGN_RIGHT, TEXT_ALIGN_CENTER)
+        end
+
+        local body = section:Add("DPanel")
+        body:Dock(TOP)
+        body.Paint = function() end
+        body.items = {}
+        for _, row in ipairs(rows) do
+            local item = body:Add("DPanel")
+            item.Paint = function(_, w, h)
+                surface.SetDrawColor(54, 72, 73, 155)
+                surface.DrawRect(0, h - 1, w, 1)
+                draw.SimpleText(row.label, "LiliaFont.15", 12, h * 0.5, mutedTextColor, TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)
+                local value = isfunction(row.value) and row.value() or row.value
+                draw.SimpleText(tostring(value or ""), "LiliaFont.15", w - (row.copy and 38 or 12), h * 0.5, textColor, TEXT_ALIGN_RIGHT, TEXT_ALIGN_CENTER)
+            end
+
+            if row.copy then
+                local copy = createCopyButton(item, function() return isfunction(row.value) and row.value() or row.value end)
+                item.PerformLayout = function(_, w, h) copy:SetPos(w - 30, math.floor((h - 26) * 0.5)) end
+            end
+
+            body.items[#body.items + 1] = item
+        end
+
+        local function updateSectionLayout()
+            local width = math.max(section:GetWide(), 1)
+            local columns = width >= 720 and 2 or 1
+            local gap = 8
+            local itemHeight = 42
+            local bodyHeight = section._expanded and math.ceil(#body.items / columns) * itemHeight + math.max(math.ceil(#body.items / columns) - 1, 0) * gap + 8 or 0
+            body:SetVisible(section._expanded)
+            body:SetTall(bodyHeight)
+            section:SetTall(46 + bodyHeight)
+            local itemWidth = columns == 2 and math.floor((width - 20 - gap) * 0.5) or width - 20
+            for index, item in ipairs(body.items) do
+                local normalized = index - 1
+                local column = normalized % columns
+                local row = math.floor(normalized / columns)
+                item:SetPos(10 + column * (itemWidth + gap), row * (itemHeight + gap))
+                item:SetSize(itemWidth, itemHeight)
+            end
+        end
+
+        section.PerformLayout = updateSectionLayout
+        headerButton.DoClick = function()
+            section._expanded = not section._expanded
+            updateSectionLayout()
+            if IsValid(parent) then parent:InvalidateLayout(true) end
+        end
+
+        timer.Simple(0, function() if IsValid(section) then updateSectionLayout() end end)
+        return section
+    end
+
+    local function renderDetail(data)
+        detailPanel:Clear()
+        if not data then
+            local empty = detailPanel:Add("DLabel")
+            empty:Dock(FILL)
+            empty:SetFont("LiliaFont.20")
+            empty:SetText("No entities match the current filters.")
+            empty:SetTextColor(mutedTextColor)
+            empty:SetContentAlignment(5)
+            return
+        end
+
+        local entityKey = getPlayerEntityKey(data)
+        state.selectedKey = entityKey
+        if data.clientSided and state.lastClientsideNoticeKey ~= entityKey then
+            state.lastClientsideNoticeKey = entityKey
+            LocalPlayer():notifyWarning("This entity is clientside. Server-side actions are unavailable.")
+        end
+
+        local scroll = detailPanel:Add("liaScrollPanel")
+        scroll:Dock(FILL)
+        scroll.Paint = function() end
+        styleScrollBar(scroll)
+        local canvas = scroll:GetCanvas()
+        canvas:DockPadding(0, 0, 4, 0)
+        canvas.Paint = function() end
+        local hero = canvas:Add("DPanel")
+        hero:Dock(TOP)
+        hero:SetTall(198)
+        hero:DockMargin(0, 0, 0, 10)
+        hero.Paint = function(_, w, h) playerEntityDrawPanel(0, 0, w, h, 6, Color(3, 16, 21, 220), borderColor) end
+        local preview = hero:Add("DPanel")
+        preview:SetSize(230, 176)
+        preview.Paint = function(_, w, h) playerEntityDrawPanel(0, 0, w, h, 6, Color(1, 11, 15, 220), Color(accent.r, accent.g, accent.b, 80)) end
+        local model = tostring(data.model or "")
+        if model ~= "" and util.IsValidModel(model) then
+            local modelPanel = preview:Add("DModelPanel")
+            modelPanel:Dock(FILL)
+            modelPanel:DockMargin(4, 4, 4, 4)
+            modelPanel:SetModel(model)
+            modelPanel:SetFOV(34)
+            modelPanel:SetAnimated(true)
+            modelPanel:SetAmbientLight(Color(110, 125, 130))
+            modelPanel:SetDirectionalLight(BOX_TOP, Color(255, 255, 255))
+            modelPanel:SetDirectionalLight(BOX_FRONT, Color(205, 225, 225))
+            modelPanel.LayoutEntity = function(_, entity) entity:SetAngles(Angle(0, RealTime() * 18 % 360, 0)) end
+            timer.Simple(0, function()
+                if not IsValid(modelPanel) or not IsValid(modelPanel.Entity) then return end
+                local mins, maxs = modelPanel.Entity:GetRenderBounds()
+                local center = (mins + maxs) * 0.5
+                local size = math.max(maxs.x - mins.x, maxs.y - mins.y, maxs.z - mins.z)
+                modelPanel:SetLookAt(center)
+                modelPanel:SetCamPos(center + Vector(size * 1.2, size * 1.2, size * 0.75))
+            end)
+        else
+            local icon = preview:Add("DPanel")
+            icon:Dock(FILL)
+            icon.Paint = function(_, w, h)
+                local material = playerEntityTypeIcons[data.type] or playerEntityTypeIcons.Entity
+                playerEntityDrawIcon(material, math.floor((w - 64) * 0.5), math.floor((h - 64) * 0.5), 64, getPlayerEntityStatus(data) == "Valid" and accent or invalidColor)
+            end
+        end
+
+        local identity = hero:Add("DPanel")
+        identity.Paint = function() end
+        local title = identity:Add("DLabel")
+        title:SetFont("LiliaFont.25")
+        title:SetText(getPlayerEntityDisplayName(data))
+        title:SetTextColor(textColor)
+        title:SetContentAlignment(4)
+        local classLabel = identity:Add("DLabel")
+        classLabel:SetFont("LiliaFont.16")
+        classLabel:SetText(tostring(data.class or ""))
+        classLabel:SetTextColor(accent)
+        classLabel:SetContentAlignment(4)
+        local entityLabel = identity:Add("DLabel")
+        entityLabel:SetFont("LiliaFont.15")
+        entityLabel:SetText((data.clientSided and "Clientside Entity" or "Entity #" .. tostring(data.entityIndex or "?")) .. "  •  " .. getPlayerEntityOwnerLabel(data))
+        entityLabel:SetTextColor(mutedTextColor)
+        entityLabel:SetContentAlignment(4)
+        local typeBadge = identity:Add("DPanel")
+        typeBadge.Paint = function(_, w, h)
+            playerEntityDrawPanel(0, 0, w, h, 4, Color(89, 57, 110, 210), Color(130, 85, 158, 160))
+            draw.SimpleText(tostring(data.type or "Entity"), "LiliaFont.14", w * 0.5, h * 0.5, Color(226, 209, 236), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
+        end
+
+        local statusBadge = identity:Add("DPanel")
+        statusBadge.Paint = function(_, w, h)
+            local valid = getPlayerEntityStatus(data) == "Valid"
+            local color = data.clientSided and warningColor or valid and validColor or invalidColor
+            local label = data.clientSided and "Clientside" or valid and "Valid" or "Invalid"
+            draw.RoundedBox(4, 0, 0, w, h, Color(color.r, color.g, color.b, 24))
+            draw.RoundedBox(4, 8, math.floor((h - 8) * 0.5), 8, 8, color)
+            draw.SimpleText(label, "LiliaFont.14", 22, h * 0.5, color, TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)
+        end
+
+        local actions = identity:Add("DPanel")
+        actions.Paint = function() end
+        local viewButton = createButton(actions, "View", "icon16/eye.png", true)
+        viewButton:Dock(LEFT)
+        viewButton:SetWide(148)
+        viewButton:DockMargin(0, 0, 10, 0)
+        viewButton.DoClick = function() self:FocusPlayerEntity(data) end
+        local teleportButton = createButton(actions, "Teleport", "icon16/arrow_right.png")
+        teleportButton:Dock(LEFT)
+        teleportButton:SetWide(172)
+        teleportButton:DockMargin(0, 0, 10, 0)
+        local canTeleport = not data.clientSided and LocalPlayer():hasPrivilege("command_goto")
+        teleportButton:SetEnabled(canTeleport)
+        if data.clientSided then
+            teleportButton:SetTooltip("Clientside entities cannot be targeted by server-side actions.")
+        elseif not canTeleport then
+            teleportButton:SetTooltip("Requires the Go To command permission.")
+        end
+
+        teleportButton.DoClick = function()
+            self:RunPlayerEntityAction(data, 1)
+            if IsValid(lia.gui.menu) and isfunction(lia.gui.menu.remove) then lia.gui.menu:remove() end
+        end
+
+        local waypointButton = createButton(actions, "Place Waypoint", "icon16/map.png")
+        waypointButton:Dock(FILL)
+        waypointButton.DoClick = function() self:SetPlayerEntityWaypoint(data) end
+        hero.PerformLayout = function(_, w, h)
+            preview:SetPos(12, 11)
+            identity:SetPos(254, 12)
+            identity:SetSize(math.max(w - 266, 100), h - 24)
+            title:SetPos(0, 0)
+            title:SetSize(math.max(identity:GetWide() - 210, 100), 34)
+            typeBadge:SetPos(0, 43)
+            typeBadge:SetSize(82, 24)
+            statusBadge:SetPos(92, 43)
+            statusBadge:SetSize(data.clientSided and 104 or 82, 24)
+            classLabel:SetPos(0, 75)
+            classLabel:SetSize(identity:GetWide(), 24)
+            entityLabel:SetPos(0, 103)
+            entityLabel:SetSize(identity:GetWide(), 24)
+            actions:SetPos(0, identity:GetTall() - 46)
+            actions:SetSize(identity:GetWide(), 46)
+        end
+
+        if data.clientSided then
+            local clientsideNotice = canvas:Add("DPanel")
+            clientsideNotice:Dock(TOP)
+            clientsideNotice:SetTall(68)
+            clientsideNotice:DockMargin(0, 0, 0, 10)
+            clientsideNotice.Paint = function(_, w, h)
+                playerEntityDrawPanel(0, 0, w, h, 6, Color(54, 37, 12, 225), Color(warningColor.r, warningColor.g, warningColor.b, 170))
+                playerEntityDrawIcon(Material("icon16/error.png", "smooth"), 16, 14, 20, warningColor)
+                draw.SimpleText("Clientside Entity", "LiliaFont.17", 46, 14, warningColor, TEXT_ALIGN_LEFT, TEXT_ALIGN_TOP)
+                draw.SimpleText("This entity only exists on your client. Teleporting, removal, and other server-side actions are unavailable.", "LiliaFont.15", 46, 40, mutedTextColor, TEXT_ALIGN_LEFT, TEXT_ALIGN_TOP)
+            end
+        end
+
+        local position = playerEntityVector(data.position)
+        local angles = playerEntityAngle(data.angles)
+        local color = data.color or {}
+        local creationAge = math.max(CurTime() - tonumber(data.creationTime or CurTime()), 0)
+        addDetailGridSection(canvas, "General", "", {
+            {
+                label = "Class",
+                value = tostring(data.class or ""),
+                copy = true
+            },
+            {
+                label = "Entity ID",
+                value = data.clientSided and "Clientside" or tostring(data.entityIndex or ""),
+                copy = not data.clientSided
+            },
+            {
+                label = "Model",
+                value = model ~= "" and model or "None",
+                copy = model ~= ""
+            },
+            {
+                label = "Type",
+                value = tostring(data.type or "Entity")
+            },
+            {
+                label = "Realm",
+                value = data.clientSided and "Clientside" or "Serverside"
+            },
+            {
+                label = "Owner",
+                value = getPlayerEntityOwnerLabel(data),
+                copy = true
+            },
+            {
+                label = "SteamID",
+                value = tostring(data.ownerSteamID or ""),
+                copy = true
+            },
+            {
+                label = "Map Created",
+                value = data.mapCreated and "Yes" or "No"
+            },
+            {
+                label = "Spawned",
+                value = string.NiceTime(creationAge) .. " ago"
+            }
+        }, true)
+
+        addDetailGridSection(canvas, "Transform", "Position, angles, and distance data", {
+            {
+                label = "Position",
+                value = string.format("%.1f, %.1f, %.1f", position.x, position.y, position.z),
+                copy = true
+            },
+            {
+                label = "Angles",
+                value = string.format("%.1f, %.1f, %.1f", angles.p, angles.y, angles.r),
+                copy = true
+            },
+            {
+                label = "Distance",
+                value = math.Round(getPlayerEntityDistance(data)) .. " units"
+            },
+            {
+                label = "Map Created",
+                value = data.mapCreated and "Yes" or "No"
+            }
+        }, false)
+
+        addDetailGridSection(canvas, "Appearance", "Skin, color, material, and model settings", {
+            {
+                label = "Material",
+                value = tostring(data.material or "") ~= "" and tostring(data.material) or "Default",
+                copy = tostring(data.material or "") ~= ""
+            },
+            {
+                label = "Skin",
+                value = tostring(data.skin or 0)
+            },
+            {
+                label = "Color",
+                value = string.format("%d, %d, %d, %d", tonumber(color.r) or 255, tonumber(color.g) or 255, tonumber(color.b) or 255, tonumber(color.a) or 255),
+                copy = true
+            },
+            {
+                label = "Model",
+                value = model ~= "" and model or "None",
+                copy = model ~= ""
+            }
+        }, false)
+
+        addDetailGridSection(canvas, "Status", "Validity, health, and runtime information", {
+            {
+                label = "State",
+                value = getPlayerEntityStatus(data)
+            },
+            {
+                label = "Realm",
+                value = data.clientSided and "Clientside" or "Serverside"
+            },
+            {
+                label = "Health",
+                value = string.format("%d / %d", tonumber(data.health) or 0, tonumber(data.maxHealth) or 0)
+            },
+            {
+                label = "Door",
+                value = data.isDoor and "Yes" or "No"
+            },
+            {
+                label = "Prop",
+                value = data.isProp and "Yes" or "No"
+            }
+        }, false)
+
+        local client = LocalPlayer()
+        local canRemove = false
+        if not data.clientSided and data.removable and IsValid(client) then canRemove = data.mapCreated and client:hasPrivilege("canRemoveWorldEntities") or not data.mapCreated and (client:hasPrivilege("canRemoveBlockedEntities") or client:hasPrivilege("canRemoveWorldEntities")) end
+        if canRemove then
+            local removeCard = canvas:Add("DPanel")
+            removeCard:Dock(TOP)
+            removeCard:SetTall(78)
+            removeCard:DockMargin(0, 0, 0, 10)
+            removeCard.Paint = function(_, w, h)
+                playerEntityDrawPanel(0, 0, w, h, 6, Color(46, 14, 17, 210), Color(195, 52, 55, 160))
+                playerEntityDrawIcon(Material("icon16/delete.png", "smooth"), 16, 17, 18, invalidColor)
+                draw.SimpleText("Remove Entity", "LiliaFont.17", 44, 21, invalidColor, TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)
+                draw.SimpleText("Permanently remove this entity from the world.", "LiliaFont.15", 16, 53, mutedTextColor, TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)
+            end
+
+            local removeButton = createButton(removeCard, "Remove", "icon16/delete.png", false, true)
+            removeButton:SetSize(132, 42)
+            removeCard.PerformLayout = function(_, w, h) removeButton:SetPos(w - 146, math.floor((h - 42) * 0.5)) end
+            removeButton.DoClick = function() Derma_Query("Remove " .. getPlayerEntityDisplayName(data) .. " permanently?", "Remove Entity", "Remove", function() self:RunPlayerEntityAction(data, 2) end, "Cancel") end
+        end
+    end
+
+    local function openRowMenu(data)
+        local menu = DermaMenu()
+        menu:AddOption("View", function() module:FocusPlayerEntity(data) end):SetIcon("icon16/eye.png")
+        local teleportOption = menu:AddOption("Teleport", function() module:RunPlayerEntityAction(data, 1) end)
+        teleportOption:SetIcon("icon16/arrow_right.png")
+        teleportOption:SetEnabled(not data.clientSided and LocalPlayer():hasPrivilege("command_goto"))
+        menu:AddOption("Place Waypoint", function() module:SetPlayerEntityWaypoint(data) end):SetIcon("icon16/map.png")
+        if data.clientSided then
+            menu:AddSpacer()
+            menu:AddOption("Clientside: server actions unavailable", function() LocalPlayer():notifyWarning("This entity is clientside. Server-side actions are unavailable.") end):SetIcon("icon16/error.png")
+        end
+
+        menu:AddSpacer()
+        menu:AddOption("Copy Class", function() copyPlayerEntityValue(data.class) end):SetIcon("icon16/page_copy.png")
+        menu:AddOption("Copy Model", function() copyPlayerEntityValue(data.model) end):SetIcon("icon16/page_copy.png")
+        local steamID = tostring(data.ownerSteamID or "")
+        if steamID ~= "" then menu:AddOption("Copy Player SteamID", function() copyPlayerEntityValue(steamID) end):SetIcon("icon16/page_copy.png") end
+        if not data.clientSided then menu:AddOption("Copy Entity ID", function() copyPlayerEntityValue(data.entityIndex) end):SetIcon("icon16/page_copy.png") end
+        menu:Open()
+    end
+
+    local function buildEntityRow(data)
+        local row = listScroll:Add("DButton")
+        row:Dock(TOP)
+        row:SetTall(84)
+        row:DockMargin(0, 0, 0, 8)
+        row:SetText("")
+        row.Paint = function(s, w, h)
+            local selected = state.selectedKey == getPlayerEntityKey(data)
+            local hovered = s:IsHovered()
+            local background = selected and Color(accent.r, accent.g, accent.b, 30) or hovered and panelColorHover or Color(4, 18, 23, 205)
+            playerEntityDrawPanel(0, 0, w, h, 6, background, selected and Color(accent.r, accent.g, accent.b, 165) or Color(accent.r, accent.g, accent.b, 45))
+            if selected then
+                surface.SetDrawColor(accent.r, accent.g, accent.b, 245)
+                surface.DrawRect(0, 8, 3, h - 16)
+            end
+        end
+
+        local iconPanel = row:Add("DPanel")
+        iconPanel:SetSize(70, 68)
+        iconPanel.Paint = function(_, w, h)
+            playerEntityDrawPanel(0, 0, w, h, 5, Color(1, 12, 16, 230), Color(accent.r, accent.g, accent.b, 50))
+            local material = playerEntityTypeIcons[data.type] or playerEntityTypeIcons.Entity
+            local color = getPlayerEntityStatus(data) == "Valid" and Color(185, 207, 207) or invalidColor
+            playerEntityDrawIcon(material, math.floor((w - 32) * 0.5), math.floor((h - 32) * 0.5), 32, color)
+        end
+
+        local nameLabel = row:Add("DLabel")
+        nameLabel:SetFont("LiliaFont.18")
+        nameLabel:SetText(getPlayerEntityDisplayName(data))
+        nameLabel:SetTextColor(textColor)
+        nameLabel:SetContentAlignment(4)
+        local classLabel = row:Add("DLabel")
+        classLabel:SetFont("LiliaFont.15")
+        classLabel:SetText(tostring(data.class or ""))
+        classLabel:SetTextColor(accent)
+        classLabel:SetContentAlignment(4)
+        local metaLabel = row:Add("DLabel")
+        metaLabel:SetFont("LiliaFont.14")
+        metaLabel:SetText(math.Round(getPlayerEntityDistance(data)) .. " units away")
+        metaLabel:SetTextColor(mutedTextColor)
+        metaLabel:SetContentAlignment(4)
+        local badge = row:Add("DPanel")
+        badge.Paint = function(_, w, h)
+            playerEntityDrawPanel(0, 0, w, h, 4, Color(57, 71, 91, 210), Color(91, 115, 146, 150))
+            draw.SimpleText(tostring(data.type or "Entity"), "LiliaFont.13", w * 0.5, h * 0.5, Color(205, 220, 233), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
+        end
+
+        local status = row:Add("DPanel")
+        status.Paint = function(_, w, h)
+            local valid = getPlayerEntityStatus(data) == "Valid"
+            local color = data.clientSided and warningColor or valid and validColor or invalidColor
+            local label = data.clientSided and "Client" or valid and "Valid" or "Invalid"
+            draw.RoundedBox(4, 0, 0, w, h, Color(color.r, color.g, color.b, 16))
+            draw.RoundedBox(4, 6, math.floor((h - 7) * 0.5), 7, 7, color)
+            draw.SimpleText(label, "LiliaFont.13", 18, h * 0.5, color, TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)
+        end
+
+        local more = row:Add("DButton")
+        more:SetText("")
+        more:SetTooltip("Actions")
+        more.Paint = function(s, w, h)
+            playerEntityDrawPanel(0, 0, w, h, 5, s:IsHovered() and panelColorHover or Color(8, 24, 29, 230), Color(accent.r, accent.g, accent.b, 65))
+            draw.SimpleText("•••", "LiliaFont.17", w * 0.5, h * 0.5 - 2, mutedTextColor, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
+        end
+
+        more.DoClick = function() openRowMenu(data) end
+        row.PerformLayout = function(_, w, h)
+            iconPanel:SetPos(10, 8)
+            local rightWidth = 174
+            nameLabel:SetPos(92, 8)
+            nameLabel:SetSize(math.max(w - 92 - rightWidth, 80), 24)
+            classLabel:SetPos(92, 31)
+            classLabel:SetSize(math.max(w - 92 - rightWidth, 80), 21)
+            metaLabel:SetPos(92, 53)
+            metaLabel:SetSize(math.max(w - 92 - rightWidth, 80), 20)
+            badge:SetPos(w - 166, 12)
+            badge:SetSize(76, 22)
+            status:SetPos(w - 166, 44)
+            status:SetSize(76, 22)
+            more:SetPos(w - 78, 20)
+            more:SetSize(58, 44)
+        end
+
+        row.DoClick = function()
+            state.selectedKey = getPlayerEntityKey(data)
+            renderDetail(data)
+            panel:RefreshEntityList()
+        end
+        return row
+    end
+
+    function panel:RefreshEntityList()
+        local filtered = getFilteredEntities()
+        local totalPages = math.max(math.ceil(#filtered / state.perPage), 1)
+        state.page = math.Clamp(state.page, 1, totalPages)
+        listScroll:Clear()
+        local startIndex = (state.page - 1) * state.perPage + 1
+        local endIndex = math.min(startIndex + state.perPage - 1, #filtered)
+        local typeCounts = {}
+        local invalidCount = 0
+        local clientsideCount = 0
+        for _, data in ipairs(filtered) do
+            local typeName = tostring(data.type or "Entity")
+            typeCounts[typeName] = (typeCounts[typeName] or 0) + 1
+            if getPlayerEntityStatus(data) == "Invalid" then invalidCount = invalidCount + 1 end
+            if data.clientSided then clientsideCount = clientsideCount + 1 end
+        end
+
+        summary.Paint = function(_, w, h)
+            draw.SimpleText(#filtered .. " total", "LiliaFont.15", 2, h * 0.5, accent, TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)
+            local offset = 78
+            local displayed = 0
+            for _, typeName in ipairs({"Prop", "Entity", "Vehicle", "Door", "NPC"}) do
+                local count = typeCounts[typeName]
+                if count and displayed < 3 then
+                    draw.SimpleText("•  " .. count .. " " .. string.lower(typeName) .. (count == 1 and "" or "s"), "LiliaFont.15", offset, h * 0.5, mutedTextColor, TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)
+                    surface.SetFont("LiliaFont.15")
+                    offset = offset + select(1, surface.GetTextSize("•  " .. count .. " " .. string.lower(typeName) .. (count == 1 and "" or "s"))) + 12
+                    displayed = displayed + 1
+                end
+            end
+
+            if clientsideCount > 0 then
+                local label = "•  " .. clientsideCount .. " clientside"
+                draw.SimpleText(label, "LiliaFont.15", offset, h * 0.5, warningColor, TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)
+                surface.SetFont("LiliaFont.15")
+                offset = offset + select(1, surface.GetTextSize(label)) + 12
+            end
+
+            if invalidCount > 0 then draw.SimpleText("•  " .. invalidCount .. " invalid", "LiliaFont.15", offset, h * 0.5, invalidColor, TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER) end
+        end
+
+        if #filtered == 0 then
+            local empty = listScroll:Add("DLabel")
+            empty:Dock(TOP)
+            empty:SetTall(120)
+            empty:SetFont("LiliaFont.17")
+            empty:SetText("No entities match the current filters.")
+            empty:SetTextColor(mutedTextColor)
+            empty:SetContentAlignment(5)
+            state.selectedKey = nil
+            renderDetail(nil)
+        else
+            local selectedData
+            for index = startIndex, endIndex do
+                local data = filtered[index]
+                buildEntityRow(data)
+                if getPlayerEntityKey(data) == state.selectedKey then selectedData = data end
+            end
+
+            if not selectedData then
+                selectedData = filtered[startIndex]
+                state.selectedKey = selectedData and getPlayerEntityKey(selectedData) or nil
+                renderDetail(selectedData)
+            end
+        end
+
+        pageLabel:SetText(#filtered > 0 and string.format("Showing %d - %d of %d entities", startIndex, endIndex, #filtered) or "No entities")
+        currentPageButton.Paint = function(_, w, h)
+            playerEntityDrawPanel(0, 0, w, h, 5, Color(accent.r, accent.g, accent.b, 45), Color(accent.r, accent.g, accent.b, 120))
+            draw.SimpleText(tostring(state.page), "LiliaFont.16", w * 0.5, h * 0.5, textColor, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
+        end
+
+        previousButton:SetEnabled(state.page > 1)
+        nextButton:SetEnabled(state.page < totalPages)
+    end
+
+    function panel:RebuildEntityFilters()
+        local selectedOwner = state.owner
+        local selectedType = state.type
+        local owners = {}
+        local types = {}
+        for _, data in ipairs(state.entities or {}) do
+            if data.clientSided and not state.includeClientside then continue end
+            local steamID = tostring(data.ownerSteamID or "")
+            if steamID ~= "" and not owners[steamID] then owners[steamID] = getPlayerEntityOwnerLabel(data) end
+            local typeName = tostring(data.type or "Entity")
+            types[string.lower(typeName)] = typeName
+        end
+
+        ownerCombo:Clear()
+        ownerCombo:AddChoice("All Players", "all", selectedOwner == "all")
+        local ownerKeys = table.GetKeys(owners)
+        table.sort(ownerKeys, function(a, b) return string.lower(owners[a]) < string.lower(owners[b]) end)
+        for _, steamID in ipairs(ownerKeys) do
+            ownerCombo:AddChoice(owners[steamID], steamID, selectedOwner == steamID)
+        end
+
+        if selectedOwner ~= "all" and not owners[selectedOwner] then state.owner = "all" end
+        ownerCombo:SetValue(state.owner == "all" and "All Players" or owners[state.owner] or "All Players")
+        typeCombo:Clear()
+        typeCombo:AddChoice("All Types", "all", selectedType == "all")
+        local typeKeys = table.GetKeys(types)
+        table.sort(typeKeys, function(a, b) return string.lower(types[a]) < string.lower(types[b]) end)
+        for _, typeKey in ipairs(typeKeys) do
+            typeCombo:AddChoice(types[typeKey], typeKey, selectedType == typeKey)
+        end
+
+        if selectedType ~= "all" and not types[selectedType] then state.type = "all" end
+        typeCombo:SetValue(state.type == "all" and "All Types" or types[state.type] or "All Types")
+    end
+
+    function panel:SetEntities(entities)
+        state.entities = module:BuildPlayerEntityData(istable(entities) and entities or {})
+        module:ReconcilePlayerEntityWaypoints(state.entities)
+        self:RebuildEntityFilters()
+        self:RefreshEntityList()
+    end
+
+    ownerCombo.OnSelect = function(_, _, _, data)
+        state.owner = data or "all"
+        state.page = 1
+        panel:RefreshEntityList()
+    end
+
+    typeCombo.OnSelect = function(_, _, _, data)
+        state.type = data or "all"
+        state.page = 1
+        panel:RefreshEntityList()
+    end
+
+    statusCombo.OnSelect = function(_, _, _, data)
+        state.status = data or "all"
+        state.page = 1
+        panel:RefreshEntityList()
+    end
+
+    sortCombo.OnSelect = function(_, _, _, data)
+        state.sort = data or "distance"
+        state.page = 1
+        panel:RefreshEntityList()
+    end
+
+    searchEntry.OnChange = function()
+        state.search = searchEntry:GetValue() or ""
+        state.page = 1
+        panel:RefreshEntityList()
+    end
+
+    previousButton.DoClick = function()
+        state.page = math.max(state.page - 1, 1)
+        panel:RefreshEntityList()
+    end
+
+    nextButton.DoClick = function()
+        state.page = state.page + 1
+        panel:RefreshEntityList()
+    end
+
+    clientsideToggle.DoClick = function()
+        state.includeClientside = not state.includeClientside
+        state.page = 1
+        state.selectedKey = nil
+        panel:SetEntities(module.playerEntityData or {})
+    end
+
+    refreshButton.DoClick = function()
+        net.Start("liaRequestMapEntities")
+        net.SendToServer()
+    end
+
+    panel:SetEntities(module.playerEntityData or {})
+    refreshButton:DoClick()
+end
+
+function MODULE:OpenNetLogs(panel)
+    if not IsValid(panel) then return end
+    self.netLogsPanel = panel
+    self.netProfilerPanel = panel
+    panel:Clear()
+    panel:DockPadding(6, 6, 6, 6)
+    panel.Paint = nil
+    local accent = lia.color.theme.accent or lia.color.theme.header or lia.color.theme.theme or Color(184, 132, 74)
+    local panelColor = Color(4, 18, 23, 242)
+    local panelColorSoft = Color(7, 24, 29, 238)
+    local panelColorHovered = Color(12, 31, 36, 244)
+    local borderColor = Color(accent.r, accent.g, accent.b, 72)
+    local borderColorSoft = Color(accent.r, accent.g, accent.b, 42)
+    local textColor = Color(230, 238, 236)
+    local mutedTextColor = Color(150, 168, 166)
+    local goodColor = Color(75, 205, 130)
+    local badColor = Color(220, 95, 95)
+    local warningColor = Color(230, 164, 70)
+    local blueColor = Color(85, 170, 225)
+    local debounceTimer = "liaNetLogsSearch" .. util.CRC(tostring(panel))
+    local state = {
+        requestId = 0,
+        view = "session",
+        page = 1,
+        pageSize = 25,
+        search = "",
+        direction = "all",
+        usage = "all",
+        source = "all",
+        player = "all",
+        timeRange = 0,
+        sortBy = "calls",
+        sortDesc = true,
+        minCalls = 0,
+        maxCalls = 0,
+        minBytes = 0,
+        maxBytes = 0
+    }
+
+    panel.netLogState = state
+    panel.netLogPayload = {
+        available = false,
+        message = "Fetching network session data...",
+        totals = {},
+        pagination = {
+            page = 1,
+            pageSize = 25,
+            pageCount = 1,
+            resultCount = 0,
+            firstIndex = 0,
+            lastIndex = 0
+        },
+        filters = {
+            directions = {},
+            players = {}
+        },
+        rows = {}
+    }
+
+    panel.loading = true
+    panel.selectedNetLogID = nil
+    local function drawPanel(x, y, w, h, radius, color, outline)
+        lia.derma.rect(x, y, w, h):Rad(radius):Color(color):Shape(lia.derma.SHAPE_IOS):Draw()
+        if outline then lia.derma.rect(x, y, w, h):Rad(radius):Color(outline):Shape(lia.derma.SHAPE_IOS):Outline(1):Draw() end
+    end
+
+    local function drawIcon(material, x, y, size, color)
+        if not material or material:IsError() then return end
+        surface.SetMaterial(material)
+        surface.SetDrawColor(color or color_white)
+        surface.DrawTexturedRect(x, y, size, size)
+    end
+
+    local function formatNumber(value)
+        return string.Comma(math.max(math.floor(tonumber(value) or 0), 0))
+    end
+
+    local function formatBytes(value)
+        local bytes = math.max(tonumber(value) or 0, 0)
+        if bytes >= 1073741824 then return string.format("%.2f GB", bytes / 1073741824) end
+        if bytes >= 1048576 then return string.format("%.2f MB", bytes / 1048576) end
+        if bytes >= 1024 then return string.format("%.2f KB", bytes / 1024) end
+        return formatNumber(bytes) .. " B"
+    end
+
+    local function formatPercent(value)
+        return string.format("%.2f%%", tonumber(value) or 0)
+    end
+
+    local function formatTimestamp(value)
+        local timestamp = tonumber(value) or 0
+        if timestamp <= 0 then return "Unknown" end
+        return os.date("%Y-%m-%d %H:%M:%S", timestamp)
+    end
+
+    local function formatDuration(value)
+        local seconds = math.max(math.floor(tonumber(value) or 0), 0)
+        local days = math.floor(seconds / 86400)
+        seconds = seconds % 86400
+        local hours = math.floor(seconds / 3600)
+        seconds = seconds % 3600
+        local minutes = math.floor(seconds / 60)
+        seconds = seconds % 60
+        if days > 0 then return string.format("%dd %02dh %02dm", days, hours, minutes) end
+        if hours > 0 then return string.format("%dh %02dm %02ds", hours, minutes, seconds) end
+        return string.format("%dm %02ds", minutes, seconds)
+    end
+
+    local function truncateText(value, font, maxWidth)
+        local text = tostring(value or "")
+        surface.SetFont(font)
+        if select(1, surface.GetTextSize(text)) <= maxWidth then return text end
+        local suffix = "..."
+        while #text > 0 and select(1, surface.GetTextSize(text .. suffix)) > maxWidth do
+            text = text:sub(1, -2)
+        end
+        return text .. suffix
+    end
+
+    local function styleScrollBar(scrollPanel)
+        if not IsValid(scrollPanel) or not IsValid(scrollPanel.VBar) then return end
+        local vbar = scrollPanel.VBar
+        vbar:SetWide(8)
+        vbar.Paint = function(_, w, h)
+            surface.SetDrawColor(255, 255, 255, 4)
+            surface.DrawRect(0, 0, w, h)
+        end
+
+        vbar.btnUp.Paint = function() end
+        vbar.btnDown.Paint = function() end
+        vbar.btnGrip.Paint = function(_, w, h) drawPanel(1, 0, w - 2, h, 4, Color(accent.r, accent.g, accent.b, 145)) end
+    end
+
+    local function styleCombo(combo)
+        combo:SetFont("LiliaFont.16")
+        combo:SetTextColor(Color(205, 220, 220))
+        combo:SetContentAlignment(4)
+        combo:SetSortItems(false)
+        combo.Paint = function(_, w, h) drawPanel(0, 0, w, h, 5, panelColorSoft, borderColor) end
+        if IsValid(combo.DropButton) then
+            combo.DropButton:SetWide(28)
+            combo.DropButton.Paint = function(_, w, h) draw.SimpleText("▼", "LiliaFont.15", w * 0.5, h * 0.5, mutedTextColor, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER) end
+        end
+    end
+
+    local function styleEntry(entry, placeholder, numeric)
+        entry:SetFont("LiliaFont.16")
+        entry:SetTextColor(textColor)
+        entry:SetCursorColor(accent)
+        entry:SetPlaceholderText(placeholder)
+        entry:SetDrawBackground(false)
+        entry:SetPaintBackground(false)
+        entry:SetPaintBorderEnabled(false)
+        if numeric then entry:SetNumeric(true) end
+    end
+
+    local function styleButton(button, labelFunc, icon)
+        button:SetText("")
+        button.Paint = function(s, w, h)
+            local enabled = s:IsEnabled()
+            local hovered = enabled and s:IsHovered()
+            local background = hovered and panelColorHovered or panelColorSoft
+            local outline = enabled and Color(accent.r, accent.g, accent.b, hovered and 120 or 70) or Color(80, 95, 95, 45)
+            drawPanel(0, 0, w, h, 5, background, outline)
+            local label = isfunction(labelFunc) and labelFunc() or tostring(labelFunc or "")
+            local color = enabled and textColor or Color(100, 116, 116)
+            if icon then
+                drawIcon(icon, 13, math.floor((h - 16) * 0.5), 16, color)
+                draw.SimpleText(label, "LiliaFont.16", 38, h * 0.5, color, TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)
+            else
+                draw.SimpleText(label, "LiliaFont.16", w * 0.5, h * 0.5, color, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
+            end
+        end
+    end
+
+    local header = panel:Add("DPanel")
+    header:Dock(TOP)
+    header:SetTall(84)
+    header:DockMargin(0, 0, 0, 8)
+    header.Paint = function(_, w, h)
+        drawPanel(0, 0, w, h, 8, panelColor, borderColor)
+        local payload = panel.netLogPayload or {}
+        local status
+        local statusColor
+        if panel.loading then
+            status = "Fetching"
+            statusColor = blueColor
+        elseif payload.available == false then
+            status = "No Data"
+            statusColor = warningColor
+        else
+            status = "Active"
+            statusColor = goodColor
+        end
+
+        drawIcon(Material("icon16/chart_curve.png", "smooth"), 18, 20, 38, accent)
+        draw.SimpleText("NET LOGS", "LiliaFont.24", 70, 12, textColor, TEXT_ALIGN_LEFT, TEXT_ALIGN_TOP)
+        local subtitle = state.view == "players" and "Per-player sent and received network activity" or "Current session message calls, bandwidth, and usage"
+        draw.SimpleText(subtitle, "LiliaFont.16", 70, 47, mutedTextColor, TEXT_ALIGN_LEFT, TEXT_ALIGN_TOP)
+        draw.SimpleText(status, "LiliaFont.18", w - 176, 18, statusColor, TEXT_ALIGN_RIGHT, TEXT_ALIGN_TOP)
+        draw.SimpleText("Captured: " .. formatTimestamp(payload.capturedAt), "LiliaFont.14", w - 176, 48, mutedTextColor, TEXT_ALIGN_RIGHT, TEXT_ALIGN_TOP)
+    end
+
+    local refreshButton = header:Add("DButton")
+    refreshButton:SetSize(142, 44)
+    styleButton(refreshButton, function() return panel.loading and "Fetching" or "Refresh" end, Material("icon16/arrow_refresh.png", "smooth"))
+    header.PerformLayout = function(_, w, h) refreshButton:SetPos(w - refreshButton:GetWide() - 16, math.floor((h - refreshButton:GetTall()) * 0.5)) end
+    local viewRow = panel:Add("DPanel")
+    viewRow:Dock(TOP)
+    viewRow:SetTall(42)
+    viewRow:DockMargin(0, 0, 0, 8)
+    viewRow.Paint = function(_, w, h) drawPanel(0, 0, w, h, 6, panelColor, borderColorSoft) end
+    local viewButtons = {}
+    local viewDefinitions = {
+        {
+            key = "session",
+            label = "Current Session Stats",
+            icon = Material("icon16/chart_bar.png", "smooth")
+        },
+        {
+            key = "players",
+            label = "Player Log",
+            icon = Material("icon16/user.png", "smooth")
+        }
+    }
+
+    for _, definition in ipairs(viewDefinitions) do
+        local data = definition
+        local button = viewRow:Add("DButton")
+        button:SetText("")
+        button.Paint = function(s, w, h)
+            local active = state.view == data.key
+            local hovered = s:IsHovered()
+            local background = active and Color(accent.r, accent.g, accent.b, 30) or hovered and Color(255, 255, 255, 6) or color_transparent
+            drawPanel(0, 0, w, h, 5, background, active and Color(accent.r, accent.g, accent.b, 110) or nil)
+            drawIcon(data.icon, 16, math.floor((h - 18) * 0.5), 18, active and textColor or mutedTextColor)
+            draw.SimpleText(data.label, "LiliaFont.16", 44, h * 0.5, active and textColor or mutedTextColor, TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)
+        end
+
+        button.DoClick = function()
+            if state.view == data.key then return end
+            lia.websound.playButtonSound()
+            state.view = data.key
+            state.page = 1
+            state.direction = "all"
+            state.player = "all"
+            state.usage = "all"
+            state.timeRange = 0
+            state.sortBy = data.key == "players" and "lastAt" or "calls"
+            state.sortDesc = true
+            panel.selectedNetLogID = nil
+            panel:ConfigureView()
+            panel:RequestNetLogs()
+        end
+
+        viewButtons[#viewButtons + 1] = button
+    end
+
+    viewRow.PerformLayout = function(_, w, h)
+        local gap = 6
+        local buttonWidth = math.min(math.floor((w - gap - 12) * 0.5), 230)
+        for index, button in ipairs(viewButtons) do
+            button:SetPos(6 + (index - 1) * (buttonWidth + gap), 5)
+            button:SetSize(buttonWidth, h - 10)
+        end
+    end
+
+    local summary = panel:Add("DPanel")
+    summary:Dock(TOP)
+    summary:SetTall(90)
+    summary:DockMargin(0, 0, 0, 8)
+    summary.Paint = function() end
+    local statCards = {}
+    local function addStatCard(titleFunc, icon, valueFunc, valueColorFunc)
+        local card = summary:Add("DPanel")
+        card.Paint = function(_, w, h)
+            drawPanel(0, 0, w, h, 7, panelColor, borderColorSoft)
+            drawPanel(14, 18, 46, 46, 23, Color(accent.r, accent.g, accent.b, 16), Color(accent.r, accent.g, accent.b, 24))
+            drawIcon(icon, 27, 31, 20, valueColorFunc and valueColorFunc() or accent)
+            local title = isfunction(titleFunc) and titleFunc() or tostring(titleFunc or "")
+            draw.SimpleText(string.upper(title), "LiliaFont.14", 76, 17, mutedTextColor, TEXT_ALIGN_LEFT, TEXT_ALIGN_TOP)
+            draw.SimpleText(tostring(valueFunc() or "0"), "LiliaFont.23", 76, 44, valueColorFunc and valueColorFunc() or textColor, TEXT_ALIGN_LEFT, TEXT_ALIGN_TOP)
+        end
+
+        statCards[#statCards + 1] = card
+    end
+
+    addStatCard(function() return state.view == "players" and "Players" or "Total Calls" end, Material("icon16/transmit.png", "smooth"), function()
+        local totals = panel.netLogPayload and panel.netLogPayload.totals or {}
+        return formatNumber(state.view == "players" and totals.uniquePlayers or totals.totalCalls)
+    end)
+
+    addStatCard(function() return state.view == "players" and "Player Logs" or "Total Bandwidth" end, Material("icon16/database.png", "smooth"), function()
+        local totals = panel.netLogPayload and panel.netLogPayload.totals or {}
+        return state.view == "players" and formatNumber(totals.matchedRows) or formatBytes(totals.totalBytes)
+    end)
+
+    addStatCard(function() return state.view == "players" and "Matching Calls" or "Unique Messages" end, Material("icon16/page_white_stack.png", "smooth"), function()
+        local totals = panel.netLogPayload and panel.netLogPayload.totals or {}
+        return formatNumber(state.view == "players" and totals.matchedCalls or totals.uniqueMessages)
+    end, function() return accent end)
+
+    addStatCard(function() return state.view == "players" and "Matching Size" or "Session Uptime" end, Material("icon16/time.png", "smooth"), function()
+        local totals = panel.netLogPayload and panel.netLogPayload.totals or {}
+        return state.view == "players" and formatBytes(totals.matchedBytes) or formatDuration(totals.sessionDuration)
+    end, function() return warningColor end)
+
+    summary.PerformLayout = function(_, w, h)
+        local gap = 8
+        local cardWidth = math.floor((w - gap * 3) / 4)
+        local x = 0
+        for index, card in ipairs(statCards) do
+            local width = index == #statCards and w - x or cardWidth
+            card:SetPos(x, 0)
+            card:SetSize(width, h)
+            x = x + width + gap
+        end
+    end
+
+    local infoPanel = panel:Add("DPanel")
+    infoPanel:Dock(TOP)
+    infoPanel:SetTall(64)
+    infoPanel:DockMargin(0, 0, 0, 8)
+    infoPanel.Paint = function(_, w, h)
+        drawPanel(0, 0, w, h, 7, panelColor, borderColorSoft)
+        local payload = panel.netLogPayload or {}
+        local iconColor = payload.available == false and warningColor or accent
+        drawIcon(Material(state.view == "players" and "icon16/group.png" or "icon16/connect.png", "smooth"), 22, 18, 28, iconColor)
+        local title = state.view == "players" and "Player network activity" or "Current profiler session"
+        draw.SimpleText(title, "LiliaFont.18", 66, 10, textColor, TEXT_ALIGN_LEFT, TEXT_ALIGN_TOP)
+        draw.SimpleText(tostring(payload.message or "Waiting for profiler data."), "LiliaFont.14", 66, 37, mutedTextColor, TEXT_ALIGN_LEFT, TEXT_ALIGN_TOP)
+        draw.SimpleText("Fetched: " .. formatTimestamp(payload.fetchedAt), "LiliaFont.13", w - 14, h * 0.5, mutedTextColor, TEXT_ALIGN_RIGHT, TEXT_ALIGN_CENTER)
+    end
+
+    local body = panel:Add("DPanel")
+    body:Dock(FILL)
+    body.Paint = function() end
+    local detailsPanel = body:Add("DPanel")
+    detailsPanel:Dock(RIGHT)
+    detailsPanel:DockMargin(8, 0, 0, 0)
+    detailsPanel.Paint = function(_, w, h)
+        drawPanel(0, 0, w, h, 8, panelColor, borderColor)
+        draw.SimpleText(state.view == "players" and "PLAYER LOG DETAILS" or "MESSAGE DETAILS", "LiliaFont.18", 16, 14, accent, TEXT_ALIGN_LEFT, TEXT_ALIGN_TOP)
+        local selected = panel.selectedNetLog
+        if not selected then
+            drawIcon(Material("icon16/information.png", "smooth"), math.floor(w * 0.5) - 16, 90, 32, mutedTextColor)
+            draw.SimpleText("No log selected", "LiliaFont.18", w * 0.5, 136, textColor, TEXT_ALIGN_CENTER, TEXT_ALIGN_TOP)
+            draw.SimpleText("Select a row to inspect it.", "LiliaFont.15", w * 0.5, 166, mutedTextColor, TEXT_ALIGN_CENTER, TEXT_ALIGN_TOP)
+            return
+        end
+
+        drawPanel(16, 46, w - 32, state.view == "players" and 68 or 48, 5, panelColorSoft, borderColorSoft)
+        if state.view == "players" then
+            draw.SimpleText(truncateText(selected.playerName, "LiliaFont.18", w - 120), "LiliaFont.18", 28, 62, textColor, TEXT_ALIGN_LEFT, TEXT_ALIGN_TOP)
+            draw.SimpleText(selected.online and "ONLINE" or "OFFLINE", "LiliaFont.13", w - 28, 64, selected.online and goodColor or mutedTextColor, TEXT_ALIGN_RIGHT, TEXT_ALIGN_TOP)
+            draw.SimpleText(truncateText(selected.steamID, "LiliaFont.14", w - 56), "LiliaFont.14", 28, 91, mutedTextColor, TEXT_ALIGN_LEFT, TEXT_ALIGN_TOP)
+        else
+            draw.SimpleText(truncateText(selected.message, "LiliaFont.18", w - 56), "LiliaFont.18", 28, 70, textColor, TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)
+        end
+
+        local detailRows
+        if state.view == "players" then
+            detailRows = {{"Message", selected.message}, {"Direction", selected.direction == "C->S" and "Sent to Server" or "Received from Server"}, {"Times", formatNumber(selected.calls)}, {"Total Size", formatBytes(selected.totalBytes)}, {"Average Size", formatBytes(selected.avgBytes)}, {"Size Range", formatBytes(selected.minBytes) .. " - " .. formatBytes(selected.maxBytes)}, {"First Seen", formatTimestamp(selected.firstAt)}, {"Last Seen", formatTimestamp(selected.lastAt)}}
+        else
+            detailRows = {{"Direction", selected.direction}, {"Calls", formatNumber(selected.calls)}, {"Total Bytes", formatBytes(selected.totalBytes)}, {"Average Size", formatBytes(selected.avgBytes)}, {"Size Range", formatBytes(selected.minBytes) .. " - " .. formatBytes(selected.maxBytes)}, {"Usage Share", formatPercent(selected.usage)}, {"First Seen", formatTimestamp(selected.firstAt)}, {"Last Seen", formatTimestamp(selected.lastAt)}}
+        end
+
+        local y = state.view == "players" and 130 or 110
+        for _, detail in ipairs(detailRows) do
+            surface.SetDrawColor(255, 255, 255, 18)
+            surface.DrawRect(16, y + 31, w - 32, 1)
+            draw.SimpleText(detail[1], "LiliaFont.14", 16, y + 15, mutedTextColor, TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)
+            draw.SimpleText(truncateText(detail[2], "LiliaFont.14", math.floor(w * 0.62)), "LiliaFont.14", w - 16, y + 15, textColor, TEXT_ALIGN_RIGHT, TEXT_ALIGN_CENTER)
+            y = y + 37
+        end
+
+        drawPanel(16, h - 78, w - 32, 58, 5, Color(8, 29, 38, 220), Color(85, 170, 225, 60))
+        drawIcon(Material("icon16/information.png", "smooth"), 28, h - 60, 22, blueColor)
+        local helpText = state.view == "players" and "C->S means the player sent the message." or "Bandwidth includes recipients for broadcasts."
+        draw.SimpleText(helpText, "LiliaFont.13", 60, h - 49, mutedTextColor, TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)
+    end
+
+    local listPanel = body:Add("DPanel")
+    listPanel:Dock(FILL)
+    listPanel:DockPadding(10, 10, 10, 10)
+    listPanel.Paint = function(_, w, h) drawPanel(0, 0, w, h, 8, panelColor, borderColor) end
+    body.PerformLayout = function(_, w) detailsPanel:SetWide(math.Clamp(math.floor(w * 0.28), 300, 370)) end
+    local titleRow = listPanel:Add("DPanel")
+    titleRow:Dock(TOP)
+    titleRow:SetTall(26)
+    titleRow:DockMargin(0, 0, 0, 7)
+    titleRow.Paint = function(_, w, h)
+        local totals = panel.netLogPayload and panel.netLogPayload.totals or {}
+        draw.SimpleText(state.view == "players" and "PLAYER LOG" or "SESSION MESSAGES", "LiliaFont.18", 0, h * 0.5, accent, TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)
+        local countLabel = formatNumber(totals.matchedRows) .. (state.view == "players" and " matching player logs" or " matching messages")
+        draw.SimpleText(countLabel, "LiliaFont.14", w, h * 0.5, mutedTextColor, TEXT_ALIGN_RIGHT, TEXT_ALIGN_CENTER)
+    end
+
+    local filterRow = listPanel:Add("DPanel")
+    filterRow:Dock(TOP)
+    filterRow:SetTall(40)
+    filterRow:DockMargin(0, 0, 0, 7)
+    filterRow.Paint = function() end
+    local searchWrap = filterRow:Add("DPanel")
+    searchWrap:DockPadding(38, 0, 8, 0)
+    searchWrap.Paint = function(_, w, h)
+        drawPanel(0, 0, w, h, 5, panelColorSoft, borderColor)
+        drawIcon(Material("icon16/magnifier.png", "smooth"), 13, math.floor(h * 0.5) - 8, 16, mutedTextColor)
+    end
+
+    local searchEntry = searchWrap:Add("DTextEntry")
+    searchEntry:Dock(FILL)
+    styleEntry(searchEntry, "Search messages...", false)
+    local directionCombo = filterRow:Add("DComboBox")
+    styleCombo(directionCombo)
+    directionCombo:AddChoice("All Directions", "all", true)
+    local usageCombo = filterRow:Add("DComboBox")
+    styleCombo(usageCombo)
+    usageCombo:AddChoice("All Usage", "all", true)
+    usageCombo:AddChoice("Dominant 25%+", "dominant")
+    usageCombo:AddChoice("High 10-25%", "high")
+    usageCombo:AddChoice("Medium 2-10%", "medium")
+    usageCombo:AddChoice("Low under 2%", "low")
+    local sourceCombo = filterRow:Add("DComboBox")
+    styleCombo(sourceCombo)
+    sourceCombo:AddChoice("All Sources", "all", true)
+    sourceCombo:AddChoice("Live Session", "live")
+    sourceCombo:AddChoice("Saved Snapshot", "snapshot")
+    local timeCombo = filterRow:Add("DComboBox")
+    styleCombo(timeCombo)
+    timeCombo:AddChoice("Entire Session", 0, true)
+    timeCombo:AddChoice("Last 5 Minutes", 300)
+    timeCombo:AddChoice("Last 15 Minutes", 900)
+    timeCombo:AddChoice("Last Hour", 3600)
+    timeCombo:AddChoice("Last 6 Hours", 21600)
+    local playerCombo = filterRow:Add("DComboBox")
+    styleCombo(playerCombo)
+    playerCombo:AddChoice("All Players", "all", true)
+    filterRow.PerformLayout = function(_, w, h)
+        local gap = 7
+        local directionWidth = 142
+        local contextWidth = 150
+        local contextTwoWidth = state.view == "players" and 190 or 142
+        local x = w
+        x = x - contextTwoWidth
+        sourceCombo:SetPos(x, 0)
+        sourceCombo:SetSize(contextTwoWidth, h)
+        playerCombo:SetPos(x, 0)
+        playerCombo:SetSize(contextTwoWidth, h)
+        x = x - gap - contextWidth
+        usageCombo:SetPos(x, 0)
+        usageCombo:SetSize(contextWidth, h)
+        timeCombo:SetPos(x, 0)
+        timeCombo:SetSize(contextWidth, h)
+        x = x - gap - directionWidth
+        directionCombo:SetPos(x, 0)
+        directionCombo:SetSize(directionWidth, h)
+        searchWrap:SetPos(0, 0)
+        searchWrap:SetSize(math.max(x - gap, 160), h)
+    end
+
+    local advancedRow = listPanel:Add("DPanel")
+    advancedRow:Dock(TOP)
+    advancedRow:SetTall(38)
+    advancedRow:DockMargin(0, 0, 0, 7)
+    advancedRow.Paint = function() end
+    local minCallsWrap = advancedRow:Add("DPanel")
+    minCallsWrap:DockPadding(8, 0, 6, 0)
+    minCallsWrap.Paint = function(_, w, h) drawPanel(0, 0, w, h, 5, panelColorSoft, borderColorSoft) end
+    local minCallsEntry = minCallsWrap:Add("DTextEntry")
+    minCallsEntry:Dock(FILL)
+    styleEntry(minCallsEntry, "Min calls", true)
+    local maxCallsWrap = advancedRow:Add("DPanel")
+    maxCallsWrap:DockPadding(8, 0, 6, 0)
+    maxCallsWrap.Paint = function(_, w, h) drawPanel(0, 0, w, h, 5, panelColorSoft, borderColorSoft) end
+    local maxCallsEntry = maxCallsWrap:Add("DTextEntry")
+    maxCallsEntry:Dock(FILL)
+    styleEntry(maxCallsEntry, "Max calls", true)
+    local minBytesWrap = advancedRow:Add("DPanel")
+    minBytesWrap:DockPadding(8, 0, 6, 0)
+    minBytesWrap.Paint = function(_, w, h) drawPanel(0, 0, w, h, 5, panelColorSoft, borderColorSoft) end
+    local minBytesEntry = minBytesWrap:Add("DTextEntry")
+    minBytesEntry:Dock(FILL)
+    styleEntry(minBytesEntry, "Min bytes", true)
+    local maxBytesWrap = advancedRow:Add("DPanel")
+    maxBytesWrap:DockPadding(8, 0, 6, 0)
+    maxBytesWrap.Paint = function(_, w, h) drawPanel(0, 0, w, h, 5, panelColorSoft, borderColorSoft) end
+    local maxBytesEntry = maxBytesWrap:Add("DTextEntry")
+    maxBytesEntry:Dock(FILL)
+    styleEntry(maxBytesEntry, "Max bytes", true)
+    local sortCombo = advancedRow:Add("DComboBox")
+    styleCombo(sortCombo)
+    local orderButton = advancedRow:Add("DButton")
+    styleButton(orderButton, function() return state.sortDesc and "Desc" or "Asc" end)
+    local pageSizeCombo = advancedRow:Add("DComboBox")
+    styleCombo(pageSizeCombo)
+    pageSizeCombo:AddChoice("10 / page", 10)
+    pageSizeCombo:AddChoice("25 / page", 25, true)
+    pageSizeCombo:AddChoice("50 / page", 50)
+    pageSizeCombo:AddChoice("100 / page", 100)
+    local resetButton = advancedRow:Add("DButton")
+    styleButton(resetButton, "Reset", Material("icon16/cross.png", "smooth"))
+    advancedRow.PerformLayout = function(_, w, h)
+        local gap = 5
+        local smallWidth = math.Clamp(math.floor((w - 430) / 4), 72, 92)
+        local sortWidth = 118
+        local orderWidth = 58
+        local pageWidth = 86
+        local resetWidth = 88
+        local x = 0
+        local controls = {minCallsWrap, maxCallsWrap, minBytesWrap, maxBytesWrap}
+        for _, control in ipairs(controls) do
+            control:SetPos(x, 0)
+            control:SetSize(smallWidth, h)
+            x = x + smallWidth + gap
+        end
+
+        sortCombo:SetPos(x, 0)
+        sortCombo:SetSize(sortWidth, h)
+        x = x + sortWidth + gap
+        orderButton:SetPos(x, 0)
+        orderButton:SetSize(orderWidth, h)
+        x = x + orderWidth + gap
+        pageSizeCombo:SetPos(x, 0)
+        pageSizeCombo:SetSize(pageWidth, h)
+        resetButton:SetPos(w - resetWidth, 0)
+        resetButton:SetSize(resetWidth, h)
+    end
+
+    local headerButtons = {}
+    local tableHeader = listPanel:Add("DPanel")
+    tableHeader:Dock(TOP)
+    tableHeader:SetTall(36)
+    tableHeader:DockMargin(0, 0, 0, 4)
+    tableHeader.Paint = function(_, w, h) drawPanel(0, 0, w, h, 4, Color(8, 27, 32, 245), borderColorSoft) end
+    for index = 1, 6 do
+        local button = tableHeader:Add("DButton")
+        button:SetText("")
+        button._columnIndex = index
+        button.Paint = function(s, w, h)
+            local column = panel:GetNetLogColumns(tableHeader:GetWide())[s._columnIndex]
+            if not column then return end
+            local active = state.sortBy == column.key
+            local label = column.label .. (active and (state.sortDesc and "  ▼" or "  ▲") or "")
+            draw.SimpleText(label, "LiliaFont.13", column.align == TEXT_ALIGN_LEFT and 10 or w * 0.5, h * 0.5, active and accent or mutedTextColor, column.align, TEXT_ALIGN_CENTER)
+        end
+
+        button.DoClick = function(s)
+            local column = panel:GetNetLogColumns(tableHeader:GetWide())[s._columnIndex]
+            if not column or not column.sortable then return end
+            if state.sortBy == column.key then
+                state.sortDesc = not state.sortDesc
+            else
+                state.sortBy = column.key
+                state.sortDesc = column.key ~= "message" and column.key ~= "playerName" and column.key ~= "direction"
+            end
+
+            state.page = 1
+            panel:UpdateSortCombo()
+            panel:RequestNetLogs()
+        end
+
+        headerButtons[index] = button
+    end
+
+    tableHeader.PerformLayout = function(_, w, h)
+        local columns = panel:GetNetLogColumns(w)
+        for index, button in ipairs(headerButtons) do
+            local column = columns[index]
+            button:SetVisible(column ~= nil)
+            if column then
+                button:SetPos(column.x, 0)
+                button:SetSize(column.w, h)
+            end
+        end
+    end
+
+    local pagination = listPanel:Add("DPanel")
+    pagination:Dock(BOTTOM)
+    pagination:SetTall(40)
+    pagination:DockMargin(0, 7, 0, 0)
+    pagination.Paint = function(_, w, h)
+        drawPanel(0, 0, w, h, 5, Color(5, 20, 25, 235), borderColorSoft)
+        local pageData = panel.netLogPayload and panel.netLogPayload.pagination or {}
+        local status = string.format("Showing %s-%s of %s", formatNumber(pageData.firstIndex), formatNumber(pageData.lastIndex), formatNumber(pageData.resultCount))
+        draw.SimpleText(status, "LiliaFont.13", 12, h * 0.5, mutedTextColor, TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)
+    end
+
+    local rows = listPanel:Add("DScrollPanel")
+    rows:Dock(FILL)
+    rows.Paint = function() end
+    styleScrollBar(rows)
+    local firstPageButton = pagination:Add("DButton")
+    local previousPageButton = pagination:Add("DButton")
+    local pageLabel = pagination:Add("DPanel")
+    local nextPageButton = pagination:Add("DButton")
+    local lastPageButton = pagination:Add("DButton")
+    styleButton(firstPageButton, "«")
+    styleButton(previousPageButton, "‹")
+    styleButton(nextPageButton, "›")
+    styleButton(lastPageButton, "»")
+    pageLabel.Paint = function(_, w, h)
+        local pageData = panel.netLogPayload and panel.netLogPayload.pagination or {}
+        draw.SimpleText(string.format("Page %s / %s", formatNumber(pageData.page or 1), formatNumber(pageData.pageCount or 1)), "LiliaFont.13", w * 0.5, h * 0.5, textColor, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
+    end
+
+    pagination.PerformLayout = function(_, w, h)
+        local buttonWidth = 36
+        local labelWidth = 104
+        local gap = 4
+        local totalWidth = buttonWidth * 4 + labelWidth + gap * 4
+        local x = w - totalWidth - 5
+        local controls = {firstPageButton, previousPageButton}
+        for _, control in ipairs(controls) do
+            control:SetPos(x, 4)
+            control:SetSize(buttonWidth, h - 8)
+            x = x + buttonWidth + gap
+        end
+
+        pageLabel:SetPos(x, 4)
+        pageLabel:SetSize(labelWidth, h - 8)
+        x = x + labelWidth + gap
+        controls = {nextPageButton, lastPageButton}
+        for _, control in ipairs(controls) do
+            control:SetPos(x, 4)
+            control:SetSize(buttonWidth, h - 8)
+            x = x + buttonWidth + gap
+        end
+    end
+
+    function panel:GetNetLogColumns(width)
+        if state.view == "players" then
+            local playerWidth = math.floor(width * 0.22)
+            local messageWidth = math.floor(width * 0.25)
+            local directionWidth = math.floor(width * 0.12)
+            local callsWidth = math.floor(width * 0.1)
+            local bytesWidth = math.floor(width * 0.14)
+            local lastWidth = width - playerWidth - messageWidth - directionWidth - callsWidth - bytesWidth
+            return {
+                {
+                    key = "playerName",
+                    label = "PLAYER",
+                    x = 0,
+                    w = playerWidth,
+                    align = TEXT_ALIGN_LEFT,
+                    sortable = true
+                },
+                {
+                    key = "message",
+                    label = "MESSAGE",
+                    x = playerWidth,
+                    w = messageWidth,
+                    align = TEXT_ALIGN_LEFT,
+                    sortable = true
+                },
+                {
+                    key = "direction",
+                    label = "DIRECTION",
+                    x = playerWidth + messageWidth,
+                    w = directionWidth,
+                    align = TEXT_ALIGN_CENTER,
+                    sortable = true
+                },
+                {
+                    key = "calls",
+                    label = "TIMES",
+                    x = playerWidth + messageWidth + directionWidth,
+                    w = callsWidth,
+                    align = TEXT_ALIGN_CENTER,
+                    sortable = true
+                },
+                {
+                    key = "totalBytes",
+                    label = "TOTAL SIZE",
+                    x = playerWidth + messageWidth + directionWidth + callsWidth,
+                    w = bytesWidth,
+                    align = TEXT_ALIGN_CENTER,
+                    sortable = true
+                },
+                {
+                    key = "lastAt",
+                    label = "LAST",
+                    x = playerWidth + messageWidth + directionWidth + callsWidth + bytesWidth,
+                    w = lastWidth,
+                    align = TEXT_ALIGN_CENTER,
+                    sortable = true
+                }
+            }
+        end
+
+        local messageWidth = math.floor(width * 0.34)
+        local directionWidth = math.floor(width * 0.13)
+        local callsWidth = math.floor(width * 0.11)
+        local bytesWidth = math.floor(width * 0.16)
+        local averageWidth = math.floor(width * 0.13)
+        local usageWidth = width - messageWidth - directionWidth - callsWidth - bytesWidth - averageWidth
+        return {
+            {
+                key = "message",
+                label = "MESSAGE",
+                x = 0,
+                w = messageWidth,
+                align = TEXT_ALIGN_LEFT,
+                sortable = true
+            },
+            {
+                key = "direction",
+                label = "DIRECTION",
+                x = messageWidth,
+                w = directionWidth,
+                align = TEXT_ALIGN_CENTER,
+                sortable = true
+            },
+            {
+                key = "calls",
+                label = "CALLS",
+                x = messageWidth + directionWidth,
+                w = callsWidth,
+                align = TEXT_ALIGN_CENTER,
+                sortable = true
+            },
+            {
+                key = "totalBytes",
+                label = "TOTAL BYTES",
+                x = messageWidth + directionWidth + callsWidth,
+                w = bytesWidth,
+                align = TEXT_ALIGN_CENTER,
+                sortable = true
+            },
+            {
+                key = "avgBytes",
+                label = "AVG SIZE",
+                x = messageWidth + directionWidth + callsWidth + bytesWidth,
+                w = averageWidth,
+                align = TEXT_ALIGN_CENTER,
+                sortable = true
+            },
+            {
+                key = "usage",
+                label = "USAGE",
+                x = messageWidth + directionWidth + callsWidth + bytesWidth + averageWidth,
+                w = usageWidth,
+                align = TEXT_ALIGN_CENTER,
+                sortable = true
+            }
+        }
+    end
+
+    function panel:UpdateSortCombo()
+        local labels = {
+            calls = "Sort: Calls",
+            usage = "Sort: Usage",
+            message = "Sort: Message",
+            direction = "Sort: Direction",
+            totalBytes = "Sort: Total Size",
+            avgBytes = "Sort: Average Size",
+            minBytes = "Sort: Minimum Size",
+            maxBytes = "Sort: Maximum Size",
+            playerName = "Sort: Player",
+            firstAt = "Sort: First Seen",
+            lastAt = "Sort: Last Seen"
+        }
+
+        sortCombo:SetValue(labels[state.sortBy] or "Sort")
+    end
+
+    function panel:ConfigureView()
+        local playerView = state.view == "players"
+        usageCombo:SetVisible(not playerView)
+        sourceCombo:SetVisible(not playerView)
+        timeCombo:SetVisible(playerView)
+        playerCombo:SetVisible(playerView)
+        searchEntry:SetPlaceholderText(playerView and "Search player, SteamID, message..." or "Search message or direction...")
+        sortCombo:Clear()
+        if playerView then
+            sortCombo:AddChoice("Sort: Last Seen", "lastAt", state.sortBy == "lastAt")
+            sortCombo:AddChoice("Sort: Player", "playerName", state.sortBy == "playerName")
+            sortCombo:AddChoice("Sort: Message", "message", state.sortBy == "message")
+            sortCombo:AddChoice("Sort: Times", "calls", state.sortBy == "calls")
+            sortCombo:AddChoice("Sort: Total Size", "totalBytes", state.sortBy == "totalBytes")
+            sortCombo:AddChoice("Sort: Average Size", "avgBytes", state.sortBy == "avgBytes")
+        else
+            sortCombo:AddChoice("Sort: Calls", "calls", state.sortBy == "calls")
+            sortCombo:AddChoice("Sort: Usage", "usage", state.sortBy == "usage")
+            sortCombo:AddChoice("Sort: Total Size", "totalBytes", state.sortBy == "totalBytes")
+            sortCombo:AddChoice("Sort: Average Size", "avgBytes", state.sortBy == "avgBytes")
+            sortCombo:AddChoice("Sort: Message", "message", state.sortBy == "message")
+            sortCombo:AddChoice("Sort: Direction", "direction", state.sortBy == "direction")
+            sortCombo:AddChoice("Sort: Last Seen", "lastAt", state.sortBy == "lastAt")
+        end
+
+        self:UpdateSortCombo()
+        filterRow:InvalidateLayout(true)
+        tableHeader:InvalidateLayout(true)
+        header:InvalidateLayout(true)
+        summary:InvalidateLayout(true)
+        infoPanel:InvalidateLayout(true)
+        titleRow:InvalidateLayout(true)
+        detailsPanel:InvalidateLayout(true)
+    end
+
+    function panel:RefreshDirectionChoices(directions)
+        local signature = table.concat(directions or {}, "\31")
+        if self.netLogDirectionSignature == signature then return true end
+        self.netLogDirectionSignature = signature
+        local foundCurrent = state.direction == "all"
+        directionCombo:Clear()
+        directionCombo:AddChoice("All Directions", "all", state.direction == "all")
+        for _, direction in ipairs(directions or {}) do
+            directionCombo:AddChoice(direction, direction, state.direction == direction)
+            if state.direction == direction then foundCurrent = true end
+        end
+
+        if not foundCurrent then
+            state.direction = "all"
+            state.page = 1
+            directionCombo:SetValue("All Directions")
+            return false
+        end
+
+        directionCombo:SetValue(state.direction == "all" and "All Directions" or state.direction)
+        return true
+    end
+
+    function panel:RefreshPlayerChoices(players)
+        local parts = {}
+        for _, playerData in ipairs(players or {}) do
+            parts[#parts + 1] = tostring(playerData.steamID64) .. ":" .. tostring(playerData.playerName)
+        end
+
+        local signature = table.concat(parts, "\31")
+        if self.netLogPlayerSignature == signature then return true end
+        self.netLogPlayerSignature = signature
+        local foundCurrent = state.player == "all"
+        playerCombo:Clear()
+        playerCombo:AddChoice("All Players", "all", state.player == "all")
+        for _, playerData in ipairs(players or {}) do
+            local label = tostring(playerData.playerName or "Unknown") .. " (" .. tostring(playerData.steamID or "UNKNOWN") .. ")"
+            playerCombo:AddChoice(label, tostring(playerData.steamID64), state.player == tostring(playerData.steamID64))
+            if state.player == tostring(playerData.steamID64) then foundCurrent = true end
+        end
+
+        if not foundCurrent then
+            state.player = "all"
+            state.page = 1
+            playerCombo:SetValue("All Players")
+            return false
+        end
+
+        if state.player == "all" then playerCombo:SetValue("All Players") end
+        return true
+    end
+
+    function panel:RefreshPagination()
+        local pageData = self.netLogPayload and self.netLogPayload.pagination or {}
+        local page = tonumber(pageData.page) or 1
+        local pageCount = tonumber(pageData.pageCount) or 1
+        firstPageButton:SetEnabled(not self.loading and page > 1)
+        previousPageButton:SetEnabled(not self.loading and page > 1)
+        nextPageButton:SetEnabled(not self.loading and page < pageCount)
+        lastPageButton:SetEnabled(not self.loading and page < pageCount)
+        pageLabel:InvalidateLayout(true)
+        pagination:InvalidateLayout(true)
+    end
+
+    function panel:RebuildNetLogRows()
+        rows:Clear()
+        local payloadRows = self.netLogPayload and self.netLogPayload.rows or {}
+        local selected
+        for _, entry in ipairs(payloadRows) do
+            if self.selectedNetLogID == entry.id then
+                selected = entry
+                break
+            end
+        end
+
+        if not selected then selected = payloadRows[1] end
+        self.selectedNetLog = selected
+        self.selectedNetLogID = selected and selected.id or nil
+        if #payloadRows == 0 then
+            local empty = rows:Add("DPanel")
+            empty:Dock(TOP)
+            empty:SetTall(math.max(rows:GetTall() - 8, 230))
+            empty.Paint = function(_, w, h)
+                drawIcon(Material("icon16/box.png", "smooth"), math.floor(w * 0.5) - 18, math.max(math.floor(h * 0.5) - 62, 24), 36, mutedTextColor)
+                local title = state.view == "players" and "No player logs match these filters" or "No messages match these filters"
+                draw.SimpleText(title, "LiliaFont.18", w * 0.5, math.max(math.floor(h * 0.5) - 12, 74), textColor, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
+                draw.SimpleText("Adjust the filters or refresh the profiler.", "LiliaFont.15", w * 0.5, math.max(math.floor(h * 0.5) + 18, 104), mutedTextColor, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
+            end
+
+            detailsPanel:InvalidateLayout(true)
+            return
+        end
+
+        for _, entry in ipairs(payloadRows) do
+            local currentEntry = entry
+            local row = rows:Add("DButton")
+            row:Dock(TOP)
+            row:SetTall(46)
+            row:DockMargin(0, 0, 0, 5)
+            row:SetText("")
+            row.Paint = function(s, w, h)
+                local active = panel.selectedNetLogID == currentEntry.id
+                local hovered = s:IsHovered()
+                local background = active and Color(accent.r, accent.g, accent.b, 24) or hovered and Color(255, 255, 255, 7) or Color(2, 14, 18, 120)
+                drawPanel(0, 0, w, h, 4, background, active and Color(accent.r, accent.g, accent.b, 120) or borderColorSoft)
+                if active then
+                    surface.SetDrawColor(accent.r, accent.g, accent.b, 230)
+                    surface.DrawRect(0, 6, 3, h - 12)
+                end
+
+                local columns = panel:GetNetLogColumns(w)
+                if state.view == "players" then
+                    local playerColumn = columns[1]
+                    local messageColumn = columns[2]
+                    local directionColumn = columns[3]
+                    local callsColumn = columns[4]
+                    local bytesColumn = columns[5]
+                    local lastColumn = columns[6]
+                    draw.SimpleText(truncateText(currentEntry.playerName, "LiliaFont.14", playerColumn.w - 24), "LiliaFont.14", 12, 13, active and textColor or Color(208, 222, 221), TEXT_ALIGN_LEFT, TEXT_ALIGN_TOP)
+                    draw.SimpleText(truncateText(currentEntry.steamID, "LiliaFont.12", playerColumn.w - 24), "LiliaFont.12", 12, 31, currentEntry.online and goodColor or mutedTextColor, TEXT_ALIGN_LEFT, TEXT_ALIGN_TOP)
+                    draw.SimpleText(truncateText(currentEntry.message, "LiliaFont.14", messageColumn.w - 20), "LiliaFont.14", messageColumn.x + 10, h * 0.5, textColor, TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)
+                    draw.SimpleText(currentEntry.direction, "LiliaFont.13", directionColumn.x + directionColumn.w * 0.5, h * 0.5, accent, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
+                    draw.SimpleText(formatNumber(currentEntry.calls), "LiliaFont.14", callsColumn.x + callsColumn.w * 0.5, h * 0.5, textColor, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
+                    draw.SimpleText(formatBytes(currentEntry.totalBytes), "LiliaFont.13", bytesColumn.x + bytesColumn.w * 0.5, h * 0.5, textColor, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
+                    draw.SimpleText((tonumber(currentEntry.lastAt) or 0) > 0 and os.date("%H:%M:%S", currentEntry.lastAt) or "Unknown", "LiliaFont.13", lastColumn.x + lastColumn.w * 0.5, h * 0.5, mutedTextColor, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
+                else
+                    local messageColumn = columns[1]
+                    local directionColumn = columns[2]
+                    local callsColumn = columns[3]
+                    local bytesColumn = columns[4]
+                    local averageColumn = columns[5]
+                    local usageColumn = columns[6]
+                    draw.SimpleText("#" .. tostring(currentEntry.rank or 0), "LiliaFont.12", 10, h * 0.5, mutedTextColor, TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)
+                    draw.SimpleText(truncateText(currentEntry.message, "LiliaFont.14", messageColumn.w - 52), "LiliaFont.14", 42, h * 0.5, active and textColor or Color(208, 222, 221), TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)
+                    draw.SimpleText(currentEntry.direction, "LiliaFont.13", directionColumn.x + directionColumn.w * 0.5, h * 0.5, accent, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
+                    draw.SimpleText(formatNumber(currentEntry.calls), "LiliaFont.14", callsColumn.x + callsColumn.w * 0.5, h * 0.5, textColor, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
+                    draw.SimpleText(formatBytes(currentEntry.totalBytes), "LiliaFont.13", bytesColumn.x + bytesColumn.w * 0.5, h * 0.5, textColor, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
+                    draw.SimpleText(formatBytes(currentEntry.avgBytes), "LiliaFont.13", averageColumn.x + averageColumn.w * 0.5, h * 0.5, textColor, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
+                    draw.SimpleText(formatPercent(currentEntry.usage), "LiliaFont.13", usageColumn.x + usageColumn.w * 0.5, 17, textColor, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
+                    local barX = usageColumn.x + 10
+                    local barW = usageColumn.w - 20
+                    surface.SetDrawColor(255, 255, 255, 12)
+                    surface.DrawRect(barX, h - 10, barW, 3)
+                    surface.SetDrawColor(accent.r, accent.g, accent.b, 180)
+                    surface.DrawRect(barX, h - 10, math.floor(barW * math.Clamp((tonumber(currentEntry.usage) or 0) / 100, 0, 1)), 3)
+                end
+            end
+
+            row.DoClick = function()
+                lia.websound.playButtonSound()
+                panel.selectedNetLogID = currentEntry.id
+                panel.selectedNetLog = currentEntry
+                detailsPanel:InvalidateLayout(true)
+            end
+        end
+
+        detailsPanel:InvalidateLayout(true)
+    end
+
+    function panel:ApplyNetLogs(payload)
+        if not istable(payload) then return end
+        if tonumber(payload.requestId) ~= state.requestId then return end
+        self.loading = false
+        self.netLogPayload = payload
+        local pageData = payload.pagination or {}
+        state.page = tonumber(pageData.page) or state.page
+        state.pageSize = tonumber(pageData.pageSize) or state.pageSize
+        if not self:RefreshDirectionChoices(payload.filters and payload.filters.directions or {}) then
+            timer.Simple(0, function() if IsValid(self) then self:RequestNetLogs() end end)
+            return
+        end
+
+        if state.view == "players" and not self:RefreshPlayerChoices(payload.filters and payload.filters.players or {}) then
+            timer.Simple(0, function() if IsValid(self) then self:RequestNetLogs() end end)
+            return
+        end
+
+        self:RebuildNetLogRows()
+        self:RefreshPagination()
+        header:InvalidateLayout(true)
+        summary:InvalidateLayout(true)
+        infoPanel:InvalidateLayout(true)
+        titleRow:InvalidateLayout(true)
+        tableHeader:InvalidateLayout(true)
+        refreshButton:SetEnabled(true)
+    end
+
+    function panel:RequestNetLogs()
+        if not IsValid(self) then return end
+        state.requestId = state.requestId + 1
+        if state.requestId >= 4294967295 then state.requestId = 1 end
+        self.loading = true
+        refreshButton:SetEnabled(false)
+        self:RefreshPagination()
+        header:InvalidateLayout(true)
+        net.Start("liaRequestNetProfilerLogs")
+        net.WriteUInt(state.requestId, 32)
+        net.WriteString(state.view)
+        net.WriteUInt(math.Clamp(math.floor(state.page), 1, 65535), 16)
+        net.WriteUInt(math.Clamp(math.floor(state.pageSize), 10, 100), 8)
+        net.WriteString(string.sub(state.search or "", 1, 128))
+        net.WriteString(string.sub(state.direction or "all", 1, 64))
+        net.WriteString(state.usage or "all")
+        net.WriteString(state.source or "all")
+        net.WriteString(string.sub(state.player or "all", 1, 32))
+        net.WriteUInt(math.Clamp(math.floor(state.timeRange or 0), 0, 4294967295), 32)
+        net.WriteString(state.sortBy or "calls")
+        net.WriteBool(state.sortDesc ~= false)
+        net.WriteUInt(math.Clamp(math.floor(state.minCalls or 0), 0, 4294967295), 32)
+        net.WriteUInt(math.Clamp(math.floor(state.maxCalls or 0), 0, 4294967295), 32)
+        net.WriteUInt(math.Clamp(math.floor(state.minBytes or 0), 0, 4294967295), 32)
+        net.WriteUInt(math.Clamp(math.floor(state.maxBytes or 0), 0, 4294967295), 32)
+        net.SendToServer()
+    end
+
+    local function updateNumberFilter(entry, key)
+        local value = math.max(math.floor(tonumber(entry:GetValue()) or 0), 0)
+        if state[key] == value then return end
+        state[key] = value
+        state.page = 1
+        panel:RequestNetLogs()
+    end
+
+    searchEntry.OnChange = function(s)
+        if panel.suppressNetLogFilters then return end
+        state.search = s:GetValue() or ""
+        state.page = 1
+        timer.Create(debounceTimer, 0.3, 1, function() if IsValid(panel) then panel:RequestNetLogs() end end)
+    end
+
+    directionCombo.OnSelect = function(_, _, _, data)
+        if panel.suppressNetLogFilters then return end
+        state.direction = tostring(data or "all")
+        state.page = 1
+        panel:RequestNetLogs()
+    end
+
+    usageCombo.OnSelect = function(_, _, _, data)
+        if panel.suppressNetLogFilters then return end
+        state.usage = tostring(data or "all")
+        state.page = 1
+        panel:RequestNetLogs()
+    end
+
+    sourceCombo.OnSelect = function(_, _, _, data)
+        if panel.suppressNetLogFilters then return end
+        state.source = tostring(data or "all")
+        state.page = 1
+        panel:RequestNetLogs()
+    end
+
+    timeCombo.OnSelect = function(_, _, _, data)
+        if panel.suppressNetLogFilters then return end
+        state.timeRange = tonumber(data) or 0
+        state.page = 1
+        panel:RequestNetLogs()
+    end
+
+    playerCombo.OnSelect = function(_, _, _, data)
+        if panel.suppressNetLogFilters then return end
+        state.player = tostring(data or "all")
+        state.page = 1
+        panel:RequestNetLogs()
+    end
+
+    sortCombo.OnSelect = function(_, _, _, data)
+        if panel.suppressNetLogFilters then return end
+        state.sortBy = tostring(data or (state.view == "players" and "lastAt" or "calls"))
+        state.page = 1
+        panel:RequestNetLogs()
+    end
+
+    pageSizeCombo.OnSelect = function(_, _, _, data)
+        if panel.suppressNetLogFilters then return end
+        state.pageSize = tonumber(data) or 25
+        state.page = 1
+        panel:RequestNetLogs()
+    end
+
+    minCallsEntry.OnEnter = function(s) updateNumberFilter(s, "minCalls") end
+    minCallsEntry.OnLoseFocus = function(s) updateNumberFilter(s, "minCalls") end
+    maxCallsEntry.OnEnter = function(s) updateNumberFilter(s, "maxCalls") end
+    maxCallsEntry.OnLoseFocus = function(s) updateNumberFilter(s, "maxCalls") end
+    minBytesEntry.OnEnter = function(s) updateNumberFilter(s, "minBytes") end
+    minBytesEntry.OnLoseFocus = function(s) updateNumberFilter(s, "minBytes") end
+    maxBytesEntry.OnEnter = function(s) updateNumberFilter(s, "maxBytes") end
+    maxBytesEntry.OnLoseFocus = function(s) updateNumberFilter(s, "maxBytes") end
+    orderButton.DoClick = function()
+        state.sortDesc = not state.sortDesc
+        state.page = 1
+        panel:RequestNetLogs()
+    end
+
+    resetButton.DoClick = function()
+        panel.suppressNetLogFilters = true
+        state.page = 1
+        state.pageSize = 25
+        state.search = ""
+        state.direction = "all"
+        state.usage = "all"
+        state.source = "all"
+        state.player = "all"
+        state.timeRange = 0
+        state.sortBy = state.view == "players" and "lastAt" or "calls"
+        state.sortDesc = true
+        state.minCalls = 0
+        state.maxCalls = 0
+        state.minBytes = 0
+        state.maxBytes = 0
+        searchEntry:SetText("")
+        directionCombo:SetValue("All Directions")
+        usageCombo:SetValue("All Usage")
+        sourceCombo:SetValue("All Sources")
+        playerCombo:SetValue("All Players")
+        timeCombo:SetValue("Entire Session")
+        pageSizeCombo:SetValue("25 / page")
+        minCallsEntry:SetText("")
+        maxCallsEntry:SetText("")
+        minBytesEntry:SetText("")
+        maxBytesEntry:SetText("")
+        panel:UpdateSortCombo()
+        panel.suppressNetLogFilters = false
+        panel:RequestNetLogs()
+    end
+
+    refreshButton.DoClick = function() panel:RequestNetLogs() end
+    firstPageButton.DoClick = function()
+        state.page = 1
+        panel:RequestNetLogs()
+    end
+
+    previousPageButton.DoClick = function()
+        state.page = math.max(state.page - 1, 1)
+        panel:RequestNetLogs()
+    end
+
+    nextPageButton.DoClick = function()
+        local pageData = panel.netLogPayload and panel.netLogPayload.pagination or {}
+        state.page = math.min(state.page + 1, tonumber(pageData.pageCount) or state.page + 1)
+        panel:RequestNetLogs()
+    end
+
+    lastPageButton.DoClick = function()
+        local pageData = panel.netLogPayload and panel.netLogPayload.pagination or {}
+        state.page = math.max(tonumber(pageData.pageCount) or 1, 1)
+        panel:RequestNetLogs()
+    end
+
+    panel.OnRemove = function()
+        timer.Remove(debounceTimer)
+        if MODULE.netLogsPanel == panel then MODULE.netLogsPanel = nil end
+        if MODULE.netProfilerPanel == panel then MODULE.netProfilerPanel = nil end
+    end
+
+    panel:ConfigureView()
+    panel:RefreshPagination()
+    panel:RequestNetLogs()
+end
+
+function MODULE:OpenNetProfiler(panel)
+    self:OpenNetLogs(panel)
+end
+
 function MODULE:PopulateAdminTabs(pages)
+    removeLegacyPlayerEntityTab()
     local client = LocalPlayer()
     if not IsValid(client) then return end
+    lia.debug("[Permissions UI]", "PopulateAdminTabs administration", "localPlayer=", tostring(client:Nick()), "usergroup=", tostring(client:GetUserGroup()), "hasPrivilege(viewNetProfiler)=", tostring(client:hasPrivilege("viewNetProfiler")))
+    if client:hasPrivilege("viewNetProfiler") then
+        table.insert(pages, {
+            name = "Net Logs",
+            description = "Inspect network message usage with server-side filtering, sorting, and paginated fetching.",
+            icon = "icon16/chart_bar.png",
+            drawFunc = function(panel) self:OpenNetLogs(panel) end
+        })
+    end
+
+    if client:hasPrivilege("viewEntityTab") then
+        for i = #pages, 1, -1 do
+            local name = string.lower(tostring(pages[i].name or "")):gsub("[^%w]", "")
+            if name == "playerentities" then table.remove(pages, i) end
+        end
+
+        pages[#pages + 1] = {
+            name = "Player Entities",
+            icon = "icon16/bricks.png",
+            drawFunc = function(panel) self:OpenPlayerEntities(panel) end
+        }
+    end
+
     local canListCharacters = client:hasPrivilege("listCharacters")
     if canListCharacters then
         table.insert(pages, {
@@ -2152,6 +4714,19 @@ lia.net.readBigTable("liaAllFlags", function(data)
         OpenFlagsPanel(panelRef, flagsData)
         flagsData = nil
     end
+end)
+
+lia.net.readBigTable("liaNetProfilerLogs", function(payload)
+    local panel = MODULE.netLogsPanel
+    if not IsValid(panel) then return end
+    if isfunction(panel.ApplyNetLogs) then panel:ApplyNetLogs(payload) end
+end)
+
+net.Receive("liaNetProfilerSnapshot", function()
+    local panel = MODULE.netProfilerPanel
+    if not IsValid(panel) then return end
+    local snapshot = net.ReadTable()
+    if isfunction(panel.RenderNetProfilerSnapshot) then panel:RenderNetProfilerSnapshot(snapshot) end
 end)
 
 lia.net.readBigTable("liaStaffSummary", function(data)

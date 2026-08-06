@@ -2378,6 +2378,19 @@ function lia.derma.drawBoxWithText(text, x, y, options)
         return tostring(value or ""):gsub("^%s+", ""):gsub("%s+$", "")
     end
 
+    local function fitTextToWidth(value, maxRowWidth, font, suffix)
+        local resolved = trim(value)
+        suffix = suffix or "..."
+        surface.SetFont(font)
+        if surface.GetTextSize(resolved) <= maxRowWidth then return resolved end
+        local candidate = resolved .. suffix
+        while resolved ~= "" and surface.GetTextSize(candidate) > maxRowWidth do
+            resolved = trim(resolved:sub(1, -2))
+            candidate = resolved .. suffix
+        end
+        return candidate ~= "" and candidate or suffix
+    end
+
     local function resolveText(value)
         if value == nil then return "" end
         if isstring(value) and L then
@@ -2723,6 +2736,11 @@ function lia.derma.drawBoxWithText(text, x, y, options)
     local overlapMargin = options.overlapMargin or 8
     local textAlignX = options.textAlignX or TEXT_ALIGN_LEFT
     local textAlignY = options.textAlignY or TEXT_ALIGN_TOP
+    local truncateTextRows = options.truncateTextRows == true
+    local textRowSuffix = options.textRowSuffix or "..."
+    local textRowRightPadding = options.textRowRightPadding or 6
+    local titleInset = options.titleInset or 14
+    local maxTextRowWidth = math.max(1, (options.width or maxWidth) - padding - textRowRightPadding)
     local titleText = resolveText(options.title or debugLayout and debugLayout.title)
     local sourceSections = {}
     if debugLayout then
@@ -2795,6 +2813,10 @@ function lia.derma.drawBoxWithText(text, x, y, options)
                         prepared.label = ""
                     end
 
+                    if truncateTextRows and prepared.text ~= "" and prepared.label == "" and prepared.value == "" then
+                        prepared.text = fitTextToWidth(prepared.text, maxTextRowWidth, rowFont, textRowSuffix)
+                    end
+
                     surface.SetFont(rowFont)
                     local labelWidth = prepared.label ~= "" and surface.GetTextSize(prepared.label) or 0
                     local textWidth = prepared.text ~= "" and surface.GetTextSize(prepared.text) or 0
@@ -2806,6 +2828,9 @@ function lia.derma.drawBoxWithText(text, x, y, options)
                 end
             else
                 prepared.text = resolveText(row)
+                if truncateTextRows and prepared.text ~= "" then
+                    prepared.text = fitTextToWidth(prepared.text, maxTextRowWidth, rowFont, textRowSuffix)
+                end
                 surface.SetFont(rowFont)
                 local textWidth = surface.GetTextSize(prepared.text)
                 measuredWidth = math.max(measuredWidth, textWidth + padding * 2)
@@ -2890,11 +2915,11 @@ function lia.derma.drawBoxWithText(text, x, y, options)
     surface.DrawRect(boxX, boxY + 1, 3, math.min(22, boxHeight - 2))
     local currentY = boxY + padding
     if titleText ~= "" then
-        draw.SimpleText(string.upper(titleText), titleFont, boxX + padding + 14, currentY, accent, TEXT_ALIGN_LEFT, TEXT_ALIGN_TOP)
+        draw.SimpleText(string.upper(titleText), titleFont, boxX + padding + titleInset, currentY, accent, TEXT_ALIGN_LEFT, TEXT_ALIGN_TOP)
         surface.SetDrawColor(255, 255, 255, 18)
         surface.SetFont(titleFont)
         local headerWidth = surface.GetTextSize(string.upper(titleText))
-        surface.DrawRect(boxX + padding + headerWidth + 18, currentY + 9, math.max(0, boxWidth - padding * 2 - headerWidth - 18), 1)
+        surface.DrawRect(boxX + padding + titleInset + headerWidth + 4, currentY + 9, math.max(0, boxWidth - padding * 2 - titleInset - headerWidth - 4), 1)
         currentY = currentY + math.max(titleHeight, 18) + 14
     end
 

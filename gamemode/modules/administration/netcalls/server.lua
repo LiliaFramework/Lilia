@@ -1,9 +1,450 @@
-﻿local spawnCooldowns = {}
+local spawnCooldowns = {}
 local validToolTiers = {
     disabled = true,
     staff = true,
     basic = true
 }
+
+local function canViewNetProfiler(client)
+    return IsValid(client) and client:hasPrivilege("viewNetProfiler")
+end
+
+local validNetLogViews = {
+    session = true,
+    players = true
+}
+
+local validNetLogSorts = {
+    calls = true,
+    usage = true,
+    message = true,
+    direction = true,
+    source = true,
+    totalBytes = true,
+    avgBytes = true,
+    minBytes = true,
+    maxBytes = true,
+    playerName = true,
+    firstAt = true,
+    lastAt = true
+}
+
+local validNetLogUsageFilters = {
+    all = true,
+    dominant = true,
+    high = true,
+    medium = true,
+    low = true
+}
+
+local validNetLogSourceFilters = {
+    all = true,
+    live = true,
+    snapshot = true
+}
+
+local validNetLogTimeRanges = {
+    [0] = true,
+    [300] = true,
+    [900] = true,
+    [3600] = true,
+    [21600] = true
+}
+
+local function readNetProfilerSnapshot()
+    local snapshotPath = (lia.net and lia.net.profiler and lia.net.profiler.snapshotDir or "netprof") .. "/latest_snapshot.json"
+    if not file.Exists(snapshotPath, "DATA") then
+        return {
+            available = false,
+            message = "No network profiler snapshot has been generated yet.",
+            snapshotPath = snapshotPath
+        }
+    end
+
+    local raw = file.Read(snapshotPath, "DATA")
+    local parsed = raw and util.JSONToTable(raw) or nil
+    if not istable(parsed) then
+        return {
+            available = false,
+            message = "The latest network profiler snapshot could not be read.",
+            snapshotPath = snapshotPath
+        }
+    end
+
+    parsed.available = true
+    parsed.snapshotPath = snapshotPath
+    parsed.profilerActive = true
+    parsed.snapshotInterval = lia.net and lia.net.profiler and lia.net.profiler.snapshotInterval or 0
+    return parsed
+end
+
+local function sendNetProfilerSnapshot(client)
+    net.Start("liaNetProfilerSnapshot")
+    net.WriteTable(readNetProfilerSnapshot())
+    net.Send(client)
+end
+
+local function splitProfilerMessageKey(value)
+    local raw = string.Trim(tostring(value or ""))
+    local direction, message = raw:match("^([^|]+)|(.+)$")
+    direction = string.Trim(tostring(direction or "Unknown"))
+    message = string.Trim(tostring(message or raw))
+    if direction == "" then direction = "Unknown" end
+    if message == "" then message = "unknown" end
+    return direction, message
+end
+
+local function copySessionRow(row, fallbackID)
+    local calls = math.max(math.floor(tonumber(row.calls or row.count) or 0), 0)
+    local totalBytes = math.max(math.floor(tonumber(row.totalBytes or row.bytes) or 0), 0)
+    local minBytes = math.max(math.floor(tonumber(row.minBytes) or 0), 0)
+    local maxBytes = math.max(math.floor(tonumber(row.maxBytes) or 0), 0)
+    return {
+        id = tostring(row.id or fallbackID),
+        key = tostring(row.key or fallbackID),
+        message = tostring(row.message or row.name or "unknown"),
+        direction = tostring(row.direction or "Unknown"),
+        source = tostring(row.source or "live"),
+        calls = calls,
+        totalBytes = totalBytes,
+        avgBytes = calls > 0 and totalBytes / calls or tonumber(row.avgBytes) or 0,
+        minBytes = minBytes,
+        maxBytes = maxBytes,
+        firstAt = math.max(math.floor(tonumber(row.firstAt) or 0), 0),
+        lastAt = math.max(math.floor(tonumber(row.lastAt) or 0), 0)
+    }
+end
+
+local function collectLiveSessionRows()
+    local rows = {}
+    local tracker = lia.net and lia.net.profiler and lia.net.profiler.sessionTracker or nil
+    if istable(tracker) and istable(tracker.messages) then
+        for key, row in pairs(tracker.messages) do
+            if istable(row) then rows[#rows + 1] = copySessionRow(row, "live|" .. tostring(key)) end
+        end
+    end
+
+    if #rows == 0 then
+        local counts = lia.net and lia.net.profiler and lia.net.profiler.messageCounts or nil
+        if istable(counts) then
+            for key, count in pairs(counts) do
+                local numericCount = math.max(math.floor(tonumber(count) or 0), 0)
+                if numericCount > 0 then
+                    local direction, message = splitProfilerMessageKey(key)
+                    rows[#rows + 1] = {
+                        id = "live|" .. tostring(key),
+                        key = tostring(key),
+                        message = message,
+                        direction = direction,
+                        source = "live",
+                        calls = numericCount,
+                        totalBytes = 0,
+                        avgBytes = 0,
+                        minBytes = 0,
+                        maxBytes = 0,
+                        firstAt = 0,
+                        lastAt = 0
+                    }
+                end
+            end
+        end
+    end
+
+    return rows
+end
+
+local function collectSnapshotRows(snapshot)
+    local rows = {}
+    local messages = istable(snapshot.messages) and snapshot.messages or snapshot.topMessages
+    for _, entry in ipairs(istable(messages) and messages or {}) do
+        if istable(entry) then
+            local key = tostring(entry.key or entry.message or entry.name or "unknown")
+            local direction, message = splitProfilerMessageKey(key)
+            if entry.direction then direction = tostring(entry.direction) end
+            if entry.name or entry.messageName then message = tostring(entry.name or entry.messageName) end
+            local calls = math.max(math.floor(tonumber(entry.calls or entry.count or entry.usage) or 0), 0)
+            if calls > 0 then
+                rows[#rows + 1] = copySessionRow({
+                    id = "snapshot|" .. key,
+                    key = key,
+                    message = message,
+                    direction = direction,
+                    source = "snapshot",
+                    calls = calls,
+                    totalBytes = entry.totalBytes or entry.bytes,
+                    avgBytes = entry.avgBytes,
+                    minBytes = entry.minBytes,
+                    maxBytes = entry.maxBytes,
+                    firstAt = entry.firstAt,
+                    lastAt = entry.lastAt
+                }, "snapshot|" .. key)
+            end
+        end
+    end
+    return rows
+end
+
+local function collectSessionRows(snapshot, requestedSource)
+    local liveRows = collectLiveSessionRows()
+    local snapshotRows = collectSnapshotRows(snapshot)
+    if requestedSource == "live" then return liveRows, "live" end
+    if requestedSource == "snapshot" then return snapshotRows, "snapshot" end
+    if #liveRows > 0 then return liveRows, "live" end
+    return snapshotRows, "snapshot"
+end
+
+local function collectPlayerRows()
+    local rows = {}
+    local players = {}
+    local tracker = lia.net and lia.net.profiler and lia.net.profiler.sessionTracker or nil
+    for steamID64, playerData in pairs(istable(tracker) and tracker.players or {}) do
+        local playerName = tostring(playerData.playerName or "Unknown")
+        local steamID = tostring(playerData.steamID or "UNKNOWN")
+        players[#players + 1] = {
+            steamID64 = tostring(steamID64),
+            steamID = steamID,
+            playerName = playerName,
+            online = playerData.online == true,
+            totalCalls = math.max(math.floor(tonumber(playerData.totalCalls) or 0), 0),
+            totalBytes = math.max(math.floor(tonumber(playerData.totalBytes) or 0), 0),
+            lastAt = math.max(math.floor(tonumber(playerData.lastAt) or 0), 0)
+        }
+        for key, entry in pairs(istable(playerData.messages) and playerData.messages or {}) do
+            if istable(entry) then
+                local calls = math.max(math.floor(tonumber(entry.calls) or 0), 0)
+                local totalBytes = math.max(math.floor(tonumber(entry.totalBytes) or 0), 0)
+                rows[#rows + 1] = {
+                    id = tostring(entry.id or steamID64 .. "|" .. key),
+                    steamID64 = tostring(steamID64),
+                    steamID = tostring(entry.steamID or steamID),
+                    playerName = tostring(entry.playerName or playerName),
+                    online = entry.online == true,
+                    message = tostring(entry.message or "unknown"),
+                    direction = tostring(entry.direction or "Unknown"),
+                    source = "live",
+                    calls = calls,
+                    totalBytes = totalBytes,
+                    avgBytes = calls > 0 and totalBytes / calls or 0,
+                    minBytes = math.max(math.floor(tonumber(entry.minBytes) or 0), 0),
+                    maxBytes = math.max(math.floor(tonumber(entry.maxBytes) or 0), 0),
+                    firstAt = math.max(math.floor(tonumber(entry.firstAt) or 0), 0),
+                    lastAt = math.max(math.floor(tonumber(entry.lastAt) or 0), 0)
+                }
+            end
+        end
+    end
+
+    table.sort(players, function(a, b)
+        local an = a.playerName:lower()
+        local bn = b.playerName:lower()
+        if an == bn then return a.steamID64 < b.steamID64 end
+        return an < bn
+    end)
+    return rows, players
+end
+
+local function getTrackerTotals()
+    local tracker = lia.net and lia.net.profiler and lia.net.profiler.sessionTracker or {}
+    local directionTotals = istable(tracker.directionTotals) and tracker.directionTotals or {}
+    local inbound = directionTotals["C->S"] or {}
+    local outbound = directionTotals["S->C"] or {}
+    local startedAt = math.max(math.floor(tonumber(tracker.startedAt) or 0), 0)
+    return {
+        totalCalls = math.max(math.floor(tonumber(tracker.totalCalls) or 0), 0),
+        totalBytes = math.max(math.floor(tonumber(tracker.totalBytes) or 0), 0),
+        uniqueMessages = table.Count(istable(tracker.messages) and tracker.messages or {}),
+        uniquePlayers = table.Count(istable(tracker.uniquePlayers) and tracker.uniquePlayers or {}),
+        sessionStartedAt = startedAt,
+        sessionDuration = startedAt > 0 and math.max(os.time() - startedAt, 0) or 0,
+        inboundCalls = math.max(math.floor(tonumber(inbound.calls) or 0), 0),
+        inboundBytes = math.max(math.floor(tonumber(inbound.bytes) or 0), 0),
+        outboundCalls = math.max(math.floor(tonumber(outbound.calls) or 0), 0),
+        outboundBytes = math.max(math.floor(tonumber(outbound.bytes) or 0), 0)
+    }
+end
+
+local function matchesUsageFilter(usage, filter)
+    if filter == "dominant" then return usage >= 25 end
+    if filter == "high" then return usage >= 10 and usage < 25 end
+    if filter == "medium" then return usage >= 2 and usage < 10 end
+    if filter == "low" then return usage < 2 end
+    return true
+end
+
+local function compareRows(a, b, sortBy, sortDesc)
+    local aValue = a[sortBy]
+    local bValue = b[sortBy]
+    if isstring(aValue) then aValue = aValue:lower() end
+    if isstring(bValue) then bValue = bValue:lower() end
+    aValue = aValue or 0
+    bValue = bValue or 0
+    if aValue == bValue then
+        local aPlayer = tostring(a.playerName or ""):lower()
+        local bPlayer = tostring(b.playerName or ""):lower()
+        if aPlayer ~= bPlayer then return aPlayer < bPlayer end
+        local aMessage = tostring(a.message or ""):lower()
+        local bMessage = tostring(b.message or ""):lower()
+        if aMessage ~= bMessage then return aMessage < bMessage end
+        return tostring(a.id or "") < tostring(b.id or "")
+    end
+    if sortDesc then return aValue > bValue end
+    return aValue < bValue
+end
+
+local function getNetProfilerLogsPayload(request)
+    local view = validNetLogViews[request.view] and request.view or "session"
+    local snapshot = readNetProfilerSnapshot()
+    local sourceFilter = validNetLogSourceFilters[request.source] and request.source or "all"
+    local rows
+    local players = {}
+    local sourceMode
+    if view == "players" then
+        rows, players = collectPlayerRows()
+        sourceMode = "live"
+    else
+        rows, sourceMode = collectSessionRows(snapshot, sourceFilter)
+    end
+
+    local baseTotals = getTrackerTotals()
+    if view == "session" and sourceMode == "snapshot" then
+        local snapshotTotals = istable(snapshot.totals) and snapshot.totals or {}
+        local totalCalls = 0
+        local totalBytes = 0
+        for _, row in ipairs(rows) do
+            totalCalls = totalCalls + row.calls
+            totalBytes = totalBytes + row.totalBytes
+        end
+        baseTotals.totalCalls = math.max(totalCalls, math.floor(tonumber(snapshotTotals.totalCalls or snapshotTotals.trackedMessages) or 0))
+        baseTotals.totalBytes = math.max(totalBytes, math.floor(tonumber(snapshotTotals.totalBytes) or 0))
+        baseTotals.uniqueMessages = #rows
+        baseTotals.uniquePlayers = math.max(math.floor(tonumber(snapshotTotals.uniquePlayers) or 0), 0)
+        baseTotals.sessionStartedAt = math.max(math.floor(tonumber(snapshot.sessionStartedAt) or 0), 0)
+        baseTotals.sessionDuration = math.max(math.floor(tonumber(snapshot.sessionDuration) or 0), 0)
+        baseTotals.inboundCalls = math.max(math.floor(tonumber(snapshotTotals.inboundCalls) or 0), 0)
+        baseTotals.inboundBytes = math.max(math.floor(tonumber(snapshotTotals.inboundBytes) or 0), 0)
+        baseTotals.outboundCalls = math.max(math.floor(tonumber(snapshotTotals.outboundCalls) or 0), 0)
+        baseTotals.outboundBytes = math.max(math.floor(tonumber(snapshotTotals.outboundBytes) or 0), 0)
+    end
+
+    local usageDenominator = math.max(baseTotals.totalCalls, 0)
+    for _, row in ipairs(rows) do
+        row.usage = usageDenominator > 0 and row.calls / usageDenominator * 100 or 0
+    end
+
+    local search = string.Trim(string.sub(tostring(request.search or ""), 1, 128)):lower()
+    local direction = string.Trim(string.sub(tostring(request.direction or "all"), 1, 64))
+    local directionLower = direction:lower()
+    local playerFilter = string.Trim(string.sub(tostring(request.player or "all"), 1, 32))
+    local usageFilter = validNetLogUsageFilters[request.usage] and request.usage or "all"
+    local sortBy = validNetLogSorts[request.sortBy] and request.sortBy or "calls"
+    local sortDesc = request.sortDesc ~= false
+    local minCalls = math.max(math.floor(tonumber(request.minCalls) or 0), 0)
+    local maxCalls = math.max(math.floor(tonumber(request.maxCalls) or 0), 0)
+    local minBytes = math.max(math.floor(tonumber(request.minBytes) or 0), 0)
+    local maxBytes = math.max(math.floor(tonumber(request.maxBytes) or 0), 0)
+    local timeRange = math.max(math.floor(tonumber(request.timeRange) or 0), 0)
+    if not validNetLogTimeRanges[timeRange] then timeRange = 0 end
+    local minimumTimestamp = timeRange > 0 and os.time() - timeRange or 0
+    local pageSize = math.Clamp(math.floor(tonumber(request.pageSize) or 25), 10, 100)
+    local page = math.max(math.floor(tonumber(request.page) or 1), 1)
+    local directions = {}
+    local seenDirections = {}
+    for _, row in ipairs(rows) do
+        local key = row.direction:lower()
+        if not seenDirections[key] then
+            seenDirections[key] = true
+            directions[#directions + 1] = row.direction
+        end
+    end
+    table.sort(directions, function(a, b) return a:lower() < b:lower() end)
+
+    local filtered = {}
+    local matchedCalls = 0
+    local matchedBytes = 0
+    local matchedPlayers = {}
+    for _, row in ipairs(rows) do
+        local searchable = table.concat({tostring(row.playerName or ""), tostring(row.steamID or ""), tostring(row.steamID64 or ""), tostring(row.message or ""), tostring(row.direction or ""), tostring(row.source or "")}, " "):lower()
+        local matchesSearch = search == "" or searchable:find(search, 1, true) ~= nil
+        local matchesDirection = directionLower == "all" or row.direction:lower() == directionLower
+        local matchesPlayer = view ~= "players" or playerFilter == "all" or row.steamID64 == playerFilter
+        local matchesMinimumCalls = row.calls >= minCalls
+        local matchesMaximumCalls = maxCalls == 0 or row.calls <= maxCalls
+        local matchesMinimumBytes = row.totalBytes >= minBytes
+        local matchesMaximumBytes = maxBytes == 0 or row.totalBytes <= maxBytes
+        local matchesTime = minimumTimestamp == 0 or row.lastAt >= minimumTimestamp
+        local matchesUsage = view ~= "session" or matchesUsageFilter(row.usage, usageFilter)
+        if matchesSearch and matchesDirection and matchesPlayer and matchesMinimumCalls and matchesMaximumCalls and matchesMinimumBytes and matchesMaximumBytes and matchesTime and matchesUsage then
+            filtered[#filtered + 1] = row
+            matchedCalls = matchedCalls + row.calls
+            matchedBytes = matchedBytes + row.totalBytes
+            if row.steamID64 then matchedPlayers[row.steamID64] = true end
+        end
+    end
+
+    table.sort(filtered, function(a, b) return compareRows(a, b, sortBy, sortDesc) end)
+    local resultCount = #filtered
+    local pageCount = math.max(math.ceil(resultCount / pageSize), 1)
+    page = math.Clamp(page, 1, pageCount)
+    local firstIndex = (page - 1) * pageSize + 1
+    local lastIndex = math.min(firstIndex + pageSize - 1, resultCount)
+    local pageRows = {}
+    for index = firstIndex, lastIndex do
+        local row = filtered[index]
+        if row then
+            local copy = table.Copy(row)
+            copy.rank = index
+            pageRows[#pageRows + 1] = copy
+        end
+    end
+
+    local profilerActive = true
+    local snapshotInterval = lia.net and lia.net.profiler and lia.net.profiler.snapshotInterval or tonumber(snapshot.snapshotInterval) or 0
+    local available = #rows > 0 or view == "session" and sourceMode == "snapshot" and snapshot.available == true
+    local capturedAt = sourceMode == "live" and os.time() or tonumber(snapshot.capturedAt) or 0
+    local statusMessage
+    if view == "players" then
+        statusMessage = #rows > 0 and "Showing per-player network activity from the current profiler session." or "No player network activity has been captured in the current session."
+    elseif #rows > 0 then
+        statusMessage = sourceMode == "live" and "Showing current session network usage and bandwidth." or "Showing the latest saved profiler snapshot."
+    else
+        statusMessage = snapshot.message or "No network message usage has been captured yet."
+    end
+
+    baseTotals.matchedCalls = matchedCalls
+    baseTotals.matchedBytes = matchedBytes
+    baseTotals.matchedRows = resultCount
+    baseTotals.matchedPlayers = table.Count(matchedPlayers)
+    return {
+        requestId = request.requestId or 0,
+        view = view,
+        available = available,
+        message = statusMessage,
+        profilerActive = profilerActive,
+        sourceMode = sourceMode,
+        snapshotPath = snapshot.snapshotPath,
+        capturedAt = capturedAt,
+        fetchedAt = os.time(),
+        snapshotInterval = snapshotInterval,
+        totals = baseTotals,
+        pagination = {
+            page = page,
+            pageSize = pageSize,
+            pageCount = pageCount,
+            resultCount = resultCount,
+            firstIndex = resultCount > 0 and firstIndex or 0,
+            lastIndex = resultCount > 0 and lastIndex or 0
+        },
+        filters = {
+            directions = directions,
+            players = players
+        },
+        rows = pageRows
+    }
+end
+
+local function sendNetProfilerLogs(client, request)
+    lia.net.writeBigTable(client, "liaNetProfilerLogs", getNetProfilerLogsPayload(request))
+end
 
 lia.staffCharacterPermissions = lia.data.get("staffCharacterPermissions", {})
 lia.staffCharacterFlags = lia.data.get("staffCharacterFlags", {})
@@ -100,6 +541,38 @@ net.Receive("liaRequestToolPermissionTiers", function(_, client)
     if not IsValid(client) or not client:hasPrivilege("manageUsergroups") then return end
     sendToolPermissionTiers(client)
 end)
+
+net.Receive("liaRequestNetProfilerSnapshot", function(_, client)
+    if not canViewNetProfiler(client) then return end
+    sendNetProfilerSnapshot(client)
+end)
+
+net.Receive("liaRequestNetProfilerLogs", function(_, client)
+    if not canViewNetProfiler(client) then return end
+    if (client.liaNextNetProfilerRequest or 0) > CurTime() then return end
+    client.liaNextNetProfilerRequest = CurTime() + 0.15
+    local request = {
+        requestId = net.ReadUInt(32),
+        view = net.ReadString(),
+        page = net.ReadUInt(16),
+        pageSize = net.ReadUInt(8),
+        search = net.ReadString(),
+        direction = net.ReadString(),
+        usage = net.ReadString(),
+        source = net.ReadString(),
+        player = net.ReadString(),
+        timeRange = net.ReadUInt(32),
+        sortBy = net.ReadString(),
+        sortDesc = net.ReadBool(),
+        minCalls = net.ReadUInt(32),
+        maxCalls = net.ReadUInt(32),
+        minBytes = net.ReadUInt(32),
+        maxBytes = net.ReadUInt(32)
+    }
+
+    sendNetProfilerLogs(client, request)
+end)
+
 
 net.Receive("liaSetToolPermissionTier", function(_, client)
     if not IsValid(client) or not client:hasPrivilege("manageUsergroups") then return end
@@ -860,31 +1333,247 @@ FROM lia_players
     end)
 end)
 
-net.Receive("liaRequestMapEntities", function(_, client)
-    lia.debug("[Permissions]", "Permission Check for net.Receive liaRequestMapEntities", "hasPrivilege(manageCharacters)=", tostring(client:hasPrivilege("manageCharacters")), "finalResult=", tostring(client:hasPrivilege("manageCharacters")))
-    if not client:hasPrivilege("manageCharacters") then return end
-    local entities = {}
-    for _, entity in ents.Iterator() do
-        if IsValid(entity) and (entity:CreatedByMap() or entity:isDoor() or entity:isProp()) then
-            entities[#entities + 1] = {
-                class = entity:GetClass(),
-                model = entity:GetModel(),
-                name = entity:GetName() or entity.PrintName or "",
-                position = tostring(entity:GetPos()),
-                angles = tostring(entity:GetAngles()),
-                mapCreated = entity:CreatedByMap(),
-                isDoor = entity:isDoor(),
-                isProp = entity:isProp(),
-                health = entity:Health(),
-                maxHealth = entity:GetMaxHealth(),
-                material = entity:GetMaterial(),
-                skin = entity:GetSkin(),
-                color = entity:GetColor()
-            }
-        end
+local protectedPlayerEntityClasses = {
+    viewmodel = true,
+    predicted_viewmodel = true,
+    gmod_hands = true
+}
+
+local function getPlayerEntityOwner(entity)
+    if not IsValid(entity) then return end
+    if isfunction(entity.CPPIGetOwner) then
+        local owner = entity:CPPIGetOwner()
+        if IsValid(owner) and owner:IsPlayer() then return owner end
     end
 
-    lia.net.writeBigTable(client, "liaMapEntities", entities)
+    if isfunction(entity.GetCreator) then
+        local creator = entity:GetCreator()
+        if IsValid(creator) and creator:IsPlayer() then return creator end
+    end
+
+    if isfunction(entity.GetOwner) then
+        local owner = entity:GetOwner()
+        if IsValid(owner) and owner:IsPlayer() then return owner end
+    end
+
+    local directOwner = entity.client or entity.player or entity.ply
+    if IsValid(directOwner) and directOwner:IsPlayer() then return directOwner end
+
+    local steamID = entity.SteamID or entity.steamID
+    if isstring(steamID) and steamID ~= "" then
+        local owner = player.GetBySteamID(steamID)
+        if IsValid(owner) then return owner end
+    end
+
+    local steamID64 = entity.SteamID64 or entity.steamID64
+    if isstring(steamID64) and steamID64 ~= "" then
+        local owner = player.GetBySteamID64(steamID64)
+        if IsValid(owner) then return owner end
+    end
+
+    local characterID = tonumber(entity.liaCharID)
+    if characterID and characterID > 0 then
+        local character = lia.char.getCharacter(characterID)
+        local owner = character and character:getPlayer()
+        if IsValid(owner) then return owner end
+    end
+
+    local parent = entity:GetParent()
+    if IsValid(parent) and parent:IsPlayer() then return parent end
+end
+
+local function getPlayerEntityType(entity)
+    local class = entity:GetClass()
+    if class == "viewmodel" or class == "predicted_viewmodel" then return "Viewmodel" end
+    if class == "gmod_hands" then return "Hands" end
+    if entity:IsWeapon() then return "Weapon" end
+    if entity:IsVehicle() then return "Vehicle" end
+    if entity:IsNPC() then return "NPC" end
+    if entity:isDoor() then return "Door" end
+    if entity:isProp() then return "Prop" end
+    return "Entity"
+end
+
+local function getPlayerEntityName(entity)
+    local class = entity:GetClass()
+    local name = entity:GetName()
+    if isstring(name) and name ~= "" then return name end
+    if entity:IsWeapon() then
+        local stored = weapons.GetStored(class)
+        if stored and isstring(stored.PrintName) and stored.PrintName ~= "" then return stored.PrintName end
+    end
+
+    local stored = scripted_ents.GetStored(class)
+    if stored and stored.t and isstring(stored.t.PrintName) and stored.t.PrintName ~= "" then return stored.t.PrintName end
+    if isstring(entity.PrintName) and entity.PrintName ~= "" then return entity.PrintName end
+    return class:gsub("_", " "):gsub("(%a)([%w']*)", function(first, rest) return string.upper(first) .. string.lower(rest) end)
+end
+
+local function getPlayerEntityModel(entity)
+    local model = entity:GetModel()
+    if entity:IsWeapon() then
+        local stored = weapons.GetStored(entity:GetClass())
+        if stored and isstring(stored.WorldModel) and stored.WorldModel ~= "" then model = stored.WorldModel end
+    end
+    return isstring(model) and model or ""
+end
+
+local function getVectorData(vector)
+    return {
+        x = vector.x,
+        y = vector.y,
+        z = vector.z
+    }
+end
+
+local function getAngleData(angle)
+    return {
+        p = angle.p,
+        y = angle.y,
+        r = angle.r
+    }
+end
+
+local function buildPlayerEntitySnapshot()
+    local entities = {}
+    for _, entity in ents.Iterator() do
+        if not IsValid(entity) or entity:IsWorld() or entity:IsPlayer() or entity:IsWeapon() then continue end
+        local class = entity:GetClass()
+        if protectedPlayerEntityClasses[class] then continue end
+        local owner = getPlayerEntityOwner(entity)
+        if not IsValid(owner) then continue end
+        local color = entity:GetColor()
+        local char = owner:getChar()
+        local creationTime = isfunction(entity.GetCreationTime) and entity:GetCreationTime() or 0
+        entities[#entities + 1] = {
+            entityIndex = entity:EntIndex(),
+            clientSided = false,
+            class = class,
+            model = getPlayerEntityModel(entity),
+            name = getPlayerEntityName(entity),
+            type = getPlayerEntityType(entity),
+            position = getVectorData(entity:GetPos()),
+            angles = getAngleData(entity:GetAngles()),
+            mapCreated = entity:CreatedByMap(),
+            isDoor = entity:isDoor(),
+            isProp = entity:isProp(),
+            health = entity:Health(),
+            maxHealth = entity:GetMaxHealth(),
+            material = entity:GetMaterial() or "",
+            skin = entity:GetSkin() or 0,
+            color = {
+                r = color.r,
+                g = color.g,
+                b = color.b,
+                a = color.a
+            },
+            creationTime = creationTime,
+            ownerName = owner:Name(),
+            ownerCharacter = char and char:getName() or "",
+            ownerSteamID = owner:SteamID(),
+            ownerSteamID64 = owner:SteamID64(),
+            ownerUserGroup = owner:GetUserGroup(),
+            removable = not protectedPlayerEntityClasses[class]
+        }
+    end
+
+    table.sort(entities, function(a, b)
+        if a.ownerSteamID == b.ownerSteamID then
+            if a.name == b.name then return a.entityIndex < b.entityIndex end
+            return string.lower(a.name) < string.lower(b.name)
+        end
+        return string.lower(a.ownerName) < string.lower(b.ownerName)
+    end)
+    return entities
+end
+
+local function sendPlayerEntitySnapshot(client)
+    if not IsValid(client) or not client:hasPrivilege("viewEntityTab") then return end
+    lia.net.writeBigTable(client, "liaMapEntities", buildPlayerEntitySnapshot())
+end
+
+local function findPlayerEntityTeleportPosition(client, entity)
+    local mins, maxs = client:GetHull()
+    local center = entity:WorldSpaceCenter()
+    local offsets = {
+        Vector(0, 0, math.max(maxs.z + 32, 96)),
+        entity:GetForward() * 96 + Vector(0, 0, 32),
+        entity:GetForward() * -96 + Vector(0, 0, 32),
+        entity:GetRight() * 96 + Vector(0, 0, 32),
+        entity:GetRight() * -96 + Vector(0, 0, 32)
+    }
+
+    for _, offset in ipairs(offsets) do
+        local position = center + offset
+        local trace = util.TraceHull({
+            start = position,
+            endpos = position,
+            mins = mins,
+            maxs = maxs,
+            mask = MASK_PLAYERSOLID,
+            filter = {client, entity}
+        })
+
+        if not trace.StartSolid and not trace.AllSolid then return position end
+    end
+
+    return center + Vector(0, 0, 128)
+end
+
+net.Receive("liaRequestMapEntities", function(_, client)
+    local allowed = client:hasPrivilege("viewEntityTab")
+    lia.debug("[Permissions]", "Permission Check for net.Receive liaRequestMapEntities", "hasPrivilege(viewEntityTab)=", tostring(allowed), "finalResult=", tostring(allowed))
+    if not allowed then return end
+    sendPlayerEntitySnapshot(client)
+end)
+
+net.Receive("liaMapEntityAction", function(_, client)
+    if not client:hasPrivilege("viewEntityTab") then return end
+    local action = net.ReadUInt(2)
+    local entityIndex = net.ReadUInt(16)
+    local entity = Entity(entityIndex)
+    if not IsValid(entity) or entity:IsWorld() or entity:IsPlayer() or entity:IsWeapon() or protectedPlayerEntityClasses[entity:GetClass()] or not IsValid(getPlayerEntityOwner(entity)) then
+        client:notifyError("The selected entity is no longer available or cannot be managed from this menu.")
+        return
+    end
+
+    if action == 1 then
+        if not client:hasPrivilege("command_goto") then
+            client:notifyError("You do not have permission to teleport to entities.")
+            return
+        end
+
+        local position = findPlayerEntityTeleportPosition(client, entity)
+        client:SetPos(position)
+        client:SetLocalVelocity(vector_origin)
+        client:SetEyeAngles((entity:WorldSpaceCenter() - client:EyePos()):Angle())
+        client:notifySuccess("Teleported to " .. getPlayerEntityName(entity) .. ".")
+        return
+    end
+
+    if action ~= 2 then return end
+    local class = entity:GetClass()
+    if protectedPlayerEntityClasses[class] then
+        client:notifyError("This entity is protected and cannot be removed.")
+        return
+    end
+
+    local canRemove
+    if entity:CreatedByMap() then
+        canRemove = client:hasPrivilege("canRemoveWorldEntities")
+    else
+        canRemove = client:hasPrivilege("canRemoveBlockedEntities") or client:hasPrivilege("canRemoveWorldEntities")
+    end
+
+    if not canRemove then
+        client:notifyError("You do not have permission to remove this entity.")
+        return
+    end
+
+    local entityName = getPlayerEntityName(entity)
+    SafeRemoveEntity(entity)
+    client:notifySuccess("Removed " .. entityName .. ".")
+    timer.Simple(0, function() sendPlayerEntitySnapshot(client) end)
 end)
 
 net.Receive("liaRequestOnlineStaffData", function(_, client)

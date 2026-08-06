@@ -72,7 +72,7 @@
         PreFreelookToggle(boolean enabled)
 
     Purpose:
-        Runs before the freelook console command changes freelook state.
+        Runs before manual freelook input from the configurable keybind or console command changes state.
 
     Category:
         Camera
@@ -100,7 +100,7 @@
         FreelookToggled(boolean enabled)
 
     Purpose:
-        Runs after the freelook console command changes freelook state.
+        Runs after manual freelook input from the configurable keybind or console command changes state.
 
     Category:
         Camera
@@ -149,12 +149,16 @@ local clmp = math.Clamp
 crouchFactor = 0
 local diff, fm, sm
 local freelooking = false
+local automaticFreelooking = false
 local freelookX = 0
 local freelookY = 0
 local freelookInitialAngles = Angle()
 local freelookCurrentAngles = Angle()
 local freelookWasHolding = false
 local zeroAngle = Angle()
+local movementKeys = bit.bor(IN_FORWARD, IN_BACK, IN_MOVELEFT, IN_MOVERIGHT)
+local automaticFreelookSpeedSqr = 25
+local freelookMouseThreshold = 0.001
 local hiddenBoneScale = Vector(0.001, 0.001, 0.001)
 local visibleBoneScale = Vector(1, 1, 1)
 local hiddenBoneOffset = Vector(0, 0, 16384)
@@ -347,13 +351,7 @@ end
         Client
 ]]
 function lia.camera.canUseFreelook(client)
-    if not IsValid(client) or client ~= LocalPlayer() then return false end
-    if client.IsInAdminEntityView then return false end
-    if lia.camera.isCharacterMenuOpen() then return false end
-    if not client:getChar() then return false end
-    if client:GetViewEntity() ~= client then return false end
-    if lia.camera.isUsingThirdPersonCamera(client) then return false end
-    return lia.option.get("freelookEnabled", false)
+    return IsValid(client) and client == LocalPlayer() and lia.option.get("freelookEnabled", false)
 end
 
 --[[
@@ -392,30 +390,127 @@ end
     Function: lia.camera.isHoldingFreelookBind
 
     Purpose:
-        Checks whether the player is holding the freelook bind or the fallback walk key.
+        Checks whether the configurable Lilia freelook keybind or the legacy `+freelook` command is being held.
 
     Parameters:
         client (Player)
-            The local player whose input state should be checked.
+            The local player whose freelook input state should be checked.
 
     Example Usage:
         ```lua
-        local allowed = lia.camera.isHoldingFreelookBind()
-        if allowed then
-            print("lia.camera.isHoldingFreelookBind returned true for the current context.")
+        local held = lia.camera.isHoldingFreelookBind(LocalPlayer())
+        if held then
+            print("The manual freelook bind is held.")
         end
         ```
 
     Returns:
         boolean
-            True when freelook input is currently being held.
+            True when manual freelook input is currently held.
 
     Realm:
         Client
 ]]
 function lia.camera.isHoldingFreelookBind(client)
-    if not input.LookupBinding("freelook") then return client:KeyDown(IN_WALK) end
-    return freelooking
+    return IsValid(client) and freelooking
+end
+
+--[[
+    Function: lia.camera.isPlayerStationary
+
+    Purpose:
+        Checks whether the player is stationary enough to begin or continue automatic freelook.
+
+    Parameters:
+        client (Player)
+            The local player whose movement state should be checked.
+
+    Example Usage:
+        ```lua
+        if lia.camera.isPlayerStationary(LocalPlayer()) then
+            print("Automatic freelook may start after mouse movement.")
+        end
+        ```
+
+    Returns:
+        boolean
+            True when no movement keys are held and horizontal velocity is effectively zero.
+
+    Realm:
+        Client
+]]
+function lia.camera.isPlayerStationary(client)
+    if not IsValid(client) or client:KeyDown(movementKeys) then return false end
+    local velocity = client:GetVelocity()
+    return velocity.x * velocity.x + velocity.y * velocity.y <= automaticFreelookSpeedSqr
+end
+
+--[[
+    Function: lia.camera.hasFreelookMouseInput
+
+    Purpose:
+        Checks whether mouse input is large enough to intentionally move the freelook camera.
+
+    Parameters:
+        x (number)
+            Horizontal mouse delta.
+
+        y (number)
+            Vertical mouse delta.
+
+    Example Usage:
+        ```lua
+        if lia.camera.hasFreelookMouseInput(x, y) then
+            print("The player moved the camera.")
+        end
+        ```
+
+    Returns:
+        boolean
+            True when horizontal or vertical mouse input exceeds the freelook activation threshold.
+
+    Realm:
+        Client
+]]
+function lia.camera.hasFreelookMouseInput(x, y)
+    return math.abs(x or 0) > freelookMouseThreshold or math.abs(y or 0) > freelookMouseThreshold
+end
+
+--[[
+    Function: lia.camera.canStartAutomaticFreelook
+
+    Purpose:
+        Determines whether mouse movement should automatically begin freelook while the player is stationary.
+
+    Parameters:
+        client (Player)
+            The local player attempting to begin automatic freelook.
+
+        x (number)
+            Horizontal mouse delta.
+
+        y (number)
+            Vertical mouse delta.
+
+    Example Usage:
+        ```lua
+        if lia.camera.canStartAutomaticFreelook(LocalPlayer(), x, y) then
+            lia.camera.beginFreelook(LocalPlayer(), true)
+        end
+        ```
+
+    Returns:
+        boolean
+            True when freelook is available, the player is stationary, and the mouse is moving.
+
+    Realm:
+        Client
+]]
+function lia.camera.canStartAutomaticFreelook(client, x, y)
+    if not lia.camera.canUseFreelook(client) then return false end
+    if lia.camera.isInSights(client) then return false end
+    if not lia.camera.isPlayerStationary(client) then return false end
+    return lia.camera.hasFreelookMouseInput(x, y)
 end
 
 --[[
@@ -433,6 +528,7 @@ end
         Client
 ]]
 function lia.camera.resetFreelookState()
+    automaticFreelooking = false
     freelookX = 0
     freelookY = 0
     freelookCurrentAngles = zeroAngle
@@ -442,24 +538,28 @@ end
     Function: lia.camera.beginFreelook
 
     Purpose:
-        Captures the player's current eye angles and marks freelook as actively held.
+        Captures the player's current eye angles and begins manual or automatic freelook.
 
     Parameters:
         client (Player)
             The local player beginning freelook.
 
+        automatic (boolean|nil)
+            Whether freelook was automatically activated by stationary mouse movement.
+
     Example Usage:
         ```lua
-        lia.camera.beginFreelook()
+        lia.camera.beginFreelook(LocalPlayer(), true)
         ```
 
     Realm:
         Client
 ]]
-function lia.camera.beginFreelook(client)
+function lia.camera.beginFreelook(client, automatic)
     freelookInitialAngles = client:EyeAngles()
     freelookInitialAngles.r = 0
     freelookWasHolding = true
+    automaticFreelooking = automatic == true
 end
 
 --[[
@@ -479,6 +579,40 @@ end
 function lia.camera.endFreelook()
     freelookWasHolding = false
     lia.camera.resetFreelookState()
+end
+
+--[[
+    Function: lia.camera.setManualFreelook
+
+    Purpose:
+        Changes the manual freelook input state for both the Lilia keybind and legacy console commands.
+
+    Parameters:
+        enabled (boolean)
+            Whether manual freelook input should be considered held.
+
+    Example Usage:
+        ```lua
+        lia.camera.setManualFreelook(true)
+        lia.camera.setManualFreelook(false)
+        ```
+
+    Returns:
+        boolean
+            True when the state changed or already matched the requested state, false when a hook blocked it.
+
+    Realm:
+        Client
+]]
+function lia.camera.setManualFreelook(enabled)
+    enabled = enabled == true
+    if freelooking == enabled then return true end
+    if enabled and not lia.camera.canUseFreelook(LocalPlayer()) then return false end
+    if hook.Run("PreFreelookToggle", enabled) == false then return false end
+    freelooking = enabled
+    if not enabled and freelookWasHolding then lia.camera.endFreelook() end
+    hook.Run("FreelookToggled", enabled)
+    return true
 end
 
 --[[
@@ -508,7 +642,7 @@ end
 ]]
 function lia.camera.shouldDrawBodyForFreelook(client)
     if not lia.camera.canUseFreelook(client) then return false end
-    return lia.camera.isHoldingFreelookBind(client) or math.abs(freelookCurrentAngles.p) >= 0.05 or math.abs(freelookCurrentAngles.y) >= 0.05
+    return freelookWasHolding and (math.abs(freelookCurrentAngles.p) >= 0.05 or math.abs(freelookCurrentAngles.y) >= 0.05)
 end
 
 --[[
@@ -905,10 +1039,90 @@ function lia.camera.setFirstPersonHeadHidden(client, hidden)
 end
 
 --[[
+    Function: lia.camera.getFreelookHeadPoseParameters
+
+    Purpose:
+        Finds and caches the current model's head pitch and head yaw pose parameters.
+
+    Parameters:
+        client (Player)
+            The local player whose model pose parameters should be inspected.
+
+    Example Usage:
+        ```lua
+        local pitch, yaw = lia.camera.getFreelookHeadPoseParameters(LocalPlayer())
+        ```
+
+    Returns:
+        number, number
+            The head pitch and head yaw pose parameter indexes, or negative values when unsupported.
+
+    Realm:
+        Client
+]]
+function lia.camera.getFreelookHeadPoseParameters(client)
+    local model = client:GetModel() or ""
+    if client.liaFreelookHeadPoseModel ~= model then
+        client.liaFreelookHeadPoseModel = model
+        client.liaFreelookHeadPitchParameter = client:LookupPoseParameter("head_pitch")
+        client.liaFreelookHeadYawParameter = client:LookupPoseParameter("head_yaw")
+    end
+    return client.liaFreelookHeadPitchParameter, client.liaFreelookHeadYawParameter
+end
+
+--[[
+    Function: lia.camera.updateFreelookHead
+
+    Purpose:
+        Applies the horizontal freelook camera offset to only the local player's head yaw without rotating the body.
+
+    Parameters:
+        client (Player)
+            The local player whose head pose should be updated.
+
+    Example Usage:
+        ```lua
+        lia.camera.updateFreelookHead(LocalPlayer())
+        ```
+
+    Realm:
+        Client
+]]
+function lia.camera.updateFreelookHead(client)
+    if not IsValid(client) then return end
+    local active = lia.camera.canUseFreelook(client) and freelookWasHolding
+    if not active and not client.liaFreelookHeadActive then return end
+    local targetYaw = active and freelookCurrentAngles.y or 0
+    local fraction = clmp(FrameTime() * 14, 0, 1)
+    client.liaFreelookHeadYaw = Lerp(fraction, client.liaFreelookHeadYaw or 0, targetYaw)
+    local pitchParameter, yawParameter = lia.camera.getFreelookHeadPoseParameters(client)
+    local changed = false
+    if pitchParameter and pitchParameter >= 0 then
+        client:SetPoseParameter("head_pitch", 0)
+        changed = true
+    end
+
+    if yawParameter and yawParameter >= 0 then
+        local minimum, maximum = client:GetPoseParameterRange(yawParameter)
+        client:SetPoseParameter("head_yaw", clmp(client.liaFreelookHeadYaw, minimum, maximum))
+        changed = true
+    end
+
+    local centered = math.abs(client.liaFreelookHeadYaw) <= 0.05
+    client.liaFreelookHeadActive = active or not centered
+    if not client.liaFreelookHeadActive then
+        client.liaFreelookHeadYaw = 0
+        if yawParameter and yawParameter >= 0 then client:SetPoseParameter("head_yaw", 0) end
+    end
+
+    if changed then client:InvalidateBoneCache() end
+end
+
+--[[
     Function: lia.camera.applyFreelookToAngles
 
     Purpose:
-        Applies the current freelook offset to a camera angle when freelook is available.
+        Applies the current horizontal freelook offset to a camera angle when freelook is available.
 
     Parameters:
         client (Player)
@@ -933,21 +1147,14 @@ end
         Client
 ]]
 function lia.camera.applyFreelookToAngles(client, angles)
-    if not lia.camera.canUseFreelook(client) then
-        lia.camera.endFreelook()
+    if not lia.camera.canUseFreelook(client) or not freelooking then
+        if freelookWasHolding then lia.camera.endFreelook() end
         return angles
     end
 
+    if not freelookWasHolding then lia.camera.beginFreelook(client, false) end
     local smoothness = clmp(lia.option.get("freelookSmoothness", 1), 0.1, 2)
     freelookCurrentAngles = LerpAngle(0.15 * smoothness, freelookCurrentAngles, Angle(freelookY, -freelookX, 0))
-    local shouldReset = not lia.camera.isHoldingFreelookBind(client) and math.abs(freelookCurrentAngles.p) < 0.05
-    shouldReset = shouldReset or lia.camera.isInSights(client) and math.abs(freelookCurrentAngles.p) < 0.05
-    shouldReset = shouldReset or not system.HasFocus() or lia.camera.isUsingThirdPersonCamera(client)
-    if shouldReset then
-        freelookInitialAngles = angles + freelookCurrentAngles
-        lia.camera.endFreelook()
-        return angles
-    end
     return angles + freelookCurrentAngles
 end
 
@@ -1043,12 +1250,14 @@ end
 function lia.camera.buildFreelookBodyView(client, pos, ang, fov)
     if not lia.camera.shouldDrawBodyForFreelook(client) then return end
     local bodyView = lia.camera.buildRealisticView(client, pos, ang, fov)
-    if bodyView then return bodyView end
+    if bodyView then
+        bodyView.drawviewer = false
+        return bodyView
+    end
     return {
         origin = pos,
         angles = lia.camera.applyFreelookToAngles(client, ang),
-        fov = fov,
-        drawviewer = true
+        fov = fov
     }
 end
 
@@ -1195,19 +1404,17 @@ hook.Add("InputMouseApply", "liaThirdPersonInputMouseApply", function(cmd, x, y)
         return true
     end
 
-    if not lia.camera.canUseFreelook(owner) then return end
-    if hook.Run("ShouldUseFreelook", owner) == false then return end
-    local isHolding = lia.camera.isHoldingFreelookBind(owner)
-    if not isHolding or lia.camera.isInSights(owner) or lia.camera.isUsingThirdPersonCamera(owner) then
+    if not lia.camera.canUseFreelook(owner) or not lia.camera.isHoldingFreelookBind(owner) then
         if freelookWasHolding then lia.camera.endFreelook() end
         return
     end
 
-    if not freelookWasHolding then lia.camera.beginFreelook(owner) end
+    if not freelookWasHolding then lia.camera.beginFreelook(owner, false) end
     freelookInitialAngles.z = 0
     cmd:SetViewAngles(freelookInitialAngles)
-    freelookX = clmp(freelookX + x * 0.02, -lia.option.get("freelookLimitHorizontal", 90), lia.option.get("freelookLimitHorizontal", 90))
-    freelookY = clmp(freelookY + y * 0.02, -lia.option.get("freelookLimitVertical", 65), lia.option.get("freelookLimitVertical", 65))
+    local horizontalLimit = lia.option.get("freelookLimitHorizontal", 90)
+    freelookX = clmp(freelookX + x * 0.02, -horizontalLimit, horizontalLimit)
+    freelookY = clmp(freelookY + y * 0.02, -85, 85)
     return true
 end)
 
@@ -1219,19 +1426,17 @@ hook.Add("ShouldDrawLocalPlayer", "liaThirdPersonShouldDrawLocalPlayer", functio
     if lia.camera.shouldDrawBodyForFreelook(client) then return true end
 end)
 
-hook.Add("CalcViewModelView", "liaFreelookCalcViewModelView", function(weapon, _, _, _, _, angles)
+hook.Add("CalcViewModelView", "liaFreelookCalcViewModelView", function(weapon, _, _, _, position, angles)
     local client = LocalPlayer()
-    if not lia.camera.canUseFreelook(client) then return end
+    if not lia.camera.canUseFreelook(client) or not freelookWasHolding then return end
     local mwBased = weapon.m_AimModeDeltaVelocity and -1.5 or 1
-    angles.p = angles.p + freelookCurrentAngles.p / 2.5 * mwBased
     angles.y = angles.y + freelookCurrentAngles.y / 2.5 * mwBased
+    return position, angles
 end)
 
-hook.Add("StartCommand", "liaFreelookStartCommand", function(client, cmd)
-    if not client:IsPlayer() or not client:Alive() then return end
-    if not lia.camera.canUseFreelook(client) or not lia.option.get("freelookBlockADS", true) then return end
-    if not lia.camera.isHoldingFreelookBind(client) or lia.camera.isInSights(client) or lia.camera.isUsingThirdPersonCamera(client) then return end
-    cmd:RemoveKey(IN_ATTACK)
+hook.Add("UpdateAnimation", "liaFreelookUpdateHead", function(client)
+    if client ~= LocalPlayer() then return end
+    lia.camera.updateFreelookHead(client)
 end)
 
 hook.Add("EntityEmitSound", "liaThirdPersonEntityEmitSound", function(data)
@@ -1254,22 +1459,20 @@ end)
 hook.Add("SetupQuickMenu", "liaFreelookSetupQuickMenu", function(menu)
     menu:addCheck("Enable freelook", function(_, state)
         lia.option.set("freelookEnabled", state)
-        if state then
-            LocalPlayer():ChatPrint("Freelook enabled.")
-        else
-            LocalPlayer():ChatPrint("Freelook disabled.")
+        if not state then
+            lia.camera.setManualFreelook(false)
+            lia.camera.endFreelook()
         end
     end, lia.option.get("freelookEnabled", false))
 end)
 
-concommand.Add("+freelook", function()
-    if hook.Run("PreFreelookToggle", true) == false then return end
-    freelooking = true
-    hook.Run("FreelookToggled", true)
-end)
+lia.keybind.add("freelook", {
+    keyBind = KEY_ALT,
+    desc = "@freelookKeybindDesc",
+    category = "Camera",
+    onPress = function() lia.camera.setManualFreelook(true) end,
+    onRelease = function() lia.camera.setManualFreelook(false) end
+})
 
-concommand.Add("-freelook", function()
-    if hook.Run("PreFreelookToggle", false) == false then return end
-    freelooking = false
-    hook.Run("FreelookToggled", false)
-end)
+concommand.Add("+freelook", function() lia.camera.setManualFreelook(true) end)
+concommand.Add("-freelook", function() lia.camera.setManualFreelook(false) end)
