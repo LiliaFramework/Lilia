@@ -544,8 +544,12 @@ else
     end)
 
     lia.net.readBigTable("liaPlayerInteractCategories", function(data) if istable(data) then lia.playerinteract.categories = data end end)
+    local function isValidReloadPanel(panel)
+        return ispanel(panel) and IsValid(panel)
+    end
+
     local function shouldPreserveReloadPanel(panel)
-        if not IsValid(panel) then return true end
+        if not isValidReloadPanel(panel) then return true end
         local panelName = panel.GetName and panel:GetName() or ""
         if panelName == "liaChatBox" then return true end
         local initInfo = panel.Init and debug.getinfo(panel.Init, "Sln")
@@ -556,10 +560,10 @@ else
     local function cleanupReloadPanels()
         if lia.gui then
             for key, panel in pairs(lia.gui) do
-                if not shouldPreserveReloadPanel(panel) then
-                    if IsValid(panel) and panel.Remove then panel:Remove() end
+                if not isValidReloadPanel(panel) then
                     lia.gui[key] = nil
-                elseif not IsValid(panel) then
+                elseif not shouldPreserveReloadPanel(panel) then
+                    if panel.Remove then panel:Remove() end
                     lia.gui[key] = nil
                 end
             end

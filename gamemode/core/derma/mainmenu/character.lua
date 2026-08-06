@@ -621,7 +621,7 @@ function PANEL:createWelcomeScreen()
     local finalX, finalY = (ScrW() - containerW) / 2, (ScrH() - containerH) / 2
     container:SetPos(finalX, finalY + 30)
     container:SetAlpha(0)
-    local accentColor = lia.color.theme and lia.color.theme.theme or Color(116, 185, 255)
+    local accentColor = lia.color.theme.theme
     container.Paint = function(s, w, h)
         local bgColor = Color(25, 28, 35, 250)
         lia.derma.rect(0, 0, w, h):Rad(12):Color(Color(0, 0, 0, 180)):Shadow(15, 20):Shape(lia.derma.SHAPE_IOS):Draw()
@@ -761,7 +761,7 @@ function PANEL:createChangelogDisplay()
     self.changelogPanel:SetSize(ScrW() * 0.25, ScrH() * 0.4)
     self.changelogPanel:SetAlpha(0)
     self.changelogPanel:AlphaTo(255, 0.4, 0)
-    local accentColor = lia.color.theme and lia.color.theme.theme or Color(116, 185, 255)
+    local accentColor = lia.color.theme.theme
     self.changelogPanel.Paint = function(s, w, h)
         local bgColor = Color(25, 28, 35, 250)
         lia.derma.rect(0, 0, w, h):Rad(12):Color(Color(0, 0, 0, 180)):Shadow(15, 20):Shape(lia.derma.SHAPE_IOS):Draw()
@@ -1613,7 +1613,7 @@ function PANEL:createSelectedCharacterInfoPanel(character)
 
     table.insert(info, L("money") .. ": " .. lia.currency.get(character:getMoney()))
     hook.Run("LoadMainMenuInformation", info, character)
-    self.infoFrame = self:Add("liaSemiTransparentDFrame")
+    self.infoFrame = self:Add("liaFrame")
     self.infoFrame:SetSize(ScrW() * 0.25, ScrH() * 0.45)
     local finalInfoX, finalInfoY = ScrW() * 0.75 - 50, ScrH() * 0.25
     self.infoFrame:SetPos(finalInfoX, finalInfoY)
@@ -2114,7 +2114,7 @@ function PANEL:showConfirmation(message, onConfirm, onCancel)
     frame:SetCenterTitle(L("areYouSure"):upper())
     frame:ShowCloseButton(false)
     frame:SetDraggable(false)
-    local accentColor = lia.color.theme and lia.color.theme.theme or Color(116, 185, 255)
+    local accentColor = lia.color.theme.theme
     local oldPaint = frame.Paint
     frame.Paint = function(s, w, h)
         if oldPaint then oldPaint(s, w, h) end

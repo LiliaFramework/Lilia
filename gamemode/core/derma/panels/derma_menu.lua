@@ -92,7 +92,7 @@ end
 function PANEL:Paint(w, h)
     local windowShadow = lia.color.theme and lia.color.theme.window_shadow or Color(18, 32, 32, 90)
     local backgroundPanel = lia.color.theme and lia.color.theme.background_panelpopup or Color(20, 28, 28)
-    local accentColor = lia.color.theme and lia.color.theme.theme or Color(116, 185, 255)
+    local accentColor = lia.color.theme.theme
     lia.derma.rect(0, 0, w, h):Rad(14):Color(windowShadow):Shape(lia.derma.SHAPE_IOS):Shadow(10, 16):Draw()
     lia.derma.rect(0, 0, w, h):Rad(14):Color(backgroundPanel):Shape(lia.derma.SHAPE_IOS):Draw()
     lia.derma.rect(0, 0, w, h):Rad(14):Color(ColorAlpha(Color(255, 255, 255), 18)):Outline(1):Draw()
@@ -356,7 +356,7 @@ function PANEL:AddOption(text, func, icon, optData)
         h = h or pnl:GetTall()
         local textColor = lia.color.theme and lia.color.theme.text or Color(210, 235, 235)
         local bgColor = Color(25, 28, 35, 250)
-        local accentColor = (lia.color.theme and lia.color.theme.theme) or Color(116, 185, 255)
+        local accentColor = lia.color.theme.theme
         local hovered = pnl:IsHovered()
         local selected = pnl._isChecked == true
         local base = ColorAlpha(bgColor, 185)

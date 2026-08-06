@@ -21,7 +21,7 @@ function PANEL:Init()
         end
 
         local bgColor = Color(25, 28, 35, 250)
-        local accentColor = lia.color.theme and lia.color.theme.theme or Color(116, 185, 255)
+        local accentColor = lia.color.theme.theme
         local base = ColorAlpha(bgColor, 200)
         if self.btn.Depressed then
             base = ColorAlpha(accentColor, 220)
@@ -154,7 +154,7 @@ function PANEL:OpenMenu()
     local paintOptionLikeParent = function(parent, s, w, h, isSelected)
         if not IsValid(parent) then return end
         local bgColor = Color(25, 28, 35, 250)
-        local accentColor = lia.color.theme and lia.color.theme.theme or Color(116, 185, 255)
+        local accentColor = lia.color.theme.theme
         local base = ColorAlpha(bgColor, 200)
         if isSelected then
             base = ColorAlpha(accentColor, 220)
@@ -191,7 +191,7 @@ function PANEL:OpenMenu()
         self.menu:MakePopup()
         self.menu:SetKeyboardInputEnabled(false)
         self.menu.Paint = function(_, w, h)
-            local accentColor = lia.color.theme and lia.color.theme.theme or Color(116, 185, 255)
+            local accentColor = lia.color.theme.theme
             lia.derma.rect(0, 0, w, h):Rad(14):Color(lia.color.theme.window_shadow):Shape(lia.derma.SHAPE_IOS):Shadow(10, 16):Draw()
             lia.derma.rect(0, 0, w, h):Rad(14):Color(lia.color.theme.background_panelpopup):Shape(lia.derma.SHAPE_IOS):Draw()
             lia.derma.rect(0, 0, w, h):Rad(14):Color(ColorAlpha(Color(255, 255, 255), 18)):Outline(1):Draw()
@@ -249,7 +249,7 @@ function PANEL:OpenMenu()
         self.menu:SetKeyboardInputEnabled(false)
         self.menu:DockPadding(menuPadding, menuPadding, menuPadding, menuPadding)
         self.menu.Paint = function(_, w, h)
-            local accentColor = lia.color.theme and lia.color.theme.theme or Color(116, 185, 255)
+            local accentColor = lia.color.theme.theme
             lia.derma.rect(0, 0, w, h):Rad(14):Color(lia.color.theme.window_shadow):Shape(lia.derma.SHAPE_IOS):Shadow(10, 16):Draw()
             lia.derma.rect(0, 0, w, h):Rad(14):Color(lia.color.theme.background_panelpopup):Shape(lia.derma.SHAPE_IOS):Draw()
             lia.derma.rect(0, 0, w, h):Rad(14):Color(ColorAlpha(Color(255, 255, 255), 18)):Outline(1):Draw()

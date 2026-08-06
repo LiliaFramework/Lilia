@@ -1,7 +1,7 @@
 ﻿local PANEL = {}
 function PANEL:Init()
     self.lineWidth = 1
-    self.lineColor = lia.color.theme and lia.color.theme.theme or Color(116, 185, 255)
+    self.lineColor = lia.color.theme.theme
 end
 
 function PANEL:SetLineColor(color)

@@ -113,8 +113,7 @@ function MODULE:LoadCharInformation()
         hook.Run("AddBarField", L("attributesModuleName"), id, attr.name, function() return minVal end, function() return maxVal end, function() return char:getAttrib(id) end)
     end
 
-    local max = hook.Run("GetCharMaxStamina", char) or lia.config.get("DefaultStamina", 100)
-    predictedStamina = client:getLocalVar("stamina", max)
+    predictedStamina = client:getLocalVar("stamina", hook.Run("GetCharMaxStamina", char) or lia.config.get("DefaultStamina", 100))
 end
 
 function MODULE:Think()

@@ -108,6 +108,8 @@ end
 
 function PANEL:SetType(t)
     self.ntype = NotifColors[t] and t or "default"
+    self._cachedTypeColor = nil
+    self._cachedIcon = nil
 end
 
 function PANEL:Think()
@@ -196,7 +198,7 @@ function PANEL:Paint(w, h)
     lia.util.drawBlur(self, 10)
     derma.SkinHook("Paint", "Panel", self, w, h)
     if self.start then
-        local w2 = TimeFraction(self.start, self.endTime, CurTime()) * w
+        local w2 = math.TimeFraction(self.start, self.endTime, CurTime()) * w
         surface.SetDrawColor(lia.config.get("Color"))
         surface.DrawRect(w2, 0, w - w2, h)
     end

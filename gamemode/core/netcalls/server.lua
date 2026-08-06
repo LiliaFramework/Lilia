@@ -307,8 +307,7 @@
 ]]
 net.Receive("liaPlayerRespawn", function(_, client)
     if not IsValid(client) or client:Alive() then return end
-    local char = client:getChar()
-    if not char then return end
+    if not client:getChar() then return end
     local baseTime = lia.config.get("SpawnTime", 5)
     baseTime = hook.Run("OverrideSpawnTime", client, baseTime) or baseTime
     local lastDeath = client:getLocalVar("lastDeathTime")

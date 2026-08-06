@@ -1,5 +1,4 @@
 ﻿local index = index or 1
-local deltaIndex = deltaIndex or index
 local alpha = alpha or 0
 local alphaDelta = alphaDelta or alpha
 local fadeTime = fadeTime or 0
@@ -27,7 +26,6 @@ local TEXT_ALIGN_CENTER = TEXT_ALIGN_CENTER
 local TEXT_ALIGN_TOP = TEXT_ALIGN_TOP
 local darkCard = Color(9, 28, 34, 232)
 local darkCardHover = Color(13, 38, 45, 238)
-local darkIcon = Color(14, 35, 41, 245)
 local textPrimary = Color(234, 239, 238)
 local textSecondary = Color(166, 179, 178)
 local bronzeFallback = Color(180, 119, 51)
@@ -157,34 +155,35 @@ local function drawEntry(client, weapon, i, selectedIndex, x, y, w, h, infoLines
     local outlineAlpha = isActive and 190 or 72
     local name = getWeaponName(weapon)
     local detail = getWeaponDetail(client, weapon)
-    local iconText = weapon.IconLetter and tostring(weapon.IconLetter):sub(1, 1) or tostring(name):sub(1, 1):upper()
-    local iconSize = 50
-    local iconX = x + 14
-    local iconY = y + 13
-    local slotW = 24
+    local contentX = x + 20
+    local slotW = 28
     local slotH = 24
     local slotX = x + w - slotW - 14
-    local slotY = y + 20
-    draw.RoundedBox(6, x, y, w, h, scaled(background, fraction))
+    local slotY = y + 18
+    local textWidth = math.max(slotX - contentX - 14, 1)
+    draw.RoundedBox(7, x + 2, y + 3, w, h, Color(0, 0, 0, 72 * fraction))
+    draw.RoundedBox(7, x, y, w, h, scaled(background, fraction))
     surface.SetDrawColor(accent.r, accent.g, accent.b, outlineAlpha * fraction)
     surface.DrawOutlinedRect(x, y, w, h)
-    if isActive then draw.RoundedBox(0, x, y, 3, h, Color(accent.r, accent.g, accent.b, 220 * fraction)) end
-    draw.RoundedBox(6, iconX, iconY, iconSize, iconSize, scaled(darkIcon, fraction))
-    surface.SetDrawColor(softLine.r, softLine.g, softLine.b, 80 * fraction)
-    surface.DrawOutlinedRect(iconX, iconY, iconSize, iconSize)
-    drawText(iconText, "LiliaFont.28", iconX + iconSize * 0.5, iconY + iconSize * 0.5 - 1, isActive and accent or textSecondary, fraction, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
-    drawText(ellipsize(name, "LiliaFont.28", w - 120), "LiliaFont.28", x + 78, y + 18, textPrimary, fraction)
-    drawText(ellipsize(detail, "LiliaFont.17", w - 120), "LiliaFont.17", x + 78, y + 47, textSecondary, fraction)
-    draw.RoundedBox(4, slotX, slotY, slotW, slotH, Color(0, 0, 0, 45 * fraction))
-    surface.SetDrawColor(accent.r, accent.g, accent.b, 95 * fraction)
+    if isActive then
+        surface.SetDrawColor(accent.r, accent.g, accent.b, 16 * fraction)
+        surface.DrawRect(x + 3, y + 1, w - 4, h - 2)
+        surface.SetDrawColor(accent.r, accent.g, accent.b, 235 * fraction)
+        surface.DrawRect(x, y, 3, h)
+    end
+
+    drawText(ellipsize(name, "LiliaFont.28", textWidth), "LiliaFont.28", contentX, y + 15, textPrimary, fraction)
+    drawText(ellipsize(detail, "LiliaFont.17", textWidth), "LiliaFont.17", contentX, y + 45, isActive and accent or textSecondary, fraction)
+    draw.RoundedBox(4, slotX, slotY, slotW, slotH, Color(0, 0, 0, 48 * fraction))
+    surface.SetDrawColor(accent.r, accent.g, accent.b, (isActive and 145 or 76) * fraction)
     surface.DrawOutlinedRect(slotX, slotY, slotW, slotH)
-    drawText(i, "LiliaFont.18", slotX + slotW * 0.5, slotY + slotH * 0.5, accent, fraction, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
+    drawText(i, "LiliaFont.18", slotX + slotW * 0.5, slotY + slotH * 0.5, isActive and accent or textSecondary, fraction, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
     if isActive and #infoLines > 0 then
         local infoY = y + 76
-        surface.SetDrawColor(softLine.r, softLine.g, softLine.b, 75 * fraction)
-        surface.DrawLine(x + 14, infoY - 8, x + w - 14, infoY - 8)
+        surface.SetDrawColor(softLine.r, softLine.g, softLine.b, 80 * fraction)
+        surface.DrawLine(contentX, infoY - 8, x + w - 18, infoY - 8)
         for lineIndex, line in ipairs(infoLines) do
-            drawText(line, "LiliaFont.17", x + 18, infoY + (lineIndex - 1) * lineHeight, textSecondary, fraction)
+            drawText(line, "LiliaFont.17", contentX, infoY + (lineIndex - 1) * lineHeight, textSecondary, fraction)
         end
     end
 end
@@ -223,7 +222,6 @@ local function HUDPaint()
     if total == 0 then return end
     if index > total then index = total end
     if index < 1 then index = 1 end
-    deltaIndex = Lerp(frameTime * 12, deltaIndex, index)
     local screenW, screenH = ScrW(), ScrH()
     local position = tostring(getOption("weaponSelectorPosition", "right")):lower()
     local centerX = screenW * 0.5
@@ -237,7 +235,7 @@ local function HUDPaint()
     local visibleCount = math.Clamp(math.floor((screenH - 210) / 92), 3, 7)
     if visibleCount % 2 == 0 then visibleCount = visibleCount - 1 end
     local firstIndex, lastIndex = getVisibleBounds(total, index, visibleCount)
-    local panelW = math.Clamp(screenW * 0.32, 390, 500)
+    local panelW = math.Clamp(screenW * 0.29, 360, 460)
     local padding = 14
     local gap = 10
     local baseEntryH = 76

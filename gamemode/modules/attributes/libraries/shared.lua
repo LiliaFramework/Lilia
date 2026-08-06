@@ -125,8 +125,7 @@ function MODULE:PlayerBindPress(client, bind, pressed)
     if not char then return end
     local maxStamina = hook.Run("GetCharMaxStamina", char) or lia.config.get("DefaultStamina", 100)
     local stamina = client:getLocalVar("stamina", maxStamina)
-    local runThreshold = maxStamina * 0.25
-    if bind == "+speed" and stamina <= runThreshold then
+    if bind == "+speed" and stamina <= maxStamina * 0.25 then
         client:ConCommand("-speed")
         return true
     end
