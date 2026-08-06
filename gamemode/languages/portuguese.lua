@@ -2396,6 +2396,7 @@ LANGUAGE = {
     freelookSmoothnessDesc = "Faz com que a camera do olhar livre acompanhe mais rapido com valores altos e com mais atraso em valores baixos.",
     freelookBlockADS = "Bloquear Olhar Livre ao Mirar",
     freelookBlockADSDesc = "Faz com que o olhar livre desligue ao mirar e bloqueia o disparo normal enquanto ele estiver sendo segurado.",
+    freelookKeybindDesc = "Segurar Olhar Livre",
     thirdPersonClassicMode = "Modo Classico",
     thirdPersonClassicModeDesc = "Faz com que a mira em terceira pessoa siga a direcao da camera mesmo quando voce esta parado.",
     weaponItemHeight = "Altura",

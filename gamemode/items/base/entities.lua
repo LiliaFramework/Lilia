@@ -6,10 +6,8 @@ ITEM.entityid = ""
 ITEM.functions.Place = {
     name = "placeDownEntity",
     onRun = function(item)
-        local client = item.player
         local entity = ents.Create(item.entityid)
-        local pos = IsValid(item.entity) and item.entity:GetPos() or client:getItemDropPos()
-        entity:SetPos(pos)
+        entity:SetPos(IsValid(item.entity) and item.entity:GetPos() or item.player:getItemDropPos())
         entity:Spawn()
         item:remove()
         return true

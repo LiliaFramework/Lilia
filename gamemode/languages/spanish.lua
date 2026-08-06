@@ -2396,6 +2396,7 @@ LANGUAGE = {
     freelookSmoothnessDesc = "Hace que la camara de vista libre responda mas rapido con valores altos y con mas retraso con valores bajos.",
     freelookBlockADS = "Bloquear Vista Libre al Apuntar",
     freelookBlockADSDesc = "Hace que la vista libre se desactive al apuntar y bloquea el disparo normal mientras la mantienes activa.",
+    freelookKeybindDesc = "Mantener Vista Libre",
     thirdPersonClassicMode = "Modo Clasico",
     thirdPersonClassicModeDesc = "Hace que el apuntado en tercera persona siga la direccion de la camara incluso cuando estas quieto.",
     weaponItemHeight = "Altura",

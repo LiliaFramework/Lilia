@@ -2398,6 +2398,7 @@ LANGUAGE = {
     freelookSmoothnessDesc = "Makes the freelook camera catch up faster at higher values and lag more at lower values.",
     freelookBlockADS = "Freelook Block ADS",
     freelookBlockADSDesc = "Makes freelook turn off while aiming and blocks normal firing while freelook is being held.",
+    freelookKeybindDesc = "Hold Freelook",
     thirdPersonClassicMode = "Classic Mode",
     thirdPersonClassicModeDesc = "Makes third-person aiming follow your camera direction even while standing still.",
     weaponItemHeight = "Height",

@@ -2396,6 +2396,7 @@ LANGUAGE = {
     freelookSmoothnessDesc = "Fait que la camera du regard libre rattrape plus vite avec des valeurs hautes et avec plus de retard a des valeurs basses.",
     freelookBlockADS = "Bloquer le Regard Libre en Visee",
     freelookBlockADSDesc = "Fait que le regard libre se coupe pendant la visee et bloque le tir normal tant qu'il est maintenu.",
+    freelookKeybindDesc = "Maintenir le Regard Libre",
     thirdPersonClassicMode = "Mode Classique",
     thirdPersonClassicModeDesc = "Fait que la visee en troisieme personne suive la direction de la camera meme a l'arret.",
     weaponItemHeight = "Hauteur",

@@ -2396,6 +2396,7 @@ LANGUAGE = {
     freelookSmoothnessDesc = "Sorgt dafur, dass die Freelook-Kamera bei hohen Werten schneller aufholt und bei niedrigen Werten starker nachzieht.",
     freelookBlockADS = "Freies Umschauen bei Visieren Blockieren",
     freelookBlockADSDesc = "Sorgt dafur, dass Freelook beim Zielen ausgeschaltet wird und blockiert normales Feuern, solange Freelook gehalten wird.",
+    freelookKeybindDesc = "Freies Umschauen Halten",
     thirdPersonClassicMode = "Klassischer Modus",
     thirdPersonClassicModeDesc = "Sorgt dafur, dass das Zielen in Third Person auch im Stand der Kamerarichtung folgt.",
     weaponItemHeight = "Höhe",
