@@ -1045,7 +1045,7 @@ local function RenderEntities()
         local ft = FrameTime()
         local rt = RealTime()
         if nextUpdate < rt then
-            nextUpdate = rt + 0.5
+            nextUpdate = rt + 0.01
             local hoverTrace = client:GetEyeTraceNoCursor()
             local hoveredEntity = IsValid(hoverTrace.Entity) and hoverTrace.Entity or nil
             local hoverDistance = hoveredEntity and client:GetShootPos():Distance(hoverTrace.HitPos) or math.huge
@@ -1074,7 +1074,7 @@ local function RenderEntities()
         for ent, drawing in pairs(paintedEntitiesCache) do
             if IsValid(ent) then
                 local goal = drawing and 255 or 0
-                local fadeSpeed = drawing and 255 or 360
+                local fadeSpeed = drawing and 255 or 1200
                 local a = mathApproach(ent.liaAlpha or 0, goal, ft * fadeSpeed)
                 if lastEntity ~= ent then paintedEntitiesCache[ent] = false end
                 if a > 0 then
@@ -1127,7 +1127,7 @@ local entityInfoOptionByCategory = {
 }
 
 local entityInfoMaxDistanceByCategory = {
-    players = 192,
+    players = 128,
     items = 380,
     entities = 380
 }
