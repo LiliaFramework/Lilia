@@ -637,10 +637,6 @@ local function writeProfilerSnapshot()
     file.Write(lia.net.profiler.snapshotDir .. "/latest_snapshot.json", util.TableToJSON(snapshot, true) or "{}")
 end
 
-local function stopProfilerSnapshots()
-    if SERVER then timer.Remove(lia.net.profiler.snapshotTimer) end
-end
-
 local function startProfilerSnapshots()
     if not SERVER then return end
     timer.Create(lia.net.profiler.snapshotTimer, lia.net.profiler.snapshotInterval, 0, writeProfilerSnapshot)
