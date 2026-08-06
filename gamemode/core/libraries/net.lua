@@ -63,10 +63,7 @@ local chunkTime = 0.05
 local CACHE_TTL = 30
 local MAX_CACHE_SIZE = 1000
 local function getProfilerPlayerIdentity(client, fallbackID, fallbackName)
-    if IsValid(client) and client:IsPlayer() then
-        return client:SteamID64(), client:SteamID(), client:Nick(), true
-    end
-
+    if IsValid(client) and client:IsPlayer() then return client:SteamID64(), client:SteamID(), client:Nick(), true end
     return fallbackID or "UNKNOWN", fallbackID or "UNKNOWN", fallbackName or "Unknown", false
 end
 
@@ -87,6 +84,7 @@ local function recordProfilerPlayerEntry(client, fallbackID, fallbackName, direc
             totalBytes = 0,
             messages = {}
         }
+
         lia.net.profiler.sessionTracker.players[steamID64] = playerData
     end
 
@@ -97,7 +95,6 @@ local function recordProfilerPlayerEntry(client, fallbackID, fallbackName, direc
     playerData.totalCalls = playerData.totalCalls + 1
     playerData.totalBytes = playerData.totalBytes + bytes
     lia.net.profiler.sessionTracker.uniquePlayers[steamID64] = true
-
     local key = direction .. "|" .. messageName
     local entry = playerData.messages[key]
     if not entry then
@@ -124,6 +121,7 @@ local function recordProfilerPlayerEntry(client, fallbackID, fallbackName, direc
             firstAt = timestamp,
             lastAt = timestamp
         }
+
         playerData.messages[key] = entry
     end
 
@@ -141,15 +139,21 @@ end
 function lia.net.profiler.recordSessionEntry(direction, messageName, rawSize, sender, receiver)
     lia.net.profiler.sessionTracker.messages = lia.net.profiler.sessionTracker.messages or {}
     lia.net.profiler.sessionTracker.directionTotals = lia.net.profiler.sessionTracker.directionTotals or {
-        ["C->S"] = {calls = 0, bytes = 0},
-        ["S->C"] = {calls = 0, bytes = 0}
+        ["C->S"] = {
+            calls = 0,
+            bytes = 0
+        },
+        ["S->C"] = {
+            calls = 0,
+            bytes = 0
+        }
     }
+
     lia.net.profiler.sessionTracker.totalCalls = lia.net.profiler.sessionTracker.totalCalls or 0
     lia.net.profiler.sessionTracker.totalBytes = lia.net.profiler.sessionTracker.totalBytes or 0
     local timestamp = os.time()
     local bytes = math.max(math.floor(tonumber(rawSize) or 0), 0)
     if direction == "C->S" then bytes = math.ceil(bytes / 8) end
-
     local key = direction .. "|" .. messageName
     local messageData = lia.net.profiler.sessionTracker.messages[key]
     if not messageData then
@@ -166,6 +170,7 @@ function lia.net.profiler.recordSessionEntry(direction, messageName, rawSize, se
             firstAt = timestamp,
             lastAt = timestamp
         }
+
         lia.net.profiler.sessionTracker.messages[key] = messageData
     end
 
@@ -173,10 +178,13 @@ function lia.net.profiler.recordSessionEntry(direction, messageName, rawSize, se
     local bandwidthBytes = bytes * recipientCount
     lia.net.profiler.sessionTracker.totalCalls = lia.net.profiler.sessionTracker.totalCalls + 1
     lia.net.profiler.sessionTracker.totalBytes = lia.net.profiler.sessionTracker.totalBytes + bandwidthBytes
-
     local directionData = lia.net.profiler.sessionTracker.directionTotals[direction]
     if not directionData then
-        directionData = {calls = 0, bytes = 0}
+        directionData = {
+            calls = 0,
+            bytes = 0
+        }
+
         lia.net.profiler.sessionTracker.directionTotals[direction] = directionData
     end
 
@@ -188,7 +196,6 @@ function lia.net.profiler.recordSessionEntry(direction, messageName, rawSize, se
     messageData.maxBytes = math.max(messageData.maxBytes, bytes)
     messageData.lastAt = timestamp
     messageData.avgBytes = messageData.calls > 0 and messageData.totalBytes / messageData.calls or 0
-
     if direction == "C->S" and IsValid(sender) and sender:IsPlayer() then
         recordProfilerPlayerEntry(sender, nil, nil, direction, messageName, bytes, timestamp)
     elseif direction == "S->C" then
@@ -704,9 +711,7 @@ function lia.net.profiler.log(direction, messageName, size, sender, receiver)
     lia.net.profiler.loggedMessages[logKey] = true
     local countKey = direction .. "|" .. messageName
     lia.net.profiler.messageCounts[countKey] = (lia.net.profiler.messageCounts[countKey] or 0) + 1
-    if isfunction(lia.net.profiler.recordSessionEntry) then
-        lia.net.profiler.recordSessionEntry(direction, messageName, size, sender, receiver)
-    end
+    if isfunction(lia.net.profiler.recordSessionEntry) then lia.net.profiler.recordSessionEntry(direction, messageName, size, sender, receiver) end
     timer.Simple(0.05, function() lia.net.profiler.loggedMessages[logKey] = nil end)
     lia.debug(string.format("[Net Profiler] [%s] %s | %s | Size: %s | From: %s | To: %s", timeStr, direction, messageName, sizeStr, senderStr, receiverStr))
 end

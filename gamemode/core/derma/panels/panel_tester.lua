@@ -1,4 +1,4 @@
-if SERVER then return end
+﻿if SERVER then return end
 local testerFrame
 local activePanels = {}
 local entries = {}
@@ -109,7 +109,6 @@ setups.BodygrouperMenu = function(panel)
 end
 
 setups.liaButton = function(panel) panel:SetText("Test Button") end
-
 setups.liaChatBox = function(panel)
     panel:setActive(true)
     panel:addText(Color(95, 210, 135), "Panel Tester", color_white, ": Chatbox preview message")
@@ -239,6 +238,7 @@ setups.liaNoticePanel = function(panel)
     panel.start = CurTime()
     panel.endTime = CurTime() + 8
 end
+
 setups.liaRadialPanel = function(panel)
     panel:SetCenterText("Panel Tester", "Choose an option")
     panel:AddOption("Accept", function() end, "icon16/accept.png", "Accept the sample action")

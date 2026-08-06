@@ -3120,6 +3120,7 @@ function MODULE:populateEntityTabPanel(entPanel)
         owners = {},
         totalEntities = 0
     }
+
     local owners = istable(entityData.owners) and entityData.owners or {}
     entPanel:Clear()
     entPanel:DockPadding(6, 6, 6, 6)
@@ -3258,6 +3259,7 @@ function MODULE:populateEntityTabPanel(entPanel)
                     client:setWaypoint(displayName, entry.position)
                 end
             end, entValid or isvector(entry.position))
+
             searchSheet:AddPanelRow(itemPanel, {
                 height = 100,
                 filterText = displayName:lower()
@@ -3276,16 +3278,8 @@ function MODULE:PopulateAdminTabs(pages)
         owners = {},
         totalEntities = 0
     }
-    lia.debug(
-        "[Entity Tab Debug]",
-        "player=", tostring(IsValid(client) and client:Nick() or "unknown"),
-        "usergroup=", tostring(IsValid(client) and client:GetUserGroup() or "unknown"),
-        "hasPrivilege(viewEntityTab)=", tostring(canViewEntityTab),
-        "cachedOwners=", tostring(istable(entityTabData.owners) and #entityTabData.owners or 0),
-        "cachedEntities=", tostring(entityTabData.totalEntities or 0),
-        "requestPending=", tostring(self.entityTabRequestPending or false),
-        "shouldAddTab=", tostring(canViewEntityTab)
-    )
+
+    lia.debug("[Entity Tab Debug]", "player=", tostring(IsValid(client) and client:Nick() or "unknown"), "usergroup=", tostring(IsValid(client) and client:GetUserGroup() or "unknown"), "hasPrivilege(viewEntityTab)=", tostring(canViewEntityTab), "cachedOwners=", tostring(istable(entityTabData.owners) and #entityTabData.owners or 0), "cachedEntities=", tostring(entityTabData.totalEntities or 0), "requestPending=", tostring(self.entityTabRequestPending or false), "shouldAddTab=", tostring(canViewEntityTab))
     if canViewEntityTab then
         self:requestEntityTabData()
         pages[#pages + 1] = {

@@ -36,6 +36,7 @@ net.Receive("liaRequestEntityTabData", function(_, client)
                     displayName = entity.PrintName or entity:GetClass(),
                     position = entity:GetPos()
                 }
+
                 totalEntities = totalEntities + 1
             end
         end
@@ -48,6 +49,7 @@ net.Receive("liaRequestEntityTabData", function(_, client)
             entities = entities
         }
     end
+
     lia.debug("[Entity Tab Debug]", "Sending server entity tab payload", "owners=", tostring(#owners), "totalEntities=", tostring(totalEntities))
     lia.net.writeBigTable(client, "liaEntityTabData", {
         owners = owners,

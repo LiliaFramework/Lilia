@@ -1,4 +1,4 @@
-local MODULE = MODULE
+﻿local MODULE = MODULE
 function MODULE:PlayerLoadedChar(client, character)
     if not IsValid(client) or not character or not client:isStaffOnDuty() then return end
     local configuredFlags = lia.staffCharacterFlags or lia.data.get("staffCharacterFlags", {})

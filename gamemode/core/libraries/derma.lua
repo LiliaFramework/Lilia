@@ -2813,10 +2813,7 @@ function lia.derma.drawBoxWithText(text, x, y, options)
                         prepared.label = ""
                     end
 
-                    if truncateTextRows and prepared.text ~= "" and prepared.label == "" and prepared.value == "" then
-                        prepared.text = fitTextToWidth(prepared.text, maxTextRowWidth, rowFont, textRowSuffix)
-                    end
-
+                    if truncateTextRows and prepared.text ~= "" and prepared.label == "" and prepared.value == "" then prepared.text = fitTextToWidth(prepared.text, maxTextRowWidth, rowFont, textRowSuffix) end
                     surface.SetFont(rowFont)
                     local labelWidth = prepared.label ~= "" and surface.GetTextSize(prepared.label) or 0
                     local textWidth = prepared.text ~= "" and surface.GetTextSize(prepared.text) or 0
@@ -2828,9 +2825,7 @@ function lia.derma.drawBoxWithText(text, x, y, options)
                 end
             else
                 prepared.text = resolveText(row)
-                if truncateTextRows and prepared.text ~= "" then
-                    prepared.text = fitTextToWidth(prepared.text, maxTextRowWidth, rowFont, textRowSuffix)
-                end
+                if truncateTextRows and prepared.text ~= "" then prepared.text = fitTextToWidth(prepared.text, maxTextRowWidth, rowFont, textRowSuffix) end
                 surface.SetFont(rowFont)
                 local textWidth = surface.GetTextSize(prepared.text)
                 measuredWidth = math.max(measuredWidth, textWidth + padding * 2)

@@ -1,4 +1,4 @@
-local spawnCooldowns = {}
+﻿local spawnCooldowns = {}
 local validToolTiers = {
     disabled = true,
     staff = true,
@@ -149,7 +149,6 @@ local function collectLiveSessionRows()
             end
         end
     end
-
     return rows
 end
 
@@ -209,6 +208,7 @@ local function collectPlayerRows()
             totalBytes = math.max(math.floor(tonumber(playerData.totalBytes) or 0), 0),
             lastAt = math.max(math.floor(tonumber(playerData.lastAt) or 0), 0)
         }
+
         for key, entry in pairs(istable(playerData.messages) and playerData.messages or {}) do
             if istable(entry) then
                 local calls = math.max(math.floor(tonumber(entry.calls) or 0), 0)
@@ -287,6 +287,7 @@ local function compareRows(a, b, sortBy, sortDesc)
         if aMessage ~= bMessage then return aMessage < bMessage end
         return tostring(a.id or "") < tostring(b.id or "")
     end
+
     if sortDesc then return aValue > bValue end
     return aValue < bValue
 end
@@ -314,6 +315,7 @@ local function getNetProfilerLogsPayload(request)
             totalCalls = totalCalls + row.calls
             totalBytes = totalBytes + row.totalBytes
         end
+
         baseTotals.totalCalls = math.max(totalCalls, math.floor(tonumber(snapshotTotals.totalCalls or snapshotTotals.trackedMessages) or 0))
         baseTotals.totalBytes = math.max(totalBytes, math.floor(tonumber(snapshotTotals.totalBytes) or 0))
         baseTotals.uniqueMessages = #rows
@@ -356,8 +358,8 @@ local function getNetProfilerLogsPayload(request)
             directions[#directions + 1] = row.direction
         end
     end
-    table.sort(directions, function(a, b) return a:lower() < b:lower() end)
 
+    table.sort(directions, function(a, b) return a:lower() < b:lower() end)
     local filtered = {}
     local matchedCalls = 0
     local matchedBytes = 0
@@ -572,7 +574,6 @@ net.Receive("liaRequestNetProfilerLogs", function(_, client)
 
     sendNetProfilerLogs(client, request)
 end)
-
 
 net.Receive("liaSetToolPermissionTier", function(_, client)
     if not IsValid(client) or not client:hasPrivilege("manageUsergroups") then return end
@@ -1358,7 +1359,6 @@ local function getPlayerEntityOwner(entity)
 
     local directOwner = entity.client or entity.player or entity.ply
     if IsValid(directOwner) and directOwner:IsPlayer() then return directOwner end
-
     local steamID = entity.SteamID or entity.steamID
     if isstring(steamID) and steamID ~= "" then
         local owner = player.GetBySteamID(steamID)
@@ -1495,14 +1495,7 @@ end
 local function findPlayerEntityTeleportPosition(client, entity)
     local mins, maxs = client:GetHull()
     local center = entity:WorldSpaceCenter()
-    local offsets = {
-        Vector(0, 0, math.max(maxs.z + 32, 96)),
-        entity:GetForward() * 96 + Vector(0, 0, 32),
-        entity:GetForward() * -96 + Vector(0, 0, 32),
-        entity:GetRight() * 96 + Vector(0, 0, 32),
-        entity:GetRight() * -96 + Vector(0, 0, 32)
-    }
-
+    local offsets = {Vector(0, 0, math.max(maxs.z + 32, 96)), entity:GetForward() * 96 + Vector(0, 0, 32), entity:GetForward() * -96 + Vector(0, 0, 32), entity:GetRight() * 96 + Vector(0, 0, 32), entity:GetRight() * -96 + Vector(0, 0, 32)}
     for _, offset in ipairs(offsets) do
         local position = center + offset
         local trace = util.TraceHull({
@@ -1516,7 +1509,6 @@ local function findPlayerEntityTeleportPosition(client, entity)
 
         if not trace.StartSolid and not trace.AllSolid then return position end
     end
-
     return center + Vector(0, 0, 128)
 end
 

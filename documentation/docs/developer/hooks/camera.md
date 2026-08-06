@@ -32,7 +32,7 @@ This page documents hooks in the camera category.
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="freelooktoggled"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
-  <p>Runs after the freelook console command changes freelook state.</p>
+  <p>Runs after manual freelook input from the configurable keybind or console command changes state.</p>
 </div>
 
 <h3 style="margin-bottom: 5px; font-weight: 700;">Category</h3>
@@ -68,7 +68,7 @@ This page documents hooks in the camera category.
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="prefreelooktoggle"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
-  <p>Runs before the freelook console command changes freelook state.</p>
+  <p>Runs before manual freelook input from the configurable keybind or console command changes state.</p>
 </div>
 
 <h3 style="margin-bottom: 5px; font-weight: 700;">Category</h3>

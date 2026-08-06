@@ -274,9 +274,7 @@ else
             return
         end
 
-        if remountedAny or not lia.workshop.hasContentToDownload() then
-            lia.bootstrap(L("workshopDownloader"), L("workshopAllInstalled"))
-        end
+        if remountedAny or not lia.workshop.hasContentToDownload() then lia.bootstrap(L("workshopDownloader"), L("workshopAllInstalled")) end
     end
 
     local workshopSearchIcon = Material("icon16/magnifier.png", "smooth")

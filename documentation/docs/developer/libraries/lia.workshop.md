@@ -186,3 +186,27 @@ The workshop library centralizes Workshop collection under `lia.workshop`. It re
 
 ---
 
+<details class="realm-client" id="function-liaworkshopremountcontent">
+<summary><span class="summary-main"><a id="lia.workshop.remountContent"></a>lia.workshop.remountContent()</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/workshop.lua#L258" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<div class="details-content">
+<h3 style="margin-bottom: 5px; font-weight: 700;"><a id="liaworkshopremountcontent"></a>Purpose</h3>
+<div style="margin-left: 20px; margin-bottom: 20px;">
+  <p>Attempts to remount already-downloaded server Workshop addons from the local data cache, falling back to the normal download flow if anything is missing.</p>
+</div>
+
+<h3 style="margin-bottom: 5px; font-weight: 700;">Realm</h3>
+<div style="margin-left: 20px; margin-bottom: 20px;">
+  <p>Client</p>
+</div>
+
+<h3 style="margin-bottom: 5px; font-weight: 700;">Example Usage</h3>
+<div style="margin-left: 20px; margin-bottom: 20px;">
+<pre><code class="language-lua">  lia.workshop.remountContent()
+</code></pre>
+</div>
+
+</div>
+</details>
+
+---
+

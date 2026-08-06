@@ -1,4 +1,4 @@
---[[
+﻿--[[
     Hooks:
         ShowPlayerOptions(Player target, table options)
 
