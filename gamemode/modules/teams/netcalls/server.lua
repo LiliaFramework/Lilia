@@ -60,7 +60,7 @@ net.Receive("liaKickCharacterToBase", function(_, client)
 
             if hook.Run("CanCharBeTransfered", targetChar, defaultFaction, oldFaction) == false then return end
             target:notifyWarningLocalized("kickedFromFaction")
-            MODULE:TrackFactionTransfer(targetChar, oldFaction, defaultFaction, client, "kickToBase")
+            hook.Run("TrackFactionTransfer", targetChar, oldFaction, defaultFaction, client, "kickToBase")
             targetChar.vars.faction = defaultFaction.uniqueID
             targetChar:setFaction(defaultFaction.index)
             hook.Run("OnTransferred", target)

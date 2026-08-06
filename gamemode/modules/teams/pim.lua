@@ -1,23 +1,40 @@
-﻿lia.playerinteract.addInteraction("inviteToFaction", {
+﻿local function canInviteToFaction(client, target)
+    local clientChar = client:getChar()
+    local targetChar = target:getChar()
+    if not clientChar or not targetChar then return false end
+    if clientChar:getFaction() == targetChar:getFaction() then return false end
+    if clientChar:hasFlags("Z") then return true end
+    local classData = lia.class.list[clientChar:getClass()]
+    if classData and classData.canInviteToFaction then return true end
+    return hook.Run("CanInviteToFaction", client, target) == true
+end
+
+local function canInviteToClass(client, target)
+    local clientChar = client:getChar()
+    local targetChar = target:getChar()
+    if not clientChar or not targetChar then return false end
+    if clientChar:getFaction() ~= targetChar:getFaction() then return false end
+    if clientChar:hasFlags("X") then return true end
+    local classData = lia.class.list[clientChar:getClass()]
+    if classData and classData.canInviteToClass then return true end
+    return hook.Run("CanInviteToClass", client, target) == true
+end
+
+lia.playerinteract.addInteraction("inviteToFaction", {
     serverOnly = true,
     category = "@factionManagement",
-    shouldShow = function(client, target)
-        local cChar = client:getChar()
-        local tChar = target:getChar()
-        if not cChar or not tChar then return false end
-        if cChar:hasFlags("Z") then return true end
-        local classData = lia.class.list[cChar:getClass()]
-        if classData and classData.canInviteToFaction then return true end
-        return hook.Run("CanInviteToFaction", client, target) ~= false and cChar:getFaction() ~= tChar:getFaction()
-    end,
+    shouldShow = canInviteToFaction,
     onRun = function(client, target)
-        if not SERVER then return end
-        local iChar = client:getChar()
-        local tChar = target:getChar()
-        if not iChar or not tChar then return end
+        if not SERVER or not canInviteToFaction(client, target) then return end
+        local clientChar = client:getChar()
+        local targetChar = target:getChar()
+        if not clientChar or not targetChar then return end
         local faction
-        for _, fac in pairs(lia.faction.teams) do
-            if fac.index == client:Team() then faction = fac end
+        for _, factionData in pairs(lia.faction.teams) do
+            if factionData.index == client:Team() then
+                faction = factionData
+                break
+            end
         end
 
         if not faction then
@@ -31,22 +48,27 @@
         end
 
         target:requestBinaryQuestion("@joinFactionTitle", "@joinFactionPrompt", "@yes", "@no", function(choice)
+            if not IsValid(client) or not IsValid(target) then return end
             if choice ~= 0 then
                 client:notifyInfoLocalized("inviteDeclined")
                 return
             end
 
-            if hook.Run("CanCharBeTransfered", tChar, faction, tChar:getFaction()) == false then return end
-            local oldFaction = tChar:getFaction()
-            MODULE:TrackFactionTransfer(tChar, oldFaction, faction, client, "inviteToFaction")
-            tChar.vars.faction = faction.uniqueID
-            tChar:setFaction(faction.index)
+            clientChar = client:getChar()
+            targetChar = target:getChar()
+            if not clientChar or not targetChar then return end
+            if not canInviteToFaction(client, target) then return end
+            if hook.Run("CanCharBeTransfered", targetChar, faction, targetChar:getFaction()) == false then return end
+            local oldFaction = targetChar:getFaction()
+            hook.Run("TrackFactionTransfer", targetChar, oldFaction, faction, client, "inviteToFaction")
+            targetChar.vars.faction = faction.uniqueID
+            targetChar:setFaction(faction.index)
             hook.Run("OnTransferred", target)
             if faction.OnTransferred then faction:OnTransferred(target, oldFaction) end
             hook.Run("PlayerLoadout", target)
             client:notifySuccessLocalized("transferSuccess", target:Name(), faction.name)
             if client ~= target then target:notifyInfoLocalized("transferNotification", faction.name, client:Name()) end
-            tChar:takeFlags("Z")
+            targetChar:takeFlags("Z")
         end)
     end
 })
@@ -54,36 +76,34 @@
 lia.playerinteract.addInteraction("inviteToClass", {
     serverOnly = true,
     category = "@factionManagement",
-    shouldShow = function(client, target)
-        local cChar = client:getChar()
-        local tChar = target:getChar()
-        if not cChar or not tChar then return false end
-        if cChar:hasFlags("X") then return true end
-        local classData = lia.class.list[cChar:getClass()]
-        if classData and classData.canInviteToClass then return true end
-        if cChar:getFaction() ~= tChar:getFaction() then return false end
-        return hook.Run("CanInviteToClass", client, target) ~= false
-    end,
+    shouldShow = canInviteToClass,
     onRun = function(client, target)
-        if not SERVER then return end
-        local cChar = client:getChar()
-        local tChar = target:getChar()
-        if not cChar or not tChar then return end
-        local class = lia.class.list[cChar:getClass()]
+        if not SERVER or not canInviteToClass(client, target) then return end
+        local clientChar = client:getChar()
+        local targetChar = target:getChar()
+        if not clientChar or not targetChar then return end
+        local class = lia.class.list[clientChar:getClass()]
         if not class then
             client:notifyErrorLocalized("invalidClass")
             return
         end
 
         target:requestBinaryQuestion("@joinClass", "@joinClassPrompt", "@yes", "@no", function(choice)
+            if not IsValid(client) or not IsValid(target) then return end
             if choice ~= 0 then
                 client:notifyInfoLocalized("inviteDeclined")
                 return
             end
 
-            if hook.Run("CanCharBeTransfered", tChar, class, tChar:getClass()) == false then return end
-            local oldClass = tChar:getClass()
-            tChar:setClass(class.index)
+            clientChar = client:getChar()
+            targetChar = target:getChar()
+            if not clientChar or not targetChar then return end
+            if not canInviteToClass(client, target) then return end
+            class = lia.class.list[clientChar:getClass()]
+            if not class then return end
+            if hook.Run("CanCharBeTransfered", targetChar, class, targetChar:getClass()) == false then return end
+            local oldClass = targetChar:getClass()
+            targetChar:setClass(class.index)
             hook.Run("OnPlayerJoinClass", target, class.index, oldClass)
             client:notifySuccessLocalized("transferSuccess", target:Name(), class.name)
             if client ~= target then target:notifyInfoLocalized("transferNotification", class.name, client:Name()) end
