@@ -611,6 +611,7 @@ else
     end
 
     function MODULE:LiliaLoaded()
+        if not IsValid(LocalPlayer()) or LocalPlayer():getChar() then return end
         self:OpenCharacterMenu()
     end
 
