@@ -1290,13 +1290,6 @@ local ignoredPlayerEntityClasses = {
 }
 
 local playerEntityViewStopKey = KEY_SPACE
-local function removeLegacyPlayerEntityTab()
-    local protectionModule = lia.module and lia.module.get and lia.module.get("protection")
-    if protectionModule then hook.Remove("PopulateAdminTabs", protectionModule) end
-end
-
-hook.Add("InitializedModules", "liaAdministrationRemoveLegacyPlayerEntityTab", removeLegacyPlayerEntityTab)
-timer.Simple(0, removeLegacyPlayerEntityTab)
 local function isIgnoredPlayerEntity(entity)
     if not IsValid(entity) or entity:IsWorld() or entity:IsPlayer() or entity:IsWeapon() then return true end
     return ignoredPlayerEntityClasses[entity:GetClass()] == true
@@ -3783,19 +3776,8 @@ function MODULE:OpenNetProfiler(panel)
 end
 
 function MODULE:PopulateAdminTabs(pages)
-    removeLegacyPlayerEntityTab()
     local client = LocalPlayer()
     if not IsValid(client) then return end
-    lia.debug("[Permissions UI]", "PopulateAdminTabs administration", "localPlayer=", tostring(client:Nick()), "usergroup=", tostring(client:GetUserGroup()), "hasPrivilege(viewNetProfiler)=", tostring(client:hasPrivilege("viewNetProfiler")))
-    if client:hasPrivilege("viewNetProfiler") then
-        table.insert(pages, {
-            name = "Net Logs",
-            description = "Inspect network message usage with server-side filtering, sorting, and paginated fetching.",
-            icon = "icon16/chart_bar.png",
-            drawFunc = function(panel) self:OpenNetLogs(panel) end
-        })
-    end
-
     if client:hasPrivilege("viewEntityTab") then
         for i = #pages, 1, -1 do
             local name = string.lower(tostring(pages[i].name or "")):gsub("[^%w]", "")

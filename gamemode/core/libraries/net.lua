@@ -45,6 +45,7 @@
         Server
 ]]
 lia.net = lia.net or {}
+lia.NetProfiler = lia.NetProfiler or false
 lia.net.sendq = lia.net.sendq or {}
 lia.net.cache = lia.net.cache or {}
 lia.net.locals = lia.net.locals or {}
@@ -713,7 +714,7 @@ function lia.net.profiler.log(direction, messageName, size, sender, receiver)
     lia.net.profiler.messageCounts[countKey] = (lia.net.profiler.messageCounts[countKey] or 0) + 1
     if isfunction(lia.net.profiler.recordSessionEntry) then lia.net.profiler.recordSessionEntry(direction, messageName, size, sender, receiver) end
     timer.Simple(0.05, function() lia.net.profiler.loggedMessages[logKey] = nil end)
-    lia.debug(string.format("[Net Profiler] [%s] %s | %s | Size: %s | From: %s | To: %s", timeStr, direction, messageName, sizeStr, senderStr, receiverStr))
+    if lia.NetProfiler then print(string.format("[Net Profiler] [%s] %s | %s | Size: %s | From: %s | To: %s", timeStr, direction, messageName, sizeStr, senderStr, receiverStr)) end
 end
 
 function net.Start(messageName)
@@ -792,11 +793,11 @@ if SERVER then
             lia.net.profiler.loggedMessages = {}
             startProfilerSnapshots()
             writeProfilerSnapshot()
-            lia.debug("[Net Profiler] Reset captured message counts and refreshed the latest snapshot")
+            if lia.NetProfiler then print("[Net Profiler] Reset captured message counts and refreshed the latest snapshot") end
         else
             startProfilerSnapshots()
             writeProfilerSnapshot()
-            lia.debug(string.format("[Net Profiler] Always enabled - snapshots will be written every %d seconds", lia.net.profiler.snapshotInterval))
+            if lia.NetProfiler then print(string.format("[Net Profiler] Always enabled - snapshots will be written every %d seconds", lia.net.profiler.snapshotInterval)) end
         end
     end)
 end
