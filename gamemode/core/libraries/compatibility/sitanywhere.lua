@@ -8,23 +8,23 @@
 
     hook.Add("CheckValidSit", "liaSitAnyWhere", function(client)
         local entity = client:getTracedEntity()
-        if entity:IsVehicle() or entity:IsPlayer() then return false end
+        if IsValid(entity) and (entity:IsVehicle() or entity:IsPlayer()) then return false end
     end)
 else
+    local function isSitAnywhereSeat(entity)
+        return IsValid(entity) and entity:GetNWBool("playerdynseat", false)
+    end
+
     hook.Add("CalcView", "liaSitAnyWhereThirdPerson", function(ply, pos, angles, fov)
         local seat = ply:GetVehicle()
-        if IsValid(seat) and seat:IsSitAnywhereSeat() then
-            local view = {}
-            view.origin = pos - (angles:Forward() * 100) + (angles:Up() * 20)
-            view.angles = (ply:GetPos() + Vector(0, 0, 40) - view.origin):Angle()
-            view.fov = fov
-            return view
-        end
+        if not isSitAnywhereSeat(seat) then return end
+        local origin = pos - angles:Forward() * 100 + angles:Up() * 20
+        return {
+            origin = origin,
+            angles = (ply:GetPos() + Vector(0, 0, 40) - origin):Angle(),
+            fov = fov
+        }
     end)
 
-    hook.Add("ShouldDrawLocalPlayer", "liaSitAnyWhereDrawLocalPlayer", function()
-        local ply = LocalPlayer()
-        local seat = ply:GetVehicle()
-        if IsValid(seat) and seat:IsSitAnywhereSeat() then return true end
-    end)
+    hook.Add("ShouldDrawLocalPlayer", "liaSitAnyWhereDrawLocalPlayer", function() return isSitAnywhereSeat(LocalPlayer():GetVehicle()) or nil end)
 end
