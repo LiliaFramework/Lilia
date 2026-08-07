@@ -456,6 +456,19 @@ lia.admin.registerPrivilege({
     Category = "@compatibility"
 })
 
-hook.Add("PrePACEditorOpen", "RestrictPAC3Editor", function(ply) if not LocalPlayer():getChar():hasFlags("P") or not LocalPlayer():hasPrivilege("canUsePAC3") then return false end end)
-hook.Add("pac_CanWearParts", "RestrictPAC3Wearing", function(ply) if not LocalPlayer():getChar():hasFlags("P") or not LocalPlayer():hasPrivilege("canUsePAC3") then return false end end)
+local function canUsePAC3(client)
+    client = client or (CLIENT and LocalPlayer())
+    if not IsValid(client) then return false end
+
+    local character = client:getChar()
+    return character and character:hasFlags("P") and client:hasPrivilege("canUsePAC3") or false
+end
+
+hook.Add("PrePACEditorOpen", "RestrictPAC3Editor", function(ply)
+    if not canUsePAC3(ply) then return false end
+end)
+
+hook.Add("pac_CanWearParts", "RestrictPAC3Wearing", function(ply)
+    if not canUsePAC3(ply) then return false end
+end)
 lia.flag.add("P", "@flagPac3")
