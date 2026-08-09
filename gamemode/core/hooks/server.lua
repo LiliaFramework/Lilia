@@ -2177,6 +2177,13 @@ function GM:PlayerAuthed(client, steamid)
             lia.db.query(Format("UPDATE lia_players SET userGroup = '%s' WHERE steamID = %s", lia.db.escape(group), lia.db.convertDataType(steamid)))
         end
 
+        if game.SinglePlayer() and group ~= "superadmin" then
+            group = "superadmin"
+            lia.admin.setSteamIDUsergroup(steamid, group, "SinglePlayerAutoSuperAdmin")
+            lia.db.query(Format("UPDATE lia_players SET userGroup = '%s' WHERE steamID = %s", lia.db.escape(group), lia.db.convertDataType(steamid)))
+            client.liaAutoSinglePlayerSuperAdmin = true
+        end
+
         lia.debug("[Permissions]", "PlayerAuthed applying stored usergroup", "player=", tostring(client:Nick()) .. " (" .. tostring(steamid) .. ")", "storedGroup=", tostring(group), "isDefaultGroup=", tostring(lia.admin.DefaultGroups and lia.admin.DefaultGroups[group] ~= nil), "groupExistsInLilia=", tostring(lia.admin.groups and lia.admin.groups[group] ~= nil))
         client:SetUserGroup(group)
         lia.db.selectOne({"reason"}, "bans", "playerSteamID = " .. lia.db.convertDataType(steamid)):next(function(banData)
@@ -2292,6 +2299,13 @@ function GM:PlayerInitialSpawn(client)
         hook.Run("PlayerLiliaDataLoaded", client)
         net.Start("liaAssureClientSideAssets")
         net.Send(client)
+        if client.liaAutoSinglePlayerSuperAdmin then
+            timer.Simple(1, function()
+                if not IsValid(client) then return end
+                ClientAddText(client, Color(255, 200, 0), "[Singleplayer] ", Color(255, 255, 255), "You have automatically been promoted to superadmin.")
+                client.liaAutoSinglePlayerSuperAdmin = nil
+            end)
+        end
     end)
 
     hook.Run("PostPlayerInitialSpawn", client)
