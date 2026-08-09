@@ -4,13 +4,6 @@ local TRIGGER_KEYS = {
     [KEY_DELETE] = true,
 }
 
-local suspiciousFunctions = {
-    ["hook.Call"] = true,
-    ["net.Receive"] = true,
-    ["render.Capture"] = true,
-    ["RunConsoleCommand"] = true
-}
-
 local function getEntityDisplayName(ent)
     if not IsValid(ent) then return L("unknownEntity") end
     if ent:GetClass() == "lia_item" and ent.getItemTable then
