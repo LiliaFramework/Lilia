@@ -1,0 +1,5 @@
+{
+  "name": "Derma Generator",
+  "description": "A visual editor for Garry's Mod Derma (GLua) interfaces.",
+  "requestFramePermissions": []
+}

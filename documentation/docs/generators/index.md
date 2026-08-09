@@ -34,6 +34,10 @@ This section contains generators and templates for creating Lilia framework comp
     <h3>Class Generator</h3>
     <p>Code templates and examples for creating character classes.</p>
   </a>
+  <a href="./derma/" class="card">
+    <h3>Derma Generator</h3>
+    <p>Launches the visual editor for building Derma interfaces and generating Lilia-compatible GLua.</p>
+  </a>
   <a href="./dialog/" class="card">
     <h3>Dialog NPC Generator</h3>
     <p>Launches the visual editor for building dialog NPC trees and conversation flows.</p>
