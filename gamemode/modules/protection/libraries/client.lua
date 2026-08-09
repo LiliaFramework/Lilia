@@ -1,4 +1,4 @@
-local TRIGGER_KEYS = {
+﻿local TRIGGER_KEYS = {
     [KEY_HOME] = true,
     [KEY_INSERT] = true,
     [KEY_DELETE] = true,
