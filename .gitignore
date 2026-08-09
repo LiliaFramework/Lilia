@@ -40,11 +40,7 @@ luac.out
 *.hex
 .vscode/*
 /documentation/docs/tools
-documentation/report.md
 *.bat
-fieldaudit.md
 /documentation/site
 /documentation/reports
-/gamemode/modules/secondary_bases
 /__pycache__
-/gamemode/modules/species_creator_poc
