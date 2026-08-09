@@ -82,11 +82,13 @@ function MODULE:CanPlayerSwitchChar(client, character, newCharacter)
 end
 
 function MODULE:EntityTakeDamage(entity, dmgInfo)
-    local entityIsOnDutyStaff = IsValid(entity) and entity:IsPlayer() and entity:isStaffOnDuty() or false
-    lia.debug("[Permissions]", "Permission Check for function MODULE:EntityTakeDamage player staff immunity", "entityValid=", tostring(IsValid(entity)), "entityIsPlayer=", tostring(IsValid(entity) and entity:IsPlayer() or false), "isStaffOnDuty=", tostring(entityIsOnDutyStaff), "finalResult=", tostring(entityIsOnDutyStaff))
-    if entityIsOnDutyStaff then
-        dmgInfo:SetDamage(0)
-        return
+    if IsValid(entity) and entity:IsPlayer() then
+        local entityIsOnDutyStaff = entity:isStaffOnDuty()
+        lia.debug("[Permissions]", "Permission Check for function MODULE:EntityTakeDamage player staff immunity", "entityValid=", "true", "entityIsPlayer=", "true", "isStaffOnDuty=", tostring(entityIsOnDutyStaff), "finalResult=", tostring(entityIsOnDutyStaff))
+        if entityIsOnDutyStaff then
+            dmgInfo:SetDamage(0)
+            return
+        end
     end
 
     if IsValid(entity) and entity:IsVehicle() and entity:GetClass():find("prop_vehicle") then
@@ -116,7 +118,7 @@ function MODULE:EntityTakeDamage(entity, dmgInfo)
 
     local inflictor = dmgInfo:GetInflictor()
     local attacker = dmgInfo:GetAttacker()
-    if not IsValid(entity) or entity:IsPlayer() and dmgInfo:IsFallDamage() then return end
+    if not IsValid(entity) or (entity:IsPlayer() and dmgInfo:IsFallDamage()) then return end
     if IsValid(inflictor) and inflictor:isProp() then
         dmgInfo:SetDamage(0)
         return
