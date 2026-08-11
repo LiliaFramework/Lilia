@@ -131,14 +131,7 @@ local function loadExtras(path)
         items = "shared",
     }
 
-    local function includeDefinitionsDir(dir)
-        local priority = {
-            ["sh_faction.lua"] = 1,
-            ["sh_factions.lua"] = 2,
-            ["sh_class.lua"] = 3,
-            ["sh_classes.lua"] = 4
-        }
-
+    local function includeSortedDir(dir, priority)
         local function loadDir(folder)
             local files, folders = file.Find(folder .. "/*", "LUA")
             table.sort(files, function(a, b)
@@ -161,7 +154,24 @@ local function loadExtras(path)
         loadDir(dir)
     end
 
-    local ModuleFolders = {"config", "definitions", "dependencies", "libs", "hooks", "libraries", "commands", "netcalls", "meta", "derma"}
+    local DefinitionPriority = {
+        ["sh_faction.lua"] = 1,
+        ["sh_factions.lua"] = 2,
+        ["sh_class.lua"] = 3,
+        ["sh_classes.lua"] = 4,
+    }
+
+    local LibraryPriority = {
+        ["sh_faction.lua"] = 1,
+        ["sh_factions.lua"] = 2,
+        ["sh_class.lua"] = 3,
+        ["sh_classes.lua"] = 4,
+        ["shared.lua"] = 5,
+        ["server.lua"] = 6,
+        ["client.lua"] = 7,
+    }
+
+    local ModuleFolders = {"config", "definitions", "dependencies", "libs", "hooks", "libraries", "commands", "netcalls", "meta", "derma",}
     lia.lang.loadFromDir(path .. "/languages")
     lia.faction.loadFromDir(path .. "/factions")
     lia.class.loadFromDir(path .. "/classes")
@@ -175,7 +185,9 @@ local function loadExtras(path)
         local subPath = path .. "/" .. folder
         if file.Exists(subPath, "LUA") then
             if folder == "definitions" then
-                includeDefinitionsDir(subPath)
+                includeSortedDir(subPath, DefinitionPriority)
+            elseif folder == "libraries" then
+                includeSortedDir(subPath, LibraryPriority)
             else
                 lia.loader.includeDir(subPath, true, true)
             end
