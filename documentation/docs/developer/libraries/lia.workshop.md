@@ -35,7 +35,7 @@ The workshop library centralizes Workshop collection under `lia.workshop`. It re
 ---
 
 <details class="realm-server" id="function-liaworkshopaddworkshop">
-<summary><span class="summary-main"><a id="lia.workshop.addWorkshop"></a>lia.workshop.addWorkshop(id)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/workshop.lua#L35" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="lia.workshop.addWorkshop"></a>lia.workshop.addWorkshop(id)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/workshop.lua#L36" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="liaworkshopaddworkshop"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -65,7 +65,7 @@ The workshop library centralizes Workshop collection under `lia.workshop`. It re
 ---
 
 <details class="realm-server" id="function-liaworkshopgather">
-<summary><span class="summary-main"><a id="lia.workshop.gather"></a>lia.workshop.gather()</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/workshop.lua#L70" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="lia.workshop.gather"></a>lia.workshop.gather()</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/workshop.lua#L71" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="liaworkshopgather"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -97,7 +97,7 @@ The workshop library centralizes Workshop collection under `lia.workshop`. It re
 ---
 
 <details class="realm-server" id="function-liaworkshopsend">
-<summary><span class="summary-main"><a id="lia.workshop.send"></a>lia.workshop.send(ply)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/workshop.lua#L116" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="lia.workshop.send"></a>lia.workshop.send(ply)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/workshop.lua#L117" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="liaworkshopsend"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -130,7 +130,7 @@ The workshop library centralizes Workshop collection under `lia.workshop`. It re
 ---
 
 <details class="realm-client" id="function-liaworkshophascontenttodownload">
-<summary><span class="summary-main"><a id="lia.workshop.hasContentToDownload"></a>lia.workshop.hasContentToDownload()</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/workshop.lua#L192" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="lia.workshop.hasContentToDownload"></a>lia.workshop.hasContentToDownload()</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/workshop.lua#L253" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="liaworkshophascontenttodownload"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -161,7 +161,7 @@ The workshop library centralizes Workshop collection under `lia.workshop`. It re
 ---
 
 <details class="realm-client" id="function-liaworkshopmountcontent">
-<summary><span class="summary-main"><a id="lia.workshop.mountContent"></a>lia.workshop.mountContent()</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/workshop.lua#L213" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="lia.workshop.mountContent"></a>lia.workshop.mountContent()</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/workshop.lua#L274" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="liaworkshopmountcontent"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
@@ -187,7 +187,7 @@ The workshop library centralizes Workshop collection under `lia.workshop`. It re
 ---
 
 <details class="realm-client" id="function-liaworkshopremountcontent">
-<summary><span class="summary-main"><a id="lia.workshop.remountContent"></a>lia.workshop.remountContent()</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/workshop.lua#L258" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
+<summary><span class="summary-main"><a id="lia.workshop.remountContent"></a>lia.workshop.remountContent()</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/workshop.lua#L319" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
 <h3 style="margin-bottom: 5px; font-weight: 700;"><a id="liaworkshopremountcontent"></a>Purpose</h3>
 <div style="margin-left: 20px; margin-bottom: 20px;">
