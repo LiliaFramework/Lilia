@@ -1193,7 +1193,7 @@ if CLIENT then
                 searchEntry:SetTextColor(Color(225, 236, 236))
                 searchEntry:SetCursorColor(getCommandThemeColors())
                 searchEntry:SetPlaceholderText(L("searchCommands"))
-                searchEntry:SetDrawBackground(false)
+                searchEntry:SetPaintBackground(false)
                 searchEntry:SetPaintBackground(false)
                 searchEntry:SetPaintBorderEnabled(false)
                 local sectionLabel = listPanel:Add("DLabel")

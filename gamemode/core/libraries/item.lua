@@ -1872,7 +1872,7 @@ else
         entry:SetFont("LiliaFont.18")
         entry:SetTextColor(Color(230, 239, 239))
         entry:SetCursorColor(accent)
-        entry:SetDrawBackground(false)
+        entry:SetPaintBackground(false)
         entry:SetPaintBackground(false)
         entry:SetPaintBorderEnabled(false)
         if numeric then entry:SetNumeric(true) end

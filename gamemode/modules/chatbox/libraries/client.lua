@@ -256,7 +256,7 @@ local function buildFilteredWordsAdminPanel(panel)
         entry:SetCursorColor(accent)
         entry:SetPlaceholderText(placeholder)
         entry:SetPlaceholderColor(Color(115, 132, 132))
-        entry:SetDrawBackground(false)
+        entry:SetPaintBackground(false)
         entry:SetPaintBackground(false)
         entry:SetPaintBorderEnabled(false)
         return wrap, entry

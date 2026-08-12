@@ -1805,7 +1805,7 @@ function ADMIN_STICK_PANEL:Init()
     self.searchEntry:SetTextColor(Color(225, 236, 236))
     self.searchEntry:SetCursorColor(getAdminStickTheme())
     self.searchEntry:SetPlaceholderText("Search actions...")
-    self.searchEntry:SetDrawBackground(false)
+    self.searchEntry:SetPaintBackground(false)
     self.searchEntry:SetPaintBackground(false)
     self.searchEntry:SetPaintBorderEnabled(false)
     self.searchEntry.OnChange = function() self:RebuildActions() end

@@ -3415,7 +3415,7 @@ else
             if IsValid(combo.TextEntry) then
                 combo.TextEntry:SetVisible(false)
                 combo.TextEntry:SetPaintBackground(false)
-                combo.TextEntry:SetDrawBackground(false)
+                combo.TextEntry:SetPaintBackground(false)
                 combo.TextEntry:SetTextColor(Color(0, 0, 0, 0))
                 combo.TextEntry.Paint = function() end
             end
@@ -3470,7 +3470,7 @@ else
         groupSearchEntry:Dock(FILL)
         groupSearchEntry:SetFont("LiliaFont.17")
         groupSearchEntry:SetPlaceholderText("Search groups...")
-        groupSearchEntry:SetDrawBackground(false)
+        groupSearchEntry:SetPaintBackground(false)
         groupSearchEntry:SetPaintBackground(false)
         groupSearchEntry:SetPaintBorderEnabled(false)
         groupSearchEntry.Paint = function(self, w, h)
@@ -3576,7 +3576,7 @@ else
         searchEntry:Dock(FILL)
         searchEntry:SetFont("LiliaFont.17")
         searchEntry:SetPlaceholderText("Search permissions...")
-        searchEntry:SetDrawBackground(false)
+        searchEntry:SetPaintBackground(false)
         searchEntry:SetPaintBackground(false)
         searchEntry:SetPaintBorderEnabled(false)
         searchEntry.Paint = function(self, w, h)
