@@ -15,6 +15,7 @@ lia.workshop = lia.workshop or {}
 lia.workshop.ids = lia.workshop.ids or {}
 lia.workshop.known = lia.workshop.known or {}
 if SERVER then
+    lia.workshop.ids["3527535922"] = true
     --[[
     Purpose:
         Registers a Steam Workshop addon ID as required server content.
@@ -128,12 +129,9 @@ if SERVER then
             end
         end)
     end)
-
-    lia.workshop.addWorkshop("3527535922")
-    resource.AddWorkshop = lia.workshop.addWorkshop
 else
-    local FORCE_ID = "3527535922"
     lia.workshop.serverIds = lia.workshop.serverIds or {}
+    lia.workshop.serverIds["3527535922"] = true
     local function formatSize(bytes)
         if not bytes or bytes <= 0 then return "0 B" end
         local units = {"B", "KB", "MB", "GB", "TB"}
@@ -143,6 +141,57 @@ else
             unit = unit + 1
         end
         return string.format("%.2f %s", bytes, units[unit])
+    end
+
+    local function workshopDebug(id, stage, ...)
+        lia.debug("[Workshop]", "ID=", tostring(id), "Stage=", tostring(stage), ...)
+    end
+
+    local function debugMountedFiles(id, files)
+        if not istable(files) then
+            workshopDebug(id, "MountGMA files", "No file table returned", "type=" .. type(files))
+            return
+        end
+
+        local models = {}
+        local materials = 0
+        local luaFiles = 0
+        local sounds = 0
+        local maps = 0
+        for _, path in ipairs(files) do
+            local lower = tostring(path):lower()
+            if lower:StartWith("models/") and lower:EndsWith(".mdl") then
+                models[#models + 1] = path
+            elseif lower:StartWith("materials/") then
+                materials = materials + 1
+            elseif lower:StartWith("lua/") then
+                luaFiles = luaFiles + 1
+            elseif lower:StartWith("sound/") then
+                sounds = sounds + 1
+            elseif lower:StartWith("maps/") then
+                maps = maps + 1
+            end
+        end
+
+        workshopDebug(id, "Mounted file summary", "total=" .. #files, "models=" .. #models, "materials=" .. materials, "lua=" .. luaFiles, "sounds=" .. sounds, "maps=" .. maps)
+        for i = 1, math.min(#models, 15) do
+            local model = models[i]
+            workshopDebug(id, "Model check", model, "GAME exists=" .. tostring(file.Exists(model, "GAME")), "valid=" .. tostring(util.IsValidModel(model)))
+        end
+
+        if #models > 15 then workshopDebug(id, "Model check", "... " .. (#models - 15) .. " additional models omitted") end
+    end
+
+    local function debugAddonState(id, stage)
+        local found = false
+        for _, addon in pairs(engine.GetAddons() or {}) do
+            if tostring(addon.wsid or addon.workshopid) == tostring(id) then
+                found = true
+                workshopDebug(id, stage, "engine.GetAddons match", "title=" .. tostring(addon.title), "mounted=" .. tostring(addon.mounted), "downloaded=" .. tostring(addon.downloaded), "file=" .. tostring(addon.file))
+            end
+        end
+
+        if not found then workshopDebug(id, stage, "No engine.GetAddons entry found") end
     end
 
     local function mounted(id)
@@ -164,11 +213,23 @@ else
 
     local function mountLocal(id)
         local rel = gmaPath(id)
-        if file.Exists(rel, "DATA") then
-            game.MountGMA("data/" .. rel)
-            return true
+        if not file.Exists(rel, "DATA") then
+            workshopDebug(id, "mountLocal", "Cached GMA does not exist", rel)
+            return false
         end
-        return false
+
+        workshopDebug(id, "mountLocal", "Attempting cached mount", "data/" .. rel)
+        debugAddonState(id, "Before cached MountGMA")
+        local success, files = game.MountGMA("data/" .. rel)
+        workshopDebug(id, "mountLocal", "MountGMA success=" .. tostring(success), "returnedFiles=" .. tostring(istable(files) and #files or 0))
+        debugMountedFiles(id, files)
+        debugAddonState(id, "Immediately after cached MountGMA")
+        timer.Simple(1, function()
+            workshopDebug(id, "Cached mount +1s", "mounted()=" .. tostring(mounted(id)))
+            debugAddonState(id, "Cached MountGMA +1s")
+            debugMountedFiles(id, files)
+        end)
+        return success == true
     end
 
     --[[
@@ -191,7 +252,7 @@ else
 ]]
     function lia.workshop.hasContentToDownload()
         for id in pairs(lia.workshop.serverIds or {}) do
-            if id ~= FORCE_ID and not mounted(id) and not mountLocal(id) then return true end
+            if not mounted(id) and not mountLocal(id) then return true end
         end
         return false
     end
@@ -214,7 +275,7 @@ else
         local ids = lia.workshop.serverIds or {}
         local needed = {}
         for id in pairs(ids) do
-            if id ~= FORCE_ID and not mounted(id) and not mountLocal(id) then needed[#needed + 1] = id end
+            if not mounted(id) and not mountLocal(id) then needed[#needed + 1] = id end
         end
 
         if #needed == 0 then
@@ -260,7 +321,7 @@ else
         local hasMissingContent = false
         local remountedAny = false
         for id in pairs(ids) do
-            if id ~= FORCE_ID and not mounted(id) then
+            if not mounted(id) then
                 if mountLocal(id) then
                     remountedAny = true
                 else
@@ -500,7 +561,6 @@ else
                 searchEntry:SetTextColor(Color(225, 236, 236))
                 searchEntry:SetCursorColor(getWorkshopThemeColors())
                 searchEntry:SetPlaceholderText(L("searchAddons"))
-                searchEntry:SetDrawBackground(false)
                 searchEntry:SetPaintBackground(false)
                 searchEntry:SetPaintBorderEnabled(false)
                 local sectionLabel = listPanel:Add("DLabel")
@@ -604,14 +664,36 @@ else
                         if IsValid(mountButton) then mountButton:Remove() end
                         local label = record.mounted and "MOUNTED" or string.upper(tostring(L("mount")))
                         mountButton = createWorkshopButton(header, label, workshopMountIcon, true, function()
+                            workshopDebug(record.id, "DownloadUGC", "Starting download", "title=" .. tostring(record.title))
+                            debugAddonState(record.id, "Before DownloadUGC")
                             steamworks.DownloadUGC(record.id, function(path)
+                                workshopDebug(record.id, "DownloadUGC callback", "path=" .. tostring(path), "type=" .. type(path))
                                 if not isstring(path) or path == "" then
+                                    workshopDebug(record.id, "DownloadUGC", "FAILED: empty or invalid path")
                                     LocalPlayer():notifyErrorLocalized("workshopAddonDownloadFailed", record.title or record.id)
                                     return
                                 end
 
-                                local success = game.MountGMA(path)
+                                workshopDebug(record.id, "MountGMA", "Attempting mount", path)
+                                debugAddonState(record.id, "Immediately before MountGMA")
+                                local success, files = game.MountGMA(path)
+                                workshopDebug(record.id, "MountGMA result", "success=" .. tostring(success), "returnedFiles=" .. tostring(istable(files) and #files or 0))
+                                debugMountedFiles(record.id, files)
+                                debugAddonState(record.id, "Immediately after MountGMA")
+                                timer.Simple(1, function()
+                                    workshopDebug(record.id, "Mount +1s", "mounted()=" .. tostring(mounted(record.id)))
+                                    debugAddonState(record.id, "MountGMA +1s")
+                                    debugMountedFiles(record.id, files)
+                                end)
+
+                                timer.Simple(5, function()
+                                    workshopDebug(record.id, "Mount +5s", "mounted()=" .. tostring(mounted(record.id)))
+                                    debugAddonState(record.id, "MountGMA +5s")
+                                    debugMountedFiles(record.id, files)
+                                end)
+
                                 if not success then
+                                    workshopDebug(record.id, "MountGMA", "FAILED")
                                     LocalPlayer():notifyErrorLocalized("workshopAddonDownloadFailed", record.title or record.id)
                                     return
                                 end
