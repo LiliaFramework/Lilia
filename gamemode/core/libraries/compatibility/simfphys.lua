@@ -95,6 +95,33 @@
         end)
         return true
     end)
+
+    hook.Add("Initialize", "SIMFPHYS_BlockBrokenEquipmentHook", function()
+        if not simfphys then return end
+        if simfphys.RegisterEquipment then
+            simfphys.RegisterEquipment = function() end
+            print("[SIMFPHYS FIX] Blocked broken RegisterEquipment override")
+        end
+
+        hook.Remove("simfphys.RegisterEquipment", "SIMFPHYS_ARMED")
+    end)
+
+    local _FireHitScan = simfphys.FireHitScan
+    local _FirePhysProjectile = simfphys.FirePhysProjectile
+    local function SafeCall(funcName, func)
+        return function(...)
+            local ok, err = pcall(func, ...)
+            if not ok then
+                print("[SIMFPHYS CRASH PROTECT] Blocked crash in " .. funcName)
+                print(err)
+                return
+            end
+            return err
+        end
+    end
+
+    if _FireHitScan then simfphys.FireHitScan = SafeCall("FireHitScan", _FireHitScan) end
+    if _FirePhysProjectile then simfphys.FirePhysProjectile = SafeCall("FirePhysProjectile", _FirePhysProjectile) end
 else
     hook.Add("InitializedModules", "liaSimfphys", function() if lia.config.get("DisableSimfphysHUD", false) then hook.Remove("HUDPaint", "simfphys_HUD") end end)
 end
