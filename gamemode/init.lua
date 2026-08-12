@@ -12,3 +12,5 @@ end
 for _, netString in ipairs(networkStrings) do
     util.AddNetworkString(netString)
 end
+
+resource.AddWorkshop("3527535922")
