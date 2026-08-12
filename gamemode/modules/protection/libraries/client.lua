@@ -326,7 +326,6 @@ end
 
 __originalMaterial = __originalMaterial or Material
 function Material(name, words)
-    if false then C_Material() end
     if name:find("../data") then
         local path = string.Replace(name, "../data/", "")
         local width, height = getImageDimensions(path)
