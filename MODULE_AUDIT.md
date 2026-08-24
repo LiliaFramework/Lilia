@@ -2,400 +2,355 @@
 
 Audit base: `03b20ced7f3bf8a17807a2c2e086fe566c73ccb1` (`main`, 2026-08-12)
 
-Scope: `LiliaFramework/Lilia` only. The separate `LiliaFramework/Modules` repository, forks, schema repositories, addons, and external workshop content are excluded.
+Audit branch: `module-audit-reorg-20260824`
 
-This report was created before any Lua file was changed on `module-audit-reorg-20260824`.
+Scope: `LiliaFramework/Lilia` only. `LiliaFramework/Modules`, forks, schemas, addons, workshop content, and other repositories were excluded.
+
+The first version of this file was committed as `a8a2c092a1a6b066201619da93cd4ba03c272efb` before any Lua change. This final version records the applied moves and verification.
 
 ## Audit rules
 
-Ownership and placement are separate questions.
+Ownership and placement were evaluated separately.
 
-- **Module-only** means the definition/registration is created for and consumed by one module scope. Calling shared Lilia APIs does not by itself make code shared.
-- **Shared** means the same definition/behavior is consumed by multiple module scopes or is Lilia core/framework behavior. Shared code is not moved.
-- **Ambiguous** means exclusive ownership, realm, sender/receiver direction, required load order, or lexical dependencies cannot be proven from this repository. Ambiguous code is not moved.
-- Module entry/registration remains in `module.lua`.
-- Module-owned `vgui.Register` definitions belong under the owning module's `derma` directory.
-- Module-owned `net.Receive` definitions belong under `netcalls/server.lua` or `netcalls/client.lua` when their realm and dependencies are provable.
-- Module-owned commands belong in `commands.lua` only when extraction preserves realm, lexical scope, and registration timing.
-- Module-owned reusable libraries remain in the appropriate `libraries/server.lua`, `libraries/shared.lua`, or `libraries/client.lua`.
-- Meta extensions belong under `meta` when they are actually module-owned meta definitions.
-- Entity/SWEP lifecycle code remains with the entity/SWEP unless a networking/registration block is independently separable without changing behavior.
+- **Module-only:** created for and exclusively used by one module scope.
+- **Shared:** used by multiple module scopes or owned by Lilia core/framework. Shared code remains unchanged.
+- **Ambiguous:** exclusive ownership, direction, realm, load order, or dependency scope cannot be proven. Ambiguous code remains unchanged.
+- Module-owned `vgui.Register` definitions belong in the owning module's `derma` directory.
+- Module-owned static `net.Receive` handlers belong in `netcalls/server.lua` or `netcalls/client.lua` when realm and dependencies are provable.
+- Module-owned command registrations belong in `commands.lua` when moving them preserves realm, scope, and registration behavior.
+- Module-owned reusable libraries remain under `libraries/server.lua`, `libraries/shared.lua`, or `libraries/client.lua`.
+- Module-owned meta extensions belong under `meta`.
+- Module entry and registration code remains in `module.lua`.
+- Entity/SWEP lifecycle code is not extracted merely because it performs a net send.
+- A mixed file is split only when all moved lexical dependencies can be preserved exactly.
 
-## Lilia loader facts used by the audit
+## Lilia loader behavior used as structural authority
 
-`gamemode/core/libraries/modularity.lua` is the primary structural reference.
+`gamemode/core/libraries/modularity.lua` establishes the relevant load model:
 
-- `module.lua` is included before module extras.
-- `MODULE.Dependencies` are loaded before normal module extras.
-- `libraries` are loaded before `commands`, `netcalls`, `meta`, and `derma`.
-- `pim.lua` is a recognized root-level module extra and is loaded server-side.
-- `config.lua`, `commands.lua`, `networking.lua`, and `items.lua` are also recognized root-level extras with explicit realms.
-- `submodules/*` are loaded as nested modules.
-- `MODULE.NetworkStrings` are registered server-side after module extras are loaded.
-- Functions assigned to `MODULE` are registered as hooks by the module loader after inclusion completes.
+- `module.lua` loads first.
+- `MODULE.Dependencies` load before normal extras.
+- `libraries` load before `commands`, `netcalls`, `meta`, and `derma`.
+- Root `pim.lua` is an explicit server-only module extra.
+- Root `config.lua`, `commands.lua`, `networking.lua`, and `items.lua` are explicit extras with defined realms.
+- `submodules/*` load as nested modules.
+- `MODULE.NetworkStrings` are registered server-side.
+- Functions stored on `MODULE` are registered as hooks by the loader after inclusion.
 
-These rules make several apparent dashboard/scanner findings intentional load-order constructs rather than safe move candidates.
+Therefore root `pim.lua`, explicit inventory dependency files, and `MODULE` hook methods are not placement errors.
 
 ## Dashboard/scanner reference
 
-A repository-wide search for `dashboard` at the audited SHA finds documentation only; no persisted module-placement dashboard implementation or saved dashboard report is present in this repository. No external dashboard data was consulted because the requested scope is the Lilia repository only.
+A repository-wide search for `dashboard` at the audited SHA found documentation only; this repository contains no persisted module-placement dashboard implementation or saved dashboard report to execute. Because the requested scope is this repository only, no external dashboard data was imported.
 
-The requested dashboard-style structural signatures were reproduced directly against the repository: `vgui.Register`, `net.Receive`, network send sites, `lia.command.add`, `concommand.Add`, meta definitions, module entries, explicit dependency files, root extras, and module folder placement.
+The dashboard-style checks were reproduced directly from repository structure and signatures: `vgui.Register`, `vgui.Create`, `net.Receive`, `lia.net.readBigTable`, `net.Start`, `lia.command.add`, `concommand.Add`, meta definitions, module entries, explicit dependencies, root extras, and nested module folders.
 
-Scanner limitations that matter here:
+Important scanner limitations:
 
-- `vgui.Create` is dynamic panel construction and does **not** establish ownership of a panel class. Only registrations/definitions prove a panel class placement issue.
-- `lia.net.readBigTable` is a networking receive registration but is not found by a scanner that only searches `net.Receive`.
-- `MODULE` methods become hooks through the Lilia loader, so absence of a literal `hook.Add` does not mean hook registration is missing.
-- Root `pim.lua` is an explicit loader convention, not a misplaced library.
-- `MODULE.Dependencies` such as GridInv/WeightInv implementation files intentionally load before normal libraries and must not be moved based on filename heuristics alone.
-- Dynamic `net.Receive` closures can depend on request-local state and cannot be moved merely because a scanner reports `module.lua`.
+- `vgui.Create` is dynamic construction, not panel registration. It is a false positive if reported as a misplaced panel definition.
+- A scanner that only finds `net.Receive` misses `lia.net.readBigTable` receive registrations.
+- `MODULE:HookName` methods are registered as hooks by Lilia even without literal `hook.Add`.
+- Root `pim.lua` is intentionally loaded server-side.
+- `gridinv.lua` and `weightinv.lua` are explicit `MODULE.Dependencies`; moving them to `libraries` would alter required load order.
+- A net name used by a module is not necessarily owned by that module. Main Menu and inventory types use core/shared character and inventory messages.
+- Dynamic request-local `net.Receive` closures cannot be converted to static netcall files without redesigning state/correlation.
 
-## Module inventory
+## Complete module inventory
 
-The audit covers 18 module scopes.
+All 18 module scopes present at the audit base were analyzed.
 
-| Scope | Entry | Libraries | Netcalls | Derma | Other module-owned structure |
-| --- | --- | --- | --- | --- | --- |
-| `administration` | `gamemode/modules/administration/module.lua` | `libraries/client.lua`, `server.lua`, `shared.lua` | `netcalls/client.lua`, `server.lua` | none | `entities/weapons/lia_distance/*`, four nested submodules |
-| `administration/adminstick` | `.../adminstick/module.lua` | `libraries/client.lua`, `server.lua` | none at audit base | none | `entities/weapons/lia_adminstick/*` |
-| `administration/logs` | `.../logs/module.lua` | `libraries/client.lua`, `server.lua` | `netcalls/client.lua`, `server.lua` | none | none |
-| `administration/tickets` | `.../tickets/module.lua` | `libraries/client.lua`, `server.lua` | `netcalls/client.lua`, `server.lua` | none | none |
-| `administration/warnings` | `.../warnings/module.lua` | `libraries/server.lua` | `netcalls/client.lua`, `server.lua` | none | none |
-| `attributes` | `gamemode/modules/attributes/module.lua` | `libraries/client.lua`, `server.lua`, `shared.lua` | none | none | none |
-| `chatbox` | `gamemode/modules/chatbox/module.lua` | `libraries/client.lua`, `server.lua`, `shared.lua` | `netcalls/client.lua`, `server.lua` | none | none |
-| `doors` | `gamemode/modules/doors/module.lua` | `libraries/client.lua`, `server.lua` | none | none | `entities/weapons/lia_keys/*` |
-| `inventory` | `gamemode/modules/inventory/module.lua` | none | none | none | dynamically loads one inventory type as a module |
-| `inventory/gridinv` | `.../types/gridinv/module.lua` | `libraries/client.lua`, `server.lua` | `netcalls/server.lua` | `derma/cl_grid_inventory.lua`, `cl_grid_inventory_item.lua`, `cl_grid_inventory_panel.lua` | `gridinv.lua` dependency, `config.lua`, items, nested Storage module |
-| `inventory/gridinv/storage` | `.../storage/module.lua` | `libraries/client.lua`, `server.lua`, `shared.lua` | `netcalls/client.lua`, `server.lua`, `shared.lua` | none | `entities/entities/lia_storage/*` |
-| `inventory/weightinv` | `.../types/weightinv/module.lua` | `libraries/client.lua`, `server.lua` | none | `derma/cl_list_inventory.lua`, `cl_list_inventory_panel.lua`, `cl_list_storage.lua` | `weightinv.lua` dependency, `config.lua`, items |
-| `mainmenu` | `gamemode/modules/mainmenu/module.lua` | `libraries/server.lua` | `netcalls/client.lua`, `server.lua` | none | module entry also contains client/server module API methods |
-| `protection` | `gamemode/modules/protection/module.lua` | `libraries/client.lua`, `server.lua`, `shared.lua` | `netcalls/client.lua` | none | none |
-| `recognition` | `gamemode/modules/recognition/module.lua` | `libraries/client.lua`, `server.lua`, `shared.lua` | `netcalls/client.lua` | none | root `pim.lua` |
-| `spawns` | `gamemode/modules/spawns/module.lua` | `libraries/client.lua`, `server.lua` | none | none | none |
-| `teams` | `gamemode/modules/teams/module.lua` | `libraries/client.lua`, `server.lua`, `shared.lua` | `netcalls/server.lua` | none | root `pim.lua` |
-| `vendor` | `gamemode/modules/vendor/module.lua` | `libraries/client.lua`, `server.lua` | `netcalls/client.lua`, `server.lua` | `derma/client.lua` | `entities/entities/lia_vendor/*` |
+| Scope | Entry | Libraries | Netcalls | Derma / special files |
+| --- | --- | --- | --- | --- |
+| `administration` | `gamemode/modules/administration/module.lua` | `libraries/client.lua`, `server.lua`, `shared.lua` | `netcalls/client.lua`, `server.lua` | `entities/weapons/lia_distance/*`; four submodules |
+| `administration/adminstick` | `.../adminstick/module.lua` | `libraries/client.lua`, `server.lua` | `netcalls/server.lua` after this audit | `entities/weapons/lia_adminstick/*` |
+| `administration/logs` | `.../logs/module.lua` | `libraries/client.lua`, `server.lua` | `netcalls/client.lua`, `server.lua` | none |
+| `administration/tickets` | `.../tickets/module.lua` | `libraries/client.lua`, `server.lua` | `netcalls/client.lua`, `server.lua` | none |
+| `administration/warnings` | `.../warnings/module.lua` | `libraries/server.lua` | `netcalls/client.lua`, `server.lua` | none |
+| `attributes` | `gamemode/modules/attributes/module.lua` | `libraries/client.lua`, `server.lua`, `shared.lua` | none | none |
+| `chatbox` | `gamemode/modules/chatbox/module.lua` | `libraries/client.lua`, `server.lua`, `shared.lua` | `netcalls/client.lua`, `server.lua` | none |
+| `doors` | `gamemode/modules/doors/module.lua` | `libraries/client.lua`, `server.lua` | none | `entities/weapons/lia_keys/*` |
+| `inventory` | `gamemode/modules/inventory/module.lua` | none | none | dynamically loads configured inventory type |
+| `inventory/gridinv` | `.../types/gridinv/module.lua` | `libraries/client.lua`, `server.lua` | `netcalls/server.lua` | `derma/*`, `gridinv.lua`, `config.lua`, items, Storage submodule |
+| `inventory/gridinv/storage` | `.../storage/module.lua` | `libraries/client.lua`, `server.lua`, `shared.lua` | `netcalls/client.lua`, `server.lua`, `shared.lua` | `entities/entities/lia_storage/*` |
+| `inventory/weightinv` | `.../types/weightinv/module.lua` | `libraries/client.lua`, `server.lua` | none | `derma/*`, `weightinv.lua`, `config.lua`, items |
+| `mainmenu` | `gamemode/modules/mainmenu/module.lua` | `libraries/server.lua` | `netcalls/client.lua`, `server.lua` | module entry also implements request-local API methods |
+| `protection` | `gamemode/modules/protection/module.lua` | `libraries/client.lua`, `server.lua` | `netcalls/client.lua` | root `commands.lua` after this audit |
+| `recognition` | `gamemode/modules/recognition/module.lua` | `libraries/client.lua`, `server.lua`, `shared.lua` | `netcalls/client.lua` | root `pim.lua` |
+| `spawns` | `gamemode/modules/spawns/module.lua` | `libraries/client.lua`, `server.lua` | none | none |
+| `teams` | `gamemode/modules/teams/module.lua` | `libraries/client.lua`, `server.lua`, `shared.lua` | `netcalls/server.lua` | root `pim.lua` |
+| `vendor` | `gamemode/modules/vendor/module.lua` | `libraries/client.lua`, `server.lua` | `netcalls/client.lua`, `server.lua` | `derma/client.lua`, `entities/entities/lia_vendor/*` |
 
-## Per-module ownership and placement findings
+## Module-by-module findings
 
 ### Administration
 
-**Entry:** `gamemode/modules/administration/module.lua` is correctly placed.
+Entry and realm-specific libraries/netcalls are structurally valid.
 
-**Module-only network strings declared by the entry:** `liaAdminSetCharProperty`, `liaAllFlags`, `liaAllPks`, `liaAllPlayers`, `liaFeaturePositions`, `liaFeaturePositionsRequest`, `liaFullCharList`, `liaFullCharListPage`, `liaManagesitroomsAction`, `liaMapEntities`, `liaMapEntityAction`, `liaModifyCharacterFlags`, `liaNetProfilerLogs`, `liaNetProfilerSnapshot`, `liaOnlineStaffData`, `liaPksCount`, `liaRequestAllFlags`, `liaRequestFullCharList`, `liaRequestFullCharListPage`, `liaRequestMapEntities`, `liaRequestNetProfilerLogs`, `liaRequestNetProfilerSnapshot`, `liaRequestPksCount`, `liaRequestPlayers`, `liaRequestStaffCases`, `liaRequestStaffSummary`, `liaRequestToolPermissionTiers`, `liaRequestStaffCharacterConfiguration`, `liaSetFeaturePosition`, `liaSetStaffCharacterFlag`, `liaSetStaffCharacterPermission`, `liaSetToolPermissionTier`, `liaSetToolPermissionTiersBatch`, `liaResetStaffCharacterConfiguration`, `liaResetToolPermissionTiers`, `liaSpawnMenuGiveItem`, `liaSpawnMenuSpawnItem`, `liaStaffCasesSnapshot`, `liaStaffCharacterConfiguration`, `liaStaffSummary`, `liaToolPermissionTiers`.
+Module-only network strings declared by the entry:
 
-**Receivers:** most literal receivers are already under `netcalls/client.lua` or `netcalls/server.lua`. `libraries/client.lua` also contains client networking UI consumers, including `net.Receive("liaNetProfilerSnapshot")` and multiple `lia.net.readBigTable(...)` handlers. The snapshot receiver is structurally misplaced, but it is embedded in the large administration UI/network consumer section adjacent to the profiler big-table handler. Extraction would change registration order and split a cohesive receive path; no safe extraction is applied in this pass.
+`liaAdminSetCharProperty`, `liaAllFlags`, `liaAllPks`, `liaAllPlayers`, `liaFeaturePositions`, `liaFeaturePositionsRequest`, `liaFullCharList`, `liaFullCharListPage`, `liaManagesitroomsAction`, `liaMapEntities`, `liaMapEntityAction`, `liaModifyCharacterFlags`, `liaNetProfilerLogs`, `liaNetProfilerSnapshot`, `liaOnlineStaffData`, `liaPksCount`, `liaRequestAllFlags`, `liaRequestFullCharList`, `liaRequestFullCharListPage`, `liaRequestMapEntities`, `liaRequestNetProfilerLogs`, `liaRequestNetProfilerSnapshot`, `liaRequestPksCount`, `liaRequestPlayers`, `liaRequestStaffCases`, `liaRequestStaffSummary`, `liaRequestToolPermissionTiers`, `liaRequestStaffCharacterConfiguration`, `liaSetFeaturePosition`, `liaSetStaffCharacterFlag`, `liaSetStaffCharacterPermission`, `liaSetToolPermissionTier`, `liaSetToolPermissionTiersBatch`, `liaResetStaffCharacterConfiguration`, `liaResetToolPermissionTiers`, `liaSpawnMenuGiveItem`, `liaSpawnMenuSpawnItem`, `liaStaffCasesSnapshot`, `liaStaffCharacterConfiguration`, `liaStaffSummary`, `liaToolPermissionTiers`.
 
-**Commands:** `lia.command.add("sayall", ...)` is in `libraries/shared.lua`. It is module-specific, but the file is a large mixed shared registration file containing properties, position callbacks, and cross-module Spawn integration. Moving only the command changes its execution point from the shared library pass to the later commands pass. No in-repository requirement proves that timing change is safe, so it remains an intentional exception.
+Static handlers are principally under `netcalls/client.lua` and `netcalls/server.lua`. `libraries/client.lua` also contains `net.Receive("liaNetProfilerSnapshot")` and adjacent `lia.net.readBigTable` consumers tied to the same profiler/admin UI state. This remains a mixed-file exception because safe extraction and unchanged registration order cannot be proven.
 
-**Panels:** no Administration-owned `vgui.Register` definition was found outside nested Admin Stick. Dynamic `vgui.Create` calls are UI construction, not misplaced panel definitions.
+Module-only command registration: `sayall` is in `libraries/shared.lua`. The file also contains properties, position callbacks, and cross-module Spawns integration. Moving only the command would change its loader phase, so it is intentionally unchanged.
 
-**Libraries:** realm placement is otherwise correct. `libraries/shared.lua` contains integrations that call the Spawns module and therefore must not be treated as a file wholly owned by one isolated feature.
-
-**Meta:** no confirmed module-owned meta definition.
+No Administration-owned `vgui.Register` definition was found outside the Admin Stick submodule. Dynamic panel creation is not a registration defect.
 
 ### Administration / Admin Stick
 
-**Entry:** `gamemode/modules/administration/submodules/adminstick/module.lua` is correctly placed.
+Entry: `module.lua`.
 
-**Module-only network strings:** `liaAdminStickRequestPlayerState`, `liaAdminStickPlayerState`.
+Module-only network strings: `liaAdminStickRequestPlayerState`, `liaAdminStickPlayerState`.
 
-**Server receiver:** `net.Receive("liaAdminStickRequestPlayerState", ...)` is in `libraries/server.lua`. Its two private helpers and receiver form a self-contained block. This is a valid placement defect and is safe to move to `netcalls/server.lua` while leaving `PostPlayerLoadout` in the library.
+`liaAdminStickRequestPlayerState` and its two private helpers were moved from `libraries/server.lua` to `netcalls/server.lua`. The handler remains server-only and still replies with `liaAdminStickPlayerState`.
 
-**Client receiver:** `net.Receive("liaAdminStickPlayerState", ...)` is in `libraries/client.lua`. It closes over `adminStickPlayerStates`, `AdminStickMenu`, and client UI state from the same large lexical scope. Moving the receiver alone is not safe.
+The client `liaAdminStickPlayerState` receiver remains in `libraries/client.lua` because it closes over `adminStickPlayerStates`, `AdminStickMenu`, and surrounding private UI state.
 
-**Panels:** `vgui.Register("liaAdminStickActionCollector", ...)` and `vgui.Register("liaAdminStickPanel", ...)` are in `libraries/client.lua`. This is a valid placement defect, but both registrations depend on a very large set of private helpers/state defined in the same client file. Moving only the panel blocks would break lexical scope; moving the whole file would incorrectly move non-panel module logic. Intentional mixed-file exception.
+Module-only panels `liaAdminStickActionCollector` and `liaAdminStickPanel` remain in `libraries/client.lua`. This is a valid placement issue but unsafe to split: both depend on a large private lexical helper/state graph in that file. It is an intentional mixed-file exception.
 
-**Commands/meta:** no module-owned command or meta definition found.
+No module-owned command or meta definition was found.
 
 ### Administration / Logs
 
-**Entry:** correctly placed in `module.lua`.
+Entry, client/server libraries, and client/server netcalls are correctly placed.
 
-**Module-only network strings:** `liaSendLogs`, `liaSendLogsCategories`, `liaSendLogsCategoriesRequest`, `liaSendLogsRequest`.
+Module-only network strings: `liaSendLogs`, `liaSendLogsCategories`, `liaSendLogsCategoriesRequest`, `liaSendLogsRequest`.
 
-**Receivers:** client/server receivers are already under `netcalls/client.lua` and `netcalls/server.lua`.
-
-**Libraries:** client/server log UI/storage behavior is correctly under realm libraries.
-
-**Panels/commands/meta:** no misplaced module-owned registrations found.
+Handlers are under the module's `netcalls/client.lua` and `netcalls/server.lua`. No misplaced module-only command, panel registration, or meta definition was found.
 
 ### Administration / Tickets
 
-**Entry:** correctly placed in `module.lua`.
+Entry, client/server libraries, and client/server netcalls are correctly placed.
 
-**Module-only network strings:** `liaActiveTickets`, `liaClearAllTicketFrames`, `liaRequestActiveTickets`, `liaRequestTicketsCount`, `liaTicketsCount`, `liaTicketSystem`, `liaTicketSystemClaim`, `liaTicketSystemClose`, `liaViewClaims`.
+Module-only network strings: `liaActiveTickets`, `liaClearAllTicketFrames`, `liaRequestActiveTickets`, `liaRequestTicketsCount`, `liaTicketsCount`, `liaTicketSystem`, `liaTicketSystemClaim`, `liaTicketSystemClose`, `liaViewClaims`.
 
-**Receivers:** literal receivers are under `netcalls/client.lua` and `netcalls/server.lua`.
+Module-only command `ticket` remains in `libraries/server.lua` because it calls private local `SendPopup`, also used by `MODULE:PlayerSay` and ticket lifecycle state. Extracting it would require redesigning helper scope. Intentional mixed-file exception.
 
-**Command:** `lia.command.add("ticket", ...)` is in `libraries/server.lua`. The command calls private local `SendPopup`, which is also used by `MODULE:PlayerSay`; the same helper performs ticket sends, active-ticket mutation, and hook emission. Extracting the command without redesigning helper scope is unsafe. Intentional mixed-file exception.
-
-**Related sends:** ticket broadcast/close sends remain in `libraries/server.lua` because they are embedded in ticket lifecycle hooks and the same private state. Moving calls alone would not create an independent networking unit.
-
-**Panels/meta:** no module-owned `vgui.Register` or meta definition found.
+No module-owned `vgui.Register` or meta definition was found.
 
 ### Administration / Warnings
 
-**Entry:** correctly placed in `module.lua`.
+Entry and server library are correctly placed. Client/server handlers are already under `netcalls/client.lua` and `netcalls/server.lua`.
 
-**Module-only network strings:** `liaAllWarnings`, `liaPlayerWarnings`, `liaRequestAllWarnings`, `liaRequestRemoveWarning`, `liaRequestWarningsCount`, `liaWarningsCount`.
+Module-only network strings: `liaAllWarnings`, `liaPlayerWarnings`, `liaRequestAllWarnings`, `liaRequestRemoveWarning`, `liaRequestWarningsCount`, `liaWarningsCount`.
 
-**Receivers:** already separated under `netcalls/client.lua` and `netcalls/server.lua`.
-
-**Libraries:** warning persistence/business logic is server-only and correctly placed.
-
-**Panels/commands/meta:** no misplaced module-owned registrations found.
+No misplaced module-only command, panel registration, or meta definition was found.
 
 ### Attributes
 
-**Entry:** correctly placed in `module.lua`.
-
-No module-owned network-string declaration, command registration, `vgui.Register`, or meta definition was found. Client/server/shared attribute libraries are correctly realm-separated.
+Entry and `libraries/client.lua`, `server.lua`, `shared.lua` are correctly placed. No module-owned network-string declaration, command registration, panel registration, or meta definition was found.
 
 ### Chatbox
 
-**Entry:** correctly placed in `module.lua`.
+Entry and realm libraries/netcalls are correctly placed.
 
-**Module-only network strings:** `liaChatboxAddFilteredWord`, `liaChatboxRemoveFilteredWord`, `liaChatboxRequestFilteredWords`, `liaChatboxSyncFilteredWords`.
+Module-only network strings: `liaChatboxAddFilteredWord`, `liaChatboxRemoveFilteredWord`, `liaChatboxRequestFilteredWords`, `liaChatboxSyncFilteredWords`.
 
-**Receivers:** already separated under `netcalls/client.lua` and `netcalls/server.lua`.
+Handlers are under `netcalls/client.lua` and `netcalls/server.lua`. Sends embedded in chat business logic remain with that logic when extracting the send alone would split its helper/hook behavior.
 
-**Libraries:** chat parsing, UI helpers, filtering, and send helpers are realm-separated. Network sends embedded in chat business logic are left in place when no independent extraction can preserve the surrounding helper scope and order.
-
-**Panels/commands/meta:** no misplaced module-owned registrations found.
+No misplaced module-only command, panel registration, or meta definition was found.
 
 ### Doors
 
-**Entry:** correctly placed in `module.lua`.
-
-No module-owned network-string declaration, command registration, `vgui.Register`, or meta definition was found. Door libraries are correctly realm-separated. The `lia_keys` SWEP remains in its entity/SWEP folder; its interaction behavior is entity lifecycle code, not a standalone module netcall unit.
+Entry and client/server libraries are correctly placed. The `lia_keys` SWEP remains with SWEP lifecycle code. No module-owned network-string declaration, command registration, panel registration, or meta definition was found.
 
 ### Inventory
 
-**Entry:** `gamemode/modules/inventory/module.lua` is correctly placed and intentionally loads the configured inventory type with `lia.module.load(...)`.
-
-The parent contains no independent module-owned receivers, commands, panels, or meta definitions. Ownership of type-specific behavior belongs to the selected GridInv or WeightInv module scope, not the parent.
+`module.lua` intentionally selects and loads one inventory type. The parent does not own the implementation details of GridInv or WeightInv and contains no independent misplaced receiver, command, panel registration, or meta definition.
 
 ### Inventory / GridInv
 
-**Entry:** correctly placed in `module.lua`.
+Entry: `module.lua`.
 
-**Module-only network string:** `liaRestoreOverflowItems`.
+Module-only network string: `liaRestoreOverflowItems`; its server receiver is already in `netcalls/server.lua`.
 
-**Receiver:** restore-overflow handling is already under `netcalls/server.lua`.
-
-**Panels:** all confirmed GridInv registrations are correctly under `derma`:
+Module-only panels are correctly under `derma`:
 
 - `liaGridInventory` -> `derma/cl_grid_inventory.lua`
 - `liaGridInventoryMenu` -> `derma/cl_grid_inventory.lua`
 - `liaGridInvItem` -> `derma/cl_grid_inventory_item.lua`
 - `liaGridInventoryPanel` -> `derma/cl_grid_inventory_panel.lua`
 
-**Dependency/library exception:** `gridinv.lua` is explicitly declared as a shared `MODULE.Dependencies` file. It defines/registers the GridInv inventory class and intentionally loads before normal extras. Moving it under `libraries` would change required load order, so it remains at the type root.
+`gridinv.lua` is an explicit shared dependency, not a misplaced normal library. Core/shared inventory messages such as `liaTransferItem` and `liaInvAct` are not re-owned by GridInv.
 
-**Related sends:** `liaTransferItem`/`liaInvAct` usage is shared/core inventory networking rather than a GridInv-exclusive message definition. Those calls are not re-owned or moved.
-
-**Meta/commands:** no module-owned command or meta definition found.
+No module-owned command or meta definition was found.
 
 ### Inventory / GridInv / Storage
 
-**Entry:** correctly placed in `module.lua`.
+Entry and realm libraries are correctly placed.
 
-**Module-only network strings:** `liaStorageExit`, `liaStorageSetPassword`, `liaStorageTransfer`, `liaStorageUnlock`, `liaTrunkInitStorage`.
+Module-only network strings: `liaStorageExit`, `liaStorageSetPassword`, `liaStorageTransfer`, `liaStorageUnlock`, `liaTrunkInitStorage`.
 
-**Receivers:** server/client handlers are under `netcalls/server.lua` and `netcalls/client.lua`. `netcalls/shared.lua` contains `net.Receive("liaTrunkInitStorage", ...)`, which calls the explicitly shared `InitializeStorage` hook. No sender for `liaTrunkInitStorage` exists elsewhere in the audited repository. Moving it to one realm would guess direction; duplicating it into both realm files would alter definition count/maintenance semantics. It remains an intentional realm exception.
+Normal client/server handlers are under `netcalls/client.lua` and `netcalls/server.lua`. `netcalls/shared.lua` contains `liaTrunkInitStorage`, which invokes the shared `InitializeStorage` hook. No sender in this repository proves one-way realm ownership. Moving it to one realm would guess direction; duplicating it would change registration count. It remains an intentional realm exception.
 
-**Libraries/entities:** realm-specific storage behavior and `lia_storage` entity lifecycle files remain in place.
-
-**Panels/commands/meta:** no module-owned `vgui.Register`, command, or meta definition found.
+The `lia_storage` entity files remain entity lifecycle code. No module-owned command, `vgui.Register`, or meta definition was found.
 
 ### Inventory / WeightInv
 
-**Entry:** correctly placed in `module.lua`.
+Entry and client/server libraries are correctly placed.
 
-No module-owned network-string declaration or command registration was found.
-
-**Panels:** all confirmed WeightInv registrations are correctly under `derma`:
+Module-only panels are correctly under `derma`:
 
 - `liaListInventory` -> `derma/cl_list_inventory.lua`
 - `liaListInventoryPanel` -> `derma/cl_list_inventory_panel.lua`
 - `liaListStorage` -> `derma/cl_list_storage.lua`
 
-**Dependency/library exception:** `weightinv.lua` is explicitly declared as a shared `MODULE.Dependencies` file. Moving it under `libraries` would alter dependency load order, so it remains at the type root.
+`weightinv.lua` is an explicit shared dependency and remains at the type root to preserve dependency load order.
 
-**Meta:** no confirmed module-owned meta definition.
+No module-owned network-string declaration, command registration, or meta definition was found.
 
 ### Main Menu
 
-**Entry:** `gamemode/modules/mainmenu/module.lua` is correctly placed and intentionally contains module API/hook methods.
+Entry: `module.lua`; static module netcalls also exist under `netcalls/client.lua` and `netcalls/server.lua`.
 
-**Module-only network string:** `liaMainCharacterSet`.
+Module-only network string: `liaMainCharacterSet`.
 
-Main Menu also uses shared/core character networking (`liaCharChoose`, `liaCharCreate`, `liaCharDelete`, `liaCharList`, and related character messages). Those names are not reclassified as Main Menu-owned solely because this module sends/receives them.
+Main Menu also participates in core/shared character networking such as `liaCharChoose`, `liaCharCreate`, `liaCharDelete`, and `liaCharList`. Those names are not Main Menu-owned merely because this module uses them.
 
-**Dynamic receiver exceptions:** `MODULE:ChooseCharacter` installs a `net.Receive("liaCharChoose", ...)` closure that captures request-local deferred `d` and character `id`; `MODULE:CreateCharacter` similarly installs `net.Receive("liaCharCreate", ...)` around request-local deferred state. Moving those closures to a static client netcall file would require new pending-request state/correlation and would change the module API implementation. They remain in `module.lua` as intentional mixed entry/network exceptions.
+`MODULE:ChooseCharacter` and `MODULE:CreateCharacter` install request-local `liaCharChoose`/`liaCharCreate` receivers that capture deferred/request state. Moving them into static netcall files would require new pending-request state and correlation behavior. They remain intentional module-entry/network exceptions.
 
-**Other receivers:** module-owned static main-character handling remains in the existing `netcalls/client.lua`/`server.lua` files.
+`vgui.Create("liaCharacter")` is dynamic construction of a panel registered elsewhere and is a scanner false positive if treated as a Main Menu panel definition.
 
-**Panels:** `vgui.Create("liaCharacter")` is dynamic construction of a panel registered elsewhere; it is not a Main Menu `vgui.Register` definition and is a dashboard/scanner false positive if treated as one.
-
-**Commands/meta:** no module-owned command or meta definition found.
+No module-owned command or meta definition was found.
 
 ### Protection
 
-**Entry:** correctly placed in `module.lua`.
+Entry: `module.lua`.
 
-**Module-only network strings:** `liaVerifyCheats`, `liaRequestEntityTabData`, `liaEntityTabData`.
+Module-only network strings: `liaVerifyCheats`, `liaRequestEntityTabData`, `liaEntityTabData`.
 
-**Server receiver:** `net.Receive("liaRequestEntityTabData", ...)` plus private `getEntityOwner` are a self-contained top block in `libraries/server.lua`. This is a valid placement defect and is safe to move to `netcalls/server.lua`.
+`concommand.Add("lia_backdoorcheck", ...)` and its implementation occupied all of former `libraries/shared.lua`. The entire blob was moved unchanged to root `commands.lua`, preserving its shared realm and command name while fixing placement.
 
-**Client receiver:** anti-cheat/client networking already has `netcalls/client.lua`.
+`net.Receive("liaRequestEntityTabData", ...)` and its private `getEntityOwner` helper form a module-only server block in `libraries/server.lua`, so the current location is a valid placement issue. The connected repository writer only supports whole-file replacement for that large mixed library; available reads are truncated. Reconstructing the unrelated server hooks would not satisfy exact-preservation requirements. The file is therefore intentionally unchanged in this pass and flagged as a preservation/tooling exception rather than rewritten speculatively.
 
-**Console command:** `concommand.Add("lia_backdoorcheck", ...)` and all of its implementation/helpers occupy the entirety of `libraries/shared.lua`. The file has no reusable Protection library API and search finds no external reference to the command implementation helpers. Moving the complete file to root `commands.lua` preserves its shared realm while putting command-only code in the command location. This is a safe placement fix.
-
-**Panels/meta:** no module-owned `vgui.Register` or meta definition found.
+Client anti-cheat/net handling already has `netcalls/client.lua`. No module-owned panel registration or meta definition was found.
 
 ### Recognition
 
-**Entry:** correctly placed in `module.lua`.
+Entry, realm libraries, and client netcall are correctly placed.
 
-**Module-only network string:** `liaRgnDone`.
+Module-only network string: `liaRgnDone`; the client handler is under `netcalls/client.lua`.
 
-**Receiver:** client completion handling is already under `netcalls/client.lua`.
+Root `pim.lua` contains Recognition-only player-interaction registration and associated `liaRgnDone` sends. It is an explicit server-only Lilia loader extra and remains unchanged.
 
-**PIM:** root `pim.lua` is module-only recognition interaction registration and is correctly placed according to Lilia's special module loader. Its `liaRgnDone` send is part of the interaction execution closure and remains there.
-
-**Libraries/panels/commands/meta:** libraries are realm-separated; no misplaced command, panel registration, or meta definition found.
+No module-owned command, panel registration, or meta definition was found.
 
 ### Spawns
 
-**Entry:** correctly placed in `module.lua`.
+Entry and client/server libraries are correctly placed. No module-owned network-string declaration, command registration, panel registration, or meta definition was found.
 
-No module-owned network-string declaration, command registration, `vgui.Register`, or meta definition was found. Client/server spawn libraries are correctly realm-separated. Administration invokes the Spawns module API for staff spawn-position tooling; that consumer relationship does not make Spawns library definitions Administration-owned.
+Administration calls the Spawns module API for staff spawn-position tooling; that consumer relationship does not transfer ownership of the Spawns library.
 
 ### Teams
 
-**Entry:** correctly placed in `module.lua`.
+Entry, realm libraries, server netcalls, and root `pim.lua` are structurally recognized.
 
-**Module-only network strings:** `liaFactionMembers`, `liaFactionMemberDetails`, `liaKickCharacterToBase`, `liaRequestFactionMembers`, `liaRequestFactionMemberDetails`, `liaSaveFactionNote`.
+Module-only network strings: `liaFactionMembers`, `liaFactionMemberDetails`, `liaKickCharacterToBase`, `liaRequestFactionMembers`, `liaRequestFactionMemberDetails`, `liaSaveFactionNote`.
 
-**Receivers:** literal server receivers are under `netcalls/server.lua`.
+Static handlers are under `netcalls/server.lua`.
 
-**Command:** `lia.command.add("speed", ...)` is in `libraries/server.lua`. The command block itself is small, but it is interleaved in a very large server library between module hook/API definitions. Moving it to the later commands pass changes its registration point relative to the rest of the Teams library. No requirement in this repository proves that registration-order change is harmless, so it remains an intentional mixed-file/load-order exception rather than being moved speculatively.
+Module-only command `speed` remains in `libraries/server.lua`. It is interleaved in a large server library and moving it to the later command loader phase would alter registration timing; no repository evidence proves that timing change is harmless. Intentional mixed-file/load-order exception.
 
-**PIM:** root `pim.lua` is a recognized server-only loader extra and correctly contains Teams player-interaction registrations.
+Net sends using core/shared team/class messages remain inside their owning hook/business logic instead of being moved based on `net.Start` alone.
 
-**Related sends:** `liaClassUpdate` and other core/shared team/class sends embedded in module hooks are not moved merely because they use `net.Start`; moving the call alone would split hook business logic and can re-own shared/core messages incorrectly.
-
-**Panels/meta:** no module-owned `vgui.Register` or meta definition found.
+No module-owned panel registration or meta definition was found.
 
 ### Vendor
 
-**Entry:** correctly placed in `module.lua`.
+Entry, realm libraries, and client/server netcalls are correctly placed.
 
-**Module-only network strings:** `liaVendorAllowClass`, `liaVendorAllowFaction`, `liaVendorBuyPrice`, `liaVendorDeletePreset`, `liaVendorExit`, `liaVendorFaction`, `liaVendorFactionBuyScale`, `liaVendorFactionSellScale`, `liaVendorInitialSync`, `liaVendorLoadPreset`, `liaVendorMaxStock`, `liaVendorMode`, `liaVendorOpen`, `liaVendorRequestData`, `liaVendorSavePreset`, `liaVendorSellPrice`, `liaVendorStock`, `liaVendorSync`, `liaVendorSyncMessages`, `liaVendorTrade`.
+Module-only network strings: `liaVendorAllowClass`, `liaVendorAllowFaction`, `liaVendorBuyPrice`, `liaVendorDeletePreset`, `liaVendorExit`, `liaVendorFaction`, `liaVendorFactionBuyScale`, `liaVendorFactionSellScale`, `liaVendorInitialSync`, `liaVendorLoadPreset`, `liaVendorMaxStock`, `liaVendorMode`, `liaVendorOpen`, `liaVendorRequestData`, `liaVendorSavePreset`, `liaVendorSellPrice`, `liaVendorStock`, `liaVendorSync`, `liaVendorSyncMessages`, `liaVendorTrade`.
 
-**Receivers:** static client/server receivers are already under `netcalls/client.lua` and `netcalls/server.lua`.
+Static handlers are under `netcalls/client.lua` and `netcalls/server.lua`.
 
-**Panels:** all confirmed Vendor registrations are correctly under `derma/client.lua`:
+Module-only panel registrations are correctly under `derma/client.lua`:
 
 - `liaVendor`
 - `liaVendorItem`
 - `liaVendorEditorItemRow`
 - `liaVendorEditor`
 
-Network sends inside Vendor panel/entity actions remain with those actions when moving the send alone would split entity/UI behavior from its lifecycle method. The actual static receive routing is already in `netcalls`.
+Net sends inside Vendor UI/entity methods remain with those lifecycle actions; moving a send alone is not a safe networking extraction.
 
-**Commands/meta:** no module-owned command or meta definition found.
+No module-owned command or meta definition was found.
 
 ## Meta audit
 
-Repository-wide `FindMetaTable`/meta-definition signatures do not identify a confirmed module-owned meta extension under `gamemode/modules`. Lilia core meta definitions under `gamemode/core/meta` are shared framework code and are intentionally untouched. A `FindMetaTable` occurrence inside the Storage entity client file is not, by itself, proof of a module-owned meta definition that can be moved.
+No confirmed module-owned meta extension was found under `gamemode/modules`. Lilia core meta definitions under `gamemode/core/meta` are shared framework code and were intentionally untouched. A `FindMetaTable` use inside module/entity code is not sufficient evidence of a movable module meta definition.
 
-## Confirmed placement defects
+## Valid placement findings
 
-| Finding | Ownership | Safety | Action |
-| --- | --- | --- | --- |
-| Protection `lia_backdoorcheck` command implementation in `libraries/shared.lua` | Module-only | Safe: whole file is command implementation and can keep shared realm | Move whole file to `gamemode/modules/protection/commands.lua` |
-| Protection `liaRequestEntityTabData` receiver/helper in `libraries/server.lua` | Module-only | Safe: self-contained top block | Move block to `gamemode/modules/protection/netcalls/server.lua` |
-| Admin Stick `liaAdminStickRequestPlayerState` receiver/helpers in `libraries/server.lua` | Module-only | Safe: self-contained block, independent of `PostPlayerLoadout` | Move block to `.../adminstick/netcalls/server.lua` |
-| Admin Stick client receiver in `libraries/client.lua` | Module-only | Unsafe: closes over private client state | Leave; document exception |
-| Admin Stick `vgui.Register` definitions in `libraries/client.lua` | Module-only | Unsafe: extensive private lexical dependencies | Leave; document exception |
-| Administration `liaNetProfilerSnapshot` receiver in `libraries/client.lua` | Module-only | Not proven safe: coupled to adjacent profiler UI/big-table handlers and current registration order | Leave; document exception |
-| Administration `sayall` in `libraries/shared.lua` | Module-only registration inside mixed file | Not proven safe under required load-order preservation | Leave; document exception |
-| Tickets `ticket` in `libraries/server.lua` | Module-only | Unsafe: closes over shared private `SendPopup` used by hooks | Leave; document exception |
-| Teams `speed` in `libraries/server.lua` | Module-only | Not proven safe under required load-order preservation | Leave; document exception |
-| Main Menu dynamic `liaCharChoose`/`liaCharCreate` receivers in `module.lua` | Uses shared/core character messages | Unsafe: request-local closure/deferred state | Leave; document exception |
-| Storage `liaTrunkInitStorage` receiver in `netcalls/shared.lua` | Storage-only name | Realm/direction ambiguous in-repo | Leave; document exception |
+| Finding | Classification | Final action |
+| --- | --- | --- |
+| Protection command implementation in `libraries/shared.lua` | Module-only, safely separable as an entire file | Moved byte-identically to `protection/commands.lua` |
+| Admin Stick `liaAdminStickRequestPlayerState` receiver/helpers in `libraries/server.lua` | Module-only, self-contained | Moved to `adminstick/netcalls/server.lua` |
+| Protection `liaRequestEntityTabData` receiver/helper in `libraries/server.lua` | Module-only, semantically separable | Left unchanged because exact whole-file preservation cannot be guaranteed through the available repository writer |
+| Admin Stick client state receiver in `libraries/client.lua` | Module-only | Left; private UI-state dependency |
+| Admin Stick `vgui.Register` definitions in `libraries/client.lua` | Module-only | Left; extensive private lexical dependencies |
+| Administration profiler snapshot receiver in `libraries/client.lua` | Module-only | Left; coupled to adjacent profiler receive/UI state and load ordering |
+| Administration `sayall` in `libraries/shared.lua` | Module-only registration in mixed file | Left; loader-phase change not proven safe |
+| Tickets `ticket` in `libraries/server.lua` | Module-only | Left; shares private `SendPopup` with hooks |
+| Teams `speed` in `libraries/server.lua` | Module-only | Left; loader-phase change not proven safe |
+| Main Menu dynamic character receivers in `module.lua` | Shared/core character-message use | Left; request-local deferred closure state |
+| Storage `liaTrunkInitStorage` in `netcalls/shared.lua` | Storage-only name, realm ambiguous | Left; sender direction cannot be proven |
 
 ## Shared code intentionally left unchanged
 
-- All `gamemode/core/**` networking, meta, Derma, loader, item, character, and utility code.
-- Core/shared character networking used by Main Menu (`liaCharChoose`, `liaCharCreate`, `liaCharDelete`, `liaCharList`, related character flow).
-- Core/shared inventory networking used by GridInv/WeightInv (`liaTransferItem`, `liaInvAct`, and shared inventory APIs).
-- Administration shared registration code that integrates with the Spawns module.
-- Entity/SWEP lifecycle behavior whose networking calls are inseparable from entity methods without changing APIs/load behavior.
-- Module hook methods on `MODULE`; Lilia registers these automatically and moving them based on `hook.Add` heuristics would change module API layout.
+- `gamemode/core/**`, including core networking, meta, Derma, loader, character, item, and utility code.
+- Shared/core character messages used by Main Menu.
+- Shared/core inventory messages and APIs used by GridInv/WeightInv.
+- Administration code that integrates with Spawns.
+- Entity/SWEP lifecycle methods whose networking calls are inseparable from the action lifecycle.
+- All module hook APIs and public `MODULE` methods other than moving the independent Admin Stick net receiver helpers out of its library.
 
-## Ambiguous code not moved
+## Ambiguous code intentionally left unchanged
 
-- Storage `liaTrunkInitStorage`: receiver is intentionally shared, `InitializeStorage` is documented shared, and no in-repo sender proves one-way realm ownership.
-- Main Menu dynamic character request receivers: shared/core message ownership plus request-local deferred closures.
-- Root `gridinv.lua` and `weightinv.lua`: explicit dependencies whose early load order is part of module initialization.
-- Root `recognition/pim.lua` and `teams/pim.lua`: explicit Lilia special extras.
-- Administration and Admin Stick large client files: network/UI definitions share local state with surrounding UI implementation.
-- Ticket command/send code: one private helper is consumed by both the command and module hook path.
+- Storage `liaTrunkInitStorage` realm/direction.
+- Main Menu request-local character receive closures and core/shared message ownership.
+- `gridinv.lua` and `weightinv.lua` explicit dependency files.
+- Recognition/Teams root `pim.lua` special loader files.
+- Large Administration/Admin Stick client mixed files with private UI state.
+- Tickets command/helper mixed file.
+- Teams command/library timing case.
+- Protection server entity-tab extraction, because exact unrelated-file preservation cannot be guaranteed by the available writer.
 
-## Dashboard-style findings: valid issues
+## Dashboard findings and false positives
 
-- `vgui.Register` outside `derma`: Admin Stick has two real registrations in `libraries/client.lua`.
-- `net.Receive` outside `netcalls`: Admin Stick server/client, Protection server entity-tab receiver, Administration profiler snapshot receiver, and Main Menu dynamic request receivers are real signatures. Only the two self-contained server blocks are safe to move in this pass.
-- Command registration outside `commands.lua`: Protection backdoor checker, Administration `sayall`, Tickets `ticket`, and Teams `speed` are real signatures. Only the whole-file Protection command is moved because the other mixed files do not satisfy the required load-order/scope proof.
-- `netcalls/shared.lua`: Storage has a real realm-separation exception that cannot be resolved without guessing message direction.
+Valid dashboard-style findings were the misplaced Admin Stick panel registrations, misplaced static receivers listed above, command registrations outside `commands.lua`, and the Storage shared-netcall realm exception.
 
-## Dashboard/scanner false positives or incomplete signals
+False positives/incomplete results include:
 
-- Any warning based only on `vgui.Create` is a false positive for panel-definition placement. Dynamic construction does not define/register the panel.
-- Root `pim.lua` findings are false positives; Lilia explicitly loads `pim.lua` server-side.
-- Root GridInv/WeightInv implementation files are false positives if treated as ordinary misplaced libraries; they are explicit `MODULE.Dependencies` and require earlier loading.
-- A scanner that only checks literal `net.Receive` misses `lia.net.readBigTable` receive registrations in Administration and elsewhere.
-- A scanner that assumes every network name used in a module is owned by that module misclassifies core character/inventory messages used by Main Menu and inventory types.
-- A scanner that treats every `MODULE:HookName` method as unregistered misses Lilia's automatic module-hook registration step.
-
-## Mixed files intentionally left unchanged
-
-- `gamemode/modules/administration/libraries/shared.lua`
-- `gamemode/modules/administration/libraries/client.lua`
-- `gamemode/modules/administration/submodules/adminstick/libraries/client.lua`
-- `gamemode/modules/administration/submodules/tickets/libraries/server.lua`
-- `gamemode/modules/teams/libraries/server.lua`
-- `gamemode/modules/mainmenu/module.lua`
-- `gamemode/modules/inventory/types/gridinv/submodules/storage/netcalls/shared.lua`
-
-Each is left unchanged because safe extraction of the reported registration/handler cannot be proven while preserving lexical scope, realm, load order, shared ownership, or request state.
-
-## Planned safe code changes after this audit commit
-
-1. Move `gamemode/modules/protection/libraries/shared.lua` to `gamemode/modules/protection/commands.lua` without changing its contents.
-2. Move `getEntityOwner` plus `net.Receive("liaRequestEntityTabData", ...)` from the top of `gamemode/modules/protection/libraries/server.lua` into new `gamemode/modules/protection/netcalls/server.lua`.
-3. Move Admin Stick's `canManageAdminStickPlayer`, `buildAdminStickPlayerState`, and `net.Receive("liaAdminStickRequestPlayerState", ...)` from `.../adminstick/libraries/server.lua` into new `.../adminstick/netcalls/server.lua`.
-4. Do not alter any shared or ambiguous files listed above.
-
-## Verification requirements after code changes
-
-The final pass must verify:
-
-- no stale old-path references to `protection/libraries/shared.lua`;
-- no duplicate `lia_backdoorcheck`, `liaRequestEntityTabData`, or `liaAdminStickRequestPlayerState` definitions;
-- every moved file is discovered exactly once by Lilia's loader;
-- command realm remains shared and both moved receivers remain server-only;
-- `liaRequestEntityTabData` remains paired with `liaEntityTabData` output and `liaAdminStickRequestPlayerState` remains paired with `liaAdminStickPlayerState` output;
-- all `vgui.Register` and command registration counts outside the intentionally documented exceptions remain unchanged;
-- module hook names and public `MODULE` APIs remain unchanged;
-- available Lua/static syntax checks are run where tooling permits;
-- `git diff --check` or an equivalent whitespace/error check is run where tooling permits;
-- final diff contains no changes to shared or ambiguous code other than this audit document.
+- treating `vgui.Create` as a panel registration;
+- treating root `pim.lua` as a misplaced library;
+- treating GridInv/WeightInv explicit dependencies as ordinary libraries;
+- assuming every net name used by a module is owned by it;
+- scanning only `net.Receive` and missing `lia.net.readBigTable`;
+- treating `MODULE` methods as unregistered hooks because no literal `hook.Add` appears.
 
 ## Files moved or modified
 
-Pre-change state: only `MODULE_AUDIT.md` has been created. This section will be refreshed after the safe code changes and verification are complete.
+- `MODULE_AUDIT.md`: created before Lua changes, then finalized after verification.
+- `gamemode/modules/protection/libraries/shared.lua` -> `gamemode/modules/protection/commands.lua`: byte-identical rename; blob SHA remained `a3eaabfde6943de523b1514fe1e2b3ec2813d039`.
+- `gamemode/modules/administration/submodules/adminstick/libraries/server.lua`: removed only the self-contained request receiver and its two private helpers; `MODULE:PostPlayerLoadout` remains.
+- `gamemode/modules/administration/submodules/adminstick/netcalls/server.lua`: added the moved helpers and `liaAdminStickRequestPlayerState` receiver.
+
+No shared or ambiguous Lua code was modified.
+
+## Verification
+
+- **Audit-first order:** PASS. Initial audit commit `a8a2c092a1a6b066201619da93cd4ba03c272efb` precedes both Lua commits.
+- **Stale path:** PASS for the applied Protection move. `protection/libraries/shared.lua` no longer exists and `protection/commands.lua` resolves to the original blob.
+- **Duplicate definitions:** PASS for applied changes. The old Protection file is deleted; Admin Stick's request receiver was removed from `libraries/server.lua` and exists in the new `netcalls/server.lua`.
+- **Loaded exactly once:** PASS by loader structure. Root `commands.lua` is one recognized module extra; `netcalls/server.lua` is loaded once through the module netcalls directory.
+- **Realm separation:** PASS. Protection command remains shared through root `commands.lua`; Admin Stick request receiver is now server-only by path/filename.
+- **Net pairing:** PASS. `liaAdminStickRequestPlayerState` still reads the same target and replies with `liaAdminStickPlayerState`; declared network names were not changed.
+- **Panel registration count:** PASS for the diff. No panel file or `vgui.Register` definition was modified.
+- **Command registration count:** PASS for the applied Protection command. The same command blob was renamed with zero content changes and the old path was removed.
+- **Hooks/module APIs:** PASS for the diff. `MODULE:PostPlayerLoadout` remains byte-for-byte in behavior and module entries/public APIs were not changed.
+- **Lua/static syntax tools:** no Lua, LuaJIT, `luac`, `luacheck`, GLua linter, or StyLua executable is available in the provided runtime. The Protection command bytes are unchanged; the Admin Stick moved block was reviewed directly and its diff is a pure extraction.
+- **`git diff --check`:** PASS on a local Git reconstruction of the exact applied rename/split.
+- **Final diff scope:** PASS. Code diff from the audit commit consists only of the Protection rename and Admin Stick extraction; no unrelated/shared/ambiguous Lua file is changed.
+
+## Result
+
+The audit found multiple structurally imperfect placements, but only two were changed because they satisfied both exclusive ownership and preservation requirements. All other valid findings remain documented exceptions rather than speculative moves.
