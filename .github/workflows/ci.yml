@@ -185,11 +185,11 @@ jobs:
           rm -rf documentation/docs/compatibility
       - if: ${{ steps.skip_docs_regen.outputs.present != 'true' }}
         run: |
-          python3 generate_docs.py meta --force
-          python3 generate_docs.py library --force
-          python3 generate_docs.py hooks --force
-          python3 generate_docs.py compatibility --force
-          python3 generate_docs.py about --force
+          python3 scripts/generate_docs.py meta --force
+          python3 scripts/generate_docs.py library --force
+          python3 scripts/generate_docs.py hooks --force
+          python3 scripts/generate_docs.py compatibility --force
+          python3 scripts/generate_docs.py about --force
       - run: |
           python3 remove_comments.py gamemode
       - if: ${{ steps.skip_docs_regen.outputs.present != 'true' }}
@@ -314,7 +314,7 @@ jobs:
           curl -sqL "https://steamcdn-a.akamaihd.net/client/installer/steamcmd_linux.tar.gz" | tar zxvf - -C ~/Steam
       - run: |
           cd addon
-          lua5.3 ../gmacreator.lua ../3527535922.gma addon.json
+           lua5.3 ../scripts/gmacreator.lua ../3527535922.gma addon.json
       - run: |
           echo "Created workshop addon 3527535922.gma"
       - run: |
@@ -378,11 +378,11 @@ jobs:
           rm -rf documentation/docs/compatibility
       - if: ${{ steps.skip_docs_regen.outputs.present != 'true' }}
         run: |
-          python3 generate_docs.py meta --force
-          python3 generate_docs.py library --force
-          python3 generate_docs.py hooks --force
-          python3 generate_docs.py compatibility --force
-          python3 generate_docs.py about --force
+           python3 scripts/generate_docs.py meta --force
+           python3 scripts/generate_docs.py library --force
+           python3 scripts/generate_docs.py hooks --force
+           python3 scripts/generate_docs.py compatibility --force
+           python3 scripts/generate_docs.py about --force
       - run: |
           python3 remove_comments.py gamemode
       - if: ${{ steps.skip_docs_regen.outputs.present != 'true' }}
@@ -429,12 +429,12 @@ jobs:
         with:
           node-version: '24'
           cache: npm
-          cache-dependency-path: documentation/docs/derma_generator/source/package-lock.json
+          cache-dependency-path: documentation/docs/tools/derma_generator/source/package-lock.json
       - name: Build Derma Generator
         run: |
-          npm ci --prefix documentation/docs/derma_generator/source
-          npm --prefix documentation/docs/derma_generator/source run build:docs
-          rm -rf documentation/docs/derma_generator/source/node_modules
+          npm ci --prefix documentation/docs/tools/derma_generator/source
+          npm --prefix documentation/docs/tools/derma_generator/source run build:docs
+          rm -rf documentation/docs/tools/derma_generator/source/node_modules
       - uses: actions/checkout@v7
         with:
           repository: LiliaFramework/LiliaFramework.github.io

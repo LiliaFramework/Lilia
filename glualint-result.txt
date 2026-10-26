@@ -1,0 +1,331 @@
+gamemode\core\derma\panels\chatbox.lua: [Warning] line 349, column 29 - line 349, column 162: Are you Egyptian? What's with these fucking scope pyramids!?
+gamemode\core\derma\panels\chatbox.lua: [Warning] line 387, column 29 - line 387, column 70: Are you Egyptian? What's with these fucking scope pyramids!?
+gamemode\core\derma\panels\chatbox.lua: [Warning] line 401, column 125 - line 401, column 149: Are you Egyptian? What's with these fucking scope pyramids!?
+gamemode\core\derma\panels\dialog.lua: [Warning] line 227, column 36 - line 227, column 156: Double if statement. Please combine the condition of this if statement with that of the outer if statement using `and`.
+gamemode\core\derma\panels\f1menu.lua: [Warning] line 2105, column 154 - line 2105, column 219: Are you Egyptian? What's with these fucking scope pyramids!?
+gamemode\core\derma\panels\f1menu.lua: [Warning] line 2179, column 37 - line 2179, column 150: Are you Egyptian? What's with these fucking scope pyramids!?
+gamemode\core\derma\panels\f1menu.lua: [Warning] line 2237, column 54 - line 2237, column 68: Are you Egyptian? What's with these fucking scope pyramids!?
+gamemode\core\derma\panels\f1menu.lua: [Warning] line 2270, column 37 - line 2270, column 75: Are you Egyptian? What's with these fucking scope pyramids!?
+gamemode\core\derma\panels\f1menu.lua: [Warning] line 2288, column 37 - line 2288, column 69: Are you Egyptian? What's with these fucking scope pyramids!?
+gamemode\core\derma\panels\f1menu.lua: [Warning] line 2293, column 56 - line 2293, column 81: Are you Egyptian? What's with these fucking scope pyramids!?
+gamemode\core\derma\panels\f1menu.lua: [Warning] line 2294, column 78 - line 2294, column 106: Are you Egyptian? What's with these fucking scope pyramids!?
+gamemode\core\derma\panels\f1menu.lua: [Warning] line 2442, column 33 - line 2445, column 36: Are you Egyptian? What's with these fucking scope pyramids!?
+gamemode\core\derma\panels\f1menu.lua: [Warning] line 2465, column 33 - line 2465, column 103: Are you Egyptian? What's with these fucking scope pyramids!?
+gamemode\core\derma\panels\f1menu.lua: [Warning] line 2469, column 33 - line 2472, column 34: Are you Egyptian? What's with these fucking scope pyramids!?
+gamemode\core\derma\panels\f1menu.lua: [Warning] line 2622, column 33 - line 2622, column 69: Are you Egyptian? What's with these fucking scope pyramids!?
+gamemode\core\derma\panels\f1menu.lua: [Warning] line 2652, column 33 - line 2652, column 75: Are you Egyptian? What's with these fucking scope pyramids!?
+gamemode\core\derma\panels\f1menu.lua: [Warning] line 2675, column 33 - line 2675, column 56: Are you Egyptian? What's with these fucking scope pyramids!?
+gamemode\core\derma\panels\radialpanel.lua: [Warning] line 38, column 47 - line 38, column 65: Inconsistent use of 'single quoted strings' and 'double quoted strings'
+gamemode\core\derma\panels\radialpanel.lua: [Warning] line 141, column 65 - line 141, column 72: Inconsistent use of 'single quoted strings' and 'double quoted strings'
+gamemode\core\derma\panels\radialpanel.lua: [Warning] line 171, column 102 - line 171, column 109: Inconsistent use of 'double quoted strings' and 'single quoted strings'
+gamemode\core\derma\panels\radialpanel.lua: [Warning] line 223, column 32 - line 223, column 38: Inconsistent use of 'double quoted strings' and 'single quoted strings'
+gamemode\core\derma\panels\scoreboard.lua: [Warning] line 347, column 29 - line 347, column 79: Are you Egyptian? What's with these fucking scope pyramids!?
+gamemode\core\derma\panels\scoreboard.lua: [Warning] line 350, column 29 - line 350, column 75: Are you Egyptian? What's with these fucking scope pyramids!?
+gamemode\core\derma\panels\scoreboard.lua: [Warning] line 356, column 29 - line 356, column 48: Are you Egyptian? What's with these fucking scope pyramids!?
+gamemode\core\derma\panels\scoreboard.lua: [Warning] line 386, column 29 - line 386, column 64: Are you Egyptian? What's with these fucking scope pyramids!?
+gamemode\core\derma\panels\sheet.lua: [Warning] line 375, column 35 - line 375, column 62: Are you Egyptian? What's with these fucking scope pyramids!?
+gamemode\core\hooks\client.lua: [Warning] line 367, column 29 - line 370, column 32: Are you Egyptian? What's with these fucking scope pyramids!?
+gamemode\core\hooks\client.lua: [Warning] line 963, column 63 - line 963, column 66: Are you Egyptian? What's with these fucking scope pyramids!?
+gamemode\core\hooks\server.lua: [Warning] line 330, column 9 - line 331, column 9: Empty if statement
+gamemode\core\hooks\server.lua: [Warning] line 331, column 9 - line 332, column 12: Empty else statement
+gamemode\core\hooks\server.lua: [Warning] line 905, column 29 - line 905, column 89: Are you Egyptian? What's with these fucking scope pyramids!?
+gamemode\core\hooks\server.lua: [Warning] line 907, column 29 - line 907, column 78: Are you Egyptian? What's with these fucking scope pyramids!?
+gamemode\core\hooks\server.lua: [Warning] line 916, column 29 - line 916, column 52: Are you Egyptian? What's with these fucking scope pyramids!?
+gamemode\core\hooks\server.lua: [Warning] line 923, column 29 - line 923, column 201: Are you Egyptian? What's with these fucking scope pyramids!?
+gamemode\core\hooks\server.lua: [Warning] line 978, column 28 - line 978, column 36: Are you Egyptian? What's with these fucking scope pyramids!?
+gamemode\core\hooks\server.lua: [Warning] line 981, column 29 - line 981, column 64: Are you Egyptian? What's with these fucking scope pyramids!?
+gamemode\core\hooks\server.lua: [Warning] line 1190, column 55 - line 1190, column 72: Are you Egyptian? What's with these fucking scope pyramids!?
+gamemode\core\hooks\server.lua: [Warning] line 1192, column 57 - line 1192, column 82: Are you Egyptian? What's with these fucking scope pyramids!?
+gamemode\core\hooks\server.lua: [Warning] line 1194, column 29 - line 1194, column 109: Are you Egyptian? What's with these fucking scope pyramids!?
+gamemode\core\libraries\core\admin\core.lua: [Warning] line 468, column 29 - line 468, column 40: Are you Egyptian? What's with these fucking scope pyramids!?
+gamemode\core\libraries\core\admin\core.lua: [Warning] line 606, column 19 - line 606, column 29: Unused variable: playerInfo
+gamemode\core\libraries\core\admin\core.lua: [Warning] line 1052, column 13 - line 1053, column 13: Empty if statement
+gamemode\core\libraries\core\admin\core.lua: [Warning] line 1053, column 13 - line 1054, column 16: Empty else statement
+gamemode\core\libraries\core\admin\core.lua: [Warning] line 1890, column 29 - line 1890, column 67: Are you Egyptian? What's with these fucking scope pyramids!?
+gamemode\core\libraries\core\admin\core.lua: [Warning] line 1907, column 38 - line 1907, column 52: Are you Egyptian? What's with these fucking scope pyramids!?
+gamemode\core\libraries\core\admin\core.lua: [Warning] line 1909, column 29 - line 1909, column 61: Are you Egyptian? What's with these fucking scope pyramids!?
+gamemode\core\libraries\core\admin\core.lua: [Warning] line 2329, column 29 - line 2329, column 84: Are you Egyptian? What's with these fucking scope pyramids!?
+gamemode\core\libraries\core\admin\core.lua: [Warning] line 2340, column 48 - line 2340, column 50: Are you Egyptian? What's with these fucking scope pyramids!?
+gamemode\core\libraries\core\admin\core.lua: [Warning] line 2347, column 29 - line 2347, column 96: Are you Egyptian? What's with these fucking scope pyramids!?
+gamemode\core\libraries\core\character\core.lua: [Warning] line 294, column 139 - line 294, column 180: Are you Egyptian? What's with these fucking scope pyramids!?
+gamemode\core\libraries\core\character\core.lua: [Warning] line 729, column 29 - line 729, column 66: Are you Egyptian? What's with these fucking scope pyramids!?
+gamemode\core\libraries\core\character\core.lua: [Warning] line 731, column 29 - line 731, column 50: Are you Egyptian? What's with these fucking scope pyramids!?
+gamemode\core\libraries\core\character\core.lua: [Warning] line 733, column 29 - line 733, column 60: Are you Egyptian? What's with these fucking scope pyramids!?
+gamemode\core\libraries\core\character\core.lua: [Warning] line 749, column 29 - line 749, column 49: Are you Egyptian? What's with these fucking scope pyramids!?
+gamemode\core\libraries\core\character\core.lua: [Warning] line 915, column 29 - line 915, column 51: Are you Egyptian? What's with these fucking scope pyramids!?
+gamemode\core\libraries\core\character\core.lua: [Warning] line 921, column 83 - line 921, column 104: Are you Egyptian? What's with these fucking scope pyramids!?
+gamemode\core\libraries\core\character\core.lua: [Warning] line 925, column 83 - line 925, column 142: Are you Egyptian? What's with these fucking scope pyramids!?
+gamemode\core\libraries\core\character\core.lua: [Warning] line 1023, column 42 - line 1023, column 55: Are you Egyptian? What's with these fucking scope pyramids!?
+gamemode\core\libraries\core\character\core.lua: [Warning] line 1030, column 29 - line 1030, column 72: Are you Egyptian? What's with these fucking scope pyramids!?
+gamemode\core\libraries\core\character\core.lua: [Warning] line 1048, column 29 - line 1048, column 90: Are you Egyptian? What's with these fucking scope pyramids!?
+gamemode\core\libraries\core\character\core.lua: [Warning] line 1061, column 29 - line 1061, column 61: Are you Egyptian? What's with these fucking scope pyramids!?
+gamemode\core\libraries\core\character\core.lua: [Warning] line 1067, column 42 - line 1067, column 55: Are you Egyptian? What's with these fucking scope pyramids!?
+gamemode\core\libraries\core\character\core.lua: [Warning] line 1104, column 29 - line 1104, column 61: Are you Egyptian? What's with these fucking scope pyramids!?
+gamemode\core\libraries\core\character\core.lua: [Warning] line 1111, column 42 - line 1111, column 61: Are you Egyptian? What's with these fucking scope pyramids!?
+gamemode\core\libraries\core\color\core.lua: [Warning] line 117, column 29 - line 117, column 110: Are you Egyptian? What's with these fucking scope pyramids!?
+gamemode\core\libraries\core\color\core.lua: [Warning] line 119, column 29 - line 119, column 52: Are you Egyptian? What's with these fucking scope pyramids!?
+gamemode\core\libraries\core\color\core.lua: [Warning] line 122, column 57 - line 122, column 81: Are you Egyptian? What's with these fucking scope pyramids!?
+gamemode\core\libraries\core\color\core.lua: [Warning] line 124, column 29 - line 124, column 44: Are you Egyptian? What's with these fucking scope pyramids!?
+gamemode\core\libraries\core\commands\core.lua: [Warning] line 147, column 11 - line 147, column 24: Variable 'privilegeName' shadows existing binding, defined at line 79, column 27
+gamemode\core\libraries\core\commands\core.lua: [Warning] line 244, column 17 - line 250, column 20: Double if statement. Please combine the condition of this if statement with that of the outer if statement using `and`.
+gamemode\core\libraries\core\commands\core.lua: [Warning] line 283, column 29 - line 283, column 94: Are you Egyptian? What's with these fucking scope pyramids!?
+gamemode\core\libraries\core\commands\core.lua: [Warning] line 285, column 29 - line 285, column 54: Are you Egyptian? What's with these fucking scope pyramids!?
+gamemode\core\libraries\core\commands\core.lua: [Warning] line 368, column 49 - line 368, column 79: Are you Egyptian? What's with these fucking scope pyramids!?
+gamemode\core\libraries\core\commands\core.lua: [Warning] line 373, column 53 - line 373, column 66: Are you Egyptian? What's with these fucking scope pyramids!?
+gamemode\core\libraries\core\commands\core.lua: [Warning] line 378, column 53 - line 378, column 79: Are you Egyptian? What's with these fucking scope pyramids!?
+gamemode\core\libraries\core\commands\core.lua: [Warning] line 390, column 36 - line 390, column 46: Are you Egyptian? What's with these fucking scope pyramids!?
+gamemode\core\libraries\core\commands\core.lua: [Warning] line 395, column 29 - line 399, column 32: Are you Egyptian? What's with these fucking scope pyramids!?
+gamemode\core\libraries\core\commands\core.lua: [Warning] line 440, column 42 - line 440, column 61: Are you Egyptian? What's with these fucking scope pyramids!?
+gamemode\core\libraries\core\commands\core.lua: [Warning] line 446, column 41 - line 446, column 59: Are you Egyptian? What's with these fucking scope pyramids!?
+gamemode\core\libraries\core\commands\core.lua: [Warning] line 452, column 43 - line 452, column 63: Are you Egyptian? What's with these fucking scope pyramids!?
+gamemode\core\libraries\core\commands\core.lua: [Warning] line 458, column 43 - line 458, column 63: Are you Egyptian? What's with these fucking scope pyramids!?
+gamemode\core\libraries\core\commands\core.lua: [Warning] line 785, column 33 - line 785, column 70: Are you Egyptian? What's with these fucking scope pyramids!?
+gamemode\core\libraries\core\commands\core.lua: [Warning] line 884, column 33 - line 884, column 75: Are you Egyptian? What's with these fucking scope pyramids!?
+gamemode\core\libraries\core\commands\core.lua: [Warning] line 901, column 33 - line 901, column 65: Are you Egyptian? What's with these fucking scope pyramids!?
+gamemode\core\libraries\core\commands\core.lua: [Warning] line 1527, column 29 - line 1531, column 32: Are you Egyptian? What's with these fucking scope pyramids!?
+gamemode\core\libraries\core\commands\core.lua: [Warning] line 2141, column 33 - line 2141, column 55: Are you Egyptian? What's with these fucking scope pyramids!?
+gamemode\core\libraries\core\commands\core.lua: [Warning] line 2143, column 33 - line 2143, column 77: Are you Egyptian? What's with these fucking scope pyramids!?
+gamemode\core\libraries\core\commands\core.lua: [Warning] line 2795, column 9 - line 2796, column 9: Empty if statement
+gamemode\core\libraries\core\commands\core.lua: [Warning] line 2821, column 9 - line 2822, column 9: Empty if statement
+gamemode\core\libraries\core\commands\core.lua: [Warning] line 2942, column 15 - line 2942, column 20: Variable 'sound' shadows existing binding, defined at line 1526, column 25
+gamemode\core\libraries\core\commands\core.lua: [Warning] line 3042, column 15 - line 3042, column 20: Variable 'sound' shadows existing binding, defined at line 1526, column 25
+gamemode\core\libraries\core\commands\core.lua: [Warning] line 3830, column 19 - line 3830, column 27: Unused variable: charName
+gamemode\core\libraries\core\commands\core.lua: [Warning] line 4787, column 74 - line 4787, column 116: Double if statement. Please combine the condition of this if statement with that of the outer if statement using `and`.
+gamemode\core\libraries\core\commands\core.lua: [Warning] line 4796, column 33 - line 4796, column 73: Are you Egyptian? What's with these fucking scope pyramids!?
+gamemode\core\libraries\core\commands\core.lua: [Warning] line 4798, column 33 - line 4798, column 39: Are you Egyptian? What's with these fucking scope pyramids!?
+gamemode\core\libraries\core\commands\core.lua: [Warning] line 5239, column 55 - line 5239, column 57: Silly negation. Use '~='
+gamemode\core\libraries\core\commands\core.lua: [Warning] line 6125, column 33 - line 6125, column 44: Are you Egyptian? What's with these fucking scope pyramids!?
+gamemode\core\libraries\core\commands\core.lua: [Warning] line 6186, column 33 - line 6186, column 44: Are you Egyptian? What's with these fucking scope pyramids!?
+gamemode\core\libraries\core\commands\core.lua: [Warning] line 6251, column 33 - line 6254, column 36: Are you Egyptian? What's with these fucking scope pyramids!?
+gamemode\core\libraries\core\commands\core.lua: [Warning] line 6320, column 33 - line 6323, column 36: Are you Egyptian? What's with these fucking scope pyramids!?
+gamemode\core\libraries\core\commands\core.lua: [Warning] line 6642, column 15 - line 6642, column 29: Unused variable: oldFactionName
+gamemode\core\libraries\core\commands\core.lua: [Warning] line 8168, column 126 - line 8168, column 254: Are you Egyptian? What's with these fucking scope pyramids!?
+gamemode\core\libraries\core\commands\core.lua: [Warning] line 8169, column 32 - line 8169, column 63: Are you Egyptian? What's with these fucking scope pyramids!?
+gamemode\core\libraries\core\commands\core.lua: [Warning] line 8174, column 33 - line 8174, column 64: Are you Egyptian? What's with these fucking scope pyramids!?
+gamemode\core\libraries\core\commands\core.lua: [Warning] line 8559, column 29 - line 8559, column 245: Are you Egyptian? What's with these fucking scope pyramids!?
+gamemode\core\libraries\core\commands\core.lua: [Warning] line 8562, column 29 - line 8562, column 211: Are you Egyptian? What's with these fucking scope pyramids!?
+gamemode\core\libraries\core\config\core.lua: [Warning] line 454, column 29 - line 454, column 74: Are you Egyptian? What's with these fucking scope pyramids!?
+gamemode\core\libraries\core\config\core.lua: [Warning] line 559, column 23 - line 559, column 27: Watch your profanity
+gamemode\core\libraries\core\config\core.lua: [Warning] line 561, column 25 - line 561, column 29: Watch your profanity
+gamemode\core\libraries\core\config\core.lua: [Warning] line 854, column 29 - line 854, column 84: Are you Egyptian? What's with these fucking scope pyramids!?
+gamemode\core\libraries\core\config\core.lua: [Warning] line 865, column 56 - line 865, column 105: Are you Egyptian? What's with these fucking scope pyramids!?
+gamemode\core\libraries\core\config\core.lua: [Warning] line 888, column 29 - line 888, column 109: Are you Egyptian? What's with these fucking scope pyramids!?
+gamemode\core\libraries\core\config\core.lua: [Warning] line 896, column 29 - line 896, column 110: Are you Egyptian? What's with these fucking scope pyramids!?
+gamemode\core\libraries\core\config\core.lua: [Warning] line 958, column 74 - line 958, column 94: Are you Egyptian? What's with these fucking scope pyramids!?
+gamemode\core\libraries\core\data\core.lua: [Warning] line 97, column 44 - line 97, column 49: Are you Egyptian? What's with these fucking scope pyramids!?
+gamemode\core\libraries\core\data\core.lua: [Warning] line 176, column 44 - line 176, column 49: Are you Egyptian? What's with these fucking scope pyramids!?
+gamemode\core\libraries\core\database\core.lua: [Warning] line 782, column 50 - line 782, column 80: Are you Egyptian? What's with these fucking scope pyramids!?
+gamemode\core\libraries\core\database\core.lua: [Warning] line 783, column 48 - line 783, column 96: Are you Egyptian? What's with these fucking scope pyramids!?
+gamemode\core\libraries\core\database\core.lua: [Warning] line 784, column 45 - line 784, column 78: Are you Egyptian? What's with these fucking scope pyramids!?
+gamemode\core\libraries\core\derma\core.lua: [Warning] line 1280, column 98 - line 1280, column 122: Are you Egyptian? What's with these fucking scope pyramids!?
+gamemode\core\libraries\core\derma\core.lua: [Warning] line 1283, column 71 - line 1283, column 95: Are you Egyptian? What's with these fucking scope pyramids!?
+gamemode\core\libraries\core\derma\core.lua: [Warning] line 1496, column 29 - line 1496, column 74: Are you Egyptian? What's with these fucking scope pyramids!?
+gamemode\core\libraries\core\derma\core.lua: [Warning] line 1506, column 29 - line 1506, column 75: Are you Egyptian? What's with these fucking scope pyramids!?
+gamemode\core\libraries\core\derma\core.lua: [Warning] line 1517, column 29 - line 1517, column 75: Are you Egyptian? What's with these fucking scope pyramids!?
+gamemode\core\libraries\core\derma\core.lua: [Warning] line 1543, column 29 - line 1543, column 73: Are you Egyptian? What's with these fucking scope pyramids!?
+gamemode\core\libraries\core\derma\core.lua: [Warning] line 1555, column 29 - line 1559, column 32: Are you Egyptian? What's with these fucking scope pyramids!?
+gamemode\core\libraries\core\derma\core.lua: [Warning] line 1798, column 133 - line 1798, column 147: Are you Egyptian? What's with these fucking scope pyramids!?
+gamemode\core\libraries\core\derma\core.lua: [Warning] line 2156, column 150 - line 2156, column 174: Are you Egyptian? What's with these fucking scope pyramids!?
+gamemode\core\libraries\core\derma\core.lua: [Warning] line 2160, column 102 - line 2160, column 126: Are you Egyptian? What's with these fucking scope pyramids!?
+gamemode\core\libraries\core\dialog\core.lua: [Warning] line 624, column 21 - line 646, column 24: Double if statement. Please combine the condition of this if statement with that of the outer if statement using `and`.
+gamemode\core\libraries\core\dialog\core.lua: [Warning] line 627, column 29 - line 627, column 56: Are you Egyptian? What's with these fucking scope pyramids!?
+gamemode\core\libraries\core\dialog\core.lua: [Warning] line 663, column 29 - line 663, column 43: Are you Egyptian? What's with these fucking scope pyramids!?
+gamemode\core\libraries\core\dialog\core.lua: [Warning] line 665, column 29 - line 665, column 75: Are you Egyptian? What's with these fucking scope pyramids!?
+gamemode\core\libraries\core\dialog\core.lua: [Warning] line 836, column 15 - line 836, column 22: Variable 'hasSkin' shadows existing binding, defined at line 810, column 24
+gamemode\core\libraries\core\dialog\core.lua: [Warning] line 837, column 15 - line 837, column 25: Variable 'skinSlider' shadows existing binding, defined at line 810, column 36
+gamemode\core\libraries\core\dialog\core.lua: [Warning] line 925, column 29 - line 925, column 73: Are you Egyptian? What's with these fucking scope pyramids!?
+gamemode\core\libraries\core\dialog\core.lua: [Warning] line 1314, column 53 - line 1314, column 96: Are you Egyptian? What's with these fucking scope pyramids!?
+gamemode\core\libraries\core\dialog\core.lua: [Warning] line 1453, column 65 - line 1453, column 99: Are you Egyptian? What's with these fucking scope pyramids!?
+gamemode\core\libraries\core\dialog\core.lua: [Warning] line 1508, column 97 - line 1508, column 152: Are you Egyptian? What's with these fucking scope pyramids!?
+gamemode\core\libraries\core\factions\core.lua: [Warning] line 381, column 11 - line 381, column 18: Variable 'FACTION' shadows existing binding, defined at line 113, column 9
+gamemode\core\libraries\core\factions\core.lua: [Warning] line 409, column 29 - line 409, column 75: Are you Egyptian? What's with these fucking scope pyramids!?
+gamemode\core\libraries\core\factions\core.lua: [Warning] line 411, column 29 - line 411, column 77: Are you Egyptian? What's with these fucking scope pyramids!?
+gamemode\core\libraries\core\factions\core.lua: [Warning] line 475, column 29 - line 475, column 95: Are you Egyptian? What's with these fucking scope pyramids!?
+gamemode\core\libraries\core\flags\core.lua: [Warning] line 343, column 33 - line 343, column 100: Are you Egyptian? What's with these fucking scope pyramids!?
+gamemode\core\libraries\core\item\core.lua: [Warning] line 99, column 82 - line 99, column 176: Are you Egyptian? What's with these fucking scope pyramids!?
+gamemode\core\libraries\core\item\core.lua: [Warning] line 783, column 29 - line 783, column 64: Are you Egyptian? What's with these fucking scope pyramids!?
+gamemode\core\libraries\core\item\core.lua: [Warning] line 788, column 29 - line 788, column 60: Are you Egyptian? What's with these fucking scope pyramids!?
+gamemode\core\libraries\core\item\core.lua: [Warning] line 793, column 29 - line 793, column 64: Are you Egyptian? What's with these fucking scope pyramids!?
+gamemode\core\libraries\core\item\core.lua: [Warning] line 1300, column 50 - line 1300, column 73: Are you Egyptian? What's with these fucking scope pyramids!?
+gamemode\core\libraries\core\item\core.lua: [Warning] line 1414, column 129 - line 1414, column 154: Are you Egyptian? What's with these fucking scope pyramids!?
+gamemode\core\libraries\core\item\core.lua: [Warning] line 1415, column 59 - line 1415, column 97: Are you Egyptian? What's with these fucking scope pyramids!?
+gamemode\core\libraries\core\keybind\core.lua: [Warning] line 217, column 33 - line 220, column 36: Are you Egyptian? What's with these fucking scope pyramids!?
+gamemode\core\libraries\core\keybind\core.lua: [Warning] line 427, column 29 - line 427, column 73: Are you Egyptian? What's with these fucking scope pyramids!?
+gamemode\core\libraries\core\keybind\core.lua: [Warning] line 430, column 29 - line 430, column 60: Are you Egyptian? What's with these fucking scope pyramids!?
+gamemode\core\libraries\core\keybind\core.lua: [Warning] line 534, column 29 - line 534, column 64: Are you Egyptian? What's with these fucking scope pyramids!?
+gamemode\core\libraries\core\keybind\core.lua: [Warning] line 938, column 33 - line 938, column 88: Are you Egyptian? What's with these fucking scope pyramids!?
+gamemode\core\libraries\core\keybind\core.lua: [Warning] line 949, column 60 - line 949, column 109: Are you Egyptian? What's with these fucking scope pyramids!?
+gamemode\core\libraries\core\keybind\core.lua: [Warning] line 973, column 33 - line 973, column 113: Are you Egyptian? What's with these fucking scope pyramids!?
+gamemode\core\libraries\core\keybind\core.lua: [Warning] line 981, column 33 - line 981, column 132: Are you Egyptian? What's with these fucking scope pyramids!?
+gamemode\core\libraries\core\keybind\core.lua: [Warning] line 1004, column 124 - line 1004, column 158: Are you Egyptian? What's with these fucking scope pyramids!?
+gamemode\core\libraries\core\option\core.lua: [Warning] line 766, column 29 - line 766, column 42: Are you Egyptian? What's with these fucking scope pyramids!?
+gamemode\core\libraries\core\playerinteract\core.lua: [Warning] line 166, column 29 - line 166, column 94: Are you Egyptian? What's with these fucking scope pyramids!?
+gamemode\core\libraries\core\playerinteract\core.lua: [Warning] line 294, column 29 - line 294, column 77: Are you Egyptian? What's with these fucking scope pyramids!?
+gamemode\core\libraries\core\playerinteract\core.lua: [Warning] line 307, column 29 - line 307, column 46: Are you Egyptian? What's with these fucking scope pyramids!?
+gamemode\core\libraries\core\sit\core.lua: [Warning] line 154, column 37 - line 154, column 43: Variable 'player' shadows existing binding, defined at line 65, column 21
+gamemode\core\libraries\core\sit\core.lua: [Warning] line 160, column 24 - line 160, column 26: Silly negation. Use '~='
+gamemode\core\libraries\core\sit\core.lua: [Warning] line 185, column 40 - line 185, column 46: Variable 'player' shadows existing binding, defined at line 65, column 21
+gamemode\core\libraries\core\util\core.lua: [Warning] line 665, column 29 - line 665, column 74: Are you Egyptian? What's with these fucking scope pyramids!?
+gamemode\core\libraries\core\util\core.lua: [Warning] line 675, column 29 - line 675, column 75: Are you Egyptian? What's with these fucking scope pyramids!?
+gamemode\core\libraries\core\util\core.lua: [Warning] line 686, column 29 - line 686, column 75: Are you Egyptian? What's with these fucking scope pyramids!?
+gamemode\core\libraries\core\util\core.lua: [Warning] line 712, column 29 - line 712, column 73: Are you Egyptian? What's with these fucking scope pyramids!?
+gamemode\core\libraries\core\util\core.lua: [Warning] line 724, column 29 - line 728, column 32: Are you Egyptian? What's with these fucking scope pyramids!?
+gamemode\core\libraries\core\workshop\core.lua: [Warning] line 557, column 33 - line 557, column 131: Are you Egyptian? What's with these fucking scope pyramids!?
+gamemode\core\libraries\thirdparty\cl_markup.lua: [Warning] line 381, column 53 - line 381, column 72: Are you Egyptian? What's with these fucking scope pyramids!?
+gamemode\core\libraries\thirdparty\cl_markup.lua: [Warning] line 403, column 53 - line 403, column 72: Are you Egyptian? What's with these fucking scope pyramids!?
+gamemode\core\libraries\thirdparty\cl_markup.lua: [Warning] line 418, column 29 - line 418, column 76: Are you Egyptian? What's with these fucking scope pyramids!?
+gamemode\core\libraries\thirdparty\cl_markup.lua: [Warning] line 423, column 29 - line 423, column 93: Are you Egyptian? What's with these fucking scope pyramids!?
+gamemode\core\libraries\thirdparty\cl_markup.lua: [Warning] line 426, column 29 - line 426, column 83: Are you Egyptian? What's with these fucking scope pyramids!?
+gamemode\core\libraries\thirdparty\cl_markup.lua: [Warning] line 433, column 29 - line 433, column 38: Are you Egyptian? What's with these fucking scope pyramids!?
+gamemode\core\libraries\thirdparty\cl_markup.lua: [Warning] line 439, column 29 - line 439, column 42: Are you Egyptian? What's with these fucking scope pyramids!?
+gamemode\core\libraries\thirdparty\cl_markup.lua: [Warning] line 454, column 53 - line 454, column 72: Are you Egyptian? What's with these fucking scope pyramids!?
+gamemode\core\libraries\thirdparty\sh_deferred.lua: [Warning] line 50, column 23 - line 50, column 32: Variable 'onResolve' shadows existing binding, defined at line 13, column 21
+gamemode\core\libraries\thirdparty\sh_deferred.lua: [Warning] line 50, column 34 - line 50, column 42: Variable 'onReject' shadows existing binding, defined at line 14, column 20
+gamemode\core\libraries\thirdparty\sh_deferred.lua: [Warning] line 81, column 24 - line 81, column 32: Variable 'onReject' shadows existing binding, defined at line 14, column 20
+gamemode\core\libraries\thirdparty\sh_deferred.lua: [Warning] line 136, column 20 - line 136, column 29: Variable 'onResolve' shadows existing binding, defined at line 13, column 21
+gamemode\core\libraries\thirdparty\sh_deferred.lua: [Warning] line 136, column 31 - line 136, column 39: Variable 'onReject' shadows existing binding, defined at line 14, column 20
+gamemode\core\libraries\thirdparty\sh_net.lua: [Warning] line 29, column 29 - line 29, column 70: Are you Egyptian? What's with these fucking scope pyramids!?
+gamemode\core\libraries\thirdparty\sh_net.lua: [Warning] line 31, column 29 - line 31, column 54: Are you Egyptian? What's with these fucking scope pyramids!?
+gamemode\core\libraries\thirdparty\sh_net.lua: [Warning] line 87, column 12 - line 87, column 20: Inconsistent use of 'double quoted strings' and 'single quoted strings'
+gamemode\core\libraries\thirdparty\sh_net.lua: [Warning] line 88, column 39 - line 88, column 42: Inconsistent use of 'double quoted strings' and 'single quoted strings'
+gamemode\core\libraries\thirdparty\sh_net.lua: [Warning] line 88, column 44 - line 88, column 49: Inconsistent use of 'single quoted strings' and 'double quoted strings'
+gamemode\core\libraries\thirdparty\sh_net.lua: [Warning] line 92, column 50 - line 92, column 54: Inconsistent use of 'single quoted strings' and 'double quoted strings'
+gamemode\core\libraries\thirdparty\sh_net.lua: [Warning] line 118, column 12 - line 118, column 17: Inconsistent use of 'double quoted strings' and 'single quoted strings'
+gamemode\core\libraries\thirdparty\sh_net.lua: [Warning] line 120, column 33 - line 120, column 91: Inconsistent use of 'double quoted strings' and 'single quoted strings'
+gamemode\core\libraries\thirdparty\sh_net.lua: [Warning] line 127, column 19 - line 127, column 25: Variable 'output' shadows existing binding, defined at line 118, column 32
+gamemode\core\libraries\thirdparty\sh_net.lua: [Warning] line 129, column 20 - line 129, column 27: Inconsistent use of 'double quoted strings' and 'single quoted strings'
+gamemode\core\libraries\thirdparty\sh_net.lua: [Warning] line 198, column 62 - line 198, column 85: Inconsistent use of 'double quoted strings' and 'single quoted strings'
+gamemode\core\libraries\thirdparty\sh_net.lua: [Warning] line 208, column 55 - line 208, column 60: Inconsistent use of 'double quoted strings' and 'single quoted strings'
+gamemode\core\libraries\thirdparty\sh_net.lua: [Warning] line 338, column 36 - line 338, column 44: Inconsistent use of 'double quoted strings' and 'single quoted strings'
+gamemode\core\libraries\thirdparty\sh_sfs.lua: [Warning] line 6, column 7 - line 6, column 11: Variable 'type' shadows existing binding, defined at line 4, column 23
+gamemode\core\meta\character.lua: [Warning] line 118, column 79 - line 118, column 147: Are you Egyptian? What's with these fucking scope pyramids!?
+gamemode\core\meta\character.lua: [Warning] line 377, column 19 - line 377, column 25: Variable 'player' shadows existing binding, defined at line 11, column 17
+gamemode\core\meta\entity.lua: [Warning] line 277, column 45 - line 277, column 54: Are you Egyptian? What's with these fucking scope pyramids!?
+gamemode\core\meta\entity.lua: [Warning] line 291, column 29 - line 291, column 75: Are you Egyptian? What's with these fucking scope pyramids!?
+gamemode\core\meta\entity.lua: [Warning] line 293, column 29 - line 293, column 44: Are you Egyptian? What's with these fucking scope pyramids!?
+gamemode\core\meta\entity.lua: [Warning] line 309, column 81 - line 309, column 105: Are you Egyptian? What's with these fucking scope pyramids!?
+gamemode\core\meta\entity.lua: [Warning] line 319, column 81 - line 319, column 105: Are you Egyptian? What's with these fucking scope pyramids!?
+gamemode\core\meta\item.lua: [Warning] line 217, column 49 - line 217, column 74: Are you Egyptian? What's with these fucking scope pyramids!?
+gamemode\core\meta\item.lua: [Warning] line 387, column 29 - line 387, column 60: Are you Egyptian? What's with these fucking scope pyramids!?
+gamemode\core\meta\item.lua: [Warning] line 389, column 29 - line 389, column 78: Are you Egyptian? What's with these fucking scope pyramids!?
+gamemode\core\meta\player.lua: [Warning] line 1077, column 29 - line 1077, column 41: Are you Egyptian? What's with these fucking scope pyramids!?
+gamemode\core\meta\player.lua: [Warning] line 1086, column 29 - line 1086, column 42: Are you Egyptian? What's with these fucking scope pyramids!?
+gamemode\core\meta\player.lua: [Warning] line 1095, column 29 - line 1095, column 43: Are you Egyptian? What's with these fucking scope pyramids!?
+gamemode\core\meta\player.lua: [Warning] line 1137, column 29 - line 1140, column 32: Are you Egyptian? What's with these fucking scope pyramids!?
+gamemode\core\meta\player.lua: [Warning] line 1143, column 29 - line 1143, column 62: Are you Egyptian? What's with these fucking scope pyramids!?
+gamemode\core\meta\player.lua: [Warning] line 1148, column 43 - line 1148, column 58: Are you Egyptian? What's with these fucking scope pyramids!?
+gamemode\core\netcalls\client.lua: [Warning] line 140, column 29 - line 140, column 49: Are you Egyptian? What's with these fucking scope pyramids!?
+gamemode\core\netcalls\client.lua: [Warning] line 142, column 29 - line 148, column 32: Are you Egyptian? What's with these fucking scope pyramids!?
+gamemode\core\netcalls\client.lua: [Warning] line 894, column 83 - line 894, column 104: Are you Egyptian? What's with these fucking scope pyramids!?
+gamemode\core\netcalls\client.lua: [Warning] line 918, column 83 - line 918, column 104: Are you Egyptian? What's with these fucking scope pyramids!?
+gamemode\core\netcalls\client.lua: [Warning] line 942, column 83 - line 942, column 104: Are you Egyptian? What's with these fucking scope pyramids!?
+gamemode\core\netcalls\server.lua: [Warning] line 27, column 5 - line 28, column 8: Empty else statement
+gamemode\core\netcalls\server.lua: [Warning] line 242, column 16 - line 242, column 36: Unused variable: getEntityDisplayName
+gamemode\core\netcalls\server.lua: [Warning] line 330, column 50 - line 330, column 72: Are you Egyptian? What's with these fucking scope pyramids!?
+gamemode\core\netcalls\server.lua: [Warning] line 337, column 29 - line 337, column 80: Are you Egyptian? What's with these fucking scope pyramids!?
+gamemode\core\netcalls\server.lua: [Warning] line 644, column 11 - line 644, column 17: Variable 'player' shadows existing binding, defined at line 104, column 19
+gamemode\core\netcalls\server.lua: [Warning] line 869, column 29 - line 869, column 76: Are you Egyptian? What's with these fucking scope pyramids!?
+gamemode\core\netcalls\server.lua: [Warning] line 874, column 29 - line 886, column 30: Are you Egyptian? What's with these fucking scope pyramids!?
+gamemode\modules\administration\libraries\client.lua: [Warning] line 2537, column 36 - line 2537, column 39: Are you Egyptian? What's with these fucking scope pyramids!?
+gamemode\modules\administration\libraries\client.lua: [Warning] line 2591, column 37 - line 2591, column 40: Are you Egyptian? What's with these fucking scope pyramids!?
+gamemode\modules\administration\libraries\client.lua: [Warning] line 2600, column 38 - line 2600, column 40: Are you Egyptian? What's with these fucking scope pyramids!?
+gamemode\modules\administration\libraries\client.lua: [Warning] line 2627, column 33 - line 2630, column 36: Are you Egyptian? What's with these fucking scope pyramids!?
+gamemode\modules\administration\libraries\client.lua: [Warning] line 2632, column 33 - line 2632, column 82: Are you Egyptian? What's with these fucking scope pyramids!?
+gamemode\modules\administration\libraries\client.lua: [Warning] line 2778, column 74 - line 2778, column 88: Inconsistent use of 'single quoted strings' and 'double quoted strings'
+gamemode\modules\administration\libraries\client.lua: [Warning] line 2782, column 44 - line 2782, column 47: Are you Egyptian? What's with these fucking scope pyramids!?
+gamemode\modules\administration\libraries\client.lua: [Warning] line 2792, column 50 - line 2792, column 58: Inconsistent use of 'single quoted strings' and 'double quoted strings'
+gamemode\modules\administration\libraries\client.lua: [Warning] line 2808, column 73 - line 2808, column 109: Are you Egyptian? What's with these fucking scope pyramids!?
+gamemode\modules\administration\libraries\client.lua: [Warning] line 2810, column 83 - line 2810, column 126: Are you Egyptian? What's with these fucking scope pyramids!?
+gamemode\modules\administration\libraries\client.lua: [Warning] line 2815, column 33 - line 2815, column 137: Are you Egyptian? What's with these fucking scope pyramids!?
+gamemode\modules\administration\libraries\client.lua: [Warning] line 2817, column 33 - line 2817, column 154: Are you Egyptian? What's with these fucking scope pyramids!?
+gamemode\modules\administration\libraries\client.lua: [Warning] line 2820, column 74 - line 2820, column 111: Are you Egyptian? What's with these fucking scope pyramids!?
+gamemode\modules\administration\libraries\client.lua: [Warning] line 2822, column 84 - line 2822, column 128: Are you Egyptian? What's with these fucking scope pyramids!?
+gamemode\modules\administration\libraries\client.lua: [Warning] line 2851, column 53 - line 2851, column 98: Are you Egyptian? What's with these fucking scope pyramids!?
+gamemode\modules\administration\libraries\client.lua: [Warning] line 2873, column 73 - line 2873, column 134: Are you Egyptian? What's with these fucking scope pyramids!?
+gamemode\modules\administration\libraries\client.lua: [Warning] line 2873, column 136 - line 2873, column 202: Are you Egyptian? What's with these fucking scope pyramids!?
+gamemode\modules\administration\libraries\client.lua: [Warning] line 2879, column 33 - line 2879, column 188: Are you Egyptian? What's with these fucking scope pyramids!?
+gamemode\modules\administration\libraries\client.lua: [Warning] line 2884, column 33 - line 2884, column 65: Are you Egyptian? What's with these fucking scope pyramids!?
+gamemode\modules\administration\libraries\client.lua: [Warning] line 2915, column 33 - line 2915, column 178: Are you Egyptian? What's with these fucking scope pyramids!?
+gamemode\modules\administration\libraries\client.lua: [Warning] line 2920, column 33 - line 2920, column 65: Are you Egyptian? What's with these fucking scope pyramids!?
+gamemode\modules\administration\libraries\client.lua: [Warning] line 2933, column 33 - line 2933, column 52: Are you Egyptian? What's with these fucking scope pyramids!?
+gamemode\modules\administration\libraries\client.lua: [Warning] line 2943, column 68 - line 2943, column 132: Are you Egyptian? What's with these fucking scope pyramids!?
+gamemode\modules\administration\libraries\client.lua: [Warning] line 2951, column 53 - line 2951, column 82: Are you Egyptian? What's with these fucking scope pyramids!?
+gamemode\modules\administration\libraries\client.lua: [Warning] line 2986, column 33 - line 2986, column 76: Are you Egyptian? What's with these fucking scope pyramids!?
+gamemode\modules\administration\libraries\client.lua: [Warning] line 3022, column 33 - line 3025, column 36: Are you Egyptian? What's with these fucking scope pyramids!?
+gamemode\modules\administration\libraries\client.lua: [Warning] line 3028, column 54 - line 3028, column 77: Are you Egyptian? What's with these fucking scope pyramids!?
+gamemode\modules\administration\libraries\client.lua: [Warning] line 3043, column 53 - line 3043, column 82: Are you Egyptian? What's with these fucking scope pyramids!?
+gamemode\modules\administration\libraries\client.lua: [Warning] line 3064, column 32 - line 3064, column 75: Are you Egyptian? What's with these fucking scope pyramids!?
+gamemode\modules\administration\libraries\client.lua: [Warning] line 3068, column 86 - line 3068, column 125: Are you Egyptian? What's with these fucking scope pyramids!?
+gamemode\modules\administration\libraries\client.lua: [Warning] line 3080, column 33 - line 3080, column 74: Are you Egyptian? What's with these fucking scope pyramids!?
+gamemode\modules\administration\libraries\client.lua: [Warning] line 3312, column 29 - line 3312, column 56: Are you Egyptian? What's with these fucking scope pyramids!?
+gamemode\modules\administration\libraries\client.lua: [Warning] line 3473, column 29 - line 3473, column 83: Are you Egyptian? What's with these fucking scope pyramids!?
+gamemode\modules\administration\libraries\client.lua: [Warning] line 3475, column 29 - line 3475, column 81: Are you Egyptian? What's with these fucking scope pyramids!?
+gamemode\modules\administration\libraries\client.lua: [Warning] line 3477, column 29 - line 3477, column 72: Are you Egyptian? What's with these fucking scope pyramids!?
+gamemode\modules\administration\libraries\client.lua: [Warning] line 4282, column 23 - line 4282, column 29: Variable 'search' shadows existing binding, defined at line 3334, column 1
+gamemode\modules\administration\libraries\client.lua: [Warning] line 4891, column 23 - line 4891, column 29: Variable 'search' shadows existing binding, defined at line 3334, column 1
+gamemode\modules\administration\libraries\shared.lua: [Warning] line 247, column 33 - line 251, column 34: Are you Egyptian? What's with these fucking scope pyramids!?
+gamemode\modules\administration\netcalls\client.lua: [Warning] line 280, column 50 - line 280, column 65: Inconsistent use of 'single quoted strings' and 'double quoted strings'
+gamemode\modules\administration\netcalls\client.lua: [Warning] line 280, column 103 - line 280, column 119: Inconsistent use of 'single quoted strings' and 'double quoted strings'
+gamemode\modules\administration\netcalls\client.lua: [Warning] line 285, column 52 - line 285, column 68: Inconsistent use of 'single quoted strings' and 'double quoted strings'
+gamemode\modules\administration\netcalls\client.lua: [Warning] line 285, column 106 - line 285, column 123: Inconsistent use of 'single quoted strings' and 'double quoted strings'
+gamemode\modules\administration\netcalls\client.lua: [Warning] line 290, column 50 - line 290, column 67: Inconsistent use of 'single quoted strings' and 'double quoted strings'
+gamemode\modules\administration\netcalls\client.lua: [Warning] line 290, column 105 - line 290, column 123: Inconsistent use of 'single quoted strings' and 'double quoted strings'
+gamemode\modules\administration\netcalls\client.lua: [Warning] line 295, column 50 - line 295, column 75: Inconsistent use of 'single quoted strings' and 'double quoted strings'
+gamemode\modules\administration\netcalls\client.lua: [Warning] line 295, column 113 - line 295, column 136: Inconsistent use of 'single quoted strings' and 'double quoted strings'
+gamemode\modules\administration\netcalls\client.lua: [Warning] line 300, column 52 - line 300, column 78: Inconsistent use of 'single quoted strings' and 'double quoted strings'
+gamemode\modules\administration\netcalls\client.lua: [Warning] line 300, column 116 - line 300, column 140: Inconsistent use of 'single quoted strings' and 'double quoted strings'
+gamemode\modules\administration\netcalls\client.lua: [Warning] line 305, column 50 - line 305, column 77: Inconsistent use of 'single quoted strings' and 'double quoted strings'
+gamemode\modules\administration\netcalls\client.lua: [Warning] line 305, column 115 - line 305, column 140: Inconsistent use of 'single quoted strings' and 'double quoted strings'
+gamemode\modules\administration\netcalls\server.lua: [Warning] line 216, column 11 - line 216, column 17: Unused variable: target
+gamemode\modules\administration\netcalls\server.lua: [Warning] line 476, column 45 - line 476, column 94: Are you Egyptian? What's with these fucking scope pyramids!?
+gamemode\modules\administration\netcalls\server.lua: [Warning] line 505, column 29 - line 505, column 67: Are you Egyptian? What's with these fucking scope pyramids!?
+gamemode\modules\administration\netcalls\server.lua: [Warning] line 507, column 29 - line 507, column 78: Are you Egyptian? What's with these fucking scope pyramids!?
+gamemode\modules\administration\submodules\adminstick\libraries\client.lua: [Warning] line 550, column 29 - line 550, column 103: Are you Egyptian? What's with these fucking scope pyramids!?
+gamemode\modules\administration\submodules\adminstick\libraries\client.lua: [Warning] line 560, column 29 - line 560, column 103: Are you Egyptian? What's with these fucking scope pyramids!?
+gamemode\modules\administration\submodules\adminstick\libraries\client.lua: [Warning] line 566, column 29 - line 566, column 103: Are you Egyptian? What's with these fucking scope pyramids!?
+gamemode\modules\administration\submodules\adminstick\libraries\client.lua: [Warning] line 623, column 29 - line 625, column 32: Are you Egyptian? What's with these fucking scope pyramids!?
+gamemode\modules\administration\submodules\adminstick\libraries\client.lua: [Warning] line 629, column 29 - line 631, column 32: Are you Egyptian? What's with these fucking scope pyramids!?
+gamemode\modules\administration\submodules\adminstick\libraries\client.lua: [Warning] line 635, column 29 - line 635, column 78: Are you Egyptian? What's with these fucking scope pyramids!?
+gamemode\modules\administration\submodules\adminstick\libraries\client.lua: [Warning] line 948, column 42 - line 948, column 56: Inconsistent use of 'single quoted strings' and 'double quoted strings'
+gamemode\modules\administration\submodules\adminstick\libraries\client.lua: [Warning] line 949, column 27 - line 949, column 43: Inconsistent use of 'single quoted strings' and 'double quoted strings'
+gamemode\modules\administration\submodules\adminstick\libraries\client.lua: [Warning] line 954, column 42 - line 954, column 56: Inconsistent use of 'single quoted strings' and 'double quoted strings'
+gamemode\modules\administration\submodules\adminstick\libraries\client.lua: [Warning] line 955, column 27 - line 955, column 43: Inconsistent use of 'single quoted strings' and 'double quoted strings'
+gamemode\modules\administration\submodules\adminstick\libraries\client.lua: [Warning] line 1075, column 29 - line 1075, column 87: Are you Egyptian? What's with these fucking scope pyramids!?
+gamemode\modules\administration\submodules\adminstick\libraries\client.lua: [Warning] line 1087, column 54 - line 1087, column 78: Are you Egyptian? What's with these fucking scope pyramids!?
+gamemode\modules\administration\submodules\adminstick\libraries\client.lua: [Warning] line 1227, column 47 - line 1227, column 81: Are you Egyptian? What's with these fucking scope pyramids!?
+gamemode\modules\administration\submodules\adminstick\libraries\client.lua: [Warning] line 1228, column 54 - line 1228, column 78: Are you Egyptian? What's with these fucking scope pyramids!?
+gamemode\modules\administration\submodules\adminstick\libraries\client.lua: [Warning] line 2815, column 29 - line 2817, column 32: Are you Egyptian? What's with these fucking scope pyramids!?
+gamemode\modules\administration\submodules\adminstick\libraries\client.lua: [Warning] line 2819, column 29 - line 2819, column 96: Are you Egyptian? What's with these fucking scope pyramids!?
+gamemode\modules\doors\libraries\server.lua: [Warning] line 74, column 29 - line 74, column 60: Are you Egyptian? What's with these fucking scope pyramids!?
+gamemode\modules\doors\libraries\server.lua: [Warning] line 76, column 29 - line 76, column 58: Are you Egyptian? What's with these fucking scope pyramids!?
+gamemode\modules\doors\libraries\server.lua: [Warning] line 80, column 29 - line 80, column 46: Are you Egyptian? What's with these fucking scope pyramids!?
+gamemode\modules\doors\libraries\server.lua: [Warning] line 83, column 29 - line 83, column 46: Are you Egyptian? What's with these fucking scope pyramids!?
+gamemode\modules\doors\libraries\server.lua: [Warning] line 104, column 29 - line 104, column 60: Are you Egyptian? What's with these fucking scope pyramids!?
+gamemode\modules\doors\libraries\server.lua: [Warning] line 106, column 29 - line 106, column 58: Are you Egyptian? What's with these fucking scope pyramids!?
+gamemode\modules\doors\libraries\server.lua: [Warning] line 110, column 29 - line 110, column 45: Are you Egyptian? What's with these fucking scope pyramids!?
+gamemode\modules\doors\libraries\server.lua: [Warning] line 113, column 29 - line 113, column 45: Are you Egyptian? What's with these fucking scope pyramids!?
+gamemode\modules\doors\libraries\server.lua: [Warning] line 191, column 29 - line 191, column 68: Are you Egyptian? What's with these fucking scope pyramids!?
+gamemode\modules\doors\libraries\server.lua: [Warning] line 196, column 29 - line 196, column 60: Are you Egyptian? What's with these fucking scope pyramids!?
+gamemode\modules\doors\libraries\server.lua: [Warning] line 201, column 29 - line 201, column 53: Are you Egyptian? What's with these fucking scope pyramids!?
+gamemode\modules\doors\libraries\server.lua: [Warning] line 206, column 29 - line 206, column 51: Are you Egyptian? What's with these fucking scope pyramids!?
+gamemode\modules\doors\libraries\server.lua: [Warning] line 211, column 29 - line 211, column 51: Are you Egyptian? What's with these fucking scope pyramids!?
+gamemode\modules\doors\libraries\server.lua: [Warning] line 216, column 29 - line 216, column 66: Are you Egyptian? What's with these fucking scope pyramids!?
+gamemode\modules\doors\libraries\server.lua: [Warning] line 223, column 29 - line 223, column 64: Are you Egyptian? What's with these fucking scope pyramids!?
+gamemode\modules\doors\libraries\server.lua: [Warning] line 230, column 29 - line 230, column 95: Are you Egyptian? What's with these fucking scope pyramids!?
+gamemode\modules\inventory\types\gridinv\gridinv.lua: [Warning] line 215, column 29 - line 215, column 59: Are you Egyptian? What's with these fucking scope pyramids!?
+gamemode\modules\inventory\types\gridinv\gridinv.lua: [Warning] line 228, column 29 - line 228, column 66: Are you Egyptian? What's with these fucking scope pyramids!?
+gamemode\modules\inventory\types\gridinv\gridinv.lua: [Warning] line 252, column 29 - line 252, column 78: Are you Egyptian? What's with these fucking scope pyramids!?
+gamemode\modules\inventory\types\gridinv\gridinv.lua: [Warning] line 255, column 29 - line 255, column 70: Are you Egyptian? What's with these fucking scope pyramids!?
+gamemode\modules\inventory\types\gridinv\libraries\server.lua: [Error] line 135, column 33 - line 135, column 33: unexpected ")", expecting 'label', if statement, function definition, numeric for loop, generic for loop, variable definition, function call or return statement
+gamemode\modules\mainmenu\derma\character.lua: [Warning] line 881, column 107 - line 881, column 172: Are you Egyptian? What's with these fucking scope pyramids!?
+gamemode\modules\mainmenu\derma\character.lua: [Warning] line 881, column 198 - line 881, column 267: Are you Egyptian? What's with these fucking scope pyramids!?
+gamemode\modules\mainmenu\derma\creation.lua: [Warning] line 227, column 62 - line 227, column 83: Are you Egyptian? What's with these fucking scope pyramids!?
+gamemode\modules\mainmenu\derma\creation.lua: [Warning] line 228, column 28 - line 228, column 55: Are you Egyptian? What's with these fucking scope pyramids!?
+gamemode\modules\mainmenu\derma\steps\model.lua: [Warning] line 427, column 106 - line 427, column 130: Are you Egyptian? What's with these fucking scope pyramids!?
+gamemode\modules\performance\libraries\shared.lua: [Warning] line 2, column 7 - line 2, column 13: Unused variable: MODULE
+gamemode\modules\protection\libraries\shared.lua: [Warning] line 89, column 29 - line 89, column 132: Are you Egyptian? What's with these fucking scope pyramids!?
+gamemode\modules\protection\libraries\shared.lua: [Warning] line 111, column 29 - line 111, column 72: Are you Egyptian? What's with these fucking scope pyramids!?
+gamemode\modules\recognition\pim.lua: [Warning] line 45, column 5 - line 46, column 8: Empty for loop
+gamemode\modules\spawns\libraries\server.lua: [Warning] line 226, column 29 - line 226, column 44: Are you Egyptian? What's with these fucking scope pyramids!?
+gamemode\modules\spawns\libraries\server.lua: [Warning] line 228, column 29 - line 228, column 45: Are you Egyptian? What's with these fucking scope pyramids!?
+gamemode\modules\teams\libraries\server.lua: [Warning] line 291, column 29 - line 291, column 54: Are you Egyptian? What's with these fucking scope pyramids!?

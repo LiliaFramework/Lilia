@@ -1,69 +1,94 @@
 <p align="center">
- <strong>Lilia - Advanced Roleplay Framework for Garry's Mod</strong><br/>
- A modern, modular, and highly extensible roleplay framework designed for stability and immersion.<br/>
- Build your dream roleplay server with powerful built-in systems and seamless addon compatibility.<br/><br/>
- <img src="https://bleonheart.github.io/Samael-Assets/lilia.png?raw=true " alt="Lilia Logo" width="200" />
+ <strong>Lilia — Advanced Roleplay Framework for Garry's Mod</strong><br/>
+ A modern, modular, and extensible roleplay framework built for scalable Garry's Mod communities.<br/>
+ Develop custom schemas, modules, interfaces, and gameplay systems on top of a structured GLua foundation.
 </p>
 
 <p align="center">
- <a href="https://github.com/LiliaFramework/Lilia/stargazers">
-  <img src="https://img.shields.io/github/stars/LiliaFramework/Lilia?style=social" alt="GitHub Stars" />
+ <img src="https://bleonheart.github.io/Samael-Assets/lilia.png?raw=true" alt="Lilia Logo" width="220" />
+</p>
+
+<p align="center">
+ <a href="https://github.com/bleonheart/Lilia/stargazers">
+  <img src="https://img.shields.io/github/stars/bleonheart/Lilia?style=social" alt="GitHub Stars" />
  </a>
- <a href="https://www.gnu.org/licenses/gpl-3.0">
-  <img src="https://img.shields.io/badge/License-GPLv3-blue.svg" alt="License GPL v3" />
+ <a href="./License">
+  <img src="https://img.shields.io/badge/License-GPLv3-blue.svg" alt="GPLv3" />
+ </a>
+ <a href="https://liliaframework.github.io">
+  <img src="https://img.shields.io/badge/Documentation-Lilia-blue?logo=readthedocs&logoColor=white" alt="Documentation" />
  </a>
  <a href="https://discord.gg/esCRH5ckbQ">
-  <img src="https://img.shields.io/badge/Discord-Join%20Chat-blue?logo=discord&logoColor=white" alt="Discord Chat" />
- </a>
- <a href="https://discord.gg/esCRH5ckbQ">
-  <img
-  src="https://img.shields.io/badge/dynamic/json?url=https://discord.com/api/guilds/1094398664434274454/widget.json&label=Online&query=$.presence_count&logo=discord&logoColor=white&color=7289DA&style=social"
-  alt="Discord Members Online"
-  />
+  <img src="https://img.shields.io/badge/Discord-Join%20Chat-5865F2?logo=discord&logoColor=white" alt="Discord" />
  </a>
 </p>
 
-<h1 align="center">Lilia Framework</h1>
-
 ---
+
+## Overview
+
+Lilia provides the framework layer for building custom roleplay gamemodes in Garry's Mod.
+
+The project is designed around reusable systems, clear extension points, and schema-driven development so server owners can build distinct roleplay experiences without rebuilding common infrastructure from scratch.
+
+The framework includes systems for areas such as:
+
+- Characters, factions, classes, and inventories
+- Commands, permissions, administration, and logging
+- Configuration and localization
+- Modules and schema extensions
+- Networking and database-backed persistence
+- UI and interaction systems
+- Hooks, libraries, metadata, and developer APIs
+- Documentation and development tooling
 
 ## Quick Start
 
-<p align="center">
- Follow our step-by-step <a href="https://liliaframework.github.io/about/installation/">installation guide</a> to get Lilia running on your server.
-</p>
+Follow the installation guide:
+
+https://liliaframework.github.io/about/installation/
+
+The documentation covers framework setup, schema creation, configuration, modules, libraries, hooks, and developer references.
 
 ## Documentation
 
-<p align="center">
- Explore the complete documentation for setup help, framework guides, generators, and reference pages:<br/>
- <a href="https://liliaframework.github.io">https://liliaframework.github.io</a>
-</p>
-
-### Useful Starting Points
-
-- **Home:** https://liliaframework.github.io/
-- **Installation Guide:** https://liliaframework.github.io/about/installation/
+- **Documentation:** https://liliaframework.github.io/
+- **Installation:** https://liliaframework.github.io/about/installation/
 - **Framework Overview:** https://liliaframework.github.io/about/
 - **Feature Map:** https://liliaframework.github.io/about/features/
-- **Addon Compatibility:** https://liliaframework.github.io/about/compatibility/
+- **Compatibility:** https://liliaframework.github.io/about/compatibility/
 - **Generators:** https://liliaframework.github.io/generators/
-- **Reference:** https://liliaframework.github.io/definitions/
-- **Developer Docs:** https://liliaframework.github.io/developer/
+- **Definitions:** https://liliaframework.github.io/definitions/
+- **Developer Reference:** https://liliaframework.github.io/developer/
 - **Modules:** https://liliaframework.github.io/modules/
+
+## Ecosystem
+
+Lilia is supported by several companion repositories:
+
+- [Modules](https://github.com/LiliaFramework/Modules) — optional framework modules
+- [Skeleton](https://github.com/LiliaFramework/Skeleton) — minimal schema foundation
+- [SCPRP](https://github.com/LiliaFramework/SCPRP) — example SCP roleplay schema
+- [Snippets](https://github.com/LiliaFramework/Snippets) — VS Code development snippets
+- [GluaCheck](https://github.com/LiliaFramework/GluaCheck) — Lilia-oriented Lua/GLua linting
+- [Documentation](https://github.com/LiliaFramework/LiliaFramework.github.io) — documentation site repository
 
 ## Contributing
 
-We welcome contributions to both code and documentation! Here's how to get started:
+Contributions to the framework and documentation are welcome.
 
-1. **Fork the repository**
-2. **Create a feature branch** (`git checkout -b feature/amazing-feature`)
-3. **Make your changes** and test thoroughly
-4. **Submit a pull request** with a clear description
+1. Fork the repository
+2. Create a feature branch
+3. Make and test your changes
+4. Keep changes focused and compatible with existing framework conventions
+5. Open a pull request with a clear description
+
+Please review [Code_Of_Conduct.md](./Code_Of_Conduct.md) before contributing.
+
+## License
+
+Lilia is distributed under the GNU General Public License v3.0.
+
+See [License](./License) for details.
 
 ---
-
-<p align="center">
- <strong>Ready to build your dream roleplay server?</strong><br/>
- <a href="https://liliaframework.github.io/about/installation/">Start with the installation guide</a>
-</p>
