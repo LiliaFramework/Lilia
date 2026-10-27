@@ -1,2 +1,4 @@
 serve.bat
-tools/
+docs/tools/*
+!docs/tools/derma_generator/
+!docs/tools/derma_generator/**

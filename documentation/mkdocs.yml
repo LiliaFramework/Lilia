@@ -6,11 +6,11 @@ repo_url: https://github.com/LiliaFramework/Lilia
 repo_name: LiliaFramework/Lilia
 
 exclude_docs: |
-  derma_generator/source/**
+  tools/derma_generator/source/**
 
 theme:
   name: material
-  logo: assets/logo.png
+  logo: https://bleonheart.github.io/Samael-Assets/lilia.png?raw=true
   favicon: assets/favicon.ico
   language: en
   features:
@@ -180,8 +180,6 @@ nav:
           - Dialog NPC Generator: generators/dialog.md
           - Classes: generators/class.md
           - Factions: generators/faction.md
-      - UI Generators:
-          - Derma Generator: generators/derma.md
       - Item Generators:
           - Aid Items: generators/items/aid.md
           - Ammo Items: generators/items/ammo.md
@@ -194,6 +192,8 @@ nav:
           - Stackable Items: generators/items/stackable.md
           - URL Items: generators/items/url.md
           - Weapons: generators/items/weapons.md
+  - Tools:
+      - Derma Visual Editor: tools/derma_generator/index.html
   - Guides:
       - Framework Overview: about/index.md
       - Modules: modules/index.md

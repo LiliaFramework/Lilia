@@ -268,39 +268,6 @@ The net library centralizes shared networking helpers under `lia.net`. It provid
 
 ---
 
-<details class="realm-shared" id="function-lianetprofilerlog">
-<summary><span class="summary-main"><a id="lia.net.profiler.log"></a>lia.net.profiler.log(direction, messageName, size, sender, receiver)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/net.lua#L681" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
-<div class="details-content">
-<h3 style="margin-bottom: 5px; font-weight: 700;"><a id="lianetprofilerlog"></a>Purpose</h3>
-<div style="margin-left: 20px; margin-bottom: 20px;">
-  <p>Records and prints a network profiler entry for a message when the profiler is active.</p>
-</div>
-
-<h3 style="margin-bottom: 5px; font-weight: 700;">Realm</h3>
-<div style="margin-left: 20px; margin-bottom: 20px;">
-  <p>Shared</p>
-</div>
-
-<h3 style="margin-bottom: 5px; font-weight: 700;">Parameters</h3>
-<div style="margin-left: 20px; margin-bottom: 20px;">
-<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#2.1">string</a></span> <span class="parameter">direction</span> Message direction label, such as `S->C` or `C->S`.</p>
-<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#2.1">string</a></span> <span class="parameter">messageName</span> The network message name being logged.</p>
-<p><span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#2.1">number</a></span> <span class="parameter">size</span> The message size value supplied by the wrapper. Send wrappers pass `net.BytesWritten()`, while receive wrappers pass the `len` argument from `net.Receive`.</p>
-<p><span class="types"><a class="type" href="/developer/meta/player/">Player|string</a></span> <span class="parameter">sender</span> <span class="optional">optional</span> The sending player or sender label.</p>
-<p><span class="types"><a class="type" href="/developer/meta/player/">Player|string</a></span> <span class="parameter">receiver</span> <span class="optional">optional</span> The receiving player or receiver label.</p>
-</div>
-
-<h3 style="margin-bottom: 5px; font-weight: 700;">Example Usage</h3>
-<div style="margin-left: 20px; margin-bottom: 20px;">
-<pre><code class="language-lua">  lia.net.profiler.log("S-&gt;C", "liaGlobalVar", net.BytesWritten() or 0, "SERVER", client)
-</code></pre>
-</div>
-
-</div>
-</details>
-
----
-
 <h2 style="margin-bottom: 5px;">Hooks</h2>
 <div style="margin-left: 20px; margin-bottom: 20px;">
 <p>Library-specific hooks documented for this library.</p>

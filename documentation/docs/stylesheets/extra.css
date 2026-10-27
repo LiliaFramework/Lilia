@@ -211,7 +211,7 @@ body {
     color: #ffffff;
     background:
         linear-gradient(125deg, rgba(0, 60, 58, 0.96) 0%, rgba(0, 121, 107, 0.94) 54%, rgba(0, 172, 193, 0.92) 100%),
-        url("../assets/logo.png") right 1.5rem center / min(9rem, 28vw) no-repeat;
+        url("https://bleonheart.github.io/Samael-Assets/lilia.png?raw=true") right 1.5rem center / min(9rem, 28vw) no-repeat;
     box-shadow: 0 1rem 2.4rem rgba(0, 77, 64, 0.28);
 }
 

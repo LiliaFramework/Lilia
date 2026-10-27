@@ -364,37 +364,6 @@ The command library centralizes shared command registration under `lia.command`,
 
 ---
 
-<details class="realm-shared" id="function-charlistextradetails">
-<summary><span class="summary-main"><a id="CharListExtraDetails"></a>CharListExtraDetails()</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/commands.lua#L14" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
-<div class="details-content">
-<h3 style="margin-bottom: 5px; font-weight: 700;"><a id="charlistextradetails"></a>Purpose</h3>
-<div style="margin-left: 20px; margin-bottom: 20px;">
-  <p>temp</p>
-</div>
-
-<h3 style="margin-bottom: 5px; font-weight: 700;">Category</h3>
-<div style="margin-left: 20px; margin-bottom: 20px;">
-  <p>temp</p>
-</div>
-
-<h3 style="margin-bottom: 5px; font-weight: 700;">Realm</h3>
-<div style="margin-left: 20px; margin-bottom: 20px;">
-  <p>temp</p>
-</div>
-
-<h3 style="margin-bottom: 5px; font-weight: 700;">Example Usage</h3>
-<div style="margin-left: 20px; margin-bottom: 20px;">
-<pre><code class="language-lua">  hook.Add("CharListExtraDetails", "liaExampleCharListExtraDetails", function(client, entry, stored)
-      temp
-  end)
-</code></pre>
-</div>
-
-</div>
-</details>
-
----
-
 <details class="realm-shared" id="function-commandadded">
 <summary><span class="summary-main"><a id="CommandAdded"></a>CommandAdded(command, data)</span><a class="source-link-button source-link-button--summary" href="https://github.com/LiliaFramework/Lilia/blob/main/gamemode/core/libraries/commands.lua#L221" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">View Source</a></summary>
 <div class="details-content">
