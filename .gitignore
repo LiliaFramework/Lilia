@@ -49,3 +49,4 @@ luac.out
 /__pycache__
 fieldaudit.md
 AGENTS.md
+*.pyc

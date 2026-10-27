@@ -54,33 +54,6 @@ net.Receive("liaVendorEdit", function()
     end)
 end)
 
-net.Receive("liaVendorFaction", function()
-    local factionID = net.ReadUInt(8)
-    if IsValid(liaVendorEnt) then liaVendorEnt.factions[factionID] = true end
-end)
-
-net.Receive("liaVendorBuyPrice", function()
-    if not IsValid(liaVendorEnt) then return end
-    local vendor = liaVendorEnt
-    local itemType = net.ReadString()
-    local value = net.ReadInt(32)
-    if value < 0 then value = nil end
-    vendor.items[itemType] = vendor.items[itemType] or {}
-    vendor.items[itemType][VENDOR_BUYPRICE] = value
-    hook.Run("VendorItemBuyPriceUpdated", vendor, itemType, value)
-end)
-
-net.Receive("liaVendorSellPrice", function()
-    if not IsValid(liaVendorEnt) then return end
-    local vendor = liaVendorEnt
-    local itemType = net.ReadString()
-    local value = net.ReadInt(32)
-    if value < 0 then value = nil end
-    vendor.items[itemType] = vendor.items[itemType] or {}
-    vendor.items[itemType][VENDOR_SELLPRICE] = value
-    hook.Run("VendorItemSellPriceUpdated", vendor, itemType, value)
-end)
-
 net.Receive("liaVendorMode", function()
     if not IsValid(liaVendorEnt) then return end
     local vendor = liaVendorEnt

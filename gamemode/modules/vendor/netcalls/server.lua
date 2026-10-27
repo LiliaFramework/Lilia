@@ -1,4 +1,4 @@
-﻿net.Receive("liaVendorExit", function(_, client)
+net.Receive("liaVendorExit", function(_, client)
     local vendor = client.liaVendor
     if IsValid(vendor) then vendor:removeReceiver(client, true) end
 end)
@@ -8,7 +8,6 @@ net.Receive("liaVendorEdit", function(_, client)
     if not client:canEditVendor() then return end
     local vendor = client.liaVendor
     if not IsValid(vendor) or not lia.vendor.editor[key] then return end
-    lia.log.add(client, "vendorEdit", vendor, key)
     hook.Run("OnVendorEdited", client, vendor, key)
     lia.vendor.editor[key](vendor, client)
     hook.Run("UpdateEntityPersistence", vendor)
@@ -37,33 +36,31 @@ net.Receive("liaVendorLoadPreset", function(_, client)
     if not presetName or presetName:Trim() == "" then return end
     presetName = presetName:Trim():lower()
     vendor:loadPreset(presetName)
-    client:notifyInfoLocalized("vendorPresetLoaded", presetName)
-    lia.log.add(client, "vendorPresetLoad", presetName)
+    client:notifyInfo(string.format("Vendor preset '%s' has been loaded successfully", presetName))
 end)
 
 net.Receive("liaVendorDeletePreset", function(_, client)
     lia.debug("[Permissions]", "Permission Check for net.Receive liaVendorDeletePreset", "hasPrivilege(canCreateVendorPresets)=", tostring(client:hasPrivilege("canCreateVendorPresets")), "finalResult=", tostring(client:hasPrivilege("canCreateVendorPresets")))
     if not client:hasPrivilege("canCreateVendorPresets") then
-        client:notifyErrorLocalized("noPermission")
+        client:notifyError(string.format("No Permission"))
         return
     end
 
     local presetName = net.ReadString()
     if not presetName or presetName:Trim() == "" then
-        client:notifyErrorLocalized("vendorPresetNameRequired")
+        client:notifyError(string.format("Preset name is required"))
         return
     end
 
     presetName = presetName:Trim():lower()
     if not lia.vendor.presets[presetName] then
-        client:notifyErrorLocalized("vendorPresetNotFound", presetName)
+        client:notifyError(string.format("Vendor preset '%s' not found.", presetName))
         return
     end
 
     lia.vendor.presets[presetName] = nil
     lia.data.set("vendor_presets", lia.vendor.presets)
-    client:notifySuccessLocalized("vendorPresetDeleted", presetName)
-    lia.log.add(client, "vendorPresetDelete", presetName)
+    client:notifySuccess(string.format("Vendor preset '%s' has been deleted.", presetName))
     net.Start("liaVendorSyncPresets")
     net.WriteTable(lia.vendor.presets)
     net.Broadcast()
@@ -72,14 +69,14 @@ end)
 net.Receive("liaVendorSavePreset", function(_, client)
     lia.debug("[Permissions]", "Permission Check for net.Receive liaVendorSavePreset", "hasPrivilege(canCreateVendorPresets)=", tostring(client:hasPrivilege("canCreateVendorPresets")), "finalResult=", tostring(client:hasPrivilege("canCreateVendorPresets")))
     if not client:hasPrivilege("canCreateVendorPresets") then
-        client:notifyErrorLocalized("noPermission")
+        client:notifyError(string.format("No Permission"))
         return
     end
 
     local presetName = net.ReadString()
     local itemsData = net.ReadTable()
     if not presetName or presetName:Trim() == "" then
-        client:notifyErrorLocalized("vendorPresetNameRequired")
+        client:notifyError(string.format("Preset name is required"))
         return
     end
 
@@ -91,8 +88,7 @@ net.Receive("liaVendorSavePreset", function(_, client)
 
     lia.vendor.presets[presetName] = validItems
     lia.data.set("vendor_presets", lia.vendor.presets)
-    client:notifyInfoLocalized("vendorPresetSaved", presetName)
-    lia.log.add(client, "vendorPresetSave", presetName)
+    client:notifyInfo(string.format("Vendor preset '%s' has been saved successfully", presetName))
     net.Start("liaVendorSyncPresets")
     net.WriteTable(lia.vendor.presets)
     net.Broadcast()
