@@ -5,9 +5,6 @@ site_url: https://liliaframework.github.io/
 repo_url: https://github.com/LiliaFramework/Lilia
 repo_name: LiliaFramework/Lilia
 
-exclude_docs: |
-  derma_generator/source/**
-
 theme:
   name: material
   logo: assets/logo.png
@@ -180,8 +177,6 @@ nav:
           - Dialog NPC Generator: generators/dialog.md
           - Classes: generators/class.md
           - Factions: generators/faction.md
-      - UI Generators:
-          - Derma Generator: generators/derma.md
       - Item Generators:
           - Aid Items: generators/items/aid.md
           - Ammo Items: generators/items/ammo.md

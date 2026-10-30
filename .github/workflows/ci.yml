@@ -425,16 +425,6 @@ jobs:
       - if: ${{ steps.skip_docs_regen.outputs.present == 'true' }}
         run: |
           echo "Skipping documentation regeneration because .skip-docs-regeneration is present."
-      - uses: actions/setup-node@v7
-        with:
-          node-version: '24'
-          cache: npm
-          cache-dependency-path: documentation/docs/derma_generator/source/package-lock.json
-      - name: Build Derma Generator
-        run: |
-          npm ci --prefix documentation/docs/derma_generator/source
-          npm --prefix documentation/docs/derma_generator/source run build:docs
-          rm -rf documentation/docs/derma_generator/source/node_modules
       - uses: actions/checkout@v7
         with:
           repository: LiliaFramework/LiliaFramework.github.io
