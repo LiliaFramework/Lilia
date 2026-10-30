@@ -516,37 +516,6 @@ Comprehensive collection of official and community-built modules for the Lilia f
 
 ---
 
-<details class="realm-shared no-icon" id="module-donator">
-<summary><a id="Donator"></a>Donator</summary>
-<div class="details-content">
-<a id="donator"></a>
-<h3 style="margin-bottom: 5px; font-weight: 700;"><a id="donator"></a>Description</h3>
-<div style="margin-left: 20px; margin-bottom: 20px;">
-  <p>Manages donor perks and extra character slots.</p>
-</div>
-
-<h3 style="margin-bottom: 5px; font-weight: 700;">Changelog</h3>
-<div style="margin-left: 20px;">
-  <details class="realm-shared no-icon" id="changelog-donator-1-0">
-    <summary>Version 1.0</summary>
-    <div class="details-content" style="margin-left: 20px;">
-      <ul>
-        <li>Initial Release</li>
-      </ul>
-    </div>
-  </details>
-</div>
-
-<div style="display: flex; justify-content: center; margin-top: 20px;">
-  <a href="https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/donator.zip" style="display: inline-block; padding: 12px 24px; background-color: #007bff; color: white; text-decoration: none; border-radius: 6px; font-weight: bold; transition: background-color 0.2s;">
-    Download
-  </a>
-</div>
-</div>
-</details>
-
----
-
 <details class="realm-shared no-icon" id="module-door-kick">
 <summary><a id="Door Kick"></a>Door Kick</summary>
 <div class="details-content">

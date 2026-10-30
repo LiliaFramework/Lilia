@@ -180,18 +180,6 @@
     "workshop": []
   },
   {
-    "name": "Donator",
-    "versionID": "public_donator",
-    "author": "Samael",
-    "discord": "@liliaplayer",
-    "description": "Manages donor perks and extra character slots.",
-    "version": "1",
-    "download": "https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/donator.zip",
-    "source": "../modules/index.md#donator",
-    "folder": "donator",
-    "workshop": []
-  },
-  {
     "name": "Door Kick",
     "versionID": "public_doorkick",
     "author": "Samael",
