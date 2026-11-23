@@ -1,4 +1,4 @@
-﻿local PANEL = {}
+local PANEL = {}
 function PANEL:EnsurePanels()
     if not IsValid(self.panel_tabs) then
         self.panel_tabs = vgui.Create("Panel", self)
@@ -113,11 +113,11 @@ function PANEL:ScrollTabs(direction)
     local max_scroll = math.max(0, #self.tabs - self.max_visible_tabs)
     self.scroll_offset = math.Clamp(self.scroll_offset + direction, 0, max_scroll)
     if direction < 0 and self.scroll_offset == 0 then
-        lia.websound.playButtonSound("buttons/button10.wav")
+        lia.webcontent.playButtonSound("buttons/button10.wav")
     elseif direction > 0 and self.scroll_offset >= max_scroll then
-        lia.websound.playButtonSound("buttons/button10.wav")
+        lia.webcontent.playButtonSound("buttons/button10.wav")
     else
-        lia.websound.playButtonSound("buttons/button14.wav")
+        lia.webcontent.playButtonSound("buttons/button14.wav")
     end
 
     self:UpdateTabVisibility()

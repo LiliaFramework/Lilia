@@ -1,68 +1,8 @@
-﻿--[[
-    Hooks:
-        ItemDraggedOutOfInventory(Player client, Item item)
-
-    Purpose:
-        Runs when a player drags an item out of an inventory UI and no destination inventory is provided.
-
-    Category:
-        Inventory
-
-    Parameters:
-        client (Player)
-            The player dragging the item out of the inventory.
-
-        item (Item)
-            The item being dragged out.
-
-    Returns:
-        any
-            Returns the first non-nil value from registered hook handlers.
-
-    Example Usage:
-        ```lua
-        hook.Add("ItemDraggedOutOfInventory", "liaExampleItemDraggedOutOfInventory", function(client, item)
-            if IsValid(client) then
-                return item:interact("drop", client)
-            end
-        end)
-        ```
-
-    Realm:
-        Server
-]]
---[[
-    Hooks:
-        ItemTransfered(table context)
-
-    Purpose:
-        Runs after an item transfer between inventories succeeds.
-
-    Category:
-        Inventory
-
-    Parameters:
-        context (table)
-            A transfer context table containing `client`, `item`, `from`, and `to`.
-
-    Returns:
-        nil
-
-    Example Usage:
-        ```lua
-        hook.Add("ItemTransfered", "liaExampleItemTransfered", function(context)
-            print("Transferred item", context.item:getName())
-        end)
-        ```
-
-    Realm:
-        Server
-]]
 local function CanAccessIfPlayerHasAccessToBag(inventory, action, context)
     local bagItemID = inventory:getData("item")
     if not bagItemID then return end
     local bagItem = lia.item.instances[bagItemID]
-    if not bagItem then return false, L("invalidBagItem") end
+    if not bagItem then return false, "Invalid bag item" end
     local parentInv = lia.inventory.instances[bagItem.invID]
     if parentInv == inventory then return end
     local contextWithBagInv = {}
@@ -71,13 +11,13 @@ local function CanAccessIfPlayerHasAccessToBag(inventory, action, context)
     end
 
     contextWithBagInv.bagInv = inventory
-    return parentInv and parentInv:canAccess(action, contextWithBagInv) or false, L("noAccess")
+    return parentInv and parentInv:canAccess(action, contextWithBagInv) or false, "No Access"
 end
 
 local function CanNotTransferBagIntoBag(_, action, context)
     if action ~= "transfer" then return end
     local item, toInventory = context.item, context.to
-    if toInventory and toInventory:getData("item") and item.isBag then return false, L("bagIntoBagError") end
+    if toInventory and toInventory:getData("item") and item.isBag then return false, "A bag cannot be placed into another bag." end
 end
 
 local function CanNotTransferBagIfNestedItemCanNotBe(_, action, context)
@@ -88,7 +28,7 @@ local function CanNotTransferBagIfNestedItemCanNotBe(_, action, context)
     if not bagInventory then return end
     for _, nestedItem in pairs(bagInventory:getItems()) do
         local canTransfer, reason = hook.Run("CanItemBeTransfered", nestedItem, bagInventory, bagInventory, context.client)
-        if canTransfer == false then return false, reason or L("nestedItemTransferError") end
+        if canTransfer == false then return false, reason or "An item in the bag cannot be transferred." end
     end
 end
 
@@ -101,7 +41,6 @@ end
 function MODULE:ItemCombine(client, item, target)
     if target.onCombine and target:call("onCombine", client, nil, item) then return end
     if item.onCombineTo and item and item:call("onCombineTo", client, nil, target) then return end
-    lia.log.add(client, "itemCombine", item:getName(), target:getName())
 end
 
 function MODULE:ItemDraggedOutOfInventory(client, item)
@@ -158,7 +97,7 @@ function MODULE:HandleItemTransferRequest(client, itemID, x, y, invID, rotated)
     if not oldInventory or not oldInventory.items[itemID] then return end
     local transferAllowed, transferReason = hook.Run("CanItemBeTransfered", item, oldInventory, newInventory, client)
     if transferAllowed == false then
-        client:notifyErrorLocalized(transferReason or "notNow")
+        client:notifyError(transferReason or "You are not allowed to do this right now.")
         return
     end
 
@@ -172,13 +111,13 @@ function MODULE:HandleItemTransferRequest(client, itemID, x, y, invID, rotated)
     local canAccessTransfer, accessReason = oldInventory:canAccess("transfer", context)
     if not newInventory then return hook.Run("ItemDraggedOutOfInventory", client, item) end
     if not canAccessTransfer then
-        if isstring(accessReason) then client:notifyErrorLocalized(accessReason) end
+        if isstring(accessReason) then client:notifyError(accessReason) end
         return
     end
 
     local canAccessTransferTo, accessReasonTo = newInventory:canAccess("transfer", context)
     if not canAccessTransferTo then
-        if isstring(accessReasonTo) then client:notifyErrorLocalized(accessReasonTo) end
+        if isstring(accessReasonTo) then client:notifyError(accessReasonTo) end
         return
     end
 
@@ -193,8 +132,7 @@ function MODULE:HandleItemTransferRequest(client, itemID, x, y, invID, rotated)
     local function fail(err)
         client.invTransferTransaction = nil
         if err then lia.error(err) end
-        if IsValid(client) then lia.log.add(client, "itemTransferFailed", item:getName(), oldInventory:getID(), newInventory and newInventory:getID() or 0) end
-        if IsValid(client) then client:notifyInfoLocalized("itemOnGround") end
+        if IsValid(client) then client:notifyInfo(string.format("Your item has been placed on the ground.")) end
         item:spawn(dropPos)
     end
 

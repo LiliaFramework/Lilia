@@ -1,479 +1,8 @@
-﻿--[[
-    Hooks:
-        GetMainCharacterID()
-
-    Purpose:
-        Allows code to override which character ID should be treated as the player's main character.
-
-    Category:
-        Main Menu
-
-    Parameters:
-        None
-
-    Example Usage:
-        ```lua
-        hook.Add("GetMainCharacterID", "liaExampleGetMainCharacterID", function()
-            return 15
-        end)
-        ```
-
-    Returns:
-        number|nil
-            Return the character ID that should be loaded as the main character.
-
-    Realm:
-        Client
-]]
---[[
-    Hooks:
-        OpenCharacterMenuOverride()
-
-    Purpose:
-        Allows code to replace the default character menu panel creation.
-
-    Category:
-        Main Menu
-
-    Parameters:
-        None
-
-    Example Usage:
-        ```lua
-        hook.Add("OpenCharacterMenuOverride", "liaExampleOpenCharacterMenuOverride", function()
-            return true
-        end)
-        ```
-
-    Returns:
-        Panel|boolean|nil
-            Return a panel to use instead of the default character menu, or any non-nil value to stop the default menu from opening.
-
-    Realm:
-        Client
-]]
---[[
-    Hooks:
-        CanPlayerCreateChar(client, data)
-
-    Purpose:
-        Determines whether a player is allowed to create a character with the supplied creation data.
-
-    Category:
-        Main Menu
-
-    Parameters:
-        client (Player)
-            The player attempting to create a character.
-
-        data (table)
-            The submitted character creation data.
-
-    Example Usage:
-        ```lua
-        hook.Add("CanPlayerCreateChar", "liaExampleCanPlayerCreateChar", function(client, data)
-            if IsValid(client) and client:IsAdmin() then
-                return true
-            end
-        end)
-        ```
-
-    Returns:
-        boolean|nil
-            Return false to block character creation.
-
-    Realm:
-        Shared
-]]
---[[
-    Hooks:
-        ChooseCharacter(id)
-
-    Purpose:
-        Requests that the client load a specific character from the character list.
-
-    Category:
-        Main Menu
-
-    Parameters:
-        id (number)
-            The character ID to choose.
-
-    Example Usage:
-        ```lua
-        hook.Add("ChooseCharacter", "liaExampleChooseCharacter", function(id)
-            print("[MyModule] handled ChooseCharacter")
-        end)
-        ```
-
-    Returns:
-        Deferred
-            Resolves when the character is loaded or rejects with the server-provided error.
-
-    Realm:
-        Client
-]]
---[[
-    Hooks:
-        CreateCharacter(data)
-
-    Purpose:
-        Validates and submits character-creation payload data to the server.
-
-    Category:
-        Main Menu
-
-    Parameters:
-        data (table)
-            The character field values to validate and send.
-
-    Example Usage:
-        ```lua
-        hook.Add("CreateCharacter", "liaExampleCreateCharacter", function(data)
-            print("[MyModule] handled CreateCharacter")
-        end)
-        ```
-
-    Returns:
-        Deferred
-            Resolves with the new character ID or rejects with the validation or server error.
-
-    Realm:
-        Client
-]]
---[[
-    Hooks:
-        DeleteCharacter(id)
-
-    Purpose:
-        Requests deletion of a character by ID.
-
-    Category:
-        Main Menu
-
-    Parameters:
-        id (number)
-            The character ID to delete.
-
-    Example Usage:
-        ```lua
-        hook.Add("DeleteCharacter", "liaExampleDeleteCharacter", function(id)
-            print("[MyModule] handled DeleteCharacter")
-        end)
-        ```
-
-    Returns:
-        nil
-
-    Realm:
-        Client
-]]
---[[
-    Hooks:
-        LoadMainCharacter()
-
-    Purpose:
-        Loads the player's configured main character through the normal character-selection flow.
-
-    Category:
-        Main Menu
-
-    Parameters:
-        None
-
-    Example Usage:
-        ```lua
-        hook.Add("LoadMainCharacter", "liaExampleLoadMainCharacter", function()
-            print("[MyModule] handled LoadMainCharacter")
-        end)
-        ```
-
-    Returns:
-        Deferred|nil
-            Returns the character-load deferred when a main character is available.
-
-    Realm:
-        Client
-]]
---[[
-    Hooks:
-        GetMaxPlayerChar(client)
-
-    Purpose:
-        Returns the total number of character slots available to a player.
-
-    Category:
-        Main Menu
-
-    Parameters:
-        client (Player)
-            The player whose character slot limit should be calculated.
-
-    Example Usage:
-        ```lua
-        hook.Add("GetMaxPlayerChar", "liaExampleGetMaxPlayerChar", function(client)
-            return 15
-        end)
-        ```
-
-    Returns:
-        number
-            The maximum number of characters the player may have.
-
-    Realm:
-        Shared
-]]
---[[
-    Hooks:
-        OpenCharacterMenu()
-
-    Purpose:
-        Opens the default character menu unless another hook overrides it.
-
-    Category:
-        Main Menu
-
-    Parameters:
-        None
-
-    Example Usage:
-        ```lua
-        hook.Add("OpenCharacterMenu", "liaExampleOpenCharacterMenu", function()
-            print("[MyModule] handled OpenCharacterMenu")
-        end)
-        ```
-
-    Returns:
-        Panel|nil
-            The created character panel, when the default menu opens.
-
-    Realm:
-        Client
-]]
---[[
-    Hooks:
-        ResetCharacterPanel()
-
-    Purpose:
-        Rebuilds the character panel when the current menu state no longer matches the player's session state.
-
-    Category:
-        Main Menu
-
-    Parameters:
-        None
-
-    Example Usage:
-        ```lua
-        hook.Add("ResetCharacterPanel", "liaExampleResetCharacterPanel", function()
-            print("[MyModule] handled ResetCharacterPanel")
-        end)
-        ```
-
-    Returns:
-        nil
-
-    Realm:
-        Client
-]]
---[[
-    Hooks:
-        SetMainCharacter(charID)
-
-    Purpose:
-        Sends the selected character ID to the server as the player's main character.
-
-    Category:
-        Main Menu
-
-    Parameters:
-        charID (number)
-            The character ID to store as the player's main character.
-
-    Example Usage:
-        ```lua
-        hook.Add("SetMainCharacter", "liaExampleSetMainCharacter", function(charID)
-            print("[MyModule] handled SetMainCharacter")
-        end)
-        ```
-
-    Returns:
-        nil
-
-    Realm:
-        Client
-]]
---[[
-    Hooks:
-        SyncCharList(client)
-
-    Purpose:
-        Sends the current character list to a client that is viewing character selection.
-
-    Category:
-        Main Menu
-
-    Parameters:
-        client (Player)
-            The player who should receive the synchronized character list.
-
-    Example Usage:
-        ```lua
-        hook.Add("SyncCharList", "liaExampleSyncCharList", function(client)
-            if not IsValid(client) then return end
-            print(string.format("[MyModule] handled SyncCharList for %s", client:Name()))
-        end)
-        ```
-
-    Returns:
-        nil
-
-    Realm:
-        Server
-]]
---[[
-    Hooks:
-        LiliaLoaded()
-
-    Purpose:
-        Opens the character menu after the framework has finished loading on the client.
-
-    Category:
-        Main Menu
-
-    Parameters:
-        None
-
-    Example Usage:
-        ```lua
-        hook.Add("LiliaLoaded", "liaExampleLiliaLoaded", function()
-            print("[MyModule] handled LiliaLoaded")
-        end)
-        ```
-
-    Returns:
-        nil
-
-    Realm:
-        Client
-]]
---[[
-    Hooks:
-        KickedFromChar(characterID, isCurrentChar)
-
-    Purpose:
-        Handles the clientside character menu state after the player is kicked from a character.
-
-    Category:
-        Main Menu
-
-    Parameters:
-        characterID (number)
-            The character ID the player was removed from.
-
-        isCurrentChar (boolean)
-            Whether the removed character was the player's currently loaded character.
-
-    Example Usage:
-        ```lua
-        hook.Add("KickedFromChar", "liaExampleKickedFromChar", function(characterID, isCurrentChar)
-            print("[MyModule] handled KickedFromChar")
-        end)
-        ```
-
-    Returns:
-        nil
-
-    Realm:
-        Client
-]]
---[[
-    Hooks:
-        IsCharacterCreationOverridden()
-
-    Purpose:
-        Allows a module or schema to suppress the default character creation flow and supply its own interface.
-
-    Category:
-        Main Menu
-
-    Parameters:
-        None
-
-    Example Usage:
-        ```lua
-        hook.Add("IsCharacterCreationOverridden", "liaExampleIsCharacterCreationOverridden", function()
-            return true
-        end)
-        ```
-
-    Returns:
-        boolean|nil
-            Return true to prevent the default character creation UI from opening. Return nil or false to keep the built-in flow.
-
-    Realm:
-        Client
-]]
---[[
-    Hooks:
-        CharLoaded(Character character)
-
-    Purpose:
-        Runs after the client successfully loads a chosen character through the normal character selection flow.
-
-    Category:
-        Main Menu
-
-    Parameters:
-        character (Character)
-            The character object that finished loading on the client.
-
-    Example Usage:
-        ```lua
-        hook.Add("CharLoaded", "liaExampleCharLoaded", function(character)
-            print("[Characters] Loaded:", character:getName())
-        end)
-        ```
-
-    Returns:
-        nil
-
-    Realm:
-        Client
-]]
---[[
-    Hooks:
-        ShouldShowCharVarInCreation(string key)
-
-    Purpose:
-        Allows code to hide specific character variable fields from the default creation flow while preserving fallback defaults in the outgoing payload.
-
-    Category:
-        Main Menu
-
-    Parameters:
-        key (string)
-            The character variable key being considered for the creation interface.
-
-    Example Usage:
-        ```lua
-        hook.Add("ShouldShowCharVarInCreation", "liaExampleShouldShowCharVarInCreation", function(key)
-            if key == "desc" then return false end
-        end)
-        ```
-
-    Returns:
-        boolean|nil
-            Return false to hide the field from the default creation UI. Return nil or true to leave the field available.
-
-    Realm:
-        Client
-]]
-MODULE.name = "mainMenuModuleName"
+MODULE.name = "Main Menu"
 MODULE.author = "Samael"
-MODULE.discord = "@liliaplayer"
-MODULE.desc = "mainMenuDescription"
-MODULE.NetworkStrings = {"liaMainCharacterSet",}
+MODULE.discord = "liliaplayer"
+MODULE.desc = "Creates the in-game main menu used for selecting, creating, and managing player characters before entering the world."
+MODULE.NetworkStrings = {"liaMainCharacterSet", "liaSetMainCharacter", "liaStaffDiscordPrompt",}
 if SERVER then
     function MODULE:SyncCharList(client)
         if not client.liaCharList then return end
@@ -486,15 +15,32 @@ if SERVER then
         net.Send(client)
     end
 else
-    local function isCharacterCreationOverridden()
-        return hook.Run("IsCharacterCreationOverridden") == true
-    end
-
     function MODULE:OpenCharacterMenu()
         local panel = hook.Run("OpenCharacterMenuOverride")
         if panel ~= nil then return panel end
-        if isCharacterCreationOverridden() then return end
+        if hook.Run("IsCharacterCreationOverridden") == true then return end
+        local creator = lia.gui.schemaCharacterCreator
+        if IsValid(creator) then return IsValid(creator.sourceMenu) and creator.sourceMenu or creator end
         return vgui.Create("liaCharacter")
+    end
+
+    function MODULE:OpenCharacterCreator(sourceMenu)
+        local creator = lia.gui.schemaCharacterCreator
+        if IsValid(creator) then
+            if IsValid(sourceMenu) and not IsValid(creator.sourceMenu) then creator:SetSourceMenu(sourceMenu) end
+            return creator
+        end
+        local client = LocalPlayer()
+        if not IsValid(client) then return nil, "Character creation is not available yet." end
+        local allowed, reason = hook.Run("CanPlayerCreateChar", client)
+        if allowed == false then return nil, reason or "You cannot create another character." end
+        allowed, reason = hook.Run("ShouldMenuButtonShow", "create")
+        if allowed == false then return nil, reason or "Character creation is unavailable." end
+        if not vgui.GetControlTable("liaSchemaCharacterCreator") then return nil, "The character creator interface is unavailable." end
+        creator = vgui.Create("liaSchemaCharacterCreator")
+        if not IsValid(creator) then return nil, "Failed to open the character creator." end
+        if IsValid(sourceMenu) then creator:SetSourceMenu(sourceMenu) end
+        return creator
     end
 
     function MODULE:PlayerButtonDown(_, button)
@@ -507,13 +53,60 @@ else
     function MODULE:ResetCharacterPanel()
         local charPanel = lia.gui.character
         local client = LocalPlayer()
+        if IsValid(lia.gui.schemaCharacterCreator) then return end
+        if IsValid(charPanel) and charPanel.inCharacterCreation then return end
         if IsValid(charPanel) and charPanel.isLoadMode and charPanel.availableCharacters and #charPanel.availableCharacters > 0 then return end
         if IsValid(charPanel) then charPanel:Remove() end
         if IsValid(client) and not client:getChar() then self:OpenCharacterMenu() end
     end
 
+    function MODULE:GetMainMenuPosition(character)
+        if not character then return nil, nil end
+        if lia.config.get("MainMenuUseLastPos", true) then
+            local lastPos = character:getLastPos()
+            if lastPos then
+                local pos = lastPos.pos or lastPos.position or lastPos.Pos or lastPos.Position
+                local ang = lastPos.ang or lastPos.angles or lastPos.Ang or lastPos.Angles
+                if pos and isvector(pos) then
+                    local angles = ang and isangle(ang) and ang or Angle(0, 0, 0)
+                    return pos, angles
+                end
+            end
+
+            local client = LocalPlayer()
+            if IsValid(client) and client:getChar() then
+                local currentChar = client:getChar()
+                local currentCharID = currentChar.getID and currentChar:getID() or nil
+                local viewingCharID = character.getID and character:getID() or nil
+                if currentCharID == viewingCharID then return client:GetPos(), Angle(0, 0, 0) end
+            end
+        end
+
+        if character:getFaction() then
+            local faction = lia.faction.get(character:getFaction())
+            if faction and faction.mainMenuPosition then
+                local menuPos = faction.mainMenuPosition
+                local currentMap = game.GetMap()
+                if istable(menuPos) and menuPos[currentMap] then
+                    local mapPos = menuPos[currentMap]
+                    if istable(mapPos) then
+                        return mapPos.position, mapPos.angles
+                    elseif isvector(mapPos) then
+                        return mapPos, Angle(0, 0, 0)
+                    end
+                end
+
+                if istable(menuPos) then
+                    return menuPos.position, menuPos.angles
+                elseif isvector(menuPos) then
+                    return menuPos, Angle(0, 0, 0)
+                end
+            end
+        end
+    end
+
     function MODULE:ChooseCharacter(id)
-        assert(isnumber(id), L("idMustBeNumber"))
+        assert(isnumber(id), "id must be a number")
         local d = deferred.new()
         net.Receive("liaCharChoose", function()
             local message = net.ReadString()
@@ -525,7 +118,7 @@ else
                     hook.Run("CharLoaded", character)
                 end)
             else
-                d:reject(message)
+                d:reject(lia.lang.resolve(message))
             end
         end)
 
@@ -537,7 +130,7 @@ else
 
     function MODULE:CreateCharacter(data)
         local client = LocalPlayer()
-        assert(istable(data), L("dataMustBeTable"))
+        assert(istable(data), "Data must be a table")
         local d = deferred.new()
         local payload = {}
         for key, charVar in pairs(lia.char.vars) do
@@ -552,7 +145,7 @@ else
             local value = data[key]
             if isfunction(charVar.onValidate) then
                 local results = {charVar.onValidate(value, data, client)}
-                if results[1] == false then return d:reject(L(unpack(results, 2))) end
+                if results[1] == false then return d:reject(tostring(unpack(results, 2))) end
             end
 
             payload[key] = value
@@ -564,7 +157,7 @@ else
             if id > 0 then
                 d:resolve(id)
             else
-                d:reject(reason)
+                d:reject(tostring(reason))
             end
         end)
 
@@ -580,7 +173,7 @@ else
     end
 
     function MODULE:DeleteCharacter(id)
-        assert(isnumber(id), L("idMustBeNumber"))
+        assert(isnumber(id), "id must be a number")
         net.Start("liaCharDelete")
         net.WriteUInt(id, 32)
         net.SendToServer()
@@ -604,10 +197,10 @@ else
     function MODULE:LoadMainCharacter()
         local mainCharID = hook.Run("GetMainCharacterID")
         if not mainCharID then
-            LocalPlayer():notifyErrorLocalized("noMainCharacter")
+            LocalPlayer():notifyError(string.format("No main character set."))
             return
         end
-        return self:ChooseCharacter(mainCharID):next(function() if IsValid(lia.gui.character) then lia.gui.character:Remove() end end):catch(function(err) if err and err ~= "" then LocalPlayer():notifyErrorLocalized(err) end end)
+        return self:ChooseCharacter(mainCharID):next(function() if IsValid(lia.gui.character) then lia.gui.character:Remove() end end):catch(function(err) if err and err ~= "" then LocalPlayer():notifyError(err) end end)
     end
 
     function MODULE:LiliaLoaded()
@@ -616,13 +209,13 @@ else
     end
 
     function MODULE:CharListLoaded()
-        if IsValid(lia.gui.character) and not lia.gui.character.isLoadMode then lia.gui.character:createStartButton() end
+        if IsValid(lia.gui.character) and not lia.gui.character.isLoadMode and not lia.gui.character.inCharacterCreation then lia.gui.character:createStartButton() end
     end
 
     function MODULE:OnReloaded()
         timer.Simple(0.1, function()
             local client = LocalPlayer()
-            if IsValid(client) and not client:getChar() and not IsValid(lia.gui.character) then self:OpenCharacterMenu() end
+            if IsValid(client) and not client:getChar() and not IsValid(lia.gui.character) and not IsValid(lia.gui.schemaCharacterCreator) then self:OpenCharacterMenu() end
         end)
     end
 
@@ -641,7 +234,7 @@ else
 
     function MODULE:CreateMenuButtons(tabs)
         tabs["characters"] = {
-            name = "characters",
+            name = "Characters",
             icon = "icon16/user.png",
             func = function()
                 if isInThirdPerson() then
@@ -688,4 +281,119 @@ function MODULE:GetMaxPlayerChar(client)
         end
         return maxChars + staffCount + extraChars
     end
+end
+
+MODULE.creationTabs = MODULE.creationTabs or {}
+MODULE.creationContext = MODULE.creationContext or {}
+function MODULE:RefreshCreationTabs()
+    local tabs = {}
+    hook.Run("RegisterCharacterCreationTabs", tabs, self)
+    self.creationTabs = {}
+    for id, data in pairs(tabs) do
+        if not isstring(id) or id == "" then continue end
+        if not istable(data) or not isstring(data.name) or not isfunction(data.onCreate) then continue end
+        data.id = id
+        data.order = tonumber(data.order) or 100
+        self.creationTabs[id] = data
+    end
+    return self.creationTabs
+end
+
+function MODULE:GetCreationTabs()
+    local tabs = {}
+    for _, tab in pairs(self.creationTabs) do
+        tabs[#tabs + 1] = tab
+    end
+
+    table.sort(tabs, function(a, b)
+        if a.order == b.order then return a.id < b.id end
+        return a.order < b.order
+    end)
+    return tabs
+end
+
+function MODULE:GetCreationContext()
+    return self.creationContext
+end
+
+function MODULE:SetCreationContext(key, value)
+    self.creationContext[key] = value
+end
+
+local function getCreationFactionIndex(value)
+    local index = tonumber(value)
+    if index and lia.faction and lia.faction.indices and lia.faction.indices[index] then return index end
+    local faction = lia.faction.get(value)
+    if faction then return faction.index end
+end
+
+local function getValidDefaultCreationClass(value, factionValue)
+    local index = tonumber(value)
+    if not index or index <= 0 or not lia.class or not lia.class.list then return nil end
+    local class = lia.class.list[index]
+    local factionIndex = getCreationFactionIndex(factionValue)
+    if not class or not factionIndex or class.faction ~= factionIndex or not class.isDefault then return nil end
+    return class
+end
+
+local function installCreationClassValidation()
+    local classVar = lia.char and lia.char.vars and lia.char.vars.class
+    if not classVar or classVar.schemaCreatorClassValidation then return end
+    local previousValidate = classVar.onValidate
+    classVar.onValidate = function(value, data, client)
+        if isfunction(previousValidate) then
+            local result = {previousValidate(value, data, client)}
+            if result[1] == false then return unpack(result) end
+        end
+
+        if value == nil or tonumber(value) == 0 then return true end
+        if not getValidDefaultCreationClass(value, data and data.faction) then return false, "Invalid class." end
+        return true
+    end
+
+    classVar.schemaCreatorClassValidation = true
+end
+
+installCreationClassValidation()
+hook.Add("PostGamemodeLoaded", "liaMainMenuInstallCreationClassValidation", installCreationClassValidation)
+hook.Add("OverrideFactionModelCustomization", "liaMainMenuCreatorClassModelCustomization", function(_, faction, context, skinAllowed, bodygroupsAllowed)
+    if not faction or not istable(context) then return end
+    local classIndex = tonumber(context.class)
+    local class = classIndex and lia.class and lia.class.list and lia.class.list[classIndex] or nil
+    if class and class.faction == faction.index then
+        if class.skinAllowed ~= nil then skinAllowed = class.skinAllowed == true end
+        if class.bodygroupsAllowed ~= nil then bodygroupsAllowed = class.bodygroupsAllowed == true end
+        if istable(class.allowedSkins) then skinAllowed = true end
+        if istable(class.allowedBodygroups) then bodygroupsAllowed = true end
+    end
+
+    if istable(faction.allowedSkins) then skinAllowed = true end
+    if istable(faction.allowedBodygroups) then bodygroupsAllowed = true end
+    local creationClass = lia.faction.getCharacterCreationClass(faction, context.class)
+    local modelData = lia.faction.getCharacterCreationModelInfo(faction, creationClass, context.model)
+    local parsed = modelData and lia.faction.getModelData(context.model or 1, modelData) or nil
+    if parsed then
+        if istable(parsed.allowedSkins) then skinAllowed = true end
+        if istable(parsed.allowedBodygroups) then bodygroupsAllowed = true end
+    end
+    return skinAllowed, bodygroupsAllowed
+end)
+
+if SERVER then
+    hook.Add("OnCharCreated", "liaMainMenuApplyCreationClass", function(client, character, originalData)
+        local class = getValidDefaultCreationClass(originalData and originalData.class, originalData and originalData.faction)
+        if not class or not character then return end
+        timer.Simple(0.4, function()
+            if not character or not character.getClass or not character.setClass then return end
+            local oldClass = character:getClass()
+            if oldClass == class.index then return end
+            character:setClass(class.index)
+            if IsValid(client) then
+                hook.Run("OnPlayerJoinClass", client, class.index, oldClass)
+                if character.sync then character:sync(client) end
+            end
+
+            if character.save then character:save() end
+        end)
+    end)
 end

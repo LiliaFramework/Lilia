@@ -1,574 +1,8 @@
-﻿--[[
-    Hooks:
-        OnWeaponOverridesBulkSynced(overrides)
-
-    Purpose:
-        Runs after the full static weapon override table has been synchronized to the client.
-
-    Category:
-        Items
-
-    Parameters:
-        overrides (table)
-            The full weapon override table keyed by weapon class name.
-
-    Returns:
-        nil
-
-    Example Usage:
-        ```lua
-        hook.Add("OnWeaponOverridesBulkSynced", "liaExampleOnWeaponOverridesBulkSynced", function(overrides)
-            print("[Weapons] Synced static overrides:", table.Count(overrides))
-        end)
-        ```
-
-    Realm:
-        Client
-]]
---[[
-    Hooks:
-        OnWeaponOverrideUpdated(className, key, value)
-
-    Purpose:
-        Runs after a single static weapon override field has been updated on the client.
-
-    Category:
-        Items
-
-    Parameters:
-        className (string)
-            The weapon class whose override changed.
-
-        key (string)
-            The item definition field that was updated.
-
-        value (any)
-            The new override value.
-
-    Returns:
-        nil
-
-    Example Usage:
-        ```lua
-        hook.Add("OnWeaponOverrideUpdated", "liaExampleOnWeaponOverrideUpdated", function(className, key, value)
-            print("[Weapons] Updated", className, key)
-        end)
-        ```
-
-    Realm:
-        Client
-]]
---[[
-    Hooks:
-        OnWeaponRuntimeOverridesBulkSynced(overrides)
-
-    Purpose:
-        Runs after the full runtime weapon override table has been synchronized to the client.
-
-    Category:
-        Items
-
-    Parameters:
-        overrides (table)
-            The full runtime override table keyed by weapon class name and dot path.
-
-    Returns:
-        nil
-
-    Example Usage:
-        ```lua
-        hook.Add("OnWeaponRuntimeOverridesBulkSynced", "liaExampleOnWeaponRuntimeOverridesBulkSynced", function(overrides)
-            print("[Weapons] Synced runtime overrides:", table.Count(overrides))
-        end)
-        ```
-
-    Realm:
-        Client
-]]
---[[
-    Hooks:
-        OnWeaponRuntimeOverrideUpdated(className, dotPath, value)
-
-    Purpose:
-        Runs after a single runtime weapon override path has been updated on the client.
-
-    Category:
-        Items
-
-    Parameters:
-        className (string)
-            The weapon class whose runtime override changed.
-
-        dotPath (string)
-            The nested runtime path that was updated.
-
-        value (any)
-            The new runtime override value.
-
-    Returns:
-        nil
-
-    Example Usage:
-        ```lua
-        hook.Add("OnWeaponRuntimeOverrideUpdated", "liaExampleOnWeaponRuntimeOverrideUpdated", function(className, dotPath, value)
-            print("[Weapons] Runtime update", className, dotPath)
-        end)
-        ```
-
-    Realm:
-        Client
-]]
---[[
-    Hooks:
-        CharListUpdated(oldCharList, newCharList)
-
-    Purpose:
-        Runs after the client receives a replacement character ID list for an already initialized character menu session.
-
-    Category:
-        Character
-
-    Parameters:
-        oldCharList (table)
-            The previous array of character IDs stored clientside.
-
-        newCharList (table)
-            The newly received array of character IDs.
-
-    Returns:
-        nil
-
-    Example Usage:
-        ```lua
-        hook.Add("CharListUpdated", "liaExampleCharListUpdated", function(oldCharList, newCharList)
-            print("[Characters] Updated list size:", #newCharList)
-        end)
-        ```
-
-    Realm:
-        Client
-]]
---[[
-    Hooks:
-        InventoryDataChanged(instance, key, oldValue, value)
-
-    Purpose:
-        Runs after an inventory data field has been updated from a network message.
-
-    Category:
-        Inventory
-
-    Parameters:
-        instance (Inventory)
-            The inventory instance whose data changed.
-
-        key (string)
-            The inventory data key that was updated.
-
-        oldValue (any)
-            The previous stored value.
-
-        value (any)
-            The new value assigned to the inventory.
-
-    Returns:
-        nil
-
-    Example Usage:
-        ```lua
-        hook.Add("InventoryDataChanged", "liaExampleInventoryDataChanged", function(instance, key, oldValue, value)
-            print("[Inventory] Data changed:", key)
-        end)
-        ```
-
-    Realm:
-        Client
-]]
---[[
-    Hooks:
-        ItemInitialized(item)
-
-    Purpose:
-        Runs after a clientside item instance has been created or refreshed from networked item data.
-
-    Category:
-        Inventory
-
-    Parameters:
-        item (Item)
-            The item instance that was initialized.
-
-    Returns:
-        nil
-
-    Example Usage:
-        ```lua
-        hook.Add("ItemInitialized", "liaExampleItemInitialized", function(item)
-            print("[Inventory] Initialized item:", item.uniqueID)
-        end)
-        ```
-
-    Realm:
-        Client
-]]
---[[
-    Hooks:
-        InventoryInitialized(instance)
-
-    Purpose:
-        Runs after a clientside inventory instance and all of its current items have been initialized.
-
-    Category:
-        Inventory
-
-    Parameters:
-        instance (Inventory)
-            The inventory instance that was initialized.
-
-    Returns:
-        nil
-
-    Example Usage:
-        ```lua
-        hook.Add("InventoryInitialized", "liaExampleInventoryInitialized", function(instance)
-            print("[Inventory] Ready:", instance:getID())
-        end)
-        ```
-
-    Realm:
-        Client
-]]
---[[
-    Hooks:
-        InventoryDeleted(instance)
-
-    Purpose:
-        Runs immediately before a clientside inventory instance is removed from the inventory cache.
-
-    Category:
-        Inventory
-
-    Parameters:
-        instance (Inventory)
-            The inventory instance that is being deleted.
-
-    Returns:
-        nil
-
-    Example Usage:
-        ```lua
-        hook.Add("InventoryDeleted", "liaExampleInventoryDeleted", function(instance)
-            print("[Inventory] Deleted:", instance:getID())
-        end)
-        ```
-
-    Realm:
-        Client
-]]
---[[
-    Hooks:
-        ItemDeleted(instance)
-
-    Purpose:
-        Runs after a clientside item instance has been removed from its inventory and instance cache.
-
-    Category:
-        Inventory
-
-    Parameters:
-        instance (Item)
-            The item instance that was deleted.
-
-    Returns:
-        nil
-
-    Example Usage:
-        ```lua
-        hook.Add("ItemDeleted", "liaExampleItemDeleted", function(instance)
-            if instance then
-                print("[Inventory] Deleted item:", instance.uniqueID)
-            end
-        end)
-        ```
-
-    Realm:
-        Client
-]]
---[[
-    Hooks:
-        OnCharNetVarChanged(character, key, oldVar, value)
-
-    Purpose:
-        Runs after a networked character variable has been updated on the client.
-
-    Category:
-        Character
-
-    Parameters:
-        character (Character)
-            The character whose networked variable changed.
-
-        key (string)
-            The networked variable key that changed.
-
-        oldVar (any)
-            The previous stored value.
-
-        value (any)
-            The new networked value.
-
-    Returns:
-        nil
-
-    Example Usage:
-        ```lua
-        hook.Add("OnCharNetVarChanged", "liaExampleOnCharNetVarChanged", function(character, key, oldVar, value)
-            print("[Character] Net var changed:", key)
-        end)
-        ```
-
-    Realm:
-        Client
-]]
---[[
-    Hooks:
-        ItemQuantityChanged(item, oldValue, quantity)
-
-    Purpose:
-        Runs after a stackable item quantity has been updated from the server.
-
-    Category:
-        Inventory
-
-    Parameters:
-        item (Item)
-            The item whose quantity changed.
-
-        oldValue (number)
-            The previous quantity.
-
-        quantity (number)
-            The new quantity.
-
-    Returns:
-        nil
-
-    Example Usage:
-        ```lua
-        hook.Add("ItemQuantityChanged", "liaExampleItemQuantityChanged", function(item, oldValue, quantity)
-            print("[Inventory] Quantity changed:", oldValue, quantity)
-        end)
-        ```
-
-    Realm:
-        Client
-]]
---[[
-    Hooks:
-        GetNPCDialogOptions(client, npc, canCustomize)
-
-    Purpose:
-        Allows plugins or modules to add extra dialog options before an NPC conversation menu is displayed.
-
-    Category:
-        Dialog
-
-    Parameters:
-        client (Player)
-            The local player opening the dialog.
-
-        npc (Entity)
-            The NPC entity that opened the dialog, if valid.
-
-        canCustomize (boolean)
-            Whether the dialog session allows customization options.
-
-    Returns:
-        table|nil
-            Return a table of extra conversation options to merge into the NPC dialog. Returning nil allows the default behavior to continue.
-
-    Example Usage:
-        ```lua
-        hook.Add("GetNPCDialogOptions", "liaExampleGetNPCDialogOptions", function(client, npc, canCustomize)
-            return {
-                AskForWork = {
-                    statement = "Any work available?"
-                }
-            }
-        end)
-        ```
-
-    Realm:
-        Client
-]]
---[[
-    Hooks:
-        DoorDataReceived(door, syncData)
-
-    Purpose:
-        Runs after door data has been synchronized to a clientside door entity.
-
-    Category:
-        Doors
-
-    Parameters:
-        door (Entity)
-            The door entity that received synchronized data.
-
-        syncData (table)
-            The synchronized door data table.
-
-    Returns:
-        nil
-
-    Example Usage:
-        ```lua
-        hook.Add("DoorDataReceived", "liaExampleDoorDataReceived", function(door, syncData)
-            print("[Doors] Received data for", door)
-        end)
-        ```
-
-    Realm:
-        Client
-]]
---[[
-    Hooks:
-        CharListLoaded(table newCharList)
-
-    Purpose:
-        Runs the first time the client receives its available character ID list during a menu session.
-
-    Category:
-        Character
-
-    Parameters:
-        newCharList (table)
-            The newly received sequential array of character IDs available to the client.
-
-    Example Usage:
-        ```lua
-        hook.Add("CharListLoaded", "liaExampleCharListLoaded", function(newCharList)
-            print("[Characters] Loaded list size:", #newCharList)
-        end)
-        ```
-
-    Returns:
-        nil
-
-    Realm:
-        Client
-]]
---[[
-    Hooks:
-        InventoryItemAdded(Inventory inventory, Item item)
-
-    Purpose:
-        Runs after an initialized item instance is inserted into a clientside inventory cache.
-
-    Category:
-        Inventory
-
-    Parameters:
-        inventory (Inventory)
-            The inventory instance that received the item.
-
-        item (Item)
-            The item instance that was added to the inventory.
-
-    Example Usage:
-        ```lua
-        hook.Add("InventoryItemAdded", "liaExampleInventoryItemAdded", function(inventory, item)
-            print("[Inventory] Added", item.uniqueID, "to", inventory:getID())
-        end)
-        ```
-
-    Returns:
-        nil
-
-    Realm:
-        Client
-]]
---[[
-    Hooks:
-        InventoryItemRemoved(Inventory inventory, Item item)
-
-    Purpose:
-        Runs after an item instance is removed from a clientside inventory cache through inventory sync or item deletion.
-
-    Category:
-        Inventory
-
-    Parameters:
-        inventory (Inventory)
-            The inventory instance the item was removed from.
-
-        item (Item)
-            The item instance that was removed.
-
-    Example Usage:
-        ```lua
-        hook.Add("InventoryItemRemoved", "liaExampleInventoryItemRemoved", function(inventory, item)
-            print("[Inventory] Removed", item.uniqueID, "from", inventory:getID())
-        end)
-        ```
-
-    Returns:
-        nil
-
-    Realm:
-        Client
-]]
---[[
-    Hooks:
-        ItemDataChanged(Item item, string key, any oldValue, any newValue)
-
-    Purpose:
-        Runs after a clientside item data field has been updated from a networked item data sync.
-
-    Category:
-        Inventory
-
-    Parameters:
-        item (Item)
-            The item instance whose data changed.
-
-        key (string)
-            The item data key that was updated.
-
-        oldValue (any)
-            The previous stored value for the item data key.
-
-        newValue (any)
-            The new value assigned to the item data key.
-
-    Example Usage:
-        ```lua
-        hook.Add("ItemDataChanged", "liaExampleItemDataChanged", function(item, key, oldValue, newValue)
-            print("[Item] Data changed:", item.uniqueID, key)
-        end)
-        ```
-
-    Returns:
-        nil
-
-    Realm:
-        Client
-]]
 net.Receive("liaSetWaypoint", function()
     local name = net.ReadString()
     local pos = net.ReadVector()
     local logo = net.ReadString()
     LocalPlayer():setWaypoint(name, pos, logo ~= "" and logo or nil)
-end)
-
-net.Receive("liaSetWaypointWithLogo", function()
-    local name = net.ReadString()
-    local pos = net.ReadVector()
-    local logo = net.ReadString()
-    local hasOnReach = net.ReadBool()
-    local onReach = nil
-    if hasOnReach then onReach = net.ReadString() end
-    LocalPlayer():setWaypoint(name, pos, logo, onReach)
 end)
 
 net.Receive("liaWeaponOverrideSync", function()
@@ -642,7 +76,7 @@ end)
 
 net.Receive("liaClassUpdate", function()
     local joinedClient = net.ReadEntity()
-    if lia.gui.classes and lia.gui.classes:IsVisible() then
+    if IsValid(lia.gui.classes) and lia.gui.classes:IsVisible() then
         if joinedClient == LocalPlayer() then
             lia.gui.classes:loadClasses()
         else
@@ -918,13 +352,6 @@ net.Receive("liaServerChatAddTextShadowed", function()
     if not IsColor(args[1]) or not isstring(args[2]) or not IsColor(args[3]) then chat.AddText(unpack(args)) end
 end)
 
-net.Receive("liaProvideServerPassword", function()
-    local pw = net.ReadString()
-    if not isstring(pw) or pw == "" then return end
-    SetClipboardText(pw)
-    chat.AddText(Color(0, 200, 0), L("serverPasswordCopied"))
-end)
-
 net.Receive("liaBlindTarget", function()
     local enabled = net.ReadBool()
     if enabled then
@@ -940,7 +367,7 @@ net.Receive("liaInventoryData", function()
     local value = net.ReadType()
     local instance = lia.inventory.instances[id]
     if not instance then
-        lia.error(L("invDataNoInstance", key, id))
+        lia.error(string.format("Got data %s for non-existent instance %s", key, id))
         return
     end
 
@@ -1099,18 +526,6 @@ net.Receive("liaCharVar", function()
     end)
 end)
 
-net.Receive("liaItemData", function()
-    local uniqueID = net.ReadString()
-    local id = net.ReadUInt(32)
-    local data = net.ReadTable()
-    local invID = net.ReadType()
-    local item = lia.item.new(uniqueID, id)
-    item.data = {}
-    if data then item.data = data end
-    item.invID = invID or 0
-    hook.Run("ItemInitialized", item)
-end)
-
 net.Receive("liaInvData", function()
     local id = net.ReadUInt(32)
     local key = net.ReadString()
@@ -1192,7 +607,7 @@ net.Receive("liaActBar", function()
 
     local text = net.ReadString()
     local time = net.ReadFloat()
-    local displayText = text:sub(1, 1) == "@" and L(text:sub(2)) or text
+    local displayText = lia.lang.resolve(text)
     if IsValid(lia.gui.actionCircle) then lia.gui.actionCircle:Remove() end
     lia.gui = lia.gui or {}
     local pnl = vgui.Create("liaLockCircle")
@@ -1209,10 +624,10 @@ net.Receive("liaOpenInvMenu", function()
     local targetInv = lia.inventory.instances[index]
     local myInv = client:getChar():getInv()
     local panels = lia.inventory.showDual(myInv, targetInv)
-    if panels and panels[1] and panels[2] then panels[2]:SetTitle(L("inventoryTitle", target:getChar():getName())) end
+    if panels and panels[1] and panels[2] then panels[2]:SetTitle(string.format("%s's Inventory", target:getChar():getName())) end
 end)
 
-lia.net.readBigTable("liaSendTableUI", function(data) lia.util.createTableUI(data.title, data.columns, data.data, data.options, data.characterID) end)
+lia.net.readBigTable("liaCreateTableUI", function(data) lia.util.createTableUI(data) end)
 net.Receive("liaOptionsRequest", function()
     local id = net.ReadUInt(32)
     local title = net.ReadString()
@@ -1279,7 +694,7 @@ net.Receive("liaProvideInteractOptions", function()
 
     local isInteraction = kind == "interaction"
     if optionCount == 0 then return end
-    lia.playerinteract.openMenu(optionsMap, isInteraction, isInteraction and L("playerInteractions") or L("actionsMenu"), isInteraction and lia.keybind.get(L("interactionMenu"), KEY_TAB) or lia.keybind.get(L("personalActions"), KEY_G), "liaRunInteraction", true)
+    lia.playerinteract.openMenu(optionsMap, isInteraction, isInteraction and "Interactions" or "Actions", isInteraction and lia.keybind.get("Interaction Menu", KEY_TAB) or lia.keybind.get("Personal Actions", KEY_G), "liaRunInteraction", true)
 end)
 
 net.Receive("liaRequestDropdown", function()
@@ -1428,7 +843,7 @@ net.Receive("liaBinaryQuestionRequest", function()
     table.insert(lia.notices, notice)
     notice.isQuery = true
     notice.text:SetText("")
-    notice.text:SetText(L(questionKey))
+    notice.text:SetText(tostring(questionKey))
     notice:SetPos(ScrW() / 2 - notice:GetWide() / 2, 4)
     notice:SetTall(36 * 2.3)
     notice:CalcWidth(120)
@@ -1460,7 +875,7 @@ net.Receive("liaBinaryQuestionRequest", function()
         if notice.opt1 and IsValid(notice.opt1) then
             notice.opt1:SetAlpha(255)
             notice.opt1:SetSize(notice:GetWide() / 3 - 5, 25)
-            notice.opt1:SetText(L(option1Key, L("yes")) .. L("keyBind", "F7"))
+            notice.opt1:SetText(lia.lang.resolve(option1Key, "Yes") .. string.format(" (%s)", "F7"))
             notice.opt1:SetPos(0, notice:GetTall() - notice.opt1:GetTall())
             notice.opt1:CenterHorizontal(0.166)
             notice.opt1:SetAlpha(0)
@@ -1485,7 +900,7 @@ net.Receive("liaBinaryQuestionRequest", function()
         if notice.opt2 and IsValid(notice.opt2) then
             notice.opt2:SetAlpha(255)
             notice.opt2:SetSize(notice:GetWide() / 3 - 5, 25)
-            notice.opt2:SetText(L(option2Key, L("no")) .. L("keyBind", "F8"))
+            notice.opt2:SetText(lia.lang.resolve(option2Key, "No") .. string.format(" (%s)", "F8"))
             notice.opt2:SetPos(0, notice:GetTall() - notice.opt2:GetTall())
             notice.opt2:CenterHorizontal(0.5)
             notice.opt2:SetAlpha(0)
@@ -1509,7 +924,7 @@ net.Receive("liaBinaryQuestionRequest", function()
         if notice.cancelBtn and IsValid(notice.cancelBtn) then
             notice.cancelBtn:SetAlpha(255)
             notice.cancelBtn:SetSize(notice:GetWide() / 3 - 5, 25)
-            notice.cancelBtn:SetText(L("cancel") .. L("keyBind", "F9"))
+            notice.cancelBtn:SetText("Cancel" .. string.format(" (%s)", "F9"))
             notice.cancelBtn:SetPos(0, notice:GetTall() - notice.cancelBtn:GetTall())
             notice.cancelBtn:CenterHorizontal(0.833)
             notice.cancelBtn:SetAlpha(0)
@@ -1642,83 +1057,6 @@ net.Receive("liaCharacterData", function()
     end
 end)
 
-lia.net.readBigTable("liaDialogSync", function(data) if istable(data) then lia.dialog.stored = data end end)
-net.Receive("liaOpenNpcDialog", function()
-    local npc = net.ReadEntity()
-    local canCustomize = net.ReadBool()
-    local npcData = net.ReadTable()
-    local npcName = "Dialog"
-    if IsValid(npc) then
-        npcName = npc:getNetVar("NPCName", npc.NPCName or "Dialog")
-    elseif npcData and npcData.PrintName then
-        npcName = npcData.PrintName
-    end
-
-    lia.dialog.vgui = vgui.Create("liaDialogMenu")
-    lia.dialog.vgui:SetDialogTitle(npcName)
-    if npcData then
-        local enhancedConversation = table.Copy(npcData.Conversation or {})
-        local additionalOptions = hook.Run("GetNPCDialogOptions", LocalPlayer(), npc, canCustomize) or {}
-        for optionName, optionData in pairs(additionalOptions) do
-            enhancedConversation[optionName] = optionData
-        end
-
-        local enhancedData = table.Copy(npcData)
-        enhancedData.Conversation = enhancedConversation
-        lia.dialog.vgui:LoadNPCDialog(enhancedData, npc)
-    end
-end)
-
-net.Receive("liaNpcDialogDeliverResponse", function()
-    local npc = net.ReadEntity()
-    local responses = net.ReadTable()
-    if not IsValid(lia.dialog.vgui) or not responses then return end
-    if lia.dialog.vgui.DisplayServerResponse then lia.dialog.vgui:DisplayServerResponse(responses, npc) end
-end)
-
-net.Receive("liaNpcDialogNodeResult", function()
-    local result = net.ReadTable()
-    if not IsValid(lia.dialog.vgui) or not result then return end
-    if lia.dialog.vgui.HandleGeneratedDialogResult then lia.dialog.vgui:HandleGeneratedDialogResult(result) end
-end)
-
-net.Receive("liaRequestNPCSelection", function()
-    local npcEntity = net.ReadEntity()
-    local npcOptions = net.ReadTable()
-    if not IsValid(npcEntity) or not npcOptions then return end
-    local frame = vgui.Create("liaFrame")
-    frame:SetSize(800, 600)
-    frame:Center()
-    frame:MakePopup()
-    frame:SetTitle(L("selectNPCType"))
-    local scroll = vgui.Create("liaScrollPanel", frame)
-    scroll:Dock(FILL)
-    scroll:DockMargin(20, 20, 20, 20)
-    for _, option in ipairs(npcOptions) do
-        local displayName = option[1]
-        local uniqueID = option[2]
-        local button = vgui.Create("liaButton", scroll)
-        button:Dock(TOP)
-        button:SetTall(50)
-        button:DockMargin(0, 0, 0, 10)
-        button:SetText(displayName)
-        button.DoClick = function()
-            net.Start("liaRequestNPCSelection")
-            net.WriteEntity(npcEntity)
-            net.WriteString(uniqueID)
-            net.SendToServer()
-            frame:Close()
-        end
-    end
-
-    local closeBtn = vgui.Create("liaButton", frame)
-    closeBtn:Dock(BOTTOM)
-    closeBtn:SetTall(60)
-    closeBtn:DockMargin(20, 10, 20, 20)
-    closeBtn:SetText(L("cancel"))
-    closeBtn.DoClick = function() frame:Close() end
-end)
-
 net.Receive("liaPacSync", function()
     for _, client in player.Iterator() do
         for id in pairs(client:getParts()) do
@@ -1765,13 +1103,13 @@ net.Receive("liaEmitUrlSound", function()
         local maxDistance = soundLevel * 13.33
         local ext = soundPath:match("%.([%w]+)$") or "mp3"
         local name = util.CRC(soundPath) .. "." .. ext
-        local cachedPath = lia.websound.get(name)
+        local cachedPath = lia.webcontent.get(name, "sound")
         if cachedPath then
             ent:playFollowingSound(cachedPath, volume, true, maxDistance, startDelay)
         else
-            lia.websound.register(name, soundPath, function(localPath) if localPath then ent:playFollowingSound(localPath, volume, true, maxDistance, startDelay) end end)
+            lia.webcontent.register(name, soundPath, "sound", function(localPath) if localPath then ent:playFollowingSound(localPath, volume, true, maxDistance, startDelay) end end)
         end
-    elseif soundPath:find("^lilia/websounds/") or soundPath:find("^websounds/") then
+    elseif soundPath:find("^lilia/webcontent/sound/") or soundPath:find("^webcontent/sound/") then
         local maxDistance = soundLevel * 13.33
         ent:playFollowingSound(soundPath, volume, true, maxDistance, startDelay)
     else
@@ -1779,81 +1117,62 @@ net.Receive("liaEmitUrlSound", function()
     end
 end)
 
-net.Receive("liaNetMessage", function()
-    local name = net.ReadString()
-    local args = net.ReadTable()
-    if lia.net.isCacheHit(name, args) then return end
-    if lia.net.registry[name] then
-        local success, err = pcall(lia.net.registry[name], LocalPlayer(), unpack(args))
-        if not success then lia.error(L("netMessageCallbackError", name, tostring(err))) end
-    else
-        lia.error(L("unregisteredNetMessage", name))
-    end
-
-    lia.net.addToCache(name, args)
-end)
-
 net.Receive("liaAssureClientSideAssets", function()
-    lia.webimage.clearCache(true)
-    lia.websound.clearCache(true)
-    local webimages = lia.webimage.stored
-    local websounds = lia.websound.stored
+    lia.webcontent.clearCache(true)
     local downloadQueue = {}
     local activeDownloads = 0
     local maxConcurrent = 5
-    local totalImages = table.Count(webimages)
-    local totalSounds = table.Count(websounds)
+    local totalImages = 0
+    local totalSounds = 0
     local completedImages = 0
     local completedSounds = 0
     local failedImages = 0
     local failedSounds = 0
-    for name, data in pairs(webimages) do
+    for _, data in pairs(lia.webcontent.stored) do
+        if data.type == "image" then
+            totalImages = totalImages + 1
+        else
+            totalSounds = totalSounds + 1
+        end
+
         table.insert(downloadQueue, {
-            type = "image",
-            name = name,
+            type = data.type,
+            name = data.name,
             url = data.url,
             flags = data.flags
         })
     end
 
-    for name, url in pairs(websounds) do
-        table.insert(downloadQueue, {
-            type = "sound",
-            name = name,
-            url = url
-        })
-    end
-
-    lia.information(L("downloadQueueSize") .. ": " .. #downloadQueue)
-    lia.information(L("processingWithMaxConcurrentDownloads") .. ": " .. maxConcurrent)
+    lia.information("Download queue size:(" .. "): " .. #downloadQueue)
+    lia.information("Processing with max concurrent downloads:(" .. "): " .. maxConcurrent)
     local function processNextDownload()
         if #downloadQueue == 0 then return end
         local download = table.remove(downloadQueue, 1)
         activeDownloads = activeDownloads + 1
         if download.type == "image" then
-            lia.webimage.download(download.name, download.url, function(material, fromCache, errorMsg)
+            lia.webcontent.download(download.name, download.url, "image", function(material, fromCache, errorMsg)
                 activeDownloads = activeDownloads - 1
                 if material then
                     completedImages = completedImages + 1
-                    if not fromCache then lia.information(L("imageDownloaded") .. ": " .. download.name) end
+                    if not fromCache then lia.information("Image downloaded(" .. "): " .. download.name) end
                 else
                     failedImages = failedImages + 1
-                    local errorMessage = errorMsg or L("unknownError")
-                    lia.warning(L("imageFailed") .. ": " .. download.name .. " - " .. errorMessage)
-                    chat.AddText(Color(255, 100, 100), L("imageDownload"), Color(255, 255, 255), L("failedToDownloadImage", download.name, errorMessage))
+                    local errorMessage = errorMsg or "Unknown error"
+                    lia.warning("Image failed(" .. "): " .. download.name .. " - " .. errorMessage)
+                    chat.AddText(Color(255, 100, 100), "Image Download", Color(255, 255, 255), string.format("Failed to download image %s: %s", download.name, errorMessage))
                 end
 
                 processNextDownload()
             end, download.flags)
         elseif download.type == "sound" then
-            lia.websound.download(download.name, download.url, function(path, fromCache, errorMsg)
+            lia.webcontent.download(download.name, download.url, "sound", function(path, fromCache, errorMsg)
                 activeDownloads = activeDownloads - 1
                 if path then
                     completedSounds = completedSounds + 1
                 else
                     failedSounds = failedSounds + 1
-                    local errorMessage = errorMsg or L("unknownError")
-                    chat.AddText(Color(255, 100, 100), L("soundDownload"), Color(255, 255, 255), L("failedToDownloadSound", download.name, errorMessage))
+                    local errorMessage = errorMsg or "Unknown error"
+                    chat.AddText(Color(255, 100, 100), "[Sound Download] ", Color(255, 255, 255), string.format("Failed to download: %s (%s)", download.name, errorMessage))
                 end
 
                 processNextDownload()
@@ -1871,24 +1190,24 @@ net.Receive("liaAssureClientSideAssets", function()
             lia.option.load()
             lia.keybind.load()
             timer.Simple(1.0, function()
-                local imageStats = lia.webimage.getStats()
-                local soundStats = lia.websound.getStats()
+                local imageStats = lia.webcontent.getStats("image")
+                local soundStats = lia.webcontent.getStats("sound")
                 lia.bootstrap("AssetDownload", "===========================================")
-                lia.bootstrap("AssetDownload", L("assetDownloadComplete"))
-                lia.bootstrap("AssetDownload", L("downloadSummary"))
-                lia.bootstrap("AssetDownload", L("assetSummaryImagesCompleted", completedImages, totalImages, failedImages))
-                lia.bootstrap("AssetDownload", L("assetSummarySoundsCompleted", completedSounds, totalSounds, failedSounds))
-                lia.bootstrap("AssetDownload", L("currentStatistics"))
-                lia.bootstrap("AssetDownload", L("imagesDownloaded", imageStats.downloaded, imageStats.stored))
-                lia.bootstrap("AssetDownload", L("soundsDownloaded", soundStats.downloaded, soundStats.stored))
-                lia.bootstrap("AssetDownload", L("combinedDownloaded", imageStats.downloaded + soundStats.downloaded, imageStats.stored + soundStats.stored))
+                lia.bootstrap("AssetDownload", "=== CLIENT-SIDE ASSETS DOWNLOAD COMPLETE ===")
+                lia.bootstrap("AssetDownload", "Download Summary")
+                lia.bootstrap("AssetDownload", string.format("Images: %d/%d completed (%d failed)", completedImages, totalImages, failedImages))
+                lia.bootstrap("AssetDownload", string.format("Sounds: %d/%d completed (%d failed)", completedSounds, totalSounds, failedSounds))
+                lia.bootstrap("AssetDownload", "Current Statistics")
+                lia.bootstrap("AssetDownload", string.format("Images: %d downloaded | %d stored", imageStats.downloaded, imageStats.stored))
+                lia.bootstrap("AssetDownload", string.format("Sounds: %d downloaded | %d stored", soundStats.downloaded, soundStats.stored))
+                lia.bootstrap("AssetDownload", string.format("Combined: %d downloaded | %d stored", imageStats.downloaded + soundStats.downloaded, imageStats.stored + soundStats.stored))
                 lia.bootstrap("AssetDownload", "===========================================")
                 if failedImages > 0 or failedSounds > 0 then
-                    lia.warning(L("warningAssetsFailedToDownload"))
-                    if failedImages > 0 then chat.AddText(Color(255, 150, 100), L("assetDownloadLabel"), Color(255, 255, 255), L("assetsDownloadWarning", failedImages, L("assetTypeImages"))) end
-                    if failedSounds > 0 then chat.AddText(Color(255, 150, 100), L("assetDownloadLabel"), Color(255, 255, 255), L("assetsDownloadWarning", failedSounds, L("assetTypeSounds"))) end
+                    lia.warning("WARNING: Some assets failed to download. Check console output above for details.")
+                    if failedImages > 0 then chat.AddText(Color(255, 150, 100), "[Asset Download] ", Color(255, 255, 255), string.format("Warning: %s %s failed to download.", failedImages, "image(s)")) end
+                    if failedSounds > 0 then chat.AddText(Color(255, 150, 100), "[Asset Download] ", Color(255, 255, 255), string.format("Warning: %s %s failed to download.", failedSounds, "sound(s)")) end
                 else
-                    chat.AddText(Color(100, 255, 100), L("assetDownloadLabel"), Color(255, 255, 255), L("allAssetsDownloadedSuccessfully"))
+                    chat.AddText(Color(100, 255, 100), "[Asset Download] ", Color(255, 255, 255), "All assets downloaded successfully.")
                 end
             end)
         end
@@ -1962,164 +1281,15 @@ net.Receive("liaDoorPerm", function()
         panel.access[client] = access
         for _, v in ipairs(panel.access:GetLines()) do
             if v.player == client then
-                v:SetColumnText(2, L(lia.doors.AccessLabels[access or 0]))
+                v:SetColumnText(2, tostring(lia.doors.AccessLabels[access or 0]))
                 return
             end
         end
     end
 end)
 
-net.Receive("liaDoorData", function()
-    local door = net.ReadEntity()
-    local syncData = net.ReadTable()
-    if IsValid(door) and istable(syncData) then
-        lia.doors.stored[door] = syncData
-        hook.Run("DoorDataReceived", door, syncData)
-    end
-end)
-
-net.Receive("liaRemoveFOne", function() if IsValid(lia.gui.menu) then lia.gui.menu:remove() end end)
-local function uiCreate()
-    if panel and panel:IsValid() then return end
-    local pad, bh = 10, 40
-    local w, h = 400 + pad * 2, 80
-    panel = vgui.Create("liaFrame")
-    panel:SetSize(w, h)
-    panel:SetPos((ScrW() - w) / 2, ScrH() * 0.1)
-    panel:SetZPos(999999)
-    panel:MoveToFront()
-    panel:SetTitle("")
-    panel:SetCenterTitle(L("downloadingWorkshopAddonsTitle"))
-    panel:ShowAnimation()
-    panel.bar = vgui.Create("liaProgressBar", panel)
-    panel.bar:SetPos(pad, h * 0.65 - bh / 2)
-    panel.bar:SetSize(w - pad * 2, bh)
-    panel.bar:SetFraction(0)
-end
-
-local queue = {}
-local MOUNT_DELAY = 3
-local function gmaPath(id)
-    return "lilia/workshop/" .. id .. ".gma"
-end
-
-local function mounted(id)
-    for _, addon in pairs(engine.GetAddons() or {}) do
-        if tostring(addon.wsid or addon.workshopid) == tostring(id) and addon.mounted then return true end
-    end
-    return false
-end
-
-local function mountLocal(id)
-    local rel = gmaPath(id)
-    if file.Exists(rel, "DATA") then
-        game.MountGMA("data/" .. rel)
-        return true
-    end
-    return false
-end
-
-local function uiUpdate()
-    if not (panel and panel:IsValid()) then return end
-    panel.bar:SetFraction(totalDownloads > 0 and (totalDownloads - remainingDownloads) / totalDownloads or 0)
-    panel.bar:SetText((totalDownloads - remainingDownloads) .. "/" .. totalDownloads)
-end
-
-local function start()
-    for id in pairs(queue) do
-        if mounted(id) or mountLocal(id) then queue[id] = nil end
-    end
-
-    local seq, idx = {}, 1
-    for id in pairs(queue) do
-        seq[#seq + 1] = id
-    end
-
-    totalDownloads = #seq
-    remainingDownloads = totalDownloads
-    if totalDownloads == 0 then
-        lia.bootstrap(L("workshopDownloader"), L("workshopAllInstalled"))
-        return
-    end
-
-    uiCreate()
-    uiUpdate()
-    local function nextItem()
-        if idx > #seq then
-            if panel and panel:IsValid() then
-                panel:Remove()
-                panel = nil
-            end
-            return
-        end
-
-        local id = seq[idx]
-        lia.bootstrap(L("workshopDownloader"), L("workshopDownloading", id))
-        steamworks.DownloadUGC(id, function(path)
-            remainingDownloads = remainingDownloads - 1
-            lia.bootstrap(L("workshopDownloader"), L("workshopDownloadComplete", id))
-            if path then
-                local rel = gmaPath(id)
-                local data = file.Read(path, "GAME")
-                if data then
-                    file.Write(rel, data)
-                    path = "data/" .. rel
-                end
-
-                game.MountGMA(path)
-            end
-
-            uiUpdate()
-            idx = idx + 1
-            timer.Simple(MOUNT_DELAY, nextItem)
-        end)
-    end
-
-    nextItem()
-end
-
-local function buildQueue(all)
-    table.Empty(queue)
-    for id in pairs(lia.workshop.serverIds or {}) do
-        if id == FORCE_ID or all then queue[id] = true end
-    end
-end
-
-local function refresh(tbl)
-    if tbl then lia.workshop.serverIds = tbl end
-    local ids = {}
-    for id in pairs(lia.workshop.serverIds or {}) do
-        if id ~= FORCE_ID then ids[#ids + 1] = id end
-    end
-
-    if #ids == 0 then return end
-    local idx = 1
-    local function mountNext()
-        if idx > #ids then return end
-        local id = ids[idx]
-        mountLocal(id)
-        idx = idx + 1
-        if idx <= #ids then timer.Simple(MOUNT_DELAY, mountNext) end
-    end
-
-    mountNext()
-end
-
-net.Receive("liaWorkshopDownloaderStart", function()
-    refresh(net.ReadTable())
-    buildQueue(true)
-    start()
-end)
-
-concommand.Add("workshop_force_redownload", function()
-    table.Empty(queue)
-    buildQueue(true)
-    start()
-end)
-
 net.Receive("liaNotificationData", lia.notices.receiveNotify)
 net.Receive("liaNotifyLocal", lia.notices.receiveNotifyL)
-net.Receive("liaWorkshopDownloaderInfo", function() refresh(net.ReadTable()) end)
 net.Receive("liaGroupPermChanged", function()
     local group = net.ReadString()
     local privilege = net.ReadString()
@@ -2139,197 +1309,6 @@ net.Receive("liaGroupPermChanged", function()
         local row = checks and checks[group] and checks[group][privilege] or nil
         if IsValid(row) then row:InvalidateLayout(true) end
     end
-end)
-
-net.Receive("liaJobNpcCloseDialog", function() if IsValid(lia.dialog.vgui) then lia.dialog.vgui:Remove() end end)
-net.Receive("BodygrouperMenu", function()
-    local client = LocalPlayer()
-    if IsValid(lia.gui.bodygroupMenu) then lia.gui.bodygroupMenu:Remove() end
-    local entity = net.ReadEntity()
-    lia.gui.bodygroupMenu = vgui.Create("BodygrouperMenu")
-    local target = IsValid(entity) and entity or client
-    lia.gui.bodygroupMenu:SetTarget(target)
-end)
-
-net.Receive("BodygrouperMenuCloseClientside", function() if IsValid(lia.gui.bodygroupMenu) then lia.gui.bodygroupMenu:Remove() end end)
-net.Receive("SeeModelTable", function()
-    local models = net.ReadTable()
-    if not istable(models) or #models == 0 then return end
-    local selectedModel = models[1]
-    local frame = vgui.Create("liaFrame")
-    frame:setScaledSize(520, math.min(ScrH() * 0.82, 820))
-    frame:SetPos(ScrW() - frame:GetWide() - 48, math.max(48, (ScrH() - frame:GetTall()) * 0.5))
-    frame:SetTitle(L("wardrobeSelectTitle"))
-    frame:MakePopup()
-    frame:DockPadding(12, 34, 12, 12)
-    local function positionWardrobeCloseButton(this)
-        if IsValid(this.cls) then
-            this.cls:SetParent(this)
-            this.cls:SetSize(20, 20)
-            this.cls:SetPos(this:GetWide() - 22, 2)
-            this.cls:SetZPos(1000)
-        end
-    end
-
-    frame.OnSizeChanged = function(this) positionWardrobeCloseButton(this) end
-    positionWardrobeCloseButton(frame)
-    local title = frame:Add("liaHeaderPanel")
-    title:Dock(TOP)
-    title:DockMargin(0, 0, 0, 12)
-    title:SetTall(32)
-    title:SetLineColor(lia.color.theme.theme)
-    title:SetLineWidth(2)
-    local titleLabel = title:Add("DLabel")
-    titleLabel:Dock(FILL)
-    titleLabel:DockMargin(8, 0, 8, 0)
-    titleLabel:SetFont("LiliaFont.18")
-    titleLabel:SetText(L("selectModel"):upper())
-    titleLabel:SetTextColor(lia.color.theme and lia.color.theme.text or color_white)
-    titleLabel:SetContentAlignment(5)
-    local hint = frame:Add("DLabel")
-    hint:Dock(TOP)
-    hint:DockMargin(0, 0, 0, 10)
-    hint:SetTall(20)
-    hint:SetFont("LiliaFont.16")
-    hint:SetTextColor(Color(220, 220, 220))
-    hint:SetContentAlignment(5)
-    hint:SetText(L("rotateInstruction", "A", "D"))
-    local confirmButton = vgui.Create("DButton", frame)
-    confirmButton:SetText(L("wardrobeConfirmButton"))
-    confirmButton:Dock(BOTTOM)
-    confirmButton:SetTall(40)
-    confirmButton:SetColor(Color(255, 255, 255))
-    confirmButton:SetFont("DermaDefaultBold")
-    confirmButton:SetContentAlignment(5)
-    confirmButton:DockMargin(0, 10, 0, 0)
-    local modelsScroll = vgui.Create("liaScrollPanel", frame)
-    modelsScroll:Dock(FILL)
-    modelsScroll:DockMargin(0, 0, 0, 0)
-    local iconLayoutParent = modelsScroll.GetCanvas and modelsScroll:GetCanvas() or modelsScroll
-    local iconLayout = iconLayoutParent:Add("DIconLayout")
-    iconLayout:Dock(LEFT)
-    iconLayout:SetSpaceX(8)
-    iconLayout:SetSpaceY(8)
-    iconLayout:SetPaintBackground(false)
-    frame._iconColumns = 5
-    frame._iconSpace = 8
-    local function requestIconResize()
-        if not IsValid(iconLayout) then return false end
-        local w = iconLayout:GetWide() or 0
-        if w <= 0 then return false end
-        frame._needsIconResize = true
-        frame:InvalidateLayout(true)
-        return true
-    end
-
-    local oldLayoutPerformLayout = iconLayout.PerformLayout
-    iconLayout.PerformLayout = function(layout, w, h)
-        if oldLayoutPerformLayout then oldLayoutPerformLayout(layout, w, h) end
-        local offsetX = layout._centerOffsetX or 0
-        local prevOffsetX = layout._appliedCenterOffsetX or 0
-        local delta = offsetX - prevOffsetX
-        if delta == 0 then return end
-        for _, child in ipairs(layout:GetChildren()) do
-            if IsValid(child) then
-                local x, y = child:GetPos()
-                child:SetPos(x + delta, y)
-            end
-        end
-
-        layout._appliedCenterOffsetX = offsetX
-    end
-
-    frame.PerformLayout = function(this, w, h)
-        local columns = this._iconColumns or 5
-        local space = this._iconSpace or 8
-        local layoutW = IsValid(modelsScroll) and modelsScroll:GetWide() or 0
-        if layoutW <= 0 then return end
-        iconLayout:SetWide(layoutW)
-        local iconW = math.floor((layoutW - (columns - 1) * space) / columns)
-        if iconW < 64 then iconW = 64 end
-        if iconW > 80 then iconW = 80 end
-        local iconH = math.floor(iconW * 2)
-        for _, child in ipairs(iconLayout:GetChildren()) do
-            if IsValid(child) and child.SetSize then child:SetSize(iconW, iconH) end
-        end
-
-        iconLayout:SizeToChildren(false, true)
-        local childCount = #iconLayout:GetChildren()
-        local usedWidth = math.min(childCount, columns) * iconW + math.max(0, math.min(childCount, columns) - 1) * space
-        iconLayout._centerOffsetX = math.max(0, math.floor((layoutW - usedWidth) * 0.5))
-        iconLayout:InvalidateLayout(true)
-        this._needsIconResize = nil
-    end
-
-    local function previewModel(modelPath)
-        lia.view.begin(frame, {
-            hideEntities = {LocalPlayer()}
-        })
-
-        lia.view.setModel(frame, modelPath)
-    end
-
-    local function setSelectedModel(modelPath)
-        selectedModel = modelPath
-        previewModel(modelPath)
-        if IsValid(iconLayout) then
-            for _, child in ipairs(iconLayout:GetChildren()) do
-                if IsValid(child) then child._liaSelected = child.modelPath == modelPath end
-            end
-        end
-    end
-
-    local function paintIcon(icon, w, h)
-        if not icon._liaSelected then return end
-        local col = lia.config.get("Color", color_white)
-        surface.SetDrawColor(col.r, col.g, col.b, 200)
-        for i = 1, 3 do
-            local o = i * 2
-            surface.DrawOutlinedRect(i, i, w - o, h - o)
-        end
-    end
-
-    local function buildModelIcons()
-        if not IsValid(iconLayout) then return end
-        iconLayout:Clear()
-        for _, modelPath in ipairs(models) do
-            local icon = iconLayout:Add("SpawnIcon")
-            icon:SetModel(modelPath)
-            icon.modelPath = modelPath
-            icon.PaintOver = paintIcon
-            icon.DoClick = function() setSelectedModel(modelPath) end
-        end
-
-        requestIconResize()
-    end
-
-    buildModelIcons()
-    setSelectedModel(models[1])
-    frame.Think = function()
-        if input.IsKeyDown(KEY_A) then
-            lia.view.rotate(frame, -50 * FrameTime())
-        elseif input.IsKeyDown(KEY_D) then
-            lia.view.rotate(frame, 50 * FrameTime())
-        end
-    end
-
-    frame.OnRemove = function() lia.view.close(frame) end
-    confirmButton.DoClick = function()
-        if isstring(selectedModel) and selectedModel ~= "" then
-            net.Start("WardrobeChangeModel")
-            net.WriteString(selectedModel)
-            net.SendToServer()
-            frame:Close()
-        else
-            chat.AddText(Color(255, 0, 0), L("wardrobeSelectError"))
-        end
-    end
-
-    timer.Simple(0, function()
-        if not IsValid(frame) then return end
-        requestIconResize()
-        timer.Simple(0.05, function() if IsValid(frame) then requestIconResize() end end)
-    end)
 end)
 
 netstream.Hook("liaSyncGesture", function(entity, a, b, c) if IsValid(entity) then entity:AnimRestartGesture(a, b, c) end end)

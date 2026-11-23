@@ -1,14 +1,14 @@
-﻿local function getGameList()
+local function getGameList()
     local games = engine.GetGames()
     table.insert(games, {
-        title = L("all"),
+        title = "All",
         folder = "GAME",
         icon = "all",
         mounted = true
     })
 
     table.insert(games, {
-        title = L("spawnmenuGMod"),
+        title = "Garry's Mod",
         folder = "garrysmod",
         icon = nil,
         mounted = true
@@ -36,7 +36,7 @@ end
 local function showMaterialWarning()
     if materialWarningShown then return end
     materialWarningShown = true
-    Derma_Message(L("materialWarning"), L("warning"), L("ok"))
+    Derma_Message("Warning: not all materials can be used on entities.", "Warning", "Ok")
 end
 
 local function registerContentType(typeName, setupIcon, onClick, menuEntries)
@@ -74,7 +74,7 @@ registerContentType("sound", function(icon) icon:SetMaterial("icon16/sound.png")
         action = function(p) SetClipboardText(p) end
     },
     {
-        text = L("stopAllSounds"),
+        text = "Stop all sounds",
         icon = "icon16/sound_mute.png",
         action = function() RunConsoleCommand("stopsound") end
     },
@@ -101,7 +101,7 @@ end, function(path)
     if not isMaterialUsable(path) then showMaterialWarning() end
     RunConsoleCommand("material_override", path)
     spawnmenu.ActivateTool("material")
-    lia.websound.playButtonSound("garrysmod/ui_click.wav")
+    lia.webcontent.playButtonSound("garrysmod/ui_click.wav")
 end, {
     {
         text = "#spawnmenu.menu.copy",
@@ -109,7 +109,7 @@ end, {
         action = function(p) SetClipboardText(p) end
     },
     {
-        text = function(p) return isMaterialUsable(p) and L("useWithMaterialTool") or L("tryWithMaterialTool") end,
+        text = function(p) return isMaterialUsable(p) and "Use with Material Tool" or "Try with Material Tool (may not work)" end,
         icon = "icon16/pencil.png",
         action = function(p)
             RunConsoleCommand("material_override", p)
@@ -181,7 +181,7 @@ hook.Add("PopulateContent", "liaExtendedSpawnMenuPopulateContent", function(pnlC
         if not IsValid(tree) or not IsValid(pnlContent) then return end
         local view = vgui.Create("ContentContainer", pnlContent)
         view:SetVisible(false)
-        local root = tree:AddNode(L("browseSoundsTitle"), "icon16/sound.png")
+        local root = tree:AddNode("Browse Sounds", "icon16/sound.png")
         root.ViewPanel, root.pnlContent = view, pnlContent
         local addons = root:AddNode("#spawnmenu.category.addons", "icon16/folder_database.png")
         addons.ViewPanel, addons.pnlContent = view, pnlContent
@@ -209,7 +209,7 @@ hook.Add("PopulateContent", "liaExtendedSpawnMenuPopulateContent", function(pnlC
         if not IsValid(tree) or not IsValid(pnlContent) then return end
         local view = vgui.Create("ContentContainer", pnlContent)
         view:SetVisible(false)
-        local root = tree:AddNode(L("browseMaterialsTitle"), "icon16/picture_empty.png")
+        local root = tree:AddNode("Browse Materials", "icon16/picture_empty.png")
         root.ViewPanel, root.pnlContent = view, pnlContent
         local addons = root:AddNode("#spawnmenu.category.addons", "icon16/folder_database.png")
         addons.ViewPanel, addons.pnlContent = view, pnlContent
@@ -239,7 +239,7 @@ hook.Add("PopulateContent", "liaExtendedSpawnMenuPopulateContent", function(pnlC
     node.DoClick = function() pnlContent:SwitchPanel(node.PropPanel) end
     local categorized = {}
     for _, ent in pairs(list.Get("SpawnableEntities") or {}) do
-        local cat = ent.Category or L("other")
+        local cat = ent.Category or "Other"
         categorized[cat] = categorized[cat] or {}
         table.insert(categorized[cat], ent)
     end
@@ -274,7 +274,7 @@ hook.Add("PopulateContent", "liaExtendedSpawnMenuPopulateContent", function(pnlC
     node.DoClick = function() pnlContent:SwitchPanel(node.PropPanel) end
     local categorized = {}
     for name, pp in pairs(list.Get("PostProcess") or {}) do
-        pp.category = pp.category or L("other")
+        pp.category = pp.category or "Other"
         pp.name = name
         categorized[pp.category] = categorized[pp.category] or {}
         table.insert(categorized[pp.category], pp)
@@ -313,7 +313,7 @@ hook.Add("PopulateContent", "liaExtendedSpawnMenuPopulateContent", function(pnlC
     node.DoClick = function() pnlContent:SwitchPanel(node.PropPanel) end
     local cats = {}
     for className, ent in pairs(list.Get("NPC") or {}) do
-        local cat = ent.Category or L("other")
+        local cat = ent.Category or "Other"
         cats[cat] = cats[cat] or {}
         cats[cat][className] = ent
     end
@@ -349,7 +349,7 @@ hook.Add("PopulateContent", "liaExtendedSpawnMenuPopulateContent", function(pnlC
     node.DoClick = function() pnlContent:SwitchPanel(node.PropPanel) end
     local cats = {}
     for className, v in pairs(list.Get("Vehicles") or {}) do
-        v.Category = v.Category or L("other")
+        v.Category = v.Category or "Other"
         v.ClassName, v.PrintName, v.ScriptedEntityType = className, v.Name, "vehicle"
         cats[v.Category] = cats[v.Category] or {}
         table.insert(cats[v.Category], v)
@@ -386,7 +386,7 @@ hook.Add("PopulateContent", "liaExtendedSpawnMenuPopulateContent", function(pnlC
     local cats = {}
     for _, w in pairs(list.Get("Weapon") or {}) do
         if w.Spawnable or w.AdminSpawnable then
-            local cat = w.Category or L("other")
+            local cat = w.Category or "Other"
             cats[cat] = cats[cat] or {}
             table.insert(cats[cat], w)
         end
@@ -453,7 +453,7 @@ hook.Add("PopulateContent", "liaExtendedSpawnMenuPopulateContent", function(pnlC
     if not IsValid(node) or not IsValid(pnlContent) then return end
     local view = vgui.Create("ContentContainer", pnlContent)
     view:SetVisible(false)
-    local legacy = node:AddNode(L("addonsLegacyTitle"), "icon16/folder_database.png")
+    local legacy = node:AddNode("Addons - Legacy", "icon16/folder_database.png")
     for _, a in ipairs(file.Find("addons/*", "MOD")) do
         if file.IsDir("addons/" .. a .. "/models/", "MOD") then
             local c = countRecursive("addons/" .. a .. "/models/")
@@ -470,7 +470,7 @@ hook.Add("PopulateContent", "liaExtendedSpawnMenuPopulateContent", function(pnlC
 
     local f, d = file.Find("download/models", "MOD")
     if f and #f > 0 or d and #d > 0 then
-        local dn = node:AddFolder(L("downloads"), "download/models", "MOD", false, false, "*.*")
+        local dn = node:AddFolder("Downloads", "download/models", "MOD", false, false, "*.*")
         dn:SetIcon("icon16/folder_database.png")
         dn.OnNodeSelected = function(self)
             view:Clear(true)

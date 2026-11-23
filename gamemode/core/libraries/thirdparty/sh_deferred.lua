@@ -83,7 +83,7 @@ function Promise:catch(onReject)
 end
 
 function Promise:_handle(value)
-    if value == self then return self:reject(L("promiseCannotResolveSelf")) end
+    if value == self then return self:reject("cannot resolve to self") end
     if value ~= nil and istable(value) and value.next then
         if value.state then
             if not DEBUG_IGNOREUNHANDLED and UNHANDLED_PROMISES then
@@ -172,7 +172,7 @@ function Promise:_handle(value)
         timer.Simple(0.1, function()
             if UNHANDLED_PROMISES and UNHANDLED_PROMISES[self.rejectionHandlerID] and not DEBUG_IGNOREUNHANDLED then
                 UNHANDLED_PROMISES[self.rejectionHandlerID] = nil
-                lia.error(L("promiseUnhandledRejection", tostring(self.reason or "")))
+                lia.error(string.format("Unhandled rejection: %s\n", tostring(self.reason or "")))
                 lia.error(trace)
             end
         end)
@@ -203,7 +203,7 @@ function deferred.resolve(value)
 end
 
 function deferred.all(promises)
-    assert(istable(promises), L("promisesMustBeTableOfPromises"))
+    assert(istable(promises), "promises must be a table of promises")
     local results = {}
     local d = deferred.new()
     local method = "resolve"
@@ -227,8 +227,8 @@ function deferred.all(promises)
 end
 
 function deferred.map(args, fn)
-    assert(istable(args), L("argsMustBeTable"))
-    assert(isfunction(fn), L("mapCalledWithoutFunction"))
+    assert(istable(args), "args must be a table of values")
+    assert(isfunction(fn), "map called without a function")
     local expected = #args
     local finished = 0
     local results = {}
@@ -245,8 +245,8 @@ function deferred.map(args, fn)
 end
 
 function deferred.fold(promises, folder, initial)
-    assert(istable(promises), L("promisesMustBeTable"))
-    assert(isfunction(folder), L("folderMustBeFunction"))
+    assert(istable(promises), "promises must be a table")
+    assert(isfunction(folder), "folder must be a function")
     local d = deferred.new()
     local total = initial
     local length = #promises
@@ -285,8 +285,8 @@ function deferred.each(promises, fn)
 end
 
 function deferred.some(promises, count)
-    assert(istable(promises), L("promisesMustBeTable"))
-    assert(isnumber(count) and count >= 0 and math.floor(count) == count, L("countMustBeNonNegativeInteger"))
+    assert(istable(promises), "promises must be a table")
+    assert(isnumber(count) and count >= 0 and math.floor(count) == count, "count must be a non-negative integer")
     local d = deferred.new()
     local results = {}
     local finished = 0

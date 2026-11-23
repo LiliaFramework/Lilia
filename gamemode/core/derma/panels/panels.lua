@@ -1,32 +1,3 @@
-﻿--[[
-    Hooks:
-        SetupQuickMenu(Panel menu)
-
-    Purpose:
-        Allows modules to populate the quick settings menu before it is sized and shown.
-
-    Category:
-        UI
-
-    Parameters:
-        menu (Panel)
-            The quick menu panel instance that exposes helper methods like `addButton`, `addCheck`, and `addSpacer`.
-
-    Returns:
-        nil
-
-    Example Usage:
-        ```lua
-        hook.Add("SetupQuickMenu", "liaExampleSetupQuickMenu", function(menu)
-            menu:addButton("Example Action", function()
-                LocalPlayer():ChatPrint("Example clicked.")
-            end, "Runs an example quick action.")
-        end)
-        ```
-
-    Realm:
-        Client
-]]
 local cacheKeys, cache, len = {}, {}, 0
 timer.Create("derma_convar_fix", 0.5, 0, function()
     if len == 0 then return end
@@ -83,20 +54,20 @@ function Derma_Install_Convar_Functions(panel)
 end
 
 local quickPaletteDefaults = {
-    background = Color(4, 13, 17, 250),
-    header = Color(5, 18, 23, 248),
-    panel = Color(9, 24, 29, 242),
-    panelHover = Color(14, 32, 38, 248),
-    field = Color(5, 18, 23, 244),
-    content = Color(3, 16, 21, 222),
-    line = Color(67, 89, 91, 112),
-    lineSoft = Color(67, 89, 91, 62),
-    text = Color(230, 239, 239, 255),
-    textMuted = Color(155, 178, 179, 255),
-    accent = Color(188, 127, 67, 255),
-    toggleOn = Color(45, 190, 170, 255),
-    toggleOff = Color(55, 76, 78, 255),
-    toggleKnob = Color(235, 243, 241, 255)
+    background = Color(24, 34, 35, 238),
+    header = Color(24, 34, 35, 238),
+    panel = Color(30, 43, 44, 238),
+    panelHover = Color(37, 52, 54, 243),
+    field = Color(26, 40, 42, 241),
+    content = Color(23, 34, 36, 225),
+    line = Color(69, 125, 129, 96),
+    lineSoft = Color(69, 125, 129, 48),
+    text = Color(226, 238, 238),
+    textMuted = Color(143, 167, 168),
+    accent = Color(65, 148, 151),
+    toggleOn = Color(65, 148, 151),
+    toggleOff = Color(67, 88, 91),
+    toggleKnob = Color(225, 236, 235)
 }
 
 local quickPalette = table.Copy(quickPaletteDefaults)
@@ -115,38 +86,29 @@ local function quickBlend(first, second, fraction, alpha)
     return Color(math.Round(Lerp(fraction, first.r, second.r)), math.Round(Lerp(fraction, first.g, second.g)), math.Round(Lerp(fraction, first.b, second.b)), alpha or math.Round(Lerp(fraction, first.a or 255, second.a or 255)))
 end
 
-local function quickDarken(color, fraction, alpha)
-    return quickBlend(color, color_black, fraction, alpha)
-end
-
 local function quickAlpha(color, alpha)
     return Color(color.r, color.g, color.b, alpha)
 end
 
 local function refreshQuickPalette()
     local theme = lia.color and lia.color.theme or {}
-    local accent = quickColor(theme.accent or theme.theme or theme.maincolor or lia.config.get("Color"), quickPaletteDefaults.accent)
-    local text = quickColor(theme.text or theme.text_entry, quickPaletteDefaults.text)
-    local textMuted = quickColor(theme.desc or theme.header_text or theme.gray, quickPaletteDefaults.textMuted)
-    local background = quickColor(theme.background_alpha or theme.background or theme.window, quickPaletteDefaults.background)
-    local panel = quickColor(theme.button or theme.category or theme.panel or theme.background, quickPaletteDefaults.panel)
-    local field = quickColor(theme.focus_panel or theme.text_entry_background or theme.category or theme.button, quickPaletteDefaults.field)
-    local toggleOff = quickColor(theme.toggle or theme.gray, quickPaletteDefaults.toggleOff)
-    local toggleKnob = quickColor(theme.text_entry or theme.text, quickPaletteDefaults.toggleKnob)
-    quickPalette.background = quickDarken(quickBlend(background, accent, 0.05), 0.7, 250)
-    quickPalette.header = quickDarken(quickBlend(background, accent, 0.08), 0.64, 248)
-    quickPalette.panel = quickDarken(quickBlend(panel, accent, 0.07), 0.62, 242)
-    quickPalette.panelHover = quickDarken(quickBlend(panel, accent, 0.16), 0.52, 248)
-    quickPalette.field = quickDarken(quickBlend(field, accent, 0.08), 0.66, 244)
-    quickPalette.content = quickDarken(quickBlend(background, accent, 0.04), 0.74, 226)
-    quickPalette.line = quickAlpha(accent, 105)
-    quickPalette.lineSoft = quickAlpha(accent, 48)
+    local accent = quickColor(theme.accent or theme.theme or lia.config.get("Color"), quickPaletteDefaults.accent)
+    local text = quickColor(theme.text or theme.foreground, quickPaletteDefaults.text)
+    local background = quickColor(theme.background or theme.panel or theme.window, quickPaletteDefaults.background)
+    quickPalette.background = quickBlend(background, text, 0.045, 238)
+    quickPalette.header = quickBlend(background, text, 0.05, 240)
+    quickPalette.panel = quickBlend(background, text, 0.072, 241)
+    quickPalette.panelHover = quickBlend(background, text, 0.12, 246)
+    quickPalette.field = quickBlend(background, text, 0.052, 242)
+    quickPalette.content = quickBlend(background, text, 0.032, 228)
+    quickPalette.line = quickAlpha(accent, 110)
+    quickPalette.lineSoft = quickAlpha(accent, 52)
     quickPalette.text = text
-    quickPalette.textMuted = textMuted
+    quickPalette.textMuted = quickBlend(text, background, 0.4, 255)
     quickPalette.accent = accent
-    quickPalette.toggleOn = accent
-    quickPalette.toggleOff = quickDarken(quickBlend(toggleOff, accent, 0.05), 0.28, 255)
-    quickPalette.toggleKnob = toggleKnob
+    quickPalette.toggleOn = quickBlend(accent, background, 0.12, 255)
+    quickPalette.toggleOff = quickBlend(background, text, 0.21, 255)
+    quickPalette.toggleKnob = quickBlend(text, background, 0.06, 255)
 end
 
 local quickSectionTitles = {
@@ -169,8 +131,17 @@ local quickSectionOrder = {
 
 local function drawQuickOutlinedBox(x, y, w, h, radius, fillColor, borderColor)
     if w <= 0 or h <= 0 then return end
-    draw.RoundedBox(radius, x, y, w, h, borderColor)
-    draw.RoundedBox(math.max(radius - 1, 0), x + 1, y + 1, math.max(w - 2, 0), math.max(h - 2, 0), fillColor)
+    radius = math.Clamp(radius or 3, 0, 4)
+    if lia.derma and lia.derma.rect and lia.derma.SHAPE_IOS then
+        lia.derma.rect(x, y, w, h):Rad(radius):Color(fillColor):Shape(lia.derma.SHAPE_IOS):Draw()
+        if borderColor then lia.derma.rect(x, y, w, h):Rad(radius):Color(borderColor):Shape(lia.derma.SHAPE_IOS):Outline(1):Draw() end
+    else
+        draw.RoundedBox(radius, x, y, w, h, fillColor)
+        if borderColor then
+            surface.SetDrawColor(borderColor)
+            surface.DrawOutlinedRect(x, y, w, h, 1)
+        end
+    end
 end
 
 local function drawQuickLine(x, y, w, color)
@@ -187,9 +158,7 @@ end
 
 local function quickLocalized(value)
     if not value or value == "" then return value end
-    local localized = L(value)
-    if localized and localized ~= "" then return localized end
-    return value
+    return lia.lang.resolve(value)
 end
 
 local function quickEllipsizeText(text, font, maxWidth)
@@ -241,7 +210,7 @@ function QuickPanel:Init()
     if IsValid(lia.gui.quick) then lia.gui.quick:Remove() end
     lia.gui.quick = self
     refreshQuickPalette()
-    self:SetSkin(lia.config.get("DermaSkin", L("liliaSkin")))
+    self:SetSkin(lia.config.get("DermaSkin", "Lilia Skin"))
     self:SetTitle("")
     self:SetAlphaBackground(false)
     self:SetDraggable(false)
@@ -254,6 +223,7 @@ function QuickPanel:Init()
     self.searchQuery = ""
     self.forceRepopulate = true
     self.closing = false
+    self.collapsedCategories = {}
     self:BuildChrome()
     self:RebuildContent()
     self:UpdateTargetSize(true)
@@ -274,8 +244,8 @@ function QuickPanel:BuildChrome()
     self.headerIcon = self:Add("DPanel")
     self.headerIcon:SetMouseInputEnabled(false)
     self.headerIcon.Paint = function(_, w, h)
-        drawQuickOutlinedBox(0, 0, w, h, 6, quickPalette.field, quickPalette.line)
-        drawQuickMaterial(quickMaterials.settings, math.floor((w - 18) * 0.5), math.floor((h - 18) * 0.5), 18, quickPalette.textMuted)
+        drawQuickOutlinedBox(0, 0, w, h, 3, quickPalette.field, quickAlpha(quickPalette.accent, 110))
+        drawQuickMaterial(quickMaterials.settings, math.floor((w - 18) * 0.5), math.floor((h - 18) * 0.5), 18, quickPalette.accent)
     end
 
     self.search = self:Add("DTextEntry")
@@ -293,14 +263,14 @@ function QuickPanel:BuildChrome()
 
     self.search.Paint = function(entry, w, h)
         local border = entry:HasFocus() and quickAlpha(quickPalette.accent, 145) or quickPalette.line
-        drawQuickOutlinedBox(0, 0, w, h, 6, quickPalette.field, border)
+        drawQuickOutlinedBox(0, 0, w, h, 3, quickPalette.field, border)
         drawQuickMaterial(quickMaterials.search, 15, math.floor((h - 16) * 0.5), 16, quickPalette.textMuted)
         if entry:GetText() == "" then draw.SimpleText("Search settings...", "LiliaFont.17", 42, h * 0.5, quickAlpha(quickPalette.textMuted, 190), TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER) end
         entry:DrawTextEntryText(quickPalette.text, quickPalette.accent, quickPalette.text)
     end
 
     self.scroll = self:Add("liaScrollPanel")
-    self.scroll.Paint = function(_, w, h) drawQuickOutlinedBox(0, 0, w, h, 7, quickPalette.content, quickPalette.lineSoft) end
+    self.scroll.Paint = function(_, w, h) drawQuickOutlinedBox(0, 0, w, h, 3, quickAlpha(quickPalette.content, 236), quickPalette.lineSoft) end
     local canvas = self.scroll.GetCanvas and self.scroll:GetCanvas() or nil
     if IsValid(canvas) then
         canvas:DockPadding(8, 8, 8, 12)
@@ -310,7 +280,7 @@ function QuickPanel:BuildChrome()
     local bar = self.scroll.GetVBar and self.scroll:GetVBar() or nil
     if IsValid(bar) then
         bar:SetWide(7)
-        bar.Paint = function(_, w, h) draw.RoundedBox(3, 2, 0, math.max(w - 3, 1), h, Color(0, 0, 0, 70)) end
+        bar.Paint = function() end
         if IsValid(bar.btnGrip) then bar.btnGrip.Paint = function(_, w, h) draw.RoundedBox(3, 1, 0, math.max(w - 2, 1), h, quickAlpha(quickPalette.accent, 165)) end end
         if IsValid(bar.btnUp) then bar.btnUp.Paint = function() end end
         if IsValid(bar.btnDown) then bar.btnDown.Paint = function() end end
@@ -325,8 +295,8 @@ function QuickPanel:BuildChrome()
     self.resetButton.Paint = function(panel, w, h)
         local fill = panel:IsHovered() and quickPalette.panelHover or quickPalette.panel
         local border = panel:IsHovered() and quickAlpha(quickPalette.accent, 145) or quickPalette.line
-        drawQuickOutlinedBox(0, 0, w, h, 5, fill, border)
-        draw.SimpleText("Reset Defaults", "LiliaFont.17", w * 0.5, h * 0.5, panel:IsHovered() and quickPalette.accent or quickPalette.textMuted, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
+        drawQuickOutlinedBox(0, 0, w, h, 3, fill, border)
+        draw.SimpleText("RESET DEFAULTS", "LiliaFont.17", w * 0.5, h * 0.5, panel:IsHovered() and quickPalette.accent or quickPalette.textMuted, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
     end
 
     self.closeButton = self.footer:Add("DButton")
@@ -335,17 +305,17 @@ function QuickPanel:BuildChrome()
     self.closeButton.DoClick = function() self:OnClose() end
     self.closeButton.Paint = function(panel, w, h)
         local fill = panel:IsHovered() and quickPalette.panelHover or quickPalette.panel
-        local border = panel:IsHovered() and quickAlpha(quickPalette.accent, 145) or quickPalette.line
-        drawQuickOutlinedBox(0, 0, w, h, 5, fill, border)
-        draw.SimpleText("Close", "LiliaFont.17", w * 0.5, h * 0.5, panel:IsHovered() and quickPalette.text or quickPalette.textMuted, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
+        local border = panel:IsHovered() and quickAlpha(quickPalette.accent, 175) or quickPalette.line
+        drawQuickOutlinedBox(0, 0, w, h, 3, fill, border)
+        draw.SimpleText("CLOSE", "LiliaFont.17", w * 0.5, h * 0.5, panel:IsHovered() and quickPalette.text or quickPalette.accent, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
     end
 end
 
 function QuickPanel:UpdateTargetSize(keepPosition)
-    local width = math.Clamp(math.floor(ScrW() * 0.32), 470, 550)
-    local height = math.Clamp(ScrH() - 40, 560, 920)
+    local width = math.min(math.Clamp(math.floor(ScrW() * 0.285), 430, 520), ScrW() - 24)
+    local height = math.min(math.Clamp(ScrH() - 40, 440, 920), ScrH() - 16)
     self.targetX = ScrW() - width - 18
-    self.targetY = 20
+    self.targetY = math.floor((ScrH() - height) * 0.5)
     self:SetSize(width, height)
     if not keepPosition then self:SetPos(self.targetX, self.targetY) end
     self:InvalidateLayout(true)
@@ -358,16 +328,15 @@ function QuickPanel:OpenAnimated()
     self:SetKeyboardInputEnabled(true)
     self:SetAlpha(0)
     self:SetPos(ScrW() + 16, self.targetY or 24)
-    self:MoveTo(self.targetX or ScrW() - self:GetWide() - 22, self.targetY or 24, 0.24, 0, 0.2)
+    self:MoveTo(self.targetX or ScrW() - self:GetWide() - 22, self.targetY or 24, 0.25, 0, 0.25)
     self:AlphaTo(255, 0.18, 0)
 end
 
 function QuickPanel:Paint(w, h)
-    if lia.util and lia.util.drawBlur then lia.util.drawBlur(self, 5) end
-    drawQuickOutlinedBox(0, 0, w, h, 9, quickPalette.background, quickAlpha(quickPalette.accent, 115))
-    draw.RoundedBox(8, 1, 1, w - 2, 74, quickPalette.header)
-    drawQuickLine(18, 74, w - 36, quickPalette.lineSoft)
-    draw.SimpleText("Quick Settings", "LiliaFont.25", 22, 29, quickPalette.text, TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)
+    lia.util.drawBlur(self, 3)
+    drawQuickOutlinedBox(0, 0, w, h, 3, quickPalette.background, quickAlpha(quickPalette.accent, 95))
+    drawQuickLine(18, 76, w - 36, quickPalette.lineSoft)
+    draw.SimpleText("QUICK SETTINGS", "LiliaFont.25", 22, 29, quickPalette.text, TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)
     draw.SimpleText("Adjust client-side preferences.", "LiliaFont.17", 22, 54, quickPalette.textMuted, TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)
 end
 
@@ -439,6 +408,7 @@ function QuickPanel:RebuildContent()
 
     self.items = {}
     self.optionsCache = {}
+    self.currentCategory = nil
     self.forceRepopulate = false
     self:populateOptions()
     hook.Run("SetupQuickMenu", self)
@@ -457,14 +427,15 @@ function QuickPanel:addButton(text, cb, description)
     if cb then button.DoClick = cb end
     if hasDescription then button:SetTooltip(descriptionText) end
     button.Paint = function(panel, w, h)
-        local fill = panel:IsHovered() and quickPalette.panelHover or quickPalette.panel
-        local border = panel:IsHovered() and quickAlpha(quickPalette.accent, 105) or quickPalette.lineSoft
-        drawQuickOutlinedBox(0, 0, w, h, 6, fill, border)
+        local fill = panel:IsHovered() and quickPalette.panel or quickPalette.field
+        local border = panel:IsHovered() and quickAlpha(quickPalette.accent, 118) or quickPalette.lineSoft
+        drawQuickOutlinedBox(0, 0, w, h, 3, fill, border)
         draw.SimpleText(quickEllipsizeText(text, "LiliaFont.17", w - 28), "LiliaFont.17", 14, hasDescription and 17 or h * 0.5, quickPalette.text, TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)
         if hasDescription then draw.SimpleText(quickEllipsizeText(descriptionText, "LiliaFont.15", w - 28), "LiliaFont.15", 14, 40, quickPalette.textMuted, TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER) end
     end
 
     self.items[#self.items + 1] = button
+    self:RegisterCategoryItem(button)
     return button
 end
 
@@ -474,20 +445,55 @@ function QuickPanel:addSpacer()
     panel:Dock(TOP)
     panel.Paint = function() end
     self.items[#self.items + 1] = panel
+    self:RegisterCategoryItem(panel)
     return panel
 end
 
+function QuickPanel:RegisterCategoryItem(panel)
+    local group = self.currentCategory
+    if not group or not IsValid(panel) then return end
+    group.items[#group.items + 1] = panel
+    panel:SetVisible(self.searchQuery ~= "" or not self.collapsedCategories[group.key])
+end
+
 function QuickPanel:addCategoryHeader(categoryName, categoryColor)
-    local header = self.scroll:Add("DPanel")
-    header:SetTall(44)
+    local key = string.lower(tostring(categoryName or "general"))
+    local header = self.scroll:Add("DButton")
+    header:SetTall(41)
     header:Dock(TOP)
-    header:DockMargin(0, 0, 0, 8)
-    header:SetPaintBackground(false)
-    header.Paint = function(_, w, h)
+    header:DockMargin(0, 7, 0, 6)
+    header:SetText("")
+    header:SetCursor("hand")
+    header:SetTooltip("Expand or collapse this category")
+    local group = {key = key, items = {}}
+    self.currentCategory = group
+    header.Paint = function(button, w, h)
+        local hovered = button:IsHovered()
         local accentColor = quickPalette.accent
-        drawQuickOutlinedBox(0, 0, w, h, 5, quickPalette.header, quickPalette.lineSoft)
-        draw.SimpleText(string.upper(tostring(categoryName or "GENERAL")), "LiliaFont.16", 13, 17, accentColor, TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)
-        drawQuickLine(13, h - 10, w - 26, quickAlpha(accentColor, 105))
+        drawQuickLine(0, h - 1, w, hovered and quickPalette.line or quickPalette.lineSoft)
+        draw.SimpleText(string.upper(tostring(categoryName or "GENERAL")), "LiliaFont.17", 1, 16, accentColor, TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)
+        local expanded = self.searchQuery ~= "" or not self.collapsedCategories[key]
+        local arrowX, arrowY = w - 17, 14
+        surface.SetDrawColor(hovered and quickPalette.text or accentColor)
+        if expanded then
+            surface.DrawLine(arrowX - 5, arrowY + 2, arrowX, arrowY - 3)
+            surface.DrawLine(arrowX, arrowY - 3, arrowX + 5, arrowY + 2)
+        else
+            surface.DrawLine(arrowX - 5, arrowY - 2, arrowX, arrowY + 3)
+            surface.DrawLine(arrowX, arrowY + 3, arrowX + 5, arrowY - 2)
+        end
+    end
+
+    header.DoClick = function()
+        if self.searchQuery ~= "" then return end
+        self.collapsedCategories[key] = not self.collapsedCategories[key]
+        local visible = not self.collapsedCategories[key]
+        for _, item in ipairs(group.items) do
+            if IsValid(item) then item:SetVisible(visible) end
+        end
+        if IsValid(self.scroll) then self.scroll:InvalidateLayout(true) end
+        local canvas = self.scroll.GetCanvas and self.scroll:GetCanvas()
+        if IsValid(canvas) then canvas:InvalidateLayout(true) end
     end
 
     self.items[#self.items + 1] = header
@@ -502,9 +508,9 @@ function QuickPanel:addSlider(text, cb, val, min, max, dec, description)
     container:Dock(TOP)
     container:DockMargin(0, 0, 0, 7)
     container.Paint = function(panel, w, h)
-        local fill = panel:IsHovered() and quickPalette.panelHover or quickPalette.panel
-        local border = panel:IsHovered() and quickAlpha(quickPalette.accent, 105) or quickPalette.lineSoft
-        drawQuickOutlinedBox(0, 0, w, h, 6, fill, border)
+        local fill = panel:IsHovered() and quickPalette.panel or quickPalette.field
+        local border = panel:IsHovered() and quickAlpha(quickPalette.accent, 118) or quickPalette.lineSoft
+        drawQuickOutlinedBox(0, 0, w, h, 3, fill, border)
         draw.SimpleText(quickEllipsizeText(text, "LiliaFont.17", w - 92), "LiliaFont.17", 14, 17, quickPalette.text, TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)
         if hasDescription then draw.SimpleText(quickEllipsizeText(descriptionText, "LiliaFont.15", w - 28), "LiliaFont.15", 14, 39, quickPalette.textMuted, TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER) end
     end
@@ -553,6 +559,7 @@ function QuickPanel:addSlider(text, cb, val, min, max, dec, description)
     end
 
     self.items[#self.items + 1] = container
+    self:RegisterCategoryItem(container)
     return container
 end
 
@@ -569,10 +576,10 @@ function QuickPanel:addCheck(text, cb, checked, description)
     if hasDescription then row:SetTooltip(descriptionText) end
     row.Paint = function(panel, w, h)
         local hovered = panel:IsHovered()
-        local fill = hovered and quickPalette.panelHover or quickPalette.panel
-        local border = hovered and quickAlpha(quickPalette.accent, 105) or quickPalette.lineSoft
+        local fill = hovered and quickPalette.panel or quickPalette.field
+        local border = hovered and quickAlpha(quickPalette.accent, 118) or quickPalette.lineSoft
         local textMaxWidth = w - 92
-        drawQuickOutlinedBox(0, 0, w, h, 6, fill, border)
+        drawQuickOutlinedBox(0, 0, w, h, 3, fill, border)
         draw.SimpleText(quickEllipsizeText(text, "LiliaFont.17", textMaxWidth), "LiliaFont.17", 14, hasDescription and 17 or h * 0.5, quickPalette.text, TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)
         if hasDescription then
             local lines = quickWrapText(descriptionText, "LiliaFont.15", textMaxWidth, 2)
@@ -613,6 +620,7 @@ function QuickPanel:addCheck(text, cb, checked, description)
     end
 
     self.items[#self.items + 1] = row
+    self:RegisterCategoryItem(row)
     return row
 end
 
@@ -622,11 +630,12 @@ function QuickPanel:addEmptyState(text)
     panel:Dock(TOP)
     panel:DockMargin(0, 4, 0, 0)
     panel.Paint = function(_, w, h)
-        drawQuickOutlinedBox(0, 0, w, h, 6, quickPalette.panel, quickPalette.lineSoft)
+        drawQuickOutlinedBox(0, 0, w, h, 3, quickPalette.field, quickAlpha(quickPalette.accent, 110))
         draw.SimpleText(text, "LiliaFont.17", w * 0.5, h * 0.5, quickPalette.textMuted, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
     end
 
     self.items[#self.items + 1] = panel
+    self:RegisterCategoryItem(panel)
     return panel
 end
 
@@ -670,7 +679,7 @@ function QuickPanel:OnClose()
     self.closing = true
     self:SetMouseInputEnabled(false)
     self:SetKeyboardInputEnabled(false)
-    self:MoveTo(ScrW() + 16, self.targetY or 24, 0.22, 0, 0.2, function()
+    self:MoveTo(ScrW() + 16, self.targetY or 24, 0.18, 0, 0.25, function()
         if not IsValid(self) then return end
         self:SetVisible(false)
         self:SetPos(self.targetX or ScrW() - self:GetWide() - 22, self.targetY or 24)
@@ -680,7 +689,7 @@ function QuickPanel:OnClose()
         self.closing = false
     end)
 
-    self:AlphaTo(0, 0.16, 0)
+    self:AlphaTo(0, 0.17, 0)
     return false
 end
 

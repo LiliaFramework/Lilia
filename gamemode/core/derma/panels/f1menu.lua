@@ -1,308 +1,6 @@
-﻿--[[
-    Hooks:
-        F1MenuOpened(Panel self)
-
-    Purpose:
-        Runs after the F1 menu panel is created and registered as the active menu interface.
-
-    Category:
-        UI
-
-    Parameters:
-        self (Panel)
-            The newly created F1 menu panel.
-
-    Example Usage:
-        ```lua
-        hook.Add("F1MenuOpened", "liaExampleF1MenuOpened", function(self)
-            self:SetAlpha(255)
-        end)
-        ```
-
-    Returns:
-        nil
-
-    Realm:
-        Client
-]]
---[[
-    Hooks:
-        F1MenuClosed()
-
-    Purpose:
-        Runs when the active F1 menu panel is being removed and its UI state is shutting down.
-
-    Category:
-        UI
-
-    Parameters:
-        None
-
-    Example Usage:
-        ```lua
-        hook.Add("F1MenuClosed", "liaExampleF1MenuClosed", function()
-            print("F1 menu closed")
-        end)
-        ```
-
-    Returns:
-        nil
-
-    Realm:
-        Client
-]]
---[[
-    Hooks:
-        LoadCharInformation()
-
-    Purpose:
-        Runs while the F1 character information panel is being initialized so modules can register sections and fields before the UI is generated.
-
-    Category:
-        UI
-
-    Parameters:
-        None
-
-    Example Usage:
-        ```lua
-        hook.Add("LoadCharInformation", "liaExampleLoadCharInformation", function()
-            hook.Run("AddSection", "Example", Color(255, 255, 255), 10, 1)
-            hook.Run("AddTextField", "Example", "exampleField", "Example Field", function()
-                return "Example Value"
-            end)
-        end)
-        ```
-
-    Returns:
-        nil
-
-    Realm:
-        Client
-]]
---[[
-    Hooks:
-        AddSection(string sectionName, Color|nil color, number|nil priority, number|nil location)
-
-    Purpose:
-        Registers or updates a character information section in the F1 menu before fields are inserted into it.
-
-    Category:
-        UI
-
-    Parameters:
-        sectionName (string)
-            The section identifier or localized display name used as the section key.
-
-        color (Color|nil)
-            The color stored with the section data.
-
-        priority (number|nil)
-            The sort priority used when the F1 menu orders sections.
-
-        location (number|nil)
-            The stored location value for the section entry.
-
-    Example Usage:
-        ```lua
-        hook.Add("AddSection", "liaExampleAddSection", function(sectionName, color, priority, location)
-            if sectionName == "Example" then
-                print(sectionName, priority, location)
-            end
-        end)
-        ```
-
-    Returns:
-        nil
-
-    Realm:
-        Client
-]]
---[[
-    Hooks:
-        AddTextField(string sectionName, string fieldName, string labelText, function valueFunc, string|IMaterial|nil icon)
-
-    Purpose:
-        Adds a text field definition to an existing F1 character information section when that field name has not already been registered.
-
-    Category:
-        UI
-
-    Parameters:
-        sectionName (string)
-            The section identifier or localized display name that should receive the field.
-
-        fieldName (string)
-            The unique field key stored on the section definition.
-
-        labelText (string)
-            The label shown beside the text entry.
-
-        valueFunc (function)
-            A callback that returns the current string value for the field.
-
-        icon (string|IMaterial|nil)
-            Optional material path or material displayed beside the field. No icon is drawn when omitted.
-
-    Example Usage:
-        ```lua
-        hook.Add("AddTextField", "liaExampleAddTextField", function(sectionName, fieldName, labelText, valueFunc, icon)
-            if sectionName == L("generalInfo") and fieldName == "name" then
-                print(labelText, valueFunc())
-            end
-        end)
-        ```
-
-    Returns:
-        nil
-
-    Realm:
-        Client
-]]
---[[
-    Hooks:
-        AddBarField(string sectionName, string fieldName, string labelText, function|number|nil minFunc, function|number|nil maxFunc, function|number|nil valueFunc, string|IMaterial|nil icon)
-
-    Purpose:
-        Adds a progress-bar field definition to an existing F1 character information section when that field name has not already been registered.
-
-    Category:
-        UI
-
-    Parameters:
-        sectionName (string)
-            The section identifier or localized display name that should receive the bar field.
-
-        fieldName (string)
-            The unique field key stored on the section definition.
-
-        labelText (string)
-            The label shown beside the progress bar.
-
-        minFunc (function|number|nil)
-            A callback or numeric value that supplies the bar minimum.
-
-        maxFunc (function|number|nil)
-            A callback or numeric value that supplies the bar maximum.
-
-        valueFunc (function|number|nil)
-            A callback or numeric value that supplies the current bar value.
-
-        icon (string|IMaterial|nil)
-            Optional material path or material displayed beside the bar. No icon is drawn when omitted.
-
-    Example Usage:
-        ```lua
-        hook.Add("AddBarField", "liaExampleAddBarField", function(sectionName, fieldName, labelText, minFunc, maxFunc, valueFunc, icon)
-            if sectionName == L("attributesModuleName") and fieldName == "stm" then
-                print(labelText, minFunc(), maxFunc(), valueFunc())
-            end
-        end)
-        ```
-
-    Returns:
-        nil
-
-    Realm:
-        Client
-]]
---[[
-    Hooks:
-        CreateInformationButtons(table pages)
-
-    Purpose:
-        Allows modules to register information-tab pages for the F1 menu before they are filtered, sorted, and rendered.
-
-    Category:
-        UI
-
-    Parameters:
-        pages (table)
-            The mutable array of page definitions consumed by the information tab builder.
-
-    Example Usage:
-        ```lua
-        hook.Add("CreateInformationButtons", "liaExampleCreateInformationButtons", function(pages)
-            pages[#pages + 1] = {
-                name = "exampleInfo",
-                drawFunc = function(parent)
-                    parent:Clear()
-                end
-            }
-        end)
-        ```
-
-    Returns:
-        nil
-
-    Realm:
-        Client
-]]
---[[
-    Hooks:
-        PopulateConfigurationButtons(table pages)
-
-    Purpose:
-        Allows modules to register settings pages for the F1 configuration tab before the menu filters, sorts, and renders them.
-
-    Category:
-        UI
-
-    Parameters:
-        pages (table)
-            The mutable array of configuration page definitions that the settings tab consumes.
-
-    Example Usage:
-        ```lua
-        hook.Add("PopulateConfigurationButtons", "liaExamplePopulateConfigurationButtons", function(pages)
-            pages[#pages + 1] = {
-                name = "Example Settings",
-                drawFunc = function(parent)
-                    parent:Clear()
-                end
-            }
-        end)
-        ```
-
-    Returns:
-        nil
-
-    Realm:
-        Client
-]]
---[[
-    Hooks:
-        CanDisplayCharInfo(string name)
-
-    Purpose:
-        Allows the F1 character information panel to veto specific character information fields before they are shown.
-
-    Category:
-        UI
-
-    Parameters:
-        name (string)
-            The field identifier being considered for display.
-
-    Example Usage:
-        ```lua
-        hook.Add("CanDisplayCharInfo", "liaExampleCanDisplayCharInfo", function(name)
-            if name == "class" then return false end
-        end)
-        ```
-
-    Returns:
-        boolean|nil
-            Return false to hide the named field. Return nil or true to leave the field available.
-
-    Realm:
-        Client
-]]
 local function localizeMenuLabel(value, ...)
     if not isstring(value) then return value end
-    local resolved = lia.lang.resolveToken(value, ...)
-    if resolved ~= value then return resolved end
-    return L(value, ...)
+    return lia.lang.resolve(value, ...)
 end
 
 local function normalizeCharInfoSectionName(value)
@@ -312,7 +10,7 @@ end
 
 local function resolveCharInfoSectionName(sectionName)
     if not IsValid(lia.gui.info) then return sectionName end
-    local localizedSectionName = isstring(sectionName) and L(sectionName) or sectionName
+    local localizedSectionName = isstring(sectionName) and tostring(sectionName) or sectionName
     if lia.gui.info.CharacterInformation[localizedSectionName] then return localizedSectionName end
     local candidates = {}
     if isstring(localizedSectionName) then candidates[#candidates + 1] = normalizeCharInfoSectionName(localizedSectionName) end
@@ -356,11 +54,39 @@ local function drawIcon(material, x, y, size, color)
     surface.DrawTexturedRect(x, y, size, size)
 end
 
+local icon16Names = {
+    characters = "user.png",
+    classes = "group.png",
+    information = "information.png",
+    inventory = "box.png",
+    logs = "page_white_text.png",
+    settings = "cog.png",
+    themes = "color_wheel.png",
+    you = "user.png",
+    onlinestaff = "group.png",
+    playerentities = "brick.png",
+    characterlist = "application_view_list.png",
+    staffcases = "report.png",
+    staffcharacterpermissions = "user_edit.png",
+    toolpermissions = "wrench.png",
+    factionmanagement = "group_edit.png",
+    chatfilter = "comment_delete.png"
+}
+
 local function resolveIconMaterial(icon, fallback)
-    if not icon then return fallback end
-    if type(icon) == "IMaterial" then return icon end
-    if isstring(icon) and icon ~= "" then return Material(icon, "smooth") end
-    return fallback
+    if type(icon) == "IMaterial" then
+        if not icon:IsError() then return icon end
+        return fallback or Material("icon16/bullet_white.png", "smooth")
+    end
+
+    if not isstring(icon) or icon == "" then return fallback or Material("icon16/bullet_white.png", "smooth") end
+    if icon:match("^icon16/[%w_%-]+%.png$") then return Material(icon, "smooth") end
+    local name = icon:match("([^/]+)%.png$")
+    local mapped = name and icon16Names[name:lower()]
+    if mapped then return Material("icon16/" .. mapped, "smooth") end
+    local material = Material(icon, "smooth")
+    if not material:IsError() then return material end
+    return fallback or Material("icon16/bullet_white.png", "smooth")
 end
 
 local function getFieldValue(panel, name)
@@ -377,16 +103,16 @@ local function getFieldValue(panel, name)
 end
 
 local sidebarIcons = {
-    ["@admin"] = Material("icon16/shield.png", "smooth"),
-    ["@characters"] = Material("icon16/user.png", "smooth"),
-    ["@classes"] = Material("icon16/group.png", "smooth"),
-    ["@information"] = Material("icon16/information.png", "smooth"),
-    ["@inventory"] = Material("icon16/box.png", "smooth"),
-    ["@logisticslogs"] = Material("icon16/page_white_text.png", "smooth"),
-    ["@logisticsstorage"] = Material("icon16/database.png", "smooth"),
-    ["@settings"] = Material("icon16/cog.png", "smooth"),
-    ["@themes"] = Material("icon16/color_wheel.png", "smooth"),
-    ["@you"] = Material("icon16/user.png", "smooth")
+    ["Admin"] = Material("icon16/shield.png", "smooth"),
+    ["Characters"] = Material("icon16/user.png", "smooth"),
+    ["Classes"] = Material("icon16/group.png", "smooth"),
+    ["Information"] = Material("icon16/information.png", "smooth"),
+    ["Inventory"] = Material("icon16/box.png", "smooth"),
+    ["Logistics Logs"] = Material("icon16/page_white_text.png", "smooth"),
+    ["Logistics Storage"] = Material("icon16/database.png", "smooth"),
+    ["Settings"] = Material("icon16/cog.png", "smooth"),
+    ["Themes"] = Material("icon16/color_wheel.png", "smooth"),
+    ["You"] = Material("icon16/user.png", "smooth")
 }
 
 local function drawcirclepoly(w, h)
@@ -542,12 +268,13 @@ function PANEL:Init()
 end
 
 function PANEL:CreateStatCard(parent, title, icon, valueFunc)
+    local iconMaterial = resolveIconMaterial(icon)
     local card = parent:Add("DPanel")
     card.Paint = function(_, w, h)
         local accent = getThemeColors()
         drawPanel(0, 0, w, h, 9, Color(9, 24, 29, 238), Color(accent.r, accent.g, accent.b, 80))
-        drawIcon(icon, 22, 20, 40, accent)
-        draw.SimpleText(string.upper(title), "LiliaFont.17", 76, 28, accent, TEXT_ALIGN_LEFT, TEXT_ALIGN_TOP)
+        drawIcon(iconMaterial, 22, 32, 16, accent)
+        draw.SimpleText(string.upper(title), "LiliaFont.17", 54, 28, accent, TEXT_ALIGN_LEFT, TEXT_ALIGN_TOP)
         draw.SimpleText(valueFunc() or "", "LiliaFont.25", 22, h - 60, Color(242, 247, 247), TEXT_ALIGN_LEFT, TEXT_ALIGN_TOP)
     end
     return card
@@ -570,11 +297,12 @@ function PANEL:GetRankText()
         end
     end
 
-    if rank == "" then rank = L("none") end
+    if rank == "" then rank = "None" end
     return rank
 end
 
 function PANEL:CreateIdentityAction(parent, width, icon, title, value, doClick)
+    local iconMaterial = resolveIconMaterial(icon)
     local panelType = isfunction(doClick) and "DButton" or "DPanel"
     local action = parent:Add(panelType)
     action:Dock(LEFT)
@@ -587,11 +315,12 @@ function PANEL:CreateIdentityAction(parent, width, icon, title, value, doClick)
         local borderAlpha = hovered and 100 or 60
         local background = hovered and Color(16, 34, 40, 235) or Color(13, 30, 35, 225)
         drawPanel(0, 0, w, h, 6, background, Color(accent.r, accent.g, accent.b, borderAlpha))
+        drawIcon(iconMaterial, 16, math.floor((h - 16) * 0.5), 16, Color(165, 187, 188))
         if title ~= "" then
-            draw.SimpleText(title, "LiliaFont.16", 16, 8, Color(165, 187, 188), TEXT_ALIGN_LEFT, TEXT_ALIGN_TOP)
-            draw.SimpleText(value or "", "LiliaFont.18", 16, h - 8, Color(230, 239, 239), TEXT_ALIGN_LEFT, TEXT_ALIGN_BOTTOM)
+            draw.SimpleText(title, "LiliaFont.16", 42, 8, Color(165, 187, 188), TEXT_ALIGN_LEFT, TEXT_ALIGN_TOP)
+            draw.SimpleText(value or "", "LiliaFont.18", 42, h - 8, Color(230, 239, 239), TEXT_ALIGN_LEFT, TEXT_ALIGN_BOTTOM)
         else
-            draw.SimpleText(value or "", "LiliaFont.18", 16, h * 0.5, Color(230, 239, 239), TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)
+            draw.SimpleText(value or "", "LiliaFont.18", 42, h * 0.5, Color(230, 239, 239), TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)
         end
     end
 
@@ -603,11 +332,11 @@ function PANEL:BuildIdentity()
     local client = LocalPlayer()
     local char = client:getChar()
     if not char then return end
-    self.characterName:SetText(char:getName() or L("unknown"))
+    self.characterName:SetText(char:getName() or "Unknown")
     self.characterSubtitle:SetText("")
     self.characterSubtitle:SetVisible(false)
     self.chips:Clear()
-    self:CreateIdentityAction(self.chips, 196, Material("icon16/shield.png", "smooth"), L("rank"), self:GetRankText())
+    self:CreateIdentityAction(self.chips, 196, Material("icon16/shield.png", "smooth"), "Rank", self:GetRankText())
     self:CreateIdentityAction(self.chips, 224, Material("icon16/world_link.png", "smooth"), "", "Steam Profile", function()
         local steamID64 = client:SteamID64()
         if steamID64 and steamID64 ~= "" then gui.OpenURL("https://steamcommunity.com/profiles/" .. steamID64) end
@@ -627,10 +356,11 @@ end
 function PANEL:CreateTextEntryWithBackgroundAndLabel(parent, name, labelText, marginBot, valueFunc, icon)
     local entry = parent:Add("DPanel")
     entry:Dock(FILL)
-    local contentX = 18
+    local contentX = icon and 42 or 18
     entry.Paint = function(_, w, h)
         local accent = getThemeColors()
         drawPanel(0, 0, w, h, 8, Color(10, 25, 30, 232), Color(accent.r, accent.g, accent.b, 45))
+        if icon then drawIcon(icon, 16, 13, 16, accent) end
     end
 
     local lbl = entry:Add("DLabel")
@@ -668,7 +398,7 @@ function PANEL:CreateTextEntryWithBackgroundAndLabel(parent, name, labelText, ma
             local now = CurTime()
             txt.lastErrorTime = txt.lastErrorTime or 0
             if now - txt.lastErrorTime > 1 then
-                LocalPlayer():notifyErrorLocalized("descMinLen", minLength)
+                LocalPlayer():notifyError(string.format("Description must be at least %s characters long.", minLength))
                 txt.lastErrorTime = now
             end
             return
@@ -687,10 +417,11 @@ end
 function PANEL:CreateFillableBarWithBackgroundAndLabel(parent, name, labelText, minFunc, maxFunc, margin, valueFunc, icon)
     local entry = parent:Add("DPanel")
     entry:Dock(FILL)
-    local contentX = 16
+    local contentX = icon and 42 or 16
     entry.Paint = function(_, w, h)
         local accent = getThemeColors()
         drawPanel(0, 0, w, h, 8, Color(10, 25, 30, 232), Color(accent.r, accent.g, accent.b, 45))
+        if icon then drawIcon(icon, 14, 11, 16, accent) end
         draw.SimpleText(labelText or "", "LiliaFont.17", contentX, 12, Color(165, 187, 188), TEXT_ALIGN_LEFT, TEXT_ALIGN_TOP)
     end
 
@@ -704,7 +435,7 @@ function PANEL:CreateFillableBarWithBackgroundAndLabel(parent, name, labelText, 
         local mx = isfunction(maxFunc) and maxFunc() or tonumber(maxFunc) or 1
         local val = isfunction(valueFunc) and valueFunc() or tonumber(valueFunc) or 0
         barSelf:SetFraction(mx > mn and math.Clamp((val - mn) / (mx - mn), 0, 1) or 0)
-        barSelf:SetText(L("barProgress", math.Round(val), math.Round(mx)))
+        barSelf:SetText(string.format("%s / %s", math.Round(val), math.Round(mx)))
     end
 
     parent[name] = bar
@@ -762,7 +493,7 @@ function PANEL:GenerateSections()
             frame.Paint = function(_, w, h)
                 local accent = getThemeColors()
                 drawPanel(0, 0, w, h, 8, Color(5, 18, 23, 220), Color(accent.r, accent.g, accent.b, 80))
-                draw.SimpleText(string.upper(L(section.name)), "LiliaFont.18", 17, 14, accent, TEXT_ALIGN_LEFT, TEXT_ALIGN_TOP)
+                draw.SimpleText(string.upper(tostring(section.name)), "LiliaFont.18", 17, 14, accent, TEXT_ALIGN_LEFT, TEXT_ALIGN_TOP)
             end
 
             local grid = frame:Add("DPanel")
@@ -775,9 +506,9 @@ function PANEL:GenerateSections()
                 holder.Paint = function() end
                 grid.cards[#grid.cards + 1] = holder
                 if field.type == "text" then
-                    self:CreateTextEntryWithBackgroundAndLabel(holder, field.name, L(field.label or ""), 0, field.value, field.icon)
+                    self:CreateTextEntryWithBackgroundAndLabel(holder, field.name, tostring(field.label or ""), 0, field.value, field.icon)
                 elseif field.type == "bar" then
-                    self:CreateFillableBarWithBackgroundAndLabel(holder, field.name, L(field.label or ""), field.min, field.max, 0, field.value, field.icon)
+                    self:CreateFillableBarWithBackgroundAndLabel(holder, field.name, tostring(field.label or ""), field.min, field.max, 0, field.value, field.icon)
                 end
             end
 
@@ -855,13 +586,13 @@ function PANEL:Init()
     self:SetPopupStayAtBack(true)
     self.noAnchor = CurTime() + 0.4
     self.anchorMode = true
-    self.invKey = lia.keybind.get(L("openInventory"), KEY_I)
+    self.invKey = lia.keybind.get("Open Inventory", KEY_I)
     hook.Add("OnThemeChanged", self, self.OnThemeChanged)
     hook.Add("AdminPrivilegesUpdated", self, self.OnAdminPrivilegesUpdated)
     self.topBar = self:Add("DPanel")
     self.topBar:Dock(TOP)
     self.topBar:SetTall(74)
-    local schemaIconMat = SCHEMA and SCHEMA.icon and Material(SCHEMA.icon, "smooth") or Material("lilia.png", "smooth")
+    local schemaIconMat = resolveIconMaterial(SCHEMA and SCHEMA.icon, Material("icon16/house.png", "smooth"))
     local schemaName = SCHEMA and SCHEMA.name
     self.topBar.Paint = function(_, w, h)
         local accent = getThemeColors()
@@ -876,10 +607,8 @@ function PANEL:Init()
     self.brandPanel = self.topBar:Add("DPanel")
     self.brandPanel:SetSize(420, 58)
     self.brandPanel.Paint = function(_, w, h)
-        surface.SetMaterial(schemaIconMat)
-        surface.SetDrawColor(255, 255, 255, 245)
-        surface.DrawTexturedRect(0, 6, 46, 46)
-        draw.SimpleText(L(schemaName), "LiliaFont.25", 58, h * 0.5, Color(244, 248, 248), TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)
+        drawIcon(schemaIconMat, 15, 21, 16, Color(255, 255, 255, 245))
+        draw.SimpleText(tostring(schemaName), "LiliaFont.25", 58, h * 0.5, Color(244, 248, 248), TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)
     end
 
     self.headerUtility = self.topBar:Add("DPanel")
@@ -946,28 +675,28 @@ function PANEL:Init()
     local utilityButtons = {
         {
             key = "characters",
-            icon = "icon16/user.png",
-            tooltip = "characters"
+            icon = Material("icon16/user.png", "smooth"),
+            tooltip = "Characters"
         },
         {
-            key = "@logs",
-            icon = "icon16/book_open.png",
-            tooltip = "@logs"
+            key = "Logs",
+            icon = Material("icon16/page_white_text.png", "smooth"),
+            tooltip = "Logs"
         },
         {
-            key = "@information",
-            icon = "icon16/information.png",
-            tooltip = "@information"
+            key = "Information",
+            icon = Material("icon16/information.png", "smooth"),
+            tooltip = "Information"
         },
         {
-            key = "@settings",
-            icon = "icon16/cog.png",
-            tooltip = "@settings"
+            key = "Settings",
+            icon = Material("icon16/cog.png", "smooth"),
+            tooltip = "Settings"
         },
         {
-            key = "@themes",
-            icon = "icon16/color_wheel.png",
-            tooltip = "@themes"
+            key = "Themes",
+            icon = Material("icon16/color_wheel.png", "smooth"),
+            tooltip = "Themes"
         }
     }
 
@@ -981,7 +710,7 @@ function PANEL:Init()
         button:SetText("")
         button:SetTooltip(localizeMenuLabel(data.tooltip))
         button._key = key
-        button._icon = Material(data.icon, "smooth")
+        button._icon = resolveIconMaterial(data.icon)
         button.Paint = function(s, w, h)
             local accent = getThemeColors()
             local active = self.activeTabKey == s._key
@@ -992,7 +721,7 @@ function PANEL:Init()
                 drawPanel(0, 0, w, h, 6, background, outline)
             end
 
-            drawIcon(s._icon, math.floor((w - 22) * 0.5), math.floor((h - 22) * 0.5), 22, active and Color(244, 248, 248) or hovered and Color(220, 232, 232) or Color(175, 195, 195))
+            drawIcon(s._icon, math.floor((w - 16) * 0.5), math.floor((h - 16) * 0.5), 16, active and Color(244, 248, 248) or hovered and Color(220, 232, 232) or Color(175, 195, 195))
         end
 
         button.DoClick = function() if self.tabList and self.tabList[key] then self:setActiveTab(key) end end
@@ -1016,7 +745,7 @@ function PANEL:Init()
     self.headerUtility.Think = function()
         local changed = false
         if IsValid(self.onlineLabel) then
-            local onlineText = #player.GetAll() .. " " .. L("online")
+            local onlineText = #player.GetAll() .. " " .. "Online"
             if self.onlineLabel:GetText() ~= onlineText then
                 self.onlineLabel:SetText(onlineText)
                 changed = true
@@ -1024,7 +753,7 @@ function PANEL:Init()
         end
 
         if IsValid(self.timeLabel) then
-            local timeText = L("serverTime") .. ": " .. os.date("%H:%M")
+            local timeText = "Server Time(" .. "): " .. os.date("%H:%M")
             if self.timeLabel:GetText() ~= timeText then
                 self.timeLabel:SetText(timeText)
                 changed = true
@@ -1126,13 +855,13 @@ function PANEL:Init()
         tabIndex = tabIndex + 1
         self._tabIndex[key] = tabIndex
         self.tabList[key] = self:addTab(key, tabDef.name, callback)
-        if key ~= "@settings" and key ~= "@information" and key ~= "@admin" and key ~= "@logs" and key ~= "@themes" and key ~= "characters" then self:AddSidebarButton(key, tabDef.name, tabDef.icon) end
+        if key ~= "Settings" and key ~= "Information" and key ~= "Admin" and key ~= "Logs" and key ~= "Themes" and key ~= "characters" then self:AddSidebarButton(key, tabDef.name, tabDef.icon) end
     end
 
     self.adminSidebarPages = {}
     self.adminSidebarButtons = {}
     self:RefreshUtilityButtons()
-    if self.tabList["@admin"] then
+    if self.tabList["Admin"] then
         local adminPages = {}
         hook.Run("PopulateAdminTabs", adminPages)
         for i = #adminPages, 1, -1 do
@@ -1147,8 +876,8 @@ function PANEL:Init()
             end)
 
             table.insert(adminPages, 1, {
-                name = "onlineStaff",
-                icon = "icon16/user.png"
+                name = "Online Staff",
+                icon = Material("icon16/group.png", "smooth")
             })
 
             self.adminSidebarPages = adminPages
@@ -1160,8 +889,8 @@ function PANEL:Init()
     end
 
     self:MakePopup()
-    local defaultTab = lia.config.get("DefaultMenuTab", "@you")
-    if not self.tabList[defaultTab] then defaultTab = self.tabList["@you"] and "@you" or tabKeys[1] end
+    local defaultTab = lia.config.get("DefaultMenuTab", "You")
+    if not self.tabList[defaultTab] then defaultTab = self.tabList["You"] and "You" or tabKeys[1] end
     if defaultTab then self:setActiveTab(defaultTab) end
     timer.Simple(0.1, function() if IsValid(self) then self:UpdateTabColors() end end)
 end
@@ -1189,12 +918,12 @@ function PANEL:AddSidebarButton(key, name, icon)
             surface.DrawRect(0, 7, 3, h - 14)
         end
 
-        drawIcon(s._icon, 16, 14, 24, active and Color(245, 249, 249) or Color(165, 186, 186))
+        drawIcon(s._icon, 20, 18, 16, active and Color(245, 249, 249) or Color(165, 186, 186))
         draw.SimpleText(s._label, "LiliaFont.17", 54, h * 0.5, active and Color(245, 249, 249) or Color(191, 207, 207), TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)
     end
 
     button.DoClick = function()
-        lia.websound.playButtonSound()
+        lia.webcontent.playButtonSound()
         self:setActiveTab(key)
     end
 
@@ -1229,7 +958,7 @@ function PANEL:AddAdminSidebarButton(index, page)
     button:SetTooltip(button._label)
     button.Paint = function(s, w, h)
         local accent = getThemeColors()
-        local active = self.activeTabKey == "@admin" and self.activeAdminPageIndex == s._adminPageIndex
+        local active = self.activeTabKey == "Admin" and self.activeAdminPageIndex == s._adminPageIndex
         local hovered = s:IsHovered()
         local bg = active and Color(accent.r, accent.g, accent.b, 28) or hovered and Color(255, 255, 255, 7) or Color(0, 0, 0, 0)
         drawPanel(0, 0, w, h, 7, bg, active and Color(accent.r, accent.g, accent.b, 120) or nil)
@@ -1238,12 +967,12 @@ function PANEL:AddAdminSidebarButton(index, page)
             surface.DrawRect(0, 7, 3, h - 14)
         end
 
-        drawIcon(s._icon, 16, 14, 24, active and Color(245, 249, 249) or Color(165, 186, 186))
+        drawIcon(s._icon, 20, 18, 16, active and Color(245, 249, 249) or Color(165, 186, 186))
         draw.SimpleText(s._label, "LiliaFont.17", 54, h * 0.5, active and Color(245, 249, 249) or Color(191, 207, 207), TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)
     end
 
     button.DoClick = function()
-        lia.websound.playButtonSound()
+        lia.webcontent.playButtonSound()
         self:OpenAdminPage(index)
     end
 
@@ -1255,8 +984,8 @@ function PANEL:OpenAdminPage(index)
     if not index or not self.adminSidebarPages or not self.adminSidebarPages[index] then return end
     self.pendingAdminPageIndex = index
     self.activeAdminPageIndex = index
-    if self.activeTabKey ~= "@admin" then
-        self:setActiveTab("@admin")
+    if self.activeTabKey ~= "Admin" then
+        self:setActiveTab("Admin")
         return
     end
 
@@ -1388,7 +1117,7 @@ function PANEL:Think()
 
     if input.IsKeyDown(KEY_F1) and CurTime() > self.noAnchor and self.anchorMode then
         self.anchorMode = false
-        lia.websound.playButtonSound("buttons/lightswitch2.wav")
+        lia.webcontent.playButtonSound("buttons/lightswitch2.wav")
     end
 
     if not self.anchorMode and not input.IsKeyDown(KEY_F1) and not IsValid(self.info) then self:remove() end
@@ -1459,7 +1188,7 @@ function PANEL:Init()
 
     if IsValid(self.filterCombo.DropButton) then
         self.filterCombo.DropButton:SetWide(30)
-        self.filterCombo.DropButton.Paint = function(_, panelW, panelH) draw.SimpleText("▼", "LiliaFont.17", panelW * 0.5, panelH * 0.5, Color(190, 210, 210), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER) end
+        self.filterCombo.DropButton.Paint = function(_, panelW, panelH) drawIcon(Material("icon16/arrow_down.png", "smooth"), math.floor((panelW - 16) * 0.5), math.floor((panelH - 16) * 0.5), 16, Color(190, 210, 210)) end
     end
 
     self.searchWrap = self.searchRow:Add("DPanel")
@@ -1536,7 +1265,7 @@ function PANEL:loadClasses()
         if cl.faction == client:Team() then self.classData[#self.classData + 1] = cl end
     end
 
-    table.sort(self.classData, function(a, b) return L(a.name or "") < L(b.name or "") end)
+    table.sort(self.classData, function(a, b) return tostring(a.name or "") < tostring(b.name or "") end)
     self:RebuildClassList()
 end
 
@@ -1548,8 +1277,8 @@ function PANEL:RebuildClassList()
     local selectedButton
     local firstButton
     for _, cl in ipairs(self.classData or {}) do
-        local className = cl.name and L(cl.name) or L("unnamed")
-        local factionName = team.GetName(cl.faction) or L("none")
+        local className = cl.name and tostring(cl.name) or "Unnamed"
+        local factionName = team.GetName(cl.faction) or "None"
         local canBe = lia.class.canBe(LocalPlayer(), cl.index)
         local matchesSearch = search == "" or className:lower():find(search, 1, true) or tostring(factionName):lower():find(search, 1, true)
         local matchesFilter = self.classFilter == "all" or self.classFilter == "available" and canBe or self.classFilter == "unavailable" and not canBe
@@ -1576,13 +1305,13 @@ function PANEL:RebuildClassList()
                 surface.DrawRect(0, 7, 3, panelH - 14)
             end
 
-            drawIcon(s._icon, 16, 16, 24, active and Color(240, 247, 247) or Color(175, 196, 196))
+            drawIcon(s._icon, 20, 20, 16, active and Color(240, 247, 247) or Color(175, 196, 196))
             draw.SimpleText(s._className, "LiliaFont.18", 54, 11, active and Color(244, 248, 248) or Color(220, 232, 232), TEXT_ALIGN_LEFT, TEXT_ALIGN_TOP)
             draw.SimpleText(s._factionName, "LiliaFont.15", 54, 33, s._canBe and accent or Color(135, 156, 157), TEXT_ALIGN_LEFT, TEXT_ALIGN_TOP)
         end
 
         button.DoClick = function()
-            lia.websound.playButtonSound()
+            lia.webcontent.playButtonSound()
             local classData = button._classData
             self.selectedClassIndex = classData.index
             self:populateClassDetails(classData, lia.class.canBe(LocalPlayer(), classData.index))
@@ -1607,8 +1336,8 @@ function PANEL:populateClassDetails(cl, canBe)
     if not IsValid(self.detailsPanel) or not IsValid(self.previewBody) then return end
     self.detailsPanel:Clear()
     self.previewBody:Clear()
-    local className = cl.name and L(cl.name) or L("unnamed")
-    local description = cl.desc and L(cl.desc) or L("noDesc")
+    local className = cl.name and tostring(cl.name) or "Unnamed"
+    local description = cl.desc and tostring(cl.desc) or "No Description"
     local header = self.detailsPanel:Add("DPanel")
     header:Dock(TOP)
     header:SetTall(124)
@@ -1628,13 +1357,10 @@ function PANEL:populateClassDetails(cl, canBe)
     desc:SetTextColor(Color(185, 204, 204))
     desc:SetWrap(true)
     desc:SetContentAlignment(7)
-    if cl.logo then
-        local logo = header:Add("DImage")
-        logo:SetSize(72, 72)
-        logo:SetImage(cl.logo)
-        logo:SetKeepAspect(true)
-        header.PerformLayout = function(_, panelW) logo:SetPos(panelW - 84, 24) end
-    end
+    local logo = header:Add("DImage")
+    logo:SetSize(16, 16)
+    logo:SetImage(canBe and "icon16/group.png" or "icon16/lock.png")
+    header.PerformLayout = function(_, panelW) logo:SetPos(panelW - 56, 54) end
 
     local detailsScroll = self.detailsPanel:Add("liaScrollPanel")
     detailsScroll:Dock(FILL)
@@ -1782,7 +1508,7 @@ function PANEL:createModelPanel(parent, cl)
                 panel.currentModelIndex = panel.currentModelIndex + direction
                 if panel.currentModelIndex < 1 then panel.currentModelIndex = #panel.availableModels end
                 if panel.currentModelIndex > #panel.availableModels then panel.currentModelIndex = 1 end
-                lia.websound.playButtonSound("buttons/button14.wav")
+                lia.webcontent.playButtonSound("buttons/button14.wav")
                 updateModel()
             end
             return button
@@ -1849,17 +1575,17 @@ function PANEL:addClassDetails(parent, cl)
     end
 
     local bloodMap = {
-        [-1] = L("bloodNo"),
-        [0] = L("bloodRed"),
-        [1] = L("bloodYellow"),
-        [2] = L("bloodGreenRed"),
-        [3] = L("bloodSparks"),
-        [4] = L("bloodAntlion"),
-        [5] = L("bloodZombie"),
-        [6] = L("bloodAntlionBright")
+        [-1] = "No blood",
+        [0] = "Red blood",
+        [1] = "Yellow blood",
+        [2] = "Green-red blood",
+        [3] = "Sparks",
+        [4] = "Antlion yellow blood",
+        [5] = "Zombie green-red blood",
+        [6] = "Antlion worker bright green blood"
     }
 
-    local factionName = team.GetName(cl.faction) or L("none")
+    local factionName = team.GetName(cl.faction) or "None"
     local classWeapons = getWeaponNames(cl.weapons)
     local resolvedRunSpeed = cl.runSpeed and math.Round(runSpeed * cl.runSpeed) or runSpeed
     local resolvedWalkSpeed = cl.walkSpeed and math.Round(walkSpeed * cl.walkSpeed) or walkSpeed
@@ -1867,19 +1593,19 @@ function PANEL:addClassDetails(parent, cl)
     local sections = {
         {
             title = "GENERAL",
-            rows = {{L("faction"), factionName}, {L("isDefault"), cl.isDefault and L("yes") or L("no")}}
+            rows = {{"Faction", factionName}, {"Is Default", cl.isDefault and "Yes" or "No"}}
         },
         {
             title = "ATTRIBUTES",
-            rows = {{L("baseHealth"), tostring(cl.health or maxHealth)}, {L("baseArmor"), tostring(cl.armor or maxArmor)}, {L("runSpeed"), tostring(resolvedRunSpeed)}, {L("walkSpeed"), tostring(resolvedWalkSpeed)}, {L("jumpPower"), tostring(resolvedJumpPower)}, {L("modelScale"), tostring(cl.scale or 1)}}
+            rows = {{"Base Health", tostring(cl.health or maxHealth)}, {"Base Armor", tostring(cl.armor or maxArmor)}, {"Run Speed", tostring(resolvedRunSpeed)}, {"Walk Speed", tostring(resolvedWalkSpeed)}, {"Jump Power", tostring(resolvedJumpPower)}, {"Model Scale", tostring(cl.scale or 1)}}
         },
         {
             title = "EQUIPMENT",
-            rows = {{L("weapons"), #classWeapons > 0 and table.concat(classWeapons, ", ") or L("none")}}
+            rows = {{"Weapons", #classWeapons > 0 and table.concat(classWeapons, ", ") or "None"}}
         },
         {
             title = "APPEARANCE",
-            rows = {{L("bloodColor"), bloodMap[cl.bloodcolor] or L("bloodRed")}}
+            rows = {{"Blood Color", bloodMap[cl.bloodcolor] or "Red blood"}}
         }
     }
 
@@ -1923,26 +1649,26 @@ function PANEL:addJoinButton(parent, cl, canBe)
     if isCurrent and hasModelChoices then
         titleText = "Current Class"
         subtitleText = "Choose another appearance for this class."
-        buttonText = L("changeModel")
+        buttonText = "Change Model"
     elseif isCurrent then
         titleText = "Current Class"
         subtitleText = "Your character is already using this class."
-        buttonText = L("alreadyInClass")
+        buttonText = "You are already in this class"
     elseif not canBe and isNonDefault then
         titleText = "Class Unavailable"
         subtitleText = "This class is not available for your character."
-        buttonText = L("classRequirementsNotMet")
+        buttonText = "Not Available"
     else
         titleText = "Class Available"
         subtitleText = "Your character can join this class."
-        buttonText = L("joinClass")
+        buttonText = "Join Class"
     end
 
     parent.PaintOver = function(_, panelW)
         local accent, textColor = getThemeColors()
         local available = canBe or isCurrent
         local icon = available and Material("icon16/accept.png", "smooth") or Material("icon16/lock.png", "smooth")
-        drawIcon(icon, 14, 15, 18, available and accent or Color(145, 160, 160))
+        drawIcon(icon, 15, 16, 16, available and accent or Color(145, 160, 160))
         draw.SimpleText(titleText, "LiliaFont.20", 42, 12, textColor, TEXT_ALIGN_LEFT, TEXT_ALIGN_TOP)
         draw.SimpleText(subtitleText, "LiliaFont.15", 14, 43, Color(155, 178, 179), TEXT_ALIGN_LEFT, TEXT_ALIGN_TOP)
     end
@@ -1961,7 +1687,7 @@ function PANEL:addJoinButton(parent, cl, canBe)
 
     button:SetDisabled((not canBe and not isCurrent) or isCurrent and not hasModelChoices)
     button.DoClick = function()
-        lia.websound.playButtonSound()
+        lia.webcontent.playButtonSound()
         if isCurrent then
             if hasModelChoices then lia.command.send("beclass", cl.index, self.selectedClassModels and self.selectedClassModels[cl.index] or nil) end
             return
@@ -1980,27 +1706,27 @@ end
 
 vgui.Register("liaClasses", PANEL, "EditablePanel")
 hook.Add("LoadCharInformation", "liaF1MenuGeneralInfo", function()
-    hook.Run("AddSection", L("generalInfo"), Color(0, 0, 0), 1, 1)
-    hook.Run("AddTextField", L("generalInfo"), "name", L("name"), function()
+    hook.Run("AddSection", "General Info", Color(0, 0, 0), 1, 1)
+    hook.Run("AddTextField", "General Info", "name", "Name", function()
         local client = LocalPlayer()
         local char = client:getChar()
-        return char and char:getName() or L("unknown")
+        return char and char:getName() or "Unknown"
     end, "icon16/user.png")
 
-    hook.Run("AddTextField", L("generalInfo"), "desc", L("desc"), function()
+    hook.Run("AddTextField", "General Info", "desc", "Description", function()
         local client = LocalPlayer()
         local char = client:getChar()
         return char and char:getDesc() or ""
     end, "icon16/page_white_text.png")
 
-    hook.Run("AddTextField", L("generalInfo"), "money", L("money"), function()
+    hook.Run("AddTextField", "General Info", "money", "Money", function()
         local client = LocalPlayer()
         return client and lia.currency.get(client:getChar():getMoney()) or lia.currency.get(0)
     end, "icon16/money.png")
 
-    hook.Run("AddTextField", L("generalInfo"), "playTime", L("playtime"), function()
+    hook.Run("AddTextField", "General Info", "playTime", "Playtime", function()
         local client = LocalPlayer()
-        return client and lia.time.formatDHM(client:getPlayTime()) or L("loading")
+        return client and lia.time.formatDHM(client:getPlayTime()) or "Loading..."
     end, "icon16/time.png")
 end)
 
@@ -2026,7 +1752,7 @@ end)
 hook.Add("AddTextField", "liaF1MenuAddTextField", function(sectionName, fieldName, labelText, valueFunc, icon)
     if IsValid(lia.gui.info) then
         local localizedSectionName = resolveCharInfoSectionName(sectionName)
-        local localizedLabel = isstring(labelText) and L(labelText) or labelText
+        local localizedLabel = isstring(labelText) and tostring(labelText) or labelText
         local section = lia.gui.info.CharacterInformation[localizedSectionName]
         if section then
             for _, field in ipairs(section.fields) do
@@ -2047,7 +1773,7 @@ end)
 hook.Add("AddBarField", "liaF1MenuAddBarField", function(sectionName, fieldName, labelText, minFunc, maxFunc, valueFunc, icon)
     if IsValid(lia.gui.info) then
         local localizedSectionName = resolveCharInfoSectionName(sectionName)
-        local localizedLabel = isstring(labelText) and L(labelText) or labelText
+        local localizedLabel = isstring(labelText) and tostring(labelText) or labelText
         local section = lia.gui.info.CharacterInformation[localizedSectionName]
         if section then
             for _, field in ipairs(section.fields) do
@@ -2079,9 +1805,9 @@ hook.Add("PlayerBindPress", "liaF1MenuPlayerBindPress", function(client, bind, p
 end)
 
 hook.Add("CreateMenuButtons", "liaF1MenuCreateMenuButtons", function(tabs)
-    tabs["@you"] = {
-        name = "@you",
-        icon = "icon16/user.png",
+    tabs["You"] = {
+        name = "You",
+        icon = Material("icon16/user.png", "smooth"),
         func = function(statusPanel)
             statusPanel.info = vgui.Create("liaCharInfo", statusPanel)
             statusPanel.info:Dock(FILL)
@@ -2091,9 +1817,9 @@ hook.Add("CreateMenuButtons", "liaF1MenuCreateMenuButtons", function(tabs)
         end
     }
 
-    tabs["@information"] = {
-        name = "@information",
-        icon = "icon16/information.png",
+    tabs["Information"] = {
+        name = "Information",
+        icon = Material("icon16/information.png", "smooth"),
         func = function(infoTabPanel)
             infoTabPanel:Clear()
             local frame = infoTabPanel:Add("DPanel")
@@ -2131,6 +1857,7 @@ hook.Add("CreateMenuButtons", "liaF1MenuCreateMenuButtons", function(tabs)
             for i, page in ipairs(pages) do
                 local index = i
                 local pageData = page
+                local pageIcon = pageData.icon and resolveIconMaterial(pageData.icon)
                 local tabButton = tabContainer:Add("DButton")
                 tabButton:SetText("")
                 tabButton.Paint = function(s, w, h)
@@ -2148,12 +1875,13 @@ hook.Add("CreateMenuButtons", "liaF1MenuCreateMenuButtons", function(tabs)
                     end
 
                     local color = active and textColor or hovered and Color(215, 229, 229) or Color(165, 188, 189)
-                    draw.SimpleText(string.upper(tostring(localizeMenuLabel(pageData.name))), "LiliaFont.18", w * 0.5, h * 0.5, color, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
+                    if pageIcon then drawIcon(pageIcon, 12, math.floor((h - 16) * 0.5), 16, color) end
+                    draw.SimpleText(string.upper(tostring(localizeMenuLabel(pageData.name))), "LiliaFont.18", pageIcon and w * 0.5 + 8 or w * 0.5, h * 0.5, color, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
                 end
 
                 tabButton.DoClick = function()
                     if activeTab == index then return end
-                    lia.websound.playButtonSound()
+                    lia.webcontent.playButtonSound()
                     if IsValid(tabPanels[activeTab]) then tabPanels[activeTab]:SetVisible(false) end
                     activeTab = index
                     tabPanels[index]:SetVisible(true)
@@ -2186,9 +1914,9 @@ hook.Add("CreateMenuButtons", "liaF1MenuCreateMenuButtons", function(tabs)
         end
     }
 
-    tabs["@settings"] = {
-        name = "@settings",
-        icon = "icon16/cog.png",
+    tabs["Settings"] = {
+        name = "Settings",
+        icon = Material("icon16/cog.png", "smooth"),
         func = function(settingsPanel)
             settingsPanel:Clear()
             local frame = settingsPanel:Add("EditablePanel")
@@ -2212,7 +1940,7 @@ hook.Add("CreateMenuButtons", "liaF1MenuCreateMenuButtons", function(tabs)
             header:SetTall(76)
             header.Paint = function()
                 local _, textColor = getThemeColors()
-                draw.SimpleText(L("settings"), "LiliaFont.30", 8, 4, textColor, TEXT_ALIGN_LEFT, TEXT_ALIGN_TOP)
+                draw.SimpleText("Settings", "LiliaFont.30", 8, 4, textColor, TEXT_ALIGN_LEFT, TEXT_ALIGN_TOP)
                 draw.SimpleText("Manage configuration options and preferences.", "LiliaFont.17", 8, 43, Color(155, 178, 179), TEXT_ALIGN_LEFT, TEXT_ALIGN_TOP)
             end
 
@@ -2222,7 +1950,7 @@ hook.Add("CreateMenuButtons", "liaF1MenuCreateMenuButtons", function(tabs)
                 empty.Paint = function(_, w, h)
                     local accent = getThemeColors()
                     drawPanel(0, 0, w, h, 8, Color(5, 18, 23, 220), Color(accent.r, accent.g, accent.b, 80))
-                    draw.SimpleText(L("noDesc"), "LiliaFont.20", w * 0.5, h * 0.5, Color(165, 187, 188), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
+                    draw.SimpleText("No Description", "LiliaFont.20", w * 0.5, h * 0.5, Color(165, 187, 188), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
                 end
                 return
             end
@@ -2277,7 +2005,7 @@ hook.Add("CreateMenuButtons", "liaF1MenuCreateMenuButtons", function(tabs)
 
                 tabButton.DoClick = function()
                     if activeTab == index then return end
-                    lia.websound.playButtonSound()
+                    lia.webcontent.playButtonSound()
                     if IsValid(tabPanels[activeTab]) then tabPanels[activeTab]:SetVisible(false) end
                     activeTab = index
                     if IsValid(tabPanels[index]) then
@@ -2327,8 +2055,8 @@ hook.Add("CreateMenuButtons", "liaF1MenuCreateMenuButtons", function(tabs)
     end
 
     if not table.IsEmpty(adminPages) then
-        tabs["@admin"] = {
-            name = "@admin",
+        tabs["Admin"] = {
+            name = "Admin",
             icon = "icon16/shield.png",
             func = function(adminPanel)
                 adminPanel:Clear()
@@ -2340,7 +2068,7 @@ hook.Add("CreateMenuButtons", "liaF1MenuCreateMenuButtons", function(tabs)
                 header:SetTall(76)
                 header.Paint = function()
                     local _, textColor = getThemeColors()
-                    local pageName = adminPanel._activeAdminPageName or L("admin")
+                    local pageName = adminPanel._activeAdminPageName or "Admin"
                     local pageDescription = adminPanel._activeAdminPageDescription or "Manage server administration tools and staff information."
                     draw.SimpleText(pageName, "LiliaFont.30", 8, 4, textColor, TEXT_ALIGN_LEFT, TEXT_ALIGN_TOP)
                     draw.SimpleText(pageDescription, "LiliaFont.17", 8, 43, Color(155, 178, 179), TEXT_ALIGN_LEFT, TEXT_ALIGN_TOP)
@@ -2365,8 +2093,8 @@ hook.Add("CreateMenuButtons", "liaF1MenuCreateMenuButtons", function(tabs)
                 end)
 
                 table.insert(pages, 1, {
-                    name = "onlineStaff",
-                    icon = "icon16/user.png",
+                    name = "Online Staff",
+                    icon = Material("icon16/group.png", "smooth"),
                     drawFunc = function(panel)
                         panel:Clear()
                         panel.originalStaffData = {}
@@ -2382,13 +2110,13 @@ hook.Add("CreateMenuButtons", "liaF1MenuCreateMenuButtons", function(tabs)
                             if staffInfo.isOnline ~= nil then return staffInfo.isOnline == true end
                             if staffInfo.online ~= nil then return staffInfo.online == true end
                             local characterName = tostring(staffInfo.characterName or "")
-                            return characterName ~= "" and characterName ~= tostring(L("unknown"))
+                            return characterName ~= "" and characterName ~= tostring("Unknown")
                         end
 
                         local function getStaffDisplayName(staffInfo)
-                            local steamName = tostring(staffInfo.name or L("unknown"))
+                            local steamName = tostring(staffInfo.name or "Unknown")
                             local characterName = tostring(staffInfo.characterName or "")
-                            if isStaffOnline(staffInfo) and characterName ~= "" and characterName ~= tostring(L("unknown")) then return characterName .. " - " .. steamName end
+                            if isStaffOnline(staffInfo) and characterName ~= "" and characterName ~= tostring("Unknown") then return characterName .. " - " .. steamName end
                             return steamName
                         end
 
@@ -2437,7 +2165,7 @@ hook.Add("CreateMenuButtons", "liaF1MenuCreateMenuButtons", function(tabs)
                         searchEntry:SetFont("LiliaFont.17")
                         searchEntry:SetTextColor(Color(225, 236, 236))
                         searchEntry:SetCursorColor(getThemeColors())
-                        searchEntry:SetPlaceholderText(L("searchStaff"))
+                        searchEntry:SetPlaceholderText("Search staff...")
                         searchEntry:SetPaintBackground(false)
                         searchEntry:SetPaintBackground(false)
                         searchEntry:SetPaintBorderEnabled(false)
@@ -2491,7 +2219,7 @@ hook.Add("CreateMenuButtons", "liaF1MenuCreateMenuButtons", function(tabs)
                             if not staffInfo then
                                 local empty = staffDetails:Add("DLabel")
                                 empty:Dock(FILL)
-                                empty:SetText(L("noStaffCurrentlyOnline"))
+                                empty:SetText("No staff currently online")
                                 empty:SetTextColor(Color(150, 170, 170))
                                 empty:SetFont("LiliaFont.20")
                                 empty:SetContentAlignment(5)
@@ -2500,10 +2228,10 @@ hook.Add("CreateMenuButtons", "liaF1MenuCreateMenuButtons", function(tabs)
 
                             panel.selectedStaffKey = getStaffKey(staffInfo)
                             local accent, textColor = getThemeColors()
-                            local steamName = tostring(staffInfo.name or L("unknown"))
+                            local steamName = tostring(staffInfo.name or "Unknown")
                             local displayName = getStaffDisplayName(staffInfo)
-                            local characterName = tostring(staffInfo.characterName or L("unknown"))
-                            local usergroup = tostring(staffInfo.usergroup or L("none"))
+                            local characterName = tostring(staffInfo.characterName or "Unknown")
+                            local usergroup = tostring(staffInfo.usergroup or "None")
                             local isOnDuty = staffInfo.isStaffOnDuty == true
                             local dutyText = isOnDuty and "ON DUTY" or "OFF DUTY"
                             local staffHeader = staffDetails:Add("DPanel")
@@ -2514,8 +2242,8 @@ hook.Add("CreateMenuButtons", "liaF1MenuCreateMenuButtons", function(tabs)
                                 drawPanel(0, 0, w, h, 6, Color(3, 16, 21, 185), Color(accent.r, accent.g, accent.b, 68))
                                 surface.SetDrawColor(accent.r, accent.g, accent.b, 235)
                                 surface.DrawRect(0, 0, 3, h)
-                                drawIcon(Material("icon16/user.png", "smooth"), 26, math.floor(h * 0.5) - 28, 56, color_white)
-                                local textX = 104
+                                drawIcon(Material("icon16/user.png", "smooth"), 46, math.floor(h * 0.5) - 8, 16, color_white)
+                                local textX = 86
                                 draw.SimpleText(displayName, "LiliaFont.25", textX, 24, textColor, TEXT_ALIGN_LEFT, TEXT_ALIGN_TOP)
                                 draw.SimpleText(characterName .. "  •  " .. usergroup, "LiliaFont.17", textX, 73, Color(185, 204, 204), TEXT_ALIGN_LEFT, TEXT_ALIGN_TOP)
                                 local badgeW = 120
@@ -2542,9 +2270,9 @@ hook.Add("CreateMenuButtons", "liaF1MenuCreateMenuButtons", function(tabs)
                             end
 
                             local generalRows = {{"Steam Name", steamName}, {"Usergroup", usergroup}}
-                            if isStaffOnline(staffInfo) and characterName ~= tostring(L("unknown")) then table.insert(generalRows, 2, {"Character", characterName}) end
+                            if isStaffOnline(staffInfo) and characterName ~= tostring("Unknown") then table.insert(generalRows, 2, {"Character", characterName}) end
                             addStaffDetailSection(detailCanvas, "GENERAL", generalRows)
-                            addStaffDetailSection(detailCanvas, "STATUS", {{"Connection", isStaffOnline(staffInfo) and "Online" or "Offline"}, {"Staff Duty", isOnDuty and L("yes") or L("no")}})
+                            addStaffDetailSection(detailCanvas, "STATUS", {{"Connection", isStaffOnline(staffInfo) and "Online" or "Offline"}, {"Staff Duty", isOnDuty and "Yes" or "No"}})
                             if IsValid(LocalPlayer()) and LocalPlayer():hasPrivilege("viewStaffManagement") then
                                 addStaffDetailSection(detailCanvas, "MODERATION", {{"Warnings Issued", tostring(staffInfo.warnings or 0)}, {"Tickets Claimed", tostring(staffInfo.tickets or 0)}})
                                 addStaffDetailSection(detailCanvas, "ACTIONS", {{"Kicks", tostring(staffInfo.kicks or 0)}, {"Kills", tostring(staffInfo.kills or 0)}, {"Respawns", tostring(staffInfo.respawns or 0)}, {"Blinds", tostring(staffInfo.blinds or 0)}, {"Mutes", tostring(staffInfo.mutes or 0)}, {"Jails", tostring(staffInfo.jails or 0)}, {"Strips", tostring(staffInfo.strips or 0)}})
@@ -2560,7 +2288,7 @@ hook.Add("CreateMenuButtons", "liaF1MenuCreateMenuButtons", function(tabs)
                             for _, staffInfo in ipairs(data) do
                                 local currentStaff = staffInfo
                                 local displayName = getStaffDisplayName(currentStaff)
-                                local usergroup = tostring(currentStaff.usergroup or L("none"))
+                                local usergroup = tostring(currentStaff.usergroup or "None")
                                 local isOnDuty = currentStaff.isStaffOnDuty == true
                                 local currentKey = getStaffKey(currentStaff)
                                 local button = staffCanvas:Add("DButton")
@@ -2579,7 +2307,7 @@ hook.Add("CreateMenuButtons", "liaF1MenuCreateMenuButtons", function(tabs)
                                         surface.DrawRect(0, 7, 3, h - 14)
                                     end
 
-                                    drawIcon(Material("icon16/user.png", "smooth"), 14, 18, 28, active and color_white or Color(175, 196, 196))
+                                    drawIcon(Material("icon16/user.png", "smooth"), 20, 24, 16, active and color_white or Color(175, 196, 196))
                                     draw.SimpleText(displayName, "LiliaFont.18", 54, 12, active and color_white or Color(220, 232, 232), TEXT_ALIGN_LEFT, TEXT_ALIGN_TOP)
                                     draw.SimpleText(usergroup, "LiliaFont.15", 54, 38, Color(185, 204, 204), TEXT_ALIGN_LEFT, TEXT_ALIGN_TOP)
                                     local statusColor = isOnDuty and currentAccent or Color(135, 156, 157)
@@ -2587,7 +2315,7 @@ hook.Add("CreateMenuButtons", "liaF1MenuCreateMenuButtons", function(tabs)
                                 end
 
                                 button.DoClick = function()
-                                    lia.websound.playButtonSound()
+                                    lia.webcontent.playButtonSound()
                                     panel.selectedStaffKey = currentKey
                                     buildStaffDetails(currentStaff)
                                 end
@@ -2600,7 +2328,7 @@ hook.Add("CreateMenuButtons", "liaF1MenuCreateMenuButtons", function(tabs)
                                 local empty = staffCanvas:Add("DLabel")
                                 empty:Dock(TOP)
                                 empty:SetTall(64)
-                                empty:SetText(L("noStaffCurrentlyOnline"))
+                                empty:SetText("No staff currently online")
                                 empty:SetTextColor(Color(145, 165, 166))
                                 empty:SetFont("LiliaFont.17")
                                 empty:SetContentAlignment(5)
@@ -2691,15 +2419,15 @@ hook.Add("CreateMenuButtons", "liaF1MenuCreateMenuButtons", function(tabs)
 
     local hasThemesPrivilege = IsValid(LocalPlayer()) and LocalPlayer():hasPrivilege("accessEditConfigurationMenu") or false
     if hasThemesPrivilege then
-        tabs["@themes"] = {
-            name = "@themes",
-            icon = "icon16/color_wheel.png",
+        tabs["Themes"] = {
+            name = "Themes",
+            icon = Material("icon16/color_wheel.png", "smooth"),
             func = function(themesPanel)
                 themesPanel:Clear()
                 local function getLocalizedThemeName(themeID)
                     local properCaseName = themeID:gsub("(%a)([%w]*)", function(first, rest) return first:upper() .. rest:lower() end)
                     local localizationKey = "theme" .. properCaseName:gsub(" ", ""):gsub("-", "")
-                    return L(localizationKey) or themeID
+                    return tostring(localizationKey) or themeID
                 end
 
                 local function prettify(name)
@@ -2957,7 +2685,7 @@ hook.Add("CreateMenuButtons", "liaF1MenuCreateMenuButtons", function(tabs)
                                 local outline = isSelected and Color(accent.r, accent.g, accent.b, 145) or Color(accent.r, accent.g, accent.b, 68)
                                 drawPanel(0, 0, w, h, 6, background, outline)
                                 if isSelected then
-                                    draw.SimpleText("✓", "LiliaFont.24", 24, h * 0.5, Color(accent.r, accent.g, accent.b, 255), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
+                                    drawIcon(Material("icon16/accept.png", "smooth"), 16, math.floor((h - 16) * 0.5), 16, accent)
                                 else
                                     surface.SetDrawColor(98, 126, 130, 180)
                                     surface.DrawOutlinedRect(16, h * 0.5 - 8, 16, 16, 1)
@@ -2987,10 +2715,10 @@ hook.Add("CreateMenuButtons", "liaF1MenuCreateMenuButtons", function(tabs)
 
                 applyButton.DoClick = function()
                     if not selectedTheme or selectedTheme == currentTheme then return end
-                    lia.websound.playButtonSound()
+                    lia.webcontent.playButtonSound()
                     net.Start("liaCfgSet")
                     net.WriteString("Theme")
-                    net.WriteString(L("theme"))
+                    net.WriteString("Theme")
                     net.WriteType(selectedTheme)
                     net.SendToServer()
                     currentTheme = selectedTheme

@@ -1,6 +1,6 @@
-﻿lia.config.add("CurrencyNotificationImage", "@currencyNotificationImage", "icon16/money.png", nil, {
-    desc = "@currencyNotificationImageDesc",
-    category = "core",
+﻿lia.config.add("CurrencyNotificationImage", "Currency Notification Image", "icon16/money.png", nil, {
+    desc = "The material path for the currency icon used in money-type notifications",
+    category = "Core",
     type = "string"
 })
 
@@ -178,7 +178,7 @@ function PANEL:Init()
     self:SetSize(400, 60)
     self:SetContentAlignment(5)
     self.text = self:Add("DLabel")
-    self.text:SetText(L("unassigned"))
+    self.text:SetText("Unassigned")
     self.text:SetExpensiveShadow(1, Color(0, 0, 0, 150))
     self.text:SetFont("LiliaFont.25")
     self.text:SetTextColor(color_white)

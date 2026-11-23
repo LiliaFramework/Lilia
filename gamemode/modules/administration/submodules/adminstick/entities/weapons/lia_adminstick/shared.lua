@@ -1,7 +1,7 @@
 ﻿SWEP.Author = "liliaplayer"
-SWEP.Contact = "@liliaplayer"
+SWEP.Contact = "liliaplayer"
 SWEP.PrintName = "Staff Stick"
-SWEP.Instructions = L("adminStickPurpose")
+SWEP.Instructions = "\nReload switches tool sections \nAdmin: Left click selects target, right click freezes player \nMap Configurer: Left click sets aim position, right click uses your position \nShift + Reload uses the active section's alternate action"
 SWEP.Category = "Lilia"
 SWEP.ViewModelFOV = 50
 SWEP.ViewModelFlip = false

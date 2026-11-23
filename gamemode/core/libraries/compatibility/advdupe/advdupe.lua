@@ -1,0 +1,37 @@
+local function CheckDuplicationScale(client, entities)
+    entities = entities or {}
+    for _, ent in pairs(entities) do
+        if ent.ModelScale and ent.ModelScale > 10 then
+            client:notifyError(string.format("A model within this duplication exceeds the size limit!"))
+            return false
+        end
+
+        ent.ModelScale = 1
+    end
+    return true
+end
+
+hook.Add("PlayerSpawnProp", "liaAdvDupe", function(client)
+    local w = client:GetActiveWeapon()
+    if IsValid(w) and w:GetClass() == "gmod_tool" then
+        local t = w:GetToolObject()
+        if t and t.Entities then return true end
+    end
+end)
+
+hook.Add("CanTool", "liaAdvDupe", function(client, _, tool)
+    if tool ~= "adv_duplicator" then return end
+    local weapon = client:GetActiveWeapon()
+    if not IsValid(weapon) then return end
+    local toolobj = weapon:GetToolObject()
+    if not toolobj or not toolobj.Entities then return end
+    for _, ent in pairs(toolobj.Entities) do
+        if ent.NoDuplicate then
+            client:notifyError(string.format("This entity cannot be duplicated using %s.", tool))
+            return false
+        end
+    end
+
+    if not CheckDuplicationScale(client, toolobj.Entities) then return false end
+end)
+

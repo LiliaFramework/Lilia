@@ -14,7 +14,7 @@ local function openAdminStickTarget(client, target)
 end
 
 local function getAdminStickHUDTitle(target)
-    if not IsValid(target) then return L("adminStick") end
+    if not IsValid(target) then return "Admin Stick" end
     if target:IsPlayer() then
         local character = target.getChar and target:getChar()
         return character and character:getName() or target:Nick()
@@ -29,7 +29,7 @@ local function getAdminStickHUDTitle(target)
         local name = target:GetName()
         if name and name ~= "" then return name end
     end
-    return target.PrintName or target:GetClass() or L("unknown")
+    return target.PrintName or target:GetClass() or "Unknown"
 end
 
 local function normalizeAdminStickHUDRows(information)
@@ -180,7 +180,14 @@ local function buildDebugHUDRows(client)
 end
 
 local function getPositionTypes()
-    return lia.util.featurePositionTypes or {}
+    local types = lia.util.featurePositionTypes or {}
+    local client = LocalPlayer()
+    local available = {}
+    for _, typeInfo in ipairs(types) do
+        local callback = lia.util.positionCallbacks and lia.util.positionCallbacks[typeInfo.id]
+        if not callback or not isfunction(callback.canAccess) or callback.canAccess(client) then available[#available + 1] = typeInfo end
+    end
+    return available
 end
 
 local function getPositionType()
@@ -219,7 +226,7 @@ local function openRemovalMenu(weapon)
     mapState.removalMenuOpen = true
     local frame = vgui.Create("DFrame")
     frame:SetSize(600, 400)
-    frame:SetTitle(L("removeThing", typeInfo.name or L("points")))
+    frame:SetTitle(string.format("Remove %s", typeInfo.name or "Points"))
     frame:Center()
     frame:MakePopup()
     function frame:OnClose()
@@ -232,7 +239,7 @@ local function openRemovalMenu(weapon)
     local clientPos = LocalPlayer():GetPos()
     if #mapState.cachedPositions == 0 then
         local label = vgui.Create("DLabel", scroll)
-        label:SetText(L("noPointsFoundForType"))
+        label:SetText("No points found for this type.")
         label:SetFont("LiliaFont.24")
         label:SetContentAlignment(5)
         label:Dock(FILL)
@@ -245,19 +252,19 @@ local function openRemovalMenu(weapon)
         row:Dock(TOP)
         row:DockMargin(0, 0, 0, 5)
         local label = vgui.Create("DLabel", row)
-        label:SetText(L("pointDistanceInfo", point.label or L("pointNumber", index), math.Round(clientPos:Distance(point.pos))))
+        label:SetText(string.format("%s - Distance: %s units", point.label or string.format("Point %s", index), math.Round(clientPos:Distance(point.pos))))
         label:SetFont("LiliaFont.20")
         label:Dock(LEFT)
         label:DockMargin(10, 0, 0, 0)
         label:SizeToContents()
         local button = vgui.Create("DButton", row)
-        button:SetText(L("remove"))
+        button:SetText("Remove")
         button:SetSize(80, 30)
         button:Dock(RIGHT)
         button:DockMargin(0, 15, 10, 15)
         button.DoClick = function()
             lia.util.removeFeaturePosition(point.pos, typeInfo.id)
-            LocalPlayer():notifySuccessLocalized("removedPoint", point.label or L("pointNumber", index))
+            LocalPlayer():notifySuccess(string.format("Successfully removed %s", point.label or string.format("Point %s", index)))
             frame:Close()
             refreshPositions(weapon, typeInfo.id)
         end
@@ -265,7 +272,7 @@ local function openRemovalMenu(weapon)
 end
 
 SWEP:RegisterMode("admin", {
-    name = function() return L("administrativeMode") end,
+    name = function() return "Administrative Mode" end,
     PrimaryAttack = function(_, client)
         if isSelfSelectHeld(client) then return openAdminStickTarget(client, client) end
         openAdminStickTarget(client, client:GetEyeTrace().Entity)
@@ -275,7 +282,7 @@ SWEP:RegisterMode("admin", {
         if IsValid(target) and target:IsPlayer() and target ~= client then
             lia.admin.execCommand(target:IsFrozen() and "unfreeze" or "freeze", target:IsBot() and target:Name() or target:SteamID())
         else
-            client:notifyErrorLocalized("cantFreezeTarget")
+            client:notifyError(string.format("You cannot freeze this!"))
         end
     end,
     Reload = function(_, client)
@@ -290,7 +297,7 @@ SWEP:RegisterMode("admin", {
 })
 
 SWEP:RegisterMode("map_configurer", {
-    name = function() return L("worldConfigurationMode") end,
+    name = function() return "World Configuration" end,
     CanUse = canUseMapConfigurer,
     PrimaryAttack = function(weapon, client)
         local typeInfo = getPositionType()
@@ -334,7 +341,7 @@ SWEP:RegisterMode("map_configurer", {
 })
 
 SWEP:RegisterMode("debug", {
-    name = function() return L("debugMode") end,
+    name = function() return "Debug Mode" end,
     CanUse = canUseDebugMode,
     PrimaryAttack = function(_, client)
         local trace = client:GetEyeTrace()
@@ -345,7 +352,7 @@ SWEP:RegisterMode("debug", {
 function SWEP:GetDebugHUDInfo()
     local client = LocalPlayer()
     if self:GetActiveMode() ~= "debug" or not canUseDebugMode(client) then return end
-    return L("debugMode"), buildDebugHUDRows(client)
+    return "Debug Mode", buildDebugHUDRows(client)
 end
 
 local function drawTopRightModeHUD(title, rows)
@@ -397,11 +404,11 @@ function SWEP:DrawHUD()
     end
 
     rows[#rows + 1] = {
-        label = L("adminStickHUDReload"),
-        value = L("adminStickInstructionSwitchMode"):gsub("^.-:%s*", "")
+        label = "Reload",
+        value = ("Reload: Switch tool section"):gsub("^.-:%s*", "")
     }
 
-    drawTopRightModeHUD(L("administrativeMode"), rows)
+    drawTopRightModeHUD("Administrative Mode", rows)
 end
 
 function SWEP:GetAdminStickHUDInfo()

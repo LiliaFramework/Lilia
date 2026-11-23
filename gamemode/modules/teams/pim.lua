@@ -20,9 +20,9 @@ local function canInviteToClass(client, target)
     return hook.Run("CanInviteToClass", client, target) == true
 end
 
-lia.playerinteract.addInteraction("inviteToFaction", {
+lia.playerinteract.addInteraction("Invite To Faction", {
     serverOnly = true,
-    category = "@factionManagement",
+    category = "Faction Management",
     shouldShow = canInviteToFaction,
     onRun = function(client, target)
         if not SERVER or not canInviteToFaction(client, target) then return end
@@ -38,19 +38,19 @@ lia.playerinteract.addInteraction("inviteToFaction", {
         end
 
         if not faction then
-            client:notifyErrorLocalized("invalidFaction")
+            client:notifyError(string.format("The specified faction is not valid."))
             return
         end
 
         if faction.uniqueID == "staff" then
-            client:notifyErrorLocalized("staffInviteBlocked")
+            client:notifyError(string.format("You cannot invite players to the staff faction through the interaction menu. Staff characters must be created through the menu system."))
             return
         end
 
-        target:requestBinaryQuestion("@joinFactionTitle", "@joinFactionPrompt", "@yes", "@no", function(choice)
+        target:requestBinaryQuestion("Join Faction", "Do you want to join this faction?", "Yes", "No", function(choice)
             if not IsValid(client) or not IsValid(target) then return end
             if choice ~= 0 then
-                client:notifyInfoLocalized("inviteDeclined")
+                client:notifyInfo(string.format("Invite declined."))
                 return
             end
 
@@ -66,16 +66,16 @@ lia.playerinteract.addInteraction("inviteToFaction", {
             hook.Run("OnTransferred", target)
             if faction.OnTransferred then faction:OnTransferred(target, oldFaction) end
             hook.Run("PlayerLoadout", target)
-            client:notifySuccessLocalized("transferSuccess", target:Name(), faction.name)
-            if client ~= target then target:notifyInfoLocalized("transferNotification", faction.name, client:Name()) end
+            client:notifySuccess(string.format("%s has been transferred to %s.", target:Name(), faction.name))
+            if client ~= target then target:notifyInfo(string.format("You have been transferred to %s by %s.", faction.name, client:Name())) end
             targetChar:takeFlags("Z")
         end)
     end
 })
 
-lia.playerinteract.addInteraction("inviteToClass", {
+lia.playerinteract.addInteraction("Invite To Class", {
     serverOnly = true,
-    category = "@factionManagement",
+    category = "Faction Management",
     shouldShow = canInviteToClass,
     onRun = function(client, target)
         if not SERVER or not canInviteToClass(client, target) then return end
@@ -84,14 +84,14 @@ lia.playerinteract.addInteraction("inviteToClass", {
         if not clientChar or not targetChar then return end
         local class = lia.class.list[clientChar:getClass()]
         if not class then
-            client:notifyErrorLocalized("invalidClass")
+            client:notifyError(string.format("The specified class is not valid."))
             return
         end
 
-        target:requestBinaryQuestion("@joinClass", "@joinClassPrompt", "@yes", "@no", function(choice)
+        target:requestBinaryQuestion("Join Class", "Do you want to join this class?", "Yes", "No", function(choice)
             if not IsValid(client) or not IsValid(target) then return end
             if choice ~= 0 then
-                client:notifyInfoLocalized("inviteDeclined")
+                client:notifyInfo(string.format("Invite declined."))
                 return
             end
 
@@ -105,8 +105,8 @@ lia.playerinteract.addInteraction("inviteToClass", {
             local oldClass = targetChar:getClass()
             targetChar:setClass(class.index)
             hook.Run("OnPlayerJoinClass", target, class.index, oldClass)
-            client:notifySuccessLocalized("transferSuccess", target:Name(), class.name)
-            if client ~= target then target:notifyInfoLocalized("transferNotification", class.name, client:Name()) end
+            client:notifySuccess(string.format("%s has been transferred to %s.", target:Name(), class.name))
+            if client ~= target then target:notifyInfo(string.format("You have been transferred to %s by %s.", class.name, client:Name())) end
         end)
     end
 })

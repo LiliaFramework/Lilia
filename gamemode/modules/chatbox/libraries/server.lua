@@ -80,7 +80,7 @@ end
 
 function MODULE:AddFilteredWord(word)
     word = normalizeFilteredWord(word)
-    if not word then return false, "invalid" end
+    if not word then return false, "Invalid word." end
     self.FilteredWords = buildNormalizedWordList(self:GetFilteredWords())
     if table.HasValue(self.FilteredWords, word) then return false, "exists" end
     self.FilteredWords[#self.FilteredWords + 1] = word
@@ -90,7 +90,7 @@ end
 
 function MODULE:RemoveFilteredWord(word)
     word = normalizeFilteredWord(word)
-    if not word then return false, "invalid" end
+    if not word then return false, "Invalid word." end
     self.FilteredWords = buildNormalizedWordList(self:GetFilteredWords())
     for index, existingWord in ipairs(self.FilteredWords) do
         if existingWord == word then

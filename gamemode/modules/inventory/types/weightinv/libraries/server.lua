@@ -1,4 +1,4 @@
-﻿function MODULE:HandleItemTransferRequest(client, itemID, x, y, invID)
+function MODULE:HandleItemTransferRequest(client, itemID, x, y, invID)
     local newInventory = lia.inventory.instances[invID]
     local item = lia.item.instances[itemID]
     if not item then return end
@@ -6,7 +6,7 @@
     if not oldInventory or not oldInventory.items[itemID] then return end
     local transferAllowed, transferReason = hook.Run("CanItemBeTransfered", item, oldInventory, newInventory, client)
     if transferAllowed == false then
-        client:notifyErrorLocalized(transferReason or "notNow")
+        client:notifyError(transferReason or "You are not allowed to do this right now.")
         return
     end
 
@@ -20,13 +20,13 @@
     local canAccessTransfer, accessReason = oldInventory:canAccess("transfer", context)
     if not newInventory then return hook.Run("ItemDraggedOutOfInventory", client, item) end
     if not canAccessTransfer then
-        if isstring(accessReason) then client:notifyErrorLocalized(accessReason) end
+        if isstring(accessReason) then client:notifyError(accessReason) end
         return
     end
 
     local canAccessTransferTo, accessReasonTo = newInventory:canAccess("transfer", context)
     if not canAccessTransferTo then
-        if isstring(accessReasonTo) then client:notifyErrorLocalized(accessReasonTo) end
+        if isstring(accessReasonTo) then client:notifyError(accessReasonTo) end
         return
     end
 
@@ -37,8 +37,7 @@
     local function fail(err)
         client.invTransferTransaction = nil
         if err then lia.error(err) end
-        if IsValid(client) then lia.log.add(client, "itemTransferFailed", item:getName(), oldInventory:getID(), newInventory and newInventory:getID() or 0) end
-        if IsValid(client) then client:notifyInfoLocalized("itemOnGround") end
+        if IsValid(client) then client:notifyInfo(string.format("Your item has been placed on the ground.")) end
         item:spawn(dropPos)
     end
     return oldInventory:removeItem(itemID, true):next(function() return newInventory:add(item) end):next(function(res)

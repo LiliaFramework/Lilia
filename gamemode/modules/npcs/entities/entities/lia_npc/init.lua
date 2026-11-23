@@ -1,0 +1,65 @@
+﻿function ENT:Initialize()
+    self:SetModel(self.Model)
+    self:SetUseType(SIMPLE_USE)
+    self:SetMoveType(MOVETYPE_VPHYSICS)
+    self:DrawShadow(true)
+    self:SetSolid(SOLID_OBB)
+    self:PhysicsInit(SOLID_OBB)
+    self:SetCollisionGroup(COLLISION_GROUP_WORLD)
+    local physObj = self:GetPhysicsObject()
+    if IsValid(physObj) then
+        physObj:EnableMotion(false)
+        physObj:Sleep()
+    end
+
+    if self.BodyGroups and istable(self.BodyGroups) then lia.util.applyBodygroups(self, self.BodyGroups) end
+    if self.skin then self:SetSkin(self.skin) end
+    if IsValid(self) then self:setAnim() end
+    self.uniqueID = self.uniqueID or ""
+    self:setNetVar("uniqueID", self.uniqueID)
+    if self.uniqueID == "" or not self.uniqueID then
+        self.NPCName = "Unconfigured NPC"
+    else
+        if SERVER then
+            local npcData = lia.dialog.getNPCData(self.uniqueID)
+            if npcData and npcData.PrintName then
+                self.NPCName = npcData.PrintName
+            else
+                self.NPCName = self.NPCName or "Unconfigured NPC"
+            end
+        else
+            self.NPCName = self.NPCName or "Unconfigured NPC"
+        end
+    end
+
+    self:setNetVar("NPCName", self.NPCName)
+    hook.Run("OnEntityCreated", self)
+end
+
+function ENT:OnTakeDamage()
+    return false
+end
+
+function ENT:Use(client)
+    local character = client:getChar()
+    if not character then return end
+    if self.uniqueID and self.uniqueID ~= "" then
+        lia.dialog.openDialog(client, self, self.uniqueID)
+        return
+    end
+
+    lia.dialog.syncToClients(client)
+    timer.Simple(0.1, function()
+        if not IsValid(client) or not IsValid(self) then return end
+        local npcOptions = lia.dialog.getCompatibleDialogOptions(self)
+        if not table.IsEmpty(npcOptions) then
+            client.npcEntity = self
+            net.Start("liaRequestNPCSelection")
+            net.WriteEntity(self)
+            net.WriteTable(npcOptions)
+            net.Send(client)
+        else
+            client:notifyError(string.format("No NPC types available! The server may still be loading modules. Please try again in a moment."))
+        end
+    end)
+end

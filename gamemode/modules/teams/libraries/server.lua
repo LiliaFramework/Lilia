@@ -1,4 +1,4 @@
-﻿local MODULE = MODULE
+local MODULE = MODULE
 function MODULE:OnPlayerJoinClass(client, class, oldClass)
     local info = lia.class.list[class]
     local info2 = lia.class.list[oldClass]
@@ -6,7 +6,7 @@ function MODULE:OnPlayerJoinClass(client, class, oldClass)
         if info.OnSet then info:OnSet(client) end
         if oldClass ~= class and info.OnTransferred then info:OnTransferred(client, oldClass) end
     else
-        lia.error(L("invalidClassError", tostring(class)))
+        lia.error(string.format("Invalid class '%s' provided for client.", tostring(class)))
     end
 
     if info2 and info2.OnLeave then info2:OnLeave(client) end
@@ -16,41 +16,6 @@ function MODULE:OnPlayerJoinClass(client, class, oldClass)
     self:UpdateNPCRelations(client)
 end
 
---[[
-    Hooks:
-        OnPlayerJoinClass(Player client, number class, number|nil oldClass)
-
-    Purpose:
-        Runs after a player is assigned to a class so modules can react to the new class and any transferred state.
-
-    Category:
-        Teams
-
-    Parameters:
-        client (Player)
-            The player joining the class.
-
-        class (number)
-            The class index the player has just joined.
-
-        oldClass (number|nil)
-            The previous class index when the player switched from another class.
-
-    Returns:
-        nil
-
-    Example Usage:
-        ```lua
-        hook.Add("OnPlayerJoinClass", "liaExampleOnPlayerJoinClass", function(client, class, oldClass)
-            if IsValid(client) then
-                print(client:Nick(), "joined class", class, "from", oldClass)
-            end
-        end)
-        ```
-
-    Realm:
-        Server
-]]
 function MODULE:OnTransferred(client)
     local char = client:getChar()
     if char then
@@ -88,7 +53,7 @@ end
 function MODULE:PlayerLoadedChar(client, character)
     self:EnsureFactionTracking(character, client, "loaded")
     if character:getData("factionKickWarn") then
-        client:notifyWarningLocalized("kickedFromFaction")
+        client:notifyWarning(string.format("You were kicked from your faction!"))
         hook.Run("OnTransferred", client)
         local faction = lia.faction.indices[client:Team()]
         if faction and faction.OnTransferred then faction:OnTransferred(client) end
@@ -269,7 +234,7 @@ end
 function MODULE:CanCharBeTransfered(character, faction)
     if faction.oneCharOnly then
         for _, otherCharacter in next, lia.char.getAll() do
-            if otherCharacter.steamID == character.steamID and faction.index == otherCharacter:getFaction() then return false, L("charAlreadyInFaction") end
+            if otherCharacter.steamID == character.steamID and faction.index == otherCharacter:getFaction() then return false, "This player already has another character in this faction!" end
         end
     end
 end
@@ -342,18 +307,18 @@ end
 
 function MODULE:CanPlayerUseChar(client, character)
     local faction = lia.faction.indices[character:getFaction()]
-    if faction and hook.Run("CheckFactionLimitReached", faction, character, client) then return false, L("limitFaction") end
+    if faction and hook.Run("CheckFactionLimitReached", faction, character, client) then return false, "This faction is full. Try again later." end
 end
 
 function MODULE:CanPlayerSwitchChar(client, currentCharacter, newCharacter)
     local faction = lia.faction.indices[newCharacter:getFaction()]
-    if faction and self:CheckFactionLimitReached(faction, newCharacter, client) then return false, L("limitFaction") end
+    if faction and self:CheckFactionLimitReached(faction, newCharacter, client) then return false, "This faction is full. Try again later." end
 end
 
 lia.command.add("speed", {
-    desc = "@speedCommandDesc",
+    desc = "Check your current movement speeds.",
     onRun = function(client)
-        client:notifyLocalized("speedCommandStatus", client:GetRunSpeed(), client:GetWalkSpeed())
+        client:notify(string.format("Current speeds - Run: %d, Walk: %d", client:GetRunSpeed(), client:GetWalkSpeed()))
         return ""
     end
 })
@@ -533,9 +498,9 @@ function MODULE:BuildFactionMembersPayload(client, factionUniqueID, callback)
 
     local gamemode = SCHEMA and SCHEMA.folder or engine.ActiveGamemode()
     local query = string.format([[
-        SELECT c.id, c.name, c.lastJoinTime, c.steamID, c.class, c.playtime
+        SELECT c.id, c.name, c.lastJoinTime, c.steamID, c.`class`, c.playtime
         FROM lia_characters AS c
-        WHERE c.faction = %s AND c.schema = %s
+        WHERE c.faction = %s AND c.`schema` = %s
         ORDER BY c.lastJoinTime DESC
     ]], lia.db.convertDataType(faction.uniqueID), lia.db.convertDataType(gamemode))
     lia.db.query(query, function(data)
@@ -560,17 +525,17 @@ function MODULE:BuildFactionMembersPayload(client, factionUniqueID, callback)
 
                 local ownerChar = IsValid(owner) and owner:getChar() or nil
                 if ownerChar and ownerChar:getID() == tonumber(charID) then
-                    lastOnlineText = L("onlineNow")
+                    lastOnlineText = "Online now"
                 else
-                    lastOnlineText = row.lastJoinTime or L("unknown")
+                    lastOnlineText = row.lastJoinTime or "Unknown"
                 end
 
                 local classIndex = tonumber(row.class) or 0
                 local classData = lia.class.list[classIndex]
                 members[#members + 1] = {
-                    name = row.name or L("unknown"),
+                    name = row.name or "Unknown",
                     lastOnline = lastOnlineText,
-                    lastActive = row.lastJoinTime or L("unknown"),
+                    lastActive = row.lastJoinTime or "Unknown",
                     charID = charID,
                     steamID = row.steamID,
                     class = classIndex,
@@ -610,9 +575,9 @@ function MODULE:BuildFactionMemberDetailsPayload(client, factionUniqueID, charID
 
     local gamemode = SCHEMA and SCHEMA.folder or engine.ActiveGamemode()
     local query = string.format([[
-        SELECT c.id, c.name, c.lastJoinTime, c.steamID, c.class, c.playtime
+        SELECT c.id, c.name, c.lastJoinTime, c.steamID, c.`class`, c.playtime
         FROM lia_characters AS c
-        WHERE c.id = %s AND c.faction = %s AND c.schema = %s
+        WHERE c.id = %s AND c.faction = %s AND c.`schema` = %s
         LIMIT 1
     ]], charID, lia.db.convertDataType(faction.uniqueID), lia.db.convertDataType(gamemode))
     lia.db.query(query, function(data)
@@ -632,7 +597,7 @@ function MODULE:BuildFactionMemberDetailsPayload(client, factionUniqueID, charID
             trackedKeys[#trackedKeys + 1] = "'" .. lia.db.escape(key) .. "'"
         end
 
-        lia.db.query(string.format("SELECT charID, key, value FROM lia_chardata WHERE charID = %d AND key IN (%s)", charID, table.concat(trackedKeys, ",")), function(extraRows)
+        lia.db.query(string.format("SELECT charID, `key`, `value` FROM lia_chardata WHERE charID = %d AND `key` IN (%s)", charID, table.concat(trackedKeys, ",")), function(extraRows)
             local charData = {}
             for _, extraRow in ipairs(extraRows or {}) do
                 charData[extraRow.key] = decodeTrackedFactionRow(extraRow.value)
@@ -659,18 +624,18 @@ function MODULE:BuildFactionMemberDetailsPayload(client, factionUniqueID, charID
             local joinDate = tonumber(joinDates[faction.uniqueID]) or nil
             local factionPlaytime = istable(charData.factionPlaytime) and charData.factionPlaytime or {}
             local playtimeInFaction = tonumber(factionPlaytime[faction.uniqueID]) or 0
-            local lastOnlineText = row.lastJoinTime or L("unknown")
+            local lastOnlineText = row.lastJoinTime or "Unknown"
             if ownerChar and ownerChar:getID() == charID then
-                lastOnlineText = L("onlineNow")
+                lastOnlineText = "Online now"
                 if ownerChar:getFaction() == faction.index and tonumber(ownerChar.liaFactionSessionStart or 0) > 0 then playtimeInFaction = playtimeInFaction + math.max(0, now - tonumber(ownerChar.liaFactionSessionStart)) end
             end
 
             local notesByFaction = istable(charData.factionNotes) and charData.factionNotes or {}
             local noteData = notesByFaction[faction.uniqueID]
             local member = {
-                name = row.name or L("unknown"),
+                name = row.name or "Unknown",
                 lastOnline = lastOnlineText,
-                lastActive = row.lastJoinTime or L("unknown"),
+                lastActive = row.lastJoinTime or "Unknown",
                 charID = charID,
                 steamID = row.steamID,
                 class = classIndex,

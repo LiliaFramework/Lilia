@@ -18,7 +18,7 @@ local function GetVoiceColor(voiceType)
 end
 
 local function GetVoiceIndicatorText(voiceType)
-    return L("youAre") .. " " .. L(voiceType or "talking")
+    return "You are" .. " " .. tostring(voiceType or "talking")
 end
 
 local function DrawGlassPanel(x, y, w, h, radius, background, outline)
@@ -71,15 +71,15 @@ end
 
 function PANEL:UpdateText()
     local voiceType = self.cachedVoiceType or "talking"
-    self.LabelName:SetText(self.name or L("unknown"))
-    self.LabelMode:SetText(L(voiceType))
+    self.LabelName:SetText(self.name or "Unknown")
+    self.LabelMode:SetText(tostring(voiceType))
     self.LabelMode:SetTextColor(GetVoiceColor(voiceType))
 end
 
 function PANEL:UpdateTooltip()
     if not IsValid(self.client) then return end
     local voiceType = self.cachedVoiceType or "talking"
-    local displayName = self.name or L("unknown")
+    local displayName = self.name or "Unknown"
     local voiceRanges = {
         whispering = lia.config.get("WhisperRange", 70),
         talking = lia.config.get("TalkRange", 280),
@@ -90,7 +90,7 @@ function PANEL:UpdateTooltip()
     lines[#lines + 1] = "<font=LiliaFont.16b>" .. displayName .. "</font>"
     lines[#lines + 1] = "<font=LiliaFont.16>" .. GetVoiceIndicatorText(voiceType) .. "</font>"
     local range = voiceRanges[voiceType]
-    if range then lines[#lines + 1] = "<font=LiliaFont.16>" .. L("voiceRange") .. ": " .. range .. " units</font>" end
+    if range then lines[#lines + 1] = "<font=LiliaFont.16>" .. "Voice Range(" .. "): " .. range .. " units</font>" end
     self:SetTooltip(table.concat(lines, "\n"))
 end
 

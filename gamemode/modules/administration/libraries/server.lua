@@ -1,4 +1,4 @@
-﻿local MODULE = MODULE
+local MODULE = MODULE
 function MODULE:PlayerLoadedChar(client, character)
     if not IsValid(client) or not character or not client:isStaffOnDuty() then return end
     local configuredFlags = lia.staffCharacterFlags or lia.data.get("staffCharacterFlags", {})
@@ -18,7 +18,7 @@ function MODULE:PlayerSay(client, text)
     if client:getLiliaData("liaMuted", false) then
         if (client.liaNextMutedTalkNotice or 0) <= CurTime() then
             client.liaNextMutedTalkNotice = CurTime() + 2
-            client:notifyWarningLocalized("mutedTryTalk")
+            client:notifyWarning(string.format("You are muted and cannot talk in chat."))
         end
         return ""
     end
@@ -26,7 +26,6 @@ end
 
 function MODULE:PlayerSpawn(client)
     if IsValid(client) and client:IsPlayer() then client:ConCommand("spawnmenu_reload") end
-    lia.log.add(client, "playerSpawn")
 end
 
 function MODULE:PlayerShouldPermaKill(client)
@@ -48,16 +47,14 @@ function GM:PlayerSpawnProp(client, model)
     local canSpawnBlacklistedProps = client:hasPrivilege("canSpawnBlacklistedProps")
     lia.debug("[Permissions]", "Permission Check for hook GM:PlayerSpawnProp blacklisted prop", "modelBlacklisted=", tostring(modelBlacklisted), "hasPrivilege(canSpawnBlacklistedProps)=", tostring(canSpawnBlacklistedProps), "finalResult=", tostring(not modelBlacklisted or canSpawnBlacklistedProps))
     if modelBlacklisted and not canSpawnBlacklistedProps then
-        lia.log.add(client, "spawnDenied", L("prop"), model)
-        client:notifyErrorLocalized("blacklistedProp")
+        client:notifyError(string.format("Blacklisted Prop!"))
         return false
     end
 
     local canSpawn = client:isStaffOnDuty() or client:hasPrivilege("canSpawnProps") or client:hasFlags("e")
     lia.debug("[Permissions]", "Permission Check for hook GM:PlayerSpawnProp", "isStaffOnDuty=", tostring(client:isStaffOnDuty()), "hasPrivilege(canSpawnProps)=", tostring(client:hasPrivilege("canSpawnProps")), "hasFlags(e)=", tostring(client:hasFlags("e")), "finalResult=", tostring(canSpawn))
     if not canSpawn then
-        lia.log.add(client, "spawnDenied", L("prop"), model)
-        client:notifyErrorLocalized("noSpawnPropsPerm", model)
+        client:notifyError(string.format("You do not have permission to spawn props (%s).", model))
     end
     return canSpawn
 end
@@ -87,8 +84,7 @@ local propertyPrivilegeEquivalents = {
 function GM:CanProperty(client, property, entity)
     local privilegeName = propertyPrivilegeEquivalents[property] or "property_" .. property
     if restrictedProperties[property] then
-        lia.log.add(client, "permissionDenied", L("useProperty", property))
-        client:notifyErrorLocalized("disabledFeature")
+        client:notifyError(string.format("This is disabled to avoid issues with Lilia's Core Features"))
         return false
     end
 
@@ -96,8 +92,7 @@ function GM:CanProperty(client, property, entity)
         local canPropertyWorldEntities = client:hasPrivilege("canPropertyWorldEntities")
         lia.debug("[Permissions]", "Permission Check for hook GM:CanProperty world entity", "property=", tostring(property), "hasPrivilege(canPropertyWorldEntities)=", tostring(canPropertyWorldEntities), "finalResult=", tostring(canPropertyWorldEntities))
         if canPropertyWorldEntities then return true end
-        lia.log.add(client, "permissionDenied", L("modifyWorldProperty", property))
-        client:notifyErrorLocalized("noModifyWorldEntities")
+        client:notifyError(string.format("You do not have permission to modify world entities."))
         return false
     end
 
@@ -107,8 +102,7 @@ function GM:CanProperty(client, property, entity)
     local permission = hasPropertyPrivilege or isStaffOnDuty
     lia.debug("[Permissions]", "Permission Check for hook GM:CanProperty", "property=", tostring(property), "privilegeName=", tostring(privilegeName), "hasPrivilege(dynamicPropertyPrivilege)=", tostring(hasPropertyPrivilege), "isStaffOnDuty=", tostring(isStaffOnDuty), "finalResult=", tostring(permission))
     if permission then return true end
-    lia.log.add(client, "permissionDenied", L("modifyProperty", property))
-    client:notifyErrorLocalized("noModifyProperty")
+    client:notifyError(string.format("You do not have permission to modify this property."))
     return false
 end
 
@@ -124,16 +118,14 @@ function GM:PlayerSpawnVehicle(client, model)
     local canSpawnBlacklistedCars = client:hasPrivilege("canSpawnBlacklistedCars")
     lia.debug("[Permissions]", "Permission Check for hook GM:PlayerSpawnVehicle blacklisted car", "modelBlacklisted=", tostring(isBlacklistedModel), "hasPrivilege(canSpawnBlacklistedCars)=", tostring(canSpawnBlacklistedCars), "finalResult=", tostring(not isBlacklistedModel or canSpawnBlacklistedCars))
     if model and isBlacklistedModel and not canSpawnBlacklistedCars then
-        lia.log.add(client, "spawnDenied", L("vehicle"), model)
-        client:notifyErrorLocalized("blacklistedVehicle")
+        client:notifyError(string.format("Blacklisted Vehicle!"))
         return false
     end
 
     local canSpawn = client:isStaffOnDuty() or client:hasPrivilege("canSpawnCars") or client:hasFlags("C")
     lia.debug("[Permissions]", "Permission Check for hook GM:PlayerSpawnVehicle", "isStaffOnDuty=", tostring(client:isStaffOnDuty()), "hasPrivilege(canSpawnCars)=", tostring(client:hasPrivilege("canSpawnCars")), "hasFlags(C)=", tostring(client:hasFlags("C")), "finalResult=", tostring(canSpawn))
     if not canSpawn then
-        lia.log.add(client, "spawnDenied", L("vehicle"), model)
-        client:notifyErrorLocalized("noSpawnVehicles", model)
+        client:notifyError(string.format("You do not have permission to spawn vehicles (%s).", model))
     end
     return canSpawn
 end
@@ -142,8 +134,7 @@ function GM:PlayerSpawnEffect(client)
     local canSpawn = client:isStaffOnDuty() or client:hasPrivilege("canSpawnEffects") or client:hasFlags("L")
     lia.debug("[Permissions]", "Permission Check for hook GM:PlayerSpawnEffect", "isStaffOnDuty=", tostring(client:isStaffOnDuty()), "hasPrivilege(canSpawnEffects)=", tostring(client:hasPrivilege("canSpawnEffects")), "hasFlags(L)=", tostring(client:hasFlags("L")), "finalResult=", tostring(canSpawn))
     if not canSpawn then
-        lia.log.add(client, "spawnDenied", L("effect"))
-        client:notifyErrorLocalized("noSpawnEffects")
+        client:notifyError(string.format("You do not have permission to spawn effects."))
     end
     return canSpawn
 end
@@ -152,8 +143,7 @@ function GM:PlayerSpawnNPC(client)
     local canSpawn = client:isStaffOnDuty() or client:hasPrivilege("canSpawnNPCs") or client:hasFlags("n")
     lia.debug("[Permissions]", "Permission Check for hook GM:PlayerSpawnNPC", "isStaffOnDuty=", tostring(client:isStaffOnDuty()), "hasPrivilege(canSpawnNPCs)=", tostring(client:hasPrivilege("canSpawnNPCs")), "hasFlags(n)=", tostring(client:hasFlags("n")), "finalResult=", tostring(canSpawn))
     if not canSpawn then
-        lia.log.add(client, "spawnDenied", L("npc"))
-        client:notifyErrorLocalized("noSpawnNPCs")
+        client:notifyError(string.format("You do not have permission to spawn NPCs."))
     end
     return canSpawn
 end
@@ -162,8 +152,7 @@ function GM:PlayerSpawnRagdoll(client)
     local canSpawn = client:isStaffOnDuty() or client:hasPrivilege("canSpawnRagdolls") or client:hasFlags("r")
     lia.debug("[Permissions]", "Permission Check for hook GM:PlayerSpawnRagdoll", "isStaffOnDuty=", tostring(client:isStaffOnDuty()), "hasPrivilege(canSpawnRagdolls)=", tostring(client:hasPrivilege("canSpawnRagdolls")), "hasFlags(r)=", tostring(client:hasFlags("r")), "finalResult=", tostring(canSpawn))
     if not canSpawn then
-        lia.log.add(client, "spawnDenied", L("ragdoll"))
-        client:notifyErrorLocalized("noSpawnRagdolls")
+        client:notifyError(string.format("You do not have permission to spawn ragdolls."))
     end
     return canSpawn
 end
@@ -172,8 +161,7 @@ function GM:PlayerSpawnSENT(client, class)
     local canSpawn = client:isStaffOnDuty() or client:hasPrivilege("canSpawnSENTs") or client:hasFlags("E")
     lia.debug("[Permissions]", "Permission Check for hook GM:PlayerSpawnSENT", "isStaffOnDuty=", tostring(client:isStaffOnDuty()), "hasPrivilege(canSpawnSENTs)=", tostring(client:hasPrivilege("canSpawnSENTs")), "hasFlags(E)=", tostring(client:hasFlags("E")), "finalResult=", tostring(canSpawn))
     if not canSpawn then
-        lia.log.add(client, "spawnDenied", L("sent"), tostring(class))
-        client:notifyErrorLocalized("noSpawnSents", tostring(class))
+        client:notifyError(string.format("You do not have permission to spawn SENTs (%s).", tostring(class)))
     end
     return canSpawn
 end
@@ -182,8 +170,7 @@ function GM:PlayerSpawnSWEP(client, weapon)
     local canSpawn = client:isStaffOnDuty() or client:hasPrivilege("canSpawnSWEPs") or client:hasFlags("z")
     lia.debug("[Permissions]", "Permission Check for hook GM:PlayerSpawnSWEP", "isStaffOnDuty=", tostring(client:isStaffOnDuty()), "hasPrivilege(canSpawnSWEPs)=", tostring(client:hasPrivilege("canSpawnSWEPs")), "hasFlags(z)=", tostring(client:hasFlags("z")), "finalResult=", tostring(canSpawn))
     if not canSpawn then
-        lia.log.add(client, "spawnDenied", L("swep"), tostring(weapon))
-        client:notifyErrorLocalized("noSpawnSweps", tostring(weapon))
+        client:notifyError(string.format("You do not have permission to spawn SWEPs (%s).", tostring(weapon)))
     end
     return canSpawn
 end
@@ -192,8 +179,7 @@ function GM:PlayerGiveSWEP(client)
     local canGive = client:isStaffOnDuty() or client:hasPrivilege("canSpawnSWEPs") or client:hasFlags("W")
     lia.debug("[Permissions]", "Permission Check for hook GM:PlayerGiveSWEP", "isStaffOnDuty=", tostring(client:isStaffOnDuty()), "hasPrivilege(canSpawnSWEPs)=", tostring(client:hasPrivilege("canSpawnSWEPs")), "hasFlags(W)=", tostring(client:hasFlags("W")), "finalResult=", tostring(canGive))
     if not canGive then
-        lia.log.add(client, "permissionDenied", L("giveSwep"))
-        client:notifyErrorLocalized("noGiveSweps")
+        client:notifyError(string.format("You do not have permission to give SWEPs."))
     end
     return canGive
 end
@@ -202,8 +188,7 @@ function GM:OnPhysgunReload(_, client)
     local canReload = client:hasPrivilege("canPhysgunReload")
     lia.debug("[Permissions]", "Permission Check for hook GM:OnPhysgunReload", "hasPrivilege(canPhysgunReload)=", tostring(canReload), "finalResult=", tostring(canReload))
     if not canReload then
-        lia.log.add(client, "permissionDenied", L("physgunReload"))
-        client:notifyErrorLocalized("noPhysgunReload")
+        client:notifyError(string.format("You do not have permission to reload the physgun."))
     end
     return canReload
 end
@@ -240,12 +225,12 @@ function GM:CanPlayerUseChar(client)
     local isLocked = GetGlobalBool("characterSwapLock", false)
     local canBypass = client:hasPrivilege("canBypassCharacterLock")
     lia.debug("[Permissions]", "Permission Check for hook GM:CanPlayerUseChar", "characterSwapLock=", tostring(isLocked), "hasPrivilege(canBypassCharacterLock)=", tostring(canBypass), "finalResult=", tostring(not isLocked or canBypass))
-    if isLocked and not canBypass then return false, L("serverEventCharLock") end
+    if isLocked and not canBypass then return false, "Currently the server is in an event and you're unable to change characters." end
 end
 
 hook.Add("PhysgunPickup", "Lilia.PhysgunPickup", function(client, entity)
     if client:InVehicle() then
-        client:notifyErrorLocalized("cmdVehicle")
+        client:notifyError(string.format("You cannot use this as you are in a vehicle!"))
         return false
     end
 
@@ -256,8 +241,7 @@ hook.Add("PhysgunPickup", "Lilia.PhysgunPickup", function(client, entity)
         local hasRestrictedEntitiesPrivilege = client:hasPrivilege("physgunPickupRestrictedEntities")
         lia.debug("[Permissions]", "Permission Check for hook PhysgunPickup restricted entity override", "hasPrivilege(physgunPickupRestrictedEntities)=", tostring(hasRestrictedEntitiesPrivilege), "finalResult=", tostring(hasRestrictedEntitiesPrivilege))
         if not hasRestrictedEntitiesPrivilege then
-            lia.log.add(client, "permissionDenied", L("physgunRestrictedEntity"))
-            client:notifyErrorLocalized("noPickupRestricted")
+            client:notifyError(string.format("You do not have permission to pick up restricted entities with the physgun."))
             return false
         end
         return true
@@ -270,8 +254,7 @@ hook.Add("PhysgunPickup", "Lilia.PhysgunPickup", function(client, entity)
             local hasVehiclePrivilege = client:hasPrivilege("physgunPickupVehicles")
             lia.debug("[Permissions]", "Permission Check for hook PhysgunPickup vehicle", "hasPrivilege(physgunPickupVehicles)=", tostring(hasVehiclePrivilege), "finalResult=", tostring(hasVehiclePrivilege))
             if not hasVehiclePrivilege then
-                lia.log.add(client, "permissionDenied", L("physgunVehicle"))
-                client:notifyErrorLocalized("noPickupVehicles")
+                client:notifyError(string.format("You do not have permission to pick up vehicles with the physgun."))
                 return false
             end
             return true
@@ -280,8 +263,7 @@ hook.Add("PhysgunPickup", "Lilia.PhysgunPickup", function(client, entity)
             local canGrabPlayers = client:hasPrivilege("canGrabPlayers")
             lia.debug("[Permissions]", "Permission Check for hook PhysgunPickup player", "targetHasPrivilege(cantBeGrabbedPhysgun)=", tostring(targetProtected), "hasPrivilege(canGrabPlayers)=", tostring(canGrabPlayers), "finalResult=", tostring(not targetProtected and canGrabPlayers))
             if targetProtected or not canGrabPlayers then
-                lia.log.add(client, "permissionDenied", L("physgunPlayer"))
-                client:notifyErrorLocalized("noPickupPlayer")
+                client:notifyError(string.format("You do not have permission to pick up this player with the physgun."))
                 return false
             end
             return true
@@ -289,8 +271,7 @@ hook.Add("PhysgunPickup", "Lilia.PhysgunPickup", function(client, entity)
             local canGrabWorldProps = client:hasPrivilege("canGrabWorldProps")
             lia.debug("[Permissions]", "Permission Check for hook PhysgunPickup world", "hasPrivilege(canGrabWorldProps)=", tostring(canGrabWorldProps), "finalResult=", tostring(canGrabWorldProps))
             if not canGrabWorldProps then
-                lia.log.add(client, "permissionDenied", L("physgunWorldProp"))
-                client:notifyErrorLocalized("noPickupWorld")
+                client:notifyError(string.format("You do not have permission to pick up world props with the physgun."))
                 return false
             end
             return true
@@ -298,8 +279,7 @@ hook.Add("PhysgunPickup", "Lilia.PhysgunPickup", function(client, entity)
         return true
     end
 
-    lia.log.add(client, "permissionDenied", L("physgunEntity"))
-    client:notifyErrorLocalized("noPickupEntity")
+    client:notifyError(string.format("You do not have permission to pick up this entity with the physgun."))
     return false
 end)
 
@@ -325,7 +305,7 @@ end
 
 hook.Add("CanTool", "Lilia.CanTool", function(client, trace, tool)
     if client:InVehicle() then
-        client:notifyErrorLocalized("cmdVehicle")
+        client:notifyError(string.format("You cannot use this as you are in a vehicle!"))
         return false
     end
 
@@ -333,8 +313,7 @@ hook.Add("CanTool", "Lilia.CanTool", function(client, trace, tool)
         entities = entities or {}
         for _, v in pairs(entities) do
             if v.ModelScale and v.ModelScale > 10 then
-                ply:notifyErrorLocalized("duplicationSizeLimit")
-                lia.log.add(ply, "dupeCrashAttempt")
+                ply:notifyError(string.format("A model within this duplication exceeds the size limit!"))
                 return false
             end
 
@@ -353,7 +332,7 @@ hook.Add("CanTool", "Lilia.CanTool", function(client, trace, tool)
     if not permitted then
         local reasons = {}
         if tier == "disabled" then
-            if not hasUseDisallowedTools then table.insert(reasons, L("privilege") .. " '" .. L("useDisallowedTools") .. "'") end
+            if not hasUseDisallowedTools then table.insert(reasons, "Privilege" .. " '" .. "Use Disallowed Tools" .. "'") end
             if not hasToolgunFlag then table.insert(reasons, "flag 't'") end
         elseif tier == "staff" then
             if not client:isStaffOnDuty() then table.insert(reasons, "on-duty staff") end
@@ -362,8 +341,7 @@ hook.Add("CanTool", "Lilia.CanTool", function(client, trace, tool)
             table.insert(reasons, "flag 't'")
         end
 
-        lia.log.add(client, "toolDenied", tool)
-        client:notifyErrorLocalized(tier == "disabled" and "toolNoPermission" or "toolNotAllowed", tool, table.concat(reasons, ", "))
+        client:notifyError(string.format(tier == "disabled" and "You do not have permission to access tool '%s'. Missing: %s" or "You are not allowed to use the %s tool.", tool, table.concat(reasons, ", ")))
         return false
     end
 
@@ -375,8 +353,7 @@ hook.Add("CanTool", "Lilia.CanTool", function(client, trace, tool)
                 local canRemoveBlockedEntities = client:hasPrivilege("canRemoveBlockedEntities")
                 lia.debug("[Permissions]", "Permission Check for hook CanTool remover blocked entity", "hasPrivilege(canRemoveBlockedEntities)=", tostring(canRemoveBlockedEntities), "finalResult=", tostring(canRemoveBlockedEntities))
                 if not canRemoveBlockedEntities then
-                    lia.log.add(client, "permissionDenied", L("removeBlockedEntity"))
-                    client:notifyErrorLocalized("noRemoveBlockedEntities")
+                    client:notifyError(string.format("You do not have permission to remove blocked entities."))
                     return false
                 end
                 return true
@@ -384,8 +361,7 @@ hook.Add("CanTool", "Lilia.CanTool", function(client, trace, tool)
                 local canRemoveWorldEntities = client:hasPrivilege("canRemoveWorldEntities")
                 lia.debug("[Permissions]", "Permission Check for hook CanTool remover world entity", "hasPrivilege(canRemoveWorldEntities)=", tostring(canRemoveWorldEntities), "finalResult=", tostring(canRemoveWorldEntities))
                 if not canRemoveWorldEntities then
-                    lia.log.add(client, "permissionDenied", L("removeWorldEntity"))
-                    client:notifyErrorLocalized("noRemoveWorldEntities")
+                    client:notifyError(string.format("You do not have permission to remove world entities."))
                     return false
                 end
                 return true
@@ -394,20 +370,17 @@ hook.Add("CanTool", "Lilia.CanTool", function(client, trace, tool)
         end
 
         if (tool == "permaall" or tool == "blacklistandremove") and hook.Run("CanPersistEntity", entity) ~= false and (string.StartWith(entClass, "lia_") or entity.IsPersistent or entity:CreatedByMap()) then
-            lia.log.add(client, "toolDenied", tool)
-            client:notifyErrorLocalized("toolCantUseEntity", tool)
+            client:notifyError(string.format("You cannot use %s on this entity.", tool))
             return false
         end
 
         if (tool == "duplicator" or tool == "blacklistandremove") and entity.NoDuplicate then
-            lia.log.add(client, "toolDenied", tool)
-            client:notifyErrorLocalized("cannotDuplicateEntity", tool)
+            client:notifyError(string.format("This entity cannot be duplicated using %s.", tool))
             return false
         end
 
         if tool == "weld" and entClass == "sent_ball" then
-            lia.log.add(client, "toolDenied", tool)
-            client:notifyErrorLocalized("cannotWeldBall")
+            client:notifyError(string.format("You cannot weld this entity with the weld tool."))
             return false
         end
     end
@@ -418,7 +391,7 @@ end)
 
 hook.Add("GravGunPickupAllowed", "Lilia.GravGunPickupAllowed", function(client)
     if client:InVehicle() then
-        client:notifyErrorLocalized("cmdVehicle")
+        client:notifyError(string.format("You cannot use this as you are in a vehicle!"))
         return false
     end
 end)
@@ -429,8 +402,7 @@ hook.Add("PlayerNoClip", "Lilia.PlayerNoClip", function(ply, enabled)
     local permission = isStaffOnDuty or hasNoClipOutsideStaff
     lia.debug("[Permissions]", "Permission Check for hook PlayerNoClip", "isStaffOnDuty=", tostring(isStaffOnDuty), "hasPrivilege(noClipOutsideStaff)=", tostring(hasNoClipOutsideStaff), "finalResult=", tostring(permission))
     if not permission then
-        lia.log.add(ply, "permissionDenied", L("noclip"))
-        ply:notifyErrorLocalized("noNoclip")
+        ply:notifyError(string.format("You do not have permission to noclip."))
         return false
     end
 
@@ -449,38 +421,4 @@ hook.Add("PlayerNoClip", "Lilia.PlayerNoClip", function(ply, enabled)
 
     hook.Run("OnPlayerObserve", ply, enabled)
     return true
-end)
-
-local function resetTracker()
-    lia.net.profiler.sessionTracker.startedAt = os.time()
-    lia.net.profiler.sessionTracker.totalCalls = 0
-    lia.net.profiler.sessionTracker.totalBytes = 0
-    lia.net.profiler.sessionTracker.playerEntryCount = 0
-    lia.net.profiler.sessionTracker.droppedPlayerEntries = 0
-    lia.net.profiler.sessionTracker.uniquePlayers = {}
-    lia.net.profiler.sessionTracker.directionTotals = {
-        ["C->S"] = {
-            calls = 0,
-            bytes = 0
-        },
-        ["S->C"] = {
-            calls = 0,
-            bytes = 0
-        }
-    }
-
-    lia.net.profiler.sessionTracker.messages = {}
-    lia.net.profiler.sessionTracker.players = {}
-end
-
-resetTracker()
-hook.Add("PlayerDisconnected", "liaAdministrationNetProfilerPlayerState", function(client)
-    local steamID64 = IsValid(client) and client:SteamID64() or nil
-    local playerData = steamID64 and lia.net.profiler.sessionTracker.players and lia.net.profiler.sessionTracker.players[steamID64] or nil
-    if playerData then
-        playerData.online = false
-        for _, entry in pairs(playerData.messages or {}) do
-            entry.online = false
-        end
-    end
 end)

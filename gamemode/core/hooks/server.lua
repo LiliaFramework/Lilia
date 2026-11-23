@@ -1,1582 +1,7 @@
-﻿--[[
-    Hooks:
-        OnPickupMoney(Player client, Entity moneyEntity)
-
-    Purpose:
-        Runs after a player successfully picks up a money entity so server systems can notify or log the transaction.
-
-    Category:
-        Economy
-
-    Parameters:
-        client (Player)
-            The player who picked up the money.
-
-        moneyEntity (Entity)
-            The money entity that was consumed.
-
-    Example Usage:
-        ```lua
-        hook.Add("OnPickupMoney", "liaExampleServerPickupMoney", function(client, moneyEntity)
-            print(client:Nick(), moneyEntity:getAmount())
-        end)
-        ```
-
-    Returns:
-        nil
-
-    Realm:
-        Server
-]]
---[[
-    Hooks:
-        PostPlayerInitialSpawn(client)
-
-    Purpose:
-        Runs after a player initially spawns so PAC part state can be synchronized to that client.
-
-    Category:
-        Character
-
-    Parameters:
-        client (Player)
-            The player whose PAC part state is being synchronized.
-
-    Returns:
-        nil
-
-    Example Usage:
-        ```lua
-        hook.Add("PostPlayerInitialSpawn", "liaExamplePostPlayerInitialSpawnPAC", function(client)
-            if client:hasPrivilege("canUsePAC3") then
-                client:ChatPrint("PAC sync queued")
-            end
-        end)
-        ```
-
-    Realm:
-        Server
-]]
---[[
-    Hooks:
-        CanItemBeTransfered(Item item, Inventory curInv, Inventory inventory, Player|nil client)
-
-    Purpose:
-        Determines whether an item transfer between inventories should be allowed before the move is completed.
-
-    Category:
-        Inventory
-
-    Parameters:
-        item (Item)
-            The item being transferred.
-
-        curInv (Inventory)
-            The source inventory that currently owns the item.
-
-        inventory (Inventory)
-            The destination inventory for the transfer.
-
-        client (Player|nil)
-            The player initiating the transfer, when available.
-
-    Example Usage:
-        ```lua
-        hook.Add("CanItemBeTransfered", "liaExampleTransferCheck", function(item, curInv, inventory, client)
-            if item and item.lockedToInventory then return false end
-        end)
-        ```
-
-    Returns:
-        boolean|nil
-            Return false to block the transfer. Returning nil allows the default behavior to continue.
-
-    Realm:
-        Server
-]]
---[[
-    Hooks:
-        PreScaleDamage(number hitgroup, CTakeDamageInfo dmgInfo, number damageScale)
-
-    Purpose:
-        Runs immediately before scaled hitgroup damage is applied so modules can adjust the damage info or scale.
-
-    Category:
-        Combat
-
-    Parameters:
-        hitgroup (number)
-            The hitgroup being processed.
-
-        dmgInfo (CTakeDamageInfo)
-            The mutable damage information object.
-
-        damageScale (number)
-            The scale that is about to be applied.
-
-    Example Usage:
-        ```lua
-        hook.Add("PreScaleDamage", "liaExamplePreScaleDamage", function(hitgroup, dmgInfo, damageScale)
-            if hitgroup == HITGROUP_HEAD then dmgInfo:ScaleDamage(0.9) end
-        end)
-        ```
-
-    Returns:
-        nil
-
-    Realm:
-        Server
-]]
---[[
-    Hooks:
-        PostPlayerLoadout(Player client)
-
-    Purpose:
-        Runs after a player's loadout finishes so modules can perform final setup work.
-
-    Category:
-        Character
-
-    Parameters:
-        client (Player)
-            The player whose loadout just finished.
-
-    Example Usage:
-        ```lua
-        hook.Add("PostPlayerLoadout", "liaExampleCorePostLoadout", function(client)
-            print(client:Nick())
-        end)
-        ```
-
-    Returns:
-        nil
-
-    Realm:
-        Server
-]]
---[[
-    Hooks:
-        LoadData()
-
-    Purpose:
-        Runs when persistent gamemode data should be loaded from storage.
-
-    Category:
-        Persistence
-
-    Parameters:
-        None
-
-    Example Usage:
-        ```lua
-        hook.Add("LoadData", "liaExampleCoreLoadData", function()
-            print("Loading saved world data")
-        end)
-        ```
-
-    Returns:
-        nil
-
-    Realm:
-        Server
-]]
---[[
-    Hooks:
-        PostLoadData()
-
-    Purpose:
-        Runs after persistent gamemode data finishes loading so modules can perform post-load setup.
-
-    Category:
-        Persistence
-
-    Parameters:
-        None
-
-    Example Usage:
-        ```lua
-        hook.Add("PostLoadData", "liaExampleCorePostLoadData", function()
-            print("Finished loading saved world data")
-        end)
-        ```
-
-    Returns:
-        nil
-
-    Realm:
-        Server
-]]
---[[
-    Hooks:
-        GetDefaultInventoryType(Character|nil character)
-
-    Purpose:
-        Allows modules to override which inventory type new characters should receive by default.
-
-    Category:
-        Inventory
-
-    Parameters:
-        character (Character|nil)
-            The character being initialized, when available.
-
-    Example Usage:
-        ```lua
-        hook.Add("GetDefaultInventoryType", "liaExampleInventoryType", function(character)
-            return "GridInv"
-        end)
-        ```
-
-    Returns:
-        string|nil
-            Return an inventory type identifier to override the default inventory type. Returning nil allows the default behavior to continue.
-
-    Realm:
-        Server
-]]
---[[
-    Hooks:
-        GetEntitySaveData(Entity ent)
-
-    Purpose:
-        Allows modules to append extra data when a persistent entity is serialized.
-
-    Category:
-        Persistence
-
-    Parameters:
-        ent (Entity)
-            The entity being serialized.
-
-    Example Usage:
-        ```lua
-        hook.Add("GetEntitySaveData", "liaExampleCoreEntitySaveData", function(ent)
-            if IsValid(ent) then return {customClass = ent:GetClass()} end
-        end)
-        ```
-
-    Returns:
-        table|nil
-            Return a table of extra save data to merge into the entity record. Returning nil leaves the save payload unchanged.
-
-    Realm:
-        Server
-]]
---[[
-    Hooks:
-        OnEntityLoaded(Entity ent, table data)
-
-    Purpose:
-        Runs after a persistent entity is recreated so modules can restore extra state from the saved data.
-
-    Category:
-        Persistence
-
-    Parameters:
-        ent (Entity)
-            The entity that was loaded.
-
-        data (table)
-            The decoded save data for the entity.
-
-    Example Usage:
-        ```lua
-        hook.Add("OnEntityLoaded", "liaExampleCoreEntityLoaded", function(ent, data)
-            if IsValid(ent) and data.customClass then print(data.customClass) end
-        end)
-        ```
-
-    Returns:
-        nil
-
-    Realm:
-        Server
-]]
---[[
-    Hooks:
-        ShouldPlayDeathSound(Player client, string|nil deathSound)
-
-    Purpose:
-        Allows plugins or modules to block player death sound selection or the final death sound playback.
-
-    Category:
-        Voice
-
-    Parameters:
-        client (Player)
-            The player whose death sound is being processed.
-
-        deathSound (string|nil)
-            The resolved sound that is about to be emitted. This is nil during the earlier selection check in `GetPlayerDeathSound`.
-
-    Returns:
-        boolean|nil
-            Return false to stop the death sound flow at the current stage. Returning nil allows the default behavior to continue.
-
-    Example Usage:
-        ```lua
-        hook.Add("ShouldPlayDeathSound", "liaExampleShouldPlayDeathSound", function(client, deathSound)
-            if client:isStaffOnDuty() then
-                return false
-            end
-        end)
-        ```
-
-    Realm:
-        Server
-]]
---[[
-    Hooks:
-        ShouldPlayPainSound(Player client, string painContextOrSound)
-
-    Purpose:
-        Allows plugins or modules to block player pain sound selection or the final pain sound playback.
-
-    Category:
-        Voice
-
-    Parameters:
-        client (Player)
-            The player whose pain sound is being processed.
-
-        painContextOrSound (string)
-            Either the requested pain context such as `hurt` or `drown`, or the resolved sound path that is about to be emitted.
-
-    Returns:
-        boolean|nil
-            Return false to stop the pain sound flow at the current stage. Returning nil allows the default behavior to continue.
-
-    Example Usage:
-        ```lua
-        hook.Add("ShouldPlayPainSound", "liaExampleShouldPlayPainSound", function(client, painContextOrSound)
-            if painContextOrSound == "drown" then
-                return false
-            end
-        end)
-        ```
-
-    Realm:
-        Server
-]]
---[[
-    Hooks:
-        CharPreSave(Character character)
-
-    Purpose:
-        Runs before a character row is written to the database so modules can update transient state or cancel the save.
-
-    Category:
-        Character
-
-    Parameters:
-        character (Character)
-            The character that is about to be saved.
-
-    Returns:
-        boolean|nil
-            Return false to stop the character save. Returning nil allows the save to continue.
-
-    Example Usage:
-        ```lua
-        hook.Add("CharPreSave", "liaExampleCharPreSave", function(character)
-            if character:getData("savingLocked") then
-                return false
-            end
-        end)
-        ```
-
-    Realm:
-        Server
-]]
---[[
-    Hooks:
-        CanPlayerInteractItem(Player client, string action, Item item, table|nil data)
-
-    Purpose:
-        Determines whether a player may run an item interaction through the standard item action flow.
-
-    Category:
-        Inventory
-
-    Parameters:
-        client (Player)
-            The player attempting the item interaction.
-
-        action (string)
-            The lowercased action identifier such as `drop`, `take`, `equip`, `unequip`, or `combine`.
-
-        item (Item)
-            The item being interacted with.
-
-        data (table|nil)
-            Optional extra action data forwarded by the caller, such as combine context.
-
-    Returns:
-        boolean|string|nil
-            Return false to block the interaction. A second return value may provide the failure reason used by callers. Returning nil allows the default behavior to continue.
-
-    Example Usage:
-        ```lua
-        hook.Add("CanPlayerInteractItem", "liaExampleCanPlayerInteractItem", function(client, action, item, data)
-            if action == "drop" and item.uniqueID == "radio" then
-                return false, L("forbiddenActionStorage")
-            end
-        end)
-        ```
-
-    Realm:
-        Server
-]]
---[[
-    Hooks:
-        CanPlayerHoldObject(Player client, Entity entity)
-
-    Purpose:
-        Determines whether the hands weapon may pick up and hold a traced entity.
-
-    Category:
-        Interaction
-
-    Parameters:
-        client (Player)
-            The player attempting to hold the entity.
-
-        entity (Entity)
-            The entity the player is trying to pick up.
-
-    Returns:
-        boolean|nil
-            Return true to explicitly allow holding or false to block it. Returning nil allows the default class and holdable checks to continue.
-
-    Example Usage:
-        ```lua
-        hook.Add("CanPlayerHoldObject", "liaExampleCanPlayerHoldObject", function(client, entity)
-            if entity:GetClass() == "prop_ragdoll" then
-                return false
-            end
-        end)
-        ```
-
-    Realm:
-        Server
-]]
---[[
-    Hooks:
-        ShouldDataBeSaved()
-
-    Purpose:
-        Determines whether the server shutdown routine should save Lilia data, config, characters, and admin state.
-
-    Category:
-        Persistence
-
-    Parameters:
-        None
-
-    Returns:
-        boolean|nil
-            Return false to skip the shutdown save routine. Returning nil allows the default behavior to continue.
-
-    Example Usage:
-        ```lua
-        hook.Add("ShouldDataBeSaved", "liaExampleShouldDataBeSaved", function()
-            if lia.shuttingDown then
-                return true
-            end
-        end)
-        ```
-
-    Realm:
-        Server
-]]
---[[
-    Hooks:
-        SetupBotPlayer(Player client)
-
-    Purpose:
-        Runs when a bot joins so modules can replace or extend the default bot character setup flow.
-
-    Category:
-        Character
-
-    Parameters:
-        client (Player)
-            The bot player that is being initialized.
-
-    Returns:
-        nil
-
-    Example Usage:
-        ```lua
-        hook.Add("SetupBotPlayer", "liaExampleSetupBotPlayer", function(client)
-            print("Preparing bot:", client:Nick())
-        end)
-        ```
-
-    Realm:
-        Server
-]]
---[[
-    Hooks:
-        ShouldEntitySave(Entity entity)
-
-    Purpose:
-        Determines whether a persistent entity should be included in Lilia's persistence save, create, and update routines.
-
-    Category:
-        Persistence
-
-    Parameters:
-        entity (Entity)
-            The live entity being evaluated for persistence.
-
-    Returns:
-        boolean|nil
-            Return false to exclude the entity from persistence. Returning nil allows the default behavior to continue.
-
-    Example Usage:
-        ```lua
-        hook.Add("ShouldEntitySave", "liaExampleShouldEntitySave", function(entity)
-            if entity:GetClass() == "prop_ragdoll" then
-                return false
-            end
-        end)
-        ```
-
-    Realm:
-        Server
-]]
---[[
-    Hooks:
-        ShouldEntityLoad(table entityData)
-
-    Purpose:
-        Determines whether a persisted entity entry should be restored during data loading.
-
-    Category:
-        Persistence
-
-    Parameters:
-        entityData (table)
-            The saved persistence row containing class, position, angles, model, and optional custom data.
-
-    Returns:
-        boolean|nil
-            Return false to skip restoring that saved entity. Returning nil allows the default behavior to continue.
-
-    Example Usage:
-        ```lua
-        hook.Add("ShouldEntityLoad", "liaExampleShouldEntityLoad", function(entityData)
-            if entityData.class == "prop_ragdoll" then
-                return false
-            end
-        end)
-        ```
-
-    Realm:
-        Server
-]]
---[[
-    Hooks:
-        ShouldDeleteSavedItems()
-
-    Purpose:
-        Determines whether saved world items should be deleted from storage instead of being respawned during data loading.
-
-    Category:
-        Persistence
-
-    Parameters:
-        None
-
-    Returns:
-        boolean|nil
-            Return true to delete the saved item records instead of restoring them. Returning nil or false allows normal item restoration.
-
-    Example Usage:
-        ```lua
-        hook.Add("ShouldDeleteSavedItems", "liaExampleShouldDeleteSavedItems", function()
-            return false
-        end)
-        ```
-
-    Realm:
-        Server
-]]
---[[
-    Hooks:
-        UpdateEntityPersistence(Entity entity)
-
-    Purpose:
-        Runs when a persistent entity should refresh its saved position, model, angles, and custom persistence data.
-
-    Category:
-        Persistence
-
-    Parameters:
-        entity (Entity)
-            The live persistent entity whose saved record should be updated.
-
-    Returns:
-        nil
-
-    Example Usage:
-        ```lua
-        hook.Add("UpdateEntityPersistence", "liaExampleUpdateEntityPersistence", function(entity)
-            if entity.IsPersistent then
-                print("Refreshing persistence for", entity:GetClass())
-            end
-        end)
-        ```
-
-    Realm:
-        Server
-]]
---[[
-    Hooks:
-        ShouldOverrideSalaryTimers()
-
-    Purpose:
-        Determines whether Lilia should skip creating its default salary interval timers.
-
-    Category:
-        Economy
-
-    Parameters:
-        None
-
-    Returns:
-        boolean|nil
-            Return true to prevent the default salary timers from being created. Returning nil or false allows the normal timer setup.
-
-    Example Usage:
-        ```lua
-        hook.Add("ShouldOverrideSalaryTimers", "liaExampleShouldOverrideSalaryTimers", function()
-            return false
-        end)
-        ```
-
-    Realm:
-        Server
-]]
---[[
-    Hooks:
-        ShouldSpawnClientRagdoll(Player client)
-
-    Purpose:
-        Determines whether a player death should create the default client ragdoll.
-
-    Category:
-        Character
-
-    Parameters:
-        client (Player)
-            The player who has just died.
-
-    Returns:
-        boolean|nil
-            Return false to block ragdoll creation. Returning nil allows the default behavior to continue.
-
-    Example Usage:
-        ```lua
-        hook.Add("ShouldSpawnClientRagdoll", "liaExampleShouldSpawnClientRagdoll", function(client)
-            if client:isStaffOnDuty() then
-                return false
-            end
-        end)
-        ```
-
-    Realm:
-        Server
-]]
---[[
-    Hooks:
-        GetPlayerDeathSound(client, isFemale)
-
-    Purpose:
-        Allows plugins or modules to override the death sound selected for a player.
-
-    Category:
-        Voice
-
-    Parameters:
-        client (Player)
-            The player whose death sound is being resolved.
-
-        isFemale (boolean)
-            Whether the player should use the female sound set.
-
-    Returns:
-        string|nil
-            Return a sound path or sound object to override the death sound. Returning nil allows the default behavior to continue.
-
-    Example Usage:
-        ```lua
-        hook.Add("GetPlayerDeathSound", "liaExampleGetPlayerDeathSound", function(client, isFemale)
-            if client:isStaffOnDuty() then
-                return "vo/npc/male01/pain07.wav"
-            end
-        end)
-        ```
-
-    Realm:
-        Server
-]]
---[[
-    Hooks:
-        GetPlayerPainSound(client, paintype, isFemale)
-
-    Purpose:
-        Allows plugins or modules to override the pain sound selected for a player.
-
-    Category:
-        Voice
-
-    Parameters:
-        client (Player)
-            The player whose pain sound is being resolved.
-
-        paintype (string)
-            The pain context being resolved, such as `hurt` or `drown`.
-
-        isFemale (boolean)
-            Whether the player should use the female sound set.
-
-    Returns:
-        string|nil
-            Return a sound path or sound object to override the pain sound. Returning nil allows the default behavior to continue.
-
-    Example Usage:
-        ```lua
-        hook.Add("GetPlayerPainSound", "liaExampleGetPlayerPainSound", function(client, paintype, isFemale)
-            if paintype == "drown" then
-                return "player/pl_drown1.wav"
-            end
-        end)
-        ```
-
-    Realm:
-        Server
-]]
---[[
-    Hooks:
-        GetDamageScale(hitgroup, dmgInfo, damageScale)
-
-    Purpose:
-        Allows plugins or modules to override the damage multiplier before scaled damage is applied.
-
-    Category:
-        Combat
-
-    Parameters:
-        hitgroup (number)
-            The Garry's Mod hitgroup being processed.
-
-        dmgInfo (CTakeDamageInfo)
-            The damage information object being scaled.
-
-        damageScale (number)
-            The current damage multiplier after Lilia's head and limb checks.
-
-    Returns:
-        number|nil
-            Return a numeric multiplier to replace the current damage scale. Returning nil allows the default behavior to continue.
-
-    Example Usage:
-        ```lua
-        hook.Add("GetDamageScale", "liaExampleGetDamageScale", function(hitgroup, dmgInfo, damageScale)
-            if hitgroup == HITGROUP_HEAD then
-                return damageScale * 0.75
-            end
-        end)
-        ```
-
-    Realm:
-        Server
-]]
---[[
-    Hooks:
-        PostScaleDamage(hitgroup, dmgInfo, damageScale)
-
-    Purpose:
-        Runs after the current damage scale has been applied to the damage info object.
-
-    Category:
-        Combat
-
-    Parameters:
-        hitgroup (number)
-            The Garry's Mod hitgroup that was processed.
-
-        dmgInfo (CTakeDamageInfo)
-            The scaled damage information object.
-
-        damageScale (number)
-            The multiplier that was applied to the damage.
-
-    Returns:
-        nil
-
-    Example Usage:
-        ```lua
-        hook.Add("PostScaleDamage", "liaExamplePostScaleDamage", function(hitgroup, dmgInfo, damageScale)
-            print("[Damage] Applied scale:", damageScale)
-        end)
-        ```
-
-    Realm:
-        Server
-]]
---[[
-    Hooks:
-        OverrideVoiceHearingStatus(listener, speaker, canHear)
-
-    Purpose:
-        Allows plugins or modules to override cached voice hearing checks for a listener and speaker pair.
-
-    Category:
-        Voice
-
-    Parameters:
-        listener (Player)
-            The player whose hearing result is being computed.
-
-        speaker (Player)
-            The speaking player being checked.
-
-        canHear (boolean)
-            The current range-based hearing result.
-
-    Returns:
-        boolean|nil
-            Return true or false to override whether the listener can hear the speaker. Returning nil allows the default behavior to continue.
-
-    Example Usage:
-        ```lua
-        hook.Add("OverrideVoiceHearingStatus", "liaExampleOverrideVoiceHearingStatus", function(listener, speaker, canHear)
-            if listener:isStaffOnDuty() then
-                return true
-            end
-        end)
-        ```
-
-    Realm:
-        Server
-]]
---[[
-    Hooks:
-        OnDeathSoundPlayed(client, deathSound)
-
-    Purpose:
-        Runs after a death sound has been emitted for a player.
-
-    Category:
-        Voice
-
-    Parameters:
-        client (Player)
-            The player who emitted the death sound.
-
-        deathSound (string)
-            The sound that was played.
-
-    Returns:
-        nil
-
-    Example Usage:
-        ```lua
-        hook.Add("OnDeathSoundPlayed", "liaExampleOnDeathSoundPlayed", function(client, deathSound)
-            lia.log.add(client, "deathSoundPlayed", deathSound)
-        end)
-        ```
-
-    Realm:
-        Server
-]]
---[[
-    Hooks:
-        PrePlayerLoadedChar(client)
-
-    Purpose:
-        Runs immediately before the player's bodygroups, skin, and movement state are reset for character loading.
-
-    Category:
-        Character
-
-    Parameters:
-        client (Player)
-            The player who is about to load a character.
-
-    Returns:
-        nil
-
-    Example Usage:
-        ```lua
-        hook.Add("PrePlayerLoadedChar", "liaExamplePrePlayerLoadedChar", function(client)
-            client:SetDSP(1, false)
-        end)
-        ```
-
-    Realm:
-        Server
-]]
---[[
-    Hooks:
-        CanPlayerDropItem(client, item)
-
-    Purpose:
-        Determines whether a player may drop an item through the standard item interaction flow.
-
-    Category:
-        Inventory
-
-    Parameters:
-        client (Player)
-            The player attempting to drop the item.
-
-        item (Item)
-            The item being dropped.
-
-    Returns:
-        boolean|nil
-            Return false to block the drop action. Returning nil allows the default behavior to continue.
-
-    Example Usage:
-        ```lua
-        hook.Add("CanPlayerDropItem", "liaExampleCanPlayerDropItem", function(client, item)
-            if item.uniqueID == "radio" then
-                return false
-            end
-        end)
-        ```
-
-    Realm:
-        Server
-]]
---[[
-    Hooks:
-        CanPlayerTakeItem(client, item)
-
-    Purpose:
-        Determines whether a player may take an item through the standard item interaction flow.
-
-    Category:
-        Inventory
-
-    Parameters:
-        client (Player)
-            The player attempting to take the item.
-
-        item (Item)
-            The item being taken.
-
-    Returns:
-        boolean|nil
-            Return false to block the take action. Returning nil allows the default behavior to continue.
-
-    Example Usage:
-        ```lua
-        hook.Add("CanPlayerTakeItem", "liaExampleCanPlayerTakeItem", function(client, item)
-            if client:getNetVar("jailed") then
-                return false
-            end
-        end)
-        ```
-
-    Realm:
-        Server
-]]
---[[
-    Hooks:
-        CanPlayerEquipItem(client, item)
-
-    Purpose:
-        Determines whether a player may equip an item through the standard item interaction flow.
-
-    Category:
-        Inventory
-
-    Parameters:
-        client (Player)
-            The player attempting to equip the item.
-
-        item (Item)
-            The item being equipped.
-
-    Returns:
-        boolean|nil
-            Return false to block the equip action. Returning nil allows the default behavior to continue.
-
-    Example Usage:
-        ```lua
-        hook.Add("CanPlayerEquipItem", "liaExampleCanPlayerEquipItem", function(client, item)
-            if item.uniqueID == "heavyarmor" and client:Crouching() then
-                return false
-            end
-        end)
-        ```
-
-    Realm:
-        Server
-]]
---[[
-    Hooks:
-        CanPlayerUnequipItem(client, item)
-
-    Purpose:
-        Determines whether a player may unequip an item through the standard item interaction flow.
-
-    Category:
-        Inventory
-
-    Parameters:
-        client (Player)
-            The player attempting to unequip the item.
-
-        item (Item)
-            The item being unequipped.
-
-    Returns:
-        boolean|nil
-            Return false to block the unequip action. Returning nil allows the default behavior to continue.
-
-    Example Usage:
-        ```lua
-        hook.Add("CanPlayerUnequipItem", "liaExampleCanPlayerUnequipItem", function(client, item)
-            if client:getNetVar("restricted") then
-                return false
-            end
-        end)
-        ```
-
-    Realm:
-        Server
-]]
---[[
-    Hooks:
-        CanPlayerRotateItem(client, item)
-
-    Purpose:
-        Determines whether a player may rotate an item through the standard item interaction flow.
-
-    Category:
-        Inventory
-
-    Parameters:
-        client (Player)
-            The player attempting to rotate the item.
-
-        item (Item)
-            The item being rotated.
-
-    Returns:
-        boolean|nil
-            Return false to block item rotation. Returning nil allows the default behavior to continue.
-
-    Example Usage:
-        ```lua
-        hook.Add("CanPlayerRotateItem", "liaExampleCanPlayerRotateItem", function(client, item)
-            if item.isBag then
-                return false
-            end
-        end)
-        ```
-
-    Realm:
-        Server
-]]
---[[
-    Hooks:
-        PostPlayerSay(client, message, chatType, anonymous)
-
-    Purpose:
-        Runs after the parsed chat message has been sent through the active chat class.
-
-    Category:
-        Chatbox
-
-    Parameters:
-        client (Player)
-            The player who sent the message.
-
-        message (string)
-            The parsed message text that was sent.
-
-        chatType (string)
-            The resolved chat class identifier.
-
-        anonymous (boolean)
-            Whether the message was sent anonymously.
-
-    Returns:
-        nil
-
-    Example Usage:
-        ```lua
-        hook.Add("PostPlayerSay", "liaExamplePostPlayerSay", function(client, message, chatType, anonymous)
-            print(client:Nick(), chatType, message)
-        end)
-        ```
-
-    Realm:
-        Server
-]]
---[[
-    Hooks:
-        OnPainSoundPlayed(entity, painSound)
-
-    Purpose:
-        Runs after a pain sound has been emitted for a player.
-
-    Category:
-        Voice
-
-    Parameters:
-        entity (Player)
-            The player who emitted the pain sound.
-
-        painSound (string)
-            The sound that was played.
-
-    Returns:
-        nil
-
-    Example Usage:
-        ```lua
-        hook.Add("OnPainSoundPlayed", "liaExampleOnPainSoundPlayed", function(entity, painSound)
-            lia.log.add(entity, "painSoundPlayed", painSound)
-        end)
-        ```
-
-    Realm:
-        Server
-]]
---[[
-    Hooks:
-        GetBotModel(client, faction)
-
-    Purpose:
-        Allows plugins or modules to override the model used when the framework creates a bot character.
-
-    Category:
-        Character
-
-    Parameters:
-        client (Player)
-            The bot player being configured.
-
-        faction (table)
-            The default faction selected for the bot.
-
-    Returns:
-        string|nil
-            Return a player model path to override the default bot model. Returning nil allows the default behavior to continue.
-
-    Example Usage:
-        ```lua
-        hook.Add("GetBotModel", "liaExampleGetBotModel", function(client, faction)
-            if faction and faction.uniqueID == "combine" then
-                return "models/player/police.mdl"
-            end
-        end)
-        ```
-
-    Realm:
-        Server
-]]
---[[
-    Hooks:
-        PostBotSetup(client, character, inventory)
-
-    Purpose:
-        Runs after a bot player, character, and inventory have been created and spawned.
-
-    Category:
-        Character
-
-    Parameters:
-        client (Player)
-            The bot player that was configured.
-
-        character (Character)
-            The newly created bot character.
-
-        inventory (Inventory)
-            The bot's newly created inventory instance.
-
-    Returns:
-        nil
-
-    Example Usage:
-        ```lua
-        hook.Add("PostBotSetup", "liaExamplePostBotSetup", function(client, character, inventory)
-            character:giveMoney(500)
-        end)
-        ```
-
-    Realm:
-        Server
-]]
---[[
-    Hooks:
-        OnEntityPersisted(ent, entData)
-
-    Purpose:
-        Runs after a persistent entity snapshot has been written into the persistence data set.
-
-    Category:
-        Persistence
-
-    Parameters:
-        ent (Entity)
-            The entity that was saved.
-
-        entData (table)
-            The serialized persistence payload stored for the entity.
-
-    Returns:
-        nil
-
-    Example Usage:
-        ```lua
-        hook.Add("OnEntityPersisted", "liaExampleOnEntityPersisted", function(ent, entData)
-            print("[Persistence] Saved", entData.class)
-        end)
-        ```
-
-    Realm:
-        Server
-]]
---[[
-    Hooks:
-        OnSavedItemLoaded(loadedItems)
-
-    Purpose:
-        Runs after saved world items have been restored from database rows.
-
-    Category:
-        Persistence
-
-    Parameters:
-        loadedItems (table)
-            An array containing the restored item instances.
-
-    Returns:
-        nil
-
-    Example Usage:
-        ```lua
-        hook.Add("OnSavedItemLoaded", "liaExampleOnSavedItemLoaded", function(loadedItems)
-            print("[Persistence] Restored items:", #loadedItems)
-        end)
-        ```
-
-    Realm:
-        Server
-]]
---[[
-    Hooks:
-        OnEntityPersistUpdated(ent, data)
-
-    Purpose:
-        Runs after an existing persistent entity entry has been updated in the saved persistence data.
-
-    Category:
-        Persistence
-
-    Parameters:
-        ent (Entity)
-            The entity whose saved record was updated.
-
-        data (table)
-            The updated persistence data entry.
-
-    Returns:
-        nil
-
-    Example Usage:
-        ```lua
-        hook.Add("OnEntityPersistUpdated", "liaExampleOnEntityPersistUpdated", function(ent, data)
-            print("[Persistence] Updated", data.class)
-        end)
-        ```
-
-    Realm:
-        Server
-]]
---[[
-    Hooks:
-        CanPlayerEarnSalary(client)
-
-    Purpose:
-        Determines whether a player should receive salary checks when the salary timers fire.
-
-    Category:
-        Salary
-
-    Parameters:
-        client (Player)
-            The player being considered for salary payment.
-
-    Returns:
-        boolean|nil
-            Return false to skip salary payment for the player. Returning nil allows the default behavior to continue.
-
-    Example Usage:
-        ```lua
-        hook.Add("CanPlayerEarnSalary", "liaExampleCanPlayerEarnSalary", function(client)
-            if client:getNetVar("jailed") then
-                return false
-            end
-        end)
-        ```
-
-    Realm:
-        Server
-]]
---[[
-    Hooks:
-        GetSalaryAmount(client, charFaction, class)
-
-    Purpose:
-        Allows plugins or modules to override the base salary amount before bonuses and final adjustments are applied.
-
-    Category:
-        Salary
-
-    Parameters:
-        client (Player)
-            The player receiving salary.
-
-        charFaction (table)
-            The faction data for the player's character.
-
-        class (table|nil)
-            The class data for the player's character, if any.
-
-    Returns:
-        number|nil
-            Return a numeric salary amount to override the base pay. Returning nil allows the default behavior to continue.
-
-    Example Usage:
-        ```lua
-        hook.Add("GetSalaryAmount", "liaExampleGetSalaryAmount", function(client, charFaction, class)
-            if class and class.uniqueID == "chief" then
-                return 250
-            end
-        end)
-        ```
-
-    Realm:
-        Server
-]]
---[[
-    Hooks:
-        OnSalaryAdjust(client)
-
-    Purpose:
-        Allows plugins or modules to replace the current salary amount before prestige bonuses are applied.
-
-    Category:
-        Salary
-
-    Parameters:
-        client (Player)
-            The player receiving salary.
-
-    Returns:
-        number|nil
-            Return a numeric salary amount to replace the current pay value. Returning nil allows the default behavior to continue.
-
-    Example Usage:
-        ```lua
-        hook.Add("OnSalaryAdjust", "liaExampleOnSalaryAdjust", function(client)
-            if client:hasPrivilege("salaryBonus") then
-                return 300
-            end
-        end)
-        ```
-
-    Realm:
-        Server
-]]
---[[
-    Hooks:
-        GetPrestigePayBonus(client, char, pay, charFaction, class)
-
-    Purpose:
-        Allows plugins or modules to add an extra prestige-style bonus on top of the current salary amount.
-
-    Category:
-        Salary
-
-    Parameters:
-        client (Player)
-            The player receiving salary.
-
-        char (Character)
-            The player's current character.
-
-        pay (number)
-            The current salary value before the prestige bonus is added.
-
-        charFaction (table)
-            The faction data for the player's character.
-
-        class (table|nil)
-            The class data for the player's character, if any.
-
-    Returns:
-        number|nil
-            Return a numeric bonus to add to the current pay. Returning nil allows the default behavior to continue.
-
-    Example Usage:
-        ```lua
-        hook.Add("GetPrestigePayBonus", "liaExampleGetPrestigePayBonus", function(client, char, pay, charFaction, class)
-            if char:getData("prestige", 0) > 0 then
-                return 50
-            end
-        end)
-        ```
-
-    Realm:
-        Server
-]]
---[[
-    Hooks:
-        PreSalaryGive(client, char, pay, charFaction, class)
-
-    Purpose:
-        Runs before the framework gives salary money to the character.
-
-    Category:
-        Salary
-
-    Parameters:
-        client (Player)
-            The player receiving salary.
-
-        char (Character)
-            The player's current character.
-
-        pay (number)
-            The current salary amount.
-
-        charFaction (table)
-            The faction data for the player's character.
-
-        class (table|nil)
-            The class data for the player's character, if any.
-
-    Returns:
-        boolean|nil
-            Return true to mark salary handling as fully handled and suppress the default payout. Returning nil allows the default behavior to continue.
-
-    Example Usage:
-        ```lua
-        hook.Add("PreSalaryGive", "liaExamplePreSalaryGive", function(client, char, pay, charFaction, class)
-            if pay <= 0 then
-                return true
-            end
-        end)
-        ```
-
-    Realm:
-        Server
-]]
---[[
-    Hooks:
-        OnSalaryGiven(client, char, pay, charFaction, class)
-
-    Purpose:
-        Allows plugins or modules to override the final salary amount immediately before money is awarded.
-
-    Category:
-        Salary
-
-    Parameters:
-        client (Player)
-            The player receiving salary.
-
-        char (Character)
-            The player's current character.
-
-        pay (number)
-            The current salary amount.
-
-        charFaction (table)
-            The faction data for the player's character.
-
-        class (table|nil)
-            The class data for the player's character, if any.
-
-    Returns:
-        number|nil
-            Return a numeric value to replace the final salary payout. Returning nil allows the default behavior to continue.
-
-    Example Usage:
-        ```lua
-        hook.Add("OnSalaryGiven", "liaExampleOnSalaryGiven", function(client, char, pay, charFaction, class)
-            return math.max(pay, 25)
-        end)
-        ```
-
-    Realm:
-        Server
-]]
 local GM = GM or GAMEMODE
 local VOICE_WHISPERING = "whispering"
 local VOICE_TALKING = "talking"
 local VOICE_YELLING = "yelling"
-local LimbHitgroups = {HITGROUP_GEAR, HITGROUP_RIGHTARM, HITGROUP_LEFTARM}
-local sounds = {
-    male = {
-        death = {Sound("vo/npc/male01/pain07.wav"), Sound("vo/npc/male01/pain08.wav"), Sound("vo/npc/male01/pain09.wav"),},
-        hurt = {Sound("vo/npc/male01/pain01.wav"), Sound("vo/npc/male01/pain02.wav"), Sound("vo/npc/male01/pain03.wav"), Sound("vo/npc/male01/pain04.wav"), Sound("vo/npc/male01/pain05.wav"), Sound("vo/npc/male01/pain06.wav"),},
-    },
-    female = {
-        death = {Sound("vo/npc/female01/pain07.wav"), Sound("vo/npc/female01/pain08.wav"), Sound("vo/npc/female01/pain09.wav"),},
-        hurt = {Sound("vo/npc/female01/pain01.wav"), Sound("vo/npc/female01/pain02.wav"), Sound("vo/npc/female01/pain03.wav"), Sound("vo/npc/female01/pain04.wav"), Sound("vo/npc/female01/pain05.wav"), Sound("vo/npc/female01/pain06.wav"),},
-    }
-}
-
-local function getGender(isFemale)
-    return isFemale and "female" or "male"
-end
-
-function GM:GetPlayerDeathSound(client, isFemale)
-    if hook.Run("ShouldPlayDeathSound", client) == false then return end
-    local sndTab = sounds[getGender(isFemale)].death
-    return sndTab[math.random(#sndTab)]
-end
-
-function GM:GetPlayerPainSound(client, paintype, isFemale)
-    if hook.Run("ShouldPlayPainSound", client, paintype) == false then return end
-    if paintype == "hurt" then
-        local sndTab = sounds[getGender(isFemale)].hurt
-        return sndTab[math.random(#sndTab)]
-    end
-end
-
-function GM:GetFallDamage(client, speed)
-    if not lia.config.get("FallDamageEnabled", true) then return 0 end
-    return math.max(0, (speed - 580) * 100 / 444)
-end
-
-function GM:ScalePlayerDamage(client, hitgroup, dmgInfo)
-    local damageScale = lia.config.get("DamageScale")
-    hook.Run("PreScaleDamage", hitgroup, dmgInfo, damageScale)
-    if hitgroup == HITGROUP_HEAD then
-        damageScale = lia.config.get("HeadShotDamage")
-    elseif table.HasValue(LimbHitgroups, hitgroup) then
-        damageScale = lia.config.get("LimbDamage")
-    end
-
-    damageScale = hook.Run("GetDamageScale", hitgroup, dmgInfo, damageScale) or damageScale
-    dmgInfo:ScaleDamage(damageScale)
-    hook.Run("PostScaleDamage", hitgroup, dmgInfo, damageScale)
-end
-
 function GM:CharPreSave(character)
     local client = character:getPlayer()
     local loginTime = character:getLoginTime()
@@ -1638,42 +63,6 @@ local function CacheVoiceHearing()
     end
 end
 
---[[
-    Hooks:
-        PlayerShouldPermaKill(Player client, Entity inflictor, Entity attacker)
-
-    Purpose:
-        Determines whether a player death caused by another player should permanently kill the victim's character.
-
-    Category:
-        Character
-
-    Parameters:
-        client (Player)
-            The player who died.
-
-        inflictor (Entity)
-            The inflictor responsible for the death.
-
-        attacker (Entity)
-            The attacker responsible for the death.
-
-    Returns:
-        boolean|nil
-            Return true to permanently kill the victim's character. Returning nil or false allows the default death flow to continue without a perma-kill.
-
-    Example Usage:
-        ```lua
-        hook.Add("PlayerShouldPermaKill", "liaExamplePlayerShouldPermaKill", function(client, inflictor, attacker)
-            if IsValid(attacker) and attacker:IsPlayer() and attacker:isStaffOnDuty() then
-                return true
-            end
-        end)
-        ```
-
-    Realm:
-        Server
-]]
 function GM:PlayerDeath(client, inflictor, attacker)
     if lia.config.get("DeathSoundEnabled") then
         local deathSound = hook.Run("GetPlayerDeathSound", client, client:isFemale())
@@ -1696,8 +85,7 @@ function GM:PlayerDeath(client, inflictor, attacker)
     end
 
     if IsValid(attacker) and attacker:IsPlayer() and attacker ~= client and hook.Run("PlayerShouldPermaKill", client, inflictor, attacker) then character:ban() end
-    net.Start("liaRemoveFOne")
-    net.Send(client)
+    client:SendLua("if IsValid(lia.gui.menu) then lia.gui.menu:remove() end")
     if hook.Run("ShouldSpawnClientRagdoll", client) ~= false then client:CreateRagdoll() end
 end
 
@@ -1724,10 +112,10 @@ function GM:PlayerLoadedChar(client, character)
     if character:getFaction() == FACTION_STAFF then
         local storedDiscord = client:getLiliaData("staffDiscord")
         if storedDiscord and storedDiscord ~= "" then
-            local description = L("staffCharacterDiscordSteamID", storedDiscord, client:SteamID())
+            local description = string.format("Staff Character - Discord: %s, SteamID: %s", storedDiscord, client:SteamID())
             character:setDesc(description)
         else
-            if character:getDesc() == "" or character:getDesc():find(L("staffCharacter")) then
+            if character:getDesc() == "" or character:getDesc():find("^A Staff Character") then
                 timer.Simple(2, function()
                     if IsValid(client) and client:getChar() == character then
                         net.Start("liaStaffDiscordPrompt")
@@ -1765,14 +153,13 @@ end
 function GM:OnPickupMoney(client, moneyEntity)
     if moneyEntity and IsValid(moneyEntity) then
         local amount = moneyEntity:getAmount()
-        client:notifyMoneyLocalized("moneyTaken", lia.currency.get(amount))
-        lia.log.add(client, "moneyPickedUp", amount)
+        client:notifyMoney(string.format("You picked up %s.", lia.currency.get(amount)))
     end
 end
 
 function GM:CanItemBeTransfered(item, curInv, inventory)
     if item.isBag and curInv ~= inventory and item.getInv and item:getInv() and table.Count(item:getInv():getItems()) > 0 then
-        lia.char.getCharacter(curInv.client, nil, function(character) if character then character:getPlayer():notifyErrorLocalized("forbiddenActionStorage") end end)
+        lia.char.getCharacter(curInv.client, nil, function(character) if character then character:getPlayer():notifyError(string.format("You can't perform this action from storage.")) end end)
         return false
     end
 
@@ -1789,8 +176,8 @@ function GM:CanPlayerInteractItem(client, action, item)
     local hasNoItemCooldown = client:hasPrivilege("noItemCooldown")
     lia.debug("[Permissions]", "Permission Check for hook GM:CanPlayerInteractItem", "action=", tostring(action), "hasPrivilege(noItemCooldown)=", tostring(hasNoItemCooldown), "finalResult=", tostring(hasNoItemCooldown))
     if hasNoItemCooldown then return true end
-    if not client:Alive() then return false, L("forbiddenActionStorage") end
-    if IsValid(client:GetRagdollEntity()) then return false, L("forbiddenActionStorage") end
+    if not client:Alive() then return false, "You can't perform this action from storage." end
+    if IsValid(client:GetRagdollEntity()) then return false, "You can't perform this action from storage." end
     if action == "drop" then
         if hook.Run("CanPlayerDropItem", client, item) ~= false then
             if not client.dropDelay then
@@ -1798,7 +185,7 @@ function GM:CanPlayerInteractItem(client, action, item)
                 timer.Create("DropDelay." .. client:SteamID64(), lia.config.get("DropDelay"), 1, function() if IsValid(client) then client.dropDelay = nil end end)
                 return true
             else
-                client:notifyWarningLocalized("switchCooldown")
+                client:notifyWarning(string.format("You are on cooldown!"))
                 return false
             end
         else
@@ -1813,7 +200,7 @@ function GM:CanPlayerInteractItem(client, action, item)
                 timer.Create("TakeDelay." .. client:SteamID64(), lia.config.get("TakeDelay"), 1, function() if IsValid(client) then client.takeDelay = nil end end)
                 return true
             else
-                client:notifyWarningLocalized("switchCooldown")
+                client:notifyWarning(string.format("You are on cooldown!"))
                 return false
             end
         else
@@ -1828,7 +215,7 @@ function GM:CanPlayerInteractItem(client, action, item)
                 timer.Create("EquipDelay." .. client:SteamID64(), lia.config.get("EquipDelay"), 1, function() if IsValid(client) then client.equipDelay = nil end end)
                 return true
             else
-                client:notifyWarningLocalized("switchCooldown")
+                client:notifyWarning(string.format("You are on cooldown!"))
                 return false
             end
         else
@@ -1843,7 +230,7 @@ function GM:CanPlayerInteractItem(client, action, item)
                 timer.Create("UnequipDelay." .. client:SteamID64(), lia.config.get("UnequipDelay"), 1, function() if IsValid(client) then client.unequipDelay = nil end end)
                 return true
             else
-                client:notifyWarningLocalized("switchCooldown")
+                client:notifyWarning(string.format("You are on cooldown!"))
                 return false
             end
         else
@@ -1861,11 +248,11 @@ function GM:CanPlayerEquipItem(client, item)
     print("[LILIA DEBUG][CanPlayerEquipItem]", "client=", IsValid(client) and client:Nick() or "nil", "item=", item and item.uniqueID or "nil", "invID=", item and item.invID or "nil", "inventoryType=", inventory and inventory.typeID or "nil", "isStorage=", inventory and tostring(inventory.isStorage) or "nil", "isExternalInventory=", inventory and tostring(inventory.isExternalInventory) or "nil", "isBag=", inventory and tostring(inventory.isBag) or "nil", "bagItemID=", tostring(bagItemID), "derivedBagInventory=", tostring(isBagInventory), "char=", inventory and tostring(inventory:getData("char")) or "nil")
     if client.equipDelay ~= nil then
         print("[LILIA DEBUG][CanPlayerEquipItem]", "blockedReason=", "equipDelay")
-        client:notifyWarningLocalized("switchCooldown")
+        client:notifyWarning(string.format("You are on cooldown!"))
         return false
     elseif inventory and (isBagInventory or inventory.isExternalInventory or inventory.isStorage) then
-        print("[LILIA DEBUG][CanPlayerEquipItem]", "blockedReason=", "forbiddenActionStorage")
-        client:notifyErrorLocalized("forbiddenActionStorage")
+        print("[LILIA DEBUG][CanPlayerEquipItem]", "blockedReason=", "You can't perform this action from storage.")
+        client:notifyError(string.format("You can't perform this action from storage."))
         return false
     end
 
@@ -1875,13 +262,13 @@ end
 function GM:CanPlayerTakeItem(client, item)
     local inventory = lia.inventory.instances[item.invID]
     if client.takeDelay ~= nil then
-        client:notifyWarningLocalized("switchCooldown")
+        client:notifyWarning(string.format("You are on cooldown!"))
         return false
     elseif inventory and (inventory.isBag or inventory.isExternalInventory) then
-        client:notifyErrorLocalized("forbiddenActionStorage")
+        client:notifyError(string.format("You can't perform this action from storage."))
         return false
     elseif client:isFamilySharedAccount() then
-        client:notifyErrorLocalized("familySharedPickupDisabled")
+        client:notifyError(string.format("You cannot pick up items with a family-shared account"))
         return false
     elseif IsValid(item.entity) then
         local character = client:getChar()
@@ -1896,34 +283,28 @@ end
 function GM:CanPlayerDropItem(client, item)
     local inventory = lia.inventory.instances[item.invID]
     if client.dropDelay ~= nil then
-        client:notifyWarningLocalized("switchCooldown")
+        client:notifyWarning(string.format("You are on cooldown!"))
         return false
     elseif item.isBag and item:getInv() then
         local items = item:getInv():getItems()
         for _, otheritem in pairs(items) do
             if not otheritem.ignoreEquipCheck and otheritem:getData("equip", false) then
-                client:notifyErrorLocalized("cantDropBagHasEquipped")
+                client:notifyError(string.format("You can't drop a bag with equipped items inside."))
                 return false
             end
         end
     elseif inventory and (inventory.isBag or inventory.isExternalInventory) then
-        client:notifyErrorLocalized("forbiddenActionStorage")
+        client:notifyError(string.format("You can't perform this action from storage."))
         return false
     end
     return true
 end
 
-local logTypeMap = {
-    ooc = "chatOOC",
-    looc = "chatLOOC"
-}
-
 function GM:CheckPassword(steamID64, ipAddress, serverPassword, clientPassword, playerName)
     local steamID = util.SteamIDFrom64(steamID64)
     if serverPassword ~= "" and serverPassword ~= clientPassword then
-        lia.log.add(nil, "failedPassword", steamID, playerName, serverPassword, clientPassword)
-        lia.information(L("passwordsDoNotMatchFor") .. " " .. tostring(playerName) .. " (" .. tostring(steamID) .. ").")
-        return false, L("passwordsDoNotMatch")
+        lia.information("Passwords Do Not Match For" .. " " .. tostring(playerName) .. " (" .. tostring(steamID) .. ").")
+        return false, "Passwords Do Not Match"
     end
 end
 
@@ -1933,19 +314,11 @@ function GM:PlayerSay(client, message)
     message = parsedMessage
     if chatType == "ic" and lia.command.parse(client, message) then return "" end
     if utf8.len(message) > lia.config.get("MaxChatLength") then
-        client:notifyErrorLocalized("tooLongMessage")
+        client:notifyError(string.format("Your message is too long and has not been sent."))
         return ""
     end
 
-    local logType = logTypeMap[chatType] or "chat"
     lia.chat.send(client, chatType, message, anonymous)
-    if lia.chat.classes[chatType] then
-        if logType == "chat" then
-            lia.log.add(client, logType, chatType and chatType:upper() or "??", message)
-        else
-            lia.log.add(client, logType, message)
-        end
-    end
 
     hook.Run("PostPlayerSay", client, message, chatType, anonymous)
     return ""
@@ -2084,7 +457,7 @@ function GM:InitializedSchema()
 end
 
 function GM:GetGameDescription()
-    return istable(SCHEMA) and tostring(SCHEMA.name) or L("defaultGameDescription")
+    return istable(SCHEMA) and tostring(SCHEMA.name) or "A Lilia Gamemode"
 end
 
 function GM:PostPlayerLoadout(client)
@@ -2092,9 +465,6 @@ function GM:PostPlayerLoadout(client)
     if not character then return end
     client:Give("lia_hands")
     client:SetupHands()
-    local savedGroups = character:getBodygroups()
-    lia.util.applyBodygroups(client, savedGroups)
-    client:SetSkin(character:getSkin())
     client:setLocalVar("VoiceType", VOICE_TALKING)
 end
 
@@ -2189,7 +559,7 @@ function GM:PlayerAuthed(client, steamid)
         lia.db.selectOne({"reason"}, "bans", "playerSteamID = " .. lia.db.convertDataType(steamid)):next(function(banData)
             if not IsValid(client) or not banData then return end
             local reason = banData.reason
-            client:Kick(L("banMessage", 0, reason or L("genericReason")))
+            client:Kick(string.format("You've been banned for %s minute(s). (%s)", 0, reason or "No reason specified."))
         end)
     end)
 end
@@ -2222,35 +592,6 @@ function GM:PlayerDisconnected(client)
     end
 end
 
---[[
-    Hooks:
-        PlayerLiliaDataLoaded(Player client)
-
-    Purpose:
-        Runs after a player's stored Lilia data finishes loading so modules can continue initialization work that depends on that data.
-
-    Category:
-        Character
-
-    Parameters:
-        client (Player)
-            The player whose Lilia data has just finished loading.
-
-    Returns:
-        nil
-
-    Example Usage:
-        ```lua
-        hook.Add("PlayerLiliaDataLoaded", "liaExamplePlayerLiliaDataLoaded", function(client)
-            if IsValid(client) then
-                print("Loaded Lilia data for", client:Nick())
-            end
-        end)
-        ```
-
-    Realm:
-        Server
-]]
 function GM:PlayerInitialSpawn(client)
     if client:IsBot() then
         hook.Run("SetupBotPlayer", client)
@@ -2279,7 +620,6 @@ function GM:PlayerInitialSpawn(client)
         end
 
         timer.Simple(1, function() lia.playerinteract.sync(client) end)
-        timer.Simple(2, function() lia.dialog.syncToClients(client) end)
         timer.Simple(3, function() if IsValid(client) then lia.doors.syncAllDoorsToClient(client) end end)
         timer.Simple(4, function()
             net.Start("liaWeaponOverrideSync")
@@ -2388,7 +728,7 @@ function GM:SetupBotPlayer(client)
     local character = lia.char.new({
         name = lia.util.generateRandomName(),
         faction = faction and faction.uniqueID or "unknown",
-        desc = L("botDesc", botID),
+        desc = string.format("This is a bot. BotID is %s.", botID),
         model = model,
     }, botID, client, client:SteamID())
 
@@ -2489,7 +829,7 @@ function GM:SaveData()
 
     if #data > 0 then
         lia.data.savePersistence(data)
-        lia.information(L("saved"))
+        lia.information("Data saved successfully.")
     end
 end
 
@@ -2520,25 +860,25 @@ function GM:LoadData()
             repeat
                 local cls = ent.class
                 if not isstring(cls) or cls == "" then
-                    lia.error(L("invalidEntityClass"))
+                    lia.error("Invalid entity class.")
                     break
                 end
 
                 local decodedPos = lia.data.decode(ent.pos)
                 local decodedAng = lia.data.decode(ent.angles)
                 if not decodedPos then
-                    lia.error(L("invalidEntityPosition", cls))
+                    lia.error(string.format("Invalid position for %s.", cls))
                     break
                 end
 
                 if IsEntityNearby(decodedPos, cls) then
-                    lia.error(L("entityCreationAborted", cls, decodedPos.x, decodedPos.y, decodedPos.z))
+                    lia.error(string.format("Entity creation aborted: An entity of class '%s' is already nearby at position (%.2f, %.2f, %.2f).", cls, decodedPos.x, decodedPos.y, decodedPos.z))
                     break
                 end
 
                 local createdEnt = ents.Create(cls)
                 if not IsValid(createdEnt) then
-                    lia.error(L("failedEntityCreation", cls))
+                    lia.error(string.format("Failed to create entity %s.", cls))
                     break
                 end
 
@@ -2568,7 +908,7 @@ function GM:LoadData()
                             lia.error(debug.traceback())
                         end
                     else
-                        lia.error(L("invalidAngleEntity", tostring(cls), tostring(decodedPos), tostring(decodedAng), type(decodedAng)))
+                        lia.error(string.format("Invalid angle for entity '%s' at %s: %s (%s)", tostring(cls), tostring(decodedPos), tostring(decodedAng), type(decodedAng)))
                         lia.error(debug.traceback())
                     end
                 end
@@ -2580,18 +920,14 @@ function GM:LoadData()
                 createdEnt:Activate()
                 restorePersistentEntityTransform(createdEnt, decodedPos, decodedAng)
                 local loadData = table.Copy(ent)
-                if lia.dialog.isDialogNPCEntity(cls) and ent.data and istable(ent.data) then
-                    if ent.data.uniqueID then loadData.uniqueID = ent.data.uniqueID end
-                    if ent.data.npcName then loadData.npcName = ent.data.npcName end
-                    loadData.data = {
-                        customData = ent.data.customData
-                    }
-                elseif ent.data and istable(ent.data) and next(ent.data) then
+                if ent.data and istable(ent.data) and next(ent.data) then
                     for k, v in pairs(ent.data) do
                         loadData[k] = v
                     end
                 end
 
+                local transformedLoadData = hook.Run("TransformPersistentEntityLoadData", createdEnt, ent, loadData)
+                if istable(transformedLoadData) then loadData = transformedLoadData end
                 hook.Run("OnEntityLoaded", createdEnt, loadData)
                 timer.Simple(0, function() restorePersistentEntityTransform(createdEnt, decodedPos, decodedAng) end)
             until true
@@ -2599,8 +935,8 @@ function GM:LoadData()
     end)
 
     local gamemode = SCHEMA and SCHEMA.folder or engine.ActiveGamemode()
-    local map = lia.data.getEquivalencyMap(game.GetMap())
-    local condition = "schema = " .. lia.db.convertDataType(gamemode) .. " AND map = " .. lia.db.convertDataType(map)
+    local map = game.GetMap()
+    local condition = {schema = gamemode, map = map}
     lia.db.select({"itemID", "pos", "angles"}, "saveditems", condition):next(function(res)
         local items = res.results or {}
         if #items > 0 then
@@ -2616,7 +952,7 @@ function GM:LoadData()
                 local range = "(" .. table.concat(idRange, ", ") .. ")"
                 if hook.Run("ShouldDeleteSavedItems") == true then
                     lia.db.query("DELETE FROM lia_items WHERE itemID IN " .. range)
-                    lia.information(L("serverDeletedItems"))
+                    lia.information("Server Deleted Server Items (does not include Logical Items)")
                 else
                     lia.db.query("SELECT itemID, uniqueID, data FROM lia_items WHERE itemID IN " .. range, function(data)
                         if not data then return end
@@ -2741,7 +1077,7 @@ end
 
 function ClientAddText(client, ...)
     if not client or not IsValid(client) then
-        lia.error(L("invalidClientChatAddText"))
+        lia.error("Invalid client provided to chat.AddText")
         return
     end
 
@@ -2753,7 +1089,7 @@ end
 
 function ClientAddTextShadowed(client, ...)
     if not client or not IsValid(client) then
-        lia.error(L("invalidClientChatAddText"))
+        lia.error("Invalid client provided to chat.AddText")
         return
     end
 
@@ -2840,7 +1176,7 @@ function GM:CreateSalaryTimers()
                                 local finalPay = hook.Run("OnSalaryGiven", client, char, pay, charFaction, class)
                                 if isnumber(finalPay) then pay = finalPay end
                                 char:giveMoney(pay)
-                                client:notifyMoneyLocalized("salary", lia.currency.get(pay), L("salaryWord"))
+                                client:notifyMoney(string.format("You have received %s from your %s.", lia.currency.get(pay), "Salary"))
                             end
                         end
                     end
@@ -2886,72 +1222,18 @@ game.ConsoleCommand = function(cmd)
 end
 
 function GM:GetEntitySaveData(ent)
-    if lia.dialog.isDialogNPCEntity(ent) then
-        local saveData = {
-            uniqueID = ent.uniqueID or "",
-            npcName = ent.NPCName or ""
-        }
-
-        if ent.customData then saveData.customData = ent.customData end
-        return saveData
-    end
+    return hook.Run("GetPersistentEntitySaveData", ent)
 end
 
 function GM:OnEntityLoaded(ent, data)
-    if lia.dialog.isDialogNPCEntity(ent) and data and data.uniqueID and data.uniqueID ~= "" then
-        ent.uniqueID = data.uniqueID
-        ent.NPCName = data.npcName or "NPC"
-        local npcData = lia.dialog.getNPCData(data.uniqueID)
-        local hasCustomModel = data.data and data.data.customData and data.data.customData.model and data.data.customData.model ~= ""
-        if npcData then
-            if not hasCustomModel then ent:SetModel("models/Barney.mdl") end
-            if npcData.BodyGroups and istable(npcData.BodyGroups) then lia.util.applyBodygroups(ent, npcData.BodyGroups) end
-            if npcData.Skin then ent:SetSkin(npcData.Skin) end
-        end
-
-        if data.data and data.data.customData and istable(data.data.customData) then
-            ent.customData = data.data.customData
-            if data.data.customData.name and data.data.customData.name ~= "" then ent.NPCName = data.data.customData.name end
-            if data.data.customData.model and data.data.customData.model ~= "" then ent:SetModel(data.data.customData.model) end
-            if data.data.customData.skin then ent:SetSkin(tonumber(data.data.customData.skin) or 0) end
-            if data.data.customData.bodygroups and istable(data.data.customData.bodygroups) then lia.util.applyBodygroups(ent, data.data.customData.bodygroups) end
-        end
-
-        if data.data and data.data.customData and data.data.customData.animation and data.data.customData.animation ~= "auto" then
-            local sequenceIndex = ent:LookupSequence(data.data.customData.animation)
-            if sequenceIndex >= 0 then
-                ent.customAnimation = data.data.customData.animation
-                ent:ResetSequence(sequenceIndex)
-            else
-                ent.customAnimation = nil
-                data.data.customData.animation = "auto"
-            end
-        else
-            ent.customAnimation = nil
-        end
-
-        ent:setNetVar("uniqueID", data.uniqueID)
-        ent:setNetVar("NPCName", ent.NPCName)
-        if not ent.NPCName or ent.NPCName == "" then ent.NPCName = ent:getNetVar("NPCName", "NPC") end
-        ent:SetMoveType(MOVETYPE_VPHYSICS)
-        ent:SetSolid(SOLID_OBB)
-        ent:PhysicsInit(SOLID_OBB)
-        ent:SetCollisionGroup(COLLISION_GROUP_WORLD)
-        local physObj = ent:GetPhysicsObject()
-        if IsValid(physObj) then
-            physObj:EnableMotion(false)
-            physObj:Sleep()
-        end
-
-        ent:setAnim()
-    end
+    hook.Run("OnPersistentEntityLoaded", ent, data)
 end
 
 gameevent.Listen("server_addban")
 gameevent.Listen("server_removeban")
 hook.Add("server_addban", "LiliaLogServerBan", function(data)
-    MsgC(Color(83, 143, 239), "[Lilia] ", "[" .. L("admin") .. "] ")
-    MsgC(Color(255, 153, 0), L("banLogFormat", data.name, data.networkid, data.ban_length, data.ban_reason), "\n")
+    MsgC(Color(83, 143, 239), "[Lilia] ", "[" .. "Admin" .. "] ")
+    MsgC(Color(255, 153, 0), string.format("[BAN] %s (%s) was banned for %s minute(s): %s", data.name, data.networkid, data.ban_length, data.ban_reason), "\n")
     lia.db.insertTable({
         player = data.name or "",
         playerSteamID = data.networkid,
@@ -2964,8 +1246,8 @@ hook.Add("server_addban", "LiliaLogServerBan", function(data)
 end)
 
 hook.Add("server_removeban", "LiliaLogServerUnban", function(data)
-    MsgC(Color(83, 143, 239), "[Lilia] ", "[" .. L("admin") .. "] ")
-    MsgC(Color(255, 153, 0), L("unbanLogFormat", data.networkid), "\n")
+    MsgC(Color(83, 143, 239), "[Lilia] ", "[" .. "Admin" .. "] ")
+    MsgC(Color(255, 153, 0), string.format("[UNBAN] %s was unbanned.", data.networkid), "\n")
     lia.db.query("DELETE FROM lia_bans WHERE playerSteamID = " .. lia.db.convertDataType(data.networkid))
 end)
 

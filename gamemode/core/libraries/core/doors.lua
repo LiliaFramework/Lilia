@@ -1,0 +1,252 @@
+﻿lia.doors = lia.doors or {}
+lia.doors.presets = lia.doors.presets or {}
+lia.doors.stored = lia.doors.stored or {}
+DOOR_OWNER, DOOR_TENANT, DOOR_GUEST, DOOR_NONE = 3, 2, 1, 0
+lia.doors.AccessLabels = {
+    [DOOR_NONE] = "none",
+    [DOOR_GUEST] = "guest",
+    [DOOR_TENANT] = "tenant",
+    [DOOR_OWNER] = "owner"
+}
+
+lia.doors.defaultValues = {
+    name = "",
+    title = "",
+    price = 0,
+    disabled = false,
+    locked = false,
+    hidden = false,
+    noSell = false,
+    factions = {},
+    classes = {},
+    useCount = 0,
+    lastUsed = 0
+}
+
+function lia.doors.getDoorDefaultValues()
+    local extras = {}
+    hook.Run("CollectDoorDataFields", extras)
+    local defaults = table.Copy(lia.doors.defaultValues)
+    for key, info in pairs(extras) do
+        defaults[key] = info and info.default
+    end
+    return defaults, extras
+end
+
+if SERVER then
+    function lia.doors.setCachedData(door, data)
+        local doorID = door:MapCreationID()
+        if not doorID or doorID <= 0 then return end
+        local defaults = lia.doors.getDoorDefaultValues()
+        local filteredData = {}
+        local hasData = false
+        for key, value in pairs(data or {}) do
+            local defaultValue = defaults[key]
+            if defaultValue ~= nil then
+                if istable(value) and istable(defaultValue) then
+                    if not table.IsEmpty(value) then
+                        filteredData[key] = value
+                        hasData = true
+                    end
+                elseif value ~= defaultValue then
+                    filteredData[key] = value
+                    hasData = true
+                end
+            end
+        end
+
+        if hasData then
+            lia.doors.stored[doorID] = filteredData
+        else
+            lia.doors.stored[doorID] = nil
+        end
+
+        lia.doors.syncDoorData(door)
+    end
+
+    function lia.doors.getCachedData(door)
+        local doorID = door:MapCreationID()
+        if not doorID or doorID <= 0 then return {} end
+        local cachedData = lia.doors.stored[doorID] or {}
+        local defaults = select(1, lia.doors.getDoorDefaultValues())
+        local fullData = {}
+        for key, defaultValue in pairs(defaults) do
+            if cachedData[key] ~= nil then
+                fullData[key] = cachedData[key]
+            else
+                if istable(defaultValue) then
+                    fullData[key] = table.Copy(defaultValue)
+                else
+                    fullData[key] = defaultValue
+                end
+            end
+        end
+        return fullData
+    end
+
+    function lia.doors.syncDoorData(door)
+        local doorID = door:MapCreationID()
+        if not doorID or doorID <= 0 then return end
+        local data = lia.doors.stored[doorID]
+        net.Start("liaDoorDataUpdate")
+        net.WriteUInt(doorID, 16)
+        if data then
+            net.WriteBool(true)
+            net.WriteTable(data)
+        else
+            net.WriteBool(false)
+        end
+
+        net.Broadcast()
+    end
+
+    function lia.doors.syncAllDoorsToClient(client)
+        if not IsValid(client) then return end
+        lia.net.writeBigTable(client, "liaDoorDataBulk", lia.doors.stored, 2048)
+    end
+
+    function lia.doors.setData(door, data)
+        lia.doors.setCachedData(door, data)
+    end
+
+    function lia.doors.addPreset(mapName, presetData)
+        if not mapName or not presetData then
+            error("lia.doors.addPreset: Missing required parameters (mapName, presetData)")
+            return
+        end
+
+        lia.doors.presets[mapName] = presetData
+        lia.information("Door preset added for map: (" .. "): " .. mapName)
+    end
+
+    function lia.doors.getPreset(mapName)
+        return lia.doors.presets[mapName]
+    end
+
+    function lia.doors.verifyDatabaseSchema()
+        lia.db.getTableColumnInfo("lia_doors"):next(function(results)
+            local columns = {}
+            for _, row in ipairs(results) do
+                columns[row.name] = row.type
+            end
+
+            local expectedColumns = {
+                gamemode = "text",
+                map = "text",
+                id = "integer",
+                factions = "text",
+                classes = "text",
+                disabled = "integer",
+                hidden = "integer",
+                ownable = "integer",
+                name = "text",
+                price = "integer",
+                locked = "integer"
+            }
+
+            local _, extraFields = lia.doors.getDoorDefaultValues()
+            for colName, info in pairs(extraFields) do
+                expectedColumns[colName] = info and info.type or "text"
+            end
+
+            for colName, expectedType in pairs(expectedColumns) do
+                if not columns[colName] then
+                    lia.error("Missing expected column:" .. " " .. colName)
+                else
+                    local actual = columns[colName]:lower()
+                    local expected = expectedType:lower()
+                    local numericType = actual:match("^%w*int") ~= nil or actual:match("^decimal") ~= nil
+                    local stringType = actual:match("^%w*text") ~= nil or actual:match("^varchar") ~= nil or actual:match("^char") ~= nil
+                    if actual ~= expected and not (expected == "integer" and numericType) and not (expected == "text" and stringType) then
+                        lia.warning("Column " .. colName .. " has type " .. columns[colName] .. ", expected " .. expectedType)
+                    end
+                end
+            end
+
+            for colName, info in pairs(extraFields) do
+                if not columns[colName] then
+                    local columnType = info and info.type or "text"
+                    local defaultValue = info and info.default
+                    lia.db.createColumn("doors", colName, columnType, defaultValue):catch(function(err) lia.error("Failed to verify database schema: " .. tostring(err)) end)
+                end
+            end
+        end):catch(function(err) lia.error("Failed to verify database schema:" .. " " .. tostring(err)) end)
+    end
+
+    function lia.doors.cleanupCorruptedData()
+        local gamemode = SCHEMA and SCHEMA.folder or engine.ActiveGamemode()
+        local map = game.GetMap()
+        local condition = "gamemode = " .. lia.db.convertDataType(gamemode) .. " AND map = " .. lia.db.convertDataType(map)
+        local query = "SELECT id, factions, classes FROM lia_doors WHERE " .. condition
+        lia.db.query(query):next(function(res)
+            local rows = res.results or {}
+            local corruptedCount = 0
+            for _, row in ipairs(rows) do
+                local id = tonumber(row.id)
+                if not id then continue end
+                local needsUpdate = false
+                local newFactions = row.factions
+                local newClasses = row.classes
+                if row.factions and row.factions ~= "NULL" and row.factions ~= "" and tostring(row.factions):match("^[%d%.%-%s]+$") and not tostring(row.factions):match("[{}%[%]]") then
+                    lia.warning(string.format("Found corrupted factions data for door %s: %s", id, tostring(row.factions)))
+                    newFactions = ""
+                    needsUpdate = true
+                    corruptedCount = corruptedCount + 1
+                end
+
+                if row.classes and row.classes ~= "NULL" and row.classes ~= "" and tostring(row.classes):match("^[%d%.%-%s]+$") and not tostring(row.classes):match("[{}%[%]]") then
+                    lia.warning(string.format("Found corrupted classes data for door %s: %s", id, tostring(row.classes)))
+                    newClasses = ""
+                    needsUpdate = true
+                    corruptedCount = corruptedCount + 1
+                end
+
+                if needsUpdate then
+                    local updateQuery = "UPDATE lia_doors SET factions = " .. lia.db.convertDataType(newFactions) .. ", classes = " .. lia.db.convertDataType(newClasses) .. " WHERE " .. condition .. " AND id = " .. id
+                    lia.db.query(updateQuery):next(function() lia.information(string.format("Fixed corrupted data for door %s", id)) end):catch(function(err) lia.error(string.format("Failed to fix corrupted data for door %s: %s", id, tostring(err))) end)
+                end
+            end
+
+            if corruptedCount > 0 then lia.information(string.format("Found and fixed %s corrupted door records", corruptedCount)) end
+        end):catch(function(err) lia.error(string.format("Failed to check corrupted door data: %s", tostring(err))) end)
+    end
+end
+
+function lia.doors.getData(door)
+    if SERVER then
+        return lia.doors.getCachedData(door)
+    else
+        return lia.doors.getCachedData(door)
+    end
+end
+
+if CLIENT then
+    lia.doors.stored = lia.doors.stored or {}
+    function lia.doors.getCachedData(door)
+        local doorID = door:MapCreationID()
+        if not doorID or doorID <= 0 then return {} end
+        local cachedData = lia.doors.stored[doorID] or {}
+        local defaults = select(1, lia.doors.getDoorDefaultValues())
+        local fullData = {}
+        for key, defaultValue in pairs(defaults) do
+            if cachedData[key] ~= nil then
+                fullData[key] = cachedData[key]
+            else
+                if istable(defaultValue) then
+                    fullData[key] = table.Copy(defaultValue)
+                else
+                    fullData[key] = defaultValue
+                end
+            end
+        end
+        return fullData
+    end
+
+    function lia.doors.updateCachedData(doorID, data)
+        if data then
+            lia.doors.stored[doorID] = data
+        else
+            lia.doors.stored[doorID] = nil
+        end
+    end
+end

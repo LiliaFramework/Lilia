@@ -26,7 +26,7 @@ function MODULE:GetDefaultCharDesc(client, faction)
     local info = lia.faction.indices[faction]
     if info and info.GetDefaultDesc then return info:GetDefaultDesc(client) end
     if faction == FACTION_STAFF then
-        local discord = SERVER and client:getLiliaData("staffDiscord", L("notProvided")) or L("notProvided")
-        return L("staffCharacterDiscordSteamID", discord, client:SteamID()), true
+        local discord = SERVER and client:getLiliaData("staffDiscord", "Not Provided") or "Not Provided"
+        return string.format("Staff Character - Discord: %s, SteamID: %s", discord, client:SteamID()), true
     end
 end

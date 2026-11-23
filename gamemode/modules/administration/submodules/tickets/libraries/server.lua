@@ -35,15 +35,15 @@ lia.command.add("ticket", {
             type = "string"
         },
     },
-    desc = "@ticketDesc",
+    desc = "Sends a support ticket to staff.",
     onRun = function(client, arguments)
         local message = table.concat(arguments, " ")
         if not message or message == "" then
-            client:notifyErrorLocalized("mustProvideString")
+            client:notifyError(string.format("Must Provide a String"))
             return
         end
 
-        ClientAddText(client, Color(70, 0, 130), L("you"), Color(151, 211, 255), " " .. L("ticketMessageToAdmins") .. ": ", Color(0, 255, 0), message)
+        ClientAddText(client, Color(70, 0, 130), "You", Color(151, 211, 255), " " .. "to admins(" .. "): ", Color(0, 255, 0), message)
         SendPopup(client, message)
     end
 })
@@ -51,7 +51,7 @@ lia.command.add("ticket", {
 function MODULE:PlayerSay(client, text)
     if text and string.sub(text, 1, 1) == "@" then
         local message = string.sub(text, 2)
-        ClientAddText(client, Color(70, 0, 130), L("you"), Color(151, 211, 255), " " .. L("ticketMessageToAdmins") .. ": ", Color(0, 255, 0), message)
+        ClientAddText(client, Color(70, 0, 130), "You", Color(151, 211, 255), " " .. "to admins(" .. "): ", Color(0, 255, 0), message)
         SendPopup(client, message)
         return ""
     end

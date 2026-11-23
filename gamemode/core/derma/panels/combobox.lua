@@ -1,4 +1,4 @@
-﻿local PANEL = {}
+local PANEL = {}
 function PANEL:Init()
     self.choices = {}
     self.selected = nil
@@ -63,7 +63,7 @@ function PANEL:Init()
             self:CloseMenu()
         else
             self:OpenMenu()
-            lia.websound.playButtonSound()
+            lia.webcontent.playButtonSound()
         end
     end
 end
@@ -233,7 +233,7 @@ function PANEL:OpenMenu()
                     if not IsValid(self) then return end
                     self:ChooseOption(choice.text, i)
                     self:CloseMenu()
-                    lia.websound.playButtonSound()
+                    lia.webcontent.playButtonSound()
                 end
             end
         end
@@ -289,7 +289,7 @@ function PANEL:OpenMenu()
                     if not IsValid(self) then return end
                     self:ChooseOption(choice.text, i)
                     self:CloseMenu()
-                    lia.websound.playButtonSound()
+                    lia.webcontent.playButtonSound()
                 end
             end
         end

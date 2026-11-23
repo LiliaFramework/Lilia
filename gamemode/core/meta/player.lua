@@ -1,189 +1,11 @@
-﻿--[[
-    Hooks:
-        CanPerformVendorEdit(self, vendor)
-
-    Purpose:
-        Determines whether a player may edit a vendor through the player meta vendor-editing flow.
-
-    Category:
-        Vendor
-
-    Parameters:
-        self (Player)
-            The player attempting to edit the vendor.
-
-        vendor (Entity)
-            The vendor entity being edited.
-
-    Returns:
-        boolean|nil
-            Return false to block vendor editing. Returning nil allows the default behavior to continue.
-
-    Example Usage:
-        ```lua
-        hook.Add("CanPerformVendorEdit", "liaExampleCanPerformVendorEdit", function(self, vendor)
-            if not self:isStaffOnDuty() then
-                return false
-            end
-        end)
-        ```
-
-    Realm:
-        Server
-]]
---[[
-    Hooks:
-        CharHasFlags(self, flags)
-
-    Purpose:
-        Allows plugins or modules to override player-side flag checks performed through `hasFlags`.
-
-    Category:
-        Character
-
-    Parameters:
-        self (Player)
-            The player whose active character flags are being checked.
-
-        flags (string)
-            The flag characters being queried.
-
-    Returns:
-        boolean|nil
-            Return true or false to override the flag check. Returning nil allows the default behavior to continue.
-
-    Example Usage:
-        ```lua
-        hook.Add("CharHasFlags", "liaExampleCharHasFlags", function(self, flags)
-            if self:isStaffOnDuty() and flags == "P" then
-                return true
-            end
-        end)
-        ```
-
-    Realm:
-        Shared
-]]
---[[
-    Hooks:
-        GetRagdollTime(self, time)
-
-    Purpose:
-        Allows plugins or modules to override how long a player should stay ragdolled.
-
-    Category:
-        Character
-
-    Parameters:
-        self (Player)
-            The player being ragdolled.
-
-        time (number)
-            The current ragdoll duration in seconds.
-
-    Returns:
-        number|nil
-            Return a numeric duration to override the ragdoll time. Returning nil allows the default behavior to continue.
-
-    Example Usage:
-        ```lua
-        hook.Add("GetRagdollTime", "liaExampleGetRagdollTime", function(self, time)
-            if self:Crouching() then
-                return time * 0.5
-            end
-        end)
-        ```
-
-    Realm:
-        Server
-]]
---[[
-    Hooks:
-        OnCharFallover(self, entity, state)
-
-    Purpose:
-        Runs when a player's character enters or leaves the ragdolled fallover state.
-
-    Category:
-        Character
-
-    Parameters:
-        self (Player)
-            The player whose character changed fallover state.
-
-        entity (Entity)
-            The ragdoll entity involved in the state change.
-
-        state (boolean)
-            True when the player entered fallover, false when they recovered.
-
-    Returns:
-        nil
-
-    Example Usage:
-        ```lua
-        hook.Add("OnCharFallover", "liaExampleOnCharFallover", function(self, entity, state)
-            print("Fallover state:", state)
-        end)
-        ```
-
-    Realm:
-        Server
-]]
---[[
-    Folder: Developer - Meta Tables
-    File: player.md
-]]
---[[
-    Player
-
-    Player metadata helpers for character access, notifications, requests, progression, persistence, and ragdoll state.
-]]
---[[
-    Overview:
-        The player meta table extends Garry's Mod player entities with Lilia-specific helpers for resolving active characters, handling action bars and prompts, managing flags and money, querying stored profile data, syncing local and networked vars, and coordinating server-side gameplay state such as stamina, ragdolls, and bans.
-]]
 local playerMeta = FindMetaTable("Player")
 do
     playerMeta.steamName = playerMeta.steamName or playerMeta.Name
     playerMeta.SteamName = playerMeta.steamName
-    --[[
-        Purpose:
-            Returns the currently loaded character attached to this player.
-
-        Returns:
-            Character|nil
-                The active character object when one is loaded.
-
-        Example Usage:
-            ```lua
-            local character = client:getChar()
-            if character then print(character:getName()) end
-            ```
-
-        Realm:
-            Shared
-    ]]
     function playerMeta:getChar()
         return lia.char.getCharacter(self.getNetVar(self, "char"), self)
     end
 
-    --[[
-        Purpose:
-            Produces a string representation of the player using the active character name when available.
-
-        Returns:
-            string
-                The character name or the Steam display name.
-
-        Example Usage:
-            ```lua
-            print(client:tostring())
-            ```
-
-        Realm:
-            Shared
-    ]]
     function playerMeta:tostring()
         local character = self:getChar()
         if character and character.getName then
@@ -193,22 +15,6 @@ do
         end
     end
 
-    --[[
-        Purpose:
-            Overrides the player name lookup to prefer the active character name.
-
-        Returns:
-            string
-                The character name or the original Steam name fallback.
-
-        Example Usage:
-            ```lua
-            print(client:Name())
-            ```
-
-        Realm:
-            Shared
-    ]]
     function playerMeta:Name()
         local character = self.getChar(self)
         return character and character.getName(character) or self.steamName(self)
@@ -218,60 +24,12 @@ do
     playerMeta.GetName = playerMeta.Name
 end
 
---[[
-    Purpose:
-        Restarts a player gesture locally and syncs it to nearby players.
-
-    Parameters:
-        a (number)
-            The gesture slot.
-        b (number)
-            The animation activity or gesture ID.
-        c (boolean|number|nil)
-            Optional autokill or blend argument passed to the engine call.
-
-    Returns:
-        nil
-
-    Example Usage:
-        ```lua
-        client:doGesture(GESTURE_SLOT_ATTACK_AND_RELOAD, ACT_GMOD_GESTURE_WAVE, true)
-        ```
-
-    Realm:
-        Shared
-]]
 function playerMeta:doGesture(a, b, c)
     self:AnimRestartGesture(a, b, c)
     self:AnimRestartGesture(a, b, c)
     netstream.Start(self:GetPos(), "liaSyncGesture", self, a, b, c)
 end
 
---[[
-    Purpose:
-        Starts, updates, or clears the action bar for this player and optionally runs a callback when it completes.
-
-    Parameters:
-        text (string|nil)
-            The label to display, or `nil` to clear the action.
-        time (number|nil)
-            The duration in seconds.
-        callback (function|nil)
-            Runs when the timer completes successfully.
-
-    Returns:
-        nil
-
-    Example Usage:
-        ```lua
-        client:setAction("Searching crate", 4, function(ply)
-            ply:notify("Search complete.")
-        end)
-        ```
-
-    Realm:
-        Shared
-]]
 function playerMeta:setAction(text, time, callback)
     if time and time <= 0 then
         if callback then callback(self) end
@@ -308,35 +66,6 @@ function playerMeta:setAction(text, time, callback)
     end
 end
 
---[[
-    Purpose:
-        Requires the player to keep looking at an entity for a duration before a callback fires.
-
-    Parameters:
-        entity (Entity)
-            The entity the player must keep tracing.
-        callback (function|nil)
-            Runs when the stare completes.
-        time (number)
-            The total stare time in seconds.
-        onCancel (function|nil)
-            Runs if the action is interrupted.
-        distance (number|nil)
-            Optional trace distance override.
-
-    Returns:
-        nil
-
-    Example Usage:
-        ```lua
-        client:doStaredAction(door, function()
-            client:notify("Unlocked.")
-        end, 3)
-        ```
-
-    Realm:
-        Shared
-]]
 function playerMeta:doStaredAction(entity, callback, time, onCancel, distance)
     local uniqueID = "liaStare" .. self:SteamID64()
     local data = {}
@@ -368,21 +97,6 @@ function playerMeta:doStaredAction(entity, callback, time, onCancel, distance)
     end)
 end
 
---[[
-    Purpose:
-        Stops the player's active action bar and stare timer.
-
-    Returns:
-        nil
-
-    Example Usage:
-        ```lua
-        client:stopAction()
-        ```
-
-    Realm:
-        Server
-]]
 function playerMeta:stopAction()
     timer.Remove("liaAct" .. self:SteamID64())
     timer.Remove("liaStare" .. self:SteamID64())
@@ -391,31 +105,9 @@ function playerMeta:stopAction()
     net.Send(self)
 end
 
---[[
-    Purpose:
-        Checks whether the player has access to a named administrative privilege.
-
-    Parameters:
-        privilegeName (string)
-            The privilege identifier to test.
-
-    Returns:
-        boolean
-            `true` when the player has access.
-
-    Example Usage:
-        ```lua
-        if client:hasPrivilege("canEditVendors") then
-            print("Vendor editing allowed.")
-        end
-        ```
-
-    Realm:
-        Shared
-]]
 function playerMeta:hasPrivilege(privilegeName)
     if not isstring(privilegeName) then
-        lia.error(L("hasPrivilegeExpectedString", tostring(privilegeName)))
+        lia.error(string.format("Privilege name must be a string, got %s", tostring(privilegeName)))
         return false
     end
     return lia.admin.hasAccess(self, privilegeName) or self:hasStaffCharacterPermission(privilegeName)
@@ -432,21 +124,6 @@ function playerMeta:hasStaffCharacterPermission(privilegeName)
     return allowed
 end
 
---[[
-    Purpose:
-        Removes the player's current ragdoll entity and clears the associated network var.
-
-    Returns:
-        nil
-
-    Example Usage:
-        ```lua
-        client:removeRagdoll()
-        ```
-
-    Realm:
-        Server
-]]
 function playerMeta:removeRagdoll()
     local ragdoll = self:GetRagdollEntity()
     if not IsValid(ragdoll) then return end
@@ -455,25 +132,6 @@ function playerMeta:removeRagdoll()
     self:setNetVar("ragdoll", nil)
 end
 
---[[
-    Purpose:
-        Resolves the equipped inventory item that matches the player's active weapon.
-
-    Returns:
-        Weapon|nil
-            The active weapon entity when it maps to an equipped item.
-        Item|nil
-            The matching inventory item.
-
-    Example Usage:
-        ```lua
-        local weapon, item = client:getItemWeapon()
-        if item then print(item.uniqueID) end
-        ```
-
-    Realm:
-        Shared
-]]
 function playerMeta:getItemWeapon()
     local character = self:getChar()
     local inv = character:getInv()
@@ -491,44 +149,10 @@ function playerMeta:getItemWeapon()
     end
 end
 
---[[
-    Purpose:
-        Detects whether the player is connected through Steam Family Sharing.
-
-    Returns:
-        boolean
-            `true` when the owner's SteamID differs from the current player's SteamID.
-
-    Example Usage:
-        ```lua
-        if client:isFamilySharedAccount() then
-            print("Family-shared account detected.")
-        end
-        ```
-
-    Realm:
-        Shared
-]]
 function playerMeta:isFamilySharedAccount()
     return util.SteamIDFrom64(self:OwnerSteamID64()) ~= self:SteamID()
 end
 
---[[
-    Purpose:
-        Calculates a nearby valid world position for dropping an item in front of the player.
-
-    Returns:
-        Vector
-            The traced drop position.
-
-    Example Usage:
-        ```lua
-        local dropPos = client:getItemDropPos()
-        ```
-
-    Realm:
-        Shared
-]]
 function playerMeta:getItemDropPos()
     local data = {}
     data.start = self:GetShootPos()
@@ -542,23 +166,6 @@ function playerMeta:getItemDropPos()
     return trace.HitPos
 end
 
---[[
-    Purpose:
-        Returns the item table for the player's active character inventory.
-
-    Returns:
-        table|nil
-            A table of inventory items when the character and inventory exist.
-
-    Example Usage:
-        ```lua
-        local items = client:getItems() or {}
-        print(#items)
-        ```
-
-    Realm:
-        Shared
-]]
 function playerMeta:getItems()
     local character = self:getChar()
     if character then
@@ -567,26 +174,6 @@ function playerMeta:getItems()
     end
 end
 
---[[
-    Purpose:
-        Traces forward from the player and returns the entity they are looking at.
-
-    Parameters:
-        distance (number|nil)
-            Optional maximum trace distance. Defaults to `96`.
-
-    Returns:
-        Entity
-            The traced entity, which may be invalid.
-
-    Example Usage:
-        ```lua
-        local target = client:getTracedEntity(128)
-        ```
-
-    Realm:
-        Shared
-]]
 function playerMeta:getTracedEntity(distance)
     if not distance then distance = 96 end
     local data = {}
@@ -597,27 +184,6 @@ function playerMeta:getTracedEntity(distance)
     return targetEntity
 end
 
---[[
-    Purpose:
-        Sends a plain notification to the player or local client.
-
-    Parameters:
-        message (string)
-            The notification text.
-        notifType (string|nil)
-            The notice style. Defaults to `"default"`.
-
-    Returns:
-        nil
-
-    Example Usage:
-        ```lua
-        client:notify("Inventory updated.")
-        ```
-
-    Realm:
-        Shared
-]]
 function playerMeta:notify(message, notifType)
     if SERVER then
         lia.notices.notify(self, message, notifType or "default")
@@ -626,29 +192,6 @@ function playerMeta:notify(message, notifType)
     end
 end
 
---[[
-    Purpose:
-        Sends a localized notification with formatting arguments.
-
-    Parameters:
-        message (string)
-            The localization key or text token.
-        notifType (string|nil)
-            The notice style. Defaults to `"default"`.
-        ... (any)
-            Additional localization arguments.
-
-    Returns:
-        nil
-
-    Example Usage:
-        ```lua
-        client:notifyLocalized("salary", "money", "250", "salary")
-        ```
-
-    Realm:
-        Shared
-]]
 function playerMeta:notifyLocalized(message, notifType, ...)
     if SERVER then
         lia.notices.notifyLocalized(self, message, notifType or "default", ...)
@@ -657,25 +200,6 @@ function playerMeta:notifyLocalized(message, notifType, ...)
     end
 end
 
---[[
-    Purpose:
-        Sends an error notification.
-
-    Parameters:
-        message (string)
-            The error text.
-
-    Returns:
-        nil
-
-    Example Usage:
-        ```lua
-        client:notifyError("You cannot do that.")
-        ```
-
-    Realm:
-        Shared
-]]
 function playerMeta:notifyError(message)
     if SERVER then
         lia.notices.notify(self, message, "error")
@@ -684,25 +208,6 @@ function playerMeta:notifyError(message)
     end
 end
 
---[[
-    Purpose:
-        Sends a warning notification.
-
-    Parameters:
-        message (string)
-            The warning text.
-
-    Returns:
-        nil
-
-    Example Usage:
-        ```lua
-        client:notifyWarning("You are over-encumbered.")
-        ```
-
-    Realm:
-        Shared
-]]
 function playerMeta:notifyWarning(message)
     if SERVER then
         lia.notices.notify(self, message, "warning")
@@ -711,25 +216,6 @@ function playerMeta:notifyWarning(message)
     end
 end
 
---[[
-    Purpose:
-        Sends an informational notification.
-
-    Parameters:
-        message (string)
-            The info text.
-
-    Returns:
-        nil
-
-    Example Usage:
-        ```lua
-        client:notifyInfo("Waypoint updated.")
-        ```
-
-    Realm:
-        Shared
-]]
 function playerMeta:notifyInfo(message)
     if SERVER then
         lia.notices.notify(self, message, "info")
@@ -738,25 +224,6 @@ function playerMeta:notifyInfo(message)
     end
 end
 
---[[
-    Purpose:
-        Sends a success notification.
-
-    Parameters:
-        message (string)
-            The success text.
-
-    Returns:
-        nil
-
-    Example Usage:
-        ```lua
-        client:notifySuccess("Craft complete.")
-        ```
-
-    Realm:
-        Shared
-]]
 function playerMeta:notifySuccess(message)
     if SERVER then
         lia.notices.notify(self, message, "success")
@@ -765,25 +232,6 @@ function playerMeta:notifySuccess(message)
     end
 end
 
---[[
-    Purpose:
-        Sends a money-themed notification.
-
-    Parameters:
-        message (string)
-            The money notice text.
-
-    Returns:
-        nil
-
-    Example Usage:
-        ```lua
-        client:notifyMoney("+250 tokens")
-        ```
-
-    Realm:
-        Shared
-]]
 function playerMeta:notifyMoney(message)
     if SERVER then
         lia.notices.notify(self, message, "money")
@@ -792,25 +240,6 @@ function playerMeta:notifyMoney(message)
     end
 end
 
---[[
-    Purpose:
-        Sends an admin-themed notification.
-
-    Parameters:
-        message (string)
-            The admin notice text.
-
-    Returns:
-        nil
-
-    Example Usage:
-        ```lua
-        client:notifyAdmin("Staff mode enabled.")
-        ```
-
-    Realm:
-        Shared
-]]
 function playerMeta:notifyAdmin(message)
     if SERVER then
         lia.notices.notify(self, message, "admin")
@@ -819,27 +248,6 @@ function playerMeta:notifyAdmin(message)
     end
 end
 
---[[
-    Purpose:
-        Sends a localized error notification.
-
-    Parameters:
-        key (string)
-            The localization token.
-        ... (any)
-            Additional localization arguments.
-
-    Returns:
-        nil
-
-    Example Usage:
-        ```lua
-        client:notifyErrorLocalized("notEnoughMoney")
-        ```
-
-    Realm:
-        Shared
-]]
 function playerMeta:notifyErrorLocalized(key, ...)
     if SERVER then
         lia.notices.notifyLocalized(self, key, "error", ...)
@@ -848,27 +256,6 @@ function playerMeta:notifyErrorLocalized(key, ...)
     end
 end
 
---[[
-    Purpose:
-        Sends a localized warning notification.
-
-    Parameters:
-        key (string)
-            The localization token.
-        ... (any)
-            Additional localization arguments.
-
-    Returns:
-        nil
-
-    Example Usage:
-        ```lua
-        client:notifyWarningLocalized("storageNotLocked")
-        ```
-
-    Realm:
-        Shared
-]]
 function playerMeta:notifyWarningLocalized(key, ...)
     if SERVER then
         lia.notices.notifyLocalized(self, key, "warning", ...)
@@ -877,27 +264,6 @@ function playerMeta:notifyWarningLocalized(key, ...)
     end
 end
 
---[[
-    Purpose:
-        Sends a localized informational notification.
-
-    Parameters:
-        key (string)
-            The localization token.
-        ... (any)
-            Additional localization arguments.
-
-    Returns:
-        nil
-
-    Example Usage:
-        ```lua
-        client:notifyInfoLocalized("questUpdate")
-        ```
-
-    Realm:
-        Shared
-]]
 function playerMeta:notifyInfoLocalized(key, ...)
     if SERVER then
         lia.notices.notifyLocalized(self, key, "info", ...)
@@ -906,27 +272,6 @@ function playerMeta:notifyInfoLocalized(key, ...)
     end
 end
 
---[[
-    Purpose:
-        Sends a localized success notification.
-
-    Parameters:
-        key (string)
-            The localization token.
-        ... (any)
-            Additional localization arguments.
-
-    Returns:
-        nil
-
-    Example Usage:
-        ```lua
-        client:notifySuccessLocalized("npcCustomizedSuccessfully")
-        ```
-
-    Realm:
-        Shared
-]]
 function playerMeta:notifySuccessLocalized(key, ...)
     if SERVER then
         lia.notices.notifyLocalized(self, key, "success", ...)
@@ -935,27 +280,6 @@ function playerMeta:notifySuccessLocalized(key, ...)
     end
 end
 
---[[
-    Purpose:
-        Sends a localized money notification.
-
-    Parameters:
-        key (string)
-            The localization token.
-        ... (any)
-            Additional localization arguments.
-
-    Returns:
-        nil
-
-    Example Usage:
-        ```lua
-        client:notifyMoneyLocalized("salary", "250", "salary")
-        ```
-
-    Realm:
-        Shared
-]]
 function playerMeta:notifyMoneyLocalized(key, ...)
     if SERVER then
         lia.notices.notifyLocalized(self, key, "money", ...)
@@ -964,27 +288,6 @@ function playerMeta:notifyMoneyLocalized(key, ...)
     end
 end
 
---[[
-    Purpose:
-        Sends a localized admin notification.
-
-    Parameters:
-        key (string)
-            The localization token.
-        ... (any)
-            Additional localization arguments.
-
-    Returns:
-        nil
-
-    Example Usage:
-        ```lua
-        client:notifyAdminLocalized("groupPermissionsUpdated")
-        ```
-
-    Realm:
-        Shared
-]]
 function playerMeta:notifyAdminLocalized(key, ...)
     if SERVER then
         lia.notices.notifyLocalized(self, key, "admin", ...)
@@ -993,28 +296,6 @@ function playerMeta:notifyAdminLocalized(key, ...)
     end
 end
 
---[[
-    Purpose:
-        Checks whether the player can edit a vendor, honoring hook overrides first.
-
-    Parameters:
-        vendor (Entity)
-            The vendor entity to test.
-
-    Returns:
-        boolean
-            `true` when editing is allowed.
-
-    Example Usage:
-        ```lua
-        if client:canEditVendor(vendor) then
-            print("Vendor editing permitted.")
-        end
-        ```
-
-    Realm:
-        Shared
-]]
 function playerMeta:canEditVendor(vendor)
     local hookResult = hook.Run("CanPerformVendorEdit", self, vendor)
     if hookResult ~= nil then return hookResult end
@@ -1039,68 +320,14 @@ local function groupHasType(groupName, t)
     return false
 end
 
---[[
-    Purpose:
-        Checks whether the player's admin group is classified as staff.
-
-    Returns:
-        boolean
-            `true` when the user's group inherits the `Staff` type.
-
-    Example Usage:
-        ```lua
-        if client:isStaff() then print("Staff account.") end
-        ```
-
-    Realm:
-        Shared
-]]
 function playerMeta:isStaff()
     return groupHasType(self:GetUserGroup(), "Staff")
 end
 
---[[
-    Purpose:
-        Checks whether the player is currently on the staff faction.
-
-    Returns:
-        boolean
-            `true` when the player's team matches `FACTION_STAFF`.
-
-    Example Usage:
-        ```lua
-        if client:isStaffOnDuty() then print("On-duty staff.") end
-        ```
-
-    Realm:
-        Shared
-]]
 function playerMeta:isStaffOnDuty()
     return self:Team() == FACTION_STAFF
 end
 
---[[
-    Purpose:
-        Checks whether the player has access to a faction whitelist.
-
-    Parameters:
-        faction (number)
-            The faction index to test.
-
-    Returns:
-        boolean
-            `true` when the faction is default or whitelisted for this schema.
-
-    Example Usage:
-        ```lua
-        if client:hasWhitelist(FACTION_CWU) then
-            print("Whitelist available.")
-        end
-        ```
-
-    Realm:
-        Shared
-]]
 function playerMeta:hasWhitelist(faction)
     local data = lia.faction.indices[faction]
     if data then
@@ -1112,23 +339,6 @@ function playerMeta:hasWhitelist(faction)
     return false
 end
 
---[[
-    Purpose:
-        Returns the class definition for the player's active character.
-
-    Returns:
-        table|nil
-            The class data table when a class is assigned.
-
-    Example Usage:
-        ```lua
-        local classData = client:getClassData()
-        if classData then print(classData.name) end
-        ```
-
-    Realm:
-        Shared
-]]
 function playerMeta:getClassData()
     local character = self:getChar()
     if character then
@@ -1140,131 +350,27 @@ function playerMeta:getClassData()
     end
 end
 
---[[
-    Purpose:
-        Provides DarkRP compatibility for retrieving player money.
-
-    Parameters:
-        var (string)
-            The DarkRP var name to query.
-
-    Returns:
-        number|nil
-            The player's money for the `"money"` key.
-
-    Example Usage:
-        ```lua
-        local money = client:getDarkRPVar("money")
-        ```
-
-    Realm:
-        Shared
-]]
 function playerMeta:getDarkRPVar(var)
     if var ~= "money" then return end
     local char = self:getChar()
     return char:getMoney()
 end
 
---[[
-    Purpose:
-        Returns the current money value from the player's active character.
-
-    Returns:
-        number
-            The character's money, or `0` if no character is loaded.
-
-    Example Usage:
-        ```lua
-        print(client:getMoney())
-        ```
-
-    Realm:
-        Shared
-]]
 function playerMeta:getMoney()
     local character = self:getChar()
     return character and character:getMoney() or 0
 end
 
---[[
-    Purpose:
-        Checks whether the player can afford a given amount.
-
-    Parameters:
-        amount (number)
-            The amount to compare against the player's money.
-
-    Returns:
-        boolean|nil
-            `true` when the character has enough money.
-
-    Example Usage:
-        ```lua
-        if client:canAfford(100) then
-            print("Purchase allowed.")
-        end
-        ```
-
-    Realm:
-        Shared
-]]
 function playerMeta:canAfford(amount)
     local character = self:getChar()
     return character and character:hasMoney(amount)
 end
 
---[[
-    Purpose:
-        Checks whether the active character meets a minimum level for one skill.
-
-    Parameters:
-        skill (string)
-            The attribute or skill identifier.
-        level (number)
-            The required level.
-
-    Returns:
-        boolean
-            `true` when the character's effective attribute meets the threshold.
-
-    Example Usage:
-        ```lua
-        if client:hasSkillLevel("stm", 10) then
-            print("Stamina requirement met.")
-        end
-        ```
-
-    Realm:
-        Shared
-]]
 function playerMeta:hasSkillLevel(skill, level)
     local currentLevel = self:getChar():getAttrib(skill, 0)
     return currentLevel >= level
 end
 
---[[
-    Purpose:
-        Checks whether the active character satisfies every required skill threshold in a table.
-
-    Parameters:
-        requiredSkillLevels (table|nil)
-            A map of skill IDs to minimum levels.
-
-    Returns:
-        boolean
-            `true` when all requirements are satisfied or no requirements were supplied.
-
-    Example Usage:
-        ```lua
-        if client:meetsRequiredSkills({str = 5, stm = 10}) then
-            print("All skill requirements met.")
-        end
-        ```
-
-    Realm:
-        Shared
-]]
 function playerMeta:meetsRequiredSkills(requiredSkillLevels)
     if not requiredSkillLevels then return true end
     for skill, level in pairs(requiredSkillLevels) do
@@ -1273,98 +379,21 @@ function playerMeta:meetsRequiredSkills(requiredSkillLevels)
     return true
 end
 
---[[
-    Purpose:
-        Returns the active character's flags.
-
-    Returns:
-        string
-            The character flag string, or an empty string.
-
-    Example Usage:
-        ```lua
-        print(client:getFlags())
-        ```
-
-    Realm:
-        Shared
-]]
 function playerMeta:getFlags()
     local char = self:getChar()
     return char and char:getFlags() or ""
 end
 
---[[
-    Purpose:
-        Grants flags to the active character.
-
-    Parameters:
-        flags (string)
-            The flags to add.
-
-    Returns:
-        nil
-
-    Example Usage:
-        ```lua
-        client:giveFlags("ab")
-        ```
-
-    Realm:
-        Shared
-]]
 function playerMeta:giveFlags(flags)
     local char = self:getChar()
     if char then char:giveFlags(flags) end
 end
 
---[[
-    Purpose:
-        Removes flags from the active character.
-
-    Parameters:
-        flags (string)
-            The flags to remove.
-
-    Returns:
-        nil
-
-    Example Usage:
-        ```lua
-        client:takeFlags("b")
-        ```
-
-    Realm:
-        Shared
-]]
 function playerMeta:takeFlags(flags)
     local char = self:getChar()
     if char then char:takeFlags(flags) end
 end
 
---[[
-    Purpose:
-        Broadcasts or applies procedural bone animation state for the player.
-
-    Parameters:
-        active (boolean)
-            Whether the animation should be applied or cleared.
-        boneData (table)
-            A map of bone names to target angles.
-
-    Returns:
-        nil
-
-    Example Usage:
-        ```lua
-        client:networkAnimation(true, {
-            ["ValveBiped.Bip01_Head1"] = Angle(10, 0, 0)
-        })
-        ```
-
-    Realm:
-        Shared
-]]
 function playerMeta:networkAnimation(active, boneData)
     if SERVER then
         net.Start("liaAnimationStatus")
@@ -1394,22 +423,6 @@ function playerMeta:networkAnimation(active, boneData)
     end
 end
 
---[[
-    Purpose:
-        Returns the full Lilia profile data table for this player on the current realm.
-
-    Returns:
-        table
-            The server-side `liaData` table or the client-side `lia.localData` cache.
-
-    Example Usage:
-        ```lua
-        local allData = client:getAllLiliaData()
-        ```
-
-    Realm:
-        Shared
-]]
 function playerMeta:getAllLiliaData()
     if SERVER then
         self.liaData = self.liaData or {}
@@ -1420,31 +433,6 @@ function playerMeta:getAllLiliaData()
     end
 end
 
---[[
-    Purpose:
-        Sets a waypoint for the player or renders one locally until it is reached.
-
-    Parameters:
-        name (string)
-            The waypoint label.
-        vector (Vector)
-            The world position to target.
-        logo (string|nil)
-            Optional material path for the waypoint icon.
-        onReach (function|nil)
-            Optional callback fired when the waypoint is cleared locally.
-
-    Returns:
-        nil
-
-    Example Usage:
-        ```lua
-        client:setWaypoint("Safehouse", Vector(0, 0, 0), "materials/icon16/house.png")
-        ```
-
-    Realm:
-        Shared
-]]
 function playerMeta:setWaypoint(name, vector, logo, onReach)
     if SERVER then
         net.Start("liaSetWaypoint")
@@ -1481,7 +469,7 @@ function playerMeta:setWaypoint(name, vector, logo, onReach)
 
                 surface.SetFont("LiliaFont.17")
                 local nameText = name
-                local metersText = L("meters", howClose)
+                local metersText = string.format("%s Meters", howClose)
                 local nameTw, nameTh = surface.GetTextSize(nameText)
                 local metersTw, metersTh = surface.GetTextSize(metersText)
                 local containerTw = math.max(nameTw, metersTw)
@@ -1525,28 +513,6 @@ function playerMeta:setWaypoint(name, vector, logo, onReach)
     end
 end
 
---[[
-    Purpose:
-        Returns one stored Lilia data value with a fallback default.
-
-    Parameters:
-        key (string)
-            The data key to fetch.
-        default (any)
-            The fallback value when the key is missing.
-
-    Returns:
-        any
-            The stored value or the provided default.
-
-    Example Usage:
-        ```lua
-        local whitelists = client:getLiliaData("whitelists", {})
-        ```
-
-    Realm:
-        Shared
-]]
 function playerMeta:getLiliaData(key, default)
     local data
     if SERVER then
@@ -1562,22 +528,6 @@ function playerMeta:getLiliaData(key, default)
     end
 end
 
---[[
-    Purpose:
-        Returns the player's configured main character ID.
-
-    Returns:
-        number|nil
-            The main character ID, if one has been set.
-
-    Example Usage:
-        ```lua
-        local mainCharID = client:getMainCharacter()
-        ```
-
-    Realm:
-        Shared
-]]
 function playerMeta:getMainCharacter()
     local mainCharData = self:getLiliaData("mainCharacter")
     if mainCharData then
@@ -1591,28 +541,6 @@ function playerMeta:getMainCharacter()
     end
 end
 
---[[
-    Purpose:
-        Sets or clears the player's main character, enforcing cooldowns and ownership checks on the server.
-
-    Parameters:
-        charID (number|nil)
-            The character ID to set as main, or `nil`/`0` to clear it.
-
-    Returns:
-        boolean|nil
-            On the server, `true` for success or `false` on failure.
-        string|nil
-            An optional localized error message when blocked by cooldowns.
-
-    Example Usage:
-        ```lua
-        local success, err = client:setMainCharacter(12)
-        ```
-
-    Realm:
-        Shared
-]]
 function playerMeta:setMainCharacter(charID)
     if SERVER then
         charID = tonumber(charID)
@@ -1636,7 +564,7 @@ function playerMeta:setMainCharacter(charID)
                 local daysSince = (os.time() - lastSetTime) / 86400
                 if daysSince < cooldownDays then
                     local daysRemaining = math.ceil(cooldownDays - daysSince)
-                    return false, L("mainCharacterCooldownActive", daysRemaining)
+                    return false, string.format("You must wait %d more day(s) before you can change your main character.", daysRemaining)
                 end
             end
         end
@@ -1660,28 +588,6 @@ function playerMeta:setMainCharacter(charID)
     end
 end
 
---[[
-    Purpose:
-        Checks whether the active character owns any of the requested flags.
-
-    Parameters:
-        flags (string)
-            One or more flag characters to test.
-
-    Returns:
-        boolean
-            `true` when any requested flag exists or a hook grants access.
-
-    Example Usage:
-        ```lua
-        if client:hasFlags("pet") then
-            print("Flag requirement met.")
-        end
-        ```
-
-    Realm:
-        Shared
-]]
 function playerMeta:hasFlags(flags)
     for i = 1, #flags do
         local flag = flags:sub(i, i)
@@ -1690,28 +596,6 @@ function playerMeta:hasFlags(flags)
     return hook.Run("CharHasFlags", self, flags) or false
 end
 
---[[
-    Purpose:
-        Checks whether the player's total playtime exceeds a threshold.
-
-    Parameters:
-        time (number)
-            The threshold in seconds.
-
-    Returns:
-        boolean
-            `true` when playtime is greater than the given amount.
-
-    Example Usage:
-        ```lua
-        if client:playTimeGreaterThan(3600) then
-            print("Played more than an hour.")
-        end
-        ```
-
-    Realm:
-        Shared
-]]
 function playerMeta:playTimeGreaterThan(time)
     local playTime = self:getPlayTime()
     if not playTime or not time then return false end
@@ -1722,7 +606,7 @@ local function serializeRequestText(value)
     if istable(value) then
         local token = value[1]
         if isstring(token) and token:sub(1, 1) == "@" then
-            return lia.lang.resolveToken(token, unpack(value, 2))
+            return lia.lang.resolve(token, unpack(value, 2))
         elseif token ~= nil then
             return tostring(token)
         end
@@ -1731,37 +615,6 @@ local function serializeRequestText(value)
     return value or ""
 end
 
---[[
-    Purpose:
-        Opens a list selection request for the player, or a local Derma dialog on the client.
-
-    Parameters:
-        title (string|table)
-            The request title.
-        subTitle (string|table)
-            Supporting description text.
-        options (table|nil)
-            The selectable option list.
-        limit (number|nil)
-            Maximum number of allowed selections.
-        callback (function|nil)
-            Runs with the selected result.
-        onCancel (function|nil)
-            Client-side cancel callback.
-
-    Returns:
-        nil
-
-    Example Usage:
-        ```lua
-        client:requestOptions("Choose Loadout", "Select one option.", {"Rifle", "SMG"}, 1, function(result)
-            PrintTable(result)
-        end)
-        ```
-
-    Realm:
-        Shared
-]]
 function playerMeta:requestOptions(title, subTitle, options, limit, callback, onCancel)
     if SERVER then
         self.liaOptionsReqs = self.liaOptionsReqs or {}
@@ -1783,34 +636,6 @@ function playerMeta:requestOptions(title, subTitle, options, limit, callback, on
     end
 end
 
---[[
-    Purpose:
-        Requests a string input from the player and optionally returns a deferred promise-like object.
-
-    Parameters:
-        title (string|table)
-            The request title.
-        subTitle (string|table)
-            The prompt text.
-        callback (function|string|nil)
-            The completion callback, or the default value when omitted.
-        default (string|nil)
-            The initial input value.
-
-    Returns:
-        Deferred|nil
-            A deferred handle when no callback function is supplied.
-
-    Example Usage:
-        ```lua
-        client:requestString("Callsign", "Enter a callsign.", function(value)
-            print(value)
-        end)
-        ```
-
-    Realm:
-        Shared
-]]
 function playerMeta:requestString(title, subTitle, callback, default)
     local d
     if not isfunction(callback) and default == nil then
@@ -1835,35 +660,6 @@ function playerMeta:requestString(title, subTitle, callback, default)
     end
 end
 
---[[
-    Purpose:
-        Requests typed argument input from the player and optionally returns a deferred handle.
-
-    Parameters:
-        title (string|table)
-            The request title.
-        argTypes (table)
-            Argument specification data.
-        callback (function|nil)
-            Runs with the submitted values.
-
-    Returns:
-        Deferred|nil
-            A deferred handle when no callback function is supplied.
-
-    Example Usage:
-        ```lua
-        client:requestArguments("Create Item", {
-            {"name", "string"},
-            {"amount", "number"}
-        }, function(values)
-            PrintTable(values)
-        end)
-        ```
-
-    Realm:
-        Shared
-]]
 function playerMeta:requestArguments(title, argTypes, callback)
     local d
     if not isfunction(callback) then
@@ -1890,35 +686,6 @@ function playerMeta:requestArguments(title, argTypes, callback)
     end
 end
 
---[[
-    Purpose:
-        Prompts the player with a two-option confirmation dialog.
-
-    Parameters:
-        question (string|table)
-            The prompt text or title, depending on the call form.
-        option1 (string|table)
-            The first option label or shifted question text.
-        option2 (string|table)
-            The second option label or shifted first option label.
-        manualDismiss (boolean|string|function|nil)
-            Whether dismissal is manual, or shifted arguments for the alternate call form.
-        callback (function|nil)
-            Runs with the chosen response.
-
-    Returns:
-        nil
-
-    Example Usage:
-        ```lua
-        client:requestBinaryQuestion("Delete item?", "Yes", "No", false, function(result)
-            print(result)
-        end)
-        ```
-
-    Realm:
-        Shared
-]]
 function playerMeta:requestBinaryQuestion(question, option1, option2, manualDismiss, callback)
     local title = ""
     if isstring(question) and isstring(option1) and isstring(option2) and (isbool(manualDismiss) or isfunction(manualDismiss)) then
@@ -1946,30 +713,6 @@ function playerMeta:requestBinaryQuestion(question, option1, option2, manualDism
     end
 end
 
---[[
-    Purpose:
-        Shows a popup question with a custom button list.
-
-    Parameters:
-        question (string|table)
-            The prompt text.
-        buttons (table)
-            Button definitions or labels.
-
-    Returns:
-        nil
-
-    Example Usage:
-        ```lua
-        client:requestPopupQuestion("Select a stance", {
-            {"Aggressive", function() print("Aggressive") end},
-            {"Defensive", function() print("Defensive") end}
-        })
-        ```
-
-    Realm:
-        Shared
-]]
 function playerMeta:requestPopupQuestion(question, buttons)
     if SERVER then
         self.liaPopupReqs = self.liaPopupReqs or {}
@@ -1994,22 +737,6 @@ function playerMeta:requestPopupQuestion(question, buttons)
     end
 end
 
---[[
-    Purpose:
-        Resolves the player's ragdoll entity from netvars, engine state, or client-side fallbacks.
-
-    Returns:
-        Entity|nil
-            The ragdoll entity when found.
-
-    Example Usage:
-        ```lua
-        local ragdoll = client:getRagdoll()
-        ```
-
-    Realm:
-        Shared
-]]
 function playerMeta:getRagdoll()
     local ragdollValue = self:getNetVar("ragdoll")
     if isnumber(ragdollValue) then
@@ -2033,30 +760,6 @@ function playerMeta:getRagdoll()
     return nil
 end
 
---[[
-    Purpose:
-        Displays a button-based request to the player.
-
-    Parameters:
-        title (string|table)
-            The request title.
-        buttons (table)
-            Button definitions containing text and callbacks.
-
-    Returns:
-        nil
-
-    Example Usage:
-        ```lua
-        client:requestButtons("Choose Option", {
-            {text = "Accept", callback = function() print("Accepted") end},
-            {text = "Decline", callback = function() print("Declined") end}
-        })
-        ```
-
-    Realm:
-        Shared
-]]
 function playerMeta:requestButtons(title, buttons)
     if SERVER then
         self.buttonRequests = self.buttonRequests or {}
@@ -2082,22 +785,6 @@ function playerMeta:requestButtons(title, buttons)
     end
 end
 
---[[
-    Purpose:
-        Checks whether the player is currently stuck in solid space.
-
-    Returns:
-        boolean
-            `true` when the player's hull starts inside solid geometry.
-
-    Example Usage:
-        ```lua
-        if client:isStuck() then print("Player is stuck.") end
-        ```
-
-    Realm:
-        Shared
-]]
 function playerMeta:isStuck()
     return util.TraceEntity({
         start = self:GetPos(),
@@ -2106,33 +793,6 @@ function playerMeta:isStuck()
     }, self).StartSolid
 end
 
---[[
-    Purpose:
-        Shows a dropdown request to the player.
-
-    Parameters:
-        title (string|table)
-            The request title.
-        subTitle (string|table)
-            Supporting prompt text.
-        options (table|nil)
-            Allowed dropdown options.
-        callback (function|nil)
-            Runs with the selected result.
-
-    Returns:
-        nil
-
-    Example Usage:
-        ```lua
-        client:requestDropdown("Faction", "Choose a faction.", {"Citizen", "Worker"}, function(choice)
-            print(choice)
-        end)
-        ```
-
-    Realm:
-        Shared
-]]
 function playerMeta:requestDropdown(title, subTitle, options, callback)
     if SERVER then
         self.liaDropdownReqs = self.liaDropdownReqs or {}
@@ -2152,28 +812,6 @@ function playerMeta:requestDropdown(title, subTitle, options, callback)
     end
 end
 
---[[
-    Purpose:
-        Returns the PAC3 part registry tracked on the player through Lilia netvars.
-
-    When Used:
-        Requires PAC3 to be installed and the global `pac` table to be available. Use this to inspect which PAC-backed item parts are currently marked as active for the player.
-
-    Returns:
-        table
-            A table keyed by PAC part identifier with boolean active states.
-
-    Example Usage:
-        ```lua
-        local activeParts = client:getParts()
-        if activeParts["fancy_hat"] then
-            print("Hat part is active.")
-        end
-        ```
-
-    Realm:
-        Shared
-]]
 function playerMeta:getParts()
     if not pac then
         print("PAC3 is not installed or the global 'pac' table is unavailable. Ensure PAC3 is present for proper functionality.")
@@ -2183,24 +821,6 @@ function playerMeta:getParts()
 end
 
 if SERVER then
-    --[[
-        Purpose:
-            Sends the player's tracked PAC3 parts back to that player so the client can rebuild its attached PAC data.
-
-        When Used:
-            Requires PAC3 to be installed and the global `pac` table to be available. Call this after a player loads in or whenever the client's PAC attachments need to be refreshed from server state.
-
-        Returns:
-            nil
-
-        Example Usage:
-            ```lua
-            client:syncParts()
-            ```
-
-        Realm:
-            Server
-    ]]
     function playerMeta:syncParts()
         if not pac then
             print("PAC3 is not installed or the global 'pac' table is unavailable. Ensure PAC3 is present for proper functionality.")
@@ -2211,28 +831,6 @@ if SERVER then
         net.Send(self)
     end
 
-    --[[
-        Purpose:
-            Marks a PAC3 part as active for the player and broadcasts the attach request to clients.
-
-        Parameters:
-            partID (string)
-                The PAC part identifier to attach and track.
-
-        When Used:
-            Requires PAC3 to be installed and the global `pac` table to be available. Commonly used when a PAC-backed item equips or when character state needs to reapply a cosmetic part.
-
-        Returns:
-            nil
-
-        Example Usage:
-            ```lua
-            client:addPart("fancy_hat")
-            ```
-
-        Realm:
-            Server
-    ]]
     function playerMeta:addPart(partID)
         if not pac then
             print("PAC3 is not installed or the global 'pac' table is unavailable. Ensure PAC3 is present for proper functionality.")
@@ -2249,28 +847,6 @@ if SERVER then
         self:setNetVar("parts", parts)
     end
 
-    --[[
-        Purpose:
-            Removes a tracked PAC3 part from the player and tells clients to detach it.
-
-        Parameters:
-            partID (string)
-                The PAC part identifier to remove.
-
-        When Used:
-            Requires PAC3 to be installed and the global `pac` table to be available. Use this when a PAC-backed item is unequipped, dropped, or otherwise stops applying its visual attachment.
-
-        Returns:
-            nil
-
-        Example Usage:
-            ```lua
-            client:removePart("fancy_hat")
-            ```
-
-        Realm:
-            Server
-    ]]
     function playerMeta:removePart(partID)
         if not pac then
             print("PAC3 is not installed or the global 'pac' table is unavailable. Ensure PAC3 is present for proper functionality.")
@@ -2286,24 +862,6 @@ if SERVER then
         self:setNetVar("parts", parts)
     end
 
-    --[[
-        Purpose:
-            Clears every tracked PAC3 part from the player and broadcasts a full reset.
-
-        When Used:
-            Requires PAC3 to be installed and the global `pac` table to be available. This is useful before rebuilding the player's PAC state, such as during loadout changes or observer transitions.
-
-        Returns:
-            nil
-
-        Example Usage:
-            ```lua
-            client:resetParts()
-            ```
-
-        Realm:
-            Server
-    ]]
     function playerMeta:resetParts()
         if not pac then
             print("PAC3 is not installed or the global 'pac' table is unavailable. Ensure PAC3 is present for proper functionality.")
@@ -2316,25 +874,6 @@ if SERVER then
         self:setNetVar("parts", {})
     end
 
-    --[[
-        Purpose:
-            Restores stamina up to the character's maximum and clears the breathing flag when recovery is sufficient.
-
-        Parameters:
-            amount (number)
-                The amount of stamina to restore.
-
-        Returns:
-            nil
-
-        Example Usage:
-            ```lua
-            client:restoreStamina(15)
-            ```
-
-        Realm:
-            Server
-    ]]
     function playerMeta:restoreStamina(amount)
         local char = self:getChar()
         local maxStamina = char and (hook.Run("GetCharMaxStamina", char) or lia.config.get("DefaultStamina", 100)) or lia.config.get("DefaultStamina", 100)
@@ -2347,25 +886,6 @@ if SERVER then
         end
     end
 
-    --[[
-        Purpose:
-            Reduces stamina and marks the player as out of breath when it reaches zero.
-
-        Parameters:
-            amount (number)
-                The amount of stamina to consume.
-
-        Returns:
-            nil
-
-        Example Usage:
-            ```lua
-            client:consumeStamina(10)
-            ```
-
-        Realm:
-            Server
-    ]]
     function playerMeta:consumeStamina(amount)
         local char = self:getChar()
         local max = char and (hook.Run("GetCharMaxStamina", char) or lia.config.get("DefaultStamina", 100)) or lia.config.get("DefaultStamina", 100)
@@ -2380,81 +900,20 @@ if SERVER then
         end
     end
 
-    --[[
-        Purpose:
-            Adds money to the active character and records the change in the money log.
-
-        Parameters:
-            amount (number)
-                The amount to add, which may be negative.
-
-        Returns:
-            boolean
-                `false` if no active character exists, otherwise `true`.
-
-        Example Usage:
-            ```lua
-            client:addMoney(250)
-            ```
-
-        Realm:
-            Server
-    ]]
     function playerMeta:addMoney(amount)
         local character = self:getChar()
         if not character then return false end
         local currentMoney = character:getMoney()
         local totalMoney = currentMoney + amount
         character:setMoney(totalMoney)
-        lia.log.add(self, "money", amount)
         return true
     end
 
-    --[[
-        Purpose:
-            Removes money from the active character.
-
-        Parameters:
-            amount (number)
-                The amount to remove.
-
-        Returns:
-            nil
-
-        Example Usage:
-            ```lua
-            client:takeMoney(100)
-            ```
-
-        Realm:
-            Server
-    ]]
     function playerMeta:takeMoney(amount)
         local character = self:getChar()
         if character then character:giveMoney(-amount) end
     end
 
-    --[[
-        Purpose:
-            Loads persistent Lilia player data from the database or creates a fresh row when none exists.
-
-        Parameters:
-            callback (function|nil)
-                Runs after the data table has been loaded or initialized.
-
-        Returns:
-            nil
-
-        Example Usage:
-            ```lua
-            client:loadLiliaData(function(data)
-                PrintTable(data)
-            end)
-            ```
-
-        Realm:
-            Server
-    ]]
     function playerMeta:loadLiliaData(callback)
         local name = self:steamName()
         local steamID = self:SteamID()
@@ -2492,21 +951,6 @@ if SERVER then
         end)
     end
 
-    --[[
-        Purpose:
-            Saves the player's Lilia profile data and updates session tracking fields.
-
-        Returns:
-            nil
-
-        Example Usage:
-            ```lua
-            client:saveLiliaData()
-            ```
-
-        Realm:
-            Server
-    ]]
     function playerMeta:saveLiliaData()
         if self:IsBot() then return end
         local name = self:steamName()
@@ -2527,31 +971,6 @@ if SERVER then
         }, nil, "players", "steamID = " .. lia.db.convertDataType(steamID))
     end
 
-    --[[
-        Purpose:
-            Stores one Lilia profile value, optionally syncing it and optionally saving immediately.
-
-        Parameters:
-            key (string)
-                The data key to write.
-            value (any)
-                The value to store.
-            noNetworking (boolean|nil)
-                Whether to skip sending the updated value to the player.
-            noSave (boolean|nil)
-                Whether to skip immediate persistence.
-
-        Returns:
-            nil
-
-        Example Usage:
-            ```lua
-            client:setLiliaData("title", "Quartermaster")
-            ```
-
-        Realm:
-            Server
-    ]]
     function playerMeta:setLiliaData(key, value, noNetworking, noSave)
         self.liaData = self.liaData or {}
         self.liaData[key] = value
@@ -2565,60 +984,21 @@ if SERVER then
         if not noSave then self:saveLiliaData() end
     end
 
-    --[[
-        Purpose:
-            Records a ban entry in the database and kicks the player with the localized ban message.
-
-        Parameters:
-            reason (string|nil)
-                The ban reason.
-            duration (number|nil)
-                The duration value used by the localized message.
-            banner (Player|nil)
-                The staff member issuing the ban.
-
-        Returns:
-            nil
-
-        Example Usage:
-            ```lua
-            client:banPlayer("Mass RDM", 1440, admin)
-            ```
-
-        Realm:
-            Server
-    ]]
     function playerMeta:banPlayer(reason, duration, banner)
         local steamID = self:SteamID()
         lia.db.insertTable({
             player = self:Name(),
             playerSteamID = steamID,
-            reason = reason or L("genericReason"),
+            reason = reason or "No reason specified.",
             bannerName = IsValid(banner) and banner:Name() or "",
             bannerSteamID = IsValid(banner) and banner:SteamID() or "",
             timestamp = os.time(),
             evidence = ""
         }, nil, "bans")
 
-        self:Kick(L("banMessage", duration or 0, reason or L("genericReason")))
+        self:Kick(string.format("You've been banned for %s minute(s). (%s)", duration or 0, reason or "No reason specified."))
     end
 
-    --[[
-        Purpose:
-            Returns the player's total playtime, honoring hook overrides and active session time.
-
-        Returns:
-            number
-                The total playtime in seconds.
-
-        Example Usage:
-            ```lua
-            print(client:getPlayTime())
-            ```
-
-        Realm:
-            Server
-    ]]
     function playerMeta:getPlayTime()
         local hookResult = hook.Run("GetPlayTime", self)
         if hookResult ~= nil then return hookResult end
@@ -2632,26 +1012,6 @@ if SERVER then
         return diff + RealTime() - (self.liaJoinTime or RealTime())
     end
 
-    --[[
-        Purpose:
-            Creates a physics ragdoll copy of the player, optionally frozen in place.
-
-        Parameters:
-            freeze (boolean|nil)
-                Whether the ragdoll's physics objects should be immobile.
-
-        Returns:
-            Entity
-                The created ragdoll entity.
-
-        Example Usage:
-            ```lua
-            local ragdoll = client:createRagdoll()
-            ```
-
-        Realm:
-            Server
-    ]]
     function playerMeta:createRagdoll(freeze)
         local entity = ents.Create("prop_ragdoll")
         entity:SetPos(self:GetPos())
@@ -2682,29 +1042,6 @@ if SERVER then
         return entity
     end
 
-    --[[
-        Purpose:
-            Toggles the player's ragdolled state, including weapon storage, movement locking, and timed recovery handling.
-
-        Parameters:
-            state (boolean)
-                Whether to ragdoll or restore the player.
-            time (number|nil)
-                Optional duration before automatic recovery.
-            getUpGrace (number|nil)
-                Optional grace period before the player may stand up again.
-
-        Returns:
-            nil
-
-        Example Usage:
-            ```lua
-            client:setRagdolled(true, 10)
-            ```
-
-        Realm:
-            Server
-    ]]
     function playerMeta:setRagdolled(state, time, getUpGrace)
         getUpGrace = getUpGrace or time or 5
         if state and time and time > 0 then time = hook.Run("GetRagdollTime", self, time) or time end
@@ -2772,7 +1109,7 @@ if SERVER then
             if time and time > 0 then
                 entity.Start = CurTime()
                 entity.Finish = entity.Start + time
-                self:setAction("@wakingUp", nil, nil, entity.Start, entity.Finish)
+                self:setAction("Waking Up", nil, nil, entity.Start, entity.Finish)
             end
 
             for k, v in ipairs(self:GetWeapons()) do
@@ -2803,7 +1140,7 @@ if SERVER then
                             end
                             return
                         elseif entity.Pausing then
-                            self:setAction("@wakingUp", time)
+                            self:setAction("Waking Up", time)
                             entity.Pausing = false
                         end
 
@@ -2829,21 +1166,6 @@ if SERVER then
         end
     end
 
-    --[[
-        Purpose:
-            Sends all current global, entity, and local netvars to the player.
-
-        Returns:
-            nil
-
-        Example Usage:
-            ```lua
-            client:syncVars()
-            ```
-
-        Realm:
-            Server
-    ]]
     function playerMeta:syncVars()
         for entity, data in pairs(lia.net) do
             if entity == "globals" then
@@ -2874,27 +1196,6 @@ if SERVER then
         end
     end
 
-    --[[
-        Purpose:
-            Stores a replicated netvar for the player and broadcasts the change.
-
-        Parameters:
-            key (string)
-                The netvar key.
-            value (any)
-                The value to assign.
-
-        Returns:
-            nil
-
-        Example Usage:
-            ```lua
-            client:setNetVar("char", 15)
-            ```
-
-        Realm:
-            Server
-    ]]
     function playerMeta:setNetVar(key, value)
         if lia.net.checkBadType(key, value) then return end
         lia.net[self] = lia.net[self] or {}
@@ -2916,27 +1217,6 @@ if SERVER then
         hook.Run("NetVarChanged", self, key, oldValue, value)
     end
 
-    --[[
-        Purpose:
-            Stores a local-only netvar for the player and syncs it to that player.
-
-        Parameters:
-            key (string)
-                The local netvar key.
-            value (any)
-                The value to assign.
-
-        Returns:
-            nil
-
-        Example Usage:
-            ```lua
-            client:setLocalVar("stamina", 75)
-            ```
-
-        Realm:
-            Server
-    ]]
     function playerMeta:setLocalVar(key, value)
         if not IsValid(self) then return end
         if lia.net.checkBadType(key, value) then return end
@@ -2954,56 +1234,12 @@ if SERVER then
         hook.Run("NetVarChanged", self, key, oldValue, value)
     end
 
-    --[[
-        Purpose:
-            Returns a server-side local netvar with a default fallback.
-
-        Parameters:
-            key (string)
-                The local netvar key.
-            default (any)
-                The fallback value when the key is missing.
-
-        Returns:
-            any
-                The stored local value or the default.
-
-        Example Usage:
-            ```lua
-            local stamina = client:getLocalVar("stamina", 100)
-            ```
-
-        Realm:
-            Server
-    ]]
     function playerMeta:getLocalVar(key, default)
         if not IsValid(self) then return default end
         if lia.net.locals[self] and lia.net.locals[self][key] ~= nil then return lia.net.locals[self][key] end
         return default
     end
 else
-    --[[
-        Purpose:
-            Returns a client-side local netvar cache entry with a fallback default.
-
-        Parameters:
-            key (string)
-                The local netvar key.
-            default (any)
-                The fallback value when the key is missing.
-
-        Returns:
-            any
-                The cached local value or the default.
-
-        Example Usage:
-            ```lua
-            local blurAmount = LocalPlayer():getLocalVar("blur", 0)
-            ```
-
-        Realm:
-            Client
-    ]]
     function playerMeta:getLocalVar(key, default)
         if not IsValid(self) then return default end
         local idx = self:EntIndex()
@@ -3011,22 +1247,6 @@ else
         return default
     end
 
-    --[[
-        Purpose:
-            Returns the player's total playtime on the client using replicated character and session data.
-
-        Returns:
-            number
-                The total playtime in seconds.
-
-        Example Usage:
-            ```lua
-            print(LocalPlayer():getPlayTime())
-            ```
-
-        Realm:
-            Client
-    ]]
     function playerMeta:getPlayTime()
         local hookResult = hook.Run("GetPlayTime", self)
         if hookResult ~= nil then return hookResult end

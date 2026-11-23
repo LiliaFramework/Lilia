@@ -1,4 +1,4 @@
-﻿local function canRecog(ply)
+local function canRecog(ply)
     return lia.config.get("RecognitionEnabled", true) and ply:getChar() and ply:Alive()
 end
 
@@ -15,7 +15,7 @@ end
 
 local function promptName(ply, cb)
     if lia.config.get("FakeNamesEnabled", false) then
-        ply:requestString("@recogFakeNamePrompt", "", function(nm)
+        ply:requestString("Enter fake name", "", function(nm)
             nm = (nm or ""):Trim()
             cb(nm == "" and ply:getChar():getName() or nm)
         end, ply:getChar():getName())
@@ -41,9 +41,8 @@ local function CharRecognize(ply, lvl, nm)
     end
 
     if count == 0 then return end
-    ply:notifySuccessLocalized("recognitionGiven", count)
+    ply:notifySuccess(string.format("Gave Recognition to %s people.", count))
     for _, v in ipairs(tgt) do
-        lia.log.add(ply, "charRecognize", v:getChar():getID(), nm)
     end
 
     net.Start("liaRgnDone")
@@ -55,29 +54,29 @@ local function doRange(ply, lvl)
     promptName(ply, function(nm) CharRecognize(ply, lvl, nm) end)
 end
 
-lia.playerinteract.addAction("recognizeInWhisperRange", {
-    category = "@recognition",
+lia.playerinteract.addAction("Recognize in Whisper Range", {
+    category = "Recognition",
     shouldShow = function(ply) return hasPlayersInRange(ply, 1) end,
     onRun = function(ply) doRange(ply, 1) end,
     serverOnly = true
 })
 
-lia.playerinteract.addAction("recognizeInTalkRange", {
-    category = "@recognition",
+lia.playerinteract.addAction("Recognize in Talk Range", {
+    category = "Recognition",
     shouldShow = function(ply) return hasPlayersInRange(ply, 3) end,
     onRun = function(ply) doRange(ply, 3) end,
     serverOnly = true
 })
 
-lia.playerinteract.addAction("recognizeInYellRange", {
-    category = "@recognition",
+lia.playerinteract.addAction("Recognize in Yell Range", {
+    category = "Recognition",
     shouldShow = function(ply) return hasPlayersInRange(ply, 4) end,
     onRun = function(ply) doRange(ply, 4) end,
     serverOnly = true
 })
 
-lia.playerinteract.addInteraction("giveRecognitionToPerson", {
-    category = "@recognition",
+lia.playerinteract.addInteraction("Give recognition to this person", {
+    category = "Recognition",
     serverOnly = true,
     shouldShow = function(ply, tgt)
         if not canRecog(ply) then return false end
@@ -88,8 +87,7 @@ lia.playerinteract.addInteraction("giveRecognitionToPerson", {
     onRun = function(ply, tgt)
         promptName(ply, function(nm)
             if tgt:getChar():recognize(ply:getChar(), nm) then
-                ply:notifySuccessLocalized("recognitionGiven", 1)
-                lia.log.add(ply, "charRecognize", tgt:getChar():getID(), nm)
+                ply:notifySuccess(string.format("Gave Recognition to %s people.", 1))
                 net.Start("liaRgnDone")
                 net.Send(ply)
                 hook.Run("OnCharRecognized", ply)

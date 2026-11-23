@@ -1,12 +1,38 @@
-﻿local PANEL = {}
+local PANEL = {}
+local fallbackAccent = Color(76, 164, 224)
+local fallbackText = Color(230, 239, 239)
+local fallbackBackground = Color(7, 14, 23)
+
+local function getThemeColor(source, fallback, alpha)
+    fallback = IsColor(fallback) and fallback or fallbackText
+    source = IsColor(source) and source or fallback
+    return Color(source.r, source.g, source.b, alpha or source.a or fallback.a or 255)
+end
+
+local function mixThemeColors(from, to, fraction, alpha)
+    from = IsColor(from) and from or fallbackBackground
+    to = IsColor(to) and to or fallbackText
+    fraction = math.Clamp(tonumber(fraction) or 0, 0, 1)
+    return Color(
+        math.Round(Lerp(fraction, from.r, to.r)),
+        math.Round(Lerp(fraction, from.g, to.g)),
+        math.Round(Lerp(fraction, from.b, to.b)),
+        alpha or math.Round(Lerp(fraction, from.a or 255, to.a or 255))
+    )
+end
+
 local function getFrameColors()
     local theme = lia.color.theme or {}
-    local accent = theme.accent or theme.theme or lia.config.get("Color") or Color(45, 190, 170)
+    local accentSource = theme.maincolor or theme.accent or theme.theme
+    if not IsColor(accentSource) then accentSource = lia.color.getMainColor() end
+    local accent = getThemeColor(accentSource, fallbackAccent)
+    local text = getThemeColor(theme.text or theme.foreground, fallbackText)
+    local background = getThemeColor(theme.background or theme.panel or theme.window, fallbackBackground)
     return {
         accent = accent,
-        text = theme.text or Color(225, 238, 238),
-        muted = Color(155, 178, 179),
-        surface = Color(6, 18, 23, 226)
+        text = text,
+        muted = mixThemeColors(text, background, 0.38, 190),
+        surface = mixThemeColors(background, text, 0.025, 238)
     }
 end
 
@@ -18,7 +44,7 @@ end
 function PANEL:Init()
     self.bool_alpha = true
     self.bool_lite = false
-    self.title = L("title")
+    self.title = "Title"
     self.center_title = ""
     self.blurAmount = 6
     self.blurPasses = 0
@@ -69,7 +95,7 @@ function PANEL:Init()
     end
 
     self.cls.DoClick = function()
-        lia.websound.playButtonSound()
+        lia.webcontent.playButtonSound()
         if self.deleteOnClose then
             self:AlphaTo(0, 0.1, 0, function() if IsValid(self) then self:Remove() end end)
         else
@@ -79,10 +105,10 @@ function PANEL:Init()
 
     self.cls.DoRightClick = function()
         local DM = lia.derma.dermaMenu()
-        DM:AddOption(L("transparency"), function() self.bool_alpha = not self.bool_alpha end, self.bool_alpha and "icon16/bullet_green.png" or "icon16/bullet_red.png")
+        DM:AddOption("Transparency", function() self.bool_alpha = not self.bool_alpha end, self.bool_alpha and "icon16/bullet_green.png" or "icon16/bullet_red.png")
         local boolInput = self:IsKeyboardInputEnabled()
-        DM:AddOption(L("moveFromMenu"), function() self:SetKeyboardInputEnabled(not boolInput) end, not boolInput and "icon16/bullet_green.png" or "icon16/bullet_red.png")
-        DM:AddOption(L("closeWindow"), function() self:Remove() end, "icon16/cross.png")
+        DM:AddOption("Move From Menu", function() self:SetKeyboardInputEnabled(not boolInput) end, not boolInput and "icon16/bullet_green.png" or "icon16/bullet_red.png")
+        DM:AddOption("Close Window", function() self:Remove() end, "icon16/cross.png")
     end
 
     self.resizer = vgui.Create("DButton", self)
@@ -270,7 +296,10 @@ end
 function PANEL:Paint(w, h)
     if self.backgroundBlur then Derma_DrawBackgroundBlur(self, self.backgroundBlurTime) end
     local colors = getFrameColors()
-    drawFramePanel(0, 0, w, h, 10, colors.surface, Color(colors.accent.r, colors.accent.g, colors.accent.b, 72))
+    drawFramePanel(0, 0, w, h, 10, colors.surface, Color(colors.accent.r, colors.accent.g, colors.accent.b, 92))
+    surface.SetDrawColor(colors.accent.r, colors.accent.g, colors.accent.b, 190)
+    surface.DrawRect(0, 0, w, 2)
+    surface.DrawRect(0, h - 2, w, 2)
     if not self.bool_lite then
         if self.iconMat then
             surface.SetMaterial(self.iconMat)
@@ -412,7 +441,7 @@ function PANEL:Init()
     self:MakePopup()
     self:Center()
     self:SetDraggable(true)
-    self:SetTitle(L("inv"))
+    self:SetTitle("Inventory")
 end
 
 function PANEL:setInventory(inventory)

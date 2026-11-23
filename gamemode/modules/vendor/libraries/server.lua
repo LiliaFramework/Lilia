@@ -84,9 +84,9 @@ function MODULE:VendorTradeEvent(client, vendor, itemType, isSellingToVendor)
     if canAccess == false then
         if isstring(reason) then
             if param1 then
-                client:notifyErrorLocalized(reason, param1)
+                client:notifyError(reason)
             else
-                client:notifyErrorLocalized(reason)
+                client:notifyError(reason)
             end
         end
         return
@@ -111,14 +111,14 @@ function MODULE:VendorTradeEvent(client, vendor, itemType, isSellingToVendor)
 
             local canTransfer, transferReason = VendorInventoryMeasure:canAccess("transfer", context)
             if not canTransfer then
-                client:notifyErrorLocalized(transferReason or "An error occurred during the transaction.")
+                client:notifyError(transferReason or "An error occurred during the transaction.")
                 client.vendorTransaction = nil
                 return
             end
 
             local canTransferItem, itemTransferReason = hook.Run("CanItemBeTransfered", item, inventory, VendorInventoryMeasure, client)
             if canTransferItem == false then
-                client:notifyErrorLocalized(itemTransferReason or "An error occurred during the transaction.")
+                client:notifyError(itemTransferReason or "An error occurred during the transaction.")
                 client.vendorTransaction = nil
                 return
             end

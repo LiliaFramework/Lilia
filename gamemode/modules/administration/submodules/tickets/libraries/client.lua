@@ -1,4 +1,4 @@
-﻿function MODULE:PopulateAdminTabs(pages)
+function MODULE:PopulateAdminTabs(pages)
     return
 end
 
@@ -32,7 +32,7 @@ function MODULE:CreateTicketFrame(requester, message, claimed)
                 local existingText = messageEntry:GetValue() or ""
                 messageEntry:SetText(existingText ~= "" and existingText .. "\n" .. message or message)
                 messageEntry:GotoTextEnd()
-                lia.websound.playButtonSound("ui/hint.wav")
+                lia.webcontent.playButtonSound("ui/hint.wav")
             end
             return
         end
@@ -47,7 +47,7 @@ function MODULE:CreateTicketFrame(requester, message, claimed)
     local messageWidth = frameWidth - actionWidth - contentPadding * 3
     local claimedValid = IsValid(claimed) and claimed:IsPlayer()
     local claimedByLocal = claimedValid and claimed == LocalPlayer()
-    local title = claimedValid and L("ticketTitleClaimed", requester:Nick(), claimed:Nick()) or requester:Nick()
+    local title = claimedValid and string.format("%s - Claimed by %s", requester:Nick(), claimed:Nick()) or requester:Nick()
     local frm = vgui.Create("liaFrame")
     frm:SetSize(frameWidth, frameHeight)
     frm:SetPos(xpos, ypos)
@@ -106,15 +106,15 @@ function MODULE:CreateTicketFrame(requester, message, claimed)
         claimCase = Material("icon16/shield.png")
     }
 
-    local function createButton(textKey, clickFunc, disabled, primary)
+    local function createButton(label, clickFunc, disabled, primary, icon)
         local btn = vgui.Create("DButton", actionPanel)
         btn:Dock(TOP)
         btn:DockMargin(0, 0, 0, actionGap)
         btn:SetTall(30)
         btn:SetText("")
         btn.Disabled = disabled
-        btn.label = L(textKey)
-        btn.icon = buttonIcons[textKey]
+        btn.label = tostring(label)
+        btn.icon = icon
         btn.primary = primary
         btn.Paint = function(button, w, h)
             local accent = getThemeAccent()
@@ -139,25 +139,25 @@ function MODULE:CreateTicketFrame(requester, message, claimed)
         btn.DoClick = function()
             if btn.Disabled then return end
             clickFunc()
-            lia.websound.playButtonSound()
+            lia.webcontent.playButtonSound()
         end
 
-        if disabled then btn:SetTooltip(L("ticketActionSelf")) end
+        if disabled then btn:SetTooltip("You cannot perform this action on your own ticket.") end
         return btn
     end
 
     local isLocalPlayer = requester == LocalPlayer()
-    createButton("goTo", function() lia.admin.execCommand("goto", requester) end, isLocalPlayer)
-    createButton("returnText", function() lia.admin.execCommand("return", requester) end, isLocalPlayer)
-    createButton("freeze", function() lia.admin.execCommand("freeze", requester) end, isLocalPlayer)
-    createButton("bring", function() lia.admin.execCommand("bring", requester) end, isLocalPlayer)
+    createButton("Goto", function() lia.admin.execCommand("goto", requester) end, isLocalPlayer, nil, buttonIcons.goTo)
+    createButton("Return", function() lia.admin.execCommand("return", requester) end, isLocalPlayer, nil, buttonIcons.returnText)
+    createButton("Freeze", function() lia.admin.execCommand("freeze", requester) end, isLocalPlayer)
+    createButton("Bring", function() lia.admin.execCommand("bring", requester) end, isLocalPlayer)
     local shouldClose = claimedByLocal
     local claimButton
-    claimButton = createButton(claimedByLocal and "closeCase" or "claimCase", function()
+    claimButton = createButton(claimedByLocal and "Close Case" or "Claim Case", function()
         if not IsValid(frm) then return end
         if not shouldClose then
             if claimedValid and claimed ~= LocalPlayer() then
-                chat.AddText(Color(255, 150, 0), "[" .. L("error") .. "] " .. L("caseAlreadyClaimed"))
+                chat.AddText(Color(255, 150, 0), "[" .. "ERROR" .. "] " .. "Case has already been claimed")
                 surface.PlaySound("common/wpn_denyselect.wav")
                 return
             end
@@ -166,7 +166,7 @@ function MODULE:CreateTicketFrame(requester, message, claimed)
             net.WriteEntity(requester)
             net.SendToServer()
             shouldClose = true
-            claimButton.label = L("closeCase")
+            claimButton.label = "Close case"
         else
             net.Start("liaTicketSystemClose")
             net.WriteEntity(requester)
@@ -176,7 +176,7 @@ function MODULE:CreateTicketFrame(requester, message, claimed)
 
     local closeButton = vgui.Create("DButton", frm)
     closeButton:SetText("")
-    closeButton:SetTooltip(L("close"))
+    closeButton:SetTooltip("Close")
     closeButton:SetSize(30, 30)
     closeButton:SetPos(frameWidth - 36, 7)
     closeButton.Paint = function(button, w, h)

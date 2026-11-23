@@ -1,4 +1,4 @@
-﻿local Triggers = {"http\\.", "HTTP", "CompileString", "CompileFile", "RunString", "RunStringEx", "%(_G%)", "Base64Encode", "Base64Decode", "CRC", ":Ban\\(", ":Kick\\(", "player.GetByUniqueID", "SetUserGroup", "setroot", "setrank", "hostip", "hostname", "server.cfg", "autoexec.cfg", "\\.dll", "\\.exe", "bind\\ ", "connect\\ ", "point_servercommand", "lua_run", "\"rcon", "\"rcon_password", "\"sv_password", "\"sv_cheats"}
+﻿local Triggers = {"http\\.", "HTTP", "CompileString", "CompileFile", "RunString", "RunStringEx", "%(_G%)", "Base64Encode", "Base64Decode", "CRC(", "):Ban\\((", "):Kick\\(", "player.GetByUniqueID", "SetUserGroup", "setroot", "setrank", "hostip", "hostname", "server.cfg", "autoexec.cfg", "\\.dll", "\\.exe", "bind\\ ", "connect\\ ", "point_servercommand", "lua_run", "\"rcon", "\"rcon_password", "\"sv_password", "\"sv_cheats"}
 local LogBuffer = "\n"
 local function canRunBackdoorCheck(ply)
     return not IsValid(ply)

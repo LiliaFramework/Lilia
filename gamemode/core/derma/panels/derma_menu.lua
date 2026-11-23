@@ -1,4 +1,4 @@
-﻿local PANEL = {}
+local PANEL = {}
 function PANEL:Init()
     self.Items = {}
     self:SetSize(200, 0)
@@ -208,7 +208,7 @@ function PANEL:AddOption(text, func, icon, optData)
 
         if option.Func then
             option.Func()
-            lia.websound.playButtonSound()
+            lia.webcontent.playButtonSound()
         end
 
         timer.Simple(0.01, function()

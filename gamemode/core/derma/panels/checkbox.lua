@@ -1,4 +1,4 @@
-﻿local PANEL = {}
+local PANEL = {}
 function PANEL:Init()
     self.text = ""
     self.description = ""
@@ -45,7 +45,7 @@ function PANEL:Init()
         self.isEditing = true
         self.value = not self.value
         self:OnChange(self.value)
-        lia.websound.playButtonSound()
+        lia.webcontent.playButtonSound()
         self.isEditing = false
     end
 

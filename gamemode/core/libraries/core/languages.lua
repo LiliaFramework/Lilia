@@ -1,0 +1,97 @@
+﻿lia.lang = lia.lang or {}
+lia.lang.names = lia.lang.names or {}
+lia.lang.stored = lia.lang.stored or {}
+function lia.lang.loadFromDir(directory)
+    for _, v in ipairs(file.Find(directory .. "/*.lua", "LUA")) do
+        local niceName
+        if v:sub(1, 3) == "sh_" then
+            niceName = v:sub(4, -5):lower()
+        else
+            niceName = v:sub(1, -5):lower()
+        end
+
+        lia.loader.include(directory .. "/" .. v, "shared")
+        if LANGUAGE then
+            if NAME then
+                lia.lang.names[niceName] = NAME
+                NAME = nil
+            end
+
+            local formatted = {}
+            for k, val in pairs(LANGUAGE) do
+                formatted[tostring(k)] = tostring(val)
+            end
+
+            lia.lang.stored[niceName] = table.Merge(lia.lang.stored[niceName] or {}, formatted)
+            LANGUAGE = nil
+        end
+    end
+end
+
+function lia.lang.addTable(name, tbl)
+    local lowerName = tostring(name):lower()
+    lia.lang.stored[lowerName] = lia.lang.stored[lowerName] or {}
+    for k, v in pairs(tbl) do
+        lia.lang.stored[lowerName][tostring(k)] = tostring(v)
+    end
+end
+
+function lia.lang.getLanguages()
+    local languages = {}
+    for key, _ in pairs(lia.lang.stored) do
+        local displayName = key:sub(1, 1):upper() .. key:sub(2)
+        table.insert(languages, displayName)
+    end
+
+    table.sort(languages)
+    return languages
+end
+
+function lia.lang.getLocalizedString(key, ...)
+    local lang = lia.config.get("Language", "english") or "english"
+    local langTable = lia.lang.stored and lia.lang.stored[lang:lower()]
+    local template = langTable and langTable[key]
+    if not template then return tostring(key) end
+    local count = select("#", ...)
+    local args = {}
+    for i = 1, count do
+        local arg = select(i, ...)
+        if istable(arg) then
+            args[i] = table.concat(arg, ", ")
+        else
+            args[i] = tostring(arg or "")
+        end
+    end
+
+    local needed = select(2, template:gsub("%%[^%%]", ""))
+    for i = count + 1, needed do
+        args[i] = ""
+    end
+
+    local success, result = pcall(string.format, template, unpack(args))
+    if not success then
+        lia.error("Format Error In Localization String '" .. tostring(key) .. "': " .. result)
+        return tostring(key)
+    end
+
+    return result
+end
+
+function lia.lang.resolve(value, ...)
+    if not isstring(value) then return value end
+    local tokenized = value:sub(1, 1) == "@"
+    local key = tokenized and value:sub(2) or value
+    if key == "" then return "" end
+    local localized = lia.lang.getLocalizedString(key, ...)
+    if localized ~= key then return localized end
+    return tokenized and key or value
+end
+
+function lia.lang.resolveToken(value, ...)
+    if not isstring(value) or value:sub(1, 1) ~= "@" then return value end
+    return lia.lang.resolve(value, ...)
+end
+
+L = lia.lang.getLocalizedString
+lia.lang.loadFromDir("lilia/gamemode/languages")
+hook.Run("OnLocalizationLoaded")

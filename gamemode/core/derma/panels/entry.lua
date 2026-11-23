@@ -1,7 +1,7 @@
 ﻿local PANEL = {}
 function PANEL:Init()
     self.title = nil
-    self.placeholder = L("enterText")
+    self.placeholder = "Enter Text"
     self:SetTall(26)
     self.action = function() end
     self.font = "LiliaFont.18"

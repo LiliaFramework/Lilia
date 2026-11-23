@@ -10,14 +10,14 @@ net.Receive("liaChatboxAddFilteredWord", function(_, client)
     local success, result = MODULE:AddFilteredWord(word)
     if not success then
         if result == "exists" then
-            client:notifyErrorLocalized("chatFilterWordExists")
+            client:notifyError(string.format("That word is already filtered."))
         else
-            client:notifyErrorLocalized("chatFilterInvalidWord")
+            client:notifyError(string.format("Enter a valid word first."))
         end
         return
     end
 
-    client:notifySuccessLocalized("chatFilterWordAdded", result)
+    client:notifySuccess(string.format("Added filtered word: %s", result))
     MODULE:SyncFilteredWords()
 end)
 
@@ -27,13 +27,13 @@ net.Receive("liaChatboxRemoveFilteredWord", function(_, client)
     local success, result = MODULE:RemoveFilteredWord(word)
     if not success then
         if result == "missing" then
-            client:notifyErrorLocalized("chatFilterWordMissing")
+            client:notifyError(string.format("That word is not in the filter list."))
         else
-            client:notifyErrorLocalized("chatFilterInvalidWord")
+            client:notifyError(string.format("Enter a valid word first."))
         end
         return
     end
 
-    client:notifySuccessLocalized("chatFilterWordRemoved", result)
+    client:notifySuccess(string.format("Removed filtered word: %s", result))
     MODULE:SyncFilteredWords()
 end)

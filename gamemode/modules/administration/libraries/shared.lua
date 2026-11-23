@@ -1,4 +1,4 @@
-﻿function MODULE:CanPlayerModifyConfig(client)
+function MODULE:CanPlayerModifyConfig(client)
     local hasPrivilege = client:hasPrivilege("accessEditConfigurationMenu")
     lia.debug("[Permissions]", "Permission Check for function MODULE:CanPlayerModifyConfig", "hasPrivilege(accessEditConfigurationMenu)=", tostring(hasPrivilege), "finalResult=", tostring(hasPrivilege))
     return hasPrivilege
@@ -13,7 +13,7 @@ function lia.admin.canUseDebugProperties(client)
 end
 
 properties.Add("TogglePropBlacklist", {
-    MenuLabel = L("togglePropBlacklist"),
+    MenuLabel = "Toggle Prop Blacklist",
     Order = 900,
     MenuIcon = "icon16/link.png",
     Filter = function(_, ent, ply)
@@ -33,46 +33,17 @@ properties.Add("TogglePropBlacklist", {
         if table.HasValue(list, model) then
             table.RemoveByValue(list, model)
             lia.data.set("prop_blacklist", list, true, true)
-            ply:notifySuccessLocalized("removedFromBlacklist", model)
+            ply:notifySuccess(string.format("Removed from blacklist: %s", model))
         else
             table.insert(list, model)
             lia.data.set("prop_blacklist", list, true, true)
-            ply:notifySuccessLocalized("addedToBlacklist", model)
+            ply:notifySuccess(string.format("Added to blacklist: %s", model))
         end
-    end
-})
-
-lia.command.add("sayall", {
-    desc = "@sendsPhraseToAllChatTypes",
-    privilege = "@adminChat",
-    adminOnly = true,
-    arguments = {
-        {
-            name = "phrase",
-            type = "string"
-        }
-    },
-    onRun = function(client, arguments)
-        local phrase = table.concat(arguments, " ")
-        if not phrase or phrase == "" then
-            client:notifyErrorLocalized("invalidPhrase")
-            return
-        end
-
-        local chatCount = 0
-        for chatType, chatData in pairs(lia.chat.classes) do
-            if chatData.onCanSay and chatType ~= "adminchat" then
-                lia.chat.send(client, chatType, phrase, false)
-                chatCount = chatCount + 1
-            end
-        end
-
-        client:notifySuccessLocalized("sentToAllChats", chatCount, phrase)
     end
 })
 
 properties.Add("ToggleCarBlacklist", {
-    MenuLabel = L("toggleCarBlacklist"),
+    MenuLabel = "Toggle Car Blacklist",
     Order = 901,
     MenuIcon = "icon16/link.png",
     Filter = function(_, ent, ply)
@@ -92,17 +63,17 @@ properties.Add("ToggleCarBlacklist", {
         if table.HasValue(list, model) then
             table.RemoveByValue(list, model)
             lia.data.set("carBlacklist", list, true, true)
-            ply:notifySuccessLocalized("removedFromBlacklist", model)
+            ply:notifySuccess(string.format("Removed from blacklist: %s", model))
         else
             table.insert(list, model)
             lia.data.set("carBlacklist", list, true, true)
-            ply:notifySuccessLocalized("addedToBlacklist", model)
+            ply:notifySuccess(string.format("Added to blacklist: %s", model))
         end
     end
 })
 
 properties.Add("copytoclipboard", {
-    MenuLabel = L("copyModelClipboard"),
+    MenuLabel = "Copy Model to Clipboard",
     Order = 999,
     MenuIcon = "icon16/cup.png",
     Filter = function(_, ent)
@@ -119,7 +90,7 @@ properties.Add("copytoclipboard", {
 })
 
 properties.Add("CopyBodygroupsByName", {
-    MenuLabel = L("copyBodygroupsByName"),
+    MenuLabel = "Copy Bodygroups (Name)",
     Order = 998,
     MenuIcon = "icon16/group.png",
     Filter = function(_, ent)
@@ -142,7 +113,7 @@ properties.Add("CopyBodygroupsByName", {
 })
 
 properties.Add("CopyBodygroupsByID", {
-    MenuLabel = L("copyBodygroupsByID"),
+    MenuLabel = "Copy Bodygroups (ID)",
     Order = 997,
     MenuIcon = "icon16/group.png",
     Filter = function(_, ent)
@@ -165,7 +136,7 @@ properties.Add("CopyBodygroupsByID", {
 })
 
 properties.Add("CopySkin", {
-    MenuLabel = L("copySkinClipboard"),
+    MenuLabel = "Copy Skin to Clipboard",
     Order = 996,
     MenuIcon = "icon16/palette.png",
     Filter = function(_, ent)
@@ -180,7 +151,7 @@ properties.Add("CopySkin", {
     end,
 })
 
-lia.util.setPositionCallback(L("factionSpawnAdderTitle"), {
+lia.util.setPositionCallback("Faction Spawn Adder", {
     onRun = function(pos, client, typeId)
         if SERVER then
             local factionID = net.ReadString()
@@ -193,29 +164,26 @@ lia.util.setPositionCallback(L("factionSpawnAdderTitle"), {
                 table.insert(spawns[factionInfo.uniqueID], {
                     pos = pos,
                     ang = angle_zero,
-                    map = lia.data.getEquivalencyMap(game.GetMap()),
+                    map = game.GetMap(),
                     radius = radius
                 })
 
-                lia.module.get("spawns"):StoreSpawns(spawns):next(function()
-                    lia.log.add(client, "spawnAdd", factionInfo.name)
-                    client:notifySuccessLocalized("spawnAdded")
-                end)
+                lia.module.get("spawns"):StoreSpawns(spawns):next(function() client:notifySuccess(string.format("Sucessfully Added Point")) end)
             end)
         else
             local names, idByDisplay = {}, {}
             for k, v in pairs(lia.faction.teams or {}) do
-                local display = L(v.name) or v.name or k
+                local display = tostring(v.name) or v.name or k
                 names[#names + 1] = display
                 idByDisplay[display] = k
             end
 
             if #names == 0 then
-                client:notifyErrorLocalized("invalidFaction")
+                client:notifyError(string.format("The specified faction is not valid."))
                 return
             end
 
-            lia.derma.requestDropdown("@factionSpawnAdderTitle", names, function(selection)
+            lia.derma.requestDropdown("Faction Spawn Adder", names, function(selection)
                 if not selection or selection == false then return end
                 local factionID = idByDisplay[selection]
                 if not factionID then return end
@@ -235,10 +203,10 @@ lia.util.setPositionCallback(L("factionSpawnAdderTitle"), {
         if SERVER then
             lia.module.get("spawns"):FetchSpawns():next(function(spawns)
                 local list = {}
-                local curMap = lia.data.getEquivalencyMap(game.GetMap()):lower()
+                local curMap = game.GetMap():lower()
                 for factionID, factionSpawns in pairs(spawns or {}) do
                     local factionInfo = lia.faction.get(factionID)
-                    local label = factionInfo and (factionInfo.name and L(factionInfo.name) or factionID) or factionID
+                    local label = factionInfo and (factionInfo.name and tostring(factionInfo.name) or factionID) or factionID
                     for i = 1, #(factionSpawns or {}) do
                         local data = factionSpawns[i]
                         local pos = data.pos or data.position
@@ -265,7 +233,7 @@ lia.util.setPositionCallback(L("factionSpawnAdderTitle"), {
     end,
     onRemove = function(pos, client, typeId)
         lia.module.get("spawns"):FetchSpawns():next(function(spawns)
-            local curMap = lia.data.getEquivalencyMap(game.GetMap()):lower()
+            local curMap = game.GetMap():lower()
             for factionID, factionSpawns in pairs(spawns) do
                 for i = #factionSpawns, 1, -1 do
                     local data = factionSpawns[i]
@@ -275,7 +243,6 @@ lia.util.setPositionCallback(L("factionSpawnAdderTitle"), {
                         if not map or map == curMap then
                             table.remove(factionSpawns, i)
                             lia.module.get("spawns"):StoreSpawns(spawns)
-                            lia.log.add(client, "spawnRemove", factionID)
                             return
                         end
                     end
@@ -287,7 +254,7 @@ lia.util.setPositionCallback(L("factionSpawnAdderTitle"), {
     serverOnly = true
 })
 
-lia.util.setPositionCallback(L("classSpawnAdderTitle"), {
+lia.util.setPositionCallback("Class Spawn Adder", {
     onRun = function(pos, client, typeId)
         if SERVER then
             local classID = net.ReadString()
@@ -303,13 +270,12 @@ lia.util.setPositionCallback(L("classSpawnAdderTitle"), {
             table.insert(data.classes[classIDNum], {
                 pos = pos,
                 ang = angle_zero,
-                map = lia.data.getEquivalencyMap(game.GetMap()),
+                map = game.GetMap(),
                 radius = radius
             })
 
             lia.data.set("spawns", data)
-            lia.log.add(client, "classSpawnAdd", classData.name)
-            client:notifySuccessLocalized("spawnAdded")
+            client:notifySuccess(string.format("Sucessfully Added Point"))
         else
             local names, idByDisplay = {}, {}
             for k, v in pairs(lia.class.list or {}) do
@@ -321,11 +287,11 @@ lia.util.setPositionCallback(L("classSpawnAdderTitle"), {
             end
 
             if #names == 0 then
-                client:notifyErrorLocalized("invalidClass")
+                client:notifyError(string.format("The specified class is not valid."))
                 return
             end
 
-            lia.derma.requestDropdown("@classSpawnAdderTitle", names, function(selection)
+            lia.derma.requestDropdown("Class Spawn Adder", names, function(selection)
                 if not selection or selection == false then return end
                 local classID = idByDisplay[selection]
                 if not classID then return end
@@ -347,7 +313,7 @@ lia.util.setPositionCallback(L("classSpawnAdderTitle"), {
             local data = istable(stored) and stored or {}
             local classes = data.classes or {}
             local list = {}
-            local curMap = lia.data.getEquivalencyMap(game.GetMap()):lower()
+            local curMap = game.GetMap():lower()
             for classID, classSpawns in pairs(classes) do
                 local classData = lia.class.get(tonumber(classID))
                 local label = classData and (classData.name or tostring(classID)) or tostring(classID)
@@ -378,7 +344,7 @@ lia.util.setPositionCallback(L("classSpawnAdderTitle"), {
         local stored = lia.data.get("spawns", {})
         local data = istable(stored) and stored or {}
         local classes = data.classes or {}
-        local curMap = lia.data.getEquivalencyMap(game.GetMap()):lower()
+        local curMap = game.GetMap():lower()
         for classID, classSpawns in pairs(classes) do
             for i = #classSpawns, 1, -1 do
                 local spawnData = classSpawns[i]
@@ -388,7 +354,6 @@ lia.util.setPositionCallback(L("classSpawnAdderTitle"), {
                     if not map or map == curMap then
                         table.remove(classSpawns, i)
                         lia.data.set("spawns", data)
-                        lia.log.add(client, "classSpawnRemove", classID)
                         return
                     end
                 end
@@ -396,66 +361,5 @@ lia.util.setPositionCallback(L("classSpawnAdderTitle"), {
         end
     end,
     color = Color(200, 150, 100),
-    serverOnly = true
-})
-
-lia.util.setPositionCallback(L("sitRoomTitle"), {
-    onRun = function(pos, client, typeId)
-        if SERVER then
-            local name = net.ReadString()
-            if not name or name == "" then return end
-            local rooms = lia.data.get("sitrooms", {})
-            rooms[name] = pos
-            lia.data.set("sitrooms", rooms)
-            client:notifySuccessLocalized("sitroomSet")
-            lia.log.add(client, "sitRoomSet", L("sitroomSetDetail", name, tostring(pos)), L("logSetSitroom"))
-        elseif CLIENT then
-            client:requestString("@enterNamePrompt", L("enterSitroomPrompt") .. ":", function(name)
-                if name == false then return end
-                if not name or name == "" then
-                    client:notifyErrorLocalized("invalidName")
-                    return
-                end
-
-                net.Start("liaSetFeaturePosition")
-                net.WriteString("sit_room")
-                net.WriteVector(pos)
-                net.WriteString(name)
-                net.SendToServer()
-            end)
-        end
-    end,
-    onSelect = function(client, callback)
-        if SERVER then
-            local rooms = lia.data.get("sitrooms", {})
-            local list = {}
-            for name, pos in pairs(rooms) do
-                if isvector(pos) then
-                    list[#list + 1] = {
-                        pos = pos,
-                        label = name
-                    }
-                end
-            end
-
-            callback(list, #list)
-        elseif CLIENT then
-            net.Start("liaFeaturePositionsRequest")
-            net.WriteString("sit_room")
-            net.SendToServer()
-        end
-    end,
-    onRemove = function(pos, client, typeId)
-        local rooms = lia.data.get("sitrooms", {})
-        for name, roomPos in pairs(rooms) do
-            if isvector(roomPos) and roomPos:DistToSqr(pos) < 1 then
-                rooms[name] = nil
-                lia.data.set("sitrooms", rooms)
-                lia.log.add(client, "sitRoomRemove", name)
-                return
-            end
-        end
-    end,
-    color = Color(123, 104, 238),
     serverOnly = true
 })

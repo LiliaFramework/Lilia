@@ -2,7 +2,7 @@
 ENT.Type = "anim"
 ENT.PrintName = "Vendor"
 ENT.Author = "Samael"
-ENT.Contact = "@liliaplayer"
+ENT.Contact = "liliaplayer"
 ENT.Category = "Lilia"
 ENT.Spawnable = true
 ENT.AdminOnly = true

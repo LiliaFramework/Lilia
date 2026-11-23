@@ -7,6 +7,6 @@
         net.WriteUInt(charID, 32)
         net.Send(client)
     else
-        if errorMsg then client:notifyErrorLocalized(errorMsg) end
+        if errorMsg then client:notifyError(errorMsg) end
     end
 end)

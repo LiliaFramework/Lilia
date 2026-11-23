@@ -45,6 +45,19 @@ function TooltipPanel:PositionTooltip()
     self:PerformLayout()
     local x, y = inputGetCursorPos()
     local w, h = self:GetSize()
+    if self.TargetPanel.liaMainMenuTooltip then
+        local parent = self.TargetPanel:GetParent()
+        if isValid(parent) then
+            local parentX = parent:LocalToScreen(0, 0)
+            local xRight = parentX + parent:GetWide() + 8
+            local xLeft = parentX - w - 8
+            local _, buttonY = self.TargetPanel:LocalToScreen(0, 0)
+            local tooltipX = xRight + w <= ScrW() - 8 and xRight or xLeft
+            self:SetPos(clamp(tooltipX, 8, math.max(8, ScrW() - w - 8)), clamp(buttonY - h + 10, 8, math.max(8, ScrH() - h - 8)))
+            return
+        end
+    end
+
     local _, ly = self.TargetPanel:LocalToScreen(0, 0)
     y = min(y - 50, ly - h * 1.5)
     if y < 2 then y = 2 end

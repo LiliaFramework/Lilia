@@ -1,88 +1,4 @@
-﻿--[[
-    Hooks:
-        PlayerStaminaLost(Player client)
-
-    Purpose:
-        Runs when a player's stamina is drained to zero and the breathing slowdown state is enabled.
-
-    Category:
-        Attributes
-
-    Parameters:
-        client (Player)
-            The player whose stamina was exhausted.
-
-    Returns:
-        nil
-
-    Example Usage:
-        ```lua
-        hook.Add("PlayerStaminaLost", "liaExamplePlayerStaminaLost", function(client)
-            client:ChatPrint("You're exhausted.")
-        end)
-        ```
-
-    Realm:
-        Server
-]]
---[[
-    Hooks:
-        PlayerStaminaGained(Player client)
-
-    Purpose:
-        Runs when a player's stamina recovers enough to clear the breathing slowdown state.
-
-    Category:
-        Attributes
-
-    Parameters:
-        client (Player)
-            The player whose stamina recovered.
-
-    Returns:
-        nil
-
-    Example Usage:
-        ```lua
-        hook.Add("PlayerStaminaGained", "liaExamplePlayerStaminaGained", function(client)
-            client:ChatPrint("You caught your breath.")
-        end)
-        ```
-
-    Realm:
-        Server
-]]
---[[
-    Hooks:
-        CanPlayerThrowPunch(Player client)
-
-    Purpose:
-        Determines whether a player may throw a punch with the hands weapon before cooldown and attack logic proceeds.
-
-    Category:
-        Combat
-
-    Parameters:
-        client (Player)
-            The player attempting to punch.
-
-    Returns:
-        boolean|string|nil
-            Return false to block the punch. A second return value may provide the localized error key shown to the player. Returning nil allows the default behavior to continue.
-
-    Example Usage:
-        ```lua
-        hook.Add("CanPlayerThrowPunch", "liaExampleCanPlayerThrowPunch", function(client)
-            if client:getNetVar("noPunching") then
-                return false, "needMorePlaytimeBeforePunch"
-            end
-        end)
-        ```
-
-    Realm:
-        Shared
-]]
-function MODULE:CalcStaminaChange(client)
+﻿function MODULE:CalcStaminaChange(client)
     local char = client:getChar()
     if not char then return 0 end
     local walkSpeed = lia.config.get("WalkSpeed", 100)
@@ -135,15 +51,15 @@ function MODULE:CanPlayerThrowPunch(client)
     local required = lia.config.get("PunchPlaytime", 7200)
     if required > 0 then
         if not IsValid(client) or client:GetUserGroup() ~= "user" then return end
-        if not client:playTimeGreaterThan(required) then return false, L("needMorePlaytimeBeforePunch") end
+        if not client:playTimeGreaterThan(required) then return false, "You need more playtime before you can punch." end
     end
 
     local staminaUse = lia.config.get("PunchStamina", 10)
     if staminaUse > 0 then
         local char = client:getChar()
-        if not char then return false, L("invalidCharacter") end
+        if not char then return false, "Invalid character." end
         local currentStamina = CLIENT and predictedStamina or client:getLocalVar("stamina", hook.Run("GetCharMaxStamina", char) or lia.config.get("DefaultStamina", 100))
-        if currentStamina < staminaUse then return false, L("notEnoughStaminaToPunch") end
+        if currentStamina < staminaUse then return false, "You don't have enough stamina to punch." end
     end
 end
 

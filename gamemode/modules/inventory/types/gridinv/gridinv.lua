@@ -21,7 +21,7 @@ local function CanNotAddItemIfNoSpace(inventory, action, context)
     if action ~= "add" then return end
     if inventory.virtual then return true end
     local x, y = context.x, context.y
-    if not x or not y then return false, L("noFit") end
+    if not x or not y then return false, "This item can not fit in your inventory." end
     local doesFit, item = inventory:doesItemFitAtPos(context.item, x, y)
     if not doesFit then
         return false, {
@@ -45,9 +45,9 @@ end
 
 function GridInv:canAdd(item)
     if isstring(item) then item = lia.item.list[item] end
-    assert(istable(item), L("itemMustBeTable"))
-    assert(isnumber(item.width) and item.width >= 1, L("itemWidthPositiveNumber"))
-    assert(isnumber(item.height) and item.height >= 1, L("itemHeightPositiveNumber"))
+    assert(istable(item), "Item must be a table")
+    assert(isnumber(item.width) and item.width >= 1, "item.width must be a positive number")
+    assert(isnumber(item.height) and item.height >= 1, "item.height must be a positive number")
     local invW, invH = self:getSize()
     local itemW, itemH = item:getWidth(), item:getHeight()
     if itemW <= invW and itemH <= invH then return true end
@@ -184,7 +184,7 @@ if SERVER then
             item = lia.item.list[itemTypeOrItem]
         end
 
-        if not item then return d:reject(L("invalidItemTypeOrID", item and item.name or tostring(itemTypeOrItem))) end
+        if not item then return d:reject(string.format("Invalid item type or ID %s", item and item.name or tostring(itemTypeOrItem))) end
         if data then
             local quantity = tonumber(xOrQuantity) or 1
             if quantity > 1 then
@@ -203,7 +203,7 @@ if SERVER then
         end
 
         local targetInventory = self
-        if not targetInventory:canAdd(itemTypeOrItem) then return d:reject(L("noSpaceForItem")) end
+        if not targetInventory:canAdd(itemTypeOrItem) then return d:reject("No space available for the item.") end
         if not x or not y then
             x, y = self:findFreePosition(item)
             if not x or not y then
@@ -237,7 +237,7 @@ if SERVER then
             end
         end
 
-        if not x or not y then return d:reject(L("noSpaceForItem")) end
+        if not x or not y then return d:reject("No space available for the item.") end
         if isStackCommand and item.isStackable ~= true then isStackCommand = false end
         local targetAssignments, remainingQuantity = {}, xOrQuantity
         if isStackCommand then
@@ -282,7 +282,7 @@ if SERVER then
                     error = reason
                 })
             end
-            return d:reject(tostring(reason or L("noAccess")))
+            return d:reject(tostring(reason or "No Access"))
         end
 
         if not isStackCommand and justAddDirectly then
@@ -343,9 +343,9 @@ if SERVER then
 
     function GridInv:remove(itemTypeOrID, quantity)
         quantity = quantity or 1
-        assert(isnumber(quantity), L("quantityMustBeNumber"))
+        assert(isnumber(quantity), "Quantity must be a number")
         local d = deferred.new()
-        if quantity <= 0 then return d:reject(L("quantityMustBePositive")) end
+        if quantity <= 0 then return d:reject("Quantity must be positive") end
         if isnumber(itemTypeOrID) then
             self:removeItem(itemTypeOrID)
         else

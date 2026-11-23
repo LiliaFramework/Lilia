@@ -1,7 +1,7 @@
-﻿function MODULE:PlayerLiliaDataLoaded(client)
+function MODULE:PlayerLiliaDataLoaded(client)
     lia.char.restore(client, function(charList)
         if not IsValid(client) then return end
-        lia.information(L("loadedCharacters", table.concat(charList, ", "), client:Name()))
+        lia.information(string.format("Loaded (%s) for %s", table.concat(charList, ", "), client:Name()))
         for _, v in ipairs(charList) do
             lia.char.getCharacter(v, client, function(character) if character then character:sync(client) end end)
         end
@@ -17,22 +17,22 @@
 end
 
 function MODULE:CanPlayerUseChar(_, character)
-    if character:isBanned() then return false, L("permaKilledCharacter") end
+    if character:isBanned() then return false, "This character was perma killed" end
     return true
 end
 
 function MODULE:CanPlayerSwitchChar(client, character, newCharacter)
-    if character:getID() == newCharacter:getID() then return false, L("alreadyUsingCharacter") end
-    if character:isBanned() then return false, L("permaKilledCharacter") end
-    if not client:Alive() then return false, L("youAreDead") end
-    if IsValid(client:GetRagdollEntity()) then return false, L("youAreRagdolled") end
-    if IsValid(client:GetVehicle()) then return false, L("cannotSwitchInVehicle") end
+    if character:getID() == newCharacter:getID() then return false, "You are already using this character" end
+    if character:isBanned() then return false, "This character was perma killed" end
+    if not client:Alive() then return false, "You are dead" end
+    if IsValid(client:GetRagdollEntity()) then return false, "You are ragdolled!" end
+    if IsValid(client:GetVehicle()) then return false, "You cannot switch characters while in a vehicle or sitting!" end
     return true
 end
 
 function MODULE:PlayerLoadedChar(client, character)
     local charID = character:getID()
-    lia.db.query("SELECT key, value FROM lia_chardata WHERE charID = " .. charID, function(data)
+    lia.db.query("SELECT `key`, `value` FROM lia_chardata WHERE charID = " .. charID, function(data)
         data = data or {}
         if not character.dataVars then character.dataVars = {} end
         for _, row in ipairs(data) do

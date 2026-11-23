@@ -1,33 +1,3 @@
-﻿--[[
-    Hooks:
-        OnCharDisconnect(Player client, Character character)
-
-    Purpose:
-        Runs when a player disconnects while a character is loaded so spawn-related character state can be persisted.
-
-    Category:
-        Character
-
-    Parameters:
-        client (Player)
-            The disconnecting player.
-
-        character (Character)
-            The character that was loaded for the player.
-
-    Example Usage:
-        ```lua
-        hook.Add("OnCharDisconnect", "liaExampleSpawnDisconnect", function(client, character)
-            print(character:getName())
-        end)
-        ```
-
-    Returns:
-        nil
-
-    Realm:
-        Server
-]]
 local MODULE = MODULE
 local MAP_SPAWN_CLASSES = {"info_player_start", "info_player_deathmatch", "info_player_counterterrorist", "info_player_terrorist", "info_player_combine", "info_player_rebel", "gmod_player_start", "info_player_axis", "info_player_allies"}
 local SPAWN_HEIGHT_OFFSET = Vector(0, 0, 16)
@@ -183,7 +153,7 @@ local function DoSpawnLogic(client, isRespawning)
         local spawnData = lia.data.get("spawns", {})
         local classSpawns = istable(spawnData) and istable(spawnData.classes) and spawnData.classes[classIndex]
         if classSpawns and #classSpawns > 0 then
-            local curMap = lia.data.getEquivalencyMap(game.GetMap()):lower()
+            local curMap = game.GetMap():lower()
             local valid = {}
             for _, v in ipairs(classSpawns) do
                 local map = v.map and tostring(v.map):lower() or nil
@@ -214,7 +184,7 @@ local function DoSpawnLogic(client, isRespawning)
 
     if factionID then
         local factionInfo = lia.faction.get(factionID)
-        local curMap = lia.data.getEquivalencyMap(game.GetMap()):lower()
+        local curMap = game.GetMap():lower()
         if factionInfo and factionInfo.spawns and factionInfo.spawns[curMap] then
             local mapSpawns = factionInfo.spawns[curMap]
             if istable(mapSpawns) and #mapSpawns > 0 then
@@ -272,7 +242,7 @@ function MODULE:CharPreSave(character)
         local lastPosData = {
             pos = client:GetPos(),
             ang = Angle(0, 0, 0),
-            map = lia.data.getEquivalencyMap(game.GetMap())
+            map = game.GetMap()
         }
 
         character:setLastPos(lastPosData)
@@ -298,7 +268,7 @@ local function RemovedDropOnDeathItems(client)
     end
 
     local lostCount = #client.LostItems
-    if lostCount > 0 then client:notifyWarningLocalized("itemsLostOnDeath", lostCount) end
+    if lostCount > 0 then client:notifyWarning(string.format("You lost %s item(s) on death.", lostCount)) end
 end
 
 local function resolveFromEntity(ent)
@@ -339,7 +309,6 @@ local function ResolveDeathAttacker(victim, inflictor, attacker)
 
     local resolved = resolveFromEntity(inflictor)
     if IsValid(resolved) then return resolved end
-    lia.log.add(client, "playerDeath", attackerName)
     return attacker
 end
 
@@ -352,7 +321,7 @@ function MODULE:OnCharDisconnect(client, character)
     local lastPosData = {
         pos = client:GetPos(),
         ang = Angle(0, 0, 0),
-        map = lia.data.getEquivalencyMap(game.GetMap())
+        map = game.GetMap()
     }
 
     character:setLastPos(lastPosData)
@@ -376,38 +345,38 @@ function MODULE:PlayerDeath(client, inflictor, attacker)
         lia.debug("[DeathDebug]", "PlayerDeath", "victim=", client:Name(), "attacker=", entShort(attacker), "inflictor=", entShort(inflictor), "resolved=", entShort(resolvedAttacker))
         local dateStr = os.date("%d/%m/%Y", os.time())
         local timeStr = os.date("%H:%M:%S", os.time())
-        local attackerName = L("na")
+        local attackerName = "N/A"
         local attackerChar = nil
         if IsValid(resolvedAttacker) then
             if resolvedAttacker == client or resolvedAttacker:IsWorld() or resolvedAttacker:GetClass() == "worldspawn" then
-                attackerName = L("theEnvironment")
+                attackerName = "the environment"
             elseif resolvedAttacker:IsPlayer() then
                 attackerChar = resolvedAttacker:getChar()
-                local charID = attackerChar and tostring(attackerChar:getID()) or L("na")
+                local charID = attackerChar and tostring(attackerChar:getID()) or "N/A"
                 local steamID = resolvedAttacker:SteamID64()
-                attackerName = L("characterIDSteamID64", charID, steamID)
+                attackerName = string.format("Character ID %s [STEAMID64 %s]", charID, steamID)
             else
-                attackerName = resolvedAttacker:GetClass() or L("na")
+                attackerName = resolvedAttacker:GetClass() or "N/A"
             end
         end
 
-        local killedByText = L("killedByAt", attackerName, timeStr)
+        local killedByText = string.format("You were killed by %s at %s", attackerName, timeStr)
         ClientAddText(client, Color(255, 255, 255), dateStr .. " - ", Color(255, 255, 255), killedByText)
         local logTimestamp = os.date("%Y-%m-%d %H:%M:%S", os.time())
         local attackerDisplay = "unknown"
         if IsValid(resolvedAttacker) then
             if resolvedAttacker == client or resolvedAttacker:IsWorld() or resolvedAttacker:GetClass() == "worldspawn" then
-                attackerDisplay = L("theEnvironment")
+                attackerDisplay = "the environment"
             elseif resolvedAttacker:IsPlayer() then
                 attackerChar = attackerChar or resolvedAttacker:getChar()
                 local steamId = resolvedAttacker:SteamID64()
-                attackerDisplay = attackerChar and L("characterSteam64ID", attackerChar:getID(), steamId) or L("na")
+                attackerDisplay = attackerChar and string.format("Character %s | Steam64ID %s", attackerChar:getID(), steamId) or "N/A"
             else
-                attackerDisplay = resolvedAttacker:GetClass() or L("na")
+                attackerDisplay = resolvedAttacker:GetClass() or "N/A"
             end
         end
 
-        local deathMessage = L("staffLogDeathMessage", client:Name(), char:getID(), client:SteamID64(), attackerDisplay)
+        local deathMessage = string.format("%s (Character %s | Steam64ID: %s) was killed by %s", client:Name(), char:getID(), client:SteamID64(), attackerDisplay)
         local isStaff = client:isStaffOnDuty() or client:hasPrivilege("canSeeLogs")
         lia.debug("[Permissions]", "Permission Check for spawns death message self visibility", "isStaffOnDuty=", tostring(client:isStaffOnDuty()), "hasPrivilege(canSeeLogs)=", tostring(client:hasPrivilege("canSeeLogs")), "finalResult=", tostring(isStaff))
         if not isStaff then ClientAddTextShadowed(client, Color(255, 0, 0), "DEATH", Color(255, 255, 255), " | " .. logTimestamp .. " | " .. deathMessage) end
@@ -453,7 +422,7 @@ function MODULE:PostPlayerLoadout(client)
 
     local lastPos = character:getLastPos()
     if lastPos and lastPos.map then
-        local currentMap = lia.data.getEquivalencyMap(game.GetMap()):lower()
+        local currentMap = game.GetMap():lower()
         local savedMapLower = tostring(lastPos.map):lower()
         if savedMapLower == currentMap then
             if lastPos.pos and isvector(lastPos.pos) then client:SetPos(lastPos.pos) end

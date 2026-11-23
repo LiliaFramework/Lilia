@@ -1,6 +1,6 @@
 ﻿SWEP.Author = "liliaplayer"
-SWEP.Contact = "@liliaplayer"
-SWEP.Instructions = L("keysInstructions")
+SWEP.Contact = "liliaplayer"
+SWEP.Instructions = "Primary Fire: Lock\nSecondary Fire: Unlock"
 SWEP.Drop = false
 SWEP.ViewModelFOV = 45
 SWEP.ViewModelFlip = false

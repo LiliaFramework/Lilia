@@ -1,6 +1,9 @@
 ﻿local WeightInv = lia.Inventory:extend("WeightInv")
-local function getItemWeight(item)
-    return item.weight or (item:getWidth() * item:getHeight())
+local function getItemWeight(item, inventory)
+    local hookedWeight = hook.Run("GetInventoryItemWeight", item, inventory)
+    if isnumber(hookedWeight) then return math.max(hookedWeight, 0) end
+    if item.weight ~= nil then return math.max(tonumber(item.weight) or 0, 0) end
+    return item:getWidth() * item:getHeight()
 end
 
 local function CanAccessInventoryIfCharacterIsOwner(inventory, action, context)
@@ -14,7 +17,7 @@ local function CanAddItemIfNotWeightRestricted(inventory, action, context)
     if context.forced then return true end
     local weight = inventory:getWeight()
     local maxWeight = inventory:getMaxWeight()
-    if weight + getItemWeight(context.item) > maxWeight then return false, "noFit" end
+    if weight + getItemWeight(context.item, inventory) > maxWeight then return false, "This item can not fit in your inventory." end
     return true
 end
 
@@ -27,13 +30,13 @@ end
 
 function WeightInv:canAdd(item)
     if isstring(item) then item = lia.item.list[item] end
-    assert(istable(item), L("itemMustBeTable"))
-    return self:getWeight() + getItemWeight(item) <= self:getMaxWeight()
+    assert(istable(item), "Item must be a table")
+    return self:getWeight() + getItemWeight(item, self) <= self:getMaxWeight()
 end
 
 function WeightInv:doesFitInventory(item)
     if isstring(item) then item = lia.item.list[item] end
-    return self:getWeight() + getItemWeight(item) <= self:getMaxWeight()
+    return self:getWeight() + getItemWeight(item, self) <= self:getMaxWeight()
 end
 
 function WeightInv:getItems(noRecurse)
@@ -90,7 +93,7 @@ if SERVER then
 
         if not item then
             return d:resolve({
-                error = "invalid item type"
+                error = "Invalid item type"
             })
         end
 
@@ -101,7 +104,7 @@ if SERVER then
         }
 
         local canAccess, reason = self:canAccess("add", context)
-        if not canAccess then return d:reject(reason or "noAccess") end
+        if not canAccess then return d:reject(reason or "No Access") end
         if justAddDirectly then
             self:addItem(item)
             return d:resolve(item)
@@ -150,9 +153,13 @@ end
 function WeightInv:getWeight()
     local weight = 0
     for _, item in pairs(self.items) do
-        weight = weight + math.max(getItemWeight(item), 0)
+        weight = weight + getItemWeight(item, self)
     end
     return weight
+end
+
+function WeightInv:getItemWeight(item)
+    return getItemWeight(item, self)
 end
 
 function WeightInv:getMaxWeight()

@@ -1,76 +1,4 @@
-﻿--[[
-    Hooks:
-        CanPlayerUseAmmoBox(Player activator, Entity ammoBox)
-
-    Purpose:
-        Determines whether a player may consume an ammo box before ammo is granted.
-
-    Category:
-        Items
-
-    Parameters:
-        activator (Player)
-            The player using the ammo box.
-
-        ammoBox (Entity)
-            The ammo box entity being used.
-
-    Returns:
-        boolean|nil
-            Return false to block the ammo box use. Returning nil allows the default behavior to continue.
-
-    Example Usage:
-        ```lua
-        hook.Add("CanPlayerUseAmmoBox", "liaExampleCanPlayerUseAmmoBox", function(activator, ammoBox)
-            if activator:InVehicle() then
-                return false
-            end
-        end)
-        ```
-
-    Realm:
-        Server
-]]
---[[
-    Hooks:
-        OnAmmoBoxUsed(Player activator, Entity ammoBox, Weapon weapon, string ammoType, number givenAmount)
-
-    Purpose:
-        Runs after an ammo box successfully grants ammunition to the player's active weapon type.
-
-    Category:
-        Items
-
-    Parameters:
-        activator (Player)
-            The player who used the ammo box.
-
-        ammoBox (Entity)
-            The ammo box entity that was consumed.
-
-        weapon (Weapon)
-            The active weapon used to determine the ammo type.
-
-        ammoType (string)
-            The primary ammo type granted by the ammo box.
-
-        givenAmount (number)
-            The amount of ammo actually added.
-
-    Returns:
-        nil
-
-    Example Usage:
-        ```lua
-        hook.Add("OnAmmoBoxUsed", "liaExampleOnAmmoBoxUsed", function(activator, ammoBox, weapon, ammoType, givenAmount)
-            print(activator:Nick(), "received", givenAmount, ammoType)
-        end)
-        ```
-
-    Realm:
-        Server
-]]
-local function getHeldAmmoInfo(client)
+﻿local function getHeldAmmoInfo(client)
     local weapon = client:GetActiveWeapon()
     if not IsValid(weapon) then return end
     local ammoTypeID = weapon:GetPrimaryAmmoType()
@@ -114,7 +42,7 @@ function ENT:Use(activator)
     if hook.Run("CanPlayerUseAmmoBox", activator, self) == false then return end
     local weapon, ammoTypeID, ammoType = getHeldAmmoInfo(activator)
     if not weapon then
-        activator:notifyErrorLocalized("liaAmmoBoxInvalidWeapon")
+        activator:notifyError(string.format("Hold a weapon that uses primary ammo."))
         return
     end
 
@@ -124,7 +52,7 @@ function ENT:Use(activator)
     local givenAmount = math.max(activator:GetAmmoCount(ammoTypeID) - ammoBefore, 0)
     if givenAmount <= 0 then
         self.liaUsed = nil
-        activator:notifyErrorLocalized("liaAmmoBoxFull")
+        activator:notifyError(string.format("You are already full on that ammo type."))
         return
     end
 

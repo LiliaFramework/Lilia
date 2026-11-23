@@ -1,205 +1,4 @@
-﻿--[[
-    Hooks:
-        GetAdminStickLists(Entity target, table lists)
-
-    Purpose:
-        Allows modules to contribute structured submenu definitions for the admin stick based on the current target entity.
-
-    Category:
-        Administration
-
-    Parameters:
-        target (Entity)
-            The entity currently selected or hovered by the admin stick.
-
-        lists (table)
-            The mutable array that receives generated list definitions with categories, subcategories, and items.
-
-    Example Usage:
-        ```lua
-        hook.Add("GetAdminStickLists", "liaExampleGetAdminStickLists", function(target, lists)
-            if IsValid(target) and target:isDoor() then
-                lists[#lists + 1] = {
-                    name = "Example",
-                    category = "doorManagement",
-                    subcategory = "example",
-                    items = {
-                        {
-                            name = "Print Door ID",
-                            callback = function(currentTarget)
-                                print(currentTarget:MapCreationID())
-                            end
-                        }
-                    }
-                }
-            end
-        end)
-        ```
-
-    Returns:
-        nil
-
-    Realm:
-        Client
-]]
---[[
-    Hooks:
-        AddToAdminStickHUD(Player client, Entity target, table information)
-
-    Purpose:
-        Allows modules to append extra text lines to the admin stick HUD for the currently traced target.
-
-    Category:
-        Administration
-
-    Parameters:
-        client (Player)
-            The local player viewing the admin stick HUD.
-
-        target (Entity)
-            The current entity or player targeted by the admin stick.
-
-        information (table)
-            The mutable array of text lines that will be rendered in the HUD panel.
-
-    Example Usage:
-        ```lua
-        hook.Add("AddToAdminStickHUD", "liaExampleAddToAdminStickHUD", function(client, target, information)
-            if IsValid(target) and target:isDoor() then
-                information[#information + 1] = "Door ID: " .. target:MapCreationID()
-            end
-        end)
-        ```
-
-    Returns:
-        nil
-
-    Realm:
-        Client
-]]
---[[
-    Hooks:
-        OpenAdminStickUI(Entity target)
-
-    Purpose:
-        Runs when the admin stick requests its management UI for a traced target and the client should build or replace the active admin stick menu.
-
-    Category:
-        Administration
-
-    Parameters:
-        target (Entity)
-            The targeted entity that the admin stick is attempting to manage.
-
-    Example Usage:
-        ```lua
-        hook.Add("OpenAdminStickUI", "liaExampleOpenAdminStickUI", function(target)
-            if IsValid(target) then
-                print("Opening admin stick UI for:", target:GetClass())
-            end
-        end)
-        ```
-
-    Returns:
-        nil
-
-    Realm:
-        Client
-]]
---[[
-    Hooks:
-        PopulateAdminStick(Panel currentMenu, Entity currentTarget, table currentStores)
-
-    Purpose:
-        Runs while the admin stick menu is being populated so modules can add menu options and submenu groups for the current target.
-
-    Category:
-        Administration
-
-    Parameters:
-        currentMenu (Panel)
-            The active admin stick context menu being populated.
-
-        currentTarget (Entity)
-            The entity currently targeted by the admin stick.
-
-        currentStores (table)
-            The mutable store table used to cache created category and subcategory menus.
-
-    Example Usage:
-        ```lua
-        hook.Add("PopulateAdminStick", "liaExamplePopulateAdminStick", function(currentMenu, currentTarget, currentStores)
-            if IsValid(currentMenu) and IsValid(currentTarget) and currentTarget:isDoor() then
-                currentMenu:AddOption("Print Door ID", function()
-                    print(currentTarget:MapCreationID())
-                end):SetIcon("icon16/information.png")
-            end
-        end)
-        ```
-
-    Returns:
-        nil
-
-    Realm:
-        Client
-]]
---[[
-    Hooks:
-        OnAdminStickMenuClosed()
-
-    Purpose:
-        Runs after the admin stick menu closes so clientside state tied to the active menu can be cleared.
-
-    Category:
-        Administration
-
-    Parameters:
-        None
-
-    Example Usage:
-        ```lua
-        hook.Add("OnAdminStickMenuClosed", "liaExampleOnAdminStickMenuClosed", function()
-            print("Admin stick menu closed")
-        end)
-        ```
-
-    Returns:
-        nil
-
-    Realm:
-        Client
-]]
---[[
-    Hooks:
-        AdminStickAddModels(table modList)
-
-    Purpose:
-        Allows clientside code to add extra model definitions to the admin stick model picker before they are displayed.
-
-    Category:
-        Administration
-
-    Parameters:
-        modList (table)
-            The mutable array of model definitions with `name` and `mdl` fields.
-
-    Example Usage:
-        ```lua
-        hook.Add("AdminStickAddModels", "liaExampleAdminStickAddModels", function(modList)
-            modList[#modList + 1] = {
-                name = "Citizen Male",
-                mdl = "models/Humans/Group01/male_01.mdl"
-            }
-        end)
-        ```
-
-    Returns:
-        nil
-
-    Realm:
-        Client
-]]
-local MODULE = MODULE
+﻿local MODULE = MODULE
 AdminStickIsOpen = false
 AdminStickMenu = nil
 AdminStickWarnings = {}
@@ -208,7 +7,7 @@ AdminStickMenuOpenTime = 0
 local adminStickPlayerStates = {}
 MODULE.adminStickCategories = MODULE.adminStickCategories or {}
 MODULE.adminStickCategoryOrder = MODULE.adminStickCategoryOrder or {}
-local playerInfoLabel = L("player") .. " " .. L("information")
+local playerInfoLabel = "Player" .. " " .. "Information"
 local subMenuIcons = {
     moderationTools = "icon16/wrench.png",
     warnings = "icon16/error.png",
@@ -424,16 +223,16 @@ local function GetIconForCategory(name)
     end
 
     local localizedExactMatches = {
-        [L("adminStickCategoryModeration"):lower()] = "icon16/shield.png",
-        [L("characterManagement"):lower()] = "icon16/user_gray.png",
-        [L("doorManagement"):lower()] = "icon16/door.png",
-        [L("playerinformation"):lower()] = "icon16/information.png",
-        [L("adminStickCategoryTeleportation"):lower()] = "icon16/arrow_right.png",
-        [L("adminStickCategoryUtility"):lower()] = "icon16/application_view_tile.png",
-        [L("misc"):lower()] = "icon16/application_view_tile.png",
-        [L("items"):lower()] = "icon16/box.png",
-        [L("outOfCharacter"):lower()] = "icon16/comment.png",
-        [L("warnsModuleName"):lower()] = "icon16/error.png",
+        [("Moderation"):lower()] = "icon16/shield.png",
+        [("Character Management"):lower()] = "icon16/user_gray.png",
+        [("Door Management"):lower()] = "icon16/door.png",
+        [("Player Information"):lower()] = "icon16/information.png",
+        [("Teleportation"):lower()] = "icon16/arrow_right.png",
+        [("Utility"):lower()] = "icon16/application_view_tile.png",
+        [("Miscellaneous"):lower()] = "icon16/application_view_tile.png",
+        [("Items"):lower()] = "icon16/box.png",
+        [("out of character"):lower()] = "icon16/comment.png",
+        [("Warnings"):lower()] = "icon16/error.png",
     }
 
     if localizedExactMatches[nameLower] then return localizedExactMatches[nameLower] end
@@ -468,8 +267,9 @@ end
 
 local function resolveAdminStickToken(candidates)
     for _, token in ipairs(candidates) do
-        local resolved = lia.lang.resolveToken(token)
-        if resolved and resolved ~= "" and resolved ~= token and resolved ~= token:sub(2) then return resolved end
+        local raw = tostring(token)
+        local resolved = lia.lang.resolve(raw)
+        if resolved and resolved ~= "" and resolved ~= raw:gsub("^@", "") then return resolved end
     end
 end
 
@@ -480,12 +280,12 @@ end
 
 local function getCategoryDisplayName(categoryKey)
     local pascalKey = formatAdminStickPascal(categoryKey)
-    return resolveAdminStickToken({"@adminStickCategory" .. pascalKey, "@" .. tostring(categoryKey or "")}) or humanizeAdminStickKey(categoryKey)
+    return resolveAdminStickToken({"Category" .. pascalKey, "@" .. tostring(categoryKey or "")}) or humanizeAdminStickKey(categoryKey)
 end
 
 local function getSubcategoryDisplayName(_, subcategoryKey)
     local pascalKey = formatAdminStickPascal(subcategoryKey)
-    return resolveAdminStickToken({"@adminStickSubCategory" .. pascalKey, "@adminStickCategory" .. pascalKey, "@" .. tostring(subcategoryKey or "")}) or humanizeAdminStickKey(subcategoryKey)
+    return resolveAdminStickToken({"Subcategory" .. pascalKey, "Category" .. pascalKey, "@" .. tostring(subcategoryKey or "")}) or humanizeAdminStickKey(subcategoryKey)
 end
 
 local function findCategoryKeyByName(categories, displayName)
@@ -627,13 +427,13 @@ local function CreateOrganizedAdminStickMenu(tgt, stores, existingMenu)
             local isStaffOnDuty = cl:isStaffOnDuty()
             if categoryKey == "moderation" and tgt:IsPlayer() and (hasAlwaysSpawnAdminStick or isStaffOnDuty) then
                 hasContent = true
-            elseif categoryKey == "characterManagement" and tgt:IsPlayer() then
+            elseif categoryKey == "Character Management" and tgt:IsPlayer() then
                 hasContent = true
             elseif categoryKey == "flagManagement" and tgt:IsPlayer() and (hasAlwaysSpawnAdminStick or isStaffOnDuty) then
                 hasContent = true
-            elseif categoryKey == "doorManagement" and tgt:isDoor() then
+            elseif categoryKey == "Door Management" and tgt:isDoor() then
                 hasContent = true
-            elseif categoryKey == "storageManagement" and tgt.isStorageEntity then
+            elseif categoryKey == "Storage Management" and tgt.isStorageEntity then
                 hasContent = true
             elseif categoryKey == "utility" and tgt:IsPlayer() then
                 hasContent = true
@@ -657,7 +457,7 @@ end
 local function OpenPlayerModelUI(tgt)
     AdminStickIsOpen = true
     local fr = vgui.Create("liaFrame")
-    fr:SetTitle(L("changePlayerModel"))
+    fr:SetTitle("Change Playermodel")
     fr:SetSize(1200, 800)
     fr:Center()
     function fr:OnClose()
@@ -670,7 +470,7 @@ local function OpenPlayerModelUI(tgt)
     ed:Dock(BOTTOM)
     ed:SetText(tgt:GetModel())
     local bt = vgui.Create("liaButton", fr)
-    bt:SetText(L("change"))
+    bt:SetText("Change")
     bt:Dock(TOP)
     function bt:DoClick()
         local txt = ed:GetValue()
@@ -711,7 +511,7 @@ local function OpenPlayerModelUI(tgt)
     hook.Run("AdminStickAddModels", allModList, tgt)
     table.sort(allModList, function(a, b) return a.name < b.name end)
     populateModelGrid(allWr, allModList)
-    sheet:AddSheet(L("all"), allPanel)
+    sheet:AddSheet("All", allPanel)
     local factionPanel = sheet:Add("Panel")
     local factionSheet = factionPanel:Add("liaTabs")
     factionSheet:Dock(FILL)
@@ -747,33 +547,33 @@ local function OpenPlayerModelUI(tgt)
                 for _, categoryModels in pairs(models) do
                     if istable(categoryModels) then
                         for _, modelData in ipairs(categoryModels) do
-                            processFactionModel(modelData, faction.name or L("unknownFaction"), modList)
+                            processFactionModel(modelData, faction.name or "Unknown Faction", modList)
                         end
                     else
-                        processFactionModel(categoryModels, faction.name or L("unknownFaction"), modList)
+                        processFactionModel(categoryModels, faction.name or "Unknown Faction", modList)
                     end
                 end
             else
                 if models.male or models.female then
                     if models.male then
                         for _, modelData in ipairs(models.male) do
-                            processFactionModel(modelData, faction.name or L("unknownFaction"), modList)
+                            processFactionModel(modelData, faction.name or "Unknown Faction", modList)
                         end
                     end
 
                     if models.female then
                         for _, modelData in ipairs(models.female) do
-                            processFactionModel(modelData, faction.name or L("unknownFaction"), modList)
+                            processFactionModel(modelData, faction.name or "Unknown Faction", modList)
                         end
                     end
                 else
                     for _, modelData in ipairs(models) do
-                        processFactionModel(modelData, faction.name or L("unknownFaction"), modList)
+                        processFactionModel(modelData, faction.name or "Unknown Faction", modList)
                     end
                 end
             end
         else
-            processFactionModel(models, faction.name or L("unknownFaction"), modList)
+            processFactionModel(models, faction.name or "Unknown Faction", modList)
         end
     end
 
@@ -788,11 +588,11 @@ local function OpenPlayerModelUI(tgt)
             processFactionModels(faction, factionModList)
             table.sort(factionModList, function(a, b) return a.name < b.name end)
             populateModelGrid(factionWr, factionModList)
-            factionSheet:AddSheet(faction.name or L("unknownFaction"), factionSubPanel)
+            factionSheet:AddSheet(faction.name or "Unknown Faction", factionSubPanel)
         end
     end
 
-    sheet:AddSheet(L("faction"), factionPanel)
+    sheet:AddSheet("Faction", factionPanel)
     local charObj = tgt:getChar()
     if charObj then
         local classIndex = charObj:getClass()
@@ -854,11 +654,11 @@ local function OpenPlayerModelUI(tgt)
                     processClassModels(class, classModList)
                     table.sort(classModList, function(a, b) return a.name < b.name end)
                     populateModelGrid(classWr, classModList)
-                    classSheet:AddSheet(class.name or L("unknownClass"), classSubPanel)
+                    classSheet:AddSheet(class.name or "Unknown Class", classSubPanel)
                 end
             end
 
-            sheet:AddSheet(L("class"), classPanel)
+            sheet:AddSheet("Class", classPanel)
         end
     end
 
@@ -869,25 +669,25 @@ local function OpenReasonUI(tgt, cmd)
     AdminStickIsOpen = true
     local argTypes = {}
     local defaults = {}
-    argTypes[L("reason")] = "string"
-    defaults[L("reason")] = ""
+    argTypes["Reason"] = "string"
+    defaults["Reason"] = ""
     if cmd == "banid" then
-        argTypes[L("lengthInDays")] = "number"
-        defaults[L("lengthInDays")] = 0
+        argTypes["Length In Days"] = "number"
+        defaults["Length In Days"] = 0
     end
 
-    lia.derma.requestArguments(L("reasonFor", cmd), argTypes, function(success, data)
+    lia.derma.requestArguments(string.format("Reason for %s", cmd), argTypes, function(success, data)
         if not success or not data then
             AdminStickIsOpen = false
             LocalPlayer().AdminStickTarget = nil
             return
         end
 
-        local txt = data[L("reason")] or ""
+        local txt = data["Reason"] or ""
         local id = GetIdentifier(tgt)
         if cmd == "banid" then
             if id ~= "" then
-                local duration = tonumber(data[L("lengthInDays")]) or 0
+                local duration = tonumber(data["Length In Days"]) or 0
                 local len = duration * 60 * 24
                 RunAdminCommand("ban", tgt, len, txt)
             end
@@ -901,9 +701,9 @@ local function OpenReasonUI(tgt, cmd)
 end
 
 local function HandleModerationOption(opt, tgt)
-    if opt.name == L("ban") then
+    if opt.name == "Ban" then
         OpenReasonUI(tgt, "banid")
-    elseif opt.name == L("kick") then
+    elseif opt.name == "Kick" then
         OpenReasonUI(tgt, "kick")
     else
         RunAdminCommand(opt.cmd, tgt)
@@ -923,20 +723,20 @@ local function IncludeAdminMenu(tgt, menu, stores)
     if not permission then return end
     local modCategory = GetOrCreateCategoryMenu(menu, "moderation", stores)
     if not modCategory then return end
-    local modSubCategory = GetOrCreateSubCategoryMenu(modCategory, "moderation", "moderationTools", stores)
+    local modSubCategory = GetOrCreateSubCategoryMenu(modCategory, "moderation", "Moderation Tools", stores)
     if not modSubCategory then return end
     appendDeferredMenuBuild(modSubCategory, function(submenu)
         local mods = {}
         local isBlinded = timer.Exists("liaBlind" .. tgt:SteamID())
         if isBlinded then
             mods[#mods + 1] = {
-                name = L("unblind"),
+                name = "Unblind",
                 cmd = "unblind",
                 icon = "icon16/eye.png"
             }
         else
             mods[#mods + 1] = {
-                name = L("blind"),
+                name = "Blind",
                 cmd = "blind",
                 icon = "icon16/eye.png"
             }
@@ -944,13 +744,13 @@ local function IncludeAdminMenu(tgt, menu, stores)
 
         if tgt:IsFrozen() then
             mods[#mods + 1] = {
-                name = L("unfreeze"),
+                name = "Unfreeze",
                 cmd = "unfreeze",
                 icon = "icon16/accept.png"
             }
         else
             mods[#mods + 1] = {
-                name = L("freeze"),
+                name = "Freeze",
                 cmd = "freeze",
                 icon = "icon16/lock.png"
             }
@@ -958,13 +758,13 @@ local function IncludeAdminMenu(tgt, menu, stores)
 
         if tgt:getLiliaData("liaGagged", false) then
             mods[#mods + 1] = {
-                name = L("ungag"),
+                name = "Ungag",
                 cmd = "ungag",
                 icon = "icon16/sound_low.png"
             }
         else
             mods[#mods + 1] = {
-                name = L("gag"),
+                name = "Gag",
                 cmd = "gag",
                 icon = "icon16/sound_mute.png"
             }
@@ -972,13 +772,13 @@ local function IncludeAdminMenu(tgt, menu, stores)
 
         if tgt:getChar() and tgt:getLiliaData("liaMuted", false) then
             mods[#mods + 1] = {
-                name = L("unmute"),
+                name = "Unmute",
                 cmd = "unmute",
                 icon = "icon16/sound_add.png"
             }
         else
             mods[#mods + 1] = {
-                name = L("mute"),
+                name = "Mute",
                 cmd = "mute",
                 icon = "icon16/sound_delete.png"
             }
@@ -986,13 +786,13 @@ local function IncludeAdminMenu(tgt, menu, stores)
 
         if tgt:IsOnFire() then
             mods[#mods + 1] = {
-                name = L("extinguish"),
+                name = "Extinguish",
                 cmd = "extinguish",
                 icon = "icon16/fire_delete.png"
             }
         else
             mods[#mods + 1] = {
-                name = L("ignite"),
+                name = "Ignite",
                 cmd = "ignite",
                 icon = "icon16/fire.png"
             }
@@ -1000,20 +800,20 @@ local function IncludeAdminMenu(tgt, menu, stores)
 
         if tgt:isLocked() then
             mods[#mods + 1] = {
-                name = L("unjail"),
+                name = "Unjail",
                 cmd = "unjail",
                 icon = "icon16/lock_open.png"
             }
         else
             mods[#mods + 1] = {
-                name = L("jail"),
+                name = "Jail",
                 cmd = "jail",
                 icon = "icon16/lock.png"
             }
         end
 
         mods[#mods + 1] = {
-            name = L("slay"),
+            name = "Slay",
             cmd = "slay",
             icon = "icon16/bomb.png"
         }
@@ -1026,33 +826,33 @@ local function IncludeAdminMenu(tgt, menu, stores)
 
         for _, p in ipairs(mods) do
             if p.action then
-                submenu:AddOption(L(p.action.name), function() HandleModerationOption(p.action, tgt) end):SetIcon(p.action.icon)
-                if p.inverse then submenu:AddOption(L(p.inverse.name), function() HandleModerationOption(p.inverse, tgt) end):SetIcon(p.inverse.icon) end
+                submenu:AddOption(tostring(p.action.name), function() HandleModerationOption(p.action, tgt) end):SetIcon(p.action.icon)
+                if p.inverse then submenu:AddOption(tostring(p.inverse.name), function() HandleModerationOption(p.inverse, tgt) end):SetIcon(p.inverse.icon) end
             else
-                submenu:AddOption(L(p.name), function() HandleModerationOption(p, tgt) end):SetIcon(p.icon)
+                submenu:AddOption(tostring(p.name), function() HandleModerationOption(p, tgt) end):SetIcon(p.icon)
             end
         end
 
         local utilityCommands = {
             {
-                name = L("noclip"),
+                name = "No Clip",
                 cmd = "noclip",
                 icon = "icon16/shape_square.png"
             },
             {
-                name = L("godmode"),
+                name = "God Mode",
                 cmd = "godmode",
                 icon = "icon16/shield.png"
             },
             {
-                name = L("spectate"),
+                name = "Spectate",
                 cmd = "spectate",
                 icon = "icon16/eye.png"
             }
         }
 
         for _, cmd in ipairs(utilityCommands) do
-            submenu:AddOption(L(cmd.name), function()
+            submenu:AddOption(tostring(cmd.name), function()
                 RunAdminCommand(cmd.cmd, tgt)
                 timer.Simple(0.1, function()
                     LocalPlayer().AdminStickTarget = nil
@@ -1075,22 +875,22 @@ local function IncludeTeleportation(tgt, menu, stores)
     appendDeferredMenuBuild(tpCategory, function(submenu)
         local tp = {
             {
-                name = L("bring"),
+                name = "Bring",
                 cmd = "bring",
                 icon = "icon16/arrow_down.png"
             },
             {
-                name = L("goTo"),
+                name = "Goto",
                 cmd = "goto",
                 icon = "icon16/arrow_right.png"
             },
             {
-                name = L("returnText"),
+                name = "Return",
                 cmd = "return",
                 icon = "icon16/arrow_redo.png"
             },
             {
-                name = L("respawn"),
+                name = "Respawn",
                 cmd = "respawn",
                 icon = "icon16/arrow_refresh.png"
             }
@@ -1098,7 +898,7 @@ local function IncludeTeleportation(tgt, menu, stores)
 
         table.sort(tp, function(a, b) return a.name < b.name end)
         for _, o in ipairs(tp) do
-            submenu:AddOption(L(o.name), function()
+            submenu:AddOption(tostring(o.name), function()
                 RunAdminCommand(o.cmd, tgt)
                 timer.Simple(0.1, function()
                     LocalPlayer().AdminStickTarget = nil
@@ -1111,11 +911,11 @@ end
 
 local function IncludeCharacterManagement(tgt, menu, stores)
     local cl = LocalPlayer()
-    local charCategory = GetOrCreateCategoryMenu(menu, "characterManagement", stores)
+    local charCategory = GetOrCreateCategoryMenu(menu, "Character Management", stores)
     if not charCategory then return end
     local canManageCharacterInformation = cl:hasPrivilege("manageCharacterInformation")
     if canManageCharacterInformation then
-        charCategory:AddOption(L("changePlayerModel"), function()
+        charCategory:AddOption("Change Playermodel", function()
             OpenPlayerModelUI(tgt)
             timer.Simple(0.1, function() AdminStickIsOpen = false end)
         end):SetIcon("icon16/user_suit.png")
@@ -1123,7 +923,7 @@ local function IncludeCharacterManagement(tgt, menu, stores)
 
     local canChangeBodygroups = cl:hasPrivilege("changeBodygroups")
     if canChangeBodygroups then
-        charCategory:AddOption(L("adminStickEditCharBodygroupsName"), function()
+        charCategory:AddOption("Edit Character Bodygroups", function()
             local id = GetIdentifier(tgt)
             if id ~= "" then RunConsoleCommand("say", "/chareditbodygroups " .. QuoteArgs(id)) end
             timer.Simple(0.1, function() AdminStickIsOpen = false end)
@@ -1135,9 +935,9 @@ local function IncludeFlagManagement(tgt, menu, stores)
     local cl = LocalPlayer()
     local canManageFlags = cl:hasPrivilege("manageFlags")
     if not canManageFlags then return end
-    local charCategory = GetOrCreateCategoryMenu(menu, "characterManagement", stores)
+    local charCategory = GetOrCreateCategoryMenu(menu, "Character Management", stores)
     if not charCategory then return end
-    local cf = GetOrCreateSubCategoryMenu(charCategory, "characterManagement", "flags", stores)
+    local cf = GetOrCreateSubCategoryMenu(charCategory, "Character Management", "Flags", stores)
     if not cf then return end
     appendDeferredMenuBuild(cf, function(submenu)
         local charObj = tgt:getChar()
@@ -1145,13 +945,13 @@ local function IncludeFlagManagement(tgt, menu, stores)
         for fl in pairs(lia.flag.list) do
             if not charObj or not charObj:hasFlags(fl) then
                 table.insert(toGive, {
-                    name = L("giveFlagFormat", fl),
+                    name = string.format("Give Flag %s", fl),
                     cmd = 'say /giveflag ' .. QuoteArgs(GetIdentifier(tgt), fl),
                     icon = "icon16/flag_blue.png"
                 })
             else
                 table.insert(toTake, {
-                    name = L("takeFlagFormat", fl),
+                    name = string.format("Take Flag %s", fl),
                     cmd = 'say /takeflag ' .. QuoteArgs(GetIdentifier(tgt), fl),
                     icon = "icon16/flag_red.png"
                 })
@@ -1161,22 +961,22 @@ local function IncludeFlagManagement(tgt, menu, stores)
         table.sort(toGive, function(a, b) return a.name < b.name end)
         table.sort(toTake, function(a, b) return a.name < b.name end)
         for _, f in ipairs(toGive) do
-            submenu:AddOption(L(f.name), function()
+            submenu:AddOption(tostring(f.name), function()
                 cl:ConCommand(f.cmd)
                 timer.Simple(0.1, function() AdminStickIsOpen = false end)
             end):SetIcon(f.icon)
         end
 
         for _, f in ipairs(toTake) do
-            submenu:AddOption(L(f.name), function()
+            submenu:AddOption(tostring(f.name), function()
                 cl:ConCommand(f.cmd)
                 timer.Simple(0.1, function() AdminStickIsOpen = false end)
             end):SetIcon(f.icon)
         end
 
-        submenu:AddOption(L("modifyCharFlags"), function()
+        submenu:AddOption("Modify Character Flags", function()
             local currentFlags = charObj and charObj:getFlags() or ""
-            tgt:requestString("@modifyCharFlags", "@modifyFlagsDesc", function(text)
+            tgt:requestString("Modify Character Flags", "Set the flags for this player.", function(text)
                 if text == false then return end
                 text = string.gsub(text or "", "%s", "")
                 net.Start("liaModifyFlags")
@@ -1189,7 +989,7 @@ local function IncludeFlagManagement(tgt, menu, stores)
             timer.Simple(0.1, function() AdminStickIsOpen = false end)
         end):SetIcon("icon16/flag_orange.png")
 
-        submenu:AddOption(L("giveAllCharFlags"), function()
+        submenu:AddOption("Give All Character Flags", function()
             local allFlags = ""
             for fl in pairs(lia.flag.list) do
                 allFlags = allFlags .. fl
@@ -1206,7 +1006,7 @@ local function IncludeFlagManagement(tgt, menu, stores)
             timer.Simple(0.1, function() AdminStickIsOpen = false end)
         end):SetIcon("icon16/flag_blue.png")
 
-        submenu:AddOption(L("takeAllCharFlags"), function()
+        submenu:AddOption("Take All Character Flags", function()
             net.Start("liaModifyFlags")
             net.WriteString(tgt:SteamID())
             net.WriteString("")
@@ -1215,7 +1015,7 @@ local function IncludeFlagManagement(tgt, menu, stores)
             timer.Simple(0.1, function() AdminStickIsOpen = false end)
         end):SetIcon("icon16/flag_red.png")
 
-        submenu:AddOption(L("listCharFlags"), function()
+        submenu:AddOption("List Character Flags", function()
             local currentFlags = charObj and charObj:getFlags() or ""
             local flagList = ""
             if currentFlags ~= "" then
@@ -1227,7 +1027,7 @@ local function IncludeFlagManagement(tgt, menu, stores)
                 flagList = string.Trim(flagList)
             end
 
-            Derma_Message(L("currentCharFlags") .. ": " .. (flagList ~= "" and flagList or L("none")), L("charFlagsTitle"), L("ok"))
+            Derma_Message("Current Character Flags(" .. "): " .. (flagList ~= "" and flagList or "None"), "Character Flags", "ok")
             timer.Simple(0.1, function() AdminStickIsOpen = false end)
         end):SetIcon("icon16/information.png")
     end)
@@ -1253,22 +1053,22 @@ local function AddCommandToMenu(menu, data, key, tgt, name, stores)
                 if warnOption then warnOption:SetIcon(ic) end
                 local severityOptions = {
                     {
-                        label = L("severityLow"),
+                        label = "Low",
                         value = "Low"
                     },
                     {
-                        label = L("severityMedium"),
+                        label = "Medium",
                         value = "Medium"
                     },
                     {
-                        label = L("severityHigh"),
+                        label = "High",
                         value = "High"
                     }
                 }
 
-                local reasonKey = L("reason") or "reason"
+                local reasonKey = "Reason" or "reason"
                 local function openReason(selectedSeverity)
-                    local severityLabel = L("warningSeverity") or "Severity"
+                    local severityLabel = "Severity" or "Severity"
                     local title = buttonText .. " - " .. selectedSeverity .. " " .. severityLabel
                     lia.derma.requestArguments(title, {{reasonKey, "string"}}, function(success, argData)
                         if not success or not argData then
@@ -1315,55 +1115,55 @@ local function RegisterDefaultAdminStickListHooks()
         local displayName
         if target:IsPlayer() then
             local char = target:getChar()
-            displayName = (char and char:getName()) or target:Nick() or target:Name() or L("unknown")
+            displayName = (char and char:getName()) or target:Nick() or target:Name() or "Unknown"
         elseif target.GetName and target:GetName() ~= "" then
             displayName = target:GetName()
         else
-            displayName = target:GetClass() or L("unknown")
+            displayName = target:GetClass() or "Unknown"
         end
 
         local copyItems = {
             {
-                name = "@copyName",
+                name = "Copy Name",
                 icon = "icon16/page_copy.png",
                 callback = function() SetClipboardText(displayName) end
             },
             {
-                name = "@copyPosition",
+                name = "Copy Position",
                 icon = "icon16/page_copy.png",
                 callback = function() SetClipboardText(posStr) end
             },
             {
-                name = "@copyAngles",
+                name = "Copy Angles",
                 icon = "icon16/page_copy.png",
                 callback = function() SetClipboardText(angStr) end
             },
             {
-                name = "@copyPosAngPrintpos",
+                name = "Copy Pos + Ang (printpos)",
                 icon = "icon16/page_copy.png",
                 callback = function() SetClipboardText(setPosAngStr) end
             }
         }
 
         table.insert(lists, {
-            name = "@copy",
-            category = "moderation",
-            subcategory = "moderationTools",
+            name = "Copy",
+            category = "Moderation",
+            subcategory = "Moderation Tools",
             items = copyItems
         })
 
         if target.isStorageEntity then
             local storageOptions = {
                 {
-                    name = L("removeThing", L("password")),
+                    name = string.format("Remove %s", "Password"),
                     icon = "icon16/key_delete.png",
                     callback = function() RunConsoleCommand("say", "/storagepasswordremove") end
                 },
                 {
-                    name = "@changePassword",
+                    name = "Change Password",
                     icon = "icon16/key.png",
                     callback = function()
-                        lia.derma.requestString("@enterNewPassword", "@enterNewPassword", function(password)
+                        lia.derma.requestString("Enter new password:", "Enter new password:", function(password)
                             if password == false then return end
                             if password and password ~= "" then RunConsoleCommand("say", "/storagepasswordchange \"" .. password .. "\"") end
                         end, "")
@@ -1372,8 +1172,8 @@ local function RegisterDefaultAdminStickListHooks()
             }
 
             table.insert(lists, {
-                name = "@storage",
-                category = "storageManagement",
+                name = "Storage",
+                category = "Storage Management",
                 subcategory = "storageActions",
                 items = storageOptions
             })
@@ -1391,12 +1191,12 @@ local function RegisterDefaultAdminStickListHooks()
         local lists = {}
         hook.Run("GetAdminStickLists", currentTarget, lists)
         for _, listData in ipairs(lists) do
-            local listName = isstring(listData.name) and lia.lang.resolveToken(listData.name) or listData.name
+            local listName = isstring(listData.name) and lia.lang.resolve(listData.name) or listData.name
             local categoryKey = listData.category
             local subcategoryKey = listData.subcategory
-            local subSubcategoryKey = isstring(listData.subSubcategory) and lia.lang.resolveToken(listData.subSubcategory) or listData.subSubcategory
-            local subSubSubcategoryKey = isstring(listData.subSubSubcategory) and lia.lang.resolveToken(listData.subSubSubcategory) or listData.subSubSubcategory
-            local subSubSubSubcategoryKey = isstring(listData.subSubSubSubcategory) and lia.lang.resolveToken(listData.subSubSubSubcategory) or listData.subSubSubSubcategory
+            local subSubcategoryKey = isstring(listData.subSubcategory) and lia.lang.resolve(listData.subSubcategory) or listData.subSubcategory
+            local subSubSubcategoryKey = isstring(listData.subSubSubcategory) and lia.lang.resolve(listData.subSubSubcategory) or listData.subSubSubcategory
+            local subSubSubSubcategoryKey = isstring(listData.subSubSubSubcategory) and lia.lang.resolve(listData.subSubSubSubcategory) or listData.subSubSubSubcategory
             local items = listData.items
             if not (listName and categoryKey and subcategoryKey and items and #items > 0) then continue end
             local category = GetOrCreateCategoryMenu(currentMenu, categoryKey, currentStores)
@@ -1422,7 +1222,7 @@ local function RegisterDefaultAdminStickListHooks()
                 if subSubSubSubcategoryKey then targetMenu = GetOrCreateSubCategoryMenu(targetMenu, scopeKey, subSubSubSubcategoryKey, currentStores) or submenu end
                 if not targetMenu or not IsValid(targetMenu) then return end
                 for _, item in ipairs(sortedItems) do
-                    local itemName = isstring(item.name) and lia.lang.resolveToken(item.name) or item.name
+                    local itemName = isstring(item.name) and lia.lang.resolve(item.name) or item.name
                     local option = targetMenu:AddOption(itemName, function()
                         if item.callback then item.callback(currentTarget, item) end
                         timer.Simple(0.1, function() AdminStickIsOpen = false end)
@@ -1442,7 +1242,7 @@ end
 
 local function getAdminStickTheme()
     local theme = lia.color and lia.color.theme or {}
-    local accent = theme.accent or theme.header or theme.theme or lia.config and lia.config.get("Color") or Color(45, 190, 170)
+    local accent = theme.accent or theme.header or theme.theme or lia.config.get("Color") or Color(45, 190, 170)
     local text = theme.text or Color(225, 238, 238)
     return accent, text
 end
@@ -1451,13 +1251,11 @@ local function resolveAdminStickLabel(value)
     if isfunction(value) then value = value() end
     if value == nil then return "" end
     if not isstring(value) then return tostring(value) end
-    local resolved = lia.lang and lia.lang.resolveToken and lia.lang.resolveToken(value) or value
-    if resolved and resolved ~= "" and resolved ~= value and resolved ~= value:sub(2) then return resolved end
-    return L(value)
+    return lia.lang.resolve(value)
 end
 
 local function drawAdminStickPanel(x, y, w, h, radius, color, outline)
-    if lia.derma and lia.derma.rect then
+    if lia.derma.SHAPE_IOS then
         lia.derma.rect(x, y, w, h):Rad(radius):Color(color):Shape(lia.derma.SHAPE_IOS):Draw()
         if outline then lia.derma.rect(x, y, w, h):Rad(radius):Color(outline):Shape(lia.derma.SHAPE_IOS):Outline(1):Draw() end
     else
@@ -1469,24 +1267,24 @@ local function drawAdminStickPanel(x, y, w, h, radius, color, outline)
     end
 end
 
-local function adminStickCopyText(value, notifyKey)
+local function adminStickCopyText(value, notifyMessage)
     if value == nil then return end
     value = tostring(value)
     if value == "" or value == "BOT" then return end
     SetClipboardText(value)
     local client = LocalPlayer()
-    if IsValid(client) and client.notifySuccessLocalized then client:notifySuccessLocalized(notifyKey or "copied") end
+    if IsValid(client) and client.notifySuccess then client:notifySuccess(notifyMessage or "Copied to clipboard.") end
 end
 
 local function adminStickGetTargetName(target)
-    if not IsValid(target) then return L("unknown") end
+    if not IsValid(target) then return "Unknown" end
     if target:IsPlayer() then
         local char = target:getChar()
-        return char and char:getName() or target:Nick() or target:Name() or L("unknown")
+        return char and char:getName() or target:Nick() or target:Name() or "Unknown"
     end
 
     if target.GetName and target:GetName() ~= "" then return target:GetName() end
-    return target:GetClass() or L("unknown")
+    return target:GetClass() or "Unknown"
 end
 
 local function adminStickShouldShowTargetHeader(target)
@@ -1498,16 +1296,16 @@ local function adminStickGetTargetSubtitle(target)
     if target:IsPlayer() then
         local char = target:getChar()
         local factionName = char and team.GetName(char:getFaction()) or team.GetName(target:Team())
-        local className = L("none")
+        local className = "None"
         if char and char.getClass then
             local classIndex = char:getClass()
-            if classIndex and classIndex ~= -1 and lia.class.list[classIndex] then className = L(lia.class.list[classIndex].name or "none") end
+            if classIndex and classIndex ~= -1 and lia.class.list[classIndex] then className = tostring(lia.class.list[classIndex].name or "none") end
         end
 
-        local charID = char and char:getID() or L("na")
-        return tostring(factionName or L("none")) .. "  •  " .. tostring(className or L("none")) .. "  •  Character #" .. tostring(charID)
+        local charID = char and char:getID() or "N/A"
+        return tostring(factionName or "None") .. "  •  " .. tostring(className or "None") .. "  •  Character #" .. tostring(charID)
     end
-    return target:GetClass() or L("unknown")
+    return target:GetClass() or "Unknown"
 end
 
 local function adminStickBuildActionText(name, path, category, subcategory)
@@ -1603,8 +1401,8 @@ local function normalizeAdminStickActions(actions)
                 commandArguments = table.Copy(action.commandArguments or {})
             }
 
-            if (displayCategory == "Faction" or displayCategory == "Class") and actionType then
-                local key = displayCategory .. "::" .. name:lower()
+            if (displayCategory == "Faction" or displayCategory == "Class(") and actionType then
+                local key = displayCategory .. ")::" .. name:lower()
                 if not grouped[key] then
                     grouped[key] = {
                         name = name,
@@ -1840,7 +1638,7 @@ function ADMIN_STICK_PANEL:Init()
 end
 
 function ADMIN_STICK_PANEL:Paint(w, h)
-    if lia.util and lia.util.drawBlackBlur then lia.util.drawBlackBlur(self, 1, 5, 255, 225) end
+    lia.util.drawBlackBlur(self, 1, 5, 255, 225)
     drawAdminStickPanel(0, 0, w, h, 10, Color(3, 13, 17, 244), Color(0, 0, 0, 210))
 end
 
@@ -1850,7 +1648,7 @@ function ADMIN_STICK_PANEL:Think()
         return
     end
 
-    if self.activeCategory == "doorAccess" and self.target.isDoor and self.target:isDoor() then self:RefreshDoorAccessState() end
+    if self.activeCategory == "Door Access" and self.target.isDoor and self.target:isDoor() then self:RefreshDoorAccessState() end
     if (self.activeCategory == "playerWhitelists" or self.activeCategory == "playerFactionTransfer") and self.target:IsPlayer() and (self.nextPlayerStateRequest or 0) <= CurTime() then
         self.nextPlayerStateRequest = CurTime() + 1.5
         requestAdminStickPlayerState(self.target)
@@ -2106,8 +1904,8 @@ function ADMIN_STICK_PANEL:BuildDoorAccessPanel()
     header.Paint = function(_, w, h)
         local accent = getAdminStickTheme()
         drawAdminStickPanel(0, 0, w, h, 8, Color(5, 18, 23, 220), Color(accent.r, accent.g, accent.b, 80))
-        draw.SimpleText(L("doorAccess"), "LiliaFont.30", 16, 12, Color(242, 247, 247), TEXT_ALIGN_LEFT, TEXT_ALIGN_TOP)
-        draw.SimpleText(L("vendorFactionAccessSubtitle"), "LiliaFont.17", 16, 52, Color(165, 187, 188), TEXT_ALIGN_LEFT, TEXT_ALIGN_TOP)
+        draw.SimpleText("Door Access", "LiliaFont.30", 16, 12, Color(242, 247, 247), TEXT_ALIGN_LEFT, TEXT_ALIGN_TOP)
+        draw.SimpleText("Choose which factions and classes can use this vendor.", "LiliaFont.17", 16, 52, Color(165, 187, 188), TEXT_ALIGN_LEFT, TEXT_ALIGN_TOP)
         surface.SetDrawColor(accent.r, accent.g, accent.b, 42)
         surface.DrawRect(16, h - 2, w - 32, 2)
     end
@@ -2164,7 +1962,7 @@ function ADMIN_STICK_PANEL:BuildDoorAccessPanel()
         factionLabel:SetTall(24)
         factionLabel:SetFont("LiliaFont.20")
         factionLabel:SetTextColor(factionData.color or Color(230, 239, 239))
-        factionLabel:SetText(L(factionData.name))
+        factionLabel:SetText(tostring(factionData.name))
         factionLabel:SetContentAlignment(4)
         local factionMeta = factionInfoWrap:Add("DLabel")
         factionMeta:Dock(TOP)
@@ -2235,7 +2033,7 @@ function ADMIN_STICK_PANEL:BuildDoorAccessPanel()
             classLabel:SetTall(16)
             classLabel:SetFont("LiliaFont.16")
             classLabel:SetTextColor(Color(210, 223, 223))
-            classLabel:SetText(L(classData.name))
+            classLabel:SetText(tostring(classData.name))
             classLabel:SetContentAlignment(4)
             local classMeta = classInfoWrap:Add("DLabel")
             classMeta:Dock(TOP)
@@ -2366,7 +2164,7 @@ function ADMIN_STICK_PANEL:BuildQuickActions()
         self.quickActions[#self.quickActions + 1] = {
             label = "Copy CharID",
             icon = "icon16/page_copy.png",
-            callback = function() adminStickCopyText(charID, "adminStickCopiedCharID") end
+            callback = function() adminStickCopyText(charID, "Character ID copied to clipboard.") end
         }
 
         self.quickActions[#self.quickActions + 1] = {
@@ -2463,13 +2261,13 @@ function ADMIN_STICK_PANEL:BuildCategories()
 
     if IsValid(self.target) and self.target.isDoor and self.target:isDoor() then
         self.categories.doorAccess = {
-            name = L("doorAccess"),
-            icon = GetIconForCategory("doorAccess"),
+            name = "Door Access",
+            icon = GetIconForCategory("Door Access"),
             count = 0,
             isDoorAccess = true
         }
 
-        self.categoryOrder[#self.categoryOrder + 1] = "doorAccess"
+        self.categoryOrder[#self.categoryOrder + 1] = "Door Access"
     end
 
     if IsValid(self.target) and self.target:IsPlayer() then
@@ -2535,7 +2333,7 @@ function ADMIN_STICK_PANEL:CreateCategoryButton(category)
 end
 
 function ADMIN_STICK_PANEL:RebuildActions()
-    local isDoorAccess = self.activeCategory == "doorAccess"
+    local isDoorAccess = self.activeCategory == "Door Access"
     local isPlayerWhitelists = self.activeCategory == "playerWhitelists"
     local isPlayerFactionTransfer = self.activeCategory == "playerFactionTransfer"
     local isSpecialCategory = isDoorAccess or isPlayerWhitelists or isPlayerFactionTransfer
@@ -2664,7 +2462,7 @@ function ADMIN_STICK_PANEL:BuildActionArgumentFields(parent, action)
         entry:SetFont("LiliaFont.16")
         entry:SetText(state[argument.name] or "")
         entry:SetUpdateOnType(true)
-        entry:SetPlaceholderText(string.format("%s (%s)", tostring(argument.name or "argument"), tostring(argument.type or "string")))
+        entry:SetPlaceholderText(string.format("%s (%s)", tostring(argument.name or "Argument"), tostring(argument.type or "String")))
         entry:SetCursorColor(getAdminStickTheme())
         if argument.type == "number" or argument.type == "int" or argument.type == "float" then entry:SetNumeric(true) end
         entry.OnValueChange = function(_, value) state[argument.name] = value end
@@ -2881,7 +2679,7 @@ function MODULE:OpenAdminStickUI(tgt)
     if #commands > 0 then hasOptions = true end
     if not hasOptions and hasAdminStickGeneratedLists(tgt) then hasOptions = true end
     if not hasOptions then
-        cl:notifyInfoLocalized("noOptionsAvailable")
+        cl:notifyInfo(string.format("No options available"))
         return
     end
 
@@ -2903,7 +2701,7 @@ function MODULE:AddToAdminStickHUD(client, target, information)
     if not IsValid(client) or not IsValid(target) or not istable(information) then return end
     local position = target:GetPos()
     information[#information + 1] = {
-        section = L("information")
+        section = "Information"
     }
 
     if target:IsPlayer() then
@@ -2911,13 +2709,13 @@ function MODULE:AddToAdminStickHUD(client, target, information)
         local characterName = character and character:getName()
         local playerName = target:Nick()
         information[#information + 1] = {
-            label = L("name"),
+            label = "Name",
             value = characterName and characterName ~= "" and characterName or playerName
         }
 
         if playerName ~= "" and playerName ~= characterName then
             information[#information + 1] = {
-                label = L("nickname"),
+                label = "Nickname",
                 value = playerName
             }
         end
@@ -2928,34 +2726,34 @@ function MODULE:AddToAdminStickHUD(client, target, information)
         }
 
         information[#information + 1] = {
-            label = L("health"),
+            label = "Health",
             value = tostring(target:Health())
         }
     else
         local displayName = target.GetName and target:GetName() or ""
         if displayName ~= "" then
             information[#information + 1] = {
-                label = L("name"),
+                label = "Name",
                 value = displayName
             }
         end
     end
 
     information[#information + 1] = {
-        label = L("class"),
+        label = "Class",
         value = target:GetClass()
     }
 
     local model = target.GetModel and target:GetModel() or ""
     if model ~= "" then
         information[#information + 1] = {
-            label = L("model"),
+            label = "Model",
             value = model
         }
     end
 
     information[#information + 1] = {
-        label = L("position"),
+        label = "Position",
         value = string.format("%.0f, %.0f, %.0f", position.x, position.y, position.z)
     }
 end
@@ -3015,24 +2813,24 @@ function MODULE:AdminStickAddModels(modList)
                     for _, categoryModels in pairs(faction.models) do
                         if istable(categoryModels) then
                             for _, modelData in ipairs(categoryModels) do
-                                processModelData(modelData, faction.name or L("unknownFaction"))
+                                processModelData(modelData, faction.name or "Unknown Faction")
                             end
                         else
-                            processModelData(categoryModels, faction.name or L("unknownFaction"))
+                            processModelData(categoryModels, faction.name or "Unknown Faction")
                         end
                     end
                 else
                     for _, modelData in ipairs(faction.models) do
-                        processModelData(modelData, faction.name or L("unknownFaction"))
+                        processModelData(modelData, faction.name or "Unknown Faction")
                     end
                 end
             else
-                processModelData(faction.models, faction.name or L("unknownFaction"))
+                processModelData(faction.models, faction.name or "Unknown Faction")
             end
         end
     end
 
     for _, class in pairs(lia.class.list or {}) do
-        if class.model and isstring(class.model) then addModel(class.model, class.name or L("unknownClass")) end
+        if class.model and isstring(class.model) then addModel(class.model, class.name or "Unknown Class") end
     end
 end

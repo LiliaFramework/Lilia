@@ -1,7 +1,15 @@
 ﻿local PANEL = {}
 local renderedIcons = {}
+
+local function getItemValue(item, method, key, default)
+    local accessor = item and item[method]
+    if isfunction(accessor) then return accessor(item) end
+    return item and item[key] or default
+end
+
 local function renderNewIcon(panel, itemTable)
-    if itemTable.iconCam and (not renderedIcons[string.lower(itemTable.model)] or itemTable.forceRender) then
+    local model = itemTable.model or ""
+    if itemTable.iconCam and (not renderedIcons[string.lower(model)] or itemTable.forceRender) then
         local iconCam = itemTable.iconCam
         iconCam = {
             cam_pos = iconCam.pos,
@@ -9,7 +17,7 @@ local function renderNewIcon(panel, itemTable)
             cam_fov = iconCam.fov
         }
 
-        renderedIcons[string.lower(itemTable.model)] = true
+        renderedIcons[string.lower(model)] = true
         panel.Icon:RebuildSpawnIconEx(iconCam)
         itemTable.forceRender = nil
     end
@@ -26,81 +34,6 @@ function PANEL:getItem()
     return self.itemTable
 end
 
---[[
-    Hooks:
-        ItemPaintOver(Panel panel, Item|nil itemTable, number w, number h)
-
-    Purpose:
-        Runs after an item icon panel finishes its normal paint pass so modules can draw extra overlays.
-
-    Category:
-        Inventory
-
-    Parameters:
-        panel (Panel)
-            The item icon panel being painted.
-
-        itemTable (Item|nil)
-            The item instance assigned to the panel, when available.
-
-        w (number)
-            The width of the item panel.
-
-        h (number)
-            The height of the item panel.
-
-    Returns:
-        nil
-
-    Example Usage:
-        ```lua
-        hook.Add("ItemPaintOver", "liaExampleItemPaintOver", function(panel, itemTable, w, h)
-            if itemTable and itemTable:getData("favorite") then
-                draw.SimpleText("*", "DermaDefaultBold", w - 8, 4, color_white, TEXT_ALIGN_RIGHT)
-            end
-        end)
-        ```
-
-    Realm:
-        Client
-]]
---[[
-    Hooks:
-        OnCreateItemInteractionMenu(Panel panel, Panel menu, Item itemTable)
-
-    Purpose:
-        Runs before the default item interaction options are added so modules can customize or replace the context menu.
-
-    Category:
-        Inventory
-
-    Parameters:
-        panel (Panel)
-            The item icon panel that opened the menu.
-
-        menu (Panel)
-            The newly created derma menu instance.
-
-        itemTable (Item)
-            The item whose interaction menu is being built.
-
-    Returns:
-        boolean|nil
-            Return true to stop the default menu population. Returning nil allows the standard item actions to be added.
-
-    Example Usage:
-        ```lua
-        hook.Add("OnCreateItemInteractionMenu", "liaExampleOnCreateItemInteractionMenu", function(panel, menu, itemTable)
-            if itemTable.uniqueID == "badge" then
-                menu:AddOption("Inspect Badge", function() print(itemTable:getName()) end)
-                return true
-            end
-        end)
-        ```
-
-    Realm:
-        Client
-]]
 function PANEL:Init()
     self:Droppable("inv")
     self:SetSize(64, 64)
@@ -157,7 +90,7 @@ end
 
 function PANEL:openActionMenu()
     local itemTable = self.itemTable
-    assert(itemTable, L("invalidActionMenuItem"))
+    assert(itemTable, "Cannot open action menu for invalid item")
     itemTable.player = LocalPlayer()
     local menu = lia.derma.dermaMenu()
     if hook.Run("OnCreateItemInteractionMenu", self, menu, itemTable) then
@@ -169,7 +102,7 @@ function PANEL:openActionMenu()
         if hook.Run("CanRunItemAction", itemTable, k) == false or isfunction(v.onCanRun) and not v.onCanRun(itemTable) then continue end
         local isMulti = v.isMulti or (v.multiOptions and (istable(v.multiOptions) or isfunction(v.multiOptions)))
         if isMulti then
-            local subMenu = menu:AddSubMenu(L(v.name or k), buildActionFunc(v, k, itemTable), v.icon or "icon16/brick.png")
+            local subMenu = menu:AddSubMenu(tostring(v.name or k), buildActionFunc(v, k, itemTable), v.icon or "icon16/brick.png")
             local options = v.multiOptions
             if isfunction(options) then options = options(itemTable, LocalPlayer()) end
             if not options then return end
@@ -180,7 +113,7 @@ function PANEL:openActionMenu()
                         onRun = optionFunc
                     }
 
-                    subMenu:AddOption(L(optionKey), buildActionFunc(v, k, itemTable, subOption, optionKey), "icon16/brick.png")
+                    subMenu:AddOption(tostring(optionKey), buildActionFunc(v, k, itemTable, subOption, optionKey), "icon16/brick.png")
                 elseif istable(optionFunc) then
                     if isfunction(optionFunc[2]) and not optionFunc[2](itemTable, LocalPlayer()) then continue end
                     local subOption = {
@@ -189,13 +122,13 @@ function PANEL:openActionMenu()
                         icon = optionFunc.icon
                     }
 
-                    subMenu:AddOption(L(subOption.name), buildActionFunc(v, k, itemTable, subOption, optionKey), subOption.icon or "icon16/brick.png")
+                    subMenu:AddOption(tostring(subOption.name), buildActionFunc(v, k, itemTable, subOption, optionKey), subOption.icon or "icon16/brick.png")
                 else
-                    subMenu:AddOption(L(optionFunc.name or "subOption"), buildActionFunc(v, k, itemTable, optionFunc), optionFunc.icon or "icon16/brick.png")
+                    subMenu:AddOption(tostring(optionFunc.name or "Sub Option"), buildActionFunc(v, k, itemTable, optionFunc), optionFunc.icon or "icon16/brick.png")
                 end
             end
         else
-            menu:AddOption(L(v.name or k), buildActionFunc(v, k, itemTable), v.icon or "icon16/brick.png")
+            menu:AddOption(tostring(v.name or k), buildActionFunc(v, k, itemTable), v.icon or "icon16/brick.png")
         end
     end
 
@@ -212,10 +145,10 @@ function PANEL:setItemType(itemTypeOrID)
         self.itemType = itemTypeOrID
     end
 
-    assert(item, L("invalidItemTypeOrID", item and item.name or itemTypeOrID))
+    assert(item, string.format("Invalid item type or ID %s", item and item.name or itemTypeOrID))
     self.liaToolTip = true
     self.itemTable = item
-    self:SetModel(item:getModel())
+    self:SetModel(getItemValue(item, "getModel", "model", ""))
     local paintMat = hook.Run("PaintItem", item)
     local entity
     if self.Icon and self.Icon.GetEntity then
@@ -225,9 +158,9 @@ function PANEL:setItemType(itemTypeOrID)
     end
 
     if IsValid(entity) then
-        local skin = item:getSkin()
+        local skin = getItemValue(item, "getSkin", "skin")
         if skin and isnumber(skin) then entity:SetSkin(skin) end
-        local bodygroups = item:getBodygroups()
+        local bodygroups = getItemValue(item, "getBodygroups", "bodygroups", {})
         if bodygroups and istable(bodygroups) then lia.util.applyBodygroups(entity, bodygroups) end
         if isstring(paintMat) and paintMat ~= "" then
             entity:SetMaterial(paintMat)
@@ -256,8 +189,11 @@ end
 
 function PANEL:updateTooltip()
     local lines = {}
-    lines[#lines + 1] = "<font=LiliaFont.16b>" .. self.itemTable:getName() .. "</font>"
-    local rarity = self.itemTable:getData("rarity") or self.itemTable.rarity
+    local item = self.itemTable
+    local name = getItemValue(item, "getName", "name", item and item.uniqueID or "Unknown item")
+    local desc = getItemValue(item, "getDesc", "desc", "")
+    lines[#lines + 1] = "<font=LiliaFont.16b>" .. tostring(name) .. "</font>"
+    local rarity = isfunction(item and item.getData) and item:getData("rarity") or item and item.rarity
     if rarity and rarity ~= "" then
         local rarityText = rarity
         local rarityColors = lia.item and lia.item.rarities
@@ -266,7 +202,7 @@ function PANEL:updateTooltip()
         lines[#lines + 1] = "<font=LiliaFont.16>" .. rarityText .. "</font>"
     end
 
-    lines[#lines + 1] = "<font=LiliaFont.16>" .. self.itemTable:getDesc() .. "</font>"
+    lines[#lines + 1] = "<font=LiliaFont.16>" .. tostring(desc) .. "</font>"
     self:SetTooltip(table.concat(lines, "\n"))
 end
 

@@ -1,4 +1,4 @@
-﻿local testerFrame
+local testerFrame
 local activePanels = {}
 local entries = {}
 local selectedEntry
@@ -101,7 +101,7 @@ setups.liaCharacterAttribsRow = function(panel, host)
     panel:updateQuantity()
 end
 
-setups.BodygrouperMenu = function(panel)
+setups.AppearanceMenu = function(panel)
     local client = LocalPlayer()
     if not IsValid(client) then error("LocalPlayer is not valid") end
     panel:SetTarget(client)
@@ -110,7 +110,7 @@ end
 setups.liaButton = function(panel) panel:SetText("Test Button") end
 setups.liaChatBox = function(panel)
     panel:setActive(true)
-    panel:addText(Color(95, 210, 135), "Panel Tester", color_white, ": Chatbox preview message")
+    panel:addText(Color(95, 210, 135), "Panel Tester(", color_white, "): Chatbox preview message")
     panel:addText(Color(130, 180, 255), "Use the entry below to test input behavior.")
 end
 
@@ -759,14 +759,14 @@ registerEntry("DNotify", "Garry's Mod VGUI", "GMOD", "embedded", "Default animat
 registerEntry("DPanelSelect", "Garry's Mod VGUI", "GMOD", "embedded", "Default selectable panel collection.", 620, 360)
 registerEntry("liaCharacterAttribs", "attribs.lua", "Character", "embedded", "Character creation attribute allocation step.", 720, 500, "Requires liaCharacterCreateStep and registered attributes.")
 registerEntry("liaCharacterAttribsRow", "attribs.lua", "Character", "embedded", "Single character attribute allocation row.", 620, 48)
-registerEntry("BodygrouperMenu", "bodygrouper.lua", "Menus", "window", "Live bodygroup and skin editor using the local player model.", 440, 720, "Submitting can send a bodygroup update to the server.")
+registerEntry("AppearanceMenu", "modules/appearance/derma/appearance.lua", "Menus", "window", "Combined model, skin, and bodygroup editor using the local player model.", 560, 820, "Submitting can send an appearance update to the server.")
 registerEntry("liaButton", "buttons.lua", "Controls", "embedded", "Primary themed Lilia button.", 280, 48)
 registerEntry("liaChatBox", "chatbox.lua", "Menus", "window", "Live custom chatbox preview with sample messages.", 760, 520, "Opening this temporarily replaces lia.gui.chat.")
 registerEntry("liaCheckbox", "checkbox.lua", "Controls", "embedded", "Themed toggle switch.", 180, 42)
 registerEntry("liaLockCircle", "circle.lua", "Overlays", "overlay", "Timed circular action indicator.", 0, 0)
 registerEntry("liaComboBox", "combobox.lua", "Controls", "embedded", "Custom combobox with choices, tooltips, and separators.", 360, 42)
 registerEntry("liaDermaMenu", "derma_menu.lua", "Menus", "overlay", "Custom context menu with a submenu.", 0, 0)
-registerEntry("liaDialogMenu", "dialog.lua", "Menus", "window", "Local NPC-style dialog preview with conversation history.", 720, 540, "Opening this temporarily replaces lia.dialog.vgui.")
+registerEntry("liaDialogMenu", "modules/npcs/derma/dialog.lua", "Menus", "window", "Local NPC-style dialog preview with conversation history.", 720, 540, "Opening this temporarily replaces the active NPC dialog panel.")
 registerEntry("liaDListView", "dlistview.lua", "Menus", "window", "Searchable and sortable list window.", 960, 720)
 registerEntry("liaDoorMenu", "door.lua", "Menus", "window", "Door access table preview using sample rows.", 700, 600, "The tester does not attach this preview to a real door.")
 registerEntry("liaProgressBar", "dprogressbar.lua", "Controls", "embedded", "Progress bar with text and configurable fraction.", 560, 54)

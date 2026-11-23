@@ -1,0 +1,175 @@
+﻿lia.class = lia.class or {}
+lia.class.list = lia.class.list or {}
+function lia.class.getBodygroups(class)
+    local classData = istable(class) and class or lia.class.get(class)
+    if not classData then return {} end
+    return lia.util.normalizeBodygroups(classData.bodyGroups or classData.bodygroups)
+end
+
+function lia.class.getMergedBodygroups(character)
+    local merged = {}
+    if character and character.getClass then
+        for index, value in pairs(lia.class.getBodygroups(character:getClass())) do
+            merged[index] = value
+        end
+    end
+
+    local overrides = character and character.vars and character.vars.bodygroups or nil
+    for index, value in pairs(lia.util.normalizeBodygroups(overrides)) do
+        merged[index] = value
+    end
+    return merged
+end
+
+function lia.class.register(uniqueID, data)
+    assert(isstring(uniqueID), "uniqueID must be a string")
+    assert(istable(data), "Class Data Table")
+    local existing
+    local constantName = "CLASS_" .. string.upper(uniqueID)
+    local providedIndex = tonumber(data.index)
+    local constantIndex = tonumber(_G[constantName])
+    local index = providedIndex or constantIndex
+    for i, v in ipairs(lia.class.list) do
+        if v.uniqueID == uniqueID then
+            existing = v
+            index = index or i
+            break
+        end
+    end
+
+    index = index or #lia.class.list + 1
+    assert(not lia.class.list[index] or lia.class.list[index] == existing, "class index is already in use")
+    local class = existing or {
+        index = index
+    }
+
+    for k, v in pairs(data) do
+        class[k] = v
+    end
+
+    class.index = index
+    class.uniqueID = uniqueID
+    class.name = class.name and lia.lang.resolve(class.name) or "Unknown"
+    class.desc = class.desc and lia.lang.resolve(class.desc) or "No Description"
+    class.limit = class.limit or 0
+    if not class.faction or not team.Valid(class.faction) then
+        lia.error(string.format("Class '%s' does not have a valid faction!", uniqueID))
+        return
+    end
+
+    if not class.OnCanBe then class.OnCanBe = function() return true end end
+    lia.class.list[index] = class
+    _G[constantName] = class.index
+    return class.index, class
+end
+
+function lia.class.loadFromDir(directory)
+    for _, v in ipairs(file.Find(directory .. "/*.lua", "LUA")) do
+        local index = #lia.class.list + 1
+        local halt
+        local niceName
+        if v:sub(1, 3) == "sh_" then
+            niceName = v:sub(4, -5):lower()
+        else
+            niceName = v:sub(1, -5)
+        end
+
+        for _, class in ipairs(lia.class.list) do
+            if class.uniqueID == niceName then halt = true end
+        end
+
+        if halt then continue end
+        CLASS = {
+            index = index,
+            uniqueID = niceName
+        }
+
+        CLASS.name = "Unknown"
+        CLASS.desc = "No Description"
+        CLASS.limit = 0
+        lia.loader.include(directory .. "/" .. v, "shared")
+        if not CLASS.faction or not team.Valid(CLASS.faction) then
+            lia.error(string.format("Class '%s' does not have a valid faction!", niceName))
+            CLASS = nil
+            continue
+        end
+
+        if not CLASS.OnCanBe then CLASS.OnCanBe = function() return true end end
+        CLASS.name = lia.lang.resolve(CLASS.name)
+        CLASS.desc = lia.lang.resolve(CLASS.desc)
+        lia.class.list[index] = CLASS
+        CLASS = nil
+    end
+end
+
+function lia.class.canBe(client, class)
+    if not lia.class.list then return false, "Class information not found." end
+    local info = lia.class.list[class]
+    if not info then return false, "Class information not found." end
+    if client:Team() ~= info.faction then return false, "You are not in the correct team to join this class." end
+    local character = client:getChar()
+    if character and character:getClass() == class then return false, "You are already in this class" end
+    local currentCount = #lia.class.getPlayers(info.index)
+    if info.limit > 0 and currentCount >= info.limit then return false, "This class is currently full." end
+    if info.isDefault == false and lia.class.hasWhitelist(class) and character and not character:getClasswhitelists()[class] then return false, "You must be whitelisted to join this class." end
+    local hookResult = hook.Run("CanPlayerJoinClass", client, class, info)
+    if hookResult == false then return false end
+    if info.OnCanBe then
+        local onCanBeResult = info:OnCanBe(client)
+        if not onCanBeResult then return false end
+    end
+    return true
+end
+
+function lia.class.get(identifier)
+    if not lia.class.list then return nil end
+    return lia.class.list[identifier]
+end
+
+function lia.class.getPlayers(class)
+    if not lia.class.list then return {} end
+    local players = {}
+    for _, v in player.Iterator() do
+        local character = v:getChar()
+        if character and character:getClass() == class then table.insert(players, v) end
+    end
+    return players
+end
+
+function lia.class.getPlayerCount(class)
+    if not lia.class.list then return 0 end
+    local count = 0
+    for _, v in player.Iterator() do
+        local character = v:getChar()
+        if character and character:getClass() == class then count = count + 1 end
+    end
+    return count
+end
+
+function lia.class.retrieveClass(class)
+    if not lia.class.list then return nil end
+    for key, classTable in pairs(lia.class.list) do
+        if lia.util.stringMatches(classTable.uniqueID, class) or lia.util.stringMatches(classTable.name, class) then return key end
+    end
+    return nil
+end
+
+function lia.class.hasWhitelist(class)
+    if not lia.class.list then return false end
+    local info = lia.class.list[class]
+    if not info then return false end
+    if info.isDefault then return false end
+    if info.isWhitelisted ~= nil then return info.isWhitelisted end
+    return true
+end
+
+function lia.class.retrieveJoinable(client)
+    client = client or CLIENT and LocalPlayer() or nil
+    if not IsValid(client) then return {} end
+    if not lia.class.list then return {} end
+    local classes = {}
+    for _, class in pairs(lia.class.list) do
+        if lia.class.canBe(client, class.index) then classes[#classes + 1] = class end
+    end
+    return classes
+end

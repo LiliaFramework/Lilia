@@ -10,7 +10,7 @@
 end
 
 function MODULE:StorageUnlockPrompt()
-    LocalPlayer():requestString("@storPassWrite", "@storPassWrite", function(val)
+    LocalPlayer():requestString("Enter the password.", "Enter the password.", function(val)
         if val ~= false then
             net.Start("liaStorageUnlock")
             net.WriteString(val)
@@ -42,13 +42,13 @@ function MODULE:StorageOpen(storage, isCar)
     local localInvPanel, storageInvPanel = panels[1], panels[2]
     if not IsValid(localInvPanel) or not IsValid(storageInvPanel) then return ExitStorage() end
     if isCar then
-        storageInvPanel:SetTitle(L("carTrunk"))
+        storageInvPanel:SetTitle("Car Trunk")
     else
         local storageInfo = storage:getStorageInfo()
         if storageInfo and storageInfo.name then
             storageInvPanel:SetTitle(storageInfo.name)
         else
-            storageInvPanel:SetTitle(L("storageContainer"))
+            storageInvPanel:SetTitle("Storage Container")
         end
     end
 
@@ -93,7 +93,7 @@ function MODULE:OnCreateStoragePanel(localInvPanel, storageInvPanel, storage)
     local textColor = lia.color.theme and lia.color.theme.text or color_white
     lockPanelRef.Paint = function(_, w, h)
         lia.derma.rect(0, 0, w, h):Rad(8):Color(panelColor):Shape(lia.derma.SHAPE_IOS):Draw()
-        draw.SimpleText(L("storageLockManagement"), "liaSmallFont", w / 2, 8, textColor, TEXT_ALIGN_CENTER, TEXT_ALIGN_TOP)
+        draw.SimpleText("Lock Management", "liaSmallFont", w / 2, 8, textColor, TEXT_ALIGN_CENTER, TEXT_ALIGN_TOP)
     end
 
     local client = LocalPlayer()
@@ -101,23 +101,23 @@ function MODULE:OnCreateStoragePanel(localInvPanel, storageInvPanel, storage)
     local buttonWidth = (panelWidth - 40) / 3
     local buttonY = 40
     local lockBtn = vgui.Create("liaButton", lockPanelRef)
-    lockBtn:SetTxt(L("lock"))
+    lockBtn:SetTxt("Lock")
     lockBtn:SetSize(buttonWidth, 22)
     lockBtn:SetPos(10, buttonY)
     lockBtn:PaintButton(lia.color.theme and lia.color.theme.button or Color(50, 80, 50), lia.color.theme and lia.color.theme.button_hovered or Color(60, 100, 60))
-    lockBtn.DoClick = function() LocalPlayer():requestString("@enterNewPassword", "@enterNewPassword", function(password) if password and password ~= "" then SetStoragePassword("set", nil, password) end end, "") end
+    lockBtn.DoClick = function() LocalPlayer():requestString("Enter new password:", "Enter new password:", function(password) if password and password ~= "" then SetStoragePassword("set", nil, password) end end, "") end
     local changeBtn = vgui.Create("liaButton", lockPanelRef)
-    changeBtn:SetTxt(L("changePassword"))
+    changeBtn:SetTxt("Change Password")
     changeBtn:SetSize(buttonWidth, 22)
     changeBtn:SetPos(15 + buttonWidth, buttonY)
     changeBtn:PaintButton(lia.color.theme and lia.color.theme.button or Color(50, 50, 80), lia.color.theme and lia.color.theme.button_hovered or Color(60, 60, 100))
-    changeBtn.DoClick = function() LocalPlayer():requestString("@enterCurrentPassword", "@enterCurrentPassword", function(currentPass) if currentPass and currentPass ~= "" then LocalPlayer():requestString("@enterNewPassword", "@enterNewPassword", function(newPass) if newPass and newPass ~= "" then SetStoragePassword("change", currentPass, newPass) end end, "") end end, "") end
+    changeBtn.DoClick = function() LocalPlayer():requestString("Enter current password:", "Enter current password:", function(currentPass) if currentPass and currentPass ~= "" then LocalPlayer():requestString("Enter new password:", "Enter new password:", function(newPass) if newPass and newPass ~= "" then SetStoragePassword("change", currentPass, newPass) end end, "") end end, "") end
     local removeBtn = vgui.Create("liaButton", lockPanelRef)
-    removeBtn:SetTxt(L("removeThing", L("password")))
+    removeBtn:SetTxt(string.format("Remove %s", "Password"))
     removeBtn:SetSize(buttonWidth, 22)
     removeBtn:SetPos(20 + buttonWidth * 2, buttonY)
     removeBtn:PaintButton(lia.color.theme and lia.color.theme.button or Color(80, 50, 50), lia.color.theme and lia.color.theme.button_hovered or Color(100, 60, 60))
-    removeBtn.DoClick = function() LocalPlayer():requestString(L("removeThing", L("password")), "@confirmRemovePassword", function(value) if value and value:lower() == L("yes"):lower() then SetStoragePassword("remove") end end) end
+    removeBtn.DoClick = function() LocalPlayer():requestString(string.format("Remove %s", "Password"), "Are you sure you want to remove the password from this storage?", function(value) if value and value:lower() == ("Yes"):lower() then SetStoragePassword("remove") end end) end
     local updateButtons = function()
         local isLocked = storage:getNetVar("locked", false)
         lockBtn:SetEnabled(not isLocked)

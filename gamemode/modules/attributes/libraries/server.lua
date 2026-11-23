@@ -68,7 +68,7 @@ function MODULE:PlayerLoadedChar(client, character)
     timer.Simple(0.25, function()
         if IsValid(client) then
             local maxStamina = hook.Run("GetCharMaxStamina", character) or lia.config.get("DefaultStamina", 100)
-            client:setLocalVar("stamina", character:getData("stamina", maxStamina))
+            client:setLocalVar("stamina", maxStamina)
         end
     end)
 end

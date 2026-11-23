@@ -1,4 +1,4 @@
-﻿function ENT:SpawnFunction(client, trace)
+function ENT:SpawnFunction(client, trace)
     local angles = (trace.HitPos - client:GetPos()):Angle()
     angles.r = 0
     angles.p = 0
@@ -12,11 +12,10 @@ end
 
 function ENT:Use(activator)
     if not hook.Run("CanPlayerAccessVendor", activator, self) then
-        if self.messages[VENDOR_NOTRADE] then activator:notifyErrorLocalized("vendorMessageFormat", lia.vendor.getVendorProperty(self, "name"), L(self.messages[VENDOR_NOTRADE], activator)) end
+        if self.messages[VENDOR_NOTRADE] then activator:notifyError(string.format("%s: %s", lia.vendor.getVendorProperty(self, "name"), string.format(tostring(self.messages[VENDOR_NOTRADE]), activator))) end
         return
     end
 
-    lia.log.add(activator, "vendorAccess", lia.vendor.getVendorProperty(self, "name"))
     self.receivers = self.receivers or {}
     self.receivers[#self.receivers + 1] = activator
     activator.liaVendor = self
@@ -98,7 +97,6 @@ function ENT:removeReceiver(client, requestedByPlayer)
     if not lia.shuttingDown then
         net.Start("liaVendorExit")
         net.Send(client)
-        lia.log.add(client, "vendorExit", lia.vendor.getVendorProperty(self, "name"))
     end
 end
 
@@ -188,7 +186,7 @@ function ENT:OnRemove()
 end
 
 function ENT:setModel(model)
-    assert(isstring(model), L("modelMustBeString"))
+    assert(isstring(model), "Model must be a string")
     model = model:lower()
     self:SetModel(model)
     if self:isReadyForAnim() then self:setAnim() end

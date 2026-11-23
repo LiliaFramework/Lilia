@@ -1,56 +1,3 @@
-﻿--[[
-    Hooks:
-        CreateChatboxPanel()
-
-    Purpose:
-        Ensures the custom chatbox panel exists so persisted messages, message-mode input, and chat synchronization can target a live UI panel.
-
-    Category:
-        Chat
-
-    Parameters:
-        None
-
-    Example Usage:
-        ```lua
-        hook.Add("CreateChatboxPanel", "liaExampleCreateChatboxPanel", function()
-            print("Chatbox creation requested")
-        end)
-        ```
-
-    Returns:
-        nil
-
-    Realm:
-        Client
-]]
---[[
-    Hooks:
-        ChatboxPanelCreated(Panel panel)
-
-    Purpose:
-        Runs immediately after the custom chatbox panel is created so modules can attach post-creation behavior before persisted messages are replayed.
-
-    Category:
-        Chat
-
-    Parameters:
-        panel (Panel)
-            The newly created `liaChatBox` panel instance.
-
-    Example Usage:
-        ```lua
-        hook.Add("ChatboxPanelCreated", "liaExampleChatboxPanelCreated", function(panel)
-            panel:SetAlpha(255)
-        end)
-        ```
-
-    Returns:
-        nil
-
-    Realm:
-        Client
-]]
 local MODULE = MODULE
 lia.chat = lia.chat or {}
 lia.chat.persistedMessages = lia.chat.persistedMessages or {}
@@ -164,7 +111,7 @@ function MODULE:ChatAddText(text, ...)
         for _, value in ipairs(args) do
             if isstring(value) then
                 local trimmed = string.Trim(value)
-                if trimmed ~= "" and not string.StartWith(trimmed, ": ") then return string.lower(trimmed) end
+                if trimmed ~= "(" and not string.StartWith(trimmed, "): ") then return string.lower(trimmed) end
             end
         end
     end
@@ -185,11 +132,11 @@ function MODULE:ChatAddText(text, ...)
 end
 
 local function openAddFilteredWordPrompt()
-    LocalPlayer():requestString(L("chatFilterAddWord"), L("chatFilterEnterWord"), function(value)
+    LocalPlayer():requestString("Add Word", "Enter the word you want to filter.", function(value)
         if value == false then return end
         value = string.Trim(tostring(value or ""))
         if value == "" then
-            LocalPlayer():notifyErrorLocalized("chatFilterInvalidWord")
+            LocalPlayer():notifyError(string.format("Enter a valid word first."))
             return
         end
 
@@ -239,7 +186,7 @@ local function buildFilteredWordsAdminPanel(panel)
 
     local function removeFilteredWord(word)
         word = string.Trim(tostring(word or ""))
-        if word == "" or word == L("chatFilterEmpty") then return end
+        if word == "" or word == "No filtered words found." then return end
         net.Start("liaChatboxRemoveFilteredWord")
         net.WriteString(word)
         net.SendToServer()
@@ -267,7 +214,7 @@ local function buildFilteredWordsAdminPanel(panel)
     controls:SetTall(46)
     controls:DockMargin(0, 0, 0, 14)
     controls.Paint = nil
-    local topSearchWrap, topSearch = createSearchEntry(controls, L("chatFilterSearch"))
+    local topSearchWrap, topSearch = createSearchEntry(controls, "Search filtered words...")
     topSearchWrap:Dock(FILL)
     topSearchWrap:DockMargin(0, 0, 12, 0)
     local addButton = controls:Add("DButton")
@@ -277,11 +224,11 @@ local function buildFilteredWordsAdminPanel(panel)
     addButton.Paint = function(self, w, h)
         local hovered = self:IsHovered()
         drawPanel(0, 0, w, h, 5, hovered and panelColorHovered or panelColorSoft, Color(accent.r, accent.g, accent.b, hovered and 105 or 60))
-        draw.SimpleText("+  " .. string.upper(L("chatFilterAddWord")), "LiliaFont.16", w * 0.5, h * 0.5, hovered and Color(245, 245, 240) or textColor, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
+        draw.SimpleText("+  " .. string.upper("Add Word"), "LiliaFont.16", w * 0.5, h * 0.5, hovered and Color(245, 245, 240) or textColor, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
     end
 
     addButton.DoClick = function()
-        lia.websound.playButtonSound()
+        lia.webcontent.playButtonSound()
         openAddFilteredWordPrompt()
     end
 
@@ -311,7 +258,7 @@ local function buildFilteredWordsAdminPanel(panel)
     countLabel:SetFont("LiliaFont.15")
     countLabel:SetTextColor(accent)
     countLabel:SetContentAlignment(4)
-    local listSearchWrap, listSearch = createSearchEntry(listPanel, L("search"))
+    local listSearchWrap, listSearch = createSearchEntry(listPanel, "Search...")
     listSearchWrap:Dock(TOP)
     listSearchWrap:SetTall(42)
     listSearchWrap:DockMargin(0, 4, 0, 14)
@@ -329,7 +276,7 @@ local function buildFilteredWordsAdminPanel(panel)
     emptyLabel:SetTextColor(mutedTextColor)
     emptyLabel:SetContentAlignment(5)
     emptyLabel:SetWrap(true)
-    emptyLabel:SetText(L("chatFilterEmpty"))
+    emptyLabel:SetText("No filtered words found.")
     emptyLabel:SetVisible(false)
     local detailPanel = body:Add("DPanel")
     detailPanel:Dock(FILL)
@@ -355,7 +302,7 @@ local function buildFilteredWordsAdminPanel(panel)
     end
 
     emptyAddButton.DoClick = function()
-        lia.websound.playButtonSound()
+        lia.webcontent.playButtonSound()
         openAddFilteredWordPrompt()
     end
 
@@ -374,7 +321,7 @@ local function buildFilteredWordsAdminPanel(panel)
         end
 
         draw.SimpleText(selectedWord, "LiliaFont.30", 10, 8, textColor, TEXT_ALIGN_LEFT, TEXT_ALIGN_TOP)
-        draw.SimpleText(L("chatFilterWordLabel"), "LiliaFont.17", 10, 48, mutedTextColor, TEXT_ALIGN_LEFT, TEXT_ALIGN_TOP)
+        draw.SimpleText("Filtered word", "LiliaFont.17", 10, 48, mutedTextColor, TEXT_ALIGN_LEFT, TEXT_ALIGN_TOP)
         local sectionY = 112
         draw.SimpleText("GENERAL", "LiliaFont.17", 10, sectionY, accent, TEXT_ALIGN_LEFT, TEXT_ALIGN_TOP)
         surface.SetDrawColor(accent.r, accent.g, accent.b, 70)
@@ -405,7 +352,7 @@ local function buildFilteredWordsAdminPanel(panel)
 
     copyButton.DoClick = function()
         if not selectedWord then return end
-        lia.websound.playButtonSound()
+        lia.webcontent.playButtonSound()
         SetClipboardText(selectedWord)
     end
 
@@ -420,7 +367,7 @@ local function buildFilteredWordsAdminPanel(panel)
 
     removeButton.DoClick = function()
         if not selectedWord then return end
-        lia.websound.playButtonSound()
+        lia.webcontent.playButtonSound()
         removeFilteredWord(selectedWord)
     end
 
@@ -479,18 +426,18 @@ local function buildFilteredWordsAdminPanel(panel)
             end
 
             draw.SimpleText(self.word, "LiliaFont.20", 18, 13, textColor, TEXT_ALIGN_LEFT, TEXT_ALIGN_TOP)
-            draw.SimpleText(L("chatFilterWordLabel"), "LiliaFont.15", 18, 40, mutedTextColor, TEXT_ALIGN_LEFT, TEXT_ALIGN_TOP)
+            draw.SimpleText("Filtered word", "LiliaFont.15", 18, 40, mutedTextColor, TEXT_ALIGN_LEFT, TEXT_ALIGN_TOP)
         end
 
         button.DoClick = function(self)
-            lia.websound.playButtonSound()
+            lia.webcontent.playButtonSound()
             selectWord(self.word)
         end
 
         button.DoRightClick = function(self)
             local menu = DermaMenu()
-            menu:AddOption(L("copyRow"), function() SetClipboardText(self.word) end)
-            menu:AddOption(L("chatFilterRemoveWord"), function() removeFilteredWord(self.word) end)
+            menu:AddOption("Copy Row", function() SetClipboardText(self.word) end)
+            menu:AddOption("Remove Selected", function() removeFilteredWord(self.word) end)
             menu:Open()
         end
 
@@ -523,7 +470,7 @@ local function buildFilteredWordsAdminPanel(panel)
         if hasWords and #visibleWords == 0 then
             emptyLabel:SetText("No filtered words match your search.")
         else
-            emptyLabel:SetText(L("chatFilterEmpty"))
+            emptyLabel:SetText("No filtered words found.")
         end
 
         local selectionStillVisible = false
@@ -573,8 +520,8 @@ function MODULE:PopulateAdminTabs(pages)
     local client = LocalPlayer()
     if not IsValid(client) or not client:hasPrivilege("manageChatFilter") then return end
     pages[#pages + 1] = {
-        name = "@chatFilterTitle",
-        icon = "icon16/comments.png",
+        name = "Chat Filter",
+        icon = "icon16/comment_delete.png",
         drawFunc = function(panel)
             buildFilteredWordsAdminPanel(panel)
             net.Start("liaChatboxRequestFilteredWords")
