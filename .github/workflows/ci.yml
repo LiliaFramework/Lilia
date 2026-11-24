@@ -191,7 +191,7 @@ jobs:
           python3 scripts/generate_docs.py compatibility --force
           python3 scripts/generate_docs.py about --force
       - run: |
-          python3 remove_comments.py gamemode
+          python3 scripts/remove_comments.py gamemode
       - if: ${{ steps.skip_docs_regen.outputs.present != 'true' }}
         run: |
           echo "=== Fetching Modules Documentation ==="
@@ -384,7 +384,7 @@ jobs:
            python3 scripts/generate_docs.py compatibility --force
            python3 scripts/generate_docs.py about --force
       - run: |
-          python3 remove_comments.py gamemode
+           python3 scripts/remove_comments.py gamemode
       - if: ${{ steps.skip_docs_regen.outputs.present != 'true' }}
         run: |
           echo "=== Fetching Modules Documentation ==="
