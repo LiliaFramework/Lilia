@@ -1113,11 +1113,11 @@ window.addEventListener('resize',reportWorkshopHeight);
                     record.card.selected = false
                     record.card.Paint = function(s, w, h)
                         local cardAccent, cardText = getWorkshopThemeColors(palette)
-                        local active = s.selected
+                        local selected = s.selected
                         local hovered = s:IsHovered()
-                        local background = active and Color(cardAccent.r, cardAccent.g, cardAccent.b, 20) or hovered and Color(255, 255, 255, 6) or (palette and palette.surface or Color(5, 19, 24, 215))
-                        drawBrowserPanel(0, 0, w, h, 6, background, Color(cardAccent.r, cardAccent.g, cardAccent.b, active and 125 or 52), palette)
-                        if active then
+                        local background = selected and Color(cardAccent.r, cardAccent.g, cardAccent.b, 20) or hovered and Color(255, 255, 255, 6) or (palette and palette.surface or Color(5, 19, 24, 215))
+                        drawBrowserPanel(0, 0, w, h, 6, background, Color(cardAccent.r, cardAccent.g, cardAccent.b, selected and 125 or 52), palette)
+                        if selected then
                             surface.SetDrawColor(cardAccent.r, cardAccent.g, cardAccent.b, 235)
                             surface.DrawRect(0, 8, 3, h - 16)
                         end
