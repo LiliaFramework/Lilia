@@ -1,5 +1,4 @@
-local sitroom = MODULE
-
+﻿local sitroom = MODULE
 local function canUseSitroomCommand(client, command)
     return sitroom:CanUseCommand(client, command), "Manage Administration Rooms"
 end

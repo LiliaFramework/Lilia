@@ -1,4 +1,4 @@
-lia.keybind = lia.keybind or {}
+﻿lia.keybind = lia.keybind or {}
 lia.keybind.stored = lia.keybind.stored or {}
 local KeybindKeys = {
     ["first"] = KEY_FIRST,
@@ -226,7 +226,6 @@ lia.keybind.add("adminMode", {
 
                     timer.Simple(5, function() if IsValid(client) then hook.Remove("PostPlayerLoadedChar", hookName) end end)
                 end
-
             else
                 client:notifyError(string.format("No previous character to swap to."))
             end

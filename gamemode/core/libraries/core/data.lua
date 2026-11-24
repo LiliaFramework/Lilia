@@ -540,4 +540,3 @@ if SERVER then
         hook.Run("PersistenceSave")
     end)
 end
-

@@ -57,6 +57,7 @@ function PANEL:onPointChange(key, delta)
         local limits = hook.Run("GetAttributeLimits", client) or {}
         self.total = limits.startingPoints or lia.config.get("StartingAttributePoints", 30)
     end
+
     local attribs = self:getContext("attribs", {})
     local sum = 0
     for _, quantity in pairs(attribs) do

@@ -1,4 +1,4 @@
-local MODULE = MODULE
+﻿local MODULE = MODULE
 function MODULE:PlayerLoadedChar(client, character)
     if not IsValid(client) or not character or not client:isStaffOnDuty() then return end
     local configuredFlags = lia.staffCharacterFlags or lia.data.get("staffCharacterFlags", {})
@@ -53,9 +53,7 @@ function GM:PlayerSpawnProp(client, model)
 
     local canSpawn = client:isStaffOnDuty() or client:hasPrivilege("canSpawnProps") or client:hasFlags("e")
     lia.debug("[Permissions]", "Permission Check for hook GM:PlayerSpawnProp", "isStaffOnDuty=", tostring(client:isStaffOnDuty()), "hasPrivilege(canSpawnProps)=", tostring(client:hasPrivilege("canSpawnProps")), "hasFlags(e)=", tostring(client:hasFlags("e")), "finalResult=", tostring(canSpawn))
-    if not canSpawn then
-        client:notifyError(string.format("You do not have permission to spawn props (%s).", model))
-    end
+    if not canSpawn then client:notifyError(string.format("You do not have permission to spawn props (%s).", model)) end
     return canSpawn
 end
 
@@ -124,72 +122,56 @@ function GM:PlayerSpawnVehicle(client, model)
 
     local canSpawn = client:isStaffOnDuty() or client:hasPrivilege("canSpawnCars") or client:hasFlags("C")
     lia.debug("[Permissions]", "Permission Check for hook GM:PlayerSpawnVehicle", "isStaffOnDuty=", tostring(client:isStaffOnDuty()), "hasPrivilege(canSpawnCars)=", tostring(client:hasPrivilege("canSpawnCars")), "hasFlags(C)=", tostring(client:hasFlags("C")), "finalResult=", tostring(canSpawn))
-    if not canSpawn then
-        client:notifyError(string.format("You do not have permission to spawn vehicles (%s).", model))
-    end
+    if not canSpawn then client:notifyError(string.format("You do not have permission to spawn vehicles (%s).", model)) end
     return canSpawn
 end
 
 function GM:PlayerSpawnEffect(client)
     local canSpawn = client:isStaffOnDuty() or client:hasPrivilege("canSpawnEffects") or client:hasFlags("L")
     lia.debug("[Permissions]", "Permission Check for hook GM:PlayerSpawnEffect", "isStaffOnDuty=", tostring(client:isStaffOnDuty()), "hasPrivilege(canSpawnEffects)=", tostring(client:hasPrivilege("canSpawnEffects")), "hasFlags(L)=", tostring(client:hasFlags("L")), "finalResult=", tostring(canSpawn))
-    if not canSpawn then
-        client:notifyError(string.format("You do not have permission to spawn effects."))
-    end
+    if not canSpawn then client:notifyError(string.format("You do not have permission to spawn effects.")) end
     return canSpawn
 end
 
 function GM:PlayerSpawnNPC(client)
     local canSpawn = client:isStaffOnDuty() or client:hasPrivilege("canSpawnNPCs") or client:hasFlags("n")
     lia.debug("[Permissions]", "Permission Check for hook GM:PlayerSpawnNPC", "isStaffOnDuty=", tostring(client:isStaffOnDuty()), "hasPrivilege(canSpawnNPCs)=", tostring(client:hasPrivilege("canSpawnNPCs")), "hasFlags(n)=", tostring(client:hasFlags("n")), "finalResult=", tostring(canSpawn))
-    if not canSpawn then
-        client:notifyError(string.format("You do not have permission to spawn NPCs."))
-    end
+    if not canSpawn then client:notifyError(string.format("You do not have permission to spawn NPCs.")) end
     return canSpawn
 end
 
 function GM:PlayerSpawnRagdoll(client)
     local canSpawn = client:isStaffOnDuty() or client:hasPrivilege("canSpawnRagdolls") or client:hasFlags("r")
     lia.debug("[Permissions]", "Permission Check for hook GM:PlayerSpawnRagdoll", "isStaffOnDuty=", tostring(client:isStaffOnDuty()), "hasPrivilege(canSpawnRagdolls)=", tostring(client:hasPrivilege("canSpawnRagdolls")), "hasFlags(r)=", tostring(client:hasFlags("r")), "finalResult=", tostring(canSpawn))
-    if not canSpawn then
-        client:notifyError(string.format("You do not have permission to spawn ragdolls."))
-    end
+    if not canSpawn then client:notifyError(string.format("You do not have permission to spawn ragdolls.")) end
     return canSpawn
 end
 
 function GM:PlayerSpawnSENT(client, class)
     local canSpawn = client:isStaffOnDuty() or client:hasPrivilege("canSpawnSENTs") or client:hasFlags("E")
     lia.debug("[Permissions]", "Permission Check for hook GM:PlayerSpawnSENT", "isStaffOnDuty=", tostring(client:isStaffOnDuty()), "hasPrivilege(canSpawnSENTs)=", tostring(client:hasPrivilege("canSpawnSENTs")), "hasFlags(E)=", tostring(client:hasFlags("E")), "finalResult=", tostring(canSpawn))
-    if not canSpawn then
-        client:notifyError(string.format("You do not have permission to spawn SENTs (%s).", tostring(class)))
-    end
+    if not canSpawn then client:notifyError(string.format("You do not have permission to spawn SENTs (%s).", tostring(class))) end
     return canSpawn
 end
 
 function GM:PlayerSpawnSWEP(client, weapon)
     local canSpawn = client:isStaffOnDuty() or client:hasPrivilege("canSpawnSWEPs") or client:hasFlags("z")
     lia.debug("[Permissions]", "Permission Check for hook GM:PlayerSpawnSWEP", "isStaffOnDuty=", tostring(client:isStaffOnDuty()), "hasPrivilege(canSpawnSWEPs)=", tostring(client:hasPrivilege("canSpawnSWEPs")), "hasFlags(z)=", tostring(client:hasFlags("z")), "finalResult=", tostring(canSpawn))
-    if not canSpawn then
-        client:notifyError(string.format("You do not have permission to spawn SWEPs (%s).", tostring(weapon)))
-    end
+    if not canSpawn then client:notifyError(string.format("You do not have permission to spawn SWEPs (%s).", tostring(weapon))) end
     return canSpawn
 end
 
 function GM:PlayerGiveSWEP(client)
     local canGive = client:isStaffOnDuty() or client:hasPrivilege("canSpawnSWEPs") or client:hasFlags("W")
     lia.debug("[Permissions]", "Permission Check for hook GM:PlayerGiveSWEP", "isStaffOnDuty=", tostring(client:isStaffOnDuty()), "hasPrivilege(canSpawnSWEPs)=", tostring(client:hasPrivilege("canSpawnSWEPs")), "hasFlags(W)=", tostring(client:hasFlags("W")), "finalResult=", tostring(canGive))
-    if not canGive then
-        client:notifyError(string.format("You do not have permission to give SWEPs."))
-    end
+    if not canGive then client:notifyError(string.format("You do not have permission to give SWEPs.")) end
     return canGive
 end
 
 function GM:OnPhysgunReload(_, client)
     local canReload = client:hasPrivilege("canPhysgunReload")
     lia.debug("[Permissions]", "Permission Check for hook GM:OnPhysgunReload", "hasPrivilege(canPhysgunReload)=", tostring(canReload), "finalResult=", tostring(canReload))
-    if not canReload then
-        client:notifyError(string.format("You do not have permission to reload the physgun."))
-    end
+    if not canReload then client:notifyError(string.format("You do not have permission to reload the physgun.")) end
     return canReload
 end
 

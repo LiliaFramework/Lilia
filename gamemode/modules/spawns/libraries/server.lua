@@ -1,4 +1,4 @@
-local MODULE = MODULE
+﻿local MODULE = MODULE
 local MAP_SPAWN_CLASSES = {"info_player_start", "info_player_deathmatch", "info_player_counterterrorist", "info_player_terrorist", "info_player_combine", "info_player_rebel", "gmod_player_start", "info_player_axis", "info_player_allies"}
 local SPAWN_HEIGHT_OFFSET = Vector(0, 0, 16)
 local SPAWN_PATH_HEIGHT = Vector(0, 0, 36)

@@ -1,8 +1,7 @@
-local MODULE = MODULE
+﻿local MODULE = MODULE
 MODULE.hideNativeMetrics = MODULE.hideNativeMetrics or false
 MODULE.serverProfilingStarted = MODULE.serverProfilingStarted or false
 MODULE.serverProfilingCollecting = MODULE.serverProfilingCollecting or false
-
 local currentPanel
 local nextRefresh = 0
 local clientMetrics = {}
@@ -30,7 +29,6 @@ local nativePaths = {
 }
 
 local addonPatterns = {"^.*/addons/", "^.*workshop/content/4000/"}
-
 local function getThemeColors()
     local theme = lia.color and lia.color.theme or {}
     return theme.accent or theme.theme or lia.config.get("Color") or Color(115, 148, 248), theme.text or Color(225, 238, 238)
@@ -69,9 +67,14 @@ local function createButton(parent, title, click, height, selected, danger)
         local edge = danger and Color(198, 86, 86, 135) or Color(accent.r, accent.g, accent.b, active and 150 or self:IsHovered() and 110 or 58)
         local fill = danger and Color(70, 28, 34, self:IsHovered() and 200 or 155) or active and Color(26, 43, 59, 240) or self:IsHovered() and Color(23, 39, 48, 235) or Color(8, 25, 32, 210)
         drawPanel(0, 0, w, h, 4, fill, edge)
-        if active then surface.SetDrawColor(accent) surface.DrawRect(1, 1, 3, h - 2) end
+        if active then
+            surface.SetDrawColor(accent)
+            surface.DrawRect(1, 1, 3, h - 2)
+        end
+
         draw.SimpleText(isfunction(title) and title() or title, "LiliaFont.15", w * 0.5, h * 0.5, textColor, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
     end
+
     button.DoClick = function(self)
         if lia.webcontent and lia.webcontent.playButtonSound then lia.webcontent.playButtonSound() end
         click(self)
@@ -98,12 +101,14 @@ function MODULE:IsAddonSource(source)
             return true
         end
     end
+
     for path in pairs(nativePaths) do
         if normalized:find(path, 1, true) then
             sourceCache[source] = false
             return false
         end
     end
+
     sourceCache[source] = true
     return true
 end
@@ -130,6 +135,7 @@ function MODULE:MergeProfileMetrics()
             calls = data.calls or 0
         }
     end
+
     for source, data in pairs(self:FilterMetrics(serverMetrics)) do
         rows[#rows + 1] = {
             key = "server:" .. source,
@@ -141,6 +147,7 @@ function MODULE:MergeProfileMetrics()
             calls = data.calls or 0
         }
     end
+
     table.sort(rows, function(a, b) return a.time > b.time end)
     return rows
 end
@@ -154,7 +161,11 @@ function MODULE:GetRealmSummary(rows, realm)
             calls = calls + data.calls
         end
     end
-    return {time = total, sources = count, calls = calls}
+    return {
+        time = total,
+        sources = count,
+        calls = calls
+    }
 end
 
 function MODULE:ToggleProfiling(realm, panel)
@@ -171,6 +182,7 @@ function MODULE:ToggleProfiling(realm, panel)
     else
         return
     end
+
     if IsValid(panel) then self:RefreshMetrics(panel) end
 end
 
@@ -239,6 +251,7 @@ function MODULE:CreateRealmCard(parent, realm, dashboard)
         drawPanel(w - 101, 15, 86, 27, 5, Color(badgeColor.r, badgeColor.g, badgeColor.b, 12), Color(badgeColor.r, badgeColor.g, badgeColor.b, 85))
         draw.SimpleText(status, "LiliaFont.14", w - 58, 29, badgeColor, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
     end
+
     local stats = card:Add("DPanel")
     stats.Paint = function() end
     local labels = {"SAMPLE COST", "SOURCES", "CALLS"}
@@ -248,15 +261,22 @@ function MODULE:CreateRealmCard(parent, realm, dashboard)
         local index = i
         local block = createCard(stats, function(_, w, h)
             local _, textColor = getThemeColors()
-            local value = (dashboard.RealmSummary or {})[realm] or {time = 0, sources = 0, calls = 0}
+            local value = (dashboard.RealmSummary or {})[realm] or {
+                time = 0,
+                sources = 0,
+                calls = 0
+            }
+
             local number = index == 1 and string.format("%.3f ms", value.time * 1000) or index == 2 and tostring(value.sources) or string.Comma(value.calls)
             drawIcon(icons[index], 10, 9, 15, Color(150, 180, 190))
             draw.SimpleText(labels[index], "LiliaFont.13", 30, 9, mutedColor, TEXT_ALIGN_LEFT, TEXT_ALIGN_TOP)
             draw.SimpleText(number, "LiliaFont.20", 12, 36, textColor, TEXT_ALIGN_LEFT, TEXT_ALIGN_TOP)
             if index == 1 then draw.SimpleText(string.format("%.1fs window", MODULE.profileRefreshRate), "LiliaFont.12", w - 9, h - 9, mutedColor, TEXT_ALIGN_RIGHT, TEXT_ALIGN_BOTTOM) end
         end)
+
         blocks[i] = block
     end
+
     stats.PerformLayout = function(_, w, h)
         local gap = 8
         local unit = math.floor((w - gap * 2) / 3)
@@ -265,10 +285,12 @@ function MODULE:CreateRealmCard(parent, realm, dashboard)
             block:SetSize(i == 3 and w - 2 * (unit + gap) or unit, h)
         end
     end
+
     local action = createButton(card, function()
         local running = isServer and MODULE.serverProfilingCollecting or MODULE.profilingCollecting
         return running and ("Pause " .. (isServer and "Server" or "Client") .. " Profiler") or ("Start " .. (isServer and "Server" or "Client") .. " Profiler")
     end, function() MODULE:ToggleProfiling(realm, dashboard) end, 36, false, false)
+
     action.Paint = function(panel, w, h)
         local running = isServer and MODULE.serverProfilingCollecting or MODULE.profilingCollecting
         local accent, textColor = getThemeColors()
@@ -277,9 +299,8 @@ function MODULE:CreateRealmCard(parent, realm, dashboard)
         drawPanel(0, 0, w, h, 4, fill, edge)
         draw.SimpleText(running and ("Pause " .. (isServer and "Server" or "Client") .. " Profiler") or ("Start " .. (isServer and "Server" or "Client") .. " Profiler"), "LiliaFont.15", w * 0.5, h * 0.5, textColor, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
     end
-    local clear = createButton(card, "Clear " .. (isServer and "Server" or "Client"), function()
-        MODULE:ClearRealmMetrics(realm, dashboard)
-    end, 36)
+
+    local clear = createButton(card, "Clear " .. (isServer and "Server" or "Client"), function() MODULE:ClearRealmMetrics(realm, dashboard) end, 36)
     card.PerformLayout = function(_, w, h)
         stats:SetPos(12, 66)
         stats:SetSize(w - 24, math.max(60, h - 120))
@@ -302,11 +323,15 @@ function MODULE:CreateMetricRow(parent, data, maxTime, dashboard)
         local selected = dashboard.SelectedKey == data.key
         if selected or panel:IsHovered() then
             drawPanel(0, 0, w, h, 2, Color(22, 39, 51, selected and 243 or 185), Color(accent.r, accent.g, accent.b, selected and 145 or 62))
-            if selected then surface.SetDrawColor(accent) surface.DrawRect(0, 0, 3, h) end
+            if selected then
+                surface.SetDrawColor(accent)
+                surface.DrawRect(0, 0, 3, h)
+            end
         elseif panel.rowIndex % 2 == 0 then
             surface.SetDrawColor(16, 36, 42, 135)
             surface.DrawRect(0, 0, w, h)
         end
+
         local pathWidth = math.max(80, w * 0.50 - 15)
         draw.SimpleText(fitText(data.source, "LiliaFont.14", pathWidth), "LiliaFont.14", 12, h * 0.5, textColor, TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)
         local realmColor = data.realm == 1 and serverColor or clientColor
@@ -320,6 +345,7 @@ function MODULE:CreateMetricRow(parent, data, maxTime, dashboard)
         surface.SetDrawColor(realmColor.r, realmColor.g, realmColor.b, 180)
         surface.DrawRect(1, h - 2, math.max(1, math.floor(w * share)), 2)
     end
+
     row.DoClick = function()
         dashboard.SelectedKey = data.key
         dashboard.SelectedData = data
@@ -348,6 +374,7 @@ function MODULE:CreateDetails(dashboard)
         end
         return
     end
+
     local accent, textColor = getThemeColors()
     local heading = canvas:Add("DPanel")
     heading:Dock(TOP)
@@ -357,16 +384,13 @@ function MODULE:CreateDetails(dashboard)
         draw.SimpleText(fitText(data.source, "LiliaFont.19", w - 110), "LiliaFont.19", 39, 10, textColor, TEXT_ALIGN_LEFT, TEXT_ALIGN_TOP)
         draw.SimpleText(data.realm == 1 and "SERVER LUA" or "CLIENT LUA", "LiliaFont.14", 39, 39, data.realm == 1 and serverColor or clientColor, TEXT_ALIGN_LEFT, TEXT_ALIGN_TOP)
     end
+
     local summary = canvas:Add("DPanel")
     summary:Dock(TOP)
     summary:SetTall(75)
     summary:DockMargin(0, 0, 0, 12)
     summary.Paint = function(_, w, h)
-        local cards = {
-            {"TOTAL TIME", string.format("%.3f ms", data.time * 1000)},
-            {"TOTAL CALLS", string.Comma(data.calls)},
-            {"AVG / CALL", string.format("%.4f ms", data.calls > 0 and data.time * 1000 / data.calls or 0)}
-        }
+        local cards = {{"TOTAL TIME", string.format("%.3f ms", data.time * 1000)}, {"TOTAL CALLS", string.Comma(data.calls)}, {"AVG / CALL", string.format("%.4f ms", data.calls > 0 and data.time * 1000 / data.calls or 0)}}
         local gap = 7
         local unit = (w - gap * 2) / 3
         for i, item in ipairs(cards) do
@@ -376,6 +400,7 @@ function MODULE:CreateDetails(dashboard)
             draw.SimpleText(item[2], "LiliaFont.19", x + 9, 39, textColor, TEXT_ALIGN_LEFT, TEXT_ALIGN_TOP)
         end
     end
+
     local section = canvas:Add("DPanel")
     section:Dock(TOP)
     section:SetTall(32)
@@ -383,10 +408,16 @@ function MODULE:CreateDetails(dashboard)
         draw.SimpleText("CALLBACK BREAKDOWN", "LiliaFont.15", 0, 6, accent, TEXT_ALIGN_LEFT, TEXT_ALIGN_TOP)
         draw.SimpleText("TOTAL MS", "LiliaFont.12", w - 8, 8, mutedColor, TEXT_ALIGN_RIGHT, TEXT_ALIGN_TOP)
     end
+
     local callbacks = {}
     for name, elapsed in pairs(data.funcs) do
-        callbacks[#callbacks + 1] = {name = name, elapsed = elapsed, calls = data.counts[name] or 0}
+        callbacks[#callbacks + 1] = {
+            name = name,
+            elapsed = elapsed,
+            calls = data.counts[name] or 0
+        }
     end
+
     table.sort(callbacks, function(a, b) return a.elapsed > b.elapsed end)
     for i, callback in ipairs(callbacks) do
         local entry = callback
@@ -403,11 +434,13 @@ function MODULE:CreateDetails(dashboard)
             local bx = math.min(116, w * 0.38)
             surface.SetDrawColor(56, 76, 89, 175)
             surface.DrawRect(bx, 30, math.max(1, w - bx - 9), 5)
-            surface.SetDrawColor((data.realm == 1 and serverColor or clientColor))
+            surface.SetDrawColor(data.realm == 1 and serverColor or clientColor)
             surface.DrawRect(bx, 30, math.max(1, (w - bx - 9) * share), 5)
         end
+
         if i >= 40 then break end
     end
+
     canvas:InvalidateLayout(true)
     if not changedSelection and IsValid(detailScroll) then detailScroll:GetVBar():SetScroll(previousScroll) end
 end
@@ -421,18 +454,22 @@ function MODULE:RefreshMetrics(panel)
         [0] = self:GetRealmSummary(rows, 0),
         [1] = self:GetRealmSummary(rows, 1)
     }
+
     local visible = {}
     local search = string.Trim(string.lower(panel.SearchText or ""))
     for _, data in ipairs(rows) do
-        if (panel.RealmFilter == "all" or (panel.RealmFilter == "client" and data.realm == 0) or (panel.RealmFilter == "server" and data.realm == 1)) and (search == "" or string.find(string.lower(data.source), search, 1, true)) then
-            visible[#visible + 1] = data
-        end
+        if (panel.RealmFilter == "all" or (panel.RealmFilter == "client" and data.realm == 0) or (panel.RealmFilter == "server" and data.realm == 1)) and (search == "" or string.find(string.lower(data.source), search, 1, true)) then visible[#visible + 1] = data end
     end
+
     panel.VisibleCount = #visible
     local selected
     for _, data in ipairs(visible) do
-        if data.key == panel.SelectedKey then selected = data break end
+        if data.key == panel.SelectedKey then
+            selected = data
+            break
+        end
     end
+
     panel.SelectedData = selected
     local scroll = panel.MetricScroll
     local previousScroll = IsValid(scroll) and IsValid(scroll:GetVBar()) and scroll:GetVBar():GetScroll() or 0
@@ -441,6 +478,7 @@ function MODULE:RefreshMetrics(panel)
         local row = self:CreateMetricRow(list, data, visible[1] and visible[1].time or 0, panel)
         row.rowIndex = i
     end
+
     if #visible == 0 then
         local empty = list:Add("DPanel")
         empty:Dock(TOP)
@@ -451,6 +489,7 @@ function MODULE:RefreshMetrics(panel)
             draw.SimpleText("Start a profiler or adjust the filters", "LiliaFont.14", w * 0.5, 94, mutedColor, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
         end
     end
+
     list:InvalidateLayout(true)
     if IsValid(scroll) and IsValid(scroll:GetVBar()) then scroll:GetVBar():SetScroll(previousScroll) end
     self:CreateDetails(panel)
@@ -462,7 +501,19 @@ function MODULE:BuildPanel(parent)
     parent.Frozen = false
     parent.SearchText = ""
     parent.RealmFilter = "all"
-    parent.RealmSummary = {[0] = {time = 0, sources = 0, calls = 0}, [1] = {time = 0, sources = 0, calls = 0}}
+    parent.RealmSummary = {
+        [0] = {
+            time = 0,
+            sources = 0,
+            calls = 0
+        },
+        [1] = {
+            time = 0,
+            sources = 0,
+            calls = 0
+        }
+    }
+
     parent.OnRemove = function(panel)
         if currentPanel ~= panel then return end
         currentPanel = nil
@@ -470,6 +521,7 @@ function MODULE:BuildPanel(parent)
         net.WriteBool(false)
         net.SendToServer()
     end
+
     local dashboard = parent:Add("DPanel")
     dashboard:Dock(TOP)
     dashboard:SetTall(191)
@@ -484,6 +536,7 @@ function MODULE:BuildPanel(parent)
         serverCard:SetPos(half + 10, 0)
         serverCard:SetSize(w - half - 10, h)
     end
+
     local toolbar = parent:Add("DPanel")
     toolbar:Dock(TOP)
     toolbar:SetTall(40)
@@ -497,6 +550,7 @@ function MODULE:BuildPanel(parent)
             MODULE:RefreshMetrics(parent)
         end, 38, function() return parent.RealmFilter == filter end)
     end
+
     local search = toolbar:Add("DTextEntry")
     search:SetFont("LiliaFont.15")
     search:SetText("")
@@ -507,24 +561,29 @@ function MODULE:BuildPanel(parent)
         if entry:GetText() == "" and not entry:HasFocus() then draw.SimpleText("Search sources...", "LiliaFont.15", 11, h * 0.5, mutedColor, TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER) end
         entry:DrawTextEntryText(Color(223, 235, 240), accent, Color(223, 235, 240))
     end
+
     search.OnValueChange = function(_, value)
         parent.SearchText = value
         MODULE:RefreshMetrics(parent)
     end
+
     local freeze = createButton(toolbar, function() return parent.Frozen and "Unfreeze Samples" or "Freeze Samples" end, function()
         parent.Frozen = not parent.Frozen
         parent.FrozenRows = parent.Frozen and MODULE:MergeProfileMetrics() or nil
         MODULE:RefreshMetrics(parent)
     end, 38, function() return parent.Frozen end)
+
     local native = createButton(toolbar, "Hide Native Activity", function()
         MODULE.hideNativeMetrics = not MODULE.hideNativeMetrics
         MODULE:RefreshMetrics(parent)
     end, 38, function() return MODULE.hideNativeMetrics end)
+
     local refresh = createButton(toolbar, "Refresh", function()
         parent.Frozen = false
         parent.FrozenRows = nil
         MODULE:RefreshMetrics(parent)
     end, 38)
+
     toolbar.PerformLayout = function(_, w, h)
         local gap = 7
         local fixed = {86, 66, 66, 126, 157, 79}
@@ -535,6 +594,7 @@ function MODULE:BuildPanel(parent)
             filter:SetSize(fixed[i], h)
             x = x + fixed[i] + gap
         end
+
         search:SetPos(x, 0)
         search:SetSize(remaining, h)
         x = x + remaining + gap
@@ -545,6 +605,7 @@ function MODULE:BuildPanel(parent)
             x = x + size + gap
         end
     end
+
     local body = parent:Add("DPanel")
     body:Dock(FILL)
     body.Paint = function() end
@@ -557,6 +618,7 @@ function MODULE:BuildPanel(parent)
         details:SetPos(left + 10, 0)
         details:SetSize(w - left - 10, h)
     end
+
     local sourceHeader = sources:Add("DPanel")
     sourceHeader:Dock(TOP)
     sourceHeader:SetTall(37)
@@ -568,6 +630,7 @@ function MODULE:BuildPanel(parent)
         surface.SetDrawColor(60, 85, 102, 155)
         surface.DrawRect(0, h - 1, w, 1)
     end
+
     local metricScroll = sources:Add("liaScrollPanel")
     metricScroll:Dock(FILL)
     metricScroll:DockMargin(5, 0, 5, 5)
@@ -612,11 +675,13 @@ function MODULE:Think()
         table.Empty(self.profileMetrics)
         table.Empty(self.profileCounts)
     end
+
     if self.serverProfilingCollecting then
         for source, data in pairs(serverMetrics) do
             if data.expires and data.expires < now then serverMetrics[source] = nil end
         end
     end
+
     if IsValid(currentPanel) and not currentPanel.Frozen then self:RefreshMetrics(currentPanel) end
     nextRefresh = now + math.Clamp(self.profileRefreshRate, 0.1, 5)
 end
@@ -634,13 +699,11 @@ net.Receive("liaPerformanceProfileMetric", function()
         funcs[name] = net.ReadFloat()
         counts[name] = net.ReadUInt(32)
     end
+
     MODULE:ReceiveServerMetrics(source, time, calls, funcs, counts)
 end)
 
-net.Receive("liaPerformanceProfileClear", function()
-    MODULE:ClearDisplayedMetrics(1, currentPanel)
-end)
-
+net.Receive("liaPerformanceProfileClear", function() MODULE:ClearDisplayedMetrics(1, currentPanel) end)
 net.Receive("liaPerformanceProfileState", function()
     MODULE.profilingFrozen = net.ReadBool()
     MODULE.profileRefreshRate = math.Clamp(net.ReadFloat(), 0.1, 5)

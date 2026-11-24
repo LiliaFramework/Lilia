@@ -1,4 +1,4 @@
-net.Receive("AppearanceMenuOpen", function()
+﻿net.Receive("AppearanceMenuOpen", function()
     local target = net.ReadEntity()
     local allowModelChange = net.ReadBool()
     local models = net.ReadTable()
@@ -7,6 +7,7 @@ net.Receive("AppearanceMenuOpen", function()
         lia.gui.appearanceMenu.suppressCloseSignal = true
         lia.gui.appearanceMenu:Remove()
     end
+
     lia.gui.appearanceMenu = vgui.Create("AppearanceMenu")
     lia.gui.appearanceMenu:SetData(target, models, allowModelChange)
 end)

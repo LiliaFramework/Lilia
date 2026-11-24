@@ -1,4 +1,4 @@
-net.Receive("liaPlayerRespawn", function(_, client)
+﻿net.Receive("liaPlayerRespawn", function(_, client)
     if not IsValid(client) or client:Alive() then return end
     if not client:getChar() then return end
     local baseTime = lia.config.get("SpawnTime", 5)

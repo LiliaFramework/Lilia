@@ -1,4 +1,4 @@
-if not ArcCWInstalled then return end
+﻿if not ArcCWInstalled then return end
 ITEM.name = "ArcCW Attachment"
 ITEM.desc = "An attachment for ArcCW weapons."
 ITEM.category = "Attachments"

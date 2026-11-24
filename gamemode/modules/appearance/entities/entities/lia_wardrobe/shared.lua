@@ -1,4 +1,4 @@
-ENT.Type = "anim"
+﻿ENT.Type = "anim"
 ENT.PrintName = "Appearance Wardrobe"
 ENT.Author = "liliaplayer"
 ENT.Spawnable = true
@@ -8,7 +8,6 @@ ENT.RenderGroup = RENDERGROUP_TRANSLUCENT
 ENT.NoPhysgun = true
 ENT.NoRemover = true
 ENT.IsPersistent = true
-
 function ENT:HasUser(user)
     self.users = self.users or {}
     return self.users[user] == true

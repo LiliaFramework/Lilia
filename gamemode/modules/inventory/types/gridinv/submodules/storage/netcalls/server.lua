@@ -1,4 +1,4 @@
-net.Receive("liaStorageExit", function(_, client)
+﻿net.Receive("liaStorageExit", function(_, client)
     local storage = client.liaStorageEntity
     if IsValid(storage) then storage.receivers[client] = nil end
     client.liaStorageEntity = nil

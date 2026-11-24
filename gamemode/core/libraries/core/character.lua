@@ -1,4 +1,4 @@
-lia.char = lia.char or {}
+﻿lia.char = lia.char or {}
 lia.char.vars = lia.char.vars or {}
 lia.char.loaded = lia.char.loaded or {}
 lia.char.varHooks = lia.char.varHooks or {}
@@ -150,9 +150,7 @@ function lia.char.registerVar(key, data)
 
         if supportedTypes[data.fieldType] then
             local columnType = data.fieldType == "string" and "VARCHAR(" .. tostring(tonumber(data.length) or 255) .. ")" or data.fieldType
-            lia.db.createColumn("characters", data.field, columnType, data.default):next(nil, function(err)
-                lia.error("Failed to register character column " .. tostring(data.field) .. ": " .. tostring(err))
-            end)
+            lia.db.createColumn("characters", data.field, columnType, data.default):next(nil, function(err) lia.error("Failed to register character column " .. tostring(data.field) .. ": " .. tostring(err)) end)
         end
     end
 end
@@ -933,7 +931,10 @@ if SERVER then
                 return true
             else
                 if val == nil then
-                    lia.db.delete("chardata", {charID = charIDsafe, key = field})
+                    lia.db.delete("chardata", {
+                        charID = charIDsafe,
+                        key = field
+                    })
                 else
                     local encoded = pon.encode({value})
                     lia.db.upsert({
@@ -948,7 +949,10 @@ if SERVER then
             end
         else
             if val == nil then
-                lia.db.delete("chardata", {charID = charIDsafe, key = field})
+                lia.db.delete("chardata", {
+                    charID = charIDsafe,
+                    key = field
+                })
             else
                 local encoded = pon.encode({value})
                 lia.db.upsert({

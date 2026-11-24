@@ -4,4 +4,3 @@ net.Receive("liaVerifyCheats", function()
     net.Start("liaVerifyCheatsResponse")
     net.SendToServer()
 end)
-

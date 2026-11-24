@@ -157,9 +157,7 @@ if SERVER then
                     local expected = expectedType:lower()
                     local numericType = actual:match("^%w*int") ~= nil or actual:match("^decimal") ~= nil
                     local stringType = actual:match("^%w*text") ~= nil or actual:match("^varchar") ~= nil or actual:match("^char") ~= nil
-                    if actual ~= expected and not (expected == "integer" and numericType) and not (expected == "text" and stringType) then
-                        lia.warning("Column " .. colName .. " has type " .. columns[colName] .. ", expected " .. expectedType)
-                    end
+                    if actual ~= expected and not (expected == "integer" and numericType) and not (expected == "text" and stringType) then lia.warning("Column " .. colName .. " has type " .. columns[colName] .. ", expected " .. expectedType) end
                 end
             end
 

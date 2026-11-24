@@ -1,7 +1,9 @@
-local MODULE = MODULE
-local subscribers = setmetatable({}, {__mode = "k"})
-local nextRefresh = 0
+﻿local MODULE = MODULE
+local subscribers = setmetatable({}, {
+    __mode = "k"
+})
 
+local nextRefresh = 0
 function MODULE:SendProfilerState(client)
     net.Start("liaPerformanceProfileState")
     net.WriteBool(self.profilingFrozen)
@@ -30,14 +32,19 @@ function MODULE:SetProfilerSetting(name, value)
     else
         return
     end
+
     self:SyncProfilerState()
 end
 
 function MODULE:SendProfilerMetrics()
     local metrics = {}
     for source, data in pairs(self:GetReadableMetrics()) do
-        metrics[#metrics + 1] = {source = source, data = data}
+        metrics[#metrics + 1] = {
+            source = source,
+            data = data
+        }
     end
+
     table.sort(metrics, function(a, b) return a.data.time > b.data.time end)
     for client in pairs(subscribers) do
         if not self:CanViewMetrics(client) then
@@ -48,8 +55,13 @@ function MODULE:SendProfilerMetrics()
                 local data = entry.data
                 local callbacks = {}
                 for name, elapsed in pairs(data.funcs) do
-                    callbacks[#callbacks + 1] = {name = name, elapsed = elapsed, calls = (data.counts or {})[name] or 0}
+                    callbacks[#callbacks + 1] = {
+                        name = name,
+                        elapsed = elapsed,
+                        calls = (data.counts or {})[name] or 0
+                    }
                 end
+
                 table.sort(callbacks, function(a, b) return a.elapsed > b.elapsed end)
                 net.Start("liaPerformanceProfileMetric")
                 net.WriteString(entry.source)
@@ -62,6 +74,7 @@ function MODULE:SendProfilerMetrics()
                     net.WriteFloat(callback.elapsed)
                     net.WriteUInt(math.min(callback.calls, 4294967295), 32)
                 end
+
                 net.Send(client)
             end
         end
@@ -84,6 +97,7 @@ function MODULE:HandleProfilingStart(client)
     else
         self:PauseProfiling()
     end
+
     self:SyncProfilerState()
 end
 
@@ -98,6 +112,7 @@ function MODULE:HandleProfilerClear(client)
             subscribers[subscriber] = nil
         end
     end
+
     if not subscribers[client] then
         net.Start("liaPerformanceProfileClear")
         net.Send(client)

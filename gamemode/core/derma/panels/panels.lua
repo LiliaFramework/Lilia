@@ -1,4 +1,4 @@
-local cacheKeys, cache, len = {}, {}, 0
+﻿local cacheKeys, cache, len = {}, {}, 0
 timer.Create("derma_convar_fix", 0.5, 0, function()
     if len == 0 then return end
     local name
@@ -465,7 +465,11 @@ function QuickPanel:addCategoryHeader(categoryName, categoryColor)
     header:SetText("")
     header:SetCursor("hand")
     header:SetTooltip("Expand or collapse this category")
-    local group = {key = key, items = {}}
+    local group = {
+        key = key,
+        items = {}
+    }
+
     self.currentCategory = group
     header.Paint = function(button, w, h)
         local hovered = button:IsHovered()
@@ -491,6 +495,7 @@ function QuickPanel:addCategoryHeader(categoryName, categoryColor)
         for _, item in ipairs(group.items) do
             if IsValid(item) then item:SetVisible(visible) end
         end
+
         if IsValid(self.scroll) then self.scroll:InvalidateLayout(true) end
         local canvas = self.scroll.GetCanvas and self.scroll:GetCanvas()
         if IsValid(canvas) then canvas:InvalidateLayout(true) end

@@ -1,4 +1,4 @@
-local PANEL = {}
+﻿local PANEL = {}
 local fallbackBackground = Color(7, 14, 23)
 local fallbackText = Color(230, 239, 239)
 local fallbackAccent = Color(76, 164, 224)
@@ -7,7 +7,6 @@ local factionHeaderHeight = math.Clamp(ScrH() * 0.062, 56, 70)
 local classHeaderHeight = 48
 local scoreboardHeaderTitleFont = "LiliaFont.22"
 local scoreboardHeaderMetaFont = "LiliaFont.16"
-
 local function themeColor(value, fallback, alpha)
     value = IsColor(value) and value or fallback
     return Color(value.r, value.g, value.b, alpha or value.a or 255)
@@ -243,14 +242,8 @@ function PANEL:Init()
     scroll.VBar.Paint = function() end
     scroll.VBar.btnUp.Paint = function() end
     scroll.VBar.btnDown.Paint = function() end
-    scroll.VBar.btnGrip.Paint = function(grip, w, h)
-        draw.RoundedBox(4, 1, 0, w - 2, h, getAccent(grip:IsHovered() and 175 or 100))
-    end
-    scroll.Paint = function(_, w, h)
-        if (self.displayedCount or 0) == 0 then
-            draw.SimpleText("NO ACTIVE CHARACTERS", "LiliaFont.17", w * 0.5, h * 0.5, getMuted(), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
-        end
-    end
+    scroll.VBar.btnGrip.Paint = function(grip, w, h) draw.RoundedBox(4, 1, 0, w - 2, h, getAccent(grip:IsHovered() and 175 or 100)) end
+    scroll.Paint = function(_, w, h) if (self.displayedCount or 0) == 0 then draw.SimpleText("NO ACTIVE CHARACTERS", "LiliaFont.17", w * 0.5, h * 0.5, getMuted(), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER) end end
     self:ShowAnimated()
     local layout = scroll:Add("DListLayout")
     layout:Dock(TOP)
@@ -489,24 +482,15 @@ function PANEL:Think()
         for _, list in pairs(facCont.classLists) do
             local count = list:ChildCount()
             memberCount = memberCount + count
-            if IsValid(list.category) then
-                list.category:SetVisible(count > 0)
-            end
+            if IsValid(list.category) then list.category:SetVisible(count > 0) end
         end
 
-        if IsValid(facCont.memberLabel) then
-            facCont.memberLabel:SetText(memberCount == 1 and "1 MEMBER" or memberCount .. " MEMBERS")
-        end
-
-        if IsValid(facCat) then
-            facCat:SetVisible(memberCount > 0)
-        end
-
+        if IsValid(facCont.memberLabel) then facCont.memberLabel:SetText(memberCount == 1 and "1 MEMBER" or memberCount .. " MEMBERS") end
+        if IsValid(facCat) then facCat:SetVisible(memberCount > 0) end
         displayedCount = displayedCount + memberCount
     end
 
     self.displayedCount = displayedCount
-
     self.nextUpdate = CurTime() + 0.12
 end
 
@@ -641,6 +625,7 @@ function PANEL:addPlayer(ply, parent)
         surface.DrawOutlinedRect(0, top, w, 30, 1)
         draw.SimpleText(label:GetText(), "LiliaFont.16", w * 0.5, h * 0.5, getAccent(), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
     end
+
     slot.ping = vgui.Create("DLabel", slot)
     slot.ping:SetFont("LiliaFont.16")
     slot.ping:SetContentAlignment(5)

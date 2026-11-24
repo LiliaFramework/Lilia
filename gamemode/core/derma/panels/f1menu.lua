@@ -1,4 +1,4 @@
-local function localizeMenuLabel(value, ...)
+﻿local function localizeMenuLabel(value, ...)
     if not isstring(value) then return value end
     return lia.lang.resolve(value, ...)
 end
@@ -1361,7 +1361,6 @@ function PANEL:populateClassDetails(cl, canBe)
     logo:SetSize(16, 16)
     logo:SetImage(canBe and "icon16/group.png" or "icon16/lock.png")
     header.PerformLayout = function(_, panelW) logo:SetPos(panelW - 56, 54) end
-
     local detailsScroll = self.detailsPanel:Add("liaScrollPanel")
     detailsScroll:Dock(FILL)
     detailsScroll.Paint = function() end

@@ -1,4 +1,4 @@
-local MODULE = MODULE
+﻿local MODULE = MODULE
 local charListRequestID = 0
 local CHAR_LIST_PAGE_SIZE = 100
 local function requestFullCharListPage(panel, offset)
@@ -201,7 +201,6 @@ function MODULE:ShowPlayerOptions(target, options)
         if v then options[#options + 1] = v end
     end
 end
-
 
 local CASE_MODE_ALL = "all"
 local CASE_MODE_TICKETS = "tickets"
@@ -3368,9 +3367,6 @@ spawnmenu.AddCreationTab("Inventory Items", function()
         return ctrl
     end
 end, "icon16/briefcase.png")
-
-
-
 
 lia.net.readBigTable("liaFullCharListPage", function(data)
     if not IsValid(panelRef) or not data or not isfunction(panelRef.buildSheets) then return end

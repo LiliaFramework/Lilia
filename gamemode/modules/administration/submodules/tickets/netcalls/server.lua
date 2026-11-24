@@ -1,6 +1,4 @@
 ﻿local MODULE = MODULE
-
-
 net.Receive("liaTicketSystemClaim", function(_, client)
     local requester = net.ReadEntity()
     if client == requester then
@@ -77,5 +75,3 @@ net.Receive("liaTicketSystemClose", function(_, client)
     requester.CaseClaimed = nil
     MODULE.ActiveTickets[requester:SteamID()] = nil
 end)
-
-

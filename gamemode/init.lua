@@ -13,7 +13,6 @@ resource.AddWorkshop = function(id)
         liaWorkshopRegisteredIDs[workshopID] = true
         hook.Run("liaWorkshopResourceRegistered", workshopID)
     end
-
     return result
 end
 

@@ -316,9 +316,7 @@ end, {
     desc = "Font Description",
     category = "Core",
     type = "Table",
-    options = function()
-        return lia.font.getAvailableFonts()
-    end
+    options = function() return lia.font.getAvailableFonts() end
 })
 
 hook.Add("OnConfigUpdated", "liaFontsOnConfigUpdate", function(key, oldValue, newValue)

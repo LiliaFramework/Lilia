@@ -1,8 +1,7 @@
-local PANEL = {}
+﻿local PANEL = {}
 local fallbackAccent = Color(76, 164, 224)
 local fallbackText = Color(230, 239, 239)
 local fallbackBackground = Color(7, 14, 23)
-
 local function getThemeColor(source, fallback, alpha)
     fallback = IsColor(fallback) and fallback or fallbackText
     source = IsColor(source) and source or fallback
@@ -13,12 +12,7 @@ local function mixThemeColors(from, to, fraction, alpha)
     from = IsColor(from) and from or fallbackBackground
     to = IsColor(to) and to or fallbackText
     fraction = math.Clamp(tonumber(fraction) or 0, 0, 1)
-    return Color(
-        math.Round(Lerp(fraction, from.r, to.r)),
-        math.Round(Lerp(fraction, from.g, to.g)),
-        math.Round(Lerp(fraction, from.b, to.b)),
-        alpha or math.Round(Lerp(fraction, from.a or 255, to.a or 255))
-    )
+    return Color(math.Round(Lerp(fraction, from.r, to.r)), math.Round(Lerp(fraction, from.g, to.g)), math.Round(Lerp(fraction, from.b, to.b)), alpha or math.Round(Lerp(fraction, from.a or 255, to.a or 255)))
 end
 
 local function getFrameColors()

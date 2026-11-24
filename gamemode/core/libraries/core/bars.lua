@@ -1,4 +1,4 @@
-lia.bar = lia.bar or {}
+﻿lia.bar = lia.bar or {}
 lia.bar.delta = lia.bar.delta or {}
 lia.bar.values = lia.bar.values or {}
 lia.bar.list = {}
@@ -11,7 +11,6 @@ local staminaColor = Color(196, 176, 72)
 local fallbackColor = Color(200, 200, 200)
 local textColor = Color(240, 240, 240)
 local shadowColor = Color(20, 20, 20)
-
 local function uiScale(px)
     return math.max(1, math.Round(px * math.Clamp(math.min(ScrW() / 1920, ScrH() / 1080), 0.75, 2)))
 end
@@ -66,6 +65,7 @@ end
 local function isMenuOpen()
     return IsValid(lia.gui.menu) or IsValid(lia.gui.character) or IsValid(lia.gui.schemaCharacterCreator)
 end
+
 local function findIndexByIdentifier(identifier)
     for idx, bar in ipairs(lia.bar.list) do
         if bar.identifier == identifier then return idx end
@@ -129,14 +129,17 @@ function lia.bar.drawAction(text, duration)
             draw.SimpleText(self.Text, "LiliaFont.17", 0, h - barHeight - uiScale(17), textColor)
         end
     end
+
     lia.gui.actionPanel.Think = function(self)
         if CurTime() >= endTime then
             if lia.gui.actionPanel == self then lia.gui.actionPanel = nil end
             self:Remove()
             return
         end
+
         self:SetFraction(1 - math.TimeFraction(startTime, endTime, CurTime()))
     end
+
     lia.gui.actionPanel:MakePopup()
     lia.gui.actionPanel:SetKeyboardInputEnabled(false)
     lia.gui.actionPanel:SetMouseInputEnabled(false)
@@ -150,6 +153,7 @@ function lia.bar.drawAll()
         if a.priority == b.priority then return (a.order or 0) < (b.order or 0) end
         return (a.priority or 0) < (b.priority or 0)
     end)
+
     local active = {}
     local now = CurTime()
     for _, bar in ipairs(lia.bar.list) do
@@ -163,9 +167,13 @@ function lia.bar.drawAll()
         if bar.identifier == "health" or bar.identifier == "stamina" or bar.identifier == "stm" then show = true end
         if bar.identifier == "armor" and client:Armor() <= 0 then show = false end
         if show then
-            active[#active + 1] = {fraction = value, color = getBarColor(bar)}
+            active[#active + 1] = {
+                fraction = value,
+                color = getBarColor(bar)
+            }
         end
     end
+
     if #active == 0 then return end
     local height = uiScale(8)
     local width = uiScale(240)

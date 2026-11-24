@@ -1,4 +1,4 @@
-lia.derma = lia.derma or {}
+﻿lia.derma = lia.derma or {}
 local color_disconnect = Color(210, 65, 65)
 local color_bot = Color(70, 150, 220)
 local color_online = Color(120, 180, 70)
@@ -270,9 +270,7 @@ function lia.derma.requestPlayerSelector(doClick)
 end
 
 local RNDX = lia.rndx
-
 assert(RNDX, "RNDX failed to load")
-
 lia.derma.draw = RNDX.draw
 lia.derma.drawOutlined = RNDX.drawOutlined
 lia.derma.drawTexture = RNDX.drawTexture
@@ -297,8 +295,6 @@ lia.derma.SHAPE_FIGMA = RNDX.SHAPE_FIGMA
 lia.derma.SHAPE_IOS = RNDX.SHAPE_IOS
 lia.derma.BLUR = RNDX.BLUR
 lia.derma.MANUAL_COLOR = RNDX.MANUAL_COLOR
-
-
 function lia.derma.shadowText(text, font, x, y, colortext, colorshadow, dist, xalign, yalign)
     surface.SetFont(font)
     local _, h = surface.GetTextSize(text)

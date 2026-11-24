@@ -1,13 +1,8 @@
-MODULE.name = "Appearance"
+﻿MODULE.name = "Appearance"
 MODULE.author = "Samael"
 MODULE.discord = "liliaplayer"
 MODULE.desc = "Provides model, skin, and bodygroup customization through one appearance wardrobe entity."
-MODULE.NetworkStrings = {
-    "AppearanceMenuOpen",
-    "AppearanceMenuSubmit",
-    "AppearanceMenuClosed",
-    "AppearanceMenuDismiss",
-}
+MODULE.NetworkStrings = {"AppearanceMenuOpen", "AppearanceMenuSubmit", "AppearanceMenuClosed", "AppearanceMenuDismiss",}
 MODULE.Privileges = {
     ["manageBodygroups"] = {
         Name = "Manage Bodygroups",

@@ -1,4 +1,4 @@
-lia.net.readBigTable("liaDialogSync", function(data) if istable(data) then lia.dialog.stored = data end end)
+﻿lia.net.readBigTable("liaDialogSync", function(data) if istable(data) then lia.dialog.stored = data end end)
 net.Receive("liaOpenNpcDialog", function()
     local npc = net.ReadEntity()
     local canCustomize = net.ReadBool()

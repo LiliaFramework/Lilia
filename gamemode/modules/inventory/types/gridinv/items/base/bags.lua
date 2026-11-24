@@ -1,4 +1,4 @@
-ITEM.name = "Bag"
+﻿ITEM.name = "Bag"
 ITEM.desc = "A bag to hold more items."
 ITEM.model = "models/props_c17/suitcase001a.mdl"
 ITEM.category = "Storage"
@@ -82,9 +82,7 @@ ITEM.functions.Open = {
         local client = item.player
         local inventory = item:getInv()
         if not inventory then
-            if SERVER then
-                client:notifyError(string.format("This bag has no inventory."))
-            end
+            if SERVER then client:notifyError(string.format("This bag has no inventory.")) end
             return false
         end
 

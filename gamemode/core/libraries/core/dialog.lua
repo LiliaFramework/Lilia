@@ -1,4 +1,4 @@
-lia.dialog = lia.dialog or {}
+﻿lia.dialog = lia.dialog or {}
 lia.dialog.stored = lia.dialog.stored or {}
 lia.dialog.configurations = lia.dialog.configurations or {}
 lia.dialog.clientHashes = lia.dialog.clientHashes or {}
@@ -1956,5 +1956,4 @@ else
         shouldShow = function(ply, npc) return canAccessNPCConfigurations(ply) and lia.dialog.entityUsesGeneratedDialog(npc) end,
         onOpen = function(npc) lia.dialog.openNodeEditor(npc) end
     })
-
 end

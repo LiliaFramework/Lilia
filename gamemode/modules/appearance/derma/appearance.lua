@@ -1,11 +1,10 @@
-local PANEL = {}
+﻿local PANEL = {}
 local leftBinding = input.LookupBinding("+moveleft") or "A"
 local rightBinding = input.LookupBinding("+moveright") or "D"
 local leftKey = input.GetKeyCode(leftBinding)
 local rightKey = input.GetKeyCode(rightBinding)
 if not leftKey or leftKey <= 0 then leftKey = KEY_A end
 if not rightKey or rightKey <= 0 then rightKey = KEY_D end
-
 function PANEL:GetPreviewEntity()
     return lia.view.getEntity(self)
 end
@@ -46,7 +45,6 @@ function PANEL:Init()
     self:SetBackgroundBlur(false)
     self:MakePopup()
     self:DockPadding(10, 34, 10, 10)
-
     self.header = self:Add("DPanel")
     self.header:Dock(TOP)
     self.header:DockMargin(0, 0, 0, 8)
@@ -61,7 +59,6 @@ function PANEL:Init()
     self.modelSection:DockMargin(0, 0, 0, 8)
     self.modelSection:SetTall(250)
     self.modelSection:SetVisible(false)
-
     self.modelLabel = self.modelSection:Add("DLabel")
     self.modelLabel:Dock(TOP)
     self.modelLabel:DockMargin(4, 0, 4, 6)
@@ -69,7 +66,6 @@ function PANEL:Init()
     self.modelLabel:SetFont("LiliaFont.18")
     self.modelLabel:SetText("Model")
     self.modelLabel:SetTextColor(color_white)
-
     self.modelScroll = self.modelSection:Add("liaScrollPanel")
     self.modelScroll:Dock(FILL)
     local canvas = self.modelScroll.GetCanvas and self.modelScroll:GetCanvas() or self.modelScroll
@@ -78,7 +74,6 @@ function PANEL:Init()
     self.modelLayout:SetSpaceX(8)
     self.modelLayout:SetSpaceY(8)
     self.modelLayout:SetPaintBackground(false)
-
     self.skinSelector = self:Add("liaSlideBox")
     self.skinSelector:Dock(TOP)
     self.skinSelector:DockMargin(0, 0, 0, 6)
@@ -97,17 +92,14 @@ function PANEL:Init()
     self.bodygroupLabel:SetFont("LiliaFont.18")
     self.bodygroupLabel:SetText("Bodygroups")
     self.bodygroupLabel:SetTextColor(color_white)
-
     self.bodygroupScroll = self:Add("liaScrollPanel")
     self.bodygroupScroll:Dock(FILL)
     self.bodygroupScroll:SetZPos(100)
-
     self.actions = self:Add("DPanel")
     self.actions:Dock(BOTTOM)
     self.actions:SetZPos(90)
     self.actions:DockMargin(0, 8, 0, 0)
     self.actions:SetTall(34)
-
     self.copyBodygroups = self.actions:Add("liaButton")
     self.copyBodygroups:Dock(LEFT)
     self.copyBodygroups:SetWide(165)
@@ -153,6 +145,7 @@ function PANEL:BuildModelIcons()
             local useTargetAppearance = IsValid(self.target) and string.lower(currentModel) == string.lower(self.target:GetModel() or "")
             self:SelectModel(currentModel, useTargetAppearance)
         end
+
         icon.PaintOver = function(panel, w, h)
             if string.lower(panel.modelPath or "") ~= string.lower(self.selectedModel or "") then return end
             local color = lia.config.get("Color", color_white)
@@ -160,6 +153,7 @@ function PANEL:BuildModelIcons()
             surface.DrawOutlinedRect(1, 1, w - 2, h - 2, 2)
         end
     end
+
     self.modelLayout:SizeToChildren(false, true)
 end
 
@@ -168,7 +162,6 @@ function PANEL:PopulateBodygroups()
     self.bodygroupScroll:Clear()
     local model = self:GetPreviewEntity()
     if not IsValid(model) then return end
-
     local skinCount = model:SkinCount() or 0
     if skinCount > 1 then
         self.skinSelector:SetRange(0, skinCount - 1, 0)
@@ -248,6 +241,7 @@ function PANEL:SetData(target, models, allowModelChange)
         context = target,
         hideEntities = {target, LocalPlayer()}
     })
+
     self:SelectModel(target:GetModel(), true)
     self:BuildModelIcons()
     self:InvalidateLayout(true)

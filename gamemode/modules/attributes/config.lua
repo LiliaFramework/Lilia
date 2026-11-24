@@ -1,4 +1,4 @@
-lia.config.add("MaxStartingAttributes", "Max Starting Attributes", 30, nil, {
+﻿lia.config.add("MaxStartingAttributes", "Max Starting Attributes", 30, nil, {
     desc = "Maximum value of each attribute at character creation.",
     category = "Core",
     isGlobal = true,

@@ -1,4 +1,4 @@
-lia.config = lia.config or {}
+﻿lia.config = lia.config or {}
 lia.config.stored = lia.config.stored or {}
 lia.config.lastSyncedValues = lia.config.lastSyncedValues or {}
 local function cfgLocalizeLabel(value, ...)

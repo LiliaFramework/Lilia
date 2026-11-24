@@ -1,4 +1,4 @@
-local MODULE = MODULE
+﻿local MODULE = MODULE
 net.Receive("liaRequestFactionMembers", function(_, client)
     local factionUniqueID = net.ReadString()
     if not factionUniqueID or factionUniqueID == "" then return end

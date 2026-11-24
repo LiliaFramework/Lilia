@@ -1,4 +1,4 @@
-ITEM.name = "Book Base"
+﻿ITEM.name = "Book Base"
 ITEM.desc = "A book."
 ITEM.category = "Literature"
 ITEM.model = "models/props_lab/bindergraylabel01b.mdl"

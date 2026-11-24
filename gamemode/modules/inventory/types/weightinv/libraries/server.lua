@@ -1,4 +1,4 @@
-function MODULE:HandleItemTransferRequest(client, itemID, x, y, invID)
+﻿function MODULE:HandleItemTransferRequest(client, itemID, x, y, invID)
     local newInventory = lia.inventory.instances[invID]
     local item = lia.item.instances[itemID]
     if not item then return end

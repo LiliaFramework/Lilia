@@ -8,7 +8,6 @@ lia.net.registry = lia.net.registry or {}
 local chunkTime = 0.05
 local CACHE_TTL = 30
 local MAX_CACHE_SIZE = 1000
-
 local function getChunkInterval()
     return (lia.reloadInProgress and chunkTime * 2) or chunkTime
 end

@@ -1,4 +1,4 @@
-lia.config.add("invMaxWeight", "Max Inventory Weight", 10, nil, {
+﻿lia.config.add("invMaxWeight", "Max Inventory Weight", 10, nil, {
     desc = "The maximum weight a player's inventory can hold.",
     category = "Core",
     type = "Number",

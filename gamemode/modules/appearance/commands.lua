@@ -1,4 +1,4 @@
-lia.command.add("listbodygroups", {
+﻿lia.command.add("listbodygroups", {
     adminOnly = true,
     desc = "List the available bodygroups for a target player.",
     arguments = {

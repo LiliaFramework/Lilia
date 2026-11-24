@@ -73,7 +73,6 @@ function lia.lang.getLocalizedString(key, ...)
         lia.error("Format Error In Localization String '" .. tostring(key) .. "': " .. result)
         return tostring(key)
     end
-
     return result
 end
 

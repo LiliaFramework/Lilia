@@ -1,4 +1,4 @@
---[[
+﻿--[[
     Hooks:
         ShouldAllowSit(client, position, pitch, entity)
     Purpose:

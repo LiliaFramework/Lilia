@@ -1,4 +1,4 @@
-MODULE.name = "NPCs"
+﻿MODULE.name = "NPCs"
 MODULE.author = "Samael"
 MODULE.discord = "liliaplayer"
 MODULE.desc = "Provides dialog NPCs, conversations, generated dialog trees, configuration, persistence, networking, and UI."

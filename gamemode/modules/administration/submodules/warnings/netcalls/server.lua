@@ -39,5 +39,3 @@ net.Receive("liaRequestRemoveWarning", function(_, client)
         end)
     end)
 end)
-
-

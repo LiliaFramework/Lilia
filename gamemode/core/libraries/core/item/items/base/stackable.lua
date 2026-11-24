@@ -1,4 +1,4 @@
-ITEM.name = "Stackable Item"
+﻿ITEM.name = "Stackable Item"
 ITEM.model = "models/props_junk/cardboard_box001a.mdl"
 ITEM.width = 1
 ITEM.height = 1

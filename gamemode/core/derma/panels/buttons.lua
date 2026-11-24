@@ -1,4 +1,4 @@
-local PANEL = {}
+﻿local PANEL = {}
 local function getButtonColors()
     local theme = lia.color.theme or {}
     local accent = theme.accent or theme.theme or lia.config.get("Color") or Color(45, 190, 170)

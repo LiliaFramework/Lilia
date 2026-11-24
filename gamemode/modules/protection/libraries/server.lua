@@ -1,4 +1,4 @@
-local MODULE = MODULE
+﻿local MODULE = MODULE
 function MODULE:CanPlayerSwitchChar(client, character, newCharacter)
     local isStaffOnDuty = client:isStaffOnDuty()
     lia.debug("[Permissions]", "Permission Check for function MODULE:CanPlayerSwitchChar staff bypass", "isStaffOnDuty=", tostring(isStaffOnDuty), "finalResult=", tostring(isStaffOnDuty))
@@ -8,14 +8,9 @@ function MODULE:CanPlayerSwitchChar(client, character, newCharacter)
         if not switchingToStaff and not switchingFromStaff then
             local damageCooldown = lia.config.get("OnDamageCharacterSwitchCooldownTimer", 15)
             local switchCooldown = lia.config.get("CharacterSwitchCooldownTimer", 5)
-            if damageCooldown > 0 and client.LastDamaged and client.LastDamaged > CurTime() - damageCooldown then
-                return false, "You took damage too recently to switch characters!"
-            end
-
+            if damageCooldown > 0 and client.LastDamaged and client.LastDamaged > CurTime() - damageCooldown then return false, "You took damage too recently to switch characters!" end
             local loginTime = character:getLoginTime()
-            if switchCooldown > 0 and loginTime + switchCooldown > os.time() then
-                return false, "You are on cooldown!"
-            end
+            if switchCooldown > 0 and loginTime + switchCooldown > os.time() then return false, "You are on cooldown!" end
         end
     end
     return true
@@ -166,9 +161,7 @@ function MODULE:PlayerAuthed(client, steamid)
         if reason and not whitelistedSteamIDs[id] then
             reason = reason ~= true and reason or "Using a family-shared account that is blacklisted"
             lia.adminstrator.applyPunishment(client, reason, false, true, 0)
-            if isAlt then
-                lia.adminstrator.notifyAdmin(string.format("%s (%s) was banned for using a family-shared account that is blacklisted.", steamName, steamID))
-            end
+            if isAlt then lia.adminstrator.notifyAdmin(string.format("%s (%s) was banned for using a family-shared account that is blacklisted.", steamName, steamID)) end
             return true
         end
     end
@@ -212,7 +205,6 @@ function MODULE:PlayerLeaveVehicle(client, entity)
             end
         end)
     end
-
 end
 
 function MODULE:OnEntityCreated(entity)
@@ -300,7 +292,6 @@ function MODULE:OnPhysgunFreeze(_, physObj, entity, client)
     else
         entity:SetCollisionGroup(COLLISION_GROUP_NONE)
     end
-
     return true
 end
 

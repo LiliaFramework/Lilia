@@ -1,7 +1,4 @@
-net.Receive("AppearanceMenuClosed", function(_, client)
-    lia.appearance.removeUser(client)
-end)
-
+﻿net.Receive("AppearanceMenuClosed", function(_, client) lia.appearance.removeUser(client) end)
 net.Receive("AppearanceMenuSubmit", function(_, client)
     local target = net.ReadEntity()
     local modelChanged = net.ReadBool()
@@ -11,7 +8,6 @@ net.Receive("AppearanceMenuSubmit", function(_, client)
     if not IsValid(target) or not target:IsPlayer() then return end
     local character = target:getChar()
     if not character then return end
-
     local selfTarget = target == client
     if selfTarget then
         if not lia.appearance.canAccess(client) then
@@ -24,6 +20,7 @@ net.Receive("AppearanceMenuSubmit", function(_, client)
             client:notify("No Access")
             return
         end
+
         if modelChanged then return end
     end
 
@@ -34,6 +31,7 @@ net.Receive("AppearanceMenuSubmit", function(_, client)
             client:notify("That model isn't allowed.")
             return
         end
+
         model = resolvedModel
     end
 

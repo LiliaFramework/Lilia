@@ -1,4 +1,4 @@
-local GM = GM or GAMEMODE
+﻿local GM = GM or GAMEMODE
 local VOICE_WHISPERING = "whispering"
 local VOICE_TALKING = "talking"
 local VOICE_YELLING = "yelling"
@@ -319,7 +319,6 @@ function GM:PlayerSay(client, message)
     end
 
     lia.chat.send(client, chatType, message, anonymous)
-
     hook.Run("PostPlayerSay", client, message, chatType, anonymous)
     return ""
 end
@@ -936,7 +935,11 @@ function GM:LoadData()
 
     local gamemode = SCHEMA and SCHEMA.folder or engine.ActiveGamemode()
     local map = game.GetMap()
-    local condition = {schema = gamemode, map = map}
+    local condition = {
+        schema = gamemode,
+        map = map
+    }
+
     lia.db.select({"itemID", "pos", "angles"}, "saveditems", condition):next(function(res)
         local items = res.results or {}
         if #items > 0 then

@@ -1,4 +1,4 @@
-function MODULE:PostPlayerLoadout(client)
+﻿function MODULE:PostPlayerLoadout(client)
     local character = client:getChar()
     if not character then return end
     lia.util.applyBodygroups(client, character:getBodygroups())

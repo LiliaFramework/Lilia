@@ -1,11 +1,9 @@
-local sitroom = MODULE
-
+﻿local sitroom = MODULE
 net.Receive("liaManagesitroomsAction", function(_, client)
     if not sitroom:CanManage(client) then return end
     local action = net.ReadUInt(2)
     local name = sitroom:NormalizeName(net.ReadString())
     if name == "" then return end
-
     local rooms = sitroom:GetRooms()
     if action == 1 then
         local targetPos = rooms[name]

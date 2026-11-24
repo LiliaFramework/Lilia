@@ -1,4 +1,4 @@
-if not pac then return end
+﻿if not pac then return end
 ITEM.name = "PAC3 Outfit"
 ITEM.desc = "A PAC3 Outfit Base."
 ITEM.category = "Outfit"

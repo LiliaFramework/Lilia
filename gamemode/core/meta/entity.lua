@@ -1,4 +1,4 @@
-local entityMeta = FindMetaTable("Entity")
+﻿local entityMeta = FindMetaTable("Entity")
 local baseEmitSound = entityMeta.EmitSound
 local validClasses = {
     ["lvs_base"] = true,

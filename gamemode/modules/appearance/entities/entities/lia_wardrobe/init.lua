@@ -1,4 +1,4 @@
-function ENT:Initialize()
+﻿function ENT:Initialize()
     self:SetModel(lia.config.get("ModelTweakerModel"))
     self:PhysicsInit(SOLID_VPHYSICS)
     self:SetMoveType(MOVETYPE_VPHYSICS)

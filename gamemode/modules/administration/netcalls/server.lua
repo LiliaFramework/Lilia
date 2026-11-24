@@ -1,4 +1,4 @@
-local spawnCooldowns = {}
+﻿local spawnCooldowns = {}
 local validToolTiers = {
     disabled = true,
     staff = true,
@@ -128,10 +128,7 @@ net.Receive("liaSetToolPermissionTiersBatch", function(_, client)
         end
     end
 
-    if changed > 0 then
-        lia.data.set("toolPermissionTiers", tiers, true, true)
-    end
-
+    if changed > 0 then lia.data.set("toolPermissionTiers", tiers, true, true) end
     sendToolPermissionTiers(client)
 end)
 
@@ -140,7 +137,6 @@ net.Receive("liaResetToolPermissionTiers", function(_, client)
     lia.data.set("toolPermissionTiers", {}, true, true)
     sendToolPermissionTiers(client)
 end)
-
 
 local function fixupProp(client, ent, mins, maxs)
     local pos = ent:GetPos()
@@ -317,7 +313,6 @@ net.Receive("liaRemoveFeaturePosition", function(_, client)
     end
 end)
 
-
 net.Receive("liaRequestStaffCases", function(_, client)
     local canSeeTickets = client:hasPrivilege("alwaysSeeTickets") or client:isStaffOnDuty()
     local canSeeWarnings = client:hasPrivilege("viewPlayerWarnings")
@@ -492,7 +487,6 @@ LIMIT %d OFFSET %d]], safeLimit, safeOffset)
     end)
 end
 
-
 net.Receive("liaRequestFullCharListPage", function(_, client)
     lia.debug("[Permissions]", "Permission Check for net.Receive liaRequestFullCharListPage", "isValidPlayer=", tostring(IsValid(client)), "hasPrivilege(listCharacters)=", tostring(IsValid(client) and client:hasPrivilege("listCharacters") or false), "finalResult=", tostring(IsValid(client) and client:hasPrivilege("listCharacters") or false))
     if not IsValid(client) or not client:hasPrivilege("listCharacters") then return end
@@ -501,7 +495,6 @@ net.Receive("liaRequestFullCharListPage", function(_, client)
     local limit = net.ReadUInt(16)
     buildFullCharListPage(client, requestID, offset, limit)
 end)
-
 
 net.Receive("liaModifyFlags", function(_, client)
     lia.debug("[Permissions]", "Permission Check for net.Receive liaModifyFlags", "hasPrivilege(manageFlags)=", tostring(client:hasPrivilege("manageFlags")), "finalResult=", tostring(client:hasPrivilege("manageFlags")))
@@ -558,9 +551,6 @@ net.Receive("liaModifyCharacterFlags", function(_, client)
         client:notifySuccess(string.format("%s has set %s's flags to '%s'.", client:Name(), data[1].name or tostring(charID), flags))
     end)
 end)
-
-
-
 
 local protectedPlayerEntityClasses = {
     viewmodel = true,

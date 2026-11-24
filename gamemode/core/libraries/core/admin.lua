@@ -1,4 +1,4 @@
-lia.admin = lia.admin or {}
+﻿lia.admin = lia.admin or {}
 lia.admin.groups = lia.admin.groups or {}
 lia.admin.privileges = lia.admin.privileges or {}
 lia.admin.privilegeCategories = lia.admin.privilegeCategories or {}
@@ -602,7 +602,6 @@ function lia.admin.hasAccess(ply, privilege)
     local superadminLevel = defaultGroups.superadmin or 3
     local adminLevel = defaultGroups.admin or 3
     if not lia.admin.privileges[privilege] then return groupLevel >= adminLevel end
-
     if groupLevel >= superadminLevel then return true end
     local g = lia.admin.groups and lia.admin.groups[grp] or nil
     if g and g[privilege] == true then return true end
@@ -620,25 +619,15 @@ function lia.admin.save(noNetwork)
             local info = istable(data._info) and data._info or {}
             local privileges = table.Copy(data)
             privileges._info = nil
-            values[#values + 1] = "(" .. table.concat({
-                lia.db.convertDataType(name),
-                lia.db.convertDataType(util.TableToJSON(privileges)),
-                lia.db.convertDataType(info.inheritance or "user"),
-                lia.db.convertDataType(util.TableToJSON(info.types or {}))
-            }, ", ") .. ")"
+            values[#values + 1] = "(" .. table.concat({lia.db.convertDataType(name), lia.db.convertDataType(util.TableToJSON(privileges)), lia.db.convertDataType(info.inheritance or "user"), lia.db.convertDataType(util.TableToJSON(info.types or {}))}, ", ") .. ")"
         else
             lia.warning("[Lilia Administration] Skipping invalid usergroup name during database save")
         end
     end
 
     local queries = {"DELETE FROM " .. lia.db.escapeIdentifier("lia_admin")}
-    if #values > 0 then
-        queries[#queries + 1] = "INSERT INTO " .. lia.db.escapeIdentifier("lia_admin") .. " (`usergroup`, `privileges`, `inheritance`, `types`) VALUES " .. table.concat(values, ", ")
-    end
-
-    lia.db.transaction(queries):next(nil, function(err)
-        lia.error("[Lilia Administration] Failed to save admin usergroups: " .. tostring(err))
-    end)
+    if #values > 0 then queries[#queries + 1] = "INSERT INTO " .. lia.db.escapeIdentifier("lia_admin") .. " (`usergroup`, `privileges`, `inheritance`, `types`) VALUES " .. table.concat(values, ", ") end
+    lia.db.transaction(queries):next(nil, function(err) lia.error("[Lilia Administration] Failed to save admin usergroups: " .. tostring(err)) end)
     if noNetwork or lia.admin._loading then return end
     lia.net.ready = lia.net.ready or setmetatable({}, {
         __mode = "k"
@@ -1058,7 +1047,8 @@ if SERVER then
             end
         end
 
-        local function logAdminAction() end
+        local function logAdminAction()
+        end
 
         local privilegeID = lia.admin.getCommandPrivilegeID(cmd)
         if not isConsoleAdmin and not lia.admin.hasAccess(admin, privilegeID) then

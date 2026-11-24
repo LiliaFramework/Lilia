@@ -1,4 +1,4 @@
-local function findOption(options, label, ply)
+﻿local function findOption(options, label, ply)
     if isfunction(options) then options = options(ply) end
     if not istable(options) then return nil end
     for k, v in pairs(options) do

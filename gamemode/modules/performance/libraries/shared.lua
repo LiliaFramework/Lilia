@@ -1,17 +1,22 @@
-local MODULE = MODULE
+﻿local MODULE = MODULE
 local GM = GM or GAMEMODE
 MODULE.profileMetrics = MODULE.profileMetrics or {}
 MODULE.profileCounts = MODULE.profileCounts or {}
 MODULE.profiledHooks = MODULE.profiledHooks or {}
-MODULE.profiledEntityMethods = MODULE.profiledEntityMethods or setmetatable({}, {__mode = "k"})
+MODULE.profiledEntityMethods = MODULE.profiledEntityMethods or setmetatable({}, {
+    __mode = "k"
+})
+
 MODULE.originalProfileFunctions = MODULE.originalProfileFunctions or {}
 MODULE.profilingStarted = MODULE.profilingStarted or false
 if MODULE.profilingCollecting == nil then MODULE.profilingCollecting = MODULE.profilingStarted end
 MODULE.profileRefreshRate = MODULE.profileRefreshRate or 2
 MODULE.profilingFrozen = MODULE.profilingFrozen or false
-
 local function pack(...)
-    return {n = select("#", ...), ...}
+    return {
+        n = select("#", ...),
+        ...
+    }
 end
 
 local function normalizeSource(source)
@@ -48,13 +53,19 @@ function MODULE:TakeMeasurement(elapsed, name, source)
         counts = {}
         self.profileCounts[source] = counts
     end
+
     counts[name] = (counts[name] or 0) + 1
 end
 
 function MODULE:MakeToolTipString(funcs, limit)
     local metrics = {}
     for name, elapsed in pairs(funcs or {}) do
-        if elapsed > 0 then metrics[#metrics + 1] = {name = name, time = elapsed} end
+        if elapsed > 0 then
+            metrics[#metrics + 1] = {
+                name = name,
+                time = elapsed
+            }
+        end
     end
 
     table.sort(metrics, function(a, b) return a.time > b.time end)
@@ -83,7 +94,13 @@ function MODULE:GetReadableMetrics()
             calls = calls + copiedCounts[name]
         end
 
-        readable[source] = {funcs = copiedFuncs, counts = copiedCounts, calls = calls, realm = realm, time = total}
+        readable[source] = {
+            funcs = copiedFuncs,
+            counts = copiedCounts,
+            calls = calls,
+            realm = realm,
+            time = total
+        }
     end
     return readable
 end
@@ -107,7 +124,11 @@ function MODULE:TimeThisHook(hookType, hookID)
         return unpack(results, 1, results.n)
     end
 
-    self.profiledHooks[hookType][hookID] = {original = original, wrapper = wrapper}
+    self.profiledHooks[hookType][hookID] = {
+        original = original,
+        wrapper = wrapper
+    }
+
     local add = self.originalProfileFunctions.hookAdd or hook.Add
     add(hookType, hookID, wrapper)
 end
@@ -149,7 +170,11 @@ function MODULE:TimeThisEntMethod(ent, methodName)
         return unpack(results, 1, results.n)
     end
 
-    entityMethods[methodName] = {original = original, wrapper = wrapper}
+    entityMethods[methodName] = {
+        original = original,
+        wrapper = wrapper
+    }
+
     local entTable = ent:GetTable()
     if entTable then entTable[methodName] = wrapper end
 end
@@ -171,9 +196,7 @@ function MODULE:ListenForNewEntityMethods()
     local original = self.originalProfileFunctions.entityNewIndex
     entityMeta.__newindex = function(ent, key, value)
         local result = original(ent, key, value)
-        if self.profilingStarted and isfunction(value) then
-            timer.Simple(0, function() if IsValid(ent) then self:TimeThisEntMethod(ent, key) end end)
-        end
+        if self.profilingStarted and isfunction(value) then timer.Simple(0, function() if IsValid(ent) then self:TimeThisEntMethod(ent, key) end end) end
         return result
     end
 
@@ -210,6 +233,7 @@ function MODULE:StartProfiling()
         self.profilingCollecting = true
         return true
     end
+
     self.profileMetrics = {}
     self.profileCounts = {}
     for hookName, entries in pairs(hook.GetTable()) do

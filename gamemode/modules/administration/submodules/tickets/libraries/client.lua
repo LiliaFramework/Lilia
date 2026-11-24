@@ -1,4 +1,4 @@
-function MODULE:PopulateAdminTabs(pages)
+﻿function MODULE:PopulateAdminTabs(pages)
     return
 end
 

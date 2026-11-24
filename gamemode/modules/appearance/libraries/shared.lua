@@ -1,5 +1,4 @@
-lia.appearance = lia.appearance or {}
-
+﻿lia.appearance = lia.appearance or {}
 function lia.util.normalizeBodygroupKey(key)
     local numericKey = tonumber(key)
     if numericKey ~= nil then return numericKey end

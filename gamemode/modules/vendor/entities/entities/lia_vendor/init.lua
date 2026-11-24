@@ -1,4 +1,4 @@
-function ENT:SpawnFunction(client, trace)
+﻿function ENT:SpawnFunction(client, trace)
     local angles = (trace.HitPos - client:GetPos()):Angle()
     angles.r = 0
     angles.p = 0

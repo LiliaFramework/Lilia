@@ -1,4 +1,4 @@
-local VOICE_WHISPERING = "whispering"
+﻿local VOICE_WHISPERING = "whispering"
 local VOICE_TALKING = "talking"
 local VOICE_YELLING = "yelling"
 lia.playerinteract = lia.playerinteract or {}
@@ -302,6 +302,7 @@ else
                         id = id,
                         option = option
                     })
+
                     table.insert(validOptions, {
                         id = id,
                         option = option

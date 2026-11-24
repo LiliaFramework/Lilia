@@ -1,5 +1,4 @@
-local sitroom = MODULE
-
+﻿local sitroom = MODULE
 function sitroom:CanManage(client)
     return IsValid(client) and client:IsPlayer() and client:hasPrivilege("manageSitRooms") or false
 end
@@ -58,12 +57,8 @@ function sitroom:Return(target)
 end
 
 lia.util.setPositionCallback("Sit Room", {
-    canAccess = function(client)
-        return sitroom:CanManage(client)
-    end,
-    formatLabel = function(label)
-        return string.format("Sit Room %s", label)
-    end,
+    canAccess = function(client) return sitroom:CanManage(client) end,
+    formatLabel = function(label) return string.format("Sit Room %s", label) end,
     onRun = function(pos, client)
         if SERVER then
             if not sitroom:CanManage(client) then return end
@@ -117,9 +112,7 @@ lia.util.setPositionCallback("Sit Room", {
             net.SendToServer()
         end
     end,
-    onRemove = function(pos, client)
-        if SERVER and sitroom:CanManage(client) then sitroom:RemoveRoomAtPosition(pos) end
-    end,
+    onRemove = function(pos, client) if SERVER and sitroom:CanManage(client) then sitroom:RemoveRoomAtPosition(pos) end end,
     color = sitroom.PositionColor,
     serverOnly = true
 })

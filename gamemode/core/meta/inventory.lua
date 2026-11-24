@@ -1,4 +1,4 @@
-local Inventory = lia.Inventory or {}
+﻿local Inventory = lia.Inventory or {}
 Inventory.__index = Inventory
 lia.Inventory = Inventory
 Inventory.data = {}
@@ -215,7 +215,10 @@ if SERVER then
             }, nil, "inventories", "invID = " .. self:getID())
         elseif not keyData or not keyData.notPersistent then
             if value == nil then
-                lia.db.delete("invdata", {invID = self.id, key = key})
+                lia.db.delete("invdata", {
+                    invID = self.id,
+                    key = key
+                })
             else
                 lia.db.upsert({
                     invID = self.id,

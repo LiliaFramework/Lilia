@@ -1,4 +1,4 @@
-local PANEL = {}
+﻿local PANEL = {}
 local math_rad = math.rad
 local math_cos = math.cos
 local math_sin = math.sin
@@ -291,9 +291,7 @@ function PANEL:Paint(w, h)
     self:DrawCircleOutline(centerX, centerY, currentRadius, outlineColor)
     self:DrawCircleOutline(centerX, centerY, currentInnerRadius, outlineColor)
     local pageCount = self:GetPageCount()
-    if pageCount > 1 then
-        draw.SimpleText(string.format("Page %d / %d  |  Scroll to navigate", self.currentPage, pageCount), self.descFont, centerX, centerY + currentRadius + 24 * textScale, ColorAlpha(textColor, 190 * alpha), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
-    end
+    if pageCount > 1 then draw.SimpleText(string.format("Page %d / %d  |  Scroll to navigate", self.currentPage, pageCount), self.descFont, centerX, centerY + currentRadius + 24 * textScale, ColorAlpha(textColor, 190 * alpha), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER) end
 end
 
 function PANEL:DrawCircleOutline(cx, cy, radius, outlineColor)
@@ -318,6 +316,7 @@ function PANEL:AddOption(text, func, icon, desc, submenu)
         desc = desc,
         submenu = submenu
     }
+
     self.pageCache = nil
     return #self.options
 end

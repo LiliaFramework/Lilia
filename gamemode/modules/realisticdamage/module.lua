@@ -1,4 +1,4 @@
-MODULE.name = "Realistic Damage"
+﻿MODULE.name = "Realistic Damage"
 MODULE.author = "Samael"
 MODULE.discord = "liliaplayer"
 MODULE.desc = "Adds configurable hit-location damage modifiers for a more grounded combat experience."

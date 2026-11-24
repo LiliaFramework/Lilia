@@ -1,4 +1,4 @@
-function lia.appearance.removeUser(client)
+﻿function lia.appearance.removeUser(client)
     for _, entity in ipairs(ents.FindByClass("lia_wardrobe")) do
         if IsValid(entity) and entity:HasUser(client) then entity:RemoveUser(client) end
     end

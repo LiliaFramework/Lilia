@@ -1,5 +1,4 @@
 ﻿local MODULE = MODULE
-
 net.Receive("liaTicketSystem", function()
     local pl = net.ReadEntity()
     local msg = net.ReadString()

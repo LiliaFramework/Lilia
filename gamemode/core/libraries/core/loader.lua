@@ -1,4 +1,4 @@
-lia = lia or {
+﻿lia = lia or {
     util = {},
     gui = {},
     meta = {},
@@ -302,10 +302,9 @@ function lia.loader.include(path, realm)
     if path:sub(1, #libraryPrefix) == libraryPrefix then
         local libraryPath = path:sub(#libraryPrefix + 1)
         local libraryGroup = libraryPath:match("^([^/]+)/")
-        if libraryGroup and libraryGroup ~= "core" and libraryGroup ~= "compatibility" and libraryGroup ~= "thirdparty" then
-            path = libraryPrefix .. "core/" .. libraryPath
-        end
+        if libraryGroup and libraryGroup ~= "core" and libraryGroup ~= "compatibility" and libraryGroup ~= "thirdparty" then path = libraryPrefix .. "core/" .. libraryPath end
     end
+
     local resolved = realm
     if not resolved then
         local filename = path:match("([^/\\]+)%.lua$")

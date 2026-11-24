@@ -1,4 +1,4 @@
-ITEM.name = "Entities Base"
+﻿ITEM.name = "Entities Base"
 ITEM.model = ""
 ITEM.desc = "A Base Entity"
 ITEM.category = "Entities"

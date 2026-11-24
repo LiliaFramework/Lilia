@@ -69,7 +69,12 @@ function ENT:setItem(itemID)
         if shouldSave ~= false then
             local gamemode = SCHEMA and SCHEMA.folder or engine.ActiveGamemode()
             local map = game.GetMap()
-            local condition = {schema = gamemode, map = map, itemID = assert(tonumber(itemID), "Invalid persistent item ID")}
+            local condition = {
+                schema = gamemode,
+                map = map,
+                itemID = assert(tonumber(itemID), "Invalid persistent item ID")
+            }
+
             lia.db.delete("saveditems", condition):next(function()
                 lia.db.insertTable({
                     schema = gamemode,
@@ -107,7 +112,12 @@ function ENT:OnRemove()
     if SERVER and not lia.shuttingDown and self.liaItemID then
         local gamemode = SCHEMA and SCHEMA.folder or engine.ActiveGamemode()
         local map = game.GetMap()
-        local condition = {schema = gamemode, map = map, itemID = assert(tonumber(self.liaItemID), "Invalid persistent item ID")}
+        local condition = {
+            schema = gamemode,
+            map = map,
+            itemID = assert(tonumber(self.liaItemID), "Invalid persistent item ID")
+        }
+
         lia.db.delete("saveditems", condition)
     end
 end

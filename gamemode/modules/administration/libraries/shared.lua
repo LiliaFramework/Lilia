@@ -1,4 +1,4 @@
-function MODULE:CanPlayerModifyConfig(client)
+﻿function MODULE:CanPlayerModifyConfig(client)
     local hasPrivilege = client:hasPrivilege("accessEditConfigurationMenu")
     lia.debug("[Permissions]", "Permission Check for function MODULE:CanPlayerModifyConfig", "hasPrivilege(accessEditConfigurationMenu)=", tostring(hasPrivilege), "finalResult=", tostring(hasPrivilege))
     return hasPrivilege

@@ -1,4 +1,4 @@
-lia.config.add("RealisticDamageHeadMultiplier", "Realistic Damage Head Multiplier", 2, nil, {
+﻿lia.config.add("RealisticDamageHeadMultiplier", "Realistic Damage Head Multiplier", 2, nil, {
     category = "Realistic Damage",
     type = "Number",
     min = 1,
@@ -13,4 +13,3 @@ lia.config.add("RealisticDamageLimbMultiplier", "Realistic Damage Limb Multiplie
     max = 1,
     desc = "Damage multiplier applied to arm and leg hits by the sample realistic damage module."
 })
-

@@ -1,4 +1,4 @@
-function MODULE:CanPersistEntity(entity)
+﻿function MODULE:CanPersistEntity(entity)
     if entity:GetClass() == "lia_vendor" then return true end
 end
 

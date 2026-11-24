@@ -1,4 +1,4 @@
-MODULE.name = "Performance"
+﻿MODULE.name = "Performance"
 MODULE.author = "Rammel, Zippy, bloodycop"
 MODULE.desc = "Profiles Lua hooks, timers, and entity methods and displays the results in the Lilia F1 menu."
 MODULE.NetworkStrings = {"liaPerformanceProfileStart", "liaPerformanceProfileClear", "liaPerformanceProfileMetric", "liaPerformanceProfileSettings", "liaPerformanceProfileSubscription", "liaPerformanceProfileState"}

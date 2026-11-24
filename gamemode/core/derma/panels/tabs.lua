@@ -1,4 +1,4 @@
-local PANEL = {}
+﻿local PANEL = {}
 function PANEL:EnsurePanels()
     if not IsValid(self.panel_tabs) then
         self.panel_tabs = vgui.Create("Panel", self)

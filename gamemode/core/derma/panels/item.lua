@@ -1,6 +1,5 @@
 ﻿local PANEL = {}
 local renderedIcons = {}
-
 local function getItemValue(item, method, key, default)
     local accessor = item and item[method]
     if isfunction(accessor) then return accessor(item) end

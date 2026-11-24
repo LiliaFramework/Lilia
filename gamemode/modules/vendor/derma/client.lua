@@ -1,4 +1,4 @@
-local RarityColors = lia.item.rarities
+﻿local RarityColors = lia.item.rarities
 local VendorClick = {"buttons/button15.wav", 30, 250}
 local function getVendorThemeColors()
     local theme = lia.color.theme or {}

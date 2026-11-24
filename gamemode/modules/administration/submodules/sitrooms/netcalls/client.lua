@@ -1,4 +1,4 @@
-local function sendSitroomAction(action, name, newName)
+﻿local function sendSitroomAction(action, name, newName)
     net.Start("liaManagesitroomsAction")
     net.WriteUInt(action, 2)
     net.WriteString(name)

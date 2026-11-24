@@ -121,4 +121,3 @@ net.Receive("liaOnlineStaffData", function()
     local staffData = net.ReadTable() or {}
     hook.Run("OnlineStaffDataReceived", staffData)
 end)
-

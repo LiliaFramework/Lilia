@@ -1,4 +1,4 @@
-lia.webcontent = lia.webcontent or {}
+﻿lia.webcontent = lia.webcontent or {}
 lia.webcontent.stored = lia.webcontent.stored or {}
 local baseDir = "lilia/webcontent/"
 local cache = {}

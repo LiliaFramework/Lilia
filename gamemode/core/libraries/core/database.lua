@@ -1364,6 +1364,7 @@ local function compileTransactionQuery(operation)
     elseif operation.type == "insert" then
         return "INSERT INTO " .. genInsertValues(operation.values or operation.value or {}, dbTable)
     end
+
     error("Unsupported database transaction operation: " .. tostring(operation.type), 3)
 end
 
@@ -1375,6 +1376,7 @@ function lia.db.transaction(queries)
             compiled[index] = compileTransactionQuery(operation)
         end
     end)
+
     if not ok then return deferred.reject(compileError) end
     queries = compiled
     if lia.db.module == "mysqloo" then return lia.db.modules.mysqloo.transaction(queries) end
@@ -1484,6 +1486,7 @@ function lia.db.createIndex(dbTable, indexName, columns)
             escapedColumns[#escapedColumns + 1] = escapeStructuredIdentifier(column)
         end
     end)
+
     if not ok then
         d:reject(err)
         return d
@@ -1497,12 +1500,20 @@ function lia.db.createIndex(dbTable, indexName, columns)
     if lia.db.module == "mysqloo" then
         local query = "SELECT 1 AS found FROM information_schema.statistics WHERE table_schema = " .. schemaDatabaseValue() .. " AND table_name = " .. lia.db.convertDataType(tableName) .. " AND index_name = " .. lia.db.convertDataType(indexName) .. " LIMIT 1"
         lia.db.query(query, function(results)
-            if istable(results) and #results > 0 then d:resolve(false) else create() end
+            if istable(results) and #results > 0 then
+                d:resolve(false)
+            else
+                create()
+            end
         end, function(queryErr) d:reject(queryErr) end)
     else
         local query = "SELECT 1 AS found FROM sqlite_master WHERE type = 'index' AND tbl_name = " .. lia.db.convertDataType(tableName) .. " AND name = " .. lia.db.convertDataType(indexName) .. " LIMIT 1"
         lia.db.query(query, function(results)
-            if istable(results) and #results > 0 then d:resolve(false) else create() end
+            if istable(results) and #results > 0 then
+                d:resolve(false)
+            else
+                create()
+            end
         end, function(queryErr) d:reject(queryErr) end)
     end
     return d

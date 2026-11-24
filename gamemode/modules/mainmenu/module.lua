@@ -1,4 +1,4 @@
-MODULE.name = "Main Menu"
+﻿MODULE.name = "Main Menu"
 MODULE.author = "Samael"
 MODULE.discord = "liliaplayer"
 MODULE.desc = "Creates the in-game main menu used for selecting, creating, and managing player characters before entering the world."
@@ -30,6 +30,7 @@ else
             if IsValid(sourceMenu) and not IsValid(creator.sourceMenu) then creator:SetSourceMenu(sourceMenu) end
             return creator
         end
+
         local client = LocalPlayer()
         if not IsValid(client) then return nil, "Character creation is not available yet." end
         local allowed, reason = hook.Run("CanPlayerCreateChar", client)

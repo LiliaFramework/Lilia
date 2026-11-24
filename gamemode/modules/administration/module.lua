@@ -1,4 +1,4 @@
-MODULE.Name = "Administration"
+﻿MODULE.Name = "Administration"
 MODULE.author = "Samael"
 MODULE.discord = "liliaplayer"
 MODULE.desc = "Provides comprehensive administration tools and staff management features."

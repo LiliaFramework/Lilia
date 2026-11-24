@@ -1,4 +1,4 @@
-ITEM.name = "Generic Item"
+﻿ITEM.name = "Generic Item"
 ITEM.desc = "Generic Description"
 ITEM.model = "models/props_interiors/pot01a.mdl"
 ITEM.width = 1

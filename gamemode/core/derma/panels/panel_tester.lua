@@ -1,4 +1,4 @@
-local testerFrame
+﻿local testerFrame
 local activePanels = {}
 local entries = {}
 local selectedEntry

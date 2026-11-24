@@ -1,4 +1,4 @@
-lia.config.add("ModelTweakerModel", "Appearance Wardrobe Model", "models/props_c17/FurnitureDresser001a.mdl", nil, {
+﻿lia.config.add("ModelTweakerModel", "Appearance Wardrobe Model", "models/props_c17/FurnitureDresser001a.mdl", nil, {
     desc = "Specifies the model used by the combined wardrobe and bodygroup entity.",
     category = "Gameplay",
     type = "Generic"
